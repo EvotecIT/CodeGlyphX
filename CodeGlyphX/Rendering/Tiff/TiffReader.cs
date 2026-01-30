@@ -5,7 +5,7 @@ using System.IO.Compression;
 namespace CodeGlyphX.Rendering.Tiff;
 
 /// <summary>
-/// Minimal TIFF decoder for baseline images.
+/// Minimal TIFF decoder for baseline images (strips/tiles).
 /// </summary>
 public static class TiffReader {
     private const ushort Magic = 42;
@@ -79,44 +79,39 @@ public static class TiffReader {
     }
 
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
-        return DecodeRgba32(data, 0, out width, out height);
-    }
-
-    public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, int pageIndex, out int width, out int height) {
         if (!IsTiff(data)) throw new FormatException("Not a TIFF image.");
-        if (pageIndex < 0) throw new ArgumentOutOfRangeException(nameof(pageIndex));
 
         var little = data[0] == (byte)'I';
-        var ifdOffset = (int)ReadU32(data, 4, little);
-        if (ifdOffset <= 0 || ifdOffset > data.Length - 2) throw new FormatException("Invalid TIFF IFD offset.");
+        var ifdOffset = ReadU32(data, 4, little);
+        if (ifdOffset > data.Length - 2) throw new FormatException("Invalid TIFF IFD offset.");
 
-        TiffIfdInfo info = default;
-        var currentOffset = ifdOffset;
-        for (var i = 0; i <= pageIndex; i++) {
-            info = ReadIfd(data, little, currentOffset);
-            if (i == pageIndex) break;
-            if (info.NextIfdOffset == 0) throw new FormatException("TIFF page index out of range.");
-            currentOffset = checked((int)info.NextIfdOffset);
-        }
-
-        return DecodeFromIfd(data, little, info, out width, out height);
+        return DecodeRgba32Internal(data, little, (int)ifdOffset, out width, out height, out _);
     }
 
-    private static TiffIfdInfo ReadIfd(ReadOnlySpan<byte> data, bool little, int ifdOffset) {
+    private static byte[] DecodeRgba32Internal(ReadOnlySpan<byte> data, bool little, int ifdOffset, out int width, out int height, out int nextIfdOffset) {
         if (ifdOffset < 0 || ifdOffset > data.Length - 2) throw new FormatException("Invalid TIFF IFD offset.");
 
         var entryCount = ReadU16(data, ifdOffset, little);
         var entriesOffset = ifdOffset + 2;
         var maxEntries = Math.Min(entryCount, (ushort)((data.Length - entriesOffset) / 12));
 
-        var info = new TiffIfdInfo {
-            Compression = CompressionNone,
-            Photometric = 1,
-            SamplesPerPixel = 1,
-            RowsPerStrip = 0,
-            Planar = 1,
-            Predictor = 1
-        };
+        width = 0;
+        height = 0;
+        var compression = CompressionNone;
+        var photometric = 1;
+        var samplesPerPixel = 1;
+        var rowsPerStrip = 0;
+        var planar = 1;
+        var predictor = 1;
+        ushort[]? bitsPerSample = null;
+        int[]? stripOffsets = null;
+        int[]? stripByteCounts = null;
+        ushort[]? colorMap = null;
+        var hasExtraSamples = false;
+        var tileWidth = 0;
+        var tileLength = 0;
+        int[]? tileOffsets = null;
+        int[]? tileByteCounts = null;
 
         for (var i = 0; i < maxEntries; i++) {
             var entryOffset = entriesOffset + i * 12;
@@ -128,55 +123,43 @@ public static class TiffReader {
 
             switch (tag) {
                 case TagImageWidth:
-                    info.Width = (int)ReadValue(valueSpan, type, little, 0);
+                    width = (int)ReadValue(valueSpan, type, little, 0);
                     break;
                 case TagImageLength:
-                    info.Height = (int)ReadValue(valueSpan, type, little, 0);
+                    height = (int)ReadValue(valueSpan, type, little, 0);
                     break;
                 case TagBitsPerSample:
-                    info.BitsPerSample = ReadValuesUShort(valueSpan, type, little, (int)count);
+                    bitsPerSample = ReadValuesUShort(valueSpan, type, little, (int)count);
                     break;
                 case TagCompression:
-                    info.Compression = (int)ReadValue(valueSpan, type, little, 0);
+                    compression = (int)ReadValue(valueSpan, type, little, 0);
                     break;
                 case TagPhotometric:
-                    info.Photometric = (int)ReadValue(valueSpan, type, little, 0);
+                    photometric = (int)ReadValue(valueSpan, type, little, 0);
                     break;
                 case TagStripOffsets:
-                    info.StripOffsets = ReadValuesInt(valueSpan, type, little, (int)count);
+                    stripOffsets = ReadValuesInt(valueSpan, type, little, (int)count);
                     break;
                 case TagSamplesPerPixel:
-                    info.SamplesPerPixel = (int)ReadValue(valueSpan, type, little, 0);
+                    samplesPerPixel = (int)ReadValue(valueSpan, type, little, 0);
                     break;
                 case TagRowsPerStrip:
-                    info.RowsPerStrip = (int)ReadValue(valueSpan, type, little, 0);
+                    rowsPerStrip = (int)ReadValue(valueSpan, type, little, 0);
                     break;
                 case TagStripByteCounts:
-                    info.StripByteCounts = ReadValuesInt(valueSpan, type, little, (int)count);
+                    stripByteCounts = ReadValuesInt(valueSpan, type, little, (int)count);
                     break;
                 case TagPlanarConfiguration:
-                    info.Planar = (int)ReadValue(valueSpan, type, little, 0);
+                    planar = (int)ReadValue(valueSpan, type, little, 0);
                     break;
                 case TagPredictor:
-                    info.Predictor = (int)ReadValue(valueSpan, type, little, 0);
+                    predictor = (int)ReadValue(valueSpan, type, little, 0);
                     break;
                 case TagExtraSamples:
-                    info.HasExtraSamples = true;
+                    hasExtraSamples = true;
                     break;
                 case TagColorMap:
-                    info.ColorMap = ReadValuesUShort(valueSpan, type, little, (int)count);
-                    break;
-                case TagTileWidth:
-                    info.TileWidth = (int)ReadValue(valueSpan, type, little, 0);
-                    break;
-                case TagTileLength:
-                    info.TileLength = (int)ReadValue(valueSpan, type, little, 0);
-                    break;
-                case TagTileOffsets:
-                    info.TileOffsets = ReadValuesInt(valueSpan, type, little, (int)count);
-                    break;
-                case TagTileByteCounts:
-                    info.TileByteCounts = ReadValuesInt(valueSpan, type, little, (int)count);
+                    colorMap = ReadValuesUShort(valueSpan, type, little, (int)count);
                     break;
                 case TagTileWidth:
                     tileWidth = (int)ReadValue(valueSpan, type, little, 0);
@@ -193,33 +176,25 @@ public static class TiffReader {
             }
         }
 
-        var nextOffsetPos = entriesOffset + entryCount * 12;
-        if (nextOffsetPos + 4 <= data.Length) {
-            info.NextIfdOffset = ReadU32(data, nextOffsetPos, little);
+        nextIfdOffset = 0;
+        var ifdEnd = entriesOffset + entryCount * 12;
+        if (ifdEnd >= 0 && ifdEnd + 4 <= data.Length) {
+            nextIfdOffset = (int)ReadU32(data, ifdEnd, little);
         }
-
-        return info;
-    }
-
-    private static byte[] DecodeFromIfd(ReadOnlySpan<byte> data, bool little, TiffIfdInfo info, out int width, out int height) {
-        width = info.Width;
-        height = info.Height;
 
         if (width <= 0 || height <= 0) throw new FormatException("Invalid TIFF dimensions.");
-        if (info.Compression != CompressionNone
-            && info.Compression != CompressionPackBits
-            && info.Compression != CompressionLzw
-            && info.Compression != CompressionDeflate
-            && info.Compression != CompressionDeflateAdobe) {
+        if (compression != CompressionNone
+            && compression != CompressionPackBits
+            && compression != CompressionLzw
+            && compression != CompressionDeflate
+            && compression != CompressionDeflateAdobe) {
             throw new FormatException("Unsupported TIFF compression.");
         }
-        if (info.Planar != 1) throw new FormatException("Unsupported TIFF planar configuration.");
+        if (planar != 1 && planar != 2) throw new FormatException("Unsupported TIFF planar configuration.");
 
-        var samplesPerPixel = info.SamplesPerPixel;
         if (samplesPerPixel <= 0) {
-            samplesPerPixel = info.BitsPerSample?.Length ?? 1;
+            samplesPerPixel = bitsPerSample?.Length ?? 1;
         }
-        var bitsPerSample = info.BitsPerSample;
         if (bitsPerSample is null || bitsPerSample.Length == 0) {
             bitsPerSample = new ushort[samplesPerPixel];
             for (var i = 0; i < bitsPerSample.Length; i++) bitsPerSample[i] = 8;
@@ -239,210 +214,223 @@ public static class TiffReader {
             throw new FormatException("TIFF predictor is not supported for 1-bit samples.");
         }
 
-        var hasTiles = info.TileOffsets is not null && info.TileByteCounts is not null && info.TileOffsets.Length > 0;
-        var hasStrips = info.StripOffsets is not null && info.StripByteCounts is not null && info.StripOffsets.Length > 0;
-        if (!hasTiles && !hasStrips) throw new FormatException("Missing TIFF strip data.");
+        var useTiles = tileOffsets is not null && tileByteCounts is not null && tileOffsets.Length > 0;
+        if (!useTiles) {
+            if (stripOffsets is null || stripByteCounts is null || stripOffsets.Length == 0) {
+                throw new FormatException("Missing TIFF strip data.");
+            }
+        } else if (tileWidth <= 0 || tileLength <= 0) {
+            throw new FormatException("Invalid TIFF tile dimensions.");
+        }
+        if (rowsPerStrip <= 0) rowsPerStrip = height;
 
         var rgba = new byte[width * height * 4];
-        var bytesPerSample = bitsPerSampleValue / 8;
-        var bytesPerPixel = samplesPerPixel * bytesPerSample;
-        var paletteStride = info.ColorMap is not null ? info.ColorMap.Length / 3 : 0;
+        var paletteSize = colorMap is not null ? colorMap.Length / 3 : 0;
+        var paletteStride = paletteSize;
 
-        if (hasTiles) {
-            DecodeTiles(data, little, info, rgba, width, height, bytesPerSample, bytesPerPixel, samplesPerPixel, paletteStride);
+        if (isPacked1) {
+            if (photometric == 3 && paletteSize == 0) {
+                throw new FormatException("Missing TIFF palette data.");
+            }
+            if (photometric != 0 && photometric != 1 && photometric != 3) {
+                throw new FormatException("Unsupported TIFF photometric for 1-bit samples.");
+            }
+            var bytesPerRowPacked = (width + 7) / 8;
+            if (!useTiles) {
+                if (stripOffsets is null || stripByteCounts is null || stripOffsets.Length == 0) {
+                    throw new FormatException("Missing TIFF strip data.");
+                }
+                var row = 0;
+                for (var s = 0; s < stripOffsets.Length && row < height; s++) {
+                    var offset = stripOffsets[s];
+                    var count = stripByteCounts[Math.Min(s, stripByteCounts.Length - 1)];
+                    if (offset < 0 || offset >= data.Length) throw new FormatException("Invalid TIFF strip offset.");
+                    if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF strip length.");
+
+                    var rowsInStrip = Math.Min(rowsPerStrip, height - row);
+                    var expected = rowsInStrip * bytesPerRowPacked;
+                    var stripSpan = DecodeChunk(data, offset, count, expected, compression, predictor, bytesPerRowPacked, 1, 1, little, out _);
+
+                    for (var r = 0; r < rowsInStrip; r++) {
+                        var dstRow = (row + r) * width * 4;
+                        var rowOffset = r * bytesPerRowPacked;
+                        for (var x = 0; x < width; x++) {
+                            var byteIndex = rowOffset + (x >> 3);
+                            var bit = (stripSpan[byteIndex] >> (7 - (x & 7))) & 1;
+                            WritePixelBit(bit, photometric, colorMap, paletteSize, paletteStride, rgba, dstRow + x * 4);
+                        }
+                    }
+                    row += rowsInStrip;
+                }
+            } else {
+                var tilesAcross = (width + tileWidth - 1) / tileWidth;
+                var tilesDown = (height + tileLength - 1) / tileLength;
+                var tileCount = Math.Min(tileOffsets!.Length, tileByteCounts!.Length);
+                var bytesPerTileRow = (tileWidth + 7) / 8;
+                var expectedBytes = tileLength * bytesPerTileRow;
+
+                for (var t = 0; t < tileCount && t < tilesAcross * tilesDown; t++) {
+                    var offset = tileOffsets[t];
+                    var count = tileByteCounts[Math.Min(t, tileByteCounts.Length - 1)];
+                    if (offset < 0 || offset >= data.Length) throw new FormatException("Invalid TIFF tile offset.");
+                    if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF tile length.");
+
+                    var tileSpan = DecodeChunk(data, offset, count, expectedBytes, compression, predictor, bytesPerTileRow, 1, 1, little, out _);
+
+                    var tileX = (t % tilesAcross) * tileWidth;
+                    var tileY = (t / tilesAcross) * tileLength;
+                    for (var ty = 0; ty < tileLength; ty++) {
+                        var dstY = tileY + ty;
+                        if (dstY >= height) break;
+                        var dstRow = dstY * width * 4;
+                        var rowOffset = ty * bytesPerTileRow;
+                        for (var tx = 0; tx < tileWidth; tx++) {
+                            var dstX = tileX + tx;
+                            if (dstX >= width) break;
+                            var byteIndex = rowOffset + (tx >> 3);
+                            var bit = (tileSpan[byteIndex] >> (7 - (tx & 7))) & 1;
+                            WritePixelBit(bit, photometric, colorMap, paletteSize, paletteStride, rgba, dstRow + dstX * 4);
+                        }
+                    }
+                }
+            }
+
             return rgba;
         }
 
-        DecodeStrips(data, little, info, rgba, width, height, bytesPerSample, bytesPerPixel, samplesPerPixel, paletteStride);
-        return rgba;
-    }
-
-    private static void DecodeStrips(ReadOnlySpan<byte> data, bool little, TiffIfdInfo info, byte[] rgba, int width, int height, int bytesPerSample, int bytesPerPixel, int samplesPerPixel, int paletteStride) {
-        var stripOffsets = info.StripOffsets;
-        var stripByteCounts = info.StripByteCounts;
-        if (stripOffsets is null || stripByteCounts is null || stripOffsets.Length == 0) {
-            throw new FormatException("Missing TIFF strip data.");
-        }
-
-        var rowsPerStrip = info.RowsPerStrip;
-        if (rowsPerStrip <= 0) rowsPerStrip = height;
+        var bytesPerSample = bitsPerSampleValue / 8;
+        var bytesPerPixel = samplesPerPixel * bytesPerSample;
         var bytesPerRow = width * bytesPerPixel;
-        var row = 0;
+        var planeRowBytes = width * bytesPerSample;
 
-        for (var s = 0; s < stripOffsets.Length && row < height; s++) {
-            var offset = stripOffsets[s];
-            var count = stripByteCounts[Math.Min(s, stripByteCounts.Length - 1)];
-            if (offset < 0 || offset >= data.Length) throw new FormatException("Invalid TIFF strip offset.");
-            if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF strip length.");
+        if (!useTiles && planar == 1) {
+            var row = 0;
+            for (var s = 0; s < stripOffsets!.Length && row < height; s++) {
+                var offset = stripOffsets[s];
+                var count = stripByteCounts![Math.Min(s, stripByteCounts.Length - 1)];
+                if (offset < 0 || offset >= data.Length) throw new FormatException("Invalid TIFF strip offset.");
+                if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF strip length.");
 
-            var rowsInStrip = Math.Min(rowsPerStrip, height - row);
-            var expected = rowsInStrip * bytesPerRow;
-            var src = data.Slice(offset, count);
-            var block = DecodeBlock(src, expected, info.Compression, info.Predictor, bytesPerRow, samplesPerPixel, bytesPerSample, little);
+                var rowsInStrip = Math.Min(rowsPerStrip, height - row);
+                var expected = rowsInStrip * bytesPerRow;
+                var stripSpan = DecodeChunk(data, offset, count, expected, compression, predictor, bytesPerRow, samplesPerPixel, bytesPerSample, little, out _);
 
-            for (var r = 0; r < rowsInStrip; r++) {
-                var dstRow = (row + r) * width * 4;
-                var srcIndex = r * bytesPerRow;
-                WritePixelsRow(block, srcIndex, rgba, dstRow, width, samplesPerPixel, bytesPerSample, bytesPerPixel, info.Photometric, info.HasExtraSamples, little, info.ColorMap, paletteStride);
+                var srcIndex = 0;
+                for (var r = 0; r < rowsInStrip; r++) {
+                    var dstRow = (row + r) * width * 4;
+                    for (var x = 0; x < width; x++) {
+                        WritePixel(stripSpan, srcIndex, photometric, samplesPerPixel, bytesPerSample, hasExtraSamples, little, colorMap, paletteSize, paletteStride, rgba, dstRow + x * 4);
+                        srcIndex += bytesPerPixel;
+                    }
+                }
+                row += rowsInStrip;
             }
-        }
-    }
-
-    private static void DecodeTiles(ReadOnlySpan<byte> data, bool little, TiffIfdInfo info, byte[] rgba, int width, int height, int bytesPerSample, int bytesPerPixel, int samplesPerPixel, int paletteStride) {
-        var tileOffsets = info.TileOffsets;
-        var tileByteCounts = info.TileByteCounts;
-        if (tileOffsets is null || tileByteCounts is null || tileOffsets.Length == 0) {
-            throw new FormatException("Missing TIFF tile data.");
-        }
-        if (info.TileWidth <= 0 || info.TileLength <= 0) throw new FormatException("Invalid TIFF tile size.");
-
-        var tilesAcross = (width + info.TileWidth - 1) / info.TileWidth;
-        var tilesDown = (height + info.TileLength - 1) / info.TileLength;
-        var tileCount = tilesAcross * tilesDown;
-        if (tileOffsets.Length < tileCount || tileByteCounts.Length < tileCount) {
-            throw new FormatException("Missing TIFF tile data.");
-        }
-
-        var bytesPerTileRow = info.TileWidth * bytesPerPixel;
-        var expected = info.TileLength * bytesPerTileRow;
-
-        for (var t = 0; t < tileCount; t++) {
-            var offset = tileOffsets[t];
-            var count = tileByteCounts[t];
-            if (offset < 0 || offset >= data.Length) throw new FormatException("Invalid TIFF tile offset.");
-            if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF tile length.");
-
-            var src = data.Slice(offset, count);
-            var block = DecodeBlock(src, expected, info.Compression, info.Predictor, bytesPerTileRow, samplesPerPixel, bytesPerSample, little);
-
-            var tileRow = t / tilesAcross;
-            var tileCol = t % tilesAcross;
-            var rowStart = tileRow * info.TileLength;
-            var colStart = tileCol * info.TileWidth;
-            var rowsInTile = Math.Min(info.TileLength, height - rowStart);
-            var colsInTile = Math.Min(info.TileWidth, width - colStart);
-
-            for (var r = 0; r < rowsInTile; r++) {
-                var dstRow = (rowStart + r) * width * 4 + colStart * 4;
-                var srcIndex = r * bytesPerTileRow;
-                WritePixelsRow(block, srcIndex, rgba, dstRow, colsInTile, samplesPerPixel, bytesPerSample, bytesPerPixel, info.Photometric, info.HasExtraSamples, little, info.ColorMap, paletteStride);
+        } else if (!useTiles && planar == 2) {
+            if (stripOffsets is null || stripByteCounts is null) throw new FormatException("Missing TIFF strip data.");
+            var stripsPerPlane = (height + rowsPerStrip - 1) / rowsPerStrip;
+            var expectedEntries = stripsPerPlane * samplesPerPixel;
+            if (stripOffsets.Length < expectedEntries || stripByteCounts.Length < expectedEntries) {
+                throw new FormatException("Invalid TIFF planar strip layout.");
             }
-        }
-    }
 
-    private static ReadOnlySpan<byte> DecodeBlock(ReadOnlySpan<byte> src, int expected, int compression, int predictor, int bytesPerRow, int samplesPerPixel, int bytesPerSample, bool little) {
-        if (expected <= 0) throw new FormatException("Invalid TIFF data length.");
-        byte[]? buffer = null;
-        ReadOnlySpan<byte> block;
+            var row = 0;
+            for (var s = 0; s < stripsPerPlane && row < height; s++) {
+                var rowsInStrip = Math.Min(rowsPerStrip, height - row);
+                var expected = rowsInStrip * planeRowBytes;
 
-        if (compression == CompressionNone) {
-            if (src.Length < expected) throw new FormatException("TIFF data block too short.");
-            if (predictor == 2) {
-                buffer = src.Slice(0, expected).ToArray();
-                ApplyPredictor(buffer, bytesPerRow, samplesPerPixel, bytesPerSample, little);
-                return buffer;
+                var planes = new byte[samplesPerPixel][];
+                for (var p = 0; p < samplesPerPixel; p++) {
+                    var index = p * stripsPerPlane + s;
+                    var offset = stripOffsets[index];
+                    var count = stripByteCounts[index];
+                    if (offset < 0 || offset >= data.Length) throw new FormatException("Invalid TIFF strip offset.");
+                    if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF strip length.");
+                    var span = DecodeChunk(data, offset, count, expected, compression, predictor, planeRowBytes, 1, bytesPerSample, little, out var buffer);
+                    planes[p] = buffer ?? span.ToArray();
+                }
+
+                for (var r = 0; r < rowsInStrip; r++) {
+                    var dstRow = (row + r) * width * 4;
+                    var rowOffset = r * planeRowBytes;
+                    for (var x = 0; x < width; x++) {
+                        var srcIndex = rowOffset + x * bytesPerSample;
+                        WritePixelPlanar(planes, srcIndex, photometric, samplesPerPixel, bytesPerSample, hasExtraSamples, little, colorMap, paletteSize, paletteStride, rgba, dstRow + x * 4);
+                    }
+                }
+
+                row += rowsInStrip;
             }
-            return src.Slice(0, expected);
-        }
-
-        if (compression == CompressionPackBits) {
-            buffer = new byte[expected];
-            var written = DecompressPackBits(src, buffer);
-            if (written != expected) throw new FormatException("Invalid TIFF PackBits data.");
-            block = buffer;
-        } else if (compression == CompressionLzw) {
-            buffer = DecompressLzwCompat(src, expected);
-            block = buffer;
         } else {
-            buffer = DecompressDeflate(src, expected);
-            block = buffer;
-        }
+            var tilesAcross = (width + tileWidth - 1) / tileWidth;
+            var tilesDown = (height + tileLength - 1) / tileLength;
+            var tileCount = Math.Min(tileOffsets!.Length, tileByteCounts!.Length);
+            var tileRowBytes = tileWidth * bytesPerPixel;
+            var expected = tileWidth * tileLength * bytesPerPixel;
 
-        if (predictor == 2) {
-            ApplyPredictor(buffer, bytesPerRow, samplesPerPixel, bytesPerSample, little);
-            block = buffer;
-        }
+            if (planar == 1) {
+                for (var t = 0; t < tileCount && t < tilesAcross * tilesDown; t++) {
+                    var offset = tileOffsets[t];
+                    var count = tileByteCounts[Math.Min(t, tileByteCounts.Length - 1)];
+                    if (offset < 0 || offset >= data.Length) throw new FormatException("Invalid TIFF tile offset.");
+                    if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF tile length.");
 
-        return block;
-    }
+                    var tileSpan = DecodeChunk(data, offset, count, expected, compression, predictor, tileRowBytes, samplesPerPixel, bytesPerSample, little, out _);
 
-    private static void WritePixelsRow(ReadOnlySpan<byte> src, int srcIndex, byte[] rgba, int dstOffset, int pixelCount, int samplesPerPixel, int bytesPerSample, int bytesPerPixel, int photometric, bool hasExtraSamples, bool little, ushort[]? colorMap, int paletteStride) {
-        for (var x = 0; x < pixelCount; x++) {
-            if (photometric == 3 && paletteStride > 0) {
-                var idx = bytesPerSample == 2 ? ReadU16(src, srcIndex, little) : src[srcIndex];
-                if (idx < paletteStride && colorMap is not null) {
-                    var r0 = (byte)(colorMap[idx] >> 8);
-                    var g0 = (byte)(colorMap[idx + paletteStride] >> 8);
-                    var b0 = (byte)(colorMap[idx + 2 * paletteStride] >> 8);
-                    rgba[dstOffset + 0] = r0;
-                    rgba[dstOffset + 1] = g0;
-                    rgba[dstOffset + 2] = b0;
-                    rgba[dstOffset + 3] = 255;
-                } else {
-                    rgba[dstOffset + 3] = 255;
-                }
-            } else if (photometric == 2 && samplesPerPixel >= 3) {
-                if (bytesPerSample == 2) {
-                    var r16 = ReadU16(src, srcIndex + 0, little);
-                    var g16 = ReadU16(src, srcIndex + 2, little);
-                    var b16 = ReadU16(src, srcIndex + 4, little);
-                    var a16 = samplesPerPixel >= 4 ? ReadU16(src, srcIndex + 6, little) : (ushort)65535;
-                    rgba[dstOffset + 0] = Scale16To8(r16);
-                    rgba[dstOffset + 1] = Scale16To8(g16);
-                    rgba[dstOffset + 2] = Scale16To8(b16);
-                    rgba[dstOffset + 3] = Scale16To8(a16);
-                } else {
-                    var r0 = src[srcIndex + 0];
-                    var g0 = src[srcIndex + 1];
-                    var b0 = src[srcIndex + 2];
-                    var a0 = samplesPerPixel >= 4 ? src[srcIndex + 3] : (byte)255;
-                    rgba[dstOffset + 0] = r0;
-                    rgba[dstOffset + 1] = g0;
-                    rgba[dstOffset + 2] = b0;
-                    rgba[dstOffset + 3] = a0;
-                }
-            } else if (samplesPerPixel >= 2 && hasExtraSamples) {
-                if (bytesPerSample == 2) {
-                    var v16 = ReadU16(src, srcIndex, little);
-                    var a16 = ReadU16(src, srcIndex + 2, little);
-                    if (photometric == 0) v16 = (ushort)(65535 - v16);
-                    rgba[dstOffset + 0] = Scale16To8(v16);
-                    rgba[dstOffset + 1] = Scale16To8(v16);
-                    rgba[dstOffset + 2] = Scale16To8(v16);
-                    rgba[dstOffset + 3] = Scale16To8(a16);
-                } else {
-                    var v = src[srcIndex];
-                    var a0 = src[srcIndex + 1];
-                    if (photometric == 0) v = (byte)(255 - v);
-                    rgba[dstOffset + 0] = v;
-                    rgba[dstOffset + 1] = v;
-                    rgba[dstOffset + 2] = v;
-                    rgba[dstOffset + 3] = a0;
-                }
-            } else if (samplesPerPixel >= 1) {
-                if (bytesPerSample == 2) {
-                    var v16 = ReadU16(src, srcIndex, little);
-                    if (photometric == 0) v16 = (ushort)(65535 - v16);
-                    var v = Scale16To8(v16);
-                    rgba[dstOffset + 0] = v;
-                    rgba[dstOffset + 1] = v;
-                    rgba[dstOffset + 2] = v;
-                    rgba[dstOffset + 3] = 255;
-                } else {
-                    var v = src[srcIndex];
-                    if (photometric == 0) v = (byte)(255 - v);
-                    rgba[dstOffset + 0] = v;
-                    rgba[dstOffset + 1] = v;
-                    rgba[dstOffset + 2] = v;
-                    rgba[dstOffset + 3] = 255;
+                    var tileX = (t % tilesAcross) * tileWidth;
+                    var tileY = (t / tilesAcross) * tileLength;
+                    for (var ty = 0; ty < tileLength; ty++) {
+                        var dstY = tileY + ty;
+                        if (dstY >= height) break;
+                        var dstRow = dstY * width * 4;
+                        var srcRow = ty * tileRowBytes;
+                        for (var tx = 0; tx < tileWidth; tx++) {
+                            var dstX = tileX + tx;
+                            if (dstX >= width) break;
+                            var srcIndex = srcRow + tx * bytesPerPixel;
+                            WritePixel(tileSpan, srcIndex, photometric, samplesPerPixel, bytesPerSample, hasExtraSamples, little, colorMap, paletteSize, paletteStride, rgba, dstRow + dstX * 4);
+                        }
+                    }
                 }
             } else {
-                rgba[dstOffset + 3] = 255;
-            }
+                var tilesPerPlane = tilesAcross * tilesDown;
+                var expectedEntries = tilesPerPlane * samplesPerPixel;
+                if (tileOffsets.Length < expectedEntries || tileByteCounts.Length < expectedEntries) {
+                    throw new FormatException("Invalid TIFF planar tile layout.");
+                }
+                var planeTileRowBytes = tileWidth * bytesPerSample;
+                var expectedPlane = tileWidth * tileLength * bytesPerSample;
 
-            srcIndex += bytesPerPixel;
-            dstOffset += 4;
+                for (var t = 0; t < tilesPerPlane; t++) {
+                    var planes = new byte[samplesPerPixel][];
+                    for (var p = 0; p < samplesPerPixel; p++) {
+                        var index = p * tilesPerPlane + t;
+                        var offset = tileOffsets[index];
+                        var count = tileByteCounts[index];
+                        if (offset < 0 || offset >= data.Length) throw new FormatException("Invalid TIFF tile offset.");
+                        if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF tile length.");
+                        var span = DecodeChunk(data, offset, count, expectedPlane, compression, predictor, planeTileRowBytes, 1, bytesPerSample, little, out var buffer);
+                        planes[p] = buffer ?? span.ToArray();
+                    }
+
+                    var tileX = (t % tilesAcross) * tileWidth;
+                    var tileY = (t / tilesAcross) * tileLength;
+                    for (var ty = 0; ty < tileLength; ty++) {
+                        var dstY = tileY + ty;
+                        if (dstY >= height) break;
+                        var dstRow = dstY * width * 4;
+                        var srcRow = ty * planeTileRowBytes;
+                        for (var tx = 0; tx < tileWidth; tx++) {
+                            var dstX = tileX + tx;
+                            if (dstX >= width) break;
+                            var srcIndex = srcRow + tx * bytesPerSample;
+                            WritePixelPlanar(planes, srcIndex, photometric, samplesPerPixel, bytesPerSample, hasExtraSamples, little, colorMap, paletteSize, paletteStride, rgba, dstRow + dstX * 4);
+                        }
+                    }
+                }
+            }
         }
+
+        return rgba;
     }
 
     private static ReadOnlySpan<byte> DecodeChunk(
@@ -991,26 +979,5 @@ public static class TiffReader {
             return (uint)(data[offset] | (data[offset + 1] << 8) | (data[offset + 2] << 16) | (data[offset + 3] << 24));
         }
         return (uint)((data[offset] << 24) | (data[offset + 1] << 16) | (data[offset + 2] << 8) | data[offset + 3]);
-    }
-
-    private struct TiffIfdInfo {
-        public int Width;
-        public int Height;
-        public int Compression;
-        public int Photometric;
-        public int SamplesPerPixel;
-        public int RowsPerStrip;
-        public int Planar;
-        public int Predictor;
-        public ushort[]? BitsPerSample;
-        public int[]? StripOffsets;
-        public int[]? StripByteCounts;
-        public ushort[]? ColorMap;
-        public bool HasExtraSamples;
-        public int TileWidth;
-        public int TileLength;
-        public int[]? TileOffsets;
-        public int[]? TileByteCounts;
-        public uint NextIfdOffset;
     }
 }
