@@ -338,6 +338,18 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_DeviceN_Alternate_Array_IccBased() {
+        var rgb = new byte[] { 0x01, 0x02, 0x03 };
+        var pdf = BuildPdfWithFlateImage(1, 1, rgb, "[/DeviceN [/Cyan /Magenta /Yellow] [/ICCBased << /N 3 /Alternate /DeviceRGB >>] << /FunctionType 2 >>]", bitsPerComponent: 8, "/Filter /FlateDecode ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x01, 0x02, 0x03, 255 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Inline_Image_Ascii85_Flate() {
         var rgb = new byte[] { 0x22, 0x33, 0x44 };
         var pdf = BuildPdfWithInlineImageAscii85Flate(1, 1, rgb, "/CS /DeviceRGB /BPC 8 /F [/ASCII85Decode /FlateDecode]");
