@@ -13,7 +13,7 @@ internal static class WebpVp8lEncoder {
     private const int LengthPrefixCount = 24;
     private const int GreenAlphabetBase = LiteralAlphabetSize + LengthPrefixCount; // 280
     private const int MaxPrefixBits = 15;
-    private const int MaxPaletteSize = 16;
+    private const int MaxPaletteSize = 256;
     private const int MaxBackwardDistance = 4096;
     private const int DistanceMapSize = 120;
     private const int MaxColorCacheBits = 11;
@@ -148,11 +148,7 @@ internal static class WebpVp8lEncoder {
         var encodedWidth = widthBits == 0 ? width : (width + group - 1) >> widthBits;
         var encodedStride = checked(encodedWidth * 4);
 
-        // If indexing does not shrink the main image width, the palette
-        // transform overhead is not worth it for this minimal encoder.
-        if (encodedWidth >= width) {
-            return false;
-        }
+        // Allow color indexing even when encoded width matches the source width.
 
         var indexedRgba = BuildIndexedImageRgba(rgba, width, height, stride, palette, widthBits, encodedWidth);
         var paletteDeltasRgba = BuildPaletteDeltaRgba(palette);
