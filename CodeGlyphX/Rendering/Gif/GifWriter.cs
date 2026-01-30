@@ -10,6 +10,7 @@ namespace CodeGlyphX.Rendering.Gif;
 public static class GifWriter {
     private const int MaxCodeSize = 12;
     private const int PaletteSize = 256;
+    private const int MinDiffFrameArea = 16;
 
     /// <summary>
     /// Encodes an RGBA buffer into a GIF byte array.
@@ -107,8 +108,16 @@ public static class GifWriter {
         }
         WriteLoopExtension(stream, options.LoopCount);
 
+        var prevFrame = default(GifAnimationFrame);
+        var prevIndex = default(GifIndexedFrame);
+        var hasPrev = false;
         for (var i = 0; i < frames.Length; i++) {
-            WriteFrame(stream, frames[i], indexedFrames[i], useGlobalPalette, globalMinCodeSize);
+            var frame = frames[i];
+            var indexed = indexedFrames[i];
+            WriteFrameWithDiff(stream, frame, indexed, useGlobalPalette, globalMinCodeSize, hasPrev, prevFrame, prevIndex);
+            prevFrame = frame;
+            prevIndex = indexed;
+            hasPrev = true;
         }
 
         stream.WriteByte(0x3B); // Trailer
@@ -191,6 +200,122 @@ public static class GifWriter {
         stream.WriteByte((byte)minCodeSize);
         var lzwData = EncodeLzw(indexed.Pixels, minCodeSize);
         WriteSubBlocks(stream, lzwData);
+    }
+
+    private static void WriteFrameWithDiff(
+        Stream stream,
+        in GifAnimationFrame frame,
+        in GifIndexedFrame indexed,
+        bool useGlobalPalette,
+        int globalMinCodeSize,
+        bool hasPrev,
+        in GifAnimationFrame prevFrame,
+        in GifIndexedFrame prevIndexed) {
+        if (!hasPrev ||
+            frame.Width != prevFrame.Width ||
+            frame.Height != prevFrame.Height ||
+            frame.X != prevFrame.X ||
+            frame.Y != prevFrame.Y) {
+            WriteFrame(stream, frame, indexed, useGlobalPalette, globalMinCodeSize);
+            return;
+        }
+
+        var diff = ComputeDiffRect(indexed.Pixels, prevIndexed.Pixels, frame.Width, frame.Height);
+        if (diff.IsEmpty) {
+            WriteFrame(stream, frame, indexed, useGlobalPalette, globalMinCodeSize);
+            return;
+        }
+
+        if (diff.Width * diff.Height < MinDiffFrameArea) {
+            WriteFrame(stream, frame, indexed, useGlobalPalette, globalMinCodeSize);
+            return;
+        }
+
+        var subPixels = ExtractSubPixels(indexed.Pixels, frame.Width, diff);
+        WriteFrameDiff(stream, frame, indexed, useGlobalPalette, globalMinCodeSize, diff, subPixels);
+    }
+
+    private static void WriteFrameDiff(
+        Stream stream,
+        in GifAnimationFrame frame,
+        in GifIndexedFrame indexed,
+        bool useGlobalPalette,
+        int globalMinCodeSize,
+        DiffRect rect,
+        byte[] pixels) {
+        stream.WriteByte(0x21); // Extension introducer
+        stream.WriteByte(0xF9); // GCE label
+        stream.WriteByte(4); // Block size
+
+        var packed = (byte)((((int)frame.DisposalMethod) & 0x7) << 2);
+        if (indexed.HasTransparency) {
+            packed |= 0x01;
+        }
+        stream.WriteByte(packed);
+
+        var delay = (frame.DurationMs + 5) / 10;
+        if (delay < 0) delay = 0;
+        if (delay > ushort.MaxValue) delay = ushort.MaxValue;
+        WriteUInt16(stream, (ushort)delay);
+        stream.WriteByte((byte)(indexed.HasTransparency ? indexed.TransparentIndex : 0));
+        stream.WriteByte(0); // Block terminator
+
+        stream.WriteByte(0x2C); // Image descriptor
+        WriteUInt16(stream, (ushort)(frame.X + rect.X));
+        WriteUInt16(stream, (ushort)(frame.Y + rect.Y));
+        WriteUInt16(stream, (ushort)rect.Width);
+        WriteUInt16(stream, (ushort)rect.Height);
+
+        if (useGlobalPalette) {
+            stream.WriteByte(0); // No local color table
+        } else {
+            var lctSize = Log2(indexed.PaletteSize) - 1;
+            stream.WriteByte((byte)(0x80 | lctSize));
+            stream.Write(indexed.Palette, 0, indexed.PaletteSize * 3);
+        }
+
+        var minCodeSize = useGlobalPalette ? globalMinCodeSize : indexed.MinCodeSize;
+        stream.WriteByte((byte)minCodeSize);
+        var lzwData = EncodeLzw(pixels, minCodeSize);
+        WriteSubBlocks(stream, lzwData);
+    }
+
+    private static DiffRect ComputeDiffRect(ReadOnlySpan<byte> current, ReadOnlySpan<byte> previous, int width, int height) {
+        var minX = width;
+        var minY = height;
+        var maxX = -1;
+        var maxY = -1;
+
+        for (var y = 0; y < height; y++) {
+            var row = y * width;
+            for (var x = 0; x < width; x++) {
+                var idx = row + x;
+                if (current[idx] != previous[idx]) {
+                    if (x < minX) minX = x;
+                    if (x > maxX) maxX = x;
+                    if (y < minY) minY = y;
+                    if (y > maxY) maxY = y;
+                }
+            }
+        }
+
+        if (maxX < minX || maxY < minY) {
+            return default;
+        }
+
+        return new DiffRect(minX, minY, maxX - minX + 1, maxY - minY + 1);
+    }
+
+    private static byte[] ExtractSubPixels(ReadOnlySpan<byte> pixels, int width, DiffRect rect) {
+        var output = new byte[rect.Width * rect.Height];
+        var dst = 0;
+        for (var y = 0; y < rect.Height; y++) {
+            var srcRow = (rect.Y + y) * width + rect.X;
+            for (var x = 0; x < rect.Width; x++) {
+                output[dst++] = pixels[srcRow + x];
+            }
+        }
+        return output;
     }
 
     private static void WriteLoopExtension(Stream stream, int loopCount) {
@@ -1021,6 +1146,21 @@ public static class GifWriter {
                 _ => xb.CompareTo(yb),
             };
         }
+    }
+
+    private readonly struct DiffRect {
+        public DiffRect(int x, int y, int width, int height) {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
+
+        public int X { get; }
+        public int Y { get; }
+        public int Width { get; }
+        public int Height { get; }
+        public bool IsEmpty => Width <= 0 || Height <= 0;
     }
 
     private static void WriteAscii(Stream stream, string text) {
