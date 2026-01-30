@@ -646,7 +646,18 @@ if (AztecCode.TryDecodeImage(File.ReadAllBytes("aztec.png"), out var text))
 using CodeGlyphX;
 
 var opts = ImageDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
+opts.WithJpegOptions(highQualityChroma: true, allowTruncated: true);
 Barcode.TryDecodePng(File.ReadAllBytes("barcode.png"), BarcodeType.Code128, opts, out var barcode);
+```
+
+```csharp
+using CodeGlyphX;
+
+var decode = new CodeGlyphDecodeOptions()
+    .WithJpegOptions(highQualityChroma: true)
+    .WithImageBudget(maxMilliseconds: 250, maxDimension: 1000);
+
+CodeGlyph.TryDecodeImage(File.ReadAllBytes("code.jpg"), out var symbol, decode);
 ```
 
 ## WPF controls

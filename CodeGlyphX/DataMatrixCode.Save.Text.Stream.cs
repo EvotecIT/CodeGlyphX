@@ -107,8 +107,12 @@ public static partial class DataMatrixCode {
     public static void SaveJpeg(string text, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         var opts = BuildPngOptions(options);
-        var quality = options?.JpegQuality ?? 85;
-        MatrixJpegRenderer.RenderToStream(modules, opts, stream, quality);
+        var jpegOptions = options?.JpegOptions;
+        if (jpegOptions is null) {
+            MatrixJpegRenderer.RenderToStream(modules, opts, stream, options?.JpegQuality ?? 85);
+        } else {
+            MatrixJpegRenderer.RenderToStream(modules, opts, stream, jpegOptions);
+        }
     }
 
     /// <summary>
@@ -238,8 +242,12 @@ public static partial class DataMatrixCode {
     public static void SaveJpeg(byte[] data, Stream stream, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         var opts = BuildPngOptions(options);
-        var quality = options?.JpegQuality ?? 85;
-        MatrixJpegRenderer.RenderToStream(modules, opts, stream, quality);
+        var jpegOptions = options?.JpegOptions;
+        if (jpegOptions is null) {
+            MatrixJpegRenderer.RenderToStream(modules, opts, stream, options?.JpegQuality ?? 85);
+        } else {
+            MatrixJpegRenderer.RenderToStream(modules, opts, stream, jpegOptions);
+        }
     }
 
     /// <summary>

@@ -71,8 +71,13 @@ public static partial class DataMatrixCode {
                 }
                 return RenderedOutput.FromText(format, html);
             }
-            case OutputFormat.Jpeg:
-                return RenderedOutput.FromBinary(format, MatrixJpegRenderer.Render(modules, pngOptions, options?.JpegQuality ?? 85));
+            case OutputFormat.Jpeg: {
+                var jpegOptions = options?.JpegOptions;
+                var data = jpegOptions is null
+                    ? MatrixJpegRenderer.Render(modules, pngOptions, options?.JpegQuality ?? 85)
+                    : MatrixJpegRenderer.Render(modules, pngOptions, jpegOptions);
+                return RenderedOutput.FromBinary(format, data);
+            }
             case OutputFormat.Webp: {
                 var quality = options?.WebpQuality ?? 100;
                 if (RenderAnimationHelpers.TryRenderMatrixWebp(extras, pngOptions, quality, out var webp)) {

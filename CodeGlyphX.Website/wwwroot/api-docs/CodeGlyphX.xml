@@ -1160,6 +1160,11 @@
             Sets JPEG quality.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Barcode.BarcodeBuilder.WithJpegOptions(CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Sets JPEG encoding options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Barcode.BarcodeBuilder.WithLabel(System.String)">
             <summary>
             Sets label text rendered under bars.
@@ -2774,6 +2779,12 @@
             JPEG quality (1..100).
             </summary>
         </member>
+        <member name="P:CodeGlyphX.BarcodeOptions.JpegOptions">
+            <summary>
+            Optional JPEG encoding options (subsampling/progressive/metadata/etc).
+            When set, overrides <see cref="P:CodeGlyphX.BarcodeOptions.JpegQuality"/> where applicable.
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.BarcodeOptions.WebpQuality">
             <summary>
             WebP quality (0..100). A value of 100 uses lossless VP8L.
@@ -3750,6 +3761,28 @@
             Configures image decode options fluently.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.CodeGlyphDecodeOptions.WithJpegOptions(CodeGlyphX.Rendering.Jpeg.JpegDecodeOptions)">
+            <summary>
+            Sets JPEG decoding options on the image decode options.
+            </summary>
+            <example>
+            <code>
+            var options = new CodeGlyphDecodeOptions()
+                .WithJpegOptions(highQualityChroma: true, allowTruncated: true);
+            </code>
+            </example>
+        </member>
+        <member name="M:CodeGlyphX.CodeGlyphDecodeOptions.WithJpegOptions(System.Boolean,System.Boolean)">
+            <summary>
+            Sets JPEG decoding options on the image decode options.
+            </summary>
+            <example>
+            <code>
+            var options = new CodeGlyphDecodeOptions()
+                .WithJpegOptions(highQualityChroma: true);
+            </code>
+            </example>
+        </member>
         <member name="M:CodeGlyphX.CodeGlyphDecodeOptions.WithExpectedBarcode(System.Nullable{CodeGlyphX.BarcodeType})">
             <summary>
             Sets the expected barcode type.
@@ -4085,6 +4118,11 @@
         <member name="M:CodeGlyphX.DataMatrixCode.DataMatrixBuilder.WithJpegQuality(System.Int32)">
             <summary>
             Sets JPEG quality (1..100).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.DataMatrixCode.DataMatrixBuilder.WithJpegOptions(CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Sets JPEG encoding options.
             </summary>
         </member>
         <member name="M:CodeGlyphX.DataMatrixCode.DataMatrixBuilder.WithHtmlEmailSafeTable(System.Boolean)">
@@ -5730,6 +5768,11 @@
             Maximum milliseconds to spend decoding (best effort). Set to 0 to disable.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.ImageDecodeOptions.JpegOptions">
+            <summary>
+            Optional JPEG decoding options (chroma upsampling, truncated handling).
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.ImageDecodeOptions.Screen(System.Int32,System.Int32)">
             <summary>
             Screen preset (budgeted decode for UI capture scenarios).
@@ -5749,6 +5792,28 @@
             <summary>
             Sets the time+dimension budget in one call.
             </summary>
+        </member>
+        <member name="M:CodeGlyphX.ImageDecodeOptions.WithJpegOptions(CodeGlyphX.Rendering.Jpeg.JpegDecodeOptions)">
+            <summary>
+            Sets JPEG decoding options.
+            </summary>
+            <example>
+            <code>
+            var options = new ImageDecodeOptions()
+                .WithJpegOptions(highQualityChroma: true, allowTruncated: true);
+            </code>
+            </example>
+        </member>
+        <member name="M:CodeGlyphX.ImageDecodeOptions.WithJpegOptions(System.Boolean,System.Boolean)">
+            <summary>
+            Sets JPEG decoding options.
+            </summary>
+            <example>
+            <code>
+            var options = new ImageDecodeOptions()
+                .WithJpegOptions(highQualityChroma: true);
+            </code>
+            </example>
         </member>
         <member name="M:CodeGlyphX.Internal.RegexCache.DigitsOptional">
             <remarks>
@@ -6099,6 +6164,12 @@
         <member name="P:CodeGlyphX.MatrixOptions.JpegQuality">
             <summary>
             JPEG quality (1..100).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.MatrixOptions.JpegOptions">
+            <summary>
+            Optional JPEG encoding options (subsampling/progressive/metadata/etc).
+            When set, overrides <see cref="P:CodeGlyphX.MatrixOptions.JpegQuality"/> where applicable.
             </summary>
         </member>
         <member name="P:CodeGlyphX.MatrixOptions.WebpQuality">
@@ -9147,6 +9218,11 @@
             Sets JPEG quality (1..100).
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithJpegOptions(CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Sets JPEG encoding options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithHtmlEmailSafeTable(System.Boolean)">
             <summary>
             Enables HTML email-safe table rendering.
@@ -11389,9 +11465,19 @@
             Renders ASCII text.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.AsciiConsole(CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions)">
+            <summary>
+            Renders console-friendly ASCII text with auto-fit.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.SaveAscii(System.String,CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)">
             <summary>
             Saves ASCII to a file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.QrBuilder.SaveAsciiConsole(System.String,CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions)">
+            <summary>
+            Saves console-friendly ASCII to a file.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QR.QrBuilder.Save(System.String,System.String)">
@@ -11704,14 +11790,29 @@
             Renders a QR code as ASCII text.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.AsciiConsole(System.String,CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions,CodeGlyphX.QrEasyOptions)">
+            <summary>
+            Renders a QR code as console-friendly ASCII text with auto-fit.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.AsciiAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions,CodeGlyphX.QrEasyOptions)">
             <summary>
             Detects a payload type and renders a QR code as ASCII text.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QR.AsciiConsoleAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions,CodeGlyphX.QrEasyOptions)">
+            <summary>
+            Detects a payload type and renders a QR code as console-friendly ASCII text with auto-fit.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QR.Ascii(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions,CodeGlyphX.QrEasyOptions)">
             <summary>
             Renders a QR code as ASCII text for a payload with embedded defaults.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QR.AsciiConsole(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions,CodeGlyphX.QrEasyOptions)">
+            <summary>
+            Renders a QR code as console-friendly ASCII text with auto-fit for a payload with embedded defaults.
             </summary>
         </member>
         <member name="M:CodeGlyphX.QR.TryDecodePng(System.Byte[],CodeGlyphX.QrDecoded@)">
@@ -13409,6 +13510,21 @@
             Evaluates QR art safety for a payload with embedded defaults.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.QrEasy.RenderAsciiConsole(System.String,CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions,CodeGlyphX.QrEasyOptions)">
+            <summary>
+            Renders a QR code as console-friendly ASCII with auto-fit.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrEasy.RenderAsciiConsoleAuto(System.String,CodeGlyphX.Payloads.QrPayloadDetectOptions,CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions,CodeGlyphX.QrEasyOptions)">
+            <summary>
+            Detects a payload type and renders a QR code as console-friendly ASCII with auto-fit.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.QrEasy.RenderAsciiConsole(CodeGlyphX.Payloads.QrPayloadData,CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions,CodeGlyphX.QrEasyOptions)">
+            <summary>
+            Renders a QR code as console-friendly ASCII with auto-fit for a payload with embedded defaults.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.QrEasy.RenderPng(System.String,CodeGlyphX.QrEasyOptions)">
             <summary>
             Renders a QR code as PNG.
@@ -14337,6 +14453,12 @@
             JPEG quality (1..100).
             </summary>
         </member>
+        <member name="P:CodeGlyphX.QrEasyOptions.JpegOptions">
+            <summary>
+            Optional JPEG encoding options (subsampling/progressive/metadata/etc).
+            When set, overrides <see cref="P:CodeGlyphX.QrEasyOptions.JpegQuality"/> where applicable.
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.QrEasyOptions.WebpQuality">
             <summary>
             WebP quality (0..100). A value of 100 uses lossless VP8L.
@@ -15132,12 +15254,344 @@
             Shift-JIS (JIS X 0208 + halfwidth katakana).
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Rendering.Ascii.AsciiGradientType">
+            <summary>
+            Gradient styles for ANSI coloring.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Ascii.AsciiGradientType.Horizontal">
+            <summary>
+            Left-to-right gradient.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Ascii.AsciiGradientType.Vertical">
+            <summary>
+            Top-to-bottom gradient.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Ascii.AsciiGradientType.Diagonal">
+            <summary>
+            Top-left to bottom-right gradient.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Ascii.AsciiGradientType.Radial">
+            <summary>
+            Radial gradient from a center point.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Ascii.AsciiPaletteMode">
+            <summary>
+            Palette selection modes for ANSI coloring.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Ascii.AsciiPaletteMode.CycleRows">
+            <summary>
+            Cycles palette entries per row.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Ascii.AsciiPaletteMode.CycleColumns">
+            <summary>
+            Cycles palette entries per column.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Ascii.AsciiPaletteMode.CycleDiagonal">
+            <summary>
+            Cycles palette entries along diagonals.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Ascii.AsciiPaletteMode.Random">
+            <summary>
+            Randomizes palette entries per module.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Ascii.AsciiGradientOptions">
+            <summary>
+            Gradient settings for ANSI coloring.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiGradientOptions.Type">
+            <summary>
+            Gradient type used for dark modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiGradientOptions.StartColor">
+            <summary>
+            Gradient start color.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiGradientOptions.EndColor">
+            <summary>
+            Gradient end color.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiGradientOptions.CenterX">
+            <summary>
+            Horizontal gradient center for radial mode (0-1).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiGradientOptions.CenterY">
+            <summary>
+            Vertical gradient center for radial mode (0-1).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Ascii.AsciiPaletteOptions">
+            <summary>
+            Palette settings for ANSI coloring.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiPaletteOptions.Mode">
+            <summary>
+            Palette selection mode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiPaletteOptions.Colors">
+            <summary>
+            Palette colors used for dark modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiPaletteOptions.Seed">
+            <summary>
+            Seed used for random palette selection.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Ascii.AsciiConsole">
+            <summary>
+            Helpers for console-friendly ASCII rendering.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiConsole.Fit(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions)">
+            <summary>
+            Builds ASCII render options that auto-fit a console window.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiConsole.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions)">
+            <summary>
+            Renders a matrix as console-friendly ASCII with auto-fit.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions">
+            <summary>
+            Options for console-friendly ASCII rendering with auto-fit.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.WindowWidth">
+            <summary>
+            Optional console window width override (columns).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.WindowHeight">
+            <summary>
+            Optional console window height override (rows).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.MaxWindowWidth">
+            <summary>
+            Optional maximum console width to use for auto-fit (columns).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.MaxWindowHeight">
+            <summary>
+            Optional maximum console height to use for auto-fit (rows).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.TargetWidth">
+            <summary>
+            Optional target output width (columns, excluding padding).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.TargetHeight">
+            <summary>
+            Optional target output height (rows, excluding padding).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.PaddingColumns">
+            <summary>
+            Horizontal padding to keep around the QR when auto-fitting.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.PaddingRows">
+            <summary>
+            Vertical padding to keep around the QR when auto-fitting.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.MinScale">
+            <summary>
+            Minimum scale applied when auto-fitting.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.MaxScale">
+            <summary>
+            Maximum scale applied when auto-fitting.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.MinQuietZone">
+            <summary>
+            Minimum quiet zone size when shrinking to fit.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.QuietZone">
+            <summary>
+            Overrides quiet zone size (modules).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.AllowQuietZoneShrink">
+            <summary>
+            When true, allows reducing quiet zone to fit within console size.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.AllowModuleWidthShrink">
+            <summary>
+            When true, allows shrinking module width to fit within console size.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.ModuleWidth">
+            <summary>
+            Optional module width override.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.ModuleHeight">
+            <summary>
+            Optional module height override.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.Dark">
+            <summary>
+            Optional dark glyph override.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.Light">
+            <summary>
+            Optional light glyph override.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.NewLine">
+            <summary>
+            Optional line separator override.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.UseHalfBlocks">
+            <summary>
+            When true, uses Unicode half-blocks to compress height.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.HalfBlockUseBackground">
+            <summary>
+            When true, uses ANSI background colors for half-block rendering.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.UseUnicodeBlocks">
+            <summary>
+            When true, prefers Unicode block glyphs.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.UseAnsiColors">
+            <summary>
+            Enables or disables ANSI colors (null = auto-detect).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.UseTrueColor">
+            <summary>
+            Enables or disables ANSI truecolor (null = default true).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.ColorizeLight">
+            <summary>
+            Enables or disables ANSI colorization of light modules (null = keep preset default).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.CellAspectRatio">
+            <summary>
+            Character cell aspect ratio (width / height). Used to auto-tune module width.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.DarkGradient">
+            <summary>
+            Optional ANSI gradient for dark modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.DarkPalette">
+            <summary>
+            Optional ANSI palette for dark modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.PreferScanReliability">
+            <summary>
+            When true, enables scan-friendly defaults (quiet zone, background fill, contrast clamp).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.EnsureDarkContrast">
+            <summary>
+            When true, clamps dark colors to a maximum luminance.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.MaxDarkLuminance">
+            <summary>
+            Maximum luminance allowed for dark modules (0-1).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.DarkColor">
+            <summary>
+            Optional ANSI color for dark modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.LightColor">
+            <summary>
+            Optional ANSI color for light modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.OutputEncoding">
+            <summary>
+            Optional output encoding override used for Unicode capability checks.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.AsciiConsoleOptions.Invert">
+            <summary>
+            When true, swaps dark and light output.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Ascii.AsciiConsolePresets">
+            <summary>
+            Ready-to-use console presets for auto-fit rendering.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiConsolePresets.Square">
+            <summary>
+            Square-ish output (no half-blocks).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiConsolePresets.Compact">
+            <summary>
+            Compact output (half-blocks).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiConsolePresets.ScanSafe">
+            <summary>
+            Compact output with scan-friendly defaults.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiConsolePresets.Tiny">
+            <summary>
+            Tiny output for tight layouts (may be less scan-friendly).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiConsolePresets.CompactDark(System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
+            <summary>
+            Compact output tuned for dark terminals (foreground only).
+            </summary>
+            <param name="lightColor">Optional foreground color for dark modules.</param>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiConsolePresets.CompactDarkForeground(System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
+            <summary>
+            Compact output tuned for dark terminals (foreground only).
+            </summary>
+            <param name="foregroundColor">Optional foreground color for dark modules.</param>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Ascii.AsciiPresets">
             <summary>
             Ready-to-use ASCII render presets tuned for console readability.
             </summary>
         </member>
-        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiPresets.Console(System.Int32,System.Boolean,System.Boolean,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiPresets.Console(System.Int32,System.Boolean,System.Boolean,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32},System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
             <summary>
             Creates a console-friendly preset that is much easier to scan from a terminal.
             </summary>
@@ -15145,6 +15599,17 @@
             <param name="useAnsiColors">Whether to emit ANSI color escape codes.</param>
             <param name="trueColor">Whether to use ANSI truecolor (24-bit) output.</param>
             <param name="darkColor">Optional ANSI color for dark modules.</param>
+            <param name="lightColor">Optional ANSI color for light modules.</param>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.AsciiPresets.ConsoleCompact(System.Int32,System.Boolean,System.Boolean,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32},System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})">
+            <summary>
+            Creates a compact console preset that uses Unicode half-blocks.
+            </summary>
+            <param name="scale">Scale multiplier applied to module size (try 2-3 for screens).</param>
+            <param name="useAnsiColors">Whether to emit ANSI color escape codes.</param>
+            <param name="trueColor">Whether to use ANSI truecolor (24-bit) output.</param>
+            <param name="darkColor">Optional ANSI color for dark modules.</param>
+            <param name="lightColor">Optional ANSI color for light modules.</param>
         </member>
         <member name="T:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderer">
             <summary>
@@ -15276,6 +15741,36 @@
             When true, prefers Unicode block glyphs (for example, █) when defaults are used.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.UseHalfBlocks">
+            <summary>
+            When true, uses Unicode half-blocks to combine two module rows into one text row.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.UseHalfBlockBackground">
+            <summary>
+            When true, uses ANSI background colors for half-block rendering.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.AnsiDarkGradient">
+            <summary>
+            Optional ANSI gradient for dark modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.AnsiDarkPalette">
+            <summary>
+            Optional ANSI palette for dark modules.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.EnsureDarkContrast">
+            <summary>
+            When true, clamps dark colors to a maximum luminance.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.MaxDarkLuminance">
+            <summary>
+            Maximum luminance allowed for dark modules (0-1).
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.Invert">
             <summary>
             When true, swaps dark and light output.
@@ -15344,6 +15839,36 @@
         <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithUnicodeBlocks(System.Boolean)">
             <summary>
             Enables or disables Unicode block glyphs when defaults are used.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithHalfBlocks(System.Boolean)">
+            <summary>
+            Enables or disables Unicode half-blocks (two module rows per text row).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithHalfBlockBackground(System.Boolean)">
+            <summary>
+            Enables or disables ANSI background colors for half-block rendering.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithAnsiDarkGradient(CodeGlyphX.Rendering.Ascii.AsciiGradientOptions)">
+            <summary>
+            Sets an ANSI gradient for dark modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithAnsiDarkPalette(CodeGlyphX.Rendering.Ascii.AsciiPaletteOptions)">
+            <summary>
+            Sets an ANSI palette for dark modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithEnsureDarkContrast(System.Boolean)">
+            <summary>
+            Enables or disables contrast clamping for dark modules.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithMaxDarkLuminance(System.Double)">
+            <summary>
+            Sets the maximum luminance for dark modules (0-1).
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions.WithInvert(System.Boolean)">
@@ -15596,14 +16121,359 @@
             Renders the QR module matrix to an EPS file under the specified directory.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer">
+            <summary>
+            Renders 1D barcodes to a GIF image (indexed color).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions)">
+            <summary>
+            Renders the barcode to a GIF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the barcode to a GIF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String)">
+            <summary>
+            Renders the barcode to a GIF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the barcode to a GIF file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderAnimation(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF from multiple barcode frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderAnimation(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32[],CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF from multiple barcode frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderAnimationToStream(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,System.IO.Stream,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a stream from multiple barcode frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderAnimationToStream(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32[],System.IO.Stream,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a stream from multiple barcode frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderAnimationToFile(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file from multiple barcode frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderAnimationToFile(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32[],System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file from multiple barcode frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderAnimationToFile(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,System.String,System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.BarcodeGifRenderer.RenderAnimationToFile(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32[],System.String,System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file under the specified directory with per-frame durations.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Gif.GifAnimationFrame">
+            <summary>
+            Describes a single RGBA32 frame for animated GIF decoding.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifAnimationFrame.#ctor(System.Byte[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.Gif.GifDisposalMethod)">
+            <summary>
+            Creates a GIF animation frame backed by an RGBA32 buffer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifAnimationFrame.#ctor(System.Byte[],System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Creates a GIF animation frame backed by an RGBA32 buffer with a convenience disposal flag.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationFrame.Rgba">
+            <summary>
+            RGBA32 pixel buffer.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationFrame.Width">
+            <summary>
+            Frame width in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationFrame.Height">
+            <summary>
+            Frame height in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationFrame.Stride">
+            <summary>
+            Frame stride in bytes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationFrame.DurationMs">
+            <summary>
+            Frame duration in milliseconds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationFrame.X">
+            <summary>
+            Frame X offset on the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationFrame.Y">
+            <summary>
+            Frame Y offset on the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationFrame.DisposalMethod">
+            <summary>
+            Disposal method for the frame.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Gif.GifDisposalMethod">
+            <summary>
+            GIF disposal methods.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Gif.GifDisposalMethod.None">
+            <summary>
+            No disposal specified.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Gif.GifDisposalMethod.DoNotDispose">
+            <summary>
+            Do not dispose (keep frame).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Gif.GifDisposalMethod.RestoreBackground">
+            <summary>
+            Restore to background.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Gif.GifDisposalMethod.RestorePrevious">
+            <summary>
+            Restore to previous.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Gif.GifAnimationOptions">
+            <summary>
+            Options extracted from an animated GIF.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifAnimationOptions.#ctor(System.Int32,System.UInt32)">
+            <summary>
+            Creates animation options.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationOptions.LoopCount">
+            <summary>
+            Loop count (0 = infinite).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Gif.GifAnimationOptions.BackgroundRgba">
+            <summary>
+            Background color in RGBA byte order.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Gif.GifReader">
             <summary>
-            Decodes GIF images to RGBA buffers (first frame only).
+            Decodes GIF images to RGBA buffers and animation frames.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Gif.GifReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
             <summary>
             Decodes a GIF image to an RGBA buffer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifReader.TryDecodeAnimationFrames(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.Gif.GifAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Attempts to decode GIF animation frames (frame rectangles only).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifReader.DecodeAnimationFrames(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Decodes GIF animation frames (frame rectangles only).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifReader.TryDecodeAnimationCanvasFrames(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.Gif.GifAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Attempts to decode GIF animation frames composited onto the canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifReader.DecodeAnimationCanvasFrames(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Decodes GIF animation frames composited onto the canvas.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Gif.GifWriter">
+            <summary>
+            Writes GIF images from RGBA buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a GIF byte array from an RGBA buffer (single frame).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a GIF to a stream from an RGBA buffer (single frame).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifWriter.WriteAnimation(System.Int32,System.Int32,CodeGlyphX.Rendering.Gif.GifAnimationFrame[],CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Writes a GIF animation byte array from RGBA frame buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifWriter.WriteAnimationRgba32(System.Int32,System.Int32,CodeGlyphX.Rendering.Gif.GifAnimationFrame[],CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Writes a GIF animation byte array from RGBA frame buffers (compatibility alias).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.GifWriter.WriteAnimation(System.IO.Stream,System.Int32,System.Int32,CodeGlyphX.Rendering.Gif.GifAnimationFrame[],CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Writes a GIF animation to a stream from RGBA frame buffers.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Gif.MatrixGifRenderer">
+            <summary>
+            Renders matrix codes to a GIF image (indexed color).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions)">
+            <summary>
+            Renders the module matrix to a GIF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the module matrix to a GIF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String)">
+            <summary>
+            Renders the module matrix to a GIF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the module matrix to a GIF file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderAnimation(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF from multiple module frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderAnimation(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32[],CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF from multiple module frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderAnimationToStream(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,System.IO.Stream,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a stream from multiple module frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderAnimationToStream(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32[],System.IO.Stream,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a stream from multiple module frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file from multiple module frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32[],System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file from multiple module frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,System.String,System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.MatrixGifRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32[],System.String,System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file under the specified directory with per-frame durations.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Gif.QrGifRenderer">
+            <summary>
+            Renders QR modules to a GIF image (indexed color).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions)">
+            <summary>
+            Renders the QR module matrix to a GIF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the QR module matrix to a GIF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String)">
+            <summary>
+            Renders the QR module matrix to a GIF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the QR module matrix to a GIF file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderAnimation(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF from multiple QR module frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderAnimation(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32[],CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF from multiple QR module frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderAnimationToStream(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32,System.IO.Stream,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a stream from multiple QR module frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderAnimationToStream(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32[],System.IO.Stream,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a stream from multiple QR module frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32,System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file from multiple QR module frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32[],System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file from multiple QR module frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32,System.String,System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Gif.QrGifRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32[],System.String,System.String,CodeGlyphX.Rendering.Gif.GifAnimationOptions)">
+            <summary>
+            Renders an animated GIF to a file under the specified directory with per-frame durations.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions">
@@ -16172,9 +17042,114 @@
             Renders the QR module matrix to an ICO file under the specified directory.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Rendering.ImageAnimationFrame">
+            <summary>
+            Describes a single RGBA32 animation frame.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageAnimationFrame.#ctor(System.Byte[],System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Creates an animation frame backed by an RGBA32 buffer.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationFrame.Rgba">
+            <summary>
+            RGBA32 pixel buffer.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationFrame.Width">
+            <summary>
+            Frame width in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationFrame.Height">
+            <summary>
+            Frame height in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationFrame.Stride">
+            <summary>
+            Frame stride in bytes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationFrame.DurationMs">
+            <summary>
+            Frame duration in milliseconds.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationFrame.X">
+            <summary>
+            Frame X offset on the canvas.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationFrame.Y">
+            <summary>
+            Frame Y offset on the canvas.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.ImageAnimationOptions">
+            <summary>
+            Options for decoded animations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageAnimationOptions.#ctor(System.Int32,System.UInt32)">
+            <summary>
+            Creates animation options.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationOptions.LoopCount">
+            <summary>
+            Loop count (0 = infinite).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationOptions.BackgroundRgba">
+            <summary>
+            Background color in RGBA byte order.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.ImageAnimationInfo">
+            <summary>
+            Basic animation metadata returned by ImageReader.TryReadAnimationInfo.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationInfo.Format">
+            <summary>
+            Image format.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationInfo.Width">
+            <summary>
+            Canvas width in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationInfo.Height">
+            <summary>
+            Canvas height in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationInfo.FrameCount">
+            <summary>
+            Number of frames in the animation.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationInfo.Options">
+            <summary>
+            Animation options such as loop count and background color.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.ImageAnimationInfo.IsValid">
+            <summary>
+            Indicates whether the info looks valid.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageAnimationInfo.#ctor(CodeGlyphX.Rendering.ImageFormat,System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.ImageAnimationOptions)">
+            <summary>
+            Creates a new <see cref="T:CodeGlyphX.Rendering.ImageAnimationInfo"/>.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.ImageFormat">
             <summary>
-            Known image formats supported by <see cref="T:CodeGlyphX.Rendering.ImageReader"/>.
+            Known image formats detected by <see cref="T:CodeGlyphX.Rendering.ImageReader"/>.
             </summary>
         </member>
         <member name="F:CodeGlyphX.Rendering.ImageFormat.Unknown">
@@ -16252,6 +17227,36 @@
             WebP image (managed VP8/VP8L stills; first-frame decode for animations).
             </summary>
         </member>
+        <member name="F:CodeGlyphX.Rendering.ImageFormat.Avif">
+            <summary>
+            AVIF image (ISOBMFF).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.ImageFormat.Heic">
+            <summary>
+            HEIC/HEIF image (ISOBMFF).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.ImageFormat.Jpeg2000">
+            <summary>
+            JPEG2000 image.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.ImageFormat.Psd">
+            <summary>
+            Photoshop PSD image.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.ImageFormat.Pdf">
+            <summary>
+            PDF document.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.ImageFormat.Ps">
+            <summary>
+            PostScript document.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.ImageInfo">
             <summary>
             Basic image metadata returned by ImageReader.TryReadInfo.
@@ -16292,19 +17297,225 @@
             Decodes an image to an RGBA buffer (auto-detected).
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image to an RGBA buffer (auto-detected) with decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.Byte[],System.Int32,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes a multipage image to an RGBA buffer (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32Composite(System.Byte[],System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32Composite(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available, with decode options.
+            </summary>
+            <example>
+            <code>
+            var options = new ImageDecodeOptions()
+                .WithJpegOptions(highQualityChroma: true, allowTruncated: true);
+            var rgba = ImageReader.DecodeRgba32Composite(bytes, options, out var width, out var height);
+            </code>
+            </example>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeAnimationFrames(System.Byte[],System.Int32@,System.Int32@,CodeGlyphX.Rendering.ImageAnimationOptions@)">
+            <summary>
+            Decodes animation frames (non-composited) (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeAnimationCanvasFrames(System.Byte[],System.Int32@,System.Int32@,CodeGlyphX.Rendering.ImageAnimationOptions@)">
+            <summary>
+            Decodes animation frames composited onto a full canvas (auto-detected).
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
             <summary>
             Decodes an image to an RGBA buffer (auto-detected).
             </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image to an RGBA buffer (auto-detected) with decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeAnimationFrames(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@,CodeGlyphX.Rendering.ImageAnimationOptions@)">
+            <summary>
+            Decodes animation frames (non-composited) (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes a multipage image to an RGBA buffer (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeAnimationCanvasFrames(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@,CodeGlyphX.Rendering.ImageAnimationOptions@)">
+            <summary>
+            Decodes animation frames composited onto a full canvas (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32Composite(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32Composite(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available, with decode options.
+            </summary>
+            <example>
+            <code>
+            var options = new ImageDecodeOptions()
+                .WithJpegOptions(highQualityChroma: true);
+            var rgba = ImageReader.DecodeRgba32Composite(data, options, out var width, out var height);
+            </code>
+            </example>
         </member>
         <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.IO.Stream,System.Int32@,System.Int32@)">
             <summary>
             Decodes an image stream to an RGBA buffer (auto-detected).
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image stream to an RGBA buffer (auto-detected) with decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.IO.Stream,System.Int32,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes a multipage image stream to an RGBA buffer (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32Composite(System.IO.Stream,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image stream to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32Composite(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image stream to an RGBA buffer (auto-detected), returning the first composited animation frame when available, with decode options.
+            </summary>
+            <example>
+            <code>
+            using var stream = File.OpenRead("image.jpg");
+            var options = new ImageDecodeOptions().WithJpegOptions(highQualityChroma: true);
+            var rgba = ImageReader.DecodeRgba32Composite(stream, options, out var width, out var height);
+            </code>
+            </example>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeAnimationCanvasFrames(System.IO.Stream,System.Int32@,System.Int32@,CodeGlyphX.Rendering.ImageAnimationOptions@)">
+            <summary>
+            Decodes animation frames composited onto a full canvas from a stream (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeAnimationFrames(System.IO.Stream,System.Int32@,System.Int32@,CodeGlyphX.Rendering.ImageAnimationOptions@)">
+            <summary>
+            Decodes animation frames (non-composited) from a stream (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32(System.Byte[],System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image to an RGBA buffer (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image to an RGBA buffer (auto-detected) with decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32(System.IO.Stream,System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image stream to an RGBA buffer (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image stream to an RGBA buffer (auto-detected) with decode options.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32(System.ReadOnlySpan{System.Byte},System.Byte[]@,System.Int32@,System.Int32@)">
             <summary>
             Attempts to decode an image to an RGBA buffer (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image to an RGBA buffer (auto-detected) with decode options.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32,System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode a multipage image to an RGBA buffer (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32Composite(System.Byte[],System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32Composite(System.Byte[],CodeGlyphX.ImageDecodeOptions,System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available, with decode options.
+            </summary>
+            <example>
+            <code>
+            var options = new ImageDecodeOptions().WithJpegOptions(allowTruncated: true);
+            if (ImageReader.TryDecodeRgba32Composite(bytes, options, out var rgba, out var width, out var height)) {
+                Console.WriteLine($\"{width}x{height}\");
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32Composite(System.IO.Stream,System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image stream to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32Composite(System.IO.Stream,CodeGlyphX.ImageDecodeOptions,System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image stream to an RGBA buffer (auto-detected), returning the first composited animation frame when available, with decode options.
+            </summary>
+            <example>
+            <code>
+            using var stream = File.OpenRead("image.jpg");
+            var options = new ImageDecodeOptions().WithJpegOptions(highQualityChroma: true);
+            if (ImageReader.TryDecodeRgba32Composite(stream, options, out var rgba, out var width, out var height)) {
+                Console.WriteLine($\"{width}x{height}\");
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32Composite(System.ReadOnlySpan{System.Byte},System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32Composite(System.ReadOnlySpan{System.Byte},CodeGlyphX.ImageDecodeOptions,System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available, with decode options.
+            </summary>
+            <example>
+            <code>
+            var options = new ImageDecodeOptions().WithJpegOptions(highQualityChroma: true);
+            if (ImageReader.TryDecodeRgba32Composite(data, options, out var rgba, out var width, out var height)) {
+                Console.WriteLine($\"{width}x{height}\");
+            }
+            </code>
+            </example>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeAnimationCanvasFrames(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.ImageAnimationOptions@)">
+            <summary>
+            Attempts to decode animation frames composited onto a full canvas (auto-detected).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeAnimationFrames(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.ImageAnimationOptions@)">
+            <summary>
+            Attempts to decode animation frames (non-composited) (auto-detected).
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.ImageReader.DetectFormat(System.ReadOnlySpan{System.Byte})">
@@ -16322,9 +17533,19 @@
             Attempts to read image format and dimensions without decoding pixels.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.Byte[],System.Int32,CodeGlyphX.Rendering.ImageInfo@)">
+            <summary>
+            Attempts to read image format and dimensions for a given page without decoding pixels.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageInfo@)">
             <summary>
             Attempts to read image format and dimensions without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.ReadOnlySpan{System.Byte},System.Int32,CodeGlyphX.Rendering.ImageInfo@)">
+            <summary>
+            Attempts to read image format and dimensions for a given page without decoding pixels.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.IO.Stream,CodeGlyphX.Rendering.ImageInfo@)">
@@ -16332,12 +17553,182 @@
             Attempts to read image format and dimensions from a stream without decoding pixels.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadAnimationInfo(System.Byte[],CodeGlyphX.Rendering.ImageAnimationInfo@)">
+            <summary>
+            Attempts to read animation format info without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadAnimationInfo(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageAnimationInfo@)">
+            <summary>
+            Attempts to read animation format info without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadAnimationInfo(System.IO.Stream,CodeGlyphX.Rendering.ImageAnimationInfo@)">
+            <summary>
+            Attempts to read animation format info from a stream without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.IO.Stream,System.Int32,CodeGlyphX.Rendering.ImageInfo@)">
+            <summary>
+            Attempts to read image format and dimensions for a given page from a stream without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadPageCount(System.ReadOnlySpan{System.Byte},System.Int32@)">
+            <summary>
+            Attempts to read page count for multipage images (TIFF).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadPageCount(System.Byte[],System.Int32@)">
+            <summary>
+            Attempts to read page count for multipage images (TIFF) from a byte buffer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryReadPageCount(System.IO.Stream,System.Int32@)">
+            <summary>
+            Attempts to read page count for multipage images (TIFF) from a stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeGifAnimationFrames(System.Byte[],CodeGlyphX.Rendering.Gif.GifAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Attempts to decode GIF animation frames into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeGifAnimationFrames(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.Gif.GifAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Attempts to decode GIF animation frames into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeGifAnimationFrames(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Decodes GIF animation frames into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeGifAnimationFrames(System.Byte[],System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Decodes GIF animation frames into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeGifAnimationCanvasFrames(System.Byte[],CodeGlyphX.Rendering.Gif.GifAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Attempts to decode GIF animation frames composited onto the full canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeGifAnimationCanvasFrames(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.Gif.GifAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Attempts to decode GIF animation frames composited onto the full canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeGifAnimationCanvasFrames(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Decodes GIF animation frames composited onto the full canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeGifAnimationCanvasFrames(System.Byte[],System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Decodes GIF animation frames composited onto the full canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeGifAnimationFrames(System.IO.Stream,CodeGlyphX.Rendering.Gif.GifAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Attempts to decode GIF animation frames from a stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeGifAnimationCanvasFrames(System.IO.Stream,CodeGlyphX.Rendering.Gif.GifAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Gif.GifAnimationOptions@)">
+            <summary>
+            Attempts to decode GIF animation canvas frames from a stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeWebpAnimationFrames(System.Byte[],CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Attempts to decode WebP animation frames into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeWebpAnimationFrames(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Attempts to decode WebP animation frames into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeWebpAnimationFrames(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Decodes WebP animation frames into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeWebpAnimationFrames(System.Byte[],System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Decodes WebP animation frames into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeWebpAnimationCanvasFrames(System.Byte[],CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Attempts to decode WebP animation frames composited onto the full canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeWebpAnimationCanvasFrames(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Attempts to decode WebP animation frames composited onto the full canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeWebpAnimationCanvasFrames(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Decodes WebP animation frames composited onto the full canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeWebpAnimationCanvasFrames(System.Byte[],System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Decodes WebP animation frames composited onto the full canvas.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeWebpAnimationFrames(System.IO.Stream,CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Attempts to decode WebP animation frames from a stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeWebpAnimationCanvasFrames(System.IO.Stream,CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]@,System.Int32@,System.Int32@,CodeGlyphX.Rendering.Webp.WebpAnimationOptions@)">
+            <summary>
+            Attempts to decode WebP animation canvas frames from a stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeTiffPagesRgba32(System.Byte[],CodeGlyphX.Rendering.Tiff.TiffRgba32Page[]@)">
+            <summary>
+            Attempts to decode all TIFF pages into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeTiffPagesRgba32(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.Tiff.TiffRgba32Page[]@)">
+            <summary>
+            Attempts to decode all TIFF pages into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.TryDecodeTiffPagesRgba32(System.IO.Stream,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[]@)">
+            <summary>
+            Attempts to decode all TIFF pages into RGBA32 buffers from a stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeTiffPagesRgba32(System.Byte[])">
+            <summary>
+            Decodes all TIFF pages into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeTiffPagesRgba32(System.IO.Stream)">
+            <summary>
+            Decodes all TIFF pages into RGBA32 buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.ImageReader.DecodeTiffPagesRgba32(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Decodes all TIFF pages into RGBA32 buffers.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer">
             <summary>
-            Renders 1D barcodes to a JPEG image (baseline, 4:4:4).
+            Renders 1D barcodes to a JPEG image.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32)">
+            <summary>
+            Renders the barcode to a JPEG byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
             <summary>
             Renders the barcode to a JPEG byte array.
             </summary>
@@ -16351,6 +17742,15 @@
             <param name="stream">Target stream.</param>
             <param name="quality">JPEG quality (1-100).</param>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Renders the barcode to a JPEG stream.
+            </summary>
+            <param name="barcode">Barcode to render.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="stream">Target stream.</param>
+            <param name="options">JPEG encoding options.</param>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.Int32)">
             <summary>
             Renders the barcode to a JPEG file.
@@ -16359,6 +17759,16 @@
             <param name="opts">Rendering options.</param>
             <param name="path">Output file path.</param>
             <param name="quality">JPEG quality (1-100).</param>
+            <returns>The output file path.</returns>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Renders the barcode to a JPEG file.
+            </summary>
+            <param name="barcode">Barcode to render.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="path">Output file path.</param>
+            <param name="options">JPEG encoding options.</param>
             <returns>The output file path.</returns>
         </member>
         <member name="M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,System.Int32)">
@@ -16371,6 +17781,108 @@
             <param name="fileName">Output file name.</param>
             <param name="quality">JPEG quality (1-100).</param>
             <returns>The output file path.</returns>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.BarcodeJpegRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Renders the barcode to a JPEG file under the specified directory.
+            </summary>
+            <param name="barcode">Barcode to render.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="directory">Output directory.</param>
+            <param name="fileName">Output file name.</param>
+            <param name="options">JPEG encoding options.</param>
+            <returns>The output file path.</returns>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Jpeg.JpegDecodeOptions">
+            <summary>
+            JPEG decoding options.
+            </summary>
+            <example>
+            <code>
+            var options = new JpegDecodeOptions(highQualityChroma: true, allowTruncated: true);
+            var rgba = JpegReader.DecodeRgba32(data, out var width, out var height, options);
+            </code>
+            </example>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegDecodeOptions.HighQualityChroma">
+            <summary>
+            Enables higher-quality chroma upsampling when components are subsampled.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegDecodeOptions.AllowTruncated">
+            <summary>
+            Allows truncated scan data (best-effort decode).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.JpegDecodeOptions.#ctor(System.Boolean,System.Boolean)">
+            <summary>
+            Creates JPEG decode options.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions">
+            <summary>
+            JPEG encoding options.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions.Quality">
+            <summary>
+            JPEG quality (1..100).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions.Subsampling">
+            <summary>
+            Chroma subsampling mode.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions.Progressive">
+            <summary>
+            Enables progressive JPEG encoding.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions.OptimizeHuffman">
+            <summary>
+            Enables optimized Huffman tables.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions.Metadata">
+            <summary>
+            Optional metadata segments (EXIF/XMP/ICC).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions.WriteJfifHeader">
+            <summary>
+            Writes a JFIF APP0 header when true.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Jpeg.JpegMetadata">
+            <summary>
+            Optional JPEG metadata payloads (EXIF/XMP/ICC).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegMetadata.Exif">
+            <summary>
+            EXIF payload (TIFF data, optional "Exif\0\0" header).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegMetadata.Xmp">
+            <summary>
+            XMP payload (RDF/XML, optional XMP namespace header).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegMetadata.Icc">
+            <summary>
+            ICC profile payload.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Jpeg.JpegMetadata.HasData">
+            <summary>
+            Indicates whether any metadata is present.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.JpegMetadata.#ctor(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Creates metadata with optional EXIF/XMP/ICC payloads.
+            </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Jpeg.JpegReader">
             <summary>
@@ -16387,12 +17899,42 @@
             Decodes a JPEG image to an RGBA buffer.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.JpegReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@,CodeGlyphX.Rendering.Jpeg.JpegDecodeOptions)">
+            <summary>
+            Decodes a JPEG image to an RGBA buffer.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Jpeg.JpegSubsampling">
+            <summary>
+            JPEG chroma subsampling selection.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Jpeg.JpegSubsampling.Y444">
+            <summary>
+            4:4:4 (no subsampling).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Jpeg.JpegSubsampling.Y422">
+            <summary>
+            4:2:2 (half horizontal chroma resolution).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Jpeg.JpegSubsampling.Y420">
+            <summary>
+            4:2:0 (half horizontal + vertical chroma resolution).
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer">
             <summary>
-            Renders generic 2D matrices to a JPEG image (baseline, 4:4:4).
+            Renders generic 2D matrices to a JPEG image.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32)">
+            <summary>
+            Renders the matrix to a JPEG byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
             <summary>
             Renders the matrix to a JPEG byte array.
             </summary>
@@ -16406,6 +17948,15 @@
             <param name="stream">Target stream.</param>
             <param name="quality">JPEG quality (1-100).</param>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.IO.Stream,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Renders the matrix to a JPEG stream.
+            </summary>
+            <param name="modules">Matrix modules.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="stream">Target stream.</param>
+            <param name="options">JPEG encoding options.</param>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.Int32)">
             <summary>
             Renders the matrix to a JPEG file.
@@ -16414,6 +17965,16 @@
             <param name="opts">Rendering options.</param>
             <param name="path">Output file path.</param>
             <param name="quality">JPEG quality (1-100).</param>
+            <returns>The output file path.</returns>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Renders the matrix to a JPEG file.
+            </summary>
+            <param name="modules">Matrix modules.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="path">Output file path.</param>
+            <param name="options">JPEG encoding options.</param>
             <returns>The output file path.</returns>
         </member>
         <member name="M:CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String,System.Int32)">
@@ -16427,12 +17988,28 @@
             <param name="quality">JPEG quality (1-100).</param>
             <returns>The output file path.</returns>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.MatrixJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Renders the matrix to a JPEG file under the specified directory.
+            </summary>
+            <param name="modules">Matrix modules.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="directory">Output directory.</param>
+            <param name="fileName">Output file name.</param>
+            <param name="options">JPEG encoding options.</param>
+            <returns>The output file path.</returns>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer">
             <summary>
-            Renders QR modules to a JPEG image (baseline, 4:4:4).
+            Renders QR modules to a JPEG image.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32)">
+            <summary>
+            Renders the QR module matrix to a JPEG byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
             <summary>
             Renders the QR module matrix to a JPEG byte array.
             </summary>
@@ -16446,6 +18023,15 @@
             <param name="stream">Target stream.</param>
             <param name="quality">JPEG quality (1-100).</param>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.IO.Stream,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Renders the QR module matrix to a JPEG stream.
+            </summary>
+            <param name="modules">QR modules.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="stream">Target stream.</param>
+            <param name="options">JPEG encoding options.</param>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.Int32)">
             <summary>
             Renders the QR module matrix to a JPEG file.
@@ -16454,6 +18040,16 @@
             <param name="opts">Rendering options.</param>
             <param name="path">Output file path.</param>
             <param name="quality">JPEG quality (1-100).</param>
+            <returns>The output file path.</returns>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Renders the QR module matrix to a JPEG file.
+            </summary>
+            <param name="modules">QR modules.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="path">Output file path.</param>
+            <param name="options">JPEG encoding options.</param>
             <returns>The output file path.</returns>
         </member>
         <member name="M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.String,System.Int32)">
@@ -16465,6 +18061,17 @@
             <param name="directory">Output directory.</param>
             <param name="fileName">Output file name.</param>
             <param name="quality">JPEG quality (1-100).</param>
+            <returns>The output file path.</returns>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.String,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions)">
+            <summary>
+            Renders the QR module matrix to a JPEG file under the specified directory.
+            </summary>
+            <param name="modules">QR modules.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="directory">Output directory.</param>
+            <param name="fileName">Output file name.</param>
+            <param name="options">JPEG encoding options.</param>
             <returns>The output file path.</returns>
         </member>
         <member name="T:CodeGlyphX.Rendering.LogoBuilder">
@@ -16592,6 +18199,16 @@
         <member name="F:CodeGlyphX.Rendering.OutputFormat.Ascii">
             <summary>
             ASCII art (text).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.OutputFormat.Gif">
+            <summary>
+            GIF image.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.OutputFormat.Tiff">
+            <summary>
+            TIFF image.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.OutputFormatInfo">
@@ -16937,6 +18554,31 @@
         <member name="M:CodeGlyphX.Rendering.Pdf.MatrixPdfRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String,CodeGlyphX.Rendering.RenderMode)">
             <summary>
             Renders the matrix to a PDF file under the specified directory.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Pdf.PdfReader">
+            <summary>
+            Minimal PDF image decoder (image-only PDFs with embedded JPEG/Flate XObjects).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Pdf.PdfReader.IsPdf(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Returns true when the buffer looks like a PDF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Pdf.PdfReader.TryReadDimensions(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to read PDF image dimensions without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Pdf.PdfReader.TryDecodeRgba32(System.ReadOnlySpan{System.Byte},System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode an image-only PDF to RGBA (embedded JPEG or Flate image XObject).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Pdf.PdfReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
+            <summary>
+            Decodes an image-only PDF to RGBA (embedded JPEG or Flate image XObject).
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Pdf.PdfVectorWriter">
@@ -19408,6 +21050,26 @@
             Renders the QR module matrix to a PPM file under the specified directory.
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Rendering.Psd.PsdReader">
+            <summary>
+            Minimal PSD decoder (flattened image only).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Psd.PsdReader.IsPsd(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Returns true when the data looks like a PSD file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Psd.PsdReader.TryReadDimensions(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to read PSD dimensions without decoding pixels.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Psd.PsdReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
+            <summary>
+            Decodes a PSD image to an RGBA buffer (flattened, 8-bit RGB/Grayscale only).
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.QrLogoOptions">
             <summary>
             Options for embedding a PNG logo inside a QR render (SVG/HTML).
@@ -19690,6 +21352,16 @@
             Encodes WebP bytes as a Base64 data URI.
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.RenderExtensions.ToGifDataUri(System.Byte[])">
+            <summary>
+            Encodes GIF bytes as a Base64 data URI.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.RenderExtensions.ToTiffDataUri(System.Byte[])">
+            <summary>
+            Encodes TIFF bytes as a Base64 data URI.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.RenderExtensions.ToSvgDataUri(System.String,System.Text.Encoding)">
             <summary>
             Encodes SVG content as a Base64 data URI.
@@ -19715,9 +21387,59 @@
             ASCII render options for matrix codes.
             </summary>
         </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.AsciiConsole">
+            <summary>
+            Console-friendly ASCII options (auto-fit).
+            </summary>
+        </member>
         <member name="P:CodeGlyphX.Rendering.RenderExtras.BarcodeAscii">
             <summary>
             ASCII render options for barcodes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.GifFrames">
+            <summary>
+            Optional GIF animation frames for matrix outputs.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.WebpFrames">
+            <summary>
+            Optional WebP animation frames for matrix outputs.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.BarcodeGifFrames">
+            <summary>
+            Optional GIF animation frames for barcode outputs.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.BarcodeWebpFrames">
+            <summary>
+            Optional WebP animation frames for barcode outputs.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.AnimationDurationsMs">
+            <summary>
+            Optional per-frame durations (ms) for GIF/WebP animations.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.AnimationDurationMs">
+            <summary>
+            Optional constant frame duration (ms) for GIF/WebP animations.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.GifAnimationOptions">
+            <summary>
+            Optional GIF animation options.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.WebpAnimationOptions">
+            <summary>
+            Optional WebP animation options.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.RenderExtras.TiffCompression">
+            <summary>
+            TIFF compression selection for TIFF outputs.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.RenderIO">
@@ -20489,9 +22211,602 @@
             Writes a TGA stream from an RGBA buffer (32-bit BGRA).
             </summary>
         </member>
+        <member name="T:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer">
+            <summary>
+            Renders 1D barcodes to a TIFF image (baseline, uncompressed).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions)">
+            <summary>
+            Renders the barcode to a TIFF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,CodeGlyphX.Rendering.TiffCompressionMode)">
+            <summary>
+            Renders the barcode to a TIFF byte array with compression selection.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevel(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) TIFF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelFromBars(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) TIFF byte array using direct bar packing (label is ignored).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelTiled(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) tiled TIFF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelTiledFromBars(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) tiled TIFF byte array using direct bar packing (label is ignored).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the barcode to a TIFF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) TIFF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelFromBarsToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) TIFF stream using direct bar packing (label is ignored).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelTiledToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) tiled TIFF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelTiledFromBarsToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) tiled TIFF stream using direct bar packing (label is ignored).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String)">
+            <summary>
+            Renders the barcode to a TIFF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) TIFF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelFromBarsToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) TIFF file using direct bar packing (label is ignored).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelTiledToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) tiled TIFF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelTiledFromBarsToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) tiled TIFF file using direct bar packing (label is ignored).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the barcode to a TIFF file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) TIFF file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelFromBarsToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) TIFF file under the specified directory using direct bar packing (label is ignored).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelTiledToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) tiled TIFF file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer.RenderBilevelTiledFromBarsToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the barcode to a bilevel (1-bit) tiled TIFF file under the specified directory using direct bar packing (label is ignored).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer">
+            <summary>
+            Renders matrix codes to a TIFF image (baseline, uncompressed).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions)">
+            <summary>
+            Renders the module matrix to a TIFF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,CodeGlyphX.Rendering.TiffCompressionMode)">
+            <summary>
+            Renders the module matrix to a TIFF byte array with compression selection.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevel(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) TIFF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelFromModules(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) TIFF byte array using direct module packing.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelTiled(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) tiled TIFF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelTiledFromModules(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) tiled TIFF byte array using direct module packing.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.IO.Stream)">
+            <summary>
+            Renders the module matrix to a TIFF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.IO.Stream,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) TIFF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelFromModulesToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.IO.Stream,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) TIFF stream using direct module packing.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelTiledToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.IO.Stream,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) tiled TIFF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelTiledFromModulesToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.IO.Stream,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) tiled TIFF stream using direct module packing.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String)">
+            <summary>
+            Renders the module matrix to a TIFF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) TIFF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelFromModulesToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) TIFF file using direct module packing.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelTiledToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) tiled TIFF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelTiledFromModulesToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) tiled TIFF file using direct module packing.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String)">
+            <summary>
+            Renders the module matrix to a TIFF file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) TIFF file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelFromModulesToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) TIFF file under the specified directory using direct module packing.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelTiledToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) tiled TIFF file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer.RenderBilevelTiledFromModulesToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.String,System.String,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Renders the module matrix to a bilevel (1-bit) tiled TIFF file under the specified directory using direct module packing.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Tiff.QrTiffRenderer">
+            <summary>
+            Renders QR modules to a TIFF image.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.QrTiffRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,CodeGlyphX.Rendering.TiffCompressionMode)">
+            <summary>
+            Renders the QR module matrix to a TIFF byte array.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.QrTiffRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.IO.Stream,CodeGlyphX.Rendering.TiffCompressionMode)">
+            <summary>
+            Renders the QR module matrix to a TIFF stream.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.QrTiffRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,CodeGlyphX.Rendering.TiffCompressionMode)">
+            <summary>
+            Renders the QR module matrix to a TIFF file.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.QrTiffRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.String,CodeGlyphX.Rendering.TiffCompressionMode)">
+            <summary>
+            Renders the QR module matrix to a TIFF file under the specified directory.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Tiff.TiffCompression">
+            <summary>
+            TIFF compression options supported by the writer.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Tiff.TiffCompression.None">
+            <summary>
+            No compression.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Tiff.TiffCompression.Lzw">
+            <summary>
+            Deflate compression (zlib).
+            </summary>
+            <summary>
+            LZW compression.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Tiff.TiffCompression.Deflate">
+            <summary>
+            Deflate compression (zlib).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Tiff.TiffCompression.PackBits">
+            <summary>
+            PackBits compression.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Tiff.TiffReader">
             <summary>
-            Minimal TIFF decoder for uncompressed baseline images.
+            Minimal TIFF decoder for baseline images (strips/tiles).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffReader.IsTiff(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Returns true when the buffer looks like a TIFF file header.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffReader.TryDecodePagesRgba32(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.Tiff.TiffRgba32Page[]@)">
+            <summary>
+            Attempts to decode all TIFF pages to RGBA buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffReader.DecodePagesRgba32(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Decodes all TIFF pages to RGBA buffers.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)">
+            <summary>
+            Decodes the first TIFF page into an RGBA buffer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffReader.TryDecodeRgba32(System.ReadOnlySpan{System.Byte},System.Byte[]@,System.Int32@,System.Int32@)">
+            <summary>
+            Attempts to decode the first TIFF page into an RGBA buffer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32@,System.Int32@)">
+            <summary>
+            Decodes a specific TIFF page into an RGBA buffer.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Tiff.TiffRgba32Page">
+            <summary>
+            Describes a single RGBA32 page for TIFF encoding.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffRgba32Page.#ctor(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.TiffCompressionMode)">
+            <summary>
+            Creates a TIFF page backed by an RGBA32 buffer.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffRgba32Page.#ctor(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.TiffCompressionMode,System.Int32)">
+            <summary>
+            Creates a TIFF page backed by an RGBA32 buffer with explicit rows-per-strip.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Tiff.TiffRgba32Page.Rgba">
+            <summary>
+            RGBA32 pixel buffer.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Tiff.TiffRgba32Page.Width">
+            <summary>
+            Page width in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Tiff.TiffRgba32Page.Height">
+            <summary>
+            Page height in pixels.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Tiff.TiffRgba32Page.Stride">
+            <summary>
+            Page stride in bytes.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Tiff.TiffRgba32Page.Compression">
+            <summary>
+            Compression to use for the page.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Tiff.TiffRgba32Page.RowsPerStrip">
+            <summary>
+            Rows per strip (0 = single strip).
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.Tiff.TiffWriter">
+            <summary>
+            Writes TIFF images from RGBA buffers (baseline RGBA, optional PackBits/Deflate/LZW).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,CodeGlyphX.Rendering.TiffCompressionMode)">
+            <summary>
+            Writes a TIFF byte array from an RGBA buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,CodeGlyphX.Rendering.TiffCompressionMode,System.Int32)">
+            <summary>
+            Writes a TIFF byte array from an RGBA buffer (single page) with configurable rows per strip.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,CodeGlyphX.Rendering.TiffCompressionMode)">
+            <summary>
+            Writes a TIFF to a stream from an RGBA buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,CodeGlyphX.Rendering.TiffCompressionMode,System.Int32)">
+            <summary>
+            Writes a TIFF to a stream from an RGBA buffer (single page) with configurable rows per strip.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a TIFF byte array from an RGBA buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a TIFF to a stream from an RGBA buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32)">
+            <summary>
+            Writes a TIFF to a stream from an RGBA buffer (single page) with configurable rows per strip.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression)">
+            <summary>
+            Writes a TIFF to a stream from an RGBA buffer (single page) with configurable rows per strip and compression.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean)">
+            <summary>
+            Writes a TIFF to a stream from an RGBA buffer (single page) with configurable rows per strip, compression, and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevel(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a TIFF byte array from a packed 1-bit buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevel(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Writes a bilevel (1-bit) TIFF byte array with configurable rows-per-strip, compression, and photometric.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevel(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a TIFF to a stream from a packed 1-bit buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevel(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32)">
+            <summary>
+            Writes a TIFF to a stream from a packed 1-bit buffer (single page) with configurable rows per strip.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevel(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Writes a TIFF to a stream from a packed 1-bit buffer (single page) with configurable rows per strip and compression.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevelFromRgba(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a TIFF byte array from an RGBA buffer (single page) as a 1-bit bilevel image.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevelFromRgba(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a TIFF to a stream from an RGBA buffer (single page) as a 1-bit bilevel image.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevelFromRgba(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Writes a TIFF to a stream from an RGBA buffer (single page) as a 1-bit bilevel image with configurable rows per strip, compression, and threshold.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevelTiled(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Writes a TIFF byte array from a packed 1-bit buffer (single page) as tiled data.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevelTiled(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Writes a TIFF byte array from a packed 1-bit buffer (single page) as tiled data with compression.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevelTiled(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Writes a TIFF to a stream from a packed 1-bit buffer (single page) as tiled data.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevelTiled(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.UInt16)">
+            <summary>
+            Writes a TIFF to a stream from a packed 1-bit buffer (single page) as tiled data with compression.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevelTiledFromRgba(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Writes a TIFF byte array from an RGBA buffer (single page) as tiled bilevel data.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteBilevelTiledFromRgba(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Byte,System.UInt16)">
+            <summary>
+            Writes a TIFF to a stream from an RGBA buffer (single page) as tiled bilevel data.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Tiled(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Writes a tiled TIFF byte array from an RGBA buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Tiled(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean)">
+            <summary>
+            Writes a tiled TIFF byte array from an RGBA buffer (single page) with compression and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Tiled(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Writes a tiled TIFF to a stream from an RGBA buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Tiled(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean)">
+            <summary>
+            Writes a tiled TIFF to a stream from an RGBA buffer (single page) with compression and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Planar(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a planar TIFF byte array from an RGBA buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Planar(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean)">
+            <summary>
+            Writes a planar TIFF byte array from an RGBA buffer (single page) with rows per strip, compression, and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Planar(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)">
+            <summary>
+            Writes a planar TIFF to a stream from an RGBA buffer (single page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Planar(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean)">
+            <summary>
+            Writes a planar TIFF to a stream from an RGBA buffer with rows per strip, compression, and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(CodeGlyphX.Rendering.Tiff.TiffRgba32Page[])">
+            <summary>
+            Writes a TIFF byte array from RGBA buffers (multi-page) using per-page settings.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32(System.IO.Stream,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[])">
+            <summary>
+            Writes a TIFF to a stream from RGBA buffers (multi-page) using per-page settings.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Pages(CodeGlyphX.Rendering.Tiff.TiffRgba32Page[])">
+            <summary>
+            Writes a TIFF byte array from RGBA buffers (multi-page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Pages(System.IO.Stream,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[])">
+            <summary>
+            Writes a TIFF to a stream from RGBA buffers (multi-page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Pages(CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[])">
+            <summary>
+            Writes a TIFF byte array from RGBA buffers (multi-page) with compression and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Pages(System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[])">
+            <summary>
+            Writes a TIFF byte array from RGBA buffers (multi-page) with rows per strip, compression, and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Pages(System.IO.Stream,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[],CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean)">
+            <summary>
+            Writes a TIFF to a stream from RGBA buffers (multi-page) with compression and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32Pages(System.IO.Stream,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[],System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean)">
+            <summary>
+            Writes a TIFF to a stream from RGBA buffers (multi-page) with rows per strip, compression, and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32PagesTiled(System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[])">
+            <summary>
+            Writes a tiled TIFF byte array from RGBA buffers (multi-page).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32PagesTiled(System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[])">
+            <summary>
+            Writes a tiled TIFF byte array from RGBA buffers (multi-page) with compression and predictor.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Tiff.TiffWriter.WriteRgba32PagesTiled(System.IO.Stream,CodeGlyphX.Rendering.Tiff.TiffRgba32Page[],System.Int32,System.Int32,CodeGlyphX.Rendering.Tiff.TiffCompression,System.Boolean)">
+            <summary>
+            Writes a tiled TIFF to a stream from RGBA buffers (multi-page) with compression and predictor.
+            </summary>
+        </member>
+        <member name="T:CodeGlyphX.Rendering.TiffCompressionMode">
+            <summary>
+            TIFF compression selection for writers.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.TiffCompressionMode.Auto">
+            <summary>
+            Picks the smallest output (current default).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.TiffCompressionMode.None">
+            <summary>
+            Writes uncompressed strips.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.TiffCompressionMode.PackBits">
+            <summary>
+            Forces PackBits compression.
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.TiffCompressionMode.Deflate">
+            <summary>
+            Forces Deflate compression (zlib).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.TiffCompressionMode.Lzw">
+            <summary>
+            Forces LZW compression.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer">
@@ -20557,6 +22872,46 @@
             <param name="quality">Quality (0-100). Values &gt;= 100 use lossless VP8L.</param>
             <returns>The output file path.</returns>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderAnimation(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP from multiple barcode frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderAnimation(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32[],CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP from multiple barcode frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderAnimationToStream(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,System.IO.Stream,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a stream from multiple barcode frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderAnimationToStream(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32[],System.IO.Stream,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a stream from multiple barcode frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderAnimationToFile(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file from multiple barcode frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderAnimationToFile(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32[],System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file from multiple barcode frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderAnimationToFile(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32,System.String,System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.BarcodeWebpRenderer.RenderAnimationToFile(CodeGlyphX.Barcode1D[],CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.Int32[],System.String,System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file under the specified directory with per-frame durations.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer">
             <summary>
             Renders generic 2D matrices to WebP images.
@@ -20620,6 +22975,46 @@
             <param name="quality">Quality (0-100). Values &gt;= 100 use lossless VP8L.</param>
             <returns>The output file path.</returns>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderAnimation(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP from multiple matrix frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderAnimation(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32[],CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP from multiple matrix frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderAnimationToStream(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,System.IO.Stream,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a stream from multiple matrix frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderAnimationToStream(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32[],System.IO.Stream,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a stream from multiple matrix frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file from multiple matrix frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32[],System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file from multiple matrix frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32,System.String,System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.MatrixWebpRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.MatrixPngRenderOptions,System.Int32[],System.String,System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file under the specified directory with per-frame durations.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Webp.QrWebpRenderer">
             <summary>
             Renders QR modules to WebP images.
@@ -20682,6 +23077,51 @@
             <param name="fileName">Output file name.</param>
             <param name="quality">Quality (0-100). Values &gt;= 100 use lossless VP8L.</param>
             <returns>The output file path.</returns>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderAnimation(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP from multiple QR module frames.
+            </summary>
+            <param name="frames">QR module frames.</param>
+            <param name="opts">Rendering options.</param>
+            <param name="durationMs">Per-frame duration in milliseconds.</param>
+            <param name="options">Animation options.</param>
+            <param name="quality">Quality (0-100). Values &gt;= 100 use lossless VP8L.</param>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderAnimation(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32[],CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP from multiple QR module frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderAnimationToStream(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32,System.IO.Stream,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a stream from multiple QR module frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderAnimationToStream(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32[],System.IO.Stream,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a stream from multiple QR module frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32,System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file from multiple QR module frames.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32[],System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file from multiple QR module frames with per-frame durations.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32,System.String,System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file under the specified directory.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.QrWebpRenderer.RenderAnimationToFile(CodeGlyphX.BitMatrix[],CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32[],System.String,System.String,CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
+            <summary>
+            Renders an animated WebP to a file under the specified directory with per-frame durations.
+            </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Webp.WebpAnimationFrame">
             <summary>
@@ -20814,6 +23254,36 @@
             The call site prefers this path and does not fall back to native decoding.
             </remarks>
         </member>
+        <member name="T:CodeGlyphX.Rendering.Webp.WebpMetadata">
+            <summary>
+            Optional WebP metadata chunks (ICCP/EXIF/XMP).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpMetadata.Icc">
+            <summary>
+            ICC profile payload.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpMetadata.Exif">
+            <summary>
+            EXIF payload.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpMetadata.Xmp">
+            <summary>
+            XMP payload.
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpMetadata.HasData">
+            <summary>
+            Indicates whether any metadata is present.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpMetadata.#ctor(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            Creates metadata with optional ICC/EXIF/XMP payloads.
+            </summary>
+        </member>
         <member name="T:CodeGlyphX.Rendering.Webp.WebpPrefixCode">
             <summary>
             Canonical prefix code with LSB-first decoding support.
@@ -20837,6 +23307,16 @@
         <member name="T:CodeGlyphX.Rendering.Webp.WebpReader">
             <summary>
             Minimal WebP container parsing plus managed decode (VP8/VP8L stills).
+            </summary>
+        </member>
+        <member name="F:CodeGlyphX.Rendering.Webp.WebpReader.DefaultMaxWebpBytes">
+            <summary>
+            Default maximum managed WebP payload size (in bytes).
+            </summary>
+        </member>
+        <member name="P:CodeGlyphX.Rendering.Webp.WebpReader.MaxWebpBytes">
+            <summary>
+            Maximum managed WebP payload size (in bytes).
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpReader.IsWebp(System.ReadOnlySpan{System.Byte})">
@@ -20923,13 +23403,17 @@
             Current limitations:
             - VP8L lossless is a managed subset; single prefix-code group (no entropy tiling).
             - Limited LZ77/back-reference search; favors short distances.
-            - Color indexing is limited to palettes up to 16 colors.
-            - Metadata chunks (VP8X/ICCP/EXIF/XMP) are not written.
+            - Color indexing is limited to palettes up to 256 colors.
             </remarks>
         </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32(System.Int32,System.Int32,System.Byte[],System.Int32)">
             <summary>
             Encodes an RGBA32 buffer as WebP lossless (managed VP8L subset).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,CodeGlyphX.Rendering.Webp.WebpMetadata)">
+            <summary>
+            Encodes an RGBA32 buffer as WebP lossless (managed VP8L subset) with metadata chunks.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32Lossy(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32)">
@@ -20940,9 +23424,19 @@
             Falls back to VP8L with pre-quantized RGB when VP8 lossy encoding is unavailable.
             </remarks>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32Lossy(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,CodeGlyphX.Rendering.Webp.WebpMetadata)">
+            <summary>
+            Encodes an RGBA32 buffer as a lossy WebP using a managed VP8 (lossy) bitstream when possible, with metadata.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32Lossy(System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32)">
             <summary>
             Encodes an RGBA32 buffer as a lossy WebP by quantizing pixels and using VP8L.
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteRgba32Lossy(System.Int32,System.Int32,System.Byte[],System.Int32,System.Int32,CodeGlyphX.Rendering.Webp.WebpMetadata)">
+            <summary>
+            Encodes an RGBA32 buffer as a lossy WebP by quantizing pixels and using VP8L, with metadata.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32(System.Int32,System.Int32,System.ReadOnlySpan{CodeGlyphX.Rendering.Webp.WebpAnimationFrame},CodeGlyphX.Rendering.Webp.WebpAnimationOptions)">
@@ -20950,9 +23444,19 @@
             Encodes an animated WebP from RGBA32 frames (VP8L frames).
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32(System.Int32,System.Int32,System.ReadOnlySpan{CodeGlyphX.Rendering.Webp.WebpAnimationFrame},CodeGlyphX.Rendering.Webp.WebpAnimationOptions,CodeGlyphX.Rendering.Webp.WebpMetadata)">
+            <summary>
+            Encodes an animated WebP from RGBA32 frames (VP8L frames) with metadata chunks.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32(System.Int32,System.Int32,CodeGlyphX.Rendering.Webp.WebpAnimationFrame[],CodeGlyphX.Rendering.Webp.WebpAnimationOptions)">
             <summary>
             Encodes an animated WebP from RGBA32 frames (VP8L frames).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32(System.Int32,System.Int32,CodeGlyphX.Rendering.Webp.WebpAnimationFrame[],CodeGlyphX.Rendering.Webp.WebpAnimationOptions,CodeGlyphX.Rendering.Webp.WebpMetadata)">
+            <summary>
+            Encodes an animated WebP from RGBA32 frames (VP8L frames) with metadata chunks.
             </summary>
         </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32Lossy(System.Int32,System.Int32,System.ReadOnlySpan{CodeGlyphX.Rendering.Webp.WebpAnimationFrame},CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
@@ -20960,9 +23464,19 @@
             Encodes an animated WebP from RGBA32 frames (managed VP8 lossy intra, with VP8L fallback).
             </summary>
         </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32Lossy(System.Int32,System.Int32,System.ReadOnlySpan{CodeGlyphX.Rendering.Webp.WebpAnimationFrame},CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32,CodeGlyphX.Rendering.Webp.WebpMetadata)">
+            <summary>
+            Encodes an animated WebP from RGBA32 frames (managed VP8 lossy intra, with VP8L fallback) with metadata.
+            </summary>
+        </member>
         <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32Lossy(System.Int32,System.Int32,CodeGlyphX.Rendering.Webp.WebpAnimationFrame[],CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32)">
             <summary>
             Encodes an animated WebP from RGBA32 frames (managed VP8 lossy intra, with VP8L fallback).
+            </summary>
+        </member>
+        <member name="M:CodeGlyphX.Rendering.Webp.WebpWriter.WriteAnimationRgba32Lossy(System.Int32,System.Int32,CodeGlyphX.Rendering.Webp.WebpAnimationFrame[],CodeGlyphX.Rendering.Webp.WebpAnimationOptions,System.Int32,CodeGlyphX.Rendering.Webp.WebpMetadata)">
+            <summary>
+            Encodes an animated WebP from RGBA32 frames (managed VP8 lossy intra, with VP8L fallback) with metadata.
             </summary>
         </member>
         <member name="T:CodeGlyphX.Rendering.Xbm.BarcodeXbmRenderer">

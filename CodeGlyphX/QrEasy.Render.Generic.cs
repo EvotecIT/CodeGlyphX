@@ -67,8 +67,11 @@ public static partial class QrEasy {
             }
             case OutputFormat.Jpeg: {
                 var render = BuildPngOptions(opts, qr);
-                var quality = opts.JpegQuality;
-                return RenderedOutput.FromBinary(format, QrJpegRenderer.Render(qr.Modules, render, quality));
+                var jpegOptions = opts.JpegOptions;
+                var data = jpegOptions is null
+                    ? QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality)
+                    : QrJpegRenderer.Render(qr.Modules, render, jpegOptions);
+                return RenderedOutput.FromBinary(format, data);
             }
             case OutputFormat.Webp: {
                 var render = BuildPngOptions(opts, qr);

@@ -80,6 +80,13 @@ public static partial class JpegReader {
     /// Decodes a JPEG image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
+        return DecodeRgba32(data, out width, out height, default);
+    }
+
+    /// <summary>
+    /// Decodes a JPEG image to an RGBA buffer.
+    /// </summary>
+    public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height, JpegDecodeOptions options) {
         if (!IsJpeg(data)) throw new FormatException("Invalid JPEG signature.");
 
         var quantTables = new int[4][];
@@ -120,12 +127,31 @@ public static partial class JpegReader {
                 if (!progressive) {
                     width = frame.Width;
                     height = frame.Height;
-                    var rgba = DecodeBaselineScan(scanData, scan, frame, quantTables, dcTables, acTables, restartInterval, adobeTransform);
+                    var rgba = DecodeBaselineScan(
+                        scanData,
+                        scan,
+                        frame,
+                        quantTables,
+                        dcTables,
+                        acTables,
+                        restartInterval,
+                        adobeTransform,
+                        options.AllowTruncated,
+                        options.HighQualityChroma);
                     return ApplyOrientation(rgba, ref width, ref height, orientation);
                 }
 
                 progressiveState ??= ProgressiveState.Create(frame, quantTables);
-                DecodeProgressiveScan(scanData, scan, frame, progressiveState, quantTables, dcTables, acTables, restartInterval);
+                DecodeProgressiveScan(
+                    scanData,
+                    scan,
+                    frame,
+                    progressiveState,
+                    quantTables,
+                    dcTables,
+                    acTables,
+                    restartInterval,
+                    options.AllowTruncated);
                 offset = scanEnd;
                 continue;
             }
@@ -230,7 +256,7 @@ public static partial class JpegReader {
         if (progressive && hasFrame && progressiveState is not null) {
             width = frame.Width;
             height = frame.Height;
-            var rgba = progressiveState.RenderRgba(frame, adobeTransform);
+            var rgba = progressiveState.RenderRgba(frame, adobeTransform, options.HighQualityChroma);
             return ApplyOrientation(rgba, ref width, ref height, orientation);
         }
 

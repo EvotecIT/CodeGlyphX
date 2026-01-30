@@ -1,3 +1,5 @@
+using CodeGlyphX.Rendering.Jpeg;
+
 namespace CodeGlyphX;
 
 /// <summary>
@@ -14,6 +16,11 @@ public sealed partial class ImageDecodeOptions {
     /// Maximum milliseconds to spend decoding (best effort). Set to 0 to disable.
     /// </summary>
     public int MaxMilliseconds { get; set; } = 0;
+
+    /// <summary>
+    /// Optional JPEG decoding options (chroma upsampling, truncated handling).
+    /// </summary>
+    public JpegDecodeOptions? JpegOptions { get; set; }
 
     /// <summary>
     /// Screen preset (budgeted decode for UI capture scenarios).

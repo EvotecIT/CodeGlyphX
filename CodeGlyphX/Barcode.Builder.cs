@@ -116,6 +116,14 @@ public static partial class Barcode {
         }
 
         /// <summary>
+        /// Sets JPEG encoding options.
+        /// </summary>
+        public BarcodeBuilder WithJpegOptions(JpegEncodeOptions options) {
+            Options.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
+            return this;
+        }
+
+        /// <summary>
         /// Sets label text rendered under bars.
         /// </summary>
         public BarcodeBuilder WithLabel(string? text) {

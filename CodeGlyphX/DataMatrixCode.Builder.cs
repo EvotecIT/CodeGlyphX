@@ -96,6 +96,14 @@ public static partial class DataMatrixCode {
         }
 
         /// <summary>
+        /// Sets JPEG encoding options.
+        /// </summary>
+        public DataMatrixBuilder WithJpegOptions(JpegEncodeOptions options) {
+            _options.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
+            return this;
+        }
+
+        /// <summary>
         /// Enables HTML email-safe table rendering.
         /// </summary>
         public DataMatrixBuilder WithHtmlEmailSafeTable(bool enabled = true) {

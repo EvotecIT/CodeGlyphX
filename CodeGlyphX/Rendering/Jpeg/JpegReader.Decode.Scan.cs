@@ -11,7 +11,9 @@ public static partial class JpegReader {
         HuffmanTable[] dcTables,
         HuffmanTable[] acTables,
         int restartInterval,
-        int? adobeTransform) {
+        int? adobeTransform,
+        bool allowTruncated,
+        bool highQualityChroma) {
         if (frame.ComponentCount == 0) throw new FormatException("Invalid JPEG frame.");
         if (frame.ComponentCount != 1 && frame.ComponentCount != 3 && frame.ComponentCount != 4) {
             throw new FormatException("Unsupported JPEG component count.");
@@ -44,7 +46,7 @@ public static partial class JpegReader {
             states[i] = new BaselineComponentState(comp, mcuCols * comp.H, mcuRows * comp.V);
         }
 
-        var reader = new JpegBitReader(scanData);
+        var reader = new JpegBitReader(scanData, allowTruncated);
         var mcuIndex = 0;
         var isSingle = scan.ComponentIndices.Length == 1;
         var scanMcuCols = isSingle ? states[scan.ComponentIndices[0]].BlocksPerRow : mcuCols;
@@ -104,7 +106,7 @@ public static partial class JpegReader {
             }
         }
 
-        return ComposeRgba(frame, states, adobeTransform);
+        return ComposeRgba(frame, states, adobeTransform, highQualityChroma);
     }
 
     private static void DecodeProgressiveScan(
@@ -115,8 +117,10 @@ public static partial class JpegReader {
         int[][] quantTables,
         HuffmanTable[] dcTables,
         HuffmanTable[] acTables,
-        int restartInterval) {
+        int restartInterval,
+        bool allowTruncated) {
         EnsureStandardHuffmanTables(dcTables, acTables);
+        // Progressive scans are lenient to match historical behavior.
         var reader = new JpegBitReader(scanData, allowTruncated: true);
         var mcuIndex = 0;
         var eobRun = 0;

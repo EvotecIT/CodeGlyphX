@@ -35,7 +35,7 @@ public static partial class JpegReader {
         }
     }
 
-    private static byte[] ComposeRgba(JpegFrame frame, BaselineComponentState[] states, int? adobeTransform) {
+    private static byte[] ComposeRgba(JpegFrame frame, BaselineComponentState[] states, int? adobeTransform, bool highQualityChroma) {
         var rgba = new byte[frame.Width * frame.Height * 4];
         var maxH = frame.MaxH;
         var maxV = frame.MaxV;
@@ -75,17 +75,17 @@ public static partial class JpegReader {
                     byte r;
                     byte g;
                     byte b;
-                    var kVal = SampleComponent(states, isYcck ? ycckK : kIndex, x, y, maxH, maxV, 0);
+                    var kVal = SampleComponent(states, isYcck ? ycckK : kIndex, x, y, maxH, maxV, 0, highQualityChroma);
 
                     if (isYcck) {
-                        var yVal = SampleComponent(states, ycckY, x, y, maxH, maxV, 128);
-                        var cbVal = SampleComponent(states, ycckCb, x, y, maxH, maxV, 128);
-                        var crVal = SampleComponent(states, ycckCr, x, y, maxH, maxV, 128);
+                        var yVal = SampleComponent(states, ycckY, x, y, maxH, maxV, 128, highQualityChroma);
+                        var cbVal = SampleComponent(states, ycckCb, x, y, maxH, maxV, 128, highQualityChroma);
+                        var crVal = SampleComponent(states, ycckCr, x, y, maxH, maxV, 128, highQualityChroma);
                         YccToRgb(yVal, cbVal, crVal, out r, out g, out b);
                     } else {
-                        var c = SampleComponent(states, cIndex, x, y, maxH, maxV, 0);
-                        var m = SampleComponent(states, mIndex, x, y, maxH, maxV, 0);
-                        var y0 = SampleComponent(states, yIndex, x, y, maxH, maxV, 0);
+                        var c = SampleComponent(states, cIndex, x, y, maxH, maxV, 0, highQualityChroma);
+                        var m = SampleComponent(states, mIndex, x, y, maxH, maxV, 0, highQualityChroma);
+                        var y0 = SampleComponent(states, yIndex, x, y, maxH, maxV, 0, highQualityChroma);
                         r = ApplyCmyk(c, kVal);
                         g = ApplyCmyk(m, kVal);
                         b = ApplyCmyk(y0, kVal);
@@ -116,7 +116,7 @@ public static partial class JpegReader {
             if (grayIndex < 0) grayIndex = 0;
             for (var y = 0; y < frame.Height; y++) {
                 for (var x = 0; x < frame.Width; x++) {
-                    var v = SampleComponent(states, grayIndex, x, y, maxH, maxV, 0);
+                    var v = SampleComponent(states, grayIndex, x, y, maxH, maxV, 0, highQualityChroma);
                     var p = (y * frame.Width + x) * 4;
                     rgba[p + 0] = (byte)v;
                     rgba[p + 1] = (byte)v;
@@ -147,13 +147,13 @@ public static partial class JpegReader {
                 byte g;
                 byte b;
                 if (rgb) {
-                    r = (byte)SampleComponent(states, rIndex, x, y, maxH, maxV, 0);
-                    g = (byte)SampleComponent(states, gIndex, x, y, maxH, maxV, 0);
-                    b = (byte)SampleComponent(states, bIndex, x, y, maxH, maxV, 0);
+                    r = (byte)SampleComponent(states, rIndex, x, y, maxH, maxV, 0, highQualityChroma);
+                    g = (byte)SampleComponent(states, gIndex, x, y, maxH, maxV, 0, highQualityChroma);
+                    b = (byte)SampleComponent(states, bIndex, x, y, maxH, maxV, 0, highQualityChroma);
                 } else {
-                    var yVal = SampleComponent(states, yIndex2, x, y, maxH, maxV, 128);
-                    var cbVal = SampleComponent(states, cbIndex, x, y, maxH, maxV, 128);
-                    var crVal = SampleComponent(states, crIndex, x, y, maxH, maxV, 128);
+                    var yVal = SampleComponent(states, yIndex2, x, y, maxH, maxV, 128, highQualityChroma);
+                    var cbVal = SampleComponent(states, cbIndex, x, y, maxH, maxV, 128, highQualityChroma);
+                    var crVal = SampleComponent(states, crIndex, x, y, maxH, maxV, 128, highQualityChroma);
 
                     YccToRgb(yVal, cbVal, crVal, out r, out g, out b);
                 }
@@ -185,13 +185,49 @@ public static partial class JpegReader {
         int y,
         int maxH,
         int maxV,
-        int fallback) {
+        int fallback,
+        bool highQualityChroma) {
         if (index < 0 || index >= states.Length) return fallback;
         var state = states[index];
-        var sx = x * state.Component.H / maxH;
-        var sy = y * state.Component.V / maxV;
+        if (!highQualityChroma || (state.Component.H == maxH && state.Component.V == maxV)) {
+            var sx = x * state.Component.H / maxH;
+            var sy = y * state.Component.V / maxV;
+            var stride = state.Stride;
+            return state.Buffer[sy * stride + sx];
+        }
+
+        return SampleComponentBilinear(state, x, y, maxH, maxV);
+    }
+
+    private static int SampleComponentBilinear(BaselineComponentState state, int x, int y, int maxH, int maxV) {
         var stride = state.Stride;
-        return state.Buffer[sy * stride + sx];
+        var height = state.Buffer.Length / stride;
+
+        var fx = (x + 0.5) * state.Component.H / maxH - 0.5;
+        var fy = (y + 0.5) * state.Component.V / maxV - 0.5;
+
+        var x0 = (int)Math.Floor(fx);
+        var y0 = (int)Math.Floor(fy);
+        var x1 = x0 + 1;
+        var y1 = y0 + 1;
+
+        if (x0 < 0) x0 = 0;
+        if (y0 < 0) y0 = 0;
+        if (x1 >= stride) x1 = stride - 1;
+        if (y1 >= height) y1 = height - 1;
+
+        var dx = fx - x0;
+        var dy = fy - y0;
+
+        var p00 = state.Buffer[y0 * stride + x0];
+        var p10 = state.Buffer[y0 * stride + x1];
+        var p01 = state.Buffer[y1 * stride + x0];
+        var p11 = state.Buffer[y1 * stride + x1];
+
+        var top = p00 + (p10 - p00) * dx;
+        var bottom = p01 + (p11 - p01) * dx;
+        var value = top + (bottom - top) * dy;
+        return (int)Math.Round(value);
     }
 
     private static void DecodeBlock(
@@ -569,13 +605,16 @@ public static partial class JpegReader {
         var i = start;
         while (i + 1 < data.Length) {
             if (data[i] == 0xFF) {
-                var next = data[i + 1];
-                if (next == 0x00) {
-                    i += 2;
+                var j = i + 1;
+                while (j < data.Length && data[j] == 0xFF) j++;
+                if (j >= data.Length) return data.Length;
+                var marker = data[j];
+                if (marker == 0x00) {
+                    i = j + 1;
                     continue;
                 }
-                if (next >= 0xD0 && next <= 0xD7) {
-                    i += 2;
+                if (marker >= 0xD0 && marker <= 0xD7) {
+                    i = j + 1;
                     continue;
                 }
                 return i;
@@ -802,7 +841,7 @@ public static partial class JpegReader {
             };
         }
 
-        public byte[] RenderRgba(JpegFrame frame, int? adobeTransform) {
+        public byte[] RenderRgba(JpegFrame frame, int? adobeTransform, bool highQualityChroma) {
             for (var i = 0; i < Components.Length; i++) {
                 var compState = Components[i];
                 for (var by = 0; by < compState.BlocksPerCol; by++) {
@@ -825,7 +864,7 @@ public static partial class JpegReader {
                 baselineStates[i] = baseline;
             }
 
-            return ComposeRgba(frame, baselineStates, adobeTransform);
+            return ComposeRgba(frame, baselineStates, adobeTransform, highQualityChroma);
         }
     }
 
@@ -1022,6 +1061,7 @@ public static partial class JpegReader {
             while (_pos < _data.Length) {
                 var b = _data[_pos++];
                 if (b != 0xFF) return b;
+                while (_pos < _data.Length && _data[_pos] == 0xFF) _pos++;
                 if (_pos >= _data.Length) {
                     if (_allowTruncated) return 0;
                     throw new FormatException("Unexpected JPEG end.");

@@ -53,8 +53,13 @@ public static partial class AztecCode {
                 }
                 return RenderedOutput.FromText(format, html);
             }
-            case OutputFormat.Jpeg:
-                return RenderedOutput.FromBinary(format, MatrixJpegRenderer.Render(modules, pngOptions, renderOptions?.JpegQuality ?? 85));
+            case OutputFormat.Jpeg: {
+                var jpegOptions = renderOptions?.JpegOptions;
+                var data = jpegOptions is null
+                    ? MatrixJpegRenderer.Render(modules, pngOptions, renderOptions?.JpegQuality ?? 85)
+                    : MatrixJpegRenderer.Render(modules, pngOptions, jpegOptions);
+                return RenderedOutput.FromBinary(format, data);
+            }
             case OutputFormat.Webp: {
                 var quality = renderOptions?.WebpQuality ?? 100;
                 if (RenderAnimationHelpers.TryRenderMatrixWebp(extras, pngOptions, quality, out var webp)) {

@@ -1,3 +1,5 @@
+using CodeGlyphX.Rendering.Jpeg;
+
 namespace CodeGlyphX;
 
 public sealed partial class ImageDecodeOptions {
@@ -25,6 +27,34 @@ public sealed partial class ImageDecodeOptions {
         if (maxDimension > 0) {
             MaxDimension = maxDimension;
         }
+        return this;
+    }
+
+    /// <summary>
+    /// Sets JPEG decoding options.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// var options = new ImageDecodeOptions()
+    ///     .WithJpegOptions(highQualityChroma: true, allowTruncated: true);
+    /// </code>
+    /// </example>
+    public ImageDecodeOptions WithJpegOptions(JpegDecodeOptions options) {
+        JpegOptions = options;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets JPEG decoding options.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// var options = new ImageDecodeOptions()
+    ///     .WithJpegOptions(highQualityChroma: true);
+    /// </code>
+    /// </example>
+    public ImageDecodeOptions WithJpegOptions(bool highQualityChroma = false, bool allowTruncated = false) {
+        JpegOptions = new JpegDecodeOptions(highQualityChroma, allowTruncated);
         return this;
     }
 }

@@ -366,7 +366,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
@@ -424,7 +424,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
@@ -455,7 +455,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
                 text = string.Empty;
                 diagnostics.Failure ??= "Unsupported image format.";
                 return false;
@@ -509,7 +509,7 @@ public static partial class AztecCode {
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
             var data = RenderIO.ReadBinary(stream);
-            if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
@@ -561,7 +561,7 @@ public static partial class AztecCode {
             if (token.IsCancellationRequested) {
                 return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
                 var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
                 return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
             }
@@ -707,7 +707,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
                 text = string.Empty;
                 diagnostics.Failure ??= "Unsupported image format.";
                 return false;
@@ -737,7 +737,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
             var original = rgba;
             var originalWidth = width;
             var originalHeight = height;

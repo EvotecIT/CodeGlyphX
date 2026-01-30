@@ -55,8 +55,13 @@ public static partial class Barcode {
                 }
                 return RenderedOutput.FromText(format, html);
             }
-            case OutputFormat.Jpeg:
-                return RenderedOutput.FromBinary(format, BarcodeJpegRenderer.Render(barcode, opts, options?.JpegQuality ?? 90));
+            case OutputFormat.Jpeg: {
+                var jpegOptions = options?.JpegOptions;
+                var data = jpegOptions is null
+                    ? BarcodeJpegRenderer.Render(barcode, opts, options?.JpegQuality ?? 90)
+                    : BarcodeJpegRenderer.Render(barcode, opts, jpegOptions);
+                return RenderedOutput.FromBinary(format, data);
+            }
             case OutputFormat.Webp: {
                 var quality = options?.WebpQuality ?? 100;
                 if (RenderAnimationHelpers.TryRenderBarcodeWebp(extras, opts, quality, out var webp)) {
