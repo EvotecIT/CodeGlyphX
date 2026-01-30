@@ -415,9 +415,9 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 | --- | --- | --- | --- |
 | PNG | ✅ | ✅ |  |
 | JPEG | ✅ | ✅ |  |
-| WebP | ✅ | ✅ | Managed VP8/VP8L; ImageReader returns first frame (use DecodeAnimationCanvasFrames for animations) |
+| WebP | ✅ | ✅ | Managed VP8/VP8L; ImageReader returns first frame (use DecodeAnimationFrames/DecodeAnimationCanvasFrames for animations) |
 | BMP | ✅ | ✅ |  |
-| GIF | ✅ | ✅ | ImageReader returns first frame (use DecodeAnimationCanvasFrames for animations) |
+| GIF | ✅ | ✅ | ImageReader returns first frame (use DecodeAnimationFrames/DecodeAnimationCanvasFrames for animations) |
 | TIFF | ✅ | ✅ | Baseline strips/tiles, 8/16-bit; compression: none/PackBits/LZW/Deflate (multipage via pageIndex) |
 | PPM/PGM/PAM/PBM | ✅ | ✅ |  |
 | TGA | ✅ | ✅ |  |
@@ -436,7 +436,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 
 ### Known gaps / not supported (decode)
 
-- ImageReader.DecodeRgba32 returns the first animation frame only (GIF/WebP); use ImageReader.DecodeAnimationCanvasFrames or GifReader/WebpReader for full animations
+- ImageReader.DecodeRgba32 returns the first animation frame only (GIF/WebP); use ImageReader.DecodeAnimationFrames/DecodeAnimationCanvasFrames or GifReader/WebpReader for full animations
 - Managed WebP decode supports VP8/VP8L stills; size limit is 256 MB
 - Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
 - AVIF, HEIC, JPEG2000, PSD are not supported
