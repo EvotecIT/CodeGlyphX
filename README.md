@@ -62,31 +62,19 @@ CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most fea
 | Decode from module grids (BitMatrix) | ✅ | ✅ |
 | Renderers + image file codecs (PNG/JPEG/SVG/PDF/etc) | ✅ | ✅ |
 | 1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec) | ✅ | ✅ |
-| QR pixel decode from raw pixels / screenshots | ✅ | ⚠️ Limited fallback (clean/generated images) |
+| QR pixel decode from raw pixels / screenshots | ✅ | ⚠️ Best-effort fallback (clean/generated images) |
 | QR pixel debug rendering | ✅ | ✖ |
 | Span-based overloads | ✅ | ✖ (byte[] only) |
 
 Notes:
 - `netstandard2.0` and `net472` require `System.Memory` 4.5.5 (automatically pulled by NuGet).
-- net8+ uses the full QR pixel pipeline; `net472`/`netstandard2.0` use a limited fallback for QR image decode via `QrImageDecoder` and byte[] overloads.
+- net8+ uses the full QR pixel pipeline; `net472`/`netstandard2.0` use a best-effort fallback for QR image decode via `QrImageDecoder` and byte[] overloads.
 - Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDecodeFallback`, `SupportsQrPixelDebug`).
 
 net472 capability notes (QR from images):
 - ✅ Clean/generated PNG/JPEG QR renders (including large module sizes)
 - ⚠️ Multi-code screenshots, heavy styling/art, blur, warp, and low-contrast scenes are best-effort
 - ✅ Recommended: run the quick smoke checklist in `Build/Net472-SmokeTest.md`
-
-### net472 parity and guidance
-
-What works the same as net8+/net10+ on `net472`:
-- All encoders, payload helpers, renderers, and file codecs.
-- Module-grid decode (BitMatrix) across supported symbologies.
-- Pixel decode for 1D barcodes and 2D matrix codes other than QR.
-
-What is intentionally limited on `net472`:
-- QR pixel decode from raw pixels/images (`QrImageDecoder` / pixel-based `QrDecoder`) returns `false`.
-- QR pixel debug rendering throws `PlatformNotSupportedException`.
-- Span-based overloads are not available (use the `byte[]` overloads).
 
 Recommended pattern for shared code:
 
@@ -269,17 +257,6 @@ dotnet run -c Release --framework net8.0 --project CodeGlyphX.Benchmarks/CodeGly
 Notes:
 - Comparisons target PNG output and use each library’s ImageSharp-based renderer where applicable.
 - Run the same command on Windows and Linux to compare OS-level differences.
-
-## Comparison (selected libraries)
-
-Based on public docs as of 2026-01-18. Capabilities depend on optional renderer packages.
-
-| Library | Encode | Decode | 2D Codes | 1D Codes | Image Dependencies |
-| --- | --- | --- | --- | --- | --- |
-| CodeGlyphX | ✅ | ✅ | QR, Micro QR, Data Matrix, MicroPDF417, PDF417, Aztec | ✅ | None (built-in PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF decode) |
-| ZXing.Net | ✅ | ✅ | QR, Data Matrix, PDF417, Aztec, more | ✅ | Image I/O via bindings on .NET Standard/5+; System.Drawing on full .NET Framework |
-| QRCoder | ✅ | ❌ | QR only | ❌ | System.Drawing renderer (Windows) or alt renderers |
-| Barcoder | ✅ | ❌ | QR, Data Matrix, PDF417, Aztec | ✅ | ImageSharp.Drawing for image renderer |
 
 ## Supported Symbologies
 
