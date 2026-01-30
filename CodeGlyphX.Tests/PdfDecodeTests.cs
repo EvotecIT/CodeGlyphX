@@ -96,6 +96,18 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_Lzw_EarlyChange_Zero() {
+        var rgb = new byte[] { 0xAA, 0xBB, 0xCC };
+        var pdf = BuildPdfWithLzwImage(1, 1, rgb, earlyChange: 0, dictExtras: "/DecodeParms << /EarlyChange 0 >> ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0xAA, 0xBB, 0xCC, 255 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Flate_Predictor_From_DecodeParms() {
         var predicted = new byte[] { 0, 0x11, 0x22, 0x33 };
         var pdf = BuildPdfWithFlateImage(1, 1, predicted, "/DeviceRGB", bitsPerComponent: 8, "/Filter /FlateDecode /DecodeParms << /Predictor 12 /Colors 3 /Columns 1 >> ");
@@ -105,6 +117,18 @@ public sealed class PdfDecodeTests {
         Assert.Equal(1, width);
         Assert.Equal(1, height);
         Assert.Equal(new byte[] { 0x11, 0x22, 0x33, 255 }, rgba);
+    }
+
+    [Fact]
+    public void Decode_Pdf_Flate_Predictor_From_DecodeParms_Array() {
+        var predicted = new byte[] { 0, 0x9A, 0xBC, 0xDE };
+        var pdf = BuildPdfWithAscii85FlateImageWithDict(1, 1, predicted, "/Filter [/ASCII85Decode /FlateDecode] /DecodeParms [null << /Predictor 12 /Colors 3 /Columns 1 >>] ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x9A, 0xBC, 0xDE, 255 }, rgba);
     }
 
     [Fact]
@@ -226,6 +250,32 @@ public sealed class PdfDecodeTests {
         return output;
     }
 
+    private static byte[] BuildPdfWithAscii85FlateImageWithDict(int width, int height, byte[] payload, string dictExtras) {
+        var compressed = Deflate(payload);
+        var encoded = Ascii85Encode(compressed);
+
+        var sb = new StringBuilder();
+        sb.Append("%PDF-1.4\n");
+        sb.Append("1 0 obj\n");
+        sb.Append("<< /Type /XObject /Subtype /Image ");
+        sb.Append("/Width ").Append(width).Append(' ');
+        sb.Append("/Height ").Append(height).Append(' ');
+        sb.Append("/ColorSpace /DeviceRGB ");
+        sb.Append("/BitsPerComponent 8 ");
+        sb.Append(dictExtras);
+        sb.Append("/Length ").Append(encoded.Length).Append(" >>\n");
+        sb.Append("stream\n");
+
+        var header = Encoding.ASCII.GetBytes(sb.ToString());
+        var footer = Encoding.ASCII.GetBytes("\nendstream\nendobj\n%%EOF\n");
+
+        var output = new byte[header.Length + encoded.Length + footer.Length];
+        Buffer.BlockCopy(header, 0, output, 0, header.Length);
+        Buffer.BlockCopy(encoded, 0, output, header.Length, encoded.Length);
+        Buffer.BlockCopy(footer, 0, output, header.Length + encoded.Length, footer.Length);
+        return output;
+    }
+
     private static byte[] BuildPdfWithAsciiHexImage(int width, int height, byte[] rgb) {
         var encoded = AsciiHexEncode(rgb);
 
@@ -252,7 +302,11 @@ public sealed class PdfDecodeTests {
     }
 
     private static byte[] BuildPdfWithLzwImage(int width, int height, byte[] rgb) {
-        var encoded = LzwEncode(rgb);
+        return BuildPdfWithLzwImage(width, height, rgb, earlyChange: 1, dictExtras: string.Empty);
+    }
+
+    private static byte[] BuildPdfWithLzwImage(int width, int height, byte[] rgb, int earlyChange, string dictExtras) {
+        var encoded = LzwEncode(rgb, earlyChange);
 
         var sb = new StringBuilder();
         sb.Append("%PDF-1.4\n");
@@ -263,6 +317,7 @@ public sealed class PdfDecodeTests {
         sb.Append("/ColorSpace /DeviceRGB ");
         sb.Append("/BitsPerComponent 8 ");
         sb.Append("/Filter /LZWDecode ");
+        sb.Append(dictExtras);
         sb.Append("/Length ").Append(encoded.Length).Append(" >>\n");
         sb.Append("stream\n");
 
@@ -360,10 +415,13 @@ public sealed class PdfDecodeTests {
     }
 
     private static byte[] LzwEncode(ReadOnlySpan<byte> data) {
+        return LzwEncode(data, earlyChange: 1);
+    }
+
+    private static byte[] LzwEncode(ReadOnlySpan<byte> data, int earlyChange) {
         const int clear = 256;
         const int eoi = 257;
         const int maxCode = 4096;
-        const int earlyChange = 1;
 
         var writer = new LzwBitWriter(data.Length);
         var dict = new System.Collections.Generic.Dictionary<int, int>(4096);

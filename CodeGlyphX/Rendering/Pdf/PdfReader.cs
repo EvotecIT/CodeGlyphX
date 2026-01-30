@@ -206,9 +206,17 @@ public static class PdfReader {
             colors = colorsValue;
         }
 
-        if (TryReadDecodeParmsAfterKey(dict, "/DecodeParms", out var dpPredictor, out var dpColors, out _)) {
+        var lzwEarlyChange = -1;
+        var lzwEarlyChangeSet = false;
+        if (filters != null && TryReadDecodeParmsArrayAfterKey(dict, "/DecodeParms", out var dpArray)) {
+            ApplyDecodeParmsForFilters(filters, dpArray, ref predictor, ref colors, ref lzwEarlyChange, ref lzwEarlyChangeSet);
+        } else if (TryReadDecodeParmsAfterKey(dict, "/DecodeParms", out var dpPredictor, out var dpColors, out _, out var dpEarlyChange, out var dpHasEarlyChange)) {
             if (predictor == 1 && dpPredictor > 0) predictor = dpPredictor;
             if (colors == 0 && dpColors > 0) colors = dpColors;
+            if (dpHasEarlyChange) {
+                lzwEarlyChange = dpEarlyChange;
+                lzwEarlyChangeSet = true;
+            }
         }
 
         float[]? decode = null;
@@ -219,11 +227,11 @@ public static class PdfReader {
         var colorSpaceKind = ParseColorSpaceName(colorSpace);
         if (TryReadIndexedColorSpaceAfterKey(dict, "/ColorSpace", out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, length, decode);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, length, decode);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, length, decode);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, length, decode);
         return true;
     }
 
@@ -261,9 +269,17 @@ public static class PdfReader {
             colors = colorsValue;
         }
 
-        if (TryReadDecodeParmsAfterAnyKey(dict, new[] { "/DecodeParms", "/DP" }, out var dpPredictor, out var dpColors, out _)) {
+        var lzwEarlyChange = -1;
+        var lzwEarlyChangeSet = false;
+        if (filters != null && TryReadDecodeParmsArrayAfterAnyKey(dict, new[] { "/DecodeParms", "/DP" }, out var dpArray)) {
+            ApplyDecodeParmsForFilters(filters, dpArray, ref predictor, ref colors, ref lzwEarlyChange, ref lzwEarlyChangeSet);
+        } else if (TryReadDecodeParmsAfterAnyKey(dict, new[] { "/DecodeParms", "/DP" }, out var dpPredictor, out var dpColors, out _, out var dpEarlyChange, out var dpHasEarlyChange)) {
             if (predictor == 1 && dpPredictor > 0) predictor = dpPredictor;
             if (colors == 0 && dpColors > 0) colors = dpColors;
+            if (dpHasEarlyChange) {
+                lzwEarlyChange = dpEarlyChange;
+                lzwEarlyChangeSet = true;
+            }
         }
 
         float[]? decode = null;
@@ -274,11 +290,11 @@ public static class PdfReader {
         var colorSpaceKind = ParseColorSpaceName(colorSpace);
         if (TryReadIndexedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, streamLength: 0, decode);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, streamLength: 0, decode);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, streamLength: 0, decode);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, streamLength: 0, decode);
         return true;
     }
 
@@ -681,25 +697,175 @@ public static class PdfReader {
         return false;
     }
 
-    private static bool TryReadDecodeParmsAfterKey(ReadOnlySpan<byte> data, string key, out int predictor, out int colors, out int columns) {
+    private readonly struct PdfDecodeParms {
+        public PdfDecodeParms(int predictor, int colors, int columns, int earlyChange, bool hasEarlyChange) {
+            Predictor = predictor;
+            Colors = colors;
+            Columns = columns;
+            EarlyChange = earlyChange;
+            HasEarlyChange = hasEarlyChange;
+        }
+
+        public int Predictor { get; }
+        public int Colors { get; }
+        public int Columns { get; }
+        public int EarlyChange { get; }
+        public bool HasEarlyChange { get; }
+        public bool HasAny => Predictor > 0 || Colors > 0 || Columns > 0 || HasEarlyChange;
+    }
+
+    private static bool TryReadDecodeParmsAfterKey(ReadOnlySpan<byte> data, string key, out int predictor, out int colors, out int columns, out int earlyChange, out bool hasEarlyChange) {
         predictor = 0;
         colors = 0;
         columns = 0;
+        earlyChange = 0;
+        hasEarlyChange = false;
         if (!TryReadDictionarySliceAfterKey(data, key, out var dict)) return false;
-        TryReadNumberAfterKey(dict, "/Predictor", out predictor);
-        TryReadNumberAfterKey(dict, "/Colors", out colors);
-        TryReadNumberAfterKey(dict, "/Columns", out columns);
-        return predictor > 0 || colors > 0 || columns > 0;
+        if (!TryReadDecodeParmsFromDict(dict, out var parms)) return false;
+        predictor = parms.Predictor;
+        colors = parms.Colors;
+        columns = parms.Columns;
+        earlyChange = parms.EarlyChange;
+        hasEarlyChange = parms.HasEarlyChange;
+        return parms.HasAny;
     }
 
-    private static bool TryReadDecodeParmsAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out int predictor, out int colors, out int columns) {
+    private static bool TryReadDecodeParmsAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out int predictor, out int colors, out int columns, out int earlyChange, out bool hasEarlyChange) {
         for (var i = 0; i < keys.Length; i++) {
-            if (TryReadDecodeParmsAfterKey(data, keys[i], out predictor, out colors, out columns)) return true;
+            if (TryReadDecodeParmsAfterKey(data, keys[i], out predictor, out colors, out columns, out earlyChange, out hasEarlyChange)) return true;
         }
         predictor = 0;
         colors = 0;
         columns = 0;
+        earlyChange = 0;
+        hasEarlyChange = false;
         return false;
+    }
+
+    private static bool TryReadDecodeParmsArrayAfterKey(ReadOnlySpan<byte> data, string key, out PdfDecodeParms[] parms) {
+        parms = Array.Empty<PdfDecodeParms>();
+        var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
+        if (idx < 0) return false;
+        var i = idx + key.Length;
+        while (i < data.Length && data[i] <= 32) i++;
+        if (i >= data.Length || data[i] != (byte)'[') return false;
+        i++;
+        var start = i;
+        var depth = 1;
+        while (i < data.Length) {
+            if (data[i] == (byte)'[') depth++;
+            else if (data[i] == (byte)']') {
+                depth--;
+                if (depth == 0) {
+                    var array = data.Slice(start, i - start);
+                    return TryReadDecodeParmsArray(array, out parms);
+                }
+            }
+            i++;
+        }
+        return false;
+    }
+
+    private static bool TryReadDecodeParmsArrayAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out PdfDecodeParms[] parms) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadDecodeParmsArrayAfterKey(data, keys[i], out parms)) return true;
+        }
+        parms = Array.Empty<PdfDecodeParms>();
+        return false;
+    }
+
+    private static bool TryReadDecodeParmsArray(ReadOnlySpan<byte> data, out PdfDecodeParms[] parms) {
+        parms = Array.Empty<PdfDecodeParms>();
+        var list = new System.Collections.Generic.List<PdfDecodeParms>();
+        var i = 0;
+        while (i < data.Length) {
+            SkipWhitespace(data, ref i);
+            if (i >= data.Length) break;
+            if (data[i] == (byte)'<' && i + 1 < data.Length && data[i + 1] == (byte)'<') {
+                if (!TryReadDictionarySliceAt(data, i, out var dict, out var endIndex)) return false;
+                if (!TryReadDecodeParmsFromDict(dict, out var parmsEntry)) {
+                    parmsEntry = new PdfDecodeParms(0, 0, 0, 0, false);
+                }
+                list.Add(parmsEntry);
+                i = endIndex;
+                continue;
+            }
+            if (StartsWithKeyword(data, i, "null")) {
+                list.Add(new PdfDecodeParms(0, 0, 0, 0, false));
+                i += 4;
+                continue;
+            }
+            if (IsNumberStart(data[i])) {
+                if (!TrySkipNumberToken(data, ref i)) return false;
+                SkipWhitespace(data, ref i);
+                var saved = i;
+                if (i < data.Length && IsNumberStart(data[i])) {
+                    if (!TrySkipNumberToken(data, ref i)) return false;
+                    SkipWhitespace(data, ref i);
+                    if (i < data.Length && data[i] == (byte)'R') {
+                        i++;
+                    } else {
+                        i = saved;
+                    }
+                }
+                list.Add(new PdfDecodeParms(0, 0, 0, 0, false));
+                continue;
+            }
+            if (data[i] == (byte)'/') {
+                i++;
+                while (i < data.Length && data[i] > 32 && !IsDelimiter(data[i])) i++;
+                list.Add(new PdfDecodeParms(0, 0, 0, 0, false));
+                continue;
+            }
+            list.Add(new PdfDecodeParms(0, 0, 0, 0, false));
+            i++;
+        }
+        if (list.Count == 0) return false;
+        parms = list.ToArray();
+        return true;
+    }
+
+    private static bool TryReadDecodeParmsFromDict(ReadOnlySpan<byte> dict, out PdfDecodeParms parms) {
+        var predictor = 0;
+        var colors = 0;
+        var columns = 0;
+        var earlyChange = 0;
+        var hasEarlyChange = false;
+        TryReadNumberAfterKey(dict, "/Predictor", out predictor);
+        TryReadNumberAfterKey(dict, "/Colors", out colors);
+        TryReadNumberAfterKey(dict, "/Columns", out columns);
+        if (TryReadNumberAfterKey(dict, "/EarlyChange", out var earlyValue)) {
+            earlyChange = earlyValue;
+            hasEarlyChange = true;
+        }
+        parms = new PdfDecodeParms(predictor, colors, columns, earlyChange, hasEarlyChange);
+        return parms.HasAny;
+    }
+
+    private static void ApplyDecodeParmsForFilters(string[] filters, PdfDecodeParms[] parms, ref int predictor, ref int colors, ref int lzwEarlyChange, ref bool lzwEarlyChangeSet) {
+        var count = Math.Min(filters.Length, parms.Length);
+        var predictorSet = predictor != 1;
+        var colorsSet = colors != 0;
+        for (var i = count - 1; i >= 0; i--) {
+            var filter = filters[i];
+            var isFlate = IsFilter(filter, "FlateDecode", "Fl");
+            var isLzw = IsFilter(filter, "LZWDecode", "LZW");
+            if (!isFlate && !isLzw) continue;
+            var dp = parms[i];
+            if (!predictorSet && dp.Predictor > 0) {
+                predictor = dp.Predictor;
+                predictorSet = true;
+            }
+            if (!colorsSet && dp.Colors > 0) {
+                colors = dp.Colors;
+                colorsSet = true;
+            }
+            if (!lzwEarlyChangeSet && isLzw && dp.HasEarlyChange) {
+                lzwEarlyChange = dp.EarlyChange;
+                lzwEarlyChangeSet = true;
+            }
+            if (predictorSet && colorsSet && lzwEarlyChangeSet) break;
+        }
     }
 
     private static bool TryReadIndexedColorSpaceAfterKey(ReadOnlySpan<byte> data, string key, out PdfColorSpaceKind baseKind, out int highVal, out byte[] lookup) {
@@ -760,6 +926,34 @@ public static class PdfReader {
                 depth--;
                 if (depth == 0) {
                     dict = data.Slice(start + 2, i - (start + 2));
+                    return true;
+                }
+                i += 2;
+                continue;
+            }
+            i++;
+        }
+        return false;
+    }
+
+    private static bool TryReadDictionarySliceAt(ReadOnlySpan<byte> data, int start, out ReadOnlySpan<byte> dict, out int endIndex) {
+        dict = ReadOnlySpan<byte>.Empty;
+        endIndex = start;
+        if (start < 0 || start + 1 >= data.Length) return false;
+        if (data[start] != (byte)'<' || data[start + 1] != (byte)'<') return false;
+        var i = start + 2;
+        var depth = 1;
+        while (i + 1 < data.Length) {
+            if (data[i] == (byte)'<' && data[i + 1] == (byte)'<') {
+                depth++;
+                i += 2;
+                continue;
+            }
+            if (data[i] == (byte)'>' && data[i + 1] == (byte)'>') {
+                depth--;
+                if (depth == 0) {
+                    dict = data.Slice(start + 2, i - (start + 2));
+                    endIndex = i + 2;
                     return true;
                 }
                 i += 2;
@@ -841,6 +1035,41 @@ public static class PdfReader {
 
     private static void SkipDelimiters(ReadOnlySpan<byte> data, ref int index) {
         while (index < data.Length && IsDelimiter(data[index])) index++;
+    }
+
+    private static void SkipWhitespace(ReadOnlySpan<byte> data, ref int index) {
+        while (index < data.Length && data[index] <= 32) index++;
+    }
+
+    private static bool IsNumberStart(byte b) {
+        return (b >= (byte)'0' && b <= (byte)'9') || b == (byte)'-' || b == (byte)'+' || b == (byte)'.';
+    }
+
+    private static bool TrySkipNumberToken(ReadOnlySpan<byte> data, ref int index) {
+        if (index >= data.Length) return false;
+        if (data[index] == (byte)'+' || data[index] == (byte)'-') index++;
+        var hasDigits = false;
+        while (index < data.Length && data[index] >= (byte)'0' && data[index] <= (byte)'9') {
+            hasDigits = true;
+            index++;
+        }
+        if (index < data.Length && data[index] == (byte)'.') {
+            index++;
+            while (index < data.Length && data[index] >= (byte)'0' && data[index] <= (byte)'9') {
+                hasDigits = true;
+                index++;
+            }
+        }
+        return hasDigits;
+    }
+
+    private static bool StartsWithKeyword(ReadOnlySpan<byte> data, int index, string keyword) {
+        if (index < 0) return false;
+        if (index + keyword.Length > data.Length) return false;
+        for (var i = 0; i < keyword.Length; i++) {
+            if (data[index + i] != (byte)keyword[i]) return false;
+        }
+        return true;
     }
 
     private static bool TryReadHexString(ReadOnlySpan<byte> data, ref int index, out byte[] bytes) {
@@ -1358,9 +1587,21 @@ public static class PdfReader {
         decoded = Array.Empty<byte>();
         if (!TryGetExpectedDecodedLength(info, out var expected)) return false;
         try {
-            decoded = DecompressLzwCompat(src, expected);
+            if (info.LzwEarlyChange == 0 || info.LzwEarlyChange == 1) {
+                decoded = DecompressLzw(src, expected, info.LzwEarlyChange);
+            } else {
+                decoded = DecompressLzwCompat(src, expected);
+            }
             return true;
         } catch (FormatException) {
+            if (info.LzwEarlyChange == 0 || info.LzwEarlyChange == 1) {
+                try {
+                    decoded = DecompressLzwCompat(src, expected);
+                    return true;
+                } catch (FormatException) {
+                    return false;
+                }
+            }
             return false;
         }
     }
@@ -1551,6 +1792,7 @@ public static class PdfReader {
             byte[]? indexedLookup,
             string[]? filters,
             int predictor,
+            int lzwEarlyChange,
             int streamLength,
             float[]? decode) {
             Width = width;
@@ -1563,6 +1805,7 @@ public static class PdfReader {
             IndexedLookup = indexedLookup;
             Filters = filters;
             Predictor = predictor;
+            LzwEarlyChange = lzwEarlyChange;
             StreamLength = streamLength;
             Decode = decode;
         }
@@ -1577,6 +1820,7 @@ public static class PdfReader {
         public byte[]? IndexedLookup { get; }
         public string[]? Filters { get; }
         public int Predictor { get; }
+        public int LzwEarlyChange { get; }
         public int StreamLength { get; }
         public float[]? Decode { get; }
     }
