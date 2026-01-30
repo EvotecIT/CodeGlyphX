@@ -1408,7 +1408,13 @@ public static class PdfReader {
         if (name.Equals("DeviceGray", StringComparison.OrdinalIgnoreCase) || name.Equals("G", StringComparison.OrdinalIgnoreCase)) {
             return PdfColorSpaceKind.DeviceGray;
         }
+        if (name.Equals("CalGray", StringComparison.OrdinalIgnoreCase)) {
+            return PdfColorSpaceKind.DeviceGray;
+        }
         if (name.Equals("DeviceRGB", StringComparison.OrdinalIgnoreCase) || name.Equals("RGB", StringComparison.OrdinalIgnoreCase)) {
+            return PdfColorSpaceKind.DeviceRGB;
+        }
+        if (name.Equals("CalRGB", StringComparison.OrdinalIgnoreCase)) {
             return PdfColorSpaceKind.DeviceRGB;
         }
         if (name.Equals("DeviceCMYK", StringComparison.OrdinalIgnoreCase) || name.Equals("CMYK", StringComparison.OrdinalIgnoreCase)) {

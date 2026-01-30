@@ -48,6 +48,18 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_CalRgb_Image() {
+        var rgb = new byte[] { 0x10, 0x20, 0x30 };
+        var pdf = BuildPdfWithFlateImage(1, 1, rgb, "[/CalRGB << /WhitePoint [1 1 1] >>]", bitsPerComponent: 8, "/Filter /FlateDecode ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x10, 0x20, 0x30, 255 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Flate_DecodeArray_Inverts_Gray() {
         var gray = new byte[] { 0 };
         var pdf = BuildPdfWithFlateImage(1, 1, gray, "/DeviceGray", bitsPerComponent: 8, "/Filter /FlateDecode /Decode [1 0] ");
@@ -141,6 +153,18 @@ public sealed class PdfDecodeTests {
         Assert.Equal(1, width);
         Assert.Equal(1, height);
         Assert.Equal(new byte[] { 0x7F, 0x7F, 0x7F, 255 }, rgba);
+    }
+
+    [Fact]
+    public void Decode_Pdf_Inline_Image_CalGray_Raw() {
+        var gray = new byte[] { 0x44 };
+        var pdf = BuildPdfWithInlineImageRaw(1, 1, gray, "/CS [/CalGray << /WhitePoint [1 1 1] >>] /BPC 8");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x44, 0x44, 0x44, 255 }, rgba);
     }
 
     [Fact]
