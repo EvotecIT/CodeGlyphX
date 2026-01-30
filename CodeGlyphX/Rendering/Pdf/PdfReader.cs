@@ -5,9 +5,9 @@ using CodeGlyphX.Rendering.Jpeg;
 
 namespace CodeGlyphX.Rendering.Pdf;
 
-/// <summary>
-/// Minimal PDF image decoder (image-only PDFs with embedded JPEG/Flate XObjects).
-/// </summary>
+    /// <summary>
+    /// Minimal PDF image decoder (image-only PDFs with embedded JPEG/Flate XObjects).
+    /// </summary>
 public static class PdfReader {
     private static readonly byte[] PdfSignature = { (byte)'%', (byte)'P', (byte)'D', (byte)'F', (byte)'-' };
     private static readonly byte[] SubtypeToken = { (byte)'/', (byte)'S', (byte)'u', (byte)'b', (byte)'t', (byte)'y', (byte)'p', (byte)'e' };
@@ -55,32 +55,7 @@ public static class PdfReader {
 
         var offset = 0;
         while (TryFindImage(data, ref offset, out var info, out var stream)) {
-            if (info.Filter is null) {
-                if (TryDecodeFlate(info, stream, out rgba, out width, out height)) {
-                    return true;
-                }
-                try {
-                    rgba = JpegReader.DecodeRgba32(stream, out width, out height);
-                    return true;
-                } catch (FormatException) {
-                    continue;
-                }
-            }
-            if (info.Filter.Equals("DCTDecode", StringComparison.OrdinalIgnoreCase) ||
-                info.Filter.Equals("DCT", StringComparison.OrdinalIgnoreCase)) {
-                try {
-                    rgba = JpegReader.DecodeRgba32(stream, out width, out height);
-                    return true;
-                } catch (FormatException) {
-                    continue;
-                }
-            }
-
-            if (info.Filter.Equals("FlateDecode", StringComparison.OrdinalIgnoreCase) ||
-                info.Filter.Equals("Fl", StringComparison.OrdinalIgnoreCase)) {
-                if (!TryDecodeFlate(info, stream, out rgba, out width, out height)) {
-                    continue;
-                }
+            if (TryDecodeWithFilters(info, stream, out rgba, out width, out height)) {
                 return true;
             }
         }
@@ -144,9 +119,11 @@ public static class PdfReader {
             bits = bpc;
         }
 
-        string? filter = null;
-        if (TryReadNameAfterKey(dict, "/Filter", out var filterName)) {
-            filter = filterName;
+        string[]? filters = null;
+        if (TryReadNameArrayAfterKey(dict, "/Filter", out var filterNames)) {
+            filters = filterNames;
+        } else if (TryReadNameAfterKey(dict, "/Filter", out var filterName)) {
+            filters = new[] { filterName };
         }
 
         var length = 0;
@@ -155,6 +132,8 @@ public static class PdfReader {
         string? colorSpace = null;
         if (TryReadNameAfterKey(dict, "/ColorSpace", out var csName)) {
             colorSpace = csName;
+        } else if (TryReadFirstNameInArrayAfterKey(dict, "/ColorSpace", out var csArrayName)) {
+            colorSpace = csArrayName;
         }
 
         var predictor = 1;
@@ -167,11 +146,68 @@ public static class PdfReader {
             colors = colorsValue;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpace, filter, predictor, length);
+        float[]? decode = null;
+        if (TryReadNumberArrayAfterKey(dict, "/Decode", out var decodeValues)) {
+            decode = decodeValues;
+        }
+
+        info = new PdfImageInfo(width, height, bits, colors, colorSpace, filters, predictor, length, decode);
         return true;
     }
 
-    private static bool TryDecodeFlate(PdfImageInfo info, ReadOnlySpan<byte> stream, out byte[] rgba, out int width, out int height) {
+    private static bool TryDecodeWithFilters(PdfImageInfo info, ReadOnlySpan<byte> stream, out byte[] rgba, out int width, out int height) {
+        rgba = Array.Empty<byte>();
+        width = 0;
+        height = 0;
+
+        if (info.Filters is null || info.Filters.Length == 0) {
+            if (TryDecodeRaster(info, stream, applyPredictor: info.Predictor > 1, out rgba, out width, out height)) {
+                return true;
+            }
+            try {
+                rgba = JpegReader.DecodeRgba32(stream, out width, out height);
+                return true;
+            } catch (FormatException) {
+                return false;
+            }
+        }
+
+        var data = stream.ToArray();
+        for (var i = 0; i < info.Filters.Length; i++) {
+            var filter = info.Filters[i];
+            if (IsFilter(filter, "ASCII85Decode", "A85")) {
+                if (!TryDecodeAscii85(data, out var decoded)) return false;
+                data = decoded;
+                continue;
+            }
+            if (IsFilter(filter, "RunLengthDecode", "RL")) {
+                if (!TryDecodeRunLength(data, out var decoded)) return false;
+                data = decoded;
+                continue;
+            }
+            if (IsFilter(filter, "FlateDecode", "Fl")) {
+                try {
+                    data = DecompressFlateAll(data);
+                } catch (FormatException) {
+                    return false;
+                }
+                continue;
+            }
+            if (IsFilter(filter, "DCTDecode", "DCT")) {
+                try {
+                    rgba = JpegReader.DecodeRgba32(data, out width, out height);
+                    return true;
+                } catch (FormatException) {
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        return TryDecodeRaster(info, data, applyPredictor: info.Predictor > 1, out rgba, out width, out height);
+    }
+
+    private static bool TryDecodeRaster(PdfImageInfo info, ReadOnlySpan<byte> data, bool applyPredictor, out byte[] rgba, out int width, out int height) {
         rgba = Array.Empty<byte>();
         width = 0;
         height = 0;
@@ -183,37 +219,38 @@ public static class PdfReader {
         if (colors <= 0) {
             if (string.Equals(info.ColorSpace, "DeviceRGB", StringComparison.OrdinalIgnoreCase)) colors = 3;
             else if (string.Equals(info.ColorSpace, "DeviceGray", StringComparison.OrdinalIgnoreCase)) colors = 1;
+            else if (string.Equals(info.ColorSpace, "DeviceCMYK", StringComparison.OrdinalIgnoreCase)) colors = 4;
         }
-        if (colors != 0 && colors != 1 && colors != 3) return false;
-
-        var predictor = info.Predictor <= 0 ? 1 : info.Predictor;
-        byte[] inflated;
-        try {
-            inflated = DecompressFlateAll(stream);
-        } catch (FormatException) {
-            return false;
-        }
+        if (colors != 0 && colors != 1 && colors != 3 && colors != 4) return false;
 
         if (colors == 0) {
-            if (!TryInferColorsFromLength(inflated.Length, info.Width, info.Height, predictor, out colors)) {
+            if (!TryInferColorsFromLength(data.Length, info.Width, info.Height, info.Predictor, out colors)) {
                 return false;
             }
         } else {
             var expectedRowSize = checked(info.Width * colors);
-            var expected = predictor >= 10 ? checked((expectedRowSize + 1) * info.Height) : checked(expectedRowSize * info.Height);
-            if (inflated.Length != expected) {
-                if (!TryInferColorsFromLength(inflated.Length, info.Width, info.Height, predictor, out colors)) {
+            var expected = info.Predictor >= 10 ? checked((expectedRowSize + 1) * info.Height) : checked(expectedRowSize * info.Height);
+            if (data.Length != expected) {
+                if (!TryInferColorsFromLength(data.Length, info.Width, info.Height, info.Predictor, out colors)) {
                     return false;
                 }
             }
         }
 
         var rowSize = checked(info.Width * colors);
-        if (predictor == 2) {
-            ApplyTiffPredictor(inflated, rowSize, info.Height, colors);
-        } else if (predictor >= 10) {
-            if (!TryApplyPngPredictor(inflated, info.Width, info.Height, colors, out var decoded)) return false;
-            inflated = decoded;
+        byte[] expanded;
+        if (applyPredictor && info.Predictor == 2) {
+            expanded = data.ToArray();
+            ApplyTiffPredictor(expanded, rowSize, info.Height, colors);
+        } else if (applyPredictor && info.Predictor >= 10) {
+            if (!TryApplyPngPredictor(data.ToArray(), info.Width, info.Height, colors, out var decoded)) return false;
+            expanded = decoded;
+        } else {
+            expanded = data.ToArray();
+        }
+
+        if (info.Decode is not null && info.Decode.Length >= colors * 2) {
+            ApplyDecodeArray(expanded, colors, info.Decode);
         }
 
         var pixelCount = info.Width * info.Height;
@@ -222,14 +259,27 @@ public static class PdfReader {
             for (var i = 0; i < pixelCount; i++) {
                 var src = i * 3;
                 var dst = i * 4;
-                rgba[dst + 0] = inflated[src + 0];
-                rgba[dst + 1] = inflated[src + 1];
-                rgba[dst + 2] = inflated[src + 2];
+                rgba[dst + 0] = expanded[src + 0];
+                rgba[dst + 1] = expanded[src + 1];
+                rgba[dst + 2] = expanded[src + 2];
+                rgba[dst + 3] = 255;
+            }
+        } else if (colors == 4) {
+            for (var i = 0; i < pixelCount; i++) {
+                var src = i * 4;
+                var dst = i * 4;
+                var c = expanded[src + 0];
+                var m = expanded[src + 1];
+                var y = expanded[src + 2];
+                var k = expanded[src + 3];
+                rgba[dst + 0] = (byte)(255 - Math.Min(255, c + k));
+                rgba[dst + 1] = (byte)(255 - Math.Min(255, m + k));
+                rgba[dst + 2] = (byte)(255 - Math.Min(255, y + k));
                 rgba[dst + 3] = 255;
             }
         } else {
             for (var i = 0; i < pixelCount; i++) {
-                var v = inflated[i];
+                var v = expanded[i];
                 var dst = i * 4;
                 rgba[dst + 0] = v;
                 rgba[dst + 1] = v;
@@ -338,6 +388,103 @@ public static class PdfReader {
         return true;
     }
 
+    private static bool TryReadNameArrayAfterKey(ReadOnlySpan<byte> data, string key, out string[] names) {
+        names = Array.Empty<string>();
+        var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
+        if (idx < 0) return false;
+        var i = idx + key.Length;
+        while (i < data.Length && IsDelimiter(data[i])) i++;
+        if (i >= data.Length || data[i] != (byte)'[') return false;
+        i++;
+        var values = new System.Collections.Generic.List<string>();
+        while (i < data.Length) {
+            while (i < data.Length && IsDelimiter(data[i])) i++;
+            if (i >= data.Length) break;
+            if (data[i] == (byte)']') {
+                i++;
+                break;
+            }
+            if (data[i] != (byte)'/') return false;
+            i++;
+            var start = i;
+            while (i < data.Length && !IsDelimiter(data[i])) i++;
+            if (i <= start) return false;
+            values.Add(GetAsciiString(data, start, i - start));
+        }
+        if (values.Count == 0) return false;
+        names = values.ToArray();
+        return true;
+    }
+
+    private static bool TryReadFirstNameInArrayAfterKey(ReadOnlySpan<byte> data, string key, out string name) {
+        name = string.Empty;
+        if (!TryReadNameArrayAfterKey(data, key, out var names)) return false;
+        if (names.Length == 0) return false;
+        name = names[0];
+        return true;
+    }
+
+    private static bool TryReadNumberArrayAfterKey(ReadOnlySpan<byte> data, string key, out float[] values) {
+        values = Array.Empty<float>();
+        var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
+        if (idx < 0) return false;
+        var i = idx + key.Length;
+        while (i < data.Length && IsDelimiter(data[i])) i++;
+        if (i >= data.Length || data[i] != (byte)'[') return false;
+        i++;
+        var list = new System.Collections.Generic.List<float>();
+        while (i < data.Length) {
+            while (i < data.Length && IsDelimiter(data[i])) i++;
+            if (i >= data.Length) break;
+            if (data[i] == (byte)']') {
+                i++;
+                break;
+            }
+            if (!TryReadFloatToken(data, ref i, out var value)) return false;
+            list.Add(value);
+        }
+        if (list.Count == 0) return false;
+        values = list.ToArray();
+        return true;
+    }
+
+    private static bool TryReadFloatToken(ReadOnlySpan<byte> data, ref int index, out float value) {
+        value = 0;
+        if (index >= data.Length) return false;
+        var sign = 1f;
+        if (data[index] == (byte)'-') {
+            sign = -1f;
+            index++;
+        } else if (data[index] == (byte)'+') {
+            index++;
+        }
+
+        var hasDigits = false;
+        var integer = 0;
+        while (index < data.Length && data[index] >= (byte)'0' && data[index] <= (byte)'9') {
+            hasDigits = true;
+            integer = integer * 10 + (data[index] - (byte)'0');
+            index++;
+        }
+
+        var frac = 0;
+        var fracDiv = 1;
+        if (index < data.Length && data[index] == (byte)'.') {
+            index++;
+            while (index < data.Length && data[index] >= (byte)'0' && data[index] <= (byte)'9') {
+                hasDigits = true;
+                frac = frac * 10 + (data[index] - (byte)'0');
+                fracDiv *= 10;
+                index++;
+            }
+        }
+
+        if (!hasDigits) return false;
+        var number = integer + (fracDiv > 1 ? (float)frac / fracDiv : 0f);
+        value = number * sign;
+        return true;
+    }
+
     private static string GetAsciiString(ReadOnlySpan<byte> data, int start, int length) {
 #if NET8_0_OR_GREATER
         return System.Text.Encoding.ASCII.GetString(data.Slice(start, length));
@@ -364,6 +511,11 @@ public static class PdfReader {
                 colors = 3;
                 return true;
             }
+            var cmyk = checked((width * 4 + 1) * height);
+            if (length == cmyk) {
+                colors = 4;
+                return true;
+            }
             var gray = checked((width + 1) * height);
             if (length == gray) {
                 colors = 1;
@@ -375,6 +527,11 @@ public static class PdfReader {
         var rgbRaw = checked(width * height * 3);
         if (length == rgbRaw) {
             colors = 3;
+            return true;
+        }
+        var cmykRaw = checked(width * height * 4);
+        if (length == cmykRaw) {
+            colors = 4;
             return true;
         }
         var grayRaw = checked(width * height);
@@ -507,16 +664,123 @@ public static class PdfReader {
         return c;
     }
 
+    private static bool IsFilter(string value, string fullName, string shortName) {
+        return value.Equals(fullName, StringComparison.OrdinalIgnoreCase)
+            || value.Equals(shortName, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void ApplyDecodeArray(byte[] data, int colors, float[] decode) {
+        var entries = colors * 2;
+        if (decode.Length < entries) return;
+        var length = data.Length;
+        var pixelStride = colors;
+        for (var i = 0; i < length; i += pixelStride) {
+            for (var c = 0; c < colors; c++) {
+                var dmin = decode[c * 2];
+                var dmax = decode[c * 2 + 1];
+                var sample = data[i + c];
+                var value = dmin + (sample / 255f) * (dmax - dmin);
+                var scaled = (int)Math.Round(value * 255f);
+                if (scaled < 0) scaled = 0;
+                if (scaled > 255) scaled = 255;
+                data[i + c] = (byte)scaled;
+            }
+        }
+    }
+
+    private static bool TryDecodeAscii85(ReadOnlySpan<byte> src, out byte[] decoded) {
+        decoded = Array.Empty<byte>();
+        using var ms = new MemoryStream();
+        uint tuple = 0;
+        var count = 0;
+        for (var i = 0; i < src.Length; i++) {
+            var b = src[i];
+            if (b == (byte)'~') {
+                if (i + 1 < src.Length && src[i + 1] == (byte)'>') {
+                    i++;
+                    break;
+                }
+            }
+            if (b == (byte)'z') {
+                if (count != 0) return false;
+                ms.WriteByte(0);
+                ms.WriteByte(0);
+                ms.WriteByte(0);
+                ms.WriteByte(0);
+                continue;
+            }
+            if (b <= 32) continue;
+            if (b < (byte)'!' || b > (byte)'u') return false;
+            tuple = tuple * 85 + (uint)(b - (byte)'!');
+            count++;
+            if (count == 5) {
+                WriteTuple(ms, tuple);
+                tuple = 0;
+                count = 0;
+            }
+        }
+
+        if (count > 0) {
+            for (var i = count; i < 5; i++) {
+                tuple = tuple * 85 + 84;
+            }
+            var buffer = new byte[4];
+            buffer[0] = (byte)(tuple >> 24);
+            buffer[1] = (byte)(tuple >> 16);
+            buffer[2] = (byte)(tuple >> 8);
+            buffer[3] = (byte)tuple;
+            ms.Write(buffer, 0, count - 1);
+        }
+
+        decoded = ms.ToArray();
+        return true;
+    }
+
+    private static void WriteTuple(Stream stream, uint tuple) {
+        stream.WriteByte((byte)(tuple >> 24));
+        stream.WriteByte((byte)(tuple >> 16));
+        stream.WriteByte((byte)(tuple >> 8));
+        stream.WriteByte((byte)tuple);
+    }
+
+    private static bool TryDecodeRunLength(ReadOnlySpan<byte> src, out byte[] decoded) {
+        decoded = Array.Empty<byte>();
+        using var ms = new MemoryStream();
+        var i = 0;
+        while (i < src.Length) {
+            var b = src[i++];
+            if (b == 128) break;
+            if (b <= 127) {
+                var count = b + 1;
+                if (i + count > src.Length) return false;
+                var chunk = new byte[count];
+                src.Slice(i, count).CopyTo(chunk);
+                ms.Write(chunk, 0, chunk.Length);
+                i += count;
+            } else {
+                var count = 257 - b;
+                if (i >= src.Length) return false;
+                var value = src[i++];
+                for (var j = 0; j < count; j++) {
+                    ms.WriteByte(value);
+                }
+            }
+        }
+        decoded = ms.ToArray();
+        return true;
+    }
+
     private readonly struct PdfImageInfo {
-        public PdfImageInfo(int width, int height, int bitsPerComponent, int colors, string? colorSpace, string? filter, int predictor, int streamLength) {
+        public PdfImageInfo(int width, int height, int bitsPerComponent, int colors, string? colorSpace, string[]? filters, int predictor, int streamLength, float[]? decode) {
             Width = width;
             Height = height;
             BitsPerComponent = bitsPerComponent;
             Colors = colors;
             ColorSpace = colorSpace;
-            Filter = filter;
+            Filters = filters;
             Predictor = predictor;
             StreamLength = streamLength;
+            Decode = decode;
         }
 
         public int Width { get; }
@@ -524,8 +788,9 @@ public static class PdfReader {
         public int BitsPerComponent { get; }
         public int Colors { get; }
         public string? ColorSpace { get; }
-        public string? Filter { get; }
+        public string[]? Filters { get; }
         public int Predictor { get; }
         public int StreamLength { get; }
+        public float[]? Decode { get; }
     }
 }
