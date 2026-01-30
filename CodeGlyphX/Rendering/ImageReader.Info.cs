@@ -20,12 +20,34 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Attempts to read image format and dimensions for a given page without decoding pixels.
+    /// </summary>
+    public static bool TryReadInfo(byte[] data, int pageIndex, out ImageInfo info) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return TryReadInfo((ReadOnlySpan<byte>)data, pageIndex, out info);
+    }
+
+    /// <summary>
     /// Attempts to read image format and dimensions without decoding pixels.
     /// </summary>
     public static bool TryReadInfo(ReadOnlySpan<byte> data, out ImageInfo info) {
         info = default;
         if (!TryDetectFormat(data, out var format)) return false;
         if (!TryReadDimensions(data, format, out var width, out var height)) return false;
+        info = new ImageInfo(format, width, height);
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to read image format and dimensions for a given page without decoding pixels.
+    /// </summary>
+    public static bool TryReadInfo(ReadOnlySpan<byte> data, int pageIndex, out ImageInfo info) {
+        info = default;
+        if (pageIndex < 0) return false;
+        if (!TryDetectFormat(data, out var format)) return false;
+        if (pageIndex == 0) return TryReadInfo(data, out info);
+        if (format != ImageFormat.Tiff) return false;
+        if (!TryReadTiffSize(data, pageIndex, out var width, out var height)) return false;
         info = new ImageInfo(format, width, height);
         return true;
     }
@@ -40,6 +62,47 @@ public static partial class ImageReader {
         }
         var data = RenderIO.ReadBinary(stream);
         return TryReadInfo(data, out info);
+    }
+
+    /// <summary>
+    /// Attempts to read image format and dimensions for a given page from a stream without decoding pixels.
+    /// </summary>
+    public static bool TryReadInfo(Stream stream, int pageIndex, out ImageInfo info) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return TryReadInfo(buffer.AsSpan(), pageIndex, out info);
+        }
+        var data = RenderIO.ReadBinary(stream);
+        return TryReadInfo(data, pageIndex, out info);
+    }
+
+    /// <summary>
+    /// Attempts to read page count for multipage images (TIFF).
+    /// </summary>
+    public static bool TryReadPageCount(ReadOnlySpan<byte> data, out int pageCount) {
+        pageCount = 0;
+        if (!TiffReader.IsTiff(data)) return false;
+        return TryReadTiffPageCount(data, out pageCount);
+    }
+
+    /// <summary>
+    /// Attempts to read page count for multipage images (TIFF) from a byte buffer.
+    /// </summary>
+    public static bool TryReadPageCount(byte[] data, out int pageCount) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return TryReadPageCount((ReadOnlySpan<byte>)data, out pageCount);
+    }
+
+    /// <summary>
+    /// Attempts to read page count for multipage images (TIFF) from a stream.
+    /// </summary>
+    public static bool TryReadPageCount(Stream stream, out int pageCount) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return TryReadPageCount(buffer.AsSpan(), out pageCount);
+        }
+        var data = RenderIO.ReadBinary(stream);
+        return TryReadPageCount(data, out pageCount);
     }
 
     private static bool TryReadDimensions(ReadOnlySpan<byte> data, ImageFormat format, out int width, out int height) {
@@ -193,13 +256,59 @@ public static partial class ImageReader {
     }
 
     private static bool TryReadTiffSize(ReadOnlySpan<byte> data, out int width, out int height) {
+        return TryReadTiffSize(data, pageIndex: 0, out width, out height);
+    }
+
+    private static bool TryReadTiffSize(ReadOnlySpan<byte> data, int pageIndex, out int width, out int height) {
         width = 0;
         height = 0;
         if (!TiffReader.IsTiff(data)) return false;
+        if (pageIndex < 0) return false;
 
         var little = data[0] == (byte)'I';
         var ifdOffset = ReadUInt32LE(data, 4, little);
         if (ifdOffset > data.Length - 2) return false;
+
+        var currentOffset = ifdOffset;
+        for (var page = 0; page <= pageIndex; page++) {
+            if (!TryReadTiffIfd(data, little, currentOffset, out var nextOffset, out var pageWidth, out var pageHeight)) return false;
+            if (page == pageIndex) {
+                width = pageWidth;
+                height = pageHeight;
+                return width > 0 && height > 0;
+            }
+            if (nextOffset == 0) return false;
+            currentOffset = nextOffset;
+        }
+
+        return false;
+    }
+
+    private static bool TryReadTiffPageCount(ReadOnlySpan<byte> data, out int pageCount) {
+        pageCount = 0;
+        if (!TiffReader.IsTiff(data)) return false;
+        var little = data[0] == (byte)'I';
+        var ifdOffset = ReadUInt32LE(data, 4, little);
+        if (ifdOffset > data.Length - 2) return false;
+
+        var maxPages = Math.Max(1, data.Length / 12);
+        var currentOffset = ifdOffset;
+        var lastOffset = 0u;
+        while (currentOffset != 0 && pageCount < maxPages) {
+            if (currentOffset == lastOffset) return false;
+            if (!TryReadTiffIfd(data, little, currentOffset, out var nextOffset, out _, out _)) return false;
+            pageCount++;
+            lastOffset = currentOffset;
+            currentOffset = nextOffset;
+        }
+        return pageCount > 0;
+    }
+
+    private static bool TryReadTiffIfd(ReadOnlySpan<byte> data, bool little, uint ifdOffset, out uint nextOffset, out int width, out int height) {
+        width = 0;
+        height = 0;
+        nextOffset = 0;
+        if (ifdOffset == 0 || ifdOffset > data.Length - 2) return false;
 
         var entryCount = ReadUInt16LE(data, (int)ifdOffset, little);
         var entriesOffset = (int)ifdOffset + 2;
@@ -217,10 +326,14 @@ public static partial class ImageReader {
             } else if (tag == 257) {
                 height = (int)ReadTiffValue(valueSpan, type, little, 0);
             }
-            if (width > 0 && height > 0) return true;
         }
 
-        return false;
+        var nextOffsetPos = entriesOffset + entryCount * 12;
+        if (nextOffsetPos + 4 <= data.Length) {
+            nextOffset = ReadUInt32LE(data, nextOffsetPos, little);
+        }
+
+        return true;
     }
 
     private static bool TryReadPbmSize(ReadOnlySpan<byte> data, out int width, out int height) {

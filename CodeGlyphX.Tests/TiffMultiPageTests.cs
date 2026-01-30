@@ -41,6 +41,24 @@ public sealed class TiffMultiPageTests {
     }
 
     [Fact]
+    public void ReadInfo_Tiff_PageIndex() {
+        var tiff = BuildTwoPageTiff();
+
+        Assert.True(ImageReader.TryReadInfo(tiff, 1, out var info));
+        Assert.Equal(ImageFormat.Tiff, info.Format);
+        Assert.Equal(1, info.Width);
+        Assert.Equal(1, info.Height);
+    }
+
+    [Fact]
+    public void ReadPageCount_Tiff() {
+        var tiff = BuildTwoPageTiff();
+
+        Assert.True(ImageReader.TryReadPageCount(tiff, out var pageCount));
+        Assert.Equal(2, pageCount);
+    }
+
+    [Fact]
     public void Decode_Tiff_Tiles() {
         var tiff = BuildTiledTiff();
 
