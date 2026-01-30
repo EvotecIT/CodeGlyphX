@@ -317,6 +317,11 @@ public static class PdfReader {
                 data = decoded;
                 continue;
             }
+            if (IsFilter(filter, "LZWDecode", "LZW")) {
+                if (!TryDecodeLzw(info, data, out var decoded)) return false;
+                data = decoded;
+                continue;
+            }
             if (IsFilter(filter, "FlateDecode", "Fl")) {
                 try {
                     data = DecompressFlateAll(data);
@@ -1347,6 +1352,157 @@ public static class PdfReader {
         }
         decoded = buffer.ToArray();
         return true;
+    }
+
+    private static bool TryDecodeLzw(PdfImageInfo info, ReadOnlySpan<byte> src, out byte[] decoded) {
+        decoded = Array.Empty<byte>();
+        if (!TryGetExpectedDecodedLength(info, out var expected)) return false;
+        try {
+            decoded = DecompressLzwCompat(src, expected);
+            return true;
+        } catch (FormatException) {
+            return false;
+        }
+    }
+
+    private static bool TryGetExpectedDecodedLength(PdfImageInfo info, out int expected) {
+        expected = 0;
+        if (info.Width <= 0 || info.Height <= 0) return false;
+
+        var colors = info.Colors;
+        if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed) {
+            colors = 1;
+        } else if (colors <= 0) {
+            colors = info.ColorSpaceKind switch {
+                PdfColorSpaceKind.DeviceGray => 1,
+                PdfColorSpaceKind.DeviceRGB => 3,
+                PdfColorSpaceKind.DeviceCMYK => 4,
+                _ => 0
+            };
+        }
+        if (colors <= 0) return false;
+
+        var bits = info.BitsPerComponent;
+        if (bits <= 0) return false;
+
+        try {
+            if (bits == 8) {
+                var rowSize = checked(info.Width * colors);
+                expected = info.Predictor >= 10
+                    ? checked((rowSize + 1) * info.Height)
+                    : checked(rowSize * info.Height);
+                return true;
+            }
+            var rowBits = checked(info.Width * colors * bits);
+            var rowBytes = (rowBits + 7) / 8;
+            expected = checked(rowBytes * info.Height);
+            return true;
+        } catch (OverflowException) {
+            expected = 0;
+            return false;
+        }
+    }
+
+    private static byte[] DecompressLzwCompat(ReadOnlySpan<byte> src, int expected) {
+        FormatException? last = null;
+        var attempts = new[] { 1, 0 };
+        foreach (var earlyChange in attempts) {
+            try {
+                return DecompressLzw(src, expected, earlyChange);
+            } catch (FormatException ex) {
+                last = ex;
+            }
+        }
+        throw last ?? new FormatException("Invalid PDF LZW data.");
+    }
+
+    private static byte[] DecompressLzw(ReadOnlySpan<byte> src, int expected, int earlyChange) {
+        if (expected <= 0) throw new FormatException("Invalid PDF LZW output size.");
+        var prefix = new short[4096];
+        var suffix = new byte[4096];
+        var stack = new byte[4096];
+        var output = new byte[expected];
+
+        for (var i = 0; i < 256; i++) {
+            prefix[i] = -1;
+            suffix[i] = (byte)i;
+        }
+
+        var bitPos = 0;
+        var codeSize = 9;
+        const int clear = 256;
+        const int eoi = 257;
+        var nextCode = 258;
+        var oldCode = -1;
+        var outIndex = 0;
+        byte firstChar = 0;
+
+        while (true) {
+            var code = ReadBitsMsb(src, ref bitPos, codeSize);
+            if (code < 0) break;
+            if (code == clear) {
+                codeSize = 9;
+                nextCode = 258;
+                oldCode = -1;
+                continue;
+            }
+            if (code == eoi) break;
+
+            var inCode = code;
+            var stackTop = 0;
+            if (code >= nextCode) {
+                if (oldCode < 0) throw new FormatException("Invalid PDF LZW stream.");
+                if (stackTop >= stack.Length) throw new FormatException("Invalid PDF LZW stack overflow.");
+                stack[stackTop++] = firstChar;
+                code = oldCode;
+            }
+
+            while (code >= 256) {
+                if ((uint)code >= 4096) throw new FormatException("Invalid PDF LZW code.");
+                if (stackTop >= stack.Length) throw new FormatException("Invalid PDF LZW stack overflow.");
+                stack[stackTop++] = suffix[code];
+                code = prefix[code];
+            }
+
+            firstChar = (byte)code;
+            if (stackTop >= stack.Length) throw new FormatException("Invalid PDF LZW stack overflow.");
+            stack[stackTop++] = firstChar;
+
+            while (stackTop > 0) {
+                if (outIndex >= output.Length) throw new FormatException("PDF LZW output too large.");
+                output[outIndex++] = stack[--stackTop];
+            }
+
+            if (oldCode >= 0) {
+                if (nextCode < 4096) {
+                    prefix[nextCode] = (short)oldCode;
+                    suffix[nextCode] = firstChar;
+                    nextCode++;
+                    if (nextCode == (1 << codeSize) - earlyChange && codeSize < 12) {
+                        codeSize++;
+                    }
+                }
+            }
+            oldCode = inCode;
+        }
+
+        if (outIndex != output.Length) throw new FormatException("PDF LZW output truncated.");
+        return output;
+    }
+
+    private static int ReadBitsMsb(ReadOnlySpan<byte> data, ref int bitPos, int bitCount) {
+        var totalBits = data.Length * 8;
+        if (bitPos + bitCount > totalBits) return -1;
+        var value = 0;
+        for (var i = 0; i < bitCount; i++) {
+            var bitIndex = bitPos + i;
+            var byteIndex = bitIndex >> 3;
+            var shift = 7 - (bitIndex & 7);
+            var bit = (data[byteIndex] >> shift) & 1;
+            value = (value << 1) | bit;
+        }
+        bitPos += bitCount;
+        return value;
     }
 
     private static void WriteTuple(Stream stream, uint tuple) {

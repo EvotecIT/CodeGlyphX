@@ -84,6 +84,18 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_Lzw_Image() {
+        var rgb = new byte[] { 0x12, 0x34, 0x56 };
+        var pdf = BuildPdfWithLzwImage(1, 1, rgb);
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x12, 0x34, 0x56, 255 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Flate_Predictor_From_DecodeParms() {
         var predicted = new byte[] { 0, 0x11, 0x22, 0x33 };
         var pdf = BuildPdfWithFlateImage(1, 1, predicted, "/DeviceRGB", bitsPerComponent: 8, "/Filter /FlateDecode /DecodeParms << /Predictor 12 /Colors 3 /Columns 1 >> ");
@@ -239,6 +251,31 @@ public sealed class PdfDecodeTests {
         return output;
     }
 
+    private static byte[] BuildPdfWithLzwImage(int width, int height, byte[] rgb) {
+        var encoded = LzwEncode(rgb);
+
+        var sb = new StringBuilder();
+        sb.Append("%PDF-1.4\n");
+        sb.Append("1 0 obj\n");
+        sb.Append("<< /Type /XObject /Subtype /Image ");
+        sb.Append("/Width ").Append(width).Append(' ');
+        sb.Append("/Height ").Append(height).Append(' ');
+        sb.Append("/ColorSpace /DeviceRGB ");
+        sb.Append("/BitsPerComponent 8 ");
+        sb.Append("/Filter /LZWDecode ");
+        sb.Append("/Length ").Append(encoded.Length).Append(" >>\n");
+        sb.Append("stream\n");
+
+        var header = Encoding.ASCII.GetBytes(sb.ToString());
+        var footer = Encoding.ASCII.GetBytes("\nendstream\nendobj\n%%EOF\n");
+
+        var output = new byte[header.Length + encoded.Length + footer.Length];
+        Buffer.BlockCopy(header, 0, output, 0, header.Length);
+        Buffer.BlockCopy(encoded, 0, output, header.Length, encoded.Length);
+        Buffer.BlockCopy(footer, 0, output, header.Length + encoded.Length, footer.Length);
+        return output;
+    }
+
     private static byte[] BuildPdfWithInlineImageRaw(int width, int height, byte[] data, string dictExtras) {
         var header = Encoding.ASCII.GetBytes("%PDF-1.4\nBI /W " + width + " /H " + height + " " + dictExtras + " ID\n");
         var footer = Encoding.ASCII.GetBytes("\nEI\n%%EOF\n");
@@ -320,5 +357,83 @@ public sealed class PdfDecodeTests {
         }
         sb.Append('>');
         return Encoding.ASCII.GetBytes(sb.ToString());
+    }
+
+    private static byte[] LzwEncode(ReadOnlySpan<byte> data) {
+        const int clear = 256;
+        const int eoi = 257;
+        const int maxCode = 4096;
+        const int earlyChange = 1;
+
+        var writer = new LzwBitWriter(data.Length);
+        var dict = new System.Collections.Generic.Dictionary<int, int>(4096);
+        var codeSize = 9;
+        var nextCode = 258;
+
+        writer.Write(clear, codeSize);
+        if (data.IsEmpty) {
+            writer.Write(eoi, codeSize);
+            return writer.ToArray();
+        }
+
+        var prefix = (int)data[0];
+        for (var i = 1; i < data.Length; i++) {
+            var b = data[i];
+            var key = (prefix << 8) | b;
+            if (dict.TryGetValue(key, out var code)) {
+                prefix = code;
+                continue;
+            }
+
+            writer.Write(prefix, codeSize);
+            if (nextCode < maxCode) {
+                dict[key] = nextCode++;
+                if (nextCode == (1 << codeSize) - earlyChange && codeSize < 12) {
+                    codeSize++;
+                }
+            } else {
+                writer.Write(clear, codeSize);
+                dict.Clear();
+                codeSize = 9;
+                nextCode = 258;
+            }
+            prefix = b;
+        }
+
+        writer.Write(prefix, codeSize);
+        writer.Write(eoi, codeSize);
+        return writer.ToArray();
+    }
+
+    private sealed class LzwBitWriter {
+        private readonly System.Collections.Generic.List<byte> _output;
+        private uint _buffer;
+        private int _bitCount;
+
+        public LzwBitWriter(int dataLength) {
+            _output = new System.Collections.Generic.List<byte>(Math.Max(16, dataLength));
+        }
+
+        public void Write(int code, int codeSize) {
+            _buffer = (_buffer << codeSize) | (uint)code;
+            _bitCount += codeSize;
+            while (_bitCount >= 8) {
+                var shift = _bitCount - 8;
+                _output.Add((byte)(_buffer >> shift));
+                _bitCount -= 8;
+                if (_bitCount == 0) {
+                    _buffer = 0;
+                } else {
+                    _buffer &= (1u << _bitCount) - 1u;
+                }
+            }
+        }
+
+        public byte[] ToArray() {
+            if (_bitCount > 0) {
+                _output.Add((byte)(_buffer << (8 - _bitCount)));
+            }
+            return _output.ToArray();
+        }
     }
 }
