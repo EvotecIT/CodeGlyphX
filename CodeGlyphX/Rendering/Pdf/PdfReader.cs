@@ -23,7 +23,9 @@ public static class PdfReader {
         DeviceGray,
         DeviceRGB,
         DeviceCMYK,
-        Indexed
+        Indexed,
+        Separation,
+        DeviceN
     }
 
     /// <summary>
@@ -228,6 +230,9 @@ public static class PdfReader {
         if (TryReadIccBasedColorSpaceAfterKey(dict, "/ColorSpace", out var iccBase)) {
             colorSpaceKind = iccBase;
         }
+        if (TryReadAlternateColorSpaceAfterKey(dict, "/ColorSpace", out var altKind)) {
+            colorSpaceKind = altKind;
+        }
         if (TryReadIndexedColorSpaceAfterKey(dict, "/ColorSpace", out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
             info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, length, decode);
@@ -293,6 +298,9 @@ public static class PdfReader {
         var colorSpaceKind = ParseColorSpaceName(colorSpace);
         if (TryReadIccBasedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var iccBase)) {
             colorSpaceKind = iccBase;
+        }
+        if (TryReadAlternateColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var altKind)) {
+            colorSpaceKind = altKind;
         }
         if (TryReadIndexedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
@@ -922,6 +930,35 @@ public static class PdfReader {
         return false;
     }
 
+    private static bool TryReadAlternateColorSpaceAfterKey(ReadOnlySpan<byte> data, string key, out PdfColorSpaceKind altKind) {
+        altKind = PdfColorSpaceKind.Unknown;
+        if (!TryReadArraySliceAfterKey(data, key, out var array)) return false;
+        return TryReadAlternateColorSpace(array, out altKind);
+    }
+
+    private static bool TryReadAlternateColorSpaceAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out PdfColorSpaceKind altKind) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadAlternateColorSpaceAfterKey(data, keys[i], out altKind)) return true;
+        }
+        altKind = PdfColorSpaceKind.Unknown;
+        return false;
+    }
+
+    private static bool TryReadAlternateColorSpace(ReadOnlySpan<byte> array, out PdfColorSpaceKind altKind) {
+        altKind = PdfColorSpaceKind.Unknown;
+        var index = 0;
+        if (!TryReadNameToken(array, ref index, out var first)) return false;
+        if (!first.Equals("Separation", StringComparison.OrdinalIgnoreCase) && !first.Equals("DeviceN", StringComparison.OrdinalIgnoreCase)) {
+            return false;
+        }
+        SkipWhitespace(array, ref index);
+        if (!TrySkipObjectToken(array, ref index)) return false;
+        SkipWhitespace(array, ref index);
+        if (!TryReadNameToken(array, ref index, out var altName)) return false;
+        altKind = ParseColorSpaceName(altName);
+        return altKind != PdfColorSpaceKind.Unknown;
+    }
+
     private static bool TryReadIndexedColorSpaceAfterKey(ReadOnlySpan<byte> data, string key, out PdfColorSpaceKind baseKind, out int highVal, out byte[] lookup) {
         baseKind = PdfColorSpaceKind.Unknown;
         highVal = 0;
@@ -1124,6 +1161,69 @@ public static class PdfReader {
             if (data[index + i] != (byte)keyword[i]) return false;
         }
         return true;
+    }
+
+    private static bool TrySkipObjectToken(ReadOnlySpan<byte> data, ref int index) {
+        if (index >= data.Length) return false;
+        if (data[index] == (byte)'(') {
+            return TryReadLiteralString(data, ref index, out _);
+        }
+        if (data[index] == (byte)'<' && index + 1 < data.Length && data[index + 1] == (byte)'<') {
+            return TryReadDictionarySliceAt(data, index, out _, out index);
+        }
+        if (data[index] == (byte)'<') {
+            return TryReadHexString(data, ref index, out _);
+        }
+        if (data[index] == (byte)'[') {
+            return TrySkipArrayToken(data, ref index);
+        }
+        if (data[index] == (byte)'/') {
+            index++;
+            while (index < data.Length && data[index] > 32 && !IsDelimiter(data[index])) index++;
+            return true;
+        }
+        if (StartsWithKeyword(data, index, "null")) { index += 4; return true; }
+        if (StartsWithKeyword(data, index, "true")) { index += 4; return true; }
+        if (StartsWithKeyword(data, index, "false")) { index += 5; return true; }
+        if (IsNumberStart(data[index])) {
+            if (!TrySkipNumberToken(data, ref index)) return false;
+            var saved = index;
+            SkipWhitespace(data, ref index);
+            if (index < data.Length && IsNumberStart(data[index])) {
+                if (!TrySkipNumberToken(data, ref index)) return false;
+                SkipWhitespace(data, ref index);
+                if (index < data.Length && data[index] == (byte)'R') {
+                    index++;
+                    return true;
+                }
+                index = saved;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private static bool TrySkipArrayToken(ReadOnlySpan<byte> data, ref int index) {
+        if (index >= data.Length || data[index] != (byte)'[') return false;
+        index++;
+        var depth = 1;
+        while (index < data.Length) {
+            SkipWhitespace(data, ref index);
+            if (index >= data.Length) break;
+            if (data[index] == (byte)'[') {
+                depth++;
+                index++;
+                continue;
+            }
+            if (data[index] == (byte)']') {
+                depth--;
+                index++;
+                if (depth == 0) return true;
+                continue;
+            }
+            if (!TrySkipObjectToken(data, ref index)) return false;
+        }
+        return false;
     }
 
     private static bool TryReadHexString(ReadOnlySpan<byte> data, ref int index, out byte[] bytes) {
