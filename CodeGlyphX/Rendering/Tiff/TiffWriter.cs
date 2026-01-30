@@ -84,17 +84,30 @@ public static class TiffWriter {
             if (page.Stride < page.Width * 4) throw new ArgumentOutOfRangeException(nameof(page.Stride));
             if (page.Rgba.Length < page.Stride * page.Height) throw new ArgumentException("RGBA buffer is too small.", nameof(page.Rgba));
 
-            var encoded = EncodeStrip(page.Rgba, page.Width, page.Height, page.Stride, page.Compression);
-            encodedPages[i] = new EncodedPage(page.Width, page.Height, encoded.StripData, encoded.Compression, encoded.HasAlpha, encoded.Samples);
+            var rowsPerStrip = page.RowsPerStrip <= 0 || page.RowsPerStrip >= page.Height
+                ? page.Height
+                : page.RowsPerStrip;
+
+            if (rowsPerStrip == page.Height) {
+                var encoded = EncodeStrip(page.Rgba, page.Width, page.Height, page.Stride, page.Compression);
+                encodedPages[i] = EncodedPage.FromSingleStrip(page.Width, page.Height, encoded, rowsPerStrip);
+            } else {
+                var encoded = EncodeStrips(page.Rgba, page.Width, page.Height, page.Stride, page.Compression, rowsPerStrip);
+                encodedPages[i] = EncodedPage.FromStrips(page.Width, page.Height, encoded);
+            }
         }
 
         var offset = 8L;
         for (var i = 0; i < encodedPages.Length; i++) {
-            var length = encodedPages[i].StripData.Length;
-            if (offset > uint.MaxValue) throw new InvalidOperationException("TIFF data exceeds supported size.");
-            encodedPages[i].StripOffset = (uint)offset;
-            offset += length;
-            if ((offset & 1) != 0) offset++;
+            var page = encodedPages[i];
+            page.StripOffsets = new uint[page.Strips.Length];
+            for (var s = 0; s < page.Strips.Length; s++) {
+                if (offset > uint.MaxValue) throw new InvalidOperationException("TIFF data exceeds supported size.");
+                page.StripOffsets[s] = (uint)offset;
+                offset += page.Strips[s].Length;
+                if ((offset & 1) != 0) offset++;
+            }
+            encodedPages[i] = page;
         }
 
         if ((offset & 1) != 0) offset++;
@@ -102,16 +115,33 @@ public static class TiffWriter {
 
         var ifdOffset = ifdStart;
         for (var i = 0; i < encodedPages.Length; i++) {
-            var entryCount = (ushort)(encodedPages[i].HasAlpha ? 11 : 10);
+            var page = encodedPages[i];
+            var entryCount = (ushort)(page.HasAlpha ? 11 : 10);
             var ifdSize = 2 + entryCount * 12 + 4;
-            var bitsOffset = ifdOffset + ifdSize;
+            var extraOffset = ifdOffset + ifdSize;
+            if ((extraOffset & 1) != 0) extraOffset++;
+
+            if (page.Strips.Length > 1) {
+                page.StripOffsetsOffset = (uint)extraOffset;
+                extraOffset += page.Strips.Length * 4L;
+                if ((extraOffset & 1) != 0) extraOffset++;
+                page.StripByteCountsOffset = (uint)extraOffset;
+                extraOffset += page.Strips.Length * 4L;
+                if ((extraOffset & 1) != 0) extraOffset++;
+            } else {
+                page.StripOffsetsOffset = 0;
+                page.StripByteCountsOffset = 0;
+            }
+
+            var bitsOffset = extraOffset;
             if ((bitsOffset & 1) != 0) bitsOffset++;
-            var bitsSize = encodedPages[i].Samples * 2;
+            var bitsSize = page.Samples * 2;
             if (ifdOffset > uint.MaxValue || bitsOffset > uint.MaxValue) throw new InvalidOperationException("TIFF data exceeds supported size.");
 
-            encodedPages[i].IfdOffset = (uint)ifdOffset;
-            encodedPages[i].BitsOffset = (uint)bitsOffset;
+            page.IfdOffset = (uint)ifdOffset;
+            page.BitsOffset = (uint)bitsOffset;
             ifdOffset = bitsOffset + bitsSize;
+            encodedPages[i] = page;
         }
 
         WriteAscii(stream, "II");
@@ -119,10 +149,13 @@ public static class TiffWriter {
         WriteUInt32(stream, encodedPages[0].IfdOffset);
 
         for (var i = 0; i < encodedPages.Length; i++) {
-            var stripData = encodedPages[i].StripData;
-            stream.Write(stripData, 0, stripData.Length);
-            if ((stream.Position & 1) != 0) {
-                stream.WriteByte(0);
+            var page = encodedPages[i];
+            for (var s = 0; s < page.Strips.Length; s++) {
+                var strip = page.Strips[s];
+                stream.Write(strip, 0, strip.Length);
+                if ((stream.Position & 1) != 0) {
+                    stream.WriteByte(0);
+                }
             }
         }
 
@@ -145,10 +178,10 @@ public static class TiffWriter {
             WriteIfdEntry(stream, 258, 3, page.Samples, page.BitsOffset); // BitsPerSample
             WriteIfdEntry(stream, 259, 3, 1, page.Compression); // Compression
             WriteIfdEntry(stream, 262, 3, 1, 2); // PhotometricInterpretation (RGB)
-            WriteIfdEntry(stream, 273, 4, 1, page.StripOffset); // StripOffsets
+            WriteIfdEntry(stream, 273, 4, (uint)page.Strips.Length, page.Strips.Length == 1 ? page.StripOffsets[0] : page.StripOffsetsOffset); // StripOffsets
             WriteIfdEntry(stream, 277, 3, 1, page.Samples); // SamplesPerPixel
-            WriteIfdEntry(stream, 278, 4, 1, (uint)page.Height); // RowsPerStrip
-            WriteIfdEntry(stream, 279, 4, 1, (uint)page.StripData.Length); // StripByteCounts
+            WriteIfdEntry(stream, 278, 4, 1, (uint)page.RowsPerStrip); // RowsPerStrip
+            WriteIfdEntry(stream, 279, 4, (uint)page.Strips.Length, page.Strips.Length == 1 ? page.ByteCounts[0] : page.StripByteCountsOffset); // StripByteCounts
             WriteIfdEntry(stream, 284, 3, 1, 1); // PlanarConfiguration (chunky)
             if (page.HasAlpha) {
                 WriteIfdEntry(stream, 338, 3, 1, 1); // ExtraSamples (unassociated alpha)
@@ -156,6 +189,20 @@ public static class TiffWriter {
 
             var nextIfd = i + 1 < encodedPages.Length ? encodedPages[i + 1].IfdOffset : 0u;
             WriteUInt32(stream, nextIfd);
+
+            if (page.Strips.Length > 1) {
+                if (stream.Position < page.StripOffsetsOffset) {
+                    var pad = (int)(page.StripOffsetsOffset - stream.Position);
+                    stream.Write(new byte[pad], 0, pad);
+                }
+                WriteUInt32Array(stream, page.StripOffsets);
+
+                if (stream.Position < page.StripByteCountsOffset) {
+                    var pad = (int)(page.StripByteCountsOffset - stream.Position);
+                    stream.Write(new byte[pad], 0, pad);
+                }
+                WriteUInt32Array(stream, page.ByteCounts);
+            }
 
             if (stream.Position < page.BitsOffset) {
                 var pad = (int)(page.BitsOffset - stream.Position);
@@ -597,25 +644,65 @@ public static class TiffWriter {
     }
 
     private struct EncodedPage {
-        public EncodedPage(int width, int height, byte[] stripData, ushort compression, bool hasAlpha, ushort samples) {
+        public static EncodedPage FromSingleStrip(int width, int height, EncodedStrip encoded, int rowsPerStrip) {
+            return new EncodedPage(
+                width,
+                height,
+                new[] { encoded.StripData },
+                new[] { (uint)encoded.StripData.Length },
+                encoded.Compression,
+                encoded.HasAlpha,
+                encoded.Samples,
+                rowsPerStrip);
+        }
+
+        public static EncodedPage FromStrips(int width, int height, EncodedStrips encoded) {
+            return new EncodedPage(
+                width,
+                height,
+                encoded.Strips,
+                encoded.ByteCounts,
+                encoded.Compression,
+                encoded.HasAlpha,
+                encoded.Samples,
+                encoded.RowsPerStrip);
+        }
+
+        private EncodedPage(
+            int width,
+            int height,
+            byte[][] strips,
+            uint[] byteCounts,
+            ushort compression,
+            bool hasAlpha,
+            ushort samples,
+            int rowsPerStrip) {
             Width = width;
             Height = height;
-            StripData = stripData;
+            Strips = strips;
+            ByteCounts = byteCounts;
             Compression = compression;
             HasAlpha = hasAlpha;
             Samples = samples;
-            StripOffset = 0;
+            RowsPerStrip = rowsPerStrip;
+            StripOffsets = Array.Empty<uint>();
+            StripOffsetsOffset = 0;
+            StripByteCountsOffset = 0;
             IfdOffset = 0;
             BitsOffset = 0;
         }
 
         public int Width { get; }
         public int Height { get; }
-        public byte[] StripData { get; }
+        public byte[][] Strips { get; }
+        public uint[] ByteCounts { get; }
         public ushort Compression { get; }
         public bool HasAlpha { get; }
         public ushort Samples { get; }
-        public uint StripOffset { get; set; }
+        public int RowsPerStrip { get; }
+        public uint[] StripOffsets { get; set; }
+        public uint StripOffsetsOffset { get; set; }
+        public uint StripByteCountsOffset { get; set; }
         public uint IfdOffset { get; set; }
         public uint BitsOffset { get; set; }
     }

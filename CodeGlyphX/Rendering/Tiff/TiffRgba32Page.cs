@@ -16,6 +16,19 @@ public readonly struct TiffRgba32Page {
         Height = height;
         Stride = stride;
         Compression = compression;
+        RowsPerStrip = 0;
+    }
+
+    /// <summary>
+    /// Creates a TIFF page backed by an RGBA32 buffer with explicit rows-per-strip.
+    /// </summary>
+    public TiffRgba32Page(byte[] rgba, int width, int height, int stride, TiffCompressionMode compression, int rowsPerStrip) {
+        Rgba = rgba ?? throw new ArgumentNullException(nameof(rgba));
+        Width = width;
+        Height = height;
+        Stride = stride;
+        Compression = compression;
+        RowsPerStrip = rowsPerStrip;
     }
 
     /// <summary>
@@ -42,4 +55,9 @@ public readonly struct TiffRgba32Page {
     /// Compression to use for the page.
     /// </summary>
     public TiffCompressionMode Compression { get; }
+
+    /// <summary>
+    /// Rows per strip (0 = single strip).
+    /// </summary>
+    public int RowsPerStrip { get; }
 }
