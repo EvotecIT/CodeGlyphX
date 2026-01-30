@@ -16,10 +16,8 @@ internal static class QrAsciiExample {
 
         var payload = "https://example.com/console";
         var payloadCompact = "https://exm.pl";
-        var payloadLarge = "https://example.com/console?ref=codematrix";
         var qr = QrCodeEncoder.EncodeText(payload, QrErrorCorrectionLevel.M);
         var qrCompact = QrCodeEncoder.EncodeText(payloadCompact, QrErrorCorrectionLevel.M);
-        var qrLarge = QrCodeEncoder.EncodeText(payloadLarge, QrErrorCorrectionLevel.M);
 
         var darkCompactOptions = AsciiConsolePresets.CompactDarkForeground();
         darkCompactOptions.DarkColor = new Rgba32(0, 220, 255);

@@ -87,7 +87,7 @@ public static class MatrixAsciiRenderer {
                 var inBounds = (uint)mx < (uint)modules.Width && (uint)my < (uint)modules.Height;
                 var isDark = inBounds && modules[mx, my];
                 if (invert) isDark = !isDark;
-                if (perModuleColor && useAnsi && isDark && inBounds) {
+                if (perModuleColor && isDark && inBounds) {
                     var color = GetDarkColor(mx, my, modules.Width, modules.Height, opts, ansiDarkColor);
                     var prefix = BuildAnsiColorPrefix(CompositeOverWhite(color), ansiTrueColor);
                     row.Append(prefix).Append(darkContent).Append(AnsiReset);
