@@ -564,18 +564,25 @@ public static class PdfReader {
             return true;
         }
 
+        var expandedScaled = !info.IsImageMask && info.ColorSpaceKind != PdfColorSpaceKind.Indexed;
+        byte[]? maskAlpha = null;
+        if (info.Mask is not null && info.Mask.Length >= colors * 2) {
+            if (TryBuildMaskAlpha(expanded, info.Width, info.Height, colors, info.BitsPerComponent, info.Mask, expandedScaled, out var alpha)) {
+                maskAlpha = alpha;
+            }
+        }
+
         if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed) {
             if (!TryExpandIndexed(info, expanded, out rgba)) return false;
+            if (maskAlpha is not null) {
+                var pixelCount = info.Width * info.Height;
+                for (var i = 0; i < pixelCount; i++) {
+                    rgba[i * 4 + 3] = maskAlpha[i];
+                }
+            }
             width = info.Width;
             height = info.Height;
             return true;
-        }
-
-        byte[]? maskAlpha = null;
-        if (info.Mask is not null && info.Mask.Length >= colors * 2) {
-            if (TryBuildMaskAlpha(expanded, info.Width, info.Height, colors, info.BitsPerComponent, info.Mask, out var alpha)) {
-                maskAlpha = alpha;
-            }
         }
 
         if (info.Decode is not null && info.Decode.Length >= colors * 2) {
@@ -629,13 +636,46 @@ public static class PdfReader {
         return true;
     }
 
-    private static bool TryBuildMaskAlpha(byte[] expanded, int width, int height, int colors, int bitsPerComponent, float[] mask, out byte[] alpha) {
+    private static bool TryBuildMaskAlpha(byte[] expanded, int width, int height, int colors, int bitsPerComponent, float[] mask, bool expandedScaled, out byte[] alpha) {
         alpha = Array.Empty<byte>();
         if (width <= 0 || height <= 0 || colors <= 0) return false;
         if (mask.Length < colors * 2) return false;
         var maxValue = bitsPerComponent == 16 ? 65535 : (1 << bitsPerComponent) - 1;
         if (maxValue <= 0) return false;
-        var ranges = new byte[colors * 2];
+        if (expandedScaled) {
+            var ranges = new byte[colors * 2];
+            for (var c = 0; c < colors; c++) {
+                var min = ClampMaskValue(mask[c * 2], maxValue);
+                var max = ClampMaskValue(mask[c * 2 + 1], maxValue);
+                if (min > max) {
+                    var tmp = min;
+                    min = max;
+                    max = tmp;
+                }
+                ranges[c * 2] = ScaleMaskValue(min, maxValue);
+                ranges[c * 2 + 1] = ScaleMaskValue(max, maxValue);
+            }
+
+            var pixelCount = width * height;
+            alpha = new byte[pixelCount];
+            for (var i = 0; i < pixelCount; i++) {
+                var baseIndex = i * colors;
+                var match = true;
+                for (var c = 0; c < colors; c++) {
+                    var v = expanded[baseIndex + c];
+                    var min = ranges[c * 2];
+                    var max = ranges[c * 2 + 1];
+                    if (v < min || v > max) {
+                        match = false;
+                        break;
+                    }
+                }
+                alpha[i] = match ? (byte)0 : (byte)255;
+            }
+            return true;
+        }
+
+        var rawRanges = new int[colors * 2];
         for (var c = 0; c < colors; c++) {
             var min = ClampMaskValue(mask[c * 2], maxValue);
             var max = ClampMaskValue(mask[c * 2 + 1], maxValue);
@@ -644,19 +684,19 @@ public static class PdfReader {
                 min = max;
                 max = tmp;
             }
-            ranges[c * 2] = ScaleMaskValue(min, maxValue);
-            ranges[c * 2 + 1] = ScaleMaskValue(max, maxValue);
+            rawRanges[c * 2] = min;
+            rawRanges[c * 2 + 1] = max;
         }
 
-        var pixelCount = width * height;
-        alpha = new byte[pixelCount];
-        for (var i = 0; i < pixelCount; i++) {
+        var count = width * height;
+        alpha = new byte[count];
+        for (var i = 0; i < count; i++) {
             var baseIndex = i * colors;
             var match = true;
             for (var c = 0; c < colors; c++) {
                 var v = expanded[baseIndex + c];
-                var min = ranges[c * 2];
-                var max = ranges[c * 2 + 1];
+                var min = rawRanges[c * 2];
+                var max = rawRanges[c * 2 + 1];
                 if (v < min || v > max) {
                     match = false;
                     break;
