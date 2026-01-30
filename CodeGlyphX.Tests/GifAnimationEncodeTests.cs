@@ -64,6 +64,32 @@ public sealed class GifAnimationEncodeTests {
         Assert.All(packedFields, packed => Assert.Equal(0, packed & 0x80));
     }
 
+    [Fact]
+    public void Gif_AnimationEncode_UsesGlobalPalette_WhenUnionFits() {
+        const int width = 2;
+        const int height = 1;
+        const int stride = width * 4;
+
+        var frame1 = new byte[] {
+            255, 0, 0, 255,     0, 255, 0, 255
+        };
+
+        var frame2 = new byte[] {
+            0, 0, 255, 255,     0, 255, 0, 255
+        };
+
+        var frames = new[] {
+            new GifAnimationFrame(frame1, width, height, stride, durationMs: 80),
+            new GifAnimationFrame(frame2, width, height, stride, durationMs: 80)
+        };
+
+        var gif = GifWriter.WriteAnimationRgba32(width, height, frames, new GifAnimationOptions(loopCount: 0, backgroundRgba: 0x00FF00FF));
+
+        var packedFields = CollectImagePackedFields(gif);
+        Assert.Equal(2, packedFields.Length);
+        Assert.All(packedFields, packed => Assert.Equal(0, packed & 0x80));
+    }
+
     private static byte[] CollectImagePackedFields(ReadOnlySpan<byte> gif) {
         if (gif.Length < 13) throw new InvalidOperationException("GIF data too small.");
         if (gif[0] != (byte)'G' || gif[1] != (byte)'I' || gif[2] != (byte)'F') {

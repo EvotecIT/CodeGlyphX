@@ -98,8 +98,9 @@ public static class GifWriter {
             indexedFrames[i] = BuildIndexedFrame(frame.Rgba, frame.Width, frame.Height, frame.Stride);
         }
 
-        var useGlobalPalette = TryBuildGlobalPalette(indexedFrames, options.BackgroundRgba, out var globalPalette, out var globalPaletteSize, out var globalMinCodeSize, out var backgroundIndex);
+        var useGlobalPalette = TryBuildGlobalPalette(frames, options.BackgroundRgba, out var globalFrames, out var globalPalette, out var globalPaletteSize, out var globalMinCodeSize, out var backgroundIndex);
         if (useGlobalPalette) {
+            indexedFrames = globalFrames;
             WriteHeader(stream, canvasWidth, canvasHeight, globalPalette, globalPaletteSize, (byte)backgroundIndex);
         } else {
             WriteHeader(stream, canvasWidth, canvasHeight, BuildBackgroundPalette(options.BackgroundRgba), paletteSize: 2, backgroundIndex: 0);
@@ -212,12 +213,14 @@ public static class GifWriter {
     }
 
     private static bool TryBuildGlobalPalette(
-        GifIndexedFrame[] frames,
+        ReadOnlySpan<GifAnimationFrame> frames,
         uint backgroundRgba,
+        out GifIndexedFrame[] remappedFrames,
         out byte[] palette,
         out int paletteSize,
         out int minCodeSize,
         out int backgroundIndex) {
+        remappedFrames = Array.Empty<GifIndexedFrame>();
         palette = Array.Empty<byte>();
         paletteSize = 0;
         minCodeSize = 0;
@@ -225,40 +228,110 @@ public static class GifWriter {
 
         if (frames.Length == 0) return false;
 
-        var first = frames[0];
-        var paletteBytes = first.PaletteSize * 3;
-        for (var i = 1; i < frames.Length; i++) {
+        var colorMap = new Dictionary<int, int>(PaletteSize);
+        var colors = new List<int>(PaletteSize);
+        var hasTransparency = false;
+
+        for (var i = 0; i < frames.Length; i++) {
             var frame = frames[i];
-            if (frame.PaletteSize != first.PaletteSize) return false;
-            if (frame.TransparentIndex != first.TransparentIndex) return false;
-            if (frame.HasTransparency != first.HasTransparency) return false;
-            if (frame.Palette.Length < paletteBytes || first.Palette.Length < paletteBytes) return false;
-            for (var p = 0; p < paletteBytes; p++) {
-                if (frame.Palette[p] != first.Palette[p]) return false;
+            var rgba = frame.Rgba;
+            var width = frame.Width;
+            var height = frame.Height;
+            var stride = frame.Stride;
+            for (var y = 0; y < height; y++) {
+                var row = y * stride;
+                for (var x = 0; x < width; x++) {
+                    var idx = row + x * 4;
+                    var a = rgba[idx + 3];
+                    if (a < 128) {
+                        if (!hasTransparency) {
+                            hasTransparency = true;
+                            if (colors.Count > PaletteSize - 1) return false;
+                        }
+                        continue;
+                    }
+
+                    var key = (rgba[idx + 0] << 16) | (rgba[idx + 1] << 8) | rgba[idx + 2];
+                    if (!colorMap.ContainsKey(key)) {
+                        var maxColors = hasTransparency ? PaletteSize - 1 : PaletteSize;
+                        if (colors.Count >= maxColors) return false;
+                        colorMap[key] = colors.Count;
+                        colors.Add(key);
+                    }
+                }
             }
         }
 
-        var r = (byte)((backgroundRgba >> 24) & 0xFF);
-        var g = (byte)((backgroundRgba >> 16) & 0xFF);
-        var b = (byte)((backgroundRgba >> 8) & 0xFF);
-        var index = FindPaletteIndex(first.Palette, first.PaletteSize, r, g, b);
-        if (index < 0) return false;
+        var backgroundKey = (int)(((backgroundRgba >> 24) & 0xFF) << 16 |
+                                  ((backgroundRgba >> 16) & 0xFF) << 8 |
+                                  ((backgroundRgba >> 8) & 0xFF));
+        if (!colorMap.TryGetValue(backgroundKey, out backgroundIndex)) {
+            var maxColors = hasTransparency ? PaletteSize - 1 : PaletteSize;
+            if (colors.Count >= maxColors) return false;
+            backgroundIndex = colors.Count;
+            colorMap[backgroundKey] = backgroundIndex;
+            colors.Add(backgroundKey);
+        }
 
-        palette = first.Palette;
-        paletteSize = first.PaletteSize;
-        minCodeSize = Math.Max(2, Log2(paletteSize));
-        backgroundIndex = index;
+        var transparentIndex = -1;
+        if (hasTransparency) {
+            if (colors.Count > PaletteSize - 1) return false;
+            transparentIndex = colors.Count;
+        }
+
+        var paletteCount = colors.Count + (hasTransparency ? 1 : 0);
+        var paletteSizePower = NextPowerOfTwo(Math.Max(paletteCount, 2), PaletteSize);
+        var localPalette = new byte[paletteSizePower * 3];
+        for (var i = 0; i < colors.Count; i++) {
+            var color = colors[i];
+            localPalette[i * 3 + 0] = (byte)((color >> 16) & 0xFF);
+            localPalette[i * 3 + 1] = (byte)((color >> 8) & 0xFF);
+            localPalette[i * 3 + 2] = (byte)(color & 0xFF);
+        }
+
+        palette = localPalette;
+        paletteSize = paletteSizePower;
+        minCodeSize = Math.Max(2, Log2(paletteSizePower));
+
+        remappedFrames = new GifIndexedFrame[frames.Length];
+        for (var i = 0; i < frames.Length; i++) {
+            var frame = frames[i];
+            var rgba = frame.Rgba;
+            var width = frame.Width;
+            var height = frame.Height;
+            var stride = frame.Stride;
+            var pixels = new byte[width * height];
+            var dst = 0;
+            var frameHasTransparency = false;
+
+            for (var y = 0; y < height; y++) {
+                var row = y * stride;
+                for (var x = 0; x < width; x++) {
+                    var idx = row + x * 4;
+                    var a = rgba[idx + 3];
+                    if (a < 128) {
+                        if (transparentIndex < 0) return false;
+                        pixels[dst++] = (byte)transparentIndex;
+                        frameHasTransparency = true;
+                        continue;
+                    }
+
+                    var key = (rgba[idx + 0] << 16) | (rgba[idx + 1] << 8) | rgba[idx + 2];
+                    if (!colorMap.TryGetValue(key, out var mapped)) return false;
+                    pixels[dst++] = (byte)mapped;
+                }
+            }
+
+            remappedFrames[i] = new GifIndexedFrame(
+                pixels,
+                localPalette,
+                paletteSizePower,
+                minCodeSize,
+                frameHasTransparency,
+                transparentIndex < 0 ? 0 : transparentIndex);
+        }
+
         return true;
-    }
-
-    private static int FindPaletteIndex(byte[] palette, int paletteSize, byte r, byte g, byte b) {
-        var max = paletteSize * 3;
-        for (var i = 0; i < max; i += 3) {
-            if (palette[i] == r && palette[i + 1] == g && palette[i + 2] == b) {
-                return i / 3;
-            }
-        }
-        return -1;
     }
 
     private static void WriteSubBlocks(Stream stream, byte[] data) {
