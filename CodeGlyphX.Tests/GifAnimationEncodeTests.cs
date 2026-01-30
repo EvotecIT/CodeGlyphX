@@ -90,6 +90,47 @@ public sealed class GifAnimationEncodeTests {
         Assert.All(packedFields, packed => Assert.Equal(0, packed & 0x80));
     }
 
+    [Fact]
+    public void Gif_AnimationEncode_UsesGlobalPalette_WhenUnionExceedsLimit() {
+        const int width = 20;
+        const int height = 20;
+        const int stride = width * 4;
+        var pixelCount = width * height;
+
+        var frame1 = new byte[pixelCount * 4];
+        var frame2 = new byte[pixelCount * 4];
+
+        FillUniqueColors(frame1, offset: 0);
+        FillUniqueColors(frame2, offset: 400);
+
+        var frames = new[] {
+            new GifAnimationFrame(frame1, width, height, stride, durationMs: 80),
+            new GifAnimationFrame(frame2, width, height, stride, durationMs: 80)
+        };
+
+        var gif = GifWriter.WriteAnimationRgba32(width, height, frames, new GifAnimationOptions(loopCount: 0, backgroundRgba: 0x000000FF));
+
+        var packedFields = CollectImagePackedFields(gif);
+        Assert.Equal(2, packedFields.Length);
+        Assert.All(packedFields, packed => Assert.Equal(0, packed & 0x80));
+        Assert.True(GifReader.TryDecodeAnimationFrames(gif, out _, out _, out _, out _));
+    }
+
+    private static void FillUniqueColors(byte[] rgba, int offset) {
+        var pixelCount = rgba.Length / 4;
+        for (var i = 0; i < pixelCount; i++) {
+            var value = offset + i;
+            var r = (byte)(value & 0xFF);
+            var g = (byte)((value >> 8) & 0xFF);
+            var b = (byte)((value >> 16) & 0xFF);
+            var idx = i * 4;
+            rgba[idx] = r;
+            rgba[idx + 1] = g;
+            rgba[idx + 2] = b;
+            rgba[idx + 3] = 255;
+        }
+    }
+
     private static byte[] CollectImagePackedFields(ReadOnlySpan<byte> gif) {
         if (gif.Length < 13) throw new InvalidOperationException("GIF data too small.");
         if (gif[0] != (byte)'G' || gif[1] != (byte)'I' || gif[2] != (byte)'F') {

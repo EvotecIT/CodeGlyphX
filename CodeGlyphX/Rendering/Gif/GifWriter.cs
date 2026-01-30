@@ -220,6 +220,21 @@ public static class GifWriter {
         out int paletteSize,
         out int minCodeSize,
         out int backgroundIndex) {
+        if (TryBuildExactGlobalPalette(frames, backgroundRgba, out remappedFrames, out palette, out paletteSize, out minCodeSize, out backgroundIndex)) {
+            return true;
+        }
+
+        return TryBuildQuantizedGlobalPalette(frames, backgroundRgba, out remappedFrames, out palette, out paletteSize, out minCodeSize, out backgroundIndex);
+    }
+
+    private static bool TryBuildExactGlobalPalette(
+        ReadOnlySpan<GifAnimationFrame> frames,
+        uint backgroundRgba,
+        out GifIndexedFrame[] remappedFrames,
+        out byte[] palette,
+        out int paletteSize,
+        out int minCodeSize,
+        out int backgroundIndex) {
         remappedFrames = Array.Empty<GifIndexedFrame>();
         palette = Array.Empty<byte>();
         paletteSize = 0;
@@ -332,6 +347,78 @@ public static class GifWriter {
         }
 
         return true;
+    }
+
+    private static bool TryBuildQuantizedGlobalPalette(
+        ReadOnlySpan<GifAnimationFrame> frames,
+        uint backgroundRgba,
+        out GifIndexedFrame[] remappedFrames,
+        out byte[] palette,
+        out int paletteSize,
+        out int minCodeSize,
+        out int backgroundIndex) {
+        remappedFrames = Array.Empty<GifIndexedFrame>();
+        palette = Array.Empty<byte>();
+        paletteSize = 0;
+        minCodeSize = 0;
+        backgroundIndex = 0;
+
+        if (frames.Length == 0) return false;
+
+        var histogram = BuildHistogram(frames, out var hasTransparency);
+        var maxColors = hasTransparency ? PaletteSize - 1 : PaletteSize;
+        var paletteColors = BuildMedianCutPalette(histogram, maxColors, out var paletteCount);
+
+        var paletteSizePower = NextPowerOfTwo(Math.Max(paletteCount + (hasTransparency ? 1 : 0), 2), PaletteSize);
+        var localPalette = new byte[paletteSizePower * 3];
+        Buffer.BlockCopy(paletteColors, 0, localPalette, 0, paletteCount * 3);
+
+        var transparentIndex = hasTransparency ? paletteCount : -1;
+
+        palette = localPalette;
+        paletteSize = paletteSizePower;
+        minCodeSize = Math.Max(2, Log2(paletteSizePower));
+
+        backgroundIndex = FindNearestPaletteIndex(localPalette, paletteCount, backgroundRgba);
+
+        var paletteMap = BuildPaletteMap(localPalette, paletteCount);
+        remappedFrames = new GifIndexedFrame[frames.Length];
+        for (var i = 0; i < frames.Length; i++) {
+            var frame = frames[i];
+            remappedFrames[i] = BuildIndexedFrameWithPaletteMap(
+                frame.Rgba,
+                frame.Width,
+                frame.Height,
+                frame.Stride,
+                localPalette,
+                paletteSizePower,
+                minCodeSize,
+                transparentIndex,
+                paletteMap);
+        }
+
+        return true;
+    }
+
+    private static int FindNearestPaletteIndex(byte[] palette, int paletteCount, uint backgroundRgba) {
+        var r = (byte)((backgroundRgba >> 24) & 0xFF);
+        var g = (byte)((backgroundRgba >> 16) & 0xFF);
+        var b = (byte)((backgroundRgba >> 8) & 0xFF);
+        var best = 0;
+        var bestDist = int.MaxValue;
+        for (var i = 0; i < paletteCount; i++) {
+            var baseIndex = i * 3;
+            var dr = r - palette[baseIndex + 0];
+            var dg = g - palette[baseIndex + 1];
+            var db = b - palette[baseIndex + 2];
+            var dist = dr * dr + dg * dg + db * db;
+            if (dist < bestDist) {
+                bestDist = dist;
+                best = i;
+                if (dist == 0) break;
+            }
+        }
+        return best;
     }
 
     private static void WriteSubBlocks(Stream stream, byte[] data) {
@@ -565,6 +652,95 @@ public static class GifWriter {
         return new GifIndexedFrame(pixels, palette, paletteSizePower, minCodeSize, hasTransparency, transparentIndex);
     }
 
+    private static GifIndexedFrame BuildIndexedFrameWithPaletteMap(
+        ReadOnlySpan<byte> rgba,
+        int width,
+        int height,
+        int stride,
+        byte[] palette,
+        int paletteSize,
+        int minCodeSize,
+        int transparentIndex,
+        int[] paletteMap) {
+        var pixels = new byte[width * height];
+        var errR = new int[width + 1];
+        var errG = new int[width + 1];
+        var errB = new int[width + 1];
+        var nextErrR = new int[width + 1];
+        var nextErrG = new int[width + 1];
+        var nextErrB = new int[width + 1];
+        var dst = 0;
+        var hasTransparency = false;
+
+        for (var y = 0; y < height; y++) {
+            Array.Clear(nextErrR, 0, nextErrR.Length);
+            Array.Clear(nextErrG, 0, nextErrG.Length);
+            Array.Clear(nextErrB, 0, nextErrB.Length);
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var idx = row + x * 4;
+                var a = rgba[idx + 3];
+                if (a < 128) {
+                    pixels[dst++] = (byte)(transparentIndex < 0 ? 0 : transparentIndex);
+                    hasTransparency = true;
+                    continue;
+                }
+
+                var r = ClampByte(rgba[idx + 0] + errR[x]);
+                var g = ClampByte(rgba[idx + 1] + errG[x]);
+                var b = ClampByte(rgba[idx + 2] + errB[x]);
+                var qIdx = ((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3);
+                var palIndex = paletteMap[qIdx];
+                pixels[dst++] = (byte)palIndex;
+
+                var baseIndex = palIndex * 3;
+                var pr = palette[baseIndex + 0];
+                var pg = palette[baseIndex + 1];
+                var pb = palette[baseIndex + 2];
+                var errRVal = r - pr;
+                var errGVal = g - pg;
+                var errBVal = b - pb;
+
+                if (x + 1 < width) {
+                    errR[x + 1] += (errRVal * 7) / 16;
+                    errG[x + 1] += (errGVal * 7) / 16;
+                    errB[x + 1] += (errBVal * 7) / 16;
+                }
+                if (x > 0) {
+                    nextErrR[x - 1] += (errRVal * 3) / 16;
+                    nextErrG[x - 1] += (errGVal * 3) / 16;
+                    nextErrB[x - 1] += (errBVal * 3) / 16;
+                }
+                nextErrR[x] += (errRVal * 5) / 16;
+                nextErrG[x] += (errGVal * 5) / 16;
+                nextErrB[x] += (errBVal * 5) / 16;
+                if (x + 1 < width) {
+                    nextErrR[x + 1] += errRVal / 16;
+                    nextErrG[x + 1] += errGVal / 16;
+                    nextErrB[x + 1] += errBVal / 16;
+                }
+            }
+
+            var swapR = errR;
+            var swapG = errG;
+            var swapB = errB;
+            errR = nextErrR;
+            errG = nextErrG;
+            errB = nextErrB;
+            nextErrR = swapR;
+            nextErrG = swapG;
+            nextErrB = swapB;
+        }
+
+        return new GifIndexedFrame(
+            pixels,
+            palette,
+            paletteSize,
+            minCodeSize,
+            hasTransparency,
+            transparentIndex < 0 ? 0 : transparentIndex);
+    }
+
     private static int[] BuildHistogram(ReadOnlySpan<byte> rgba, int width, int height, int stride) {
         var histogram = new int[32 * 32 * 32];
         for (var y = 0; y < height; y++) {
@@ -577,6 +753,34 @@ public static class GifWriter {
                 var b5 = rgba[idx + 2] >> 3;
                 var colorIndex = (r5 << 10) | (g5 << 5) | b5;
                 histogram[colorIndex]++;
+            }
+        }
+        return histogram;
+    }
+
+    private static int[] BuildHistogram(ReadOnlySpan<GifAnimationFrame> frames, out bool hasTransparency) {
+        hasTransparency = false;
+        var histogram = new int[32 * 32 * 32];
+        for (var i = 0; i < frames.Length; i++) {
+            var frame = frames[i];
+            var rgba = frame.Rgba;
+            var width = frame.Width;
+            var height = frame.Height;
+            var stride = frame.Stride;
+            for (var y = 0; y < height; y++) {
+                var row = y * stride;
+                for (var x = 0; x < width; x++) {
+                    var idx = row + x * 4;
+                    if (rgba[idx + 3] < 128) {
+                        hasTransparency = true;
+                        continue;
+                    }
+                    var r5 = rgba[idx + 0] >> 3;
+                    var g5 = rgba[idx + 1] >> 3;
+                    var b5 = rgba[idx + 2] >> 3;
+                    var colorIndex = (r5 << 10) | (g5 << 5) | b5;
+                    histogram[colorIndex]++;
+                }
             }
         }
         return histogram;
