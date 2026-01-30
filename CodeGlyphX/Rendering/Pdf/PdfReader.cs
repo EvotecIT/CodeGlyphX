@@ -225,6 +225,9 @@ public static class PdfReader {
         }
 
         var colorSpaceKind = ParseColorSpaceName(colorSpace);
+        if (TryReadIccBasedColorSpaceAfterKey(dict, "/ColorSpace", out var iccBase)) {
+            colorSpaceKind = iccBase;
+        }
         if (TryReadIndexedColorSpaceAfterKey(dict, "/ColorSpace", out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
             info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, length, decode);
@@ -288,6 +291,9 @@ public static class PdfReader {
         }
 
         var colorSpaceKind = ParseColorSpaceName(colorSpace);
+        if (TryReadIccBasedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var iccBase)) {
+            colorSpaceKind = iccBase;
+        }
         if (TryReadIndexedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
             info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, streamLength: 0, decode);
@@ -866,6 +872,54 @@ public static class PdfReader {
             }
             if (predictorSet && colorsSet && lzwEarlyChangeSet) break;
         }
+    }
+
+    private static bool TryReadIccBasedColorSpaceAfterKey(ReadOnlySpan<byte> data, string key, out PdfColorSpaceKind baseKind) {
+        baseKind = PdfColorSpaceKind.Unknown;
+        if (!TryReadArraySliceAfterKey(data, key, out var array)) return false;
+        return TryReadIccBasedColorSpace(array, out baseKind);
+    }
+
+    private static bool TryReadIccBasedColorSpaceAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out PdfColorSpaceKind baseKind) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadIccBasedColorSpaceAfterKey(data, keys[i], out baseKind)) return true;
+        }
+        baseKind = PdfColorSpaceKind.Unknown;
+        return false;
+    }
+
+    private static bool TryReadIccBasedColorSpace(ReadOnlySpan<byte> array, out PdfColorSpaceKind baseKind) {
+        baseKind = PdfColorSpaceKind.Unknown;
+        var index = 0;
+        if (!TryReadNameToken(array, ref index, out var first) || !first.Equals("ICCBased", StringComparison.OrdinalIgnoreCase)) return false;
+        SkipWhitespace(array, ref index);
+        if (index >= array.Length) return false;
+        if (array[index] == (byte)'<' && index + 1 < array.Length && array[index + 1] == (byte)'<') {
+            if (!TryReadDictionarySliceAt(array, index, out var dict, out _)) return false;
+            string? alternate = null;
+            if (TryReadNameAfterKey(dict, "/Alternate", out var altName)) {
+                alternate = altName;
+            } else if (TryReadFirstNameInArrayAfterKey(dict, "/Alternate", out var altArrayName)) {
+                alternate = altArrayName;
+            }
+            if (!string.IsNullOrEmpty(alternate)) {
+                var altKind = ParseColorSpaceName(alternate);
+                if (altKind != PdfColorSpaceKind.Unknown) {
+                    baseKind = altKind;
+                    return true;
+                }
+            }
+            if (TryReadNumberAfterKey(dict, "/N", out var n)) {
+                baseKind = n switch {
+                    1 => PdfColorSpaceKind.DeviceGray,
+                    3 => PdfColorSpaceKind.DeviceRGB,
+                    4 => PdfColorSpaceKind.DeviceCMYK,
+                    _ => PdfColorSpaceKind.Unknown
+                };
+                return baseKind != PdfColorSpaceKind.Unknown;
+            }
+        }
+        return false;
     }
 
     private static bool TryReadIndexedColorSpaceAfterKey(ReadOnlySpan<byte> data, string key, out PdfColorSpaceKind baseKind, out int highVal, out byte[] lookup) {
