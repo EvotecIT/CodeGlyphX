@@ -211,52 +211,8 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 ## Benchmarks (local run)
 
 Latest benchmark tables are generated into `BENCHMARK.md` (and `Assets/Data/benchmark*.json`).
-Benchmarks below were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
-Benchmarks run on identical hardware with default settings.
+This README intentionally does not mirror benchmark tables to avoid drift. See `BENCHMARK.md` for the latest Windows/Linux/macOS quick and full runs, including timestamps and hardware details.
 Quick runs use fewer iterations but include the same scenario list as full runs (for BenchmarkDotNet tables). The QR pack runner uses a smaller quick pack set and adds art/stylized packs in full mode.
-
-### QR (Encode)
-
-| Scenario | Mean (us) | Allocated |
-| --- | --- | --- |
-| QR PNG (short text) | 331.33 | 431.94 KB |
-| QR PNG (medium text) | 713.68 | 837.75 KB |
-| QR PNG (long text) | 2197.99 | 3041.06 KB |
-| QR SVG (medium text) | 99.17 | 20.03 KB |
-| QR PNG (High EC) | 1094.94 | 1535.88 KB |
-| QR HTML (medium text) | 115.46 | 137.43 KB |
-
-### QR (Decode)
-
-| Scenario | Mean (ms) | Allocated | Notes |
-| --- | --- | --- | --- |
-| QR decode (clean, fast) | 2.148 | 103.9 KB | qr-clean-small.png |
-| QR decode (clean, balanced) | 2.124 | 103.9 KB | qr-clean-small.png |
-| QR decode (clean, robust) | 2.193 | 103.9 KB | qr-clean-small.png |
-| QR decode (noisy, robust) | 170.949 | 8507.41 KB | qr-noisy-ui.png (Robust, MaxMilliseconds=800) |
-
-### 1D Barcodes (Encode)
-
-| Scenario | Mean (us) | Allocated |
-| --- | --- | --- |
-| Code 128 PNG | 442.41 | 756.24 KB |
-| Code 128 SVG | 2.52 | 17.61 KB |
-| EAN PNG | 191.33 | 338.54 KB |
-| Code 39 PNG | 311.37 | 414.49 KB |
-| Code 93 PNG | 222.69 | 367.76 KB |
-| UPC-A PNG | 175.83 | 338.85 KB |
-
-### 2D Matrix Codes (Encode)
-
-| Scenario | Mean (us) | Allocated |
-| --- | --- | --- |
-| Data Matrix PNG (medium) | 303.48 | 447.73 KB |
-| Data Matrix PNG (long) | 711.93 | 1509.06 KB |
-| Data Matrix SVG | 5.64 | 12.29 KB |
-| PDF417 PNG | 1730.92 | 3154.87 KB |
-| PDF417 SVG | 28.79 | 64.53 KB |
-| Aztec PNG | 260.70 | 452.30 KB |
-| Aztec SVG | 12.76 | 59.74 KB |
 
 ### Performance checklist
 
