@@ -201,6 +201,11 @@ public static class PdfReader {
             colorSpace = csArrayName;
         }
 
+        var isImageMask = false;
+        if (TryReadBoolAfterKey(dict, "/ImageMask", out var imageMask)) {
+            isImageMask = imageMask;
+        }
+
         var softMaskObj = 0;
         var softMaskGen = 0;
         if (TryReadIndirectRefAfterKey(dict, "/SMask", out var smObj, out var smGen)) {
@@ -250,11 +255,11 @@ public static class PdfReader {
         }
         if (TryReadIndexedColorSpaceAfterKey(dict, "/ColorSpace", out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, length, decode, mask);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, isImageMask, length, decode, mask);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, length, decode, mask);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, isImageMask, length, decode, mask);
         return true;
     }
 
@@ -280,6 +285,11 @@ public static class PdfReader {
             colorSpace = csName;
         } else if (TryReadFirstNameInArrayAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var csArrayName)) {
             colorSpace = csArrayName;
+        }
+
+        var isImageMask = false;
+        if (TryReadBoolAfterAnyKey(dict, new[] { "/IM", "/ImageMask" }, out var imageMask)) {
+            isImageMask = imageMask;
         }
 
         var softMaskObj = 0;
@@ -331,11 +341,11 @@ public static class PdfReader {
         }
         if (TryReadIndexedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, streamLength: 0, decode, mask);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, isImageMask, streamLength: 0, decode, mask);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, streamLength: 0, decode, mask);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, isImageMask, streamLength: 0, decode, mask);
         return true;
     }
 
@@ -426,6 +436,9 @@ public static class PdfReader {
 
         var bits = info.BitsPerComponent;
         var colors = info.Colors;
+        if (info.IsImageMask) {
+            colors = 1;
+        }
         if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed) {
             colors = 1;
         } else if (colors <= 0) {
@@ -471,7 +484,7 @@ public static class PdfReader {
                 expanded = data.ToArray();
             }
         } else {
-            var scale = info.ColorSpaceKind != PdfColorSpaceKind.Indexed;
+            var scale = info.IsImageMask || info.ColorSpaceKind != PdfColorSpaceKind.Indexed;
             if (bits == 16) {
                 if (applyPredictor && info.Predictor == 2) {
                     var decoded16 = data.ToArray();
@@ -487,6 +500,25 @@ public static class PdfReader {
             } else {
                 if (!TryExpandSamples(data, info.Width, info.Height, colors, bits, scale, out expanded)) return false;
             }
+        }
+
+        if (info.IsImageMask) {
+            if (info.Decode is not null && info.Decode.Length >= 2) {
+                ApplyDecodeArray(expanded, 1, info.Decode);
+            }
+            var pixelCount = info.Width * info.Height;
+            rgba = new byte[pixelCount * 4];
+            for (var i = 0; i < pixelCount; i++) {
+                var dst = i * 4;
+                var alpha = expanded[i];
+                rgba[dst + 0] = 0;
+                rgba[dst + 1] = 0;
+                rgba[dst + 2] = 0;
+                rgba[dst + 3] = alpha;
+            }
+            width = info.Width;
+            height = info.Height;
+            return true;
         }
 
         if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed) {
@@ -719,6 +751,31 @@ public static class PdfReader {
             if (TryReadNumberAfterKey(data, keys[i], out value)) return true;
         }
         value = 0;
+        return false;
+    }
+
+    private static bool TryReadBoolAfterKey(ReadOnlySpan<byte> data, string key, out bool value) {
+        value = false;
+        var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
+        if (idx < 0) return false;
+        var i = idx + key.Length;
+        SkipWhitespace(data, ref i);
+        if (StartsWithKeyword(data, i, "true")) {
+            value = true;
+            return true;
+        }
+        if (StartsWithKeyword(data, i, "false")) {
+            value = false;
+            return true;
+        }
+        return false;
+    }
+
+    private static bool TryReadBoolAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out bool value) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadBoolAfterKey(data, keys[i], out value)) return true;
+        }
+        value = false;
         return false;
     }
 
@@ -2312,6 +2369,7 @@ public static class PdfReader {
             int lzwEarlyChange,
             int softMaskObj,
             int softMaskGen,
+            bool isImageMask,
             int streamLength,
             float[]? decode,
             float[]? mask) {
@@ -2328,6 +2386,7 @@ public static class PdfReader {
             LzwEarlyChange = lzwEarlyChange;
             SoftMaskObj = softMaskObj;
             SoftMaskGen = softMaskGen;
+            IsImageMask = isImageMask;
             StreamLength = streamLength;
             Decode = decode;
             Mask = mask;
@@ -2346,6 +2405,7 @@ public static class PdfReader {
         public int LzwEarlyChange { get; }
         public int SoftMaskObj { get; }
         public int SoftMaskGen { get; }
+        public bool IsImageMask { get; }
         public int StreamLength { get; }
         public float[]? Decode { get; }
         public float[]? Mask { get; }
