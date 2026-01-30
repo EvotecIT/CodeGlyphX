@@ -24,6 +24,18 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_Flate_16bit_Image() {
+        var rgb16 = new byte[] { 0x12, 0x34, 0xAB, 0xCD, 0xFF, 0xFF };
+        var pdf = BuildPdfWithFlateImage(1, 1, rgb16, "/DeviceRGB", bitsPerComponent: 16, "/Filter /FlateDecode ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x12, 0xAB, 0xFF, 255 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Flate_Filter_Array() {
         var rgb = new byte[] { 0, 255, 0 };
         var pdf = BuildPdfWithFlateImage(1, 1, rgb, "/DeviceRGB", bitsPerComponent: 8, "/Filter [/FlateDecode] ");

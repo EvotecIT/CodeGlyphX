@@ -1479,7 +1479,7 @@ public static class PdfReader {
 
     private static bool TryValidatePackedLength(int width, int height, int colors, int bitsPerComponent, int length) {
         if (width <= 0 || height <= 0 || colors <= 0) return false;
-        if (bitsPerComponent != 1 && bitsPerComponent != 2 && bitsPerComponent != 4) return false;
+        if (bitsPerComponent != 1 && bitsPerComponent != 2 && bitsPerComponent != 4 && bitsPerComponent != 16) return false;
         var rowBits = (long)width * colors * bitsPerComponent;
         var rowBytes = (int)((rowBits + 7) / 8);
         var expected = (long)rowBytes * height;
@@ -1488,6 +1488,20 @@ public static class PdfReader {
 
     private static bool TryExpandSamples(ReadOnlySpan<byte> data, int width, int height, int colors, int bitsPerComponent, bool scale, out byte[] expanded) {
         expanded = Array.Empty<byte>();
+        if (bitsPerComponent == 16) {
+            if (!scale) return false;
+            var samplesPerRow = checked(width * colors);
+            var rowBytes = checked(samplesPerRow * 2);
+            if ((long)rowBytes * height > data.Length) return false;
+            expanded = new byte[samplesPerRow * height];
+            var srcIndex = 0;
+            for (var i = 0; i < expanded.Length; i++) {
+                var value = (data[srcIndex] << 8) | data[srcIndex + 1];
+                srcIndex += 2;
+                expanded[i] = (byte)((value + 128) / 257);
+            }
+            return true;
+        }
         if (bitsPerComponent != 1 && bitsPerComponent != 2 && bitsPerComponent != 4) return false;
         var samplesPerRow = checked(width * colors);
         var rowBits = (long)samplesPerRow * bitsPerComponent;
