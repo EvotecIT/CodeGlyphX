@@ -1,55 +1,22 @@
-{
+﻿{
   "name": "OtpAuthType",
   "fullName": "CodeGlyphX.OtpAuthType",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-otpauthtype",
   "summary": "OTP token type for otpauth:// URIs.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.OtpAuthType.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Totp",
-      "kind": "Field",
-      "summary": "Time-based one-time password.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "OtpAuthType Totp",
-      "xmlId": "F:CodeGlyphX.OtpAuthType.Totp",
-      "anchor": "field-totp-otpauthtype-totp"
+      "summary": "Time-based one-time password."
     },
     {
       "name": "Hotp",
-      "kind": "Field",
-      "summary": "Counter-based one-time password.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "OtpAuthType Hotp",
-      "xmlId": "F:CodeGlyphX.OtpAuthType.Hotp",
-      "anchor": "field-hotp-otpauthtype-hotp"
+      "summary": "Counter-based one-time password."
     }
-  ]
+  ],
+  "events": []
 }

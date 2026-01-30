@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrPngLogoOptions",
   "fullName": "CodeGlyphX.Rendering.Png.QrPngLogoOptions",
   "namespace": "CodeGlyphX.Rendering.Png",
@@ -6,230 +6,120 @@
   "slug": "codeglyphx-rendering-png-qrpnglogooptions",
   "summary": "Options and pixel data for a centered logo overlay in a QR PNG.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "QrPngLogoOptions",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Creates a logo option with a packed RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "rgba",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPngLogoOptions(byte[] rgba, int width, int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.QrPngLogoOptions.#ctor(System.Byte[],System.Int32,System.Int32)",
-      "anchor": "constructor-qrpnglogooptions-qrpnglogooptions-byte-rgba-int-width-int-height"
+      ]
     },
     {
       "name": "FromPixels",
-      "kind": "Method",
       "summary": "Creates a logo option from a raw pixel buffer in BGRA/RGBA.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "pixels",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPngLogoOptions FromPixels(byte[] pixels, int width, int height, int stride, PixelFormat fmt)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.QrPngLogoOptions.FromPixels(System.Byte[],System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat)",
-      "anchor": "method-frompixels-static-qrpnglogooptions-frompixels-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt"
+      ]
     },
     {
       "name": "FromPng",
-      "kind": "Method",
       "summary": "Creates a logo option from a PNG (RGBA or RGB, non-interlaced).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "png",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPngLogoOptions FromPng(byte[] png)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.QrPngLogoOptions.FromPng(System.Byte[])",
-      "anchor": "method-frompng-static-qrpnglogooptions-frompng-byte-png"
+      ]
     },
     {
       "name": "FromPngFile",
-      "kind": "Method",
       "summary": "Creates a logo option from a PNG file.",
-      "remarks": null,
       "returns": "Logo options.",
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": "PNG file path."
+          "type": "System.String",
+          "summary": "PNG file path."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPngLogoOptions FromPngFile(string path)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.QrPngLogoOptions.FromPngFile(System.String)",
-      "anchor": "method-frompngfile-static-qrpnglogooptions-frompngfile-string-path"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "Rgba",
-      "kind": "Property",
-      "summary": "Logo pixels in RGBA order, row-major, tightly packed.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Rgba {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.QrPngLogoOptions.Rgba",
-      "anchor": "property-rgba-byte-rgba-get"
+      "summary": "Logo pixels in RGBA order, row-major, tightly packed."
     },
     {
       "name": "Width",
-      "kind": "Property",
-      "summary": "Logo width in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Width {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.QrPngLogoOptions.Width",
-      "anchor": "property-width-int-width-get"
+      "summary": "Logo width in pixels."
     },
     {
       "name": "Height",
-      "kind": "Property",
-      "summary": "Logo height in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Height {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.QrPngLogoOptions.Height",
-      "anchor": "property-height-int-height-get"
+      "summary": "Logo height in pixels."
     },
     {
       "name": "Scale",
-      "kind": "Property",
-      "summary": "Maximum logo size relative to the QR area (excluding quiet zone).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "double Scale {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.QrPngLogoOptions.Scale",
-      "anchor": "property-scale-double-scale-get-set"
+      "summary": "Maximum logo size relative to the QR area (excluding quiet zone)."
     },
     {
       "name": "PaddingPx",
-      "kind": "Property",
-      "summary": "Padding in pixels around the logo (filled with CodeGlyphX.Rendering.Png.QrPngLogoOptions.Background when CodeGlyphX.Rendering.Png.QrPngLogoOptions.DrawBackground is true).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int PaddingPx {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.QrPngLogoOptions.PaddingPx",
-      "anchor": "property-paddingpx-int-paddingpx-get-set"
+      "summary": "Padding in pixels around the logo (filled with CodeGlyphX.Rendering.Png.QrPngLogoOptions.Background when CodeGlyphX.Rendering.Png.QrPngLogoOptions.DrawBackground is true)."
     },
     {
       "name": "DrawBackground",
-      "kind": "Property",
-      "summary": "Whether to draw a background plate behind the logo.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool DrawBackground {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.QrPngLogoOptions.DrawBackground",
-      "anchor": "property-drawbackground-bool-drawbackground-get-set"
+      "summary": "Whether to draw a background plate behind the logo."
     },
     {
       "name": "Background",
-      "kind": "Property",
-      "summary": "Background color for the logo plate.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Background {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.QrPngLogoOptions.Background",
-      "anchor": "property-background-rgba32-background-get-set"
+      "summary": "Background color for the logo plate."
     },
     {
       "name": "CornerRadiusPx",
-      "kind": "Property",
-      "summary": "Optional corner radius for the background plate.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int CornerRadiusPx {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.QrPngLogoOptions.CornerRadiusPx",
-      "anchor": "property-cornerradiuspx-int-cornerradiuspx-get-set"
+      "summary": "Optional corner radius for the background plate."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

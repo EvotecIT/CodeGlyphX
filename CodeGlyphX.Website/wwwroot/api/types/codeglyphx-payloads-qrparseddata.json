@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrParsedData",
   "fullName": "CodeGlyphX.Payloads.QrParsedData",
   "namespace": "CodeGlyphX.Payloads",
@@ -6,7 +6,8 @@
   "slug": "codeglyphx-payloads-qrparseddata",
   "summary": "Parsed payload data records.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": []
+  "methods": [],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -8,7 +8,7 @@ namespace CodeGlyphX.DataBar;
 /// </summary>
 public static class DataBar14Decoder {
     /// <summary>
-    /// Attempts to decode a GS1 DataBar-14 Truncated symbol from a <see cref="Barcode1D"/>.
+    /// Attempts to decode a GS1 DataBar-14 Truncated symbol from a <see cref="Barcode1D">Barcode1D</see>.
     /// </summary>
     public static bool TryDecodeTruncated(Barcode1D barcode, out string content) {
         content = string.Empty;
@@ -28,7 +28,7 @@ public static class DataBar14Decoder {
     }
 
     /// <summary>
-    /// Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a <see cref="BitMatrix"/>.
+    /// Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a <see cref="BitMatrix">BitMatrix</see>.
     /// </summary>
     public static bool TryDecodeOmni(BitMatrix modules, out string content) {
         content = string.Empty;
@@ -38,7 +38,7 @@ public static class DataBar14Decoder {
     }
 
     /// <summary>
-    /// Attempts to decode a GS1 DataBar-14 Stacked symbol from a <see cref="BitMatrix"/>.
+    /// Attempts to decode a GS1 DataBar-14 Stacked symbol from a <see cref="BitMatrix">BitMatrix</see>.
     /// </summary>
     public static bool TryDecodeStacked(BitMatrix modules, out string content) {
         content = string.Empty;

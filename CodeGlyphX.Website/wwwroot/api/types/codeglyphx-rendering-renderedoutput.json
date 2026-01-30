@@ -1,0 +1,86 @@
+﻿{
+  "name": "RenderedOutput",
+  "fullName": "CodeGlyphX.Rendering.RenderedOutput",
+  "namespace": "CodeGlyphX.Rendering",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-renderedoutput",
+  "summary": "Represents rendered output (text or binary).",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "FromBinary",
+      "summary": "Creates a binary output.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "format",
+          "type": "CodeGlyphX.Rendering.OutputFormat",
+          "summary": null
+        },
+        {
+          "name": "data",
+          "type": "System.Byte[]",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "FromText",
+      "summary": "Creates a text output (UTF-8 bytes).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "format",
+          "type": "CodeGlyphX.Rendering.OutputFormat",
+          "summary": null
+        },
+        {
+          "name": "text",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "encoding",
+          "type": "System.Text.Encoding",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "GetText",
+      "summary": "Returns the text representation when this is a text output.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "encoding",
+          "type": "System.Text.Encoding",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "Format",
+      "summary": "Output format."
+    },
+    {
+      "name": "Kind",
+      "summary": "Output kind."
+    },
+    {
+      "name": "MimeType",
+      "summary": "MIME type when known."
+    },
+    {
+      "name": "Data",
+      "summary": "Output bytes."
+    },
+    {
+      "name": "IsText",
+      "summary": "Returns true when this output is textual."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

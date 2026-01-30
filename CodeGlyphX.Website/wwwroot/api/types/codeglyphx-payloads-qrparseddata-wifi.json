@@ -1,271 +1,41 @@
-{
+﻿{
   "name": "Wifi",
   "fullName": "CodeGlyphX.Payloads.QrParsedData.Wifi",
-  "namespace": "CodeGlyphX.Payloads",
+  "namespace": "CodeGlyphX.Payloads.QrParsedData",
   "kind": "Class",
   "slug": "codeglyphx-payloads-qrparseddata-wifi",
   "summary": "WiFi payload.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "Wifi",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "WiFi payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "Ssid",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "Password",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "AuthType",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "Hidden",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Wifi(string Ssid, string Password, string AuthType, bool Hidden)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Wifi.#ctor(System.String,System.String,System.String,System.Boolean)",
-      "anchor": "constructor-wifi-wifi-string-ssid-string-password-string-authtype-bool-hidden"
-    },
-    {
-      "name": "ToString",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Wifi.ToString",
-      "anchor": "method-tostring-string-tostring"
-    },
-    {
-      "name": "op_Inequality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.Wifi",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.Wifi",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Inequality(QrParsedData.Wifi left, QrParsedData.Wifi right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Wifi.op_Inequality(CodeGlyphX.Payloads.QrParsedData.Wifi,CodeGlyphX.Payloads.QrParsedData.Wifi)",
-      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-wifi-left-qrparseddata-wifi-right"
-    },
-    {
-      "name": "op_Equality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.Wifi",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.Wifi",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Equality(QrParsedData.Wifi left, QrParsedData.Wifi right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Wifi.op_Equality(CodeGlyphX.Payloads.QrParsedData.Wifi,CodeGlyphX.Payloads.QrParsedData.Wifi)",
-      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-wifi-left-qrparseddata-wifi-right"
-    },
-    {
-      "name": "GetHashCode",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int GetHashCode()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Wifi.GetHashCode",
-      "anchor": "method-gethashcode-int-gethashcode"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "obj",
-          "type": "object",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(object obj)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Wifi.Equals(System.Object)",
-      "anchor": "method-equals-bool-equals-object-obj"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "other",
-          "type": "QrParsedData.Wifi",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(QrParsedData.Wifi other)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Wifi.Equals(CodeGlyphX.Payloads.QrParsedData.Wifi)",
-      "anchor": "method-equals-bool-equals-qrparseddata-wifi-other"
-    },
-    {
-      "name": "\u003CClone\u003E$",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrParsedData.Wifi \u003CClone\u003E$()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Wifi.\u003CClone\u003E$",
-      "anchor": "method-clone-qrparseddata-wifi-clone"
-    },
-    {
-      "name": "Deconstruct",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "Ssid",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Password",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "AuthType",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Hidden",
-          "type": "bool",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void Deconstruct(out string Ssid, out string Password, out string AuthType, out bool Hidden)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.Wifi.Deconstruct(System.String@,System.String@,System.String@,System.Boolean@)",
-      "anchor": "method-deconstruct-void-deconstruct-out-string-ssid-out-string-password-out-string-authtype-out-bool-hidden"
-    },
-    {
-      "name": "Ssid",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Ssid {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Wifi.Ssid",
-      "anchor": "property-ssid-string-ssid-get-set"
-    },
-    {
-      "name": "Password",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Password {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Wifi.Password",
-      "anchor": "property-password-string-password-get-set"
-    },
-    {
-      "name": "AuthType",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string AuthType {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Wifi.AuthType",
-      "anchor": "property-authtype-string-authtype-get-set"
-    },
-    {
-      "name": "Hidden",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Hidden {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.Wifi.Hidden",
-      "anchor": "property-hidden-bool-hidden-get-set"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

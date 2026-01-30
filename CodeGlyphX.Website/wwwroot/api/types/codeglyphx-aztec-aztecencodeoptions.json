@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "AztecEncodeOptions",
   "fullName": "CodeGlyphX.Aztec.AztecEncodeOptions",
   "namespace": "CodeGlyphX.Aztec",
@@ -6,64 +6,21 @@
   "slug": "codeglyphx-aztec-aztecencodeoptions",
   "summary": "Options for future Aztec encoding support.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "AztecEncodeOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "AztecEncodeOptions()",
-      "xmlId": "M:CodeGlyphX.Aztec.AztecEncodeOptions.#ctor",
-      "anchor": "constructor-aztecencodeoptions-aztecencodeoptions"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "Layers",
-      "kind": "Property",
-      "summary": "Target number of layers. When null, the encoder will choose automatically.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cint\u003E Layers {get; set; }",
-      "xmlId": "P:CodeGlyphX.Aztec.AztecEncodeOptions.Layers",
-      "anchor": "property-layers-nullable-int-layers-get-set"
+      "summary": "Target number of layers. When null, the encoder will choose automatically."
     },
     {
       "name": "ErrorCorrectionPercent",
-      "kind": "Property",
-      "summary": "Target error correction percentage. When null, the encoder will choose automatically.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cint\u003E ErrorCorrectionPercent {get; set; }",
-      "xmlId": "P:CodeGlyphX.Aztec.AztecEncodeOptions.ErrorCorrectionPercent",
-      "anchor": "property-errorcorrectionpercent-nullable-int-errorcorrectionpercent-get-set"
+      "summary": "Target error correction percentage. When null, the encoder will choose automatically."
     },
     {
       "name": "Compact",
-      "kind": "Property",
-      "summary": "When true, encode as compact Aztec when possible.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cbool\u003E Compact {get; set; }",
-      "xmlId": "P:CodeGlyphX.Aztec.AztecEncodeOptions.Compact",
-      "anchor": "property-compact-nullable-bool-compact-get-set"
+      "summary": "When true, encode as compact Aztec when possible."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

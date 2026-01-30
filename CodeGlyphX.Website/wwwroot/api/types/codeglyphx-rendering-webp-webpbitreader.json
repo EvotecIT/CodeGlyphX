@@ -1,0 +1,31 @@
+﻿{
+  "name": "WebpBitReader",
+  "fullName": "CodeGlyphX.Rendering.Webp.WebpBitReader",
+  "namespace": "CodeGlyphX.Rendering.Webp",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-webp-webpbitreader",
+  "summary": "LSB-first bit reader used by the VP8L lossless bitstream.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "ReadBits",
+      "summary": "Attempts to read up to 32 bits (LSB-first). Returns -1 on truncation.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "count",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "BitsConsumed",
+      "summary": "Gets the number of bits consumed so far."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

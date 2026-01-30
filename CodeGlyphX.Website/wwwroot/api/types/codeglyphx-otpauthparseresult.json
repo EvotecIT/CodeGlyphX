@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "OtpAuthParseResult",
   "fullName": "CodeGlyphX.OtpAuthParseResult",
   "namespace": "CodeGlyphX",
@@ -6,64 +6,25 @@
   "slug": "codeglyphx-otpauthparseresult",
   "summary": "Parsed otpauth:// payload with warnings.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [],
+  "properties": [
     {
       "name": "Payload",
-      "kind": "Property",
-      "summary": "Gets the parsed payload.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "OtpAuthPayload Payload {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthParseResult.Payload",
-      "anchor": "property-payload-otpauthpayload-payload-get"
+      "summary": "Gets the parsed payload."
     },
     {
       "name": "LabelIssuer",
-      "kind": "Property",
-      "summary": "Gets the issuer extracted from the label (may be empty).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LabelIssuer {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthParseResult.LabelIssuer",
-      "anchor": "property-labelissuer-string-labelissuer-get"
+      "summary": "Gets the issuer extracted from the label (may be empty)."
     },
     {
       "name": "ParamIssuer",
-      "kind": "Property",
-      "summary": "Gets the issuer from the query parameter (may be empty).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ParamIssuer {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthParseResult.ParamIssuer",
-      "anchor": "property-paramissuer-string-paramissuer-get"
+      "summary": "Gets the issuer from the query parameter (may be empty)."
     },
     {
       "name": "Warnings",
-      "kind": "Property",
-      "summary": "Gets any warnings or normalization notes.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string[] Warnings {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthParseResult.Warnings",
-      "anchor": "property-warnings-string-warnings-get"
+      "summary": "Gets any warnings or normalization notes."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodePngRenderOptions",
   "fullName": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
   "namespace": "CodeGlyphX.Rendering.Png",
@@ -6,328 +6,170 @@
   "slug": "codeglyphx-rendering-png-barcodepngrenderoptions",
   "summary": "Options for CodeGlyphX.Rendering.Png.BarcodePngRenderer.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "BarcodePngRenderOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions()",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.#ctor",
-      "anchor": "constructor-barcodepngrenderoptions-barcodepngrenderoptions"
-    },
+  "methods": [
     {
       "name": "WithModuleSize",
-      "kind": "Method",
       "summary": "Sets the module size in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "size",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions WithModuleSize(int size)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithModuleSize(System.Int32)",
-      "anchor": "method-withmodulesize-barcodepngrenderoptions-withmodulesize-int-size"
+      ]
     },
     {
       "name": "WithQuietZone",
-      "kind": "Method",
       "summary": "Sets the quiet zone size in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "quietZone",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions WithQuietZone(int quietZone)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithQuietZone(System.Int32)",
-      "anchor": "method-withquietzone-barcodepngrenderoptions-withquietzone-int-quietzone"
+      ]
     },
     {
       "name": "WithHeightModules",
-      "kind": "Method",
       "summary": "Sets the barcode height in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "heightModules",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions WithHeightModules(int heightModules)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithHeightModules(System.Int32)",
-      "anchor": "method-withheightmodules-barcodepngrenderoptions-withheightmodules-int-heightmodules"
+      ]
     },
     {
       "name": "WithForeground",
-      "kind": "Method",
       "summary": "Sets the bar (foreground) color.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "Rgba32",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions WithForeground(Rgba32 color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)",
-      "anchor": "method-withforeground-barcodepngrenderoptions-withforeground-rgba32-color"
+      ]
     },
     {
       "name": "WithBackground",
-      "kind": "Method",
       "summary": "Sets the background color.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "Rgba32",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions WithBackground(Rgba32 color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)",
-      "anchor": "method-withbackground-barcodepngrenderoptions-withbackground-rgba32-color"
+      ]
     },
     {
       "name": "WithLabelText",
-      "kind": "Method",
       "summary": "Sets the label text.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "text",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions WithLabelText(string text)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelText(System.String)",
-      "anchor": "method-withlabeltext-barcodepngrenderoptions-withlabeltext-string-text"
+      ]
     },
     {
       "name": "WithLabelFontSize",
-      "kind": "Method",
       "summary": "Sets the label font size in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "size",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions WithLabelFontSize(int size)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelFontSize(System.Int32)",
-      "anchor": "method-withlabelfontsize-barcodepngrenderoptions-withlabelfontsize-int-size"
+      ]
     },
     {
       "name": "WithLabelMargin",
-      "kind": "Method",
       "summary": "Sets the label margin in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "margin",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions WithLabelMargin(int margin)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelMargin(System.Int32)",
-      "anchor": "method-withlabelmargin-barcodepngrenderoptions-withlabelmargin-int-margin"
+      ]
     },
     {
       "name": "WithLabelColor",
-      "kind": "Method",
       "summary": "Sets the label color.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "Rgba32",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodePngRenderOptions WithLabelColor(Rgba32 color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.WithLabelColor(CodeGlyphX.Rendering.Png.Rgba32)",
-      "anchor": "method-withlabelcolor-barcodepngrenderoptions-withlabelcolor-rgba32-color"
+      ]
     },
     {
-      "name": "ModuleSize",
-      "kind": "Property",
-      "summary": "Gets or sets the size of a single module in pixels.",
-      "remarks": null,
+      "name": "WithPngCompressionLevel",
+      "summary": "Sets the PNG compression level (0 = stored/uncompressed, 1-9 = compressed).",
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.ModuleSize",
-      "anchor": "property-modulesize-int-modulesize-get-set"
+      "parameters": [
+        {
+          "name": "level",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "ModuleSize",
+      "summary": "Gets or sets the size of a single module in pixels."
     },
     {
       "name": "QuietZone",
-      "kind": "Property",
-      "summary": "Gets or sets the quiet zone size in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int QuietZone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.QuietZone",
-      "anchor": "property-quietzone-int-quietzone-get-set"
+      "summary": "Gets or sets the quiet zone size in modules."
     },
     {
       "name": "HeightModules",
-      "kind": "Property",
-      "summary": "Gets or sets the barcode height in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int HeightModules {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.HeightModules",
-      "anchor": "property-heightmodules-int-heightmodules-get-set"
+      "summary": "Gets or sets the barcode height in modules."
     },
     {
       "name": "Foreground",
-      "kind": "Property",
-      "summary": "Gets or sets the foreground (bar) color.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Foreground {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.Foreground",
-      "anchor": "property-foreground-rgba32-foreground-get-set"
+      "summary": "Gets or sets the foreground (bar) color."
     },
     {
       "name": "Background",
-      "kind": "Property",
-      "summary": "Gets or sets the background (space) color.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Background {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.Background",
-      "anchor": "property-background-rgba32-background-get-set"
+      "summary": "Gets or sets the background (space) color."
     },
     {
       "name": "LabelText",
-      "kind": "Property",
-      "summary": "Optional label text rendered under the bars.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LabelText {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.LabelText",
-      "anchor": "property-labeltext-string-labeltext-get-set"
+      "summary": "Optional label text rendered under the bars."
     },
     {
       "name": "LabelFontSize",
-      "kind": "Property",
-      "summary": "Label font size in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int LabelFontSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.LabelFontSize",
-      "anchor": "property-labelfontsize-int-labelfontsize-get-set"
+      "summary": "Label font size in pixels."
     },
     {
       "name": "LabelMargin",
-      "kind": "Property",
-      "summary": "Vertical margin between bars and label in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int LabelMargin {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.LabelMargin",
-      "anchor": "property-labelmargin-int-labelmargin-get-set"
+      "summary": "Vertical margin between bars and label in pixels."
     },
     {
       "name": "LabelColor",
-      "kind": "Property",
-      "summary": "Label color.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 LabelColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Png.BarcodePngRenderOptions.LabelColor",
-      "anchor": "property-labelcolor-rgba32-labelcolor-get-set"
+      "summary": "Label color."
+    },
+    {
+      "name": "PngCompressionLevel",
+      "summary": "PNG compression level (0 = stored/uncompressed, 1-9 = compressed)."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

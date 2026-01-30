@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BitMatrix",
   "fullName": "CodeGlyphX.BitMatrix",
   "namespace": "CodeGlyphX",
@@ -6,183 +6,96 @@
   "slug": "codeglyphx-bitmatrix",
   "summary": "A compact, bit-packed 2D boolean grid.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "BitMatrix",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Creates a new CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BitMatrix(int width, int height)",
-      "xmlId": "M:CodeGlyphX.BitMatrix.#ctor(System.Int32,System.Int32)",
-      "anchor": "constructor-bitmatrix-bitmatrix-int-width-int-height"
+      ]
     },
     {
       "name": "Get",
-      "kind": "Method",
-      "summary": "Gets the value at (, ).",
-      "remarks": null,
+      "summary": "Gets the value at (x, y).",
       "returns": null,
       "parameters": [
         {
           "name": "x",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "y",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Get(int x, int y)",
-      "xmlId": "M:CodeGlyphX.BitMatrix.Get(System.Int32,System.Int32)",
-      "anchor": "method-get-bool-get-int-x-int-y"
+      ]
     },
     {
       "name": "Set",
-      "kind": "Method",
-      "summary": "Sets the value at (, ).",
-      "remarks": null,
+      "summary": "Sets the value at (x, y).",
       "returns": null,
       "parameters": [
         {
           "name": "x",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "y",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "value",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void Set(int x, int y, bool value)",
-      "xmlId": "M:CodeGlyphX.BitMatrix.Set(System.Int32,System.Int32,System.Boolean)",
-      "anchor": "method-set-void-set-int-x-int-y-bool-value"
+      ]
     },
     {
       "name": "Clear",
-      "kind": "Method",
       "summary": "Clears all bits to false.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void Clear()",
-      "xmlId": "M:CodeGlyphX.BitMatrix.Clear",
-      "anchor": "method-clear-void-clear"
+      "parameters": []
     },
     {
       "name": "Clone",
-      "kind": "Method",
       "summary": "Creates a deep copy of this matrix.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BitMatrix Clone()",
-      "xmlId": "M:CodeGlyphX.BitMatrix.Clone",
-      "anchor": "method-clone-bitmatrix-clone"
+      "parameters": []
     },
     {
       "name": "ToPackedBytes",
-      "kind": "Method",
       "summary": "Packs the matrix into row-major bytes (left-to-right, top-to-bottom).",
-      "remarks": "Bit 7 of the first byte corresponds to (0,0); bit 0 is the 8th cell.",
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] ToPackedBytes()",
-      "xmlId": "M:CodeGlyphX.BitMatrix.ToPackedBytes",
-      "anchor": "method-topackedbytes-byte-topackedbytes"
-    },
+      "parameters": []
+    }
+  ],
+  "properties": [
     {
       "name": "Width",
-      "kind": "Property",
-      "summary": "Gets the matrix width (in cells).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Width {get; }",
-      "xmlId": "P:CodeGlyphX.BitMatrix.Width",
-      "anchor": "property-width-int-width-get"
+      "summary": "Gets the matrix width (in cells)."
     },
     {
       "name": "Height",
-      "kind": "Property",
-      "summary": "Gets the matrix height (in cells).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Height {get; }",
-      "xmlId": "P:CodeGlyphX.BitMatrix.Height",
-      "anchor": "property-height-int-height-get"
+      "summary": "Gets the matrix height (in cells)."
     },
     {
       "name": "Item",
-      "kind": "Property",
-      "summary": "Gets or sets the value at (, ).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "x",
-          "type": "int",
-          "description": null
-        },
-        {
-          "name": "y",
-          "type": "int",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool this[int x, int y] {get; set; }",
-      "xmlId": "P:CodeGlyphX.BitMatrix.Item(System.Int32,System.Int32)",
-      "anchor": "property-item-bool-this-int-x-int-y-get-set"
+      "summary": "Gets or sets the value at (x, y)."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "MatrixHtmlRenderOptions",
   "fullName": "CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions",
   "namespace": "CodeGlyphX.Rendering.Html",
@@ -6,192 +6,90 @@
   "slug": "codeglyphx-rendering-html-matrixhtmlrenderoptions",
   "summary": "Options for rendering generic 2D matrices to HTML.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "MatrixHtmlRenderOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixHtmlRenderOptions()",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.#ctor",
-      "anchor": "constructor-matrixhtmlrenderoptions-matrixhtmlrenderoptions"
-    },
+  "methods": [
     {
       "name": "WithModuleSize",
-      "kind": "Method",
       "summary": "Sets the module size in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "size",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixHtmlRenderOptions WithModuleSize(int size)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithModuleSize(System.Int32)",
-      "anchor": "method-withmodulesize-matrixhtmlrenderoptions-withmodulesize-int-size"
+      ]
     },
     {
       "name": "WithQuietZone",
-      "kind": "Method",
       "summary": "Sets the quiet zone size in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "quietZone",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixHtmlRenderOptions WithQuietZone(int quietZone)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithQuietZone(System.Int32)",
-      "anchor": "method-withquietzone-matrixhtmlrenderoptions-withquietzone-int-quietzone"
+      ]
     },
     {
       "name": "WithDarkColor",
-      "kind": "Method",
       "summary": "Sets the dark color (CSS value).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixHtmlRenderOptions WithDarkColor(string color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithDarkColor(System.String)",
-      "anchor": "method-withdarkcolor-matrixhtmlrenderoptions-withdarkcolor-string-color"
+      ]
     },
     {
       "name": "WithLightColor",
-      "kind": "Method",
       "summary": "Sets the light color (CSS value).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixHtmlRenderOptions WithLightColor(string color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithLightColor(System.String)",
-      "anchor": "method-withlightcolor-matrixhtmlrenderoptions-withlightcolor-string-color"
+      ]
     },
     {
       "name": "WithEmailSafeTable",
-      "kind": "Method",
       "summary": "Enables or disables email-safe HTML output.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "enabled",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixHtmlRenderOptions WithEmailSafeTable(bool enabled)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.WithEmailSafeTable(System.Boolean)",
-      "anchor": "method-withemailsafetable-matrixhtmlrenderoptions-withemailsafetable-bool-enabled"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "ModuleSize",
-      "kind": "Property",
-      "summary": "Module size in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.ModuleSize",
-      "anchor": "property-modulesize-int-modulesize-get-set"
+      "summary": "Module size in pixels."
     },
     {
       "name": "QuietZone",
-      "kind": "Property",
-      "summary": "Quiet zone size in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int QuietZone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.QuietZone",
-      "anchor": "property-quietzone-int-quietzone-get-set"
+      "summary": "Quiet zone size in modules."
     },
     {
       "name": "DarkColor",
-      "kind": "Property",
-      "summary": "Foreground color (CSS).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string DarkColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.DarkColor",
-      "anchor": "property-darkcolor-string-darkcolor-get-set"
+      "summary": "Foreground color (CSS)."
     },
     {
       "name": "LightColor",
-      "kind": "Property",
-      "summary": "Background color (CSS).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LightColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.LightColor",
-      "anchor": "property-lightcolor-string-lightcolor-get-set"
+      "summary": "Background color (CSS)."
     },
     {
       "name": "EmailSafeTable",
-      "kind": "Property",
-      "summary": "When true, renders HTML using email-safe tables.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool EmailSafeTable {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.MatrixHtmlRenderOptions.EmailSafeTable",
-      "anchor": "property-emailsafetable-bool-emailsafetable-get-set"
+      "summary": "When true, renders HTML using email-safe tables."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

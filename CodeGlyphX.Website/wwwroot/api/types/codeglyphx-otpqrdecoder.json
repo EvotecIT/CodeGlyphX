@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "OtpQrDecoder",
   "fullName": "CodeGlyphX.OtpQrDecoder",
   "namespace": "CodeGlyphX",
@@ -6,383 +6,312 @@
   "slug": "codeglyphx-otpqrdecoder",
   "summary": "Convenience decoder for OTP QR payloads.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode an OTP payload from a module matrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "payload",
-          "type": "OtpAuthPayload",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthPayload@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(BitMatrix modules, out OtpAuthPayload payload)",
-      "xmlId": "M:CodeGlyphX.OtpQrDecoder.TryDecode(CodeGlyphX.BitMatrix,CodeGlyphX.OtpAuthPayload@)",
-      "anchor": "method-trydecode-static-bool-trydecode-bitmatrix-modules-out-otpauthpayload-payload"
+      ]
     },
     {
       "name": "TryDecodeDetailed",
-      "kind": "Method",
       "summary": "Attempts to decode an OTP payload from a module matrix and returns warnings.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "result",
-          "type": "OtpAuthParseResult",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthParseResult@",
+          "summary": null
         },
         {
           "name": "error",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeDetailed(BitMatrix modules, out OtpAuthParseResult result, out string error)",
-      "xmlId": "M:CodeGlyphX.OtpQrDecoder.TryDecodeDetailed(CodeGlyphX.BitMatrix,CodeGlyphX.OtpAuthParseResult@,System.String@)",
-      "anchor": "method-trydecodedetailed-static-bool-trydecodedetailed-bitmatrix-modules-out-otpauthparseresult-result-out-string-error"
+      ]
     },
     {
       "name": "TryDecodeStrict",
-      "kind": "Method",
       "summary": "Attempts to decode and strictly validate an OTP payload from a module matrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "payload",
-          "type": "OtpAuthPayload",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthPayload@",
+          "summary": null
         },
         {
           "name": "error",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeStrict(BitMatrix modules, out OtpAuthPayload payload, out string error)",
-      "xmlId": "M:CodeGlyphX.OtpQrDecoder.TryDecodeStrict(CodeGlyphX.BitMatrix,CodeGlyphX.OtpAuthPayload@,System.String@)",
-      "anchor": "method-trydecodestrict-static-bool-trydecodestrict-bitmatrix-modules-out-otpauthpayload-payload-out-string-error"
+      ]
     },
     {
       "name": "TryDecodeStrict",
-      "kind": "Method",
       "summary": "Attempts to decode and validate an OTP payload from a module matrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "options",
-          "type": "OtpAuthValidationOptions",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthValidationOptions",
+          "summary": null
         },
         {
           "name": "payload",
-          "type": "OtpAuthPayload",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthPayload@",
+          "summary": null
         },
         {
           "name": "error",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeStrict(BitMatrix modules, OtpAuthValidationOptions options, out OtpAuthPayload payload, out string error)",
-      "xmlId": "M:CodeGlyphX.OtpQrDecoder.TryDecodeStrict(CodeGlyphX.BitMatrix,CodeGlyphX.OtpAuthValidationOptions,CodeGlyphX.OtpAuthPayload@,System.String@)",
-      "anchor": "method-trydecodestrict-static-bool-trydecodestrict-bitmatrix-modules-otpauthvalidationoptions-options-out-otpauthpayload-payload-out-string-error"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode an OTP payload from raw pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
           "name": "payload",
-          "type": "OtpAuthPayload",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthPayload@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out OtpAuthPayload payload)",
-      "xmlId": "M:CodeGlyphX.OtpQrDecoder.TryDecode(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.OtpAuthPayload@)",
-      "anchor": "method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-otpauthpayload-payload"
+      ]
     },
     {
       "name": "TryDecodeDetailed",
-      "kind": "Method",
       "summary": "Attempts to decode an OTP payload from raw pixels and returns warnings.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
           "name": "result",
-          "type": "OtpAuthParseResult",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthParseResult@",
+          "summary": null
         },
         {
           "name": "error",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeDetailed(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out OtpAuthParseResult result, out string error)",
-      "xmlId": "M:CodeGlyphX.OtpQrDecoder.TryDecodeDetailed(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.OtpAuthParseResult@,System.String@)",
-      "anchor": "method-trydecodedetailed-static-bool-trydecodedetailed-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-otpauthparseresult-result-out-string-error"
+      ]
     },
     {
       "name": "TryDecodeDetailed",
-      "kind": "Method",
       "summary": "Attempts to decode an OTP payload from raw pixels, returning QR diagnostics text and OTP warnings.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
           "name": "result",
-          "type": "OtpAuthParseResult",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthParseResult@",
+          "summary": null
         },
         {
           "name": "qrDiagnostics",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         },
         {
           "name": "error",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeDetailed(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out OtpAuthParseResult result, out string qrDiagnostics, out string error)",
-      "xmlId": "M:CodeGlyphX.OtpQrDecoder.TryDecodeDetailed(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.OtpAuthParseResult@,System.String@,System.String@)",
-      "anchor": "method-trydecodedetailed-static-bool-trydecodedetailed-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-otpauthparseresult-result-out-string-qrdiagnostics-out-string-error"
+      ]
     },
     {
       "name": "TryDecodeStrict",
-      "kind": "Method",
       "summary": "Attempts to decode and strictly validate an OTP payload from raw pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
           "name": "payload",
-          "type": "OtpAuthPayload",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthPayload@",
+          "summary": null
         },
         {
           "name": "error",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeStrict(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, out OtpAuthPayload payload, out string error)",
-      "xmlId": "M:CodeGlyphX.OtpQrDecoder.TryDecodeStrict(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.OtpAuthPayload@,System.String@)",
-      "anchor": "method-trydecodestrict-static-bool-trydecodestrict-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-out-otpauthpayload-payload-out-string-error"
+      ]
     },
     {
       "name": "TryDecodeStrict",
-      "kind": "Method",
       "summary": "Attempts to decode and validate an OTP payload from raw pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "pixels",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "fmt",
-          "type": "PixelFormat",
-          "description": null
+          "type": "CodeGlyphX.PixelFormat",
+          "summary": null
         },
         {
           "name": "options",
-          "type": "OtpAuthValidationOptions",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthValidationOptions",
+          "summary": null
         },
         {
           "name": "payload",
-          "type": "OtpAuthPayload",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthPayload@",
+          "summary": null
         },
         {
           "name": "error",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeStrict(ReadOnlySpan\u003Cbyte\u003E pixels, int width, int height, int stride, PixelFormat fmt, OtpAuthValidationOptions options, out OtpAuthPayload payload, out string error)",
-      "xmlId": "M:CodeGlyphX.OtpQrDecoder.TryDecodeStrict(System.ReadOnlySpan{System.Byte},System.Int32,System.Int32,System.Int32,CodeGlyphX.PixelFormat,CodeGlyphX.OtpAuthValidationOptions,CodeGlyphX.OtpAuthPayload@,System.String@)",
-      "anchor": "method-trydecodestrict-static-bool-trydecodestrict-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-fmt-otpauthvalidationoptions-options-out-otpauthpayload-payload-out-string-error"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

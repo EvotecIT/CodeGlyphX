@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "OtpQrPreset",
   "fullName": "CodeGlyphX.OtpQrPreset",
   "namespace": "CodeGlyphX",
@@ -6,343 +6,296 @@
   "slug": "codeglyphx-otpqrpreset",
   "summary": "Opinionated QR presets for OTP URIs.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "CreatePngRenderOptions",
-      "kind": "Method",
       "summary": "Creates PNG render options optimized for OTP QR readability.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "moduleSize",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "quietZone",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "foreground",
-          "type": "Nullable\u003CRgba32\u003E",
-          "description": null
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
         },
         {
           "name": "background",
-          "type": "Nullable\u003CRgba32\u003E",
-          "description": null
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrPngRenderOptions CreatePngRenderOptions(int moduleSize, int quietZone, Nullable\u003CRgba32\u003E foreground, Nullable\u003CRgba32\u003E background)",
-      "xmlId": "M:CodeGlyphX.OtpQrPreset.CreatePngRenderOptions(System.Int32,System.Int32,System.Nullable{CodeGlyphX.Rendering.Png.Rgba32},System.Nullable{CodeGlyphX.Rendering.Png.Rgba32})",
-      "anchor": "method-createpngrenderoptions-static-qrpngrenderoptions-createpngrenderoptions-int-modulesize-int-quietzone-nullable-rgba32-foreground-nullable-rgba32-background"
+      ]
     },
     {
       "name": "EncodeTotp",
-      "kind": "Method",
       "summary": "Builds a TOTP otpauth:// URI and encodes it as a QR code.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "issuer",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "account",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "secret",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
           "name": "alg",
-          "type": "OtpAlgorithm",
-          "description": null
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
           "name": "digits",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "period",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "ecc",
-          "type": "QrErrorCorrectionLevel",
-          "description": null
+          "type": "CodeGlyphX.QrErrorCorrectionLevel",
+          "summary": null
         },
         {
           "name": "minVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "maxVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "forceMask",
-          "type": "Nullable\u003Cint\u003E",
-          "description": null
+          "type": "System.Nullable{System.Int32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrCode EncodeTotp(string issuer, string account, byte[] secret, OtpAlgorithm alg, int digits, int period, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
-      "xmlId": "M:CodeGlyphX.OtpQrPreset.EncodeTotp(System.String,System.String,System.Byte[],CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
-      "anchor": "method-encodetotp-static-qrcode-encodetotp-string-issuer-string-account-byte-secret-otpalgorithm-alg-int-digits-int-period-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+      ]
     },
     {
       "name": "EncodeTotp",
-      "kind": "Method",
       "summary": "Builds a TOTP otpauth:// URI and encodes it as a QR code.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "issuer",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "account",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "secret",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "alg",
-          "type": "OtpAlgorithm",
-          "description": null
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
           "name": "digits",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "period",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "ecc",
-          "type": "QrErrorCorrectionLevel",
-          "description": null
+          "type": "CodeGlyphX.QrErrorCorrectionLevel",
+          "summary": null
         },
         {
           "name": "minVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "maxVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "forceMask",
-          "type": "Nullable\u003Cint\u003E",
-          "description": null
+          "type": "System.Nullable{System.Int32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrCode EncodeTotp(string issuer, string account, ReadOnlySpan\u003Cbyte\u003E secret, OtpAlgorithm alg, int digits, int period, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
-      "xmlId": "M:CodeGlyphX.OtpQrPreset.EncodeTotp(System.String,System.String,System.ReadOnlySpan{System.Byte},CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
-      "anchor": "method-encodetotp-static-qrcode-encodetotp-string-issuer-string-account-readonlyspan-byte-secret-otpalgorithm-alg-int-digits-int-period-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+      ]
     },
     {
       "name": "EncodeHotp",
-      "kind": "Method",
       "summary": "Builds a HOTP otpauth:// URI and encodes it as a QR code.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "issuer",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "account",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "secret",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
           "name": "counter",
-          "type": "long",
-          "description": null
+          "type": "System.Int64",
+          "summary": null
         },
         {
           "name": "alg",
-          "type": "OtpAlgorithm",
-          "description": null
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
           "name": "digits",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "ecc",
-          "type": "QrErrorCorrectionLevel",
-          "description": null
+          "type": "CodeGlyphX.QrErrorCorrectionLevel",
+          "summary": null
         },
         {
           "name": "minVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "maxVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "forceMask",
-          "type": "Nullable\u003Cint\u003E",
-          "description": null
+          "type": "System.Nullable{System.Int32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrCode EncodeHotp(string issuer, string account, byte[] secret, long counter, OtpAlgorithm alg, int digits, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
-      "xmlId": "M:CodeGlyphX.OtpQrPreset.EncodeHotp(System.String,System.String,System.Byte[],System.Int64,CodeGlyphX.OtpAlgorithm,System.Int32,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
-      "anchor": "method-encodehotp-static-qrcode-encodehotp-string-issuer-string-account-byte-secret-long-counter-otpalgorithm-alg-int-digits-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+      ]
     },
     {
       "name": "EncodeHotp",
-      "kind": "Method",
       "summary": "Builds a HOTP otpauth:// URI and encodes it as a QR code.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "issuer",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "account",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "secret",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "counter",
-          "type": "long",
-          "description": null
+          "type": "System.Int64",
+          "summary": null
         },
         {
           "name": "alg",
-          "type": "OtpAlgorithm",
-          "description": null
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
           "name": "digits",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "ecc",
-          "type": "QrErrorCorrectionLevel",
-          "description": null
+          "type": "CodeGlyphX.QrErrorCorrectionLevel",
+          "summary": null
         },
         {
           "name": "minVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "maxVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "forceMask",
-          "type": "Nullable\u003Cint\u003E",
-          "description": null
+          "type": "System.Nullable{System.Int32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrCode EncodeHotp(string issuer, string account, ReadOnlySpan\u003Cbyte\u003E secret, long counter, OtpAlgorithm alg, int digits, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
-      "xmlId": "M:CodeGlyphX.OtpQrPreset.EncodeHotp(System.String,System.String,System.ReadOnlySpan{System.Byte},System.Int64,CodeGlyphX.OtpAlgorithm,System.Int32,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
-      "anchor": "method-encodehotp-static-qrcode-encodehotp-string-issuer-string-account-readonlyspan-byte-secret-long-counter-otpalgorithm-alg-int-digits-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+      ]
     },
     {
       "name": "EncodeUri",
-      "kind": "Method",
       "summary": "Encodes a pre-built otpauth:// URI as a QR code.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "otpauthUri",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "ecc",
-          "type": "QrErrorCorrectionLevel",
-          "description": null
+          "type": "CodeGlyphX.QrErrorCorrectionLevel",
+          "summary": null
         },
         {
           "name": "minVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "maxVersion",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "forceMask",
-          "type": "Nullable\u003Cint\u003E",
-          "description": null
+          "type": "System.Nullable{System.Int32}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrCode EncodeUri(string otpauthUri, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, Nullable\u003Cint\u003E forceMask)",
-      "xmlId": "M:CodeGlyphX.OtpQrPreset.EncodeUri(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32})",
-      "anchor": "method-encodeuri-static-qrcode-encodeuri-string-otpauthuri-qrerrorcorrectionlevel-ecc-int-minversion-int-maxversion-nullable-int-forcemask"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

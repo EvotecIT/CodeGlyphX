@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Code39Encoder",
   "fullName": "CodeGlyphX.Code39.Code39Encoder",
   "namespace": "CodeGlyphX.Code39",
@@ -6,38 +6,31 @@
   "slug": "codeglyphx-code39-code39encoder",
   "summary": "Encodes Code 39 barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a Code 39 barcode.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "includeChecksum",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         },
         {
           "name": "fullAsciiMode",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode(string content, bool includeChecksum, bool fullAsciiMode)",
-      "xmlId": "M:CodeGlyphX.Code39.Code39Encoder.Encode(System.String,System.Boolean,System.Boolean)",
-      "anchor": "method-encode-static-barcode1d-encode-string-content-bool-includechecksum-bool-fullasciimode"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

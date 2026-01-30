@@ -1,99 +1,53 @@
-{
+﻿{
   "name": "ImageInfo",
   "fullName": "CodeGlyphX.Rendering.ImageInfo",
   "namespace": "CodeGlyphX.Rendering",
-  "kind": "Struct",
+  "kind": "Class",
   "slug": "codeglyphx-rendering-imageinfo",
   "summary": "Basic image metadata returned by ImageReader.TryReadInfo.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "ImageInfo",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Creates a new CodeGlyphX.Rendering.ImageInfo.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "format",
-          "type": "ImageFormat",
-          "description": null
+          "type": "CodeGlyphX.Rendering.ImageFormat",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageInfo(ImageFormat format, int width, int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageInfo.#ctor(CodeGlyphX.Rendering.ImageFormat,System.Int32,System.Int32)",
-      "anchor": "constructor-imageinfo-imageinfo-imageformat-format-int-width-int-height"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "Format",
-      "kind": "Property",
-      "summary": "Image format.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "ImageFormat Format {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.ImageInfo.Format",
-      "anchor": "property-format-imageformat-format-get"
+      "summary": "Image format."
     },
     {
       "name": "Width",
-      "kind": "Property",
-      "summary": "Image width in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Width {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.ImageInfo.Width",
-      "anchor": "property-width-int-width-get"
+      "summary": "Image width in pixels."
     },
     {
       "name": "Height",
-      "kind": "Property",
-      "summary": "Image height in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Height {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.ImageInfo.Height",
-      "anchor": "property-height-int-height-get"
+      "summary": "Image height in pixels."
     },
     {
       "name": "IsValid",
-      "kind": "Property",
-      "summary": "Indicates whether the info looks valid.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool IsValid {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.ImageInfo.IsValid",
-      "anchor": "property-isvalid-bool-isvalid-get"
+      "summary": "Indicates whether the info looks valid."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

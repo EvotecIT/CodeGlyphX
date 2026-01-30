@@ -1,295 +1,46 @@
-{
+﻿{
   "name": "VCard",
   "fullName": "CodeGlyphX.Payloads.QrParsedData.VCard",
-  "namespace": "CodeGlyphX.Payloads",
+  "namespace": "CodeGlyphX.Payloads.QrParsedData",
   "kind": "Class",
   "slug": "codeglyphx-payloads-qrparseddata-vcard",
   "summary": "vCard payload.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "VCard",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "vCard payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "Raw",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "FullName",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "Organization",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "Email",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "Phone",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "VCard(string Raw, string FullName, string Organization, string Email, string Phone)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.VCard.#ctor(System.String,System.String,System.String,System.String,System.String)",
-      "anchor": "constructor-vcard-vcard-string-raw-string-fullname-string-organization-string-email-string-phone"
-    },
-    {
-      "name": "ToString",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.VCard.ToString",
-      "anchor": "method-tostring-string-tostring"
-    },
-    {
-      "name": "op_Inequality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.VCard",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.VCard",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Inequality(QrParsedData.VCard left, QrParsedData.VCard right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.VCard.op_Inequality(CodeGlyphX.Payloads.QrParsedData.VCard,CodeGlyphX.Payloads.QrParsedData.VCard)",
-      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-vcard-left-qrparseddata-vcard-right"
-    },
-    {
-      "name": "op_Equality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.VCard",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.VCard",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Equality(QrParsedData.VCard left, QrParsedData.VCard right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.VCard.op_Equality(CodeGlyphX.Payloads.QrParsedData.VCard,CodeGlyphX.Payloads.QrParsedData.VCard)",
-      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-vcard-left-qrparseddata-vcard-right"
-    },
-    {
-      "name": "GetHashCode",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int GetHashCode()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.VCard.GetHashCode",
-      "anchor": "method-gethashcode-int-gethashcode"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "obj",
-          "type": "object",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(object obj)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.VCard.Equals(System.Object)",
-      "anchor": "method-equals-bool-equals-object-obj"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "other",
-          "type": "QrParsedData.VCard",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(QrParsedData.VCard other)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.VCard.Equals(CodeGlyphX.Payloads.QrParsedData.VCard)",
-      "anchor": "method-equals-bool-equals-qrparseddata-vcard-other"
-    },
-    {
-      "name": "\u003CClone\u003E$",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrParsedData.VCard \u003CClone\u003E$()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.VCard.\u003CClone\u003E$",
-      "anchor": "method-clone-qrparseddata-vcard-clone"
-    },
-    {
-      "name": "Deconstruct",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "Raw",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "FullName",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Organization",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Email",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Phone",
-          "type": "string",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void Deconstruct(out string Raw, out string FullName, out string Organization, out string Email, out string Phone)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.VCard.Deconstruct(System.String@,System.String@,System.String@,System.String@,System.String@)",
-      "anchor": "method-deconstruct-void-deconstruct-out-string-raw-out-string-fullname-out-string-organization-out-string-email-out-string-phone"
-    },
-    {
-      "name": "Raw",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Raw {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.VCard.Raw",
-      "anchor": "property-raw-string-raw-get-set"
-    },
-    {
-      "name": "FullName",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string FullName {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.VCard.FullName",
-      "anchor": "property-fullname-string-fullname-get-set"
-    },
-    {
-      "name": "Organization",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Organization {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.VCard.Organization",
-      "anchor": "property-organization-string-organization-get-set"
-    },
-    {
-      "name": "Email",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Email {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.VCard.Email",
-      "anchor": "property-email-string-email-get-set"
-    },
-    {
-      "name": "Phone",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Phone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.VCard.Phone",
-      "anchor": "property-phone-string-phone-get-set"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

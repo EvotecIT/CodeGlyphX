@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodeDecodeDiagnostics",
   "fullName": "CodeGlyphX.BarcodeDecodeDiagnostics",
   "namespace": "CodeGlyphX",
@@ -6,106 +6,33 @@
   "slug": "codeglyphx-barcodedecodediagnostics",
   "summary": "Diagnostics for 1D barcode decoding.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "BarcodeDecodeDiagnostics",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeDecodeDiagnostics()",
-      "xmlId": "M:CodeGlyphX.BarcodeDecodeDiagnostics.#ctor",
-      "anchor": "constructor-barcodedecodediagnostics-barcodedecodediagnostics"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "CandidateCount",
-      "kind": "Property",
-      "summary": "Number of scanline candidates tested.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int CandidateCount {get; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeDiagnostics.CandidateCount",
-      "anchor": "property-candidatecount-int-candidatecount-get"
+      "summary": "Number of scanline candidates tested."
     },
     {
       "name": "AttemptCount",
-      "kind": "Property",
-      "summary": "Number of decode attempts across transforms.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int AttemptCount {get; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeDiagnostics.AttemptCount",
-      "anchor": "property-attemptcount-int-attemptcount-get"
+      "summary": "Number of decode attempts across transforms."
     },
     {
       "name": "InvertedTried",
-      "kind": "Property",
-      "summary": "True when an inverted candidate was tried.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool InvertedTried {get; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeDiagnostics.InvertedTried",
-      "anchor": "property-invertedtried-bool-invertedtried-get"
+      "summary": "True when an inverted candidate was tried."
     },
     {
       "name": "ReversedTried",
-      "kind": "Property",
-      "summary": "True when a reversed candidate was tried.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool ReversedTried {get; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeDiagnostics.ReversedTried",
-      "anchor": "property-reversedtried-bool-reversedtried-get"
+      "summary": "True when a reversed candidate was tried."
     },
     {
       "name": "Success",
-      "kind": "Property",
-      "summary": "True when decode succeeded.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Success {get; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeDiagnostics.Success",
-      "anchor": "property-success-bool-success-get"
+      "summary": "True when decode succeeded."
     },
     {
       "name": "Failure",
-      "kind": "Property",
-      "summary": "Optional failure message when decoding fails.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Failure {get; }",
-      "xmlId": "P:CodeGlyphX.BarcodeDecodeDiagnostics.Failure",
-      "anchor": "property-failure-string-failure-get"
+      "summary": "Optional failure message when decoding fails."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

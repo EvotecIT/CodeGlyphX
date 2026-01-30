@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "XpmReader",
   "fullName": "CodeGlyphX.Rendering.Xpm.XpmReader",
   "namespace": "CodeGlyphX.Rendering.Xpm",
@@ -6,38 +6,31 @@
   "slug": "codeglyphx-rendering-xpm-xpmreader",
   "summary": "Decodes XPM images to RGBA buffers.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes an XPM image to an RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "xpm",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(ReadOnlySpan\u003Cbyte\u003E xpm, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Xpm.XpmReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-readonlyspan-byte-xpm-out-int-width-out-int-height"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

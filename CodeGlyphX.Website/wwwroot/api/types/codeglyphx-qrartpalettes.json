@@ -1,0 +1,44 @@
+﻿{
+  "name": "QrArtPalettes",
+  "fullName": "CodeGlyphX.QrArtPalettes",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-qrartpalettes",
+  "summary": "Curated, scan-friendly palette sets for QR art.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "Warm",
+      "summary": "Warm palette with high contrast on a light background.",
+      "returns": null,
+      "parameters": []
+    },
+    {
+      "name": "Cool",
+      "summary": "Cool palette with high contrast on a light background.",
+      "returns": null,
+      "parameters": []
+    },
+    {
+      "name": "Pastel",
+      "summary": "Pastel palette with contrast-anchored accents.",
+      "returns": null,
+      "parameters": []
+    },
+    {
+      "name": "HighContrast",
+      "summary": "High-contrast palette suitable for strong scanning reliability.",
+      "returns": null,
+      "parameters": []
+    },
+    {
+      "name": "Neon",
+      "summary": "Neon palette for dark canvases.",
+      "returns": null,
+      "parameters": []
+    }
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

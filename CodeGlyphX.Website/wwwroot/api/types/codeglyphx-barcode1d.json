@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Barcode1D",
   "fullName": "CodeGlyphX.Barcode1D",
   "namespace": "CodeGlyphX",
@@ -6,56 +6,30 @@
   "slug": "codeglyphx-barcode1d",
   "summary": "A simple 1D barcode represented as an alternating sequence of bar/space segments.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "Barcode1D",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Creates a new CodeGlyphX.Barcode1D from the provided segments.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "segments",
-          "type": "IEnumerable\u003CBarSegment\u003E",
-          "description": "Barcode segments in order (must contain at least one segment)."
+          "type": "System.Collections.Generic.IEnumerable{CodeGlyphX.BarSegment}",
+          "summary": "Barcode segments in order (must contain at least one segment)."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Barcode1D(IEnumerable\u003CBarSegment\u003E segments)",
-      "xmlId": "M:CodeGlyphX.Barcode1D.#ctor(System.Collections.Generic.IEnumerable{CodeGlyphX.BarSegment})",
-      "anchor": "constructor-barcode1d-barcode1d-ienumerable-barsegment-segments"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "Segments",
-      "kind": "Property",
-      "summary": "Gets the barcode segments in order.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "IReadOnlyList\u003CBarSegment\u003E Segments {get; }",
-      "xmlId": "P:CodeGlyphX.Barcode1D.Segments",
-      "anchor": "property-segments-ireadonlylist-barsegment-segments-get"
+      "summary": "Gets the barcode segments in order."
     },
     {
       "name": "TotalModules",
-      "kind": "Property",
-      "summary": "Gets the total barcode width in modules (sum of CodeGlyphX.BarSegment.Modules for all segments).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int TotalModules {get; }",
-      "xmlId": "P:CodeGlyphX.Barcode1D.TotalModules",
-      "anchor": "property-totalmodules-int-totalmodules-get"
+      "summary": "Gets the total barcode width in modules (sum of CodeGlyphX.BarSegment.Modules for all segments)."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

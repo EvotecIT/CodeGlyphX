@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "PngReader",
   "fullName": "CodeGlyphX.Rendering.Png.PngReader",
   "namespace": "CodeGlyphX.Rendering.Png",
@@ -6,128 +6,97 @@
   "slug": "codeglyphx-rendering-png-pngreader",
   "summary": "Decodes PNG images to RGBA buffers.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes a PNG image to an RGBA buffer.",
-      "remarks": null,
       "returns": "RGBA buffer (width * height * 4 bytes).",
       "parameters": [
         {
           "name": "png",
-          "type": "byte[]",
-          "description": "PNG bytes."
+          "type": "System.Byte[]",
+          "summary": "PNG bytes."
         },
         {
           "name": "width",
-          "type": "int",
-          "description": "Image width in pixels."
+          "type": "System.Int32@",
+          "summary": "Image width in pixels."
         },
         {
           "name": "height",
-          "type": "int",
-          "description": "Image height in pixels."
+          "type": "System.Int32@",
+          "summary": "Image height in pixels."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(byte[] png, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.PngReader.DecodeRgba32(System.Byte[],System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-byte-png-out-int-width-out-int-height"
+      ]
     },
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes a PNG image to an RGBA buffer from a read-only span.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "png",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(ReadOnlySpan\u003Cbyte\u003E png, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.PngReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-readonlyspan-byte-png-out-int-width-out-int-height"
+      ]
     },
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes a PNG image to an RGBA buffer from a read-only memory.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "png",
-          "type": "ReadOnlyMemory\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlyMemory{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(ReadOnlyMemory\u003Cbyte\u003E png, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.PngReader.DecodeRgba32(System.ReadOnlyMemory{System.Byte},System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-readonlymemory-byte-png-out-int-width-out-int-height"
+      ]
     },
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes a PNG stream to an RGBA buffer.",
-      "remarks": null,
       "returns": "RGBA buffer (width * height * 4 bytes).",
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "PNG stream."
+          "type": "System.IO.Stream",
+          "summary": "PNG stream."
         },
         {
           "name": "width",
-          "type": "int",
-          "description": "Image width in pixels."
+          "type": "System.Int32@",
+          "summary": "Image width in pixels."
         },
         {
           "name": "height",
-          "type": "int",
-          "description": "Image height in pixels."
+          "type": "System.Int32@",
+          "summary": "Image height in pixels."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(Stream stream, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Png.PngReader.DecodeRgba32(System.IO.Stream,System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-stream-stream-out-int-width-out-int-height"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

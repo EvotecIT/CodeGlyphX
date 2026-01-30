@@ -1,0 +1,66 @@
+﻿{
+  "name": "EmvCoMerchant",
+  "fullName": "CodeGlyphX.Payloads.QrParsedData.EmvCoMerchant",
+  "namespace": "CodeGlyphX.Payloads.QrParsedData",
+  "kind": "Class",
+  "slug": "codeglyphx-payloads-qrparseddata-emvcomerchant",
+  "summary": "EMVCo merchant-presented payment payload.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "#ctor",
+      "summary": "EMVCo merchant-presented payment payload.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "PayloadFormatIndicator",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "MerchantCategoryCode",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "TransactionCurrency",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "TransactionAmount",
+          "type": "System.Nullable{System.Decimal}",
+          "summary": null
+        },
+        {
+          "name": "CountryCode",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "MerchantName",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "MerchantCity",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "Fields",
+          "type": "System.Collections.Generic.IReadOnlyDictionary{System.String,System.String}",
+          "summary": null
+        },
+        {
+          "name": "CrcValid",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

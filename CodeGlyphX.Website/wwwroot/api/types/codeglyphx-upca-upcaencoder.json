@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "UpcAEncoder",
   "fullName": "CodeGlyphX.UpcA.UpcAEncoder",
   "namespace": "CodeGlyphX.UpcA",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-upca-upcaencoder",
   "summary": "Encodes UPC-A barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a UPC-A barcode. Use \u0022\u002BNN\u0022 or \u0022\u002BNNNNN\u0022 to append add-ons.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode(string content)",
-      "xmlId": "M:CodeGlyphX.UpcA.UpcAEncoder.Encode(System.String)",
-      "anchor": "method-encode-static-barcode1d-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

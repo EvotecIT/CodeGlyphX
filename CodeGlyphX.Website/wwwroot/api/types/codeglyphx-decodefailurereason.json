@@ -1,111 +1,42 @@
-{
+﻿{
   "name": "DecodeFailureReason",
   "fullName": "CodeGlyphX.DecodeFailureReason",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-decodefailurereason",
   "summary": "Describes why decoding failed.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.DecodeFailureReason.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "None",
-      "kind": "Field",
-      "summary": "No failure (success).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DecodeFailureReason None",
-      "xmlId": "F:CodeGlyphX.DecodeFailureReason.None",
-      "anchor": "field-none-decodefailurereason-none"
+      "summary": "No failure (success)."
     },
     {
       "name": "InvalidInput",
-      "kind": "Field",
-      "summary": "Input was invalid.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DecodeFailureReason InvalidInput",
-      "xmlId": "F:CodeGlyphX.DecodeFailureReason.InvalidInput",
-      "anchor": "field-invalidinput-decodefailurereason-invalidinput"
+      "summary": "Input was invalid."
     },
     {
       "name": "UnsupportedFormat",
-      "kind": "Field",
-      "summary": "Image format or data was not supported.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DecodeFailureReason UnsupportedFormat",
-      "xmlId": "F:CodeGlyphX.DecodeFailureReason.UnsupportedFormat",
-      "anchor": "field-unsupportedformat-decodefailurereason-unsupportedformat"
+      "summary": "Image format or data was not supported."
+    },
+    {
+      "name": "PlatformNotSupported",
+      "summary": "Feature is not supported on this target framework."
     },
     {
       "name": "Cancelled",
-      "kind": "Field",
-      "summary": "Operation was cancelled.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DecodeFailureReason Cancelled",
-      "xmlId": "F:CodeGlyphX.DecodeFailureReason.Cancelled",
-      "anchor": "field-cancelled-decodefailurereason-cancelled"
+      "summary": "Operation was cancelled."
     },
     {
       "name": "NoResult",
-      "kind": "Field",
-      "summary": "Decoding completed but no symbols were found.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DecodeFailureReason NoResult",
-      "xmlId": "F:CodeGlyphX.DecodeFailureReason.NoResult",
-      "anchor": "field-noresult-decodefailurereason-noresult"
+      "summary": "Decoding completed but no symbols were found."
     },
     {
       "name": "Error",
-      "kind": "Field",
-      "summary": "An unexpected error occurred.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DecodeFailureReason Error",
-      "xmlId": "F:CodeGlyphX.DecodeFailureReason.Error",
-      "anchor": "field-error-decodefailurereason-error"
+      "summary": "An unexpected error occurred."
     }
-  ]
+  ],
+  "events": []
 }

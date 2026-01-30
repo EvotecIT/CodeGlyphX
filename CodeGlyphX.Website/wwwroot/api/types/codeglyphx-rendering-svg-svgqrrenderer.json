@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "SvgQrRenderer",
   "fullName": "CodeGlyphX.Rendering.Svg.SvgQrRenderer",
   "namespace": "CodeGlyphX.Rendering.Svg",
@@ -6,128 +6,97 @@
   "slug": "codeglyphx-rendering-svg-svgqrrenderer",
   "summary": "Renders QR modules to SVG.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Render",
-      "kind": "Method",
       "summary": "Renders the QR module matrix to an SVG string.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "opts",
-          "type": "QrSvgRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Svg.QrSvgRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Render(BitMatrix modules, QrSvgRenderOptions opts)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.SvgQrRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions)",
-      "anchor": "method-render-static-string-render-bitmatrix-modules-qrsvgrenderoptions-opts"
+      ]
     },
     {
       "name": "RenderToStream",
-      "kind": "Method",
       "summary": "Renders the QR module matrix to an SVG stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "QR modules."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "QR modules."
         },
         {
           "name": "opts",
-          "type": "QrSvgRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Svg.QrSvgRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Target stream."
+          "type": "System.IO.Stream",
+          "summary": "Target stream."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderToStream(BitMatrix modules, QrSvgRenderOptions opts, Stream stream)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.SvgQrRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions,System.IO.Stream)",
-      "anchor": "method-rendertostream-static-void-rendertostream-bitmatrix-modules-qrsvgrenderoptions-opts-stream-stream"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the QR module matrix to an SVG file.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "QR modules."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "QR modules."
         },
         {
           "name": "opts",
-          "type": "QrSvgRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Svg.QrSvgRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(BitMatrix modules, QrSvgRenderOptions opts, string path)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.SvgQrRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-qrsvgrenderoptions-opts-string-path"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the QR module matrix to an SVG file under the specified directory.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "QR modules."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "QR modules."
         },
         {
           "name": "opts",
-          "type": "QrSvgRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Svg.QrSvgRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "directory",
-          "type": "string",
-          "description": "Output directory."
+          "type": "System.String",
+          "summary": "Output directory."
         },
         {
           "name": "fileName",
-          "type": "string",
-          "description": "Output file name."
+          "type": "System.String",
+          "summary": "Output file name."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(BitMatrix modules, QrSvgRenderOptions opts, string directory, string fileName)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.SvgQrRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Svg.QrSvgRenderOptions,System.String,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-qrsvgrenderoptions-opts-string-directory-string-filename"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

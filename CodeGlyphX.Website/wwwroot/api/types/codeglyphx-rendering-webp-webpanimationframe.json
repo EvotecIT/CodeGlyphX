@@ -1,0 +1,103 @@
+﻿{
+  "name": "WebpAnimationFrame",
+  "fullName": "CodeGlyphX.Rendering.Webp.WebpAnimationFrame",
+  "namespace": "CodeGlyphX.Rendering.Webp",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-webp-webpanimationframe",
+  "summary": "Describes a single RGBA32 frame for animated WebP encoding.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "#ctor",
+      "summary": "Creates a WebP animation frame backed by an RGBA32 buffer.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "rgba",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "width",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "height",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "stride",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "durationMs",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "x",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "y",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "blend",
+          "type": "System.Boolean",
+          "summary": null
+        },
+        {
+          "name": "disposeToBackground",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "name": "Rgba",
+      "summary": "RGBA32 pixel buffer."
+    },
+    {
+      "name": "Width",
+      "summary": "Frame width in pixels."
+    },
+    {
+      "name": "Height",
+      "summary": "Frame height in pixels."
+    },
+    {
+      "name": "Stride",
+      "summary": "Frame stride in bytes."
+    },
+    {
+      "name": "DurationMs",
+      "summary": "Frame duration in milliseconds."
+    },
+    {
+      "name": "X",
+      "summary": "Frame X offset on the canvas."
+    },
+    {
+      "name": "Y",
+      "summary": "Frame Y offset on the canvas."
+    },
+    {
+      "name": "Blend",
+      "summary": "Whether to alpha-blend the frame over the canvas."
+    },
+    {
+      "name": "DisposeToBackground",
+      "summary": "Whether to dispose to background after the frame."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

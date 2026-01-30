@@ -1,0 +1,13 @@
+﻿{
+  "name": "QrPerspectiveTransform",
+  "fullName": "CodeGlyphX.Qr.QrPerspectiveTransform",
+  "namespace": "CodeGlyphX.Qr",
+  "kind": "Class",
+  "slug": "codeglyphx-qr-qrperspectivetransform",
+  "summary": "Minimal perspective transform (ported from common QR grid-sampling approaches).",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

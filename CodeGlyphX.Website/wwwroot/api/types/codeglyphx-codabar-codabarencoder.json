@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "CodabarEncoder",
   "fullName": "CodeGlyphX.Codabar.CodabarEncoder",
   "namespace": "CodeGlyphX.Codabar",
@@ -6,38 +6,31 @@
   "slug": "codeglyphx-codabar-codabarencoder",
   "summary": "Encodes Codabar barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a Codabar barcode.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "start",
-          "type": "char",
-          "description": null
+          "type": "System.Char",
+          "summary": null
         },
         {
           "name": "stop",
-          "type": "char",
-          "description": null
+          "type": "System.Char",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode(string content, char start, char stop)",
-      "xmlId": "M:CodeGlyphX.Codabar.CodabarEncoder.Encode(System.String,System.Char,System.Char)",
-      "anchor": "method-encode-static-barcode1d-encode-string-content-char-start-char-stop"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

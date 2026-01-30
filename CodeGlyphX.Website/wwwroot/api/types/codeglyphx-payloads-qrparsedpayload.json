@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrParsedPayload",
   "fullName": "CodeGlyphX.Payloads.QrParsedPayload",
   "namespace": "CodeGlyphX.Payloads",
@@ -6,70 +6,34 @@
   "slug": "codeglyphx-payloads-qrparsedpayload",
   "summary": "Parsed QR payload with detected type and optional raw value.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "TryGet",
-      "kind": "Method",
+      "name": "TryGet\u0060\u00601",
       "summary": "Attempts to get the parsed payload as a specific type.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "value",
-          "type": "T",
-          "description": null
+          "type": "\u0060\u00600@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool TryGet\u003CT\u003E(out T value)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedPayload.TryGet\u0060\u00601(\u0060\u00600@)",
-      "anchor": "method-tryget-bool-tryget-t-out-t-value"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "Type",
-      "kind": "Property",
-      "summary": "Detected payload type.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadType Type {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedPayload.Type",
-      "anchor": "property-type-qrpayloadtype-type-get"
+      "summary": "Detected payload type."
     },
     {
       "name": "Raw",
-      "kind": "Property",
-      "summary": "Raw payload text.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Raw {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedPayload.Raw",
-      "anchor": "property-raw-string-raw-get"
+      "summary": "Raw payload text."
     },
     {
       "name": "Value",
-      "kind": "Property",
-      "summary": "Gets the parsed payload object (type-specific), when available.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "object Value {get; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedPayload.Value",
-      "anchor": "property-value-object-value-get"
+      "summary": "Gets the parsed payload object (type-specific), when available."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

@@ -1,107 +1,84 @@
-{
+﻿{
   "name": "Contact",
   "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload.Contact",
-  "namespace": "CodeGlyphX.Payloads",
+  "namespace": "CodeGlyphX.Payloads.SwissQrCodePayload",
   "kind": "Class",
   "slug": "codeglyphx-payloads-swissqrcodepayload-contact",
   "summary": "Contact section.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "CreateStructured",
-      "kind": "Method",
       "summary": "Creates a contact with a structured address.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "name",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "street",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "houseNumber",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "zipCode",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "city",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "country",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static SwissQrCodePayload.Contact CreateStructured(string name, string street, string houseNumber, string zipCode, string city, string country)",
-      "xmlId": "M:CodeGlyphX.Payloads.SwissQrCodePayload.Contact.CreateStructured(System.String,System.String,System.String,System.String,System.String,System.String)",
-      "anchor": "method-createstructured-static-swissqrcodepayload-contact-createstructured-string-name-string-street-string-housenumber-string-zipcode-string-city-string-country"
+      ]
     },
     {
       "name": "CreateCombined",
-      "kind": "Method",
       "summary": "Creates a contact with a combined address.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "name",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "addressLine1",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "addressLine2",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "country",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static SwissQrCodePayload.Contact CreateCombined(string name, string addressLine1, string addressLine2, string country)",
-      "xmlId": "M:CodeGlyphX.Payloads.SwissQrCodePayload.Contact.CreateCombined(System.String,System.String,System.String,System.String)",
-      "anchor": "method-createcombined-static-swissqrcodepayload-contact-createcombined-string-name-string-addressline1-string-addressline2-string-country"
+      ]
     },
     {
       "name": "ToString",
-      "kind": "Method",
       "summary": "Returns the contact block string.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.SwissQrCodePayload.Contact.ToString",
-      "anchor": "method-tostring-string-tostring"
+      "parameters": []
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

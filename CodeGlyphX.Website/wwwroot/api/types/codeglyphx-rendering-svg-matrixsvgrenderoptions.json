@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "MatrixSvgRenderOptions",
   "fullName": "CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions",
   "namespace": "CodeGlyphX.Rendering.Svg",
@@ -6,158 +6,74 @@
   "slug": "codeglyphx-rendering-svg-matrixsvgrenderoptions",
   "summary": "Options for rendering generic 2D matrices to SVG.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "MatrixSvgRenderOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixSvgRenderOptions()",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.#ctor",
-      "anchor": "constructor-matrixsvgrenderoptions-matrixsvgrenderoptions"
-    },
+  "methods": [
     {
       "name": "WithModuleSize",
-      "kind": "Method",
       "summary": "Sets the module size in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "size",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixSvgRenderOptions WithModuleSize(int size)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.WithModuleSize(System.Int32)",
-      "anchor": "method-withmodulesize-matrixsvgrenderoptions-withmodulesize-int-size"
+      ]
     },
     {
       "name": "WithQuietZone",
-      "kind": "Method",
       "summary": "Sets the quiet zone size in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "quietZone",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixSvgRenderOptions WithQuietZone(int quietZone)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.WithQuietZone(System.Int32)",
-      "anchor": "method-withquietzone-matrixsvgrenderoptions-withquietzone-int-quietzone"
+      ]
     },
     {
       "name": "WithDarkColor",
-      "kind": "Method",
       "summary": "Sets the dark color (CSS value).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixSvgRenderOptions WithDarkColor(string color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.WithDarkColor(System.String)",
-      "anchor": "method-withdarkcolor-matrixsvgrenderoptions-withdarkcolor-string-color"
+      ]
     },
     {
       "name": "WithLightColor",
-      "kind": "Method",
       "summary": "Sets the light color (CSS value).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "MatrixSvgRenderOptions WithLightColor(string color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.WithLightColor(System.String)",
-      "anchor": "method-withlightcolor-matrixsvgrenderoptions-withlightcolor-string-color"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "ModuleSize",
-      "kind": "Property",
-      "summary": "Module size in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.ModuleSize",
-      "anchor": "property-modulesize-int-modulesize-get-set"
+      "summary": "Module size in pixels."
     },
     {
       "name": "QuietZone",
-      "kind": "Property",
-      "summary": "Quiet zone size in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int QuietZone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.QuietZone",
-      "anchor": "property-quietzone-int-quietzone-get-set"
+      "summary": "Quiet zone size in modules."
     },
     {
       "name": "DarkColor",
-      "kind": "Property",
-      "summary": "Foreground color (CSS).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string DarkColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.DarkColor",
-      "anchor": "property-darkcolor-string-darkcolor-get-set"
+      "summary": "Foreground color (CSS)."
     },
     {
       "name": "LightColor",
-      "kind": "Property",
-      "summary": "Background color (CSS).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LightColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Svg.MatrixSvgRenderOptions.LightColor",
-      "anchor": "property-lightcolor-string-lightcolor-get-set"
+      "summary": "Background color (CSS)."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

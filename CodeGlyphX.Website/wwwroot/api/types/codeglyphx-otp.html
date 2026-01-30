@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Otp - CodeGlyphX API Reference</title>
-  <meta name="description" content="Simple OTP helpers with fluent and static APIs." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.Otp - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,514 +28,600 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                <button type="button" class="nav-icon theme-cycle-btn" title="Auto mode (click to switch to light)" aria-label="Auto mode (click to switch to light)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
                     </svg>
                 </button>
+                <a href="https://evo.yt/discord" target="_blank" rel="noopener" class="nav-icon" title="Discord" aria-label="Discord">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                </a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                 </a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="nav-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor" class="nav-cta-icon">
-                        <path d="M12 0L1.75 6v12L12 24l10.25-6V6zm-1.775 18a3.11 3.11 0 01-3.111-3.111 3.11 3.11 0 013.111-3.111 3.11 3.11 0 013.111 3.111A3.11 3.11 0 0110.225 18zm4.91-6.944a1.867 1.867 0 01-1.867-1.867 1.867 1.867 0 011.866-1.866 1.867 1.867 0 011.867 1.866 1.867 1.867 0 01-1.867 1.867z"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-cta-icon" aria-hidden="true" focusable="false">
+                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
-                    Get Started
+                    Install
                 </a>
             </div>
         </nav>
     </div>
 </header>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.Otp</h1>
+    <p>Simple OTP helpers with fluent and static APIs.</p>
 
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX</span>
-  </nav>
-  <header class="type-header">
-    <h1>Otp</h1>
-    <div class="type-meta">Class · CodeGlyphX</div>
-  </header>
-  <p class="type-summary">Simple OTP helpers with fluent and static APIs.</p>
-  <section class="member-section">
-    <h2>Methods</h2>
-    <div class="member" id="method-totpuri-static-string-totpuri-string-issuer-string-account-string-secretbase32-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static string TotpUri(string issuer, string account, string secretBase32, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Builds a TOTP URI from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-totpuri-static-string-totpuri-string-issuer-string-account-byte-secret-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static string TotpUri(string issuer, string account, byte[] secret, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Builds a TOTP URI from raw secret bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secret <span class="param-type">byte[]</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-hotpuri-static-string-hotpuri-string-issuer-string-account-string-secretbase32-long-counter-otpalgorithm-alg-int-digits">
-      <code class="signature">static string HotpUri(string issuer, string account, string secretBase32, long counter, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Builds a HOTP URI from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-hotpuri-static-string-hotpuri-string-issuer-string-account-byte-secret-long-counter-otpalgorithm-alg-int-digits">
-      <code class="signature">static string HotpUri(string issuer, string account, byte[] secret, long counter, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Builds a HOTP URI from raw secret bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secret <span class="param-type">byte[]</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-totppng-static-byte-totppng-string-issuer-string-account-string-secretbase32-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static byte[] TotpPng(string issuer, string account, string secretBase32, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Renders a TOTP QR as PNG from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-totpsvg-static-string-totpsvg-string-issuer-string-account-string-secretbase32-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static string TotpSvg(string issuer, string account, string secretBase32, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Renders a TOTP QR as SVG from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-totphtml-static-string-totphtml-string-issuer-string-account-string-secretbase32-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static string TotpHtml(string issuer, string account, string secretBase32, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Renders a TOTP QR as HTML from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-totpjpeg-static-byte-totpjpeg-string-issuer-string-account-string-secretbase32-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static byte[] TotpJpeg(string issuer, string account, string secretBase32, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Renders a TOTP QR as JPEG from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-hotppng-static-byte-hotppng-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static byte[] HotpPng(string issuer, string account, string secretBase32, long counter, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Renders a HOTP QR as PNG from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-hotpsvg-static-string-hotpsvg-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static string HotpSvg(string issuer, string account, string secretBase32, long counter, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Renders a HOTP QR as SVG from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-hotphtml-static-string-hotphtml-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static string HotpHtml(string issuer, string account, string secretBase32, long counter, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Renders a HOTP QR as HTML from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-hotpjpeg-static-byte-hotpjpeg-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static byte[] HotpJpeg(string issuer, string account, string secretBase32, long counter, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Renders a HOTP QR as JPEG from a Base32 secret.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savetotppng-static-string-savetotppng-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static string SaveTotpPng(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Saves a TOTP PNG to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savetotppng-static-void-savetotppng-string-issuer-string-account-string-secretbase32-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static void SaveTotpPng(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Saves a TOTP PNG to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savetotpsvg-static-string-savetotpsvg-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static string SaveTotpSvg(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Saves a TOTP SVG to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savetotpsvg-static-void-savetotpsvg-string-issuer-string-account-string-secretbase32-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static void SaveTotpSvg(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Saves a TOTP SVG to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savetotphtml-static-string-savetotphtml-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period-string-title">
-      <code class="signature">static string SaveTotpHtml(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period, string title)</code>
-      <p class="member-summary">Saves a TOTP HTML to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savetotphtml-static-void-savetotphtml-string-issuer-string-account-string-secretbase32-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period-string-title">
-      <code class="signature">static void SaveTotpHtml(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, int period, string title)</code>
-      <p class="member-summary">Saves a TOTP HTML to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savetotpjpeg-static-string-savetotpjpeg-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static string SaveTotpJpeg(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Saves a TOTP JPEG to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savetotpjpeg-static-void-savetotpjpeg-string-issuer-string-account-string-secretbase32-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period">
-      <code class="signature">static void SaveTotpJpeg(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, int period)</code>
-      <p class="member-summary">Saves a TOTP JPEG to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehotppng-static-string-savehotppng-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static string SaveHotpPng(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Saves a HOTP PNG to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehotppng-static-void-savehotppng-string-issuer-string-account-string-secretbase32-long-counter-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static void SaveHotpPng(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Saves a HOTP PNG to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehotpsvg-static-string-savehotpsvg-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static string SaveHotpSvg(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Saves a HOTP SVG to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehotpsvg-static-void-savehotpsvg-string-issuer-string-account-string-secretbase32-long-counter-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static void SaveHotpSvg(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Saves a HOTP SVG to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehotphtml-static-string-savehotphtml-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-string-title">
-      <code class="signature">static string SaveHotpHtml(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, string title)</code>
-      <p class="member-summary">Saves a HOTP HTML to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehotphtml-static-void-savehotphtml-string-issuer-string-account-string-secretbase32-long-counter-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits-string-title">
-      <code class="signature">static void SaveHotpHtml(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits, string title)</code>
-      <p class="member-summary">Saves a HOTP HTML to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehotpjpeg-static-string-savehotpjpeg-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static string SaveHotpJpeg(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Saves a HOTP JPEG to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehotpjpeg-static-void-savehotpjpeg-string-issuer-string-account-string-secretbase32-long-counter-stream-stream-qreasyoptions-options-otpalgorithm-alg-int-digits">
-      <code class="signature">static void SaveHotpJpeg(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions options, OtpAlgorithm alg, int digits)</code>
-      <p class="member-summary">Saves a HOTP JPEG to a stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savetotp-static-string-savetotp-string-issuer-string-account-string-secretbase32-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-int-period-string-title">
-      <code class="signature">static string SaveTotp(string issuer, string account, string secretBase32, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, int period, string title)</code>
-      <p class="member-summary">Saves a TOTP QR based on file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
- Defaults to PNG when no extension is provided.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>period <span class="param-type">int</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehotp-static-string-savehotp-string-issuer-string-account-string-secretbase32-long-counter-string-path-qreasyoptions-options-otpalgorithm-alg-int-digits-string-title">
-      <code class="signature">static string SaveHotp(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions options, OtpAlgorithm alg, int digits, string title)</code>
-      <p class="member-summary">Saves a HOTP QR based on file extension (.png/.svg/.html/.jpg/.bmp/.pdf/.eps).
- Defaults to PNG when no extension is provided.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-        <dt>alg <span class="param-type">OtpAlgorithm</span></dt>
-        <dt>digits <span class="param-type">int</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-totp-static-otp-totpbuilder-totp-string-issuer-string-account-string-secretbase32-qreasyoptions-options">
-      <code class="signature">static Otp.TotpBuilder Totp(string issuer, string account, string secretBase32, QrEasyOptions options)</code>
-      <p class="member-summary">Starts a fluent TOTP builder.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-hotp-static-otp-hotpbuilder-hotp-string-issuer-string-account-string-secretbase32-long-counter-qreasyoptions-options">
-      <code class="signature">static Otp.HotpBuilder Hotp(string issuer, string account, string secretBase32, long counter, QrEasyOptions options)</code>
-      <p class="member-summary">Starts a fluent HOTP builder.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>issuer <span class="param-type">string</span></dt>
-        <dt>account <span class="param-type">string</span></dt>
-        <dt>secretBase32 <span class="param-type">string</span></dt>
-        <dt>counter <span class="param-type">long</span></dt>
-        <dt>options <span class="param-type">QrEasyOptions</span></dt>
-      </dl>
-    </div>
-  </section>
-</main>
+    <section class="pf-api-section">
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>TotpUri</strong> - Builds a TOTP URI from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TotpUri</strong> - Builds a TOTP URI from raw secret bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secret</code> (System.Byte[])</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>HotpUri</strong> - Builds a HOTP URI from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>HotpUri</strong> - Builds a HOTP URI from raw secret bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secret</code> (System.Byte[])</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TotpPng</strong> - Renders a TOTP QR as PNG from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TotpSvg</strong> - Renders a TOTP QR as SVG from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TotpHtml</strong> - Renders a TOTP QR as HTML from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TotpJpeg</strong> - Renders a TOTP QR as JPEG from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TotpWebp</strong> - Renders a TOTP QR as WebP from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>HotpPng</strong> - Renders a HOTP QR as PNG from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>HotpSvg</strong> - Renders a HOTP QR as SVG from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>HotpHtml</strong> - Renders a HOTP QR as HTML from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>HotpJpeg</strong> - Renders a HOTP QR as JPEG from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>HotpWebp</strong> - Renders a HOTP QR as WebP from a Base32 secret.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpPng</strong> - Saves a TOTP PNG to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpPng</strong> - Saves a TOTP PNG to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpSvg</strong> - Saves a TOTP SVG to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpSvg</strong> - Saves a TOTP SVG to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpHtml</strong> - Saves a TOTP HTML to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+              <li><code>title</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpHtml</strong> - Saves a TOTP HTML to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+              <li><code>title</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpJpeg</strong> - Saves a TOTP JPEG to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpJpeg</strong> - Saves a TOTP JPEG to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpWebp</strong> - Saves a TOTP WebP to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotpWebp</strong> - Saves a TOTP WebP to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpPng</strong> - Saves a HOTP PNG to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpPng</strong> - Saves a HOTP PNG to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpSvg</strong> - Saves a HOTP SVG to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpSvg</strong> - Saves a HOTP SVG to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpHtml</strong> - Saves a HOTP HTML to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>title</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpHtml</strong> - Saves a HOTP HTML to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>title</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpJpeg</strong> - Saves a HOTP JPEG to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpJpeg</strong> - Saves a HOTP JPEG to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpWebp</strong> - Saves a HOTP WebP to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotpWebp</strong> - Saves a HOTP WebP to a stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveTotp</strong> - Saves a TOTP QR based on file extension (.png/.webp/.svg/.html/.jpg/.bmp/.pdf/.eps). Defaults to PNG when no extension is provided.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>period</code> (System.Int32)</li>
+              <li><code>title</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHotp</strong> - Saves a HOTP QR based on file extension (.png/.webp/.svg/.html/.jpg/.bmp/.pdf/.eps). Defaults to PNG when no extension is provided.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>path</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+              <li><code>alg</code> (CodeGlyphX.OtpAlgorithm)</li>
+              <li><code>digits</code> (System.Int32)</li>
+              <li><code>title</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Totp</strong> - Starts a fluent TOTP builder.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Hotp</strong> - Starts a fluent HOTP builder.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>issuer</code> (System.String)</li>
+              <li><code>account</code> (System.String)</li>
+              <li><code>secretBase32</code> (System.String)</li>
+              <li><code>counter</code> (System.Int64)</li>
+              <li><code>options</code> (CodeGlyphX.QrEasyOptions)</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -553,20 +636,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -583,7 +667,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

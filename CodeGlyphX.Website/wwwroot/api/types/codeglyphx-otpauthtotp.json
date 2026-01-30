@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "OtpAuthTotp",
   "fullName": "CodeGlyphX.OtpAuthTotp",
   "namespace": "CodeGlyphX",
@@ -6,98 +6,83 @@
   "slug": "codeglyphx-otpauthtotp",
   "summary": "Builder for deterministic otpauth://totp/ URIs.",
   "remarks": "Output is stable (parameter ordering is fixed) and uses percent-encoding for label/query parts.",
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Create",
-      "kind": "Method",
       "summary": "Builds an otpauth://totp/ URI for a TOTP token.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "issuer",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "account",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "secret",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "alg",
-          "type": "OtpAlgorithm",
-          "description": null
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
           "name": "digits",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "period",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Create(string issuer, string account, ReadOnlySpan\u003Cbyte\u003E secret, OtpAlgorithm alg, int digits, int period)",
-      "xmlId": "M:CodeGlyphX.OtpAuthTotp.Create(System.String,System.String,System.ReadOnlySpan{System.Byte},CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
-      "anchor": "method-create-static-string-create-string-issuer-string-account-readonlyspan-byte-secret-otpalgorithm-alg-int-digits-int-period"
+      ]
     },
     {
       "name": "Create",
-      "kind": "Method",
       "summary": "Builds an otpauth://totp/ URI for a TOTP token.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "issuer",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "account",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "secret",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
           "name": "alg",
-          "type": "OtpAlgorithm",
-          "description": null
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
           "name": "digits",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "period",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Create(string issuer, string account, byte[] secret, OtpAlgorithm alg, int digits, int period)",
-      "xmlId": "M:CodeGlyphX.OtpAuthTotp.Create(System.String,System.String,System.Byte[],CodeGlyphX.OtpAlgorithm,System.Int32,System.Int32)",
-      "anchor": "method-create-static-string-create-string-issuer-string-account-byte-secret-otpalgorithm-alg-int-digits-int-period"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

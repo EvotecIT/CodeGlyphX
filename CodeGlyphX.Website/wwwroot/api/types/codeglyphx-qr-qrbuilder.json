@@ -1,1312 +1,1028 @@
-{
+﻿{
   "name": "QrBuilder",
   "fullName": "CodeGlyphX.QR.QrBuilder",
-  "namespace": "CodeGlyphX",
+  "namespace": "CodeGlyphX.QR",
   "kind": "Class",
   "slug": "codeglyphx-qr-qrbuilder",
   "summary": "Fluent QR builder.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "WithOptions",
-      "kind": "Method",
       "summary": "Updates rendering options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "configure",
-          "type": "Action\u003CQrEasyOptions\u003E",
-          "description": null
+          "type": "System.Action{CodeGlyphX.QrEasyOptions}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithOptions(Action\u003CQrEasyOptions\u003E configure)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithOptions(System.Action{CodeGlyphX.QrEasyOptions})",
-      "anchor": "method-withoptions-qr-qrbuilder-withoptions-action-qreasyoptions-configure"
+      ]
     },
     {
       "name": "WithModuleSize",
-      "kind": "Method",
       "summary": "Sets the module size in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "moduleSize",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithModuleSize(int moduleSize)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithModuleSize(System.Int32)",
-      "anchor": "method-withmodulesize-qr-qrbuilder-withmodulesize-int-modulesize"
+      ]
     },
     {
       "name": "WithQuietZone",
-      "kind": "Method",
       "summary": "Sets the quiet zone size in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "quietZone",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithQuietZone(int quietZone)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithQuietZone(System.Int32)",
-      "anchor": "method-withquietzone-qr-qrbuilder-withquietzone-int-quietzone"
+      ]
     },
     {
       "name": "WithColors",
-      "kind": "Method",
       "summary": "Sets foreground and background colors.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "foreground",
-          "type": "Rgba32",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         },
         {
           "name": "background",
-          "type": "Rgba32",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithColors(Rgba32 foreground, Rgba32 background)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithColors(CodeGlyphX.Rendering.Png.Rgba32,CodeGlyphX.Rendering.Png.Rgba32)",
-      "anchor": "method-withcolors-qr-qrbuilder-withcolors-rgba32-foreground-rgba32-background"
+      ]
     },
     {
       "name": "WithForeground",
-      "kind": "Method",
       "summary": "Sets foreground color.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "Rgba32",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithForeground(Rgba32 color)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithForeground(CodeGlyphX.Rendering.Png.Rgba32)",
-      "anchor": "method-withforeground-qr-qrbuilder-withforeground-rgba32-color"
+      ]
     },
     {
       "name": "WithBackground",
-      "kind": "Method",
       "summary": "Sets background color.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "Rgba32",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithBackground(Rgba32 color)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithBackground(CodeGlyphX.Rendering.Png.Rgba32)",
-      "anchor": "method-withbackground-qr-qrbuilder-withbackground-rgba32-color"
+      ]
     },
     {
       "name": "WithTransparentBackground",
-      "kind": "Method",
       "summary": "Uses a transparent background (alpha = 0).",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithTransparentBackground()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithTransparentBackground",
-      "anchor": "method-withtransparentbackground-qr-qrbuilder-withtransparentbackground"
+      "parameters": []
     },
     {
       "name": "WithStyle",
-      "kind": "Method",
       "summary": "Sets the render style preset.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "style",
-          "type": "QrRenderStyle",
-          "description": null
+          "type": "CodeGlyphX.QrRenderStyle",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithStyle(QrRenderStyle style)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithStyle(CodeGlyphX.QrRenderStyle)",
-      "anchor": "method-withstyle-qr-qrbuilder-withstyle-qrrenderstyle-style"
+      ]
+    },
+    {
+      "name": "WithModuleShape",
+      "summary": "Sets module shape override.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "shape",
+          "type": "CodeGlyphX.Rendering.Png.QrPngModuleShape",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithModuleScale",
+      "summary": "Sets module scale override (0.1..1.0).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "scale",
+          "type": "System.Double",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithModuleScaleMap",
+      "summary": "Sets module scale map.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "map",
+          "type": "CodeGlyphX.Rendering.Png.QrPngModuleScaleMapOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithModuleShapeMap",
+      "summary": "Sets module shape map.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "map",
+          "type": "CodeGlyphX.Rendering.Png.QrPngModuleShapeMapOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithModuleJitter",
+      "summary": "Sets per-module jitter options.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "jitter",
+          "type": "CodeGlyphX.Rendering.Png.QrPngModuleJitterOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithModuleCornerRadiusPx",
+      "summary": "Sets module corner radius in pixels.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "radiusPx",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithForegroundGradient",
+      "summary": "Sets the foreground gradient.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "gradient",
+          "type": "CodeGlyphX.Rendering.Png.QrPngGradientOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithBackgroundGradient",
+      "summary": "Sets the background gradient.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "gradient",
+          "type": "CodeGlyphX.Rendering.Png.QrPngGradientOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithForegroundPalette",
+      "summary": "Sets the foreground palette.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "palette",
+          "type": "CodeGlyphX.Rendering.Png.QrPngPaletteOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithCanvas",
+      "summary": "Sets the canvas options.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "canvas",
+          "type": "CodeGlyphX.Rendering.Png.QrPngCanvasOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithForegroundPaletteZones",
+      "summary": "Sets palette overrides for specific zones.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "zones",
+          "type": "CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithEyes",
+      "summary": "Sets eye (finder) styling.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "eyes",
+          "type": "CodeGlyphX.Rendering.Png.QrPngEyeOptions",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "WithTargetSize",
-      "kind": "Method",
       "summary": "Sets a fixed target size (in pixels). Module size is adjusted to fit.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "sizePx",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "includeQuietZone",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithTargetSize(int sizePx, bool includeQuietZone)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithTargetSize(System.Int32,System.Boolean)",
-      "anchor": "method-withtargetsize-qr-qrbuilder-withtargetsize-int-sizepx-bool-includequietzone"
+      ]
     },
     {
       "name": "WithFixedSize",
-      "kind": "Method",
       "summary": "Sets a fixed target size (in pixels). Module size is adjusted to fit.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "sizePx",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "includeQuietZone",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithFixedSize(int sizePx, bool includeQuietZone)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithFixedSize(System.Int32,System.Boolean)",
-      "anchor": "method-withfixedsize-qr-qrbuilder-withfixedsize-int-sizepx-bool-includequietzone"
+      ]
     },
     {
       "name": "WithLogoPng",
-      "kind": "Method",
       "summary": "Sets an embedded logo from PNG bytes.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "png",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithLogoPng(byte[] png)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithLogoPng(System.Byte[])",
-      "anchor": "method-withlogopng-qr-qrbuilder-withlogopng-byte-png"
+      ]
     },
     {
-      "name": "WithLogoFile",
-      "kind": "Method",
-      "summary": "Sets an embedded logo from a PNG file.",
-      "remarks": null,
+      "name": "WithLogoScale",
+      "summary": "Sets the logo scale relative to the QR area (excluding quiet zone).",
       "returns": null,
       "parameters": [
         {
-          "name": "path",
-          "type": "string",
-          "description": null
+          "name": "scale",
+          "type": "System.Double",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithLogoFile(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithLogoFile(System.String)",
-      "anchor": "method-withlogofile-qr-qrbuilder-withlogofile-string-path"
+      ]
     },
     {
-      "name": "WithErrorCorrection",
-      "kind": "Method",
-      "summary": "Sets error correction level.",
-      "remarks": null,
+      "name": "WithLogoPaddingPx",
+      "summary": "Sets the logo padding in pixels.",
       "returns": null,
       "parameters": [
         {
-          "name": "ecc",
-          "type": "QrErrorCorrectionLevel",
-          "description": null
+          "name": "paddingPx",
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithErrorCorrection(QrErrorCorrectionLevel ecc)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithErrorCorrection(CodeGlyphX.QrErrorCorrectionLevel)",
-      "anchor": "method-witherrorcorrection-qr-qrbuilder-witherrorcorrection-qrerrorcorrectionlevel-ecc"
+      ]
     },
     {
-      "name": "WithIcoSizes",
-      "kind": "Method",
-      "summary": "Sets ICO output sizes (in pixels).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "sizes",
-          "type": "int[]",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithIcoSizes(int[] sizes)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithIcoSizes(System.Int32[])",
-      "anchor": "method-withicosizes-qr-qrbuilder-withicosizes-int-sizes"
-    },
-    {
-      "name": "WithIcoPreserveAspectRatio",
-      "kind": "Method",
-      "summary": "Sets ICO aspect ratio preservation behavior.",
-      "remarks": null,
+      "name": "WithLogoBackground",
+      "summary": "Sets whether to draw a background plate behind the logo.",
       "returns": null,
       "parameters": [
         {
           "name": "enabled",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QR.QrBuilder WithIcoPreserveAspectRatio(bool enabled)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.WithIcoPreserveAspectRatio(System.Boolean)",
-      "anchor": "method-withicopreserveaspectratio-qr-qrbuilder-withicopreserveaspectratio-bool-enabled"
+      ]
+    },
+    {
+      "name": "WithLogoBackgroundAutoBump",
+      "summary": "Enables/disables auto-bumping the minimum version for logo background plates.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithLogoBackgroundMinVersion",
+      "summary": "Sets the minimum version used when a logo background plate is enabled.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "minVersion",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithLogoBackgroundColor",
+      "summary": "Sets the logo background color.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "color",
+          "type": "System.Nullable{CodeGlyphX.Rendering.Png.Rgba32}",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithLogoCornerRadiusPx",
+      "summary": "Sets the logo background corner radius in pixels.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "radiusPx",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithLogoFile",
+      "summary": "Sets an embedded logo from a PNG file.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithErrorCorrection",
+      "summary": "Sets error correction level.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "ecc",
+          "type": "CodeGlyphX.QrErrorCorrectionLevel",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithIcoSizes",
+      "summary": "Sets ICO output sizes (in pixels).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "sizes",
+          "type": "System.Int32[]",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WithIcoPreserveAspectRatio",
+      "summary": "Sets ICO aspect ratio preservation behavior.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "enabled",
+          "type": "System.Boolean",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes the QR code.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrCode Encode()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Encode",
-      "anchor": "method-encode-qrcode-encode"
+      "parameters": []
     },
     {
       "name": "Png",
-      "kind": "Method",
       "summary": "Renders PNG bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Png()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Png",
-      "anchor": "method-png-byte-png"
+      "parameters": []
     },
     {
       "name": "Svg",
-      "kind": "Method",
       "summary": "Renders SVG text.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Svg()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Svg",
-      "anchor": "method-svg-string-svg"
+      "parameters": []
     },
     {
       "name": "Html",
-      "kind": "Method",
       "summary": "Renders HTML text.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Html()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Html",
-      "anchor": "method-html-string-html"
+      "parameters": []
     },
     {
       "name": "Jpeg",
-      "kind": "Method",
       "summary": "Renders JPEG bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Jpeg()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Jpeg",
-      "anchor": "method-jpeg-byte-jpeg"
+      "parameters": []
     },
     {
       "name": "Ppm",
-      "kind": "Method",
       "summary": "Renders PPM bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Ppm()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Ppm",
-      "anchor": "method-ppm-byte-ppm"
+      "parameters": []
     },
     {
       "name": "Pbm",
-      "kind": "Method",
       "summary": "Renders PBM bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Pbm()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Pbm",
-      "anchor": "method-pbm-byte-pbm"
+      "parameters": []
     },
     {
       "name": "Pgm",
-      "kind": "Method",
       "summary": "Renders PGM bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Pgm()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Pgm",
-      "anchor": "method-pgm-byte-pgm"
+      "parameters": []
     },
     {
       "name": "Pam",
-      "kind": "Method",
       "summary": "Renders PAM bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Pam()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Pam",
-      "anchor": "method-pam-byte-pam"
+      "parameters": []
     },
     {
       "name": "Xbm",
-      "kind": "Method",
       "summary": "Renders XBM text.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Xbm()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Xbm",
-      "anchor": "method-xbm-string-xbm"
+      "parameters": []
     },
     {
       "name": "Xpm",
-      "kind": "Method",
       "summary": "Renders XPM text.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Xpm()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Xpm",
-      "anchor": "method-xpm-string-xpm"
+      "parameters": []
     },
     {
       "name": "Tga",
-      "kind": "Method",
       "summary": "Renders TGA bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Tga()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Tga",
-      "anchor": "method-tga-byte-tga"
+      "parameters": []
     },
     {
       "name": "Ico",
-      "kind": "Method",
       "summary": "Renders ICO bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Ico()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Ico",
-      "anchor": "method-ico-byte-ico"
+      "parameters": []
     },
     {
       "name": "Svgz",
-      "kind": "Method",
       "summary": "Renders SVGZ bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Svgz()",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Svgz",
-      "anchor": "method-svgz-byte-svgz"
+      "parameters": []
     },
     {
       "name": "Pdf",
-      "kind": "Method",
       "summary": "Renders PDF bytes.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Pdf(RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Pdf(CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-pdf-byte-pdf-rendermode-mode"
+      ]
     },
     {
       "name": "Eps",
-      "kind": "Method",
       "summary": "Renders EPS text.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Eps(RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Eps(CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-eps-string-eps-rendermode-mode"
+      ]
     },
     {
       "name": "SavePng",
-      "kind": "Method",
       "summary": "Saves PNG to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SavePng(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePng(System.String)",
-      "anchor": "method-savepng-string-savepng-string-path"
+      ]
     },
     {
       "name": "SavePng",
-      "kind": "Method",
       "summary": "Saves PNG to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SavePng(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePng(System.IO.Stream)",
-      "anchor": "method-savepng-void-savepng-stream-stream"
+      ]
     },
     {
       "name": "SaveSvg",
-      "kind": "Method",
       "summary": "Saves SVG to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveSvg(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveSvg(System.String)",
-      "anchor": "method-savesvg-string-savesvg-string-path"
+      ]
     },
     {
       "name": "SaveSvg",
-      "kind": "Method",
       "summary": "Saves SVG to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveSvg(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveSvg(System.IO.Stream)",
-      "anchor": "method-savesvg-void-savesvg-stream-stream"
+      ]
     },
     {
       "name": "SaveHtml",
-      "kind": "Method",
       "summary": "Saves HTML to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "title",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveHtml(string path, string title)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveHtml(System.String,System.String)",
-      "anchor": "method-savehtml-string-savehtml-string-path-string-title"
+      ]
     },
     {
       "name": "SaveHtml",
-      "kind": "Method",
       "summary": "Saves HTML to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
           "name": "title",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveHtml(Stream stream, string title)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveHtml(System.IO.Stream,System.String)",
-      "anchor": "method-savehtml-void-savehtml-stream-stream-string-title"
+      ]
     },
     {
       "name": "SaveJpeg",
-      "kind": "Method",
       "summary": "Saves JPEG to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveJpeg(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveJpeg(System.String)",
-      "anchor": "method-savejpeg-string-savejpeg-string-path"
+      ]
     },
     {
       "name": "SaveJpeg",
-      "kind": "Method",
       "summary": "Saves JPEG to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveJpeg(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveJpeg(System.IO.Stream)",
-      "anchor": "method-savejpeg-void-savejpeg-stream-stream"
+      ]
+    },
+    {
+      "name": "SaveWebp",
+      "summary": "Saves WebP to a file.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "SaveWebp",
+      "summary": "Saves WebP to a stream.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "System.IO.Stream",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "SaveBmp",
-      "kind": "Method",
       "summary": "Saves BMP to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveBmp(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveBmp(System.String)",
-      "anchor": "method-savebmp-string-savebmp-string-path"
+      ]
     },
     {
       "name": "SaveBmp",
-      "kind": "Method",
       "summary": "Saves BMP to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveBmp(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveBmp(System.IO.Stream)",
-      "anchor": "method-savebmp-void-savebmp-stream-stream"
+      ]
     },
     {
       "name": "SavePpm",
-      "kind": "Method",
       "summary": "Saves PPM to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SavePpm(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePpm(System.String)",
-      "anchor": "method-saveppm-string-saveppm-string-path"
+      ]
     },
     {
       "name": "SavePpm",
-      "kind": "Method",
       "summary": "Saves PPM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SavePpm(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePpm(System.IO.Stream)",
-      "anchor": "method-saveppm-void-saveppm-stream-stream"
+      ]
     },
     {
       "name": "SavePbm",
-      "kind": "Method",
       "summary": "Saves PBM to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SavePbm(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePbm(System.String)",
-      "anchor": "method-savepbm-string-savepbm-string-path"
+      ]
     },
     {
       "name": "SavePbm",
-      "kind": "Method",
       "summary": "Saves PBM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SavePbm(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePbm(System.IO.Stream)",
-      "anchor": "method-savepbm-void-savepbm-stream-stream"
+      ]
     },
     {
       "name": "SavePgm",
-      "kind": "Method",
       "summary": "Saves PGM to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SavePgm(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePgm(System.String)",
-      "anchor": "method-savepgm-string-savepgm-string-path"
+      ]
     },
     {
       "name": "SavePgm",
-      "kind": "Method",
       "summary": "Saves PGM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SavePgm(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePgm(System.IO.Stream)",
-      "anchor": "method-savepgm-void-savepgm-stream-stream"
+      ]
     },
     {
       "name": "SavePam",
-      "kind": "Method",
       "summary": "Saves PAM to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SavePam(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePam(System.String)",
-      "anchor": "method-savepam-string-savepam-string-path"
+      ]
     },
     {
       "name": "SavePam",
-      "kind": "Method",
       "summary": "Saves PAM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SavePam(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePam(System.IO.Stream)",
-      "anchor": "method-savepam-void-savepam-stream-stream"
+      ]
     },
     {
       "name": "SaveXbm",
-      "kind": "Method",
       "summary": "Saves XBM to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveXbm(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveXbm(System.String)",
-      "anchor": "method-savexbm-string-savexbm-string-path"
+      ]
     },
     {
       "name": "SaveXbm",
-      "kind": "Method",
       "summary": "Saves XBM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveXbm(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveXbm(System.IO.Stream)",
-      "anchor": "method-savexbm-void-savexbm-stream-stream"
+      ]
     },
     {
       "name": "SaveXpm",
-      "kind": "Method",
       "summary": "Saves XPM to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveXpm(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveXpm(System.String)",
-      "anchor": "method-savexpm-string-savexpm-string-path"
+      ]
     },
     {
       "name": "SaveXpm",
-      "kind": "Method",
       "summary": "Saves XPM to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveXpm(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveXpm(System.IO.Stream)",
-      "anchor": "method-savexpm-void-savexpm-stream-stream"
+      ]
     },
     {
       "name": "SaveTga",
-      "kind": "Method",
       "summary": "Saves TGA to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveTga(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveTga(System.String)",
-      "anchor": "method-savetga-string-savetga-string-path"
+      ]
     },
     {
       "name": "SaveTga",
-      "kind": "Method",
       "summary": "Saves TGA to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveTga(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveTga(System.IO.Stream)",
-      "anchor": "method-savetga-void-savetga-stream-stream"
+      ]
     },
     {
       "name": "SaveIco",
-      "kind": "Method",
       "summary": "Saves ICO to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveIco(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveIco(System.String)",
-      "anchor": "method-saveico-string-saveico-string-path"
+      ]
     },
     {
       "name": "SaveIco",
-      "kind": "Method",
       "summary": "Saves ICO to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveIco(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveIco(System.IO.Stream)",
-      "anchor": "method-saveico-void-saveico-stream-stream"
+      ]
     },
     {
       "name": "SaveSvgz",
-      "kind": "Method",
       "summary": "Saves SVGZ to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveSvgz(string path)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveSvgz(System.String)",
-      "anchor": "method-savesvgz-string-savesvgz-string-path"
+      ]
     },
     {
       "name": "SaveSvgz",
-      "kind": "Method",
       "summary": "Saves SVGZ to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveSvgz(Stream stream)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveSvgz(System.IO.Stream)",
-      "anchor": "method-savesvgz-void-savesvgz-stream-stream"
+      ]
     },
     {
       "name": "SavePdf",
-      "kind": "Method",
       "summary": "Saves PDF to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SavePdf(string path, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePdf(System.String,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-savepdf-string-savepdf-string-path-rendermode-mode"
+      ]
     },
     {
       "name": "SavePdf",
-      "kind": "Method",
       "summary": "Saves PDF to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Destination stream."
+          "type": "System.IO.Stream",
+          "summary": "Destination stream."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SavePdf(Stream stream, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SavePdf(System.IO.Stream,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-savepdf-void-savepdf-stream-stream-rendermode-mode"
+      ]
     },
     {
       "name": "SaveEps",
-      "kind": "Method",
       "summary": "Saves EPS to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveEps(string path, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveEps(System.String,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-saveeps-string-saveeps-string-path-rendermode-mode"
+      ]
     },
     {
       "name": "SaveEps",
-      "kind": "Method",
       "summary": "Saves EPS to a stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Destination stream."
+          "type": "System.IO.Stream",
+          "summary": "Destination stream."
         },
         {
           "name": "mode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void SaveEps(Stream stream, RenderMode mode)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveEps(System.IO.Stream,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-saveeps-void-saveeps-stream-stream-rendermode-mode"
+      ]
     },
     {
       "name": "Ascii",
-      "kind": "Method",
       "summary": "Renders ASCII text.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "asciiOptions",
-          "type": "MatrixAsciiRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Ascii(MatrixAsciiRenderOptions asciiOptions)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Ascii(CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)",
-      "anchor": "method-ascii-string-ascii-matrixasciirenderoptions-asciioptions"
+      ]
     },
     {
       "name": "SaveAscii",
-      "kind": "Method",
       "summary": "Saves ASCII to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "asciiOptions",
-          "type": "MatrixAsciiRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveAscii(string path, MatrixAsciiRenderOptions asciiOptions)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.SaveAscii(System.String,CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)",
-      "anchor": "method-saveascii-string-saveascii-string-path-matrixasciirenderoptions-asciioptions"
+      ]
     },
     {
       "name": "Save",
-      "kind": "Method",
       "summary": "Saves based on file extension (.png/.svg/.svgz/.html/.jpg/.bmp/.ppm/.pbm/.pgm/.pam/.xbm/.xpm/.tga/.ico/.pdf/.eps). Defaults to PNG when no extension is provided.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "title",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Save(string path, string title)",
-      "xmlId": "M:CodeGlyphX.QR.QrBuilder.Save(System.String,System.String)",
-      "anchor": "method-save-string-save-string-path-string-title"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "Options",
-      "kind": "Property",
-      "summary": "Rendering options used by this builder.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrEasyOptions Options {get; }",
-      "xmlId": "P:CodeGlyphX.QR.QrBuilder.Options",
-      "anchor": "property-options-qreasyoptions-options-get"
+      "summary": "Rendering options used by this builder."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

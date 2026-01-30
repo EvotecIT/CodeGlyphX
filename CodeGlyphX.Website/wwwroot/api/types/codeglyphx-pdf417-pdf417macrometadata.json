@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Pdf417MacroMetadata",
   "fullName": "CodeGlyphX.Pdf417.Pdf417MacroMetadata",
   "namespace": "CodeGlyphX.Pdf417",
@@ -6,148 +6,49 @@
   "slug": "codeglyphx-pdf417-pdf417macrometadata",
   "summary": "Macro PDF417 metadata payload.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [],
+  "properties": [
     {
       "name": "SegmentIndex",
-      "kind": "Property",
-      "summary": "Gets the segment index.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int SegmentIndex {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.SegmentIndex",
-      "anchor": "property-segmentindex-int-segmentindex-get"
+      "summary": "Gets the segment index."
     },
     {
       "name": "FileId",
-      "kind": "Property",
-      "summary": "Gets the file identifier.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string FileId {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.FileId",
-      "anchor": "property-fileid-string-fileid-get"
+      "summary": "Gets the file identifier."
     },
     {
       "name": "IsLastSegment",
-      "kind": "Property",
-      "summary": "Gets whether this segment is marked as the last segment.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool IsLastSegment {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.IsLastSegment",
-      "anchor": "property-islastsegment-bool-islastsegment-get"
+      "summary": "Gets whether this segment is marked as the last segment."
     },
     {
       "name": "SegmentCount",
-      "kind": "Property",
-      "summary": "Gets the total number of segments, if present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cint\u003E SegmentCount {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.SegmentCount",
-      "anchor": "property-segmentcount-nullable-int-segmentcount-get"
+      "summary": "Gets the total number of segments, if present."
     },
     {
       "name": "FileName",
-      "kind": "Property",
-      "summary": "Gets the file name, if present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string FileName {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.FileName",
-      "anchor": "property-filename-string-filename-get"
+      "summary": "Gets the file name, if present."
     },
     {
       "name": "Timestamp",
-      "kind": "Property",
-      "summary": "Gets the timestamp, if present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Clong\u003E Timestamp {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.Timestamp",
-      "anchor": "property-timestamp-nullable-long-timestamp-get"
+      "summary": "Gets the timestamp, if present."
     },
     {
       "name": "Sender",
-      "kind": "Property",
-      "summary": "Gets the sender, if present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Sender {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.Sender",
-      "anchor": "property-sender-string-sender-get"
+      "summary": "Gets the sender, if present."
     },
     {
       "name": "Addressee",
-      "kind": "Property",
-      "summary": "Gets the addressee, if present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Addressee {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.Addressee",
-      "anchor": "property-addressee-string-addressee-get"
+      "summary": "Gets the addressee, if present."
     },
     {
       "name": "FileSize",
-      "kind": "Property",
-      "summary": "Gets the file size, if present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Clong\u003E FileSize {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.FileSize",
-      "anchor": "property-filesize-nullable-long-filesize-get"
+      "summary": "Gets the file size, if present."
     },
     {
       "name": "Checksum",
-      "kind": "Property",
-      "summary": "Gets the checksum, if present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cint\u003E Checksum {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417.Pdf417MacroMetadata.Checksum",
-      "anchor": "property-checksum-nullable-int-checksum-get"
+      "summary": "Gets the checksum, if present."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

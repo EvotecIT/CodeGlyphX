@@ -1,55 +1,22 @@
-{
+﻿{
   "name": "QrMmsEncoding",
   "fullName": "CodeGlyphX.Payloads.QrMmsEncoding",
   "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-qrmmsencoding",
   "summary": "MMS payload formats.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.QrMmsEncoding.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Mms",
-      "kind": "Field",
-      "summary": "mms: URI.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrMmsEncoding Mms",
-      "xmlId": "F:CodeGlyphX.Payloads.QrMmsEncoding.Mms",
-      "anchor": "field-mms-qrmmsencoding-mms"
+      "summary": "mms: URI."
     },
     {
       "name": "Mmsto",
-      "kind": "Field",
-      "summary": "mmsto: URI.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrMmsEncoding Mmsto",
-      "xmlId": "F:CodeGlyphX.Payloads.QrMmsEncoding.Mmsto",
-      "anchor": "field-mmsto-qrmmsencoding-mmsto"
+      "summary": "mmsto: URI."
     }
-  ]
+  ],
+  "events": []
 }

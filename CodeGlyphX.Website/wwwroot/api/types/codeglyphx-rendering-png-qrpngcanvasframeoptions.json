@@ -1,0 +1,58 @@
+﻿{
+  "name": "QrPngCanvasFrameOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngcanvasframeoptions",
+  "summary": "Decorative frame options drawn around the QR bounds (outside the QR area).",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "ThicknessPx",
+      "summary": "Frame thickness in pixels."
+    },
+    {
+      "name": "GapPx",
+      "summary": "Gap between the QR bounds (including quiet zone) and the frame."
+    },
+    {
+      "name": "RadiusPx",
+      "summary": "Frame corner radius in pixels."
+    },
+    {
+      "name": "Color",
+      "summary": "Frame color."
+    },
+    {
+      "name": "Gradient",
+      "summary": "Optional frame gradient (overrides CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.Color when set)."
+    },
+    {
+      "name": "EdgePattern",
+      "summary": "Optional edge pattern overlay."
+    },
+    {
+      "name": "InnerThicknessPx",
+      "summary": "Optional inner frame thickness in pixels (0 = disabled)."
+    },
+    {
+      "name": "InnerGapPx",
+      "summary": "Gap from the QR bounds to the inner frame."
+    },
+    {
+      "name": "InnerColor",
+      "summary": "Optional inner frame color. When null, CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.Color is used."
+    },
+    {
+      "name": "InnerGradient",
+      "summary": "Optional inner frame gradient (overrides CodeGlyphX.Rendering.Png.QrPngCanvasFrameOptions.InnerColor when set)."
+    },
+    {
+      "name": "InnerEdgePattern",
+      "summary": "Optional inner edge pattern overlay."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

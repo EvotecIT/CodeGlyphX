@@ -1,0 +1,13 @@
+﻿{
+  "name": "WebpVp8lEncoder",
+  "fullName": "CodeGlyphX.Rendering.Webp.WebpVp8lEncoder",
+  "namespace": "CodeGlyphX.Rendering.Webp",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-webp-webpvp8lencoder",
+  "summary": "Managed VP8L lossless encoder (subset) for RGBA images.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

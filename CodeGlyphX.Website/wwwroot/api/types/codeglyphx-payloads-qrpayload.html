@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QrPayload - CodeGlyphX API Reference</title>
-  <meta name="description" content="Helpers for building common QR payload strings (URLs, Wi‑Fi, vCard, and basic URI schemes)." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.Payloads.QrPayload - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,277 +28,275 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                <button type="button" class="nav-icon theme-cycle-btn" title="Auto mode (click to switch to light)" aria-label="Auto mode (click to switch to light)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
                     </svg>
                 </button>
+                <a href="https://evo.yt/discord" target="_blank" rel="noopener" class="nav-icon" title="Discord" aria-label="Discord">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                </a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                 </a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="nav-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor" class="nav-cta-icon">
-                        <path d="M12 0L1.75 6v12L12 24l10.25-6V6zm-1.775 18a3.11 3.11 0 01-3.111-3.111 3.11 3.11 0 013.111-3.111 3.11 3.11 0 013.111 3.111A3.11 3.11 0 0110.225 18zm4.91-6.944a1.867 1.867 0 01-1.867-1.867 1.867 1.867 0 011.866-1.866 1.867 1.867 0 011.867 1.866 1.867 1.867 0 01-1.867 1.867z"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-cta-icon" aria-hidden="true" focusable="false">
+                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
-                    Get Started
+                    Install
                 </a>
             </div>
         </nav>
     </div>
 </header>
-
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX.Payloads</span>
-  </nav>
-  <header class="type-header">
-    <h1>QrPayload</h1>
-    <div class="type-meta">Class · CodeGlyphX.Payloads</div>
-  </header>
-  <p class="type-summary">Helpers for building common QR payload strings (URLs, Wi‑Fi, vCard, and basic URI schemes).</p>
-  <p class="type-remarks">The returned strings can be passed directly to CodeGlyphX.QrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32}).</p>
-  <section class="member-section">
-    <h2>Methods</h2>
-    <div class="member" id="method-text-static-string-text-string-text">
-      <code class="signature">static string Text(string text)</code>
-      <p class="member-summary">Returns the text as-is (after a null check).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>text <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-url-static-string-url-string-url">
-      <code class="signature">static string Url(string url)</code>
-      <p class="member-summary">Builds a URL payload (trimmed).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>url <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-email-static-string-email-string-address-string-subject-string-body">
-      <code class="signature">static string Email(string address, string subject, string body)</code>
-      <p class="member-summary">Builds a mailto: URI payload.</p>
-      <p class="member-remarks">Query parameters are percent-encoded.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>address <span class="param-type">string</span></dt>
-        <dt>subject <span class="param-type">string</span></dt>
-        <dt>body <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-phone-static-string-phone-string-number">
-      <code class="signature">static string Phone(string number)</code>
-      <p class="member-summary">Builds a tel: URI payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>number <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-sms-static-string-sms-string-number-string-body">
-      <code class="signature">static string Sms(string number, string body)</code>
-      <p class="member-summary">Builds an sms: URI payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>number <span class="param-type">string</span></dt>
-        <dt>body <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-upi-static-string-upi-string-vpa-string-name-string-merchantcode-string-transactionref-string-transactionnote-nullable-decimal-amount-string-currency">
-      <code class="signature">static string Upi(string vpa, string name, string merchantCode, string transactionRef, string transactionNote, Nullable&lt;decimal&gt; amount, string currency)</code>
-      <p class="member-summary">Builds a UPI payment URI payload (upi://pay).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>vpa <span class="param-type">string</span></dt>
-        <dt>name <span class="param-type">string</span></dt>
-        <dt>merchantCode <span class="param-type">string</span></dt>
-        <dt>transactionRef <span class="param-type">string</span></dt>
-        <dt>transactionNote <span class="param-type">string</span></dt>
-        <dt>amount <span class="param-type">Nullable&lt;decimal&gt;</span></dt>
-        <dt>currency <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-wifi-static-string-wifi-string-ssid-string-password-string-authtype-bool-hidden">
-      <code class="signature">static string Wifi(string ssid, string password, string authType, bool hidden)</code>
-      <p class="member-summary">Builds a Wi‑Fi QR payload (common WIFI:... format).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>ssid <span class="param-type">string</span></dt>
-        <dt>password <span class="param-type">string</span></dt>
-        <dt>authType <span class="param-type">string</span></dt>
-        <dt>hidden <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-appstore-static-string-appstore-string-appid-string-countrycode">
-      <code class="signature">static string AppStore(string appId, string countryCode)</code>
-      <p class="member-summary">Builds an Apple App Store URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>appId <span class="param-type">string</span></dt>
-        <dt>countryCode <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-appstoreapple-static-string-appstoreapple-string-appid-string-countrycode">
-      <code class="signature">static string AppStoreApple(string appId, string countryCode)</code>
-      <p class="member-summary">Builds an Apple App Store URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>appId <span class="param-type">string</span></dt>
-        <dt>countryCode <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-appstoregoogleplay-static-string-appstoregoogleplay-string-packageid">
-      <code class="signature">static string AppStoreGooglePlay(string packageId)</code>
-      <p class="member-summary">Builds a Google Play Store URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>packageId <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-facebookprofile-static-string-facebookprofile-string-handleorurl">
-      <code class="signature">static string FacebookProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds a Facebook profile URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-twitterprofile-static-string-twitterprofile-string-handleorurl">
-      <code class="signature">static string TwitterProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds a Twitter profile URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-xprofile-static-string-xprofile-string-handleorurl">
-      <code class="signature">static string XProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds an X (Twitter) profile URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-tiktokprofile-static-string-tiktokprofile-string-handleorurl">
-      <code class="signature">static string TikTokProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds a TikTok profile URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-linkedinprofile-static-string-linkedinprofile-string-handleorurl">
-      <code class="signature">static string LinkedInProfile(string handleOrUrl)</code>
-      <p class="member-summary">Builds a LinkedIn profile URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-linkedincompany-static-string-linkedincompany-string-handleorurl">
-      <code class="signature">static string LinkedInCompany(string handleOrUrl)</code>
-      <p class="member-summary">Builds a LinkedIn company URL payload.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>handleOrUrl <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-geo-static-string-geo-double-latitude-double-longitude-nullable-double-altitude">
-      <code class="signature">static string Geo(double latitude, double longitude, Nullable&lt;double&gt; altitude)</code>
-      <p class="member-summary">Builds a Geo URI payload (geo:lat,lon or geo:lat,lon,alt).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>latitude <span class="param-type">double</span></dt>
-        <dt>longitude <span class="param-type">double</span></dt>
-        <dt>altitude <span class="param-type">Nullable&lt;double&gt;</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-location-static-string-location-double-latitude-double-longitude-nullable-double-altitude">
-      <code class="signature">static string Location(double latitude, double longitude, Nullable&lt;double&gt; altitude)</code>
-      <p class="member-summary">Alias for CodeGlyphX.Payloads.QrPayload.Geo(System.Double,System.Double,System.Nullable{System.Double}).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>latitude <span class="param-type">double</span></dt>
-        <dt>longitude <span class="param-type">double</span></dt>
-        <dt>altitude <span class="param-type">Nullable&lt;double&gt;</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-mecard-static-string-mecard-string-firstname-string-lastname-string-phone-string-email-string-url-string-address-string-note-string-organization">
-      <code class="signature">static string MeCard(string firstName, string lastName, string phone, string email, string url, string address, string note, string organization)</code>
-      <p class="member-summary">Builds a MECARD payload (compact contact format).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>firstName <span class="param-type">string</span></dt>
-        <dt>lastName <span class="param-type">string</span></dt>
-        <dt>phone <span class="param-type">string</span></dt>
-        <dt>email <span class="param-type">string</span></dt>
-        <dt>url <span class="param-type">string</span></dt>
-        <dt>address <span class="param-type">string</span></dt>
-        <dt>note <span class="param-type">string</span></dt>
-        <dt>organization <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-calendarevent-static-string-calendarevent-string-summary-datetime-start-nullable-datetime-end-string-location-string-description-string-organizer-string-uid-bool-allday-string-timezoneid-nullable-int-alarmminutesbefore-string-alarmdescription">
-      <code class="signature">static string CalendarEvent(string summary, DateTime start, Nullable&lt;DateTime&gt; end, string location, string description, string organizer, string uid, bool allDay, string timeZoneId, Nullable&lt;int&gt; alarmMinutesBefore, string alarmDescription)</code>
-      <p class="member-summary">Builds a minimal iCalendar event payload (VEVENT).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>summary <span class="param-type">string</span></dt>
-        <dt>start <span class="param-type">DateTime</span></dt>
-        <dt>end <span class="param-type">Nullable&lt;DateTime&gt;</span></dt>
-        <dt>location <span class="param-type">string</span></dt>
-        <dt>description <span class="param-type">string</span></dt>
-        <dt>organizer <span class="param-type">string</span></dt>
-        <dt>uid <span class="param-type">string</span></dt>
-        <dt>allDay <span class="param-type">bool</span></dt>
-        <dt>timeZoneId <span class="param-type">string</span></dt>
-        <dt>alarmMinutesBefore <span class="param-type">Nullable&lt;int&gt;</span></dt>
-        <dt>alarmDescription <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-vcard-static-string-vcard-string-firstname-string-lastname-string-phone-string-email-string-organization">
-      <code class="signature">static string VCard(string firstName, string lastName, string phone, string email, string organization)</code>
-      <p class="member-summary">Builds a minimal vCard 3.0 payload (name + optional fields).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>firstName <span class="param-type">string</span></dt>
-        <dt>lastName <span class="param-type">string</span></dt>
-        <dt>phone <span class="param-type">string</span></dt>
-        <dt>email <span class="param-type">string</span></dt>
-        <dt>organization <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-vcard4-static-string-vcard4-string-firstname-string-lastname-ienumerable-string-phones-ienumerable-string-emails-string-organization-string-title-string-url-string-address-string-note-string-birthday-string-photouri-string-logouri">
-      <code class="signature">static string VCard4(string firstName, string lastName, IEnumerable&lt;string&gt; phones, IEnumerable&lt;string&gt; emails, string organization, string title, string url, string address, string note, string birthday, string photoUri, string logoUri)</code>
-      <p class="member-summary">Builds a vCard 4.0 payload with optional multi-value fields.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>firstName <span class="param-type">string</span></dt>
-        <dt>lastName <span class="param-type">string</span></dt>
-        <dt>phones <span class="param-type">IEnumerable&lt;string&gt;</span></dt>
-        <dt>emails <span class="param-type">IEnumerable&lt;string&gt;</span></dt>
-        <dt>organization <span class="param-type">string</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-        <dt>url <span class="param-type">string</span></dt>
-        <dt>address <span class="param-type">string</span></dt>
-        <dt>note <span class="param-type">string</span></dt>
-        <dt>birthday <span class="param-type">string</span></dt>
-        <dt>photoUri <span class="param-type">string</span></dt>
-        <dt>logoUri <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-  </section>
-</main>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.Payloads.QrPayload</h1>
+    <p>Helpers for building common QR payload strings (URLs, Wi‑Fi, vCard, and basic URI schemes).</p>
+    <div class="pf-api-remarks">The returned strings can be passed directly to CodeGlyphX.QrCodeEncoder.EncodeText(System.String,CodeGlyphX.QrErrorCorrectionLevel,System.Int32,System.Int32,System.Nullable{System.Int32}).</div>
+    <section class="pf-api-section">
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>Text</strong> - Returns the text as-is (after a null check).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>text</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Url</strong> - Builds a URL payload (trimmed).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>url</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Email</strong> - Builds a mailto: URI payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>address</code> (System.String)</li>
+              <li><code>subject</code> (System.String)</li>
+              <li><code>body</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Phone</strong> - Builds a tel: URI payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>number</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Sms</strong> - Builds an sms: URI payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>number</code> (System.String)</li>
+              <li><code>body</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Upi</strong> - Builds a UPI payment URI payload (upi://pay).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>vpa</code> (System.String)</li>
+              <li><code>name</code> (System.String)</li>
+              <li><code>merchantCode</code> (System.String)</li>
+              <li><code>transactionRef</code> (System.String)</li>
+              <li><code>transactionNote</code> (System.String)</li>
+              <li><code>amount</code> (System.Nullable{System.Decimal})</li>
+              <li><code>currency</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Wifi</strong> - Builds a Wi‑Fi QR payload (common WIFI:... format).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>ssid</code> (System.String)</li>
+              <li><code>password</code> (System.String)</li>
+              <li><code>authType</code> (System.String)</li>
+              <li><code>hidden</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>AppStore</strong> - Builds an Apple App Store URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>appId</code> (System.String)</li>
+              <li><code>countryCode</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>AppStoreApple</strong> - Builds an Apple App Store URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>appId</code> (System.String)</li>
+              <li><code>countryCode</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>AppStoreGooglePlay</strong> - Builds a Google Play Store URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>packageId</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>FacebookProfile</strong> - Builds a Facebook profile URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>handleOrUrl</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TwitterProfile</strong> - Builds a Twitter profile URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>handleOrUrl</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>XProfile</strong> - Builds an X (Twitter) profile URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>handleOrUrl</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TikTokProfile</strong> - Builds a TikTok profile URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>handleOrUrl</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>LinkedInProfile</strong> - Builds a LinkedIn profile URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>handleOrUrl</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>LinkedInCompany</strong> - Builds a LinkedIn company URL payload.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>handleOrUrl</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Geo</strong> - Builds a Geo URI payload (geo:lat,lon or geo:lat,lon,alt).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>latitude</code> (System.Double)</li>
+              <li><code>longitude</code> (System.Double)</li>
+              <li><code>altitude</code> (System.Nullable{System.Double})</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Location</strong> - Alias for CodeGlyphX.Payloads.QrPayload.Geo(System.Double,System.Double,System.Nullable{System.Double}).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>latitude</code> (System.Double)</li>
+              <li><code>longitude</code> (System.Double)</li>
+              <li><code>altitude</code> (System.Nullable{System.Double})</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>MeCard</strong> - Builds a MECARD payload (compact contact format).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>firstName</code> (System.String)</li>
+              <li><code>lastName</code> (System.String)</li>
+              <li><code>phone</code> (System.String)</li>
+              <li><code>email</code> (System.String)</li>
+              <li><code>url</code> (System.String)</li>
+              <li><code>address</code> (System.String)</li>
+              <li><code>note</code> (System.String)</li>
+              <li><code>organization</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>CalendarEvent</strong> - Builds a minimal iCalendar event payload (VEVENT).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>summary</code> (System.String)</li>
+              <li><code>start</code> (System.DateTime)</li>
+              <li><code>end</code> (System.Nullable{System.DateTime})</li>
+              <li><code>location</code> (System.String)</li>
+              <li><code>description</code> (System.String)</li>
+              <li><code>organizer</code> (System.String)</li>
+              <li><code>uid</code> (System.String)</li>
+              <li><code>allDay</code> (System.Boolean)</li>
+              <li><code>timeZoneId</code> (System.String)</li>
+              <li><code>alarmMinutesBefore</code> (System.Nullable{System.Int32})</li>
+              <li><code>alarmDescription</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>VCard</strong> - Builds a minimal vCard 3.0 payload (name + optional fields).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>firstName</code> (System.String)</li>
+              <li><code>lastName</code> (System.String)</li>
+              <li><code>phone</code> (System.String)</li>
+              <li><code>email</code> (System.String)</li>
+              <li><code>organization</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>VCard4</strong> - Builds a vCard 4.0 payload with optional multi-value fields.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>firstName</code> (System.String)</li>
+              <li><code>lastName</code> (System.String)</li>
+              <li><code>phones</code> (System.Collections.Generic.IEnumerable{System.String})</li>
+              <li><code>emails</code> (System.Collections.Generic.IEnumerable{System.String})</li>
+              <li><code>organization</code> (System.String)</li>
+              <li><code>title</code> (System.String)</li>
+              <li><code>url</code> (System.String)</li>
+              <li><code>address</code> (System.String)</li>
+              <li><code>note</code> (System.String)</li>
+              <li><code>birthday</code> (System.String)</li>
+              <li><code>photoUri</code> (System.String)</li>
+              <li><code>logoUri</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -316,20 +311,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -346,7 +342,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

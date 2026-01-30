@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "CodeGlyphDecoded",
   "fullName": "CodeGlyphX.CodeGlyphDecoded",
   "namespace": "CodeGlyphX",
@@ -6,148 +6,49 @@
   "slug": "codeglyphx-codeglyphdecoded",
   "summary": "Result of decoding a QR or barcode symbol.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [],
+  "properties": [
     {
       "name": "Kind",
-      "kind": "Property",
-      "summary": "Gets the decoded symbol kind.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "CodeGlyphKind Kind {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Kind",
-      "anchor": "property-kind-codeglyphkind-kind-get"
+      "summary": "Gets the decoded symbol kind."
     },
     {
       "name": "Qr",
-      "kind": "Property",
-      "summary": "Gets the decoded QR result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Qr.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrDecoded Qr {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Qr",
-      "anchor": "property-qr-qrdecoded-qr-get"
+      "summary": "Gets the decoded QR result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Qr."
     },
     {
       "name": "Barcode",
-      "kind": "Property",
-      "summary": "Gets the decoded barcode result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Barcode1D.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeDecoded Barcode {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Barcode",
-      "anchor": "property-barcode-barcodedecoded-barcode-get"
+      "summary": "Gets the decoded barcode result when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Barcode1D."
     },
     {
       "name": "DataMatrixText",
-      "kind": "Property",
-      "summary": "Gets the decoded Data Matrix text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.DataMatrix.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string DataMatrixText {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.DataMatrixText",
-      "anchor": "property-datamatrixtext-string-datamatrixtext-get"
+      "summary": "Gets the decoded Data Matrix text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.DataMatrix."
     },
     {
       "name": "Pdf417Text",
-      "kind": "Property",
-      "summary": "Gets the decoded PDF417 text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Pdf417Text {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Pdf417Text",
-      "anchor": "property-pdf417text-string-pdf417text-get"
+      "summary": "Gets the decoded PDF417 text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417."
     },
     {
       "name": "Pdf417",
-      "kind": "Property",
-      "summary": "Gets the decoded PDF417 payload when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Decoded Pdf417 {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Pdf417",
-      "anchor": "property-pdf417-pdf417decoded-pdf417-get"
+      "summary": "Gets the decoded PDF417 payload when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Pdf417."
     },
     {
       "name": "Pdf417Macro",
-      "kind": "Property",
-      "summary": "Gets the Macro PDF417 metadata when present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417MacroMetadata Pdf417Macro {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Pdf417Macro",
-      "anchor": "property-pdf417macro-pdf417macrometadata-pdf417macro-get"
+      "summary": "Gets the Macro PDF417 metadata when present."
     },
     {
       "name": "AztecText",
-      "kind": "Property",
-      "summary": "Gets the decoded Aztec text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Aztec.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string AztecText {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.AztecText",
-      "anchor": "property-aztectext-string-aztectext-get"
+      "summary": "Gets the decoded Aztec text when CodeGlyphX.CodeGlyphDecoded.Kind is CodeGlyphX.CodeGlyphKind.Aztec."
     },
     {
       "name": "Text",
-      "kind": "Property",
-      "summary": "Gets the decoded text (QR/Barcode/DataMatrix/PDF417/Aztec).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Text {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Text",
-      "anchor": "property-text-string-text-get"
+      "summary": "Gets the decoded text (QR/Barcode/DataMatrix/PDF417/Aztec)."
     },
     {
       "name": "Bytes",
-      "kind": "Property",
-      "summary": "Gets the decoded payload bytes for QR codes.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Bytes {get; }",
-      "xmlId": "P:CodeGlyphX.CodeGlyphDecoded.Bytes",
-      "anchor": "property-bytes-byte-bytes-get"
+      "summary": "Gets the decoded payload bytes for QR codes."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

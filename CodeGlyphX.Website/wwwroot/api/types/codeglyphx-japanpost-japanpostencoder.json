@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "JapanPostEncoder",
   "fullName": "CodeGlyphX.JapanPost.JapanPostEncoder",
   "namespace": "CodeGlyphX.JapanPost",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-japanpost-japanpostencoder",
   "summary": "Encodes Japan Post barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a Japan Post barcode into a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix Encode(string content)",
-      "xmlId": "M:CodeGlyphX.JapanPost.JapanPostEncoder.Encode(System.String)",
-      "anchor": "method-encode-static-bitmatrix-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "DataBar14Encoder",
   "fullName": "CodeGlyphX.DataBar.DataBar14Encoder",
   "namespace": "CodeGlyphX.DataBar",
@@ -6,68 +6,45 @@
   "slug": "codeglyphx-databar-databar14encoder",
   "summary": "Encodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "EncodeTruncated",
-      "kind": "Method",
       "summary": "Encodes a GS1 DataBar-14 Truncated symbol into a CodeGlyphX.Barcode1D.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D EncodeTruncated(string content)",
-      "xmlId": "M:CodeGlyphX.DataBar.DataBar14Encoder.EncodeTruncated(System.String)",
-      "anchor": "method-encodetruncated-static-barcode1d-encodetruncated-string-content"
+      ]
     },
     {
       "name": "EncodeOmni",
-      "kind": "Method",
       "summary": "Encodes a GS1 DataBar-14 Omnidirectional symbol into a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix EncodeOmni(string content)",
-      "xmlId": "M:CodeGlyphX.DataBar.DataBar14Encoder.EncodeOmni(System.String)",
-      "anchor": "method-encodeomni-static-bitmatrix-encodeomni-string-content"
+      ]
     },
     {
       "name": "EncodeStacked",
-      "kind": "Method",
       "summary": "Encodes a GS1 DataBar-14 Stacked symbol into a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix EncodeStacked(string content)",
-      "xmlId": "M:CodeGlyphX.DataBar.DataBar14Encoder.EncodeStacked(System.String)",
-      "anchor": "method-encodestacked-static-bitmatrix-encodestacked-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

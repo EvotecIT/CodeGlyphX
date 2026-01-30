@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodeOptions",
   "fullName": "CodeGlyphX.BarcodeOptions",
   "namespace": "CodeGlyphX",
@@ -6,218 +6,69 @@
   "slug": "codeglyphx-barcodeoptions",
   "summary": "Simplified rendering options for 1D barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "BarcodeOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeOptions()",
-      "xmlId": "M:CodeGlyphX.BarcodeOptions.#ctor",
-      "anchor": "constructor-barcodeoptions-barcodeoptions"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "ModuleSize",
-      "kind": "Property",
-      "summary": "Module size in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.ModuleSize",
-      "anchor": "property-modulesize-int-modulesize-get-set"
+      "summary": "Module size in pixels."
     },
     {
       "name": "QuietZone",
-      "kind": "Property",
-      "summary": "Quiet zone size in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int QuietZone {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.QuietZone",
-      "anchor": "property-quietzone-int-quietzone-get-set"
+      "summary": "Quiet zone size in modules."
     },
     {
       "name": "HeightModules",
-      "kind": "Property",
-      "summary": "Barcode height in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int HeightModules {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.HeightModules",
-      "anchor": "property-heightmodules-int-heightmodules-get-set"
+      "summary": "Barcode height in modules."
     },
     {
       "name": "Foreground",
-      "kind": "Property",
-      "summary": "Foreground color.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Foreground {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.Foreground",
-      "anchor": "property-foreground-rgba32-foreground-get-set"
+      "summary": "Foreground color."
     },
     {
       "name": "Background",
-      "kind": "Property",
-      "summary": "Background color.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Background {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.Background",
-      "anchor": "property-background-rgba32-background-get-set"
+      "summary": "Background color."
     },
     {
       "name": "JpegQuality",
-      "kind": "Property",
-      "summary": "JPEG quality (1..100).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int JpegQuality {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.JpegQuality",
-      "anchor": "property-jpegquality-int-jpegquality-get-set"
+      "summary": "JPEG quality (1..100)."
+    },
+    {
+      "name": "WebpQuality",
+      "summary": "WebP quality (0..100). A value of 100 uses lossless VP8L."
     },
     {
       "name": "IcoSizes",
-      "kind": "Property",
-      "summary": "ICO output sizes in pixels (1..256). Defaults to common icon sizes.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int[] IcoSizes {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.IcoSizes",
-      "anchor": "property-icosizes-int-icosizes-get-set"
+      "summary": "ICO output sizes in pixels (1..256). Defaults to common icon sizes."
     },
     {
       "name": "IcoPreserveAspectRatio",
-      "kind": "Property",
-      "summary": "When true, preserves aspect ratio and pads to square for ICO.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool IcoPreserveAspectRatio {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.IcoPreserveAspectRatio",
-      "anchor": "property-icopreserveaspectratio-bool-icopreserveaspectratio-get-set"
+      "summary": "When true, preserves aspect ratio and pads to square for ICO."
     },
     {
       "name": "HtmlEmailSafeTable",
-      "kind": "Property",
-      "summary": "When true, renders HTML using email-safe tables.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool HtmlEmailSafeTable {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.HtmlEmailSafeTable",
-      "anchor": "property-htmlemailsafetable-bool-htmlemailsafetable-get-set"
+      "summary": "When true, renders HTML using email-safe tables."
     },
     {
       "name": "LabelText",
-      "kind": "Property",
-      "summary": "Optional label text rendered under the bars.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LabelText {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.LabelText",
-      "anchor": "property-labeltext-string-labeltext-get-set"
+      "summary": "Optional label text rendered under the bars."
     },
     {
       "name": "LabelFontSize",
-      "kind": "Property",
-      "summary": "Label font size in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int LabelFontSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.LabelFontSize",
-      "anchor": "property-labelfontsize-int-labelfontsize-get-set"
+      "summary": "Label font size in pixels."
     },
     {
       "name": "LabelMargin",
-      "kind": "Property",
-      "summary": "Vertical margin between bars and label in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int LabelMargin {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.LabelMargin",
-      "anchor": "property-labelmargin-int-labelmargin-get-set"
+      "summary": "Vertical margin between bars and label in pixels."
     },
     {
       "name": "LabelColor",
-      "kind": "Property",
-      "summary": "Label text color.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 LabelColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.LabelColor",
-      "anchor": "property-labelcolor-rgba32-labelcolor-get-set"
+      "summary": "Label text color."
     },
     {
       "name": "LabelFontFamily",
-      "kind": "Property",
-      "summary": "Label font family (SVG/HTML).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LabelFontFamily {get; set; }",
-      "xmlId": "P:CodeGlyphX.BarcodeOptions.LabelFontFamily",
-      "anchor": "property-labelfontfamily-string-labelfontfamily-get-set"
+      "summary": "Label font family (SVG/HTML)."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

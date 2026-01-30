@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodeAsciiRenderer",
   "fullName": "CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderer",
   "namespace": "CodeGlyphX.Rendering.Ascii",
@@ -6,33 +6,26 @@
   "slug": "codeglyphx-rendering-ascii-barcodeasciirenderer",
   "summary": "Renders 1D barcodes as ASCII text.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Render",
-      "kind": "Method",
       "summary": "Renders the barcode to an ASCII string.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
           "name": "options",
-          "type": "BarcodeAsciiRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Render(Barcode1D barcode, BarcodeAsciiRenderOptions options)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Ascii.BarcodeAsciiRenderOptions)",
-      "anchor": "method-render-static-string-render-barcode1d-barcode-barcodeasciirenderoptions-options"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

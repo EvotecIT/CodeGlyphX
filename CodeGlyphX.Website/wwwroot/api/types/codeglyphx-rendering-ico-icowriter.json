@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "IcoWriter",
   "fullName": "CodeGlyphX.Rendering.Ico.IcoWriter",
   "namespace": "CodeGlyphX.Rendering.Ico",
@@ -6,98 +6,67 @@
   "slug": "codeglyphx-rendering-ico-icowriter",
   "summary": "Writes ICO files embedding PNG images.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "WritePng",
-      "kind": "Method",
       "summary": "Creates an ICO byte array from PNG bytes.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "pngBytes",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] WritePng(byte[] pngBytes)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ico.IcoWriter.WritePng(System.Byte[])",
-      "anchor": "method-writepng-static-byte-writepng-byte-pngbytes"
+      ]
     },
     {
       "name": "WritePng",
-      "kind": "Method",
       "summary": "Writes an ICO stream from PNG bytes.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
           "name": "pngBytes",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void WritePng(Stream stream, ReadOnlySpan\u003Cbyte\u003E pngBytes)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ico.IcoWriter.WritePng(System.IO.Stream,System.ReadOnlySpan{System.Byte})",
-      "anchor": "method-writepng-static-void-writepng-stream-stream-readonlyspan-byte-pngbytes"
+      ]
     },
     {
       "name": "WritePngs",
-      "kind": "Method",
       "summary": "Creates an ICO byte array from multiple PNG images.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "pngBytes",
-          "type": "byte[][]",
-          "description": null
+          "type": "System.Byte[][]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] WritePngs(byte[][] pngBytes)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ico.IcoWriter.WritePngs(System.Byte[][])",
-      "anchor": "method-writepngs-static-byte-writepngs-byte-pngbytes"
+      ]
     },
     {
       "name": "WritePngs",
-      "kind": "Method",
       "summary": "Writes an ICO stream from multiple PNG images.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
           "name": "pngBytes",
-          "type": "byte[][]",
-          "description": null
+          "type": "System.Byte[][]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void WritePngs(Stream stream, byte[][] pngBytes)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ico.IcoWriter.WritePngs(System.IO.Stream,System.Byte[][])",
-      "anchor": "method-writepngs-static-void-writepngs-stream-stream-byte-pngbytes"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

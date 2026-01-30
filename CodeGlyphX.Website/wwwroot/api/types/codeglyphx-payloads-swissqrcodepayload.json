@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "SwissQrCodePayload",
   "fullName": "CodeGlyphX.Payloads.SwissQrCodePayload",
   "namespace": "CodeGlyphX.Payloads",
@@ -6,101 +6,78 @@
   "slug": "codeglyphx-payloads-swissqrcodepayload",
   "summary": "Swiss QR bill payload.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "SwissQrCodePayload",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Creates a Swiss QR bill payload.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "iban",
-          "type": "SwissQrCodePayload.Iban",
-          "description": null
+          "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Iban",
+          "summary": null
         },
         {
           "name": "currency",
-          "type": "QrSwissCurrency",
-          "description": null
+          "type": "CodeGlyphX.Payloads.QrSwissCurrency",
+          "summary": null
         },
         {
           "name": "creditor",
-          "type": "SwissQrCodePayload.Contact",
-          "description": null
+          "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Contact",
+          "summary": null
         },
         {
           "name": "reference",
-          "type": "SwissQrCodePayload.Reference",
-          "description": null
+          "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Reference",
+          "summary": null
         },
         {
           "name": "additionalInformation",
-          "type": "SwissQrCodePayload.AdditionalInformation",
-          "description": null
+          "type": "CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation",
+          "summary": null
         },
         {
           "name": "debitor",
-          "type": "SwissQrCodePayload.Contact",
-          "description": null
+          "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Contact",
+          "summary": null
         },
         {
           "name": "amount",
-          "type": "Nullable\u003Cdecimal\u003E",
-          "description": null
+          "type": "System.Nullable{System.Decimal}",
+          "summary": null
         },
         {
           "name": "ultimateCreditor",
-          "type": "SwissQrCodePayload.Contact",
-          "description": null
+          "type": "CodeGlyphX.Payloads.SwissQrCodePayload.Contact",
+          "summary": null
         },
         {
           "name": "alternativeProcedure1",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "alternativeProcedure2",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "SwissQrCodePayload(SwissQrCodePayload.Iban iban, QrSwissCurrency currency, SwissQrCodePayload.Contact creditor, SwissQrCodePayload.Reference reference, SwissQrCodePayload.AdditionalInformation additionalInformation, SwissQrCodePayload.Contact debitor, Nullable\u003Cdecimal\u003E amount, SwissQrCodePayload.Contact ultimateCreditor, string alternativeProcedure1, string alternativeProcedure2)",
-      "xmlId": "M:CodeGlyphX.Payloads.SwissQrCodePayload.#ctor(CodeGlyphX.Payloads.SwissQrCodePayload.Iban,CodeGlyphX.Payloads.QrSwissCurrency,CodeGlyphX.Payloads.SwissQrCodePayload.Contact,CodeGlyphX.Payloads.SwissQrCodePayload.Reference,CodeGlyphX.Payloads.SwissQrCodePayload.AdditionalInformation,CodeGlyphX.Payloads.SwissQrCodePayload.Contact,System.Nullable{System.Decimal},CodeGlyphX.Payloads.SwissQrCodePayload.Contact,System.String,System.String)",
-      "anchor": "constructor-swissqrcodepayload-swissqrcodepayload-swissqrcodepayload-iban-iban-qrswisscurrency-currency-swissqrcodepayload-contact-creditor-swissqrcodepayload-reference-reference-swissqrcodepayload-additionalinformation-additionalinformation-swissqrcodepayload-contact-debitor-nullable-decimal-amount-swissqrcodepayload-contact-ultimatecreditor-string-alternativeprocedure1-string-alternativeprocedure2"
+      ]
     },
     {
       "name": "ToPayloadData",
-      "kind": "Method",
       "summary": "Converts this payload to a QR payload with recommended settings.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadData ToPayloadData()",
-      "xmlId": "M:CodeGlyphX.Payloads.SwissQrCodePayload.ToPayloadData",
-      "anchor": "method-topayloaddata-qrpayloaddata-topayloaddata"
+      "parameters": []
     },
     {
       "name": "ToString",
-      "kind": "Method",
       "summary": "Returns the Swiss QR bill payload string.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.SwissQrCodePayload.ToString",
-      "anchor": "method-tostring-string-tostring"
+      "parameters": []
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

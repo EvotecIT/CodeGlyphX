@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "ImageReader",
   "fullName": "CodeGlyphX.Rendering.ImageReader",
   "namespace": "CodeGlyphX.Rendering",
@@ -6,253 +6,182 @@
   "slug": "codeglyphx-rendering-imagereader",
   "summary": "Auto-detects common image formats and decodes to RGBA buffers.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes an image to an RGBA buffer (auto-detected).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "data",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(byte[] data, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.Byte[],System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-byte-data-out-int-width-out-int-height"
+      ]
     },
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes an image to an RGBA buffer (auto-detected).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(ReadOnlySpan\u003Cbyte\u003E data, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-readonlyspan-byte-data-out-int-width-out-int-height"
+      ]
     },
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes an image stream to an RGBA buffer (auto-detected).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(Stream stream, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.DecodeRgba32(System.IO.Stream,System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-stream-stream-out-int-width-out-int-height"
+      ]
     },
     {
       "name": "TryDecodeRgba32",
-      "kind": "Method",
       "summary": "Attempts to decode an image to an RGBA buffer (auto-detected).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "rgba",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]@",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeRgba32(ReadOnlySpan\u003Cbyte\u003E data, out byte[] rgba, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.TryDecodeRgba32(System.ReadOnlySpan{System.Byte},System.Byte[]@,System.Int32@,System.Int32@)",
-      "anchor": "method-trydecodergba32-static-bool-trydecodergba32-readonlyspan-byte-data-out-byte-rgba-out-int-width-out-int-height"
+      ]
     },
     {
       "name": "DetectFormat",
-      "kind": "Method",
       "summary": "Detects the image format from a byte buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static ImageFormat DetectFormat(ReadOnlySpan\u003Cbyte\u003E data)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.DetectFormat(System.ReadOnlySpan{System.Byte})",
-      "anchor": "method-detectformat-static-imageformat-detectformat-readonlyspan-byte-data"
+      ]
     },
     {
       "name": "TryDetectFormat",
-      "kind": "Method",
       "summary": "Attempts to detect the image format from a byte buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "format",
-          "type": "ImageFormat",
-          "description": null
+          "type": "CodeGlyphX.Rendering.ImageFormat@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDetectFormat(ReadOnlySpan\u003Cbyte\u003E data, out ImageFormat format)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.TryDetectFormat(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageFormat@)",
-      "anchor": "method-trydetectformat-static-bool-trydetectformat-readonlyspan-byte-data-out-imageformat-format"
+      ]
     },
     {
       "name": "TryReadInfo",
-      "kind": "Method",
       "summary": "Attempts to read image format and dimensions without decoding pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "data",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
           "name": "info",
-          "type": "ImageInfo",
-          "description": null
+          "type": "CodeGlyphX.Rendering.ImageInfo@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryReadInfo(byte[] data, out ImageInfo info)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.Byte[],CodeGlyphX.Rendering.ImageInfo@)",
-      "anchor": "method-tryreadinfo-static-bool-tryreadinfo-byte-data-out-imageinfo-info"
+      ]
     },
     {
       "name": "TryReadInfo",
-      "kind": "Method",
       "summary": "Attempts to read image format and dimensions without decoding pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "data",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "info",
-          "type": "ImageInfo",
-          "description": null
+          "type": "CodeGlyphX.Rendering.ImageInfo@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryReadInfo(ReadOnlySpan\u003Cbyte\u003E data, out ImageInfo info)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.ReadOnlySpan{System.Byte},CodeGlyphX.Rendering.ImageInfo@)",
-      "anchor": "method-tryreadinfo-static-bool-tryreadinfo-readonlyspan-byte-data-out-imageinfo-info"
+      ]
     },
     {
       "name": "TryReadInfo",
-      "kind": "Method",
       "summary": "Attempts to read image format and dimensions from a stream without decoding pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
           "name": "info",
-          "type": "ImageInfo",
-          "description": null
+          "type": "CodeGlyphX.Rendering.ImageInfo@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryReadInfo(Stream stream, out ImageInfo info)",
-      "xmlId": "M:CodeGlyphX.Rendering.ImageReader.TryReadInfo(System.IO.Stream,CodeGlyphX.Rendering.ImageInfo@)",
-      "anchor": "method-tryreadinfo-static-bool-tryreadinfo-stream-stream-out-imageinfo-info"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -1,0 +1,250 @@
+﻿{
+  "name": "WebpWriter",
+  "fullName": "CodeGlyphX.Rendering.Webp.WebpWriter",
+  "namespace": "CodeGlyphX.Rendering.Webp",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-webp-webpwriter",
+  "summary": "Managed WebP writer (VP8L lossless subset \u002B VP8 lossy intra \u002B animation container).",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "WriteRgba32",
+      "summary": "Encodes an RGBA32 buffer as WebP lossless (managed VP8L subset).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "height",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "rgba",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "stride",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WriteRgba32",
+      "summary": "Encodes an RGBA32 buffer as WebP lossless (managed VP8L subset).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "height",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "rgba",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "stride",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WriteRgba32Lossy",
+      "summary": "Encodes an RGBA32 buffer as a lossy WebP using a managed VP8 (lossy) bitstream when possible.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "height",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "rgba",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "stride",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "quality",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WriteRgba32Lossy",
+      "summary": "Encodes an RGBA32 buffer as a lossy WebP by quantizing pixels and using VP8L.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "height",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "rgba",
+          "type": "System.Byte[]",
+          "summary": null
+        },
+        {
+          "name": "stride",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "quality",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WriteAnimationRgba32",
+      "summary": "Encodes an animated WebP from RGBA32 frames (VP8L frames).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "canvasWidth",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "canvasHeight",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "frames",
+          "type": "System.ReadOnlySpan{CodeGlyphX.Rendering.Webp.WebpAnimationFrame}",
+          "summary": null
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WriteAnimationRgba32",
+      "summary": "Encodes an animated WebP from RGBA32 frames (VP8L frames).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "canvasWidth",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "canvasHeight",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "frames",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]",
+          "summary": null
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WriteAnimationRgba32Lossy",
+      "summary": "Encodes an animated WebP from RGBA32 frames (managed VP8 lossy intra, with VP8L fallback).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "canvasWidth",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "canvasHeight",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "frames",
+          "type": "System.ReadOnlySpan{CodeGlyphX.Rendering.Webp.WebpAnimationFrame}",
+          "summary": null
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationOptions",
+          "summary": null
+        },
+        {
+          "name": "quality",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WriteAnimationRgba32Lossy",
+      "summary": "Encodes an animated WebP from RGBA32 frames (managed VP8 lossy intra, with VP8L fallback).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "canvasWidth",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "canvasHeight",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "frames",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationFrame[]",
+          "summary": null
+        },
+        {
+          "name": "options",
+          "type": "CodeGlyphX.Rendering.Webp.WebpAnimationOptions",
+          "summary": null
+        },
+        {
+          "name": "quality",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    }
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

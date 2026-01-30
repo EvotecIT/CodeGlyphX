@@ -1,0 +1,210 @@
+﻿{
+  "name": "MatrixWebpRenderer",
+  "fullName": "CodeGlyphX.Rendering.Webp.MatrixWebpRenderer",
+  "namespace": "CodeGlyphX.Rendering.Webp",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-webp-matrixwebprenderer",
+  "summary": "Renders generic 2D matrices to WebP images.",
+  "remarks": null,
+  "methods": [
+    {
+      "name": "Render",
+      "summary": "Renders the matrix to a WebP byte array (lossless VP8L).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
+        },
+        {
+          "name": "opts",
+          "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "Render",
+      "summary": "Renders the matrix to a WebP byte array (lossy VP8 when possible).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Matrix modules."
+        },
+        {
+          "name": "opts",
+          "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+          "summary": "Rendering options."
+        },
+        {
+          "name": "quality",
+          "type": "System.Int32",
+          "summary": "Quality (0-100). Values \u003E= 100 use lossless VP8L."
+        }
+      ]
+    },
+    {
+      "name": "RenderToStream",
+      "summary": "Renders the matrix to a WebP stream.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
+        },
+        {
+          "name": "opts",
+          "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+          "summary": null
+        },
+        {
+          "name": "stream",
+          "type": "System.IO.Stream",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "RenderToStream",
+      "summary": "Renders the matrix to a WebP stream (lossy VP8 when possible).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Matrix modules."
+        },
+        {
+          "name": "opts",
+          "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+          "summary": "Rendering options."
+        },
+        {
+          "name": "stream",
+          "type": "System.IO.Stream",
+          "summary": "Target stream."
+        },
+        {
+          "name": "quality",
+          "type": "System.Int32",
+          "summary": "Quality (0-100). Values \u003E= 100 use lossless VP8L."
+        }
+      ]
+    },
+    {
+      "name": "RenderToFile",
+      "summary": "Renders the matrix to a WebP file.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
+        },
+        {
+          "name": "opts",
+          "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+          "summary": null
+        },
+        {
+          "name": "path",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "RenderToFile",
+      "summary": "Renders the matrix to a WebP file (lossy VP8 when possible).",
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Matrix modules."
+        },
+        {
+          "name": "opts",
+          "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+          "summary": "Rendering options."
+        },
+        {
+          "name": "path",
+          "type": "System.String",
+          "summary": "Output file path."
+        },
+        {
+          "name": "quality",
+          "type": "System.Int32",
+          "summary": "Quality (0-100). Values \u003E= 100 use lossless VP8L."
+        }
+      ]
+    },
+    {
+      "name": "RenderToFile",
+      "summary": "Renders the matrix to a WebP file under the specified directory.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
+        },
+        {
+          "name": "opts",
+          "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+          "summary": null
+        },
+        {
+          "name": "directory",
+          "type": "System.String",
+          "summary": null
+        },
+        {
+          "name": "fileName",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "RenderToFile",
+      "summary": "Renders the matrix to a WebP file under the specified directory (lossy VP8 when possible).",
+      "returns": "The output file path.",
+      "parameters": [
+        {
+          "name": "modules",
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Matrix modules."
+        },
+        {
+          "name": "opts",
+          "type": "CodeGlyphX.Rendering.Png.MatrixPngRenderOptions",
+          "summary": "Rendering options."
+        },
+        {
+          "name": "directory",
+          "type": "System.String",
+          "summary": "Output directory."
+        },
+        {
+          "name": "fileName",
+          "type": "System.String",
+          "summary": "Output file name."
+        },
+        {
+          "name": "quality",
+          "type": "System.Int32",
+          "summary": "Quality (0-100). Values \u003E= 100 use lossless VP8L."
+        }
+      ]
+    }
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

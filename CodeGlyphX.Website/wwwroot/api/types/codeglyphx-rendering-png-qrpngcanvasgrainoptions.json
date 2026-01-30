@@ -1,0 +1,46 @@
+﻿{
+  "name": "QrPngCanvasGrainOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngcanvasgrainoptions",
+  "summary": "Grain/noise texture options for the canvas background.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "Color",
+      "summary": "Grain color (alpha recommended)."
+    },
+    {
+      "name": "Density",
+      "summary": "Grain density (0..1)."
+    },
+    {
+      "name": "PixelSizePx",
+      "summary": "Grain dot size in pixels."
+    },
+    {
+      "name": "AlphaJitter",
+      "summary": "Alpha jitter amount (0..1)."
+    },
+    {
+      "name": "Seed",
+      "summary": "Random seed used to place grain. Use 0 to auto-randomize per render."
+    },
+    {
+      "name": "BandPx",
+      "summary": "Optional edge band width in pixels. When greater than 0, grain is limited to the canvas edges."
+    },
+    {
+      "name": "ProtectQrArea",
+      "summary": "When true, never draws inside the QR area."
+    },
+    {
+      "name": "QrAreaAlphaMax",
+      "summary": "Maximum alpha allowed inside the QR area when CodeGlyphX.Rendering.Png.QrPngCanvasGrainOptions.ProtectQrArea is false. Set to 0 to apply no alpha limit."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

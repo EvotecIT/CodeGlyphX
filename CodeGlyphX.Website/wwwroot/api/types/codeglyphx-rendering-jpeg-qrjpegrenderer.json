@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrJpegRenderer",
   "fullName": "CodeGlyphX.Rendering.Jpeg.QrJpegRenderer",
   "namespace": "CodeGlyphX.Rendering.Jpeg",
@@ -6,148 +6,117 @@
   "slug": "codeglyphx-rendering-jpeg-qrjpegrenderer",
   "summary": "Renders QR modules to a JPEG image (baseline, 4:4:4).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Render",
-      "kind": "Method",
       "summary": "Renders the QR module matrix to a JPEG byte array.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "opts",
-          "type": "QrPngRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
+          "summary": null
         },
         {
           "name": "quality",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] Render(BitMatrix modules, QrPngRenderOptions opts, int quality)",
-      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.Render(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.Int32)",
-      "anchor": "method-render-static-byte-render-bitmatrix-modules-qrpngrenderoptions-opts-int-quality"
+      ]
     },
     {
       "name": "RenderToStream",
-      "kind": "Method",
       "summary": "Renders the QR module matrix to a JPEG stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "QR modules."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "QR modules."
         },
         {
           "name": "opts",
-          "type": "QrPngRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": "Target stream."
+          "type": "System.IO.Stream",
+          "summary": "Target stream."
         },
         {
           "name": "quality",
-          "type": "int",
-          "description": "JPEG quality (1-100)."
+          "type": "System.Int32",
+          "summary": "JPEG quality (1-100)."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderToStream(BitMatrix modules, QrPngRenderOptions opts, Stream stream, int quality)",
-      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.RenderToStream(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.IO.Stream,System.Int32)",
-      "anchor": "method-rendertostream-static-void-rendertostream-bitmatrix-modules-qrpngrenderoptions-opts-stream-stream-int-quality"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the QR module matrix to a JPEG file.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "QR modules."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "QR modules."
         },
         {
           "name": "opts",
-          "type": "QrPngRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "quality",
-          "type": "int",
-          "description": "JPEG quality (1-100)."
+          "type": "System.Int32",
+          "summary": "JPEG quality (1-100)."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(BitMatrix modules, QrPngRenderOptions opts, string path, int quality)",
-      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.Int32)",
-      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-qrpngrenderoptions-opts-string-path-int-quality"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders the QR module matrix to a JPEG file under the specified directory.",
-      "remarks": null,
       "returns": "The output file path.",
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "QR modules."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "QR modules."
         },
         {
           "name": "opts",
-          "type": "QrPngRenderOptions",
-          "description": "Rendering options."
+          "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
+          "summary": "Rendering options."
         },
         {
           "name": "directory",
-          "type": "string",
-          "description": "Output directory."
+          "type": "System.String",
+          "summary": "Output directory."
         },
         {
           "name": "fileName",
-          "type": "string",
-          "description": "Output file name."
+          "type": "System.String",
+          "summary": "Output file name."
         },
         {
           "name": "quality",
-          "type": "int",
-          "description": "JPEG quality (1-100)."
+          "type": "System.Int32",
+          "summary": "JPEG quality (1-100)."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(BitMatrix modules, QrPngRenderOptions opts, string directory, string fileName, int quality)",
-      "xmlId": "M:CodeGlyphX.Rendering.Jpeg.QrJpegRenderer.RenderToFile(CodeGlyphX.BitMatrix,CodeGlyphX.Rendering.Png.QrPngRenderOptions,System.String,System.String,System.Int32)",
-      "anchor": "method-rendertofile-static-string-rendertofile-bitmatrix-modules-qrpngrenderoptions-opts-string-directory-string-filename-int-quality"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

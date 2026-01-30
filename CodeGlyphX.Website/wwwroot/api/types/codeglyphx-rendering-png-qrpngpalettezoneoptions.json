@@ -1,0 +1,30 @@
+﻿{
+  "name": "QrPngPaletteZoneOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngPaletteZoneOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngpalettezoneoptions",
+  "summary": "Palette overrides for specific QR zones.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "CenterPalette",
+      "summary": "Palette applied to a centered square zone."
+    },
+    {
+      "name": "CenterSize",
+      "summary": "Center zone size in modules (0 = disabled)."
+    },
+    {
+      "name": "CornerPalette",
+      "summary": "Palette applied to the four corners."
+    },
+    {
+      "name": "CornerSize",
+      "summary": "Corner zone size in modules (0 = disabled)."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

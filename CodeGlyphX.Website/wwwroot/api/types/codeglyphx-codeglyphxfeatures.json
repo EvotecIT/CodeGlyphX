@@ -1,0 +1,34 @@
+﻿{
+  "name": "CodeGlyphXFeatures",
+  "fullName": "CodeGlyphX.CodeGlyphXFeatures",
+  "namespace": "CodeGlyphX",
+  "kind": "Class",
+  "slug": "codeglyphx-codeglyphxfeatures",
+  "summary": "Runtime feature flags for CodeGlyphX capabilities.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "SupportsQrPixelDecode",
+      "summary": "True when the high-performance QR pixel pipeline is available (net8\u002B)."
+    },
+    {
+      "name": "SupportsQrPixelDecodeFallback",
+      "summary": "True when the legacy QR pixel fallback path is active (non-net8 targets)."
+    },
+    {
+      "name": "SupportsQrPixelDebug",
+      "summary": "True when QR pixel debug rendering is available (net8\u002B)."
+    },
+    {
+      "name": "SupportsSpanPixelPipeline",
+      "summary": "True when span-based pixel APIs and fast pipeline paths are available (net8\u002B)."
+    },
+    {
+      "name": "TargetFramework",
+      "summary": "The target framework for this build (compile-time constant)."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pdf417Builder - CodeGlyphX API Reference</title>
-  <meta name="description" content="Fluent PDF417 builder." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.Pdf417Code.Pdf417Builder - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,302 +28,298 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                <button type="button" class="nav-icon theme-cycle-btn" title="Auto mode (click to switch to light)" aria-label="Auto mode (click to switch to light)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
                     </svg>
                 </button>
+                <a href="https://evo.yt/discord" target="_blank" rel="noopener" class="nav-icon" title="Discord" aria-label="Discord">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                </a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                 </a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="nav-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor" class="nav-cta-icon">
-                        <path d="M12 0L1.75 6v12L12 24l10.25-6V6zm-1.775 18a3.11 3.11 0 01-3.111-3.111 3.11 3.11 0 013.111-3.111 3.11 3.11 0 013.111 3.111A3.11 3.11 0 0110.225 18zm4.91-6.944a1.867 1.867 0 01-1.867-1.867 1.867 1.867 0 011.866-1.866 1.867 1.867 0 011.867 1.866 1.867 1.867 0 01-1.867 1.867z"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-cta-icon" aria-hidden="true" focusable="false">
+                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
-                    Get Started
+                    Install
                 </a>
             </div>
         </nav>
     </div>
 </header>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.Pdf417Code.Pdf417Builder</h1>
+    <p>Fluent PDF417 builder.</p>
 
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX</span>
-  </nav>
-  <header class="type-header">
-    <h1>Pdf417Builder</h1>
-    <div class="type-meta">Class · CodeGlyphX</div>
-  </header>
-  <p class="type-summary">Fluent PDF417 builder.</p>
-  <section class="member-section">
-    <h2>Methods</h2>
-    <div class="member" id="method-withencodeoptions-pdf417code-pdf417builder-withencodeoptions-action-pdf417encodeoptions-configure">
-      <code class="signature">Pdf417Code.Pdf417Builder WithEncodeOptions(Action&lt;Pdf417EncodeOptions&gt; configure)</code>
-      <p class="member-summary">Mutates PDF417 encoding options.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>configure <span class="param-type">Action&lt;Pdf417EncodeOptions&gt;</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withrenderoptions-pdf417code-pdf417builder-withrenderoptions-action-matrixoptions-configure">
-      <code class="signature">Pdf417Code.Pdf417Builder WithRenderOptions(Action&lt;MatrixOptions&gt; configure)</code>
-      <p class="member-summary">Mutates rendering options.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>configure <span class="param-type">Action&lt;MatrixOptions&gt;</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withmodulesize-pdf417code-pdf417builder-withmodulesize-int-modulesize">
-      <code class="signature">Pdf417Code.Pdf417Builder WithModuleSize(int moduleSize)</code>
-      <p class="member-summary">Sets module size in pixels.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>moduleSize <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withquietzone-pdf417code-pdf417builder-withquietzone-int-quietzone">
-      <code class="signature">Pdf417Code.Pdf417Builder WithQuietZone(int quietZone)</code>
-      <p class="member-summary">Sets quiet zone size in modules.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>quietZone <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withcolors-pdf417code-pdf417builder-withcolors-rgba32-foreground-rgba32-background">
-      <code class="signature">Pdf417Code.Pdf417Builder WithColors(Rgba32 foreground, Rgba32 background)</code>
-      <p class="member-summary">Sets foreground/background colors.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>foreground <span class="param-type">Rgba32</span></dt>
-        <dt>background <span class="param-type">Rgba32</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withjpegquality-pdf417code-pdf417builder-withjpegquality-int-quality">
-      <code class="signature">Pdf417Code.Pdf417Builder WithJpegQuality(int quality)</code>
-      <p class="member-summary">Sets JPEG quality (1..100).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>quality <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withhtmlemailsafetable-pdf417code-pdf417builder-withhtmlemailsafetable-bool-enabled">
-      <code class="signature">Pdf417Code.Pdf417Builder WithHtmlEmailSafeTable(bool enabled)</code>
-      <p class="member-summary">Enables HTML email-safe table rendering.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>enabled <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withicosizes-pdf417code-pdf417builder-withicosizes-int-sizes">
-      <code class="signature">Pdf417Code.Pdf417Builder WithIcoSizes(int[] sizes)</code>
-      <p class="member-summary">Sets ICO output sizes (in pixels).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>sizes <span class="param-type">int[]</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withicopreserveaspectratio-pdf417code-pdf417builder-withicopreserveaspectratio-bool-enabled">
-      <code class="signature">Pdf417Code.Pdf417Builder WithIcoPreserveAspectRatio(bool enabled)</code>
-      <p class="member-summary">Sets ICO aspect ratio preservation behavior.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>enabled <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withcompaction-pdf417code-pdf417builder-withcompaction-pdf417compaction-compaction">
-      <code class="signature">Pdf417Code.Pdf417Builder WithCompaction(Pdf417Compaction compaction)</code>
-      <p class="member-summary">Sets compaction mode.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>compaction <span class="param-type">Pdf417Compaction</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-witherrorcorrection-pdf417code-pdf417builder-witherrorcorrection-int-level">
-      <code class="signature">Pdf417Code.Pdf417Builder WithErrorCorrection(int level)</code>
-      <p class="member-summary">Sets error correction level (0..8 or -1 for auto).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>level <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withtextencoding-pdf417code-pdf417builder-withtextencoding-encoding-encoding">
-      <code class="signature">Pdf417Code.Pdf417Builder WithTextEncoding(Encoding encoding)</code>
-      <p class="member-summary">Sets text encoding for byte compaction.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>encoding <span class="param-type">Encoding</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withaspectratio-pdf417code-pdf417builder-withaspectratio-float-ratio">
-      <code class="signature">Pdf417Code.Pdf417Builder WithAspectRatio(float ratio)</code>
-      <p class="member-summary">Sets target aspect ratio (width/height).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>ratio <span class="param-type">float</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withcolumns-pdf417code-pdf417builder-withcolumns-int-mincolumns-int-maxcolumns">
-      <code class="signature">Pdf417Code.Pdf417Builder WithColumns(int minColumns, int maxColumns)</code>
-      <p class="member-summary">Sets column constraints.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>minColumns <span class="param-type">int</span></dt>
-        <dt>maxColumns <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withrows-pdf417code-pdf417builder-withrows-int-minrows-int-maxrows">
-      <code class="signature">Pdf417Code.Pdf417Builder WithRows(int minRows, int maxRows)</code>
-      <p class="member-summary">Sets row constraints.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>minRows <span class="param-type">int</span></dt>
-        <dt>maxRows <span class="param-type">int</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-withcompact-pdf417code-pdf417builder-withcompact-bool-compact">
-      <code class="signature">Pdf417Code.Pdf417Builder WithCompact(bool compact)</code>
-      <p class="member-summary">Enables compact PDF417.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>compact <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-encode-bitmatrix-encode">
-      <code class="signature">BitMatrix Encode()</code>
-      <p class="member-summary">Encodes the PDF417 as a module matrix.</p>
-    </div>
-    <div class="member" id="method-png-byte-png">
-      <code class="signature">byte[] Png()</code>
-      <p class="member-summary">Renders PNG bytes.</p>
-    </div>
-    <div class="member" id="method-svg-string-svg">
-      <code class="signature">string Svg()</code>
-      <p class="member-summary">Renders SVG markup.</p>
-    </div>
-    <div class="member" id="method-html-string-html">
-      <code class="signature">string Html()</code>
-      <p class="member-summary">Renders HTML markup.</p>
-    </div>
-    <div class="member" id="method-jpeg-byte-jpeg">
-      <code class="signature">byte[] Jpeg()</code>
-      <p class="member-summary">Renders JPEG bytes.</p>
-    </div>
-    <div class="member" id="method-bmp-byte-bmp">
-      <code class="signature">byte[] Bmp()</code>
-      <p class="member-summary">Renders BMP bytes.</p>
-    </div>
-    <div class="member" id="method-pdf-byte-pdf-rendermode-rendermode">
-      <code class="signature">byte[] Pdf(RenderMode renderMode)</code>
-      <p class="member-summary">Renders PDF bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>renderMode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-eps-string-eps-rendermode-rendermode">
-      <code class="signature">string Eps(RenderMode renderMode)</code>
-      <p class="member-summary">Renders EPS text.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>renderMode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-ascii-string-ascii-matrixasciirenderoptions-options">
-      <code class="signature">string Ascii(MatrixAsciiRenderOptions options)</code>
-      <p class="member-summary">Renders ASCII text.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>options <span class="param-type">MatrixAsciiRenderOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-save-string-save-string-path-string-title">
-      <code class="signature">string Save(string path, string title)</code>
-      <p class="member-summary">Saves output based on file extension.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savepng-string-savepng-string-path">
-      <code class="signature">string SavePng(string path)</code>
-      <p class="member-summary">Saves PNG to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savesvg-string-savesvg-string-path">
-      <code class="signature">string SaveSvg(string path)</code>
-      <p class="member-summary">Saves SVG to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savehtml-string-savehtml-string-path-string-title">
-      <code class="signature">string SaveHtml(string path, string title)</code>
-      <p class="member-summary">Saves HTML to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>title <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savejpeg-string-savejpeg-string-path">
-      <code class="signature">string SaveJpeg(string path)</code>
-      <p class="member-summary">Saves JPEG to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savebmp-string-savebmp-string-path">
-      <code class="signature">string SaveBmp(string path)</code>
-      <p class="member-summary">Saves BMP to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-savepdf-string-savepdf-string-path-rendermode-rendermode">
-      <code class="signature">string SavePdf(string path, RenderMode renderMode)</code>
-      <p class="member-summary">Saves PDF to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>renderMode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-    <div class="member" id="method-saveeps-string-saveeps-string-path-rendermode-rendermode">
-      <code class="signature">string SaveEps(string path, RenderMode renderMode)</code>
-      <p class="member-summary">Saves EPS to a file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dd>Output file path.</dd>
-        <dt>renderMode <span class="param-type">RenderMode</span></dt>
-        <dd>Vector or raster output.</dd>
-      </dl>
-    </div>
-  </section>
-</main>
+    <section class="pf-api-section">
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>WithEncodeOptions</strong> - Mutates PDF417 encoding options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>configure</code> (System.Action{CodeGlyphX.Pdf417.Pdf417EncodeOptions})</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithRenderOptions</strong> - Mutates rendering options.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>configure</code> (System.Action{CodeGlyphX.MatrixOptions})</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithModuleSize</strong> - Sets module size in pixels.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>moduleSize</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithQuietZone</strong> - Sets quiet zone size in modules.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>quietZone</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithColors</strong> - Sets foreground/background colors.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>foreground</code> (CodeGlyphX.Rendering.Png.Rgba32)</li>
+              <li><code>background</code> (CodeGlyphX.Rendering.Png.Rgba32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithJpegQuality</strong> - Sets JPEG quality (1..100).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>quality</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithHtmlEmailSafeTable</strong> - Enables HTML email-safe table rendering.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>enabled</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithIcoSizes</strong> - Sets ICO output sizes (in pixels).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>sizes</code> (System.Int32[])</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithIcoPreserveAspectRatio</strong> - Sets ICO aspect ratio preservation behavior.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>enabled</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithCompaction</strong> - Sets compaction mode.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>compaction</code> (CodeGlyphX.Pdf417.Pdf417Compaction)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithErrorCorrection</strong> - Sets error correction level (0..8 or -1 for auto).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>level</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithTextEncoding</strong> - Sets text encoding for byte compaction.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>encoding</code> (System.Text.Encoding)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithAspectRatio</strong> - Sets target aspect ratio (width/height).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>ratio</code> (System.Single)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithColumns</strong> - Sets column constraints.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>minColumns</code> (System.Int32)</li>
+              <li><code>maxColumns</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithRows</strong> - Sets row constraints.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>minRows</code> (System.Int32)</li>
+              <li><code>maxRows</code> (System.Int32)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>WithCompact</strong> - Enables compact PDF417.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>compact</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Encode</strong> - Encodes the PDF417 as a module matrix.
+        </li>
+        <li>
+          <strong>Png</strong> - Renders PNG bytes.
+        </li>
+        <li>
+          <strong>Svg</strong> - Renders SVG markup.
+        </li>
+        <li>
+          <strong>Html</strong> - Renders HTML markup.
+        </li>
+        <li>
+          <strong>Jpeg</strong> - Renders JPEG bytes.
+        </li>
+        <li>
+          <strong>Bmp</strong> - Renders BMP bytes.
+        </li>
+        <li>
+          <strong>Pdf</strong> - Renders PDF bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Eps</strong> - Renders EPS text.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Ascii</strong> - Renders ASCII text.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>options</code> (CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>Save</strong> - Saves output based on file extension.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>title</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SavePng</strong> - Saves PNG to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveSvg</strong> - Saves SVG to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveHtml</strong> - Saves HTML to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>title</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveJpeg</strong> - Saves JPEG to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveWebp</strong> - Saves WebP to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveBmp</strong> - Saves BMP to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SavePdf</strong> - Saves PDF to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>SaveEps</strong> - Saves EPS to a file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String): Output file path.</li>
+              <li><code>renderMode</code> (CodeGlyphX.Rendering.RenderMode): Vector or raster output.</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -341,20 +334,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -371,7 +365,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

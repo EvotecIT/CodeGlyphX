@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodeHtmlRenderOptions",
   "fullName": "CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions",
   "namespace": "CodeGlyphX.Rendering.Html",
@@ -6,396 +6,186 @@
   "slug": "codeglyphx-rendering-html-barcodehtmlrenderoptions",
   "summary": "Options for CodeGlyphX.Rendering.Html.HtmlBarcodeRenderer.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "BarcodeHtmlRenderOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions()",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.#ctor",
-      "anchor": "constructor-barcodehtmlrenderoptions-barcodehtmlrenderoptions"
-    },
+  "methods": [
     {
       "name": "WithModuleSize",
-      "kind": "Method",
       "summary": "Sets the module size in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "size",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithModuleSize(int size)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithModuleSize(System.Int32)",
-      "anchor": "method-withmodulesize-barcodehtmlrenderoptions-withmodulesize-int-size"
+      ]
     },
     {
       "name": "WithQuietZone",
-      "kind": "Method",
       "summary": "Sets the quiet zone size in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "quietZone",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithQuietZone(int quietZone)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithQuietZone(System.Int32)",
-      "anchor": "method-withquietzone-barcodehtmlrenderoptions-withquietzone-int-quietzone"
+      ]
     },
     {
       "name": "WithHeightModules",
-      "kind": "Method",
       "summary": "Sets the barcode height in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "heightModules",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithHeightModules(int heightModules)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithHeightModules(System.Int32)",
-      "anchor": "method-withheightmodules-barcodehtmlrenderoptions-withheightmodules-int-heightmodules"
+      ]
     },
     {
       "name": "WithBarColor",
-      "kind": "Method",
       "summary": "Sets the bar color (CSS value).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithBarColor(string color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithBarColor(System.String)",
-      "anchor": "method-withbarcolor-barcodehtmlrenderoptions-withbarcolor-string-color"
+      ]
     },
     {
       "name": "WithBackgroundColor",
-      "kind": "Method",
       "summary": "Sets the background color (CSS value).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithBackgroundColor(string color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithBackgroundColor(System.String)",
-      "anchor": "method-withbackgroundcolor-barcodehtmlrenderoptions-withbackgroundcolor-string-color"
+      ]
     },
     {
       "name": "WithEmailSafeTable",
-      "kind": "Method",
       "summary": "Enables or disables email-safe HTML output.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "enabled",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithEmailSafeTable(bool enabled)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithEmailSafeTable(System.Boolean)",
-      "anchor": "method-withemailsafetable-barcodehtmlrenderoptions-withemailsafetable-bool-enabled"
+      ]
     },
     {
       "name": "WithLabelText",
-      "kind": "Method",
       "summary": "Sets the label text.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "text",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithLabelText(string text)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelText(System.String)",
-      "anchor": "method-withlabeltext-barcodehtmlrenderoptions-withlabeltext-string-text"
+      ]
     },
     {
       "name": "WithLabelFontSize",
-      "kind": "Method",
       "summary": "Sets the label font size in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "size",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithLabelFontSize(int size)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelFontSize(System.Int32)",
-      "anchor": "method-withlabelfontsize-barcodehtmlrenderoptions-withlabelfontsize-int-size"
+      ]
     },
     {
       "name": "WithLabelMargin",
-      "kind": "Method",
       "summary": "Sets the label margin in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "margin",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithLabelMargin(int margin)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelMargin(System.Int32)",
-      "anchor": "method-withlabelmargin-barcodehtmlrenderoptions-withlabelmargin-int-margin"
+      ]
     },
     {
       "name": "WithLabelColor",
-      "kind": "Method",
       "summary": "Sets the label color (CSS value).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "color",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithLabelColor(string color)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelColor(System.String)",
-      "anchor": "method-withlabelcolor-barcodehtmlrenderoptions-withlabelcolor-string-color"
+      ]
     },
     {
       "name": "WithLabelFontFamily",
-      "kind": "Method",
       "summary": "Sets the label font family.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "family",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BarcodeHtmlRenderOptions WithLabelFontFamily(string family)",
-      "xmlId": "M:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.WithLabelFontFamily(System.String)",
-      "anchor": "method-withlabelfontfamily-barcodehtmlrenderoptions-withlabelfontfamily-string-family"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "ModuleSize",
-      "kind": "Property",
-      "summary": "Gets or sets the size of a single module in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int ModuleSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.ModuleSize",
-      "anchor": "property-modulesize-int-modulesize-get-set"
+      "summary": "Gets or sets the size of a single module in pixels."
     },
     {
       "name": "QuietZone",
-      "kind": "Property",
-      "summary": "Gets or sets the quiet zone size in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int QuietZone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.QuietZone",
-      "anchor": "property-quietzone-int-quietzone-get-set"
+      "summary": "Gets or sets the quiet zone size in modules."
     },
     {
       "name": "HeightModules",
-      "kind": "Property",
-      "summary": "Gets or sets the barcode height in modules.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int HeightModules {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.HeightModules",
-      "anchor": "property-heightmodules-int-heightmodules-get-set"
+      "summary": "Gets or sets the barcode height in modules."
     },
     {
       "name": "BarColor",
-      "kind": "Property",
-      "summary": "Gets or sets the bar color (CSS value).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string BarColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.BarColor",
-      "anchor": "property-barcolor-string-barcolor-get-set"
+      "summary": "Gets or sets the bar color (CSS value)."
     },
     {
       "name": "BackgroundColor",
-      "kind": "Property",
-      "summary": "Gets or sets the background color (CSS value).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string BackgroundColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.BackgroundColor",
-      "anchor": "property-backgroundcolor-string-backgroundcolor-get-set"
+      "summary": "Gets or sets the background color (CSS value)."
     },
     {
       "name": "EmailSafeTable",
-      "kind": "Property",
-      "summary": "When true, produces an email-friendly table (uses bgcolor).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool EmailSafeTable {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.EmailSafeTable",
-      "anchor": "property-emailsafetable-bool-emailsafetable-get-set"
+      "summary": "When true, produces an email-friendly table (uses bgcolor)."
     },
     {
       "name": "LabelText",
-      "kind": "Property",
-      "summary": "Optional label text rendered under the bars.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LabelText {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.LabelText",
-      "anchor": "property-labeltext-string-labeltext-get-set"
+      "summary": "Optional label text rendered under the bars."
     },
     {
       "name": "LabelFontSize",
-      "kind": "Property",
-      "summary": "Label font size in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int LabelFontSize {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.LabelFontSize",
-      "anchor": "property-labelfontsize-int-labelfontsize-get-set"
+      "summary": "Label font size in pixels."
     },
     {
       "name": "LabelMargin",
-      "kind": "Property",
-      "summary": "Vertical margin between bars and label in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int LabelMargin {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.LabelMargin",
-      "anchor": "property-labelmargin-int-labelmargin-get-set"
+      "summary": "Vertical margin between bars and label in pixels."
     },
     {
       "name": "LabelColor",
-      "kind": "Property",
-      "summary": "Label color (CSS value).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LabelColor {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.LabelColor",
-      "anchor": "property-labelcolor-string-labelcolor-get-set"
+      "summary": "Label color (CSS value)."
     },
     {
       "name": "LabelFontFamily",
-      "kind": "Property",
-      "summary": "Label font family.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string LabelFontFamily {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.Html.BarcodeHtmlRenderOptions.LabelFontFamily",
-      "anchor": "property-labelfontfamily-string-labelfontfamily-get-set"
+      "summary": "Label font family."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

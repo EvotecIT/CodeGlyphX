@@ -516,8 +516,7 @@ $pricingContent = @"
             <h2>Free</h2>
             <div class="pricing-tag">Open Source</div>
             <div class="pricing-amount">
-                <span class="pricing-currency">&#36;0</span>
-                <span class="pricing-period">forever</span>
+                <span class="pricing-currency">Free</span>
             </div>
             <p class="pricing-desc">Everything you need. No limits, no paywalls, no feature gating.</p>
             <ul class="pricing-features">

@@ -26,10 +26,141 @@
     <ProjectReference Include="..\CodeGlyphX.Playground\CodeGlyphX.Playground.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(WasmEnableWebcil)' == 'true'">
+    <!-- Keep lazy-loaded assembly names stable; we override fingerprinting just for these assets below. -->
     <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.Playground.wasm" />
     <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.wasm" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(WasmEnableWebcil)' != 'true'">
+    <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.Playground.dll" />
+    <BlazorWebAssemblyLazyLoad Include="CodeGlyphX.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TrimmerRootAssembly Include="CodeGlyphX.Playground" />
+    <TrimmerRootAssembly Include="CodeGlyphX" />
+  </ItemGroup>
+
+  <!--
+    Blazor lazy-load requires stable file names. With wasm fingerprinting enabled, the SDK renames
+    assemblies (e.g., CodeGlyphX.Playground.<hash>.wasm) and GenerateWasmBootJson fails with
+    BLAZORSDK1001 because it can't match the lazy-load list. We keep global fingerprinting on,
+    but re-register just the lazy assemblies without fingerprints for both build and publish.
+  -->
+  <Target Name="FixLazyWasmAssetsForBuild"
+          AfterTargets="ResolveWasmOutputs"
+          BeforeTargets="GenerateBuildWasmBootJson">
+    <PropertyGroup>
+      <_LazyWasmBuildWebCilPath>$([MSBuild]::NormalizeDirectory($(IntermediateOutputPath), 'webcil'))</_LazyWasmBuildWebCilPath>
+      <_LazyWasmBuildOutputRoot>$([MSBuild]::NormalizeDirectory('$(OutputPath)', 'wwwroot'))</_LazyWasmBuildOutputRoot>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_LazyWasmBuildCandidates Include="$(_LazyWasmBuildWebCilPath)CodeGlyphX.wasm"
+                                Condition="'$(WasmEnableWebcil)' == 'true' and Exists('$(_LazyWasmBuildWebCilPath)CodeGlyphX.wasm')" />
+      <_LazyWasmBuildCandidates Include="$(_LazyWasmBuildWebCilPath)CodeGlyphX.Playground.wasm"
+                                Condition="'$(WasmEnableWebcil)' == 'true' and Exists('$(_LazyWasmBuildWebCilPath)CodeGlyphX.Playground.wasm')" />
+      <_LazyWasmBuildCandidates Include="$(_LazyWasmBuildWebCilPath)CodeGlyphX.dll"
+                                Condition="'$(WasmEnableWebcil)' != 'true' and Exists('$(_LazyWasmBuildWebCilPath)CodeGlyphX.dll')" />
+      <_LazyWasmBuildCandidates Include="$(_LazyWasmBuildWebCilPath)CodeGlyphX.Playground.dll"
+                                Condition="'$(WasmEnableWebcil)' != 'true' and Exists('$(_LazyWasmBuildWebCilPath)CodeGlyphX.Playground.dll')" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'@(_LazyWasmBuildCandidates)' != ''">
+      <_LazyWasmBuildCandidates>
+        <RelativePath>_framework/%(Filename)%(Extension)</RelativePath>
+        <AssetTraitName>WasmResource</AssetTraitName>
+        <AssetTraitValue>runtime</AssetTraitValue>
+      </_LazyWasmBuildCandidates>
+
+      <WasmStaticWebAsset Remove="@(WasmStaticWebAsset)"
+                          Condition="$([System.String]::Copy('%(WasmStaticWebAsset.OriginalItemSpec)').ToLowerInvariant().EndsWith('codeglyphx.wasm'))
+                                    Or $([System.String]::Copy('%(WasmStaticWebAsset.OriginalItemSpec)').ToLowerInvariant().EndsWith('codeglyphx.playground.wasm'))
+                                    Or $([System.String]::Copy('%(WasmStaticWebAsset.OriginalItemSpec)').ToLowerInvariant().EndsWith('codeglyphx.dll'))
+                                    Or $([System.String]::Copy('%(WasmStaticWebAsset.OriginalItemSpec)').ToLowerInvariant().EndsWith('codeglyphx.playground.dll'))" />
+    </ItemGroup>
+
+    <DefineStaticWebAssets Condition="'@(_LazyWasmBuildCandidates)' != ''"
+                           CandidateAssets="@(_LazyWasmBuildCandidates)"
+                           SourceId="$(PackageId)"
+                           SourceType="Computed"
+                           AssetKind="Build"
+                           AssetRole="Primary"
+                           CopyToOutputDirectory="PreserveNewest"
+                           CopyToPublishDirectory="Never"
+                           ContentRoot="$(_LazyWasmBuildOutputRoot)"
+                           FingerprintCandidates="false"
+                           FingerprintPatterns=""
+                           BasePath="$(StaticWebAssetBasePath)">
+      <Output TaskParameter="Assets" ItemName="_LazyWasmBuildStaticWebAsset" />
+    </DefineStaticWebAssets>
+
+    <ItemGroup Condition="'@(_LazyWasmBuildStaticWebAsset)' != ''">
+      <WasmStaticWebAsset Include="@(_LazyWasmBuildStaticWebAsset)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="FixLazyWasmAssetsForPublish"
+          AfterTargets="ProcessPublishFilesForWasm"
+          BeforeTargets="GeneratePublishWasmBootJson">
+    <PropertyGroup>
+      <_LazyWasmPublishWebCilPath>$([MSBuild]::NormalizeDirectory($(IntermediateOutputPath), 'webcil', 'publish'))</_LazyWasmPublishWebCilPath>
+      <_LazyWasmPublishRoot>$([MSBuild]::NormalizeDirectory('$(PublishDir)', 'wwwroot'))</_LazyWasmPublishRoot>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_LazyWasmPublishCandidates Include="$(_LazyWasmPublishWebCilPath)CodeGlyphX.wasm"
+                                  Condition="'$(WasmEnableWebcil)' == 'true' and Exists('$(_LazyWasmPublishWebCilPath)CodeGlyphX.wasm')" />
+      <_LazyWasmPublishCandidates Include="$(_LazyWasmPublishWebCilPath)CodeGlyphX.Playground.wasm"
+                                  Condition="'$(WasmEnableWebcil)' == 'true' and Exists('$(_LazyWasmPublishWebCilPath)CodeGlyphX.Playground.wasm')" />
+      <_LazyWasmPublishCandidates Include="$(_LazyWasmPublishWebCilPath)CodeGlyphX.dll"
+                                  Condition="'$(WasmEnableWebcil)' != 'true' and Exists('$(_LazyWasmPublishWebCilPath)CodeGlyphX.dll')" />
+      <_LazyWasmPublishCandidates Include="$(_LazyWasmPublishWebCilPath)CodeGlyphX.Playground.dll"
+                                  Condition="'$(WasmEnableWebcil)' != 'true' and Exists('$(_LazyWasmPublishWebCilPath)CodeGlyphX.Playground.dll')" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'@(_LazyWasmPublishCandidates)' != ''">
+      <_LazyWasmPublishCandidates>
+        <RelativePath>_framework/%(Filename)%(Extension)</RelativePath>
+        <AssetTraitName>WasmResource</AssetTraitName>
+        <AssetTraitValue>runtime</AssetTraitValue>
+      </_LazyWasmPublishCandidates>
+
+      <StaticWebAsset Remove="@(StaticWebAsset)"
+                      Condition="$([System.String]::Copy('%(StaticWebAsset.OriginalItemSpec)').ToLowerInvariant().EndsWith('codeglyphx.wasm'))
+                                Or $([System.String]::Copy('%(StaticWebAsset.OriginalItemSpec)').ToLowerInvariant().EndsWith('codeglyphx.playground.wasm'))
+                                Or $([System.String]::Copy('%(StaticWebAsset.OriginalItemSpec)').ToLowerInvariant().EndsWith('codeglyphx.dll'))
+                                Or $([System.String]::Copy('%(StaticWebAsset.OriginalItemSpec)').ToLowerInvariant().EndsWith('codeglyphx.playground.dll'))" />
+    </ItemGroup>
+
+    <DefineStaticWebAssets Condition="'@(_LazyWasmPublishCandidates)' != ''"
+                           CandidateAssets="@(_LazyWasmPublishCandidates)"
+                           SourceId="$(PackageId)"
+                           SourceType="Computed"
+                           AssetKind="Publish"
+                           AssetRole="Primary"
+                           CopyToOutputDirectory="Never"
+                           CopyToPublishDirectory="PreserveNewest"
+                           ContentRoot="$(_LazyWasmPublishRoot)"
+                           FingerprintCandidates="false"
+                           FingerprintPatterns=""
+                           BasePath="$(StaticWebAssetBasePath)">
+      <Output TaskParameter="Assets" ItemName="_LazyWasmPublishStaticWebAsset" />
+    </DefineStaticWebAssets>
+
+    <DefineStaticWebAssetEndpoints Condition="'@(_LazyWasmPublishStaticWebAsset)' != ''"
+                                   CandidateAssets="@(_LazyWasmPublishStaticWebAsset)"
+                                   ExistingEndpoints="@(StaticWebAssetEndpoint)"
+                                   ContentTypeMappings="@(StaticWebAssetContentTypeMapping)">
+      <Output TaskParameter="Endpoints" ItemName="_LazyWasmPublishStaticWebAssetEndpoint" />
+    </DefineStaticWebAssetEndpoints>
+
+    <ItemGroup Condition="'@(_LazyWasmPublishStaticWebAsset)' != ''">
+      <StaticWebAsset Include="@(_LazyWasmPublishStaticWebAsset)" />
+      <StaticWebAssetEndpoint Include="@(_LazyWasmPublishStaticWebAssetEndpoint)" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />

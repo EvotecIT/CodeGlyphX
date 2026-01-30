@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "PpmWriter",
   "fullName": "CodeGlyphX.Rendering.Ppm.PpmWriter",
   "namespace": "CodeGlyphX.Rendering.Ppm",
@@ -6,83 +6,127 @@
   "slug": "codeglyphx-rendering-ppm-ppmwriter",
   "summary": "Writes PPM (P6) images from RGBA buffers.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "WriteRgba32",
-      "kind": "Method",
       "summary": "Writes a PPM byte array from an RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "rgba",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] WriteRgba32(int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ppm.PpmWriter.WriteRgba32(System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
-      "anchor": "method-writergba32-static-byte-writergba32-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+      ]
     },
     {
       "name": "WriteRgba32",
-      "kind": "Method",
       "summary": "Writes a PPM (P6) stream from an RGBA buffer (alpha blended over white).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "rgba",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "stride",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan\u003Cbyte\u003E rgba, int stride)",
-      "xmlId": "M:CodeGlyphX.Rendering.Ppm.PpmWriter.WriteRgba32(System.IO.Stream,System.Int32,System.Int32,System.ReadOnlySpan{System.Byte},System.Int32)",
-      "anchor": "method-writergba32-static-void-writergba32-stream-stream-int-width-int-height-readonlyspan-byte-rgba-int-stride"
+      ]
+    },
+    {
+      "name": "WriteRgba32Scanlines",
+      "summary": "Writes a PPM byte array from a PNG scanline buffer (filter byte per row).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "width",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "height",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "scanlines",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "stride",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
+    },
+    {
+      "name": "WriteRgba32Scanlines",
+      "summary": "Writes a PPM (P6) stream from a PNG scanline buffer (filter byte per row).",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "stream",
+          "type": "System.IO.Stream",
+          "summary": null
+        },
+        {
+          "name": "width",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "height",
+          "type": "System.Int32",
+          "summary": null
+        },
+        {
+          "name": "scanlines",
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
+        },
+        {
+          "name": "stride",
+          "type": "System.Int32",
+          "summary": null
+        }
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

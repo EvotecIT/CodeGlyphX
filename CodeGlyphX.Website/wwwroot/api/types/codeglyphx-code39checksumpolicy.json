@@ -1,69 +1,26 @@
-{
+﻿{
   "name": "Code39ChecksumPolicy",
   "fullName": "CodeGlyphX.Code39ChecksumPolicy",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-code39checksumpolicy",
   "summary": "Policy for handling optional Code39 checksum characters.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Code39ChecksumPolicy.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "None",
-      "kind": "Field",
-      "summary": "Do not strip checksum characters (default, avoids accidental data loss).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Code39ChecksumPolicy None",
-      "xmlId": "F:CodeGlyphX.Code39ChecksumPolicy.None",
-      "anchor": "field-none-code39checksumpolicy-none"
+      "summary": "Do not strip checksum characters (default, avoids accidental data loss)."
     },
     {
       "name": "StripIfValid",
-      "kind": "Field",
-      "summary": "Strip the trailing character if it matches a valid checksum.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Code39ChecksumPolicy StripIfValid",
-      "xmlId": "F:CodeGlyphX.Code39ChecksumPolicy.StripIfValid",
-      "anchor": "field-stripifvalid-code39checksumpolicy-stripifvalid"
+      "summary": "Strip the trailing character if it matches a valid checksum."
     },
     {
       "name": "RequireValid",
-      "kind": "Field",
-      "summary": "Require a valid checksum and strip it; otherwise decoding fails.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Code39ChecksumPolicy RequireValid",
-      "xmlId": "F:CodeGlyphX.Code39ChecksumPolicy.RequireValid",
-      "anchor": "field-requirevalid-code39checksumpolicy-requirevalid"
+      "summary": "Require a valid checksum and strip it; otherwise decoding fails."
     }
-  ]
+  ],
+  "events": []
 }

@@ -1,0 +1,13 @@
+﻿{
+  "name": "TiffReader",
+  "fullName": "CodeGlyphX.Rendering.Tiff.TiffReader",
+  "namespace": "CodeGlyphX.Rendering.Tiff",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-tiff-tiffreader",
+  "summary": "Minimal TIFF decoder for uncompressed baseline images.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [],
+  "events": []
+}

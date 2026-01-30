@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "OtpAuthValidationOptions",
   "fullName": "CodeGlyphX.OtpAuthValidationOptions",
   "namespace": "CodeGlyphX",
@@ -6,134 +6,41 @@
   "slug": "codeglyphx-otpauthvalidationoptions",
   "summary": "Validation options for otpauth:// payloads.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "OtpAuthValidationOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "OtpAuthValidationOptions()",
-      "xmlId": "M:CodeGlyphX.OtpAuthValidationOptions.#ctor",
-      "anchor": "constructor-otpauthvalidationoptions-otpauthvalidationoptions"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "RequireIssuer",
-      "kind": "Property",
-      "summary": "Requires issuer to be present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool RequireIssuer {get; set; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthValidationOptions.RequireIssuer",
-      "anchor": "property-requireissuer-bool-requireissuer-get-set"
+      "summary": "Requires issuer to be present."
     },
     {
       "name": "RequireIssuerMatch",
-      "kind": "Property",
-      "summary": "Requires issuer to match between label and query when both are present.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool RequireIssuerMatch {get; set; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthValidationOptions.RequireIssuerMatch",
-      "anchor": "property-requireissuermatch-bool-requireissuermatch-get-set"
+      "summary": "Requires issuer to match between label and query when both are present."
     },
     {
       "name": "RequireStandardDigits",
-      "kind": "Property",
-      "summary": "Requires digits to be 6 or 8.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool RequireStandardDigits {get; set; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthValidationOptions.RequireStandardDigits",
-      "anchor": "property-requirestandarddigits-bool-requirestandarddigits-get-set"
+      "summary": "Requires digits to be 6 or 8."
     },
     {
       "name": "RequireDefaultPeriod",
-      "kind": "Property",
-      "summary": "Requires TOTP period to be 30 seconds.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool RequireDefaultPeriod {get; set; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthValidationOptions.RequireDefaultPeriod",
-      "anchor": "property-requiredefaultperiod-bool-requiredefaultperiod-get-set"
+      "summary": "Requires TOTP period to be 30 seconds."
     },
     {
       "name": "RequireSha1",
-      "kind": "Property",
-      "summary": "Requires SHA1 algorithm.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool RequireSha1 {get; set; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthValidationOptions.RequireSha1",
-      "anchor": "property-requiresha1-bool-requiresha1-get-set"
+      "summary": "Requires SHA1 algorithm."
     },
     {
       "name": "MinSecretBytes",
-      "kind": "Property",
-      "summary": "Requires a minimum secret length in bytes.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int MinSecretBytes {get; set; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthValidationOptions.MinSecretBytes",
-      "anchor": "property-minsecretbytes-int-minsecretbytes-get-set"
+      "summary": "Requires a minimum secret length in bytes."
     },
     {
       "name": "AllowUnknownParameters",
-      "kind": "Property",
-      "summary": "Allows unknown query parameters.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool AllowUnknownParameters {get; set; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthValidationOptions.AllowUnknownParameters",
-      "anchor": "property-allowunknownparameters-bool-allowunknownparameters-get-set"
+      "summary": "Allows unknown query parameters."
     },
     {
       "name": "Strict",
-      "kind": "Property",
-      "summary": "Strict defaults for maximum compatibility.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "OtpAuthValidationOptions Strict {get; }",
-      "xmlId": "P:CodeGlyphX.OtpAuthValidationOptions.Strict",
-      "anchor": "property-strict-otpauthvalidationoptions-strict-get"
+      "summary": "Strict defaults for maximum compatibility."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

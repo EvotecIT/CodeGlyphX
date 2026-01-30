@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrPayloadDetectOptions",
   "fullName": "CodeGlyphX.Payloads.QrPayloadDetectOptions",
   "namespace": "CodeGlyphX.Payloads",
@@ -6,78 +6,25 @@
   "slug": "codeglyphx-payloads-qrpayloaddetectoptions",
   "summary": "Options that control payload auto-detection heuristics.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "QrPayloadDetectOptions",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrPayloadDetectOptions()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrPayloadDetectOptions.#ctor",
-      "anchor": "constructor-qrpayloaddetectoptions-qrpayloaddetectoptions"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "AllowBareEmail",
-      "kind": "Property",
-      "summary": "Allows detecting bare email addresses (e.g. user@example.com).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool AllowBareEmail {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadDetectOptions.AllowBareEmail",
-      "anchor": "property-allowbareemail-bool-allowbareemail-get-set"
+      "summary": "Allows detecting bare email addresses (e.g. user@example.com)."
     },
     {
       "name": "AllowBarePhone",
-      "kind": "Property",
-      "summary": "Allows detecting bare phone numbers (e.g. \u002B1 555 123 4567).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool AllowBarePhone {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadDetectOptions.AllowBarePhone",
-      "anchor": "property-allowbarephone-bool-allowbarephone-get-set"
+      "summary": "Allows detecting bare phone numbers (e.g. \u002B1 555 123 4567)."
     },
     {
       "name": "AllowBareUrl",
-      "kind": "Property",
-      "summary": "Allows detecting bare URLs (e.g. example.com).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool AllowBareUrl {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadDetectOptions.AllowBareUrl",
-      "anchor": "property-allowbareurl-bool-allowbareurl-get-set"
+      "summary": "Allows detecting bare URLs (e.g. example.com)."
     },
     {
       "name": "PreferTextWhenAmbiguous",
-      "kind": "Property",
-      "summary": "Prefer treating ambiguous inputs with whitespace as plain text.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool PreferTextWhenAmbiguous {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrPayloadDetectOptions.PreferTextWhenAmbiguous",
-      "anchor": "property-prefertextwhenambiguous-bool-prefertextwhenambiguous-get-set"
+      "summary": "Prefer treating ambiguous inputs with whitespace as plain text."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

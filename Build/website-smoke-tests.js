@@ -582,16 +582,28 @@ async function testBenchmarks(page) {
                     error: `Expected at least 3 pricing cards, got ${cardCount}`
                 });
             }
-            // Check for $0 text (may be rendered from HTML entity &#36;0)
+            // Check for free tier price label.
             const hasFreePrice = await page.evaluate(() => {
-                const text = document.body.textContent || '';
-                return text.includes('$0') || text.includes('\u00240');
+                const cards = Array.from(document.querySelectorAll('.pricing-card'));
+                const freeCard = cards.find(card => {
+                    const title = card.querySelector('h2');
+                    return title && title.textContent && title.textContent.trim() === 'Free';
+                });
+                if (!freeCard) {
+                    return false;
+                }
+                const price = freeCard.querySelector('.pricing-amount .pricing-currency');
+                if (!price || !price.textContent) {
+                    return false;
+                }
+                const value = price.textContent.trim();
+                return value === 'Free' || value === '$0';
             });
             if (!hasFreePrice) {
                 failures.push({
                     test: 'pricing-free',
                     page: 'Pricing',
-                    error: 'Missing free tier price ($0)'
+                    error: 'Missing free tier price'
                 });
             }
         }

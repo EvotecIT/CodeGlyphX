@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrArtSafety",
   "fullName": "CodeGlyphX.QrArtSafety",
   "namespace": "CodeGlyphX",
@@ -6,33 +6,26 @@
   "slug": "codeglyphx-qrartsafety",
   "summary": "Evaluates QR art/render options for scan safety.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Evaluate",
-      "kind": "Method",
       "summary": "Evaluates a QR render configuration.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "qr",
-          "type": "QrCode",
-          "description": null
+          "type": "CodeGlyphX.QrCode",
+          "summary": null
         },
         {
           "name": "options",
-          "type": "QrPngRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.QrPngRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrArtSafetyReport Evaluate(QrCode qr, QrPngRenderOptions options)",
-      "xmlId": "M:CodeGlyphX.QrArtSafety.Evaluate(CodeGlyphX.QrCode,CodeGlyphX.Rendering.Png.QrPngRenderOptions)",
-      "anchor": "method-evaluate-static-qrartsafetyreport-evaluate-qrcode-qr-qrpngrenderoptions-options"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

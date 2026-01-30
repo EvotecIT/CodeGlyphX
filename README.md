@@ -62,31 +62,19 @@ CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most fea
 | Decode from module grids (BitMatrix) | ✅ | ✅ |
 | Renderers + image file codecs (PNG/JPEG/SVG/PDF/etc) | ✅ | ✅ |
 | 1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec) | ✅ | ✅ |
-| QR pixel decode from raw pixels / screenshots | ✅ | ⚠️ Limited fallback (clean/generated images) |
+| QR pixel decode from raw pixels / screenshots | ✅ | ⚠️ Best-effort fallback (clean/generated images) |
 | QR pixel debug rendering | ✅ | ✖ |
 | Span-based overloads | ✅ | ✖ (byte[] only) |
 
 Notes:
 - `netstandard2.0` and `net472` require `System.Memory` 4.5.5 (automatically pulled by NuGet).
-- net8+ uses the full QR pixel pipeline; `net472`/`netstandard2.0` use a limited fallback for QR image decode via `QrImageDecoder` and byte[] overloads.
+- net8+ uses the full QR pixel pipeline; `net472`/`netstandard2.0` use a best-effort fallback for QR image decode via `QrImageDecoder` and byte[] overloads.
 - Runtime checks are available via `CodeGlyphXFeatures` (e.g., `SupportsQrPixelDecode`, `SupportsQrPixelDecodeFallback`, `SupportsQrPixelDebug`).
 
 net472 capability notes (QR from images):
 - ✅ Clean/generated PNG/JPEG QR renders (including large module sizes)
 - ⚠️ Multi-code screenshots, heavy styling/art, blur, warp, and low-contrast scenes are best-effort
 - ✅ Recommended: run the quick smoke checklist in `Build/Net472-SmokeTest.md`
-
-### net472 parity and guidance
-
-What works the same as net8+/net10+ on `net472`:
-- All encoders, payload helpers, renderers, and file codecs.
-- Module-grid decode (BitMatrix) across supported symbologies.
-- Pixel decode for 1D barcodes and 2D matrix codes other than QR.
-
-What is intentionally limited on `net472`:
-- QR pixel decode from raw pixels/images (`QrImageDecoder` / pixel-based `QrDecoder`) returns `false`.
-- QR pixel debug rendering throws `PlatformNotSupportedException`.
-- Span-based overloads are not available (use the `byte[]` overloads).
 
 Recommended pattern for shared code:
 
@@ -211,52 +199,8 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 ## Benchmarks (local run)
 
 Latest benchmark tables are generated into `BENCHMARK.md` (and `Assets/Data/benchmark*.json`).
-Benchmarks below were run on 2026-01-19 (Linux Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
-Benchmarks run on identical hardware with default settings.
+This README intentionally does not mirror benchmark tables to avoid drift. See `BENCHMARK.md` for the latest Windows/Linux/macOS quick and full runs, including timestamps and hardware details.
 Quick runs use fewer iterations but include the same scenario list as full runs (for BenchmarkDotNet tables). The QR pack runner uses a smaller quick pack set and adds art/stylized packs in full mode.
-
-### QR (Encode)
-
-| Scenario | Mean (us) | Allocated |
-| --- | --- | --- |
-| QR PNG (short text) | 331.33 | 431.94 KB |
-| QR PNG (medium text) | 713.68 | 837.75 KB |
-| QR PNG (long text) | 2197.99 | 3041.06 KB |
-| QR SVG (medium text) | 99.17 | 20.03 KB |
-| QR PNG (High EC) | 1094.94 | 1535.88 KB |
-| QR HTML (medium text) | 115.46 | 137.43 KB |
-
-### QR (Decode)
-
-| Scenario | Mean (ms) | Allocated | Notes |
-| --- | --- | --- | --- |
-| QR decode (clean, fast) | 2.148 | 103.9 KB | qr-clean-small.png |
-| QR decode (clean, balanced) | 2.124 | 103.9 KB | qr-clean-small.png |
-| QR decode (clean, robust) | 2.193 | 103.9 KB | qr-clean-small.png |
-| QR decode (noisy, robust) | 170.949 | 8507.41 KB | qr-noisy-ui.png (Robust, MaxMilliseconds=800) |
-
-### 1D Barcodes (Encode)
-
-| Scenario | Mean (us) | Allocated |
-| --- | --- | --- |
-| Code 128 PNG | 442.41 | 756.24 KB |
-| Code 128 SVG | 2.52 | 17.61 KB |
-| EAN PNG | 191.33 | 338.54 KB |
-| Code 39 PNG | 311.37 | 414.49 KB |
-| Code 93 PNG | 222.69 | 367.76 KB |
-| UPC-A PNG | 175.83 | 338.85 KB |
-
-### 2D Matrix Codes (Encode)
-
-| Scenario | Mean (us) | Allocated |
-| --- | --- | --- |
-| Data Matrix PNG (medium) | 303.48 | 447.73 KB |
-| Data Matrix PNG (long) | 711.93 | 1509.06 KB |
-| Data Matrix SVG | 5.64 | 12.29 KB |
-| PDF417 PNG | 1730.92 | 3154.87 KB |
-| PDF417 SVG | 28.79 | 64.53 KB |
-| Aztec PNG | 260.70 | 452.30 KB |
-| Aztec SVG | 12.76 | 59.74 KB |
 
 ### Performance checklist
 
@@ -313,17 +257,6 @@ dotnet run -c Release --framework net8.0 --project CodeGlyphX.Benchmarks/CodeGly
 Notes:
 - Comparisons target PNG output and use each library’s ImageSharp-based renderer where applicable.
 - Run the same command on Windows and Linux to compare OS-level differences.
-
-## Comparison (selected libraries)
-
-Based on public docs as of 2026-01-18. Capabilities depend on optional renderer packages.
-
-| Library | Encode | Decode | 2D Codes | 1D Codes | Image Dependencies |
-| --- | --- | --- | --- | --- | --- |
-| CodeGlyphX | ✅ | ✅ | QR, Micro QR, Data Matrix, MicroPDF417, PDF417, Aztec | ✅ | None (built-in PNG/JPEG/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF decode) |
-| ZXing.Net | ✅ | ✅ | QR, Data Matrix, PDF417, Aztec, more | ✅ | Image I/O via bindings on .NET Standard/5+; System.Drawing on full .NET Framework |
-| QRCoder | ✅ | ❌ | QR only | ❌ | System.Drawing renderer (Windows) or alt renderers |
-| Barcoder | ✅ | ❌ | QR, Data Matrix, PDF417, Aztec | ✅ | ImageSharp.Drawing for image renderer |
 
 ## Supported Symbologies
 

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "QrLogoOptions",
   "fullName": "CodeGlyphX.Rendering.QrLogoOptions",
   "namespace": "CodeGlyphX.Rendering",
@@ -6,132 +6,58 @@
   "slug": "codeglyphx-rendering-qrlogooptions",
   "summary": "Options for embedding a PNG logo inside a QR render (SVG/HTML).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "QrLogoOptions",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "Creates a logo option with PNG bytes.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "png",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrLogoOptions(byte[] png)",
-      "xmlId": "M:CodeGlyphX.Rendering.QrLogoOptions.#ctor(System.Byte[])",
-      "anchor": "constructor-qrlogooptions-qrlogooptions-byte-png"
+      ]
     },
     {
       "name": "FromPngFile",
-      "kind": "Method",
       "summary": "Creates a logo option from a PNG file.",
-      "remarks": null,
       "returns": "Logo options.",
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": "PNG file path."
+          "type": "System.String",
+          "summary": "PNG file path."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static QrLogoOptions FromPngFile(string path)",
-      "xmlId": "M:CodeGlyphX.Rendering.QrLogoOptions.FromPngFile(System.String)",
-      "anchor": "method-frompngfile-static-qrlogooptions-frompngfile-string-path"
-    },
+      ]
+    }
+  ],
+  "properties": [
     {
       "name": "Png",
-      "kind": "Property",
-      "summary": "PNG bytes for the logo image.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Png {get; }",
-      "xmlId": "P:CodeGlyphX.Rendering.QrLogoOptions.Png",
-      "anchor": "property-png-byte-png-get"
+      "summary": "PNG bytes for the logo image."
     },
     {
       "name": "Scale",
-      "kind": "Property",
-      "summary": "Maximum logo size relative to the QR area (excluding quiet zone).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "double Scale {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.QrLogoOptions.Scale",
-      "anchor": "property-scale-double-scale-get-set"
+      "summary": "Maximum logo size relative to the QR area (excluding quiet zone)."
     },
     {
       "name": "PaddingPx",
-      "kind": "Property",
-      "summary": "Padding in pixels around the logo.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int PaddingPx {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.QrLogoOptions.PaddingPx",
-      "anchor": "property-paddingpx-int-paddingpx-get-set"
+      "summary": "Padding in pixels around the logo."
     },
     {
       "name": "DrawBackground",
-      "kind": "Property",
-      "summary": "Whether to draw a background plate behind the logo.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool DrawBackground {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.QrLogoOptions.DrawBackground",
-      "anchor": "property-drawbackground-bool-drawbackground-get-set"
+      "summary": "Whether to draw a background plate behind the logo."
     },
     {
       "name": "Background",
-      "kind": "Property",
-      "summary": "Background color for the logo plate.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Rgba32 Background {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.QrLogoOptions.Background",
-      "anchor": "property-background-rgba32-background-get-set"
+      "summary": "Background color for the logo plate."
     },
     {
       "name": "CornerRadiusPx",
-      "kind": "Property",
-      "summary": "Corner radius for the background plate in pixels.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int CornerRadiusPx {get; set; }",
-      "xmlId": "P:CodeGlyphX.Rendering.QrLogoOptions.CornerRadiusPx",
-      "anchor": "property-cornerradiuspx-int-cornerradiuspx-get-set"
+      "summary": "Corner radius for the background plate in pixels."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

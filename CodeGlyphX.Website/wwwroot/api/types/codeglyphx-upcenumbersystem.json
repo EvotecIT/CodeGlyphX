@@ -1,55 +1,22 @@
-{
+﻿{
   "name": "UpcENumberSystem",
   "fullName": "CodeGlyphX.UpcENumberSystem",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-upcenumbersystem",
   "summary": "UPC-E number system (0 or 1).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.UpcENumberSystem.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Zero",
-      "kind": "Field",
-      "summary": "Number system 0.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "UpcENumberSystem Zero",
-      "xmlId": "F:CodeGlyphX.UpcENumberSystem.Zero",
-      "anchor": "field-zero-upcenumbersystem-zero"
+      "summary": "Number system 0."
     },
     {
       "name": "One",
-      "kind": "Field",
-      "summary": "Number system 1.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "UpcENumberSystem One",
-      "xmlId": "F:CodeGlyphX.UpcENumberSystem.One",
-      "anchor": "field-one-upcenumbersystem-one"
+      "summary": "Number system 1."
     }
-  ]
+  ],
+  "events": []
 }

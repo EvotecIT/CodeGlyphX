@@ -1,125 +1,42 @@
-{
+﻿{
   "name": "DataMatrixEncodingMode",
   "fullName": "CodeGlyphX.DataMatrix.DataMatrixEncodingMode",
   "namespace": "CodeGlyphX.DataMatrix",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-datamatrix-datamatrixencodingmode",
   "summary": "High-level data encoding modes for Data Matrix.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Auto",
-      "kind": "Field",
-      "summary": "Choose the smallest mode automatically.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DataMatrixEncodingMode Auto",
-      "xmlId": "F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Auto",
-      "anchor": "field-auto-datamatrixencodingmode-auto"
+      "summary": "Choose the smallest mode automatically."
     },
     {
       "name": "Ascii",
-      "kind": "Field",
-      "summary": "ASCII encodation (default for Latin-1 text).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DataMatrixEncodingMode Ascii",
-      "xmlId": "F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Ascii",
-      "anchor": "field-ascii-datamatrixencodingmode-ascii"
+      "summary": "ASCII encodation (default for Latin-1 text)."
     },
     {
       "name": "C40",
-      "kind": "Field",
-      "summary": "C40 encodation (uppercase optimized).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DataMatrixEncodingMode C40",
-      "xmlId": "F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.C40",
-      "anchor": "field-c40-datamatrixencodingmode-c40"
+      "summary": "C40 encodation (uppercase optimized)."
     },
     {
       "name": "Text",
-      "kind": "Field",
-      "summary": "Text encodation (lowercase optimized).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DataMatrixEncodingMode Text",
-      "xmlId": "F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Text",
-      "anchor": "field-text-datamatrixencodingmode-text"
+      "summary": "Text encodation (lowercase optimized)."
     },
     {
       "name": "X12",
-      "kind": "Field",
-      "summary": "X12 encodation (ANSI X12 subset).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DataMatrixEncodingMode X12",
-      "xmlId": "F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.X12",
-      "anchor": "field-x12-datamatrixencodingmode-x12"
+      "summary": "X12 encodation (ANSI X12 subset)."
     },
     {
       "name": "Edifact",
-      "kind": "Field",
-      "summary": "EDIFACT encodation (ASCII 32-95).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DataMatrixEncodingMode Edifact",
-      "xmlId": "F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Edifact",
-      "anchor": "field-edifact-datamatrixencodingmode-edifact"
+      "summary": "EDIFACT encodation (ASCII 32-95)."
     },
     {
       "name": "Base256",
-      "kind": "Field",
-      "summary": "Base256 encodation (for binary or UTF-8 data).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "DataMatrixEncodingMode Base256",
-      "xmlId": "F:CodeGlyphX.DataMatrix.DataMatrixEncodingMode.Base256",
-      "anchor": "field-base256-datamatrixencodingmode-base256"
+      "summary": "Base256 encodation (for binary or UTF-8 data)."
     }
-  ]
+  ],
+  "events": []
 }

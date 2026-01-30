@@ -1,0 +1,39 @@
+﻿{
+  "name": "QrPngPaletteOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngPaletteOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngpaletteoptions",
+  "summary": "Palette options for multi-color QR module rendering.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "Colors",
+      "summary": "Gets or sets the palette colors (required)."
+    },
+    {
+      "name": "Mode",
+      "summary": "Gets or sets the palette selection mode."
+    },
+    {
+      "name": "Seed",
+      "summary": "Gets or sets the random seed used by CodeGlyphX.Rendering.Png.QrPngPaletteMode.Random."
+    },
+    {
+      "name": "RingSize",
+      "summary": "Gets or sets the ring thickness in modules for CodeGlyphX.Rendering.Png.QrPngPaletteMode.Rings."
+    },
+    {
+      "name": "ApplyToEyes",
+      "summary": "When false, finder (eye) modules keep the foreground color."
+    }
+  ],
+  "fields": [
+    {
+      "name": "DefaultRingSize",
+      "summary": "Default ring size (in modules) for CodeGlyphX.Rendering.Png.QrPngPaletteMode.Rings."
+    }
+  ],
+  "events": []
+}

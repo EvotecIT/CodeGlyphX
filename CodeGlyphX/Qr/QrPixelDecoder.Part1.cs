@@ -169,6 +169,7 @@ internal static partial class QrPixelDecoder {
         var minContrast = settings.MinContrast;
 
         if (options is not null) {
+            var effectiveMaxMs = GetEffectiveMaxMilliseconds(options);
             if (options.MaxScale > 0) {
                 maxScale = Math.Min(maxScale, options.MaxScale);
                 collectMaxScale = Math.Min(collectMaxScale, options.MaxScale);
@@ -195,8 +196,8 @@ internal static partial class QrPixelDecoder {
                     collectMaxScale = boostedCollect;
                 }
             }
-            if (options.MaxMilliseconds > 0) {
-                if (options.MaxMilliseconds <= 400) {
+            if (effectiveMaxMs > 0) {
+                if (effectiveMaxMs <= 400) {
                     maxScale = Math.Min(maxScale, 1);
                     collectMaxScale = Math.Min(collectMaxScale, 1);
                     allowTransforms = false;
@@ -205,7 +206,7 @@ internal static partial class QrPixelDecoder {
                     allowAdaptiveThreshold = false;
                     allowBlur = false;
                     allowExtraThresholds = false;
-                } else if (options.MaxMilliseconds <= 800) {
+                } else if (effectiveMaxMs <= 800) {
                     maxScale = Math.Min(maxScale, 2);
                     collectMaxScale = Math.Min(collectMaxScale, 1);
                     allowTransforms = false;
@@ -214,7 +215,7 @@ internal static partial class QrPixelDecoder {
                     allowAdaptiveThreshold = false;
                     allowBlur = false;
                 }
-                if (options.MaxMilliseconds <= 800 && !options.AggressiveSampling && !options.StylizedSampling) {
+                if (effectiveMaxMs <= 800 && !options.AggressiveSampling && !options.StylizedSampling) {
                     aggressiveSampling = false;
                 }
             }
@@ -252,12 +253,14 @@ internal static partial class QrPixelDecoder {
     }
 
     private static int GetScaleStart(QrPixelDecodeOptions? options, int width, int height) {
-        if (options is null || options.MaxDimension <= 0 && options.MaxMilliseconds <= 0) return 1;
+        if (options is null) return 1;
+        var effectiveMaxMs = GetEffectiveMaxMilliseconds(options);
+        if (options.MaxDimension <= 0 && effectiveMaxMs <= 0) return 1;
         var maxDim = Math.Max(width, height);
         var targetMax = options.MaxDimension > 0 ? options.MaxDimension : int.MaxValue;
-        if (options.MaxMilliseconds > 0) {
-            if (options.MaxMilliseconds <= 400) targetMax = Math.Min(targetMax, 400);
-            else if (options.MaxMilliseconds <= 800) {
+        if (effectiveMaxMs > 0) {
+            if (effectiveMaxMs <= 400) targetMax = Math.Min(targetMax, 400);
+            else if (effectiveMaxMs <= 800) {
                 var budgetMax = options.AggressiveSampling || options.Profile == QrDecodeProfile.Robust ? 1000 : 600;
                 targetMax = Math.Min(targetMax, budgetMax);
             }
@@ -325,9 +328,10 @@ internal static partial class QrPixelDecoder {
         var best = default(QrPixelDecodeDiagnostics);
         var scaleStart = GetScaleStart(options, width, height);
         var profile = options?.Profile ?? QrDecodeProfile.Robust;
-        if (options?.MaxMilliseconds > 0) {
-            if (options.MaxMilliseconds <= 800) profile = QrDecodeProfile.Fast;
-            else if (options.MaxMilliseconds <= 1600 && profile == QrDecodeProfile.Robust) profile = QrDecodeProfile.Balanced;
+        var effectiveMaxMs = options is null ? 0 : GetEffectiveMaxMilliseconds(options);
+        if (effectiveMaxMs > 0) {
+            if (effectiveMaxMs <= 800) profile = QrDecodeProfile.Fast;
+            else if (effectiveMaxMs <= 1600 && profile == QrDecodeProfile.Robust) profile = QrDecodeProfile.Balanced;
         }
         var settings = GetProfileSettings(profile, Math.Min(width, height));
         settings = ApplyOverrides(settings, options, scaleStart);
@@ -575,9 +579,10 @@ internal static partial class QrPixelDecoder {
 
         var scaleStart = GetScaleStart(options, width, height);
         var profile = options?.Profile ?? QrDecodeProfile.Robust;
-        if (options?.MaxMilliseconds > 0) {
-            if (options.MaxMilliseconds <= 800) profile = QrDecodeProfile.Fast;
-            else if (options.MaxMilliseconds <= 1600 && profile == QrDecodeProfile.Robust) profile = QrDecodeProfile.Balanced;
+        var effectiveMaxMs = options is null ? 0 : GetEffectiveMaxMilliseconds(options);
+        if (effectiveMaxMs > 0) {
+            if (effectiveMaxMs <= 800) profile = QrDecodeProfile.Fast;
+            else if (effectiveMaxMs <= 1600 && profile == QrDecodeProfile.Robust) profile = QrDecodeProfile.Balanced;
         }
         var settings = GetProfileSettings(profile, Math.Min(width, height));
         settings = ApplyOverrides(settings, options, scaleStart);
@@ -809,6 +814,10 @@ internal static partial class QrPixelDecoder {
         } finally {
             pool.ReturnAll();
         }
+    }
+
+    private static int GetEffectiveMaxMilliseconds(QrPixelDecodeOptions options) {
+        return options.BudgetMilliseconds > 0 ? 0 : options.MaxMilliseconds;
     }
 
     private static void CollectFromWhitespaceGrid(

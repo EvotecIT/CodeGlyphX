@@ -1,271 +1,41 @@
-{
+﻿{
   "name": "PayPal",
   "fullName": "CodeGlyphX.Payloads.QrParsedData.PayPal",
-  "namespace": "CodeGlyphX.Payloads",
+  "namespace": "CodeGlyphX.Payloads.QrParsedData",
   "kind": "Class",
   "slug": "codeglyphx-payloads-qrparseddata-paypal",
   "summary": "PayPal payment payload (PayPal.Me).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
-      "name": "PayPal",
-      "kind": "Constructor",
+      "name": "#ctor",
       "summary": "PayPal payment payload (PayPal.Me).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "Handle",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "Amount",
-          "type": "Nullable\u003Cdecimal\u003E",
-          "description": null
+          "type": "System.Nullable{System.Decimal}",
+          "summary": null
         },
         {
           "name": "Currency",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "Url",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "PayPal(string Handle, Nullable\u003Cdecimal\u003E Amount, string Currency, string Url)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.PayPal.#ctor(System.String,System.Nullable{System.Decimal},System.String,System.String)",
-      "anchor": "constructor-paypal-paypal-string-handle-nullable-decimal-amount-string-currency-string-url"
-    },
-    {
-      "name": "ToString",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.PayPal.ToString",
-      "anchor": "method-tostring-string-tostring"
-    },
-    {
-      "name": "op_Inequality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.PayPal",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.PayPal",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Inequality(QrParsedData.PayPal left, QrParsedData.PayPal right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.PayPal.op_Inequality(CodeGlyphX.Payloads.QrParsedData.PayPal,CodeGlyphX.Payloads.QrParsedData.PayPal)",
-      "anchor": "method-op-inequality-static-bool-op-inequality-qrparseddata-paypal-left-qrparseddata-paypal-right"
-    },
-    {
-      "name": "op_Equality",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "left",
-          "type": "QrParsedData.PayPal",
-          "description": null
-        },
-        {
-          "name": "right",
-          "type": "QrParsedData.PayPal",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool op_Equality(QrParsedData.PayPal left, QrParsedData.PayPal right)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.PayPal.op_Equality(CodeGlyphX.Payloads.QrParsedData.PayPal,CodeGlyphX.Payloads.QrParsedData.PayPal)",
-      "anchor": "method-op-equality-static-bool-op-equality-qrparseddata-paypal-left-qrparseddata-paypal-right"
-    },
-    {
-      "name": "GetHashCode",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int GetHashCode()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.PayPal.GetHashCode",
-      "anchor": "method-gethashcode-int-gethashcode"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "obj",
-          "type": "object",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(object obj)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.PayPal.Equals(System.Object)",
-      "anchor": "method-equals-bool-equals-object-obj"
-    },
-    {
-      "name": "Equals",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "other",
-          "type": "QrParsedData.PayPal",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Equals(QrParsedData.PayPal other)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.PayPal.Equals(CodeGlyphX.Payloads.QrParsedData.PayPal)",
-      "anchor": "method-equals-bool-equals-qrparseddata-paypal-other"
-    },
-    {
-      "name": "\u003CClone\u003E$",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrParsedData.PayPal \u003CClone\u003E$()",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.PayPal.\u003CClone\u003E$",
-      "anchor": "method-clone-qrparseddata-paypal-clone"
-    },
-    {
-      "name": "Deconstruct",
-      "kind": "Method",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [
-        {
-          "name": "Handle",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Amount",
-          "type": "Nullable\u003Cdecimal\u003E",
-          "description": null
-        },
-        {
-          "name": "Currency",
-          "type": "string",
-          "description": null
-        },
-        {
-          "name": "Url",
-          "type": "string",
-          "description": null
-        }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "void Deconstruct(out string Handle, out Nullable\u003Cdecimal\u003E Amount, out string Currency, out string Url)",
-      "xmlId": "M:CodeGlyphX.Payloads.QrParsedData.PayPal.Deconstruct(System.String@,System.Nullable{System.Decimal}@,System.String@,System.String@)",
-      "anchor": "method-deconstruct-void-deconstruct-out-string-handle-out-nullable-decimal-amount-out-string-currency-out-string-url"
-    },
-    {
-      "name": "Handle",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Handle {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.PayPal.Handle",
-      "anchor": "property-handle-string-handle-get-set"
-    },
-    {
-      "name": "Amount",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Nullable\u003Cdecimal\u003E Amount {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.PayPal.Amount",
-      "anchor": "property-amount-nullable-decimal-amount-get-set"
-    },
-    {
-      "name": "Currency",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Currency {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.PayPal.Currency",
-      "anchor": "property-currency-string-currency-get-set"
-    },
-    {
-      "name": "Url",
-      "kind": "Property",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Url {get; set; }",
-      "xmlId": "P:CodeGlyphX.Payloads.QrParsedData.PayPal.Url",
-      "anchor": "property-url-string-url-get-set"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

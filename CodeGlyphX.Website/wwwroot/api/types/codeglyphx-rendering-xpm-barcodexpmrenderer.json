@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "BarcodeXpmRenderer",
   "fullName": "CodeGlyphX.Rendering.Xpm.BarcodeXpmRenderer",
   "namespace": "CodeGlyphX.Rendering.Xpm",
@@ -6,148 +6,117 @@
   "slug": "codeglyphx-rendering-xpm-barcodexpmrenderer",
   "summary": "Renders barcodes to XPM.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Render",
-      "kind": "Method",
       "summary": "Renders a barcode to an XPM string.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
           "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
           "name": "name",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Render(Barcode1D barcode, BarcodePngRenderOptions opts, string name)",
-      "xmlId": "M:CodeGlyphX.Rendering.Xpm.BarcodeXpmRenderer.Render(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String)",
-      "anchor": "method-render-static-string-render-barcode1d-barcode-barcodepngrenderoptions-opts-string-name"
+      ]
     },
     {
       "name": "RenderToStream",
-      "kind": "Method",
       "summary": "Renders a barcode to an XPM stream.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
           "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
           "name": "name",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void RenderToStream(Barcode1D barcode, BarcodePngRenderOptions opts, Stream stream, string name)",
-      "xmlId": "M:CodeGlyphX.Rendering.Xpm.BarcodeXpmRenderer.RenderToStream(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.IO.Stream,System.String)",
-      "anchor": "method-rendertostream-static-void-rendertostream-barcode1d-barcode-barcodepngrenderoptions-opts-stream-stream-string-name"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders a barcode to an XPM file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
           "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "name",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string path, string name)",
-      "xmlId": "M:CodeGlyphX.Rendering.Xpm.BarcodeXpmRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-path-string-name"
+      ]
     },
     {
       "name": "RenderToFile",
-      "kind": "Method",
       "summary": "Renders a barcode to an XPM file under the specified directory.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "barcode",
-          "type": "Barcode1D",
-          "description": null
+          "type": "CodeGlyphX.Barcode1D",
+          "summary": null
         },
         {
           "name": "opts",
-          "type": "BarcodePngRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.BarcodePngRenderOptions",
+          "summary": null
         },
         {
           "name": "directory",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "fileName",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "name",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string RenderToFile(Barcode1D barcode, BarcodePngRenderOptions opts, string directory, string fileName, string name)",
-      "xmlId": "M:CodeGlyphX.Rendering.Xpm.BarcodeXpmRenderer.RenderToFile(CodeGlyphX.Barcode1D,CodeGlyphX.Rendering.Png.BarcodePngRenderOptions,System.String,System.String,System.String)",
-      "anchor": "method-rendertofile-static-string-rendertofile-barcode1d-barcode-barcodepngrenderoptions-opts-string-directory-string-filename-string-name"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

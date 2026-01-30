@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "Pdf417DecodeDiagnostics",
   "fullName": "CodeGlyphX.Pdf417DecodeDiagnostics",
   "namespace": "CodeGlyphX",
@@ -6,106 +6,33 @@
   "slug": "codeglyphx-pdf417decodediagnostics",
   "summary": "Diagnostics for PDF417 decoding.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "Pdf417DecodeDiagnostics",
-      "kind": "Constructor",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417DecodeDiagnostics()",
-      "xmlId": "M:CodeGlyphX.Pdf417DecodeDiagnostics.#ctor",
-      "anchor": "constructor-pdf417decodediagnostics-pdf417decodediagnostics"
-    },
+  "methods": [],
+  "properties": [
     {
       "name": "AttemptCount",
-      "kind": "Property",
-      "summary": "Number of decode attempts.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int AttemptCount {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417DecodeDiagnostics.AttemptCount",
-      "anchor": "property-attemptcount-int-attemptcount-get"
+      "summary": "Number of decode attempts."
     },
     {
       "name": "StartPatternCandidates",
-      "kind": "Property",
-      "summary": "Number of start-pattern candidates detected.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int StartPatternCandidates {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417DecodeDiagnostics.StartPatternCandidates",
-      "anchor": "property-startpatterncandidates-int-startpatterncandidates-get"
+      "summary": "Number of start-pattern candidates detected."
     },
     {
       "name": "StartPatternAttempts",
-      "kind": "Property",
-      "summary": "Number of start-pattern candidates tried.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int StartPatternAttempts {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417DecodeDiagnostics.StartPatternAttempts",
-      "anchor": "property-startpatternattempts-int-startpatternattempts-get"
+      "summary": "Number of start-pattern candidates tried."
     },
     {
       "name": "MirroredTried",
-      "kind": "Property",
-      "summary": "True when mirrored decoding was attempted.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool MirroredTried {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417DecodeDiagnostics.MirroredTried",
-      "anchor": "property-mirroredtried-bool-mirroredtried-get"
+      "summary": "True when mirrored decoding was attempted."
     },
     {
       "name": "Success",
-      "kind": "Property",
-      "summary": "True when decode succeeded.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Success {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417DecodeDiagnostics.Success",
-      "anchor": "property-success-bool-success-get"
+      "summary": "True when decode succeeded."
     },
     {
       "name": "Failure",
-      "kind": "Property",
-      "summary": "Optional failure message when decoding fails.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Failure {get; }",
-      "xmlId": "P:CodeGlyphX.Pdf417DecodeDiagnostics.Failure",
-      "anchor": "property-failure-string-failure-get"
+      "summary": "Optional failure message when decoding fails."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

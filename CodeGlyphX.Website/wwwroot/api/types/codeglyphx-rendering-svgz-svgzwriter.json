@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "SvgzWriter",
   "fullName": "CodeGlyphX.Rendering.Svgz.SvgzWriter",
   "namespace": "CodeGlyphX.Rendering.Svgz",
@@ -6,53 +6,38 @@
   "slug": "codeglyphx-rendering-svgz-svgzwriter",
   "summary": "Writes SVGZ (gzip-compressed SVG).",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "WriteSvg",
-      "kind": "Method",
       "summary": "Writes SVGZ bytes from an SVG string.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "svg",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] WriteSvg(string svg)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svgz.SvgzWriter.WriteSvg(System.String)",
-      "anchor": "method-writesvg-static-byte-writesvg-string-svg"
+      ]
     },
     {
       "name": "WriteSvg",
-      "kind": "Method",
       "summary": "Writes SVGZ bytes to a stream from an SVG string.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "stream",
-          "type": "Stream",
-          "description": null
+          "type": "System.IO.Stream",
+          "summary": null
         },
         {
           "name": "svg",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static void WriteSvg(Stream stream, string svg)",
-      "xmlId": "M:CodeGlyphX.Rendering.Svgz.SvgzWriter.WriteSvg(System.IO.Stream,System.String)",
-      "anchor": "method-writesvg-static-void-writesvg-stream-stream-string-svg"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

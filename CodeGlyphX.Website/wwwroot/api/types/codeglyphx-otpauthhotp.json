@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "OtpAuthHotp",
   "fullName": "CodeGlyphX.OtpAuthHotp",
   "namespace": "CodeGlyphX",
@@ -6,98 +6,83 @@
   "slug": "codeglyphx-otpauthhotp",
   "summary": "Builder for deterministic otpauth://hotp/ URIs.",
   "remarks": "Output is stable (parameter ordering is fixed) and uses percent-encoding for label/query parts.",
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Create",
-      "kind": "Method",
       "summary": "Builds an otpauth://hotp/ URI for a HOTP token.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "issuer",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "account",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "secret",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "counter",
-          "type": "long",
-          "description": null
+          "type": "System.Int64",
+          "summary": null
         },
         {
           "name": "alg",
-          "type": "OtpAlgorithm",
-          "description": null
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
           "name": "digits",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Create(string issuer, string account, ReadOnlySpan\u003Cbyte\u003E secret, long counter, OtpAlgorithm alg, int digits)",
-      "xmlId": "M:CodeGlyphX.OtpAuthHotp.Create(System.String,System.String,System.ReadOnlySpan{System.Byte},System.Int64,CodeGlyphX.OtpAlgorithm,System.Int32)",
-      "anchor": "method-create-static-string-create-string-issuer-string-account-readonlyspan-byte-secret-long-counter-otpalgorithm-alg-int-digits"
+      ]
     },
     {
       "name": "Create",
-      "kind": "Method",
       "summary": "Builds an otpauth://hotp/ URI for a HOTP token.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "issuer",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "account",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "secret",
-          "type": "byte[]",
-          "description": null
+          "type": "System.Byte[]",
+          "summary": null
         },
         {
           "name": "counter",
-          "type": "long",
-          "description": null
+          "type": "System.Int64",
+          "summary": null
         },
         {
           "name": "alg",
-          "type": "OtpAlgorithm",
-          "description": null
+          "type": "CodeGlyphX.OtpAlgorithm",
+          "summary": null
         },
         {
           "name": "digits",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static string Create(string issuer, string account, byte[] secret, long counter, OtpAlgorithm alg, int digits)",
-      "xmlId": "M:CodeGlyphX.OtpAuthHotp.Create(System.String,System.String,System.Byte[],System.Int64,CodeGlyphX.OtpAlgorithm,System.Int32)",
-      "anchor": "method-create-static-string-create-string-issuer-string-account-byte-secret-long-counter-otpalgorithm-alg-int-digits"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

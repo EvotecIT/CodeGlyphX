@@ -1,153 +1,57 @@
-{
+﻿{
   "name": "QrPixelDecodeInfo",
   "fullName": "CodeGlyphX.QrPixelDecodeInfo",
   "namespace": "CodeGlyphX",
-  "kind": "Struct",
+  "kind": "Class",
   "slug": "codeglyphx-qrpixeldecodeinfo",
   "summary": "Diagnostics returned by pixel-based QR decoding attempts.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "ToString",
-      "kind": "Method",
       "summary": null,
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string ToString()",
-      "xmlId": "M:CodeGlyphX.QrPixelDecodeInfo.ToString",
-      "anchor": "method-tostring-string-tostring"
-    },
+      "parameters": []
+    }
+  ],
+  "properties": [
     {
       "name": "Scale",
-      "kind": "Property",
-      "summary": "Gets the scale factor applied before decoding.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Scale {get; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDecodeInfo.Scale",
-      "anchor": "property-scale-int-scale-get"
+      "summary": "Gets the scale factor applied before decoding."
     },
     {
       "name": "Threshold",
-      "kind": "Property",
-      "summary": "Gets the binarization threshold (0..255).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte Threshold {get; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDecodeInfo.Threshold",
-      "anchor": "property-threshold-byte-threshold-get"
+      "summary": "Gets the binarization threshold (0..255)."
     },
     {
       "name": "Invert",
-      "kind": "Property",
-      "summary": "Gets a value indicating whether the image was inverted.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool Invert {get; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDecodeInfo.Invert",
-      "anchor": "property-invert-bool-invert-get"
+      "summary": "Gets a value indicating whether the image was inverted."
     },
     {
       "name": "CandidateCount",
-      "kind": "Property",
-      "summary": "Gets the number of candidate finder patterns detected.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int CandidateCount {get; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDecodeInfo.CandidateCount",
-      "anchor": "property-candidatecount-int-candidatecount-get"
+      "summary": "Gets the number of candidate finder patterns detected."
     },
     {
       "name": "CandidateTriplesTried",
-      "kind": "Property",
-      "summary": "Gets the number of finder triples evaluated.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int CandidateTriplesTried {get; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDecodeInfo.CandidateTriplesTried",
-      "anchor": "property-candidatetriplestried-int-candidatetriplestried-get"
+      "summary": "Gets the number of finder triples evaluated."
     },
     {
       "name": "Dimension",
-      "kind": "Property",
-      "summary": "Gets the decoded module dimension, when available.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int Dimension {get; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDecodeInfo.Dimension",
-      "anchor": "property-dimension-int-dimension-get"
+      "summary": "Gets the decoded module dimension, when available."
     },
     {
       "name": "Module",
-      "kind": "Property",
-      "summary": "Gets the underlying module-level diagnostics.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrDecodeInfo Module {get; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDecodeInfo.Module",
-      "anchor": "property-module-qrdecodeinfo-module-get"
+      "summary": "Gets the underlying module-level diagnostics."
     },
     {
       "name": "IsSuccess",
-      "kind": "Property",
-      "summary": "Gets a value indicating whether decoding succeeded.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "bool IsSuccess {get; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDecodeInfo.IsSuccess",
-      "anchor": "property-issuccess-bool-issuccess-get"
+      "summary": "Gets a value indicating whether decoding succeeded."
     },
     {
       "name": "Confidence",
-      "kind": "Property",
-      "summary": "Gets a confidence score (0..1) for the decode.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "double Confidence {get; }",
-      "xmlId": "P:CodeGlyphX.QrPixelDecodeInfo.Confidence",
-      "anchor": "property-confidence-double-confidence-get"
+      "summary": "Gets a confidence score (0..1) for the decode."
     }
-  ]
+  ],
+  "fields": [],
+  "events": []
 }

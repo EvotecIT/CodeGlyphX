@@ -1,672 +1,421 @@
-{
+﻿{
   "name": "Pdf417Builder",
   "fullName": "CodeGlyphX.Pdf417Code.Pdf417Builder",
-  "namespace": "CodeGlyphX",
+  "namespace": "CodeGlyphX.Pdf417Code",
   "kind": "Class",
   "slug": "codeglyphx-pdf417code-pdf417builder",
   "summary": "Fluent PDF417 builder.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "WithEncodeOptions",
-      "kind": "Method",
       "summary": "Mutates PDF417 encoding options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "configure",
-          "type": "Action\u003CPdf417EncodeOptions\u003E",
-          "description": null
+          "type": "System.Action{CodeGlyphX.Pdf417.Pdf417EncodeOptions}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithEncodeOptions(Action\u003CPdf417EncodeOptions\u003E configure)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithEncodeOptions(System.Action{CodeGlyphX.Pdf417.Pdf417EncodeOptions})",
-      "anchor": "method-withencodeoptions-pdf417code-pdf417builder-withencodeoptions-action-pdf417encodeoptions-configure"
+      ]
     },
     {
       "name": "WithRenderOptions",
-      "kind": "Method",
       "summary": "Mutates rendering options.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "configure",
-          "type": "Action\u003CMatrixOptions\u003E",
-          "description": null
+          "type": "System.Action{CodeGlyphX.MatrixOptions}",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithRenderOptions(Action\u003CMatrixOptions\u003E configure)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithRenderOptions(System.Action{CodeGlyphX.MatrixOptions})",
-      "anchor": "method-withrenderoptions-pdf417code-pdf417builder-withrenderoptions-action-matrixoptions-configure"
+      ]
     },
     {
       "name": "WithModuleSize",
-      "kind": "Method",
       "summary": "Sets module size in pixels.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "moduleSize",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithModuleSize(int moduleSize)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithModuleSize(System.Int32)",
-      "anchor": "method-withmodulesize-pdf417code-pdf417builder-withmodulesize-int-modulesize"
+      ]
     },
     {
       "name": "WithQuietZone",
-      "kind": "Method",
       "summary": "Sets quiet zone size in modules.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "quietZone",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithQuietZone(int quietZone)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithQuietZone(System.Int32)",
-      "anchor": "method-withquietzone-pdf417code-pdf417builder-withquietzone-int-quietzone"
+      ]
     },
     {
       "name": "WithColors",
-      "kind": "Method",
       "summary": "Sets foreground/background colors.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "foreground",
-          "type": "Rgba32",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         },
         {
           "name": "background",
-          "type": "Rgba32",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Png.Rgba32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithColors(Rgba32 foreground, Rgba32 background)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithColors(CodeGlyphX.Rendering.Png.Rgba32,CodeGlyphX.Rendering.Png.Rgba32)",
-      "anchor": "method-withcolors-pdf417code-pdf417builder-withcolors-rgba32-foreground-rgba32-background"
+      ]
     },
     {
       "name": "WithJpegQuality",
-      "kind": "Method",
       "summary": "Sets JPEG quality (1..100).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "quality",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithJpegQuality(int quality)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithJpegQuality(System.Int32)",
-      "anchor": "method-withjpegquality-pdf417code-pdf417builder-withjpegquality-int-quality"
+      ]
     },
     {
       "name": "WithHtmlEmailSafeTable",
-      "kind": "Method",
       "summary": "Enables HTML email-safe table rendering.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "enabled",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithHtmlEmailSafeTable(bool enabled)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithHtmlEmailSafeTable(System.Boolean)",
-      "anchor": "method-withhtmlemailsafetable-pdf417code-pdf417builder-withhtmlemailsafetable-bool-enabled"
+      ]
     },
     {
       "name": "WithIcoSizes",
-      "kind": "Method",
       "summary": "Sets ICO output sizes (in pixels).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "sizes",
-          "type": "int[]",
-          "description": null
+          "type": "System.Int32[]",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithIcoSizes(int[] sizes)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithIcoSizes(System.Int32[])",
-      "anchor": "method-withicosizes-pdf417code-pdf417builder-withicosizes-int-sizes"
+      ]
     },
     {
       "name": "WithIcoPreserveAspectRatio",
-      "kind": "Method",
       "summary": "Sets ICO aspect ratio preservation behavior.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "enabled",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithIcoPreserveAspectRatio(bool enabled)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithIcoPreserveAspectRatio(System.Boolean)",
-      "anchor": "method-withicopreserveaspectratio-pdf417code-pdf417builder-withicopreserveaspectratio-bool-enabled"
+      ]
     },
     {
       "name": "WithCompaction",
-      "kind": "Method",
       "summary": "Sets compaction mode.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "compaction",
-          "type": "Pdf417Compaction",
-          "description": null
+          "type": "CodeGlyphX.Pdf417.Pdf417Compaction",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithCompaction(Pdf417Compaction compaction)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithCompaction(CodeGlyphX.Pdf417.Pdf417Compaction)",
-      "anchor": "method-withcompaction-pdf417code-pdf417builder-withcompaction-pdf417compaction-compaction"
+      ]
     },
     {
       "name": "WithErrorCorrection",
-      "kind": "Method",
       "summary": "Sets error correction level (0..8 or -1 for auto).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "level",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithErrorCorrection(int level)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithErrorCorrection(System.Int32)",
-      "anchor": "method-witherrorcorrection-pdf417code-pdf417builder-witherrorcorrection-int-level"
+      ]
     },
     {
       "name": "WithTextEncoding",
-      "kind": "Method",
       "summary": "Sets text encoding for byte compaction.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "encoding",
-          "type": "Encoding",
-          "description": null
+          "type": "System.Text.Encoding",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithTextEncoding(Encoding encoding)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithTextEncoding(System.Text.Encoding)",
-      "anchor": "method-withtextencoding-pdf417code-pdf417builder-withtextencoding-encoding-encoding"
+      ]
     },
     {
       "name": "WithAspectRatio",
-      "kind": "Method",
       "summary": "Sets target aspect ratio (width/height).",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "ratio",
-          "type": "float",
-          "description": null
+          "type": "System.Single",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithAspectRatio(float ratio)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithAspectRatio(System.Single)",
-      "anchor": "method-withaspectratio-pdf417code-pdf417builder-withaspectratio-float-ratio"
+      ]
     },
     {
       "name": "WithColumns",
-      "kind": "Method",
       "summary": "Sets column constraints.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "minColumns",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "maxColumns",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithColumns(int minColumns, int maxColumns)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithColumns(System.Int32,System.Int32)",
-      "anchor": "method-withcolumns-pdf417code-pdf417builder-withcolumns-int-mincolumns-int-maxcolumns"
+      ]
     },
     {
       "name": "WithRows",
-      "kind": "Method",
       "summary": "Sets row constraints.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "minRows",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         },
         {
           "name": "maxRows",
-          "type": "int",
-          "description": null
+          "type": "System.Int32",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithRows(int minRows, int maxRows)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithRows(System.Int32,System.Int32)",
-      "anchor": "method-withrows-pdf417code-pdf417builder-withrows-int-minrows-int-maxrows"
+      ]
     },
     {
       "name": "WithCompact",
-      "kind": "Method",
       "summary": "Enables compact PDF417.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "compact",
-          "type": "bool",
-          "description": null
+          "type": "System.Boolean",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "Pdf417Code.Pdf417Builder WithCompact(bool compact)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.WithCompact(System.Boolean)",
-      "anchor": "method-withcompact-pdf417code-pdf417builder-withcompact-bool-compact"
+      ]
     },
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes the PDF417 as a module matrix.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "BitMatrix Encode()",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Encode",
-      "anchor": "method-encode-bitmatrix-encode"
+      "parameters": []
     },
     {
       "name": "Png",
-      "kind": "Method",
       "summary": "Renders PNG bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Png()",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Png",
-      "anchor": "method-png-byte-png"
+      "parameters": []
     },
     {
       "name": "Svg",
-      "kind": "Method",
       "summary": "Renders SVG markup.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Svg()",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Svg",
-      "anchor": "method-svg-string-svg"
+      "parameters": []
     },
     {
       "name": "Html",
-      "kind": "Method",
       "summary": "Renders HTML markup.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Html()",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Html",
-      "anchor": "method-html-string-html"
+      "parameters": []
     },
     {
       "name": "Jpeg",
-      "kind": "Method",
       "summary": "Renders JPEG bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Jpeg()",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Jpeg",
-      "anchor": "method-jpeg-byte-jpeg"
+      "parameters": []
     },
     {
       "name": "Bmp",
-      "kind": "Method",
       "summary": "Renders BMP bytes.",
-      "remarks": null,
       "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Bmp()",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Bmp",
-      "anchor": "method-bmp-byte-bmp"
+      "parameters": []
     },
     {
       "name": "Pdf",
-      "kind": "Method",
       "summary": "Renders PDF bytes.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "renderMode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "byte[] Pdf(RenderMode renderMode)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Pdf(CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-pdf-byte-pdf-rendermode-rendermode"
+      ]
     },
     {
       "name": "Eps",
-      "kind": "Method",
       "summary": "Renders EPS text.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "renderMode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Eps(RenderMode renderMode)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Eps(CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-eps-string-eps-rendermode-rendermode"
+      ]
     },
     {
       "name": "Ascii",
-      "kind": "Method",
       "summary": "Renders ASCII text.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "options",
-          "type": "MatrixAsciiRenderOptions",
-          "description": null
+          "type": "CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Ascii(MatrixAsciiRenderOptions options)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Ascii(CodeGlyphX.Rendering.Ascii.MatrixAsciiRenderOptions)",
-      "anchor": "method-ascii-string-ascii-matrixasciirenderoptions-options"
+      ]
     },
     {
       "name": "Save",
-      "kind": "Method",
       "summary": "Saves output based on file extension.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "title",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string Save(string path, string title)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.Save(System.String,System.String)",
-      "anchor": "method-save-string-save-string-path-string-title"
+      ]
     },
     {
       "name": "SavePng",
-      "kind": "Method",
       "summary": "Saves PNG to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SavePng(string path)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.SavePng(System.String)",
-      "anchor": "method-savepng-string-savepng-string-path"
+      ]
     },
     {
       "name": "SaveSvg",
-      "kind": "Method",
       "summary": "Saves SVG to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveSvg(string path)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.SaveSvg(System.String)",
-      "anchor": "method-savesvg-string-savesvg-string-path"
+      ]
     },
     {
       "name": "SaveHtml",
-      "kind": "Method",
       "summary": "Saves HTML to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         },
         {
           "name": "title",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveHtml(string path, string title)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.SaveHtml(System.String,System.String)",
-      "anchor": "method-savehtml-string-savehtml-string-path-string-title"
+      ]
     },
     {
       "name": "SaveJpeg",
-      "kind": "Method",
       "summary": "Saves JPEG to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveJpeg(string path)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.SaveJpeg(System.String)",
-      "anchor": "method-savejpeg-string-savejpeg-string-path"
+      ]
+    },
+    {
+      "name": "SaveWebp",
+      "summary": "Saves WebP to a file.",
+      "returns": null,
+      "parameters": [
+        {
+          "name": "path",
+          "type": "System.String",
+          "summary": null
+        }
+      ]
     },
     {
       "name": "SaveBmp",
-      "kind": "Method",
       "summary": "Saves BMP to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveBmp(string path)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.SaveBmp(System.String)",
-      "anchor": "method-savebmp-string-savebmp-string-path"
+      ]
     },
     {
       "name": "SavePdf",
-      "kind": "Method",
       "summary": "Saves PDF to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "renderMode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SavePdf(string path, RenderMode renderMode)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.SavePdf(System.String,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-savepdf-string-savepdf-string-path-rendermode-rendermode"
+      ]
     },
     {
       "name": "SaveEps",
-      "kind": "Method",
       "summary": "Saves EPS to a file.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "path",
-          "type": "string",
-          "description": "Output file path."
+          "type": "System.String",
+          "summary": "Output file path."
         },
         {
           "name": "renderMode",
-          "type": "RenderMode",
-          "description": "Vector or raster output."
+          "type": "CodeGlyphX.Rendering.RenderMode",
+          "summary": "Vector or raster output."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "string SaveEps(string path, RenderMode renderMode)",
-      "xmlId": "M:CodeGlyphX.Pdf417Code.Pdf417Builder.SaveEps(System.String,CodeGlyphX.Rendering.RenderMode)",
-      "anchor": "method-saveeps-string-saveeps-string-path-rendermode-rendermode"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

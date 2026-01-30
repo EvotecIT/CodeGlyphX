@@ -1,0 +1,58 @@
+﻿{
+  "name": "QrPngCanvasBadgeOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngcanvasbadgeoptions",
+  "summary": "Decorative badge/tab/ribbon options drawn outside the QR bounds.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "Shape",
+      "summary": "Badge shape."
+    },
+    {
+      "name": "Position",
+      "summary": "Badge position relative to the QR bounds."
+    },
+    {
+      "name": "WidthPx",
+      "summary": "Badge width in pixels (0 disables drawing)."
+    },
+    {
+      "name": "HeightPx",
+      "summary": "Badge height in pixels (0 disables drawing)."
+    },
+    {
+      "name": "GapPx",
+      "summary": "Gap between the QR bounds and the badge."
+    },
+    {
+      "name": "OffsetPx",
+      "summary": "Offset along the edge (horizontal for top/bottom, vertical for left/right)."
+    },
+    {
+      "name": "CornerRadiusPx",
+      "summary": "Badge corner radius in pixels."
+    },
+    {
+      "name": "Color",
+      "summary": "Badge color."
+    },
+    {
+      "name": "Gradient",
+      "summary": "Optional badge gradient (overrides CodeGlyphX.Rendering.Png.QrPngCanvasBadgeOptions.Color when set)."
+    },
+    {
+      "name": "EdgePattern",
+      "summary": "Optional edge pattern overlay."
+    },
+    {
+      "name": "TailPx",
+      "summary": "Ribbon tail length in pixels (applies to CodeGlyphX.Rendering.Png.QrPngCanvasBadgeShape.Ribbon)."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

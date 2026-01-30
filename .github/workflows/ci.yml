@@ -161,8 +161,7 @@ jobs:
   coverage:
     name: Coverage (linux)
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-    if: github.event_name != 'pull_request'
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4

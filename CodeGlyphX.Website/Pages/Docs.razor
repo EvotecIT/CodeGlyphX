@@ -255,44 +255,10 @@ if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
         {
             <h1>Benchmarks</h1>
             <p>
-                Benchmarks are run locally using BenchmarkDotNet. Results below were captured on
-                2026-01-18 (Ubuntu 24.04, Ryzen 9 9950X, .NET 8.0.22). Your results will vary.
+                The full benchmark dashboard now lives on the dedicated page:
+                <a href="/benchmarks/">codeglyphx.com/benchmarks</a>.
             </p>
-            <p class="text-muted">Quick runs use fewer iterations but include the same scenario list as full runs. See <code>BENCHMARK.md</code> for full tables.</p>
-            <div class="bench-summary" data-benchmark-summary>
-                <div class="bench-summary-loading">Loading benchmark summary...</div>
-            </div>
-
-            <h2>QR (Encode)</h2>
-            <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <th style="text-align: left; padding: 0.75rem;">Scenario</th>
-                        <th style="text-align: left; padding: 0.75rem;">Mean (us)</th>
-                        <th style="text-align: left; padding: 0.75rem;">Allocated</th>
-                    </tr>
-                </thead>
-                <tbody style="color: var(--text-muted);">
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 0.75rem;">QR PNG (short)</td>
-                        <td style="padding: 0.75rem;">331.33</td>
-                        <td style="padding: 0.75rem;">431.94 KB</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 0.75rem;">QR PNG (medium)</td>
-                        <td style="padding: 0.75rem;">713.68</td>
-                        <td style="padding: 0.75rem;">837.75 KB</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 0.75rem;">QR PNG (long)</td>
-                        <td style="padding: 0.75rem;">2197.99</td>
-                        <td style="padding: 0.75rem;">3041.06 KB</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h2>Run the Benchmarks</h2>
-            <pre class="code-block">dotnet run -c Release --framework net8.0 --project CodeGlyphX.Benchmarks/CodeGlyphX.Benchmarks.csproj -- --filter "*"</pre>
+            <p class="text-muted">It includes both quick and full runs, charts, and raw data downloads.</p>
         }
         else if (Section == "qr")
         {

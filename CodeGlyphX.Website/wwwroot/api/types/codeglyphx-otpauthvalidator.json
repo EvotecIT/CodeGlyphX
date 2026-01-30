@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "OtpAuthValidator",
   "fullName": "CodeGlyphX.OtpAuthValidator",
   "namespace": "CodeGlyphX",
@@ -6,68 +6,53 @@
   "slug": "codeglyphx-otpauthvalidator",
   "summary": "Validation helpers for otpauth:// payloads.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "TryValidate",
-      "kind": "Method",
       "summary": "Validates a detailed OTP parse result.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "result",
-          "type": "OtpAuthParseResult",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthParseResult",
+          "summary": null
         },
         {
           "name": "options",
-          "type": "OtpAuthValidationOptions",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthValidationOptions",
+          "summary": null
         },
         {
           "name": "error",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryValidate(OtpAuthParseResult result, OtpAuthValidationOptions options, out string error)",
-      "xmlId": "M:CodeGlyphX.OtpAuthValidator.TryValidate(CodeGlyphX.OtpAuthParseResult,CodeGlyphX.OtpAuthValidationOptions,System.String@)",
-      "anchor": "method-tryvalidate-static-bool-tryvalidate-otpauthparseresult-result-otpauthvalidationoptions-options-out-string-error"
+      ]
     },
     {
       "name": "TryValidate",
-      "kind": "Method",
       "summary": "Validates a detailed OTP parse result, returning all errors.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "result",
-          "type": "OtpAuthParseResult",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthParseResult",
+          "summary": null
         },
         {
           "name": "options",
-          "type": "OtpAuthValidationOptions",
-          "description": null
+          "type": "CodeGlyphX.OtpAuthValidationOptions",
+          "summary": null
         },
         {
           "name": "errors",
-          "type": "string[]",
-          "description": null
+          "type": "System.String[]@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryValidate(OtpAuthParseResult result, OtpAuthValidationOptions options, out string[] errors)",
-      "xmlId": "M:CodeGlyphX.OtpAuthValidator.TryValidate(CodeGlyphX.OtpAuthParseResult,CodeGlyphX.OtpAuthValidationOptions,System.String[]@)",
-      "anchor": "method-tryvalidate-static-bool-tryvalidate-otpauthparseresult-result-otpauthvalidationoptions-options-out-string-errors"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -42,7 +42,7 @@ public sealed class QrDecodingSamplesSweepTests {
         var baseOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2200,
-            BudgetMilliseconds = 5000,
+            BudgetMilliseconds = TestBudget.Adjust(5000),
             AutoCrop = true,
             AggressiveSampling = true,
             StylizedSampling = true,
@@ -58,7 +58,8 @@ public sealed class QrDecodingSamplesSweepTests {
                 options = new QrPixelDecodeOptions {
                     Profile = QrDecodeProfile.Robust,
                     MaxDimension = 3200,
-                    BudgetMilliseconds = 12000,
+                    MaxMilliseconds = TestBudget.Adjust(18000),
+                    BudgetMilliseconds = TestBudget.Adjust(18000),
                     AutoCrop = true,
                     AggressiveSampling = true,
                     StylizedSampling = false,

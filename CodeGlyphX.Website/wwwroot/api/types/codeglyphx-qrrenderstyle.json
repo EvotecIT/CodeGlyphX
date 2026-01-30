@@ -1,69 +1,26 @@
-{
+﻿{
   "name": "QrRenderStyle",
   "fullName": "CodeGlyphX.QrRenderStyle",
   "namespace": "CodeGlyphX",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-qrrenderstyle",
   "summary": "Style presets for easy QR rendering.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.QrRenderStyle.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Default",
-      "kind": "Field",
-      "summary": "Plain, high-contrast QR (recommended).",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrRenderStyle Default",
-      "xmlId": "F:CodeGlyphX.QrRenderStyle.Default",
-      "anchor": "field-default-qrrenderstyle-default"
+      "summary": "Plain, high-contrast QR (recommended)."
     },
     {
       "name": "Rounded",
-      "kind": "Field",
-      "summary": "Rounded modules for a softer look.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrRenderStyle Rounded",
-      "xmlId": "F:CodeGlyphX.QrRenderStyle.Rounded",
-      "anchor": "field-rounded-qrrenderstyle-rounded"
+      "summary": "Rounded modules for a softer look."
     },
     {
       "name": "Fancy",
-      "kind": "Field",
-      "summary": "Decorative style with gradients and eye frames.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrRenderStyle Fancy",
-      "xmlId": "F:CodeGlyphX.QrRenderStyle.Fancy",
-      "anchor": "field-fancy-qrrenderstyle-fancy"
+      "summary": "Decorative style with gradients and eye frames."
     }
-  ]
+  ],
+  "events": []
 }

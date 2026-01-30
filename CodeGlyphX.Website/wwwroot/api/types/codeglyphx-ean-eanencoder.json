@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "EanEncoder",
   "fullName": "CodeGlyphX.Ean.EanEncoder",
   "namespace": "CodeGlyphX.Ean",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-ean-eanencoder",
   "summary": "Encodes EAN-8 and EAN-13 barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes an EAN barcode (EAN-8 or EAN-13, depending on input length). Use \u0022\u002BNN\u0022 or \u0022\u002BNNNNN\u0022 to append add-ons.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static Barcode1D Encode(string content)",
-      "xmlId": "M:CodeGlyphX.Ean.EanEncoder.Encode(System.String)",
-      "anchor": "method-encode-static-barcode1d-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

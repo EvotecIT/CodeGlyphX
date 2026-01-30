@@ -1,0 +1,70 @@
+﻿{
+  "name": "QrPngCanvasSplashOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngcanvassplashoptions",
+  "summary": "Paint splash/drip options for the canvas background.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "Color",
+      "summary": "Splash color (alpha recommended)."
+    },
+    {
+      "name": "Colors",
+      "summary": "Optional multi-color splash palette. When set, a random entry is used per splash."
+    },
+    {
+      "name": "Count",
+      "summary": "Number of splash blobs to draw."
+    },
+    {
+      "name": "MinRadiusPx",
+      "summary": "Minimum splash radius in pixels."
+    },
+    {
+      "name": "MaxRadiusPx",
+      "summary": "Maximum splash radius in pixels."
+    },
+    {
+      "name": "SpreadPx",
+      "summary": "How far splashes can extend beyond the QR bounds."
+    },
+    {
+      "name": "Placement",
+      "summary": "Where splashes are placed. Defaults to CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement.AroundQr."
+    },
+    {
+      "name": "EdgeBandPx",
+      "summary": "Optional edge band width (in pixels) when CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.Placement is CodeGlyphX.Rendering.Png.QrPngCanvasSplashPlacement.CanvasEdges. When 0, a sensible band is derived from splash size and spread."
+    },
+    {
+      "name": "Seed",
+      "summary": "Random seed used to place splashes. Use 0 to auto-randomize per render."
+    },
+    {
+      "name": "DripChance",
+      "summary": "Chance (0..1) that a splash will include a downward drip."
+    },
+    {
+      "name": "DripLengthPx",
+      "summary": "Maximum drip length in pixels."
+    },
+    {
+      "name": "DripWidthPx",
+      "summary": "Drip width in pixels."
+    },
+    {
+      "name": "ProtectQrArea",
+      "summary": "When true, never draws inside the QR area."
+    },
+    {
+      "name": "QrAreaAlphaMax",
+      "summary": "Maximum alpha allowed inside the QR area when CodeGlyphX.Rendering.Png.QrPngCanvasSplashOptions.ProtectQrArea is false. Set to 0 to apply no alpha limit."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

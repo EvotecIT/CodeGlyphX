@@ -1,15 +1,12 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CodeGlyph - CodeGlyphX API Reference</title>
-  <meta name="description" content="Unified decode helpers (QR + 1D + 2D barcodes)." />
-  <link rel="stylesheet" href="../style.css" />
-  <script>(function(){const theme=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=theme;})();</script>
+  <title>CodeGlyphX.CodeGlyph - CodeGlyphX API Reference</title>
+  <link rel="stylesheet" href="/css/api-docs.css" />
 </head>
 <body>
-  <div class="page">
 <header class="header">
     <div class="header-content">
         <a href="/" class="brand">
@@ -31,882 +28,882 @@
             <div class="nav-links">
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
+                <a href="/pricing/">Pricing</a>
             </div>
             <div class="nav-actions">
-                <button class="theme-toggle" title="Toggle theme" aria-label="Toggle theme">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+                <button type="button" class="nav-icon theme-cycle-btn" title="Auto mode (click to switch to light)" aria-label="Auto mode (click to switch to light)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                        <rect x="2" y="3" width="20" height="14" rx="2"/>
+                        <path d="M8 21h8M12 17v4"/>
                     </svg>
                 </button>
+                <a href="https://evo.yt/discord" target="_blank" rel="noopener" class="nav-icon" title="Discord" aria-label="Discord">
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                </a>
                 <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="nav-icon" title="GitHub" aria-label="GitHub">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                 </a>
                 <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="nav-cta">
-                    <svg viewBox="0 0 24 24" fill="currentColor" class="nav-cta-icon">
-                        <path d="M12 0L1.75 6v12L12 24l10.25-6V6zm-1.775 18a3.11 3.11 0 01-3.111-3.111 3.11 3.11 0 013.111-3.111 3.11 3.11 0 013.111 3.111A3.11 3.11 0 0110.225 18zm4.91-6.944a1.867 1.867 0 01-1.867-1.867 1.867 1.867 0 011.866-1.866 1.867 1.867 0 011.867 1.866 1.867 1.867 0 01-1.867 1.867z"/>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="nav-cta-icon" aria-hidden="true" focusable="false">
+                        <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                     </svg>
-                    Get Started
+                    Install
                 </a>
             </div>
         </nav>
     </div>
 </header>
+  <main class="pf-api">
+    <a href="../index.html">← API Index</a>
+    <h1>CodeGlyphX.CodeGlyph</h1>
+    <p>Unified decode helpers (QR + 1D + 2D barcodes).</p>
 
-<main class="type-detail">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <a href="../index.html">API Reference</a>
-    <span class="sep">/</span><span>CodeGlyphX</span>
-  </nav>
-  <header class="type-header">
-    <h1>CodeGlyph</h1>
-    <div class="type-meta">Class · CodeGlyphX</div>
-  </header>
-  <p class="type-summary">Unified decode helpers (QR + 1D + 2D barcodes).</p>
-  <section class="member-section">
-    <h2>Methods</h2>
-    <div class="member" id="method-trydecodepngasync-static-task-codeglyphdecoded-trydecodepngasync-stream-stream-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded&gt; TryDecodePngAsync(Stream stream, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from PNG bytes asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodepngfileasync-static-task-codeglyphdecoded-trydecodepngfileasync-string-path-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded&gt; TryDecodePngFileAsync(string path, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from a PNG file asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallpngasync-static-task-codeglyphdecoded-trydecodeallpngasync-stream-stream-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded[]&gt; TryDecodeAllPngAsync(Stream stream, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from PNG bytes asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallpngfileasync-static-task-codeglyphdecoded-trydecodeallpngfileasync-string-path-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded[]&gt; TryDecodeAllPngFileAsync(string path, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG file asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeimageasync-static-task-codeglyphdecoded-trydecodeimageasync-stream-stream-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded&gt; TryDecodeImageAsync(Stream stream, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from an image stream asynchronously (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeimagefileasync-static-task-codeglyphdecoded-trydecodeimagefileasync-string-path-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded&gt; TryDecodeImageFileAsync(string path, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from an image file asynchronously (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallimageasync-static-task-codeglyphdecoded-trydecodeallimageasync-stream-stream-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded[]&gt; TryDecodeAllImageAsync(Stream stream, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from an image stream asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallimagefileasync-static-task-codeglyphdecoded-trydecodeallimagefileasync-string-path-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded[]&gt; TryDecodeAllImageFileAsync(string path, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from an image file asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeimageasync-static-task-codeglyphdecoded-trydecodeimageasync-stream-stream-codeglyphdecodeoptions-options">
-      <code class="signature">static Task&lt;CodeGlyphDecoded&gt; TryDecodeImageAsync(Stream stream, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from an image stream using a single options object asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallimageasync-static-task-codeglyphdecoded-trydecodeallimageasync-stream-stream-codeglyphdecodeoptions-options">
-      <code class="signature">static Task&lt;CodeGlyphDecoded[]&gt; TryDecodeAllImageAsync(Stream stream, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from an image stream using a single options object asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodeimageasync-static-task-codeglyphdecoded-decodeimageasync-stream-stream-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded&gt; DecodeImageAsync(Stream stream, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Decodes a QR or barcode from an image stream asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodepngasync-static-task-codeglyphdecoded-decodepngasync-stream-stream-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static Task&lt;CodeGlyphDecoded&gt; DecodePngAsync(Stream stream, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Decodes a QR or barcode from a PNG stream asynchronously.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeauto-static-bool-trydecodeauto-byte-image-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAuto(byte[] image, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from auto-detected image bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallauto-static-bool-trydecodeallauto-byte-image-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAllAuto(byte[] image, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from auto-detected image bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeauto-static-bool-trydecodeauto-stream-stream-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAuto(Stream stream, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from an auto-detected image stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallauto-static-bool-trydecodeallauto-stream-stream-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAllAuto(Stream stream, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from an auto-detected image stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeautofile-static-bool-trydecodeautofile-string-path-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAutoFile(string path, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from an auto-detected image file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallautofile-static-bool-trydecodeallautofile-string-path-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAllAutoFile(string path, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from an auto-detected image file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodeauto-static-codeglyphdecoded-decodeauto-byte-image-codeglyphdecodeoptions-options">
-      <code class="signature">static CodeGlyphDecoded DecodeAuto(byte[] image, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Decodes a QR or barcode from auto-detected image bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodeallauto-static-codeglyphdecoded-decodeallauto-byte-image-codeglyphdecodeoptions-options">
-      <code class="signature">static CodeGlyphDecoded[] DecodeAllAuto(byte[] image, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Decodes all QR codes and (optionally) a 1D barcode from auto-detected image bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from raw pixels.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">byte[]</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from raw pixels, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">byte[]</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">byte[]</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">byte[]</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from raw pixels.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from raw pixels, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeAll(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeAll(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodePng(byte[] png, out CodeGlyphDecoded decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or 1D barcode from PNG bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>png <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallpng-static-bool-trydecodeallpng-byte-png-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeAllPng(byte[] png, out CodeGlyphDecoded[] decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from PNG bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>png <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeAllImage(byte[] image, out CodeGlyphDecoded[] decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeImage(Stream stream, out CodeGlyphDecoded decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeAllImage(Stream stream, out CodeGlyphDecoded[] decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodePngFile(string path, out CodeGlyphDecoded decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or 1D barcode from a PNG file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallpngfile-static-bool-trydecodeallpngfile-string-path-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeAllPngFile(string path, out CodeGlyphDecoded[] decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-stream-stream-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodePng(Stream stream, out CodeGlyphDecoded decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode a QR or 1D barcode from a PNG stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallpng-static-bool-trydecodeallpng-stream-stream-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-includebarcode-bool-preferbarcode-qrpixeldecodeoptions-qroptions-cancellationtoken-cancellationtoken-barcodedecodeoptions-barcodeoptions">
-      <code class="signature">static bool TryDecodeAllPng(Stream stream, out CodeGlyphDecoded[] decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool includeBarcode, bool preferBarcode, QrPixelDecodeOptions qrOptions, CancellationToken cancellationToken, BarcodeDecodeOptions barcodeOptions)</code>
-      <p class="member-summary">Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>includeBarcode <span class="param-type">bool</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-        <dt>qrOptions <span class="param-type">QrPixelDecodeOptions</span></dt>
-        <dt>cancellationToken <span class="param-type">CancellationToken</span></dt>
-        <dt>barcodeOptions <span class="param-type">BarcodeDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodepng-static-codeglyphdecoded-decodepng-byte-png-nullable-barcodetype-expectedbarcode-bool-preferbarcode">
-      <code class="signature">static CodeGlyphDecoded DecodePng(byte[] png, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode)</code>
-      <p class="member-summary">Decodes a QR or 1D barcode from PNG bytes.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>png <span class="param-type">byte[]</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodepngfile-static-codeglyphdecoded-decodepngfile-string-path-nullable-barcodetype-expectedbarcode-bool-preferbarcode">
-      <code class="signature">static CodeGlyphDecoded DecodePngFile(string path, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode)</code>
-      <p class="member-summary">Decodes a QR or 1D barcode from a PNG file.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodepng-static-codeglyphdecoded-decodepng-stream-stream-nullable-barcodetype-expectedbarcode-bool-preferbarcode">
-      <code class="signature">static CodeGlyphDecoded DecodePng(Stream stream, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode)</code>
-      <p class="member-summary">Decodes a QR or 1D barcode from a PNG stream.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from raw pixels using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">byte[]</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecode-static-bool-trydecode-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from raw pixels using a single options object, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">byte[]</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from raw pixels using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">byte[]</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeall-static-bool-trydecodeall-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from raw pixels using a single options object, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">byte[]</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from raw pixels using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAll(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from raw pixels using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeall-static-bool-trydecodeall-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAll(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from raw pixels using a single options object, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecode-static-bool-trydecode-readonlyspan-byte-pixels-int-width-int-height-int-stride-pixelformat-format-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecode(ReadOnlySpan&lt;byte&gt; pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from raw pixels using a single options object, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>pixels <span class="param-type">ReadOnlySpan&lt;byte&gt;</span></dt>
-        <dt>width <span class="param-type">int</span></dt>
-        <dt>height <span class="param-type">int</span></dt>
-        <dt>stride <span class="param-type">int</span></dt>
-        <dt>format <span class="param-type">PixelFormat</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodePng(byte[] png, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from PNG bytes using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>png <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-byte-png-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodePng(byte[] png, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from PNG bytes using a single options object, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>png <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from common image formats using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-byte-image-out-codeglyphdecoded-decoded-out-codeglyphdecodediagnostics-diagnostics-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from common image formats using a single options object, with diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>diagnostics <span class="param-type">CodeGlyphDecodeDiagnostics</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodeimageresult-static-decoderesult-codeglyphdecoded-decodeimageresult-byte-image-codeglyphdecodeoptions-options">
-      <code class="signature">static DecodeResult&lt;CodeGlyphDecoded&gt; DecodeImageResult(byte[] image, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Decodes a QR or barcode from common image formats using a single options object and returns diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodeimageresult-static-decoderesult-codeglyphdecoded-decodeimageresult-stream-stream-codeglyphdecodeoptions-options">
-      <code class="signature">static DecodeResult&lt;CodeGlyphDecoded&gt; DecodeImageResult(Stream stream, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Decodes a QR or barcode from an image stream using a single options object and returns diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-decodeimagebatch-static-decodebatchresult-codeglyphdecoded-decodeimagebatch-ienumerable-byte-images-codeglyphdecodeoptions-options">
-      <code class="signature">static DecodeBatchResult&lt;CodeGlyphDecoded&gt; DecodeImageBatch(IEnumerable&lt;byte[]&gt; images, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Decodes a batch of QR/barcode images using a single options object and returns aggregated diagnostics.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>images <span class="param-type">IEnumerable&lt;byte[]&gt;</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallpng-static-bool-trydecodeallpng-byte-png-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAllPng(byte[] png, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from PNG bytes using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>png <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-byte-image-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAllImage(byte[] image, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from common image formats using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>image <span class="param-type">byte[]</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeimage-static-bool-trydecodeimage-stream-stream-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeImage(Stream stream, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from an image stream using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallimage-static-bool-trydecodeallimage-stream-stream-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAllImage(Stream stream, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from an image stream using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodepngfile-static-bool-trydecodepngfile-string-path-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodePngFile(string path, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from a PNG file using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallpngfile-static-bool-trydecodeallpngfile-string-path-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAllPngFile(string path, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from a PNG file using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>path <span class="param-type">string</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodepng-static-bool-trydecodepng-stream-stream-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodePng(Stream stream, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from a PNG stream using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecodeallpng-static-bool-trydecodeallpng-stream-stream-out-codeglyphdecoded-decoded-codeglyphdecodeoptions-options">
-      <code class="signature">static bool TryDecodeAllPng(Stream stream, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions options)</code>
-      <p class="member-summary">Attempts to decode all symbols from a PNG stream using a single options object.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>stream <span class="param-type">Stream</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded[]</span></dt>
-        <dt>options <span class="param-type">CodeGlyphDecodeOptions</span></dt>
-      </dl>
-    </div>
-    <div class="member" id="method-trydecode-static-bool-trydecode-bitmatrix-modules-out-codeglyphdecoded-decoded-nullable-barcodetype-expectedbarcode-bool-preferbarcode">
-      <code class="signature">static bool TryDecode(BitMatrix modules, out CodeGlyphDecoded decoded, Nullable&lt;BarcodeType&gt; expectedBarcode, bool preferBarcode)</code>
-      <p class="member-summary">Attempts to decode a QR or barcode from a module matrix.</p>
-      <h4>Parameters</h4>
-      <dl class="param-list">
-        <dt>modules <span class="param-type">BitMatrix</span></dt>
-        <dt>decoded <span class="param-type">CodeGlyphDecoded</span></dt>
-        <dt>expectedBarcode <span class="param-type">Nullable&lt;BarcodeType&gt;</span></dt>
-        <dt>preferBarcode <span class="param-type">bool</span></dt>
-      </dl>
-    </div>
-  </section>
-</main>
+    <section class="pf-api-section">
+      <h2>Methods</h2>
+      <ul>
+        <li>
+          <strong>TryDecodePngAsync</strong> - Attempts to decode a QR or barcode from PNG bytes asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodePngFileAsync</strong> - Attempts to decode a QR or barcode from a PNG file asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllPngAsync</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from PNG bytes asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllPngFileAsync</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG file asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeImageAsync</strong> - Attempts to decode a QR or barcode from an image stream asynchronously (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeImageFileAsync</strong> - Attempts to decode a QR or barcode from an image file asynchronously (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllImageAsync</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from an image stream asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllImageFileAsync</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from an image file asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeImageAsync</strong> - Attempts to decode a QR or barcode from an image stream using a single options object asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllImageAsync</strong> - Attempts to decode all symbols from an image stream using a single options object asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodeImageAsync</strong> - Decodes a QR or barcode from an image stream asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodePngAsync</strong> - Decodes a QR or barcode from a PNG stream asynchronously.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAuto</strong> - Attempts to decode a QR or barcode from auto-detected image bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllAuto</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from auto-detected image bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAuto</strong> - Attempts to decode a QR or barcode from an auto-detected image stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllAuto</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from an auto-detected image stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAutoFile</strong> - Attempts to decode a QR or barcode from an auto-detected image file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllAutoFile</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from an auto-detected image file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodeAuto</strong> - Decodes a QR or barcode from auto-detected image bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodeAllAuto</strong> - Decodes all QR codes and (optionally) a 1D barcode from auto-detected image bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecode</strong> - Attempts to decode a QR or barcode from raw pixels.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecode</strong> - Attempts to decode a QR or barcode from raw pixels, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAll</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAll</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecode</strong> - Attempts to decode a QR or barcode from raw pixels.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecode</strong> - Attempts to decode a QR or barcode from raw pixels, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAll</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAll</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodePng</strong> - Attempts to decode a QR or 1D barcode from PNG bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeImage</strong> - Attempts to decode a QR or barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from PNG bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeImage</strong> - Attempts to decode a QR or barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllImage</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodePngFile</strong> - Attempts to decode a QR or 1D barcode from a PNG file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllPngFile</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodePng</strong> - Attempts to decode a QR or 1D barcode from a PNG stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllPng</strong> - Attempts to decode all QR codes and (optionally) a 1D barcode from a PNG stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>includeBarcode</code> (System.Boolean)</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+              <li><code>qrOptions</code> (CodeGlyphX.QrPixelDecodeOptions)</li>
+              <li><code>cancellationToken</code> (System.Threading.CancellationToken)</li>
+              <li><code>barcodeOptions</code> (CodeGlyphX.BarcodeDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodePng</strong> - Decodes a QR or 1D barcode from PNG bytes.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodePngFile</strong> - Decodes a QR or 1D barcode from a PNG file.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodePng</strong> - Decodes a QR or 1D barcode from a PNG stream.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecode</strong> - Attempts to decode a QR or barcode from raw pixels using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecode</strong> - Attempts to decode a QR or barcode from raw pixels using a single options object, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAll</strong> - Attempts to decode all symbols from raw pixels using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAll</strong> - Attempts to decode all symbols from raw pixels using a single options object, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.Byte[])</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecode</strong> - Attempts to decode a QR or barcode from raw pixels using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAll</strong> - Attempts to decode all symbols from raw pixels using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAll</strong> - Attempts to decode all symbols from raw pixels using a single options object, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecode</strong> - Attempts to decode a QR or barcode from raw pixels using a single options object, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>pixels</code> (System.ReadOnlySpan{System.Byte})</li>
+              <li><code>width</code> (System.Int32)</li>
+              <li><code>height</code> (System.Int32)</li>
+              <li><code>stride</code> (System.Int32)</li>
+              <li><code>format</code> (CodeGlyphX.PixelFormat)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodePng</strong> - Attempts to decode a QR or barcode from PNG bytes using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodePng</strong> - Attempts to decode a QR or barcode from PNG bytes using a single options object, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeImage</strong> - Attempts to decode a QR or barcode from common image formats using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeImage</strong> - Attempts to decode a QR or barcode from common image formats using a single options object, with diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>diagnostics</code> (CodeGlyphX.CodeGlyphDecodeDiagnostics@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodeImageResult</strong> - Decodes a QR or barcode from common image formats using a single options object and returns diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodeImageResult</strong> - Decodes a QR or barcode from an image stream using a single options object and returns diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>DecodeImageBatch</strong> - Decodes a batch of QR/barcode images using a single options object and returns aggregated diagnostics.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>images</code> (System.Collections.Generic.IEnumerable{System.Byte[]})</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllPng</strong> - Attempts to decode all symbols from PNG bytes using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>png</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllImage</strong> - Attempts to decode all symbols from common image formats using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>image</code> (System.Byte[])</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeImage</strong> - Attempts to decode a QR or barcode from an image stream using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllImage</strong> - Attempts to decode all symbols from an image stream using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodePngFile</strong> - Attempts to decode a QR or barcode from a PNG file using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllPngFile</strong> - Attempts to decode all symbols from a PNG file using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>path</code> (System.String)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodePng</strong> - Attempts to decode a QR or barcode from a PNG stream using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecodeAllPng</strong> - Attempts to decode all symbols from a PNG stream using a single options object.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>stream</code> (System.IO.Stream)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded[]@)</li>
+              <li><code>options</code> (CodeGlyphX.CodeGlyphDecodeOptions)</li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <strong>TryDecode</strong> - Attempts to decode a QR or barcode from a module matrix.
+          <div class="pf-api-params">
+            <ul>
+              <li><code>modules</code> (CodeGlyphX.BitMatrix)</li>
+              <li><code>decoded</code> (CodeGlyphX.CodeGlyphDecoded@)</li>
+              <li><code>expectedBarcode</code> (System.Nullable{CodeGlyphX.BarcodeType})</li>
+              <li><code>preferBarcode</code> (System.Boolean)</li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
 <footer class="footer">
     <div class="footer-content">
         <div class="footer-brand">
@@ -921,20 +918,21 @@
                 <h3>Product</h3>
                 <a href="/">Home</a>
                 <a href="/playground/">Playground</a>
-                <a href="/docs/">Documentation</a>
+                <a href="/docs/">Docs</a>
+                <a href="/benchmarks/">Benchmarks</a>
                 <a href="/showcase/">Showcase</a>
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
                 <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener">Report Issue</a>
+                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
+                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener">Blog</a>
+                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
+                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
             </div>
         </div>
         <div class="footer-bottom">
@@ -951,7 +949,5 @@
     </div>
 </footer>
 <script src="/js/site.js"></script>
-
-  </div>
 </body>
 </html>

@@ -36,7 +36,9 @@ if ($IsLinux -or $IsMacOS) {
 
 $repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 if (-not $PowerForgeCliProject) {
-    $PowerForgeCliProject = [IO.Path]::Combine($repoRoot, "..", "PSPublishModule", "PowerForge.Cli", "PowerForge.Cli.csproj")
+    $webCli = [IO.Path]::Combine($repoRoot, "..", "PSPublishModule", "PowerForge.Web.Cli", "PowerForge.Web.Cli.csproj")
+    $legacyCli = [IO.Path]::Combine($repoRoot, "..", "PSPublishModule", "PowerForge.Cli", "PowerForge.Cli.csproj")
+    $PowerForgeCliProject = if (Test-Path $webCli) { $webCli } else { $legacyCli }
 }
 
 $codeGlyphProject = [IO.Path]::Combine($repoRoot, "CodeGlyphX", "CodeGlyphX.csproj")
@@ -44,19 +46,25 @@ $websiteProjectPath = Join-Path $repoRoot $WebsiteProject
 $assemblyPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX", "bin", $Configuration, $Framework, "CodeGlyphX.dll")
 $xmlPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX", "bin", $Configuration, $Framework, "CodeGlyphX.xml")
 $apiOutput = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api")
-$apiCss = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "css", "api-docs.css")
+$apiCssPath = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "css", "api-docs.css")
+$apiCssUrl = "/css/api-docs.css"
 $apiHeader = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api-fragments", "header.html")
 $apiFooter = [IO.Path]::Combine($repoRoot, "CodeGlyphX.Website", "wwwroot", "api-fragments", "footer.html")
 
 if (-not (Test-Path $codeGlyphProject)) { throw "Missing CodeGlyphX.csproj at $codeGlyphProject" }
 if (-not (Test-Path $websiteProjectPath)) { throw "Missing website project at $websiteProjectPath" }
 if (-not (Test-Path $PowerForgeCliProject -PathType Leaf)) { throw "Missing PowerForge.Cli project at $PowerForgeCliProject" }
-if (-not (Test-Path $apiCss)) { throw "Missing API docs CSS at $apiCss" }
+if (-not (Test-Path $apiCssPath)) { throw "Missing API docs CSS at $apiCssPath" }
 if (-not (Test-Path $apiHeader)) { throw "Missing API docs header at $apiHeader" }
 if (-not (Test-Path $apiFooter)) { throw "Missing API docs footer at $apiFooter" }
 
 $navScript = Join-Path $PSScriptRoot "Update-NavFragments.ps1"
 Invoke-Step "Updating navigation fragments..." @("pwsh",$navScript)
+
+$verifyDataScript = Join-Path $PSScriptRoot "Verify-ApiDataSources.ps1"
+if (Test-Path $verifyDataScript) {
+    Invoke-Step "Verifying API data sources..." @("pwsh",$verifyDataScript)
+}
 
 Invoke-Step "Building CodeGlyphX..." @("dotnet","build",$codeGlyphProject,"-c",$Configuration,"-f",$Framework)
 
@@ -74,10 +82,25 @@ if (-not $SkipApiDocs) {
         "--format","hybrid",
         "--title",$SiteTitle,
         "--base-url",$BaseUrl,
-        "--css",$apiCss,
+        "--css",$apiCssUrl,
         "--header-html",$apiHeader,
-        "--footer-html",$apiFooter
+        "--footer-html",$apiFooter,
+        "--include-namespace","CodeGlyphX"
     )
+}
+
+# Ensure app JSON data lives alongside API docs for SPA fetches.
+$apiDataSource = [IO.Path]::Combine($repoRoot, "Assets", "Data")
+if (Test-Path $apiDataSource) {
+    if (-not (Test-Path $apiOutput)) {
+        New-Item -ItemType Directory -Path $apiOutput -Force | Out-Null
+    }
+    foreach ($file in @("faq.json", "showcase.json")) {
+        $sourcePath = Join-Path $apiDataSource $file
+        if (Test-Path $sourcePath) {
+            Copy-Item -Path $sourcePath -Destination (Join-Path $apiOutput $file) -Force
+        }
+    }
 }
 
 if (-not $SkipLlms) {

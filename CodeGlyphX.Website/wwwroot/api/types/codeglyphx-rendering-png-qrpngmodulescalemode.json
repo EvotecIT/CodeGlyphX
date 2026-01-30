@@ -1,0 +1,30 @@
+﻿{
+  "name": "QrPngModuleScaleMode",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngModuleScaleMode",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngmodulescalemode",
+  "summary": "Module scale map modes.",
+  "remarks": null,
+  "methods": [],
+  "properties": [],
+  "fields": [
+    {
+      "name": "Rings",
+      "summary": "Concentric bands from the center."
+    },
+    {
+      "name": "Radial",
+      "summary": "Smooth radial gradient from the center."
+    },
+    {
+      "name": "Random",
+      "summary": "Pseudo-random per-module scale."
+    },
+    {
+      "name": "Checker",
+      "summary": "Alternating pattern (checkerboard)."
+    }
+  ],
+  "events": []
+}

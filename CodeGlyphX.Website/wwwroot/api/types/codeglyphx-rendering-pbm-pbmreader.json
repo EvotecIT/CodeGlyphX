@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "PbmReader",
   "fullName": "CodeGlyphX.Rendering.Pbm.PbmReader",
   "namespace": "CodeGlyphX.Rendering.Pbm",
@@ -6,38 +6,31 @@
   "slug": "codeglyphx-rendering-pbm-pbmreader",
   "summary": "Decodes PBM (P4/P1) images to RGBA buffers.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "DecodeRgba32",
-      "kind": "Method",
       "summary": "Decodes a PBM image to an RGBA buffer.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "pbm",
-          "type": "ReadOnlySpan\u003Cbyte\u003E",
-          "description": null
+          "type": "System.ReadOnlySpan{System.Byte}",
+          "summary": null
         },
         {
           "name": "width",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         },
         {
           "name": "height",
-          "type": "int",
-          "description": null
+          "type": "System.Int32@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static byte[] DecodeRgba32(ReadOnlySpan\u003Cbyte\u003E pbm, out int width, out int height)",
-      "xmlId": "M:CodeGlyphX.Rendering.Pbm.PbmReader.DecodeRgba32(System.ReadOnlySpan{System.Byte},System.Int32@,System.Int32@)",
-      "anchor": "method-decodergba32-static-byte-decodergba32-readonlyspan-byte-pbm-out-int-width-out-int-height"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "PlanetEncoder",
   "fullName": "CodeGlyphX.Postal.PlanetEncoder",
   "namespace": "CodeGlyphX.Postal",
@@ -6,28 +6,21 @@
   "slug": "codeglyphx-postal-planetencoder",
   "summary": "Encodes PLANET barcodes.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "Encode",
-      "kind": "Method",
       "summary": "Encodes a PLANET barcode into a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "content",
-          "type": "string",
-          "description": null
+          "type": "System.String",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static BitMatrix Encode(string content)",
-      "xmlId": "M:CodeGlyphX.Postal.PlanetEncoder.Encode(System.String)",
-      "anchor": "method-encode-static-bitmatrix-encode-string-content"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }

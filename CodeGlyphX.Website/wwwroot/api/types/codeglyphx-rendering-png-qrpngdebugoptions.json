@@ -1,0 +1,50 @@
+﻿{
+  "name": "QrPngDebugOptions",
+  "fullName": "CodeGlyphX.Rendering.Png.QrPngDebugOptions",
+  "namespace": "CodeGlyphX.Rendering.Png",
+  "kind": "Class",
+  "slug": "codeglyphx-rendering-png-qrpngdebugoptions",
+  "summary": "Debug overlay options for QR PNG rendering.",
+  "remarks": null,
+  "methods": [],
+  "properties": [
+    {
+      "name": "ShowQuietZone",
+      "summary": "Draws the quiet zone boundary."
+    },
+    {
+      "name": "ShowQrBounds",
+      "summary": "Draws the QR module area boundary."
+    },
+    {
+      "name": "ShowEyeBounds",
+      "summary": "Draws finder (eye) bounds."
+    },
+    {
+      "name": "ShowLogoBounds",
+      "summary": "Draws logo bounds (including background padding when enabled)."
+    },
+    {
+      "name": "StrokePx",
+      "summary": "Stroke thickness in pixels."
+    },
+    {
+      "name": "QuietZoneColor",
+      "summary": "Color used for quiet zone bounds."
+    },
+    {
+      "name": "QrBoundsColor",
+      "summary": "Color used for QR bounds."
+    },
+    {
+      "name": "EyeBoundsColor",
+      "summary": "Color used for eye bounds."
+    },
+    {
+      "name": "LogoBoundsColor",
+      "summary": "Color used for logo bounds."
+    }
+  ],
+  "fields": [],
+  "events": []
+}

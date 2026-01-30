@@ -1,139 +1,46 @@
-{
+﻿{
   "name": "QrGirocodeEncoding",
   "fullName": "CodeGlyphX.Payloads.QrGirocodeEncoding",
   "namespace": "CodeGlyphX.Payloads",
-  "kind": "Enum",
+  "kind": "Class",
   "slug": "codeglyphx-payloads-qrgirocodeencoding",
   "summary": "Girocode payload encodings.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
-    {
-      "name": "value__",
-      "kind": "Field",
-      "summary": null,
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "int value__",
-      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeEncoding.value__",
-      "anchor": "field-value-int-value"
-    },
+  "methods": [],
+  "properties": [],
+  "fields": [
     {
       "name": "Utf8",
-      "kind": "Field",
-      "summary": "UTF-8.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrGirocodeEncoding Utf8",
-      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeEncoding.Utf8",
-      "anchor": "field-utf8-qrgirocodeencoding-utf8"
+      "summary": "UTF-8."
     },
     {
       "name": "Iso8859_1",
-      "kind": "Field",
-      "summary": "ISO-8859-1.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrGirocodeEncoding Iso8859_1",
-      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeEncoding.Iso8859_1",
-      "anchor": "field-iso8859-1-qrgirocodeencoding-iso8859-1"
+      "summary": "ISO-8859-1."
     },
     {
       "name": "Iso8859_2",
-      "kind": "Field",
-      "summary": "ISO-8859-2.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrGirocodeEncoding Iso8859_2",
-      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeEncoding.Iso8859_2",
-      "anchor": "field-iso8859-2-qrgirocodeencoding-iso8859-2"
+      "summary": "ISO-8859-2."
     },
     {
       "name": "Iso8859_4",
-      "kind": "Field",
-      "summary": "ISO-8859-4.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrGirocodeEncoding Iso8859_4",
-      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeEncoding.Iso8859_4",
-      "anchor": "field-iso8859-4-qrgirocodeencoding-iso8859-4"
+      "summary": "ISO-8859-4."
     },
     {
       "name": "Iso8859_5",
-      "kind": "Field",
-      "summary": "ISO-8859-5.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrGirocodeEncoding Iso8859_5",
-      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeEncoding.Iso8859_5",
-      "anchor": "field-iso8859-5-qrgirocodeencoding-iso8859-5"
+      "summary": "ISO-8859-5."
     },
     {
       "name": "Iso8859_7",
-      "kind": "Field",
-      "summary": "ISO-8859-7.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrGirocodeEncoding Iso8859_7",
-      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeEncoding.Iso8859_7",
-      "anchor": "field-iso8859-7-qrgirocodeencoding-iso8859-7"
+      "summary": "ISO-8859-7."
     },
     {
       "name": "Iso8859_10",
-      "kind": "Field",
-      "summary": "ISO-8859-10.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrGirocodeEncoding Iso8859_10",
-      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeEncoding.Iso8859_10",
-      "anchor": "field-iso8859-10-qrgirocodeencoding-iso8859-10"
+      "summary": "ISO-8859-10."
     },
     {
       "name": "Iso8859_15",
-      "kind": "Field",
-      "summary": "ISO-8859-15.",
-      "remarks": null,
-      "returns": null,
-      "parameters": [],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "QrGirocodeEncoding Iso8859_15",
-      "xmlId": "F:CodeGlyphX.Payloads.QrGirocodeEncoding.Iso8859_15",
-      "anchor": "field-iso8859-15-qrgirocodeencoding-iso8859-15"
+      "summary": "ISO-8859-15."
     }
-  ]
+  ],
+  "events": []
 }

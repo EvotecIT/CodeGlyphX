@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "MatrixBarcodeDecoder",
   "fullName": "CodeGlyphX.MatrixBarcodeDecoder",
   "namespace": "CodeGlyphX",
@@ -6,218 +6,155 @@
   "slug": "codeglyphx-matrixbarcodedecoder",
   "summary": "Decodes 2D barcode symbologies from a CodeGlyphX.BitMatrix.",
   "remarks": null,
-  "examples": [],
-  "seeAlso": [],
-  "members": [
+  "methods": [
     {
       "name": "TryDecodeAny",
-      "kind": "Method",
       "summary": "Attempts to decode any supported matrix barcode from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": "true when decoding succeeds.",
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": "Module matrix to decode."
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": "Module matrix to decode."
         },
         {
           "name": "decoded",
-          "type": "BarcodeDecoded",
-          "description": "Decoded barcode payload."
+          "type": "CodeGlyphX.BarcodeDecoded@",
+          "summary": "Decoded barcode payload."
         },
         {
           "name": "expectedType",
-          "type": "Nullable\u003CBarcodeType\u003E",
-          "description": "Optional expected matrix barcode type to decode."
+          "type": "System.Nullable{CodeGlyphX.BarcodeType}",
+          "summary": "Optional expected matrix barcode type to decode."
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeAny(BitMatrix modules, out BarcodeDecoded decoded, Nullable\u003CBarcodeType\u003E expectedType)",
-      "xmlId": "M:CodeGlyphX.MatrixBarcodeDecoder.TryDecodeAny(CodeGlyphX.BitMatrix,CodeGlyphX.BarcodeDecoded@,System.Nullable{CodeGlyphX.BarcodeType})",
-      "anchor": "method-trydecodeany-static-bool-trydecodeany-bitmatrix-modules-out-barcodedecoded-decoded-nullable-barcodetype-expectedtype"
+      ]
     },
     {
       "name": "TryDecode",
-      "kind": "Method",
       "summary": "Attempts to decode a 2D barcode using the specified CodeGlyphX.BarcodeType.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "type",
-          "type": "BarcodeType",
-          "description": null
+          "type": "CodeGlyphX.BarcodeType",
+          "summary": null
         },
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "text",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecode(BarcodeType type, BitMatrix modules, out string text)",
-      "xmlId": "M:CodeGlyphX.MatrixBarcodeDecoder.TryDecode(CodeGlyphX.BarcodeType,CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecode-static-bool-trydecode-barcodetype-type-bitmatrix-modules-out-string-text"
+      ]
     },
     {
       "name": "TryDecodeGs1DataBarOmni",
-      "kind": "Method",
       "summary": "Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "text",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeGs1DataBarOmni(BitMatrix modules, out string text)",
-      "xmlId": "M:CodeGlyphX.MatrixBarcodeDecoder.TryDecodeGs1DataBarOmni(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecodegs1databaromni-static-bool-trydecodegs1databaromni-bitmatrix-modules-out-string-text"
+      ]
     },
     {
       "name": "TryDecodeGs1DataBarStacked",
-      "kind": "Method",
       "summary": "Attempts to decode a GS1 DataBar-14 Stacked symbol from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "text",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeGs1DataBarStacked(BitMatrix modules, out string text)",
-      "xmlId": "M:CodeGlyphX.MatrixBarcodeDecoder.TryDecodeGs1DataBarStacked(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecodegs1databarstacked-static-bool-trydecodegs1databarstacked-bitmatrix-modules-out-string-text"
+      ]
     },
     {
       "name": "TryDecodeGs1DataBarExpandedStacked",
-      "kind": "Method",
       "summary": "Attempts to decode a GS1 DataBar Expanded Stacked symbol from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "text",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeGs1DataBarExpandedStacked(BitMatrix modules, out string text)",
-      "xmlId": "M:CodeGlyphX.MatrixBarcodeDecoder.TryDecodeGs1DataBarExpandedStacked(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecodegs1databarexpandedstacked-static-bool-trydecodegs1databarexpandedstacked-bitmatrix-modules-out-string-text"
+      ]
     },
     {
       "name": "TryDecodeDataMatrix",
-      "kind": "Method",
       "summary": "Attempts to decode a Data Matrix symbol from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "text",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeDataMatrix(BitMatrix modules, out string text)",
-      "xmlId": "M:CodeGlyphX.MatrixBarcodeDecoder.TryDecodeDataMatrix(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecodedatamatrix-static-bool-trydecodedatamatrix-bitmatrix-modules-out-string-text"
+      ]
     },
     {
       "name": "TryDecodePdf417",
-      "kind": "Method",
       "summary": "Attempts to decode a PDF417 symbol from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "text",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodePdf417(BitMatrix modules, out string text)",
-      "xmlId": "M:CodeGlyphX.MatrixBarcodeDecoder.TryDecodePdf417(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecodepdf417-static-bool-trydecodepdf417-bitmatrix-modules-out-string-text"
+      ]
     },
     {
       "name": "TryDecodeMicroPdf417",
-      "kind": "Method",
       "summary": "Attempts to decode a MicroPDF417 symbol from a CodeGlyphX.BitMatrix.",
-      "remarks": null,
       "returns": null,
       "parameters": [
         {
           "name": "modules",
-          "type": "BitMatrix",
-          "description": null
+          "type": "CodeGlyphX.BitMatrix",
+          "summary": null
         },
         {
           "name": "text",
-          "type": "string",
-          "description": null
+          "type": "System.String@",
+          "summary": null
         }
-      ],
-      "exceptions": [],
-      "examples": [],
-      "seeAlso": [],
-      "signature": "static bool TryDecodeMicroPdf417(BitMatrix modules, out string text)",
-      "xmlId": "M:CodeGlyphX.MatrixBarcodeDecoder.TryDecodeMicroPdf417(CodeGlyphX.BitMatrix,System.String@)",
-      "anchor": "method-trydecodemicropdf417-static-bool-trydecodemicropdf417-bitmatrix-modules-out-string-text"
+      ]
     }
-  ]
+  ],
+  "properties": [],
+  "fields": [],
+  "events": []
 }
