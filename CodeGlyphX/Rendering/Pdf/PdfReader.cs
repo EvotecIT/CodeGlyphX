@@ -69,6 +69,9 @@ public static class PdfReader {
         var offset = 0;
         while (TryFindImage(data, ref offset, out var info, out var stream)) {
             if (TryDecodeWithFilters(info, stream, out rgba, out width, out height)) {
+                if (info.SoftMaskObj > 0) {
+                    TryApplySoftMask(data, info, rgba, width, height);
+                }
                 return true;
             }
         }
@@ -198,6 +201,13 @@ public static class PdfReader {
             colorSpace = csArrayName;
         }
 
+        var softMaskObj = 0;
+        var softMaskGen = 0;
+        if (TryReadIndirectRefAfterKey(dict, "/SMask", out var smObj, out var smGen)) {
+            softMaskObj = smObj;
+            softMaskGen = smGen;
+        }
+
         var predictor = 1;
         if (TryReadNumberAfterKey(dict, "/Predictor", out var predictorValue)) {
             predictor = predictorValue;
@@ -235,11 +245,11 @@ public static class PdfReader {
         }
         if (TryReadIndexedColorSpaceAfterKey(dict, "/ColorSpace", out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, length, decode);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, length, decode);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, length, decode);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, length, decode);
         return true;
     }
 
@@ -265,6 +275,13 @@ public static class PdfReader {
             colorSpace = csName;
         } else if (TryReadFirstNameInArrayAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var csArrayName)) {
             colorSpace = csArrayName;
+        }
+
+        var softMaskObj = 0;
+        var softMaskGen = 0;
+        if (TryReadIndirectRefAfterAnyKey(dict, new[] { "/SMask" }, out var smObj, out var smGen)) {
+            softMaskObj = smObj;
+            softMaskGen = smGen;
         }
 
         var predictor = 1;
@@ -304,11 +321,11 @@ public static class PdfReader {
         }
         if (TryReadIndexedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, streamLength: 0, decode);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, streamLength: 0, decode);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, streamLength: 0, decode);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, streamLength: 0, decode);
         return true;
     }
 
@@ -372,6 +389,22 @@ public static class PdfReader {
         }
 
         return TryDecodeRaster(info, data, applyPredictor: info.Predictor > 1, out rgba, out width, out height);
+    }
+
+    private static void TryApplySoftMask(ReadOnlySpan<byte> data, PdfImageInfo info, byte[] rgba, int width, int height) {
+        if (info.SoftMaskObj <= 0) return;
+        if (!TryResolveIndirectStream(data, info.SoftMaskObj, info.SoftMaskGen, out var dict, out var stream)) return;
+        if (!TryParseImageInfo(data, dict, out var maskInfo)) return;
+        if (!TryDecodeWithFilters(maskInfo, stream, out var maskRgba, out var maskWidth, out var maskHeight)) return;
+        if (maskWidth != width || maskHeight != height) return;
+
+        var pixelCount = width * height;
+        for (var i = 0; i < pixelCount; i++) {
+            var maskAlpha = maskRgba[i * 4];
+            var dst = i * 4 + 3;
+            var baseAlpha = rgba[dst];
+            rgba[dst] = (byte)((baseAlpha * maskAlpha + 127) / 255);
+        }
     }
 
     private static bool TryDecodeRaster(PdfImageInfo info, ReadOnlySpan<byte> data, bool applyPredictor, out byte[] rgba, out int width, out int height) {
@@ -1250,6 +1283,25 @@ public static class PdfReader {
         return false;
     }
 
+    private static bool TryReadIndirectRefAfterKey(ReadOnlySpan<byte> data, string key, out int obj, out int gen) {
+        obj = 0;
+        gen = 0;
+        var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
+        if (idx < 0) return false;
+        var i = idx + key.Length;
+        SkipWhitespace(data, ref i);
+        return TryReadIndirectReference(data, ref i, out obj, out gen);
+    }
+
+    private static bool TryReadIndirectRefAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out int obj, out int gen) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadIndirectRefAfterKey(data, keys[i], out obj, out gen)) return true;
+        }
+        obj = 0;
+        gen = 0;
+        return false;
+    }
+
     private static bool TryReadIndirectReference(ReadOnlySpan<byte> data, ref int index, out int obj, out int gen) {
         obj = 0;
         gen = 0;
@@ -1300,6 +1352,34 @@ public static class PdfReader {
                     var dictStart = IndexOfToken(data, (byte)'<', (byte)'<', idx + token.Length);
                     if (dictStart < 0) return false;
                     return TryReadDictionarySliceAt(data, dictStart, out dict, out _);
+                }
+            }
+            start = idx + token.Length;
+        }
+        return false;
+    }
+
+    private static bool TryResolveIndirectStream(ReadOnlySpan<byte> data, int obj, int gen, out ReadOnlySpan<byte> dict, out ReadOnlySpan<byte> stream) {
+        dict = ReadOnlySpan<byte>.Empty;
+        stream = ReadOnlySpan<byte>.Empty;
+        if (obj < 0 || gen < 0) return false;
+        var token = System.Text.Encoding.ASCII.GetBytes("obj");
+        var start = 0;
+        while (start < data.Length) {
+            var idx = data.Slice(start).IndexOf(token);
+            if (idx < 0) break;
+            idx += start;
+            var beforeOk = idx == 0 || IsDelimiter(data[idx - 1]);
+            var afterOk = idx + token.Length >= data.Length || IsDelimiter(data[idx + token.Length]);
+            if (beforeOk && afterOk && TryParseIndirectHeader(data, idx, out var foundObj, out var foundGen)) {
+                if (foundObj == obj && foundGen == gen) {
+                    var dictStart = IndexOfToken(data, (byte)'<', (byte)'<', idx + token.Length);
+                    if (dictStart < 0) return false;
+                    if (!TryReadDictionarySliceAt(data, dictStart, out dict, out var dictEnd)) return false;
+                    var lengthHint = 0;
+                    TryReadNumberAfterKey(dict, "/Length", out lengthHint);
+                    if (!TryReadStream(data, dictEnd, lengthHint, out stream, out _)) return false;
+                    return true;
                 }
             }
             start = idx + token.Length;
@@ -2155,6 +2235,8 @@ public static class PdfReader {
             string[]? filters,
             int predictor,
             int lzwEarlyChange,
+            int softMaskObj,
+            int softMaskGen,
             int streamLength,
             float[]? decode) {
             Width = width;
@@ -2168,6 +2250,8 @@ public static class PdfReader {
             Filters = filters;
             Predictor = predictor;
             LzwEarlyChange = lzwEarlyChange;
+            SoftMaskObj = softMaskObj;
+            SoftMaskGen = softMaskGen;
             StreamLength = streamLength;
             Decode = decode;
         }
@@ -2183,6 +2267,8 @@ public static class PdfReader {
         public string[]? Filters { get; }
         public int Predictor { get; }
         public int LzwEarlyChange { get; }
+        public int SoftMaskObj { get; }
+        public int SoftMaskGen { get; }
         public int StreamLength { get; }
         public float[]? Decode { get; }
     }

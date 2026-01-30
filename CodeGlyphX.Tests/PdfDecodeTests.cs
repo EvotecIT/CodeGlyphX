@@ -132,6 +132,19 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_SoftMask_Applies_Alpha() {
+        var rgb = new byte[] { 0x10, 0x20, 0x30 };
+        var mask = new byte[] { 0x80 };
+        var pdf = BuildPdfWithFlateImageAndSoftMask(1, 1, rgb, mask);
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x10, 0x20, 0x30, 0x80 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Flate_DecodeArray_Inverts_Gray() {
         var gray = new byte[] { 0 };
         var pdf = BuildPdfWithFlateImage(1, 1, gray, "/DeviceGray", bitsPerComponent: 8, "/Filter /FlateDecode /Decode [1 0] ");
@@ -428,6 +441,58 @@ public sealed class PdfDecodeTests {
         Buffer.BlockCopy(footer, 0, output, offset, footer.Length);
         offset += footer.Length;
         Buffer.BlockCopy(obj2, 0, output, offset, obj2.Length);
+        return output;
+    }
+
+    private static byte[] BuildPdfWithFlateImageAndSoftMask(int width, int height, byte[] rgb, byte[] mask) {
+        byte[] rgbCompressed;
+        using (var ms = new MemoryStream()) {
+            using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, leaveOpen: true)) {
+                deflate.Write(rgb, 0, rgb.Length);
+            }
+            rgbCompressed = ms.ToArray();
+        }
+
+        byte[] maskCompressed;
+        using (var ms = new MemoryStream()) {
+            using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, leaveOpen: true)) {
+                deflate.Write(mask, 0, mask.Length);
+            }
+            maskCompressed = ms.ToArray();
+        }
+
+        var sb = new StringBuilder();
+        sb.Append("%PDF-1.4\n");
+        sb.Append("1 0 obj\n");
+        sb.Append("<< /Type /XObject /Subtype /Image ");
+        sb.Append("/Width ").Append(width).Append(' ');
+        sb.Append("/Height ").Append(height).Append(' ');
+        sb.Append("/ColorSpace /DeviceRGB ");
+        sb.Append("/BitsPerComponent 8 ");
+        sb.Append("/Filter /FlateDecode ");
+        sb.Append("/SMask 2 0 R ");
+        sb.Append("/Length ").Append(rgbCompressed.Length).Append(" >>\n");
+        sb.Append("stream\n");
+
+        var header = Encoding.ASCII.GetBytes(sb.ToString());
+        var footer = Encoding.ASCII.GetBytes("\nendstream\nendobj\n");
+        var maskHeader = Encoding.ASCII.GetBytes("2 0 obj\n<< /Type /XObject /Subtype /Image /Width " + width + " /Height " + height +
+            " /ColorSpace /DeviceGray /BitsPerComponent 8 /Filter /FlateDecode /Length " + maskCompressed.Length + " >>\nstream\n");
+        var maskFooter = Encoding.ASCII.GetBytes("\nendstream\nendobj\n%%EOF\n");
+
+        var output = new byte[header.Length + rgbCompressed.Length + footer.Length + maskHeader.Length + maskCompressed.Length + maskFooter.Length];
+        var offset = 0;
+        Buffer.BlockCopy(header, 0, output, offset, header.Length);
+        offset += header.Length;
+        Buffer.BlockCopy(rgbCompressed, 0, output, offset, rgbCompressed.Length);
+        offset += rgbCompressed.Length;
+        Buffer.BlockCopy(footer, 0, output, offset, footer.Length);
+        offset += footer.Length;
+        Buffer.BlockCopy(maskHeader, 0, output, offset, maskHeader.Length);
+        offset += maskHeader.Length;
+        Buffer.BlockCopy(maskCompressed, 0, output, offset, maskCompressed.Length);
+        offset += maskCompressed.Length;
+        Buffer.BlockCopy(maskFooter, 0, output, offset, maskFooter.Length);
         return output;
     }
 
