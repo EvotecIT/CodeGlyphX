@@ -18,6 +18,14 @@ public static class PdfReader {
     private static readonly byte[] InlineImageDataToken = { (byte)'I', (byte)'D' };
     private static readonly byte[] InlineImageEndToken = { (byte)'E', (byte)'I' };
 
+    private enum PdfColorSpaceKind {
+        Unknown = 0,
+        DeviceGray,
+        DeviceRGB,
+        DeviceCMYK,
+        Indexed
+    }
+
     /// <summary>
     /// Returns true when the buffer looks like a PDF file.
     /// </summary>
@@ -203,7 +211,14 @@ public static class PdfReader {
             decode = decodeValues;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpace, filters, predictor, length, decode);
+        var colorSpaceKind = ParseColorSpaceName(colorSpace);
+        if (TryReadIndexedColorSpaceAfterKey(dict, "/ColorSpace", out var indexedBase, out var indexedHigh, out var indexedLookup)) {
+            colorSpaceKind = PdfColorSpaceKind.Indexed;
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, length, decode);
+            return true;
+        }
+
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, length, decode);
         return true;
     }
 
@@ -246,7 +261,14 @@ public static class PdfReader {
             decode = decodeValues;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpace, filters, predictor, streamLength: 0, decode);
+        var colorSpaceKind = ParseColorSpaceName(colorSpace);
+        if (TryReadIndexedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var indexedBase, out var indexedHigh, out var indexedLookup)) {
+            colorSpaceKind = PdfColorSpaceKind.Indexed;
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, streamLength: 0, decode);
+            return true;
+        }
+
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, streamLength: 0, decode);
         return true;
     }
 
@@ -308,40 +330,63 @@ public static class PdfReader {
         height = 0;
 
         if (info.Width <= 0 || info.Height <= 0) return false;
-        if (info.BitsPerComponent != 8) return false;
 
+        var bits = info.BitsPerComponent;
         var colors = info.Colors;
-        if (colors <= 0) {
-            if (string.Equals(info.ColorSpace, "DeviceRGB", StringComparison.OrdinalIgnoreCase)) colors = 3;
-            else if (string.Equals(info.ColorSpace, "DeviceGray", StringComparison.OrdinalIgnoreCase)) colors = 1;
-            else if (string.Equals(info.ColorSpace, "DeviceCMYK", StringComparison.OrdinalIgnoreCase)) colors = 4;
+        if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed) {
+            colors = 1;
+        } else if (colors <= 0) {
+            colors = info.ColorSpaceKind switch {
+                PdfColorSpaceKind.DeviceGray => 1,
+                PdfColorSpaceKind.DeviceRGB => 3,
+                PdfColorSpaceKind.DeviceCMYK => 4,
+                _ => colors
+            };
         }
         if (colors != 0 && colors != 1 && colors != 3 && colors != 4) return false;
 
-        if (colors == 0) {
-            if (!TryInferColorsFromLength(data.Length, info.Width, info.Height, info.Predictor, out colors)) {
-                return false;
-            }
+        if (bits != 8) {
+            if (colors <= 0) return false;
+            if (applyPredictor && info.Predictor > 1) return false;
+            if (!TryValidatePackedLength(info.Width, info.Height, colors, bits, data.Length)) return false;
         } else {
-            var expectedRowSize = checked(info.Width * colors);
-            var expected = info.Predictor >= 10 ? checked((expectedRowSize + 1) * info.Height) : checked(expectedRowSize * info.Height);
-            if (data.Length != expected) {
+            if (colors == 0) {
                 if (!TryInferColorsFromLength(data.Length, info.Width, info.Height, info.Predictor, out colors)) {
                     return false;
+                }
+            } else {
+                var expectedRowSize = checked(info.Width * colors);
+                var expected = info.Predictor >= 10 ? checked((expectedRowSize + 1) * info.Height) : checked(expectedRowSize * info.Height);
+                if (data.Length != expected) {
+                    if (!TryInferColorsFromLength(data.Length, info.Width, info.Height, info.Predictor, out colors)) {
+                        return false;
+                    }
                 }
             }
         }
 
-        var rowSize = checked(info.Width * colors);
         byte[] expanded;
-        if (applyPredictor && info.Predictor == 2) {
-            expanded = data.ToArray();
-            ApplyTiffPredictor(expanded, rowSize, info.Height, colors);
-        } else if (applyPredictor && info.Predictor >= 10) {
-            if (!TryApplyPngPredictor(data.ToArray(), info.Width, info.Height, colors, out var decoded)) return false;
-            expanded = decoded;
+        if (bits == 8) {
+            var rowSize = checked(info.Width * colors);
+            if (applyPredictor && info.Predictor == 2) {
+                expanded = data.ToArray();
+                ApplyTiffPredictor(expanded, rowSize, info.Height, colors);
+            } else if (applyPredictor && info.Predictor >= 10) {
+                if (!TryApplyPngPredictor(data.ToArray(), info.Width, info.Height, colors, out var decoded)) return false;
+                expanded = decoded;
+            } else {
+                expanded = data.ToArray();
+            }
         } else {
-            expanded = data.ToArray();
+            var scale = info.ColorSpaceKind != PdfColorSpaceKind.Indexed;
+            if (!TryExpandSamples(data, info.Width, info.Height, colors, bits, scale, out expanded)) return false;
+        }
+
+        if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed) {
+            if (!TryExpandIndexed(info, expanded, out rgba)) return false;
+            width = info.Width;
+            height = info.Height;
+            return true;
         }
 
         if (info.Decode is not null && info.Decode.Length >= colors * 2) {
@@ -616,6 +661,195 @@ public static class PdfReader {
         return false;
     }
 
+    private static bool TryReadIndexedColorSpaceAfterKey(ReadOnlySpan<byte> data, string key, out PdfColorSpaceKind baseKind, out int highVal, out byte[] lookup) {
+        baseKind = PdfColorSpaceKind.Unknown;
+        highVal = 0;
+        lookup = Array.Empty<byte>();
+        if (!TryReadArraySliceAfterKey(data, key, out var array)) return false;
+        var index = 0;
+        if (!TryReadNameToken(array, ref index, out var first) || !first.Equals("Indexed", StringComparison.OrdinalIgnoreCase)) return false;
+        if (!TryReadNameToken(array, ref index, out var baseName)) return false;
+        baseKind = ParseColorSpaceName(baseName);
+        if (baseKind == PdfColorSpaceKind.Unknown) return false;
+        if (!TryReadIntToken(array, ref index, out highVal)) return false;
+        if (!TryReadLookupToken(array, ref index, out lookup)) return false;
+        return lookup.Length > 0;
+    }
+
+    private static bool TryReadIndexedColorSpaceAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out PdfColorSpaceKind baseKind, out int highVal, out byte[] lookup) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadIndexedColorSpaceAfterKey(data, keys[i], out baseKind, out highVal, out lookup)) return true;
+        }
+        baseKind = PdfColorSpaceKind.Unknown;
+        highVal = 0;
+        lookup = Array.Empty<byte>();
+        return false;
+    }
+
+    private static bool TryReadArraySliceAfterKey(ReadOnlySpan<byte> data, string key, out ReadOnlySpan<byte> array) {
+        array = ReadOnlySpan<byte>.Empty;
+        var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
+        if (idx < 0) return false;
+        var i = idx + key.Length;
+        while (i < data.Length && IsDelimiter(data[i])) i++;
+        if (i >= data.Length || data[i] != (byte)'[') return false;
+        i++;
+        var start = i;
+        var depth = 1;
+        while (i < data.Length) {
+            if (data[i] == (byte)'[') depth++;
+            else if (data[i] == (byte)']') {
+                depth--;
+                if (depth == 0) {
+                    array = data.Slice(start, i - start);
+                    return true;
+                }
+            }
+            i++;
+        }
+        return false;
+    }
+
+    private static bool TryReadNameToken(ReadOnlySpan<byte> data, ref int index, out string name) {
+        name = string.Empty;
+        SkipDelimiters(data, ref index);
+        if (index >= data.Length || data[index] != (byte)'/') return false;
+        index++;
+        var start = index;
+        while (index < data.Length && !IsDelimiter(data[index])) index++;
+        if (index <= start) return false;
+        name = GetAsciiString(data, start, index - start);
+        return true;
+    }
+
+    private static bool TryReadIntToken(ReadOnlySpan<byte> data, ref int index, out int value) {
+        value = 0;
+        SkipDelimiters(data, ref index);
+        var sign = 1;
+        if (index < data.Length && data[index] == (byte)'-') {
+            sign = -1;
+            index++;
+        }
+        var found = false;
+        var result = 0;
+        while (index < data.Length && data[index] >= (byte)'0' && data[index] <= (byte)'9') {
+            found = true;
+            result = result * 10 + (data[index] - (byte)'0');
+            index++;
+        }
+        if (!found) return false;
+        value = result * sign;
+        return true;
+    }
+
+    private static bool TryReadLookupToken(ReadOnlySpan<byte> data, ref int index, out byte[] lookup) {
+        lookup = Array.Empty<byte>();
+        SkipDelimiters(data, ref index);
+        if (index >= data.Length) return false;
+        if (data[index] == (byte)'<') {
+            return TryReadHexString(data, ref index, out lookup);
+        }
+        if (data[index] == (byte)'(') {
+            return TryReadLiteralString(data, ref index, out lookup);
+        }
+        return false;
+    }
+
+    private static void SkipDelimiters(ReadOnlySpan<byte> data, ref int index) {
+        while (index < data.Length && IsDelimiter(data[index])) index++;
+    }
+
+    private static bool TryReadHexString(ReadOnlySpan<byte> data, ref int index, out byte[] bytes) {
+        bytes = Array.Empty<byte>();
+        if (index >= data.Length || data[index] != (byte)'<') return false;
+        index++;
+        var buffer = new System.Collections.Generic.List<byte>();
+        var highNibble = -1;
+        while (index < data.Length) {
+            var b = data[index++];
+            if (b == (byte)'>') {
+                if (highNibble >= 0) {
+                    buffer.Add((byte)(highNibble << 4));
+                }
+                bytes = buffer.ToArray();
+                return true;
+            }
+            if (IsDelimiter(b)) continue;
+            var nibble = HexToNibble(b);
+            if (nibble < 0) return false;
+            if (highNibble < 0) {
+                highNibble = nibble;
+            } else {
+                buffer.Add((byte)((highNibble << 4) | nibble));
+                highNibble = -1;
+            }
+        }
+        return false;
+    }
+
+    private static int HexToNibble(byte b) {
+        if (b >= (byte)'0' && b <= (byte)'9') return b - (byte)'0';
+        if (b >= (byte)'a' && b <= (byte)'f') return b - (byte)'a' + 10;
+        if (b >= (byte)'A' && b <= (byte)'F') return b - (byte)'A' + 10;
+        return -1;
+    }
+
+    private static bool TryReadLiteralString(ReadOnlySpan<byte> data, ref int index, out byte[] bytes) {
+        bytes = Array.Empty<byte>();
+        if (index >= data.Length || data[index] != (byte)'(') return false;
+        index++;
+        var buffer = new System.Collections.Generic.List<byte>();
+        var depth = 1;
+        while (index < data.Length) {
+            var b = data[index++];
+            if (b == (byte)'\\') {
+                if (index >= data.Length) return false;
+                var esc = data[index++];
+                switch (esc) {
+                    case (byte)'n': buffer.Add((byte)'\n'); break;
+                    case (byte)'r': buffer.Add((byte)'\r'); break;
+                    case (byte)'t': buffer.Add((byte)'\t'); break;
+                    case (byte)'b': buffer.Add((byte)'\b'); break;
+                    case (byte)'f': buffer.Add((byte)'\f'); break;
+                    case (byte)'\\': buffer.Add((byte)'\\'); break;
+                    case (byte)'(' : buffer.Add((byte)'('); break;
+                    case (byte)')' : buffer.Add((byte)')'); break;
+                    default:
+                        if (esc >= (byte)'0' && esc <= (byte)'7') {
+                            var octal = esc - (byte)'0';
+                            var count = 1;
+                            while (count < 3 && index < data.Length && data[index] >= (byte)'0' && data[index] <= (byte)'7') {
+                                octal = (octal * 8) + (data[index] - (byte)'0');
+                                index++;
+                                count++;
+                            }
+                            buffer.Add((byte)octal);
+                        } else {
+                            buffer.Add(esc);
+                        }
+                        break;
+                }
+                continue;
+            }
+            if (b == (byte)'(') {
+                depth++;
+                buffer.Add(b);
+                continue;
+            }
+            if (b == (byte)')') {
+                depth--;
+                if (depth == 0) {
+                    bytes = buffer.ToArray();
+                    return true;
+                }
+                buffer.Add(b);
+                continue;
+            }
+            buffer.Add(b);
+        }
+        return false;
+    }
+
     private static bool TryReadFloatToken(ReadOnlySpan<byte> data, ref int index, out float value) {
         value = 0;
         if (index >= data.Length) return false;
@@ -856,6 +1090,108 @@ public static class PdfReader {
         }
     }
 
+    private static PdfColorSpaceKind ParseColorSpaceName(string? name) {
+        if (string.IsNullOrWhiteSpace(name)) return PdfColorSpaceKind.Unknown;
+        if (name.Equals("DeviceGray", StringComparison.OrdinalIgnoreCase) || name.Equals("G", StringComparison.OrdinalIgnoreCase)) {
+            return PdfColorSpaceKind.DeviceGray;
+        }
+        if (name.Equals("DeviceRGB", StringComparison.OrdinalIgnoreCase) || name.Equals("RGB", StringComparison.OrdinalIgnoreCase)) {
+            return PdfColorSpaceKind.DeviceRGB;
+        }
+        if (name.Equals("DeviceCMYK", StringComparison.OrdinalIgnoreCase) || name.Equals("CMYK", StringComparison.OrdinalIgnoreCase)) {
+            return PdfColorSpaceKind.DeviceCMYK;
+        }
+        return PdfColorSpaceKind.Unknown;
+    }
+
+    private static bool TryValidatePackedLength(int width, int height, int colors, int bitsPerComponent, int length) {
+        if (width <= 0 || height <= 0 || colors <= 0) return false;
+        if (bitsPerComponent != 1 && bitsPerComponent != 2 && bitsPerComponent != 4) return false;
+        var rowBits = (long)width * colors * bitsPerComponent;
+        var rowBytes = (int)((rowBits + 7) / 8);
+        var expected = (long)rowBytes * height;
+        return expected == length;
+    }
+
+    private static bool TryExpandSamples(ReadOnlySpan<byte> data, int width, int height, int colors, int bitsPerComponent, bool scale, out byte[] expanded) {
+        expanded = Array.Empty<byte>();
+        if (bitsPerComponent != 1 && bitsPerComponent != 2 && bitsPerComponent != 4) return false;
+        var samplesPerRow = checked(width * colors);
+        var rowBits = (long)samplesPerRow * bitsPerComponent;
+        var rowBytes = (int)((rowBits + 7) / 8);
+        if ((long)rowBytes * height > data.Length) return false;
+
+        expanded = new byte[samplesPerRow * height];
+        var mask = (1 << bitsPerComponent) - 1;
+        for (var y = 0; y < height; y++) {
+            var rowStart = y * samplesPerRow;
+            var baseOffset = y * rowBytes;
+            var bitOffset = 0;
+            for (var s = 0; s < samplesPerRow; s++) {
+                var byteIndex = baseOffset + (bitOffset >> 3);
+                var shift = 8 - bitsPerComponent - (bitOffset & 7);
+                var value = (data[byteIndex] >> shift) & mask;
+                if (scale) {
+                    value = (value * 255) / mask;
+                }
+                expanded[rowStart + s] = (byte)value;
+                bitOffset += bitsPerComponent;
+            }
+        }
+        return true;
+    }
+
+    private static bool TryExpandIndexed(PdfImageInfo info, byte[] indices, out byte[] rgba) {
+        rgba = Array.Empty<byte>();
+        if (info.IndexedLookup is null) return false;
+        if (info.IndexedHighVal < 0) return false;
+        if (info.Width <= 0 || info.Height <= 0) return false;
+        var pixelCount = info.Width * info.Height;
+        if (indices.Length < pixelCount) return false;
+
+        var baseComponents = info.IndexedBase switch {
+            PdfColorSpaceKind.DeviceGray => 1,
+            PdfColorSpaceKind.DeviceRGB => 3,
+            PdfColorSpaceKind.DeviceCMYK => 4,
+            _ => 0
+        };
+        if (baseComponents == 0) return false;
+
+        var entryCount = info.IndexedHighVal + 1;
+        var lookupBytes = entryCount * baseComponents;
+        if (info.IndexedLookup.Length < lookupBytes) return false;
+
+        rgba = new byte[pixelCount * 4];
+        for (var i = 0; i < pixelCount; i++) {
+            var index = indices[i];
+            if (index > info.IndexedHighVal) index = (byte)info.IndexedHighVal;
+            var lookupOffset = index * baseComponents;
+            var dst = i * 4;
+            if (baseComponents == 1) {
+                var v = info.IndexedLookup[lookupOffset];
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = 255;
+            } else if (baseComponents == 3) {
+                rgba[dst + 0] = info.IndexedLookup[lookupOffset + 0];
+                rgba[dst + 1] = info.IndexedLookup[lookupOffset + 1];
+                rgba[dst + 2] = info.IndexedLookup[lookupOffset + 2];
+                rgba[dst + 3] = 255;
+            } else {
+                var c = info.IndexedLookup[lookupOffset + 0];
+                var m = info.IndexedLookup[lookupOffset + 1];
+                var y = info.IndexedLookup[lookupOffset + 2];
+                var k = info.IndexedLookup[lookupOffset + 3];
+                rgba[dst + 0] = (byte)(255 - Math.Min(255, c + k));
+                rgba[dst + 1] = (byte)(255 - Math.Min(255, m + k));
+                rgba[dst + 2] = (byte)(255 - Math.Min(255, y + k));
+                rgba[dst + 3] = 255;
+            }
+        }
+        return true;
+    }
+
     private static bool TryDecodeAscii85(ReadOnlySpan<byte> src, out byte[] decoded) {
         decoded = Array.Empty<byte>();
         using var ms = new MemoryStream();
@@ -939,12 +1275,27 @@ public static class PdfReader {
     }
 
     private readonly struct PdfImageInfo {
-        public PdfImageInfo(int width, int height, int bitsPerComponent, int colors, string? colorSpace, string[]? filters, int predictor, int streamLength, float[]? decode) {
+        public PdfImageInfo(
+            int width,
+            int height,
+            int bitsPerComponent,
+            int colors,
+            PdfColorSpaceKind colorSpaceKind,
+            PdfColorSpaceKind indexedBase,
+            int indexedHighVal,
+            byte[]? indexedLookup,
+            string[]? filters,
+            int predictor,
+            int streamLength,
+            float[]? decode) {
             Width = width;
             Height = height;
             BitsPerComponent = bitsPerComponent;
             Colors = colors;
-            ColorSpace = colorSpace;
+            ColorSpaceKind = colorSpaceKind;
+            IndexedBase = indexedBase;
+            IndexedHighVal = indexedHighVal;
+            IndexedLookup = indexedLookup;
             Filters = filters;
             Predictor = predictor;
             StreamLength = streamLength;
@@ -955,7 +1306,10 @@ public static class PdfReader {
         public int Height { get; }
         public int BitsPerComponent { get; }
         public int Colors { get; }
-        public string? ColorSpace { get; }
+        public PdfColorSpaceKind ColorSpaceKind { get; }
+        public PdfColorSpaceKind IndexedBase { get; }
+        public int IndexedHighVal { get; }
+        public byte[]? IndexedLookup { get; }
         public string[]? Filters { get; }
         public int Predictor { get; }
         public int StreamLength { get; }

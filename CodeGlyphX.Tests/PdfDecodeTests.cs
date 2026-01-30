@@ -11,7 +11,7 @@ public sealed class PdfDecodeTests {
     [Fact]
     public void Decode_Pdf_Flate_Image() {
         var rgb = new byte[] { 255, 0, 0 };
-        var pdf = BuildPdfWithFlateImage(1, 1, rgb, "/DeviceRGB", "/Filter /FlateDecode ");
+        var pdf = BuildPdfWithFlateImage(1, 1, rgb, "/DeviceRGB", bitsPerComponent: 8, "/Filter /FlateDecode ");
 
         var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
         Assert.Equal(1, width);
@@ -26,7 +26,7 @@ public sealed class PdfDecodeTests {
     [Fact]
     public void Decode_Pdf_Flate_Filter_Array() {
         var rgb = new byte[] { 0, 255, 0 };
-        var pdf = BuildPdfWithFlateImage(1, 1, rgb, "/DeviceRGB", "/Filter [/FlateDecode] ");
+        var pdf = BuildPdfWithFlateImage(1, 1, rgb, "/DeviceRGB", bitsPerComponent: 8, "/Filter [/FlateDecode] ");
 
         var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
 
@@ -38,7 +38,7 @@ public sealed class PdfDecodeTests {
     [Fact]
     public void Decode_Pdf_Flate_Cmyk_Image() {
         var cmyk = new byte[] { 0, 255, 0, 0 };
-        var pdf = BuildPdfWithFlateImage(1, 1, cmyk, "/DeviceCMYK", "/Filter /FlateDecode ");
+        var pdf = BuildPdfWithFlateImage(1, 1, cmyk, "/DeviceCMYK", bitsPerComponent: 8, "/Filter /FlateDecode ");
 
         var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
 
@@ -50,7 +50,7 @@ public sealed class PdfDecodeTests {
     [Fact]
     public void Decode_Pdf_Flate_DecodeArray_Inverts_Gray() {
         var gray = new byte[] { 0 };
-        var pdf = BuildPdfWithFlateImage(1, 1, gray, "/DeviceGray", "/Filter /FlateDecode /Decode [1 0] ");
+        var pdf = BuildPdfWithFlateImage(1, 1, gray, "/DeviceGray", bitsPerComponent: 8, "/Filter /FlateDecode /Decode [1 0] ");
 
         var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
 
@@ -95,7 +95,33 @@ public sealed class PdfDecodeTests {
         Assert.Equal(new byte[] { 0x22, 0x33, 0x44, 255 }, rgba);
     }
 
-    private static byte[] BuildPdfWithFlateImage(int width, int height, byte[] payload, string colorSpace, string filterClause) {
+    [Fact]
+    public void Decode_Pdf_Flate_Indexed_Image() {
+        var indexData = new byte[] { 0x80 };
+        var lookup = "<00FF00FF0000>";
+        var pdf = BuildPdfWithFlateImage(1, 1, indexData, $"[/Indexed /DeviceRGB 1 {lookup}]", bitsPerComponent: 1, "/Filter /FlateDecode ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 255, 0, 0, 255 }, rgba);
+    }
+
+    [Fact]
+    public void Decode_Pdf_Inline_Image_Indexed_Raw() {
+        var indexData = new byte[] { 0x00 };
+        var lookup = "<0000FF00FF00>";
+        var pdf = BuildPdfWithInlineImageRaw(1, 1, indexData, $"/CS [/Indexed /DeviceRGB 1 {lookup}] /BPC 1");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0, 0, 255, 255 }, rgba);
+    }
+
+    private static byte[] BuildPdfWithFlateImage(int width, int height, byte[] payload, string colorSpace, int bitsPerComponent, string filterClause) {
         byte[] compressed;
         using (var ms = new MemoryStream()) {
             using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, leaveOpen: true)) {
@@ -111,7 +137,7 @@ public sealed class PdfDecodeTests {
         sb.Append("/Width ").Append(width).Append(' ');
         sb.Append("/Height ").Append(height).Append(' ');
         sb.Append("/ColorSpace ").Append(colorSpace).Append(' ');
-        sb.Append("/BitsPerComponent 8 ");
+        sb.Append("/BitsPerComponent ").Append(bitsPerComponent).Append(' ');
         sb.Append(filterClause);
         sb.Append("/Length ").Append(compressed.Length).Append(" >>\n");
         sb.Append("stream\n");
