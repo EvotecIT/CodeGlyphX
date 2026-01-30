@@ -114,7 +114,16 @@ public static class GifWriter {
         for (var i = 0; i < frames.Length; i++) {
             var frame = frames[i];
             var indexed = indexedFrames[i];
-            WriteFrameWithDiff(stream, frame, indexed, useGlobalPalette, globalMinCodeSize, hasPrev, prevFrame, prevIndex);
+            WriteFrameWithDiff(
+                stream,
+                frame,
+                indexed,
+                useGlobalPalette,
+                globalMinCodeSize,
+                hasPrev,
+                prevFrame,
+                prevIndex,
+                options.BackgroundRgba);
             prevFrame = frame;
             prevIndex = indexed;
             hasPrev = true;
@@ -210,7 +219,8 @@ public static class GifWriter {
         int globalMinCodeSize,
         bool hasPrev,
         in GifAnimationFrame prevFrame,
-        in GifIndexedFrame prevIndexed) {
+        in GifIndexedFrame prevIndexed,
+        uint backgroundRgba) {
         if (!hasPrev ||
             frame.Width != prevFrame.Width ||
             frame.Height != prevFrame.Height ||
@@ -220,7 +230,20 @@ public static class GifWriter {
             return;
         }
 
-        var diff = ComputeDiffRect(indexed.Pixels, prevIndexed.Pixels, frame.Width, frame.Height);
+        if (prevFrame.DisposalMethod == GifDisposalMethod.RestorePrevious) {
+            WriteFrame(stream, frame, indexed, useGlobalPalette, globalMinCodeSize);
+            return;
+        }
+
+        var diff = ComputeDiffRectRgba(
+            frame.Rgba,
+            frame.Stride,
+            prevFrame.Rgba,
+            prevFrame.Stride,
+            frame.Width,
+            frame.Height,
+            prevFrame.DisposalMethod == GifDisposalMethod.RestoreBackground,
+            backgroundRgba);
         if (diff.IsEmpty) {
             WriteFrame(stream, frame, indexed, useGlobalPalette, globalMinCodeSize);
             return;
@@ -280,17 +303,54 @@ public static class GifWriter {
         WriteSubBlocks(stream, lzwData);
     }
 
-    private static DiffRect ComputeDiffRect(ReadOnlySpan<byte> current, ReadOnlySpan<byte> previous, int width, int height) {
+    private static DiffRect ComputeDiffRectRgba(
+        ReadOnlySpan<byte> current,
+        int currentStride,
+        ReadOnlySpan<byte> previous,
+        int previousStride,
+        int width,
+        int height,
+        bool previousIsBackground,
+        uint backgroundRgba) {
         var minX = width;
         var minY = height;
         var maxX = -1;
         var maxY = -1;
 
+        var bgR = (byte)((backgroundRgba >> 24) & 0xFF);
+        var bgG = (byte)((backgroundRgba >> 16) & 0xFF);
+        var bgB = (byte)((backgroundRgba >> 8) & 0xFF);
+
         for (var y = 0; y < height; y++) {
-            var row = y * width;
+            var currRow = y * currentStride;
+            var prevRow = y * previousStride;
             for (var x = 0; x < width; x++) {
-                var idx = row + x;
-                if (current[idx] != previous[idx]) {
+                var currIdx = currRow + x * 4;
+                var currA = current[currIdx + 3];
+                if (currA < 128) {
+                    continue;
+                }
+
+                var currR = current[currIdx];
+                var currG = current[currIdx + 1];
+                var currB = current[currIdx + 2];
+
+                var changed = false;
+                if (previousIsBackground) {
+                    changed = currR != bgR || currG != bgG || currB != bgB;
+                } else {
+                    var prevIdx = prevRow + x * 4;
+                    var prevA = previous[prevIdx + 3];
+                    if (prevA < 128) {
+                        changed = true;
+                    } else {
+                        changed = currR != previous[prevIdx] ||
+                                  currG != previous[prevIdx + 1] ||
+                                  currB != previous[prevIdx + 2];
+                    }
+                }
+
+                if (changed) {
                     if (x < minX) minX = x;
                     if (x > maxX) maxX = x;
                     if (y < minY) minY = y;
