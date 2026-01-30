@@ -11,7 +11,16 @@ public static class WebpReader {
     private const uint FourCcVp8X = 0x58385056; // "VP8X"
     private const uint FourCcVp8L = 0x4C385056; // "VP8L"
     private const uint FourCcVp8 = 0x20385056;  // "VP8 "
-    internal const int MaxWebpBytes = 256 * 1024 * 1024;
+
+    /// <summary>
+    /// Default maximum managed WebP payload size (in bytes).
+    /// </summary>
+    public const int DefaultMaxWebpBytes = 256 * 1024 * 1024;
+
+    /// <summary>
+    /// Maximum managed WebP payload size (in bytes).
+    /// </summary>
+    public static int MaxWebpBytes { get; set; } = DefaultMaxWebpBytes;
 
     /// <summary>
     /// Checks whether the buffer looks like a WebP RIFF container.
