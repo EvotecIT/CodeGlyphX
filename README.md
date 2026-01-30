@@ -421,7 +421,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 | BMP | ✅ | ✅ |  |
 | GIF | ✅ | ✅ | ImageReader returns first frame (use DecodeAnimationFrames/DecodeAnimationCanvasFrames for animations) |
 | TIFF | ✅ | ✅ | Baseline strips/tiles, 8/16-bit; compression: none/PackBits/LZW/Deflate (multipage via pageIndex) |
-| PSD | ❌ | ✅ | Flattened 8-bit grayscale/RGB only (raw/RLE) |
+| PSD | ❌ | ✅ | Flattened 8/16-bit grayscale/RGB/CMYK (raw/RLE) |
 | PPM/PGM/PAM/PBM | ✅ | ✅ |  |
 | TGA | ✅ | ✅ |  |
 | ICO | ✅ | ✅ | PNG/BMP payloads (CUR decode supported) |
@@ -444,7 +444,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 - Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
 - AVIF, HEIC, JPEG2000 are not supported (format detection only)
 - Multi-page / tiled TIFF: use `ImageReader.DecodeRgba32(data, pageIndex, ...)`, `ImageReader.TryReadInfo(..., pageIndex, ...)`, or `TiffReader.DecodeRgba32(data, pageIndex, ...)`
-- PSD decode is limited to flattened 8-bit grayscale/RGB (raw/RLE); no layers/CMYK/16-bit
+- PSD decode is limited to flattened 8/16-bit grayscale/RGB/CMYK (raw/RLE); no layers/CMYK ICC profiles/other color modes
 - PDF decode is limited to embedded image-only JPEG/Flate; PS decode is not supported (rasterize first)
 
 ### Format corpus (optional)
