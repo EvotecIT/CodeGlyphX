@@ -442,6 +442,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 - ImageReader.DecodeRgba32 returns the first animation frame only (GIF/WebP); use ImageReader.DecodeAnimationFrames/DecodeAnimationCanvasFrames or GifReader/WebpReader for full animations. Use ImageReader.TryReadAnimationInfo for lightweight frame/loop metadata.
 - Managed WebP decode supports VP8/VP8L stills; default size limit is 256 MB (configurable via `WebpReader.MaxWebpBytes`)
 - Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
+- WebP VP8 interframes in animations are currently treated as repeats of the previous frame (best-effort)
 - AVIF, HEIC, JPEG2000 are not supported (format detection only)
 - Multi-page / tiled TIFF: use `ImageReader.DecodeRgba32(data, pageIndex, ...)`, `ImageReader.TryReadInfo(..., pageIndex, ...)`, or `TiffReader.DecodeRgba32(data, pageIndex, ...)`
 - PSD decode is limited to flattened 8/16-bit grayscale/RGB/CMYK (raw/RLE); no layers/CMYK ICC profiles/other color modes
