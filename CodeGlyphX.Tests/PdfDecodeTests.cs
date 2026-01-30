@@ -71,6 +71,30 @@ public sealed class PdfDecodeTests {
         Assert.Equal(new byte[] { 0, 0, 255, 255 }, rgba);
     }
 
+    [Fact]
+    public void Decode_Pdf_Inline_Image_Raw() {
+        var gray = new byte[] { 0x7F };
+        var pdf = BuildPdfWithInlineImageRaw(1, 1, gray, "/CS /DeviceGray /BPC 8");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x7F, 0x7F, 0x7F, 255 }, rgba);
+    }
+
+    [Fact]
+    public void Decode_Pdf_Inline_Image_Ascii85_Flate() {
+        var rgb = new byte[] { 0x22, 0x33, 0x44 };
+        var pdf = BuildPdfWithInlineImageAscii85Flate(1, 1, rgb, "/CS /DeviceRGB /BPC 8 /F [/ASCII85Decode /FlateDecode]");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x22, 0x33, 0x44, 255 }, rgba);
+    }
+
     private static byte[] BuildPdfWithFlateImage(int width, int height, byte[] payload, string colorSpace, string filterClause) {
         byte[] compressed;
         using (var ms = new MemoryStream()) {
@@ -121,6 +145,28 @@ public sealed class PdfDecodeTests {
         var header = Encoding.ASCII.GetBytes(sb.ToString());
         var footer = Encoding.ASCII.GetBytes("\nendstream\nendobj\n%%EOF\n");
 
+        var output = new byte[header.Length + encoded.Length + footer.Length];
+        Buffer.BlockCopy(header, 0, output, 0, header.Length);
+        Buffer.BlockCopy(encoded, 0, output, header.Length, encoded.Length);
+        Buffer.BlockCopy(footer, 0, output, header.Length + encoded.Length, footer.Length);
+        return output;
+    }
+
+    private static byte[] BuildPdfWithInlineImageRaw(int width, int height, byte[] data, string dictExtras) {
+        var header = Encoding.ASCII.GetBytes("%PDF-1.4\nBI /W " + width + " /H " + height + " " + dictExtras + " ID\n");
+        var footer = Encoding.ASCII.GetBytes("\nEI\n%%EOF\n");
+        var output = new byte[header.Length + data.Length + footer.Length];
+        Buffer.BlockCopy(header, 0, output, 0, header.Length);
+        Buffer.BlockCopy(data, 0, output, header.Length, data.Length);
+        Buffer.BlockCopy(footer, 0, output, header.Length + data.Length, footer.Length);
+        return output;
+    }
+
+    private static byte[] BuildPdfWithInlineImageAscii85Flate(int width, int height, byte[] rgb, string dictExtras) {
+        var compressed = Deflate(rgb);
+        var encoded = Ascii85Encode(compressed);
+        var header = Encoding.ASCII.GetBytes("%PDF-1.4\nBI /W " + width + " /H " + height + " " + dictExtras + " ID\n");
+        var footer = Encoding.ASCII.GetBytes("\nEI\n%%EOF\n");
         var output = new byte[header.Length + encoded.Length + footer.Length];
         Buffer.BlockCopy(header, 0, output, 0, header.Length);
         Buffer.BlockCopy(encoded, 0, output, header.Length, encoded.Length);

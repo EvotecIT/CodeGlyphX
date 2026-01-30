@@ -14,6 +14,9 @@ public static class PdfReader {
     private static readonly byte[] ImageToken = { (byte)'/', (byte)'I', (byte)'m', (byte)'a', (byte)'g', (byte)'e' };
     private static readonly byte[] StreamToken = { (byte)'s', (byte)'t', (byte)'r', (byte)'e', (byte)'a', (byte)'m' };
     private static readonly byte[] EndStreamToken = { (byte)'e', (byte)'n', (byte)'d', (byte)'s', (byte)'t', (byte)'r', (byte)'e', (byte)'a', (byte)'m' };
+    private static readonly byte[] InlineImageToken = { (byte)'B', (byte)'I' };
+    private static readonly byte[] InlineImageDataToken = { (byte)'I', (byte)'D' };
+    private static readonly byte[] InlineImageEndToken = { (byte)'E', (byte)'I' };
 
     /// <summary>
     /// Returns true when the buffer looks like a PDF file.
@@ -78,35 +81,84 @@ public static class PdfReader {
         stream = ReadOnlySpan<byte>.Empty;
         while (offset < data.Length) {
             var imageIdx = IndexOfToken(data, ImageToken, offset);
-            if (imageIdx < 0) return false;
+            var inlineIdx = IndexOfInlineToken(data, InlineImageToken, offset);
+            var nextIdx = SelectNextIndex(imageIdx, inlineIdx);
+            if (nextIdx < 0) return false;
 
-            var dictStart = LastIndexOfToken(data, (byte)'<', (byte)'<', imageIdx);
-            var dictEnd = IndexOfToken(data, (byte)'>', (byte)'>', imageIdx);
-            if (dictStart < 0 || dictEnd < 0 || dictEnd <= dictStart) {
+            if (nextIdx == inlineIdx) {
+                if (TryReadInlineImage(data, inlineIdx, out info, out stream, out var endOffset)) {
+                    offset = endOffset;
+                    return true;
+                }
+                offset = inlineIdx + InlineImageToken.Length;
+                continue;
+            }
+
+            if (!TryReadXObjectImage(data, imageIdx, out info, out stream, out var xObjectEnd)) {
                 offset = imageIdx + ImageToken.Length;
                 continue;
             }
 
-            var dict = data.Slice(dictStart, dictEnd + 2 - dictStart);
-            if (IndexOfToken(dict, SubtypeToken, 0) < 0) {
-                offset = imageIdx + ImageToken.Length;
-                continue;
-            }
-
-            if (!TryParseImageInfo(dict, out info)) {
-                offset = dictEnd + 2;
-                continue;
-            }
-
-            if (!TryReadStream(data, dictEnd + 2, info.StreamLength, out stream, out var endOffset)) {
-                offset = dictEnd + 2;
-                continue;
-            }
-
-            offset = endOffset;
+            offset = xObjectEnd;
             return true;
         }
         return false;
+    }
+
+    private static bool TryReadXObjectImage(ReadOnlySpan<byte> data, int imageIdx, out PdfImageInfo info, out ReadOnlySpan<byte> stream, out int endOffset) {
+        info = default;
+        stream = ReadOnlySpan<byte>.Empty;
+        endOffset = imageIdx + ImageToken.Length;
+
+        var dictStart = LastIndexOfToken(data, (byte)'<', (byte)'<', imageIdx);
+        var dictEnd = IndexOfToken(data, (byte)'>', (byte)'>', imageIdx);
+        if (dictStart < 0 || dictEnd < 0 || dictEnd <= dictStart) {
+            return false;
+        }
+
+        var dict = data.Slice(dictStart, dictEnd + 2 - dictStart);
+        if (IndexOfToken(dict, SubtypeToken, 0) < 0) {
+            endOffset = dictEnd + 2;
+            return false;
+        }
+
+        if (!TryParseImageInfo(dict, out info)) {
+            endOffset = dictEnd + 2;
+            return false;
+        }
+
+        if (!TryReadStream(data, dictEnd + 2, info.StreamLength, out stream, out endOffset)) {
+            endOffset = dictEnd + 2;
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool TryReadInlineImage(ReadOnlySpan<byte> data, int inlineIdx, out PdfImageInfo info, out ReadOnlySpan<byte> stream, out int endOffset) {
+        info = default;
+        stream = ReadOnlySpan<byte>.Empty;
+        endOffset = inlineIdx + InlineImageToken.Length;
+
+        var idIndex = IndexOfInlineToken(data, InlineImageDataToken, inlineIdx + InlineImageToken.Length);
+        if (idIndex < 0) return false;
+
+        var dictStart = inlineIdx + InlineImageToken.Length;
+        var dictLength = idIndex - dictStart;
+        if (dictLength <= 0) return false;
+        var dict = data.Slice(dictStart, dictLength);
+
+        if (!TryParseInlineImageInfo(dict, out info)) return false;
+
+        var dataStart = idIndex + InlineImageDataToken.Length;
+        while (dataStart < data.Length && IsDelimiter(data[dataStart])) {
+            dataStart++;
+        }
+        if (dataStart >= data.Length) return false;
+
+        if (!TryReadInlineImageData(data, dataStart, out stream, out var eiIndex)) return false;
+        endOffset = eiIndex + InlineImageEndToken.Length;
+        return true;
     }
 
     private static bool TryParseImageInfo(ReadOnlySpan<byte> dict, out PdfImageInfo info) {
@@ -152,6 +204,49 @@ public static class PdfReader {
         }
 
         info = new PdfImageInfo(width, height, bits, colors, colorSpace, filters, predictor, length, decode);
+        return true;
+    }
+
+    private static bool TryParseInlineImageInfo(ReadOnlySpan<byte> dict, out PdfImageInfo info) {
+        info = default;
+        if (!TryReadNumberAfterAnyKey(dict, new[] { "/W", "/Width" }, out var width)) return false;
+        if (!TryReadNumberAfterAnyKey(dict, new[] { "/H", "/Height" }, out var height)) return false;
+
+        var bits = 8;
+        if (TryReadNumberAfterAnyKey(dict, new[] { "/BPC", "/BitsPerComponent" }, out var bpc)) {
+            bits = bpc;
+        }
+
+        string[]? filters = null;
+        if (TryReadNameArrayAfterAnyKey(dict, new[] { "/F", "/Filter" }, out var filterNames)) {
+            filters = filterNames;
+        } else if (TryReadNameAfterAnyKey(dict, new[] { "/F", "/Filter" }, out var filterName)) {
+            filters = new[] { filterName };
+        }
+
+        string? colorSpace = null;
+        if (TryReadNameAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var csName)) {
+            colorSpace = csName;
+        } else if (TryReadFirstNameInArrayAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var csArrayName)) {
+            colorSpace = csArrayName;
+        }
+
+        var predictor = 1;
+        if (TryReadNumberAfterAnyKey(dict, new[] { "/Predictor" }, out var predictorValue)) {
+            predictor = predictorValue;
+        }
+
+        var colors = 0;
+        if (TryReadNumberAfterAnyKey(dict, new[] { "/Colors" }, out var colorsValue)) {
+            colors = colorsValue;
+        }
+
+        float[]? decode = null;
+        if (TryReadNumberArrayAfterAnyKey(dict, new[] { "/D", "/Decode" }, out var decodeValues)) {
+            decode = decodeValues;
+        }
+
+        info = new PdfImageInfo(width, height, bits, colors, colorSpace, filters, predictor, streamLength: 0, decode);
         return true;
     }
 
@@ -329,9 +424,36 @@ public static class PdfReader {
         return true;
     }
 
+    private static bool TryReadInlineImageData(ReadOnlySpan<byte> data, int dataStart, out ReadOnlySpan<byte> stream, out int eiIndex) {
+        stream = ReadOnlySpan<byte>.Empty;
+        eiIndex = -1;
+        for (var i = dataStart; i + 1 < data.Length; i++) {
+            if (data[i] != InlineImageEndToken[0] || data[i + 1] != InlineImageEndToken[1]) continue;
+            var beforeOk = i == 0 || IsDelimiter(data[i - 1]);
+            var afterIndex = i + InlineImageEndToken.Length;
+            var afterOk = afterIndex >= data.Length || IsDelimiter(data[afterIndex]);
+            if (!beforeOk || !afterOk) continue;
+            stream = data.Slice(dataStart, i - dataStart);
+            eiIndex = i;
+            return true;
+        }
+        return false;
+    }
+
     private static int IndexOfToken(ReadOnlySpan<byte> data, ReadOnlySpan<byte> token, int start) {
         var idx = data.Slice(start).IndexOf(token);
         return idx < 0 ? -1 : start + idx;
+    }
+
+    private static int IndexOfInlineToken(ReadOnlySpan<byte> data, ReadOnlySpan<byte> token, int start) {
+        for (var i = start; i + token.Length <= data.Length; i++) {
+            if (data[i] != token[0] || data[i + 1] != token[1]) continue;
+            var beforeOk = i == 0 || IsDelimiter(data[i - 1]);
+            var afterIndex = i + token.Length;
+            var afterOk = afterIndex >= data.Length || IsDelimiter(data[afterIndex]);
+            if (beforeOk && afterOk) return i;
+        }
+        return -1;
     }
 
     private static int IndexOfToken(ReadOnlySpan<byte> data, byte a, byte b, int start) {
@@ -339,6 +461,12 @@ public static class PdfReader {
             if (data[i] == a && data[i + 1] == b) return i;
         }
         return -1;
+    }
+
+    private static int SelectNextIndex(int a, int b) {
+        if (a < 0) return b;
+        if (b < 0) return a;
+        return a < b ? a : b;
     }
 
     private static int LastIndexOfToken(ReadOnlySpan<byte> data, byte a, byte b, int before) {
@@ -369,6 +497,14 @@ public static class PdfReader {
         return true;
     }
 
+    private static bool TryReadNumberAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out int value) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadNumberAfterKey(data, keys[i], out value)) return true;
+        }
+        value = 0;
+        return false;
+    }
+
     private static bool TryReadNameAfterKey(ReadOnlySpan<byte> data, string key, out string name) {
         name = string.Empty;
         var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
@@ -386,6 +522,14 @@ public static class PdfReader {
         if (i <= start) return false;
         name = GetAsciiString(data, start, i - start);
         return true;
+    }
+
+    private static bool TryReadNameAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out string name) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadNameAfterKey(data, keys[i], out name)) return true;
+        }
+        name = string.Empty;
+        return false;
     }
 
     private static bool TryReadNameArrayAfterKey(ReadOnlySpan<byte> data, string key, out string[] names) {
@@ -416,9 +560,25 @@ public static class PdfReader {
         return true;
     }
 
+    private static bool TryReadNameArrayAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out string[] names) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadNameArrayAfterKey(data, keys[i], out names)) return true;
+        }
+        names = Array.Empty<string>();
+        return false;
+    }
+
     private static bool TryReadFirstNameInArrayAfterKey(ReadOnlySpan<byte> data, string key, out string name) {
         name = string.Empty;
         if (!TryReadNameArrayAfterKey(data, key, out var names)) return false;
+        if (names.Length == 0) return false;
+        name = names[0];
+        return true;
+    }
+
+    private static bool TryReadFirstNameInArrayAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out string name) {
+        name = string.Empty;
+        if (!TryReadNameArrayAfterAnyKey(data, keys, out var names)) return false;
         if (names.Length == 0) return false;
         name = names[0];
         return true;
@@ -446,6 +606,14 @@ public static class PdfReader {
         if (list.Count == 0) return false;
         values = list.ToArray();
         return true;
+    }
+
+    private static bool TryReadNumberArrayAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out float[] values) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadNumberArrayAfterKey(data, keys[i], out values)) return true;
+        }
+        values = Array.Empty<float>();
+        return false;
     }
 
     private static bool TryReadFloatToken(ReadOnlySpan<byte> data, ref int index, out float value) {
