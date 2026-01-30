@@ -65,6 +65,42 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Attempts to read animation format info without decoding pixels.
+    /// </summary>
+    public static bool TryReadAnimationInfo(byte[] data, out ImageAnimationInfo info) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return TryReadAnimationInfo((ReadOnlySpan<byte>)data, out info);
+    }
+
+    /// <summary>
+    /// Attempts to read animation format info without decoding pixels.
+    /// </summary>
+    public static bool TryReadAnimationInfo(ReadOnlySpan<byte> data, out ImageAnimationInfo info) {
+        info = default;
+        if (!TryDetectFormat(data, out var format)) return false;
+        switch (format) {
+            case ImageFormat.Gif:
+                return TryReadGifAnimationInfo(data, out info);
+            case ImageFormat.Webp:
+                return TryReadWebpAnimationInfo(data, out info);
+            default:
+                return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to read animation format info from a stream without decoding pixels.
+    /// </summary>
+    public static bool TryReadAnimationInfo(Stream stream, out ImageAnimationInfo info) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return TryReadAnimationInfo(buffer.AsSpan(), out info);
+        }
+        var data = RenderIO.ReadBinary(stream);
+        return TryReadAnimationInfo(data, out info);
+    }
+
+    /// <summary>
     /// Attempts to read image format and dimensions for a given page from a stream without decoding pixels.
     /// </summary>
     public static bool TryReadInfo(Stream stream, int pageIndex, out ImageInfo info) {
@@ -364,6 +400,179 @@ public static partial class ImageReader {
             if (maxVal <= 0) return false;
         }
         return true;
+    }
+
+    private static bool TryReadGifAnimationInfo(ReadOnlySpan<byte> data, out ImageAnimationInfo info) {
+        info = default;
+        if (data.Length < 13) return false;
+        if (!IsGifHeader(data)) return false;
+
+        var width = ReadUInt16LE(data, 6);
+        var height = ReadUInt16LE(data, 8);
+        if (width <= 0 || height <= 0) return false;
+
+        var packed = data[10];
+        var hasGlobalColorTable = (packed & 0x80) != 0;
+        var backgroundIndex = data[11];
+        var globalColorTableSize = hasGlobalColorTable ? 3 * (1 << ((packed & 0x07) + 1)) : 0;
+        var offset = 13 + globalColorTableSize;
+        if (offset > data.Length) return false;
+
+        uint backgroundRgba = 0;
+        if (hasGlobalColorTable) {
+            var tableEntries = globalColorTableSize / 3;
+            if (backgroundIndex < tableEntries) {
+                var colorOffset = 13 + backgroundIndex * 3;
+                if (colorOffset + 2 < data.Length) {
+                    var r = data[colorOffset];
+                    var g = data[colorOffset + 1];
+                    var b = data[colorOffset + 2];
+                    backgroundRgba = (uint)(r | (g << 8) | (b << 16) | (255u << 24));
+                }
+            }
+        }
+
+        var loopCount = 0;
+        var frameCount = 0;
+
+        while (offset < data.Length) {
+            var introducer = data[offset++];
+            if (introducer == 0x3B) break;
+
+            if (introducer == 0x2C) {
+                if (offset + 9 > data.Length) return false;
+                var localPacked = data[offset + 8];
+                offset += 9;
+                if ((localPacked & 0x80) != 0) {
+                    var localSize = 3 * (1 << ((localPacked & 0x07) + 1));
+                    offset += localSize;
+                    if (offset > data.Length) return false;
+                }
+                if (offset >= data.Length) return false;
+                offset++; // LZW minimum code size
+                if (!SkipGifSubBlocks(data, ref offset)) return false;
+                frameCount++;
+                continue;
+            }
+
+            if (introducer == 0x21) {
+                if (offset >= data.Length) return false;
+                var label = data[offset++];
+                if (label == 0xFF) {
+                    if (offset >= data.Length) return false;
+                    var blockSize = data[offset++];
+                    if (offset + blockSize > data.Length) return false;
+                    var isNetscape = blockSize >= 11 && IsGifAppId(data.Slice(offset, blockSize));
+                    offset += blockSize;
+                    if (!ReadGifApplicationBlocks(data, ref offset, isNetscape, ref loopCount)) return false;
+                } else {
+                    if (!SkipGifSubBlocks(data, ref offset)) return false;
+                }
+                continue;
+            }
+
+            return false;
+        }
+
+        if (frameCount <= 0) return false;
+        info = new ImageAnimationInfo(ImageFormat.Gif, width, height, frameCount, new ImageAnimationOptions(loopCount, backgroundRgba));
+        return true;
+    }
+
+    private static bool IsGifHeader(ReadOnlySpan<byte> data) {
+        if (data.Length < 6) return false;
+        return (data[0] == (byte)'G' && data[1] == (byte)'I' && data[2] == (byte)'F'
+            && data[3] == (byte)'8' && (data[4] == (byte)'7' || data[4] == (byte)'9') && data[5] == (byte)'a');
+    }
+
+    private static bool SkipGifSubBlocks(ReadOnlySpan<byte> data, ref int offset) {
+        while (offset < data.Length) {
+            var size = data[offset++];
+            if (size == 0) return true;
+            offset += size;
+            if (offset > data.Length) return false;
+        }
+        return false;
+    }
+
+    private static bool IsGifAppId(ReadOnlySpan<byte> block) {
+        if (block.Length < 11) return false;
+        return block[0] == (byte)'N' && block[1] == (byte)'E' && block[2] == (byte)'T'
+            && block[3] == (byte)'S' && block[4] == (byte)'C' && block[5] == (byte)'A'
+            && block[6] == (byte)'P' && block[7] == (byte)'E' && block[8] == (byte)'2'
+            && block[9] == (byte)'.' && block[10] == (byte)'0';
+    }
+
+    private static bool ReadGifApplicationBlocks(ReadOnlySpan<byte> data, ref int offset, bool isNetscape, ref int loopCount) {
+        while (offset < data.Length) {
+            var size = data[offset++];
+            if (size == 0) return true;
+            if (offset + size > data.Length) return false;
+            if (isNetscape && size >= 3 && data[offset] == 1) {
+                loopCount = ReadUInt16LE(data, offset + 1, little: true);
+            }
+            offset += size;
+        }
+        return false;
+    }
+
+    private static bool TryReadWebpAnimationInfo(ReadOnlySpan<byte> data, out ImageAnimationInfo info) {
+        info = default;
+        if (!WebpReader.IsWebp(data)) return false;
+        if (!WebpReader.TryReadDimensions(data, out var width, out var height)) return false;
+        if (!TryReadWebpAnimationChunks(data, out var frameCount, out var loopCount, out var backgroundRgba)) return false;
+        if (frameCount <= 0) return false;
+        info = new ImageAnimationInfo(ImageFormat.Webp, width, height, frameCount, new ImageAnimationOptions(loopCount, backgroundRgba));
+        return true;
+    }
+
+    private static bool TryReadWebpAnimationChunks(ReadOnlySpan<byte> data, out int frameCount, out int loopCount, out uint backgroundRgba) {
+        frameCount = 0;
+        loopCount = 0;
+        backgroundRgba = 0;
+
+        if (data.Length < 12) return false;
+        if (!IsFourCc(data, 0, "RIFF") || !IsFourCc(data, 8, "WEBP")) return false;
+
+        var offset = 12;
+        while (offset + 8 <= data.Length) {
+            var chunkSize = ReadUInt32LE(data, offset + 4, little: true);
+            var payloadOffset = offset + 8;
+            if (payloadOffset + chunkSize > data.Length) return false;
+
+            if (IsFourCc(data, offset, "ANMF")) {
+                frameCount++;
+            } else if (IsFourCc(data, offset, "ANIM")) {
+                if (chunkSize >= 6) {
+                    var bgra = ReadUInt32LE(data, payloadOffset, little: true);
+                    backgroundRgba = ConvertBgraToRgba(bgra);
+                    loopCount = ReadUInt16LE(data, payloadOffset + 4, little: true);
+                }
+            }
+
+            var padded = chunkSize + (chunkSize & 1);
+            var next = payloadOffset + (int)padded;
+            if (next < 0 || next > data.Length) return false;
+            offset = next;
+        }
+
+        return true;
+    }
+
+    private static bool IsFourCc(ReadOnlySpan<byte> data, int offset, string fourCc) {
+        if (offset < 0 || offset + 4 > data.Length) return false;
+        return data[offset] == (byte)fourCc[0]
+            && data[offset + 1] == (byte)fourCc[1]
+            && data[offset + 2] == (byte)fourCc[2]
+            && data[offset + 3] == (byte)fourCc[3];
+    }
+
+    private static uint ConvertBgraToRgba(uint bgra) {
+        var b = (byte)(bgra & 0xFF);
+        var g = (byte)((bgra >> 8) & 0xFF);
+        var r = (byte)((bgra >> 16) & 0xFF);
+        var a = (byte)((bgra >> 24) & 0xFF);
+        return (uint)(r | (g << 8) | (b << 16) | (a << 24));
     }
 
     private static bool TryReadPamSize(ReadOnlySpan<byte> data, out int width, out int height) {
