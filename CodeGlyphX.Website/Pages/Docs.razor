@@ -587,7 +587,7 @@ QR.Save(QrPayloads.OneTimePassword(
                         <td style="padding: 0.75rem;"><code>.webp</code></td>
                         <td style="padding: 0.75rem;">Yes</td>
                         <td style="padding: 0.75rem;">Yes</td>
-                        <td style="padding: 0.75rem;">Managed VP8/VP8L; ImageReader returns first frame for animations</td>
+                        <td style="padding: 0.75rem;">Managed VP8/VP8L; ImageReader returns first animation frame (use WebpReader/ImageReader multi-frame helpers); animation via WebpWriter or Webp renderers RenderAnimation</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">BMP</td>
@@ -599,16 +599,23 @@ QR.Save(QrPayloads.OneTimePassword(
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">GIF</td>
                         <td style="padding: 0.75rem;"><code>.gif</code></td>
-                        <td style="padding: 0.75rem;">No</td>
                         <td style="padding: 0.75rem;">Yes</td>
-                        <td style="padding: 0.75rem;">First frame only, transparency via GCE</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Single-frame encode (indexed, 256 colors max; quantizes + dithers if needed); animation via GifReader/GifWriter.WriteAnimation or GIF renderers RenderAnimation (diff-cropped)</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">TIFF</td>
                         <td style="padding: 0.75rem;"><code>.tif</code>, <code>.tiff</code></td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Yes</td>
+                        <td style="padding: 0.75rem;">Baseline RGBA encode (multi-page via TiffWriter.WriteRgba32Pages; tiled multi-page via WriteRgba32PagesTiled; planar via WriteRgba32Planar; bilevel 1-bit via WriteBilevel/WriteBilevelFromRgba or RenderBilevel; direct matrix bilevel via RenderBilevelFromModules; direct barcode bilevel via RenderBilevelFromBars; tiled bilevel via WriteBilevelTiled/WriteBilevelTiledFromRgba or RenderBilevelTiled; tiled direct matrix bilevel via RenderBilevelTiledFromModules; tiled direct barcode bilevel via RenderBilevelTiledFromBars; strips via rowsPerStrip; tiles via WriteRgba32Tiled; PackBits/Deflate/LZW via TiffCompression; optional predictor via usePredictor); decode strips/tiles, planar config 1/2, PackBits/LZW/Deflate, 1/8/16-bit</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 0.75rem;">PSD</td>
+                        <td style="padding: 0.75rem;"><code>.psd</code></td>
                         <td style="padding: 0.75rem;">No</td>
                         <td style="padding: 0.75rem;">Yes</td>
-                        <td style="padding: 0.75rem;">Baseline strips, PackBits/LZW/Deflate, 8/16-bit</td>
+                        <td style="padding: 0.75rem;">Flattened 8-bit grayscale/RGB; raw or RLE image data</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">PPM/PGM/PAM/PBM</td>
@@ -649,8 +656,8 @@ QR.Save(QrPayloads.OneTimePassword(
                         <td style="padding: 0.75rem;">PDF / EPS</td>
                         <td style="padding: 0.75rem;"><code>.pdf</code>, <code>.eps</code>, <code>.ps</code></td>
                         <td style="padding: 0.75rem;">Yes</td>
-                        <td style="padding: 0.75rem;">No</td>
-                        <td style="padding: 0.75rem;">Vector by default, raster via RenderMode</td>
+                        <td style="padding: 0.75rem;">Limited</td>
+                        <td style="padding: 0.75rem;">Vector by default, raster via RenderMode (PDF decode: image-only JPEG/Flate)</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">HTML</td>
@@ -999,10 +1006,10 @@ var decodeResult = QrImageDecoder.DecodeImage(stream);</pre>
 
             <h2>Known Gaps (Decoding)</h2>
             <ul style="color: var(--text-muted); margin-left: 1.5rem;">
-                <li>AVIF, HEIC, JPEG2000, PSD</li>
-                <li>Animated GIF (first frame only)</li>
-                <li>Multi-page / tiled TIFF and mixed sample sizes</li>
-                <li>PDF/PS decode (rasterize first)</li>
+                <li>AVIF, HEIC, JPEG2000</li>
+                <li>ImageReader.DecodeRgba32 returns the first GIF/WebP frame; use ImageReader.DecodeGifAnimationFrames / DecodeWebpAnimationFrames (or GifReader/WebpReader) for animation frames</li>
+                <li>ImageReader.DecodeRgba32 returns the first TIFF page; use ImageReader.TryDecodeTiffPagesRgba32 (or TiffReader.DecodePagesRgba32) for multi-page</li>
+                <li>PDF decode supports image-only PDFs with embedded JPEG/Flate; PS decode still needs rasterization</li>
             </ul>
 
             <h2>Format Corpus (Optional)</h2>

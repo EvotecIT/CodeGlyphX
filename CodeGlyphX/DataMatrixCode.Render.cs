@@ -81,6 +81,20 @@ public static partial class DataMatrixCode {
                 return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions, extras?.TiffCompression ?? TiffCompressionMode.Auto));
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, MatrixBmpRenderer.Render(modules, pngOptions));
+            case OutputFormat.Gif: {
+                var extrasFrames = extras?.GifFrames;
+                if (extrasFrames is not null && extrasFrames.Length > 0) {
+                    var duration = extras?.AnimationDurationMs ?? 100;
+                    var durations = extras?.AnimationDurationsMs;
+                    var gif = durations is not null
+                        ? MatrixGifRenderer.RenderAnimation(extrasFrames, pngOptions, durations, extras?.GifAnimationOptions ?? default)
+                        : MatrixGifRenderer.RenderAnimation(extrasFrames, pngOptions, duration, extras?.GifAnimationOptions ?? default);
+                    return RenderedOutput.FromBinary(format, gif);
+                }
+                return RenderedOutput.FromBinary(format, MatrixGifRenderer.Render(modules, pngOptions));
+            }
+            case OutputFormat.Tiff:
+                return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions));
             case OutputFormat.Ppm:
                 return RenderedOutput.FromBinary(format, MatrixPpmRenderer.Render(modules, pngOptions));
             case OutputFormat.Pbm:

@@ -9,6 +9,7 @@ using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using System.Threading;
 using CodeGlyphX;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Qr;
 

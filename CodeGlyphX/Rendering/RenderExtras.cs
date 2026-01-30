@@ -1,4 +1,7 @@
+using CodeGlyphX;
 using CodeGlyphX.Rendering.Ascii;
+using CodeGlyphX.Rendering.Gif;
+using CodeGlyphX.Rendering.Webp;
 
 namespace CodeGlyphX.Rendering;
 

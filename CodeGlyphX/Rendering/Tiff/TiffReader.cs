@@ -45,6 +45,39 @@ public static class TiffReader {
         return ReadU16(data, 2, little) == Magic;
     }
 
+    /// <summary>
+    /// Attempts to decode all TIFF pages to RGBA buffers.
+    /// </summary>
+    public static bool TryDecodePagesRgba32(ReadOnlySpan<byte> data, out TiffRgba32Page[] pages) {
+        try {
+            pages = DecodePagesRgba32(data);
+            return true;
+        } catch (FormatException) {
+            pages = Array.Empty<TiffRgba32Page>();
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Decodes all TIFF pages to RGBA buffers.
+    /// </summary>
+    public static TiffRgba32Page[] DecodePagesRgba32(ReadOnlySpan<byte> data) {
+        if (!IsTiff(data)) throw new FormatException("Not a TIFF image.");
+
+        var little = data[0] == (byte)'I';
+        var ifdOffset = ReadU32(data, 4, little);
+        if (ifdOffset > data.Length - 2) throw new FormatException("Invalid TIFF IFD offset.");
+
+        var pages = new System.Collections.Generic.List<TiffRgba32Page>();
+        while (ifdOffset != 0) {
+            var rgba = DecodeRgba32Internal(data, little, (int)ifdOffset, out var width, out var height, out var nextIfdOffset);
+            pages.Add(new TiffRgba32Page(rgba, width, height, width * 4));
+            ifdOffset = nextIfdOffset <= 0 ? 0 : (uint)nextIfdOffset;
+        }
+
+        return pages.ToArray();
+    }
+
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
         return DecodeRgba32(data, 0, out width, out height);
     }
@@ -145,6 +178,18 @@ public static class TiffReader {
                 case TagTileByteCounts:
                     info.TileByteCounts = ReadValuesInt(valueSpan, type, little, (int)count);
                     break;
+                case TagTileWidth:
+                    tileWidth = (int)ReadValue(valueSpan, type, little, 0);
+                    break;
+                case TagTileLength:
+                    tileLength = (int)ReadValue(valueSpan, type, little, 0);
+                    break;
+                case TagTileOffsets:
+                    tileOffsets = ReadValuesInt(valueSpan, type, little, (int)count);
+                    break;
+                case TagTileByteCounts:
+                    tileByteCounts = ReadValuesInt(valueSpan, type, little, (int)count);
+                    break;
             }
         }
 
@@ -183,8 +228,15 @@ public static class TiffReader {
         for (var i = 1; i < bitsPerSample.Length; i++) {
             if (bitsPerSample[i] != bitsPerSampleValue) throw new FormatException("Mixed TIFF sample sizes are not supported.");
         }
-        if (bitsPerSampleValue != 8 && bitsPerSampleValue != 16) {
-            throw new FormatException("Only 8-bit or 16-bit TIFF samples are supported.");
+        var isPacked1 = bitsPerSampleValue == 1;
+        if (!isPacked1 && bitsPerSampleValue != 8 && bitsPerSampleValue != 16) {
+            throw new FormatException("Only 1-bit, 8-bit, or 16-bit TIFF samples are supported.");
+        }
+        if (isPacked1 && samplesPerPixel != 1) {
+            throw new FormatException("Packed 1-bit TIFF samples with multiple channels are not supported.");
+        }
+        if (isPacked1 && predictor == 2) {
+            throw new FormatException("TIFF predictor is not supported for 1-bit samples.");
         }
 
         var hasTiles = info.TileOffsets is not null && info.TileByteCounts is not null && info.TileOffsets.Length > 0;
@@ -233,7 +285,6 @@ public static class TiffReader {
                 var srcIndex = r * bytesPerRow;
                 WritePixelsRow(block, srcIndex, rgba, dstRow, width, samplesPerPixel, bytesPerSample, bytesPerPixel, info.Photometric, info.HasExtraSamples, little, info.ColorMap, paletteStride);
             }
-            row += rowsInStrip;
         }
     }
 
@@ -392,6 +443,266 @@ public static class TiffReader {
             srcIndex += bytesPerPixel;
             dstOffset += 4;
         }
+    }
+
+    private static ReadOnlySpan<byte> DecodeChunk(
+        ReadOnlySpan<byte> data,
+        int offset,
+        int count,
+        int expected,
+        int compression,
+        int predictor,
+        int bytesPerRow,
+        int samplesPerPixel,
+        int bytesPerSample,
+        bool little,
+        out byte[]? buffer) {
+        buffer = null;
+        var src = data.Slice(offset, count);
+        if (compression == CompressionNone) {
+            if (count < expected) throw new FormatException("TIFF strip too short.");
+            if (predictor == 2) {
+                buffer = src.Slice(0, expected).ToArray();
+                ApplyPredictor(buffer, bytesPerRow, samplesPerPixel, bytesPerSample, little);
+                return buffer;
+            }
+            return src.Slice(0, expected);
+        }
+
+        if (compression == CompressionPackBits) {
+            buffer = new byte[expected];
+            var written = DecompressPackBits(src, buffer);
+            if (written != expected) throw new FormatException("Invalid TIFF PackBits data.");
+        } else if (compression == CompressionLzw) {
+            buffer = DecompressLzwCompat(src, expected);
+        } else {
+            buffer = DecompressDeflate(src, expected);
+        }
+
+        if (predictor == 2) {
+            ApplyPredictor(buffer, bytesPerRow, samplesPerPixel, bytesPerSample, little);
+        }
+
+        return buffer;
+    }
+
+    private static void WritePixel(
+        ReadOnlySpan<byte> source,
+        int srcIndex,
+        int photometric,
+        int samplesPerPixel,
+        int bytesPerSample,
+        bool hasExtraSamples,
+        bool little,
+        ushort[]? colorMap,
+        int paletteSize,
+        int paletteStride,
+        byte[] rgba,
+        int dst) {
+        if (photometric == 3 && paletteSize > 0) {
+            var idx = bytesPerSample == 2 ? ReadU16(source, srcIndex, little) : source[srcIndex];
+            if (idx < paletteSize) {
+                var r0 = (byte)(colorMap![idx] >> 8);
+                var g0 = (byte)(colorMap[idx + paletteStride] >> 8);
+                var b0 = (byte)(colorMap[idx + 2 * paletteStride] >> 8);
+                rgba[dst + 0] = r0;
+                rgba[dst + 1] = g0;
+                rgba[dst + 2] = b0;
+                rgba[dst + 3] = 255;
+            } else {
+                rgba[dst + 3] = 255;
+            }
+        } else if (photometric == 2 && samplesPerPixel >= 3) {
+            if (bytesPerSample == 2) {
+                var r16 = ReadU16(source, srcIndex + 0, little);
+                var g16 = ReadU16(source, srcIndex + 2, little);
+                var b16 = ReadU16(source, srcIndex + 4, little);
+                var a16 = samplesPerPixel >= 4 ? ReadU16(source, srcIndex + 6, little) : (ushort)65535;
+                rgba[dst + 0] = Scale16To8(r16);
+                rgba[dst + 1] = Scale16To8(g16);
+                rgba[dst + 2] = Scale16To8(b16);
+                rgba[dst + 3] = Scale16To8(a16);
+            } else {
+                var r0 = source[srcIndex + 0];
+                var g0 = source[srcIndex + 1];
+                var b0 = source[srcIndex + 2];
+                var a0 = samplesPerPixel >= 4 ? source[srcIndex + 3] : (byte)255;
+                rgba[dst + 0] = r0;
+                rgba[dst + 1] = g0;
+                rgba[dst + 2] = b0;
+                rgba[dst + 3] = a0;
+            }
+        } else if (samplesPerPixel >= 2 && hasExtraSamples) {
+            if (bytesPerSample == 2) {
+                var v16 = ReadU16(source, srcIndex, little);
+                var a16 = ReadU16(source, srcIndex + 2, little);
+                if (photometric == 0) v16 = (ushort)(65535 - v16);
+                rgba[dst + 0] = Scale16To8(v16);
+                rgba[dst + 1] = Scale16To8(v16);
+                rgba[dst + 2] = Scale16To8(v16);
+                rgba[dst + 3] = Scale16To8(a16);
+            } else {
+                var v = source[srcIndex];
+                var a0 = source[srcIndex + 1];
+                if (photometric == 0) v = (byte)(255 - v);
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = a0;
+            }
+        } else if (samplesPerPixel >= 1) {
+            if (bytesPerSample == 2) {
+                var v16 = ReadU16(source, srcIndex, little);
+                if (photometric == 0) v16 = (ushort)(65535 - v16);
+                var v = Scale16To8(v16);
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = 255;
+            } else {
+                var v = source[srcIndex];
+                if (photometric == 0) v = (byte)(255 - v);
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = 255;
+            }
+        } else {
+            rgba[dst + 3] = 255;
+        }
+    }
+
+    private static void WritePixelBit(
+        int bit,
+        int photometric,
+        ushort[]? colorMap,
+        int paletteSize,
+        int paletteStride,
+        byte[] rgba,
+        int dst) {
+        if (photometric == 3 && paletteSize > 0) {
+            var idx = bit & 1;
+            if (idx < paletteSize) {
+                var r0 = (byte)(colorMap![idx] >> 8);
+                var g0 = (byte)(colorMap[idx + paletteStride] >> 8);
+                var b0 = (byte)(colorMap[idx + 2 * paletteStride] >> 8);
+                rgba[dst + 0] = r0;
+                rgba[dst + 1] = g0;
+                rgba[dst + 2] = b0;
+                rgba[dst + 3] = 255;
+            } else {
+                rgba[dst + 3] = 255;
+            }
+            return;
+        }
+
+        var v = (bit & 1) == 0 ? 0 : 255;
+        if (photometric == 0) v = 255 - v;
+        rgba[dst + 0] = (byte)v;
+        rgba[dst + 1] = (byte)v;
+        rgba[dst + 2] = (byte)v;
+        rgba[dst + 3] = 255;
+    }
+
+    private static void WritePixelPlanar(
+        byte[][] planes,
+        int srcIndex,
+        int photometric,
+        int samplesPerPixel,
+        int bytesPerSample,
+        bool hasExtraSamples,
+        bool little,
+        ushort[]? colorMap,
+        int paletteSize,
+        int paletteStride,
+        byte[] rgba,
+        int dst) {
+        if (planes.Length == 0) {
+            rgba[dst + 3] = 255;
+            return;
+        }
+
+        if (photometric == 3 && paletteSize > 0) {
+            var idx = bytesPerSample == 2 ? ReadU16(planes[0], srcIndex, little) : planes[0][srcIndex];
+            if (idx < paletteSize) {
+                var r0 = (byte)(colorMap![idx] >> 8);
+                var g0 = (byte)(colorMap[idx + paletteStride] >> 8);
+                var b0 = (byte)(colorMap[idx + 2 * paletteStride] >> 8);
+                rgba[dst + 0] = r0;
+                rgba[dst + 1] = g0;
+                rgba[dst + 2] = b0;
+                rgba[dst + 3] = 255;
+            } else {
+                rgba[dst + 3] = 255;
+            }
+            return;
+        }
+
+        if (photometric == 2 && samplesPerPixel >= 3 && planes.Length >= 3) {
+            if (bytesPerSample == 2) {
+                var r16 = ReadU16(planes[0], srcIndex, little);
+                var g16 = ReadU16(planes[1], srcIndex, little);
+                var b16 = ReadU16(planes[2], srcIndex, little);
+                var a16 = (samplesPerPixel >= 4 && planes.Length >= 4) ? ReadU16(planes[3], srcIndex, little) : (ushort)65535;
+                rgba[dst + 0] = Scale16To8(r16);
+                rgba[dst + 1] = Scale16To8(g16);
+                rgba[dst + 2] = Scale16To8(b16);
+                rgba[dst + 3] = Scale16To8(a16);
+            } else {
+                var r0 = planes[0][srcIndex];
+                var g0 = planes[1][srcIndex];
+                var b0 = planes[2][srcIndex];
+                var a0 = (samplesPerPixel >= 4 && planes.Length >= 4) ? planes[3][srcIndex] : (byte)255;
+                rgba[dst + 0] = r0;
+                rgba[dst + 1] = g0;
+                rgba[dst + 2] = b0;
+                rgba[dst + 3] = a0;
+            }
+            return;
+        }
+
+        if (samplesPerPixel >= 2 && hasExtraSamples && planes.Length >= 2) {
+            if (bytesPerSample == 2) {
+                var v16 = ReadU16(planes[0], srcIndex, little);
+                var a16 = ReadU16(planes[1], srcIndex, little);
+                if (photometric == 0) v16 = (ushort)(65535 - v16);
+                rgba[dst + 0] = Scale16To8(v16);
+                rgba[dst + 1] = Scale16To8(v16);
+                rgba[dst + 2] = Scale16To8(v16);
+                rgba[dst + 3] = Scale16To8(a16);
+            } else {
+                var v = planes[0][srcIndex];
+                var a0 = planes[1][srcIndex];
+                if (photometric == 0) v = (byte)(255 - v);
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = a0;
+            }
+            return;
+        }
+
+        if (samplesPerPixel >= 1) {
+            if (bytesPerSample == 2) {
+                var v16 = ReadU16(planes[0], srcIndex, little);
+                if (photometric == 0) v16 = (ushort)(65535 - v16);
+                var v = Scale16To8(v16);
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = 255;
+            } else {
+                var v = planes[0][srcIndex];
+                if (photometric == 0) v = (byte)(255 - v);
+                rgba[dst + 0] = v;
+                rgba[dst + 1] = v;
+                rgba[dst + 2] = v;
+                rgba[dst + 3] = 255;
+            }
+            return;
+        }
+
+        rgba[dst + 3] = 255;
     }
 
     private static int DecompressPackBits(ReadOnlySpan<byte> src, Span<byte> dst) {

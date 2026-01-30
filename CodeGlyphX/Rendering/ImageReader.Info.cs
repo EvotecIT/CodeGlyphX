@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Ico;
+using CodeGlyphX.Rendering.Pdf;
+using CodeGlyphX.Rendering.Psd;
 using CodeGlyphX.Rendering.Tga;
 using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
@@ -153,6 +155,10 @@ public static partial class ImageReader {
                 return TryReadJpegSize(data, out width, out height);
             case ImageFormat.Gif:
                 return TryReadGifSize(data, out width, out height);
+            case ImageFormat.Pdf:
+                return PdfReader.TryReadDimensions(data, out width, out height);
+            case ImageFormat.Psd:
+                return PsdReader.TryReadDimensions(data, out width, out height);
             case ImageFormat.Bmp:
                 return TryReadBmpSize(data, out width, out height);
             case ImageFormat.Pbm:

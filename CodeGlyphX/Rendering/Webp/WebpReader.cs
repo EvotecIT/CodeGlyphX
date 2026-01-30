@@ -49,6 +49,8 @@ public static class WebpReader {
         if (riffLimit < 12) return false;
 
         var offset = 12;
+        var anmfWidth = 0;
+        var anmfHeight = 0;
         while ((long)offset + 8 <= riffLimit) {
             var fourCc = ReadU32LE(data, offset);
             var chunkSize = ReadU32LE(data, offset + 4);
@@ -64,11 +66,22 @@ public static class WebpReader {
             if (fourCc == FourCcVp8X && TryReadVp8XSize(chunk, out width, out height)) return true;
             if (fourCc == FourCcVp8L && TryReadVp8LSize(chunk, out width, out height)) return true;
             if (fourCc == FourCcVp8 && TryReadVp8Size(chunk, out width, out height)) return true;
+            if (fourCc == FourCcAnmf && anmfWidth == 0 && anmfHeight == 0) {
+                if (TryReadAnmfSize(chunk, out anmfWidth, out anmfHeight)) {
+                    // Keep scanning for VP8X/VP8/VP8L, but remember the first ANMF size.
+                }
+            }
 
             var padded = chunkLength + (chunkLength & 1);
             var nextOffset = dataOffset + padded;
             if (nextOffset < 0 || nextOffset > riffLimit || nextOffset > int.MaxValue) return false;
             offset = (int)nextOffset;
+        }
+
+        if (anmfWidth > 0 && anmfHeight > 0) {
+            width = anmfWidth;
+            height = anmfHeight;
+            return true;
         }
 
         return false;
@@ -179,6 +192,17 @@ public static class WebpReader {
         if (chunk[3] != 0x9D || chunk[4] != 0x01 || chunk[5] != 0x2A) return false;
         width = ReadU16LE(chunk, 6) & 0x3FFF;
         height = ReadU16LE(chunk, 8) & 0x3FFF;
+        return width > 0 && height > 0;
+    }
+
+    private static bool TryReadAnmfSize(ReadOnlySpan<byte> chunk, out int width, out int height) {
+        width = 0;
+        height = 0;
+        if (chunk.Length < 16) return false;
+        var widthMinus1 = ReadU24LE(chunk, 6);
+        var heightMinus1 = ReadU24LE(chunk, 9);
+        width = widthMinus1 + 1;
+        height = heightMinus1 + 1;
         return width > 0 && height > 0;
     }
 

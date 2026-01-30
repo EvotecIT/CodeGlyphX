@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CodeGlyphX.Rendering.Gif;
 
 /// <summary>
-/// Decodes GIF images to RGBA buffers (first frame only).
+/// Decodes GIF images to RGBA buffers and animation frames.
 /// </summary>
 public static class GifReader {
     /// <summary>

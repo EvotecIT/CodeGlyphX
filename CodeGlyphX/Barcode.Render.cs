@@ -65,6 +65,20 @@ public static partial class Barcode {
                 return RenderedOutput.FromBinary(format, BarcodeTiffRenderer.Render(barcode, opts, extras?.TiffCompression ?? TiffCompressionMode.Auto));
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, BarcodeBmpRenderer.Render(barcode, opts));
+            case OutputFormat.Gif: {
+                var extrasFrames = extras?.BarcodeGifFrames;
+                if (extrasFrames is not null && extrasFrames.Length > 0) {
+                    var duration = extras?.AnimationDurationMs ?? 100;
+                    var durations = extras?.AnimationDurationsMs;
+                    var gif = durations is not null
+                        ? BarcodeGifRenderer.RenderAnimation(extrasFrames, opts, durations, extras?.GifAnimationOptions ?? default)
+                        : BarcodeGifRenderer.RenderAnimation(extrasFrames, opts, duration, extras?.GifAnimationOptions ?? default);
+                    return RenderedOutput.FromBinary(format, gif);
+                }
+                return RenderedOutput.FromBinary(format, BarcodeGifRenderer.Render(barcode, opts));
+            }
+            case OutputFormat.Tiff:
+                return RenderedOutput.FromBinary(format, BarcodeTiffRenderer.Render(barcode, opts));
             case OutputFormat.Ppm:
                 return RenderedOutput.FromBinary(format, BarcodePpmRenderer.Render(barcode, opts));
             case OutputFormat.Pbm:
