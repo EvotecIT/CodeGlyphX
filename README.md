@@ -409,6 +409,25 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 
 ## Image format support
 
+### Animation decode helpers
+
+```csharp
+using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Gif;
+using CodeGlyphX.Rendering.Webp;
+
+// First composited frame (GIF/WebP) via ImageReader helper
+var rgba = ImageReader.DecodeRgba32Composite(bytes, out var width, out var height);
+
+// Raw GIF frames (rectangles) + canvas frames
+var gifFrames = GifReader.DecodeAnimationFrames(bytes, out var gifW, out var gifH, out var gifOptions);
+var gifCanvasFrames = GifReader.DecodeAnimationCanvasFrames(bytes, out _, out _, out _);
+
+// Raw WebP frames + canvas frames
+var webpFrames = WebpReader.DecodeAnimationFrames(bytes, out var webpW, out var webpH, out var webpOptions);
+var webpCanvasFrames = WebpReader.DecodeAnimationCanvasFrames(bytes, out _, out _, out _);
+```
+
 ### Raster formats (encode + decode)
 
 | Format | Encode | Decode | Notes |
