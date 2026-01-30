@@ -68,6 +68,54 @@ public sealed partial class MatrixAsciiRenderOptions {
     }
 
     /// <summary>
+    /// Enables or disables Unicode half-blocks (two module rows per text row).
+    /// </summary>
+    public MatrixAsciiRenderOptions WithHalfBlocks(bool enabled = true) {
+        UseHalfBlocks = enabled;
+        return this;
+    }
+
+    /// <summary>
+    /// Enables or disables ANSI background colors for half-block rendering.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithHalfBlockBackground(bool enabled = true) {
+        UseHalfBlockBackground = enabled;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets an ANSI gradient for dark modules.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithAnsiDarkGradient(AsciiGradientOptions gradient) {
+        AnsiDarkGradient = gradient;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets an ANSI palette for dark modules.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithAnsiDarkPalette(AsciiPaletteOptions palette) {
+        AnsiDarkPalette = palette;
+        return this;
+    }
+
+    /// <summary>
+    /// Enables or disables contrast clamping for dark modules.
+    /// </summary>
+    public MatrixAsciiRenderOptions WithEnsureDarkContrast(bool enabled = true) {
+        EnsureDarkContrast = enabled;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the maximum luminance for dark modules (0-1).
+    /// </summary>
+    public MatrixAsciiRenderOptions WithMaxDarkLuminance(double value) {
+        MaxDarkLuminance = value;
+        return this;
+    }
+
+    /// <summary>
     /// Enables or disables inverted output (dark/light swapped).
     /// </summary>
     public MatrixAsciiRenderOptions WithInvert(bool enabled = true) {

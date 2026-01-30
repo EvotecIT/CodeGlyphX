@@ -591,10 +591,24 @@ public static partial class QR {
         }
 
         /// <summary>
+        /// Renders console-friendly ASCII text with auto-fit.
+        /// </summary>
+        public string AsciiConsole(AsciiConsoleOptions? consoleOptions = null) {
+            return Render(OutputFormat.Ascii, new RenderExtras { AsciiConsole = consoleOptions }).GetText();
+        }
+
+        /// <summary>
         /// Saves ASCII to a file.
         /// </summary>
         public string SaveAscii(string path, MatrixAsciiRenderOptions? asciiOptions = null) {
             return OutputWriter.Write(path, Render(OutputFormat.Ascii, new RenderExtras { MatrixAscii = asciiOptions }));
+        }
+
+        /// <summary>
+        /// Saves console-friendly ASCII to a file.
+        /// </summary>
+        public string SaveAsciiConsole(string path, AsciiConsoleOptions? consoleOptions = null) {
+            return OutputWriter.Write(path, Render(OutputFormat.Ascii, new RenderExtras { AsciiConsole = consoleOptions }));
         }
 
         /// <summary>

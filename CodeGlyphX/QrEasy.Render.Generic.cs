@@ -119,6 +119,10 @@ public static partial class QrEasy {
                 return RenderedOutput.FromText(format, eps, Encoding.ASCII);
             }
             case OutputFormat.Ascii: {
+                if (extras?.AsciiConsole is not null) {
+                    var fitOptions = MergeConsoleOptions(extras.AsciiConsole, opts.QuietZone);
+                    return RenderedOutput.FromText(format, AsciiConsole.Render(qr.Modules, fitOptions));
+                }
                 var asciiOptions = BuildAsciiOptions(extras?.MatrixAscii, opts);
                 return RenderedOutput.FromText(format, MatrixAsciiRenderer.Render(qr.Modules, asciiOptions));
             }
