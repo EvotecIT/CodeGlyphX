@@ -83,17 +83,16 @@ public sealed class WebpManagedEncodeTests {
 
     [Fact]
     public void Webp_ManagedEncode_Vp8L_FallsBackWhenPaletteTooLarge() {
-        const int width = 17;
+        const int width = 257;
         const int height = 1;
         const int stride = width * 4;
 
         var rgba = new byte[height * stride];
         for (var x = 0; x < width; x++) {
-            var v = (byte)(x * 8);
             var i = x * 4;
-            rgba[i] = v;
-            rgba[i + 1] = v;
-            rgba[i + 2] = v;
+            rgba[i] = (byte)(x & 0xFF);
+            rgba[i + 1] = (byte)(x >> 8);
+            rgba[i + 2] = (byte)(x * 13);
             rgba[i + 3] = 255;
         }
 
@@ -180,16 +179,16 @@ public sealed class WebpManagedEncodeTests {
 
     [Fact]
     public void Webp_ManagedEncode_Vp8L_NoTransform_WhenPaletteTooLarge() {
-        const int width = 20;
+        const int width = 300;
         const int height = 1;
         const int stride = width * 4;
 
         var rgba = new byte[height * stride];
         for (var x = 0; x < width; x++) {
             var i = x * 4;
-            rgba[i] = (byte)(x * 7);
-            rgba[i + 1] = (byte)(255 - (x * 7));
-            rgba[i + 2] = (byte)(x * 3);
+            rgba[i] = (byte)(x & 0xFF);
+            rgba[i + 1] = (byte)(x >> 8);
+            rgba[i + 2] = (byte)(x * 7);
             rgba[i + 3] = 255;
         }
 

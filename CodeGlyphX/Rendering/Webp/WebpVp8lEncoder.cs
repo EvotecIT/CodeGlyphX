@@ -14,9 +14,11 @@ internal static class WebpVp8lEncoder {
     private const int GreenAlphabetBase = LiteralAlphabetSize + LengthPrefixCount; // 280
     private const int MaxPrefixBits = 15;
     private const int MaxPaletteSize = 256;
-    private const int MaxBackwardDistance = 4096;
+    private const int MaxBackwardDistance = 16384;
     private const int DistanceMapSize = 120;
     private const int MaxColorCacheBits = 11;
+    private const int HashBits = 16;
+    private const int MaxHashChain = 64;
     private const uint ColorCacheHashMultiplier = 0x1e35a7bd;
     private static readonly (int xi, int yi)[] DistanceMap = {
         (0, 1), (1, 0), (1, 1), (-1, 1), (0, 2), (2, 0), (1, 2), (-1, 2),
@@ -684,145 +686,169 @@ internal static class WebpVp8lEncoder {
     private static Token[] BuildTokensWithColorCache(ReadOnlySpan<int> pixels, int width, int colorCacheBits) {
         if (pixels.Length == 0) return Array.Empty<Token>();
         if (colorCacheBits is < 1 or > MaxColorCacheBits) return BuildSmallDistanceTokens(pixels);
+        return BuildTokensWithHash(pixels, colorCacheBits);
+    }
 
-        var cacheSize = 1 << colorCacheBits;
-        var cache = new int[cacheSize];
-        var cacheValid = new bool[cacheSize];
+    private static Token[] BuildSmallDistanceTokens(ReadOnlySpan<int> pixels) {
+        if (pixels.Length == 0) return Array.Empty<Token>();
+        return BuildTokensWithHash(pixels, colorCacheBits: 0);
+    }
+
+    private static Token[] BuildTokensWithHash(ReadOnlySpan<int> pixels, int colorCacheBits) {
+        if (pixels.Length == 0) return Array.Empty<Token>();
+
+        var useCache = colorCacheBits > 0;
+        var cacheSize = useCache ? 1 << colorCacheBits : 0;
+        var cache = useCache ? new int[cacheSize] : Array.Empty<int>();
+        var cacheValid = useCache ? new bool[cacheSize] : Array.Empty<bool>();
+
+        var hashSize = 1 << HashBits;
+        var head = new int[hashSize];
+        var next = new int[pixels.Length];
+        Array.Fill(head, -1);
+        Array.Fill(next, -1);
+
         var list = new List<Token>(pixels.Length);
-
         var pos = 0;
         var maxDistance = Math.Min(MaxBackwardDistance, pixels.Length);
         const int maxMatchLength = 256;
+
         while (pos < pixels.Length) {
             var pixel = pixels[pos];
-            var cacheIndex = GetColorCacheIndex(pixel, colorCacheBits);
-            if (cacheValid[cacheIndex] && cache[cacheIndex] == pixel) {
-                list.Add(Token.CacheIndex(cacheIndex));
-                cache[cacheIndex] = pixel;
-                cacheValid[cacheIndex] = true;
-                pos++;
-                continue;
+            if (useCache) {
+                var cacheIndex = GetColorCacheIndex(pixel, colorCacheBits);
+                if (cacheValid[cacheIndex] && cache[cacheIndex] == pixel) {
+                    list.Add(Token.CacheIndex(cacheIndex));
+                    cache[cacheIndex] = pixel;
+                    cacheValid[cacheIndex] = true;
+                    InsertHash(pixels, pos, head, next);
+                    pos++;
+                    continue;
+                }
             }
-
-            var bestLength = 0;
-            var bestDistance = 0;
-            var bestScore = int.MinValue;
 
             var remaining = pixels.Length - pos;
             var maxLen = remaining < MaxBackwardDistance ? remaining : MaxBackwardDistance;
             if (maxLen > maxMatchLength) maxLen = maxMatchLength;
 
-            var maxSearchDistance = pos < maxDistance ? pos : maxDistance;
-            for (var distance = 1; distance <= maxSearchDistance; distance++) {
-                var requiredLength = distance <= 8 ? 3
-                    : distance <= 64 ? 4
-                    : distance <= 256 ? 5
-                    : 6;
-
-                var length = 0;
-                while (length < maxLen && pixels[pos + length] == pixels[pos - distance + length]) {
-                    length++;
-                }
-
-                if (length < requiredLength) continue;
-
-                var score = length - requiredLength;
-                if (score > bestScore || (score == bestScore && distance < bestDistance)) {
-                    bestScore = score;
-                    bestLength = length;
-                    bestDistance = distance;
-                }
-            }
+            FindBestMatch(pixels, pos, maxDistance, maxLen, head, next, out var bestLength, out var bestDistance);
 
             if (bestLength > 0) {
                 list.Add(Token.BackReference(bestDistance, bestLength));
+                if (useCache) {
+                    for (var i = 0; i < bestLength; i++) {
+                        var copied = pixels[pos + i];
+                        var idx = GetColorCacheIndex(copied, colorCacheBits);
+                        cache[idx] = copied;
+                        cacheValid[idx] = true;
+                    }
+                }
                 for (var i = 0; i < bestLength; i++) {
-                    var copied = pixels[pos + i];
-                    var idx = GetColorCacheIndex(copied, colorCacheBits);
-                    cache[idx] = copied;
-                    cacheValid[idx] = true;
+                    InsertHash(pixels, pos + i, head, next);
                 }
                 pos += bestLength;
                 continue;
             }
 
             list.Add(Token.Literal(pixel));
-            cache[cacheIndex] = pixel;
-            cacheValid[cacheIndex] = true;
+            if (useCache) {
+                var cacheIndex = GetColorCacheIndex(pixel, colorCacheBits);
+                cache[cacheIndex] = pixel;
+                cacheValid[cacheIndex] = true;
+            }
+            InsertHash(pixels, pos, head, next);
             pos++;
         }
 
         return list.ToArray();
     }
 
-    private static Token[] BuildSmallDistanceTokens(ReadOnlySpan<int> pixels) {
-        if (pixels.Length == 0) return Array.Empty<Token>();
+    private static void FindBestMatch(
+        ReadOnlySpan<int> pixels,
+        int pos,
+        int maxDistance,
+        int maxLen,
+        int[] head,
+        int[] next,
+        out int bestLength,
+        out int bestDistance) {
+        bestLength = 0;
+        bestDistance = 0;
+        if (pos + 1 >= pixels.Length) return;
 
-        var list = new List<Token>(pixels.Length);
-        var pos = 0;
-        var maxDistance = Math.Min(MaxBackwardDistance, pixels.Length);
-        const int maxMatchLength = 256;
-        while (pos < pixels.Length) {
-            var bestLength = 0;
-            var bestDistance = 0;
-            var bestScore = int.MinValue;
+        var hash = ComputeHash(pixels, pos);
+        if (hash < 0) return;
 
-            var remaining = pixels.Length - pos;
-            var maxLen = remaining < MaxBackwardDistance ? remaining : MaxBackwardDistance;
-            if (maxLen > maxMatchLength) maxLen = maxMatchLength;
+        var bestScore = int.MinValue;
+        var candidate = head[hash];
+        var chain = 0;
 
-            var maxSearchDistance = pos < maxDistance ? pos : maxDistance;
-            for (var distance = 1; distance <= maxSearchDistance; distance++) {
-
+        while (candidate >= 0 && chain < MaxHashChain) {
+            var distance = pos - candidate;
+            if (distance > 0 && distance <= maxDistance) {
                 var requiredLength = distance <= 8 ? 3
                     : distance <= 64 ? 4
                     : distance <= 256 ? 5
                     : 6;
 
-                var length = 0;
-                while (length < maxLen && pixels[pos + length] == pixels[pos - distance + length]) {
-                    length++;
-                }
+                if (requiredLength <= maxLen) {
+                    var length = 0;
+                    while (length < maxLen && pixels[pos + length] == pixels[candidate + length]) {
+                        length++;
+                    }
 
-                if (length < requiredLength) continue;
-
-                var score = length - requiredLength;
-                if (score > bestScore || (score == bestScore && distance < bestDistance)) {
-                    bestScore = score;
-                    bestLength = length;
-                    bestDistance = distance;
+                    if (length >= requiredLength) {
+                        var score = length - requiredLength;
+                        if (score > bestScore || (score == bestScore && distance < bestDistance)) {
+                            bestScore = score;
+                            bestLength = length;
+                            bestDistance = distance;
+                            if (length == maxLen) break;
+                        }
+                    }
                 }
             }
 
-            if (bestLength > 0) {
-                list.Add(Token.BackReference(bestDistance, bestLength));
-                pos += bestLength;
-                continue;
-            }
-
-            list.Add(Token.Literal(pixels[pos]));
-            pos++;
+            candidate = next[candidate];
+            chain++;
         }
+    }
 
-        return list.ToArray();
+    private static void InsertHash(ReadOnlySpan<int> pixels, int pos, int[] head, int[] next) {
+        if (pos + 1 >= pixels.Length) return;
+        var hash = ComputeHash(pixels, pos);
+        if (hash < 0) return;
+        next[pos] = head[hash];
+        head[hash] = pos;
+    }
+
+    private static int ComputeHash(ReadOnlySpan<int> pixels, int pos) {
+        if (pos + 1 >= pixels.Length) return -1;
+        unchecked {
+            var a = (uint)pixels[pos];
+            var b = (uint)pixels[pos + 1];
+            var hash = (a * 0x1e35a7bdu) + (b * 0x9e3779b9u);
+            return (int)(hash >> (32 - HashBits));
+        }
     }
 
     private static int ChooseColorCacheBits(ReadOnlySpan<int> pixels) {
-        if (pixels.Length < 16) return 0;
+        if (pixels.Length < 32) return 0;
 
         var bestBits = 0;
-        var bestHits = 0;
-        for (var bits = 4; bits <= 7; bits++) {
+        var bestScore = 0;
+        for (var bits = 2; bits <= MaxColorCacheBits; bits++) {
             var hits = CountColorCacheHits(pixels, bits);
-            if (hits > bestHits) {
-                bestHits = hits;
+            if (hits == 0) continue;
+            var cacheSize = 1 << bits;
+            var score = hits * 3 - cacheSize;
+            if (score > bestScore) {
+                bestScore = score;
                 bestBits = bits;
             }
         }
 
-        if (bestBits == 0) return 0;
-        var threshold = pixels.Length / 8;
-        return bestHits >= threshold ? bestBits : 0;
+        return bestScore > 0 ? bestBits : 0;
     }
 
     private static int CountColorCacheHits(ReadOnlySpan<int> pixels, int colorCacheBits) {
