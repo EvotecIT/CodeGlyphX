@@ -145,6 +145,18 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_ColorKey_Mask() {
+        var black = new byte[] { 0x00, 0x00, 0x00 };
+        var pdf = BuildPdfWithFlateImage(1, 1, black, "/DeviceRGB", bitsPerComponent: 8, "/Filter /FlateDecode /Mask [0 0 0 0 0 0] ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x00, 0x00, 0x00, 0x00 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Flate_DecodeArray_Inverts_Gray() {
         var gray = new byte[] { 0 };
         var pdf = BuildPdfWithFlateImage(1, 1, gray, "/DeviceGray", bitsPerComponent: 8, "/Filter /FlateDecode /Decode [1 0] ");

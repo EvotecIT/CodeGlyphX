@@ -218,6 +218,11 @@ public static class PdfReader {
             colors = colorsValue;
         }
 
+        float[]? mask = null;
+        if (TryReadNumberArrayAfterKey(dict, "/Mask", out var maskValues)) {
+            mask = maskValues;
+        }
+
         var lzwEarlyChange = -1;
         var lzwEarlyChangeSet = false;
         if (filters != null && TryReadDecodeParmsArrayAfterKey(dict, "/DecodeParms", out var dpArray)) {
@@ -245,11 +250,11 @@ public static class PdfReader {
         }
         if (TryReadIndexedColorSpaceAfterKey(dict, "/ColorSpace", out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, length, decode);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, length, decode, mask);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, length, decode);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, length, decode, mask);
         return true;
     }
 
@@ -294,6 +299,11 @@ public static class PdfReader {
             colors = colorsValue;
         }
 
+        float[]? mask = null;
+        if (TryReadNumberArrayAfterAnyKey(dict, new[] { "/Mask" }, out var maskValues)) {
+            mask = maskValues;
+        }
+
         var lzwEarlyChange = -1;
         var lzwEarlyChangeSet = false;
         if (filters != null && TryReadDecodeParmsArrayAfterAnyKey(dict, new[] { "/DecodeParms", "/DP" }, out var dpArray)) {
@@ -321,11 +331,11 @@ public static class PdfReader {
         }
         if (TryReadIndexedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, streamLength: 0, decode);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, streamLength: 0, decode, mask);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, streamLength: 0, decode);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, streamLength: 0, decode, mask);
         return true;
     }
 
@@ -486,6 +496,13 @@ public static class PdfReader {
             return true;
         }
 
+        byte[]? maskAlpha = null;
+        if (info.Mask is not null && info.Mask.Length >= colors * 2) {
+            if (TryBuildMaskAlpha(expanded, info.Width, info.Height, colors, info.BitsPerComponent, info.Mask, out var alpha)) {
+                maskAlpha = alpha;
+            }
+        }
+
         if (info.Decode is not null && info.Decode.Length >= colors * 2) {
             ApplyDecodeArray(expanded, colors, info.Decode);
         }
@@ -525,9 +542,67 @@ public static class PdfReader {
             }
         }
 
+        if (maskAlpha is not null) {
+            var pixelCount = info.Width * info.Height;
+            for (var i = 0; i < pixelCount; i++) {
+                rgba[i * 4 + 3] = maskAlpha[i];
+            }
+        }
+
         width = info.Width;
         height = info.Height;
         return true;
+    }
+
+    private static bool TryBuildMaskAlpha(byte[] expanded, int width, int height, int colors, int bitsPerComponent, float[] mask, out byte[] alpha) {
+        alpha = Array.Empty<byte>();
+        if (width <= 0 || height <= 0 || colors <= 0) return false;
+        if (mask.Length < colors * 2) return false;
+        var maxValue = bitsPerComponent == 16 ? 65535 : (1 << bitsPerComponent) - 1;
+        if (maxValue <= 0) return false;
+        var ranges = new byte[colors * 2];
+        for (var c = 0; c < colors; c++) {
+            var min = ClampMaskValue(mask[c * 2], maxValue);
+            var max = ClampMaskValue(mask[c * 2 + 1], maxValue);
+            if (min > max) {
+                var tmp = min;
+                min = max;
+                max = tmp;
+            }
+            ranges[c * 2] = ScaleMaskValue(min, maxValue);
+            ranges[c * 2 + 1] = ScaleMaskValue(max, maxValue);
+        }
+
+        var pixelCount = width * height;
+        alpha = new byte[pixelCount];
+        for (var i = 0; i < pixelCount; i++) {
+            var baseIndex = i * colors;
+            var match = true;
+            for (var c = 0; c < colors; c++) {
+                var v = expanded[baseIndex + c];
+                var min = ranges[c * 2];
+                var max = ranges[c * 2 + 1];
+                if (v < min || v > max) {
+                    match = false;
+                    break;
+                }
+            }
+            alpha[i] = match ? (byte)0 : (byte)255;
+        }
+        return true;
+    }
+
+    private static int ClampMaskValue(float value, int maxValue) {
+        var v = (int)Math.Round(value);
+        if (v < 0) return 0;
+        if (v > maxValue) return maxValue;
+        return v;
+    }
+
+    private static byte ScaleMaskValue(int value, int maxValue) {
+        if (maxValue <= 0) return 0;
+        if (maxValue == 255) return (byte)value;
+        return (byte)((value * 255 + (maxValue / 2)) / maxValue);
     }
 
     private static bool TryReadStream(ReadOnlySpan<byte> data, int start, int lengthHint, out ReadOnlySpan<byte> stream, out int endOffset) {
@@ -2238,7 +2313,8 @@ public static class PdfReader {
             int softMaskObj,
             int softMaskGen,
             int streamLength,
-            float[]? decode) {
+            float[]? decode,
+            float[]? mask) {
             Width = width;
             Height = height;
             BitsPerComponent = bitsPerComponent;
@@ -2254,6 +2330,7 @@ public static class PdfReader {
             SoftMaskGen = softMaskGen;
             StreamLength = streamLength;
             Decode = decode;
+            Mask = mask;
         }
 
         public int Width { get; }
@@ -2271,5 +2348,6 @@ public static class PdfReader {
         public int SoftMaskGen { get; }
         public int StreamLength { get; }
         public float[]? Decode { get; }
+        public float[]? Mask { get; }
     }
 }
