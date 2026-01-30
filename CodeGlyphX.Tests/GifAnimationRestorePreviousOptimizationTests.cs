@@ -16,7 +16,7 @@ public sealed class GifAnimationRestorePreviousOptimizationTests {
             0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 255, 0, 255
         };
-        var frame2 = new GifAnimationFrame(frame2Pixels, 2, 2, 8, durationMs: 20, disposal: GifDisposal.RestorePrevious);
+        var frame2 = new GifAnimationFrame(frame2Pixels, 2, 2, 8, durationMs: 20, disposalMethod: GifDisposalMethod.RestorePrevious);
 
         var gif = GifWriter.WriteAnimation(2, 2, new[] { frame1, frame2 });
         Assert.True(GifReader.TryDecodeAnimationFrames(gif, out var frames, out _, out _, out _));

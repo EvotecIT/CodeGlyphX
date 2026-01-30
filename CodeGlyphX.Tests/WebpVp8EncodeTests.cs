@@ -4,6 +4,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpVp8EncodeTests {
     [Fact]
     public void Webp_ManagedEncode_Vp8_Lossy_Decodes() {

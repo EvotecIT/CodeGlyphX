@@ -127,7 +127,7 @@ public static class TiffWriter {
                 if (usePredictor) {
                     ApplyHorizontalPredictor(raw, rowSize, rowsInStrip, bytesPerPixel: 4);
                 }
-                var encoded = EncodeCompressed(raw, compression);
+                var encoded = EncodeCompressed(raw, compression, rowSize, rowsInStrip);
                 stripData[s] = encoded;
             }
             if (stripCount == 1) {
@@ -238,6 +238,22 @@ public static class TiffWriter {
     }
 
     /// <summary>
+    /// Writes a bilevel (1-bit) TIFF byte array with configurable rows-per-strip, compression, and photometric.
+    /// </summary>
+    public static byte[] WriteBilevel(
+        int width,
+        int height,
+        ReadOnlySpan<byte> packed,
+        int stride,
+        int rowsPerStrip,
+        TiffCompression compression,
+        ushort photometric = 1) {
+        using var ms = new MemoryStream();
+        WriteBilevel(ms, width, height, packed, stride, rowsPerStrip, compression, photometric);
+        return ms.ToArray();
+    }
+
+    /// <summary>
     /// Writes a TIFF to a stream from a packed 1-bit buffer (single page).
     /// </summary>
     public static void WriteBilevel(Stream stream, int width, int height, ReadOnlySpan<byte> packed, int stride) {
@@ -302,7 +318,7 @@ public static class TiffWriter {
                     var srcRow = (s * stripRows + y) * stride;
                     packed.Slice(srcRow, rowSize).CopyTo(raw.AsSpan(y * rowSize, rowSize));
                 }
-                var encoded = EncodeCompressed(raw, compression);
+                var encoded = EncodeCompressed(raw, compression, rowSize, rowsInStrip);
                 stripData[s] = encoded;
             }
             if (stripCount == 1) {
@@ -531,7 +547,7 @@ public static class TiffWriter {
             var current = (uint)offset;
             for (var t = 0; t < tileCount; t++) {
                 FillTileBilevel(packed, width, height, stride, tileWidth, tileHeight, tilesAcross, t, tileBuffer, photometric);
-                var encoded = EncodeCompressed(tileBuffer, compression);
+                var encoded = EncodeCompressed(tileBuffer, compression, tileRowBytes, tileHeight);
                 tileData[t] = encoded;
                 if (tileCount > 1) {
                     tileOffsets![t] = current;
@@ -731,7 +747,7 @@ public static class TiffWriter {
                 if (usePredictor) {
                     ApplyHorizontalPredictor(tileBuffer, tileRowBytes, tileHeight, bytesPerPixel: 4);
                 }
-                var encoded = EncodeCompressed(tileBuffer, compression);
+                var encoded = EncodeCompressed(tileBuffer, compression, tileRowBytes, tileHeight);
                 tileData[t] = encoded;
                 if (tileCount > 1) {
                     tileOffsets![t] = current;
@@ -892,7 +908,7 @@ public static class TiffWriter {
                     offsets[index] = current;
                     current += counts[index];
                 } else {
-                    var encoded = EncodeCompressed(raw, compression);
+                    var encoded = EncodeCompressed(raw, compression, planeRowBytes, rowsInStrip);
                     stripData![index] = encoded;
                     counts[index] = (uint)encoded.Length;
                     offsets[index] = current;
@@ -1078,7 +1094,7 @@ public static class TiffWriter {
                     if (usePredictor) {
                         ApplyHorizontalPredictor(raw, rowSize, rowsInStrip, bytesPerPixel: 4);
                     }
-                    var encoded = EncodeCompressed(raw, compression);
+                    var encoded = EncodeCompressed(raw, compression, rowSize, rowsInStrip);
                     stripData[i][s] = encoded;
                     stripByteCounts[i][s] = (uint)encoded.Length;
                 }
@@ -1452,7 +1468,7 @@ public static class TiffWriter {
                     if (usePredictor) {
                         ApplyHorizontalPredictor(tileBuffer, tileRowBytes, tileHeight, bytesPerPixel: 4);
                     }
-                    var encoded = EncodeCompressed(tileBuffer, compression);
+                    var encoded = EncodeCompressed(tileBuffer, compression, tileRowBytes, tileHeight);
                     tileData[i][t] = encoded;
                     tileByteCounts[i][t] = (uint)encoded.Length;
                     if (tileCount > 1) {
@@ -1460,6 +1476,7 @@ public static class TiffWriter {
                         current += tileByteCounts[i][t];
                     } else {
                         tileByteCountsValues[i] = tileByteCounts[i][t];
+                        current += tileByteCounts[i][t];
                     }
                 }
                 cursor = current;
@@ -1574,6 +1591,7 @@ public static class TiffWriter {
             TiffCompressionMode.None => TiffCompression.None,
             TiffCompressionMode.PackBits => TiffCompression.PackBits,
             TiffCompressionMode.Deflate => TiffCompression.Deflate,
+            TiffCompressionMode.Lzw => TiffCompression.Lzw,
             _ => throw new ArgumentOutOfRangeException(nameof(compression))
         };
     }
@@ -1624,7 +1642,7 @@ public static class TiffWriter {
             if (usePredictor) {
                 ApplyHorizontalPredictor(raw, rowSize, rowsInStrip, bytesPerPixel: 4);
             }
-            strips[s] = EncodeCompressed(raw, compression);
+            strips[s] = EncodeCompressed(raw, compression, rowSize, rowsInStrip);
         }
         return strips;
     }
@@ -1695,6 +1713,20 @@ public static class TiffWriter {
         return result;
     }
 
+    private static byte[] PackBitsEncodeRows(ReadOnlySpan<byte> data, int rowSize, int rows) {
+        if (rowSize <= 0 || rows <= 0) return PackBitsEncode(data);
+        var needed = (long)rowSize * rows;
+        if (needed < 0 || needed > data.Length) throw new ArgumentOutOfRangeException(nameof(data));
+
+        using var ms = new MemoryStream();
+        for (var y = 0; y < rows; y++) {
+            var row = data.Slice(y * rowSize, rowSize);
+            var encoded = PackBitsEncode(row);
+            ms.Write(encoded, 0, encoded.Length);
+        }
+        return ms.ToArray();
+    }
+
     private static byte[] EncodeCompressed(byte[] data, TiffCompression compression) {
         return compression switch {
             TiffCompression.PackBits => PackBitsEncode(data),
@@ -1702,6 +1734,13 @@ public static class TiffWriter {
             TiffCompression.Lzw => LzwEncode(data),
             _ => throw new ArgumentOutOfRangeException(nameof(compression))
         };
+    }
+
+    private static byte[] EncodeCompressed(byte[] data, TiffCompression compression, int rowSize, int rows) {
+        if (compression == TiffCompression.PackBits) {
+            return PackBitsEncodeRows(data, rowSize, rows);
+        }
+        return EncodeCompressed(data, compression);
     }
 
     private static byte[] LzwEncode(ReadOnlySpan<byte> data) {
@@ -1721,7 +1760,7 @@ public static class TiffWriter {
             return writer.ToArray();
         }
 
-        var prefix = data[0];
+        var prefix = (int)data[0];
         for (var i = 1; i < data.Length; i++) {
             var b = data[i];
             var key = (prefix << 8) | b;
@@ -1887,11 +1926,14 @@ public static class TiffWriter {
 
     private static void ApplyHorizontalPredictor(byte[] data, int rowSize, int rows, int bytesPerPixel) {
         if (bytesPerPixel <= 0) return;
+        if (rowSize <= bytesPerPixel) return;
+        var rowCopy = new byte[rowSize];
         for (var y = 0; y < rows; y++) {
             var rowStart = y * rowSize;
+            Buffer.BlockCopy(data, rowStart, rowCopy, 0, rowSize);
             for (var i = bytesPerPixel; i < rowSize; i++) {
-                var value = data[rowStart + i];
-                var prev = data[rowStart + i - bytesPerPixel];
+                var value = rowCopy[i];
+                var prev = rowCopy[i - bytesPerPixel];
                 data[rowStart + i] = unchecked((byte)(value - prev));
             }
         }

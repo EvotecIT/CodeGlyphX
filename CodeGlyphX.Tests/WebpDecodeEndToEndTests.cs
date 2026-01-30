@@ -6,6 +6,8 @@ using Xunit.Abstractions;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpDecodeEndToEndTests {
     private readonly ITestOutputHelper _output;
 

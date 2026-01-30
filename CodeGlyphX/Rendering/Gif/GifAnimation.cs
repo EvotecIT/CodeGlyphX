@@ -3,28 +3,6 @@ using System;
 namespace CodeGlyphX.Rendering.Gif;
 
 /// <summary>
-/// GIF disposal methods.
-/// </summary>
-public enum GifDisposalMethod {
-    /// <summary>
-    /// No disposal specified.
-    /// </summary>
-    None = 0,
-    /// <summary>
-    /// Do not dispose (keep previous frame).
-    /// </summary>
-    DoNotDispose = 1,
-    /// <summary>
-    /// Restore to background after the frame.
-    /// </summary>
-    RestoreBackground = 2,
-    /// <summary>
-    /// Restore to previous canvas after the frame.
-    /// </summary>
-    RestorePrevious = 3
-}
-
-/// <summary>
 /// Describes a single RGBA32 frame for animated GIF decoding.
 /// </summary>
 public readonly struct GifAnimationFrame {
@@ -48,6 +26,19 @@ public readonly struct GifAnimationFrame {
         X = x;
         Y = y;
         DisposalMethod = disposalMethod;
+    }
+
+    /// <summary>
+    /// Creates a GIF animation frame backed by an RGBA32 buffer with a convenience disposal flag.
+    /// </summary>
+    public GifAnimationFrame(
+        byte[] rgba,
+        int width,
+        int height,
+        int stride,
+        int durationMs,
+        bool disposeToBackground)
+        : this(rgba, width, height, stride, durationMs, 0, 0, disposeToBackground ? GifDisposalMethod.RestoreBackground : GifDisposalMethod.None) {
     }
 
     /// <summary>
@@ -92,13 +83,35 @@ public readonly struct GifAnimationFrame {
 }
 
 /// <summary>
-/// Options for animated GIF decoding.
+/// GIF disposal methods.
+/// </summary>
+public enum GifDisposalMethod {
+    /// <summary>
+    /// No disposal specified.
+    /// </summary>
+    None = 0,
+    /// <summary>
+    /// Do not dispose (keep frame).
+    /// </summary>
+    DoNotDispose = 1,
+    /// <summary>
+    /// Restore to background.
+    /// </summary>
+    RestoreBackground = 2,
+    /// <summary>
+    /// Restore to previous.
+    /// </summary>
+    RestorePrevious = 3
+}
+
+/// <summary>
+/// Options extracted from an animated GIF.
 /// </summary>
 public readonly struct GifAnimationOptions {
     /// <summary>
     /// Creates animation options.
     /// </summary>
-    public GifAnimationOptions(int loopCount = 0, uint backgroundRgba = 0) {
+    public GifAnimationOptions(int loopCount, uint backgroundRgba) {
         LoopCount = loopCount;
         BackgroundRgba = backgroundRgba;
     }

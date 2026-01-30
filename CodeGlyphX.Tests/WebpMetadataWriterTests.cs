@@ -4,6 +4,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpMetadataWriterTests {
     [Fact]
     public void WebpWriter_WritesMetadataChunks_Lossless() {

@@ -4,6 +4,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpSizeLimitTests {
     [Fact]
     public void WebpReader_SizeLimit_IsConfigurable() {

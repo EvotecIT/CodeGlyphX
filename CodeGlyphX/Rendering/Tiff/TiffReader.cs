@@ -37,6 +37,9 @@ public static class TiffReader {
     private const int CompressionPackBits = 32773;
     private const int CompressionDeflateAdobe = 32946;
 
+    /// <summary>
+    /// Returns true when the buffer looks like a TIFF file header.
+    /// </summary>
     public static bool IsTiff(ReadOnlySpan<byte> data) {
         if (data.Length < 8) return false;
         var little = data[0] == (byte)'I' && data[1] == (byte)'I';
@@ -78,6 +81,9 @@ public static class TiffReader {
         return pages.ToArray();
     }
 
+    /// <summary>
+    /// Decodes the first TIFF page into an RGBA buffer.
+    /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
         if (!IsTiff(data)) throw new FormatException("Not a TIFF image.");
 
@@ -86,6 +92,47 @@ public static class TiffReader {
         if (ifdOffset > data.Length - 2) throw new FormatException("Invalid TIFF IFD offset.");
 
         return DecodeRgba32Internal(data, little, (int)ifdOffset, out width, out height, out _);
+    }
+
+    /// <summary>
+    /// Attempts to decode the first TIFF page into an RGBA buffer.
+    /// </summary>
+    public static bool TryDecodeRgba32(ReadOnlySpan<byte> data, out byte[] rgba, out int width, out int height) {
+        try {
+            rgba = DecodeRgba32(data, out width, out height);
+            return true;
+        } catch (FormatException) {
+            rgba = Array.Empty<byte>();
+            width = 0;
+            height = 0;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Decodes a specific TIFF page into an RGBA buffer.
+    /// </summary>
+    public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, int pageIndex, out int width, out int height) {
+        if (!IsTiff(data)) throw new FormatException("Not a TIFF image.");
+        if (pageIndex < 0) throw new ArgumentOutOfRangeException(nameof(pageIndex));
+
+        var little = data[0] == (byte)'I';
+        var ifdOffset = ReadU32(data, 4, little);
+        if (ifdOffset > data.Length - 2) throw new FormatException("Invalid TIFF IFD offset.");
+
+        var currentOffset = (int)ifdOffset;
+        for (var page = 0; page <= pageIndex; page++) {
+            var rgba = DecodeRgba32Internal(data, little, currentOffset, out width, out height, out var nextIfdOffset);
+            if (page == pageIndex) {
+                return rgba;
+            }
+            if (nextIfdOffset <= 0 || nextIfdOffset > data.Length - 2) {
+                throw new FormatException("TIFF page index out of range.");
+            }
+            currentOffset = nextIfdOffset;
+        }
+
+        throw new FormatException("TIFF page index out of range.");
     }
 
     private static byte[] DecodeRgba32Internal(ReadOnlySpan<byte> data, bool little, int ifdOffset, out int width, out int height, out int nextIfdOffset) {

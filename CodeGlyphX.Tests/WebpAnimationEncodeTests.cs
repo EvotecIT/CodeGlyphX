@@ -5,6 +5,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpAnimationEncodeTests {
     [Fact]
     public void Webp_AnimationEncode_FirstFrameDecodes() {

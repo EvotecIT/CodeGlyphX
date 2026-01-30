@@ -84,10 +84,6 @@ public static partial class QrEasy {
                 }
                 return RenderedOutput.FromBinary(format, QrWebpRenderer.Render(qr.Modules, render, quality));
             }
-            case OutputFormat.Gif: {
-                var render = BuildPngOptions(opts, qr);
-                return RenderedOutput.FromBinary(format, QrGifRenderer.Render(qr.Modules, render));
-            }
             case OutputFormat.Tiff: {
                 var render = BuildPngOptions(opts, qr);
                 var compression = extras?.TiffCompression ?? TiffCompressionMode.Auto;
@@ -109,10 +105,6 @@ public static partial class QrEasy {
                     return RenderedOutput.FromBinary(format, gif);
                 }
                 return RenderedOutput.FromBinary(format, QrGifRenderer.Render(qr.Modules, render));
-            }
-            case OutputFormat.Tiff: {
-                var render = BuildPngOptions(opts, qr);
-                return RenderedOutput.FromBinary(format, QrTiffRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Ppm: {
                 var render = BuildPngOptions(opts, qr);

@@ -73,12 +73,19 @@ public static partial class DataMatrixCode {
             }
             case OutputFormat.Jpeg:
                 return RenderedOutput.FromBinary(format, MatrixJpegRenderer.Render(modules, pngOptions, options?.JpegQuality ?? 85));
-            case OutputFormat.Webp:
-                return RenderedOutput.FromBinary(format, MatrixWebpRenderer.Render(modules, pngOptions, options?.WebpQuality ?? 100));
-            case OutputFormat.Gif:
-                return RenderedOutput.FromBinary(format, MatrixGifRenderer.Render(modules, pngOptions));
-            case OutputFormat.Tiff:
-                return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions, extras?.TiffCompression ?? TiffCompressionMode.Auto));
+            case OutputFormat.Webp: {
+                var quality = options?.WebpQuality ?? 100;
+                var extrasFrames = extras?.WebpFrames;
+                if (extrasFrames is not null && extrasFrames.Length > 0) {
+                    var duration = extras?.AnimationDurationMs ?? 100;
+                    var durations = extras?.AnimationDurationsMs;
+                    var webp = durations is not null
+                        ? MatrixWebpRenderer.RenderAnimation(extrasFrames, pngOptions, durations, extras?.WebpAnimationOptions ?? default, quality)
+                        : MatrixWebpRenderer.RenderAnimation(extrasFrames, pngOptions, duration, extras?.WebpAnimationOptions ?? default, quality);
+                    return RenderedOutput.FromBinary(format, webp);
+                }
+                return RenderedOutput.FromBinary(format, MatrixWebpRenderer.Render(modules, pngOptions, quality));
+            }
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, MatrixBmpRenderer.Render(modules, pngOptions));
             case OutputFormat.Gif: {
@@ -94,7 +101,7 @@ public static partial class DataMatrixCode {
                 return RenderedOutput.FromBinary(format, MatrixGifRenderer.Render(modules, pngOptions));
             }
             case OutputFormat.Tiff:
-                return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions));
+                return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions, extras?.TiffCompression ?? TiffCompressionMode.Auto));
             case OutputFormat.Ppm:
                 return RenderedOutput.FromBinary(format, MatrixPpmRenderer.Render(modules, pngOptions));
             case OutputFormat.Pbm:

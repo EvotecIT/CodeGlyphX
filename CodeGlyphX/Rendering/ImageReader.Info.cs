@@ -565,21 +565,6 @@ public static partial class ImageReader {
         return true;
     }
 
-    private static bool IsFourCc(ReadOnlySpan<byte> data, int offset, string fourCc) {
-        if (offset < 0 || offset + 4 > data.Length) return false;
-        return data[offset] == (byte)fourCc[0]
-            && data[offset + 1] == (byte)fourCc[1]
-            && data[offset + 2] == (byte)fourCc[2]
-            && data[offset + 3] == (byte)fourCc[3];
-    }
-
-    private static uint ConvertBgraToRgba(uint bgra) {
-        var b = (byte)(bgra & 0xFF);
-        var g = (byte)((bgra >> 8) & 0xFF);
-        var r = (byte)((bgra >> 16) & 0xFF);
-        var a = (byte)((bgra >> 24) & 0xFF);
-        return (uint)(r | (g << 8) | (b << 16) | (a << 24));
-    }
 
     private static bool TryReadPamSize(ReadOnlySpan<byte> data, out int width, out int height) {
         width = 0;
@@ -650,10 +635,6 @@ public static partial class ImageReader {
 
     private static ushort ReadUInt16LE(ReadOnlySpan<byte> data, int offset, bool little) {
         return little ? ReadUInt16LE(data, offset) : ReadUInt16BE(data, offset);
-    }
-
-    private static uint ReadUInt32BE(ReadOnlySpan<byte> data, int offset) {
-        return (uint)(data[offset] << 24 | data[offset + 1] << 16 | data[offset + 2] << 8 | data[offset + 3]);
     }
 
     private static uint ReadUInt32LE(ReadOnlySpan<byte> data, int offset) {

@@ -332,8 +332,8 @@ internal static class WebpManagedDecoder {
         frame = default;
         if (payload.Length < 16) return false;
 
-        var x = ReadU24LE(payload, 0) * 2;
-        var y = ReadU24LE(payload, 3) * 2;
+        var x = ReadU24LE(payload, 0);
+        var y = ReadU24LE(payload, 3);
         var width = ReadU24LE(payload, 6) + 1;
         var height = ReadU24LE(payload, 9) + 1;
         if (width <= 0 || height <= 0) return false;

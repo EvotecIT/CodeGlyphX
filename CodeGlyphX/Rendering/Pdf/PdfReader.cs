@@ -55,7 +55,17 @@ public static class PdfReader {
 
         var offset = 0;
         while (TryFindImage(data, ref offset, out var info, out var stream)) {
-            if (info.Filter is null) continue;
+            if (info.Filter is null) {
+                if (TryDecodeFlate(info, stream, out rgba, out width, out height)) {
+                    return true;
+                }
+                try {
+                    rgba = JpegReader.DecodeRgba32(stream, out width, out height);
+                    return true;
+                } catch (FormatException) {
+                    continue;
+                }
+            }
             if (info.Filter.Equals("DCTDecode", StringComparison.OrdinalIgnoreCase) ||
                 info.Filter.Equals("DCT", StringComparison.OrdinalIgnoreCase)) {
                 try {
@@ -83,7 +93,7 @@ public static class PdfReader {
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
         if (!TryDecodeRgba32(data, out var rgba, out width, out height)) {
-            throw new FormatException("Unsupported or invalid PDF image.");
+            throw new FormatException("Unsupported or invalid PDF/PS image.");
         }
         return rgba;
     }
@@ -113,7 +123,7 @@ public static class PdfReader {
                 continue;
             }
 
-            if (!TryReadStream(data, dictEnd + 2, out stream, out var endOffset)) {
+            if (!TryReadStream(data, dictEnd + 2, info.StreamLength, out stream, out var endOffset)) {
                 offset = dictEnd + 2;
                 continue;
             }
@@ -139,6 +149,9 @@ public static class PdfReader {
             filter = filterName;
         }
 
+        var length = 0;
+        TryReadNumberAfterKey(dict, "/Length", out length);
+
         string? colorSpace = null;
         if (TryReadNameAfterKey(dict, "/ColorSpace", out var csName)) {
             colorSpace = csName;
@@ -154,7 +167,7 @@ public static class PdfReader {
             colors = colorsValue;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpace, filter, predictor);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpace, filter, predictor, length);
         return true;
     }
 
@@ -170,21 +183,32 @@ public static class PdfReader {
         if (colors <= 0) {
             if (string.Equals(info.ColorSpace, "DeviceRGB", StringComparison.OrdinalIgnoreCase)) colors = 3;
             else if (string.Equals(info.ColorSpace, "DeviceGray", StringComparison.OrdinalIgnoreCase)) colors = 1;
-            else return false;
         }
-        if (colors != 1 && colors != 3) return false;
+        if (colors != 0 && colors != 1 && colors != 3) return false;
 
-        var rowSize = checked(info.Width * colors);
         var predictor = info.Predictor <= 0 ? 1 : info.Predictor;
-        var expected = predictor >= 10 ? checked((rowSize + 1) * info.Height) : checked(rowSize * info.Height);
-
         byte[] inflated;
         try {
-            inflated = DecompressFlate(stream, expected);
+            inflated = DecompressFlateAll(stream);
         } catch (FormatException) {
             return false;
         }
 
+        if (colors == 0) {
+            if (!TryInferColorsFromLength(inflated.Length, info.Width, info.Height, predictor, out colors)) {
+                return false;
+            }
+        } else {
+            var expectedRowSize = checked(info.Width * colors);
+            var expected = predictor >= 10 ? checked((expectedRowSize + 1) * info.Height) : checked(expectedRowSize * info.Height);
+            if (inflated.Length != expected) {
+                if (!TryInferColorsFromLength(inflated.Length, info.Width, info.Height, predictor, out colors)) {
+                    return false;
+                }
+            }
+        }
+
+        var rowSize = checked(info.Width * colors);
         if (predictor == 2) {
             ApplyTiffPredictor(inflated, rowSize, info.Height, colors);
         } else if (predictor >= 10) {
@@ -219,7 +243,7 @@ public static class PdfReader {
         return true;
     }
 
-    private static bool TryReadStream(ReadOnlySpan<byte> data, int start, out ReadOnlySpan<byte> stream, out int endOffset) {
+    private static bool TryReadStream(ReadOnlySpan<byte> data, int start, int lengthHint, out ReadOnlySpan<byte> stream, out int endOffset) {
         stream = ReadOnlySpan<byte>.Empty;
         endOffset = start;
         var streamIndex = IndexOfToken(data, StreamToken, start);
@@ -234,11 +258,24 @@ public static class PdfReader {
             }
         }
 
-        var endStreamIndex = IndexOfToken(data, EndStreamToken, dataStart);
-        if (endStreamIndex < 0) return false;
+        if (lengthHint > 0) {
+            var dataEndHint = dataStart + lengthHint;
+            if (dataEndHint > data.Length) return false;
+            stream = data.Slice(dataStart, lengthHint);
+            var endStreamIndex = IndexOfToken(data, EndStreamToken, dataEndHint);
+            endOffset = endStreamIndex >= 0 ? endStreamIndex + EndStreamToken.Length : dataEndHint;
+            return true;
+        }
 
-        stream = data.Slice(dataStart, endStreamIndex - dataStart);
-        endOffset = endStreamIndex + EndStreamToken.Length;
+        var endStreamIndexLegacy = IndexOfToken(data, EndStreamToken, dataStart);
+        if (endStreamIndexLegacy < 0) return false;
+
+        var dataEnd = endStreamIndexLegacy;
+        while (dataEnd > dataStart && (data[dataEnd - 1] == (byte)'\n' || data[dataEnd - 1] == (byte)'\r')) {
+            dataEnd--;
+        }
+        stream = data.Slice(dataStart, dataEnd - dataStart);
+        endOffset = endStreamIndexLegacy + EndStreamToken.Length;
         return true;
     }
 
@@ -307,6 +344,36 @@ public static class PdfReader {
                || b == (byte)'(' || b == (byte)')';
     }
 
+    private static bool TryInferColorsFromLength(int length, int width, int height, int predictor, out int colors) {
+        colors = 0;
+        if (width <= 0 || height <= 0) return false;
+        if (predictor >= 10) {
+            var rgb = checked((width * 3 + 1) * height);
+            if (length == rgb) {
+                colors = 3;
+                return true;
+            }
+            var gray = checked((width + 1) * height);
+            if (length == gray) {
+                colors = 1;
+                return true;
+            }
+            return false;
+        }
+
+        var rgbRaw = checked(width * height * 3);
+        if (length == rgbRaw) {
+            colors = 3;
+            return true;
+        }
+        var grayRaw = checked(width * height);
+        if (length == grayRaw) {
+            colors = 1;
+            return true;
+        }
+        return false;
+    }
+
     private static byte[] DecompressFlate(ReadOnlySpan<byte> src, int expected) {
         using var input = new MemoryStream(src.ToArray(), writable: false);
 #if NET8_0_OR_GREATER
@@ -326,6 +393,28 @@ public static class PdfReader {
             var buffer = new byte[expected];
             ReadExact(stream, buffer);
             return buffer;
+        }
+    }
+
+    private static byte[] DecompressFlateAll(ReadOnlySpan<byte> src) {
+        using var input = new MemoryStream(src.ToArray(), writable: false);
+#if NET8_0_OR_GREATER
+        Stream stream = LooksLikeZlib(src)
+            ? new ZLibStream(input, CompressionMode.Decompress, leaveOpen: true)
+            : new DeflateStream(input, CompressionMode.Decompress, leaveOpen: true);
+#else
+        Stream stream;
+        if (LooksLikeZlib(src)) {
+            if (src.Length < 6) throw new FormatException("Invalid PDF deflate stream.");
+            stream = new DeflateStream(new MemoryStream(src.Slice(2, src.Length - 6).ToArray(), writable: false), CompressionMode.Decompress, leaveOpen: true);
+        } else {
+            stream = new DeflateStream(input, CompressionMode.Decompress, leaveOpen: true);
+        }
+#endif
+        using (stream) {
+            using var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            return ms.ToArray();
         }
     }
 
@@ -408,7 +497,7 @@ public static class PdfReader {
     }
 
     private readonly struct PdfImageInfo {
-        public PdfImageInfo(int width, int height, int bitsPerComponent, int colors, string? colorSpace, string? filter, int predictor) {
+        public PdfImageInfo(int width, int height, int bitsPerComponent, int colors, string? colorSpace, string? filter, int predictor, int streamLength) {
             Width = width;
             Height = height;
             BitsPerComponent = bitsPerComponent;
@@ -416,6 +505,7 @@ public static class PdfReader {
             ColorSpace = colorSpace;
             Filter = filter;
             Predictor = predictor;
+            StreamLength = streamLength;
         }
 
         public int Width { get; }
@@ -425,5 +515,6 @@ public static class PdfReader {
         public string? ColorSpace { get; }
         public string? Filter { get; }
         public int Predictor { get; }
+        public int StreamLength { get; }
     }
 }

@@ -4,6 +4,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpVp8BlockTokenScaffoldTests
 {
     private static readonly int[] TokenExtraBits = new[] { 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 11 };

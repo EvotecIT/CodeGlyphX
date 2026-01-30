@@ -11,6 +11,7 @@ public static class WebpReader {
     private const uint FourCcVp8X = 0x58385056; // "VP8X"
     private const uint FourCcVp8L = 0x4C385056; // "VP8L"
     private const uint FourCcVp8 = 0x20385056;  // "VP8 "
+    private const uint FourCcAnmf = 0x464D4E41; // "ANMF"
 
     /// <summary>
     /// Default maximum managed WebP payload size (in bytes).

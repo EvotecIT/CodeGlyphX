@@ -46,12 +46,13 @@ public static class PsdReader {
         width = (int)ReadU32BE(data, 18);
         var depth = ReadU16BE(data, 22);
         var colorMode = ReadU16BE(data, 24);
+        var channelCount = (int)channels;
 
         if (width <= 0 || height <= 0) throw new FormatException("Invalid PSD dimensions.");
-        if (channels <= 0) throw new FormatException("Invalid PSD channel count.");
+        if (channelCount <= 0) throw new FormatException("Invalid PSD channel count.");
         if (depth != 8) throw new FormatException("Only 8-bit PSD images are supported.");
         if (colorMode != 1 && colorMode != 3) throw new FormatException("Only Grayscale or RGB PSD images are supported.");
-        if (colorMode == 3 && channels < 3) throw new FormatException("RGB PSD must have at least 3 channels.");
+        if (colorMode == 3 && channelCount < 3) throw new FormatException("RGB PSD must have at least 3 channels.");
 
         var offset = 26;
         offset = SkipSection(data, offset); // color mode data
@@ -64,13 +65,13 @@ public static class PsdReader {
         if (compression != 0 && compression != 1) throw new FormatException("Unsupported PSD compression.");
 
         var pixelCount = checked(width * height);
-        var maxChannels = Math.Min(channels, 4);
+        var maxChannels = Math.Min(channelCount, 4);
         var channelBuffers = new byte[maxChannels][];
         for (var c = 0; c < maxChannels; c++) channelBuffers[c] = new byte[pixelCount];
 
         if (compression == 0) {
             var channelBytes = checked(width * height);
-            for (var c = 0; c < channels; c++) {
+            for (var c = 0; c < channelCount; c++) {
                 if (offset + channelBytes > data.Length) throw new FormatException("Truncated PSD data.");
                 if (c < maxChannels) {
                     data.Slice(offset, channelBytes).CopyTo(channelBuffers[c]);
@@ -78,7 +79,7 @@ public static class PsdReader {
                 offset += channelBytes;
             }
         } else {
-            var rowCount = checked(channels * height);
+            var rowCount = checked(channelCount * height);
             var lengthsBytes = checked(rowCount * 2);
             if (offset + lengthsBytes > data.Length) throw new FormatException("Truncated PSD RLE header.");
             var rowLengths = new ushort[rowCount];
@@ -88,7 +89,7 @@ public static class PsdReader {
             offset += lengthsBytes;
 
             var rowBuffer = new byte[width];
-            for (var c = 0; c < channels; c++) {
+            for (var c = 0; c < channelCount; c++) {
                 for (var y = 0; y < height; y++) {
                     var rowLength = rowLengths[c * height + y];
                     if (offset + rowLength > data.Length) throw new FormatException("Truncated PSD RLE data.");

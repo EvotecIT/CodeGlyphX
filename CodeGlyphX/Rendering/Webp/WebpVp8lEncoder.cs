@@ -80,9 +80,11 @@ internal static class WebpVp8lEncoder {
         var bestLength = int.MaxValue;
         var bestReason = "Managed WebP encode failed.";
         var succeeded = false;
+        byte[] candidate;
+        string candidateReason;
 
         if (!forceNoTransforms) {
-            if (TryEncodeWithColorIndexing(rgba, width, height, stride, out var candidate, out var candidateReason)) {
+            if (TryEncodeWithColorIndexing(rgba, width, height, stride, out candidate, out candidateReason)) {
                 succeeded = true;
                 best = candidate;
                 bestLength = candidate.Length;
@@ -101,7 +103,7 @@ internal static class WebpVp8lEncoder {
             }
         }
 
-        if (TryEncodeWithoutTransforms(rgba, width, height, stride, allowMetaPrefix: true, out var candidate, out var candidateReason)) {
+        if (TryEncodeWithoutTransforms(rgba, width, height, stride, allowMetaPrefix: true, out candidate, out candidateReason)) {
             if (!succeeded || candidate.Length < bestLength) {
                 best = candidate;
                 bestLength = candidate.Length;

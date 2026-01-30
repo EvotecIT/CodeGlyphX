@@ -3,6 +3,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpAnimationAlphaDecodeTests {
     [Fact]
     public void Decode_Webp_Animation_Preserves_Alpha() {

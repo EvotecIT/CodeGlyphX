@@ -19,5 +19,9 @@ public enum TiffCompressionMode {
     /// <summary>
     /// Forces Deflate compression (zlib).
     /// </summary>
-    Deflate
+    Deflate,
+    /// <summary>
+    /// Forces LZW compression.
+    /// </summary>
+    Lzw
 }

@@ -187,7 +187,7 @@ public sealed class GifDisposalTests {
         }
 
         ResetDictionary();
-        var prefix = indices[0];
+        var prefix = (int)indices[0];
         for (var i = 1; i < indices.Length; i++) {
             var c = indices[i];
             var key = (prefix << 8) | c;

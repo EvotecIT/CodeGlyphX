@@ -94,13 +94,13 @@ public sealed class TiffPlanarDecodeTests {
         WriteU16(data, bitsOffset + 2, 8);
         WriteU16(data, bitsOffset + 4, 8);
 
-        WriteU32(data, stripOffsetsOffset + 0, dataOffset);
-        WriteU32(data, stripOffsetsOffset + 4, dataOffset + 1);
-        WriteU32(data, stripOffsetsOffset + 8, dataOffset + 2);
+        WriteU32(data, stripOffsetsOffset + 0, (uint)dataOffset);
+        WriteU32(data, stripOffsetsOffset + 4, (uint)(dataOffset + 1));
+        WriteU32(data, stripOffsetsOffset + 8, (uint)(dataOffset + 2));
 
-        WriteU32(data, stripByteCountsOffset + 0, 1);
-        WriteU32(data, stripByteCountsOffset + 4, 1);
-        WriteU32(data, stripByteCountsOffset + 8, 1);
+        WriteU32(data, stripByteCountsOffset + 0, 1u);
+        WriteU32(data, stripByteCountsOffset + 4, 1u);
+        WriteU32(data, stripByteCountsOffset + 8, 1u);
 
         data[dataOffset + 0] = 0x11; // R
         data[dataOffset + 1] = 0x22; // G
@@ -113,7 +113,7 @@ public sealed class TiffPlanarDecodeTests {
         WriteU16(buffer, offset, tag);
         WriteU16(buffer, offset + 2, type);
         WriteU32(buffer, offset + 4, count);
-        WriteU32(buffer, offset + 8, value);
+        WriteU32(buffer, offset + 8, (uint)value);
     }
 
     private static void WriteAscii(byte[] buffer, int offset, string value) {
@@ -126,7 +126,7 @@ public sealed class TiffPlanarDecodeTests {
         buffer[offset + 1] = (byte)((value >> 8) & 0xFF);
     }
 
-    private static void WriteU32(byte[] buffer, int offset, int value) {
+    private static void WriteU32(byte[] buffer, int offset, uint value) {
         buffer[offset] = (byte)(value & 0xFF);
         buffer[offset + 1] = (byte)((value >> 8) & 0xFF);
         buffer[offset + 2] = (byte)((value >> 16) & 0xFF);

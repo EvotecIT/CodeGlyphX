@@ -5,6 +5,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpPrefixCodeTests {
     [Fact]
     public void PrefixCode_SimpleSingleSymbol_DecodesWithoutExtraBits() {

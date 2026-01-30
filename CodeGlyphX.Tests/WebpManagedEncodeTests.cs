@@ -5,6 +5,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpManagedEncodeTests {
     [Fact]
     public void Webp_ManagedEncode_Vp8L_LiteralOnly_RoundTripsBinaryImage() {

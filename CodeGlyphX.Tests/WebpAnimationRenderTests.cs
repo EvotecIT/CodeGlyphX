@@ -4,6 +4,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpAnimationRenderTests {
     [Fact]
     public void Render_Webp_Animation_From_Matrix_Frames() {

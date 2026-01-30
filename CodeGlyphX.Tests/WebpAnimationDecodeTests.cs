@@ -7,6 +7,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpAnimationDecodeTests {
     [Fact]
     public void Webp_ManagedDecode_AnimatedWebp_DecodesFirstFrame() {
@@ -248,8 +250,8 @@ public sealed class WebpAnimationDecodeTests {
 
         foreach (var frame in frames) {
             using var framePayload = new MemoryStream();
-            WriteU24LE(framePayload, frame.X / 2);
-            WriteU24LE(framePayload, frame.Y / 2);
+            WriteU24LE(framePayload, frame.X);
+            WriteU24LE(framePayload, frame.Y);
             WriteU24LE(framePayload, frame.Width - 1);
             WriteU24LE(framePayload, frame.Height - 1);
             WriteU24LE(framePayload, frame.DurationMs);

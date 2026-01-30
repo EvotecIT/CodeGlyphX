@@ -51,7 +51,7 @@ public sealed class TiffEncodeTests {
             return ReadU16(tiff, entryOffset + 8);
         }
 
-        Assert.True(false, "Compression tag not found.");
+        Assert.Fail("Compression tag not found.");
         return 0;
     }
 

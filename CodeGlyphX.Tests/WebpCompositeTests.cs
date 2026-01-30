@@ -4,6 +4,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpCompositeTests {
     [Fact]
     public void ImageReader_DecodeComposite_Webp_Succeeds() {

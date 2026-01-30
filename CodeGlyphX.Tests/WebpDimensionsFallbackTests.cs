@@ -3,6 +3,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpDimensionsFallbackTests {
     [Fact]
     public void TryReadDimensions_Uses_Anmf_When_No_Vp8x() {
