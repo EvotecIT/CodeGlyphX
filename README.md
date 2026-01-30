@@ -30,7 +30,7 @@ Status: Actively developed · Stable core · Expanding format support
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
 - 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, Code11, Codabar, MSI, Plessey, EAN/UPC, ITF-14)
 - 2D encoding/decoding (Data Matrix, MicroPDF417, PDF417, Aztec)
-- Renderers (SVG / SVGZ / HTML / PNG / JPEG / WebP / GIF / TIFF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/WebP/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF)
+- Renderers (SVG / SVGZ / HTML / PNG / JPEG / WebP / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/WebP/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF)
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
 
@@ -188,7 +188,7 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 | Feature | Windows | Linux | macOS |
 | --- | --- | --- | --- |
 | Core encode/decode (QR/1D/2D) | ✅ | ✅ | ✅ |
-| Renderers (PNG/SVG/SVGZ/HTML/JPEG/WebP/GIF/TIFF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII) | ✅ | ✅ | ✅ |
+| Renderers (PNG/SVG/SVGZ/HTML/JPEG/WebP/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII) | ✅ | ✅ | ✅ |
 | Image decoding (PNG/JPEG/WebP/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF) | ✅ | ✅ | ✅ |
 | WPF controls | ✅ | ❌ | ❌ |
 
@@ -321,7 +321,7 @@ Matrix/stacked/4-state symbols use a `BitMatrix` + the `Matrix*` renderers.
 - [x] 1D barcode encode + decode
 - [x] Data Matrix + MicroPDF417 + PDF417 encode + decode
 - [x] Matrix/stacked/4-state encoding (Data Matrix / PDF417 / MicroPDF417 / Aztec / GS1 DataBar / postal + pharmacode) with dedicated matrix renderers
-- [x] SVG / SVGZ / HTML / PNG / JPEG / WebP / GIF / TIFF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
+- [x] SVG / SVGZ / HTML / PNG / JPEG / WebP / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
 - [x] Image decode: PNG / JPEG / WebP / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / TIFF
 - [x] Base64 + data URI helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone/SMS/MMS, Contact, Calendar, OTP, payments, crypto, social)
@@ -409,25 +409,6 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 
 ## Image format support
 
-### Animation decode helpers
-
-```csharp
-using CodeGlyphX.Rendering;
-using CodeGlyphX.Rendering.Gif;
-using CodeGlyphX.Rendering.Webp;
-
-// First composited frame (GIF/WebP) via ImageReader helper
-var rgba = ImageReader.DecodeRgba32Composite(bytes, out var width, out var height);
-
-// Raw GIF frames (rectangles) + canvas frames
-var gifFrames = GifReader.DecodeAnimationFrames(bytes, out var gifW, out var gifH, out var gifOptions);
-var gifCanvasFrames = GifReader.DecodeAnimationCanvasFrames(bytes, out _, out _, out _);
-
-// Raw WebP frames + canvas frames
-var webpFrames = WebpReader.DecodeAnimationFrames(bytes, out var webpW, out var webpH, out var webpOptions);
-var webpCanvasFrames = WebpReader.DecodeAnimationCanvasFrames(bytes, out _, out _, out _);
-```
-
 ### Raster formats (encode + decode)
 
 | Format | Encode | Decode | Notes |
@@ -436,8 +417,8 @@ var webpCanvasFrames = WebpReader.DecodeAnimationCanvasFrames(bytes, out _, out 
 | JPEG | ✅ | ✅ |  |
 | WebP | ✅ | ✅ | Managed VP8/VP8L; ImageReader returns first animation frame (WebpReader exposes frames) |
 | BMP | ✅ | ✅ |  |
-| GIF | ✅ | ✅ | Single-frame (no animation); optimized palette + dithering (256 colors max) |
-| TIFF | ✅ | ✅ | Baseline strips; encode 8-bit (single IFD) with PackBits/Deflate (or force via RenderExtras); decode supports none/PackBits/LZW/Deflate |
+| GIF | ✖ | ✅ | First frame only |
+| TIFF | ✖ | ✅ | Baseline strips, 8/16-bit; compression: none/PackBits/LZW/Deflate |
 | PPM/PGM/PAM/PBM | ✅ | ✅ |  |
 | TGA | ✅ | ✅ |  |
 | ICO | ✅ | ✅ | PNG/BMP payloads (CUR decode supported) |
@@ -455,11 +436,11 @@ var webpCanvasFrames = WebpReader.DecodeAnimationCanvasFrames(bytes, out _, out 
 
 ### Known gaps / not supported (decode)
 
-- ImageReader returns the first animation frame only (GIF/WebP); use GifReader.* / WebpReader.* or ImageReader.DecodeRgba32Composite for composited frames
+- ImageReader returns the first animation frame only (GIF/WebP); use WebpReader.* for raw or composited WebP frames
 - Managed WebP decode supports VP8/VP8L stills; size limit is 256 MB
 - Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
 - AVIF, HEIC, JPEG2000, PSD are not supported
-- Multi-page / tiled TIFF is not supported (first IFD only)
+- Multi-page / tiled TIFF: use `TiffReader.DecodeRgba32(data, pageIndex, ...)`; `ImageReader` still uses the first IFD
 - PDF/PS decode is not supported (rasterize first)
 
 ### Format corpus (optional)
