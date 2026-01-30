@@ -239,7 +239,7 @@ QR.Save("Hello, World!", "hello.html", extras: extras);</pre>
 Barcode.Save(BarcodeType.Code128, "PRODUCT-12345", "barcode.png");
 
 // EAN-13 (retail products)
-Barcode.Save(BarcodeType.Ean13, "5901234123457", "ean.png");</pre>
+Barcode.Save(BarcodeType.EAN, "5901234123457", "ean.png");</pre>
 
             <h2>4. Decode Images</h2>
             <pre class="code-block">using CodeGlyphX;
@@ -860,16 +860,16 @@ Barcode.Save(BarcodeType.Code93, "HELLO-123", "code93.png");</pre>
             <pre class="code-block">using CodeGlyphX;
 
 // EAN-13 (International)
-Barcode.Save(BarcodeType.Ean13, "5901234123457", "ean13.png");
+Barcode.Save(BarcodeType.EAN, "5901234123457", "ean13.png");
 
 // EAN-8 (Smaller packages)
-Barcode.Save(BarcodeType.Ean8, "96385074", "ean8.png");
+Barcode.Save(BarcodeType.EAN, "96385074", "ean8.png");
 
 // UPC-A (North America)
-Barcode.Save(BarcodeType.UpcA, "012345678905", "upca.png");
+Barcode.Save(BarcodeType.UPCA, "012345678905", "upca.png");
 
 // UPC-E (Compact)
-Barcode.Save(BarcodeType.UpcE, "01234565", "upce.png");</pre>
+Barcode.Save(BarcodeType.UPCE, "01234565", "upce.png");</pre>
 
             <h2>Format Guide</h2>
             <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">

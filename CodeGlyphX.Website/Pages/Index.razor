@@ -287,6 +287,9 @@
             <span class="symbology-tag featured">PDF417</span>
             <span class="symbology-tag featured">Aztec</span>
             <span class="symbology-tag">Micro QR</span>
+            <span class="symbology-tag">MicroPDF417</span>
+            <span class="symbology-tag">GS1 DataBar</span>
+            <span class="symbology-tag">Postal 4-State</span>
         </div>
     </div>
 
@@ -301,11 +304,14 @@
             <span class="symbology-tag">Codabar</span>
             <span class="symbology-tag">MSI</span>
             <span class="symbology-tag">Plessey</span>
+            <span class="symbology-tag">Telepen</span>
+            <span class="symbology-tag">Pharmacode</span>
             <span class="symbology-tag">EAN-8</span>
             <span class="symbology-tag">EAN-13</span>
             <span class="symbology-tag">UPC-A</span>
             <span class="symbology-tag">UPC-E</span>
             <span class="symbology-tag">ITF-14</span>
+            <span class="symbology-tag">ITF</span>
         </div>
     </div>
 
@@ -320,10 +326,12 @@
             <span class="symbology-tag">Email / Phone / SMS</span>
             <span class="symbology-tag">TOTP / HOTP</span>
             <span class="symbology-tag">SEPA Girocode</span>
+            <span class="symbology-tag">PayPal.Me</span>
             <span class="symbology-tag">Swiss QR Bill</span>
             <span class="symbology-tag">UPI Payment</span>
             <span class="symbology-tag">Bitcoin / Crypto</span>
             <span class="symbology-tag">App Store Links</span>
+            <span class="symbology-tag">WhatsApp</span>
         </div>
     </div>
 </section>
@@ -346,7 +354,7 @@ QR.Save(<span class="string">"https://evotec.xyz"</span>, <span class="string">"
 
 <span class="comment">// Barcodes</span>
 Barcode.Save(BarcodeType.Code128, <span class="string">"PRODUCT-12345"</span>, <span class="string">"barcode.png"</span>);
-Barcode.Save(BarcodeType.Ean13, <span class="string">"5901234123457"</span>, <span class="string">"ean.png"</span>);
+Barcode.Save(BarcodeType.EAN, <span class="string">"5901234123457"</span>, <span class="string">"ean.png"</span>);
 
 <span class="comment">// 2D codes</span>
 DataMatrixCode.Save(<span class="string">"Serial: ABC123"</span>, <span class="string">"datamatrix.png"</span>);
