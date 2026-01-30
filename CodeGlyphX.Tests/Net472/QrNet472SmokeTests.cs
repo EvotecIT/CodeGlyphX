@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
@@ -189,6 +190,29 @@ public sealed class QrNet472SmokeTests {
         var ok = QrImageDecoder.TryDecode(rotated, rw, rh, rstride, PixelFormat.Rgba32, out var decoded);
         Assert.True(ok);
         Assert.Equal(Payload, decoded.Text);
+    }
+
+    [Fact]
+    public void Net472_AsciiConsole_Render_Succeeds() {
+        var qr = QrCodeEncoder.EncodeText("NET472-ASCII");
+        var options = new AsciiConsoleOptions {
+            UseHalfBlocks = true,
+            UseUnicodeBlocks = true,
+            UseAnsiColors = true,
+            PreferScanReliability = true,
+            TargetWidth = 28,
+            TargetHeight = 14,
+            DarkGradient = new AsciiGradientOptions {
+                Type = AsciiGradientType.Horizontal,
+                StartColor = new Rgba32(0, 0, 0),
+                EndColor = new Rgba32(40, 40, 40)
+            }
+        };
+
+        var fit = AsciiConsole.Fit(qr.Modules, options);
+        var ascii = MatrixAsciiRenderer.Render(qr.Modules, fit);
+        Assert.False(string.IsNullOrWhiteSpace(ascii));
+        Assert.Contains("\u001b[", ascii, StringComparison.Ordinal);
     }
 
     [Fact]

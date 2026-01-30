@@ -48,6 +48,36 @@ public sealed partial class MatrixAsciiRenderOptions {
     public bool UseUnicodeBlocks { get; set; }
 
     /// <summary>
+    /// When true, uses Unicode half-blocks to combine two module rows into one text row.
+    /// </summary>
+    public bool UseHalfBlocks { get; set; }
+
+    /// <summary>
+    /// When true, uses ANSI background colors for half-block rendering.
+    /// </summary>
+    public bool UseHalfBlockBackground { get; set; } = true;
+
+    /// <summary>
+    /// Optional ANSI gradient for dark modules.
+    /// </summary>
+    public AsciiGradientOptions? AnsiDarkGradient { get; set; }
+
+    /// <summary>
+    /// Optional ANSI palette for dark modules.
+    /// </summary>
+    public AsciiPaletteOptions? AnsiDarkPalette { get; set; }
+
+    /// <summary>
+    /// When true, clamps dark colors to a maximum luminance.
+    /// </summary>
+    public bool EnsureDarkContrast { get; set; }
+
+    /// <summary>
+    /// Maximum luminance allowed for dark modules (0-1).
+    /// </summary>
+    public double MaxDarkLuminance { get; set; } = 0.45;
+
+    /// <summary>
     /// When true, swaps dark and light output.
     /// </summary>
     public bool Invert { get; set; }

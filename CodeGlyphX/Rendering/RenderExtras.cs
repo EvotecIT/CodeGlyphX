@@ -22,6 +22,11 @@ public sealed class RenderExtras {
     public MatrixAsciiRenderOptions? MatrixAscii { get; set; }
 
     /// <summary>
+    /// Console-friendly ASCII options (auto-fit).
+    /// </summary>
+    public AsciiConsoleOptions? AsciiConsole { get; set; }
+
+    /// <summary>
     /// ASCII render options for barcodes.
     /// </summary>
     public BarcodeAsciiRenderOptions? BarcodeAscii { get; set; }

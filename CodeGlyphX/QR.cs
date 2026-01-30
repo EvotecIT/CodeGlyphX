@@ -442,6 +442,13 @@ public static partial class QR {
     }
 
     /// <summary>
+    /// Renders a QR code as console-friendly ASCII text with auto-fit.
+    /// </summary>
+    public static string AsciiConsole(string payload, AsciiConsoleOptions? consoleOptions = null, QrEasyOptions? options = null) {
+        return Render(payload, OutputFormat.Ascii, options, new RenderExtras { AsciiConsole = consoleOptions }).GetText();
+    }
+
+    /// <summary>
     /// Detects a payload type and renders a QR code as ASCII text.
     /// </summary>
     [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
@@ -450,10 +457,24 @@ public static partial class QR {
     }
 
     /// <summary>
+    /// Detects a payload type and renders a QR code as console-friendly ASCII text with auto-fit.
+    /// </summary>
+    public static string AsciiConsoleAuto(string payload, QrPayloadDetectOptions? detectOptions = null, AsciiConsoleOptions? consoleOptions = null, QrEasyOptions? options = null) {
+        return RenderAuto(payload, OutputFormat.Ascii, detectOptions, options, new RenderExtras { AsciiConsole = consoleOptions }).GetText();
+    }
+
+    /// <summary>
     /// Renders a QR code as ASCII text for a payload with embedded defaults.
     /// </summary>
     [Obsolete(CodeGlyphX.Internal.ObsoleteMessages.RenderFormatHelpers)]
     public static string Ascii(QrPayloadData payload, MatrixAsciiRenderOptions? asciiOptions = null, QrEasyOptions? options = null) {
         return Render(payload, OutputFormat.Ascii, options, new RenderExtras { MatrixAscii = asciiOptions }).GetText();
+    }
+
+    /// <summary>
+    /// Renders a QR code as console-friendly ASCII text with auto-fit for a payload with embedded defaults.
+    /// </summary>
+    public static string AsciiConsole(QrPayloadData payload, AsciiConsoleOptions? consoleOptions = null, QrEasyOptions? options = null) {
+        return Render(payload, OutputFormat.Ascii, options, new RenderExtras { AsciiConsole = consoleOptions }).GetText();
     }
 }
