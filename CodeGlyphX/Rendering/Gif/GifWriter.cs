@@ -98,17 +98,26 @@ public static class GifWriter {
             indexedFrames[i] = BuildIndexedFrame(frame.Rgba, frame.Width, frame.Height, frame.Stride);
         }
 
-        WriteHeader(stream, canvasWidth, canvasHeight, BuildBackgroundPalette(options.BackgroundRgba), paletteSize: 2, hasTransparency: false, transparentIndex: 0);
+        var useGlobalPalette = TryBuildGlobalPalette(indexedFrames, options.BackgroundRgba, out var globalPalette, out var globalPaletteSize, out var globalMinCodeSize, out var backgroundIndex);
+        if (useGlobalPalette) {
+            WriteHeader(stream, canvasWidth, canvasHeight, globalPalette, globalPaletteSize, (byte)backgroundIndex);
+        } else {
+            WriteHeader(stream, canvasWidth, canvasHeight, BuildBackgroundPalette(options.BackgroundRgba), paletteSize: 2, backgroundIndex: 0);
+        }
         WriteLoopExtension(stream, options.LoopCount);
 
         for (var i = 0; i < frames.Length; i++) {
-            WriteFrame(stream, frames[i], indexedFrames[i]);
+            WriteFrame(stream, frames[i], indexedFrames[i], useGlobalPalette, globalMinCodeSize);
         }
 
         stream.WriteByte(0x3B); // Trailer
     }
 
     private static void WriteHeader(Stream stream, int width, int height, byte[] palette, int paletteSize, bool hasTransparency, int transparentIndex) {
+        WriteHeader(stream, width, height, palette, paletteSize, (byte)(hasTransparency ? transparentIndex : 0));
+    }
+
+    private static void WriteHeader(Stream stream, int width, int height, byte[] palette, int paletteSize, byte backgroundIndex) {
         WriteAscii(stream, "GIF89a");
         WriteUInt16(stream, (ushort)width);
         WriteUInt16(stream, (ushort)height);
@@ -117,7 +126,7 @@ public static class GifWriter {
         var gctSize = Log2(paletteSize) - 1; // 2^(gctSize+1)
         var packed = (byte)(0x80 | (colorResolution << 4) | gctSize);
         stream.WriteByte(packed);
-        stream.WriteByte((byte)(hasTransparency ? transparentIndex : 0)); // Background color index
+        stream.WriteByte(backgroundIndex); // Background color index
         stream.WriteByte(0); // Pixel aspect ratio
         stream.Write(palette, 0, paletteSize * 3);
     }
@@ -145,7 +154,7 @@ public static class GifWriter {
         WriteSubBlocks(stream, lzwData);
     }
 
-    private static void WriteFrame(Stream stream, in GifAnimationFrame frame, in GifIndexedFrame indexed) {
+    private static void WriteFrame(Stream stream, in GifAnimationFrame frame, in GifIndexedFrame indexed, bool useGlobalPalette, int globalMinCodeSize) {
         stream.WriteByte(0x21); // Extension introducer
         stream.WriteByte(0xF9); // GCE label
         stream.WriteByte(4); // Block size
@@ -169,12 +178,17 @@ public static class GifWriter {
         WriteUInt16(stream, (ushort)frame.Width);
         WriteUInt16(stream, (ushort)frame.Height);
 
-        var lctSize = Log2(indexed.PaletteSize) - 1;
-        stream.WriteByte((byte)(0x80 | lctSize));
-        stream.Write(indexed.Palette, 0, indexed.PaletteSize * 3);
+        if (useGlobalPalette) {
+            stream.WriteByte(0); // No local color table
+        } else {
+            var lctSize = Log2(indexed.PaletteSize) - 1;
+            stream.WriteByte((byte)(0x80 | lctSize));
+            stream.Write(indexed.Palette, 0, indexed.PaletteSize * 3);
+        }
 
-        stream.WriteByte((byte)indexed.MinCodeSize);
-        var lzwData = EncodeLzw(indexed.Pixels, indexed.MinCodeSize);
+        var minCodeSize = useGlobalPalette ? globalMinCodeSize : indexed.MinCodeSize;
+        stream.WriteByte((byte)minCodeSize);
+        var lzwData = EncodeLzw(indexed.Pixels, minCodeSize);
         WriteSubBlocks(stream, lzwData);
     }
 
@@ -195,6 +209,56 @@ public static class GifWriter {
         palette[1] = (byte)((backgroundRgba >> 16) & 0xFF);
         palette[2] = (byte)((backgroundRgba >> 8) & 0xFF);
         return palette;
+    }
+
+    private static bool TryBuildGlobalPalette(
+        GifIndexedFrame[] frames,
+        uint backgroundRgba,
+        out byte[] palette,
+        out int paletteSize,
+        out int minCodeSize,
+        out int backgroundIndex) {
+        palette = Array.Empty<byte>();
+        paletteSize = 0;
+        minCodeSize = 0;
+        backgroundIndex = 0;
+
+        if (frames.Length == 0) return false;
+
+        var first = frames[0];
+        var paletteBytes = first.PaletteSize * 3;
+        for (var i = 1; i < frames.Length; i++) {
+            var frame = frames[i];
+            if (frame.PaletteSize != first.PaletteSize) return false;
+            if (frame.TransparentIndex != first.TransparentIndex) return false;
+            if (frame.HasTransparency != first.HasTransparency) return false;
+            if (frame.Palette.Length < paletteBytes || first.Palette.Length < paletteBytes) return false;
+            for (var p = 0; p < paletteBytes; p++) {
+                if (frame.Palette[p] != first.Palette[p]) return false;
+            }
+        }
+
+        var r = (byte)((backgroundRgba >> 24) & 0xFF);
+        var g = (byte)((backgroundRgba >> 16) & 0xFF);
+        var b = (byte)((backgroundRgba >> 8) & 0xFF);
+        var index = FindPaletteIndex(first.Palette, first.PaletteSize, r, g, b);
+        if (index < 0) return false;
+
+        palette = first.Palette;
+        paletteSize = first.PaletteSize;
+        minCodeSize = Math.Max(2, Log2(paletteSize));
+        backgroundIndex = index;
+        return true;
+    }
+
+    private static int FindPaletteIndex(byte[] palette, int paletteSize, byte r, byte g, byte b) {
+        var max = paletteSize * 3;
+        for (var i = 0; i < max; i += 3) {
+            if (palette[i] == r && palette[i + 1] == g && palette[i + 2] == b) {
+                return i / 3;
+            }
+        }
+        return -1;
     }
 
     private static void WriteSubBlocks(Stream stream, byte[] data) {
