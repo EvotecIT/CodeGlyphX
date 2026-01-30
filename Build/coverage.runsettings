@@ -3,6 +3,7 @@
   <RunConfiguration>
     <EnvironmentVariables>
       <CODEGLYPHX_COVERAGE>1</CODEGLYPHX_COVERAGE>
+      <CODEGLYPHX_TEST_BUDGET_MULTIPLIER>2</CODEGLYPHX_TEST_BUDGET_MULTIPLIER>
     </EnvironmentVariables>
   </RunConfiguration>
   <DataCollectionRunSettings>
