@@ -29,6 +29,35 @@ public sealed class GifDisposalTests {
         Assert.Equal(255, second[3]);
     }
 
+    [Fact]
+    public void Gif_Disposal_RestorePrevious_Reverts_For_Next_Frame() {
+        var gif = BuildRestorePreviousGif();
+
+        var frames = GifReader.DecodeAnimationCanvasFrames(gif, out var width, out var height, out _);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(3, frames.Length);
+
+        var first = frames[0].Rgba;
+        Assert.Equal(255, first[0]);
+        Assert.Equal(0, first[1]);
+        Assert.Equal(0, first[2]);
+        Assert.Equal(255, first[3]);
+
+        var second = frames[1].Rgba;
+        Assert.Equal(0, second[0]);
+        Assert.Equal(255, second[1]);
+        Assert.Equal(0, second[2]);
+        Assert.Equal(255, second[3]);
+
+        var third = frames[2].Rgba;
+        Assert.Equal(255, third[0]);
+        Assert.Equal(0, third[1]);
+        Assert.Equal(0, third[2]);
+        Assert.Equal(255, third[3]);
+    }
+
     private static byte[] BuildTwoFrameGif() {
         var output = new List<byte>(64);
 
@@ -53,6 +82,43 @@ public sealed class GifDisposalTests {
         AddImage(output, new byte[] { 0x01 });
 
         // Frame 2: transparent pixel
+        AddGraphicControl(output, disposal: 0, transparent: true, transparentIndex: 0);
+        AddImage(output, new byte[] { 0x00 });
+
+        output.Add(0x3B); // Trailer
+        return output.ToArray();
+    }
+
+    private static byte[] BuildRestorePreviousGif() {
+        var output = new List<byte>(96);
+
+        // Header + Logical Screen Descriptor
+        output.AddRange(new byte[] {
+            (byte)'G', (byte)'I', (byte)'F', (byte)'8', (byte)'9', (byte)'a',
+            0x01, 0x00, // width
+            0x01, 0x00, // height
+            0xF1,       // GCT flag + 4 colors
+            0x00,       // background index
+            0x00        // aspect
+        });
+
+        // Global color table: black, red, green, blue
+        output.AddRange(new byte[] {
+            0x00, 0x00, 0x00,
+            0xFF, 0x00, 0x00,
+            0x00, 0xFF, 0x00,
+            0x00, 0x00, 0xFF
+        });
+
+        // Frame 1: red pixel, do not dispose
+        AddGraphicControl(output, disposal: 1, transparent: false, transparentIndex: 0);
+        AddImage(output, new byte[] { 0x01 });
+
+        // Frame 2: green pixel, restore previous
+        AddGraphicControl(output, disposal: 3, transparent: false, transparentIndex: 0);
+        AddImage(output, new byte[] { 0x02 });
+
+        // Frame 3: transparent pixel (should show restored red)
         AddGraphicControl(output, disposal: 0, transparent: true, transparentIndex: 0);
         AddImage(output, new byte[] { 0x00 });
 
