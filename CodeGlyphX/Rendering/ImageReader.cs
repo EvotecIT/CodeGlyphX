@@ -84,6 +84,7 @@ public static partial class ImageReader {
         if (IsXpm(data)) return XpmReader.DecodeRgba32(data, out width, out height);
         if (IsXbm(data)) return XbmReader.DecodeRgba32(data, out width, out height);
 
+        ThrowIfUnsupportedFormat(data);
         throw new FormatException("Unknown image format.");
     }
 
@@ -187,6 +188,7 @@ public static partial class ImageReader {
         if (IsXpm(data)) return XpmReader.DecodeRgba32(data, out width, out height);
         if (IsXbm(data)) return XbmReader.DecodeRgba32(data, out width, out height);
 
+        ThrowIfUnsupportedFormat(data);
         throw new FormatException("Unknown image format.");
     }
 
@@ -419,6 +421,118 @@ public static partial class ImageReader {
 
     private static bool IsXbm(ReadOnlySpan<byte> data) {
         return StartsWithAscii(data, "#define") && ContainsAscii(data, "_width");
+    }
+
+    private static void ThrowIfUnsupportedFormat(ReadOnlySpan<byte> data) {
+        if (IsPdf(data) || IsPostScript(data)) {
+            throw new FormatException("PDF/PS decode is not supported (rasterize first).");
+        }
+        if (IsPsd(data)) {
+            throw new FormatException("PSD decode is not supported.");
+        }
+        if (IsJpeg2000(data)) {
+            throw new FormatException("JPEG2000 decode is not supported.");
+        }
+        if (IsAvif(data) || IsHeif(data)) {
+            throw new FormatException("AVIF/HEIC decode is not supported.");
+        }
+    }
+
+    private static bool IsPdf(ReadOnlySpan<byte> data) {
+        return data.Length >= 5
+            && data[0] == (byte)'%'
+            && data[1] == (byte)'P'
+            && data[2] == (byte)'D'
+            && data[3] == (byte)'F'
+            && data[4] == (byte)'-';
+    }
+
+    private static bool IsPostScript(ReadOnlySpan<byte> data) {
+        return data.Length >= 4
+            && data[0] == (byte)'%'
+            && data[1] == (byte)'!'
+            && data[2] == (byte)'P'
+            && data[3] == (byte)'S';
+    }
+
+    private static bool IsPsd(ReadOnlySpan<byte> data) {
+        return data.Length >= 4
+            && data[0] == (byte)'8'
+            && data[1] == (byte)'B'
+            && data[2] == (byte)'P'
+            && data[3] == (byte)'S';
+    }
+
+    private static bool IsJpeg2000(ReadOnlySpan<byte> data) {
+        if (data.Length >= 12
+            && data[0] == 0x00
+            && data[1] == 0x00
+            && data[2] == 0x00
+            && data[3] == 0x0C
+            && data[4] == 0x6A
+            && data[5] == 0x50
+            && data[6] == 0x20
+            && data[7] == 0x20
+            && data[8] == 0x0D
+            && data[9] == 0x0A
+            && data[10] == 0x87
+            && data[11] == 0x0A) {
+            return true;
+        }
+        return data.Length >= 2 && data[0] == 0xFF && data[1] == 0x4F;
+    }
+
+    private static bool IsAvif(ReadOnlySpan<byte> data) {
+        return HasIsobmffBrand(data, "avif", "avis");
+    }
+
+    private static bool IsHeif(ReadOnlySpan<byte> data) {
+        return HasIsobmffBrand(data, "heic", "heix", "hevc", "hevx", "mif1", "msf1");
+    }
+
+    private static bool HasIsobmffBrand(ReadOnlySpan<byte> data, params string[] brands) {
+        if (data.Length < 16) return false;
+        if (!IsFourCc(data, 4, "ftyp")) return false;
+
+        var boxSize = ReadUInt32BE(data, 0);
+        var limit = boxSize >= 16 && boxSize <= data.Length ? (int)boxSize : Math.Min(data.Length, 128);
+        if (limit < 16) return false;
+
+        if (IsAnyBrand(data.Slice(8, 4), brands)) return true;
+        for (var offset = 16; offset + 4 <= limit; offset += 4) {
+            if (IsAnyBrand(data.Slice(offset, 4), brands)) return true;
+        }
+        return false;
+    }
+
+    private static bool IsFourCc(ReadOnlySpan<byte> data, int offset, string fourCc) {
+        if (offset < 0 || offset + 4 > data.Length) return false;
+        return data[offset] == (byte)fourCc[0]
+            && data[offset + 1] == (byte)fourCc[1]
+            && data[offset + 2] == (byte)fourCc[2]
+            && data[offset + 3] == (byte)fourCc[3];
+    }
+
+    private static bool IsAnyBrand(ReadOnlySpan<byte> data, string[] brands) {
+        for (var i = 0; i < brands.Length; i++) {
+            var brand = brands[i];
+            if (brand.Length != 4) continue;
+            if (data[0] == (byte)brand[0]
+                && data[1] == (byte)brand[1]
+                && data[2] == (byte)brand[2]
+                && data[3] == (byte)brand[3]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static uint ReadUInt32BE(ReadOnlySpan<byte> data, int offset) {
+        if (offset < 0 || offset + 4 > data.Length) return 0;
+        return (uint)((data[offset] << 24)
+            | (data[offset + 1] << 16)
+            | (data[offset + 2] << 8)
+            | data[offset + 3]);
     }
 
     private static ImageAnimationFrame[] MapGifFrames(GifAnimationFrame[] frames) {
