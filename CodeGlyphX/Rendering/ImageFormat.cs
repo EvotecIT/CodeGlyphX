@@ -64,4 +64,12 @@ public enum ImageFormat {
     /// WebP image (managed VP8/VP8L stills; first-frame decode for animations).
     /// </summary>
     Webp,
+    /// <summary>
+    /// PDF document (image-only decode).
+    /// </summary>
+    Pdf,
+    /// <summary>
+    /// PSD image (flattened 8-bit grayscale/RGB).
+    /// </summary>
+    Psd,
 }

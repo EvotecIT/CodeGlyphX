@@ -79,5 +79,13 @@ public enum OutputFormat {
     /// <summary>
     /// ASCII art (text).
     /// </summary>
-    Ascii
+    Ascii,
+    /// <summary>
+    /// GIF image.
+    /// </summary>
+    Gif,
+    /// <summary>
+    /// TIFF image.
+    /// </summary>
+    Tiff
 }

@@ -3,6 +3,8 @@ using System.IO;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Ico;
+using CodeGlyphX.Rendering.Pdf;
+using CodeGlyphX.Rendering.Psd;
 using CodeGlyphX.Rendering.Pam;
 using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Pbm;
@@ -43,6 +45,8 @@ public static partial class ImageReader {
         if (IcoReader.IsIco(data)) return IcoReader.DecodeRgba32(data, out width, out height);
         if (JpegReader.IsJpeg(data)) return JpegReader.DecodeRgba32(data, out width, out height);
         if (GifReader.IsGif(data)) return GifReader.DecodeRgba32(data, out width, out height);
+        if (PdfReader.IsPdf(data)) return PdfReader.DecodeRgba32(data, out width, out height);
+        if (PsdReader.IsPsd(data)) return PsdReader.DecodeRgba32(data, out width, out height);
         if (IsBmp(data)) return BmpReader.DecodeRgba32(data, out width, out height);
         if (IsPbm(data)) return PbmReader.DecodeRgba32(data, out width, out height);
         if (IsPgm(data)) return PgmReader.DecodeRgba32(data, out width, out height);
@@ -107,6 +111,8 @@ public static partial class ImageReader {
         if (IcoReader.IsIco(data)) { format = ImageFormat.Ico; return true; }
         if (JpegReader.IsJpeg(data)) { format = ImageFormat.Jpeg; return true; }
         if (GifReader.IsGif(data)) { format = ImageFormat.Gif; return true; }
+        if (PdfReader.IsPdf(data)) { format = ImageFormat.Pdf; return true; }
+        if (PsdReader.IsPsd(data)) { format = ImageFormat.Psd; return true; }
         if (IsBmp(data)) { format = ImageFormat.Bmp; return true; }
         if (IsPbm(data)) { format = ImageFormat.Pbm; return true; }
         if (IsPgm(data)) { format = ImageFormat.Pgm; return true; }

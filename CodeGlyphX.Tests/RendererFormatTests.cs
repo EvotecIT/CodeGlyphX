@@ -35,6 +35,14 @@ public sealed class RendererFormatTests {
         var bmp = QrCode.Render(payload, OutputFormat.Bmp).Data;
         Assert.True(IsBmp(bmp));
 
+        var gif = QrCode.Render(payload, OutputFormat.Gif).Data;
+        Assert.True(ImageReader.TryDetectFormat(gif, out var gifFormat));
+        Assert.Equal(ImageFormat.Gif, gifFormat);
+
+        var tiff = QrCode.Render(payload, OutputFormat.Tiff).Data;
+        Assert.True(ImageReader.TryDetectFormat(tiff, out var tiffFormat));
+        Assert.Equal(ImageFormat.Tiff, tiffFormat);
+
         var ppm = QrCode.Render(payload, OutputFormat.Ppm).Data;
         Assert.True(IsPpm(ppm));
 

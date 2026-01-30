@@ -4,6 +4,7 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
+using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
@@ -16,6 +17,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
@@ -53,10 +55,35 @@ public static partial class AztecCode {
             }
             case OutputFormat.Jpeg:
                 return RenderedOutput.FromBinary(format, MatrixJpegRenderer.Render(modules, pngOptions, renderOptions?.JpegQuality ?? 85));
-            case OutputFormat.Webp:
-                return RenderedOutput.FromBinary(format, MatrixWebpRenderer.Render(modules, pngOptions, renderOptions?.WebpQuality ?? 100));
+            case OutputFormat.Webp: {
+                var quality = renderOptions?.WebpQuality ?? 100;
+                var extrasFrames = extras?.WebpFrames;
+                if (extrasFrames is not null && extrasFrames.Length > 0) {
+                    var duration = extras?.AnimationDurationMs ?? 100;
+                    var durations = extras?.AnimationDurationsMs;
+                    var webp = durations is not null
+                        ? MatrixWebpRenderer.RenderAnimation(extrasFrames, pngOptions, durations, extras?.WebpAnimationOptions ?? default, quality)
+                        : MatrixWebpRenderer.RenderAnimation(extrasFrames, pngOptions, duration, extras?.WebpAnimationOptions ?? default, quality);
+                    return RenderedOutput.FromBinary(format, webp);
+                }
+                return RenderedOutput.FromBinary(format, MatrixWebpRenderer.Render(modules, pngOptions, quality));
+            }
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, MatrixBmpRenderer.Render(modules, pngOptions));
+            case OutputFormat.Gif: {
+                var extrasFrames = extras?.GifFrames;
+                if (extrasFrames is not null && extrasFrames.Length > 0) {
+                    var duration = extras?.AnimationDurationMs ?? 100;
+                    var durations = extras?.AnimationDurationsMs;
+                    var gif = durations is not null
+                        ? MatrixGifRenderer.RenderAnimation(extrasFrames, pngOptions, durations, extras?.GifAnimationOptions ?? default)
+                        : MatrixGifRenderer.RenderAnimation(extrasFrames, pngOptions, duration, extras?.GifAnimationOptions ?? default);
+                    return RenderedOutput.FromBinary(format, gif);
+                }
+                return RenderedOutput.FromBinary(format, MatrixGifRenderer.Render(modules, pngOptions));
+            }
+            case OutputFormat.Tiff:
+                return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions));
             case OutputFormat.Ppm:
                 return RenderedOutput.FromBinary(format, MatrixPpmRenderer.Render(modules, pngOptions));
             case OutputFormat.Pbm:

@@ -55,6 +55,8 @@ public static class OutputFormatInfo {
             OutputFormat.Pdf => "pdf",
             OutputFormat.Eps => "eps",
             OutputFormat.Ascii => "txt",
+            OutputFormat.Gif => "gif",
+            OutputFormat.Tiff => "tiff",
             _ => string.Empty
         };
     }
@@ -82,6 +84,8 @@ public static class OutputFormatInfo {
             OutputFormat.Pdf => "application/pdf",
             OutputFormat.Eps => "application/postscript",
             OutputFormat.Ascii => "text/plain",
+            OutputFormat.Gif => "image/gif",
+            OutputFormat.Tiff => "image/tiff",
             _ => "application/octet-stream"
         };
     }
@@ -125,6 +129,8 @@ public static class OutputFormatInfo {
                 return OutputFormat.Jpeg;
             case ".bmp":
                 return OutputFormat.Bmp;
+            case ".gif":
+                return OutputFormat.Gif;
             case ".ppm":
                 return OutputFormat.Ppm;
             case ".pbm":
@@ -141,6 +147,9 @@ public static class OutputFormatInfo {
                 return OutputFormat.Tga;
             case ".ico":
                 return OutputFormat.Ico;
+            case ".tif":
+            case ".tiff":
+                return OutputFormat.Tiff;
             case ".pdf":
                 return OutputFormat.Pdf;
             case ".eps":
