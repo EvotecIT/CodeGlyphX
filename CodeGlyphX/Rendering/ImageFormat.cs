@@ -1,7 +1,7 @@
 namespace CodeGlyphX.Rendering;
 
 /// <summary>
-/// Known image formats supported by <see cref="ImageReader"/>.
+/// Known image formats detected by <see cref="ImageReader"/>.
 /// </summary>
 public enum ImageFormat {
     /// <summary>
@@ -64,4 +64,28 @@ public enum ImageFormat {
     /// WebP image (managed VP8/VP8L stills; first-frame decode for animations).
     /// </summary>
     Webp,
+    /// <summary>
+    /// AVIF image (ISOBMFF).
+    /// </summary>
+    Avif,
+    /// <summary>
+    /// HEIC/HEIF image (ISOBMFF).
+    /// </summary>
+    Heic,
+    /// <summary>
+    /// JPEG2000 image.
+    /// </summary>
+    Jpeg2000,
+    /// <summary>
+    /// Photoshop PSD image.
+    /// </summary>
+    Psd,
+    /// <summary>
+    /// PDF document.
+    /// </summary>
+    Pdf,
+    /// <summary>
+    /// PostScript document.
+    /// </summary>
+    Ps,
 }

@@ -3,6 +3,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpVp8SegmentationDequantScaffoldTests
 {
     private const int CoefficientProbabilityCount = 1056;

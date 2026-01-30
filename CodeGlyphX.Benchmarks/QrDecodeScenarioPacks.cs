@@ -95,7 +95,7 @@ internal static class QrDecodeScenarioPacks {
         return scenarios;
     }
 
-    private const string GeneratedPayload = "https://github.com/EvotecIT/CodeGlyphX";
+    private const string GeneratedPayload = QrDecodeSampleFactory.DefaultPayload;
     private const string ExpectedJess3 = "http://jess3.com";
     private const string ExpectedCleanLarge = "This is a quick test! 123#?";
     private const string ExpectedCleanSmall = "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=jnll6mrqknd57pmn&issuer=Microsoft";
@@ -107,7 +107,7 @@ internal static class QrDecodeScenarioPacks {
         return new QrDecodeScenario(
             name,
             pack,
-            () => LoadSample(relativePath),
+            () => QrDecodeSampleFactory.LoadSample(relativePath),
             options,
             new[] { expectedText });
     }
@@ -128,14 +128,6 @@ internal static class QrDecodeScenarioPacks {
             build,
             options,
             expectedTexts);
-    }
-
-    private static QrDecodeScenarioData LoadSample(string relativePath) {
-        var bytes = RepoFiles.ReadRepoFile(relativePath);
-        if (!ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height)) {
-            throw new InvalidOperationException($"Failed to decode sample '{relativePath}'.");
-        }
-        return new QrDecodeScenarioData(rgba, width, height);
     }
 
     private static QrPixelDecodeOptions IdealOptions(QrPackMode mode) {
@@ -207,46 +199,15 @@ internal static class QrDecodeScenarioPacks {
     }
 
     private static QrDecodeScenarioData BuildResampledGenerated() {
-        var options = new QrEasyOptions { ModuleSize = 8 };
-        var png = QrCode.Render(GeneratedPayload, OutputFormat.Png, options).Data;
-        if (!ImageReader.TryDecodeRgba32(png, out var baseRgba, out var baseWidth, out var baseHeight)) {
-            throw new InvalidOperationException("Failed to decode generated resample PNG.");
-        }
-
-        var downW = Math.Max(1, (int)Math.Round(baseWidth * 0.62, MidpointRounding.AwayFromZero));
-        var downH = Math.Max(1, (int)Math.Round(baseHeight * 0.62, MidpointRounding.AwayFromZero));
-        var down = QrDecodeImageOps.ResampleBilinear(baseRgba, baseWidth, baseHeight, downW, downH);
-
-        var upW = Math.Max(1, (int)Math.Round(baseWidth * 1.12, MidpointRounding.AwayFromZero));
-        var upH = Math.Max(1, (int)Math.Round(baseHeight * 1.12, MidpointRounding.AwayFromZero));
-        var up = QrDecodeImageOps.ResampleBilinear(down, downW, downH, upW, upH);
-
-        return new QrDecodeScenarioData(up, upW, upH);
+        return QrDecodeSampleFactory.BuildResampledGenerated(GeneratedPayload);
     }
 
     private static QrDecodeScenarioData BuildNoQuietGenerated() {
-        var options = new QrEasyOptions { QuietZone = 0, ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
-        var png = QrCode.Render(GeneratedPayload, OutputFormat.Png, options).Data;
-        if (!ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height)) {
-            throw new InvalidOperationException("Failed to decode generated no-quiet PNG.");
-        }
-
-        return new QrDecodeScenarioData(rgba, width, height);
+        return QrDecodeSampleFactory.BuildNoQuietGenerated(GeneratedPayload);
     }
 
     private static QrDecodeScenarioData BuildLongPayloadGenerated() {
-        var options = new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.M,
-            TargetSizePx = 1400,
-            TargetSizeIncludesQuietZone = true,
-            QuietZone = 4
-        };
-        var png = QrCode.Render(LongPayload, OutputFormat.Png, options).Data;
-        if (!ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height)) {
-            throw new InvalidOperationException("Failed to decode generated long-payload PNG.");
-        }
-
-        return new QrDecodeScenarioData(rgba, width, height);
+        return QrDecodeSampleFactory.BuildLongPayloadGenerated(LongPayload);
     }
 
     private static QrDecodeScenarioData BuildMultiQrScreenshotLike() {

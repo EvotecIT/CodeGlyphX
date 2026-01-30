@@ -3,6 +3,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpVp8lDistanceTests {
     [Fact]
     public void Vp8l_DistanceMapping_UsesNeighborhoodTable() {

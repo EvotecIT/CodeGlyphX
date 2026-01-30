@@ -7,6 +7,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpManagedDecodeTests {
     [Fact]
     public void Webp_ManagedLiteralOnly_Vp8L_DecodesPixel() {

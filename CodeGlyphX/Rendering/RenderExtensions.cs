@@ -156,6 +156,16 @@ public static class RenderExtensions {
     public static string ToWebpDataUri(this byte[] data) => data.ToDataUri("image/webp");
 
     /// <summary>
+    /// Encodes GIF bytes as a Base64 data URI.
+    /// </summary>
+    public static string ToGifDataUri(this byte[] data) => data.ToDataUri("image/gif");
+
+    /// <summary>
+    /// Encodes TIFF bytes as a Base64 data URI.
+    /// </summary>
+    public static string ToTiffDataUri(this byte[] data) => data.ToDataUri("image/tiff");
+
+    /// <summary>
     /// Encodes SVG content as a Base64 data URI.
     /// </summary>
     public static string ToSvgDataUri(this string svg, Encoding? encoding = null) {

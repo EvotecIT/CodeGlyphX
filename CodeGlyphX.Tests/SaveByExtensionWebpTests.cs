@@ -6,6 +6,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class SaveByExtensionWebpTests {
     [Fact]
     public void Qr_Save_ByExtension_WritesWebp() {

@@ -6,6 +6,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpContainerInfoTests {
     [Fact]
     public void Webp_Vp8X_TryReadInfo_ParsesDimensions() {

@@ -30,7 +30,7 @@ Status: Actively developed · Stable core · Expanding format support
 - Reliable QR decoding (ECI, FNC1/GS1, Kanji, structured append, Micro QR)
 - 1D barcode encoding/decoding (Code128/GS1-128, Code39, Code93, Code11, Codabar, MSI, Plessey, EAN/UPC, ITF-14)
 - 2D encoding/decoding (Data Matrix, MicroPDF417, PDF417, Aztec)
-- Renderers (SVG / SVGZ / HTML / PNG / JPEG / WebP / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/WebP/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF)
+- Renderers (SVG / SVGZ / HTML / PNG / JPEG / WebP / GIF / TIFF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII) and image decoding (PNG/JPEG/WebP/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF, plus limited PSD/PDF)
 - OTP helpers (otpauth://totp + Base32)
 - WPF controls + demo apps
 
@@ -188,8 +188,8 @@ Runs wherever .NET runs (Windows, Linux, macOS). WPF controls are Windows-only.
 | Feature | Windows | Linux | macOS |
 | --- | --- | --- | --- |
 | Core encode/decode (QR/1D/2D) | ✅ | ✅ | ✅ |
-| Renderers (PNG/SVG/SVGZ/HTML/JPEG/WebP/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII) | ✅ | ✅ | ✅ |
-| Image decoding (PNG/JPEG/WebP/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF) | ✅ | ✅ | ✅ |
+| Renderers (PNG/SVG/SVGZ/HTML/JPEG/WebP/GIF/TIFF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII) | ✅ | ✅ | ✅ |
+| Image decoding (PNG/JPEG/WebP/GIF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/TIFF/PSD/PDF) | ✅ | ✅ | ✅ |
 | WPF controls | ✅ | ❌ | ❌ |
 
 ## Build Status
@@ -321,13 +321,13 @@ Matrix/stacked/4-state symbols use a `BitMatrix` + the `Matrix*` renderers.
 - [x] 1D barcode encode + decode
 - [x] Data Matrix + MicroPDF417 + PDF417 encode + decode
 - [x] Matrix/stacked/4-state encoding (Data Matrix / PDF417 / MicroPDF417 / Aztec / GS1 DataBar / postal + pharmacode) with dedicated matrix renderers
-- [x] SVG / SVGZ / HTML / PNG / JPEG / WebP / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
+- [x] SVG / SVGZ / HTML / PNG / JPEG / WebP / GIF / TIFF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
 - [x] Image decode: PNG / JPEG / WebP / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / TIFF
 - [x] Base64 + data URI helpers for rendered outputs
 - [x] Payload helpers (URL, WiFi, Email, Phone/SMS/MMS, Contact, Calendar, OTP, payments, crypto, social)
 - [x] WPF controls and demo apps
 - [x] Aztec encode + decode (module matrix + pixel)
-- [x] Matrix render helpers for Aztec/DataMatrix/PDF417 (PNG/SVG/SVGZ/HTML/JPEG/WebP/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII)
+- [x] Matrix render helpers for Aztec/DataMatrix/PDF417 (PNG/SVG/SVGZ/HTML/JPEG/WebP/GIF/TIFF/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII)
 
 ## AOT & trimming
 
@@ -345,6 +345,8 @@ Use `.txt` for ASCII output and `.ps` as an EPS alias.
 | PNG | `.png` | Raster |
 | JPEG | `.jpg`, `.jpeg` | Raster, quality via options |
 | WebP | `.webp` | Raster, quality via options (lossless at quality 100) |
+| GIF | `.gif` | Raster (indexed, 256 colors max) |
+| TIFF | `.tif`, `.tiff` | Raster (baseline RGBA, compression via options: none/PackBits/LZW/Deflate) |
 | BMP | `.bmp` | Raster |
 | PPM | `.ppm` | Raster (portable pixmap) |
 | PBM | `.pbm` | Raster (portable bitmap) |
@@ -415,10 +417,11 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 | --- | --- | --- | --- |
 | PNG | ✅ | ✅ |  |
 | JPEG | ✅ | ✅ |  |
-| WebP | ✅ | ✅ | Managed VP8/VP8L; ImageReader returns first animation frame (WebpReader exposes frames) |
+| WebP | ✅ | ✅ | Managed VP8/VP8L; optional ICCP/EXIF/XMP on encode; ImageReader returns first frame (use DecodeAnimationFrames/DecodeAnimationCanvasFrames for animations) |
 | BMP | ✅ | ✅ |  |
-| GIF | ✖ | ✅ | First frame only |
-| TIFF | ✖ | ✅ | Baseline strips, 8/16-bit; compression: none/PackBits/LZW/Deflate |
+| GIF | ✅ | ✅ | ImageReader returns first frame (use DecodeAnimationFrames/DecodeAnimationCanvasFrames for animations) |
+| TIFF | ✅ | ✅ | Baseline strips/tiles, 8/16-bit; compression: none/PackBits/LZW/Deflate (multipage via pageIndex) |
+| PSD | ❌ | ✅ | Flattened 8-bit grayscale/RGB only (raw/RLE) |
 | PPM/PGM/PAM/PBM | ✅ | ✅ |  |
 | TGA | ✅ | ✅ |  |
 | ICO | ✅ | ✅ | PNG/BMP payloads (CUR decode supported) |
@@ -429,19 +432,20 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 | Format | Encode | Notes |
 | --- | --- | --- |
 | SVG / SVGZ | ✅ | Vector output |
-| PDF / EPS | ✅ | Vector by default, raster via RenderMode |
+| PDF / EPS | ✅ | Vector by default, raster via RenderMode (PDF decode: image-only JPEG/Flate) |
 | HTML | ✅ | Table-based output |
 | ASCII | ✅ | `.txt` output or `Render(..., OutputFormat.Ascii)` |
 | Raw RGBA | ✅ | Use `RenderPixels` APIs |
 
 ### Known gaps / not supported (decode)
 
-- ImageReader returns the first animation frame only (GIF/WebP); use WebpReader.* for raw or composited WebP frames
-- Managed WebP decode supports VP8/VP8L stills; size limit is 256 MB
+- ImageReader.DecodeRgba32 returns the first animation frame only (GIF/WebP); use ImageReader.DecodeAnimationFrames/DecodeAnimationCanvasFrames or GifReader/WebpReader for full animations. Use ImageReader.TryReadAnimationInfo for lightweight frame/loop metadata.
+- Managed WebP decode supports VP8/VP8L stills; default size limit is 256 MB (configurable via `WebpReader.MaxWebpBytes`)
 - Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
-- AVIF, HEIC, JPEG2000, PSD are not supported
-- Multi-page / tiled TIFF is not supported (first IFD only)
-- PDF/PS decode is not supported (rasterize first)
+- AVIF, HEIC, JPEG2000 are not supported (format detection only)
+- Multi-page / tiled TIFF: use `ImageReader.DecodeRgba32(data, pageIndex, ...)`, `ImageReader.TryReadInfo(..., pageIndex, ...)`, or `TiffReader.DecodeRgba32(data, pageIndex, ...)`
+- PSD decode is limited to flattened 8-bit grayscale/RGB (raw/RLE); no layers/CMYK/16-bit
+- PDF decode is limited to embedded image-only JPEG/Flate; PS decode is not supported (rasterize first)
 
 ### Format corpus (optional)
 

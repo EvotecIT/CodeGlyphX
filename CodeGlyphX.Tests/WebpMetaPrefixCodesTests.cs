@@ -7,6 +7,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpMetaPrefixCodesTests {
     [Fact]
     public void Webp_ManagedVp8L_MetaPrefixCodes_SelectsGroups() {

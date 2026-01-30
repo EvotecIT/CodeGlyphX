@@ -154,13 +154,13 @@ internal static class WebpVp8Encoder {
         var headerWriter = new WebpVp8BoolEncoder(expectedSize: 4096);
         WriteControlHeader(headerWriter);
         WriteSegmentation(headerWriter, segmentationEnabled, quantizerDeltas, segmentProbabilities);
-        WriteLoopFilter(headerWriter, quality);
+        WriteLoopFilter(headerWriter, baseQIndex, quality);
         headerWriter.WriteLiteral(0, 2); // one DCT partition
         WriteQuantization(headerWriter, baseQIndex);
         WriteCoefficientProbabilityUpdates(headerWriter);
         headerWriter.WriteBool(128, false); // refresh entropy probs
         var enableSkip = true;
-        var skipProbability = ComputeSkipProbability(quality, segmentationEnabled);
+        var skipProbability = ComputeSkipProbability(baseQIndex, segmentationEnabled);
         headerWriter.WriteBool(128, enableSkip);
         if (enableSkip) {
             headerWriter.WriteLiteral(skipProbability, 8);
@@ -999,12 +999,12 @@ internal static class WebpVp8Encoder {
         }
     }
 
-    private static void WriteLoopFilter(WebpVp8BoolEncoder writer, int quality) {
-        var level = (100 - quality) * 63 / 100;
+    private static void WriteLoopFilter(WebpVp8BoolEncoder writer, int baseQIndex, int quality) {
+        var level = baseQIndex * 63 / 127;
         if (level < 0) level = 0;
         if (level > 63) level = 63;
 
-        var sharpness = quality >= 75 ? 4 : 0;
+        var sharpness = quality >= 85 ? 4 : quality >= 60 ? 2 : 0;
         if (sharpness > 7) sharpness = 7;
 
         writer.WriteBool(128, false); // filter type (normal)
@@ -1790,13 +1790,19 @@ internal static class WebpVp8Encoder {
     private static int QualityToBaseQIndex(int quality) {
         if (quality <= 0) return 127;
         if (quality >= 100) return 0;
-        return (100 - quality) * 127 / 100;
+        var q = quality / 100.0;
+        var curve = Math.Pow(1.0 - q, 1.35);
+        var index = (int)Math.Round(curve * 127);
+        if (index < 0) return 0;
+        if (index > 127) return 127;
+        return index;
     }
 
-    private static int ComputeSkipProbability(int quality, bool segmentationEnabled) {
+    private static int ComputeSkipProbability(int baseQIndex, bool segmentationEnabled) {
         var baseProbability = segmentationEnabled ? 200 : 140;
         var span = segmentationEnabled ? 40 : 30;
-        var probability = baseProbability + (quality * span / 100);
+        var qualityFactor = baseQIndex * span / 127;
+        var probability = baseProbability + qualityFactor;
         if (probability < 8) return 8;
         if (probability > 248) return 248;
         return probability;
@@ -1967,6 +1973,13 @@ internal static class WebpVp8Encoder {
         var uvDc = GetDcQuant(q) * 2;
         if (uvDc > 132) uvDc = 132;
         var uvAc = GetAcQuant(q);
+        if (q < 40) {
+            y2Ac = (y2Ac * 9) / 10;
+            uvDc = (uvDc * 9) / 10;
+            uvAc = (uvAc * 9) / 10;
+        }
+        if (uvDc < 8) uvDc = 8;
+        if (uvAc < 8) uvAc = 8;
         return new DequantFactors(y1Dc, y1Ac, y2Dc, y2Ac, uvDc, uvAc);
     }
 
