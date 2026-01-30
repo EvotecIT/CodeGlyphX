@@ -383,6 +383,12 @@ public static partial class ImageReader {
         if (TgaReader.LooksLikeTga(data)) { format = ImageFormat.Tga; return true; }
         if (IsXpm(data)) { format = ImageFormat.Xpm; return true; }
         if (IsXbm(data)) { format = ImageFormat.Xbm; return true; }
+        if (IsPdf(data)) { format = ImageFormat.Pdf; return true; }
+        if (IsPostScript(data)) { format = ImageFormat.Ps; return true; }
+        if (IsPsd(data)) { format = ImageFormat.Psd; return true; }
+        if (IsJpeg2000(data)) { format = ImageFormat.Jpeg2000; return true; }
+        if (IsAvif(data)) { format = ImageFormat.Avif; return true; }
+        if (IsHeif(data)) { format = ImageFormat.Heic; return true; }
 
         return false;
     }
