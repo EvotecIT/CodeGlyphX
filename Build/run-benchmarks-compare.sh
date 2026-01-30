@@ -197,22 +197,31 @@ fi
 
 run_pack_runner "QR decode pack runner" "$PACK_ENV_PREFIX" "${PACK_PROPS[@]}"
 
-REPORT_SCRIPT="$SCRIPT_DIR/generate-benchmark-report.py"
-if command -v python3 >/dev/null 2>&1 && [[ -f "$REPORT_SCRIPT" ]]; then
-  if [[ $BENCH_QUICK -eq 1 ]]; then
-    if [[ $ALLOW_PARTIAL -eq 1 ]]; then
-      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode quick --allow-partial
-    else
-      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode quick --fail-on-missing-compare
-    fi
+REPORT_SCRIPT_PS1="$SCRIPT_DIR/Generate-BenchmarkReport.ps1"
+REPORT_SCRIPT_PY="$SCRIPT_DIR/generate-benchmark-report.py"
+REPORT_RUN_MODE=$([[ $BENCH_QUICK -eq 1 ]] && echo "quick" || echo "full")
+REPORT_ENFORCE_COMPARE=1
+if [[ $ALLOW_PARTIAL -eq 1 || "$COMPARE_FILTER" != "*Compare*" ]]; then
+  REPORT_ENFORCE_COMPARE=0
+fi
+
+if command -v pwsh >/dev/null 2>&1 && [[ -f "$REPORT_SCRIPT_PS1" ]]; then
+  report_args=(pwsh -NoProfile -File "$REPORT_SCRIPT_PS1" -ArtifactsPath "$ARTIFACTS_PATH" -Framework "$FRAMEWORK" -Configuration "$CONFIGURATION" -RunMode "$REPORT_RUN_MODE")
+  if [[ $ALLOW_PARTIAL -eq 1 ]]; then
+    report_args+=("-AllowPartial")
+  elif [[ $REPORT_ENFORCE_COMPARE -eq 1 ]]; then
+    report_args+=("-FailOnMissingCompare")
+  fi
+  "${report_args[@]}"
+elif command -v python3 >/dev/null 2>&1 && [[ -f "$REPORT_SCRIPT_PY" ]]; then
+  if [[ $ALLOW_PARTIAL -eq 1 ]]; then
+    python3 "$REPORT_SCRIPT_PY" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode "$REPORT_RUN_MODE" --allow-partial
+  elif [[ $REPORT_ENFORCE_COMPARE -eq 1 ]]; then
+    python3 "$REPORT_SCRIPT_PY" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode "$REPORT_RUN_MODE" --fail-on-missing-compare
   else
-    if [[ $ALLOW_PARTIAL -eq 1 ]]; then
-      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode full --allow-partial
-    else
-      python3 "$REPORT_SCRIPT" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode full --fail-on-missing-compare
-    fi
+    python3 "$REPORT_SCRIPT_PY" --artifacts-path "$ARTIFACTS_PATH" --framework "$FRAMEWORK" --configuration "$CONFIGURATION" --run-mode "$REPORT_RUN_MODE"
   fi
 else
   echo ""
-  echo "Skipping BENCHMARK.md generation (python3 not found or script missing)."
+  echo "Skipping BENCHMARK.md generation (pwsh/python3 not found or report scripts missing)."
 fi
