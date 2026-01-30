@@ -334,8 +334,19 @@ public static class PdfReader {
         var start = i;
         while (i < data.Length && !IsDelimiter(data[i])) i++;
         if (i <= start) return false;
-        name = System.Text.Encoding.ASCII.GetString(data.Slice(start, i - start));
+        name = GetAsciiString(data, start, i - start);
         return true;
+    }
+
+    private static string GetAsciiString(ReadOnlySpan<byte> data, int start, int length) {
+#if NET8_0_OR_GREATER
+        return System.Text.Encoding.ASCII.GetString(data.Slice(start, length));
+#else
+        if (length <= 0) return string.Empty;
+        var buffer = new byte[length];
+        data.Slice(start, length).CopyTo(buffer);
+        return System.Text.Encoding.ASCII.GetString(buffer);
+#endif
     }
 
     private static bool IsDelimiter(byte b) {

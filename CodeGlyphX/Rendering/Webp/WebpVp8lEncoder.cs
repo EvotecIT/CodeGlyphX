@@ -732,8 +732,12 @@ internal static class WebpVp8lEncoder {
         var hashSize = 1 << HashBits;
         var head = new int[hashSize];
         var next = new int[pixels.Length];
-        Array.Fill(head, -1);
-        Array.Fill(next, -1);
+        for (var i = 0; i < head.Length; i++) {
+            head[i] = -1;
+        }
+        for (var i = 0; i < next.Length; i++) {
+            next[i] = -1;
+        }
 
         var list = new List<Token>(pixels.Length);
         var pos = 0;

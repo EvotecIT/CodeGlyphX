@@ -1896,7 +1896,9 @@ public static class TiffWriter {
         byte[] tileBuffer,
         ushort photometric) {
         var fill = photometric == 0 ? (byte)0x00 : (byte)0xFF;
-        Array.Fill(tileBuffer, fill);
+        for (var i = 0; i < tileBuffer.Length; i++) {
+            tileBuffer[i] = fill;
+        }
         var tileX = tileIndex % tilesAcross;
         var tileY = tileIndex / tilesAcross;
         var startX = tileX * tileWidth;
