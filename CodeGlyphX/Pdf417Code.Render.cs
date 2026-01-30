@@ -4,6 +4,7 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
+using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
@@ -16,6 +17,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
@@ -81,6 +83,10 @@ public static partial class Pdf417Code {
                 return RenderedOutput.FromBinary(format, MatrixJpegRenderer.Render(modules, pngOptions, renderOptions?.JpegQuality ?? 85));
             case OutputFormat.Webp:
                 return RenderedOutput.FromBinary(format, MatrixWebpRenderer.Render(modules, pngOptions, renderOptions?.WebpQuality ?? 100));
+            case OutputFormat.Gif:
+                return RenderedOutput.FromBinary(format, MatrixGifRenderer.Render(modules, pngOptions));
+            case OutputFormat.Tiff:
+                return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions));
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, MatrixBmpRenderer.Render(modules, pngOptions));
             case OutputFormat.Ppm:

@@ -43,6 +43,8 @@ public static class OutputFormatInfo {
             OutputFormat.Html => "html",
             OutputFormat.Jpeg => "jpg",
             OutputFormat.Webp => "webp",
+            OutputFormat.Gif => "gif",
+            OutputFormat.Tiff => "tiff",
             OutputFormat.Bmp => "bmp",
             OutputFormat.Ppm => "ppm",
             OutputFormat.Pbm => "pbm",
@@ -70,6 +72,8 @@ public static class OutputFormatInfo {
             OutputFormat.Html => "text/html",
             OutputFormat.Jpeg => "image/jpeg",
             OutputFormat.Webp => "image/webp",
+            OutputFormat.Gif => "image/gif",
+            OutputFormat.Tiff => "image/tiff",
             OutputFormat.Bmp => "image/bmp",
             OutputFormat.Ppm => "image/x-portable-pixmap",
             OutputFormat.Pbm => "image/x-portable-bitmap",
@@ -112,6 +116,11 @@ public static class OutputFormatInfo {
                 return OutputFormat.Png;
             case ".webp":
                 return OutputFormat.Webp;
+            case ".gif":
+                return OutputFormat.Gif;
+            case ".tif":
+            case ".tiff":
+                return OutputFormat.Tiff;
             case ".svg":
                 return OutputFormat.Svg;
             case ".svgz":

@@ -4,6 +4,7 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
+using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
@@ -16,6 +17,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
@@ -72,6 +74,14 @@ public static partial class QrEasy {
                 var render = BuildPngOptions(opts, qr);
                 var quality = opts.WebpQuality;
                 return RenderedOutput.FromBinary(format, QrWebpRenderer.Render(qr.Modules, render, quality));
+            }
+            case OutputFormat.Gif: {
+                var render = BuildPngOptions(opts, qr);
+                return RenderedOutput.FromBinary(format, QrGifRenderer.Render(qr.Modules, render));
+            }
+            case OutputFormat.Tiff: {
+                var render = BuildPngOptions(opts, qr);
+                return RenderedOutput.FromBinary(format, QrTiffRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Bmp: {
                 var render = BuildPngOptions(opts, qr);

@@ -45,4 +45,11 @@ public class RenderOutputTests {
         Assert.Equal(OutputFormat.Svgz, OutputFormatInfo.FromPath("code.svgz"));
         Assert.Equal(OutputFormat.Svgz, OutputFormatInfo.FromPath("code.svg.gz"));
     }
+
+    [Fact]
+    public void OutputFormatInfoDetectsGifAndTiff() {
+        Assert.Equal(OutputFormat.Gif, OutputFormatInfo.FromPath("code.gif"));
+        Assert.Equal(OutputFormat.Tiff, OutputFormatInfo.FromPath("code.tif"));
+        Assert.Equal(OutputFormat.Tiff, OutputFormatInfo.FromPath("code.tiff"));
+    }
 }

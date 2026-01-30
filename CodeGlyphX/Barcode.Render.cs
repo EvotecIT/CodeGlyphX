@@ -3,6 +3,7 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
+using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
@@ -15,6 +16,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
@@ -57,6 +59,10 @@ public static partial class Barcode {
                 return RenderedOutput.FromBinary(format, BarcodeJpegRenderer.Render(barcode, opts, options?.JpegQuality ?? 90));
             case OutputFormat.Webp:
                 return RenderedOutput.FromBinary(format, BarcodeWebpRenderer.Render(barcode, opts, options?.WebpQuality ?? 100));
+            case OutputFormat.Gif:
+                return RenderedOutput.FromBinary(format, BarcodeGifRenderer.Render(barcode, opts));
+            case OutputFormat.Tiff:
+                return RenderedOutput.FromBinary(format, BarcodeTiffRenderer.Render(barcode, opts));
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, BarcodeBmpRenderer.Render(barcode, opts));
             case OutputFormat.Ppm:

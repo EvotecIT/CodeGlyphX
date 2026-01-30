@@ -35,6 +35,12 @@ public sealed class RendererFormatTests {
         var bmp = QrCode.Render(payload, OutputFormat.Bmp).Data;
         Assert.True(IsBmp(bmp));
 
+        var gif = QrCode.Render(payload, OutputFormat.Gif).Data;
+        Assert.True(IsGif(gif));
+
+        var tiff = QrCode.Render(payload, OutputFormat.Tiff).Data;
+        Assert.True(IsTiff(tiff));
+
         var ppm = QrCode.Render(payload, OutputFormat.Ppm).Data;
         Assert.True(IsPpm(ppm));
 
@@ -219,6 +225,12 @@ public sealed class RendererFormatTests {
         var bmp = BarcodeBmpRenderer.Render(barcode, new BarcodePngRenderOptions());
         Assert.True(IsBmp(bmp));
 
+        var gif = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Gif).Data;
+        Assert.True(IsGif(gif));
+
+        var tiff = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Tiff).Data;
+        Assert.True(IsTiff(tiff));
+
         var ppm = BarcodePpmRenderer.Render(barcode, new BarcodePngRenderOptions());
         Assert.True(IsPpm(ppm));
 
@@ -336,6 +348,22 @@ public sealed class RendererFormatTests {
     private static bool IsBmp(byte[] data) {
         if (data is null || data.Length < 2) return false;
         return data[0] == (byte)'B' && data[1] == (byte)'M';
+    }
+
+    private static bool IsGif(byte[] data) {
+        if (data is null || data.Length < 6) return false;
+        return data[0] == (byte)'G' &&
+               data[1] == (byte)'I' &&
+               data[2] == (byte)'F' &&
+               data[3] == (byte)'8' &&
+               (data[4] == (byte)'7' || data[4] == (byte)'9') &&
+               data[5] == (byte)'a';
+    }
+
+    private static bool IsTiff(byte[] data) {
+        if (data is null || data.Length < 4) return false;
+        return (data[0] == (byte)'I' && data[1] == (byte)'I' && data[2] == 42 && data[3] == 0) ||
+               (data[0] == (byte)'M' && data[1] == (byte)'M' && data[2] == 0 && data[3] == 42);
     }
 
     private static bool IsPpm(byte[] data) {
