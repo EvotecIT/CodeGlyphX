@@ -21,6 +21,31 @@ public static class GifWriter {
     }
 
     /// <summary>
+    /// Encodes multiple RGBA buffers into an animated GIF byte array.
+    /// </summary>
+    public static byte[] WriteAnimationRgba32(
+        int canvasWidth,
+        int canvasHeight,
+        ReadOnlySpan<GifAnimationFrame> frames,
+        GifAnimationOptions options) {
+        using var ms = new MemoryStream();
+        WriteAnimationRgba32(ms, canvasWidth, canvasHeight, frames, options);
+        return ms.ToArray();
+    }
+
+    /// <summary>
+    /// Encodes multiple RGBA buffers into an animated GIF byte array.
+    /// </summary>
+    public static byte[] WriteAnimationRgba32(
+        int canvasWidth,
+        int canvasHeight,
+        GifAnimationFrame[] frames,
+        GifAnimationOptions options) {
+        if (frames is null) throw new ArgumentNullException(nameof(frames));
+        return WriteAnimationRgba32(canvasWidth, canvasHeight, frames.AsSpan(), options);
+    }
+
+    /// <summary>
     /// Encodes an RGBA buffer into a GIF stream.
     /// </summary>
     public static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan<byte> rgba, int stride) {
@@ -31,6 +56,221 @@ public static class GifWriter {
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < stride * height) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
+        var frame = BuildIndexedFrame(rgba, width, height, stride);
+        WriteHeader(stream, width, height, frame.Palette, frame.PaletteSize, frame.HasTransparency, frame.TransparentIndex);
+        WriteImage(stream, width, height, frame.Pixels, frame.HasTransparency, frame.TransparentIndex, frame.MinCodeSize);
+        stream.WriteByte(0x3B); // Trailer
+    }
+
+    /// <summary>
+    /// Encodes multiple RGBA buffers into an animated GIF stream.
+    /// </summary>
+    public static void WriteAnimationRgba32(
+        Stream stream,
+        int canvasWidth,
+        int canvasHeight,
+        ReadOnlySpan<GifAnimationFrame> frames,
+        GifAnimationOptions options) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (canvasWidth <= 0 || canvasHeight <= 0) throw new ArgumentOutOfRangeException(nameof(canvasWidth));
+        if (canvasWidth > ushort.MaxValue || canvasHeight > ushort.MaxValue) {
+            throw new ArgumentOutOfRangeException(nameof(canvasWidth), "GIF dimensions exceed 65535.");
+        }
+        if (frames.Length == 0) throw new ArgumentException("At least one frame is required.", nameof(frames));
+        if (options.LoopCount < 0) throw new ArgumentOutOfRangeException(nameof(options.LoopCount));
+
+        var indexedFrames = new GifIndexedFrame[frames.Length];
+        for (var i = 0; i < frames.Length; i++) {
+            var frame = frames[i];
+            if (frame.Rgba is null) throw new ArgumentNullException(nameof(frame.Rgba));
+            if (frame.Width <= 0 || frame.Height <= 0) throw new ArgumentOutOfRangeException(nameof(frame.Width));
+            if (frame.Width > ushort.MaxValue || frame.Height > ushort.MaxValue) {
+                throw new ArgumentOutOfRangeException(nameof(frame.Width), "GIF dimensions exceed 65535.");
+            }
+            if (frame.Stride < frame.Width * 4) throw new ArgumentOutOfRangeException(nameof(frame.Stride));
+            if (frame.Rgba.Length < frame.Stride * frame.Height) throw new ArgumentException("RGBA buffer is too small.", nameof(frame.Rgba));
+            if (frame.X < 0 || frame.Y < 0) throw new ArgumentOutOfRangeException(nameof(frame.X));
+            if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) {
+                throw new ArgumentOutOfRangeException(nameof(frame), "Frame exceeds canvas bounds.");
+            }
+            if (frame.DurationMs < 0) throw new ArgumentOutOfRangeException(nameof(frame.DurationMs));
+
+            indexedFrames[i] = BuildIndexedFrame(frame.Rgba, frame.Width, frame.Height, frame.Stride);
+        }
+
+        WriteHeader(stream, canvasWidth, canvasHeight, BuildBackgroundPalette(options.BackgroundRgba), paletteSize: 2, hasTransparency: false, transparentIndex: 0);
+        WriteLoopExtension(stream, options.LoopCount);
+
+        for (var i = 0; i < frames.Length; i++) {
+            WriteFrame(stream, frames[i], indexedFrames[i]);
+        }
+
+        stream.WriteByte(0x3B); // Trailer
+    }
+
+    private static void WriteHeader(Stream stream, int width, int height, byte[] palette, int paletteSize, bool hasTransparency, int transparentIndex) {
+        WriteAscii(stream, "GIF89a");
+        WriteUInt16(stream, (ushort)width);
+        WriteUInt16(stream, (ushort)height);
+
+        const int colorResolution = 7; // 8 bits per channel
+        var gctSize = Log2(paletteSize) - 1; // 2^(gctSize+1)
+        var packed = (byte)(0x80 | (colorResolution << 4) | gctSize);
+        stream.WriteByte(packed);
+        stream.WriteByte((byte)(hasTransparency ? transparentIndex : 0)); // Background color index
+        stream.WriteByte(0); // Pixel aspect ratio
+        stream.Write(palette, 0, paletteSize * 3);
+    }
+
+    private static void WriteImage(Stream stream, int width, int height, byte[] pixels, bool hasTransparency, int transparentIndex, int minCodeSize) {
+        if (hasTransparency) {
+            stream.WriteByte(0x21); // Extension introducer
+            stream.WriteByte(0xF9); // GCE label
+            stream.WriteByte(4); // Block size
+            stream.WriteByte(0x01); // Transparency flag
+            WriteUInt16(stream, 0); // Delay
+            stream.WriteByte((byte)transparentIndex);
+            stream.WriteByte(0); // Block terminator
+        }
+
+        stream.WriteByte(0x2C); // Image descriptor
+        WriteUInt16(stream, 0);
+        WriteUInt16(stream, 0);
+        WriteUInt16(stream, (ushort)width);
+        WriteUInt16(stream, (ushort)height);
+        stream.WriteByte(0); // No local color table
+
+        stream.WriteByte((byte)minCodeSize);
+        var lzwData = EncodeLzw(pixels, minCodeSize);
+        WriteSubBlocks(stream, lzwData);
+    }
+
+    private static void WriteFrame(Stream stream, in GifAnimationFrame frame, in GifIndexedFrame indexed) {
+        stream.WriteByte(0x21); // Extension introducer
+        stream.WriteByte(0xF9); // GCE label
+        stream.WriteByte(4); // Block size
+
+        var packed = (byte)((((int)frame.DisposalMethod) & 0x7) << 2);
+        if (indexed.HasTransparency) {
+            packed |= 0x01;
+        }
+        stream.WriteByte(packed);
+
+        var delay = (frame.DurationMs + 5) / 10;
+        if (delay < 0) delay = 0;
+        if (delay > ushort.MaxValue) delay = ushort.MaxValue;
+        WriteUInt16(stream, (ushort)delay);
+        stream.WriteByte((byte)(indexed.HasTransparency ? indexed.TransparentIndex : 0));
+        stream.WriteByte(0); // Block terminator
+
+        stream.WriteByte(0x2C); // Image descriptor
+        WriteUInt16(stream, (ushort)frame.X);
+        WriteUInt16(stream, (ushort)frame.Y);
+        WriteUInt16(stream, (ushort)frame.Width);
+        WriteUInt16(stream, (ushort)frame.Height);
+
+        var lctSize = Log2(indexed.PaletteSize) - 1;
+        stream.WriteByte((byte)(0x80 | lctSize));
+        stream.Write(indexed.Palette, 0, indexed.PaletteSize * 3);
+
+        stream.WriteByte((byte)indexed.MinCodeSize);
+        var lzwData = EncodeLzw(indexed.Pixels, indexed.MinCodeSize);
+        WriteSubBlocks(stream, lzwData);
+    }
+
+    private static void WriteLoopExtension(Stream stream, int loopCount) {
+        stream.WriteByte(0x21); // Extension introducer
+        stream.WriteByte(0xFF); // Application extension
+        stream.WriteByte(11); // Block size
+        WriteAscii(stream, "NETSCAPE2.0");
+        stream.WriteByte(3); // Sub-block size
+        stream.WriteByte(1);
+        WriteUInt16(stream, (ushort)loopCount);
+        stream.WriteByte(0);
+    }
+
+    private static byte[] BuildBackgroundPalette(uint backgroundRgba) {
+        var palette = new byte[6];
+        palette[0] = (byte)((backgroundRgba >> 24) & 0xFF);
+        palette[1] = (byte)((backgroundRgba >> 16) & 0xFF);
+        palette[2] = (byte)((backgroundRgba >> 8) & 0xFF);
+        return palette;
+    }
+
+    private static void WriteSubBlocks(Stream stream, byte[] data) {
+        var offset = 0;
+        while (offset < data.Length) {
+            var count = Math.Min(255, data.Length - offset);
+            stream.WriteByte((byte)count);
+            stream.Write(data, offset, count);
+            offset += count;
+        }
+        stream.WriteByte(0); // Terminator
+    }
+
+    private static byte[] EncodeLzw(ReadOnlySpan<byte> indices, int minCodeSize) {
+        if (indices.Length == 0) return Array.Empty<byte>();
+
+        var clearCode = 1 << minCodeSize;
+        var endCode = clearCode + 1;
+        var nextCode = endCode + 1;
+        var codeSize = minCodeSize + 1;
+
+        var dict = new Dictionary<int, int>(4096);
+        var output = new List<byte>(indices.Length);
+        var bitBuffer = 0;
+        var bitCount = 0;
+
+        void WriteCode(int code) {
+            bitBuffer |= code << bitCount;
+            bitCount += codeSize;
+            while (bitCount >= 8) {
+                output.Add((byte)(bitBuffer & 0xFF));
+                bitBuffer >>= 8;
+                bitCount -= 8;
+            }
+        }
+
+        void ResetDictionary() {
+            dict.Clear();
+            codeSize = minCodeSize + 1;
+            nextCode = endCode + 1;
+            WriteCode(clearCode);
+        }
+
+        ResetDictionary();
+
+        var prefix = indices[0];
+        for (var i = 1; i < indices.Length; i++) {
+            var c = indices[i];
+            var key = (prefix << 8) | c;
+            if (dict.TryGetValue(key, out var code)) {
+                prefix = code;
+                continue;
+            }
+
+            WriteCode(prefix);
+            if (nextCode < (1 << MaxCodeSize)) {
+                dict[key] = nextCode++;
+                if (nextCode == (1 << codeSize) && codeSize < MaxCodeSize) {
+                    codeSize++;
+                }
+            } else {
+                ResetDictionary();
+            }
+
+            prefix = c;
+        }
+
+        WriteCode(prefix);
+        WriteCode(endCode);
+        if (bitCount > 0) {
+            output.Add((byte)(bitBuffer & 0xFF));
+        }
+        return output.ToArray();
+    }
+
+    private static GifIndexedFrame BuildIndexedFrame(ReadOnlySpan<byte> rgba, int width, int height, int stride) {
         var hasTransparency = false;
         var colorCounts = new Dictionary<int, int>(256);
         var tooManyColors = false;
@@ -185,119 +425,7 @@ public static class GifWriter {
             }
         }
 
-        WriteHeader(stream, width, height, palette, paletteSizePower, hasTransparency, transparentIndex);
-        WriteImage(stream, width, height, pixels, hasTransparency, transparentIndex, minCodeSize);
-        stream.WriteByte(0x3B); // Trailer
-    }
-
-    private static void WriteHeader(Stream stream, int width, int height, byte[] palette, int paletteSize, bool hasTransparency, int transparentIndex) {
-        WriteAscii(stream, "GIF89a");
-        WriteUInt16(stream, (ushort)width);
-        WriteUInt16(stream, (ushort)height);
-
-        const int colorResolution = 7; // 8 bits per channel
-        var gctSize = Log2(paletteSize) - 1; // 2^(gctSize+1)
-        var packed = (byte)(0x80 | (colorResolution << 4) | gctSize);
-        stream.WriteByte(packed);
-        stream.WriteByte((byte)(hasTransparency ? transparentIndex : 0)); // Background color index
-        stream.WriteByte(0); // Pixel aspect ratio
-        stream.Write(palette, 0, paletteSize * 3);
-    }
-
-    private static void WriteImage(Stream stream, int width, int height, byte[] pixels, bool hasTransparency, int transparentIndex, int minCodeSize) {
-        if (hasTransparency) {
-            stream.WriteByte(0x21); // Extension introducer
-            stream.WriteByte(0xF9); // GCE label
-            stream.WriteByte(4); // Block size
-            stream.WriteByte(0x01); // Transparency flag
-            WriteUInt16(stream, 0); // Delay
-            stream.WriteByte((byte)transparentIndex);
-            stream.WriteByte(0); // Block terminator
-        }
-
-        stream.WriteByte(0x2C); // Image descriptor
-        WriteUInt16(stream, 0);
-        WriteUInt16(stream, 0);
-        WriteUInt16(stream, (ushort)width);
-        WriteUInt16(stream, (ushort)height);
-        stream.WriteByte(0); // No local color table
-
-        stream.WriteByte((byte)minCodeSize);
-        var lzwData = EncodeLzw(pixels, minCodeSize);
-        WriteSubBlocks(stream, lzwData);
-    }
-
-    private static void WriteSubBlocks(Stream stream, byte[] data) {
-        var offset = 0;
-        while (offset < data.Length) {
-            var count = Math.Min(255, data.Length - offset);
-            stream.WriteByte((byte)count);
-            stream.Write(data, offset, count);
-            offset += count;
-        }
-        stream.WriteByte(0); // Terminator
-    }
-
-    private static byte[] EncodeLzw(ReadOnlySpan<byte> indices, int minCodeSize) {
-        if (indices.Length == 0) return Array.Empty<byte>();
-
-        var clearCode = 1 << minCodeSize;
-        var endCode = clearCode + 1;
-        var nextCode = endCode + 1;
-        var codeSize = minCodeSize + 1;
-
-        var dict = new Dictionary<int, int>(4096);
-        var output = new List<byte>(indices.Length);
-        var bitBuffer = 0;
-        var bitCount = 0;
-
-        void WriteCode(int code) {
-            bitBuffer |= code << bitCount;
-            bitCount += codeSize;
-            while (bitCount >= 8) {
-                output.Add((byte)(bitBuffer & 0xFF));
-                bitBuffer >>= 8;
-                bitCount -= 8;
-            }
-        }
-
-        void ResetDictionary() {
-            dict.Clear();
-            codeSize = minCodeSize + 1;
-            nextCode = endCode + 1;
-            WriteCode(clearCode);
-        }
-
-        ResetDictionary();
-
-        var prefix = indices[0];
-        for (var i = 1; i < indices.Length; i++) {
-            var c = indices[i];
-            var key = (prefix << 8) | c;
-            if (dict.TryGetValue(key, out var code)) {
-                prefix = code;
-                continue;
-            }
-
-            WriteCode(prefix);
-            if (nextCode < (1 << MaxCodeSize)) {
-                dict[key] = nextCode++;
-                if (nextCode == (1 << codeSize) && codeSize < MaxCodeSize) {
-                    codeSize++;
-                }
-            } else {
-                ResetDictionary();
-            }
-
-            prefix = c;
-        }
-
-        WriteCode(prefix);
-        WriteCode(endCode);
-        if (bitCount > 0) {
-            output.Add((byte)(bitBuffer & 0xFF));
-        }
-        return output.ToArray();
+        return new GifIndexedFrame(pixels, palette, paletteSizePower, minCodeSize, hasTransparency, transparentIndex);
     }
 
     private static int[] BuildHistogram(ReadOnlySpan<byte> rgba, int width, int height, int stride) {
@@ -448,6 +576,24 @@ public static class GifWriter {
         if (value < 0) return 0;
         if (value > 255) return 255;
         return (byte)value;
+    }
+
+    private readonly struct GifIndexedFrame {
+        public GifIndexedFrame(byte[] pixels, byte[] palette, int paletteSize, int minCodeSize, bool hasTransparency, int transparentIndex) {
+            Pixels = pixels;
+            Palette = palette;
+            PaletteSize = paletteSize;
+            MinCodeSize = minCodeSize;
+            HasTransparency = hasTransparency;
+            TransparentIndex = transparentIndex;
+        }
+
+        public byte[] Pixels { get; }
+        public byte[] Palette { get; }
+        public int PaletteSize { get; }
+        public int MinCodeSize { get; }
+        public bool HasTransparency { get; }
+        public int TransparentIndex { get; }
     }
 
     private readonly struct ColorBucket {
