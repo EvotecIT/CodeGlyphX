@@ -36,6 +36,7 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 - CI: PR website build check (static output) before merge.
 - Managed WebP VP8 lossy encode (intra), alpha (ALPH), segmentation, and skip-coefficient support. [formats][webp]
 - End-to-end WebP output across QR/Barcode/Matrix APIs (Save/Render + extension routing) + WebP quality options. [formats][webp][dx]
+- GIF/TIFF encoding support (palette optimization + dithering; TIFF compression options). [formats][docs]
 
 ## Milestones (priority, no dates)
 ### P0 — Reliability & clarity
