@@ -45,6 +45,17 @@ internal static class WebpVp8lEncoder {
         int stride,
         out byte[] webp,
         out string reason) {
+        return TryEncodeLiteralRgba32(rgba, width, height, stride, forceNoTransforms: false, out webp, out reason);
+    }
+
+    internal static bool TryEncodeLiteralRgba32(
+        ReadOnlySpan<byte> rgba,
+        int width,
+        int height,
+        int stride,
+        bool forceNoTransforms,
+        out byte[] webp,
+        out string reason) {
         webp = Array.Empty<byte>();
         reason = string.Empty;
 
@@ -70,25 +81,27 @@ internal static class WebpVp8lEncoder {
         var bestReason = "Managed WebP encode failed.";
         var succeeded = false;
 
-        if (TryEncodeWithColorIndexing(rgba, width, height, stride, out var candidate, out var candidateReason)) {
-            succeeded = true;
-            best = candidate;
-            bestLength = candidate.Length;
-        } else if (!string.IsNullOrEmpty(candidateReason)) {
-            bestReason = candidateReason;
-        }
-
-        if (TryEncodeWithPredictorTransform(rgba, width, height, stride, out candidate, out candidateReason)) {
-            if (!succeeded || candidate.Length < bestLength) {
+        if (!forceNoTransforms) {
+            if (TryEncodeWithColorIndexing(rgba, width, height, stride, out var candidate, out var candidateReason)) {
+                succeeded = true;
                 best = candidate;
                 bestLength = candidate.Length;
-                succeeded = true;
+            } else if (!string.IsNullOrEmpty(candidateReason)) {
+                bestReason = candidateReason;
             }
-        } else if (!succeeded && !string.IsNullOrEmpty(candidateReason)) {
-            bestReason = candidateReason;
+
+            if (TryEncodeWithPredictorTransform(rgba, width, height, stride, out candidate, out candidateReason)) {
+                if (!succeeded || candidate.Length < bestLength) {
+                    best = candidate;
+                    bestLength = candidate.Length;
+                    succeeded = true;
+                }
+            } else if (!succeeded && !string.IsNullOrEmpty(candidateReason)) {
+                bestReason = candidateReason;
+            }
         }
 
-        if (TryEncodeWithoutTransforms(rgba, width, height, stride, out candidate, out candidateReason)) {
+        if (TryEncodeWithoutTransforms(rgba, width, height, stride, allowMetaPrefix: true, out var candidate, out var candidateReason)) {
             if (!succeeded || candidate.Length < bestLength) {
                 best = candidate;
                 bestLength = candidate.Length;
@@ -112,6 +125,7 @@ internal static class WebpVp8lEncoder {
         int width,
         int height,
         int stride,
+        bool allowMetaPrefix,
         out byte[] webp,
         out string reason) {
         webp = Array.Empty<byte>();
@@ -125,7 +139,7 @@ internal static class WebpVp8lEncoder {
         // Transform section present, but empty.
         writer.WriteBits(0, 1);
 
-        if (!TryWriteImageCore(writer, rgba, width, height, stride, out reason)) return false;
+        if (!TryWriteImageCore(writer, rgba, width, height, stride, allowMetaPrefix, out reason)) return false;
 
         webp = WriteWebpContainer(writer.ToArray());
         return true;
@@ -157,7 +171,7 @@ internal static class WebpVp8lEncoder {
 
         // Palette subimage: no header, no transforms.
         var paletteWriter = new WebpBitWriter();
-        if (!TryWriteImageCore(paletteWriter, paletteDeltasRgba, palette.Length, height: 1, palette.Length * 4, out reason)) return false;
+        if (!TryWriteImageCore(paletteWriter, paletteDeltasRgba, palette.Length, height: 1, palette.Length * 4, allowMetaPrefix: false, out reason)) return false;
 
         var alphaUsed = ComputeAlphaUsed(rgba, width, height, stride);
 
@@ -171,7 +185,7 @@ internal static class WebpVp8lEncoder {
         writer.Append(paletteWriter);
         writer.WriteBits(0, 1); // no more transforms
 
-        if (!TryWriteImageCore(writer, indexedRgba, encodedWidth, height, encodedStride, out reason)) return false;
+        if (!TryWriteImageCore(writer, indexedRgba, encodedWidth, height, encodedStride, allowMetaPrefix: true, out reason)) return false;
 
         webp = WriteWebpContainer(writer.ToArray());
         return true;
@@ -208,7 +222,7 @@ internal static class WebpVp8lEncoder {
         var residualRgba = BuildResidualImage(pixels, width, height, sizeBits, transformWidth, modes);
 
         var predictorWriter = new WebpBitWriter();
-        if (!TryWriteImageCore(predictorWriter, predictorRgba, transformWidth, transformHeight, transformWidth * 4, out reason)) {
+        if (!TryWriteImageCore(predictorWriter, predictorRgba, transformWidth, transformHeight, transformWidth * 4, allowMetaPrefix: false, out reason)) {
             return false;
         }
 
@@ -228,7 +242,7 @@ internal static class WebpVp8lEncoder {
         writer.Append(predictorWriter);
         writer.WriteBits(0, 1); // no more transforms
 
-        if (!TryWriteImageCore(writer, residualRgba, width, height, width * 4, out reason)) {
+        if (!TryWriteImageCore(writer, residualRgba, width, height, width * 4, allowMetaPrefix: true, out reason)) {
             return false;
         }
 
@@ -251,6 +265,7 @@ internal static class WebpVp8lEncoder {
         int width,
         int height,
         int stride,
+        bool allowMetaPrefix,
         out string reason) {
         reason = string.Empty;
 
@@ -261,21 +276,31 @@ internal static class WebpVp8lEncoder {
         var colorCacheBits = ChooseColorCacheBits(pixels);
         var colorCacheSize = colorCacheBits == 0 ? 0 : 1 << colorCacheBits;
 
-        // Color cache flag + bits, then no meta prefix codes.
+        var tokens = colorCacheBits > 0
+            ? BuildTokensWithColorCache(pixels, width, colorCacheBits)
+            : BuildSmallDistanceTokens(pixels);
+
         if (colorCacheBits > 0) {
             writer.WriteBits(1, 1);
             writer.WriteBits(colorCacheBits, 4);
         } else {
             writer.WriteBits(0, 1);
         }
-        writer.WriteBits(0, 1);
 
-        var tokens = colorCacheBits > 0
-            ? BuildTokensWithColorCache(pixels, width, colorCacheBits)
-            : BuildSmallDistanceTokens(pixels);
+        if (allowMetaPrefix && TryPrepareMetaPrefix(tokens, pixels, width, height, colorCacheSize, out var meta, out reason)) {
+            writer.WriteBits(1, 1);
+            writer.WriteBits(meta.PrefixBits - 2, 3);
+            if (!TryWriteMetaImage(writer, meta, out reason)) {
+                return false;
+            }
+            if (!TryWriteGroupPrefixCodes(writer, colorCacheSize, meta, out var groups, out reason)) {
+                return false;
+            }
+            return TryEncodeTokensWithGroups(writer, tokens, width, groups, meta, out reason);
+        }
+
+        writer.WriteBits(0, 1);
         if (!TryWriteTokensWithPrefixCodes(writer, tokens, width, colorCacheSize, out reason)) {
-            // Fall back to literal-only encoding if our constrained backref path
-            // cannot be expressed with the current prefix-code strategy.
             tokens = BuildLiteralTokens(pixels);
             return TryWriteTokensWithPrefixCodes(writer, tokens, width, colorCacheSize: 0, out reason);
         }
@@ -875,6 +900,382 @@ internal static class WebpVp8lEncoder {
         return (int)(hash >> (32 - colorCacheBits));
     }
 
+    private static bool TryPrepareMetaPrefix(
+        ReadOnlySpan<Token> tokens,
+        ReadOnlySpan<int> pixels,
+        int width,
+        int height,
+        int colorCacheSize,
+        out MetaPrefixInfo meta,
+        out string reason) {
+        meta = default;
+        reason = string.Empty;
+
+        if (width <= 0 || height <= 0) return false;
+        if (tokens.Length == 0) return false;
+        if ((long)width * height < 64) return false;
+
+        if (!TryBuildMetaGroups(pixels, width, height, out var prefixBits, out var metaWidth, out var metaHeight, out var metaGroups, out var groupCount)) {
+            return false;
+        }
+        if (groupCount <= 1) return false;
+
+        if (!TryCollectGroupSymbols(tokens, width, metaGroups, metaWidth, prefixBits, groupCount, colorCacheSize, out var groups)) {
+            return false;
+        }
+
+        meta = new MetaPrefixInfo(prefixBits, metaWidth, metaHeight, metaGroups, groups);
+        return true;
+    }
+
+    private static bool TryBuildMetaGroups(
+        ReadOnlySpan<int> pixels,
+        int width,
+        int height,
+        out int prefixBits,
+        out int metaWidth,
+        out int metaHeight,
+        out int[] metaGroups,
+        out int groupCount) {
+        prefixBits = width >= 32 && height >= 32 ? 3 : 2;
+        var blockSize = 1 << prefixBits;
+        metaWidth = (width + blockSize - 1) >> prefixBits;
+        metaHeight = (height + blockSize - 1) >> prefixBits;
+        if (metaWidth <= 0 || metaHeight <= 0) {
+            metaGroups = Array.Empty<int>();
+            groupCount = 1;
+            return false;
+        }
+
+        metaGroups = new int[metaWidth * metaHeight];
+        groupCount = 1;
+        for (var by = 0; by < metaHeight; by++) {
+            var yStart = by * blockSize;
+            var yEnd = Math.Min(yStart + blockSize, height);
+            for (var bx = 0; bx < metaWidth; bx++) {
+                var xStart = bx * blockSize;
+                var xEnd = Math.Min(xStart + blockSize, width);
+
+                var first = int.MinValue;
+                var second = int.MinValue;
+                var complex = false;
+
+                for (var y = yStart; y < yEnd && !complex; y++) {
+                    var row = y * width;
+                    for (var x = xStart; x < xEnd; x++) {
+                        var color = pixels[row + x];
+                        if (color == first || color == second) continue;
+                        if (first == int.MinValue) {
+                            first = color;
+                        } else if (second == int.MinValue) {
+                            second = color;
+                        } else {
+                            complex = true;
+                            break;
+                        }
+                    }
+                }
+
+                var index = by * metaWidth + bx;
+                if (complex) {
+                    metaGroups[index] = 1;
+                    groupCount = 2;
+                } else {
+                    metaGroups[index] = 0;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private static bool TryCollectGroupSymbols(
+        ReadOnlySpan<Token> tokens,
+        int width,
+        int[] metaGroups,
+        int metaWidth,
+        int prefixBits,
+        int groupCount,
+        int colorCacheSize,
+        out GroupSymbols[] groups) {
+        groups = Array.Empty<GroupSymbols>();
+        if (groupCount <= 0) return false;
+
+        var seenR = new bool[groupCount][];
+        var seenG = new bool[groupCount][];
+        var seenB = new bool[groupCount][];
+        var seenA = new bool[groupCount][];
+        var seenLength = new bool[groupCount][];
+        var seenCache = colorCacheSize > 0 ? new bool[groupCount][] : null;
+        var hasTokens = new bool[groupCount];
+        var hasLiterals = new bool[groupCount];
+        var hasBackrefs = new bool[groupCount];
+
+        for (var g = 0; g < groupCount; g++) {
+            seenR[g] = new bool[256];
+            seenG[g] = new bool[256];
+            seenB[g] = new bool[256];
+            seenA[g] = new bool[256];
+            seenLength[g] = new bool[LengthPrefixCount];
+            if (colorCacheSize > 0) {
+                seenCache![g] = new bool[colorCacheSize];
+            }
+        }
+
+        var pixelIndex = 0;
+        for (var i = 0; i < tokens.Length; i++) {
+            var token = tokens[i];
+            var group = GetGroupForPixel(pixelIndex, width, metaGroups, metaWidth, prefixBits);
+            if (group < 0 || group >= groupCount) return false;
+            hasTokens[group] = true;
+
+            if (token.Kind == TokenKind.Literal) {
+                hasLiterals[group] = true;
+                var argb = token.LiteralArgb;
+                seenA[group][(argb >> 24) & 0xFF] = true;
+                seenR[group][(argb >> 16) & 0xFF] = true;
+                seenG[group][(argb >> 8) & 0xFF] = true;
+                seenB[group][argb & 0xFF] = true;
+                pixelIndex++;
+                continue;
+            }
+
+            if (token.Kind == TokenKind.CacheIndex) {
+                if (colorCacheSize > 0 && token.CacheIndexValue >= 0 && token.CacheIndexValue < colorCacheSize) {
+                    seenCache![group][token.CacheIndexValue] = true;
+                }
+                pixelIndex++;
+                continue;
+            }
+
+            if (!TryEncodePrefixValue(token.Length, maxPrefix: LengthPrefixCount - 1, out var prefix, out _, out _)) {
+                return false;
+            }
+
+            hasBackrefs[group] = true;
+            seenLength[group][prefix] = true;
+            pixelIndex += token.Length;
+        }
+
+        for (var g = 0; g < groupCount; g++) {
+            if (!hasTokens[g]) return false;
+        }
+
+        groups = new GroupSymbols[groupCount];
+        for (var g = 0; g < groupCount; g++) {
+            var uniqueR = BuildSymbolList(seenR[g]);
+            var uniqueG = BuildSymbolList(seenG[g]);
+            var uniqueB = BuildSymbolList(seenB[g]);
+            var uniqueA = BuildSymbolList(seenA[g]);
+            var lengthPrefixes = BuildIntList(seenLength[g]);
+            var cacheIndexes = colorCacheSize > 0 ? BuildIntList(seenCache![g]) : Array.Empty<int>();
+            groups[g] = new GroupSymbols(uniqueR, uniqueG, uniqueB, uniqueA, lengthPrefixes, cacheIndexes, hasBackrefs[g], hasLiterals[g]);
+        }
+
+        return true;
+    }
+
+    private static bool TryWriteMetaImage(WebpBitWriter writer, MetaPrefixInfo meta, out string reason) {
+        reason = string.Empty;
+        var metaPixels = new byte[checked(meta.MetaWidth * meta.MetaHeight * 4)];
+        for (var i = 0; i < meta.MetaGroups.Length; i++) {
+            var offset = i * 4;
+            metaPixels[offset] = 0;
+            metaPixels[offset + 1] = (byte)meta.MetaGroups[i];
+            metaPixels[offset + 2] = 0;
+            metaPixels[offset + 3] = 255;
+        }
+
+        return TryWriteImageCore(writer, metaPixels, meta.MetaWidth, meta.MetaHeight, meta.MetaWidth * 4, allowMetaPrefix: false, out reason);
+    }
+
+    private static bool TryWriteGroupPrefixCodes(
+        WebpBitWriter writer,
+        int colorCacheSize,
+        MetaPrefixInfo meta,
+        out GroupCodebooks[] groups,
+        out string reason) {
+        reason = string.Empty;
+        groups = Array.Empty<GroupCodebooks>();
+
+        var groupCount = meta.GroupSymbols.Length;
+        if (groupCount == 0) return false;
+
+        var groupBooks = new GroupCodebooks[groupCount];
+        for (var g = 0; g < groupCount; g++) {
+            var symbols = meta.GroupSymbols[g];
+            var literalsR = EnsureSymbolList(symbols.UniqueR, 0);
+            var literalsG = EnsureSymbolList(symbols.UniqueG, 0);
+            var literalsB = EnsureSymbolList(symbols.UniqueB, 0);
+            var literalsA = EnsureSymbolList(symbols.UniqueA, 255);
+            var lengthPrefixes = symbols.LengthPrefixes;
+            var cacheIndexes = symbols.CacheIndexes;
+            var hasBackrefs = symbols.HasBackrefs;
+            var hasColorCache = colorCacheSize > 0 && cacheIndexes.Length > 0;
+
+            Codebook greenBook;
+            if (hasBackrefs || hasColorCache) {
+                if (!TryWriteGreenPrefixCodeWithExtras(writer, literalsG, lengthPrefixes, cacheIndexes, colorCacheSize, out greenBook, out reason)) {
+                    return false;
+                }
+            } else {
+                if (!TryWriteChannelPrefixCode(writer, GreenAlphabetBase, literalsG, fixedLiteralCount: LiteralAlphabetSize, out greenBook, out reason)) {
+                    return false;
+                }
+            }
+
+            if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, literalsR, fixedLiteralCount: LiteralAlphabetSize, out var redBook, out reason)) return false;
+            if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, literalsB, fixedLiteralCount: LiteralAlphabetSize, out var blueBook, out reason)) return false;
+            if (!TryWriteChannelPrefixCode(writer, LiteralAlphabetSize, literalsA, fixedLiteralCount: LiteralAlphabetSize, out var alphaBook, out reason)) return false;
+
+            Codebook distanceBook = default;
+            if (hasBackrefs) {
+                if (!TryWriteDistancePrefixCodeForBackrefs(writer, out distanceBook, out reason)) return false;
+            } else {
+                WriteSimplePrefixCode(writer, symbols: new byte[] { 0 });
+            }
+
+            groupBooks[g] = new GroupCodebooks(greenBook, redBook, blueBook, alphaBook, distanceBook, hasBackrefs);
+        }
+
+        groups = groupBooks;
+        return true;
+    }
+
+    private static bool TryEncodeTokensWithGroups(
+        WebpBitWriter writer,
+        ReadOnlySpan<Token> tokens,
+        int width,
+        GroupCodebooks[] groups,
+        MetaPrefixInfo meta,
+        out string reason) {
+        reason = string.Empty;
+        var distanceCodeMap = BuildDistanceCodeMap(width);
+
+        var pixelIndex = 0;
+        for (var i = 0; i < tokens.Length; i++) {
+            var token = tokens[i];
+            var groupIndex = GetGroupForPixel(pixelIndex, width, meta.MetaGroups, meta.MetaWidth, meta.PrefixBits);
+            if (groupIndex < 0 || groupIndex >= groups.Length) {
+                reason = "Meta prefix group out of range.";
+                return false;
+            }
+
+            var books = groups[groupIndex];
+            if (token.Kind == TokenKind.Literal) {
+                var argb = token.LiteralArgb;
+                var a = (argb >> 24) & 0xFF;
+                var r = (argb >> 16) & 0xFF;
+                var g = (argb >> 8) & 0xFF;
+                var b = argb & 0xFF;
+
+                if (!books.Green.TryWrite(writer, g)) {
+                    reason = "Green channel symbol not present in prefix code.";
+                    return false;
+                }
+                if (!books.Red.TryWrite(writer, r)) {
+                    reason = "Red channel symbol not present in prefix code.";
+                    return false;
+                }
+                if (!books.Blue.TryWrite(writer, b)) {
+                    reason = "Blue channel symbol not present in prefix code.";
+                    return false;
+                }
+                if (!books.Alpha.TryWrite(writer, a)) {
+                    reason = "Alpha channel symbol not present in prefix code.";
+                    return false;
+                }
+
+                pixelIndex++;
+                continue;
+            }
+
+            if (token.Kind == TokenKind.CacheIndex) {
+                var cacheGreenSymbol = GreenAlphabetBase + token.CacheIndexValue;
+                if (!books.Green.TryWrite(writer, cacheGreenSymbol)) {
+                    reason = "Green cache symbol not present in prefix code.";
+                    return false;
+                }
+                pixelIndex++;
+                continue;
+            }
+
+            if (!books.HasBackrefs) {
+                reason = "Back-reference used but group has no back-reference prefix codes.";
+                return false;
+            }
+
+            if (!TryEncodePrefixValue(token.Length, maxPrefix: LengthPrefixCount - 1, out var lengthPrefix, out var lengthExtraBits, out var lengthExtraValue)) {
+                reason = "Back-reference length is not encodable.";
+                return false;
+            }
+
+            var greenSymbol = LiteralAlphabetSize + lengthPrefix;
+            if (!books.Green.TryWrite(writer, greenSymbol)) {
+                reason = "Green length-prefix symbol not present in prefix code.";
+                return false;
+            }
+            if (lengthExtraBits > 0) {
+                writer.WriteBits(lengthExtraValue, lengthExtraBits);
+            }
+
+            if (token.Distance is < 1 or > MaxBackwardDistance) {
+                reason = $"Only distances 1..{MaxBackwardDistance} are supported in this encoder step.";
+                return false;
+            }
+
+            var distanceCode = ResolveDistanceCode(distanceCodeMap, token.Distance);
+            if (!TryEncodePrefixValue(distanceCode, maxPrefix: 39, out var distancePrefix, out var distanceExtraBits, out var distanceExtraValue)) {
+                reason = "Distance code could not be encoded.";
+                return false;
+            }
+
+            if (!books.Distance.TryWrite(writer, distancePrefix)) {
+                reason = "Distance prefix symbol not present in prefix code.";
+                return false;
+            }
+
+            if (distanceExtraBits > 0) {
+                writer.WriteBits(distanceExtraValue, distanceExtraBits);
+            }
+
+            pixelIndex += token.Length;
+        }
+
+        return true;
+    }
+
+    private static int GetGroupForPixel(int pixelIndex, int width, int[] metaGroups, int metaWidth, int prefixBits) {
+        if (metaGroups.Length == 0 || metaWidth <= 0) return 0;
+        var x = pixelIndex % width;
+        var y = pixelIndex / width;
+        var blockX = x >> prefixBits;
+        var blockY = y >> prefixBits;
+        var index = blockY * metaWidth + blockX;
+        if (index < 0 || index >= metaGroups.Length) return 0;
+        return metaGroups[index];
+    }
+
+    private static byte[] EnsureSymbolList(byte[] symbols, byte fallback) {
+        if (symbols.Length > 0) return symbols;
+        return new[] { fallback };
+    }
+
+    private static int[] BuildIntList(bool[] seen) {
+        var count = 0;
+        for (var i = 0; i < seen.Length; i++) {
+            if (seen[i]) count++;
+        }
+        if (count == 0) return Array.Empty<int>();
+        var values = new int[count];
+        var idx = 0;
+        for (var i = 0; i < seen.Length; i++) {
+            if (!seen[i]) continue;
+            values[idx++] = i;
+        }
+        return values;
+    }
+
     private static bool TryWriteTokensWithPrefixCodes(
         WebpBitWriter writer,
         ReadOnlySpan<Token> tokens,
@@ -1269,6 +1670,70 @@ internal static class WebpVp8lEncoder {
             return distanceCodeMap[distance];
         }
         return DistanceMapSize + distance;
+    }
+
+    private readonly struct GroupSymbols {
+        public GroupSymbols(
+            byte[] uniqueR,
+            byte[] uniqueG,
+            byte[] uniqueB,
+            byte[] uniqueA,
+            int[] lengthPrefixes,
+            int[] cacheIndexes,
+            bool hasBackrefs,
+            bool hasLiterals) {
+            UniqueR = uniqueR;
+            UniqueG = uniqueG;
+            UniqueB = uniqueB;
+            UniqueA = uniqueA;
+            LengthPrefixes = lengthPrefixes;
+            CacheIndexes = cacheIndexes;
+            HasBackrefs = hasBackrefs;
+            HasLiterals = hasLiterals;
+        }
+
+        public byte[] UniqueR { get; }
+        public byte[] UniqueG { get; }
+        public byte[] UniqueB { get; }
+        public byte[] UniqueA { get; }
+        public int[] LengthPrefixes { get; }
+        public int[] CacheIndexes { get; }
+        public bool HasBackrefs { get; }
+        public bool HasLiterals { get; }
+    }
+
+    private readonly struct MetaPrefixInfo {
+        public MetaPrefixInfo(int prefixBits, int metaWidth, int metaHeight, int[] metaGroups, GroupSymbols[] groupSymbols) {
+            PrefixBits = prefixBits;
+            MetaWidth = metaWidth;
+            MetaHeight = metaHeight;
+            MetaGroups = metaGroups;
+            GroupSymbols = groupSymbols;
+        }
+
+        public int PrefixBits { get; }
+        public int MetaWidth { get; }
+        public int MetaHeight { get; }
+        public int[] MetaGroups { get; }
+        public GroupSymbols[] GroupSymbols { get; }
+    }
+
+    private readonly struct GroupCodebooks {
+        public GroupCodebooks(Codebook green, Codebook red, Codebook blue, Codebook alpha, Codebook distance, bool hasBackrefs) {
+            Green = green;
+            Red = red;
+            Blue = blue;
+            Alpha = alpha;
+            Distance = distance;
+            HasBackrefs = hasBackrefs;
+        }
+
+        public Codebook Green { get; }
+        public Codebook Red { get; }
+        public Codebook Blue { get; }
+        public Codebook Alpha { get; }
+        public Codebook Distance { get; }
+        public bool HasBackrefs { get; }
     }
 
     private readonly struct Token {

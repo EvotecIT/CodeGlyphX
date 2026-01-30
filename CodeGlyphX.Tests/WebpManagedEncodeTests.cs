@@ -235,6 +235,47 @@ public sealed class WebpManagedEncodeTests {
         Assert.Equal(rgba, decoded);
     }
 
+    [Fact]
+    public void Webp_ManagedEncode_Vp8L_UsesMetaPrefixCodes_WhenBlocksVary() {
+        const int width = 16;
+        const int height = 8;
+        const int stride = width * 4;
+
+        var rgba = new byte[height * stride];
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                var i = y * stride + x * 4;
+                if (x < width / 2) {
+                    rgba[i] = 0;
+                    rgba[i + 1] = 0;
+                    rgba[i + 2] = 0;
+                    rgba[i + 3] = 255;
+                } else {
+                    var mode = (x + y) & 3;
+                    rgba[i] = mode switch { 0 => (byte)255, 1 => (byte)0, 2 => (byte)0, _ => (byte)255 };
+                    rgba[i + 1] = mode switch { 0 => (byte)0, 1 => (byte)255, 2 => (byte)0, _ => (byte)255 };
+                    rgba[i + 2] = mode switch { 0 => (byte)0, 1 => (byte)0, 2 => (byte)255, _ => (byte)0 };
+                    rgba[i + 3] = 255;
+                }
+            }
+        }
+
+        Assert.True(WebpVp8lEncoder.TryEncodeLiteralRgba32(rgba, width, height, stride, forceNoTransforms: true, out var webp, out var reason), reason);
+
+        var payload = ExtractVp8lPayload(webp);
+        var reader = new WebpBitReader(payload);
+        Assert.True(WebpVp8lDecoder.TryReadHeader(ref reader, out _));
+
+        var hasTransform = reader.ReadBits(1);
+        Assert.Equal(0, hasTransform);
+        var colorCacheFlag = reader.ReadBits(1);
+        if (colorCacheFlag != 0) {
+            reader.ReadBits(4);
+        }
+        var metaFlag = reader.ReadBits(1);
+        Assert.Equal(1, metaFlag);
+    }
+
     private static byte[] ExtractVp8lPayload(byte[] webp) {
         Assert.True(WebpReader.IsWebp(webp));
         Assert.True(webp.Length >= 12);
