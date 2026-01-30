@@ -36,6 +36,30 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_Flate_16bit_PngPredictor() {
+        var predicted = new byte[] { 0x00, 0x12, 0x34, 0xAB, 0xCD, 0xFF, 0xFF };
+        var pdf = BuildPdfWithFlateImage(1, 1, predicted, "/DeviceRGB", bitsPerComponent: 16, "/Filter /FlateDecode /DecodeParms << /Predictor 12 /Colors 3 /Columns 1 >> ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x12, 0xAB, 0xFF, 255 }, rgba);
+    }
+
+    [Fact]
+    public void Decode_Pdf_Flate_16bit_TiffPredictor() {
+        var predicted = new byte[] { 0x01, 0x01, 0x01, 0x01 };
+        var pdf = BuildPdfWithFlateImage(2, 1, predicted, "/DeviceGray", bitsPerComponent: 16, "/Filter /FlateDecode /Predictor 2 /Colors 1 ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(2, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x01, 0x01, 0x01, 255, 0x02, 0x02, 0x02, 255 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Flate_Filter_Array() {
         var rgb = new byte[] { 0, 255, 0 };
         var pdf = BuildPdfWithFlateImage(1, 1, rgb, "/DeviceRGB", bitsPerComponent: 8, "/Filter [/FlateDecode] ");

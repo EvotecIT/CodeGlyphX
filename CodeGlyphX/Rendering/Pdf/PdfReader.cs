@@ -397,8 +397,8 @@ public static class PdfReader {
 
         if (bits != 8) {
             if (colors <= 0) return false;
-            if (applyPredictor && info.Predictor > 1) return false;
-            if (!TryValidatePackedLength(info.Width, info.Height, colors, bits, data.Length)) return false;
+            if (applyPredictor && info.Predictor > 1 && bits != 16) return false;
+            if (!TryValidatePackedLengthForPredictor(info.Width, info.Height, colors, bits, info.Predictor, data.Length)) return false;
         } else {
             if (colors == 0) {
                 if (!TryInferColorsFromLength(data.Length, info.Width, info.Height, info.Predictor, out colors)) {
@@ -429,7 +429,21 @@ public static class PdfReader {
             }
         } else {
             var scale = info.ColorSpaceKind != PdfColorSpaceKind.Indexed;
-            if (!TryExpandSamples(data, info.Width, info.Height, colors, bits, scale, out expanded)) return false;
+            if (bits == 16) {
+                if (applyPredictor && info.Predictor == 2) {
+                    var decoded16 = data.ToArray();
+                    var rowSize = checked(info.Width * colors * 2);
+                    ApplyTiffPredictor16(decoded16, rowSize, info.Height, colors);
+                    if (!TryExpandSamples(decoded16, info.Width, info.Height, colors, bits, scale, out expanded)) return false;
+                } else if (applyPredictor && info.Predictor >= 10) {
+                    if (!TryApplyPngPredictor16(data.ToArray(), info.Width, info.Height, colors, out var decoded16)) return false;
+                    if (!TryExpandSamples(decoded16, info.Width, info.Height, colors, bits, scale, out expanded)) return false;
+                } else {
+                    if (!TryExpandSamples(data, info.Width, info.Height, colors, bits, scale, out expanded)) return false;
+                }
+            } else {
+                if (!TryExpandSamples(data, info.Width, info.Height, colors, bits, scale, out expanded)) return false;
+            }
         }
 
         if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed) {
@@ -1573,6 +1587,23 @@ public static class PdfReader {
         }
     }
 
+    private static void ApplyTiffPredictor16(byte[] data, int rowSize, int rows, int colors) {
+        var bytesPerPixel = colors * 2;
+        if (bytesPerPixel <= 0) return;
+        for (var y = 0; y < rows; y++) {
+            var rowStart = y * rowSize;
+            for (var i = bytesPerPixel; i + 1 < rowSize; i += 2) {
+                var prevIndex = rowStart + i - bytesPerPixel;
+                var prev = (data[prevIndex] << 8) | data[prevIndex + 1];
+                var curIndex = rowStart + i;
+                var cur = (data[curIndex] << 8) | data[curIndex + 1];
+                var value = (cur + prev) & 0xFFFF;
+                data[curIndex] = (byte)(value >> 8);
+                data[curIndex + 1] = (byte)value;
+            }
+        }
+    }
+
     private static bool TryApplyPngPredictor(byte[] data, int width, int height, int colors, out byte[] output) {
         output = new byte[width * height * colors];
         var rowSize = width * colors;
@@ -1611,6 +1642,59 @@ public static class PdfReader {
                 output[dstRow + x] = value;
             }
         }
+        return true;
+    }
+
+    private static bool TryApplyPngPredictor16(byte[] data, int width, int height, int colors, out byte[] output) {
+        output = Array.Empty<byte>();
+        if (width <= 0 || height <= 0 || colors <= 0) return false;
+        var rowSize = checked(width * colors * 2);
+        var expected = checked((rowSize + 1) * height);
+        if (data.Length != expected) return false;
+
+        var decoded = new byte[rowSize * height];
+        var bytesPerPixel = colors * 2;
+        for (var y = 0; y < height; y++) {
+            var srcRow = y * (rowSize + 1);
+            var dstRow = y * rowSize;
+            var filter = data[srcRow++];
+            switch (filter) {
+                case 0:
+                    Buffer.BlockCopy(data, srcRow, decoded, dstRow, rowSize);
+                    break;
+                case 1:
+                    for (var i = 0; i < rowSize; i++) {
+                        var left = i >= bytesPerPixel ? decoded[dstRow + i - bytesPerPixel] : 0;
+                        decoded[dstRow + i] = (byte)(data[srcRow + i] + left);
+                    }
+                    break;
+                case 2:
+                    for (var i = 0; i < rowSize; i++) {
+                        var up = y > 0 ? decoded[dstRow - rowSize + i] : 0;
+                        decoded[dstRow + i] = (byte)(data[srcRow + i] + up);
+                    }
+                    break;
+                case 3:
+                    for (var i = 0; i < rowSize; i++) {
+                        var left = i >= bytesPerPixel ? decoded[dstRow + i - bytesPerPixel] : 0;
+                        var up = y > 0 ? decoded[dstRow - rowSize + i] : 0;
+                        decoded[dstRow + i] = (byte)(data[srcRow + i] + ((left + up) >> 1));
+                    }
+                    break;
+                case 4:
+                    for (var i = 0; i < rowSize; i++) {
+                        var a = i >= bytesPerPixel ? decoded[dstRow + i - bytesPerPixel] : 0;
+                        var b = y > 0 ? decoded[dstRow - rowSize + i] : 0;
+                        var c = (y > 0 && i >= bytesPerPixel) ? decoded[dstRow - rowSize + i - bytesPerPixel] : 0;
+                        decoded[dstRow + i] = (byte)(data[srcRow + i] + Paeth(a, b, c));
+                    }
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        output = decoded;
         return true;
     }
 
@@ -1674,6 +1758,17 @@ public static class PdfReader {
         var rowBits = (long)width * colors * bitsPerComponent;
         var rowBytes = (int)((rowBits + 7) / 8);
         var expected = (long)rowBytes * height;
+        return expected == length;
+    }
+
+    private static bool TryValidatePackedLengthForPredictor(int width, int height, int colors, int bitsPerComponent, int predictor, int length) {
+        if (TryValidatePackedLength(width, height, colors, bitsPerComponent, length)) return true;
+        if (predictor < 10) return false;
+        if (width <= 0 || height <= 0 || colors <= 0) return false;
+        if (bitsPerComponent != 1 && bitsPerComponent != 2 && bitsPerComponent != 4 && bitsPerComponent != 16) return false;
+        var rowBits = (long)width * colors * bitsPerComponent;
+        var rowBytes = (int)((rowBits + 7) / 8);
+        var expected = (long)(rowBytes + 1) * height;
         return expected == length;
     }
 
@@ -1901,7 +1996,9 @@ public static class PdfReader {
             }
             var rowBits = checked(info.Width * colors * bits);
             var rowBytes = (rowBits + 7) / 8;
-            expected = checked(rowBytes * info.Height);
+            expected = info.Predictor >= 10
+                ? checked((rowBytes + 1) * info.Height)
+                : checked(rowBytes * info.Height);
             return true;
         } catch (OverflowException) {
             expected = 0;
