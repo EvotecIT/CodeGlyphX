@@ -88,10 +88,10 @@
 
             <h2>Supported Symbologies</h2>
             <h3>2D Matrix Codes</h3>
-            <p>QR Code, Data Matrix, PDF417, Aztec, Micro QR</p>
+            <p>QR Code, Micro QR, Data Matrix, PDF417 / MicroPDF417, Aztec, GS1 DataBar (Omni/Stacked), and postal 4-state (IMB/RM4SCC/AusPost)</p>
 
             <h3>1D Linear Barcodes</h3>
-            <p>Code 128, GS1-128, Code 39, Code 93, Code 11, Codabar, MSI, Plessey, EAN-8, EAN-13, UPC-A, UPC-E, ITF-14</p>
+            <p>Code 128, GS1-128, Code 39/93/11, Codabar, MSI, Plessey, Telepen, Pharmacode, Code 32, EAN/UPC, ITF and 2-of-5 variants, GS1 DataBar (Truncated/Expanded)</p>
 
             <h2>Documentation Map</h2>
             <ul style="color: var(--text-muted); margin-left: 1.5rem;">
@@ -516,24 +516,25 @@ using CodeGlyphX.Payloads;
 QR.Save(QrPayloads.Wifi("NetworkName", "Password123"), "wifi.png");
 
 // Open network (no password)
-QR.Save(QrPayloads.Wifi("PublicNetwork", null, WifiAuthType.None), "wifi-open.png");</pre>
+QR.Save(QrPayloads.Wifi("PublicNetwork", "", "nopass"), "wifi-open.png");</pre>
 
             <h2>Contact Cards</h2>
             <pre class="code-block">// vCard format (widely supported)
-QR.Save(QrPayloads.VCard(
-    firstName: "Przemyslaw",
-    lastName: "Klys",
+QR.Save(QrPayloads.Contact(
+    QrContactOutputType.VCard3,
+    firstname: "Przemyslaw",
+    lastname: "Klys",
     email: "contact@evotec.pl",
     phone: "+48123456789",
     website: "https://evotec.xyz",
-    organization: "Evotec Services"
+    org: "Evotec Services"
 ), "contact.png");</pre>
 
             <h2>OTP / 2FA</h2>
             <pre class="code-block">// TOTP (Time-based One-Time Password)
 QR.Save(QrPayloads.OneTimePassword(
     OtpAuthType.Totp,
-    secret: "JBSWY3DPEHPK3PXP",
+    secretBase32: "JBSWY3DPEHPK3PXP",
     label: "user@example.com",
     issuer: "MyApp"
 ), "totp.png");</pre>
@@ -542,10 +543,13 @@ QR.Save(QrPayloads.OneTimePassword(
             <pre class="code-block">QR.Save(QrPayloads.Girocode(
     iban: "DE89370400440532013000",
     bic: "COBADEFFXXX",
-    recipientName: "Evotec Services",
+    name: "Evotec Services",
     amount: 99.99m,
-    reference: "Invoice-2024-001"
+    remittanceInformation: "Invoice-2024-001"
 ), "sepa.png");</pre>
+
+            <p>Additional helpers include PayPal.Me, UPI, BezahlCode variants, Swiss QR Bill, Slovenian UPN, Russia payment order, crypto URIs, and social/app store links. See the API reference for the full list.</p>
+            <p>Auto-detect helper: <code>QrPayloads.Detect("...")</code> builds the best-known payload for mixed inputs.</p>
         }
         else if (Section == "renderers")
         {
@@ -583,7 +587,7 @@ QR.Save(QrPayloads.OneTimePassword(
                         <td style="padding: 0.75rem;"><code>.webp</code></td>
                         <td style="padding: 0.75rem;">Yes</td>
                         <td style="padding: 0.75rem;">Yes</td>
-                        <td style="padding: 0.75rem;">Lossless VP8L + VP8 lossy intra, animation supported</td>
+                        <td style="padding: 0.75rem;">Managed VP8/VP8L; ImageReader returns first frame for animations</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">BMP</td>
@@ -621,11 +625,11 @@ QR.Save(QrPayloads.OneTimePassword(
                         <td style="padding: 0.75rem;">Uncompressed + RLE, true-color/grayscale/color-mapped</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
-                        <td style="padding: 0.75rem;">ICO/CUR</td>
-                        <td style="padding: 0.75rem;"><code>.ico</code>, <code>.cur</code></td>
+                        <td style="padding: 0.75rem;">ICO</td>
+                        <td style="padding: 0.75rem;"><code>.ico</code></td>
                         <td style="padding: 0.75rem;">Yes</td>
                         <td style="padding: 0.75rem;">Yes</td>
-                        <td style="padding: 0.75rem;">Multi-size icons (PNG/BMP payloads)</td>
+                        <td style="padding: 0.75rem;">PNG/BMP payloads (CUR decode supported)</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">XBM/XPM</td>
@@ -636,14 +640,14 @@ QR.Save(QrPayloads.OneTimePassword(
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">SVG / SVGZ</td>
-                        <td style="padding: 0.75rem;"><code>.svg</code>, <code>.svgz</code></td>
+                        <td style="padding: 0.75rem;"><code>.svg</code>, <code>.svgz</code>, <code>.svg.gz</code></td>
                         <td style="padding: 0.75rem;">Yes</td>
                         <td style="padding: 0.75rem;">No</td>
                         <td style="padding: 0.75rem;">Vector output only</td>
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">PDF / EPS</td>
-                        <td style="padding: 0.75rem;"><code>.pdf</code>, <code>.eps</code></td>
+                        <td style="padding: 0.75rem;"><code>.pdf</code>, <code>.eps</code>, <code>.ps</code></td>
                         <td style="padding: 0.75rem;">Yes</td>
                         <td style="padding: 0.75rem;">No</td>
                         <td style="padding: 0.75rem;">Vector by default, raster via RenderMode</td>
@@ -657,7 +661,7 @@ QR.Save(QrPayloads.OneTimePassword(
                     </tr>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 0.75rem;">ASCII</td>
-                        <td style="padding: 0.75rem;">API only</td>
+                        <td style="padding: 0.75rem;"><code>.txt</code></td>
                         <td style="padding: 0.75rem;">Yes</td>
                         <td style="padding: 0.75rem;">No</td>
                         <td style="padding: 0.75rem;">Text art</td>
