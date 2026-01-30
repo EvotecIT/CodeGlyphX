@@ -39,7 +39,7 @@ Status: Actively developed · Stable core · Expanding format support
 - Zero external dependencies (no System.Drawing, no SkiaSharp, no ImageSharp)
 - Encode + decode for QR/Micro QR + common 1D/2D symbologies
 - Robust pixel decoder for screenshots, gradients, low-contrast, rotation/mirroring
-- Payload helpers for QR (WiFi, payments, contacts, OTP, social, etc.)
+- Payload helpers for QR (WiFi, email/phone/SMS, contacts, calendar, payments, crypto, social, OTP)
 - Friendly APIs: one-liners + options + fluent presets
 
 ## Roadmap & Website
@@ -260,44 +260,59 @@ Notes:
 
 ## Supported Symbologies
 
-| Symbology | Encode | Decode | Outputs | Notes |
-| --- | --- | --- | --- | --- |
-| QR | ✅ | ✅ | All (see Output formats) | ECI, FNC1/GS1, Kanji, structured append |
-| Micro QR | ✅ | ✅ | All (see Output formats) | Versions M1–M4 |
-| Code128 | ✅ | ✅ | All (see Output formats) | Set A/B/C |
-| GS1-128 | ✅ | ✅ | All (see Output formats) | FNC1 + AI helpers |
-| Code39 | ✅ | ✅ | All (see Output formats) | Optional checksum |
-| Code93 | ✅ | ✅ | All (see Output formats) | Optional checksum |
-| Code11 | ✅ | ✅ | All (see Output formats) | Optional checksum |
-| Codabar | ✅ | ✅ | All (see Output formats) | A/B/C/D start/stop |
-| MSI | ✅ | ✅ | All (see Output formats) | Mod10 / Mod10Mod10 |
-| Plessey | ✅ | ✅ | All (see Output formats) | CRC |
-| Telepen | ✅ | ✅ | All (see Output formats) | ASCII 0-127, checksum |
-| Pharmacode (one-track) | ✅ | ✅ | All (see Output formats) | Numeric 3–131070 |
-| Pharmacode (two-track) | ✅ | ✅ | All (see Output formats) | Matrix renderers (top/bottom/full bars), numeric 4–64570080 |
-| Code 32 (Italian Pharmacode) | ✅ | ✅ | All (see Output formats) | 8 digits + checksum |
-| POSTNET / PLANET | ✅ | ✅ | All (see Output formats) | Matrix renderers (tall/short bars), checksum |
-| KIX / Royal Mail 4-State | ✅ | ✅ | All (see Output formats) | KIX (headerless) + RM4SCC (headers + checksum), matrix renderers |
-| Australia Post (Customer) | ✅ | ✅ | All (see Output formats) | Standard + Customer 2/3, RS parity (ambiguous N/C decode for numeric-only Customer 3) |
-| Japan Post | ✅ | ✅ | All (see Output formats) | 67-bar 4-state, modulo-19 check |
-| USPS Intelligent Mail (IMB) | ✅ | ✅ | All (see Output formats) | 65-bar 4-state, tracking + routing (5/9/11) |
-| GS1 DataBar-14 Truncated | ✅ | ✅ | All (see Output formats) | GTIN-13 input (check digit computed) |
-| GS1 DataBar-14 Omnidirectional | ✅ | ✅ | All (see Output formats) | Matrix renderers |
-| GS1 DataBar-14 Stacked | ✅ | ✅ | All (see Output formats) | Matrix renderers |
-| GS1 DataBar Expanded | ✅ | ✅ | All (see Output formats) | GS1 AI strings (linear) |
-| GS1 DataBar Expanded Stacked | ✅ | ✅ | All (see Output formats) | Matrix renderers |
-| EAN-8 / EAN-13 | ✅ | ✅ | All (see Output formats) | Checksum validation, +2/+5 add-ons |
-| UPC-A / UPC-E | ✅ | ✅ | All (see Output formats) | Checksum validation, +2/+5 add-ons |
-| ITF-14 | ✅ | ✅ | All (see Output formats) | Checksum validation |
-| ITF (Interleaved 2 of 5) | ✅ | ✅ | All (see Output formats) | Even-length digits, optional checksum |
-| Industrial 2 of 5 | ✅ | ✅ | All (see Output formats) | Optional checksum |
-| Matrix 2 of 5 | ✅ | ✅ | All (see Output formats) | Optional checksum |
-| IATA 2 of 5 | ✅ | ✅ | All (see Output formats) | Optional checksum |
-| Patch Code | ✅ | ✅ | All (see Output formats) | Single symbol (1,2,3,4,6,T) |
-| Data Matrix | ✅ | ✅ | All (see Output formats) | ASCII/C40/Text/X12/EDIFACT/Base256 |
-| MicroPDF417 | ✅ | ✅ | All (see Output formats) | Module matrix encode/decode |
-| PDF417 | ✅ | ✅ | All (see Output formats) | Full encode/decode, Macro PDF417 metadata |
-| Aztec | ✅ | ✅ | All (see Output formats) | Module matrix + basic pixel decode |
+All symbologies can be rendered to any output format listed below.
+Matrix/stacked/4-state symbols use a `BitMatrix` + the `Matrix*` renderers.
+
+### QR family
+
+| Symbology | Encode | Decode | Notes |
+| --- | --- | --- | --- |
+| QR | ✅ | ✅ | ECI, FNC1/GS1, Kanji, structured append |
+| Micro QR | ✅ | ✅ | Versions M1–M4 |
+
+### 2D matrix / stacked / 4-state (BitMatrix)
+
+| Symbology | Encode | Decode | Notes |
+| --- | --- | --- | --- |
+| Data Matrix | ✅ | ✅ | ASCII/C40/Text/X12/EDIFACT/Base256 |
+| PDF417 | ✅ | ✅ | Macro PDF417 metadata |
+| MicroPDF417 | ✅ | ✅ | Module matrix encode/decode |
+| Aztec | ✅ | ✅ | Pixel decode via `AztecCode.TryDecodeImage` |
+| GS1 DataBar-14 Omni / Stacked | ✅ | ✅ | Matrix renderers |
+| GS1 DataBar Expanded Stacked | ✅ | ✅ | Matrix renderers |
+| Pharmacode (two-track) | ✅ | ✅ | Numeric 4–64570080 |
+| KIX | ✅ | ✅ | Headerless 4-state |
+| Royal Mail 4-State (RM4SCC) | ✅ | ✅ | Encodes with headers by default |
+| POSTNET / PLANET | ✅ | ✅ | 4-state, checksum |
+| Australia Post | ✅ | ✅ | Standard + Customer 2/3; decode may be ambiguous for numeric-only Customer 3 |
+| Japan Post | ✅ | ✅ | 67-bar 4-state |
+| USPS Intelligent Mail (IMB) | ✅ | ✅ | 65-bar 4-state, tracking + routing (5/9/11) |
+
+### 1D linear
+
+| Symbology | Encode | Decode | Notes |
+| --- | --- | --- | --- |
+| Code128 | ✅ | ✅ | Set A/B/C |
+| GS1-128 | ✅ | ✅ | FNC1 + AI helpers |
+| Code39 | ✅ | ✅ | Optional checksum |
+| Code93 | ✅ | ✅ | Optional checksum |
+| Code11 | ✅ | ✅ | Optional checksum |
+| Codabar | ✅ | ✅ | A/B/C/D start/stop |
+| MSI | ✅ | ✅ | Mod10 / Mod10Mod10 |
+| Plessey | ✅ | ✅ | CRC |
+| Telepen | ✅ | ✅ | ASCII 0–127 |
+| Pharmacode (one-track) | ✅ | ✅ | Numeric 3–131070 |
+| Code 32 (Italian Pharmacode) | ✅ | ✅ | 8 digits + checksum |
+| EAN-8 / EAN-13 | ✅ | ✅ | +2/+5 add-ons |
+| UPC-A / UPC-E | ✅ | ✅ | +2/+5 add-ons |
+| ITF-14 | ✅ | ✅ | Checksum validation |
+| ITF (Interleaved 2 of 5) | ✅ | ✅ | Even-length digits, optional checksum |
+| Industrial 2 of 5 | ✅ | ✅ | Optional checksum |
+| Matrix 2 of 5 | ✅ | ✅ | Optional checksum |
+| IATA 2 of 5 | ✅ | ✅ | Optional checksum |
+| Patch Code | ✅ | ✅ | Single symbol (1,2,3,4,6,T) |
+| GS1 DataBar-14 Truncated | ✅ | ✅ | GTIN-13 input (check digit computed) |
+| GS1 DataBar Expanded | ✅ | ✅ | GS1 AI strings (linear) |
 
 ## Features
 
@@ -305,14 +320,14 @@ Notes:
 - [x] Micro QR support
 - [x] 1D barcode encode + decode
 - [x] Data Matrix + MicroPDF417 + PDF417 encode + decode
-- [x] Matrix barcode encoding (Data Matrix / MicroPDF417 / PDF417 / KIX / GS1 DataBar) with dedicated matrix renderers
+- [x] Matrix/stacked/4-state encoding (Data Matrix / PDF417 / MicroPDF417 / Aztec / GS1 DataBar / postal + pharmacode) with dedicated matrix renderers
 - [x] SVG / SVGZ / HTML / PNG / JPEG / WebP / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / PDF / EPS / ASCII renderers
 - [x] Image decode: PNG / JPEG / WebP / GIF / BMP / PPM / PBM / PGM / PAM / XBM / XPM / TGA / ICO / TIFF
 - [x] Base64 + data URI helpers for rendered outputs
-- [x] Payload helpers (URL, WiFi, Email, Phone, SMS, Contact, Calendar, OTP, Social)
+- [x] Payload helpers (URL, WiFi, Email, Phone/SMS/MMS, Contact, Calendar, OTP, payments, crypto, social)
 - [x] WPF controls and demo apps
 - [x] Aztec encode + decode (module matrix + pixel)
-- [x] Aztec render helpers (PNG/SVG/SVGZ/HTML/JPEG/WebP/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII + Save by extension)
+- [x] Matrix render helpers for Aztec/DataMatrix/PDF417 (PNG/SVG/SVGZ/HTML/JPEG/WebP/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/ASCII)
 
 ## AOT & trimming
 
@@ -323,6 +338,7 @@ Recommended publish flags: `PublishAot=true` (native), or `PublishTrimmed=true` 
 
 Save(...) chooses the output based on file extension for QR/Barcode/DataMatrix/PDF417/Aztec.
 For other matrix barcodes (e.g., KIX/Royal Mail 4‑State), use the `Matrix*` renderers with a `BitMatrix` from `MatrixBarcodeEncoder`.
+Use `.txt` for ASCII output and `.ps` as an EPS alias.
 
 | Format | Extensions | Notes |
 | --- | --- | --- |
@@ -343,7 +359,7 @@ For other matrix barcodes (e.g., KIX/Royal Mail 4‑State), use the `Matrix*` re
 | HTML | `.html`, `.htm` | Table-based output |
 | PDF | `.pdf` | Vector by default, raster via RenderMode |
 | EPS | `.eps`, `.ps` | Vector by default, raster via RenderMode |
-| ASCII | API only | Use `Render(..., OutputFormat.Ascii)` |
+| ASCII | `.txt` | Text output (also via `Render(..., OutputFormat.Ascii)`) |
 | Raw RGBA | API only | Use `RenderPixels` methods |
 
 ### Render to bytes or text
@@ -381,13 +397,15 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 | Category | Payloads |
 | --- | --- |
 | Core | Text, URL, Bookmark, WiFi |
-| Communication | Email (Mailto/MATMSG/SMTP), Phone, SMS, MMS, Skype |
+| Communication | Email (Mailto/MATMSG/SMTP), Phone, SMS, MMS, Skype, WhatsApp |
 | Location & Calendar | Geo, Calendar (iCal/vEvent) |
 | Contacts | vCard / MeCard |
 | OTP | TOTP / HOTP (otpauth://) |
-| Social & Stores | App Store (Apple/Google), Facebook, X/Twitter, TikTok, LinkedIn, WhatsApp |
-| Payments | UPI, SEPA Girocode (EPC), BezahlCode (contact/payment/debit/periodic), Swiss QR Bill, Slovenian UPN, Russia Payment Order (ST00012) |
+| Social & Stores | App Store (Apple/Google), Facebook, X/Twitter, TikTok, LinkedIn |
+| Payments | PayPal.Me, UPI, SEPA Girocode (EPC), BezahlCode (contact/payment/debit/periodic), Swiss QR Bill, Slovenian UPN, Russia Payment Order (ST00012) |
 | Crypto & Network | Bitcoin / Bitcoin Cash / Litecoin, Monero, ShadowSocks |
+
+Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for mixed inputs.
 
 ## Image format support
 
@@ -395,16 +413,16 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 
 | Format | Encode | Decode | Notes |
 | --- | --- | --- | --- |
-| PNG | ✅ | ✅ | Color types 0/2/3/4/6, bit depths 1/2/4/8/16, tRNS, Adam7 |
-| JPEG | ✅ | ✅ | Baseline + progressive (8-bit, Huffman), EXIF orientation, CMYK/YCCK |
-| WebP | ✅ | ✅ | Decode: managed VP8L/VP8 + VP8+ALPH (external corpus validation in progress). ImageReader returns the first animation frame; WebpReader can decode raw frames or composited canvas frames. Encode: VP8L lossless subset + animated VP8L/VP8 (lossy intra-only); lossy uses managed VP8 intra-only (4x4/16x16) with ALPH for alpha (VP8L fallback on failure). Managed decode enforces a size cap. |
-| BMP | ✅ | ✅ | 1/4/8/16/24/32-bit, RLE4/RLE8, bitfields |
-| GIF | No | ✅ | First frame only, transparency via GCE |
-| TIFF | No | ✅ | Baseline, strips, uncompressed/PackBits/LZW/Deflate, 8/16-bit, predictor 2 |
-| PPM/PGM/PAM/PBM | ✅ | ✅ | Portable pixmaps (8/16-bit maxval, PAM RGBA) |
-| TGA | ✅ | ✅ | Uncompressed + RLE, true-color/grayscale/color-mapped |
-| ICO/CUR | ✅ | ✅ | Multi-size icons (PNG/BMP payloads) |
-| XBM/XPM | ✅ | ✅ | X Window text formats |
+| PNG | ✅ | ✅ |  |
+| JPEG | ✅ | ✅ |  |
+| WebP | ✅ | ✅ | Managed VP8/VP8L; ImageReader returns first animation frame (WebpReader exposes frames) |
+| BMP | ✅ | ✅ |  |
+| GIF | ✖ | ✅ | First frame only |
+| TIFF | ✖ | ✅ | Baseline strips, 8/16-bit; compression: none/PackBits/LZW/Deflate |
+| PPM/PGM/PAM/PBM | ✅ | ✅ |  |
+| TGA | ✅ | ✅ |  |
+| ICO | ✅ | ✅ | PNG/BMP payloads (CUR decode supported) |
+| XBM/XPM | ✅ | ✅ |  |
 
 ### Vector / text outputs (encode only)
 
@@ -413,19 +431,17 @@ QR payload helpers generate well-known structured strings so scanners can trigge
 | SVG / SVGZ | ✅ | Vector output |
 | PDF / EPS | ✅ | Vector by default, raster via RenderMode |
 | HTML | ✅ | Table-based output |
-| ASCII | ✅ | API only |
+| ASCII | ✅ | `.txt` output or `Render(..., OutputFormat.Ascii)` |
 | Raw RGBA | ✅ | Use `RenderPixels` APIs |
 
 ### Known gaps / not supported (decode)
 
-- ImageReader returns the first animation frame only; use WebpReader.DecodeAnimationFrames for raw frames or WebpReader.DecodeAnimationCanvasFrames for composited frames
-- Managed lossy WebP encode uses VP8 intra-only (4x4/16x16) with ALPH for alpha (VP8L fallback on failure)
-- Managed VP8 decode supports keyframes only; interframes (if present) are not supported
-- Managed WebP decode enforces a size limit (256 MB).
-- AVIF, HEIC, JPEG2000, PSD
-- Animated GIF (first frame only)
-- Multi-page / tiled TIFF, mixed sample sizes, 12-bit JPEG
-- PDF/PS decode (rasterize first)
+- ImageReader returns the first animation frame only (GIF/WebP); use WebpReader.* for raw or composited WebP frames
+- Managed WebP decode supports VP8/VP8L stills; size limit is 256 MB
+- Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
+- AVIF, HEIC, JPEG2000, PSD are not supported
+- Multi-page / tiled TIFF is not supported (first IFD only)
+- PDF/PS decode is not supported (rasterize first)
 
 ### Format corpus (optional)
 
