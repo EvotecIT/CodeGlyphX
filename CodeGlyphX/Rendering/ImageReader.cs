@@ -40,6 +40,14 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes animation frames composited onto a full canvas (auto-detected).
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(byte[] data, out int width, out int height, out ImageAnimationOptions options) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return DecodeAnimationCanvasFrames((ReadOnlySpan<byte>)data, out width, out height, out options);
+    }
+
+    /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected).
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
@@ -61,6 +69,34 @@ public static partial class ImageReader {
         if (IsXbm(data)) return XbmReader.DecodeRgba32(data, out width, out height);
 
         throw new FormatException("Unknown image format.");
+    }
+
+    /// <summary>
+    /// Decodes animation frames composited onto a full canvas (auto-detected).
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(ReadOnlySpan<byte> data, out int width, out int height, out ImageAnimationOptions options) {
+        if (data.Length < 2) throw new FormatException("Unknown image format.");
+
+        if (GifReader.IsGif(data)) {
+            if (!GifReader.TryDecodeAnimationCanvasFrames(data, out var frames, out width, out height, out var gifOptions)) {
+                throw new FormatException("Unsupported or invalid animated GIF.");
+            }
+            options = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
+            return MapGifFrames(frames);
+        }
+
+        if (WebpReader.IsWebp(data)) {
+            if (WebpReader.TryDecodeAnimationCanvasFrames(data, out var frames, out width, out height, out var webpOptions)) {
+                options = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
+                return MapWebpFrames(frames);
+            }
+
+            var rgba = WebpReader.DecodeRgba32(data, out width, out height);
+            options = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
+            return new[] { new ImageAnimationFrame(rgba, width, height, width * 4, durationMs: 0) };
+        }
+
+        throw new FormatException("Unsupported animated image format.");
     }
 
     /// <summary>
@@ -130,6 +166,22 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes animation frames composited onto a full canvas from a stream (auto-detected).
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(Stream stream, out int width, out int height, out ImageAnimationOptions options) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return DecodeAnimationCanvasFrames(buffer.AsSpan(), out width, out height, out options);
+        }
+        using var ms = new MemoryStream();
+        stream.CopyTo(ms);
+        if (ms.TryGetBuffer(out var segment)) {
+            return DecodeAnimationCanvasFrames(segment.AsSpan(), out width, out height, out options);
+        }
+        return DecodeAnimationCanvasFrames(ms.ToArray(), out width, out height, out options);
+    }
+
+    /// <summary>
     /// Attempts to decode an image to an RGBA buffer (auto-detected).
     /// </summary>
     public static bool TryDecodeRgba32(ReadOnlySpan<byte> data, out byte[] rgba, out int width, out int height) {
@@ -155,6 +207,22 @@ public static partial class ImageReader {
             rgba = Array.Empty<byte>();
             width = 0;
             height = 0;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode animation frames composited onto a full canvas (auto-detected).
+    /// </summary>
+    public static bool TryDecodeAnimationCanvasFrames(ReadOnlySpan<byte> data, out ImageAnimationFrame[] frames, out int width, out int height, out ImageAnimationOptions options) {
+        try {
+            frames = DecodeAnimationCanvasFrames(data, out width, out height, out options);
+            return true;
+        } catch (FormatException) {
+            frames = Array.Empty<ImageAnimationFrame>();
+            width = 0;
+            height = 0;
+            options = default;
             return false;
         }
     }
@@ -226,6 +294,34 @@ public static partial class ImageReader {
 
     private static bool IsXbm(ReadOnlySpan<byte> data) {
         return StartsWithAscii(data, "#define") && ContainsAscii(data, "_width");
+    }
+
+    private static ImageAnimationFrame[] MapGifFrames(GifAnimationFrame[] frames) {
+        if (frames.Length == 0) return Array.Empty<ImageAnimationFrame>();
+        var mapped = new ImageAnimationFrame[frames.Length];
+        for (var i = 0; i < frames.Length; i++) {
+            var frame = frames[i];
+            mapped[i] = new ImageAnimationFrame(frame.Rgba, frame.Width, frame.Height, frame.Stride, frame.DurationMs, frame.X, frame.Y);
+        }
+        return mapped;
+    }
+
+    private static ImageAnimationFrame[] MapWebpFrames(WebpAnimationFrame[] frames) {
+        if (frames.Length == 0) return Array.Empty<ImageAnimationFrame>();
+        var mapped = new ImageAnimationFrame[frames.Length];
+        for (var i = 0; i < frames.Length; i++) {
+            var frame = frames[i];
+            mapped[i] = new ImageAnimationFrame(frame.Rgba, frame.Width, frame.Height, frame.Stride, frame.DurationMs, frame.X, frame.Y);
+        }
+        return mapped;
+    }
+
+    private static uint ConvertBgraToRgba(uint bgra) {
+        var b = (byte)(bgra & 0xFF);
+        var g = (byte)((bgra >> 8) & 0xFF);
+        var r = (byte)((bgra >> 16) & 0xFF);
+        var a = (byte)((bgra >> 24) & 0xFF);
+        return (uint)(r | (g << 8) | (b << 16) | (a << 24));
     }
 
     private static bool StartsWithAscii(ReadOnlySpan<byte> data, string prefix) {
