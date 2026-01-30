@@ -72,6 +72,30 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_AsciiHex_Image() {
+        var rgb = new byte[] { 0x10, 0x20, 0x30 };
+        var pdf = BuildPdfWithAsciiHexImage(1, 1, rgb);
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x10, 0x20, 0x30, 255 }, rgba);
+    }
+
+    [Fact]
+    public void Decode_Pdf_Flate_Predictor_From_DecodeParms() {
+        var predicted = new byte[] { 0, 0x11, 0x22, 0x33 };
+        var pdf = BuildPdfWithFlateImage(1, 1, predicted, "/DeviceRGB", bitsPerComponent: 8, "/Filter /FlateDecode /DecodeParms << /Predictor 12 /Colors 3 /Columns 1 >> ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x11, 0x22, 0x33, 255 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Inline_Image_Raw() {
         var gray = new byte[] { 0x7F };
         var pdf = BuildPdfWithInlineImageRaw(1, 1, gray, "/CS /DeviceGray /BPC 8");
@@ -93,6 +117,18 @@ public sealed class PdfDecodeTests {
         Assert.Equal(1, width);
         Assert.Equal(1, height);
         Assert.Equal(new byte[] { 0x22, 0x33, 0x44, 255 }, rgba);
+    }
+
+    [Fact]
+    public void Decode_Pdf_Inline_Image_DecodeParms_Predictor() {
+        var predicted = new byte[] { 0, 0x66, 0x77, 0x88 };
+        var pdf = BuildPdfWithInlineImageFlate(1, 1, predicted, "/CS /DeviceRGB /BPC 8 /F /FlateDecode /DP << /Predictor 12 /Colors 3 /Columns 1 >>");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x66, 0x77, 0x88, 255 }, rgba);
     }
 
     [Fact]
@@ -178,6 +214,31 @@ public sealed class PdfDecodeTests {
         return output;
     }
 
+    private static byte[] BuildPdfWithAsciiHexImage(int width, int height, byte[] rgb) {
+        var encoded = AsciiHexEncode(rgb);
+
+        var sb = new StringBuilder();
+        sb.Append("%PDF-1.4\n");
+        sb.Append("1 0 obj\n");
+        sb.Append("<< /Type /XObject /Subtype /Image ");
+        sb.Append("/Width ").Append(width).Append(' ');
+        sb.Append("/Height ").Append(height).Append(' ');
+        sb.Append("/ColorSpace /DeviceRGB ");
+        sb.Append("/BitsPerComponent 8 ");
+        sb.Append("/Filter /ASCIIHexDecode ");
+        sb.Append("/Length ").Append(encoded.Length).Append(" >>\n");
+        sb.Append("stream\n");
+
+        var header = Encoding.ASCII.GetBytes(sb.ToString());
+        var footer = Encoding.ASCII.GetBytes("\nendstream\nendobj\n%%EOF\n");
+
+        var output = new byte[header.Length + encoded.Length + footer.Length];
+        Buffer.BlockCopy(header, 0, output, 0, header.Length);
+        Buffer.BlockCopy(encoded, 0, output, header.Length, encoded.Length);
+        Buffer.BlockCopy(footer, 0, output, header.Length + encoded.Length, footer.Length);
+        return output;
+    }
+
     private static byte[] BuildPdfWithInlineImageRaw(int width, int height, byte[] data, string dictExtras) {
         var header = Encoding.ASCII.GetBytes("%PDF-1.4\nBI /W " + width + " /H " + height + " " + dictExtras + " ID\n");
         var footer = Encoding.ASCII.GetBytes("\nEI\n%%EOF\n");
@@ -197,6 +258,17 @@ public sealed class PdfDecodeTests {
         Buffer.BlockCopy(header, 0, output, 0, header.Length);
         Buffer.BlockCopy(encoded, 0, output, header.Length, encoded.Length);
         Buffer.BlockCopy(footer, 0, output, header.Length + encoded.Length, footer.Length);
+        return output;
+    }
+
+    private static byte[] BuildPdfWithInlineImageFlate(int width, int height, byte[] payload, string dictExtras) {
+        var compressed = Deflate(payload);
+        var header = Encoding.ASCII.GetBytes("%PDF-1.4\nBI /W " + width + " /H " + height + " " + dictExtras + " ID\n");
+        var footer = Encoding.ASCII.GetBytes("\nEI\n%%EOF\n");
+        var output = new byte[header.Length + compressed.Length + footer.Length];
+        Buffer.BlockCopy(header, 0, output, 0, header.Length);
+        Buffer.BlockCopy(compressed, 0, output, header.Length, compressed.Length);
+        Buffer.BlockCopy(footer, 0, output, header.Length + compressed.Length, footer.Length);
         return output;
     }
 
@@ -239,5 +311,14 @@ public sealed class PdfDecodeTests {
         ms.WriteByte((byte)'~');
         ms.WriteByte((byte)'>');
         return ms.ToArray();
+    }
+
+    private static byte[] AsciiHexEncode(byte[] data) {
+        var sb = new StringBuilder(data.Length * 2 + 1);
+        for (var i = 0; i < data.Length; i++) {
+            sb.Append(data[i].ToString("X2"));
+        }
+        sb.Append('>');
+        return Encoding.ASCII.GetBytes(sb.ToString());
     }
 }

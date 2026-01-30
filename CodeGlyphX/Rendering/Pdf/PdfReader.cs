@@ -206,6 +206,11 @@ public static class PdfReader {
             colors = colorsValue;
         }
 
+        if (TryReadDecodeParmsAfterKey(dict, "/DecodeParms", out var dpPredictor, out var dpColors, out _)) {
+            if (predictor == 1 && dpPredictor > 0) predictor = dpPredictor;
+            if (colors == 0 && dpColors > 0) colors = dpColors;
+        }
+
         float[]? decode = null;
         if (TryReadNumberArrayAfterKey(dict, "/Decode", out var decodeValues)) {
             decode = decodeValues;
@@ -256,6 +261,11 @@ public static class PdfReader {
             colors = colorsValue;
         }
 
+        if (TryReadDecodeParmsAfterAnyKey(dict, new[] { "/DecodeParms", "/DP" }, out var dpPredictor, out var dpColors, out _)) {
+            if (predictor == 1 && dpPredictor > 0) predictor = dpPredictor;
+            if (colors == 0 && dpColors > 0) colors = dpColors;
+        }
+
         float[]? decode = null;
         if (TryReadNumberArrayAfterAnyKey(dict, new[] { "/D", "/Decode" }, out var decodeValues)) {
             decode = decodeValues;
@@ -292,6 +302,11 @@ public static class PdfReader {
         var data = stream.ToArray();
         for (var i = 0; i < info.Filters.Length; i++) {
             var filter = info.Filters[i];
+            if (IsFilter(filter, "ASCIIHexDecode", "AHx")) {
+                if (!TryDecodeAsciiHex(data, out var decoded)) return false;
+                data = decoded;
+                continue;
+            }
             if (IsFilter(filter, "ASCII85Decode", "A85")) {
                 if (!TryDecodeAscii85(data, out var decoded)) return false;
                 data = decoded;
@@ -661,6 +676,27 @@ public static class PdfReader {
         return false;
     }
 
+    private static bool TryReadDecodeParmsAfterKey(ReadOnlySpan<byte> data, string key, out int predictor, out int colors, out int columns) {
+        predictor = 0;
+        colors = 0;
+        columns = 0;
+        if (!TryReadDictionarySliceAfterKey(data, key, out var dict)) return false;
+        TryReadNumberAfterKey(dict, "/Predictor", out predictor);
+        TryReadNumberAfterKey(dict, "/Colors", out colors);
+        TryReadNumberAfterKey(dict, "/Columns", out columns);
+        return predictor > 0 || colors > 0 || columns > 0;
+    }
+
+    private static bool TryReadDecodeParmsAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out int predictor, out int colors, out int columns) {
+        for (var i = 0; i < keys.Length; i++) {
+            if (TryReadDecodeParmsAfterKey(data, keys[i], out predictor, out colors, out columns)) return true;
+        }
+        predictor = 0;
+        colors = 0;
+        columns = 0;
+        return false;
+    }
+
     private static bool TryReadIndexedColorSpaceAfterKey(ReadOnlySpan<byte> data, string key, out PdfColorSpaceKind baseKind, out int highVal, out byte[] lookup) {
         baseKind = PdfColorSpaceKind.Unknown;
         highVal = 0;
@@ -683,6 +719,49 @@ public static class PdfReader {
         baseKind = PdfColorSpaceKind.Unknown;
         highVal = 0;
         lookup = Array.Empty<byte>();
+        return false;
+    }
+
+    private static bool TryReadDictionarySliceAfterKey(ReadOnlySpan<byte> data, string key, out ReadOnlySpan<byte> dict) {
+        dict = ReadOnlySpan<byte>.Empty;
+        var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
+        if (idx < 0) return false;
+        var i = idx + key.Length;
+        while (i < data.Length && data[i] <= 32) i++;
+        if (i >= data.Length) return false;
+        if (data[i] == (byte)'[') {
+            if (!TryReadArraySliceAfterKey(data, key, out var array)) return false;
+            return TryReadDictionarySlice(array, out dict);
+        }
+        if (data[i] == (byte)'<' && i + 1 < data.Length && data[i + 1] == (byte)'<') {
+            return TryReadDictionarySlice(data.Slice(i), out dict);
+        }
+        return false;
+    }
+
+    private static bool TryReadDictionarySlice(ReadOnlySpan<byte> data, out ReadOnlySpan<byte> dict) {
+        dict = ReadOnlySpan<byte>.Empty;
+        var start = IndexOfToken(data, (byte)'<', (byte)'<', 0);
+        if (start < 0) return false;
+        var i = start + 2;
+        var depth = 1;
+        while (i + 1 < data.Length) {
+            if (data[i] == (byte)'<' && data[i + 1] == (byte)'<') {
+                depth++;
+                i += 2;
+                continue;
+            }
+            if (data[i] == (byte)'>' && data[i + 1] == (byte)'>') {
+                depth--;
+                if (depth == 0) {
+                    dict = data.Slice(start + 2, i - (start + 2));
+                    return true;
+                }
+                i += 2;
+                continue;
+            }
+            i++;
+        }
         return false;
     }
 
@@ -1237,6 +1316,36 @@ public static class PdfReader {
         }
 
         decoded = ms.ToArray();
+        return true;
+    }
+
+    private static bool TryDecodeAsciiHex(ReadOnlySpan<byte> src, out byte[] decoded) {
+        decoded = Array.Empty<byte>();
+        var buffer = new System.Collections.Generic.List<byte>();
+        var highNibble = -1;
+        for (var i = 0; i < src.Length; i++) {
+            var b = src[i];
+            if (b == (byte)'>') {
+                if (highNibble >= 0) {
+                    buffer.Add((byte)(highNibble << 4));
+                }
+                decoded = buffer.ToArray();
+                return true;
+            }
+            if (b <= 32) continue;
+            var nibble = HexToNibble(b);
+            if (nibble < 0) return false;
+            if (highNibble < 0) {
+                highNibble = nibble;
+            } else {
+                buffer.Add((byte)((highNibble << 4) | nibble));
+                highNibble = -1;
+            }
+        }
+        if (highNibble >= 0) {
+            buffer.Add((byte)(highNibble << 4));
+        }
+        decoded = buffer.ToArray();
         return true;
     }
 

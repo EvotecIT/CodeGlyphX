@@ -446,7 +446,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 - AVIF, HEIC, JPEG2000 are not supported (format detection only)
 - Multi-page / tiled TIFF: use `ImageReader.DecodeRgba32(data, pageIndex, ...)`, `ImageReader.TryReadInfo(..., pageIndex, ...)`, or `TiffReader.DecodeRgba32(data, pageIndex, ...)`
 - PSD decode is limited to flattened 8/16-bit grayscale/RGB/CMYK (raw/RLE); no layers/CMYK ICC profiles/other color modes
-- PDF decode is limited to embedded image-only JPEG/Flate (with ASCII85/RunLength wrappers), including inline images and Indexed color spaces. PS decode is not supported (rasterize first)
+- PDF decode is limited to embedded image-only JPEG/Flate (with ASCII85/ASCIIHex/RunLength wrappers), including inline images and Indexed color spaces. PS decode is not supported (rasterize first)
 
 ### Format corpus (optional)
 
