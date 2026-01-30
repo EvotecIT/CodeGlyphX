@@ -132,7 +132,7 @@ public static class PdfReader {
             return false;
         }
 
-        if (!TryParseImageInfo(dict, out info)) {
+        if (!TryParseImageInfo(data, dict, out info)) {
             endOffset = dictEnd + 2;
             return false;
         }
@@ -158,7 +158,7 @@ public static class PdfReader {
         if (dictLength <= 0) return false;
         var dict = data.Slice(dictStart, dictLength);
 
-        if (!TryParseInlineImageInfo(dict, out info)) return false;
+        if (!TryParseInlineImageInfo(data, dict, out info)) return false;
 
         var dataStart = idIndex + InlineImageDataToken.Length;
         while (dataStart < data.Length && IsDelimiter(data[dataStart])) {
@@ -171,7 +171,7 @@ public static class PdfReader {
         return true;
     }
 
-    private static bool TryParseImageInfo(ReadOnlySpan<byte> dict, out PdfImageInfo info) {
+    private static bool TryParseImageInfo(ReadOnlySpan<byte> data, ReadOnlySpan<byte> dict, out PdfImageInfo info) {
         info = default;
         if (!TryReadNumberAfterKey(dict, "/Width", out var width)) return false;
         if (!TryReadNumberAfterKey(dict, "/Height", out var height)) return false;
@@ -227,7 +227,7 @@ public static class PdfReader {
         }
 
         var colorSpaceKind = ParseColorSpaceName(colorSpace);
-        if (TryReadIccBasedColorSpaceAfterKey(dict, "/ColorSpace", out var iccBase)) {
+        if (TryReadIccBasedColorSpaceAfterKey(dict, data, "/ColorSpace", out var iccBase)) {
             colorSpaceKind = iccBase;
         }
         if (TryReadAlternateColorSpaceAfterKey(dict, "/ColorSpace", out var altKind)) {
@@ -243,7 +243,7 @@ public static class PdfReader {
         return true;
     }
 
-    private static bool TryParseInlineImageInfo(ReadOnlySpan<byte> dict, out PdfImageInfo info) {
+    private static bool TryParseInlineImageInfo(ReadOnlySpan<byte> data, ReadOnlySpan<byte> dict, out PdfImageInfo info) {
         info = default;
         if (!TryReadNumberAfterAnyKey(dict, new[] { "/W", "/Width" }, out var width)) return false;
         if (!TryReadNumberAfterAnyKey(dict, new[] { "/H", "/Height" }, out var height)) return false;
@@ -296,7 +296,7 @@ public static class PdfReader {
         }
 
         var colorSpaceKind = ParseColorSpaceName(colorSpace);
-        if (TryReadIccBasedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var iccBase)) {
+        if (TryReadIccBasedColorSpaceAfterAnyKey(dict, data, new[] { "/CS", "/ColorSpace" }, out var iccBase)) {
             colorSpaceKind = iccBase;
         }
         if (TryReadAlternateColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var altKind)) {
@@ -882,21 +882,21 @@ public static class PdfReader {
         }
     }
 
-    private static bool TryReadIccBasedColorSpaceAfterKey(ReadOnlySpan<byte> data, string key, out PdfColorSpaceKind baseKind) {
+    private static bool TryReadIccBasedColorSpaceAfterKey(ReadOnlySpan<byte> data, ReadOnlySpan<byte> fullData, string key, out PdfColorSpaceKind baseKind) {
         baseKind = PdfColorSpaceKind.Unknown;
         if (!TryReadArraySliceAfterKey(data, key, out var array)) return false;
-        return TryReadIccBasedColorSpace(array, out baseKind);
+        return TryReadIccBasedColorSpace(array, fullData, out baseKind);
     }
 
-    private static bool TryReadIccBasedColorSpaceAfterAnyKey(ReadOnlySpan<byte> data, string[] keys, out PdfColorSpaceKind baseKind) {
+    private static bool TryReadIccBasedColorSpaceAfterAnyKey(ReadOnlySpan<byte> data, ReadOnlySpan<byte> fullData, string[] keys, out PdfColorSpaceKind baseKind) {
         for (var i = 0; i < keys.Length; i++) {
-            if (TryReadIccBasedColorSpaceAfterKey(data, keys[i], out baseKind)) return true;
+            if (TryReadIccBasedColorSpaceAfterKey(data, fullData, keys[i], out baseKind)) return true;
         }
         baseKind = PdfColorSpaceKind.Unknown;
         return false;
     }
 
-    private static bool TryReadIccBasedColorSpace(ReadOnlySpan<byte> array, out PdfColorSpaceKind baseKind) {
+    private static bool TryReadIccBasedColorSpace(ReadOnlySpan<byte> array, ReadOnlySpan<byte> fullData, out PdfColorSpaceKind baseKind) {
         baseKind = PdfColorSpaceKind.Unknown;
         var index = 0;
         if (!TryReadNameToken(array, ref index, out var first) || !first.Equals("ICCBased", StringComparison.OrdinalIgnoreCase)) return false;
@@ -904,28 +904,38 @@ public static class PdfReader {
         if (index >= array.Length) return false;
         if (array[index] == (byte)'<' && index + 1 < array.Length && array[index + 1] == (byte)'<') {
             if (!TryReadDictionarySliceAt(array, index, out var dict, out _)) return false;
-            string? alternate = null;
-            if (TryReadNameAfterKey(dict, "/Alternate", out var altName)) {
-                alternate = altName;
-            } else if (TryReadFirstNameInArrayAfterKey(dict, "/Alternate", out var altArrayName)) {
-                alternate = altArrayName;
+            return TryResolveIccDictKind(dict, out baseKind);
+        }
+        if (TryReadIndirectReference(array, ref index, out var obj, out var gen)) {
+            if (!TryResolveIndirectDictionary(fullData, obj, gen, out var dict)) return false;
+            return TryResolveIccDictKind(dict, out baseKind);
+        }
+        return false;
+    }
+
+    private static bool TryResolveIccDictKind(ReadOnlySpan<byte> dict, out PdfColorSpaceKind baseKind) {
+        baseKind = PdfColorSpaceKind.Unknown;
+        string? alternate = null;
+        if (TryReadNameAfterKey(dict, "/Alternate", out var altName)) {
+            alternate = altName;
+        } else if (TryReadFirstNameInArrayAfterKey(dict, "/Alternate", out var altArrayName)) {
+            alternate = altArrayName;
+        }
+        if (!string.IsNullOrEmpty(alternate)) {
+            var altKind = ParseColorSpaceName(alternate);
+            if (altKind != PdfColorSpaceKind.Unknown) {
+                baseKind = altKind;
+                return true;
             }
-            if (!string.IsNullOrEmpty(alternate)) {
-                var altKind = ParseColorSpaceName(alternate);
-                if (altKind != PdfColorSpaceKind.Unknown) {
-                    baseKind = altKind;
-                    return true;
-                }
-            }
-            if (TryReadNumberAfterKey(dict, "/N", out var n)) {
-                baseKind = n switch {
-                    1 => PdfColorSpaceKind.DeviceGray,
-                    3 => PdfColorSpaceKind.DeviceRGB,
-                    4 => PdfColorSpaceKind.DeviceCMYK,
-                    _ => PdfColorSpaceKind.Unknown
-                };
-                return baseKind != PdfColorSpaceKind.Unknown;
-            }
+        }
+        if (TryReadNumberAfterKey(dict, "/N", out var n)) {
+            baseKind = n switch {
+                1 => PdfColorSpaceKind.DeviceGray,
+                3 => PdfColorSpaceKind.DeviceRGB,
+                4 => PdfColorSpaceKind.DeviceCMYK,
+                _ => PdfColorSpaceKind.Unknown
+            };
+            return baseKind != PdfColorSpaceKind.Unknown;
         }
         return false;
     }
@@ -1224,6 +1234,87 @@ public static class PdfReader {
             if (!TrySkipObjectToken(data, ref index)) return false;
         }
         return false;
+    }
+
+    private static bool TryReadIndirectReference(ReadOnlySpan<byte> data, ref int index, out int obj, out int gen) {
+        obj = 0;
+        gen = 0;
+        var i = index;
+        if (!TryReadIntTokenSimple(data, ref i, out obj)) return false;
+        if (!TryReadIntTokenSimple(data, ref i, out gen)) return false;
+        SkipWhitespace(data, ref i);
+        if (i >= data.Length || data[i] != (byte)'R') return false;
+        index = i + 1;
+        return true;
+    }
+
+    private static bool TryReadIntTokenSimple(ReadOnlySpan<byte> data, ref int index, out int value) {
+        value = 0;
+        SkipWhitespace(data, ref index);
+        var sign = 1;
+        if (index < data.Length && data[index] == (byte)'-') {
+            sign = -1;
+            index++;
+        } else if (index < data.Length && data[index] == (byte)'+') {
+            index++;
+        }
+        var found = false;
+        var result = 0;
+        while (index < data.Length && data[index] >= (byte)'0' && data[index] <= (byte)'9') {
+            found = true;
+            result = result * 10 + (data[index] - (byte)'0');
+            index++;
+        }
+        if (!found) return false;
+        value = result * sign;
+        return true;
+    }
+
+    private static bool TryResolveIndirectDictionary(ReadOnlySpan<byte> data, int obj, int gen, out ReadOnlySpan<byte> dict) {
+        dict = ReadOnlySpan<byte>.Empty;
+        if (obj < 0 || gen < 0) return false;
+        var token = System.Text.Encoding.ASCII.GetBytes("obj");
+        var start = 0;
+        while (start < data.Length) {
+            var idx = data.Slice(start).IndexOf(token);
+            if (idx < 0) break;
+            idx += start;
+            var beforeOk = idx == 0 || IsDelimiter(data[idx - 1]);
+            var afterOk = idx + token.Length >= data.Length || IsDelimiter(data[idx + token.Length]);
+            if (beforeOk && afterOk && TryParseIndirectHeader(data, idx, out var foundObj, out var foundGen)) {
+                if (foundObj == obj && foundGen == gen) {
+                    var dictStart = IndexOfToken(data, (byte)'<', (byte)'<', idx + token.Length);
+                    if (dictStart < 0) return false;
+                    return TryReadDictionarySliceAt(data, dictStart, out dict, out _);
+                }
+            }
+            start = idx + token.Length;
+        }
+        return false;
+    }
+
+    private static bool TryParseIndirectHeader(ReadOnlySpan<byte> data, int objTokenIndex, out int obj, out int gen) {
+        obj = 0;
+        gen = 0;
+        var i = objTokenIndex - 1;
+        if (!TryReadIntBackward(data, ref i, out gen)) return false;
+        if (!TryReadIntBackward(data, ref i, out obj)) return false;
+        return true;
+    }
+
+    private static bool TryReadIntBackward(ReadOnlySpan<byte> data, ref int index, out int value) {
+        value = 0;
+        while (index >= 0 && data[index] <= 32) index--;
+        if (index < 0 || data[index] < (byte)'0' || data[index] > (byte)'9') return false;
+        var end = index;
+        while (index >= 0 && data[index] >= (byte)'0' && data[index] <= (byte)'9') index--;
+        var start = index + 1;
+        var result = 0;
+        for (var i = start; i <= end; i++) {
+            result = result * 10 + (data[i] - (byte)'0');
+        }
+        value = result;
+        return true;
     }
 
     private static bool TryReadHexString(ReadOnlySpan<byte> data, ref int index, out byte[] bytes) {

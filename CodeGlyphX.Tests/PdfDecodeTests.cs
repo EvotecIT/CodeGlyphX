@@ -84,6 +84,18 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_IccBased_Indirect_Image() {
+        var rgb = new byte[] { 0x11, 0x22, 0x33 };
+        var pdf = BuildPdfWithFlateImageAndIccObject(1, 1, rgb);
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x11, 0x22, 0x33, 255 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Separation_Alternate_Image() {
         var gray = new byte[] { 0x5A };
         var pdf = BuildPdfWithFlateImage(1, 1, gray, "[/Separation /Spot /DeviceGray << /FunctionType 2 >>]", bitsPerComponent: 8, "/Filter /FlateDecode ");
@@ -357,6 +369,41 @@ public sealed class PdfDecodeTests {
         Buffer.BlockCopy(header, 0, output, 0, header.Length);
         Buffer.BlockCopy(encoded, 0, output, header.Length, encoded.Length);
         Buffer.BlockCopy(footer, 0, output, header.Length + encoded.Length, footer.Length);
+        return output;
+    }
+
+    private static byte[] BuildPdfWithFlateImageAndIccObject(int width, int height, byte[] payload) {
+        byte[] compressed;
+        using (var ms = new MemoryStream()) {
+            using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, leaveOpen: true)) {
+                deflate.Write(payload, 0, payload.Length);
+            }
+            compressed = ms.ToArray();
+        }
+
+        var sb = new StringBuilder();
+        sb.Append("%PDF-1.4\n");
+        sb.Append("1 0 obj\n");
+        sb.Append("<< /Type /XObject /Subtype /Image ");
+        sb.Append("/Width ").Append(width).Append(' ');
+        sb.Append("/Height ").Append(height).Append(' ');
+        sb.Append("/ColorSpace [/ICCBased 2 0 R] ");
+        sb.Append("/BitsPerComponent 8 ");
+        sb.Append("/Filter /FlateDecode ");
+        sb.Append("/Length ").Append(compressed.Length).Append(" >>\n");
+        sb.Append("stream\n");
+
+        var header = Encoding.ASCII.GetBytes(sb.ToString());
+        var footer = Encoding.ASCII.GetBytes("\nendstream\nendobj\n");
+        var obj2 = Encoding.ASCII.GetBytes("2 0 obj\n<< /N 3 /Alternate /DeviceRGB >>\nendobj\n%%EOF\n");
+
+        var output = new byte[header.Length + compressed.Length + footer.Length + obj2.Length];
+        Buffer.BlockCopy(header, 0, output, 0, header.Length);
+        Buffer.BlockCopy(compressed, 0, output, header.Length, compressed.Length);
+        var offset = header.Length + compressed.Length;
+        Buffer.BlockCopy(footer, 0, output, offset, footer.Length);
+        offset += footer.Length;
+        Buffer.BlockCopy(obj2, 0, output, offset, obj2.Length);
         return output;
     }
 
