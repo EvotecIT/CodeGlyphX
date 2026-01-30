@@ -14,16 +14,16 @@ public static class TiffWriter {
     /// <summary>
     /// Encodes an RGBA buffer into a TIFF byte array.
     /// </summary>
-    public static byte[] WriteRgba32(int width, int height, ReadOnlySpan<byte> rgba, int stride) {
+    public static byte[] WriteRgba32(int width, int height, ReadOnlySpan<byte> rgba, int stride, TiffCompressionMode compression = TiffCompressionMode.Auto) {
         using var ms = new MemoryStream();
-        WriteRgba32(ms, width, height, rgba, stride);
+        WriteRgba32(ms, width, height, rgba, stride, compression);
         return ms.ToArray();
     }
 
     /// <summary>
     /// Encodes an RGBA buffer into a TIFF stream.
     /// </summary>
-    public static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan<byte> rgba, int stride) {
+    public static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan<byte> rgba, int stride, TiffCompressionMode compressionMode = TiffCompressionMode.Auto) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
@@ -61,10 +61,17 @@ public static class TiffWriter {
             }
         }
 
-        var compressed = CompressPackBits(pixelData);
-        var usePackBits = compressed.Length < pixelData.Length;
-        var stripData = usePackBits ? compressed : pixelData;
-        var compression = usePackBits ? CompressionPackBits : CompressionNone;
+        byte[] stripData;
+        ushort compression;
+        if (compressionMode == TiffCompressionMode.None) {
+            stripData = pixelData;
+            compression = CompressionNone;
+        } else {
+            var compressed = CompressPackBits(pixelData);
+            var usePackBits = compressionMode == TiffCompressionMode.PackBits || compressed.Length < pixelData.Length;
+            stripData = usePackBits ? compressed : pixelData;
+            compression = usePackBits ? CompressionPackBits : CompressionNone;
+        }
 
         var ifdOffset = pixelOffset + stripData.Length;
         if ((ifdOffset & 1) != 0) {

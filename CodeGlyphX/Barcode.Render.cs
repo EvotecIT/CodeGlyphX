@@ -62,7 +62,7 @@ public static partial class Barcode {
             case OutputFormat.Gif:
                 return RenderedOutput.FromBinary(format, BarcodeGifRenderer.Render(barcode, opts));
             case OutputFormat.Tiff:
-                return RenderedOutput.FromBinary(format, BarcodeTiffRenderer.Render(barcode, opts));
+                return RenderedOutput.FromBinary(format, BarcodeTiffRenderer.Render(barcode, opts, extras?.TiffCompression ?? TiffCompressionMode.Auto));
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, BarcodeBmpRenderer.Render(barcode, opts));
             case OutputFormat.Ppm:

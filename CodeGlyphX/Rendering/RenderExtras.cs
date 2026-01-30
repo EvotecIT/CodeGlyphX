@@ -25,4 +25,9 @@ public sealed class RenderExtras {
     /// ASCII render options for barcodes.
     /// </summary>
     public BarcodeAsciiRenderOptions? BarcodeAscii { get; set; }
+
+    /// <summary>
+    /// TIFF compression selection for TIFF outputs.
+    /// </summary>
+    public TiffCompressionMode TiffCompression { get; set; } = TiffCompressionMode.Auto;
 }

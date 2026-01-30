@@ -81,7 +81,8 @@ public static partial class QrEasy {
             }
             case OutputFormat.Tiff: {
                 var render = BuildPngOptions(opts, qr);
-                return RenderedOutput.FromBinary(format, QrTiffRenderer.Render(qr.Modules, render));
+                var compression = extras?.TiffCompression ?? TiffCompressionMode.Auto;
+                return RenderedOutput.FromBinary(format, QrTiffRenderer.Render(qr.Modules, render, compression));
             }
             case OutputFormat.Bmp: {
                 var render = BuildPngOptions(opts, qr);

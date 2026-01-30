@@ -78,7 +78,7 @@ public static partial class DataMatrixCode {
             case OutputFormat.Gif:
                 return RenderedOutput.FromBinary(format, MatrixGifRenderer.Render(modules, pngOptions));
             case OutputFormat.Tiff:
-                return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions));
+                return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions, extras?.TiffCompression ?? TiffCompressionMode.Auto));
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, MatrixBmpRenderer.Render(modules, pngOptions));
             case OutputFormat.Ppm:
