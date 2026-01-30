@@ -564,6 +564,10 @@ public static class PdfReader {
             return true;
         }
 
+        if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed && info.Decode is not null && info.Decode.Length >= 2) {
+            if (!TryApplyIndexedDecode(expanded, info.BitsPerComponent, info.IndexedHighVal, info.Decode)) return false;
+        }
+
         var expandedScaled = !info.IsImageMask && info.ColorSpaceKind != PdfColorSpaceKind.Indexed;
         byte[]? maskAlpha = null;
         if (info.Mask is not null && info.Mask.Length >= colors * 2) {
@@ -703,6 +707,24 @@ public static class PdfReader {
                 }
             }
             alpha[i] = match ? (byte)0 : (byte)255;
+        }
+        return true;
+    }
+
+    private static bool TryApplyIndexedDecode(byte[] indices, int bitsPerComponent, int highVal, float[] decode) {
+        if (decode.Length < 2) return false;
+        if (highVal < 0) return false;
+        var maxSample = bitsPerComponent == 16 ? 65535 : (1 << bitsPerComponent) - 1;
+        if (maxSample <= 0) return false;
+        var dmin = decode[0];
+        var dmax = decode[1];
+        for (var i = 0; i < indices.Length; i++) {
+            var raw = indices[i];
+            var mapped = dmin + raw * (dmax - dmin) / maxSample;
+            var value = (int)Math.Round(mapped);
+            if (value < 0) value = 0;
+            if (value > highVal) value = highVal;
+            indices[i] = (byte)value;
         }
         return true;
     }

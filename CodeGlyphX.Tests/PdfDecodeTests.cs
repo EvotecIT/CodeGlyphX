@@ -388,6 +388,19 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_Indexed_DecodeArray() {
+        var indexData = new byte[] { 0x00 };
+        var lookup = "<00FF00FF0000>";
+        var pdf = BuildPdfWithFlateImage(1, 1, indexData, $"[/Indexed /DeviceRGB 1 {lookup}]", bitsPerComponent: 1, "/Filter /FlateDecode /Decode [1 0] ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 255, 0, 0, 255 }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_Inline_Image_Indexed_Raw() {
         var indexData = new byte[] { 0x00 };
         var lookup = "<0000FF00FF00>";
