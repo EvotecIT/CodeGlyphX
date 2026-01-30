@@ -59,8 +59,10 @@ public static class GifWriter {
 
         var useExactPalette = !tooManyColors && (!hasTransparency || colorCounts.Count <= PaletteSize - 1);
         Dictionary<int, byte>? colorIndex = null;
+        int[]? paletteMap = null;
         var transparentIndex = 0;
         var paletteSizePower = PaletteSize;
+        var paletteCount = 0;
         byte[] palette;
         var minCodeSize = 8;
 
@@ -78,25 +80,24 @@ public static class GifWriter {
                 colorIndex[entry.Key] = (byte)paletteIndex;
                 paletteIndex++;
             }
+            paletteCount = paletteIndex;
             if (hasTransparency) {
                 transparentIndex = paletteIndex;
             }
         } else {
-            palette = new byte[PaletteSize * 3];
-            BuildFixedPalette(palette);
-        }
-
-        var counts = useExactPalette ? null : new int[PaletteSize];
-        if (!useExactPalette) {
-            for (var y = 0; y < height; y++) {
-                var row = y * stride;
-                for (var x = 0; x < width; x++) {
-                    var idx = row + x * 4;
-                    if (rgba[idx + 3] < 128) continue;
-                    counts![Quantize(rgba[idx + 0], rgba[idx + 1], rgba[idx + 2])]++;
-                }
+            var histogram = BuildHistogram(rgba, width, height, stride);
+            palette = BuildMedianCutPalette(histogram, hasTransparency ? PaletteSize - 1 : PaletteSize, out paletteCount);
+            paletteSizePower = NextPowerOfTwo(Math.Max(paletteCount + (hasTransparency ? 1 : 0), 2), PaletteSize);
+            minCodeSize = Math.Max(2, Log2(paletteSizePower));
+            if (palette.Length < paletteSizePower * 3) {
+                var padded = new byte[paletteSizePower * 3];
+                Buffer.BlockCopy(palette, 0, padded, 0, palette.Length);
+                palette = padded;
             }
-            transparentIndex = hasTransparency ? FindLeastUsedIndex(counts!) : 0;
+            if (hasTransparency) {
+                transparentIndex = paletteCount;
+            }
+            paletteMap = BuildPaletteMap(palette, paletteCount);
         }
 
         var pixels = new byte[width * height];
@@ -140,16 +141,17 @@ public static class GifWriter {
                     var r = ClampByte(rgba[idx + 0] + errR[x]);
                     var g = ClampByte(rgba[idx + 1] + errG[x]);
                     var b = ClampByte(rgba[idx + 2] + errB[x]);
-                    var quantized = Quantize(r, g, b);
-                    if (hasTransparency && quantized == transparentIndex) {
-                        quantized = (quantized ^ 0x01) & 0xFF;
-                    }
-                    pixels[dst++] = (byte)quantized;
+                    var qIdx = ((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3);
+                    var palIndex = paletteMap![qIdx];
+                    pixels[dst++] = (byte)palIndex;
 
-                    var (qr, qg, qb) = Dequantize(quantized);
-                    var errRVal = r - qr;
-                    var errGVal = g - qg;
-                    var errBVal = b - qb;
+                    var baseIndex = palIndex * 3;
+                    var pr = palette[baseIndex + 0];
+                    var pg = palette[baseIndex + 1];
+                    var pb = palette[baseIndex + 2];
+                    var errRVal = r - pr;
+                    var errGVal = g - pg;
+                    var errBVal = b - pb;
 
                     if (x + 1 < width) {
                         errR[x + 1] += (errRVal * 7) / 16;
@@ -298,34 +300,132 @@ public static class GifWriter {
         return output.ToArray();
     }
 
-    private static void BuildFixedPalette(byte[] palette) {
-        var idx = 0;
-        for (var r = 0; r < 8; r++) {
-            var rr = (byte)(r * 255 / 7);
-            for (var g = 0; g < 8; g++) {
-                var gg = (byte)(g * 255 / 7);
-                for (var b = 0; b < 4; b++) {
-                    var bb = (byte)(b * 255 / 3);
-                    palette[idx++] = rr;
-                    palette[idx++] = gg;
-                    palette[idx++] = bb;
-                }
+    private static int[] BuildHistogram(ReadOnlySpan<byte> rgba, int width, int height, int stride) {
+        var histogram = new int[32 * 32 * 32];
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                var idx = row + x * 4;
+                if (rgba[idx + 3] < 128) continue;
+                var r5 = rgba[idx + 0] >> 3;
+                var g5 = rgba[idx + 1] >> 3;
+                var b5 = rgba[idx + 2] >> 3;
+                var colorIndex = (r5 << 10) | (g5 << 5) | b5;
+                histogram[colorIndex]++;
             }
         }
+        return histogram;
     }
 
-    private static int Quantize(byte r, byte g, byte b) {
-        var r3 = r >> 5;
-        var g3 = g >> 5;
-        var b2 = b >> 6;
-        return (r3 << 5) | (g3 << 2) | b2;
+    private static byte[] BuildMedianCutPalette(int[] histogram, int maxColors, out int paletteCount) {
+        var colors = new List<int>();
+        for (var i = 0; i < histogram.Length; i++) {
+            if (histogram[i] > 0) {
+                colors.Add(i);
+            }
+        }
+
+        if (colors.Count == 0) {
+            paletteCount = 1;
+            return new byte[] { 0, 0, 0 };
+        }
+
+        var buckets = new List<ColorBucket> { ColorBucket.Create(colors.ToArray(), histogram) };
+        while (buckets.Count < maxColors) {
+            var splitIndex = -1;
+            var bestRange = -1;
+            for (var i = 0; i < buckets.Count; i++) {
+                var bucket = buckets[i];
+                if (bucket.Count < 2) continue;
+                var range = bucket.MaxRange;
+                if (range > bestRange) {
+                    bestRange = range;
+                    splitIndex = i;
+                }
+            }
+
+            if (splitIndex < 0) break;
+            var target = buckets[splitIndex];
+            var channel = target.LongestChannel;
+            Array.Sort(target.Colors, 0, target.Count, new ChannelComparer(channel));
+
+            var total = target.TotalCount;
+            var cumulative = 0;
+            var cut = 0;
+            while (cut < target.Count - 1 && cumulative < total / 2) {
+                cumulative += histogram[target.Colors[cut]];
+                cut++;
+            }
+
+            if (cut <= 0 || cut >= target.Count) break;
+
+            var leftColors = new int[cut];
+            var rightColors = new int[target.Count - cut];
+            Array.Copy(target.Colors, 0, leftColors, 0, cut);
+            Array.Copy(target.Colors, cut, rightColors, 0, rightColors.Length);
+
+            buckets[splitIndex] = ColorBucket.Create(leftColors, histogram);
+            buckets.Add(ColorBucket.Create(rightColors, histogram));
+        }
+
+        paletteCount = buckets.Count;
+        var palette = new byte[paletteCount * 3];
+        for (var i = 0; i < buckets.Count; i++) {
+            var bucket = buckets[i];
+            var total = bucket.TotalCount;
+            if (total <= 0) total = 1;
+            long sumR = 0;
+            long sumG = 0;
+            long sumB = 0;
+            for (var j = 0; j < bucket.Count; j++) {
+                var idx = bucket.Colors[j];
+                var count = histogram[idx];
+                var r5 = (idx >> 10) & 31;
+                var g5 = (idx >> 5) & 31;
+                var b5 = idx & 31;
+                sumR += r5 * (long)count;
+                sumG += g5 * (long)count;
+                sumB += b5 * (long)count;
+            }
+
+            var avgR5 = (int)((sumR + total / 2) / total);
+            var avgG5 = (int)((sumG + total / 2) / total);
+            var avgB5 = (int)((sumB + total / 2) / total);
+            palette[i * 3 + 0] = (byte)((avgR5 * 255 + 15) / 31);
+            palette[i * 3 + 1] = (byte)((avgG5 * 255 + 15) / 31);
+            palette[i * 3 + 2] = (byte)((avgB5 * 255 + 15) / 31);
+        }
+
+        return palette;
     }
 
-    private static (int r, int g, int b) Dequantize(int index) {
-        var r3 = (index >> 5) & 0x7;
-        var g3 = (index >> 2) & 0x7;
-        var b2 = index & 0x3;
-        return (r3 * 255 / 7, g3 * 255 / 7, b2 * 255 / 3);
+    private static int[] BuildPaletteMap(byte[] palette, int paletteCount) {
+        var map = new int[32 * 32 * 32];
+        for (var idx = 0; idx < map.Length; idx++) {
+            var r5 = (idx >> 10) & 31;
+            var g5 = (idx >> 5) & 31;
+            var b5 = idx & 31;
+            var r8 = r5 * 255 / 31;
+            var g8 = g5 * 255 / 31;
+            var b8 = b5 * 255 / 31;
+
+            var best = 0;
+            var bestDist = int.MaxValue;
+            for (var p = 0; p < paletteCount; p++) {
+                var baseIndex = p * 3;
+                var dr = r8 - palette[baseIndex + 0];
+                var dg = g8 - palette[baseIndex + 1];
+                var db = b8 - palette[baseIndex + 2];
+                var dist = dr * dr + dg * dg + db * db;
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    best = p;
+                    if (dist == 0) break;
+                }
+            }
+            map[idx] = best;
+        }
+        return map;
     }
 
     private static int NextPowerOfTwo(int value, int max) {
@@ -350,17 +450,90 @@ public static class GifWriter {
         return (byte)value;
     }
 
-    private static int FindLeastUsedIndex(int[] counts) {
-        var best = 0;
-        var bestCount = counts[0];
-        for (var i = 1; i < counts.Length; i++) {
-            if (counts[i] < bestCount) {
-                best = i;
-                bestCount = counts[i];
-                if (bestCount == 0) break;
+    private readonly struct ColorBucket {
+        public ColorBucket(int[] colors, int count, int totalCount, byte minR, byte maxR, byte minG, byte maxG, byte minB, byte maxB) {
+            Colors = colors;
+            Count = count;
+            TotalCount = totalCount;
+            MinR = minR;
+            MaxR = maxR;
+            MinG = minG;
+            MaxG = maxG;
+            MinB = minB;
+            MaxB = maxB;
+        }
+
+        public int[] Colors { get; }
+        public int Count { get; }
+        public int TotalCount { get; }
+        public byte MinR { get; }
+        public byte MaxR { get; }
+        public byte MinG { get; }
+        public byte MaxG { get; }
+        public byte MinB { get; }
+        public byte MaxB { get; }
+
+        public int RangeR => MaxR - MinR;
+        public int RangeG => MaxG - MinG;
+        public int RangeB => MaxB - MinB;
+        public int MaxRange => Math.Max(RangeR, Math.Max(RangeG, RangeB));
+
+        public int LongestChannel {
+            get {
+                var r = RangeR;
+                var g = RangeG;
+                var b = RangeB;
+                if (r >= g && r >= b) return 0;
+                return g >= b ? 1 : 2;
             }
         }
-        return best;
+
+        public static ColorBucket Create(int[] colors, int[] histogram) {
+            var minR = (byte)31;
+            var minG = (byte)31;
+            var minB = (byte)31;
+            var maxR = (byte)0;
+            var maxG = (byte)0;
+            var maxB = (byte)0;
+            var total = 0;
+            for (var i = 0; i < colors.Length; i++) {
+                var idx = colors[i];
+                var count = histogram[idx];
+                total += count;
+                var r5 = (byte)((idx >> 10) & 31);
+                var g5 = (byte)((idx >> 5) & 31);
+                var b5 = (byte)(idx & 31);
+                if (r5 < minR) minR = r5;
+                if (r5 > maxR) maxR = r5;
+                if (g5 < minG) minG = g5;
+                if (g5 > maxG) maxG = g5;
+                if (b5 < minB) minB = b5;
+                if (b5 > maxB) maxB = b5;
+            }
+            return new ColorBucket(colors, colors.Length, total, minR, maxR, minG, maxG, minB, maxB);
+        }
+    }
+
+    private sealed class ChannelComparer : IComparer<int> {
+        private readonly int _channel;
+
+        public ChannelComparer(int channel) {
+            _channel = channel;
+        }
+
+        public int Compare(int x, int y) {
+            var xr = (x >> 10) & 31;
+            var xg = (x >> 5) & 31;
+            var xb = x & 31;
+            var yr = (y >> 10) & 31;
+            var yg = (y >> 5) & 31;
+            var yb = y & 31;
+            return _channel switch {
+                0 => xr.CompareTo(yr),
+                1 => xg.CompareTo(yg),
+                _ => xb.CompareTo(yb),
+            };
+        }
     }
 
     private static void WriteAscii(Stream stream, string text) {
