@@ -72,6 +72,9 @@ public static class PdfReader {
                 if (info.SoftMaskObj > 0) {
                     TryApplySoftMask(data, info, rgba, width, height);
                 }
+                if (info.MaskObj > 0) {
+                    TryApplyMaskImage(data, info, rgba, width, height);
+                }
                 return true;
             }
         }
@@ -213,6 +216,13 @@ public static class PdfReader {
             softMaskGen = smGen;
         }
 
+        var maskObj = 0;
+        var maskGen = 0;
+        if (TryReadIndirectRefAfterKey(dict, "/Mask", out var maskRefObj, out var maskRefGen)) {
+            maskObj = maskRefObj;
+            maskGen = maskRefGen;
+        }
+
         var predictor = 1;
         if (TryReadNumberAfterKey(dict, "/Predictor", out var predictorValue)) {
             predictor = predictorValue;
@@ -255,11 +265,11 @@ public static class PdfReader {
         }
         if (TryReadIndexedColorSpaceAfterKey(dict, "/ColorSpace", out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, isImageMask, length, decode, mask);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, maskObj, maskGen, isImageMask, length, decode, mask);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, isImageMask, length, decode, mask);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, maskObj, maskGen, isImageMask, length, decode, mask);
         return true;
     }
 
@@ -297,6 +307,13 @@ public static class PdfReader {
         if (TryReadIndirectRefAfterAnyKey(dict, new[] { "/SMask" }, out var smObj, out var smGen)) {
             softMaskObj = smObj;
             softMaskGen = smGen;
+        }
+
+        var maskObj = 0;
+        var maskGen = 0;
+        if (TryReadIndirectRefAfterAnyKey(dict, new[] { "/Mask" }, out var maskRefObj, out var maskRefGen)) {
+            maskObj = maskRefObj;
+            maskGen = maskRefGen;
         }
 
         var predictor = 1;
@@ -341,11 +358,11 @@ public static class PdfReader {
         }
         if (TryReadIndexedColorSpaceAfterAnyKey(dict, new[] { "/CS", "/ColorSpace" }, out var indexedBase, out var indexedHigh, out var indexedLookup)) {
             colorSpaceKind = PdfColorSpaceKind.Indexed;
-            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, isImageMask, streamLength: 0, decode, mask);
+            info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, indexedBase, indexedHigh, indexedLookup, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, maskObj, maskGen, isImageMask, streamLength: 0, decode, mask);
             return true;
         }
 
-        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, isImageMask, streamLength: 0, decode, mask);
+        info = new PdfImageInfo(width, height, bits, colors, colorSpaceKind, PdfColorSpaceKind.Unknown, 0, null, filters, predictor, lzwEarlyChange, softMaskObj, softMaskGen, maskObj, maskGen, isImageMask, streamLength: 0, decode, mask);
         return true;
     }
 
@@ -421,6 +438,22 @@ public static class PdfReader {
         var pixelCount = width * height;
         for (var i = 0; i < pixelCount; i++) {
             var maskAlpha = maskRgba[i * 4];
+            var dst = i * 4 + 3;
+            var baseAlpha = rgba[dst];
+            rgba[dst] = (byte)((baseAlpha * maskAlpha + 127) / 255);
+        }
+    }
+
+    private static void TryApplyMaskImage(ReadOnlySpan<byte> data, PdfImageInfo info, byte[] rgba, int width, int height) {
+        if (info.MaskObj <= 0) return;
+        if (!TryResolveIndirectStream(data, info.MaskObj, info.MaskGen, out var dict, out var stream)) return;
+        if (!TryParseImageInfo(data, dict, out var maskInfo)) return;
+        if (!TryDecodeWithFilters(maskInfo, stream, out var maskRgba, out var maskWidth, out var maskHeight)) return;
+        if (maskWidth != width || maskHeight != height) return;
+
+        var pixelCount = width * height;
+        for (var i = 0; i < pixelCount; i++) {
+            var maskAlpha = maskInfo.IsImageMask ? maskRgba[i * 4 + 3] : maskRgba[i * 4];
             var dst = i * 4 + 3;
             var baseAlpha = rgba[dst];
             rgba[dst] = (byte)((baseAlpha * maskAlpha + 127) / 255);
@@ -2369,6 +2402,8 @@ public static class PdfReader {
             int lzwEarlyChange,
             int softMaskObj,
             int softMaskGen,
+            int maskObj,
+            int maskGen,
             bool isImageMask,
             int streamLength,
             float[]? decode,
@@ -2386,6 +2421,8 @@ public static class PdfReader {
             LzwEarlyChange = lzwEarlyChange;
             SoftMaskObj = softMaskObj;
             SoftMaskGen = softMaskGen;
+            MaskObj = maskObj;
+            MaskGen = maskGen;
             IsImageMask = isImageMask;
             StreamLength = streamLength;
             Decode = decode;
@@ -2405,6 +2442,8 @@ public static class PdfReader {
         public int LzwEarlyChange { get; }
         public int SoftMaskObj { get; }
         public int SoftMaskGen { get; }
+        public int MaskObj { get; }
+        public int MaskGen { get; }
         public bool IsImageMask { get; }
         public int StreamLength { get; }
         public float[]? Decode { get; }
