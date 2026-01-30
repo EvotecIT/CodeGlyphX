@@ -183,8 +183,10 @@ public static class PdfReader {
         if (!TryReadNumberAfterKey(dict, "/Height", out var height)) return false;
 
         var bits = 8;
+        var bitsSpecified = false;
         if (TryReadNumberAfterKey(dict, "/BitsPerComponent", out var bpc)) {
             bits = bpc;
+            bitsSpecified = true;
         }
 
         string[]? filters = null;
@@ -207,6 +209,9 @@ public static class PdfReader {
         var isImageMask = false;
         if (TryReadBoolAfterKey(dict, "/ImageMask", out var imageMask)) {
             isImageMask = imageMask;
+        }
+        if (isImageMask && !bitsSpecified) {
+            bits = 1;
         }
 
         var softMaskObj = 0;
@@ -279,8 +284,10 @@ public static class PdfReader {
         if (!TryReadNumberAfterAnyKey(dict, new[] { "/H", "/Height" }, out var height)) return false;
 
         var bits = 8;
+        var bitsSpecified = false;
         if (TryReadNumberAfterAnyKey(dict, new[] { "/BPC", "/BitsPerComponent" }, out var bpc)) {
             bits = bpc;
+            bitsSpecified = true;
         }
 
         string[]? filters = null;
@@ -300,6 +307,9 @@ public static class PdfReader {
         var isImageMask = false;
         if (TryReadBoolAfterAnyKey(dict, new[] { "/IM", "/ImageMask" }, out var imageMask)) {
             isImageMask = imageMask;
+        }
+        if (isImageMask && !bitsSpecified) {
+            bits = 1;
         }
 
         var softMaskObj = 0;

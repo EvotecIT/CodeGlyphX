@@ -169,6 +169,18 @@ public sealed class PdfDecodeTests {
     }
 
     [Fact]
+    public void Decode_Pdf_ImageMask_Default_NoBitsPerComponent() {
+        var mask = new byte[] { 0x80 };
+        var pdf = BuildPdfWithFlateImageWithDict(1, 1, mask, "/Filter /FlateDecode /ImageMask true ");
+
+        var rgba = ImageReader.DecodeRgba32(pdf, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 0x00, 0x00, 0x00, 0xFF }, rgba);
+    }
+
+    [Fact]
     public void Decode_Pdf_ImageMask_Invert() {
         var mask = new byte[] { 0x80 };
         var pdf = BuildPdfWithFlateImage(1, 1, mask, "/DeviceGray", bitsPerComponent: 1, "/Filter /FlateDecode /ImageMask true /Decode [1 0] ");
@@ -490,6 +502,35 @@ public sealed class PdfDecodeTests {
         Buffer.BlockCopy(footer, 0, output, offset, footer.Length);
         offset += footer.Length;
         Buffer.BlockCopy(obj2, 0, output, offset, obj2.Length);
+        return output;
+    }
+
+    private static byte[] BuildPdfWithFlateImageWithDict(int width, int height, byte[] payload, string dictExtras) {
+        byte[] compressed;
+        using (var ms = new MemoryStream()) {
+            using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, leaveOpen: true)) {
+                deflate.Write(payload, 0, payload.Length);
+            }
+            compressed = ms.ToArray();
+        }
+
+        var sb = new StringBuilder();
+        sb.Append("%PDF-1.4\n");
+        sb.Append("1 0 obj\n");
+        sb.Append("<< /Type /XObject /Subtype /Image ");
+        sb.Append("/Width ").Append(width).Append(' ');
+        sb.Append("/Height ").Append(height).Append(' ');
+        sb.Append(dictExtras);
+        sb.Append("/Length ").Append(compressed.Length).Append(" >>\n");
+        sb.Append("stream\n");
+
+        var header = Encoding.ASCII.GetBytes(sb.ToString());
+        var footer = Encoding.ASCII.GetBytes("\nendstream\nendobj\n%%EOF\n");
+
+        var output = new byte[header.Length + compressed.Length + footer.Length];
+        Buffer.BlockCopy(header, 0, output, 0, header.Length);
+        Buffer.BlockCopy(compressed, 0, output, header.Length, compressed.Length);
+        Buffer.BlockCopy(footer, 0, output, header.Length + compressed.Length, footer.Length);
         return output;
     }
 
