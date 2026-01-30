@@ -15,5 +15,9 @@ public enum TiffCompressionMode {
     /// <summary>
     /// Forces PackBits compression.
     /// </summary>
-    PackBits
+    PackBits,
+    /// <summary>
+    /// Forces Deflate compression (zlib).
+    /// </summary>
+    Deflate
 }

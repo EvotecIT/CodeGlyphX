@@ -418,7 +418,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 | WebP | ✅ | ✅ | Managed VP8/VP8L; ImageReader returns first animation frame (WebpReader exposes frames) |
 | BMP | ✅ | ✅ |  |
 | GIF | ✅ | ✅ | Single-frame (no animation); optimized palette + dithering (256 colors max) |
-| TIFF | ✅ | ✅ | Baseline strips; encode 8-bit (single IFD) with PackBits (or force via RenderExtras); decode supports none/PackBits/LZW/Deflate |
+| TIFF | ✅ | ✅ | Baseline strips; encode 8-bit (single IFD) with PackBits/Deflate (or force via RenderExtras); decode supports none/PackBits/LZW/Deflate |
 | PPM/PGM/PAM/PBM | ✅ | ✅ |  |
 | TGA | ✅ | ✅ |  |
 | ICO | ✅ | ✅ | PNG/BMP payloads (CUR decode supported) |

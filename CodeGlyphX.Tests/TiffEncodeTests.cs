@@ -13,14 +13,18 @@ public sealed class TiffEncodeTests {
         var packBits = QrCode.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
             TiffCompression = TiffCompressionMode.PackBits
         }).Data;
+        var deflate = QrCode.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
+            TiffCompression = TiffCompressionMode.Deflate
+        }).Data;
         var auto = QrCode.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
             TiffCompression = TiffCompressionMode.Auto
         }).Data;
 
         Assert.Equal(1, ReadCompression(none));
         Assert.Equal(32773, ReadCompression(packBits));
+        Assert.Equal(8, ReadCompression(deflate));
         var autoCompression = ReadCompression(auto);
-        Assert.True(autoCompression == 1 || autoCompression == 32773);
+        Assert.True(autoCompression == 1 || autoCompression == 32773 || autoCompression == 8);
     }
 
     private static ushort ReadCompression(byte[] tiff) {

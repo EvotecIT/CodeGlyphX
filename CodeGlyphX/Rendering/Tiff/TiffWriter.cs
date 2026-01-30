@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 
 namespace CodeGlyphX.Rendering.Tiff;
 
@@ -10,6 +11,7 @@ namespace CodeGlyphX.Rendering.Tiff;
 public static class TiffWriter {
     private const ushort CompressionNone = 1;
     private const ushort CompressionPackBits = 32773;
+    private const ushort CompressionDeflate = 8;
 
     /// <summary>
     /// Encodes an RGBA buffer into a TIFF byte array.
@@ -66,11 +68,25 @@ public static class TiffWriter {
         if (compressionMode == TiffCompressionMode.None) {
             stripData = pixelData;
             compression = CompressionNone;
+        } else if (compressionMode == TiffCompressionMode.PackBits) {
+            stripData = CompressPackBits(pixelData);
+            compression = CompressionPackBits;
+        } else if (compressionMode == TiffCompressionMode.Deflate) {
+            stripData = CompressDeflate(pixelData);
+            compression = CompressionDeflate;
         } else {
-            var compressed = CompressPackBits(pixelData);
-            var usePackBits = compressionMode == TiffCompressionMode.PackBits || compressed.Length < pixelData.Length;
-            stripData = usePackBits ? compressed : pixelData;
-            compression = usePackBits ? CompressionPackBits : CompressionNone;
+            var packBits = CompressPackBits(pixelData);
+            var deflate = CompressDeflate(pixelData);
+            stripData = pixelData;
+            compression = CompressionNone;
+            if (packBits.Length < stripData.Length) {
+                stripData = packBits;
+                compression = CompressionPackBits;
+            }
+            if (deflate.Length < stripData.Length) {
+                stripData = deflate;
+                compression = CompressionDeflate;
+            }
         }
 
         var ifdOffset = pixelOffset + stripData.Length;
@@ -161,6 +177,15 @@ public static class TiffWriter {
         }
 
         return output.ToArray();
+    }
+
+    private static byte[] CompressDeflate(byte[] src) {
+        if (src.Length == 0) return Array.Empty<byte>();
+        using var ms = new MemoryStream();
+        using (var deflate = new DeflateStream(ms, CompressionLevel.Optimal, leaveOpen: true)) {
+            deflate.Write(src, 0, src.Length);
+        }
+        return ms.ToArray();
     }
 
     private static void WriteIfdEntry(Stream stream, ushort tag, ushort type, uint count, uint value) {
