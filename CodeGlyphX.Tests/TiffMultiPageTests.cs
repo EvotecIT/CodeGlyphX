@@ -1,4 +1,5 @@
 using System.IO;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Tiff;
 using Xunit;
 
@@ -20,6 +21,19 @@ public sealed class TiffMultiPageTests {
         var page1 = TiffReader.DecodeRgba32(tiff, 1, out var width1, out var height1);
         Assert.Equal(1, width1);
         Assert.Equal(1, height1);
+        Assert.Equal(255, page1[0]);
+        Assert.Equal(255, page1[1]);
+        Assert.Equal(255, page1[2]);
+        Assert.Equal(255, page1[3]);
+    }
+
+    [Fact]
+    public void Decode_Tiff_MultiPage_ImageReader() {
+        var tiff = BuildTwoPageTiff();
+
+        var page1 = ImageReader.DecodeRgba32(tiff, 1, out var width, out var height);
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
         Assert.Equal(255, page1[0]);
         Assert.Equal(255, page1[1]);
         Assert.Equal(255, page1[2]);

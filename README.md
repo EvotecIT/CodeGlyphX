@@ -418,7 +418,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 | WebP | ✅ | ✅ | Managed VP8/VP8L; ImageReader returns first frame (use DecodeAnimationCanvasFrames for animations) |
 | BMP | ✅ | ✅ |  |
 | GIF | ✅ | ✅ | ImageReader returns first frame (use DecodeAnimationCanvasFrames for animations) |
-| TIFF | ✅ | ✅ | Baseline strips, 8/16-bit; compression: none/PackBits/LZW/Deflate |
+| TIFF | ✅ | ✅ | Baseline strips/tiles, 8/16-bit; compression: none/PackBits/LZW/Deflate (multipage via pageIndex) |
 | PPM/PGM/PAM/PBM | ✅ | ✅ |  |
 | TGA | ✅ | ✅ |  |
 | ICO | ✅ | ✅ | PNG/BMP payloads (CUR decode supported) |
@@ -440,7 +440,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 - Managed WebP decode supports VP8/VP8L stills; size limit is 256 MB
 - Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
 - AVIF, HEIC, JPEG2000, PSD are not supported
-- Multi-page / tiled TIFF: use `TiffReader.DecodeRgba32(data, pageIndex, ...)`; `ImageReader` still uses the first IFD
+- Multi-page / tiled TIFF: use `ImageReader.DecodeRgba32(data, pageIndex, ...)` or `TiffReader.DecodeRgba32(data, pageIndex, ...)`
 - PDF/PS decode is not supported (rasterize first)
 
 ### Format corpus (optional)

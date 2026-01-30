@@ -32,6 +32,14 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes a multipage image to an RGBA buffer (auto-detected).
+    /// </summary>
+    public static byte[] DecodeRgba32(byte[] data, int pageIndex, out int width, out int height) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return DecodeRgba32((ReadOnlySpan<byte>)data, pageIndex, out width, out height);
+    }
+
+    /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
     /// </summary>
     public static byte[] DecodeRgba32Composite(byte[] data, out int width, out int height) {
@@ -69,6 +77,19 @@ public static partial class ImageReader {
         if (IsXbm(data)) return XbmReader.DecodeRgba32(data, out width, out height);
 
         throw new FormatException("Unknown image format.");
+    }
+
+    /// <summary>
+    /// Decodes a multipage image to an RGBA buffer (auto-detected).
+    /// </summary>
+    public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, int pageIndex, out int width, out int height) {
+        if (pageIndex < 0) throw new ArgumentOutOfRangeException(nameof(pageIndex));
+        if (pageIndex == 0) return DecodeRgba32(data, out width, out height);
+        if (data.Length < 2) throw new FormatException("Unknown image format.");
+
+        if (TiffReader.IsTiff(data)) return TiffReader.DecodeRgba32(data, pageIndex, out width, out height);
+
+        throw new FormatException("Page index decoding is only supported for TIFF images.");
     }
 
     /// <summary>
@@ -150,6 +171,22 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes a multipage image stream to an RGBA buffer (auto-detected).
+    /// </summary>
+    public static byte[] DecodeRgba32(Stream stream, int pageIndex, out int width, out int height) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return DecodeRgba32(buffer.AsSpan(), pageIndex, out width, out height);
+        }
+        using var ms = new MemoryStream();
+        stream.CopyTo(ms);
+        if (ms.TryGetBuffer(out var segment)) {
+            return DecodeRgba32(segment.AsSpan(), pageIndex, out width, out height);
+        }
+        return DecodeRgba32(ms.ToArray(), pageIndex, out width, out height);
+    }
+
+    /// <summary>
     /// Decodes an image stream to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
     /// </summary>
     public static byte[] DecodeRgba32Composite(Stream stream, out int width, out int height) {
@@ -189,6 +226,26 @@ public static partial class ImageReader {
             rgba = DecodeRgba32(data, out width, out height);
             return true;
         } catch (FormatException) {
+            rgba = Array.Empty<byte>();
+            width = 0;
+            height = 0;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode a multipage image to an RGBA buffer (auto-detected).
+    /// </summary>
+    public static bool TryDecodeRgba32(ReadOnlySpan<byte> data, int pageIndex, out byte[] rgba, out int width, out int height) {
+        try {
+            rgba = DecodeRgba32(data, pageIndex, out width, out height);
+            return true;
+        } catch (FormatException) {
+            rgba = Array.Empty<byte>();
+            width = 0;
+            height = 0;
+            return false;
+        } catch (ArgumentOutOfRangeException) {
             rgba = Array.Empty<byte>();
             width = 0;
             height = 0;
