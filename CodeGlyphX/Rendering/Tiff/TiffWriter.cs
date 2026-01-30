@@ -23,6 +23,15 @@ public static class TiffWriter {
     }
 
     /// <summary>
+    /// Encodes an RGBA buffer into a TIFF byte array using multiple strips.
+    /// </summary>
+    public static byte[] WriteRgba32(int width, int height, ReadOnlySpan<byte> rgba, int stride, TiffCompressionMode compression, int rowsPerStrip) {
+        using var ms = new MemoryStream();
+        WriteRgba32(ms, width, height, rgba, stride, compression, rowsPerStrip);
+        return ms.ToArray();
+    }
+
+    /// <summary>
     /// Encodes multiple RGBA buffers into a multi-page TIFF byte array.
     /// </summary>
     public static byte[] WriteRgba32(ReadOnlySpan<TiffRgba32Page> pages) {
@@ -35,67 +44,28 @@ public static class TiffWriter {
     /// Encodes an RGBA buffer into a TIFF stream.
     /// </summary>
     public static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan<byte> rgba, int stride, TiffCompressionMode compressionMode = TiffCompressionMode.Auto) {
+        WriteRgba32(stream, width, height, rgba, stride, compressionMode, rowsPerStrip: 0);
+    }
+
+    /// <summary>
+    /// Encodes an RGBA buffer into a TIFF stream using multiple strips.
+    /// </summary>
+    public static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan<byte> rgba, int stride, TiffCompressionMode compressionMode, int rowsPerStrip) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < stride * height) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
-        var encoded = EncodeStrip(rgba, width, height, stride, compressionMode);
-        var stripData = encoded.StripData;
-        var compression = encoded.Compression;
-        var hasAlpha = encoded.HasAlpha;
-        var samples = encoded.Samples;
-        var pixelOffset = 8;
-
-        var ifdOffset = pixelOffset + stripData.Length;
-        if ((ifdOffset & 1) != 0) {
-            ifdOffset++;
+        var normalizedRows = rowsPerStrip <= 0 || rowsPerStrip >= height ? height : rowsPerStrip;
+        if (normalizedRows == height) {
+            var encoded = EncodeStrip(rgba, width, height, stride, compressionMode);
+            WriteSingleStrip(stream, width, height, encoded);
+            return;
         }
 
-        // Header
-        WriteAscii(stream, "II");
-        WriteUInt16(stream, 42);
-        WriteUInt32(stream, (uint)ifdOffset);
-
-        // Pixel data
-        stream.Write(stripData, 0, stripData.Length);
-        if ((pixelOffset + stripData.Length) != ifdOffset) {
-            stream.WriteByte(0);
-        }
-
-        var entryCount = (ushort)(hasAlpha ? 11 : 10);
-        var ifdSize = 2 + entryCount * 12 + 4;
-        var bitsOffset = ifdOffset + ifdSize;
-        if ((bitsOffset & 1) != 0) {
-            bitsOffset++;
-        }
-
-        WriteUInt16(stream, entryCount);
-        WriteIfdEntry(stream, 256, 4, 1, (uint)width); // ImageWidth
-        WriteIfdEntry(stream, 257, 4, 1, (uint)height); // ImageLength
-        WriteIfdEntry(stream, 258, 3, (uint)samples, (uint)bitsOffset); // BitsPerSample
-        WriteIfdEntry(stream, 259, 3, 1, compression); // Compression
-        WriteIfdEntry(stream, 262, 3, 1, 2); // PhotometricInterpretation (RGB)
-        WriteIfdEntry(stream, 273, 4, 1, (uint)pixelOffset); // StripOffsets
-        WriteIfdEntry(stream, 277, 3, 1, (uint)samples); // SamplesPerPixel
-        WriteIfdEntry(stream, 278, 4, 1, (uint)height); // RowsPerStrip
-        WriteIfdEntry(stream, 279, 4, 1, (uint)stripData.Length); // StripByteCounts
-        WriteIfdEntry(stream, 284, 3, 1, 1); // PlanarConfiguration (chunky)
-        if (hasAlpha) {
-            WriteIfdEntry(stream, 338, 3, 1, 1); // ExtraSamples (unassociated alpha)
-        }
-
-        WriteUInt32(stream, 0); // Next IFD offset
-
-        var pad = bitsOffset - (ifdOffset + ifdSize);
-        if (pad > 0) {
-            stream.Write(new byte[pad], 0, pad);
-        }
-
-        for (var i = 0; i < samples; i++) {
-            WriteUInt16(stream, 8);
-        }
+        var encodedStrips = EncodeStrips(rgba, width, height, stride, compressionMode, normalizedRows);
+        WriteMultiStrip(stream, width, height, encodedStrips);
     }
 
     /// <summary>
@@ -195,6 +165,155 @@ public static class TiffWriter {
             for (var j = 0; j < page.Samples; j++) {
                 WriteUInt16(stream, 8);
             }
+        }
+    }
+
+    private static void WriteSingleStrip(Stream stream, int width, int height, EncodedStrip encoded) {
+        var stripData = encoded.StripData;
+        var compression = encoded.Compression;
+        var hasAlpha = encoded.HasAlpha;
+        var samples = encoded.Samples;
+        var pixelOffset = 8;
+
+        var ifdOffset = pixelOffset + stripData.Length;
+        if ((ifdOffset & 1) != 0) {
+            ifdOffset++;
+        }
+
+        WriteAscii(stream, "II");
+        WriteUInt16(stream, 42);
+        WriteUInt32(stream, (uint)ifdOffset);
+
+        stream.Write(stripData, 0, stripData.Length);
+        if ((pixelOffset + stripData.Length) != ifdOffset) {
+            stream.WriteByte(0);
+        }
+
+        var entryCount = (ushort)(hasAlpha ? 11 : 10);
+        var ifdSize = 2 + entryCount * 12 + 4;
+        var bitsOffset = ifdOffset + ifdSize;
+        if ((bitsOffset & 1) != 0) {
+            bitsOffset++;
+        }
+
+        WriteUInt16(stream, entryCount);
+        WriteIfdEntry(stream, 256, 4, 1, (uint)width); // ImageWidth
+        WriteIfdEntry(stream, 257, 4, 1, (uint)height); // ImageLength
+        WriteIfdEntry(stream, 258, 3, samples, (uint)bitsOffset); // BitsPerSample
+        WriteIfdEntry(stream, 259, 3, 1, compression); // Compression
+        WriteIfdEntry(stream, 262, 3, 1, 2); // PhotometricInterpretation (RGB)
+        WriteIfdEntry(stream, 273, 4, 1, (uint)pixelOffset); // StripOffsets
+        WriteIfdEntry(stream, 277, 3, 1, samples); // SamplesPerPixel
+        WriteIfdEntry(stream, 278, 4, 1, (uint)height); // RowsPerStrip
+        WriteIfdEntry(stream, 279, 4, 1, (uint)stripData.Length); // StripByteCounts
+        WriteIfdEntry(stream, 284, 3, 1, 1); // PlanarConfiguration (chunky)
+        if (hasAlpha) {
+            WriteIfdEntry(stream, 338, 3, 1, 1); // ExtraSamples (unassociated alpha)
+        }
+
+        WriteUInt32(stream, 0); // Next IFD offset
+
+        var pad = bitsOffset - (ifdOffset + ifdSize);
+        if (pad > 0) {
+            stream.Write(new byte[pad], 0, pad);
+        }
+
+        for (var i = 0; i < samples; i++) {
+            WriteUInt16(stream, 8);
+        }
+    }
+
+    private static void WriteMultiStrip(Stream stream, int width, int height, EncodedStrips encoded) {
+        var stripCount = encoded.Strips.Length;
+        var stripOffsets = new uint[stripCount];
+        var stripByteCounts = encoded.ByteCounts;
+
+        long offset = 8;
+        for (var i = 0; i < stripCount; i++) {
+            if (offset > uint.MaxValue) throw new InvalidOperationException("TIFF data exceeds supported size.");
+            stripOffsets[i] = (uint)offset;
+            offset += encoded.Strips[i].Length;
+            if ((offset & 1) != 0) offset++;
+        }
+
+        if ((offset & 1) != 0) offset++;
+        var ifdOffset = offset;
+        if (ifdOffset > uint.MaxValue) throw new InvalidOperationException("TIFF data exceeds supported size.");
+
+        var entryCount = (ushort)(encoded.HasAlpha ? 11 : 10);
+        var ifdSize = 2 + entryCount * 12 + 4;
+        var extraOffset = ifdOffset + ifdSize;
+        if ((extraOffset & 1) != 0) extraOffset++;
+
+        var stripOffsetsOffset = 0u;
+        var stripByteCountsOffset = 0u;
+        if (stripCount > 1) {
+            stripOffsetsOffset = (uint)extraOffset;
+            extraOffset += stripCount * 4L;
+            if ((extraOffset & 1) != 0) extraOffset++;
+            stripByteCountsOffset = (uint)extraOffset;
+            extraOffset += stripCount * 4L;
+            if ((extraOffset & 1) != 0) extraOffset++;
+        }
+
+        var bitsOffset = extraOffset;
+        if ((bitsOffset & 1) != 0) bitsOffset++;
+
+        WriteAscii(stream, "II");
+        WriteUInt16(stream, 42);
+        WriteUInt32(stream, (uint)ifdOffset);
+
+        for (var i = 0; i < stripCount; i++) {
+            var strip = encoded.Strips[i];
+            stream.Write(strip, 0, strip.Length);
+            if ((stream.Position & 1) != 0) {
+                stream.WriteByte(0);
+            }
+        }
+
+        if (stream.Position < ifdOffset) {
+            var pad = (int)(ifdOffset - stream.Position);
+            stream.Write(new byte[pad], 0, pad);
+        }
+
+        WriteUInt16(stream, entryCount);
+        WriteIfdEntry(stream, 256, 4, 1, (uint)width); // ImageWidth
+        WriteIfdEntry(stream, 257, 4, 1, (uint)height); // ImageLength
+        WriteIfdEntry(stream, 258, 3, encoded.Samples, (uint)bitsOffset); // BitsPerSample
+        WriteIfdEntry(stream, 259, 3, 1, encoded.Compression); // Compression
+        WriteIfdEntry(stream, 262, 3, 1, 2); // PhotometricInterpretation (RGB)
+        WriteIfdEntry(stream, 273, 4, (uint)stripCount, stripCount == 1 ? stripOffsets[0] : stripOffsetsOffset); // StripOffsets
+        WriteIfdEntry(stream, 277, 3, 1, encoded.Samples); // SamplesPerPixel
+        WriteIfdEntry(stream, 278, 4, 1, (uint)encoded.RowsPerStrip); // RowsPerStrip
+        WriteIfdEntry(stream, 279, 4, (uint)stripCount, stripCount == 1 ? stripByteCounts[0] : stripByteCountsOffset); // StripByteCounts
+        WriteIfdEntry(stream, 284, 3, 1, 1); // PlanarConfiguration (chunky)
+        if (encoded.HasAlpha) {
+            WriteIfdEntry(stream, 338, 3, 1, 1); // ExtraSamples (unassociated alpha)
+        }
+
+        WriteUInt32(stream, 0); // Next IFD offset
+
+        if (stripCount > 1) {
+            if (stream.Position < stripOffsetsOffset) {
+                var pad = (int)(stripOffsetsOffset - stream.Position);
+                stream.Write(new byte[pad], 0, pad);
+            }
+            WriteUInt32Array(stream, stripOffsets);
+
+            if (stream.Position < stripByteCountsOffset) {
+                var pad = (int)(stripByteCountsOffset - stream.Position);
+                stream.Write(new byte[pad], 0, pad);
+            }
+            WriteUInt32Array(stream, stripByteCounts);
+        }
+
+        if (stream.Position < bitsOffset) {
+            var pad = (int)(bitsOffset - stream.Position);
+            stream.Write(new byte[pad], 0, pad);
+        }
+
+        for (var i = 0; i < encoded.Samples; i++) {
+            WriteUInt16(stream, 8);
         }
     }
 
@@ -306,6 +425,114 @@ public static class TiffWriter {
         return new EncodedStrip(stripData, compression, hasAlpha, samples);
     }
 
+    private static EncodedStrips EncodeStrips(
+        ReadOnlySpan<byte> rgba,
+        int width,
+        int height,
+        int stride,
+        TiffCompressionMode compressionMode,
+        int rowsPerStrip) {
+        var hasAlpha = false;
+        for (var y = 0; y < height && !hasAlpha; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                if (rgba[row + x * 4 + 3] < 255) {
+                    hasAlpha = true;
+                    break;
+                }
+            }
+        }
+
+        var samples = (ushort)(hasAlpha ? 4 : 3);
+        var bytesPerPixel = samples;
+        var stripCount = (height + rowsPerStrip - 1) / rowsPerStrip;
+        var rawStrips = new byte[stripCount][];
+
+        var stripIndex = 0;
+        for (var y = 0; y < height; y += rowsPerStrip) {
+            var rows = Math.Min(rowsPerStrip, height - y);
+            var pixelBytes = checked(width * rows * bytesPerPixel);
+            var pixelData = new byte[pixelBytes];
+            var dst = 0;
+            for (var row = 0; row < rows; row++) {
+                var srcRow = (y + row) * stride;
+                for (var x = 0; x < width; x++) {
+                    var idx = srcRow + x * 4;
+                    pixelData[dst++] = rgba[idx + 0];
+                    pixelData[dst++] = rgba[idx + 1];
+                    pixelData[dst++] = rgba[idx + 2];
+                    if (hasAlpha) {
+                        pixelData[dst++] = rgba[idx + 3];
+                    }
+                }
+            }
+            rawStrips[stripIndex++] = pixelData;
+        }
+
+        ushort compression;
+        byte[][] strips;
+
+        if (compressionMode == TiffCompressionMode.None) {
+            compression = CompressionNone;
+            strips = rawStrips;
+        } else if (compressionMode == TiffCompressionMode.PackBits) {
+            compression = CompressionPackBits;
+            strips = CompressStrips(rawStrips, CompressPackBits);
+        } else if (compressionMode == TiffCompressionMode.Deflate) {
+            compression = CompressionDeflate;
+            strips = CompressStrips(rawStrips, CompressDeflate);
+        } else {
+            var packBits = CompressStrips(rawStrips, CompressPackBits);
+            var deflate = CompressStrips(rawStrips, CompressDeflate);
+            var rawSize = SumSizes(rawStrips);
+            var packSize = SumSizes(packBits);
+            var deflateSize = SumSizes(deflate);
+
+            compression = CompressionNone;
+            strips = rawStrips;
+            if (packSize < rawSize) {
+                compression = CompressionPackBits;
+                strips = packBits;
+                rawSize = packSize;
+            }
+            if (deflateSize < rawSize) {
+                compression = CompressionDeflate;
+                strips = deflate;
+            }
+        }
+
+        var byteCounts = new uint[strips.Length];
+        for (var i = 0; i < strips.Length; i++) {
+            byteCounts[i] = (uint)strips[i].Length;
+        }
+
+        return new EncodedStrips(strips, byteCounts, compression, hasAlpha, samples, rowsPerStrip);
+    }
+
+    private static byte[][] CompressStrips(byte[][] strips, Func<ReadOnlySpan<byte>, byte[]> compressor) {
+        var output = new byte[strips.Length][];
+        for (var i = 0; i < strips.Length; i++) {
+            output[i] = compressor(strips[i]);
+        }
+        return output;
+    }
+
+    private static byte[][] CompressStrips(byte[][] strips, Func<byte[], byte[]> compressor) {
+        var output = new byte[strips.Length][];
+        for (var i = 0; i < strips.Length; i++) {
+            output[i] = compressor(strips[i]);
+        }
+        return output;
+    }
+
+    private static long SumSizes(byte[][] strips) {
+        long total = 0;
+        for (var i = 0; i < strips.Length; i++) {
+            total += strips[i].Length;
+        }
+        return total;
+    }
+
     private static void WriteIfdEntry(Stream stream, ushort tag, ushort type, uint count, uint value) {
         WriteUInt16(stream, tag);
         WriteUInt16(stream, type);
@@ -331,6 +558,12 @@ public static class TiffWriter {
         stream.WriteByte((byte)((value >> 24) & 0xFF));
     }
 
+    private static void WriteUInt32Array(Stream stream, uint[] values) {
+        for (var i = 0; i < values.Length; i++) {
+            WriteUInt32(stream, values[i]);
+        }
+    }
+
     private readonly struct EncodedStrip {
         public EncodedStrip(byte[] stripData, ushort compression, bool hasAlpha, ushort samples) {
             StripData = stripData;
@@ -343,6 +576,24 @@ public static class TiffWriter {
         public ushort Compression { get; }
         public bool HasAlpha { get; }
         public ushort Samples { get; }
+    }
+
+    private readonly struct EncodedStrips {
+        public EncodedStrips(byte[][] strips, uint[] byteCounts, ushort compression, bool hasAlpha, ushort samples, int rowsPerStrip) {
+            Strips = strips;
+            ByteCounts = byteCounts;
+            Compression = compression;
+            HasAlpha = hasAlpha;
+            Samples = samples;
+            RowsPerStrip = rowsPerStrip;
+        }
+
+        public byte[][] Strips { get; }
+        public uint[] ByteCounts { get; }
+        public ushort Compression { get; }
+        public bool HasAlpha { get; }
+        public ushort Samples { get; }
+        public int RowsPerStrip { get; }
     }
 
     private struct EncodedPage {
