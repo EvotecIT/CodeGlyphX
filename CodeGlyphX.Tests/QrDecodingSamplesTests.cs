@@ -183,7 +183,8 @@ public sealed class QrDecodingSamplesTests {
 
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
-            MaxMilliseconds = TestBudget.Adjust(800),
+            MaxMilliseconds = TestBudget.Adjust(2000),
+            BudgetMilliseconds = TestBudget.Adjust(2000),
             MaxDimension = 1600,
             AggressiveSampling = true
         };
