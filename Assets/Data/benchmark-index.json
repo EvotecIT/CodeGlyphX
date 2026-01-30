@@ -23,31 +23,10 @@
       "runModeSource": "explicit"
     },
     {
-      "os": "windows",
-      "runMode": "quick",
-      "generatedUtc": "2026-01-30T08:49:20.7101868Z",
-      "publish": false,
-      "framework": "net8.0",
-      "configuration": "Release",
-      "artifacts": "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260130-094549",
-      "meta": {
-        "commit": null,
-        "branch": null,
-        "dotnetSdk": "10.0.102",
-        "runtime": ".NET 9.0.10",
-        "osDescription": "Microsoft Windows 10.0.26200",
-        "osArchitecture": "X64",
-        "processArchitecture": "X64",
-        "machineName": "EVOMAGIC",
-        "processorCount": 32
-      },
-      "runModeSource": "explicit"
-    },
-    {
       "os": "linux",
       "runMode": "quick",
       "runModeSource": "explicit",
-      "generatedUtc": "2026-01-30T09:17:06.024404+00:00",
+      "generatedUtc": "2026-01-30T10:17:06.024404+01:00",
       "publish": false,
       "framework": "net8.0",
       "configuration": "Release",
@@ -63,6 +42,27 @@
         "machineName": "EVOMAGIC",
         "processorCount": 32
       }
+    },
+    {
+      "os": "windows",
+      "runMode": "quick",
+      "generatedUtc": "2026-01-30T09:22:51.7369607Z",
+      "publish": false,
+      "framework": "net8.0",
+      "configuration": "Release",
+      "artifacts": "C:\\Support\\GitHub\\CodeMatrix\\Build\\BenchmarkResults\\windows-20260130-101914",
+      "meta": {
+        "commit": null,
+        "branch": null,
+        "dotnetSdk": "10.0.102",
+        "runtime": ".NET 9.0.10",
+        "osDescription": "Microsoft Windows 10.0.26200",
+        "osArchitecture": "X64",
+        "processArchitecture": "X64",
+        "machineName": "EVOMAGIC",
+        "processorCount": 32
+      },
+      "runModeSource": "explicit"
     }
   ]
 }
