@@ -436,7 +436,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 
 ### Known gaps / not supported (decode)
 
-- ImageReader returns the first animation frame only (GIF/WebP); use GifReader.* / WebpReader.* for raw or composited frames
+- ImageReader returns the first animation frame only (GIF/WebP); use GifReader.* / WebpReader.* or ImageReader.DecodeRgba32Composite for composited frames
 - Managed WebP decode supports VP8/VP8L stills; size limit is 256 MB
 - Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
 - AVIF, HEIC, JPEG2000, PSD are not supported

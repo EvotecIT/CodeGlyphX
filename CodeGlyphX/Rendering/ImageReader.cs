@@ -32,6 +32,14 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+    /// </summary>
+    public static byte[] DecodeRgba32Composite(byte[] data, out int width, out int height) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return DecodeRgba32Composite((ReadOnlySpan<byte>)data, out width, out height);
+    }
+
+    /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected).
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
@@ -43,6 +51,40 @@ public static partial class ImageReader {
         if (IcoReader.IsIco(data)) return IcoReader.DecodeRgba32(data, out width, out height);
         if (JpegReader.IsJpeg(data)) return JpegReader.DecodeRgba32(data, out width, out height);
         if (GifReader.IsGif(data)) return GifReader.DecodeRgba32(data, out width, out height);
+        if (IsBmp(data)) return BmpReader.DecodeRgba32(data, out width, out height);
+        if (IsPbm(data)) return PbmReader.DecodeRgba32(data, out width, out height);
+        if (IsPgm(data)) return PgmReader.DecodeRgba32(data, out width, out height);
+        if (IsPam(data)) return PamReader.DecodeRgba32(data, out width, out height);
+        if (IsPpm(data)) return PpmReader.DecodeRgba32(data, out width, out height);
+        if (TgaReader.LooksLikeTga(data)) return TgaReader.DecodeRgba32(data, out width, out height);
+        if (IsXpm(data)) return XpmReader.DecodeRgba32(data, out width, out height);
+        if (IsXbm(data)) return XbmReader.DecodeRgba32(data, out width, out height);
+
+        throw new FormatException("Unknown image format.");
+    }
+
+    /// <summary>
+    /// Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+    /// </summary>
+    public static byte[] DecodeRgba32Composite(ReadOnlySpan<byte> data, out int width, out int height) {
+        if (data.Length < 2) throw new FormatException("Unknown image format.");
+
+        if (IsPng(data)) return PngReader.DecodeRgba32(data, out width, out height);
+        if (WebpReader.IsWebp(data)) {
+            if (WebpReader.TryDecodeAnimationCanvasFrames(data, out var frames, out width, out height, out _)) {
+                if (frames.Length > 0) return frames[0].Rgba;
+            }
+            return WebpReader.DecodeRgba32(data, out width, out height);
+        }
+        if (TiffReader.IsTiff(data)) return TiffReader.DecodeRgba32(data, out width, out height);
+        if (IcoReader.IsIco(data)) return IcoReader.DecodeRgba32(data, out width, out height);
+        if (JpegReader.IsJpeg(data)) return JpegReader.DecodeRgba32(data, out width, out height);
+        if (GifReader.IsGif(data)) {
+            if (GifReader.TryDecodeAnimationCanvasFrames(data, out var frames, out width, out height, out _)) {
+                if (frames.Length > 0) return frames[0].Rgba;
+            }
+            return GifReader.DecodeRgba32(data, out width, out height);
+        }
         if (IsBmp(data)) return BmpReader.DecodeRgba32(data, out width, out height);
         if (IsPbm(data)) return PbmReader.DecodeRgba32(data, out width, out height);
         if (IsPgm(data)) return PgmReader.DecodeRgba32(data, out width, out height);
@@ -72,11 +114,42 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes an image stream to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+    /// </summary>
+    public static byte[] DecodeRgba32Composite(Stream stream, out int width, out int height) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return DecodeRgba32Composite(buffer.AsSpan(), out width, out height);
+        }
+        using var ms = new MemoryStream();
+        stream.CopyTo(ms);
+        if (ms.TryGetBuffer(out var segment)) {
+            return DecodeRgba32Composite(segment.AsSpan(), out width, out height);
+        }
+        return DecodeRgba32Composite(ms.ToArray(), out width, out height);
+    }
+
+    /// <summary>
     /// Attempts to decode an image to an RGBA buffer (auto-detected).
     /// </summary>
     public static bool TryDecodeRgba32(ReadOnlySpan<byte> data, out byte[] rgba, out int width, out int height) {
         try {
             rgba = DecodeRgba32(data, out width, out height);
+            return true;
+        } catch (FormatException) {
+            rgba = Array.Empty<byte>();
+            width = 0;
+            height = 0;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
+    /// </summary>
+    public static bool TryDecodeRgba32Composite(ReadOnlySpan<byte> data, out byte[] rgba, out int width, out int height) {
+        try {
+            rgba = DecodeRgba32Composite(data, out width, out height);
             return true;
         } catch (FormatException) {
             rgba = Array.Empty<byte>();
