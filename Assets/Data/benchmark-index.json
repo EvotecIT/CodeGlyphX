@@ -23,27 +23,6 @@
       "runModeSource": "explicit"
     },
     {
-      "os": "linux",
-      "runMode": "quick",
-      "generatedUtc": "2026-01-27T14:16:09.1385475Z",
-      "publish": false,
-      "framework": "net8.0",
-      "configuration": "Release",
-      "artifacts": "/tmp/cgx-psquick-smoke/linux-20260127-151049",
-      "meta": {
-        "commit": null,
-        "branch": null,
-        "dotnetSdk": "10.0.100",
-        "runtime": ".NET 9.0.10",
-        "osDescription": "Ubuntu 24.04.3 LTS",
-        "osArchitecture": "X64",
-        "processArchitecture": "X64",
-        "machineName": "EVOMONSTER",
-        "processorCount": 32
-      },
-      "runModeSource": "explicit"
-    },
-    {
       "os": "windows",
       "runMode": "quick",
       "generatedUtc": "2026-01-30T08:49:20.7101868Z",
@@ -63,6 +42,27 @@
         "processorCount": 32
       },
       "runModeSource": "explicit"
+    },
+    {
+      "os": "linux",
+      "runMode": "quick",
+      "runModeSource": "explicit",
+      "generatedUtc": "2026-01-30T09:17:06.024404+00:00",
+      "publish": false,
+      "framework": "net8.0",
+      "configuration": "Release",
+      "artifacts": "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-20260130-101027",
+      "meta": {
+        "commit": null,
+        "branch": null,
+        "dotnetSdk": null,
+        "runtime": null,
+        "osDescription": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "osArchitecture": "x86_64",
+        "processArchitecture": "x86_64",
+        "machineName": "EVOMAGIC",
+        "processorCount": 32
+      }
     }
   ]
 }

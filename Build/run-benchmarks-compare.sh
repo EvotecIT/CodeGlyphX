@@ -11,7 +11,6 @@ COMPARE_QRCODER=0
 COMPARE_BARCODER=0
 BASE_FILTER="*"
 COMPARE_FILTER="*Compare*"
-BASE_FILTER_SET=0
 COMPARE_FILTER_SET=0
 BENCH_QUICK=1
 ALLOW_PARTIAL=0
@@ -50,7 +49,7 @@ while [[ $# -gt 0 ]]; do
     --compare-zxing) COMPARE_ZXING=1; shift ;;
     --compare-qrcoder) COMPARE_QRCODER=1; shift ;;
     --compare-barcoder) COMPARE_BARCODER=1; shift ;;
-    --base-filter) BASE_FILTER="$2"; BASE_FILTER_SET=1; shift 2 ;;
+    --base-filter) BASE_FILTER="$2"; shift 2 ;;
     --compare-filter) COMPARE_FILTER="$2"; COMPARE_FILTER_SET=1; shift 2 ;;
     --full) BENCH_QUICK=0; shift ;;
     --allow-partial) ALLOW_PARTIAL=1; shift ;;
@@ -60,10 +59,6 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Keep the default quick run focused on compare suites so it stays fast.
-if [[ $BENCH_QUICK -eq 1 && $BASE_FILTER_SET -eq 0 ]]; then
-  BASE_FILTER="*CompareBenchmarks*"
-fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_PATH="$SCRIPT_DIR/../CodeGlyphX.Benchmarks/CodeGlyphX.Benchmarks.csproj"

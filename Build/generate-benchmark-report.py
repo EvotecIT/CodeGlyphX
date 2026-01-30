@@ -22,6 +22,7 @@ TITLE_MAP = {
     "QrCompareBenchmarks": "QR (Encode)",
     "QrDecodeCleanCompareBenchmarks": "QR Decode (Clean)",
     "QrDecodeNoisyCompareBenchmarks": "QR Decode (Noisy)",
+    "QrDecodeStressCompareBenchmarks": "QR Decode (Stress)",
     "Code128CompareBenchmarks": "Code 128 (Encode)",
     "Code39CompareBenchmarks": "Code 39 (Encode)",
     "Code93CompareBenchmarks": "Code 93 (Encode)",
@@ -649,7 +650,7 @@ def parse_mean_to_ns(value: str):
     cleaned = value.strip().replace(",", "")
     if cleaned == "NA":
         return None
-    match = re.match(r"^(\\d+(?:\\.\\d+)?)\\s*(ns|us|μs|ms|s)$", cleaned)
+    match = re.match(r"^(\d+(?:\.\d+)?)\s*(ns|us|μs|ms|s)$", cleaned)
     if not match:
         return None
     number = float(match.group(1))

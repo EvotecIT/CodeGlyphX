@@ -44,12 +44,6 @@ if ($benchQuick) {
     $quickProps += "/p:BenchQuick=true"
 }
 
-# Keep the default quick run focused on compare suites so it stays fast.
-$baseFilterBound = $PSBoundParameters.ContainsKey("BaseFilter")
-if ($benchQuick -and -not $baseFilterBound) {
-    $BaseFilter = "*CompareBenchmarks*"
-}
-
 $expectedCompare = @(
     "QrCompareBenchmarks",
     "QrDecodeCleanCompareBenchmarks",
