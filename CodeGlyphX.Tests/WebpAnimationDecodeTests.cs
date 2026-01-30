@@ -154,7 +154,7 @@ public sealed class WebpAnimationDecodeTests {
         AssertPixel(frames[2].Rgba, canvasWidth, 2, 2, 7, 8, 9, 255);
     }
 
-    private static byte[] BuildLiteralOnlyVp8lPayload(int width, int height, int r, int g, int b, int a) {
+    internal static byte[] BuildLiteralOnlyVp8lPayload(int width, int height, int r, int g, int b, int a) {
         var writer = new BitWriterLsb();
 
         writer.WriteBits(0x2F, 8);
@@ -191,7 +191,7 @@ public sealed class WebpAnimationDecodeTests {
         Assert.Equal(a, rgba[index + 3]);
     }
 
-    private static byte[] BuildAnimatedWebp(
+    internal static byte[] BuildAnimatedWebp(
         byte[] vp8lPayload,
         int canvasWidth,
         int canvasHeight,
@@ -213,7 +213,7 @@ public sealed class WebpAnimationDecodeTests {
         return BuildAnimatedWebp(new[] { frame }, canvasWidth, canvasHeight, bgraBackground, loopCount: 0);
     }
 
-    private static byte[] BuildAnimatedWebp(
+    internal static byte[] BuildAnimatedWebp(
         AnimationFrameSpec[] frames,
         int canvasWidth,
         int canvasHeight,
@@ -272,7 +272,7 @@ public sealed class WebpAnimationDecodeTests {
         return bytes;
     }
 
-    private readonly struct AnimationFrameSpec {
+    internal readonly struct AnimationFrameSpec {
         public AnimationFrameSpec(
             byte[] vp8lPayload,
             int x,
@@ -302,7 +302,7 @@ public sealed class WebpAnimationDecodeTests {
         public bool DisposeToBackground { get; }
     }
 
-    private static bool UsesAlpha(AnimationFrameSpec[] frames) {
+    internal static bool UsesAlpha(AnimationFrameSpec[] frames) {
         for (var i = 0; i < frames.Length; i++) {
             var payload = frames[i].Vp8lPayload;
             if (payload.Length < 5) continue;
@@ -320,7 +320,7 @@ public sealed class WebpAnimationDecodeTests {
             | (buffer[offset + 3] << 24));
     }
 
-    private static void WriteChunk(Stream stream, string fourCc, byte[] payload) {
+    internal static void WriteChunk(Stream stream, string fourCc, byte[] payload) {
         WriteAscii(stream, fourCc);
         WriteU32LE(stream, (uint)payload.Length);
         stream.Write(payload, 0, payload.Length);
@@ -329,30 +329,30 @@ public sealed class WebpAnimationDecodeTests {
         }
     }
 
-    private static void WriteAscii(Stream stream, string text) {
+    internal static void WriteAscii(Stream stream, string text) {
         var bytes = Encoding.ASCII.GetBytes(text);
         stream.Write(bytes, 0, bytes.Length);
     }
 
-    private static void WriteU16LE(Stream stream, ushort value) {
+    internal static void WriteU16LE(Stream stream, ushort value) {
         stream.WriteByte((byte)(value & 0xFF));
         stream.WriteByte((byte)((value >> 8) & 0xFF));
     }
 
-    private static void WriteU24LE(Stream stream, int value) {
+    internal static void WriteU24LE(Stream stream, int value) {
         stream.WriteByte((byte)(value & 0xFF));
         stream.WriteByte((byte)((value >> 8) & 0xFF));
         stream.WriteByte((byte)((value >> 16) & 0xFF));
     }
 
-    private static void WriteU32LE(Stream stream, uint value) {
+    internal static void WriteU32LE(Stream stream, uint value) {
         stream.WriteByte((byte)(value & 0xFF));
         stream.WriteByte((byte)((value >> 8) & 0xFF));
         stream.WriteByte((byte)((value >> 16) & 0xFF));
         stream.WriteByte((byte)((value >> 24) & 0xFF));
     }
 
-    private static void WriteU32LE(byte[] buffer, int offset, uint value) {
+    internal static void WriteU32LE(byte[] buffer, int offset, uint value) {
         buffer[offset] = (byte)(value & 0xFF);
         buffer[offset + 1] = (byte)((value >> 8) & 0xFF);
         buffer[offset + 2] = (byte)((value >> 16) & 0xFF);
