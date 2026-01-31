@@ -121,7 +121,7 @@ public static partial class JpegReader {
         bool allowTruncated) {
         EnsureStandardHuffmanTables(dcTables, acTables);
         // Progressive scans are lenient to match historical behavior.
-        var reader = new JpegBitReader(scanData, allowTruncated: true);
+        var reader = new JpegBitReader(scanData, allowTruncated);
         var mcuIndex = 0;
         var eobRun = 0;
         var isSingle = scan.ComponentIndices.Length == 1;

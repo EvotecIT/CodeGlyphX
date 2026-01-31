@@ -784,7 +784,15 @@ internal static class JpegWriter {
     }
 
     private static byte[] EnsurePrefix(byte[] data, byte[] prefix) {
-        if (StartsWith(data, prefix)) return data;
+        if (StartsWith(data, prefix)) {
+            if (data.Length > 0xFFFD) {
+                throw new ArgumentOutOfRangeException(nameof(data), "APP segment payload too large.");
+            }
+            return data;
+        }
+        if (prefix.Length + data.Length > 0xFFFD) {
+            throw new ArgumentOutOfRangeException(nameof(data), "APP segment payload too large.");
+        }
         var combined = new byte[prefix.Length + data.Length];
         Buffer.BlockCopy(prefix, 0, combined, 0, prefix.Length);
         Buffer.BlockCopy(data, 0, combined, prefix.Length, data.Length);
@@ -814,6 +822,9 @@ internal static class JpegWriter {
         var maxData = maxPayload - headerSize;
         var totalSegments = (icc.Length + maxData - 1) / maxData;
         if (totalSegments <= 0) return;
+        if (totalSegments > 255) {
+            throw new ArgumentOutOfRangeException(nameof(icc), "ICC profile payload too large.");
+        }
         var offset = 0;
         for (var segment = 1; segment <= totalSegments; segment++) {
             var remaining = icc.Length - offset;

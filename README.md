@@ -647,7 +647,7 @@ using CodeGlyphX;
 
 var opts = ImageDecodeOptions.Screen(maxMilliseconds: 300, maxDimension: 1200);
 opts.WithJpegOptions(highQualityChroma: true, allowTruncated: true);
-Barcode.TryDecodePng(File.ReadAllBytes("barcode.png"), BarcodeType.Code128, opts, out var barcode);
+Barcode.TryDecodeImage(File.ReadAllBytes("barcode.jpg"), BarcodeType.Code128, opts, out var barcode);
 ```
 
 ```csharp
