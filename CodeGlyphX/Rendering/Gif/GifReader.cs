@@ -115,19 +115,7 @@ public static class GifReader {
             var minCodeSize = gif[offset++];
 
             var imageData = ReadSubBlocks(gif, ref offset);
-            if (maxFrames > 0 && frames.Count >= maxFrames) {
-                throw new FormatException("GIF frame count exceeds limits.");
-            }
-            if (!DecodeGuards.TryEnsurePixelCount(imgW, imgH, maxFramePixels, out _)) {
-                throw new FormatException("GIF frame exceeds size limits.");
-            }
-            if (delay > 0) {
-                var nextTotal = totalDuration + delay;
-                if (maxDurationMs > 0 && nextTotal > maxDurationMs) {
-                    throw new FormatException("GIF animation duration exceeds limits.");
-                }
-                totalDuration = nextTotal;
-            }
+            _ = DecodeGuards.EnsurePixelCount(imgW, imgH, "GIF frame exceeds size limits.");
             var pixels = DecodeGuards.AllocatePixelBuffer(imgW, imgH, "GIF frame exceeds size limits.");
             var written = LzwDecode(imageData, minCodeSize, pixels);
             if (written < imgW * imgH) {
@@ -334,7 +322,19 @@ public static class GifReader {
             var imgH = ReadUInt16LE(gif, offset + 6);
             var imgPacked = gif[offset + 8];
             offset += 9;
-            _ = DecodeGuards.EnsurePixelCount(imgW, imgH, "GIF frame exceeds size limits.");
+            if (maxFrames > 0 && frames.Count >= maxFrames) {
+                throw new FormatException("GIF frame count exceeds limits.");
+            }
+            if (!DecodeGuards.TryEnsurePixelCount(imgW, imgH, maxFramePixels, out _)) {
+                throw new FormatException("GIF frame exceeds size limits.");
+            }
+            if (delay > 0) {
+                var nextTotal = totalDuration + delay;
+                if (maxDurationMs > 0 && nextTotal > maxDurationMs) {
+                    throw new FormatException("GIF animation duration exceeds limits.");
+                }
+                totalDuration = nextTotal;
+            }
 
             var lctFlag = (imgPacked & 0x80) != 0;
             var interlaced = (imgPacked & 0x40) != 0;
