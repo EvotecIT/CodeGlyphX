@@ -8,6 +8,12 @@
 - Manual review of decoding entry points, I/O helpers, renderers, and option surfaces.
 - Quick dependency vulnerability scan via `dotnet list package --vulnerable`.
 
+## Mitigations Applied (this branch)
+- Enforced image size limits (max pixels + max bytes) before decode for ImageReader-based paths.
+- Added size-capped stream reads in decode entry points (sync + async).
+- Sanitized HTML/SVG colors + font family and HTML document title.
+- Added consistent “Invalid input” failure messages when size limits reject input.
+
 ## Key Findings
 
 ### 1) Potential memory DoS in image decoders (PNG/GIF/others)
@@ -23,10 +29,8 @@
 - `Rendering/Png/PngDecoder.cs` allocates scanlines + raw buffers based on IHDR width/height with no max pixel check.
 - `Rendering/Gif/GifReader.cs` allocates `width * height * 4` buffers based on header dimensions without a cap.
 
-**Recommendations:**
-- Introduce a configurable max pixel limit (or max dimension limit) enforced *before* decode, ideally via `ImageDecodeOptions` and `ImageReader.TryReadInfo`.
-- Consider a global default limit for all image decoders, with opt-out for trusted inputs.
-- If retaining `MaxDimension` behavior (downscale after decode), document that it does not protect against oversized inputs.
+**Status:** Mitigated for ImageReader-based decode paths by adding max pixel/max byte limits and enforcing them pre-decode.  
+**Remaining gap:** Direct format-specific entry points (e.g., `TryDecodePng(...)`) can still allocate based on header sizes without hitting `ImageReader` limits.
 
 ### 2) HTML/SVG renderer injection risks via unescaped style/attribute values
 **Severity:** Medium (when render options come from untrusted sources)
@@ -38,10 +42,8 @@
 - `Rendering/Html/HtmlBarcodeRenderer.cs` inserts `LabelFontFamily`, `LabelColor`, `BarColor`, `BackgroundColor` directly into HTML.
 - `Rendering/Html/HtmlQrRenderer.cs` and `Rendering/Svg/*` insert color strings into attributes without escaping.
 
-**Recommendations:**
-- Add a strict validation/sanitization path (e.g., whitelist hex/rgb/rgba/known color names) or encode/escape attribute values.
-- Document that render option strings must be trusted or sanitized by callers.
-- Optional: provide safe overloads that accept strongly typed colors (`Rgba32`) and map to CSS safely.
+**Status:** Sanitization added for colors and font family; HTML title is now encoded when wrapping output.  
+**Remaining gap:** If future options add raw CSS/class/style strings, they should be sanitized or explicitly documented as trusted-only.
 
 ### 3) Unbounded reads for streams
 **Severity:** Medium
@@ -49,9 +51,7 @@
 - `RenderIO.ReadBinary(Stream)` reads the entire stream into memory with no size cap.
 - Any API that accepts a `Stream` and calls `RenderIO.ReadBinary` can exhaust memory on large streams.
 
-**Recommendations:**
-- Add `ReadBinary(Stream, int maxBytes)` overloads with a hard cap.
-- For decode entry points, optionally enforce max input size as part of decode options.
+**Status:** `ReadBinary` now supports maxBytes and decode entry points enforce caps (sync + async).
 
 ### 4) Path handling convenience APIs can be misused
 **Severity:** Low (depends on caller usage)
@@ -59,6 +59,7 @@
 - Methods like `RenderIO.WriteBinary(directory, fileName, ...)` accept arbitrary `fileName` and combine with `Path.Combine` without validation.
 - If `fileName` is untrusted, it can include path traversal (`..`) or rooted paths to escape the directory.
 
+**Status:** Still open.  
 **Recommendations:**
 - Consider optional filename validation (reject path separators or rooted paths) for "safe" helper overloads.
 - Document that these overloads expect trusted file names.
@@ -75,6 +76,11 @@
 - **Medium term:**
   - Sanitize HTML/SVG render options or provide strongly typed color APIs.
   - Add fuzzing tests for image decoders (PNG/GIF/TIFF/WebP/JPEG) to catch parser edge cases.
+
+## Remaining Gaps / Follow-ups
+- Add pre-decode max-pixel checks to format-specific decode methods (e.g., `TryDecodePng` overloads) that bypass `ImageReader`.
+- Add “safe filename” overloads (or validation) for `RenderIO.WriteBinary(directory, fileName, ...)`.
+- Consider a public `SECURITY.md` and a lightweight fuzzing pipeline for decoder inputs.
 
 ## Open Questions
 - Do you want strict defaults (limits enabled by default) or opt-in limits for callers?
