@@ -466,12 +466,72 @@ internal static partial class QrPixelDecoder {
             useNeighborGate = TryBuildNeighborGate(candSpan, stylized, nnDist2, out minLink2, out maxLink2, out linkScale2);
         }
 
+        Span<ScoredTriple> scoredTriples = stackalloc ScoredTriple[8];
+        var scoredCount = 0;
+        var useTimingScore = stylized && n >= 6 && !budget.IsNearDeadline(280);
+        if (useTimingScore) {
+            var scoreScanLimit = Math.Min(maxTriples * 2, 140);
+            var scanned = 0;
+            var moduleRatioLimitScore = stylized && !budget.IsNearDeadline(240) ? 2.6 : 1.75;
+            var ratioLimitScore = stylized && !budget.IsNearDeadline(240) ? 2.8 : 1.8;
+            for (var i = 0; i < n - 2 && scanned < scoreScanLimit; i++) {
+                for (var j = i + 1; j < n - 1 && scanned < scoreScanLimit; j++) {
+                    for (var k = j + 1; k < n && scanned < scoreScanLimit; k++) {
+                        if (budget.IsExpired) break;
+                        scanned++;
+
+                        var a = candSpan[i];
+                        var b = candSpan[j];
+                        var c = candSpan[k];
+                        if (useNeighborGate && !PassesNeighborGate(candSpan, nnDist2, i, j, k, minLink2, maxLink2, linkScale2)) {
+                            continue;
+                        }
+
+                        var msMin = Math.Min(a.ModuleSize, Math.Min(b.ModuleSize, c.ModuleSize));
+                        var msMax = Math.Max(a.ModuleSize, Math.Max(b.ModuleSize, c.ModuleSize));
+                        if (msMin <= 0) continue;
+                        if (moduleRatioLimitScore > 0 && msMax > msMin * moduleRatioLimitScore) continue;
+
+                        if (!TryOrderAsTlTrBl(a, b, c, ratioLimitScore, out var tl, out var tr, out var bl)) continue;
+                        if (!TryEstimateDimensionForTriple(tl, tr, bl, msMin, out var dimension)) continue;
+                        if (dimension < 25) continue;
+
+                        var score = ComputeTimingScore(image, invert, tl, tr, bl, dimension, msMin);
+                        if (score <= 0) continue;
+                        InsertScoredTriple(ref scoredTriples, ref scoredCount, i, j, k, score);
+                    }
+                }
+            }
+        }
+
+        if (scoredCount > 0) {
+            for (var s = 0; s < scoredCount; s++) {
+                if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
+                triedTriples++;
+                if (triedTriples > maxTriples) return false;
+                var scored = scoredTriples[s];
+                var a = candidates[scored.I];
+                var b = candidates[scored.J];
+                var c = candidates[scored.K];
+                var ratioLimit = stylized && !budget.IsNearDeadline(240) ? 2.8 : 1.8;
+                if (!TryOrderAsTlTrBl(a, b, c, ratioLimit, out var tl, out var tr, out var bl)) continue;
+                if (TrySampleAndDecode(scale, threshold, image, invert, tl, tr, bl, candidates.Count, triedTriples, accept, aggressive, stylized, budget, out result, out var diag)) {
+                    diagnostics = diag;
+                    return true;
+                }
+                diagnostics = Better(diagnostics, diag);
+            }
+        }
+
         for (var i = 0; i < n - 2; i++) {
             for (var j = i + 1; j < n - 1; j++) {
                 for (var k = j + 1; k < n; k++) {
                     if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
                     triedTriples++;
                     if (triedTriples > maxTriples) return false;
+                    if (useTimingScore && IsScoredTriple(scoredTriples, scoredCount, i, j, k)) {
+                        continue;
+                    }
                     var a = candidates[i];
                     var b = candidates[j];
                     var c = candidates[k];

@@ -2108,7 +2108,7 @@ internal static partial class QrPixelDecoder {
         }
 
         var functionMask = QrStructureAnalysis.GetFunctionMask(version);
-        var maxCandidates = dimension <= 25 ? 10 : 14;
+        var maxCandidates = dimension <= 25 ? 12 : dimension <= 45 ? 20 : 16;
         var candidates = new List<FlipCandidate>(maxCandidates);
         if (!CollectLowConfidenceCandidates(confidenceImage, transform, dimension, phaseX, phaseY, primary, functionMask, maxCandidates, budget, candidates)) {
             return false;
