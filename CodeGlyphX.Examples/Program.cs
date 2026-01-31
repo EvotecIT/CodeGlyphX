@@ -37,6 +37,15 @@ internal static class Program {
             return;
         }
 
+        var runModuleDiff = Environment.GetEnvironmentVariable("CODEGLYPHX_MODULE_DIFF");
+        if (!string.IsNullOrEmpty(runModuleDiff) &&
+            (string.Equals(runModuleDiff, "1", StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(runModuleDiff, "true", StringComparison.OrdinalIgnoreCase))) {
+            runner.Run("QR (module diff)", QrModuleDiffExample.Run);
+            runner.PrintSummary();
+            return;
+        }
+
         runner.Run("QR (basic)", QrGenerationExample.Run);
         runner.Run("QR (ascii console)", QrAsciiExample.Run);
         runner.Run("QR (payloads)", QrPayloadsExample.Run);
