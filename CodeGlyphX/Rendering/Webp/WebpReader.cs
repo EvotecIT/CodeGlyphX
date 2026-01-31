@@ -17,7 +17,7 @@ public static class WebpReader {
     /// <summary>
     /// Default maximum managed WebP payload size (in bytes).
     /// </summary>
-    public const int DefaultMaxWebpBytes = 256 * 1024 * 1024;
+    public const int DefaultMaxWebpBytes = 128 * 1024 * 1024;
 
     /// <summary>
     /// Maximum managed WebP payload size (in bytes).

@@ -30,12 +30,12 @@ public static partial class ImageReader {
     /// <summary>
     /// Default maximum pixel count allowed for managed decodes.
     /// </summary>
-    public const long DefaultMaxPixels = 100_000_000;
+    public const long DefaultMaxPixels = 50_000_000;
 
     /// <summary>
     /// Default maximum image payload size (bytes) for stream decoding.
     /// </summary>
-    public const int DefaultMaxImageBytes = 256 * 1024 * 1024;
+    public const int DefaultMaxImageBytes = 128 * 1024 * 1024;
 
     /// <summary>
     /// Default maximum animation frame count allowed for managed decodes.
