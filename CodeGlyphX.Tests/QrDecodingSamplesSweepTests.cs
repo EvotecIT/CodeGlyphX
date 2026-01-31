@@ -96,7 +96,20 @@ public sealed class QrDecodingSamplesSweepTests {
                 TileGrid = Math.Max(4, options.TileGrid)
             };
 
-            if (!TryDecodeResults(rgba, width, height, width * 4, out var results, out var diagnostics, options, fallbackOptions, fallbackStylized)) {
+            var fallbackHeavy = new QrPixelDecodeOptions {
+                Profile = QrDecodeProfile.Robust,
+                MaxDimension = Math.Max(options.MaxDimension, 3200),
+                MaxScale = 6,
+                MaxMilliseconds = TestBudget.Adjust(5000),
+                BudgetMilliseconds = TestBudget.Adjust(15000),
+                AutoCrop = true,
+                AggressiveSampling = true,
+                StylizedSampling = true,
+                EnableTileScan = true,
+                TileGrid = Math.Max(6, options.TileGrid)
+            };
+
+            if (!TryDecodeResults(rgba, width, height, width * 4, out var results, out var diagnostics, options, fallbackOptions, fallbackStylized, fallbackHeavy)) {
                 Assert.Fail($"Decode failed for {file}: {diagnostics}");
             }
 

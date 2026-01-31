@@ -60,7 +60,20 @@ public sealed class QrDecodingSamplesTests {
             TileGrid = 4
         };
 
-        if (!TryDecodeResults(rgba, width, height, width * 4, out var results, out var diagnostics, options, fallbackOptions, fallbackStylized)) {
+        var fallbackHeavy = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 3200,
+            MaxScale = 6,
+            MaxMilliseconds = TestBudget.Adjust(5000),
+            BudgetMilliseconds = TestBudget.Adjust(15000),
+            AutoCrop = true,
+            AggressiveSampling = true,
+            StylizedSampling = true,
+            EnableTileScan = true,
+            TileGrid = 6
+        };
+
+        if (!TryDecodeResults(rgba, width, height, width * 4, out var results, out var diagnostics, options, fallbackOptions, fallbackStylized, fallbackHeavy)) {
             Assert.Fail(diagnostics);
         }
 
@@ -118,7 +131,20 @@ public sealed class QrDecodingSamplesTests {
             TileGrid = 4
         };
 
-        var texts = DecodeTexts(rgba, width, height, width * 4, options, fallbackOptions, fallbackStylized);
+        var fallbackHeavy = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 3200,
+            MaxScale = 6,
+            MaxMilliseconds = TestBudget.Adjust(5000),
+            BudgetMilliseconds = TestBudget.Adjust(15000),
+            AutoCrop = true,
+            AggressiveSampling = true,
+            StylizedSampling = true,
+            EnableTileScan = true,
+            TileGrid = 6
+        };
+
+        var texts = DecodeTexts(rgba, width, height, width * 4, options, fallbackOptions, fallbackStylized, fallbackHeavy);
         Assert.Contains(expectedText, texts);
     }
 

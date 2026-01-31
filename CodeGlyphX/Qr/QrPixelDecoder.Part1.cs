@@ -1506,8 +1506,8 @@ internal static partial class QrPixelDecoder {
                                 if (roiStartIndex + roiRequiredLen > pixels.Length) continue;
 
                                 var roiSpan = pixels.Slice((int)roiStartIndex, (int)roiRequiredLen);
-                                if (TryDecodeAll(roiSpan, roiW, roiH, stride, fmt, attemptOptions, accept, cancellationToken, allowTileScan: false, out var roiDecodedList) && roiDecodedList.Length > 0) {
-                                    AddResult(results, seen, roiDecodedList[0], accept);
+                                if (TryDecode(roiSpan, roiW, roiH, stride, fmt, attemptOptions, accept, cancellationToken, out var decodedRoi, out _)) {
+                                    AddResult(results, seen, decodedRoi, accept);
                                     if (budget.IsNearDeadline(160)) return;
                                 }
                             }
@@ -1530,8 +1530,8 @@ internal static partial class QrPixelDecoder {
                 if (startIndex + requiredLen > pixels.Length) continue;
 
                 var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                if (TryDecodeAll(tileSpan, tw, th, stride, fmt, attemptOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
-                    AddResult(results, seen, decodedList[0], accept);
+                if (TryDecode(tileSpan, tw, th, stride, fmt, attemptOptions, accept, cancellationToken, out var decodedTile, out _)) {
+                    AddResult(results, seen, decodedTile, accept);
                     if (budget.IsNearDeadline(160)) return;
                 }
             }
