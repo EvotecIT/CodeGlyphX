@@ -347,7 +347,7 @@ public sealed class QrDecodingSamplesTests {
                 diagnostics = "Decode produced no results.";
             }
 
-            QrPixelDecodeDiagnostics info = default;
+            QrPixelDecodeInfo info = default;
             if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out info, option)) {
                 results = new[] { decoded };
                 diagnostics = info.ToString();

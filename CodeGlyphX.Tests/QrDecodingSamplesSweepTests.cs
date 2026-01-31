@@ -145,7 +145,7 @@ public sealed class QrDecodingSamplesSweepTests {
                 diagnostics = infoAll.ToString();
             }
 
-            QrPixelDecodeDiagnostics infoSingle = default;
+            QrPixelDecodeInfo infoSingle = default;
             if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out infoSingle, option)) {
                 results = new[] { decoded };
                 diagnostics = infoSingle.ToString();
