@@ -213,17 +213,4 @@ public static partial class Pdf417Code {
         }
     }
 
-    private static int ResolveMaxBytes(ImageDecodeOptions? options) {
-        if (options is not null && options.MaxBytes > 0) return options.MaxBytes;
-        return ImageReader.MaxImageBytes;
-    }
-
-    private static bool TryReadBinary(string path, ImageDecodeOptions? options, out byte[] data) {
-        return RenderIO.TryReadBinary(path, ResolveMaxBytes(options), out data);
-    }
-
-    private static bool TryReadBinary(Stream stream, ImageDecodeOptions? options, out byte[] data) {
-        return RenderIO.TryReadBinary(stream, ResolveMaxBytes(options), out data);
-    }
-
 }
