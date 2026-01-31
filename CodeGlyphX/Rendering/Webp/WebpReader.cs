@@ -67,10 +67,8 @@ public static class WebpReader {
             if (fourCc == FourCcVp8X && TryReadVp8XSize(chunk, out width, out height)) return true;
             if (fourCc == FourCcVp8L && TryReadVp8LSize(chunk, out width, out height)) return true;
             if (fourCc == FourCcVp8 && TryReadVp8Size(chunk, out width, out height)) return true;
-            if (fourCc == FourCcAnmf && anmfWidth == 0 && anmfHeight == 0) {
-                if (TryReadAnmfSize(chunk, out anmfWidth, out anmfHeight)) {
-                    // Keep scanning for VP8X/VP8/VP8L, but remember the first ANMF size.
-                }
+            if (fourCc == FourCcAnmf && anmfWidth == 0 && anmfHeight == 0 && TryReadAnmfSize(chunk, out anmfWidth, out anmfHeight)) {
+                // Keep scanning for VP8X/VP8/VP8L, but remember the first ANMF size.
             }
 
             var padded = chunkLength + (chunkLength & 1);

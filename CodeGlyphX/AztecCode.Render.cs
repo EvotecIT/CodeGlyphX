@@ -57,13 +57,7 @@ public static partial class AztecCode {
                 return RenderedOutput.FromBinary(format, MatrixJpegRenderer.Render(modules, pngOptions, renderOptions?.JpegQuality ?? 85));
             case OutputFormat.Webp: {
                 var quality = renderOptions?.WebpQuality ?? 100;
-                var extrasFrames = extras?.WebpFrames;
-                if (extrasFrames is not null && extrasFrames.Length > 0) {
-                    var duration = extras?.AnimationDurationMs ?? 100;
-                    var durations = extras?.AnimationDurationsMs;
-                    var webp = durations is not null
-                        ? MatrixWebpRenderer.RenderAnimation(extrasFrames, pngOptions, durations, extras?.WebpAnimationOptions ?? default, quality)
-                        : MatrixWebpRenderer.RenderAnimation(extrasFrames, pngOptions, duration, extras?.WebpAnimationOptions ?? default, quality);
+                if (RenderAnimationHelpers.TryRenderMatrixWebp(extras, pngOptions, quality, out var webp)) {
                     return RenderedOutput.FromBinary(format, webp);
                 }
                 return RenderedOutput.FromBinary(format, MatrixWebpRenderer.Render(modules, pngOptions, quality));
@@ -71,13 +65,7 @@ public static partial class AztecCode {
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, MatrixBmpRenderer.Render(modules, pngOptions));
             case OutputFormat.Gif: {
-                var extrasFrames = extras?.GifFrames;
-                if (extrasFrames is not null && extrasFrames.Length > 0) {
-                    var duration = extras?.AnimationDurationMs ?? 100;
-                    var durations = extras?.AnimationDurationsMs;
-                    var gif = durations is not null
-                        ? MatrixGifRenderer.RenderAnimation(extrasFrames, pngOptions, durations, extras?.GifAnimationOptions ?? default)
-                        : MatrixGifRenderer.RenderAnimation(extrasFrames, pngOptions, duration, extras?.GifAnimationOptions ?? default);
+                if (RenderAnimationHelpers.TryRenderMatrixGif(extras, pngOptions, out var gif)) {
                     return RenderedOutput.FromBinary(format, gif);
                 }
                 return RenderedOutput.FromBinary(format, MatrixGifRenderer.Render(modules, pngOptions));

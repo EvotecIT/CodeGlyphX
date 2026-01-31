@@ -9,9 +9,6 @@ public enum TiffCompression {
     /// </summary>
     None = 1,
     /// <summary>
-    /// Deflate compression (zlib).
-    /// </summary>
-    /// <summary>
     /// LZW compression.
     /// </summary>
     Lzw = 5,

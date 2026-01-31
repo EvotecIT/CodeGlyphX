@@ -2,6 +2,7 @@ using System;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Benchmarks;
 

@@ -73,13 +73,7 @@ public static partial class QrEasy {
             case OutputFormat.Webp: {
                 var render = BuildPngOptions(opts, qr);
                 var quality = opts.WebpQuality;
-                var extrasFrames = extras?.WebpFrames;
-                if (extrasFrames is not null && extrasFrames.Length > 0) {
-                    var duration = extras?.AnimationDurationMs ?? 100;
-                    var durations = extras?.AnimationDurationsMs;
-                    var webp = durations is not null
-                        ? QrWebpRenderer.RenderAnimation(extrasFrames, render, durations, extras?.WebpAnimationOptions ?? default, quality)
-                        : QrWebpRenderer.RenderAnimation(extrasFrames, render, duration, extras?.WebpAnimationOptions ?? default, quality);
+                if (RenderAnimationHelpers.TryRenderQrWebp(extras, render, quality, out var webp)) {
                     return RenderedOutput.FromBinary(format, webp);
                 }
                 return RenderedOutput.FromBinary(format, QrWebpRenderer.Render(qr.Modules, render, quality));
@@ -95,13 +89,7 @@ public static partial class QrEasy {
             }
             case OutputFormat.Gif: {
                 var render = BuildPngOptions(opts, qr);
-                var extrasFrames = extras?.GifFrames;
-                if (extrasFrames is not null && extrasFrames.Length > 0) {
-                    var duration = extras?.AnimationDurationMs ?? 100;
-                    var durations = extras?.AnimationDurationsMs;
-                    var gif = durations is not null
-                        ? QrGifRenderer.RenderAnimation(extrasFrames, render, durations, extras?.GifAnimationOptions ?? default)
-                        : QrGifRenderer.RenderAnimation(extrasFrames, render, duration, extras?.GifAnimationOptions ?? default);
+                if (RenderAnimationHelpers.TryRenderQrGif(extras, render, out var gif)) {
                     return RenderedOutput.FromBinary(format, gif);
                 }
                 return RenderedOutput.FromBinary(format, QrGifRenderer.Render(qr.Modules, render));

@@ -76,17 +76,26 @@ public sealed class TiffPlanarDecodeTests {
 
         WriteU16(data, headerSize, entryCount);
         var entryBase = headerSize + 2;
-        var i = 0;
-        WriteEntry(data, entryBase + i++ * 12, tag: 256, type: 4, count: 1, value: 1); // width
-        WriteEntry(data, entryBase + i++ * 12, tag: 257, type: 4, count: 1, value: 1); // height
-        WriteEntry(data, entryBase + i++ * 12, tag: 258, type: 3, count: 3, value: bitsOffset); // bits per sample
-        WriteEntry(data, entryBase + i++ * 12, tag: 259, type: 3, count: 1, value: 1); // compression none
-        WriteEntry(data, entryBase + i++ * 12, tag: 262, type: 3, count: 1, value: 2); // photometric RGB
-        WriteEntry(data, entryBase + i++ * 12, tag: 273, type: 4, count: 3, value: stripOffsetsOffset); // strip offsets
-        WriteEntry(data, entryBase + i++ * 12, tag: 277, type: 3, count: 1, value: 3); // samples per pixel
-        WriteEntry(data, entryBase + i++ * 12, tag: 278, type: 4, count: 1, value: 1); // rows per strip
-        WriteEntry(data, entryBase + i++ * 12, tag: 279, type: 4, count: 3, value: stripByteCountsOffset); // strip byte counts
-        WriteEntry(data, entryBase + i++ * 12, tag: 284, type: 3, count: 1, value: 2); // planar configuration separate
+        var entryOffset = entryBase;
+        WriteEntry(data, entryOffset, tag: 256, type: 4, count: 1, value: 1); // width
+        entryOffset += 12;
+        WriteEntry(data, entryOffset, tag: 257, type: 4, count: 1, value: 1); // height
+        entryOffset += 12;
+        WriteEntry(data, entryOffset, tag: 258, type: 3, count: 3, value: bitsOffset); // bits per sample
+        entryOffset += 12;
+        WriteEntry(data, entryOffset, tag: 259, type: 3, count: 1, value: 1); // compression none
+        entryOffset += 12;
+        WriteEntry(data, entryOffset, tag: 262, type: 3, count: 1, value: 2); // photometric RGB
+        entryOffset += 12;
+        WriteEntry(data, entryOffset, tag: 273, type: 4, count: 3, value: stripOffsetsOffset); // strip offsets
+        entryOffset += 12;
+        WriteEntry(data, entryOffset, tag: 277, type: 3, count: 1, value: 3); // samples per pixel
+        entryOffset += 12;
+        WriteEntry(data, entryOffset, tag: 278, type: 4, count: 1, value: 1); // rows per strip
+        entryOffset += 12;
+        WriteEntry(data, entryOffset, tag: 279, type: 4, count: 3, value: stripByteCountsOffset); // strip byte counts
+        entryOffset += 12;
+        WriteEntry(data, entryOffset, tag: 284, type: 3, count: 1, value: 2); // planar configuration separate
 
         WriteU32(data, entryBase + entryCount * 12, 0); // next IFD
 

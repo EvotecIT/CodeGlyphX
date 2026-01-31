@@ -59,13 +59,7 @@ public static partial class Barcode {
                 return RenderedOutput.FromBinary(format, BarcodeJpegRenderer.Render(barcode, opts, options?.JpegQuality ?? 90));
             case OutputFormat.Webp: {
                 var quality = options?.WebpQuality ?? 100;
-                var extrasFrames = extras?.BarcodeWebpFrames;
-                if (extrasFrames is not null && extrasFrames.Length > 0) {
-                    var duration = extras?.AnimationDurationMs ?? 100;
-                    var durations = extras?.AnimationDurationsMs;
-                    var webp = durations is not null
-                        ? BarcodeWebpRenderer.RenderAnimation(extrasFrames, opts, durations, extras?.WebpAnimationOptions ?? default, quality)
-                        : BarcodeWebpRenderer.RenderAnimation(extrasFrames, opts, duration, extras?.WebpAnimationOptions ?? default, quality);
+                if (RenderAnimationHelpers.TryRenderBarcodeWebp(extras, opts, quality, out var webp)) {
                     return RenderedOutput.FromBinary(format, webp);
                 }
                 return RenderedOutput.FromBinary(format, BarcodeWebpRenderer.Render(barcode, opts, quality));
@@ -73,13 +67,7 @@ public static partial class Barcode {
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, BarcodeBmpRenderer.Render(barcode, opts));
             case OutputFormat.Gif: {
-                var extrasFrames = extras?.BarcodeGifFrames;
-                if (extrasFrames is not null && extrasFrames.Length > 0) {
-                    var duration = extras?.AnimationDurationMs ?? 100;
-                    var durations = extras?.AnimationDurationsMs;
-                    var gif = durations is not null
-                        ? BarcodeGifRenderer.RenderAnimation(extrasFrames, opts, durations, extras?.GifAnimationOptions ?? default)
-                        : BarcodeGifRenderer.RenderAnimation(extrasFrames, opts, duration, extras?.GifAnimationOptions ?? default);
+                if (RenderAnimationHelpers.TryRenderBarcodeGif(extras, opts, out var gif)) {
                     return RenderedOutput.FromBinary(format, gif);
                 }
                 return RenderedOutput.FromBinary(format, BarcodeGifRenderer.Render(barcode, opts));

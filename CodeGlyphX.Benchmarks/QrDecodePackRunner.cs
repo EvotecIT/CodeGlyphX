@@ -261,7 +261,7 @@ internal static class QrDecodePackRunner {
         for (var run = 1; run < targetRuns; run++) {
             var res = DecodeOnce(engine, data, scenario.Options, scenario.ExpectedTexts);
             times.Add(res.ElapsedMilliseconds);
-            if (res.Info is { } info) infos.Add(info);
+            if (res.Info is { } infoEntry) infos.Add(infoEntry);
             if (res.Decoded) decodeSuccess++;
             if (res.ExpectedMatched) expectedMatch++;
             decodedCountSum += res.DecodedCount;
