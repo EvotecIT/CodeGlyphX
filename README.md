@@ -440,7 +440,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 ### Known gaps / not supported (decode)
 
 - ImageReader.DecodeRgba32 returns the first animation frame only (GIF/WebP); use ImageReader.DecodeAnimationFrames/DecodeAnimationCanvasFrames or GifReader/WebpReader for full animations. Use ImageReader.TryReadAnimationInfo for lightweight frame/loop metadata.
-- Managed WebP decode supports VP8/VP8L stills; default size limit is 256 MB (configurable via `WebpReader.MaxWebpBytes`)
+- Managed WebP decode supports VP8/VP8L stills; default size limit is 128 MB (configurable via `WebpReader.MaxWebpBytes`)
 - Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
 - WebP VP8 interframes in animations are currently treated as repeats of the previous frame (best-effort)
 - AVIF, HEIC, JPEG2000 are not supported (format detection only)
@@ -660,6 +660,24 @@ var decode = new CodeGlyphDecodeOptions()
 
 CodeGlyph.TryDecodeImage(File.ReadAllBytes("code.jpg"), out var symbol, decode);
 ```
+
+### Decode safety (untrusted images)
+
+For untrusted inputs, pass `ImageDecodeOptions` to cap payload bytes, pixel counts, and animation limits.
+Use the `Safe()` preset as a baseline and adjust as needed.
+
+```csharp
+using CodeGlyphX;
+
+var imageOptions = ImageDecodeOptions.Safe();
+if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), imageOptions, options: null, out var decoded)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+Defaults (when you do not pass options) are capped by `ImageReader.DefaultMaxPixels` (50,000,000)
+and `ImageReader.DefaultMaxImageBytes` (128 MB). Override per call with `ImageDecodeOptions`,
+or globally via `ImageReader.MaxPixels` / `ImageReader.MaxImageBytes`.
 
 ## WPF controls
 

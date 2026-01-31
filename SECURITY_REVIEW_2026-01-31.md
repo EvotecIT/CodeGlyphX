@@ -17,6 +17,7 @@
 - Added PNG chunk length validation for PLTE/tRNS + capped total IDAT payload size.
 - Added animation safety limits (max frames, max duration, max frame pixels) for GIF/WebP.
 - Added per-call animation limit overrides via `ImageDecodeOptions` for ImageReader animation paths.
+- Added safe `ImageDecodeOptions` preset for untrusted inputs and tightened default decode caps.
 - Added output-size guards for encoders/writers (PNG/BMP/JPEG/GIF/TIFF/TGA/WebP/NetPBM/PDF/EPS/XBM/XPM).
 - Sanitized HTML/SVG colors + font family and HTML document title.
 - Added consistent “Invalid input” failure messages when size limits reject input.
