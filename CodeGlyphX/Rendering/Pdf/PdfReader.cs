@@ -1375,7 +1375,7 @@ public static class PdfReader {
         var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
         if (idx < 0) return false;
         var i = idx + key.Length;
-        while (i < data.Length && IsDelimiter(data[i])) i++;
+        SkipWhitespace(data, ref i);
         if (i >= data.Length || data[i] != (byte)'[') return false;
         i++;
         var start = i;
