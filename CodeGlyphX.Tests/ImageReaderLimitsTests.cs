@@ -4,6 +4,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("GlobalState")]
 public sealed class ImageReaderLimitsTests {
     [Fact]
     public void TryDecodeRgba32_Respects_Global_MaxPixels() {

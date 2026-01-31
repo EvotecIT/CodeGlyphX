@@ -262,9 +262,9 @@ public static class GifReader {
         options = new GifAnimationOptions(loopCount: 0, backgroundRgba: (uint)(bgR | (bgG << 8) | (bgB << 16) | (bgA << 24)));
 
         var frames = new System.Collections.Generic.List<GifAnimationFrame>();
-        var maxFrames = ImageReader.MaxAnimationFrames;
-        var maxDurationMs = ImageReader.MaxAnimationDurationMs;
-        var maxFramePixels = ImageReader.MaxAnimationFramePixels;
+        var maxFrames = ImageReader.EffectiveMaxAnimationFrames;
+        var maxDurationMs = ImageReader.EffectiveMaxAnimationDurationMs;
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
         var totalDuration = 0L;
         byte[]? canvas = composite ? DecodeGuards.AllocateRgba32(canvasWidth, canvasHeight, "GIF dimensions exceed size limits.") : null;
         if (canvas is not null) {

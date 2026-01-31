@@ -27,7 +27,6 @@ public static class PbmReader {
 
         SkipWhitespaceAndComments(pbm, ref pos);
 
-        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "PBM dimensions exceed size limits.");
         var rgba = DecodeGuards.AllocateRgba32(width, height, "PBM dimensions exceed size limits.");
 
         if (format == (byte)'1') {

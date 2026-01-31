@@ -40,8 +40,11 @@ jobs:
         with:
           languages: csharp
 
+      - name: Restore
+        run: dotnet restore CodeGlyphX.sln
+
       - name: Build
-        run: dotnet build CodeGlyphX.sln -c Release
+        run: dotnet build CodeGlyphX.sln -c Release --no-restore
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

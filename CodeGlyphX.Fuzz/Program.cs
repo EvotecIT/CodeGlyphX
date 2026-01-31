@@ -9,6 +9,9 @@ using CodeGlyphX.Rendering.Webp;
 namespace CodeGlyphX.Fuzz;
 
 public static class Program {
+    private static readonly bool LogExpectedExceptions =
+        string.Equals(Environment.GetEnvironmentVariable("CODEGLYPHX_FUZZ_LOG"), "1", StringComparison.OrdinalIgnoreCase);
+
     public static int Main(string[] args) {
         var data = ReadInput(args);
         if (data.Length == 0) return 0;
@@ -41,10 +44,19 @@ public static class Program {
     private static void Try(Action action) {
         try {
             action();
-        } catch (FormatException) {
-        } catch (ArgumentException) {
-        } catch (InvalidOperationException) {
-        } catch (IOException) {
+        } catch (FormatException ex) {
+            LogExpectedException(ex);
+        } catch (ArgumentException ex) {
+            LogExpectedException(ex);
+        } catch (InvalidOperationException ex) {
+            LogExpectedException(ex);
+        } catch (IOException ex) {
+            LogExpectedException(ex);
         }
+    }
+
+    private static void LogExpectedException(Exception ex) {
+        if (!LogExpectedExceptions) return;
+        Console.Error.WriteLine($"[Fuzz] {ex.GetType().Name}: {ex.Message}");
     }
 }

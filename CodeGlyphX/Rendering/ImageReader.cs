@@ -25,7 +25,7 @@ namespace CodeGlyphX.Rendering;
 /// </summary>
 public static partial class ImageReader {
     private static readonly byte[] PngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
-    private static readonly object AnimationLimitLock = new();
+    private static readonly System.Threading.AsyncLocal<AnimationLimitOverride?> AnimationLimitOverrides = new();
 
     /// <summary>
     /// Default maximum pixel count allowed for managed decodes.
@@ -76,6 +76,10 @@ public static partial class ImageReader {
     /// Maximum pixel count allowed per animation frame. Set to 0 to disable.
     /// </summary>
     public static long MaxAnimationFramePixels { get; set; } = DefaultMaxAnimationFramePixels;
+
+    internal static int EffectiveMaxAnimationFrames => AnimationLimitOverrides.Value?.MaxFrames ?? MaxAnimationFrames;
+    internal static int EffectiveMaxAnimationDurationMs => AnimationLimitOverrides.Value?.MaxDurationMs ?? MaxAnimationDurationMs;
+    internal static long EffectiveMaxAnimationFramePixels => AnimationLimitOverrides.Value?.MaxFramePixels ?? MaxAnimationFramePixels;
 
     /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected).
@@ -386,35 +390,35 @@ public static partial class ImageReader {
             return null;
         }
 
-        System.Threading.Monitor.Enter(AnimationLimitLock);
-        var prevFrames = MaxAnimationFrames;
-        var prevDuration = MaxAnimationDurationMs;
-        var prevFramePixels = MaxAnimationFramePixels;
-        MaxAnimationFrames = maxFrames;
-        MaxAnimationDurationMs = maxDuration;
-        MaxAnimationFramePixels = maxFramePixels;
-        return new AnimationLimitScope(prevFrames, prevDuration, prevFramePixels);
+        var previous = AnimationLimitOverrides.Value;
+        AnimationLimitOverrides.Value = new AnimationLimitOverride(maxFrames, maxDuration, maxFramePixels);
+        return new AnimationLimitScope(previous);
     }
 
     private sealed class AnimationLimitScope : IDisposable {
-        private readonly int prevFrames;
-        private readonly int prevDuration;
-        private readonly long prevFramePixels;
+        private readonly AnimationLimitOverride? previous;
         private bool disposed;
 
-        public AnimationLimitScope(int prevFrames, int prevDuration, long prevFramePixels) {
-            this.prevFrames = prevFrames;
-            this.prevDuration = prevDuration;
-            this.prevFramePixels = prevFramePixels;
+        public AnimationLimitScope(AnimationLimitOverride? previous) {
+            this.previous = previous;
         }
 
         public void Dispose() {
             if (disposed) return;
             disposed = true;
-            MaxAnimationFrames = prevFrames;
-            MaxAnimationDurationMs = prevDuration;
-            MaxAnimationFramePixels = prevFramePixels;
-            System.Threading.Monitor.Exit(AnimationLimitLock);
+            AnimationLimitOverrides.Value = previous;
+        }
+    }
+
+    private sealed class AnimationLimitOverride {
+        public readonly int MaxFrames;
+        public readonly int MaxDurationMs;
+        public readonly long MaxFramePixels;
+
+        public AnimationLimitOverride(int maxFrames, int maxDurationMs, long maxFramePixels) {
+            MaxFrames = maxFrames;
+            MaxDurationMs = maxDurationMs;
+            MaxFramePixels = maxFramePixels;
         }
     }
 

@@ -73,7 +73,7 @@ internal static class WebpManagedDecoder {
             return false;
         }
 
-        var maxFramePixels = ImageReader.MaxAnimationFramePixels;
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
         var decodedFrames = new WebpAnimationFrame[frameInfos.Count];
         byte[]? lastFrame = null;
         var lastWidth = 0;
@@ -140,7 +140,7 @@ internal static class WebpManagedDecoder {
             return false;
         }
 
-        var maxFramePixels = ImageReader.MaxAnimationFramePixels;
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
         var backgroundBgra = options.BackgroundBgra;
         var canvas = new byte[canvasBytes];
         FillBackground(canvas, backgroundBgra);
@@ -245,9 +245,9 @@ internal static class WebpManagedDecoder {
             if (!TryReadVp8X(vp8xPayload, out canvasWidth, out canvasHeight, out _)) return false;
         }
 
-        var maxFrames = ImageReader.MaxAnimationFrames;
-        var maxDurationMs = ImageReader.MaxAnimationDurationMs;
-        var maxFramePixels = ImageReader.MaxAnimationFramePixels;
+        var maxFrames = ImageReader.EffectiveMaxAnimationFrames;
+        var maxDurationMs = ImageReader.EffectiveMaxAnimationDurationMs;
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
         var totalDuration = 0L;
 
         for (var i = 0; i < chunks.Length; i++) {
@@ -351,7 +351,7 @@ internal static class WebpManagedDecoder {
 
         if (frame.X < 0 || frame.Y < 0) return false;
         if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) return false;
-        if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, ImageReader.MaxAnimationFramePixels, out _)) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, ImageReader.EffectiveMaxAnimationFramePixels, out _)) return false;
         if (!DecodeGuards.TryEnsurePixelCount(canvasWidth, canvasHeight, out var canvasPixels)) return false;
         if (!DecodeGuards.TryEnsureByteCount((long)canvasPixels * 4, out var canvasBytes)) return false;
 
@@ -413,7 +413,7 @@ internal static class WebpManagedDecoder {
         var width = ReadU24LE(payload, 6) + 1;
         var height = ReadU24LE(payload, 9) + 1;
         if (width <= 0 || height <= 0) return false;
-        if (!DecodeGuards.TryEnsurePixelCount(width, height, ImageReader.MaxAnimationFramePixels, out _)) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, ImageReader.EffectiveMaxAnimationFramePixels, out _)) return false;
 
         var duration = ReadU24LE(payload, 12);
         if (duration <= 0) duration = 1;
