@@ -60,4 +60,15 @@ public sealed class ImageDecodeOptionsTests {
         Assert.Equal(60_000, options.MaxAnimationDurationMs);
         Assert.Equal(20_000_000, options.MaxAnimationFramePixels);
     }
+
+    [Fact]
+    public void ImageDecodeOptions_UltraSafe_Sets_Tighter_Caps() {
+        var options = ImageDecodeOptions.UltraSafe();
+
+        Assert.Equal(8 * 1024 * 1024, options.MaxBytes);
+        Assert.Equal(8_000_000, options.MaxPixels);
+        Assert.Equal(60, options.MaxAnimationFrames);
+        Assert.Equal(15_000, options.MaxAnimationDurationMs);
+        Assert.Equal(8_000_000, options.MaxAnimationFramePixels);
+    }
 }

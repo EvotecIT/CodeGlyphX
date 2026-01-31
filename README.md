@@ -664,7 +664,7 @@ CodeGlyph.TryDecodeImage(File.ReadAllBytes("code.jpg"), out var symbol, decode);
 ### Decode safety (untrusted images)
 
 For untrusted inputs, pass `ImageDecodeOptions` to cap payload bytes, pixel counts, and animation limits.
-Use the `Safe()` preset as a baseline and adjust as needed.
+Use the `Safe()` preset as a baseline, or `UltraSafe()` for tighter hostile-input caps, then adjust as needed.
 
 ```csharp
 using CodeGlyphX;
@@ -676,8 +676,14 @@ if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), imageOptions,
 ```
 
 Defaults (when you do not pass options) are capped by `ImageReader.DefaultMaxPixels` (50,000,000)
-and `ImageReader.DefaultMaxImageBytes` (128 MB). Override per call with `ImageDecodeOptions`,
-or globally via `ImageReader.MaxPixels` / `ImageReader.MaxImageBytes`.
+and `ImageReader.DefaultMaxImageBytes` (128 MB). Override per call with `ImageDecodeOptions` (including
+animation limits), or globally via `ImageReader.MaxPixels` / `ImageReader.MaxImageBytes` /
+`ImageReader.MaxAnimationFrames` / `ImageReader.MaxAnimationDurationMs` / `ImageReader.MaxAnimationFramePixels`.
+
+Migration note: if you previously allowed unlimited decoding, set the global limits to `0` or raise them
+explicitly for your environment.
+
+Telemetry: subscribe to `ImageReader.LimitViolation` to capture guard hits in production.
 
 ## WPF controls
 

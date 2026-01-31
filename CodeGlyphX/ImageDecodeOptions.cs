@@ -4,7 +4,7 @@ namespace CodeGlyphX;
 
 /// <summary>
 /// Options for decoding from image sources (non-QR).
-/// Use <see cref="Safe"/> or set explicit limits for untrusted inputs.
+/// Use <see cref="Safe"/>/<see cref="UltraSafe"/> or set explicit limits for untrusted inputs.
 /// </summary>
 public sealed partial class ImageDecodeOptions {
     /// <summary>
@@ -78,5 +78,18 @@ public sealed partial class ImageDecodeOptions {
             MaxAnimationFramePixels = resolvedMaxAnimationFramePixels,
             MaxDimension = maxDimension < 0 ? 0 : maxDimension
         };
+    }
+
+    /// <summary>
+    /// Ultra-safe preset for untrusted images (tighter caps for hostile inputs).
+    /// </summary>
+    public static ImageDecodeOptions UltraSafe(
+        int maxBytes = 8 * 1024 * 1024,
+        long maxPixels = 8_000_000,
+        int maxAnimationFrames = 60,
+        int maxAnimationDurationMs = 15_000,
+        long maxAnimationFramePixels = 8_000_000,
+        int maxDimension = 0) {
+        return Safe(maxBytes, maxPixels, maxAnimationFrames, maxAnimationDurationMs, maxAnimationFramePixels, maxDimension);
     }
 }
