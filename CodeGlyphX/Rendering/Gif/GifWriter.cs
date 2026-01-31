@@ -161,13 +161,10 @@ public static class GifWriter {
 
         for (var i = 0; i < optimizedFrames.Length; i++) {
             var frame = optimizedFrames[i];
-            PaletteInfo paletteInfo;
             var frameHasTransparency = FrameHasTransparency(frame);
-            if (useGlobal) {
-                paletteInfo = new PaletteInfo(globalPalette, globalMap, gctSize, gctBits, anyTransparency, globalTransparentIndex, globalQuantized, globalRLevels, globalGLevels, globalBLevels);
-            } else {
-                paletteInfo = BuildFramePalette(frame);
-            }
+            var paletteInfo = useGlobal
+                ? new PaletteInfo(globalPalette, globalMap, gctSize, gctBits, anyTransparency, globalTransparentIndex, globalQuantized, globalRLevels, globalGLevels, globalBLevels)
+                : BuildFramePalette(frame);
 
             var hasTransparency = useGlobal ? frameHasTransparency : paletteInfo.HasTransparency;
             var transparentIndex = paletteInfo.TransparentIndex;
@@ -305,7 +302,9 @@ public static class GifWriter {
             if (allowCrop && TryComputeDiffBounds(canvas, canvasWidth, canvasHeight, frame, disposal == GifDisposalMethod.RestoreBackground, bgR, bgG, bgB, bgA, out var minX, out var minY, out var maxX, out var maxY)) {
                 output = CropFrame(frame, minX, minY, maxX, maxY);
             } else if (allowCrop) {
-                output = new GifAnimationFrame(new byte[] { 0, 0, 0, 0 }, 1, 1, 4, frame.DurationMs, 0, 0, frame.DisposalMethod);
+                output = disposal == GifDisposalMethod.RestoreBackground
+                    ? frame
+                    : new GifAnimationFrame(new byte[] { 0, 0, 0, 0 }, 1, 1, 4, frame.DurationMs, 0, 0, frame.DisposalMethod);
             } else {
                 output = frame;
             }

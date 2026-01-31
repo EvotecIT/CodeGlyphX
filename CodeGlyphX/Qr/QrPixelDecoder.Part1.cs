@@ -680,9 +680,9 @@ internal static partial class QrPixelDecoder {
                     : Math.Max(8, Math.Min(width, height) / 40);
                 var minTile = options?.AggressiveSampling == true ? 24 : 48;
 
-                QrPixelDecodeOptions ResolveTileOptions(int gridBudget) {
-                    var tileOptions = options!;
-                    if (options is null || tileBudgetMs <= 0) return tileOptions;
+                QrPixelDecodeOptions? ResolveTileOptions(int gridBudget) {
+                    if (options is null || tileBudgetMs <= 0) return options;
+                    var tileOptions = options;
                     var divisor = Math.Max(1, gridBudget * gridBudget);
                     var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
                     if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
