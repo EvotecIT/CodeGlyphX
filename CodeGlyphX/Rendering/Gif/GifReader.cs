@@ -323,7 +323,13 @@ public static class GifReader {
             var imgPacked = gif[offset + 8];
             offset += 9;
             if (maxFrames > 0 && frames.Count >= maxFrames) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFrames, maxFrames, frames.Count + 1, ImageFormat.Gif));
                 throw new FormatException("GIF frame count exceeds limits.");
+            }
+            var framePixels = (long)imgW * imgH;
+            if (maxFramePixels > 0 && framePixels > maxFramePixels) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFramePixels, maxFramePixels, framePixels, ImageFormat.Gif));
+                throw new FormatException("GIF frame exceeds size limits.");
             }
             if (!DecodeGuards.TryEnsurePixelCount(imgW, imgH, maxFramePixels, out _)) {
                 throw new FormatException("GIF frame exceeds size limits.");
@@ -331,6 +337,7 @@ public static class GifReader {
             if (delay > 0) {
                 var nextTotal = totalDuration + delay;
                 if (maxDurationMs > 0 && nextTotal > maxDurationMs) {
+                    ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationDurationMs, maxDurationMs, nextTotal, ImageFormat.Gif));
                     throw new FormatException("GIF animation duration exceeds limits.");
                 }
                 totalDuration = nextTotal;

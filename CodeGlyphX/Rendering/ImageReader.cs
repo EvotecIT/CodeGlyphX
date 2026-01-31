@@ -77,9 +77,24 @@ public static partial class ImageReader {
     /// </summary>
     public static long MaxAnimationFramePixels { get; set; } = DefaultMaxAnimationFramePixels;
 
+    /// <summary>
+    /// Optional handler invoked when decode limits are violated.
+    /// </summary>
+    public static event Action<ImageDecodeLimitViolation>? LimitViolation;
+
     internal static int EffectiveMaxAnimationFrames => AnimationLimitOverrides.Value?.MaxFrames ?? MaxAnimationFrames;
     internal static int EffectiveMaxAnimationDurationMs => AnimationLimitOverrides.Value?.MaxDurationMs ?? MaxAnimationDurationMs;
     internal static long EffectiveMaxAnimationFramePixels => AnimationLimitOverrides.Value?.MaxFramePixels ?? MaxAnimationFramePixels;
+
+    internal static void ReportLimitViolation(ImageDecodeLimitViolation violation) {
+        var handler = LimitViolation;
+        if (handler is null) return;
+        try {
+            handler(violation);
+        } catch {
+            // Avoid breaking decode callers if the telemetry handler throws.
+        }
+    }
 
     /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected).
@@ -336,6 +351,7 @@ public static partial class ImageReader {
     private static void EnsureWithinLimits(ReadOnlySpan<byte> data, ImageDecodeOptions? options, int pageIndex) {
         var maxBytes = ResolveMaxBytes(options);
         if (maxBytes > 0 && data.Length > maxBytes) {
+            ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxBytes, maxBytes, data.Length, ImageFormat.Unknown, pageIndex));
             throw new FormatException("Image payload exceeds size limits.");
         }
 
@@ -344,14 +360,20 @@ public static partial class ImageReader {
         if (pageIndex == 0) {
             if (TryReadInfo(data, out var info) && info.IsValid) {
                 var pixels = (long)info.Width * info.Height;
-                if (pixels > maxPixels) throw new FormatException("Image dimensions exceed limits.");
+                if (pixels > maxPixels) {
+                    ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxPixels, maxPixels, pixels, info.Format, pageIndex));
+                    throw new FormatException("Image dimensions exceed limits.");
+                }
             }
             return;
         }
 
         if (TryReadInfo(data, pageIndex, out var pageInfo) && pageInfo.IsValid) {
             var pixels = (long)pageInfo.Width * pageInfo.Height;
-            if (pixels > maxPixels) throw new FormatException("Image dimensions exceed limits.");
+            if (pixels > maxPixels) {
+                ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxPixels, maxPixels, pixels, pageInfo.Format, pageIndex));
+                throw new FormatException("Image dimensions exceed limits.");
+            }
         }
     }
 
@@ -424,7 +446,9 @@ public static partial class ImageReader {
 
     private static byte[] ReadStream(Stream stream, ImageDecodeOptions? options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (!RenderIO.TryReadBinary(stream, ResolveMaxBytes(options), out var data)) {
+        var maxBytes = ResolveMaxBytes(options);
+        if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
+            ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxBytes, maxBytes, 0, ImageFormat.Unknown));
             throw new FormatException("Image payload exceeds size limits.");
         }
         return data;

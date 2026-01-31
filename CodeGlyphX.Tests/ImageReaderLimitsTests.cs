@@ -1,3 +1,4 @@
+using System;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using Xunit;
@@ -23,5 +24,23 @@ public sealed class ImageReaderLimitsTests {
         var png = QrCode.Render("LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
         var options = new ImageDecodeOptions { MaxBytes = png.Length - 1 };
         Assert.False(ImageReader.TryDecodeRgba32(png, options, out _, out _, out _));
+    }
+
+    [Fact]
+    public void LimitViolation_Fires_OnMaxPixels() {
+        var png = QrCode.Render("LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var options = new ImageDecodeOptions { MaxPixels = 1 };
+        ImageDecodeLimitViolation? violation = null;
+        void Handler(ImageDecodeLimitViolation v) => violation = v;
+
+        ImageReader.LimitViolation += Handler;
+        try {
+            Assert.Throws<FormatException>(() => ImageReader.DecodeRgba32(png, options, out _, out _));
+        } finally {
+            ImageReader.LimitViolation -= Handler;
+        }
+
+        Assert.True(violation.HasValue);
+        Assert.Equal(ImageDecodeLimitKind.MaxPixels, violation!.Value.Kind);
     }
 }

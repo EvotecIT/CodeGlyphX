@@ -263,11 +263,22 @@ internal static class WebpManagedDecoder {
             if (frame.X < 0 || frame.Y < 0) return false;
             if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) return false;
 
-            if (maxFrames > 0 && frames.Count >= maxFrames) return false;
+            if (maxFrames > 0 && frames.Count >= maxFrames) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFrames, maxFrames, frames.Count + 1, ImageFormat.Webp));
+                return false;
+            }
+            var framePixels = (long)frame.Width * frame.Height;
+            if (maxFramePixels > 0 && framePixels > maxFramePixels) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFramePixels, maxFramePixels, framePixels, ImageFormat.Webp));
+                return false;
+            }
             if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, maxFramePixels, out _)) return false;
             if (frame.DurationMs > 0) {
                 var nextTotal = totalDuration + frame.DurationMs;
-                if (maxDurationMs > 0 && nextTotal > maxDurationMs) return false;
+                if (maxDurationMs > 0 && nextTotal > maxDurationMs) {
+                    ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationDurationMs, maxDurationMs, nextTotal, ImageFormat.Webp));
+                    return false;
+                }
                 totalDuration = nextTotal;
             }
             frames.Add(frame);
@@ -413,7 +424,13 @@ internal static class WebpManagedDecoder {
         var width = ReadU24LE(payload, 6) + 1;
         var height = ReadU24LE(payload, 9) + 1;
         if (width <= 0 || height <= 0) return false;
-        if (!DecodeGuards.TryEnsurePixelCount(width, height, ImageReader.EffectiveMaxAnimationFramePixels, out _)) return false;
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
+        var framePixels = (long)width * height;
+        if (maxFramePixels > 0 && framePixels > maxFramePixels) {
+            ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFramePixels, maxFramePixels, framePixels, ImageFormat.Webp));
+            return false;
+        }
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, maxFramePixels, out _)) return false;
 
         var duration = ReadU24LE(payload, 12);
         if (duration <= 0) duration = 1;
