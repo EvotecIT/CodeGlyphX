@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.IO.Compression;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Png;
 
@@ -48,10 +49,12 @@ internal static class PngWriter {
     public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, "PNG output exceeds size limits.");
         if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
         if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
-        var stride = width * 4;
-        if (length != height * (stride + 1))
+        var stride = RenderGuards.EnsureOutputBytes((long)width * 4, "PNG output exceeds size limits.");
+        var expectedLength = RenderGuards.EnsureOutputBytes((long)height * (stride + 1), "PNG output exceeds size limits.");
+        if (length != expectedLength)
             throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
 
         if (stream is null) throw new ArgumentNullException(nameof(stream));
@@ -77,11 +80,12 @@ internal static class PngWriter {
     public static void WriteRgba8(Stream stream, int width, int height, RowWriter fillRow, int compressionLevel) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, "PNG output exceeds size limits.");
         if (fillRow is null) throw new ArgumentNullException(nameof(fillRow));
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var stride = width * 4;
-        var rowLength = stride + 1;
-        var length = height * rowLength;
+        var stride = RenderGuards.EnsureOutputBytes((long)width * 4, "PNG output exceeds size limits.");
+        var rowLength = RenderGuards.EnsureOutputBytes((long)stride + 1, "PNG output exceeds size limits.");
+        var length = RenderGuards.EnsureOutputBytes((long)height * rowLength, "PNG output exceeds size limits.");
 
         stream.Write(Signature, 0, Signature.Length);
         WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 8, colorType: 6));
@@ -128,10 +132,12 @@ internal static class PngWriter {
     public static void WriteGray1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, "PNG output exceeds size limits.");
         if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
         if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
-        var rowBytes = (width + 7) / 8;
-        if (length != height * (rowBytes + 1))
+        var rowBytes = RenderGuards.EnsureOutputBytes(((long)width + 7) / 8, "PNG output exceeds size limits.");
+        var expectedLength = RenderGuards.EnsureOutputBytes((long)height * (rowBytes + 1), "PNG output exceeds size limits.");
+        if (length != expectedLength)
             throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
 
         if (stream is null) throw new ArgumentNullException(nameof(stream));
@@ -172,12 +178,14 @@ internal static class PngWriter {
     public static void WriteIndexed1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette, int compressionLevel) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, "PNG output exceeds size limits.");
         if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
         if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
         if (palette is null) throw new ArgumentNullException(nameof(palette));
         if (palette.Length != 6) throw new ArgumentException("Palette must contain exactly two RGB entries (6 bytes).", nameof(palette));
-        var rowBytes = (width + 7) / 8;
-        if (length != height * (rowBytes + 1))
+        var rowBytes = RenderGuards.EnsureOutputBytes(((long)width + 7) / 8, "PNG output exceeds size limits.");
+        var expectedLength = RenderGuards.EnsureOutputBytes((long)height * (rowBytes + 1), "PNG output exceeds size limits.");
+        if (length != expectedLength)
             throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
 
         if (stream is null) throw new ArgumentNullException(nameof(stream));
