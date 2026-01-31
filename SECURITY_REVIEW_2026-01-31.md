@@ -10,9 +10,11 @@
 
 ## Mitigations Applied (this branch)
 - Enforced image size limits (max pixels + max bytes) before decode for ImageReader-based paths.
+- Added PNG pre-decode limits for Aztec/DataMatrix/PDF417 `TryDecodePng(...)` entry points.
 - Added size-capped stream reads in decode entry points (sync + async).
 - Sanitized HTML/SVG colors + font family and HTML document title.
 - Added consistent “Invalid input” failure messages when size limits reject input.
+- Added safe filename overloads for RenderIO write helpers.
 
 ## Key Findings
 
@@ -29,8 +31,8 @@
 - `Rendering/Png/PngDecoder.cs` allocates scanlines + raw buffers based on IHDR width/height with no max pixel check.
 - `Rendering/Gif/GifReader.cs` allocates `width * height * 4` buffers based on header dimensions without a cap.
 
-**Status:** Mitigated for ImageReader-based decode paths by adding max pixel/max byte limits and enforcing them pre-decode.  
-**Remaining gap:** Direct format-specific entry points (e.g., `TryDecodePng(...)`) can still allocate based on header sizes without hitting `ImageReader` limits.
+**Status:** Mitigated for ImageReader-based decode paths and PNG-specific barcode entry points with pre-decode limits.  
+**Remaining gap:** Other format-specific entry points (if added in the future) should apply the same pre-decode limits.
 
 ### 2) HTML/SVG renderer injection risks via unescaped style/attribute values
 **Severity:** Medium (when render options come from untrusted sources)
@@ -59,10 +61,10 @@
 - Methods like `RenderIO.WriteBinary(directory, fileName, ...)` accept arbitrary `fileName` and combine with `Path.Combine` without validation.
 - If `fileName` is untrusted, it can include path traversal (`..`) or rooted paths to escape the directory.
 
-**Status:** Still open.  
+**Status:** Mitigated via new safe filename overloads; existing helpers remain unsafe if given untrusted names.  
 **Recommendations:**
-- Consider optional filename validation (reject path separators or rooted paths) for "safe" helper overloads.
-- Document that these overloads expect trusted file names.
+- Prefer safe overloads when file names come from untrusted sources.
+- Document that the existing helpers expect trusted file names.
 
 ## Dependency Scan
 - `dotnet list CodeGlyphX/CodeGlyphX.csproj package --vulnerable` reports **no known vulnerable packages** from `https://api.nuget.org/v3/index.json` as of 2026-01-31.
@@ -78,8 +80,8 @@
   - Add fuzzing tests for image decoders (PNG/GIF/TIFF/WebP/JPEG) to catch parser edge cases.
 
 ## Remaining Gaps / Follow-ups
-- Add pre-decode max-pixel checks to format-specific decode methods (e.g., `TryDecodePng` overloads) that bypass `ImageReader`.
-- Add “safe filename” overloads (or validation) for `RenderIO.WriteBinary(directory, fileName, ...)`.
+- Consider pre-decode max-pixel checks for any other format-specific decode methods that bypass `ImageReader`.
+- Consider a public `SECURITY.md` and a lightweight fuzzing pipeline for decoder inputs.
 - Consider a public `SECURITY.md` and a lightweight fuzzing pipeline for decoder inputs.
 
 ## Open Questions
