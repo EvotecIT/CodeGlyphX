@@ -128,14 +128,6 @@ public static partial class ImageReader {
     }
 
     /// <summary>
-    /// Decodes an image to an RGBA buffer (auto-detected).
-    /// </summary>
-    public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height) {
-        _ = options;
-        return DecodeRgba32(data, out width, out height);
-    }
-
-    /// <summary>
     /// Decodes animation frames (non-composited) (auto-detected).
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationFrames(ReadOnlySpan<byte> data, out int width, out int height, out ImageAnimationOptions options) {
