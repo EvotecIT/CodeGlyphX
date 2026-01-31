@@ -800,12 +800,12 @@ internal static partial class QrPixelDecoder {
                     for (var extraGrid = grid + 1; extraGrid <= maxGrid; extraGrid++) {
                         var beforeCount = list.Count;
                         if (tileBudget.IsExpired) break;
-                        var tileOptions = options;
+                        var extraTileOptions = options;
                         if (options is not null && tileBudgetMs > 0) {
                             var divisor = Math.Max(1, extraGrid * extraGrid);
                             var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
                             if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
-                                tileOptions = new QrPixelDecodeOptions {
+                                extraTileOptions = new QrPixelDecodeOptions {
                                     Profile = options.Profile,
                                     MaxDimension = options.MaxDimension,
                                     MaxScale = options.MaxScale,
@@ -846,9 +846,9 @@ internal static partial class QrPixelDecoder {
                                 if (tileBudget.IsNearDeadline(120)) break;
 
                                 var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                                if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
+                                if (TryDecode(tileSpan, tw, th, stride, fmt, extraTileOptions, cancellationToken, out var decodedSingle, out _)) {
                                     AddResult(list, seen, decodedSingle, accept);
-                                } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+                                } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, extraTileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
                                     for (var i = 0; i < decodedList.Length; i++) {
                                         AddResult(list, seen, decodedList[i], accept);
                                     }

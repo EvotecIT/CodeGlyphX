@@ -520,6 +520,24 @@ internal static partial class QrPixelDecoder {
                     return true;
                 }
                 diagnostics = Better(diagnostics, diag);
+
+                if (bboxAttempts < 4 && TryGetCandidateBounds(tl, tr, bl, image.Width, image.Height, out var bminX, out var bminY, out var bmaxX, out var bmaxY)) {
+                    bboxAttempts++;
+                    if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out var diagB, candidates.Count, triedTriples, bminX, bminY, bmaxX, bmaxY)) {
+                        diagnostics = diagB;
+                        return true;
+                    }
+                    diagnostics = Better(diagnostics, diagB);
+
+                    if (stylized && aggressive && roiAttempts < 2 && !budget.IsNearDeadline(200)) {
+                        roiAttempts++;
+                        if (TryDecodeFromCroppedRegion(scale, threshold, image, accept, aggressive, stylized, budget, bminX, bminY, bmaxX, bmaxY, out result, out var diagR)) {
+                            diagnostics = diagR;
+                            return true;
+                        }
+                        diagnostics = Better(diagnostics, diagR);
+                    }
+                }
             }
         }
 
