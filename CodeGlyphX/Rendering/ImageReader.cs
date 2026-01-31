@@ -27,6 +27,26 @@ public static partial class ImageReader {
     private static readonly byte[] PngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
 
     /// <summary>
+    /// Default maximum pixel count allowed for managed decodes.
+    /// </summary>
+    public const long DefaultMaxPixels = 100_000_000;
+
+    /// <summary>
+    /// Default maximum image payload size (bytes) for stream decoding.
+    /// </summary>
+    public const int DefaultMaxImageBytes = 256 * 1024 * 1024;
+
+    /// <summary>
+    /// Maximum pixel count allowed for managed decodes (width * height). Set to 0 to disable.
+    /// </summary>
+    public static long MaxPixels { get; set; } = DefaultMaxPixels;
+
+    /// <summary>
+    /// Maximum image payload size (bytes) for stream decoding. Set to 0 to disable.
+    /// </summary>
+    public static int MaxImageBytes { get; set; } = DefaultMaxImageBytes;
+
+    /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected).
     /// </summary>
     public static byte[] DecodeRgba32(byte[] data, out int width, out int height) {
@@ -93,6 +113,7 @@ public static partial class ImageReader {
     /// Decodes an image to an RGBA buffer (auto-detected).
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
+        EnsureWithinLimits(data, options: null, pageIndex: 0);
         return DecodeRgba32Core(data, null, out width, out height);
     }
 
@@ -100,6 +121,7 @@ public static partial class ImageReader {
     /// Decodes an image to an RGBA buffer (auto-detected) with decode options.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height) {
+        EnsureWithinLimits(data, options, pageIndex: 0);
         return DecodeRgba32Core(data, options?.JpegOptions, out width, out height);
     }
 
@@ -132,6 +154,7 @@ public static partial class ImageReader {
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationFrames(ReadOnlySpan<byte> data, out int width, out int height, out ImageAnimationOptions options) {
         if (data.Length < 2) throw new FormatException("Unknown image format.");
+        EnsureWithinLimits(data, options: null, pageIndex: 0);
 
         if (GifReader.IsGif(data)) {
             if (!GifReader.TryDecodeAnimationFrames(data, out var frames, out width, out height, out var gifOptions)) {
@@ -160,6 +183,7 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, int pageIndex, out int width, out int height) {
         if (pageIndex < 0) throw new ArgumentOutOfRangeException(nameof(pageIndex));
+        EnsureWithinLimits(data, options: null, pageIndex);
         if (pageIndex == 0) return DecodeRgba32(data, out width, out height);
         if (data.Length < 2) throw new FormatException("Unknown image format.");
 
@@ -173,6 +197,7 @@ public static partial class ImageReader {
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(ReadOnlySpan<byte> data, out int width, out int height, out ImageAnimationOptions options) {
         if (data.Length < 2) throw new FormatException("Unknown image format.");
+        EnsureWithinLimits(data, options: null, pageIndex: 0);
 
         if (GifReader.IsGif(data)) {
             if (!GifReader.TryDecodeAnimationCanvasFrames(data, out var frames, out width, out height, out var gifOptions)) {
@@ -200,6 +225,7 @@ public static partial class ImageReader {
     /// Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
     /// </summary>
     public static byte[] DecodeRgba32Composite(ReadOnlySpan<byte> data, out int width, out int height) {
+        EnsureWithinLimits(data, options: null, pageIndex: 0);
         return DecodeRgba32CompositeCore(data, null, out width, out height);
     }
 
@@ -214,7 +240,48 @@ public static partial class ImageReader {
     /// </code>
     /// </example>
     public static byte[] DecodeRgba32Composite(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height) {
+        EnsureWithinLimits(data, options, pageIndex: 0);
         return DecodeRgba32CompositeCore(data, options?.JpegOptions, out width, out height);
+    }
+
+    private static void EnsureWithinLimits(ReadOnlySpan<byte> data, ImageDecodeOptions? options, int pageIndex) {
+        var maxBytes = ResolveMaxBytes(options);
+        if (maxBytes > 0 && data.Length > maxBytes) {
+            throw new FormatException("Image payload exceeds size limits.");
+        }
+
+        var maxPixels = ResolveMaxPixels(options);
+        if (maxPixels <= 0) return;
+        if (pageIndex == 0) {
+            if (TryReadInfo(data, out var info) && info.IsValid) {
+                var pixels = (long)info.Width * info.Height;
+                if (pixels > maxPixels) throw new FormatException("Image dimensions exceed limits.");
+            }
+            return;
+        }
+
+        if (TryReadInfo(data, pageIndex, out var pageInfo) && pageInfo.IsValid) {
+            var pixels = (long)pageInfo.Width * pageInfo.Height;
+            if (pixels > maxPixels) throw new FormatException("Image dimensions exceed limits.");
+        }
+    }
+
+    private static int ResolveMaxBytes(ImageDecodeOptions? options) {
+        if (options is not null && options.MaxBytes > 0) return options.MaxBytes;
+        return MaxImageBytes;
+    }
+
+    private static long ResolveMaxPixels(ImageDecodeOptions? options) {
+        if (options is not null && options.MaxPixels > 0) return options.MaxPixels;
+        return MaxPixels;
+    }
+
+    private static byte[] ReadStream(Stream stream, ImageDecodeOptions? options) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (!RenderIO.TryReadBinary(stream, ResolveMaxBytes(options), out var data)) {
+            throw new FormatException("Image payload exceeds size limits.");
+        }
+        return data;
     }
 
     private static byte[] DecodeRgba32CompositeCore(ReadOnlySpan<byte> data, JpegDecodeOptions? jpegOptions, out int width, out int height) {
@@ -256,15 +323,8 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32(Stream stream, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32(buffer.AsSpan(), out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32(segment.AsSpan(), out width, out height);
-        }
-        return DecodeRgba32(ms.ToArray(), out width, out height);
+        var data = ReadStream(stream, options: null);
+        return DecodeRgba32(data, out width, out height);
     }
 
     /// <summary>
@@ -272,15 +332,8 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32(Stream stream, ImageDecodeOptions? options, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32(buffer.AsSpan(), options, out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32(segment.AsSpan(), options, out width, out height);
-        }
-        return DecodeRgba32(ms.ToArray(), options, out width, out height);
+        var data = ReadStream(stream, options);
+        return DecodeRgba32(data, options, out width, out height);
     }
 
     /// <summary>
@@ -288,15 +341,8 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32(Stream stream, int pageIndex, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32(buffer.AsSpan(), pageIndex, out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32(segment.AsSpan(), pageIndex, out width, out height);
-        }
-        return DecodeRgba32(ms.ToArray(), pageIndex, out width, out height);
+        var data = ReadStream(stream, options: null);
+        return DecodeRgba32(data, pageIndex, out width, out height);
     }
 
     /// <summary>
@@ -304,15 +350,8 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32Composite(Stream stream, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32Composite(buffer.AsSpan(), out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32Composite(segment.AsSpan(), out width, out height);
-        }
-        return DecodeRgba32Composite(ms.ToArray(), out width, out height);
+        var data = ReadStream(stream, options: null);
+        return DecodeRgba32Composite(data, out width, out height);
     }
 
     /// <summary>
@@ -327,15 +366,8 @@ public static partial class ImageReader {
     /// </example>
     public static byte[] DecodeRgba32Composite(Stream stream, ImageDecodeOptions? options, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32Composite(buffer.AsSpan(), options, out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32Composite(segment.AsSpan(), options, out width, out height);
-        }
-        return DecodeRgba32Composite(ms.ToArray(), options, out width, out height);
+        var data = ReadStream(stream, options);
+        return DecodeRgba32Composite(data, options, out width, out height);
     }
 
     /// <summary>
@@ -343,15 +375,8 @@ public static partial class ImageReader {
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(Stream stream, out int width, out int height, out ImageAnimationOptions options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeAnimationCanvasFrames(buffer.AsSpan(), out width, out height, out options);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeAnimationCanvasFrames(segment.AsSpan(), out width, out height, out options);
-        }
-        return DecodeAnimationCanvasFrames(ms.ToArray(), out width, out height, out options);
+        var data = ReadStream(stream, options: null);
+        return DecodeAnimationCanvasFrames(data, out width, out height, out options);
     }
 
     /// <summary>
@@ -359,15 +384,8 @@ public static partial class ImageReader {
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationFrames(Stream stream, out int width, out int height, out ImageAnimationOptions options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeAnimationFrames(buffer.AsSpan(), out width, out height, out options);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeAnimationFrames(segment.AsSpan(), out width, out height, out options);
-        }
-        return DecodeAnimationFrames(ms.ToArray(), out width, out height, out options);
+        var data = ReadStream(stream, options: null);
+        return DecodeAnimationFrames(data, out width, out height, out options);
     }
 
     /// <summary>

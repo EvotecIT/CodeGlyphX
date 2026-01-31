@@ -103,7 +103,7 @@ public static partial class Pdf417Code {
     /// </summary>
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var png = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, options, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, options, cancellationToken, out decoded);
     }
 
@@ -134,7 +134,7 @@ public static partial class Pdf417Code {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
-        var png = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, options, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, options, cancellationToken, out decoded);
     }
 
@@ -211,6 +211,19 @@ public static partial class Pdf417Code {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
         }
+    }
+
+    private static int ResolveMaxBytes(ImageDecodeOptions? options) {
+        if (options is not null && options.MaxBytes > 0) return options.MaxBytes;
+        return ImageReader.MaxImageBytes;
+    }
+
+    private static bool TryReadBinary(string path, ImageDecodeOptions? options, out byte[] data) {
+        return RenderIO.TryReadBinary(path, ResolveMaxBytes(options), out data);
+    }
+
+    private static bool TryReadBinary(Stream stream, ImageDecodeOptions? options, out byte[] data) {
+        return RenderIO.TryReadBinary(stream, ResolveMaxBytes(options), out data);
     }
 
 }

@@ -27,4 +27,28 @@ internal static class DecodeResultHelpers {
     public static DecodeFailureReason FailureForDecode(CancellationToken token) {
         return token.IsCancellationRequested ? DecodeFailureReason.Cancelled : DecodeFailureReason.NoResult;
     }
+
+    public static bool TryCheckImageLimits(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out ImageInfo info, out bool formatKnown, out string? message) {
+        message = null;
+        _ = TryGetImageInfo(image, out info, out formatKnown);
+
+        var maxBytes = options?.MaxBytes ?? 0;
+        if (maxBytes <= 0) maxBytes = ImageReader.MaxImageBytes;
+        if (maxBytes > 0 && image.Length > maxBytes) {
+            message = "image payload exceeds size limits";
+            return false;
+        }
+
+        var maxPixels = options?.MaxPixels ?? 0;
+        if (maxPixels <= 0) maxPixels = ImageReader.MaxPixels;
+        if (maxPixels > 0 && info.IsValid) {
+            var pixels = (long)info.Width * info.Height;
+            if (pixels > maxPixels) {
+                message = "image dimensions exceed size limits";
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

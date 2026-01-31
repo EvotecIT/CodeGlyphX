@@ -102,6 +102,22 @@ public static class RenderIO {
     }
 
     /// <summary>
+    /// Reads binary data from a file with a size limit.
+    /// </summary>
+    /// <param name="path">Input file path.</param>
+    /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
+    /// <returns>Binary file contents.</returns>
+    public static byte[] ReadBinary(string path, int maxBytes) {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        if (maxBytes <= 0) return ReadBinary(path);
+        var info = new FileInfo(path);
+        if (info.Exists && info.Length > maxBytes) {
+            throw new FormatException("Input exceeds size limits.");
+        }
+        return File.ReadAllBytes(path);
+    }
+
+    /// <summary>
     /// Reads binary data from a file asynchronously.
     /// </summary>
     /// <param name="path">Input file path.</param>
@@ -114,6 +130,24 @@ public static class RenderIO {
     }
 
     /// <summary>
+    /// Reads binary data from a file asynchronously with a size limit.
+    /// </summary>
+    /// <param name="path">Input file path.</param>
+    /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Binary file contents.</returns>
+    public static async Task<byte[]> ReadBinaryAsync(string path, int maxBytes, CancellationToken cancellationToken = default) {
+        if (path is null) throw new ArgumentNullException(nameof(path));
+        if (maxBytes <= 0) return await ReadBinaryAsync(path, cancellationToken).ConfigureAwait(false);
+        var info = new FileInfo(path);
+        if (info.Exists && info.Length > maxBytes) {
+            throw new FormatException("Input exceeds size limits.");
+        }
+        using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
+        return await ReadBinaryAsync(fs, maxBytes, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
     /// Reads binary data from a stream.
     /// </summary>
     /// <param name="stream">Input stream.</param>
@@ -123,6 +157,34 @@ public static class RenderIO {
         if (stream is MemoryStream memory) return memory.ToArray();
         using var ms = new MemoryStream();
         stream.CopyTo(ms);
+        return ms.ToArray();
+    }
+
+    /// <summary>
+    /// Reads binary data from a stream with a size limit.
+    /// </summary>
+    /// <param name="stream">Input stream.</param>
+    /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
+    /// <returns>Binary data.</returns>
+    public static byte[] ReadBinary(Stream stream, int maxBytes) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (maxBytes <= 0) return ReadBinary(stream);
+
+        if (stream is MemoryStream memory) {
+            if (memory.Length > maxBytes) throw new FormatException("Input exceeds size limits.");
+            return memory.ToArray();
+        }
+
+        using var ms = new MemoryStream();
+        var buffer = new byte[81920];
+        long total = 0;
+        while (true) {
+            var read = stream.Read(buffer, 0, buffer.Length);
+            if (read <= 0) break;
+            total += read;
+            if (total > maxBytes) throw new FormatException("Input exceeds size limits.");
+            ms.Write(buffer, 0, read);
+        }
         return ms.ToArray();
     }
 
@@ -141,6 +203,65 @@ public static class RenderIO {
     }
 
     /// <summary>
+    /// Reads binary data from a stream asynchronously with a size limit.
+    /// </summary>
+    /// <param name="stream">Input stream.</param>
+    /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Binary data.</returns>
+    public static async Task<byte[]> ReadBinaryAsync(Stream stream, int maxBytes, CancellationToken cancellationToken = default) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (maxBytes <= 0) return await ReadBinaryAsync(stream, cancellationToken).ConfigureAwait(false);
+
+        if (stream is MemoryStream memory) {
+            if (memory.Length > maxBytes) throw new FormatException("Input exceeds size limits.");
+            return memory.ToArray();
+        }
+
+        using var ms = new MemoryStream();
+        var buffer = new byte[81920];
+        long total = 0;
+        while (true) {
+            var read = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
+            if (read <= 0) break;
+            total += read;
+            if (total > maxBytes) throw new FormatException("Input exceeds size limits.");
+            await ms.WriteAsync(buffer, 0, read, cancellationToken).ConfigureAwait(false);
+        }
+        return ms.ToArray();
+    }
+
+    /// <summary>
+    /// Attempts to read binary data from a stream asynchronously with a size limit.
+    /// </summary>
+    /// <param name="stream">Input stream.</param>
+    /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Binary data when successful; otherwise null.</returns>
+    public static async Task<byte[]?> TryReadBinaryAsync(Stream stream, int maxBytes, CancellationToken cancellationToken = default) {
+        try {
+            return await ReadBinaryAsync(stream, maxBytes, cancellationToken).ConfigureAwait(false);
+        } catch (FormatException) {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to read binary data from a file asynchronously with a size limit.
+    /// </summary>
+    /// <param name="path">Input file path.</param>
+    /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Binary data when successful; otherwise null.</returns>
+    public static async Task<byte[]?> TryReadBinaryAsync(string path, int maxBytes, CancellationToken cancellationToken = default) {
+        try {
+            return await ReadBinaryAsync(path, maxBytes, cancellationToken).ConfigureAwait(false);
+        } catch (FormatException) {
+            return null;
+        }
+    }
+
+    /// <summary>
     /// Attempts to read binary data from a file.
     /// </summary>
     /// <param name="path">Input file path.</param>
@@ -151,6 +272,44 @@ public static class RenderIO {
         if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return false;
         data = File.ReadAllBytes(path);
         return true;
+    }
+
+    /// <summary>
+    /// Attempts to read binary data from a file with a size limit.
+    /// </summary>
+    /// <param name="path">Input file path.</param>
+    /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
+    /// <param name="data">Binary file contents.</param>
+    /// <returns>True when the file exists and was read.</returns>
+    public static bool TryReadBinary(string path, int maxBytes, out byte[] data) {
+        data = Array.Empty<byte>();
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return false;
+        if (maxBytes <= 0) {
+            data = File.ReadAllBytes(path);
+            return true;
+        }
+        var info = new FileInfo(path);
+        if (info.Exists && info.Length > maxBytes) return false;
+        data = File.ReadAllBytes(path);
+        return true;
+    }
+
+    /// <summary>
+    /// Attempts to read binary data from a stream with a size limit.
+    /// </summary>
+    /// <param name="stream">Input stream.</param>
+    /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
+    /// <param name="data">Binary data.</param>
+    /// <returns>True when the stream was read within the limit.</returns>
+    public static bool TryReadBinary(Stream stream, int maxBytes, out byte[] data) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        try {
+            data = ReadBinary(stream, maxBytes);
+            return true;
+        } catch (FormatException) {
+            data = Array.Empty<byte>();
+            return false;
+        }
     }
 
     /// <summary>

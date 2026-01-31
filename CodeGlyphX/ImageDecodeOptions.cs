@@ -13,6 +13,16 @@ public sealed partial class ImageDecodeOptions {
     public int MaxDimension { get; set; } = 0;
 
     /// <summary>
+    /// Maximum pixel count allowed for decoding (width * height). Set to 0 to disable.
+    /// </summary>
+    public long MaxPixels { get; set; } = 0;
+
+    /// <summary>
+    /// Maximum input size in bytes for decoding. Set to 0 to disable.
+    /// </summary>
+    public int MaxBytes { get; set; } = 0;
+
+    /// <summary>
     /// Maximum milliseconds to spend decoding (best effort). Set to 0 to disable.
     /// </summary>
     public int MaxMilliseconds { get; set; } = 0;

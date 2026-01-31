@@ -31,6 +31,22 @@ public sealed partial class ImageDecodeOptions {
     }
 
     /// <summary>
+    /// Sets the maximum pixel count allowed for decoding.
+    /// </summary>
+    public ImageDecodeOptions WithMaxPixels(long maxPixels) {
+        MaxPixels = maxPixels;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the maximum input size in bytes for decoding.
+    /// </summary>
+    public ImageDecodeOptions WithMaxBytes(int maxBytes) {
+        MaxBytes = maxBytes;
+        return this;
+    }
+
+    /// <summary>
     /// Sets JPEG decoding options.
     /// </summary>
     /// <example>
