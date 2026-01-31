@@ -680,9 +680,11 @@ internal static partial class QrPixelDecoder {
                     : Math.Max(8, Math.Min(width, height) / 40);
                 var minTile = options?.AggressiveSampling == true ? 24 : 48;
 
-                QrPixelDecodeOptions? ResolveTileOptions(int gridBudget) {
-                    if (options is null || tileBudgetMs <= 0) return options;
-                    var tileOptions = options;
+                var tileOptions = options;
+                if (options is not null && tileBudgetMs > 0) {
+                    var gridBudget = options.TileGrid > 0
+                        ? grid
+                        : (options.AggressiveSampling == true ? maxGrid : grid);
                     var divisor = Math.Max(1, gridBudget * gridBudget);
                     var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
                     if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
@@ -700,12 +702,10 @@ internal static partial class QrPixelDecoder {
                             StylizedSampling = options.StylizedSampling
                         };
                     }
-                    return tileOptions;
                 }
 
                 void ScanGrid(ReadOnlySpan<byte> pixelSpan, int gridToScan) {
                     if (gridToScan < 2) return;
-                    var tileOptions = ResolveTileOptions(gridToScan);
                     var tileW = width / gridToScan;
                     var tileH = height / gridToScan;
                     for (var ty = 0; ty < gridToScan; ty++) {
@@ -753,7 +753,6 @@ internal static partial class QrPixelDecoder {
                     var hadResults = list.Count > 0;
                     for (var extraGrid = grid + 1; extraGrid <= maxGrid; extraGrid++) {
                         var beforeCount = list.Count;
-                        var tileOptions = ResolveTileOptions(extraGrid);
                         if (tileBudget.IsExpired) break;
                         var extraTileW = width / extraGrid;
                         var extraTileH = height / extraGrid;
