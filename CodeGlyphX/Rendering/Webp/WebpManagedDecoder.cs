@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Webp;
 
@@ -21,6 +22,10 @@ internal static class WebpManagedDecoder {
         height = 0;
         if (!WebpReader.IsWebp(data)) return false;
         if (data.Length > WebpReader.MaxWebpBytes) return false;
+        if (WebpReader.TryReadDimensions(data, out var limitWidth, out var limitHeight)
+            && !DecodeGuards.TryEnsurePixelCount(limitWidth, limitHeight, out _)) {
+            return false;
+        }
 
         if (!TryEnumerateChunks(data, out var chunkSpan, out var chunks)) return false;
 
@@ -64,6 +69,9 @@ internal static class WebpManagedDecoder {
         if (!TryDecodeAnimationFrameInfoList(data, out var frameInfos, out canvasWidth, out canvasHeight, out options)) {
             return false;
         }
+        if (!DecodeGuards.TryEnsurePixelCount(canvasWidth, canvasHeight, out _)) {
+            return false;
+        }
 
         var decodedFrames = new WebpAnimationFrame[frameInfos.Count];
         byte[]? lastFrame = null;
@@ -71,9 +79,19 @@ internal static class WebpManagedDecoder {
         var lastHeight = 0;
         for (var i = 0; i < frameInfos.Count; i++) {
             var frame = frameInfos[i];
+            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, out var framePixels)) {
+                return false;
+            }
+            if (!DecodeGuards.TryEnsureByteCount((long)frame.Width * 4, out var frameStride)) {
+                return false;
+            }
+
             var rgba = frame.Rgba;
             if (rgba.Length == 0) {
-                rgba = new byte[checked(frame.Width * frame.Height * 4)];
+                if (!DecodeGuards.TryEnsureByteCount((long)framePixels * 4, out var frameBytes)) {
+                    return false;
+                }
+                rgba = new byte[frameBytes];
                 if (lastFrame is not null && lastWidth == frame.Width && lastHeight == frame.Height) {
                     Buffer.BlockCopy(lastFrame, 0, rgba, 0, rgba.Length);
                 }
@@ -82,7 +100,7 @@ internal static class WebpManagedDecoder {
                 rgba,
                 frame.Width,
                 frame.Height,
-                frame.Width * 4,
+                frameStride,
                 frame.DurationMs,
                 frame.X,
                 frame.Y,
@@ -111,14 +129,27 @@ internal static class WebpManagedDecoder {
         if (!TryDecodeAnimationFrameInfoList(data, out var frameInfos, out canvasWidth, out canvasHeight, out options)) {
             return false;
         }
+        if (!DecodeGuards.TryEnsurePixelCount(canvasWidth, canvasHeight, out var canvasPixels)) {
+            return false;
+        }
+        if (!DecodeGuards.TryEnsureByteCount((long)canvasPixels * 4, out var canvasBytes)) {
+            return false;
+        }
+        if (!DecodeGuards.TryEnsureByteCount((long)canvasWidth * 4, out var canvasStride)) {
+            return false;
+        }
 
         var backgroundBgra = options.BackgroundBgra;
-        var canvas = new byte[checked(canvasWidth * canvasHeight * 4)];
+        var canvas = new byte[canvasBytes];
         FillBackground(canvas, backgroundBgra);
 
         var renderedFrames = new WebpAnimationFrame[frameInfos.Count];
         for (var i = 0; i < frameInfos.Count; i++) {
             var frame = frameInfos[i];
+            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, out _)) {
+                return false;
+            }
+
             if (frame.Rgba.Length == 0) {
                 var emptySnapshot = new byte[canvas.Length];
                 Buffer.BlockCopy(canvas, 0, emptySnapshot, 0, canvas.Length);
@@ -126,7 +157,7 @@ internal static class WebpManagedDecoder {
                     emptySnapshot,
                     canvasWidth,
                     canvasHeight,
-                    canvasWidth * 4,
+                    canvasStride,
                     frame.DurationMs,
                     0,
                     0,
@@ -146,7 +177,7 @@ internal static class WebpManagedDecoder {
                 snapshot,
                 canvasWidth,
                 canvasHeight,
-                canvasWidth * 4,
+                canvasStride,
                 frame.DurationMs,
                 0,
                 0,
@@ -306,8 +337,10 @@ internal static class WebpManagedDecoder {
 
         if (frame.X < 0 || frame.Y < 0) return false;
         if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(canvasWidth, canvasHeight, out var canvasPixels)) return false;
+        if (!DecodeGuards.TryEnsureByteCount((long)canvasPixels * 4, out var canvasBytes)) return false;
 
-        var canvas = new byte[checked(canvasWidth * canvasHeight * 4)];
+        var canvas = new byte[canvasBytes];
         FillBackground(canvas, background);
 
         if (frame.Blend) {
@@ -528,6 +561,10 @@ internal static class WebpManagedDecoder {
             reason = "Alpha dimensions are invalid.";
             return false;
         }
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var alphaPixels)) {
+            reason = "Alpha dimensions exceed size limits.";
+            return false;
+        }
         if (payload.Length < 1) {
             reason = "Alpha chunk is too small.";
             return false;
@@ -539,7 +576,7 @@ internal static class WebpManagedDecoder {
         var preprocessing = (header >> 4) & 0x3;
 
         if (compression == 0) {
-            var required = checked(width * height);
+            var required = alphaPixels;
             if (payload.Length - 1 < required) {
                 reason = "Alpha chunk payload is too small.";
                 return false;
@@ -550,7 +587,7 @@ internal static class WebpManagedDecoder {
                 reason = "Failed to decode lossless alpha image-stream.";
                 return false;
             }
-            alpha = new byte[checked(width * height)];
+            alpha = new byte[alphaPixels];
             for (var i = 0; i < argb.Length; i++) {
                 alpha[i] = (byte)((argb[i] >> 8) & 0xFF); // green channel holds alpha values
             }

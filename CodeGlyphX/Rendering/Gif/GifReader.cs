@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Gif;
 
@@ -16,6 +17,7 @@ public static class GifReader {
         width = ReadUInt16LE(gif, 6);
         height = ReadUInt16LE(gif, 8);
         if (width <= 0 || height <= 0) throw new FormatException("Invalid GIF dimensions.");
+        var canvasPixels = DecodeGuards.EnsurePixelCount(width, height, "GIF dimensions exceed size limits.");
 
         var packed = gif[10];
         var gctFlag = (packed & 0x80) != 0;
@@ -35,13 +37,13 @@ public static class GifReader {
         var hasTransparency = false;
 
         // Prepare background.
-        var rgba = new byte[width * height * 4];
+        var rgba = DecodeGuards.AllocateRgba32(width, height, "GIF dimensions exceed size limits.");
         if (!globalTable.IsEmpty && bgIndex < gctSize) {
             var p = bgIndex * 3;
             var br = globalTable[p + 0];
             var bg = globalTable[p + 1];
             var bb = globalTable[p + 2];
-            for (var i = 0; i < width * height; i++) {
+            for (var i = 0; i < canvasPixels; i++) {
                 var dst = i * 4;
                 rgba[dst + 0] = br;
                 rgba[dst + 1] = bg;
@@ -112,7 +114,8 @@ public static class GifReader {
             var minCodeSize = gif[offset++];
 
             var imageData = ReadSubBlocks(gif, ref offset);
-            var pixels = new byte[imgW * imgH];
+            _ = DecodeGuards.EnsurePixelCount(imgW, imgH, "GIF frame exceeds size limits.");
+            var pixels = DecodeGuards.AllocatePixelBuffer(imgW, imgH, "GIF frame exceeds size limits.");
             var written = LzwDecode(imageData, minCodeSize, pixels);
             if (written < imgW * imgH) {
                 // Leave remaining pixels as 0.
@@ -227,6 +230,7 @@ public static class GifReader {
         canvasWidth = ReadUInt16LE(gif, 6);
         canvasHeight = ReadUInt16LE(gif, 8);
         if (canvasWidth <= 0 || canvasHeight <= 0) throw new FormatException("Invalid GIF dimensions.");
+        _ = DecodeGuards.EnsurePixelCount(canvasWidth, canvasHeight, "GIF dimensions exceed size limits.");
 
         var packed = gif[10];
         var gctFlag = (packed & 0x80) != 0;
@@ -256,7 +260,7 @@ public static class GifReader {
         options = new GifAnimationOptions(loopCount: 0, backgroundRgba: (uint)(bgR | (bgG << 8) | (bgB << 16) | (bgA << 24)));
 
         var frames = new System.Collections.Generic.List<GifAnimationFrame>();
-        byte[]? canvas = composite ? new byte[canvasWidth * canvasHeight * 4] : null;
+        byte[]? canvas = composite ? DecodeGuards.AllocateRgba32(canvasWidth, canvasHeight, "GIF dimensions exceed size limits.") : null;
         if (canvas is not null) {
             FillCanvas(canvas, bgR, bgG, bgB, bgA);
         }
@@ -312,6 +316,7 @@ public static class GifReader {
             var imgH = ReadUInt16LE(gif, offset + 6);
             var imgPacked = gif[offset + 8];
             offset += 9;
+            _ = DecodeGuards.EnsurePixelCount(imgW, imgH, "GIF frame exceeds size limits.");
 
             var lctFlag = (imgPacked & 0x80) != 0;
             var interlaced = (imgPacked & 0x40) != 0;
@@ -329,12 +334,12 @@ public static class GifReader {
             if (offset >= gif.Length) throw new FormatException("Missing GIF image data.");
             var minCodeSize = gif[offset++];
             var imageData = ReadSubBlocks(gif, ref offset);
-            var pixels = new byte[imgW * imgH];
+            var pixels = DecodeGuards.AllocatePixelBuffer(imgW, imgH, "GIF frame exceeds size limits.");
             _ = LzwDecode(imageData, minCodeSize, pixels);
 
             var durationMs = delay;
             if (!composite) {
-                var frameRgba = new byte[imgW * imgH * 4];
+                var frameRgba = DecodeGuards.AllocateRgba32(imgW, imgH, "GIF frame exceeds size limits.");
                 if (!interlaced) {
                     DecodeFrame(pixels, imgW, imgH, colorTable, hasTransparency, transparentIndex, frameRgba);
                 } else {
@@ -590,7 +595,7 @@ public static class GifReader {
     }
 
     private static byte[] ReadSubBlocks(ReadOnlySpan<byte> data, ref int offset) {
-        var total = 0;
+        var total = 0L;
         var start = offset;
         while (offset < data.Length) {
             var size = data[offset++];
@@ -598,9 +603,11 @@ public static class GifReader {
             offset += size;
             if (offset > data.Length) throw new FormatException("Truncated GIF sub-block.");
             total += size;
+            if (total > int.MaxValue) throw new FormatException("GIF data exceeds size limits.");
         }
 
-        var output = new byte[total];
+        if (total == 0) return Array.Empty<byte>();
+        var output = new byte[DecodeGuards.EnsureByteCount(total, "GIF data exceeds size limits.")];
         var dst = 0;
         var pos = start;
         while (pos < data.Length) {

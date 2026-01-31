@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Tiff;
 
@@ -74,7 +75,8 @@ public static class TiffReader {
         var pages = new System.Collections.Generic.List<TiffRgba32Page>();
         while (ifdOffset != 0) {
             var rgba = DecodeRgba32Internal(data, little, (int)ifdOffset, out var width, out var height, out var nextIfdOffset);
-            pages.Add(new TiffRgba32Page(rgba, width, height, width * 4));
+            var stride = DecodeGuards.EnsureByteCount((long)width * 4, "TIFF stride exceeds size limits.");
+            pages.Add(new TiffRgba32Page(rgba, width, height, stride));
             ifdOffset = nextIfdOffset <= 0 ? 0 : (uint)nextIfdOffset;
         }
 
@@ -229,7 +231,7 @@ public static class TiffReader {
             nextIfdOffset = (int)ReadU32(data, ifdEnd, little);
         }
 
-        if (width <= 0 || height <= 0) throw new FormatException("Invalid TIFF dimensions.");
+        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "TIFF dimensions exceed size limits.");
         if (compression != CompressionNone
             && compression != CompressionPackBits
             && compression != CompressionLzw
@@ -271,7 +273,7 @@ public static class TiffReader {
         }
         if (rowsPerStrip <= 0) rowsPerStrip = height;
 
-        var rgba = new byte[width * height * 4];
+        var rgba = new byte[DecodeGuards.EnsureByteCount((long)pixelCount * 4, "TIFF dimensions exceed size limits.")];
         var paletteSize = colorMap is not null ? colorMap.Length / 3 : 0;
         var paletteStride = paletteSize;
 
@@ -282,7 +284,7 @@ public static class TiffReader {
             if (photometric != 0 && photometric != 1 && photometric != 3) {
                 throw new FormatException("Unsupported TIFF photometric for 1-bit samples.");
             }
-            var bytesPerRowPacked = (width + 7) / 8;
+            var bytesPerRowPacked = DecodeGuards.EnsureByteCount(((long)width + 7) / 8, "TIFF row exceeds size limits.");
             if (!useTiles) {
                 if (stripOffsets is null || stripByteCounts is null || stripOffsets.Length == 0) {
                     throw new FormatException("Missing TIFF strip data.");
@@ -295,7 +297,7 @@ public static class TiffReader {
                     if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF strip length.");
 
                     var rowsInStrip = Math.Min(rowsPerStrip, height - row);
-                    var expected = rowsInStrip * bytesPerRowPacked;
+                    var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * bytesPerRowPacked, "TIFF strip exceeds size limits.");
                     var stripSpan = DecodeChunk(data, offset, count, expected, compression, predictor, bytesPerRowPacked, 1, 1, little, out _);
 
                     for (var r = 0; r < rowsInStrip; r++) {
@@ -314,7 +316,7 @@ public static class TiffReader {
                 var tilesDown = (height + tileLength - 1) / tileLength;
                 var tileCount = Math.Min(tileOffsets!.Length, tileByteCounts!.Length);
                 var bytesPerTileRow = (tileWidth + 7) / 8;
-                var expectedBytes = tileLength * bytesPerTileRow;
+                var expectedBytes = DecodeGuards.EnsureByteCount((long)tileLength * bytesPerTileRow, "TIFF tile exceeds size limits.");
 
                 for (var t = 0; t < tileCount && t < tilesAcross * tilesDown; t++) {
                     var offset = tileOffsets[t];
@@ -346,9 +348,9 @@ public static class TiffReader {
         }
 
         var bytesPerSample = bitsPerSampleValue / 8;
-        var bytesPerPixel = samplesPerPixel * bytesPerSample;
-        var bytesPerRow = width * bytesPerPixel;
-        var planeRowBytes = width * bytesPerSample;
+        var bytesPerPixel = DecodeGuards.EnsureByteCount((long)samplesPerPixel * bytesPerSample, "TIFF pixel exceeds size limits.");
+        var bytesPerRow = DecodeGuards.EnsureByteCount((long)width * bytesPerPixel, "TIFF row exceeds size limits.");
+        var planeRowBytes = DecodeGuards.EnsureByteCount((long)width * bytesPerSample, "TIFF row exceeds size limits.");
 
         if (!useTiles && planar == 1) {
             var row = 0;
@@ -359,7 +361,7 @@ public static class TiffReader {
                 if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF strip length.");
 
                 var rowsInStrip = Math.Min(rowsPerStrip, height - row);
-                var expected = rowsInStrip * bytesPerRow;
+                var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * bytesPerRow, "TIFF strip exceeds size limits.");
                 var stripSpan = DecodeChunk(data, offset, count, expected, compression, predictor, bytesPerRow, samplesPerPixel, bytesPerSample, little, out _);
 
                 var srcIndex = 0;
@@ -383,7 +385,7 @@ public static class TiffReader {
             var row = 0;
             for (var s = 0; s < stripsPerPlane && row < height; s++) {
                 var rowsInStrip = Math.Min(rowsPerStrip, height - row);
-                var expected = rowsInStrip * planeRowBytes;
+                var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * planeRowBytes, "TIFF strip exceeds size limits.");
 
                 var planes = new byte[samplesPerPixel][];
                 for (var p = 0; p < samplesPerPixel; p++) {
@@ -411,8 +413,8 @@ public static class TiffReader {
             var tilesAcross = (width + tileWidth - 1) / tileWidth;
             var tilesDown = (height + tileLength - 1) / tileLength;
             var tileCount = Math.Min(tileOffsets!.Length, tileByteCounts!.Length);
-            var tileRowBytes = tileWidth * bytesPerPixel;
-            var expected = tileWidth * tileLength * bytesPerPixel;
+            var tileRowBytes = DecodeGuards.EnsureByteCount((long)tileWidth * bytesPerPixel, "TIFF tile exceeds size limits.");
+            var expected = DecodeGuards.EnsureByteCount((long)tileWidth * tileLength * bytesPerPixel, "TIFF tile exceeds size limits.");
 
             if (planar == 1) {
                 for (var t = 0; t < tileCount && t < tilesAcross * tilesDown; t++) {
@@ -444,8 +446,8 @@ public static class TiffReader {
                 if (tileOffsets.Length < expectedEntries || tileByteCounts.Length < expectedEntries) {
                     throw new FormatException("Invalid TIFF planar tile layout.");
                 }
-                var planeTileRowBytes = tileWidth * bytesPerSample;
-                var expectedPlane = tileWidth * tileLength * bytesPerSample;
+                var planeTileRowBytes = DecodeGuards.EnsureByteCount((long)tileWidth * bytesPerSample, "TIFF tile exceeds size limits.");
+                var expectedPlane = DecodeGuards.EnsureByteCount((long)tileWidth * tileLength * bytesPerSample, "TIFF tile exceeds size limits.");
 
                 for (var t = 0; t < tilesPerPlane; t++) {
                     var planes = new byte[samplesPerPixel][];
