@@ -2110,19 +2110,19 @@ public static class PdfReader {
 
     private static PdfColorSpaceKind ParseColorSpaceName(string? name) {
         if (string.IsNullOrWhiteSpace(name)) return PdfColorSpaceKind.Unknown;
-        if (name.Equals("DeviceGray", StringComparison.OrdinalIgnoreCase) || name.Equals("G", StringComparison.OrdinalIgnoreCase)) {
+        if (string.Equals(name, "DeviceGray", StringComparison.OrdinalIgnoreCase) || string.Equals(name, "G", StringComparison.OrdinalIgnoreCase)) {
             return PdfColorSpaceKind.DeviceGray;
         }
-        if (name.Equals("CalGray", StringComparison.OrdinalIgnoreCase)) {
+        if (string.Equals(name, "CalGray", StringComparison.OrdinalIgnoreCase)) {
             return PdfColorSpaceKind.DeviceGray;
         }
-        if (name.Equals("DeviceRGB", StringComparison.OrdinalIgnoreCase) || name.Equals("RGB", StringComparison.OrdinalIgnoreCase)) {
+        if (string.Equals(name, "DeviceRGB", StringComparison.OrdinalIgnoreCase) || string.Equals(name, "RGB", StringComparison.OrdinalIgnoreCase)) {
             return PdfColorSpaceKind.DeviceRGB;
         }
-        if (name.Equals("CalRGB", StringComparison.OrdinalIgnoreCase)) {
+        if (string.Equals(name, "CalRGB", StringComparison.OrdinalIgnoreCase)) {
             return PdfColorSpaceKind.DeviceRGB;
         }
-        if (name.Equals("DeviceCMYK", StringComparison.OrdinalIgnoreCase) || name.Equals("CMYK", StringComparison.OrdinalIgnoreCase)) {
+        if (string.Equals(name, "DeviceCMYK", StringComparison.OrdinalIgnoreCase) || string.Equals(name, "CMYK", StringComparison.OrdinalIgnoreCase)) {
             return PdfColorSpaceKind.DeviceCMYK;
         }
         return PdfColorSpaceKind.Unknown;
