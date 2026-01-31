@@ -13,6 +13,9 @@
 - Added PNG pre-decode limits for Aztec/DataMatrix/PDF417 `TryDecodePng(...)` entry points.
 - Added size-capped stream reads in decode entry points (sync + async).
 - Added decoder guardrails (checked arithmetic + size caps) in PNG/GIF/TIFF/WebP decoders.
+- Added payload caps + size guards for BMP/JPEG/PSD/TGA/NetPBM/XBM/XPM/PDF decoders.
+- Added PNG chunk length validation for PLTE/tRNS + capped total IDAT payload size.
+- Added animation safety limits (max frames, max duration, max frame pixels) for GIF/WebP.
 - Sanitized HTML/SVG colors + font family and HTML document title.
 - Added consistent “Invalid input” failure messages when size limits reject input.
 - Added safe filename overloads for RenderIO write helpers.
@@ -34,7 +37,8 @@
 - `Rendering/Gif/GifReader.cs` allocates `width * height * 4` buffers based on header dimensions without a cap.
 
 **Status:** Mitigated for ImageReader-based decode paths and PNG-specific barcode entry points with pre-decode limits.  
-**Remaining gap:** Other format-specific entry points (if added in the future) should apply the same pre-decode limits.
+**Status update:** Guardrails now apply to BMP/JPEG/PSD/TGA/NetPBM/XBM/XPM/PDF decoders and animation frames (GIF/WebP).
+**Remaining gap:** Any new format-specific entry points should apply the same pre-decode limits.
 
 ### 2) HTML/SVG renderer injection risks via unescaped style/attribute values
 **Severity:** Medium (when render options come from untrusted sources)
@@ -73,18 +77,19 @@
 
 ## Suggested Hardening Roadmap
 - **Short term (low risk):**
-  - Add pre-decode size limits (max pixels) using `ImageReader.TryReadInfo`.
   - Document that `MaxDimension` downscales post-decode, not pre-decode.
-  - Add safe helper overloads for stream reads with byte caps.
+  - Document animation limits (`ImageReader.MaxAnimationFrames/MaxAnimationDurationMs/MaxAnimationFramePixels`).
 
 - **Medium term:**
   - Sanitize HTML/SVG render options or provide strongly typed color APIs.
   - Add fuzzing tests for image decoders (PNG/GIF/TIFF/WebP/JPEG) to catch parser edge cases.
+  - Consider output-size guards for encoders/writers when width/height are caller-provided.
 
 ## Remaining Gaps / Follow-ups
 - Consider pre-decode max-pixel checks for any other format-specific decode methods that bypass `ImageReader`.
 - Hook the fuzzing harness into CI (or a scheduled job) with corpus inputs and time limits.
 - Consider a public `SECURITY.md` and a lightweight fuzzing pipeline for decoder inputs.
+ - Consider configurable caps for encoder outputs (max pixels/bytes) to avoid unbounded memory usage in untrusted pipelines.
 
 ## Open Questions
 - Do you want strict defaults (limits enabled by default) or opt-in limits for callers?
