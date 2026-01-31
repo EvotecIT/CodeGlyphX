@@ -765,6 +765,8 @@ internal static class JpegWriter {
         (byte)'I', (byte)'C', (byte)'C', (byte)'_', (byte)'P', (byte)'R', (byte)'O', (byte)'F', (byte)'I', (byte)'L', (byte)'E', 0
     };
 
+    private const int MaxAppSegmentPayload = 0xFFFD;
+
     private static void WriteMetadata(Stream s, JpegMetadata metadata) {
         if (!metadata.HasData) return;
 
@@ -785,12 +787,12 @@ internal static class JpegWriter {
 
     private static byte[] EnsurePrefix(byte[] data, byte[] prefix) {
         if (StartsWith(data, prefix)) {
-            if (data.Length > 0xFFFD) {
+            if (data.Length > MaxAppSegmentPayload) {
                 throw new ArgumentOutOfRangeException(nameof(data), "APP segment payload too large.");
             }
             return data;
         }
-        if (prefix.Length + data.Length > 0xFFFD) {
+        if (prefix.Length + data.Length > MaxAppSegmentPayload) {
             throw new ArgumentOutOfRangeException(nameof(data), "APP segment payload too large.");
         }
         var combined = new byte[prefix.Length + data.Length];
@@ -808,7 +810,7 @@ internal static class JpegWriter {
     }
 
     private static void WriteAppSegment(Stream s, int marker, byte[] payload) {
-        if (payload.Length > 0xFFFD) {
+        if (payload.Length > MaxAppSegmentPayload) {
             throw new ArgumentOutOfRangeException(nameof(payload), "APP segment payload too large.");
         }
         WriteMarker(s, marker);
@@ -817,7 +819,7 @@ internal static class JpegWriter {
     }
 
     private static void WriteIccSegments(Stream s, byte[] icc) {
-        const int maxPayload = 0xFFFD;
+        const int maxPayload = MaxAppSegmentPayload;
         var headerSize = IccPrefix.Length + 2;
         var maxData = maxPayload - headerSize;
         var totalSegments = (icc.Length + maxData - 1) / maxData;

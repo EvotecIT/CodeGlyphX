@@ -527,6 +527,8 @@ public static partial class JpegReader {
         var width = ReadUInt16BE(data, 3);
         var components = data[5];
         if (width == 0 || height == 0) throw new FormatException("Invalid JPEG dimensions.");
+        const long maxPixels = 100_000_000;
+        if ((long)width * height > maxPixels) throw new FormatException("JPEG dimensions exceed limits.");
         if (components == 0) throw new FormatException("Invalid JPEG component count.");
         if (data.Length < 6 + components * 3) throw new FormatException("Invalid JPEG SOF segment.");
 
