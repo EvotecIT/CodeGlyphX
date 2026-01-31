@@ -29,6 +29,7 @@ namespace CodeGlyphX;
 
 public static partial class Pdf417Code {
     private const string FailureCancelled = "Cancelled.";
+    private const string FailureInvalid = "Invalid input.";
     private const string FailureDownscale = "Image downscale failed.";
     private const string FailureNoPdf417 = "No PDF417 decoded.";
     private const int MinTileSize = 48;

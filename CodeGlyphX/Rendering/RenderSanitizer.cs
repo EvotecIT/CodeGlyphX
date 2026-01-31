@@ -6,16 +6,17 @@ namespace CodeGlyphX.Rendering;
 internal static class RenderSanitizer {
     public static string SafeCssColor(string? value, string fallback) {
         if (string.IsNullOrWhiteSpace(value)) return fallback;
-        var trimmed = value.Trim();
+        var trimmed = value!.Trim();
         if (IsHexColor(trimmed) || IsRgbColor(trimmed) || IsNamedColor(trimmed)) return trimmed;
         return fallback;
     }
 
     public static string SafeFontFamily(string? value, string fallback) {
         if (string.IsNullOrWhiteSpace(value)) return fallback;
-        var sb = new StringBuilder(value.Length);
-        for (var i = 0; i < value.Length; i++) {
-            var c = value[i];
+        var safeValue = value!;
+        var sb = new StringBuilder(safeValue.Length);
+        for (var i = 0; i < safeValue.Length; i++) {
+            var c = safeValue[i];
             if (char.IsLetterOrDigit(c) || c == ' ' || c == ',' || c == '-' || c == '_') {
                 sb.Append(c);
             }

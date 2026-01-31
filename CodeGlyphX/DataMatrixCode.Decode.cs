@@ -28,6 +28,7 @@ namespace CodeGlyphX;
 
 public static partial class DataMatrixCode {
     private const string FailureCancelled = "Cancelled.";
+    private const string FailureInvalid = "Invalid input.";
     private const string FailureDownscale = "Image downscale failed.";
     private const string FailureNoDataMatrix = "No Data Matrix decoded.";
     /// <summary>

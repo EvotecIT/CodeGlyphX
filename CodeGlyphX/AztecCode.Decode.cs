@@ -28,6 +28,7 @@ namespace CodeGlyphX;
 
 public static partial class AztecCode {
     private const string FailureCancelled = "Cancelled.";
+    private const string FailureInvalid = "Invalid input.";
     private const string FailureDownscale = "Image downscale failed.";
     private const string FailureNoDecoded = "No Aztec decoded.";
     /// <summary>
