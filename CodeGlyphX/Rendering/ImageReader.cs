@@ -200,6 +200,8 @@ public static partial class ImageReader {
             }
             return GifReader.DecodeRgba32(data, out width, out height);
         }
+        if (PdfReader.IsPdf(data)) return PdfReader.DecodeRgba32(data, out width, out height);
+        if (PsdReader.IsPsd(data)) return PsdReader.DecodeRgba32(data, out width, out height);
         if (IsBmp(data)) return BmpReader.DecodeRgba32(data, out width, out height);
         if (IsPbm(data)) return PbmReader.DecodeRgba32(data, out width, out height);
         if (IsPgm(data)) return PgmReader.DecodeRgba32(data, out width, out height);
@@ -486,9 +488,6 @@ public static partial class ImageReader {
     private static void ThrowIfUnsupportedFormat(ReadOnlySpan<byte> data) {
         if (IsPdf(data) || IsPostScript(data)) {
             throw new FormatException("PDF/PS decode is not supported (rasterize first).");
-        }
-        if (IsPsd(data)) {
-            throw new FormatException("PSD decode is not supported.");
         }
         if (IsJpeg2000(data)) {
             throw new FormatException("JPEG2000 decode is not supported.");

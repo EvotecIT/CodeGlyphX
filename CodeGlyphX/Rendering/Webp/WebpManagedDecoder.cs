@@ -66,10 +66,20 @@ internal static class WebpManagedDecoder {
         }
 
         var decodedFrames = new WebpAnimationFrame[frameInfos.Count];
+        byte[]? lastFrame = null;
+        var lastWidth = 0;
+        var lastHeight = 0;
         for (var i = 0; i < frameInfos.Count; i++) {
             var frame = frameInfos[i];
+            var rgba = frame.Rgba;
+            if (rgba.Length == 0) {
+                rgba = new byte[checked(frame.Width * frame.Height * 4)];
+                if (lastFrame is not null && lastWidth == frame.Width && lastHeight == frame.Height) {
+                    Buffer.BlockCopy(lastFrame, 0, rgba, 0, rgba.Length);
+                }
+            }
             decodedFrames[i] = new WebpAnimationFrame(
-                frame.Rgba,
+                rgba,
                 frame.Width,
                 frame.Height,
                 frame.Width * 4,
@@ -78,6 +88,9 @@ internal static class WebpManagedDecoder {
                 frame.Y,
                 frame.Blend,
                 frame.DisposeToBackground);
+            lastFrame = rgba;
+            lastWidth = frame.Width;
+            lastHeight = frame.Height;
         }
 
         frames = decodedFrames;
@@ -106,6 +119,21 @@ internal static class WebpManagedDecoder {
         var renderedFrames = new WebpAnimationFrame[frameInfos.Count];
         for (var i = 0; i < frameInfos.Count; i++) {
             var frame = frameInfos[i];
+            if (frame.Rgba.Length == 0) {
+                var emptySnapshot = new byte[canvas.Length];
+                Buffer.BlockCopy(canvas, 0, emptySnapshot, 0, canvas.Length);
+                renderedFrames[i] = new WebpAnimationFrame(
+                    emptySnapshot,
+                    canvasWidth,
+                    canvasHeight,
+                    canvasWidth * 4,
+                    frame.DurationMs,
+                    0,
+                    0,
+                    blend: false,
+                    disposeToBackground: false);
+                continue;
+            }
             if (frame.Blend) {
                 AlphaBlendFrame(canvas, canvasWidth, canvasHeight, frame);
             } else {
@@ -356,16 +384,24 @@ internal static class WebpManagedDecoder {
         }
 
         if (TryFindChunk(frameData, chunks, FourCcVp8, out var vp8Payload)) {
-            if (!WebpVp8Decoder.TryDecode(vp8Payload, out var rgba, out var decodedWidth, out var decodedHeight)) return false;
-            if (decodedWidth != width || decodedHeight != height) return false;
+            if (WebpVp8Decoder.TryDecode(vp8Payload, out var rgba, out var decodedWidth, out var decodedHeight)) {
+                if (decodedWidth != width || decodedHeight != height) return false;
 
-            if (TryFindChunk(frameData, chunks, FourCcAlph, out var alphPayload)) {
-                if (!TryDecodeAlphaChunk(alphPayload, width, height, out var alpha, out _)) return false;
-                ApplyAlphaToRgba(alpha, rgba);
+                if (TryFindChunk(frameData, chunks, FourCcAlph, out var alphPayload)) {
+                    if (!TryDecodeAlphaChunk(alphPayload, width, height, out var alpha, out _)) return false;
+                    ApplyAlphaToRgba(alpha, rgba);
+                }
+
+                frame = new WebpAnimationFrameInfo(x, y, width, height, duration, blend, disposeToBackground, rgba);
+                return true;
             }
 
-            frame = new WebpAnimationFrameInfo(x, y, width, height, duration, blend, disposeToBackground, rgba);
-            return true;
+            if (WebpVp8Decoder.IsInterframe(vp8Payload)) {
+                frame = new WebpAnimationFrameInfo(x, y, width, height, duration, blend, disposeToBackground, Array.Empty<byte>());
+                return true;
+            }
+
+            return false;
         }
 
         return false;
