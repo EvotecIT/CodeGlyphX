@@ -12,9 +12,11 @@
 - Enforced image size limits (max pixels + max bytes) before decode for ImageReader-based paths.
 - Added PNG pre-decode limits for Aztec/DataMatrix/PDF417 `TryDecodePng(...)` entry points.
 - Added size-capped stream reads in decode entry points (sync + async).
+- Added decoder guardrails (checked arithmetic + size caps) in PNG/GIF/TIFF/WebP decoders.
 - Sanitized HTML/SVG colors + font family and HTML document title.
 - Added consistent “Invalid input” failure messages when size limits reject input.
 - Added safe filename overloads for RenderIO write helpers.
+- Added `SECURITY.md` and a fuzzing harness (`CodeGlyphX.Fuzz`) with usage notes.
 
 ## Key Findings
 
@@ -81,7 +83,7 @@
 
 ## Remaining Gaps / Follow-ups
 - Consider pre-decode max-pixel checks for any other format-specific decode methods that bypass `ImageReader`.
-- Consider a public `SECURITY.md` and a lightweight fuzzing pipeline for decoder inputs.
+- Hook the fuzzing harness into CI (or a scheduled job) with corpus inputs and time limits.
 - Consider a public `SECURITY.md` and a lightweight fuzzing pipeline for decoder inputs.
 
 ## Open Questions
