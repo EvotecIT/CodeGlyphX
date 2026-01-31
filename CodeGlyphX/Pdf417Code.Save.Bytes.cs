@@ -239,8 +239,12 @@ public static partial class Pdf417Code {
     public static void SaveJpeg(ReadOnlySpan<byte> data, Stream stream, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         var opts = BuildPngOptions(renderOptions);
-        var quality = renderOptions?.JpegQuality ?? 85;
-        MatrixJpegRenderer.RenderToStream(modules, opts, stream, quality);
+        var jpegOptions = renderOptions?.JpegOptions;
+        if (jpegOptions is null) {
+            MatrixJpegRenderer.RenderToStream(modules, opts, stream, renderOptions?.JpegQuality ?? 85);
+        } else {
+            MatrixJpegRenderer.RenderToStream(modules, opts, stream, jpegOptions);
+        }
     }
 
     /// <summary>

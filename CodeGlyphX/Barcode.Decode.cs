@@ -163,7 +163,7 @@ public static partial class Barcode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
             var original = rgba;
             var originalWidth = width;
             var originalHeight = height;
@@ -216,7 +216,7 @@ public static partial class Barcode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
             var original = rgba;
             var originalWidth = width;
             var originalHeight = height;
@@ -295,7 +295,7 @@ public static partial class Barcode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
-            var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+            var rgba = ImageReader.DecodeRgba32(stream, options, out var width, out var height);
             var original = rgba;
             var originalWidth = width;
             var originalHeight = height;
@@ -331,7 +331,7 @@ public static partial class Barcode {
             if (token.IsCancellationRequested) {
                 return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
                 var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
                 return new DecodeResult<BarcodeDecoded>(imageFailure, info, stopwatch.Elapsed);
             }

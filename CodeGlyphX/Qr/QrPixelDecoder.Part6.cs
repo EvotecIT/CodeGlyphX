@@ -38,6 +38,7 @@ internal static partial class QrPixelDecoder {
     }
 
     private static int Score(global::CodeGlyphX.QrDecodeDiagnostics d) {
+        if (d.Failure == global::CodeGlyphX.QrDecodeFailure.None && d.Version == 0) return 0;
         return d.Failure switch {
             global::CodeGlyphX.QrDecodeFailure.None => 5,
             global::CodeGlyphX.QrDecodeFailure.Payload => 4,

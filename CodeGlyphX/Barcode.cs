@@ -87,8 +87,10 @@ public static partial class Barcode {
     public static byte[] Jpeg(BarcodeType type, string content, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
-        var quality = options?.JpegQuality ?? 90;
-        return BarcodeJpegRenderer.Render(barcode, opts, quality);
+        var jpegOptions = options?.JpegOptions;
+        return jpegOptions is null
+            ? BarcodeJpegRenderer.Render(barcode, opts, options?.JpegQuality ?? 90)
+            : BarcodeJpegRenderer.Render(barcode, opts, jpegOptions);
     }
 
     /// <summary>

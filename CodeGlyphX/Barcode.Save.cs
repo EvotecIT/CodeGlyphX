@@ -101,8 +101,12 @@ public static partial class Barcode {
     public static void SaveJpeg(BarcodeType type, string content, Stream stream, BarcodeOptions? options = null) {
         var barcode = Encode(type, content);
         var opts = BuildPngOptions(options);
-        var quality = options?.JpegQuality ?? 90;
-        BarcodeJpegRenderer.RenderToStream(barcode, opts, stream, quality);
+        var jpegOptions = options?.JpegOptions;
+        if (jpegOptions is null) {
+            BarcodeJpegRenderer.RenderToStream(barcode, opts, stream, options?.JpegQuality ?? 90);
+        } else {
+            BarcodeJpegRenderer.RenderToStream(barcode, opts, stream, jpegOptions);
+        }
     }
 
     /// <summary>
