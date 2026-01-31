@@ -16,10 +16,13 @@
 - Added payload caps + size guards for BMP/JPEG/PSD/TGA/NetPBM/XBM/XPM/PDF decoders.
 - Added PNG chunk length validation for PLTE/tRNS + capped total IDAT payload size.
 - Added animation safety limits (max frames, max duration, max frame pixels) for GIF/WebP.
+- Added per-call animation limit overrides via `ImageDecodeOptions` for ImageReader animation paths.
+- Added output-size guards for encoders/writers (PNG/BMP/JPEG/GIF/TIFF/TGA/WebP/NetPBM/PDF/EPS/XBM/XPM).
 - Sanitized HTML/SVG colors + font family and HTML document title.
 - Added consistent “Invalid input” failure messages when size limits reject input.
 - Added safe filename overloads for RenderIO write helpers.
 - Added `SECURITY.md` and a fuzzing harness (`CodeGlyphX.Fuzz`) with usage notes.
+- Added CodeQL workflow for static analysis in CI.
 
 ## Key Findings
 
@@ -83,13 +86,12 @@
 - **Medium term:**
   - Sanitize HTML/SVG render options or provide strongly typed color APIs.
   - Add fuzzing tests for image decoders (PNG/GIF/TIFF/WebP/JPEG) to catch parser edge cases.
-  - Consider output-size guards for encoders/writers when width/height are caller-provided.
+  - Consider enforcing output-size limits for any new encoders/writers when width/height are caller-provided.
 
 ## Remaining Gaps / Follow-ups
 - Consider pre-decode max-pixel checks for any other format-specific decode methods that bypass `ImageReader`.
 - Hook the fuzzing harness into CI (or a scheduled job) with corpus inputs and time limits.
-- Consider a public `SECURITY.md` and a lightweight fuzzing pipeline for decoder inputs.
- - Consider configurable caps for encoder outputs (max pixels/bytes) to avoid unbounded memory usage in untrusted pipelines.
+- Consider a lightweight fuzzing pipeline for decoder inputs.
 
 ## Open Questions
 - Do you want strict defaults (limits enabled by default) or opt-in limits for callers?
