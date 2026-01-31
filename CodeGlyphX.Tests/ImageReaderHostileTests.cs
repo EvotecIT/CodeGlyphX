@@ -30,6 +30,32 @@ public sealed class ImageReaderHostileTests {
         Assert.Throws<FormatException>(() => ImageReader.DecodeRgba32(data, options, out _, out _));
     }
 
+
+    [Fact]
+    public void DecodeRgba32_Rejects_OversizedJpegDimensions() {
+        var jpeg = BuildJpegHeader(width: 10_000, height: 10_000);
+        var options = new ImageDecodeOptions { MaxPixels = 1_000_000 };
+
+        Assert.Throws<FormatException>(() => ImageReader.DecodeRgba32(jpeg, options, out _, out _));
+    }
+    private static byte[] BuildJpegHeader(int width, int height) {
+        var data = new byte[21];
+        data[0] = 0xFF; // SOI
+        data[1] = 0xD8;
+        data[2] = 0xFF; // SOF0
+        data[3] = 0xC0;
+        data[4] = 0x00; // length (17)
+        data[5] = 0x11;
+        data[6] = 0x08; // precision
+        WriteUInt16BE(data, 7, (ushort)height);
+        WriteUInt16BE(data, 9, (ushort)width);
+        data[11] = 0x03; // components
+        data[12] = 0x01; data[13] = 0x11; data[14] = 0x00;
+        data[15] = 0x02; data[16] = 0x11; data[17] = 0x00;
+        data[18] = 0x03; data[19] = 0x11; data[20] = 0x00;
+        return data;
+    }
+
     private static byte[] BuildPngHeader(int width, int height) {
         var data = new byte[24];
         data[0] = 137;
@@ -60,6 +86,11 @@ public sealed class ImageReaderHostileTests {
         WriteUInt16LE(data, 6, (ushort)width);
         WriteUInt16LE(data, 8, (ushort)height);
         return data;
+    }
+
+    private static void WriteUInt16BE(byte[] data, int offset, ushort value) {
+        data[offset + 0] = (byte)(value >> 8);
+        data[offset + 1] = (byte)value;
     }
 
     private static void WriteUInt32BE(byte[] data, int offset, uint value) {
