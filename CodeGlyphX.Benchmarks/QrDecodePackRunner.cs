@@ -268,7 +268,9 @@ internal static class QrDecodePackRunner {
             decodedCountSum += res.DecodedCount;
         }
 
-        if (dumpFailures && decodeSuccess == 0) {
+        if (dumpFailures &&
+            (decodeSuccess == 0 ||
+             (scenario.ExpectedTexts is { Length: > 0 } && expectedMatch == 0))) {
             DumpFailureDebug(reportsDir, nowUtc, engine, scenario, data);
         }
 
@@ -353,6 +355,21 @@ internal static class QrDecodePackRunner {
             AdaptiveOffset = 4
         });
         if (adaptiveRatio >= 0) metaLines.Add($"BinarizedAdaptiveBlack%: {adaptiveRatio:P1}");
+
+        try {
+            var engineResult = engine.Decode(data, scenario.Options);
+            metaLines.Add($"EngineDecodedCount: {engineResult.Count}");
+            metaLines.Add($"EngineSuccess: {engineResult.Success}");
+            if (engineResult.Texts.Length > 0) {
+                for (var i = 0; i < engineResult.Texts.Length; i++) {
+                    var text = engineResult.Texts[i] ?? string.Empty;
+                    var textPreview = text.Length > 400 ? text[..400] + "..." : text;
+                    metaLines.Add($"EngineText[{i}]: textLen={text.Length} text=\"{textPreview}\"");
+                }
+            }
+        } catch (Exception ex) {
+            metaLines.Add($"EngineDecodeError: {ex.GetType().Name} {ex.Message}");
+        }
 
         var prevModuleDumpDir = Environment.GetEnvironmentVariable("CODEGLYPHX_QR_MODULE_DUMP_DIR");
         var prevModuleDumpLimit = Environment.GetEnvironmentVariable("CODEGLYPHX_QR_MODULE_DUMP_LIMIT");

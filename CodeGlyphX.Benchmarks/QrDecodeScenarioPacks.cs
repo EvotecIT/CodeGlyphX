@@ -152,7 +152,7 @@ internal static class QrDecodeScenarioPacks {
 
         if (mode == QrPackMode.Full) {
             scenarios.Add(Sample(Art, "art-facebook-splash-grid", "Assets/DecodingSamples/qr-art-facebook-splash-grid.png", ArtOptions(mode), ExpectedFacebookJess3));
-            scenarios.Add(Sample(Art, "art-montage-grid", "Assets/DecodingSamples/qr-art-montage-grid.png", ArtOptions(mode), ExpectedJess3));
+            scenarios.Add(Sample(Art, "art-montage-grid", "Assets/DecodingSamples/qr-art-montage-grid.png", ArtOptions(mode), ExpectedZip2Montage));
             scenarios.Add(Sample(Art, "art-stripe-eye-grid", "Assets/DecodingSamples/qr-art-stripe-eye-grid.png", ArtOptions(mode), ExpectedJess3));
             scenarios.Add(Sample(Art, "art-drip-variants", "Assets/DecodingSamples/qr-art-drip-variants.png", ArtOptions(mode), ExpectedJess3));
             scenarios.Add(Sample(Art, "art-solid-bg-grid", "Assets/DecodingSamples/qr-art-solid-bg-grid.png", ArtOptions(mode), ExpectedJess3));
@@ -165,6 +165,7 @@ internal static class QrDecodeScenarioPacks {
     private const string GeneratedPayload = QrDecodeSampleFactory.DefaultPayload;
     private const string ExpectedJess3 = "http://jess3.com";
     private const string ExpectedFacebookJess3 = "http://www.facebook.com/JESS3";
+    private const string ExpectedZip2Montage = "http://zip2.it/brqr#793618522169349375768512169081277855174341298682677390128336508746685343206314554540757831128512012765565340457163802334869373954682682661341296002959959682672725341202682890853371864448104673341141687721219362682984020043955491325341340146702703341956113384000533341141";
     private const string ExpectedCleanLarge = "This is a quick test! 123#?";
     private const string ExpectedCleanSmall = "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=jnll6mrqknd57pmn&issuer=Microsoft";
     private const string ExpectedNoisyUi = "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=pqhjwcgzncvzykhd&issuer=Microsoft";
