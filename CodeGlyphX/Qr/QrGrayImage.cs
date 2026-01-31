@@ -351,6 +351,52 @@ internal readonly struct QrGrayImage {
         }
     }
 
+    public QrGrayImage Crop(int minX, int minY, int maxX, int maxY) => Crop(minX, minY, maxX, maxY, pool: null);
+
+    public QrGrayImage Crop(int minX, int minY, int maxX, int maxY, QrGrayImagePool? pool) {
+        if (minX < 0) minX = 0;
+        if (minY < 0) minY = 0;
+        if (maxX >= Width) maxX = Width - 1;
+        if (maxY >= Height) maxY = Height - 1;
+        if (maxX < minX || maxY < minY) return this;
+
+        var w = maxX - minX + 1;
+        var h = maxY - minY + 1;
+        if (w == Width && h == Height) return this;
+
+        var total = w * h;
+        var cropped = RentBuffer(total, pool);
+        byte[]? croppedThresholds = null;
+        if (ThresholdMap is not null) {
+            croppedThresholds = RentBuffer(total, pool);
+        }
+
+        Span<int> histogram = stackalloc int[256];
+        byte min = 255;
+        byte max = 0;
+
+        var srcWidth = Width;
+        for (var y = 0; y < h; y++) {
+            var srcRow = (y + minY) * srcWidth + minX;
+            var dstRow = y * w;
+            Array.Copy(Gray, srcRow, cropped, dstRow, w);
+
+            if (croppedThresholds is not null) {
+                Array.Copy(ThresholdMap!, srcRow, croppedThresholds, dstRow, w);
+            }
+
+            for (var x = 0; x < w; x++) {
+                var v = cropped[dstRow + x];
+                histogram[v]++;
+                if (v < min) min = v;
+                if (v > max) max = v;
+            }
+        }
+
+        var threshold = ComputeOtsuThreshold(histogram, total);
+        return new QrGrayImage(w, h, cropped, min, max, threshold, croppedThresholds);
+    }
+
     public QrGrayImage Rotate90() => Rotate90(pool: null);
 
     public QrGrayImage Rotate90(QrGrayImagePool? pool) {

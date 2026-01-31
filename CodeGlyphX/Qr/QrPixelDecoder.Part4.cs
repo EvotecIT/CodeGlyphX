@@ -445,6 +445,7 @@ internal static partial class QrPixelDecoder {
         var n = Math.Min(candidates.Count, tightBudget ? 5 : nLimit);
         var triedTriples = 0;
         var bboxAttempts = 0;
+        var roiAttempts = 0;
         var maxTriples = maxTriplesOverride > 0 ? maxTriplesOverride : (aggressive ? 240 : 40);
         if (budget.Enabled && maxTriplesOverride <= 0) {
             maxTriples = Math.Min(maxTriples, aggressive ? 160 : 20);
@@ -503,6 +504,15 @@ internal static partial class QrPixelDecoder {
                             return true;
                         }
                         diagnostics = Better(diagnostics, diagB);
+
+                        if (stylized && aggressive && roiAttempts < 2 && !budget.IsNearDeadline(200)) {
+                            roiAttempts++;
+                            if (TryDecodeFromCroppedRegion(scale, threshold, image, accept, aggressive, stylized, budget, bminX, bminY, bmaxX, bmaxY, out result, out var diagR)) {
+                                diagnostics = diagR;
+                                return true;
+                            }
+                            diagnostics = Better(diagnostics, diagR);
+                        }
                     }
                 }
             }
@@ -531,6 +541,76 @@ internal static partial class QrPixelDecoder {
             if (TryDecodeFromComponentFindersCore(scale, edge.Threshold, edge, invert, accept, aggressive, stylized, budget, out result, out diagnostics)) {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    private static bool TryDecodeFromCroppedRegion(
+        int scale,
+        byte threshold,
+        QrGrayImage image,
+        Func<QrDecoded, bool>? accept,
+        bool aggressive,
+        bool stylized,
+        DecodeBudget budget,
+        int minX,
+        int minY,
+        int maxX,
+        int maxY,
+        out QrDecoded result,
+        out QrPixelDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        if (budget.IsExpired || budget.IsNearDeadline(160)) return false;
+
+        var pad = Math.Max(4, Math.Min(image.Width, image.Height) / 120);
+        minX -= pad;
+        minY -= pad;
+        maxX += pad;
+        maxY += pad;
+
+        minX = Math.Max(0, minX);
+        minY = Math.Max(0, minY);
+        maxX = Math.Min(image.Width - 1, maxX);
+        maxY = Math.Min(image.Height - 1, maxY);
+
+        var cropW = maxX - minX + 1;
+        var cropH = maxY - minY + 1;
+        if (cropW < 96 || cropH < 96) return false;
+        if (cropW >= image.Width && cropH >= image.Height) return false;
+
+        var pool = RentGrayPool();
+        var candidates = RentCandidateList();
+        try {
+            var cropped = image.Crop(minX, minY, maxX, maxY, pool);
+            if (cropped.Width <= 0 || cropped.Height <= 0) return false;
+
+            Func<bool>? shouldStop = budget.Enabled || budget.CanCancel ? () => budget.IsExpired : null;
+            var requireDiagonal = !aggressive;
+
+            QrFinderPatternDetector.FindCandidates(cropped, invert: false, candidates, aggressive, shouldStop, rowStepOverride: 0, maxCandidates: 40, allowFullScan: true, requireDiagonalCheck: requireDiagonal);
+            var diagF = default(QrPixelDecodeDiagnostics);
+            if (candidates.Count >= 3 &&
+                TryDecodeFromFinderCandidates(scale, threshold, cropped, invert: false, candidates, candidatesSorted: false, accept, aggressive, stylized, budget, out result, out diagF)) {
+                diagnostics = diagF;
+                return true;
+            }
+            if (candidates.Count > 0) diagnostics = Better(diagnostics, diagF);
+
+            candidates.Clear();
+            QrFinderPatternDetector.FindCandidates(cropped, invert: true, candidates, aggressive, shouldStop, rowStepOverride: 0, maxCandidates: 40, allowFullScan: true, requireDiagonalCheck: requireDiagonal);
+            var diagI = default(QrPixelDecodeDiagnostics);
+            if (candidates.Count >= 3 &&
+                TryDecodeFromFinderCandidates(scale, threshold, cropped, invert: true, candidates, candidatesSorted: false, accept, aggressive, stylized, budget, out result, out diagI)) {
+                diagnostics = diagI;
+                return true;
+            }
+            if (candidates.Count > 0) diagnostics = Better(diagnostics, diagI);
+        } finally {
+            ReturnCandidateList(candidates);
+            ReturnGrayPool(pool);
         }
 
         return false;
