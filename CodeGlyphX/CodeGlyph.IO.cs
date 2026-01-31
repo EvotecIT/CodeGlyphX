@@ -431,7 +431,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
         if (image is null) throw new ArgumentNullException(nameof(image));
-        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
         return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 
@@ -441,7 +441,7 @@ public static partial class CodeGlyph {
     public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions? options) {
         diagnostics = new CodeGlyphDecodeDiagnostics();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+        if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) {
             decoded = null!;
             SetFailure(diagnostics, DecodeFailureReason.UnsupportedFormat, "Unsupported image format.");
             return false;
@@ -484,7 +484,7 @@ public static partial class CodeGlyph {
             if (token.IsCancellationRequested) {
                 return new DecodeResult<CodeGlyphDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) {
                 var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
                 return new DecodeResult<CodeGlyphDecoded>(imageFailure, info, stopwatch.Elapsed);
             }
@@ -515,7 +515,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeAllImage(byte[] image, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
         if (image is null) throw new ArgumentNullException(nameof(image));
-        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
         return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 
@@ -525,7 +525,7 @@ public static partial class CodeGlyph {
     public static bool TryDecodeImage(Stream stream, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var data = RenderIO.ReadBinary(stream);
-        if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+        if (!ImageReader.TryDecodeRgba32(data, options?.Image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
         return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 
@@ -535,7 +535,7 @@ public static partial class CodeGlyph {
     public static bool TryDecodeAllImage(Stream stream, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var data = RenderIO.ReadBinary(stream);
-        if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+        if (!ImageReader.TryDecodeRgba32(data, options?.Image, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
         return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 
