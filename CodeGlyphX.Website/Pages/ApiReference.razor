@@ -367,7 +367,7 @@
         _loadError = null;
         try
         {
-            _index = await Http.GetFromJsonAsync<ApiIndex>("api/index.json");
+            _index = await Http.GetFromJsonAsync<ApiIndex>("/api/index.json");
             if (_index != null)
             {
                 foreach (var ns in _index.Types.Select(t => string.IsNullOrWhiteSpace(t.Namespace) ? "(global)" : t.Namespace).Distinct())
@@ -394,7 +394,7 @@
 
         try
         {
-            _selectedType = await Http.GetFromJsonAsync<ApiTypeDetail>($"api/types/{TypeSlug}.json");
+            _selectedType = await Http.GetFromJsonAsync<ApiTypeDetail>($"/api/types/{TypeSlug}.json");
         }
         catch
         {

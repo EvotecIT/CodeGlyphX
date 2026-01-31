@@ -1,8 +1,10 @@
 const { chromium } = require('playwright');
 const path = require('path');
+const fs = require('fs');
 
 const baseUrl = process.env.WEBSITE_BASE_URL || 'http://localhost:5051';
 const trackedResourceTypes = new Set(['document', 'stylesheet', 'script', 'fetch']);
+const configPath = process.env.WEBSITE_SMOKE_CONFIG || path.join(__dirname, 'website-smoke-config.json');
 
 function getTimeout(name, fallback) {
     const raw = process.env[`WEBSITE_TIMEOUT_${name}`];
@@ -29,7 +31,113 @@ let expectedNav = [
     { href: '/pricing/', text: 'Pricing' }
 ];
 
+function loadSmokeConfig() {
+    try {
+        if (!fs.existsSync(configPath)) {
+            return null;
+        }
+        const raw = fs.readFileSync(configPath, 'utf8');
+        return raw ? JSON.parse(raw) : null;
+    } catch (err) {
+        console.warn(`Failed to load smoke test config: ${err.message}`);
+        return null;
+    }
+}
+
+const smokeConfig = loadSmokeConfig() || {};
+const defaultNavTests = [
+    { label: 'Home', href: '/', expectedPath: '/', expectedContent: 'Generate QR Codes' },
+    { label: 'Playground', href: '/playground/', expectedPath: '/playground/', expectedContent: null },
+    { label: 'Docs', href: '/docs/', expectedPath: '/docs/', expectedContent: null },
+    { label: 'Benchmarks', href: '/benchmarks/', expectedPath: '/benchmarks/', expectedContent: 'Benchmarks' },
+    { label: 'Showcase', href: '/showcase/', expectedPath: '/showcase/', expectedContent: 'Showcase' },
+    { label: 'Pricing', href: '/pricing/', expectedPath: '/pricing/', expectedContent: 'Pricing' },
+];
+
+const defaultStaticPages = [
+    {
+        path: '/',
+        label: 'Home',
+        expectedText: 'Generate QR Codes',
+        expectedSelector: '.hero',
+        stylesheet: 'app.css',
+        checkNav: true
+    },
+    {
+        path: '/showcase/',
+        label: 'Showcase',
+        expectedText: 'Showcase',
+        expectedSelector: '.showcase-page',
+        stylesheet: 'app.css',
+        checkNav: true
+    },
+    {
+        path: '/faq/',
+        label: 'FAQ',
+        expectedText: 'Frequently Asked Questions',
+        expectedSelector: '.faq-page',
+        stylesheet: 'app.css',
+        checkNav: true
+    },
+    {
+        path: '/pricing/',
+        label: 'Pricing',
+        expectedText: 'Simple, Transparent Pricing',
+        expectedSelector: '.pricing-page',
+        stylesheet: 'app.css',
+        checkNav: true,
+        afterLoad: 'pricing'
+    },
+    {
+        path: '/docs/',
+        label: 'Documentation',
+        expectedText: 'CodeGlyphX Documentation',
+        expectedSelector: '.docs-layout',
+        stylesheet: 'app.css',
+        checkNav: true
+    },
+    {
+        path: '/docs/api',
+        label: 'API Reference',
+        expectedText: 'API Reference',
+        expectedSelector: '.api-layout',
+        stylesheet: 'api.css',
+        checkNav: true
+    }
+];
+
+const defaultBlazorApps = [
+    {
+        path: '/playground/',
+        label: 'Playground',
+        expectedSelector: '.playground',
+        expectedBaseHref: '/playground/',
+        stylesheet: 'app.css',
+        checkNav: true,
+        afterLoad: 'playground'
+    }
+];
+
+const navTests = Array.isArray(smokeConfig.navTests) && smokeConfig.navTests.length
+    ? smokeConfig.navTests
+    : defaultNavTests;
+const staticPages = Array.isArray(smokeConfig.staticPages) && smokeConfig.staticPages.length
+    ? smokeConfig.staticPages
+    : defaultStaticPages;
+const blazorApps = Array.isArray(smokeConfig.blazorApps) && smokeConfig.blazorApps.length
+    ? smokeConfig.blazorApps
+    : defaultBlazorApps;
+const mobileStaticPages = smokeConfig.mobile?.staticPages || ['/', '/showcase/', '/faq/', '/benchmarks/', '/pricing/', '/docs/', '/docs/api'];
+const mobileStaticWidths = smokeConfig.mobile?.staticWidths || [375, 390, 414];
+const mobileBlazorPages = smokeConfig.mobile?.blazorPages || ['/playground/'];
+const mobileBlazorWidths = smokeConfig.mobile?.blazorWidths || [375, 414];
+const benchmarkConfig = smokeConfig.benchmarks || { enabled: true, path: '/benchmarks/' };
+
 async function loadNavConfig() {
+    if (Array.isArray(smokeConfig.navLinks) && smokeConfig.navLinks.length) {
+        expectedNav = smokeConfig.navLinks;
+        return;
+    }
     try {
         const res = await fetch(`${baseUrl}/data/site-nav.json`, { cache: 'no-store' });
         if (!res.ok) return;
@@ -179,21 +287,63 @@ async function expectNavConsistency(page, failures, label) {
     });
 }
 
+function resolveAfterLoadHandler(afterLoad) {
+    if (!afterLoad) return null;
+    if (typeof afterLoad === 'function') return afterLoad;
+    if (typeof afterLoad === 'string' && afterLoadHandlers[afterLoad]) {
+        return afterLoadHandlers[afterLoad];
+    }
+    return null;
+}
+
+async function verifyPricingPage(page, failures) {
+    const cardCount = await page.$$eval('.pricing-card', cards => cards.length);
+    if (cardCount < 3) {
+        failures.push({
+            test: 'pricing-cards',
+            page: 'Pricing',
+            error: `Expected at least 3 pricing cards, got ${cardCount}`
+        });
+    }
+    // Check for free tier price label.
+    const hasFreePrice = await page.evaluate(() => {
+        const cards = Array.from(document.querySelectorAll('.pricing-card'));
+        const freeCard = cards.find(card => {
+            const title = card.querySelector('h2');
+            return title && title.textContent && title.textContent.trim() === 'Free';
+        });
+        if (!freeCard) {
+            return false;
+        }
+        const price = freeCard.querySelector('.pricing-amount .pricing-currency');
+        if (!price || !price.textContent) {
+            return false;
+        }
+        const value = price.textContent.trim();
+        return value === 'Free' || value === '$0';
+    });
+    if (!hasFreePrice) {
+        failures.push({
+            test: 'pricing-free',
+            page: 'Pricing',
+            error: 'Missing free tier price'
+        });
+    }
+}
+
+const afterLoadHandlers = {
+    pricing: verifyPricingPage,
+    playground: testPlaygroundInteractions
+};
+
 async function testNavigation(page) {
     console.log('\n=== Testing Navigation ===');
     const failures = [];
-    const navTests = [
-        { label: 'Home', href: '/', expectedPath: '/', expectedContent: 'Generate QR Codes' },
-        { label: 'Playground', href: '/playground/', expectedPath: '/playground/', expectedContent: null },
-        { label: 'Docs', href: '/docs/', expectedPath: '/docs/', expectedContent: null },
-        { label: 'Benchmarks', href: '/benchmarks/', expectedPath: '/benchmarks/', expectedContent: 'Benchmarks' },
-        { label: 'Showcase', href: '/showcase/', expectedPath: '/showcase/', expectedContent: 'Showcase' },
-        { label: 'Pricing', href: '/pricing/', expectedPath: '/pricing/', expectedContent: 'Pricing' },
-    ];
+    const tests = navTests;
 
     await page.goto(baseUrl, { waitUntil: 'networkidle', timeout: timeouts.page });
 
-    for (const { label, href, expectedPath, expectedContent } of navTests) {
+    for (const { label, href, expectedPath, expectedContent } of tests) {
         try {
             console.log('Testing navigation to:', label);
             await withRetries(`navigation ${label}`, 2, async () => {
@@ -239,6 +389,7 @@ async function testNavigation(page) {
 async function testStaticPage(page, path, label, options = {}) {
     const failures = [];
     const monitor = attachResourceMonitor(page);
+    const afterLoadHandler = resolveAfterLoadHandler(options.afterLoad);
 
     try {
         await page.goto(baseUrl + path, { waitUntil: 'networkidle', timeout: timeouts.page });
@@ -263,8 +414,8 @@ async function testStaticPage(page, path, label, options = {}) {
             await expectNavConsistency(page, failures, label);
         }
 
-        if (typeof options.afterLoad === 'function') {
-            await options.afterLoad(page, failures);
+        if (afterLoadHandler) {
+            await afterLoadHandler(page, failures);
         }
     } catch (err) {
         failures.push({
@@ -309,6 +460,7 @@ async function testBlazorApp(page, path, appName, options = {}) {
     console.log('Testing Blazor app:', appName, 'at', url);
     const failures = [];
     const monitor = attachResourceMonitor(page);
+    const afterLoadHandler = resolveAfterLoadHandler(options.afterLoad);
 
     const errors = [];
     page.on('console', msg => {
@@ -389,8 +541,8 @@ async function testBlazorApp(page, path, appName, options = {}) {
             await expectNavConsistency(page, failures, appName);
         }
 
-        if (typeof options.afterLoad === 'function') {
-            await options.afterLoad(page, failures);
+        if (afterLoadHandler) {
+            await afterLoadHandler(page, failures);
         }
 
         console.log('  ✓', appName, 'loaded successfully');
@@ -478,23 +630,31 @@ async function testPlaygroundInteractions(page, failures) {
     }
 }
 
-async function testBenchmarks(page) {
-    const path = '/benchmarks/';
-    const label = 'Benchmarks';
+async function testBenchmarks(page, config = {}) {
+    const route = config.path || '/benchmarks/';
+    const label = config.label || 'Benchmarks';
+    const expectedSelector = config.expectedSelector || '.benchmark-page';
+    const summarySelector = config.summarySelector || '[data-benchmark-summary]';
+    const summaryRowsSelector = config.summaryRowsSelector || '.bench-summary-table tbody tr';
+    const metaSelector = config.metaSelector || '.benchmark-meta-grid';
+    const tableSelector = config.tableSelector || '.bench-table';
+    const stylesheet = config.stylesheet || 'app.css';
     const failures = [];
     const monitor = attachResourceMonitor(page);
 
     try {
-        await page.goto(baseUrl + path, { waitUntil: 'networkidle', timeout: 30000 });
-        await page.waitForSelector('.benchmark-page', { timeout: timeouts.selector });
-        await expectStylesheet(page, 'app.css', failures, label);
+        await page.goto(baseUrl + route, { waitUntil: 'networkidle', timeout: 30000 });
+        await page.waitForSelector(expectedSelector, { timeout: timeouts.selector });
+        await expectStylesheet(page, stylesheet, failures, label);
 
-        await page.waitForFunction(() => {
-            const summary = document.querySelector('[data-benchmark-summary]');
-            return summary && summary.querySelector('table');
-        }, { timeout: timeouts.page });
+        if (summarySelector) {
+            await page.waitForFunction((selector) => {
+                const summary = document.querySelector(selector);
+                return summary && summary.querySelector('table');
+            }, summarySelector, { timeout: timeouts.page });
+        }
 
-        const rowCount = await page.$$eval('.bench-summary-table tbody tr', rows => rows.length);
+        const rowCount = await page.$$eval(summaryRowsSelector, rows => rows.length);
         if (rowCount === 0) {
             failures.push({
                 test: 'benchmarks',
@@ -503,7 +663,7 @@ async function testBenchmarks(page) {
             });
         }
 
-        const metaExists = await page.locator('.benchmark-meta-grid').count();
+        const metaExists = await page.locator(metaSelector).count();
         if (!metaExists) {
             failures.push({
                 test: 'benchmarks',
@@ -512,7 +672,7 @@ async function testBenchmarks(page) {
             });
         }
 
-        const tableHandle = await page.$('.bench-table');
+        const tableHandle = await page.$(tableSelector);
         if (tableHandle) {
             const borderCollapse = await tableHandle.evaluate(el => getComputedStyle(el).borderCollapse);
             if (borderCollapse !== 'collapse') {
@@ -550,96 +710,34 @@ async function testBenchmarks(page) {
     allFailures.push(...await testNavigation(page));
 
     console.log('\n=== Testing Static Pages ===');
-    allFailures.push(...await testStaticPage(page, '/', 'Home', {
-        expectedText: 'Generate QR Codes',
-        expectedSelector: '.hero',
-        stylesheet: 'app.css',
-        checkNav: true
-    }));
-    allFailures.push(...await testStaticPage(page, '/showcase/', 'Showcase', {
-        expectedText: 'Showcase',
-        expectedSelector: '.showcase-page',
-        stylesheet: 'app.css',
-        checkNav: true
-    }));
-    allFailures.push(...await testStaticPage(page, '/faq/', 'FAQ', {
-        expectedText: 'Frequently Asked Questions',
-        expectedSelector: '.faq-page',
-        stylesheet: 'app.css',
-        checkNav: true
-    }));
-    allFailures.push(...await testStaticPage(page, '/pricing/', 'Pricing', {
-        expectedText: 'Simple, Transparent Pricing',
-        expectedSelector: '.pricing-page',
-        stylesheet: 'app.css',
-        checkNav: true,
-        afterLoad: async (page, failures) => {
-            const cardCount = await page.$$eval('.pricing-card', cards => cards.length);
-            if (cardCount < 3) {
-                failures.push({
-                    test: 'pricing-cards',
-                    page: 'Pricing',
-                    error: `Expected at least 3 pricing cards, got ${cardCount}`
-                });
-            }
-            // Check for free tier price label.
-            const hasFreePrice = await page.evaluate(() => {
-                const cards = Array.from(document.querySelectorAll('.pricing-card'));
-                const freeCard = cards.find(card => {
-                    const title = card.querySelector('h2');
-                    return title && title.textContent && title.textContent.trim() === 'Free';
-                });
-                if (!freeCard) {
-                    return false;
-                }
-                const price = freeCard.querySelector('.pricing-amount .pricing-currency');
-                if (!price || !price.textContent) {
-                    return false;
-                }
-                const value = price.textContent.trim();
-                return value === 'Free' || value === '$0';
-            });
-            if (!hasFreePrice) {
-                failures.push({
-                    test: 'pricing-free',
-                    page: 'Pricing',
-                    error: 'Missing free tier price'
-                });
-            }
-        }
-    }));
-    allFailures.push(...await testBenchmarks(page));
+    for (const entry of staticPages) {
+        const { path, label, ...options } = entry;
+        allFailures.push(...await testStaticPage(page, path, label, options));
+    }
+    if (benchmarkConfig && benchmarkConfig.enabled !== false) {
+        allFailures.push(...await testBenchmarks(page, benchmarkConfig));
+    }
 
     console.log('\n=== Testing Mobile Layout ===');
     allFailures.push(...await testMobileLayout(
         page,
-        ['/', '/showcase/', '/faq/', '/benchmarks/', '/pricing/'],
-        [375, 390, 414],
+        mobileStaticPages,
+        mobileStaticWidths,
         5
     ));
 
     console.log('\n=== Testing Blazor Apps ===');
     await page.setViewportSize({ width: 1280, height: 800 });
-    allFailures.push(...await testBlazorApp(page, '/docs/', 'Documentation', {
-        expectedSelector: '.docs-layout',
-        expectedText: 'CodeGlyphX Documentation',
-        expectedBaseHref: '/docs/',
-        stylesheet: 'app.css',
-        checkNav: true
-    }));
-    allFailures.push(...await testBlazorApp(page, '/playground/', 'Playground', {
-        expectedSelector: '.playground',
-        expectedBaseHref: '/playground/',
-        stylesheet: 'app.css',
-        checkNav: true,
-        afterLoad: testPlaygroundInteractions
-    }));
+    for (const entry of blazorApps) {
+        const { path, label, ...options } = entry;
+        allFailures.push(...await testBlazorApp(page, path, label, options));
+    }
 
     console.log('\n=== Testing Blazor Apps Mobile Layout ===');
     allFailures.push(...await testMobileLayout(
         page,
-        ['/docs/', '/playground/'],
-        [375, 414],
+        mobileBlazorPages,
+        mobileBlazorWidths,
         10
     ));
 

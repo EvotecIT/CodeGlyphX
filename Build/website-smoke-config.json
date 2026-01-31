@@ -1,0 +1,88 @@
+{
+  "navTests": [
+    { "label": "Home", "href": "/", "expectedPath": "/", "expectedContent": "Generate QR Codes" },
+    { "label": "Playground", "href": "/playground/", "expectedPath": "/playground/", "expectedContent": null },
+    { "label": "Docs", "href": "/docs/", "expectedPath": "/docs/", "expectedContent": null },
+    { "label": "Benchmarks", "href": "/benchmarks/", "expectedPath": "/benchmarks/", "expectedContent": "Benchmarks" },
+    { "label": "Showcase", "href": "/showcase/", "expectedPath": "/showcase/", "expectedContent": "Showcase" },
+    { "label": "Pricing", "href": "/pricing/", "expectedPath": "/pricing/", "expectedContent": "Pricing" }
+  ],
+  "staticPages": [
+    {
+      "path": "/",
+      "label": "Home",
+      "expectedText": "Generate QR Codes",
+      "expectedSelector": ".hero",
+      "stylesheet": "app.css",
+      "checkNav": true
+    },
+    {
+      "path": "/showcase/",
+      "label": "Showcase",
+      "expectedText": "Showcase",
+      "expectedSelector": ".showcase-page",
+      "stylesheet": "app.css",
+      "checkNav": true
+    },
+    {
+      "path": "/faq/",
+      "label": "FAQ",
+      "expectedText": "Frequently Asked Questions",
+      "expectedSelector": ".faq-page",
+      "stylesheet": "app.css",
+      "checkNav": true
+    },
+    {
+      "path": "/pricing/",
+      "label": "Pricing",
+      "expectedText": "Simple, Transparent Pricing",
+      "expectedSelector": ".pricing-page",
+      "stylesheet": "app.css",
+      "checkNav": true,
+      "afterLoad": "pricing"
+    },
+    {
+      "path": "/docs/",
+      "label": "Documentation",
+      "expectedText": "CodeGlyphX Documentation",
+      "expectedSelector": ".docs-layout",
+      "stylesheet": "app.css",
+      "checkNav": true
+    },
+    {
+      "path": "/docs/api",
+      "label": "API Reference",
+      "expectedText": "API Reference",
+      "expectedSelector": ".api-layout",
+      "stylesheet": "api.css",
+      "checkNav": true
+    }
+  ],
+  "benchmarks": {
+    "enabled": true,
+    "path": "/benchmarks/",
+    "expectedSelector": ".benchmark-page",
+    "summarySelector": "[data-benchmark-summary]",
+    "summaryRowsSelector": ".bench-summary-table tbody tr",
+    "metaSelector": ".benchmark-meta-grid",
+    "tableSelector": ".bench-table",
+    "stylesheet": "app.css"
+  },
+  "blazorApps": [
+    {
+      "path": "/playground/",
+      "label": "Playground",
+      "expectedSelector": ".playground",
+      "expectedBaseHref": "/playground/",
+      "stylesheet": "app.css",
+      "checkNav": true,
+      "afterLoad": "playground"
+    }
+  ],
+  "mobile": {
+    "staticPages": ["/", "/showcase/", "/faq/", "/benchmarks/", "/pricing/", "/docs/", "/docs/api"],
+    "staticWidths": [375, 390, 414],
+    "blazorPages": ["/playground/"],
+    "blazorWidths": [375, 414]
+  }
+}
