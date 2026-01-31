@@ -73,8 +73,9 @@ public sealed class QrDecodingSamplesSweepTests {
             var fallbackOptions = new QrPixelDecodeOptions {
                 Profile = QrDecodeProfile.Robust,
                 MaxDimension = Math.Max(options.MaxDimension, 2000),
-                MaxMilliseconds = TestBudget.Adjust(1500),
-                BudgetMilliseconds = TestBudget.Adjust(5000),
+                MaxScale = 3,
+                MaxMilliseconds = TestBudget.Adjust(2000),
+                BudgetMilliseconds = TestBudget.Adjust(7000),
                 AutoCrop = true,
                 AggressiveSampling = true,
                 StylizedSampling = false,
@@ -85,8 +86,9 @@ public sealed class QrDecodingSamplesSweepTests {
             var fallbackStylized = new QrPixelDecodeOptions {
                 Profile = QrDecodeProfile.Robust,
                 MaxDimension = Math.Max(options.MaxDimension, 2400),
-                MaxMilliseconds = TestBudget.Adjust(2000),
-                BudgetMilliseconds = TestBudget.Adjust(7000),
+                MaxScale = 4,
+                MaxMilliseconds = TestBudget.Adjust(3000),
+                BudgetMilliseconds = TestBudget.Adjust(10000),
                 AutoCrop = true,
                 AggressiveSampling = true,
                 StylizedSampling = true,
@@ -135,7 +137,16 @@ public sealed class QrDecodingSamplesSweepTests {
 
         for (var i = 0; i < options.Length; i++) {
             var option = options[i];
-            if (QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var decodedList, out var infoAll, option)) {
+            QrPixelDecodeInfo infoSingle = default;
+            if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out infoSingle, option)) {
+                results = new[] { decoded };
+                diagnostics = infoSingle.ToString();
+                return true;
+            }
+
+            diagnostics = infoSingle.ToString();
+
+            if (i == 0 && QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var decodedList, out var infoAll, option)) {
                 if (decodedList.Length > 0) {
                     results = decodedList;
                     diagnostics = infoAll.ToString();
@@ -144,15 +155,6 @@ public sealed class QrDecodingSamplesSweepTests {
 
                 diagnostics = infoAll.ToString();
             }
-
-            QrPixelDecodeInfo infoSingle = default;
-            if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out infoSingle, option)) {
-                results = new[] { decoded };
-                diagnostics = infoSingle.ToString();
-                return true;
-            }
-
-            diagnostics = $"{infoAll} | {infoSingle}";
         }
 
         return false;

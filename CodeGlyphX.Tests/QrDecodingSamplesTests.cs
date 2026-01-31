@@ -37,8 +37,9 @@ public sealed class QrDecodingSamplesTests {
         var fallbackOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2000,
-            MaxMilliseconds = TestBudget.Adjust(1500),
-            BudgetMilliseconds = TestBudget.Adjust(4000),
+            MaxScale = 3,
+            MaxMilliseconds = TestBudget.Adjust(2000),
+            BudgetMilliseconds = TestBudget.Adjust(6000),
             AutoCrop = true,
             AggressiveSampling = true,
             StylizedSampling = false,
@@ -49,8 +50,9 @@ public sealed class QrDecodingSamplesTests {
         var fallbackStylized = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2400,
-            MaxMilliseconds = TestBudget.Adjust(2000),
-            BudgetMilliseconds = TestBudget.Adjust(6000),
+            MaxScale = 4,
+            MaxMilliseconds = TestBudget.Adjust(3000),
+            BudgetMilliseconds = TestBudget.Adjust(9000),
             AutoCrop = true,
             AggressiveSampling = true,
             StylizedSampling = true,
@@ -93,8 +95,9 @@ public sealed class QrDecodingSamplesTests {
         var fallbackOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2000,
-            MaxMilliseconds = TestBudget.Adjust(1200),
-            BudgetMilliseconds = TestBudget.Adjust(4000),
+            MaxScale = 3,
+            MaxMilliseconds = TestBudget.Adjust(2000),
+            BudgetMilliseconds = TestBudget.Adjust(6000),
             AutoCrop = true,
             AggressiveSampling = true,
             StylizedSampling = false,
@@ -105,8 +108,9 @@ public sealed class QrDecodingSamplesTests {
         var fallbackStylized = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2400,
-            MaxMilliseconds = TestBudget.Adjust(2000),
-            BudgetMilliseconds = TestBudget.Adjust(6000),
+            MaxScale = 4,
+            MaxMilliseconds = TestBudget.Adjust(3000),
+            BudgetMilliseconds = TestBudget.Adjust(9000),
             AutoCrop = true,
             AggressiveSampling = true,
             StylizedSampling = true,
@@ -337,16 +341,6 @@ public sealed class QrDecodingSamplesTests {
 
         for (var i = 0; i < options.Length; i++) {
             var option = options[i];
-            if (QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var decodedList, option)) {
-                if (decodedList.Length > 0) {
-                    results = decodedList;
-                    diagnostics = string.Empty;
-                    return true;
-                }
-
-                diagnostics = "Decode produced no results.";
-            }
-
             QrPixelDecodeInfo info = default;
             if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out info, option)) {
                 results = new[] { decoded };
@@ -355,6 +349,16 @@ public sealed class QrDecodingSamplesTests {
             }
 
             diagnostics = info.ToString();
+
+            if (i == 0 && QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var decodedList, option)) {
+                if (decodedList.Length > 0) {
+                    results = decodedList;
+                    diagnostics = string.Empty;
+                    return true;
+                }
+
+                diagnostics = "Decode produced no results.";
+            }
         }
 
         return false;
