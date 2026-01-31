@@ -448,7 +448,8 @@ internal static partial class QrPixelDecoder {
         var roiAttempts = 0;
         var maxTriples = maxTriplesOverride > 0 ? maxTriplesOverride : (aggressive ? 240 : 40);
         if (budget.Enabled && maxTriplesOverride <= 0) {
-            maxTriples = Math.Min(maxTriples, aggressive ? 160 : 20);
+            var cap = aggressive ? (stylized ? 240 : 160) : (stylized ? 32 : 20);
+            maxTriples = Math.Min(maxTriples, cap);
         }
         if (tightBudget && candidates.Count > 12) {
             maxTriples = Math.Min(maxTriples, aggressive ? 32 : 12);
@@ -464,6 +465,13 @@ internal static partial class QrPixelDecoder {
         if (stylized && n >= 9 && !budget.IsNearDeadline(200)) {
             nnDist2 = stackalloc double[n];
             useNeighborGate = TryBuildNeighborGate(candSpan, stylized, nnDist2, out minLink2, out maxLink2, out linkScale2);
+        }
+
+        var moduleRatioLimitBase = moduleRatioLimit;
+        var sideRatioLimitBase = sideRatioLimit;
+        if (stylized && !budget.IsNearDeadline(240)) {
+            if (moduleRatioLimitBase > 0) moduleRatioLimitBase = Math.Max(moduleRatioLimitBase, 2.6);
+            if (sideRatioLimitBase > 0) sideRatioLimitBase = Math.Max(sideRatioLimitBase, 2.8);
         }
 
         Span<ScoredTriple> scoredTriples = stackalloc ScoredTriple[8];
@@ -560,12 +568,12 @@ internal static partial class QrPixelDecoder {
                     var msMin = Math.Min(a.ModuleSize, Math.Min(b.ModuleSize, c.ModuleSize));
                     var msMax = Math.Max(a.ModuleSize, Math.Max(b.ModuleSize, c.ModuleSize));
                     if (msMin <= 0) continue;
-                    if (moduleRatioLimit > 0 && msMax > msMin * moduleRatioLimit) continue;
+                    if (moduleRatioLimitBase > 0 && msMax > msMin * moduleRatioLimitBase) continue;
 
                     var tl = default(QrFinderPatternDetector.FinderPattern);
                     var tr = default(QrFinderPatternDetector.FinderPattern);
                     var bl = default(QrFinderPatternDetector.FinderPattern);
-                    var ratioLimit = sideRatioLimit > 0 ? sideRatioLimit : 1.8;
+                    var ratioLimit = sideRatioLimitBase > 0 ? sideRatioLimitBase : 1.8;
                     if (!TryOrderAsTlTrBl(a, b, c, ratioLimit, out tl, out tr, out bl)) continue;
                     if (TrySampleAndDecode(scale, threshold, image, invert, tl, tr, bl, candidates.Count, triedTriples, accept, aggressive, stylized, budget, out result, out var diag)) {
                         diagnostics = diag;
