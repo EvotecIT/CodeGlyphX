@@ -549,9 +549,9 @@ public static class PdfReader {
             if (info.Decode is not null && info.Decode.Length >= 2) {
                 ApplyDecodeArray(expanded, 1, info.Decode);
             }
-            var pixelCount = info.Width * info.Height;
-            rgba = new byte[pixelCount * 4];
-            for (var i = 0; i < pixelCount; i++) {
+            var maskPixelCount = info.Width * info.Height;
+            rgba = new byte[maskPixelCount * 4];
+            for (var i = 0; i < maskPixelCount; i++) {
                 var dst = i * 4;
                 var alpha = expanded[i];
                 rgba[dst + 0] = 0;
@@ -579,8 +579,8 @@ public static class PdfReader {
         if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed) {
             if (!TryExpandIndexed(info, expanded, out rgba)) return false;
             if (maskAlpha is not null) {
-                var pixelCount = info.Width * info.Height;
-                for (var i = 0; i < pixelCount; i++) {
+                var maskPixelCount = info.Width * info.Height;
+                for (var i = 0; i < maskPixelCount; i++) {
                     rgba[i * 4 + 3] = maskAlpha[i];
                 }
             }
@@ -593,10 +593,10 @@ public static class PdfReader {
             ApplyDecodeArray(expanded, colors, info.Decode);
         }
 
-        var pixelCount = info.Width * info.Height;
-        rgba = new byte[pixelCount * 4];
+        var totalPixels = info.Width * info.Height;
+        rgba = new byte[totalPixels * 4];
         if (colors == 3) {
-            for (var i = 0; i < pixelCount; i++) {
+            for (var i = 0; i < totalPixels; i++) {
                 var src = i * 3;
                 var dst = i * 4;
                 rgba[dst + 0] = expanded[src + 0];
@@ -605,7 +605,7 @@ public static class PdfReader {
                 rgba[dst + 3] = 255;
             }
         } else if (colors == 4) {
-            for (var i = 0; i < pixelCount; i++) {
+            for (var i = 0; i < totalPixels; i++) {
                 var src = i * 4;
                 var dst = i * 4;
                 var c = expanded[src + 0];
@@ -618,7 +618,7 @@ public static class PdfReader {
                 rgba[dst + 3] = 255;
             }
         } else {
-            for (var i = 0; i < pixelCount; i++) {
+            for (var i = 0; i < totalPixels; i++) {
                 var v = expanded[i];
                 var dst = i * 4;
                 rgba[dst + 0] = v;
@@ -629,8 +629,7 @@ public static class PdfReader {
         }
 
         if (maskAlpha is not null) {
-            var pixelCount = info.Width * info.Height;
-            for (var i = 0; i < pixelCount; i++) {
+            for (var i = 0; i < totalPixels; i++) {
                 rgba[i * 4 + 3] = maskAlpha[i];
             }
         }
@@ -2018,28 +2017,28 @@ public static class PdfReader {
                     break;
                 case 1:
                     for (var i = 0; i < rowSize; i++) {
-                        var left = i >= bytesPerPixel ? decoded[dstRow + i - bytesPerPixel] : 0;
+                        var left = i >= bytesPerPixel ? decoded[dstRow + i - bytesPerPixel] : (byte)0;
                         decoded[dstRow + i] = (byte)(data[srcRow + i] + left);
                     }
                     break;
                 case 2:
                     for (var i = 0; i < rowSize; i++) {
-                        var up = y > 0 ? decoded[dstRow - rowSize + i] : 0;
+                        var up = y > 0 ? decoded[dstRow - rowSize + i] : (byte)0;
                         decoded[dstRow + i] = (byte)(data[srcRow + i] + up);
                     }
                     break;
                 case 3:
                     for (var i = 0; i < rowSize; i++) {
-                        var left = i >= bytesPerPixel ? decoded[dstRow + i - bytesPerPixel] : 0;
-                        var up = y > 0 ? decoded[dstRow - rowSize + i] : 0;
+                        var left = i >= bytesPerPixel ? decoded[dstRow + i - bytesPerPixel] : (byte)0;
+                        var up = y > 0 ? decoded[dstRow - rowSize + i] : (byte)0;
                         decoded[dstRow + i] = (byte)(data[srcRow + i] + ((left + up) >> 1));
                     }
                     break;
                 case 4:
                     for (var i = 0; i < rowSize; i++) {
-                        var a = i >= bytesPerPixel ? decoded[dstRow + i - bytesPerPixel] : 0;
-                        var b = y > 0 ? decoded[dstRow - rowSize + i] : 0;
-                        var c = (y > 0 && i >= bytesPerPixel) ? decoded[dstRow - rowSize + i - bytesPerPixel] : 0;
+                        var a = i >= bytesPerPixel ? decoded[dstRow + i - bytesPerPixel] : (byte)0;
+                        var b = y > 0 ? decoded[dstRow - rowSize + i] : (byte)0;
+                        var c = (y > 0 && i >= bytesPerPixel) ? decoded[dstRow - rowSize + i - bytesPerPixel] : (byte)0;
                         decoded[dstRow + i] = (byte)(data[srcRow + i] + Paeth(a, b, c));
                     }
                     break;
@@ -2130,10 +2129,10 @@ public static class PdfReader {
         expanded = Array.Empty<byte>();
         if (bitsPerComponent == 16) {
             if (!scale) return false;
-            var samplesPerRow = checked(width * colors);
-            var rowBytes = checked(samplesPerRow * 2);
-            if ((long)rowBytes * height > data.Length) return false;
-            expanded = new byte[samplesPerRow * height];
+            var samplesPerRow16 = checked(width * colors);
+            var rowBytes16 = checked(samplesPerRow16 * 2);
+            if ((long)rowBytes16 * height > data.Length) return false;
+            expanded = new byte[samplesPerRow16 * height];
             var srcIndex = 0;
             for (var i = 0; i < expanded.Length; i++) {
                 var value = (data[srcIndex] << 8) | data[srcIndex + 1];

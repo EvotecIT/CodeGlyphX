@@ -120,10 +120,10 @@ internal static class WebpManagedDecoder {
         for (var i = 0; i < frameInfos.Count; i++) {
             var frame = frameInfos[i];
             if (frame.Rgba.Length == 0) {
-                var snapshot = new byte[canvas.Length];
-                Buffer.BlockCopy(canvas, 0, snapshot, 0, canvas.Length);
+                var emptySnapshot = new byte[canvas.Length];
+                Buffer.BlockCopy(canvas, 0, emptySnapshot, 0, canvas.Length);
                 renderedFrames[i] = new WebpAnimationFrame(
-                    snapshot,
+                    emptySnapshot,
                     canvasWidth,
                     canvasHeight,
                     canvasWidth * 4,

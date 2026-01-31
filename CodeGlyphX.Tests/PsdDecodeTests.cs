@@ -23,6 +23,20 @@ public sealed class PsdDecodeTests {
     }
 
     [Fact]
+    public void Psd_Rgb8_Raw_NoAlpha() {
+        var psd = BuildPsdRaw(1, 1, depth: 8, colorMode: 3,
+            new byte[] { 1 },
+            new byte[] { 2 },
+            new byte[] { 3 });
+
+        var rgba = ImageReader.DecodeRgba32(psd, out var width, out var height);
+
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] { 1, 2, 3, 255 }, rgba);
+    }
+
+    [Fact]
     public void Psd_Grayscale8_Raw() {
         var psd = BuildPsdRaw(1, 1, depth: 8, colorMode: 1,
             new byte[] { 200 });
@@ -51,6 +65,27 @@ public sealed class PsdDecodeTests {
     }
 
     [Fact]
+    public void Psd_Cmyk8_Raw_NoAlpha() {
+        var psd = BuildPsdRaw(1, 1, depth: 8, colorMode: 4,
+            new byte[] { 10 },
+            new byte[] { 20 },
+            new byte[] { 30 },
+            new byte[] { 40 });
+
+        var rgba = ImageReader.DecodeRgba32(psd, out var width, out var height);
+
+        var expected = new byte[] {
+            CmykToRgbChannel(10, 40),
+            CmykToRgbChannel(20, 40),
+            CmykToRgbChannel(30, 40),
+            255
+        };
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(expected, rgba);
+    }
+
+    [Fact]
     public void Psd_Grayscale16_Raw() {
         var psd = BuildPsdRaw(1, 1, depth: 16, colorMode: 1,
             BuildChannel16(0x1234));
@@ -61,6 +96,51 @@ public sealed class PsdDecodeTests {
         Assert.Equal(1, width);
         Assert.Equal(1, height);
         Assert.Equal(new byte[] { expected, expected, expected, 255 }, rgba);
+    }
+
+    [Fact]
+    public void Psd_Rgb16_Raw() {
+        var psd = BuildPsdRaw(1, 1, depth: 16, colorMode: 3,
+            BuildChannel16(0x1234),
+            BuildChannel16(0x5678),
+            BuildChannel16(0x9ABC));
+
+        var rgba = ImageReader.DecodeRgba32(psd, out var width, out var height);
+
+        var expected = new byte[] {
+            Convert16To8(0x1234),
+            Convert16To8(0x5678),
+            Convert16To8(0x9ABC),
+            255
+        };
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(expected, rgba);
+    }
+
+    [Fact]
+    public void Psd_Cmyk16_Raw_NoAlpha() {
+        var psd = BuildPsdRaw(1, 1, depth: 16, colorMode: 4,
+            BuildChannel16(0x0000),
+            BuildChannel16(0xFFFF),
+            BuildChannel16(0x0000),
+            BuildChannel16(0x8000));
+
+        var rgba = ImageReader.DecodeRgba32(psd, out var width, out var height);
+
+        var c = Convert16To8(0x0000);
+        var m = Convert16To8(0xFFFF);
+        var y = Convert16To8(0x0000);
+        var k = Convert16To8(0x8000);
+        var expected = new byte[] {
+            CmykToRgbChannel(c, k),
+            CmykToRgbChannel(m, k),
+            CmykToRgbChannel(y, k),
+            255
+        };
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        Assert.Equal(expected, rgba);
     }
 
     [Fact]
@@ -75,6 +155,23 @@ public sealed class PsdDecodeTests {
         Assert.Equal(new byte[] {
             0x10, 0x10, 0x10, 255,
             0x20, 0x20, 0x20, 255
+        }, rgba);
+    }
+
+    [Fact]
+    public void Psd_Grayscale16_Rle() {
+        var psd = BuildPsdRle(2, 1, depth: 16, colorMode: 1,
+            BuildChannel16(0x1234, 0xABCD));
+
+        var rgba = ImageReader.DecodeRgba32(psd, out var width, out var height);
+
+        var first = Convert16To8(0x1234);
+        var second = Convert16To8(0xABCD);
+        Assert.Equal(2, width);
+        Assert.Equal(1, height);
+        Assert.Equal(new byte[] {
+            first, first, first, 255,
+            second, second, second, 255
         }, rgba);
     }
 
@@ -154,6 +251,13 @@ public sealed class PsdDecodeTests {
 
     private static byte Convert16To8(ushort value) {
         return (byte)((value + 128) / 257);
+    }
+
+    private static byte CmykToRgbChannel(byte c, byte k) {
+        var value = 255 - c - k + (c * k + 127) / 255;
+        if (value < 0) value = 0;
+        if (value > 255) value = 255;
+        return (byte)value;
     }
 
     private static byte[] PackBitsEncode(ReadOnlySpan<byte> data) {
