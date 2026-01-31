@@ -42,12 +42,11 @@ jobs:
 
       - name: Restore
         run: |
-          dotnet restore CodeGlyphX/CodeGlyphX.csproj
+          dotnet restore CodeGlyphX/CodeGlyphX.csproj -p:TargetFramework=net8.0
 
       - name: Build
         run: |
           dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net8.0 --no-restore
-          dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net10.0 --no-restore
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
