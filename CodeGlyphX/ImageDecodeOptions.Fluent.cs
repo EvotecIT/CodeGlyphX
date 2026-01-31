@@ -47,6 +47,30 @@ public sealed partial class ImageDecodeOptions {
     }
 
     /// <summary>
+    /// Sets the maximum animation frame count allowed for decoding.
+    /// </summary>
+    public ImageDecodeOptions WithMaxAnimationFrames(int maxFrames) {
+        MaxAnimationFrames = maxFrames;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the maximum total animation duration (milliseconds) allowed for decoding.
+    /// </summary>
+    public ImageDecodeOptions WithMaxAnimationDurationMs(int maxDurationMs) {
+        MaxAnimationDurationMs = maxDurationMs;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the maximum pixel count allowed per animation frame.
+    /// </summary>
+    public ImageDecodeOptions WithMaxAnimationFramePixels(long maxPixels) {
+        MaxAnimationFramePixels = maxPixels;
+        return this;
+    }
+
+    /// <summary>
     /// Sets JPEG decoding options.
     /// </summary>
     /// <example>

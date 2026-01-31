@@ -25,6 +25,7 @@ namespace CodeGlyphX.Rendering;
 /// </summary>
 public static partial class ImageReader {
     private static readonly byte[] PngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
+    private static readonly object AnimationLimitLock = new();
 
     /// <summary>
     /// Default maximum pixel count allowed for managed decodes.
@@ -132,11 +133,27 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes animation frames (non-composited) (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationFrames(byte[] data, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return DecodeAnimationFrames((ReadOnlySpan<byte>)data, options, out width, out height, out animationOptions);
+    }
+
+    /// <summary>
     /// Decodes animation frames composited onto a full canvas (auto-detected).
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(byte[] data, out int width, out int height, out ImageAnimationOptions options) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         return DecodeAnimationCanvasFrames((ReadOnlySpan<byte>)data, out width, out height, out options);
+    }
+
+    /// <summary>
+    /// Decodes animation frames composited onto a full canvas (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(byte[] data, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return DecodeAnimationCanvasFrames((ReadOnlySpan<byte>)data, options, out width, out height, out animationOptions);
     }
 
     /// <summary>
@@ -183,29 +200,47 @@ public static partial class ImageReader {
     /// Decodes animation frames (non-composited) (auto-detected).
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationFrames(ReadOnlySpan<byte> data, out int width, out int height, out ImageAnimationOptions options) {
+        return DecodeAnimationFrames(data, options: null, out width, out height, out options);
+    }
+
+    /// <summary>
+    /// Decodes animation frames (non-composited) (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationFrames(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
         if (data.Length < 2) throw new FormatException("Unknown image format.");
-        EnsureWithinLimits(data, options: null, pageIndex: 0);
+        EnsureWithinLimits(data, options, pageIndex: 0);
 
-        if (GifReader.IsGif(data)) {
-            if (!GifReader.TryDecodeAnimationFrames(data, out var frames, out width, out height, out var gifOptions)) {
-                throw new FormatException("Unsupported or invalid animated GIF.");
+        var resolvedWidth = 0;
+        var resolvedHeight = 0;
+        var resolvedOptions = default(ImageAnimationOptions);
+
+        var frames = WithAnimationLimits(options, () => {
+            if (GifReader.IsGif(data)) {
+                if (!GifReader.TryDecodeAnimationFrames(data, out var gifFrames, out resolvedWidth, out resolvedHeight, out var gifOptions)) {
+                    throw new FormatException("Unsupported or invalid animated GIF.");
+                }
+                resolvedOptions = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
+                return MapGifFrames(gifFrames);
             }
-            options = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
-            return MapGifFrames(frames);
-        }
 
-        if (WebpReader.IsWebp(data)) {
-            if (WebpReader.TryDecodeAnimationFrames(data, out var frames, out width, out height, out var webpOptions)) {
-                options = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
-                return MapWebpFrames(frames);
+            if (WebpReader.IsWebp(data)) {
+                if (WebpReader.TryDecodeAnimationFrames(data, out var webpFrames, out resolvedWidth, out resolvedHeight, out var webpOptions)) {
+                    resolvedOptions = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
+                    return MapWebpFrames(webpFrames);
+                }
+
+                var rgba = WebpReader.DecodeRgba32(data, out resolvedWidth, out resolvedHeight);
+                resolvedOptions = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
+                return new[] { new ImageAnimationFrame(rgba, resolvedWidth, resolvedHeight, resolvedWidth * 4, durationMs: 0) };
             }
 
-            var rgba = WebpReader.DecodeRgba32(data, out width, out height);
-            options = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
-            return new[] { new ImageAnimationFrame(rgba, width, height, width * 4, durationMs: 0) };
-        }
+            throw new FormatException("Unsupported animated image format.");
+        });
 
-        throw new FormatException("Unsupported animated image format.");
+        width = resolvedWidth;
+        height = resolvedHeight;
+        animationOptions = resolvedOptions;
+        return frames;
     }
 
     /// <summary>
@@ -226,29 +261,47 @@ public static partial class ImageReader {
     /// Decodes animation frames composited onto a full canvas (auto-detected).
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(ReadOnlySpan<byte> data, out int width, out int height, out ImageAnimationOptions options) {
+        return DecodeAnimationCanvasFrames(data, options: null, out width, out height, out options);
+    }
+
+    /// <summary>
+    /// Decodes animation frames composited onto a full canvas (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
         if (data.Length < 2) throw new FormatException("Unknown image format.");
-        EnsureWithinLimits(data, options: null, pageIndex: 0);
+        EnsureWithinLimits(data, options, pageIndex: 0);
 
-        if (GifReader.IsGif(data)) {
-            if (!GifReader.TryDecodeAnimationCanvasFrames(data, out var frames, out width, out height, out var gifOptions)) {
-                throw new FormatException("Unsupported or invalid animated GIF.");
+        var resolvedWidth = 0;
+        var resolvedHeight = 0;
+        var resolvedOptions = default(ImageAnimationOptions);
+
+        var frames = WithAnimationLimits(options, () => {
+            if (GifReader.IsGif(data)) {
+                if (!GifReader.TryDecodeAnimationCanvasFrames(data, out var gifFrames, out resolvedWidth, out resolvedHeight, out var gifOptions)) {
+                    throw new FormatException("Unsupported or invalid animated GIF.");
+                }
+                resolvedOptions = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
+                return MapGifFrames(gifFrames);
             }
-            options = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
-            return MapGifFrames(frames);
-        }
 
-        if (WebpReader.IsWebp(data)) {
-            if (WebpReader.TryDecodeAnimationCanvasFrames(data, out var frames, out width, out height, out var webpOptions)) {
-                options = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
-                return MapWebpFrames(frames);
+            if (WebpReader.IsWebp(data)) {
+                if (WebpReader.TryDecodeAnimationCanvasFrames(data, out var webpFrames, out resolvedWidth, out resolvedHeight, out var webpOptions)) {
+                    resolvedOptions = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
+                    return MapWebpFrames(webpFrames);
+                }
+
+                var rgba = WebpReader.DecodeRgba32(data, out resolvedWidth, out resolvedHeight);
+                resolvedOptions = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
+                return new[] { new ImageAnimationFrame(rgba, resolvedWidth, resolvedHeight, resolvedWidth * 4, durationMs: 0) };
             }
 
-            var rgba = WebpReader.DecodeRgba32(data, out width, out height);
-            options = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
-            return new[] { new ImageAnimationFrame(rgba, width, height, width * 4, durationMs: 0) };
-        }
+            throw new FormatException("Unsupported animated image format.");
+        });
 
-        throw new FormatException("Unsupported animated image format.");
+        width = resolvedWidth;
+        height = resolvedHeight;
+        animationOptions = resolvedOptions;
+        return frames;
     }
 
     /// <summary>
@@ -271,7 +324,12 @@ public static partial class ImageReader {
     /// </example>
     public static byte[] DecodeRgba32Composite(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height) {
         EnsureWithinLimits(data, options, pageIndex: 0);
-        return DecodeRgba32CompositeCore(data, options?.JpegOptions, out width, out height);
+        int resolvedWidth = 0;
+        int resolvedHeight = 0;
+        var rgba = WithAnimationLimits(options, () => DecodeRgba32CompositeCore(data, options?.JpegOptions, out resolvedWidth, out resolvedHeight));
+        width = resolvedWidth;
+        height = resolvedHeight;
+        return rgba;
     }
 
     private static void EnsureWithinLimits(ReadOnlySpan<byte> data, ImageDecodeOptions? options, int pageIndex) {
@@ -304,6 +362,48 @@ public static partial class ImageReader {
     private static long ResolveMaxPixels(ImageDecodeOptions? options) {
         if (options is not null && options.MaxPixels > 0) return options.MaxPixels;
         return MaxPixels;
+    }
+
+    private static int ResolveMaxAnimationFrames(ImageDecodeOptions? options) {
+        if (options is not null && options.MaxAnimationFrames > 0) return options.MaxAnimationFrames;
+        return MaxAnimationFrames;
+    }
+
+    private static int ResolveMaxAnimationDurationMs(ImageDecodeOptions? options) {
+        if (options is not null && options.MaxAnimationDurationMs > 0) return options.MaxAnimationDurationMs;
+        return MaxAnimationDurationMs;
+    }
+
+    private static long ResolveMaxAnimationFramePixels(ImageDecodeOptions? options) {
+        if (options is not null && options.MaxAnimationFramePixels > 0) return options.MaxAnimationFramePixels;
+        return MaxAnimationFramePixels;
+    }
+
+    private static T WithAnimationLimits<T>(ImageDecodeOptions? options, Func<T> action) {
+        if (options is null) return action();
+        var maxFrames = ResolveMaxAnimationFrames(options);
+        var maxDuration = ResolveMaxAnimationDurationMs(options);
+        var maxFramePixels = ResolveMaxAnimationFramePixels(options);
+
+        if (maxFrames == MaxAnimationFrames && maxDuration == MaxAnimationDurationMs && maxFramePixels == MaxAnimationFramePixels) {
+            return action();
+        }
+
+        lock (AnimationLimitLock) {
+            var prevFrames = MaxAnimationFrames;
+            var prevDuration = MaxAnimationDurationMs;
+            var prevFramePixels = MaxAnimationFramePixels;
+            try {
+                MaxAnimationFrames = maxFrames;
+                MaxAnimationDurationMs = maxDuration;
+                MaxAnimationFramePixels = maxFramePixels;
+                return action();
+            } finally {
+                MaxAnimationFrames = prevFrames;
+                MaxAnimationDurationMs = prevDuration;
+                MaxAnimationFramePixels = prevFramePixels;
+            }
+        }
     }
 
     private static byte[] ReadStream(Stream stream, ImageDecodeOptions? options) {
@@ -410,12 +510,30 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes animation frames composited onto a full canvas from a stream (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(Stream stream, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = ReadStream(stream, options);
+        return DecodeAnimationCanvasFrames(data, options, out width, out height, out animationOptions);
+    }
+
+    /// <summary>
     /// Decodes animation frames (non-composited) from a stream (auto-detected).
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationFrames(Stream stream, out int width, out int height, out ImageAnimationOptions options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var data = ReadStream(stream, options: null);
         return DecodeAnimationFrames(data, out width, out height, out options);
+    }
+
+    /// <summary>
+    /// Decodes animation frames (non-composited) from a stream (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationFrames(Stream stream, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = ReadStream(stream, options);
+        return DecodeAnimationFrames(data, options, out width, out height, out animationOptions);
     }
 
     /// <summary>
@@ -636,6 +754,22 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Attempts to decode animation frames composited onto a full canvas (auto-detected) with decode options.
+    /// </summary>
+    public static bool TryDecodeAnimationCanvasFrames(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out ImageAnimationFrame[] frames, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        try {
+            frames = DecodeAnimationCanvasFrames(data, options, out width, out height, out animationOptions);
+            return true;
+        } catch (FormatException) {
+            frames = Array.Empty<ImageAnimationFrame>();
+            width = 0;
+            height = 0;
+            animationOptions = default;
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Attempts to decode animation frames (non-composited) (auto-detected).
     /// </summary>
     public static bool TryDecodeAnimationFrames(ReadOnlySpan<byte> data, out ImageAnimationFrame[] frames, out int width, out int height, out ImageAnimationOptions options) {
@@ -647,6 +781,22 @@ public static partial class ImageReader {
             width = 0;
             height = 0;
             options = default;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode animation frames (non-composited) (auto-detected) with decode options.
+    /// </summary>
+    public static bool TryDecodeAnimationFrames(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out ImageAnimationFrame[] frames, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        try {
+            frames = DecodeAnimationFrames(data, options, out width, out height, out animationOptions);
+            return true;
+        } catch (FormatException) {
+            frames = Array.Empty<ImageAnimationFrame>();
+            width = 0;
+            height = 0;
+            animationOptions = default;
             return false;
         }
     }

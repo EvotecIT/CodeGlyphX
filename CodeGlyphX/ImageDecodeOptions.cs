@@ -28,6 +28,21 @@ public sealed partial class ImageDecodeOptions {
     public int MaxMilliseconds { get; set; } = 0;
 
     /// <summary>
+    /// Maximum animation frame count allowed for decoding. Set to 0 to use global defaults.
+    /// </summary>
+    public int MaxAnimationFrames { get; set; } = 0;
+
+    /// <summary>
+    /// Maximum total animation duration (milliseconds) allowed for decoding. Set to 0 to use global defaults.
+    /// </summary>
+    public int MaxAnimationDurationMs { get; set; } = 0;
+
+    /// <summary>
+    /// Maximum pixel count allowed per animation frame. Set to 0 to use global defaults.
+    /// </summary>
+    public long MaxAnimationFramePixels { get; set; } = 0;
+
+    /// <summary>
     /// Optional JPEG decoding options (chroma upsampling, truncated handling).
     /// </summary>
     public JpegDecodeOptions? JpegOptions { get; set; }
