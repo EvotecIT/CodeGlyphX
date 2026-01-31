@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Rendering.Xpm;
@@ -10,11 +11,14 @@ namespace CodeGlyphX.Rendering.Xpm;
 /// </summary>
 public static class XpmReader {
     private const int MaxDimension = 16384;
+    private const int MaxColors = 65536;
+    private const int MaxCharsPerPixel = 8;
 
     /// <summary>
     /// Decodes an XPM image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> xpm, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(xpm.Length, "XPM payload exceeds size limits.");
         var text = System.Text.Encoding.ASCII.GetString(xpm.ToArray());
         var strings = ExtractQuotedStrings(text);
         if (strings.Count == 0) throw new FormatException("Invalid XPM data.");
@@ -27,9 +31,11 @@ public static class XpmReader {
         var charsPerPixel = int.Parse(headerParts[3], CultureInfo.InvariantCulture);
         if (width <= 0 || height <= 0 || colors <= 0 || charsPerPixel <= 0) throw new FormatException("Invalid XPM header.");
         if (width > MaxDimension || height > MaxDimension) throw new FormatException("XPM dimensions are too large.");
-        var pixelCount = (long)width * height;
+        if (colors > MaxColors || charsPerPixel > MaxCharsPerPixel) throw new FormatException("XPM color table is too large.");
+        _ = DecodeGuards.EnsurePixelCount(width, height, "XPM dimensions exceed size limits.");
 
-        if (strings.Count < 1 + colors + height) throw new FormatException("Truncated XPM data.");
+        var requiredStrings = 1L + colors + height;
+        if (requiredStrings > int.MaxValue || strings.Count < requiredStrings) throw new FormatException("Truncated XPM data.");
 
         var palette = new Dictionary<string, Rgba32>(StringComparer.Ordinal);
         for (var i = 0; i < colors; i++) {
@@ -40,10 +46,10 @@ public static class XpmReader {
             palette[key] = value;
         }
 
-        var rgba = new byte[width * height * 4];
+        var rgba = DecodeGuards.AllocateRgba32(width, height, "XPM dimensions exceed size limits.");
         for (var y = 0; y < height; y++) {
             var line = strings[1 + colors + y];
-            if (line.Length < width * charsPerPixel) throw new FormatException("Invalid XPM pixel data.");
+            if ((long)line.Length < (long)width * charsPerPixel) throw new FormatException("Invalid XPM pixel data.");
             for (var x = 0; x < width; x++) {
                 var key = line.Substring(x * charsPerPixel, charsPerPixel);
                 if (!palette.TryGetValue(key, out var color)) color = new Rgba32(0, 0, 0, 0);

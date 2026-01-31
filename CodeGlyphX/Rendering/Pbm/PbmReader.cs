@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Pbm;
 
@@ -12,6 +13,7 @@ public static class PbmReader {
     /// Decodes a PBM image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> pbm, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(pbm.Length, "PBM payload exceeds size limits.");
         if (pbm.Length < 2) throw new FormatException("Invalid PBM data.");
         if (pbm[0] != (byte)'P') throw new FormatException("Invalid PBM signature.");
         var format = pbm[1];
@@ -25,8 +27,8 @@ public static class PbmReader {
 
         SkipWhitespaceAndComments(pbm, ref pos);
 
-        var pixelCount = (long)width * height;
-        var rgba = new byte[(int)pixelCount * 4];
+        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "PBM dimensions exceed size limits.");
+        var rgba = DecodeGuards.AllocateRgba32(width, height, "PBM dimensions exceed size limits.");
 
         if (format == (byte)'1') {
             for (var y = 0; y < height; y++) {

@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Psd;
 
@@ -35,6 +36,7 @@ public static class PsdReader {
     /// Decodes a PSD image to an RGBA buffer (flattened, 8/16-bit Grayscale/RGB/CMYK only).
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(data.Length, "PSD payload exceeds size limits.");
         if (!IsPsd(data)) throw new FormatException("Invalid PSD signature.");
         if (data.Length < 26) throw new FormatException("Invalid PSD header.");
 
@@ -72,14 +74,14 @@ public static class PsdReader {
         var hasAlpha = channelCount > colorChannels;
         var channelsToRead = colorChannels + (hasAlpha ? 1 : 0);
 
-        var pixelCount = checked(width * height);
+        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "PSD dimensions exceed size limits.");
         var channelBuffers = new byte[channelsToRead][];
         for (var c = 0; c < channelsToRead; c++) channelBuffers[c] = new byte[pixelCount];
 
         if (compression == 0) {
-            var channelBytes = checked(width * height * bytesPerSample);
+            var channelBytes = DecodeGuards.EnsureByteCount((long)pixelCount * bytesPerSample, "PSD dimensions exceed size limits.");
             for (var c = 0; c < channelCount; c++) {
-                if (offset + channelBytes > data.Length) throw new FormatException("Truncated PSD data.");
+                if ((long)offset + channelBytes > data.Length) throw new FormatException("Truncated PSD data.");
                 if (c < channelsToRead) {
                     if (bytesPerSample == 1) {
                         data.Slice(offset, channelBytes).CopyTo(channelBuffers[c]);
@@ -90,21 +92,21 @@ public static class PsdReader {
                 offset += channelBytes;
             }
         } else {
-            var rowCount = checked(channelCount * height);
-            var lengthsBytes = checked(rowCount * 2);
-            if (offset + lengthsBytes > data.Length) throw new FormatException("Truncated PSD RLE header.");
+            var rowCount = DecodeGuards.EnsureByteCount((long)channelCount * height, "PSD dimensions exceed size limits.");
+            var lengthsBytes = DecodeGuards.EnsureByteCount((long)rowCount * 2, "PSD dimensions exceed size limits.");
+            if ((long)offset + lengthsBytes > data.Length) throw new FormatException("Truncated PSD RLE header.");
             var rowLengths = new ushort[rowCount];
             for (var i = 0; i < rowCount; i++) {
                 rowLengths[i] = ReadU16BE(data, offset + i * 2);
             }
             offset += lengthsBytes;
 
-            var rowBytes = checked(width * bytesPerSample);
+            var rowBytes = DecodeGuards.EnsureByteCount((long)width * bytesPerSample, "PSD row exceeds size limits.");
             var rowBuffer = new byte[rowBytes];
             for (var c = 0; c < channelCount; c++) {
                 for (var y = 0; y < height; y++) {
                     var rowLength = rowLengths[c * height + y];
-                    if (offset + rowLength > data.Length) throw new FormatException("Truncated PSD RLE data.");
+                    if ((long)offset + rowLength > data.Length) throw new FormatException("Truncated PSD RLE data.");
                     var rowSpan = data.Slice(offset, rowLength);
                     if (!TryDecodePackBitsRow(rowSpan, rowBuffer)) {
                         throw new FormatException("Invalid PSD RLE data.");
@@ -122,7 +124,7 @@ public static class PsdReader {
             }
         }
 
-        var rgba = new byte[pixelCount * 4];
+        var rgba = DecodeGuards.AllocateRgba32(width, height, "PSD dimensions exceed size limits.");
         if (colorMode == 3) {
             var r = channelBuffers[0];
             var g = channelBuffers[1];

@@ -45,17 +45,19 @@ internal static class PngDecoder {
 
         while (localOffset + 8 <= end) {
             var len = ReadUInt32BE(png, offset + localOffset);
+            if (len > int.MaxValue) throw new FormatException("Invalid PNG chunk length.");
+            var chunkLength = (int)len;
             localOffset += 4;
             if (localOffset + 4 > end) throw new FormatException("Invalid PNG chunk.");
             var typeOffset = offset + localOffset;
             localOffset += 4;
-            if (localOffset + len + 4 > end) throw new FormatException("Invalid PNG chunk length.");
+            if (localOffset + chunkLength + 4 > end) throw new FormatException("Invalid PNG chunk length.");
             var dataOffset = offset + localOffset;
-            localOffset += (int)len;
+            localOffset += chunkLength;
             localOffset += 4; // CRC
 
             if (MatchType(png, typeOffset, "IHDR")) {
-                if (len < 13) throw new FormatException("Invalid IHDR chunk.");
+                if (chunkLength < 13) throw new FormatException("Invalid IHDR chunk.");
                 width = (int)ReadUInt32BE(png, dataOffset);
                 height = (int)ReadUInt32BE(png, dataOffset + 4);
                 bitDepth = png[dataOffset + 8];
@@ -64,15 +66,21 @@ internal static class PngDecoder {
                 filter = png[dataOffset + 11];
                 interlace = png[dataOffset + 12];
             } else if (MatchType(png, typeOffset, "PLTE")) {
-                palette = new byte[len];
-                Buffer.BlockCopy(png, dataOffset, palette, 0, (int)len);
+                if (chunkLength <= 0 || chunkLength > 256 * 3 || chunkLength % 3 != 0) {
+                    throw new FormatException("Invalid PNG palette.");
+                }
+                palette = new byte[chunkLength];
+                Buffer.BlockCopy(png, dataOffset, palette, 0, chunkLength);
             } else if (MatchType(png, typeOffset, "tRNS")) {
-                transparency = new byte[len];
-                Buffer.BlockCopy(png, dataOffset, transparency, 0, (int)len);
+                if (chunkLength < 0 || chunkLength > 256) {
+                    throw new FormatException("Invalid PNG transparency data.");
+                }
+                transparency = new byte[chunkLength];
+                Buffer.BlockCopy(png, dataOffset, transparency, 0, chunkLength);
             } else if (MatchType(png, typeOffset, "IDAT")) {
-                var chunkLength = checked((int)len);
                 if (chunkLength > 0) {
                     idatTotal = checked(idatTotal + chunkLength);
+                    DecodeGuards.EnsurePayloadWithinLimits(idatTotal, "PNG IDAT payload exceeds size limits.");
                 }
                 if (idatCount == 0) {
                     singleIdatOffset = dataOffset;

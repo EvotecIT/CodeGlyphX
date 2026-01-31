@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.IO.Compression;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Jpeg;
 
 namespace CodeGlyphX.Rendering.Pdf;
@@ -450,7 +451,7 @@ public static class PdfReader {
         if (!TryDecodeWithFilters(maskInfo, stream, out var maskRgba, out var maskWidth, out var maskHeight)) return;
         if (maskWidth != width || maskHeight != height) return;
 
-        var pixelCount = width * height;
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var pixelCount)) return;
         for (var i = 0; i < pixelCount; i++) {
             var maskAlpha = maskRgba[i * 4];
             var dst = i * 4 + 3;
@@ -466,7 +467,7 @@ public static class PdfReader {
         if (!TryDecodeWithFilters(maskInfo, stream, out var maskRgba, out var maskWidth, out var maskHeight)) return;
         if (maskWidth != width || maskHeight != height) return;
 
-        var pixelCount = width * height;
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var pixelCount)) return;
         for (var i = 0; i < pixelCount; i++) {
             var maskAlpha = maskInfo.IsImageMask ? maskRgba[i * 4 + 3] : maskRgba[i * 4];
             var dst = i * 4 + 3;
@@ -481,6 +482,7 @@ public static class PdfReader {
         height = 0;
 
         if (info.Width <= 0 || info.Height <= 0) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(info.Width, info.Height, out _)) return false;
 
         var bits = info.BitsPerComponent;
         var colors = info.Colors;
@@ -664,7 +666,7 @@ public static class PdfReader {
                 ranges[c * 2 + 1] = ScaleMaskValue(max, maxValue);
             }
 
-            var pixelCount = width * height;
+            var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "PDF image exceeds size limits.");
             alpha = new byte[pixelCount];
             for (var i = 0; i < pixelCount; i++) {
                 var baseIndex = i * colors;
@@ -696,7 +698,7 @@ public static class PdfReader {
             rawRanges[c * 2 + 1] = max;
         }
 
-        var count = width * height;
+        var count = DecodeGuards.EnsurePixelCount(width, height, "PDF image exceeds size limits.");
         alpha = new byte[count];
         for (var i = 0; i < count; i++) {
             var baseIndex = i * colors;
@@ -1856,17 +1858,20 @@ public static class PdfReader {
         colors = 0;
         if (width <= 0 || height <= 0) return false;
         if (predictor >= 10) {
-            var rgb = checked((width * 3 + 1) * height);
+            var rgb = ((long)width * 3 + 1) * height;
+            if (rgb > int.MaxValue) return false;
             if (length == rgb) {
                 colors = 3;
                 return true;
             }
-            var cmyk = checked((width * 4 + 1) * height);
+            var cmyk = ((long)width * 4 + 1) * height;
+            if (cmyk > int.MaxValue) return false;
             if (length == cmyk) {
                 colors = 4;
                 return true;
             }
-            var gray = checked((width + 1) * height);
+            var gray = ((long)width + 1) * height;
+            if (gray > int.MaxValue) return false;
             if (length == gray) {
                 colors = 1;
                 return true;
@@ -1874,17 +1879,20 @@ public static class PdfReader {
             return false;
         }
 
-        var rgbRaw = checked(width * height * 3);
+        var rgbRaw = (long)width * height * 3;
+        if (rgbRaw > int.MaxValue) return false;
         if (length == rgbRaw) {
             colors = 3;
             return true;
         }
-        var cmykRaw = checked(width * height * 4);
+        var cmykRaw = (long)width * height * 4;
+        if (cmykRaw > int.MaxValue) return false;
         if (length == cmykRaw) {
             colors = 4;
             return true;
         }
-        var grayRaw = checked(width * height);
+        var grayRaw = (long)width * height;
+        if (grayRaw > int.MaxValue) return false;
         if (length == grayRaw) {
             colors = 1;
             return true;
@@ -1981,8 +1989,9 @@ public static class PdfReader {
     }
 
     private static bool TryApplyPngPredictor(byte[] data, int width, int height, int colors, out byte[] output) {
-        output = new byte[width * height * colors];
-        var rowSize = width * colors;
+        var outputLength = DecodeGuards.EnsureByteCount((long)width * height * colors, "PDF image exceeds size limits.");
+        output = new byte[outputLength];
+        var rowSize = DecodeGuards.EnsureByteCount((long)width * colors, "PDF image exceeds size limits.");
         var srcOffset = 0;
         for (var y = 0; y < height; y++) {
             if (srcOffset >= data.Length) return false;
@@ -2195,7 +2204,7 @@ public static class PdfReader {
         if (info.IndexedLookup is null) return false;
         if (info.IndexedHighVal < 0) return false;
         if (info.Width <= 0 || info.Height <= 0) return false;
-        var pixelCount = info.Width * info.Height;
+        if (!DecodeGuards.TryEnsurePixelCount(info.Width, info.Height, out var pixelCount)) return false;
         if (indices.Length < pixelCount) return false;
 
         var baseComponents = info.IndexedBase switch {
@@ -2207,10 +2216,10 @@ public static class PdfReader {
         if (baseComponents == 0) return false;
 
         var entryCount = info.IndexedHighVal + 1;
-        var lookupBytes = entryCount * baseComponents;
+        var lookupBytes = DecodeGuards.EnsureByteCount((long)entryCount * baseComponents, "PDF indexed lookup exceeds size limits.");
         if (info.IndexedLookup.Length < lookupBytes) return false;
 
-        rgba = new byte[pixelCount * 4];
+        rgba = DecodeGuards.AllocateRgba32(info.Width, info.Height, "PDF image exceeds size limits.");
         for (var i = 0; i < pixelCount; i++) {
             var index = indices[i];
             if (index > info.IndexedHighVal) index = (byte)info.IndexedHighVal;

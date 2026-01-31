@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Jpeg;
 
@@ -36,7 +37,7 @@ public static partial class JpegReader {
     }
 
     private static byte[] ComposeRgba(JpegFrame frame, BaselineComponentState[] states, int? adobeTransform, bool highQualityChroma) {
-        var rgba = new byte[frame.Width * frame.Height * 4];
+        var rgba = DecodeGuards.AllocateRgba32(frame.Width, frame.Height, "JPEG dimensions exceed limits.");
         var maxH = frame.MaxH;
         var maxV = frame.MaxV;
 
@@ -527,8 +528,9 @@ public static partial class JpegReader {
         var width = ReadUInt16BE(data, 3);
         var components = data[5];
         if (width == 0 || height == 0) throw new FormatException("Invalid JPEG dimensions.");
-        const long maxPixels = 100_000_000;
-        if ((long)width * height > maxPixels) throw new FormatException("JPEG dimensions exceed limits.");
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out _)) {
+            throw new FormatException("JPEG dimensions exceed limits.");
+        }
         if (components == 0) throw new FormatException("Invalid JPEG component count.");
         if (data.Length < 6 + components * 3) throw new FormatException("Invalid JPEG SOF segment.");
 
@@ -697,7 +699,7 @@ public static partial class JpegReader {
         var srcHeight = height;
         var destWidth = (orientation >= 5 && orientation <= 8) ? srcHeight : srcWidth;
         var destHeight = (orientation >= 5 && orientation <= 8) ? srcWidth : srcHeight;
-        var result = new byte[destWidth * destHeight * 4];
+        var result = DecodeGuards.AllocateRgba32(destWidth, destHeight, "JPEG dimensions exceed limits.");
 
         for (var y = 0; y < destHeight; y++) {
             for (var x = 0; x < destWidth; x++) {
@@ -806,8 +808,9 @@ public static partial class JpegReader {
             Component = component;
             BlocksPerRow = blocksPerRow;
             BlocksPerCol = blocksPerCol;
-            Stride = blocksPerRow * 8;
-            Buffer = new int[Stride * (blocksPerCol * 8)];
+            Stride = DecodeGuards.EnsureByteCount((long)blocksPerRow * 8, "JPEG dimensions exceed limits.");
+            var bufferLength = DecodeGuards.EnsureByteCount((long)Stride * blocksPerCol * 8, "JPEG dimensions exceed limits.");
+            Buffer = new int[bufferLength];
             BlockCoeffs = new int[64];
             BlockPixels = new int[64];
             PrevDc = 0;
@@ -833,7 +836,9 @@ public static partial class JpegReader {
                 if (comp.QuantId >= quantTables.Length || quantTables[comp.QuantId] is null) {
                     throw new FormatException("Missing JPEG quantization table.");
                 }
-                components[i] = new ProgressiveComponentState(comp, mcuCols * comp.H, mcuRows * comp.V);
+                var blocksPerRow = DecodeGuards.EnsureByteCount((long)mcuCols * comp.H, "JPEG dimensions exceed limits.");
+                var blocksPerCol = DecodeGuards.EnsureByteCount((long)mcuRows * comp.V, "JPEG dimensions exceed limits.");
+                components[i] = new ProgressiveComponentState(comp, blocksPerRow, blocksPerCol);
             }
 
             return new ProgressiveState {
@@ -891,9 +896,11 @@ public static partial class JpegReader {
             Component = component;
             BlocksPerRow = blocksPerRow;
             BlocksPerCol = blocksPerCol;
-            Stride = blocksPerRow * 8;
-            Coeffs = new int[BlocksPerRow * BlocksPerCol * 64];
-            Buffer = new int[Stride * (blocksPerCol * 8)];
+            Stride = DecodeGuards.EnsureByteCount((long)blocksPerRow * 8, "JPEG dimensions exceed limits.");
+            var coeffLength = DecodeGuards.EnsureByteCount((long)BlocksPerRow * BlocksPerCol * 64, "JPEG dimensions exceed limits.");
+            var bufferLength = DecodeGuards.EnsureByteCount((long)Stride * blocksPerCol * 8, "JPEG dimensions exceed limits.");
+            Coeffs = new int[coeffLength];
+            Buffer = new int[bufferLength];
             BlockCoeffs = new int[64];
             BlockPixels = new int[64];
             PrevDc = 0;

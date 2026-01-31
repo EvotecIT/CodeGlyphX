@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Bmp;
 
@@ -16,6 +17,7 @@ public static class BmpReader {
     /// Decodes a BMP image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> bmp, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(bmp.Length, "BMP payload exceeds size limits.");
         if (bmp.Length < 54) throw new FormatException("Invalid BMP header.");
         if (bmp[0] != (byte)'B' || bmp[1] != (byte)'M') throw new FormatException("Invalid BMP signature.");
 
@@ -43,6 +45,7 @@ public static class BmpReader {
 
         width = w;
         height = h;
+        _ = DecodeGuards.EnsurePixelCount(width, height, "BMP dimensions exceed size limits.");
 
         if (dataOffset < 0 || dataOffset >= bmp.Length) throw new FormatException("Invalid BMP pixel data offset.");
 
@@ -65,10 +68,10 @@ public static class BmpReader {
 
         if (bpp == 24) {
             var rowStride = RowStride(width, bpp);
-            var required = dataOffset + rowStride * height;
+            var required = (long)dataOffset + (long)rowStride * height;
             if (required > bmp.Length) throw new FormatException("Truncated BMP data.");
 
-            var rgba = new byte[width * height * 4];
+            var rgba = DecodeGuards.AllocateRgba32(width, height, "BMP dimensions exceed size limits.");
             for (var y = 0; y < height; y++) {
                 var srcRow = topDown ? y : (height - 1 - y);
                 var src = dataOffset + srcRow * rowStride;
@@ -88,10 +91,10 @@ public static class BmpReader {
 
         if (bpp == 32) {
             var rowStride = RowStride(width, bpp);
-            var required = dataOffset + rowStride * height;
+            var required = (long)dataOffset + (long)rowStride * height;
             if (required > bmp.Length) throw new FormatException("Truncated BMP data.");
 
-            var rgba = new byte[width * height * 4];
+            var rgba = DecodeGuards.AllocateRgba32(width, height, "BMP dimensions exceed size limits.");
             for (var y = 0; y < height; y++) {
                 var srcRow = topDown ? y : (height - 1 - y);
                 var src = dataOffset + srcRow * rowStride;
@@ -121,7 +124,7 @@ public static class BmpReader {
 
         if (bpp == 16) {
             var rowStride = RowStride(width, bpp);
-            var required = dataOffset + rowStride * height;
+            var required = (long)dataOffset + (long)rowStride * height;
             if (required > bmp.Length) throw new FormatException("Truncated BMP data.");
             if (!hasBitFields && redMask == 0 && greenMask == 0 && blueMask == 0) {
                 redMask = 0x7C00;
@@ -130,7 +133,7 @@ public static class BmpReader {
                 alphaMask = 0;
             }
 
-            var rgba = new byte[width * height * 4];
+            var rgba = DecodeGuards.AllocateRgba32(width, height, "BMP dimensions exceed size limits.");
             for (var y = 0; y < height; y++) {
                 var srcRow = topDown ? y : (height - 1 - y);
                 var src = dataOffset + srcRow * rowStride;
@@ -149,13 +152,16 @@ public static class BmpReader {
         if (bpp == 1 || bpp == 4 || bpp == 8) {
             var colorsUsed = headerSize >= 44 ? ReadUInt32LE(bmp, 46) : 0;
             var paletteCount = colorsUsed != 0 ? (int)colorsUsed : 1 << bpp;
+            if (paletteCount <= 0 || paletteCount > (1 << bpp) || paletteCount > 256) {
+                throw new FormatException("Invalid BMP palette.");
+            }
             var paletteOffset = 14 + headerSize + (hasBitFields ? 12 : 0);
-            var paletteBytes = paletteCount * 4;
-            if (paletteOffset + paletteBytes > bmp.Length) throw new FormatException("Invalid BMP palette.");
+            var paletteBytes = DecodeGuards.EnsureByteCount((long)paletteCount * 4, "Invalid BMP palette.");
+            if ((long)paletteOffset + paletteBytes > bmp.Length) throw new FormatException("Invalid BMP palette.");
 
-            var rgba = new byte[width * height * 4];
+            var rgba = DecodeGuards.AllocateRgba32(width, height, "BMP dimensions exceed size limits.");
             if (compression == BiRle8 || compression == BiRle4) {
-                var indices = new byte[width * height];
+                var indices = DecodeGuards.AllocatePixelBuffer(width, height, "BMP dimensions exceed size limits.");
                 if (compression == BiRle8) {
                     DecodeRle8(bmp.Slice(dataOffset), indices, width, height, topDown);
                 } else {
@@ -181,7 +187,7 @@ public static class BmpReader {
             }
 
             var rowStride = RowStride(width, bpp);
-            var required = dataOffset + rowStride * height;
+            var required = (long)dataOffset + (long)rowStride * height;
             if (required > bmp.Length) throw new FormatException("Truncated BMP data.");
             for (var y = 0; y < height; y++) {
                 var srcRow = topDown ? y : (height - 1 - y);
@@ -206,7 +212,9 @@ public static class BmpReader {
     }
 
     private static int RowStride(int width, int bpp) {
-        return ((width * bpp + 31) / 32) * 4;
+        var rowBits = (long)width * bpp;
+        var stride = ((rowBits + 31) / 32) * 4;
+        return DecodeGuards.EnsureByteCount(stride, "BMP row exceeds size limits.");
     }
 
     private static byte ExtractToByte(uint value, uint mask) {
