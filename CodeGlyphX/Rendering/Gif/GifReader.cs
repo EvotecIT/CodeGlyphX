@@ -11,6 +11,7 @@ public static class GifReader {
     /// Decodes a GIF image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> gif, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(gif.Length, "GIF payload exceeds size limits.");
         if (gif.Length < 13) throw new FormatException("Invalid GIF header.");
         if (!IsGif(gif)) throw new FormatException("Invalid GIF signature.");
 
@@ -114,7 +115,19 @@ public static class GifReader {
             var minCodeSize = gif[offset++];
 
             var imageData = ReadSubBlocks(gif, ref offset);
-            _ = DecodeGuards.EnsurePixelCount(imgW, imgH, "GIF frame exceeds size limits.");
+            if (maxFrames > 0 && frames.Count >= maxFrames) {
+                throw new FormatException("GIF frame count exceeds limits.");
+            }
+            if (!DecodeGuards.TryEnsurePixelCount(imgW, imgH, maxFramePixels, out _)) {
+                throw new FormatException("GIF frame exceeds size limits.");
+            }
+            if (delay > 0) {
+                var nextTotal = totalDuration + delay;
+                if (maxDurationMs > 0 && nextTotal > maxDurationMs) {
+                    throw new FormatException("GIF animation duration exceeds limits.");
+                }
+                totalDuration = nextTotal;
+            }
             var pixels = DecodeGuards.AllocatePixelBuffer(imgW, imgH, "GIF frame exceeds size limits.");
             var written = LzwDecode(imageData, minCodeSize, pixels);
             if (written < imgW * imgH) {
@@ -224,6 +237,7 @@ public static class GifReader {
         out int canvasWidth,
         out int canvasHeight,
         out GifAnimationOptions options) {
+        DecodeGuards.EnsurePayloadWithinLimits(gif.Length, "GIF payload exceeds size limits.");
         if (gif.Length < 13) throw new FormatException("Invalid GIF header.");
         if (!IsGif(gif)) throw new FormatException("Invalid GIF signature.");
 
@@ -260,6 +274,10 @@ public static class GifReader {
         options = new GifAnimationOptions(loopCount: 0, backgroundRgba: (uint)(bgR | (bgG << 8) | (bgB << 16) | (bgA << 24)));
 
         var frames = new System.Collections.Generic.List<GifAnimationFrame>();
+        var maxFrames = ImageReader.MaxAnimationFrames;
+        var maxDurationMs = ImageReader.MaxAnimationDurationMs;
+        var maxFramePixels = ImageReader.MaxAnimationFramePixels;
+        var totalDuration = 0L;
         byte[]? canvas = composite ? DecodeGuards.AllocateRgba32(canvasWidth, canvasHeight, "GIF dimensions exceed size limits.") : null;
         if (canvas is not null) {
             FillCanvas(canvas, bgR, bgG, bgB, bgA);

@@ -37,6 +37,21 @@ public static partial class ImageReader {
     public const int DefaultMaxImageBytes = 256 * 1024 * 1024;
 
     /// <summary>
+    /// Default maximum animation frame count allowed for managed decodes.
+    /// </summary>
+    public const int DefaultMaxAnimationFrames = 256;
+
+    /// <summary>
+    /// Default maximum total animation duration (milliseconds) for managed decodes.
+    /// </summary>
+    public const int DefaultMaxAnimationDurationMs = 120_000;
+
+    /// <summary>
+    /// Default maximum animation frame pixel count allowed for managed decodes.
+    /// </summary>
+    public const long DefaultMaxAnimationFramePixels = DefaultMaxPixels;
+
+    /// <summary>
     /// Maximum pixel count allowed for managed decodes (width * height). Set to 0 to disable.
     /// </summary>
     public static long MaxPixels { get; set; } = DefaultMaxPixels;
@@ -45,6 +60,21 @@ public static partial class ImageReader {
     /// Maximum image payload size (bytes) for stream decoding. Set to 0 to disable.
     /// </summary>
     public static int MaxImageBytes { get; set; } = DefaultMaxImageBytes;
+
+    /// <summary>
+    /// Maximum animation frame count allowed for managed decodes. Set to 0 to disable.
+    /// </summary>
+    public static int MaxAnimationFrames { get; set; } = DefaultMaxAnimationFrames;
+
+    /// <summary>
+    /// Maximum total animation duration (milliseconds) allowed for managed decodes. Set to 0 to disable.
+    /// </summary>
+    public static int MaxAnimationDurationMs { get; set; } = DefaultMaxAnimationDurationMs;
+
+    /// <summary>
+    /// Maximum pixel count allowed per animation frame. Set to 0 to disable.
+    /// </summary>
+    public static long MaxAnimationFramePixels { get; set; } = DefaultMaxAnimationFramePixels;
 
     /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected).

@@ -73,13 +73,14 @@ internal static class WebpManagedDecoder {
             return false;
         }
 
+        var maxFramePixels = ImageReader.MaxAnimationFramePixels;
         var decodedFrames = new WebpAnimationFrame[frameInfos.Count];
         byte[]? lastFrame = null;
         var lastWidth = 0;
         var lastHeight = 0;
         for (var i = 0; i < frameInfos.Count; i++) {
             var frame = frameInfos[i];
-            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, out var framePixels)) {
+            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, maxFramePixels, out var framePixels)) {
                 return false;
             }
             if (!DecodeGuards.TryEnsureByteCount((long)frame.Width * 4, out var frameStride)) {
@@ -139,6 +140,7 @@ internal static class WebpManagedDecoder {
             return false;
         }
 
+        var maxFramePixels = ImageReader.MaxAnimationFramePixels;
         var backgroundBgra = options.BackgroundBgra;
         var canvas = new byte[canvasBytes];
         FillBackground(canvas, backgroundBgra);
@@ -146,7 +148,7 @@ internal static class WebpManagedDecoder {
         var renderedFrames = new WebpAnimationFrame[frameInfos.Count];
         for (var i = 0; i < frameInfos.Count; i++) {
             var frame = frameInfos[i];
-            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, out _)) {
+            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, maxFramePixels, out _)) {
                 return false;
             }
 
@@ -243,6 +245,11 @@ internal static class WebpManagedDecoder {
             if (!TryReadVp8X(vp8xPayload, out canvasWidth, out canvasHeight, out _)) return false;
         }
 
+        var maxFrames = ImageReader.MaxAnimationFrames;
+        var maxDurationMs = ImageReader.MaxAnimationDurationMs;
+        var maxFramePixels = ImageReader.MaxAnimationFramePixels;
+        var totalDuration = 0L;
+
         for (var i = 0; i < chunks.Length; i++) {
             if (chunks[i].FourCc != FourCcAnmf) continue;
             var payload = chunkSpan.Slice(chunks[i].DataOffset, chunks[i].Length);
@@ -256,6 +263,13 @@ internal static class WebpManagedDecoder {
             if (frame.X < 0 || frame.Y < 0) return false;
             if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) return false;
 
+            if (maxFrames > 0 && frames.Count >= maxFrames) return false;
+            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, maxFramePixels, out _)) return false;
+            if (frame.DurationMs > 0) {
+                var nextTotal = totalDuration + frame.DurationMs;
+                if (maxDurationMs > 0 && nextTotal > maxDurationMs) return false;
+                totalDuration = nextTotal;
+            }
             frames.Add(frame);
         }
 
@@ -337,6 +351,7 @@ internal static class WebpManagedDecoder {
 
         if (frame.X < 0 || frame.Y < 0) return false;
         if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, ImageReader.MaxAnimationFramePixels, out _)) return false;
         if (!DecodeGuards.TryEnsurePixelCount(canvasWidth, canvasHeight, out var canvasPixels)) return false;
         if (!DecodeGuards.TryEnsureByteCount((long)canvasPixels * 4, out var canvasBytes)) return false;
 
@@ -398,6 +413,7 @@ internal static class WebpManagedDecoder {
         var width = ReadU24LE(payload, 6) + 1;
         var height = ReadU24LE(payload, 9) + 1;
         if (width <= 0 || height <= 0) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, ImageReader.MaxAnimationFramePixels, out _)) return false;
 
         var duration = ReadU24LE(payload, 12);
         if (duration <= 0) duration = 1;

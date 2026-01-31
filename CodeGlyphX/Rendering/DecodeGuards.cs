@@ -10,11 +10,14 @@ internal static class DecodeGuards {
     }
 
     public static bool TryEnsurePixelCount(int width, int height, out int pixels) {
+        return TryEnsurePixelCount(width, height, ImageReader.MaxPixels, out pixels);
+    }
+
+    public static bool TryEnsurePixelCount(int width, int height, long maxPixels, out int pixels) {
         pixels = 0;
         if (width <= 0 || height <= 0) return false;
         var total = (long)width * height;
         if (total > int.MaxValue) return false;
-        var maxPixels = ImageReader.MaxPixels;
         if (maxPixels > 0 && total > maxPixels) return false;
         pixels = (int)total;
         return true;
