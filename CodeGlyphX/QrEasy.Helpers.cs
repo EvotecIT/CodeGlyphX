@@ -259,11 +259,31 @@ public static partial class QrEasy {
             LogoBackground = opts.LogoBackground,
             LogoCornerRadiusPx = opts.LogoCornerRadiusPx,
             JpegQuality = opts.JpegQuality,
+            JpegOptions = CloneJpegOptions(opts.JpegOptions),
             WebpQuality = opts.WebpQuality,
             IcoSizes = opts.IcoSizes is null ? null : (int[])opts.IcoSizes.Clone(),
             IcoPreserveAspectRatio = opts.IcoPreserveAspectRatio,
             HtmlEmailSafeTable = opts.HtmlEmailSafeTable,
         };
+    }
+
+    private static JpegEncodeOptions? CloneJpegOptions(JpegEncodeOptions? options) {
+        if (options is null) return null;
+        return new JpegEncodeOptions {
+            Quality = options.Quality,
+            Subsampling = options.Subsampling,
+            Progressive = options.Progressive,
+            OptimizeHuffman = options.OptimizeHuffman,
+            WriteJfifHeader = options.WriteJfifHeader,
+            Metadata = CloneJpegMetadata(options.Metadata)
+        };
+    }
+
+    private static JpegMetadata CloneJpegMetadata(JpegMetadata metadata) {
+        return new JpegMetadata(
+            metadata.Exif is null ? null : (byte[])metadata.Exif.Clone(),
+            metadata.Xmp is null ? null : (byte[])metadata.Xmp.Clone(),
+            metadata.Icc is null ? null : (byte[])metadata.Icc.Clone());
     }
 
     private static QrPngGradientOptions? CloneGradient(QrPngGradientOptions? gradient) {

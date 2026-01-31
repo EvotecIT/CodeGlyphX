@@ -306,6 +306,12 @@ internal static class WebpVp8Decoder {
         return true;
     }
 
+    internal static bool IsInterframe(ReadOnlySpan<byte> payload) {
+        if (payload.Length < FrameTagBytes) return false;
+        var frameTag = ReadU24LE(payload, 0);
+        return (frameTag & 1) != 0;
+    }
+
     internal static bool TryGetFirstPartition(ReadOnlySpan<byte> payload, out ReadOnlySpan<byte> firstPartition) {
         firstPartition = default;
         if (!TryReadHeader(payload, out var header)) return false;

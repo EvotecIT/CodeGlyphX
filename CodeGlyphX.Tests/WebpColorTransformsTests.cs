@@ -6,6 +6,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpColorTransformTests {
     [Fact]
     public void Webp_ManagedVp8L_ColorTransform_AdjustsChannels() {

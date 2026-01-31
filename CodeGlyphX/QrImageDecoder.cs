@@ -665,7 +665,7 @@ public static class QrImageDecoder {
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
                 return TryDecodeImageFallback(image, imageOptions, options, token, out decoded, out _);
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageReader.TryDecodeRgba32(image, imageOptions, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out decoded);
         } finally {
@@ -684,7 +684,7 @@ public static class QrImageDecoder {
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
                 return TryDecodeImageFallback(image, imageOptions, options, token, out decoded, out info);
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageReader.TryDecodeRgba32(image, imageOptions, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
         } finally {
@@ -701,7 +701,7 @@ public static class QrImageDecoder {
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
                 return TryDecodeImageFallback(image.ToArray(), imageOptions, options, token, out decoded, out _);
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageReader.TryDecodeRgba32(image, imageOptions, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out decoded);
         } finally {
@@ -719,7 +719,7 @@ public static class QrImageDecoder {
             if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
                 return TryDecodeImageFallback(image.ToArray(), imageOptions, options, token, out decoded, out info);
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageReader.TryDecodeRgba32(image, imageOptions, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
         } finally {
@@ -739,7 +739,7 @@ public static class QrImageDecoder {
                 decoded = new[] { single };
                 return true;
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageReader.TryDecodeRgba32(image, imageOptions, out var rgba, out var width, out var height)) return false;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
             return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, options, token, out decoded);
         } finally {
@@ -775,7 +775,7 @@ public static class QrImageDecoder {
                 decoded = Array.Empty<QrDecoded>();
                 return false;
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, imageOptions, out var rgba, out var width, out var height)) {
                 decoded = Array.Empty<QrDecoded>();
                 return false;
             }

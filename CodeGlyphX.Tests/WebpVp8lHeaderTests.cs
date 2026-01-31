@@ -5,6 +5,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpVp8lHeaderTests {
     [Fact]
     public void Vp8l_Header_SubtractGreenOnly_Parses() {

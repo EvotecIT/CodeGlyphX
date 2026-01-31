@@ -113,8 +113,10 @@ public static partial class DataMatrixCode {
     public static byte[] Jpeg(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         var opts = BuildPngOptions(options);
-        var quality = options?.JpegQuality ?? 85;
-        return MatrixJpegRenderer.Render(modules, opts, quality);
+        var jpegOptions = options?.JpegOptions;
+        return jpegOptions is null
+            ? MatrixJpegRenderer.Render(modules, opts, options?.JpegQuality ?? 85)
+            : MatrixJpegRenderer.Render(modules, opts, jpegOptions);
     }
 
     /// <summary>
@@ -325,8 +327,10 @@ public static partial class DataMatrixCode {
     public static byte[] Jpeg(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = Encode(text, mode);
         var opts = BuildPngOptions(options);
-        var quality = options?.JpegQuality ?? 85;
-        return MatrixJpegRenderer.Render(modules, opts, quality);
+        var jpegOptions = options?.JpegOptions;
+        return jpegOptions is null
+            ? MatrixJpegRenderer.Render(modules, opts, options?.JpegQuality ?? 85)
+            : MatrixJpegRenderer.Render(modules, opts, jpegOptions);
     }
 
     /// <summary>
@@ -463,8 +467,10 @@ public static partial class DataMatrixCode {
     public static byte[] Jpeg(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null) {
         var modules = EncodeBytes(data, mode);
         var opts = BuildPngOptions(options);
-        var quality = options?.JpegQuality ?? 85;
-        return MatrixJpegRenderer.Render(modules, opts, quality);
+        var jpegOptions = options?.JpegOptions;
+        return jpegOptions is null
+            ? MatrixJpegRenderer.Render(modules, opts, options?.JpegQuality ?? 85)
+            : MatrixJpegRenderer.Render(modules, opts, jpegOptions);
     }
 
     /// <summary>

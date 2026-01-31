@@ -4,6 +4,7 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
+using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
@@ -16,6 +17,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
@@ -77,12 +79,30 @@ public static partial class Pdf417Code {
                 }
                 return RenderedOutput.FromText(format, html);
             }
-            case OutputFormat.Jpeg:
-                return RenderedOutput.FromBinary(format, MatrixJpegRenderer.Render(modules, pngOptions, renderOptions?.JpegQuality ?? 85));
-            case OutputFormat.Webp:
-                return RenderedOutput.FromBinary(format, MatrixWebpRenderer.Render(modules, pngOptions, renderOptions?.WebpQuality ?? 100));
+            case OutputFormat.Jpeg: {
+                var jpegOptions = renderOptions?.JpegOptions;
+                var data = jpegOptions is null
+                    ? MatrixJpegRenderer.Render(modules, pngOptions, renderOptions?.JpegQuality ?? 85)
+                    : MatrixJpegRenderer.Render(modules, pngOptions, jpegOptions);
+                return RenderedOutput.FromBinary(format, data);
+            }
+            case OutputFormat.Webp: {
+                var quality = renderOptions?.WebpQuality ?? 100;
+                if (RenderAnimationHelpers.TryRenderMatrixWebp(extras, pngOptions, quality, out var webp)) {
+                    return RenderedOutput.FromBinary(format, webp);
+                }
+                return RenderedOutput.FromBinary(format, MatrixWebpRenderer.Render(modules, pngOptions, quality));
+            }
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, MatrixBmpRenderer.Render(modules, pngOptions));
+            case OutputFormat.Gif: {
+                if (RenderAnimationHelpers.TryRenderMatrixGif(extras, pngOptions, out var gif)) {
+                    return RenderedOutput.FromBinary(format, gif);
+                }
+                return RenderedOutput.FromBinary(format, MatrixGifRenderer.Render(modules, pngOptions));
+            }
+            case OutputFormat.Tiff:
+                return RenderedOutput.FromBinary(format, MatrixTiffRenderer.Render(modules, pngOptions, extras?.TiffCompression ?? TiffCompressionMode.Auto));
             case OutputFormat.Ppm:
                 return RenderedOutput.FromBinary(format, MatrixPpmRenderer.Render(modules, pngOptions));
             case OutputFormat.Pbm:

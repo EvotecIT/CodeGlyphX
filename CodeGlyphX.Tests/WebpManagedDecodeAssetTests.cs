@@ -5,6 +5,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpManagedDecodeAssetTests {
     [Theory]
     [InlineData("Assets/DecodingSamples/qr-template-grid.webp", 1536, 864)]

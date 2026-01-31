@@ -12,7 +12,7 @@ public static partial class CodeGlyph {
     public static bool TryDecodeAuto(byte[] image, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options = null) {
         decoded = null!;
         if (image is null) throw new ArgumentNullException(nameof(image));
-        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+        if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) return false;
         return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 
@@ -22,7 +22,7 @@ public static partial class CodeGlyph {
     public static bool TryDecodeAllAuto(byte[] image, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options = null) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+        if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) return false;
         return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 

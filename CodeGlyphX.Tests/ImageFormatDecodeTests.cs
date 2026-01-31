@@ -1,6 +1,7 @@
 using System.Text;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Bmp;
+using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Pam;
@@ -9,6 +10,7 @@ using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
 using Xunit;
@@ -26,6 +28,9 @@ public sealed class ImageFormatDecodeTests {
 
     [Fact]
     public void Decode_Bmp() => AssertRoundTrip(QrBmpRenderer.Render(Encode(), DefaultOptions()));
+
+    [Fact]
+    public void Decode_Gif_Render() => AssertRoundTrip(QrGifRenderer.Render(Encode(), DefaultOptions()));
 
     [Fact]
     public void Decode_Ppm() => AssertRoundTrip(QrPpmRenderer.Render(Encode(), DefaultOptions()));
@@ -47,6 +52,9 @@ public sealed class ImageFormatDecodeTests {
 
     [Fact]
     public void Decode_Tga() => AssertRoundTrip(QrTgaRenderer.Render(Encode(), DefaultOptions()));
+
+    [Fact]
+    public void Decode_Tiff_Render() => AssertRoundTrip(QrTiffRenderer.Render(Encode(), DefaultOptions()));
 
     [Fact]
     public void Decode_Ico() => AssertRoundTrip(QrIcoRenderer.Render(Encode(), DefaultOptions()));

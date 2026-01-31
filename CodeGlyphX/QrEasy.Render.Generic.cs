@@ -4,6 +4,7 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
+using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
@@ -16,6 +17,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
@@ -65,17 +67,35 @@ public static partial class QrEasy {
             }
             case OutputFormat.Jpeg: {
                 var render = BuildPngOptions(opts, qr);
-                var quality = opts.JpegQuality;
-                return RenderedOutput.FromBinary(format, QrJpegRenderer.Render(qr.Modules, render, quality));
+                var jpegOptions = opts.JpegOptions;
+                var data = jpegOptions is null
+                    ? QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality)
+                    : QrJpegRenderer.Render(qr.Modules, render, jpegOptions);
+                return RenderedOutput.FromBinary(format, data);
             }
             case OutputFormat.Webp: {
                 var render = BuildPngOptions(opts, qr);
                 var quality = opts.WebpQuality;
+                if (RenderAnimationHelpers.TryRenderQrWebp(extras, render, quality, out var webp)) {
+                    return RenderedOutput.FromBinary(format, webp);
+                }
                 return RenderedOutput.FromBinary(format, QrWebpRenderer.Render(qr.Modules, render, quality));
+            }
+            case OutputFormat.Tiff: {
+                var render = BuildPngOptions(opts, qr);
+                var compression = extras?.TiffCompression ?? TiffCompressionMode.Auto;
+                return RenderedOutput.FromBinary(format, QrTiffRenderer.Render(qr.Modules, render, compression));
             }
             case OutputFormat.Bmp: {
                 var render = BuildPngOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrBmpRenderer.Render(qr.Modules, render));
+            }
+            case OutputFormat.Gif: {
+                var render = BuildPngOptions(opts, qr);
+                if (RenderAnimationHelpers.TryRenderQrGif(extras, render, out var gif)) {
+                    return RenderedOutput.FromBinary(format, gif);
+                }
+                return RenderedOutput.FromBinary(format, QrGifRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Ppm: {
                 var render = BuildPngOptions(opts, qr);
@@ -119,6 +139,10 @@ public static partial class QrEasy {
                 return RenderedOutput.FromText(format, eps, Encoding.ASCII);
             }
             case OutputFormat.Ascii: {
+                if (extras?.AsciiConsole is not null) {
+                    var fitOptions = MergeConsoleOptions(extras.AsciiConsole, opts.QuietZone);
+                    return RenderedOutput.FromText(format, AsciiConsole.Render(qr.Modules, fitOptions));
+                }
                 var asciiOptions = BuildAsciiOptions(extras?.MatrixAscii, opts);
                 return RenderedOutput.FromText(format, MatrixAsciiRenderer.Render(qr.Modules, asciiOptions));
             }

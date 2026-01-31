@@ -167,7 +167,7 @@ public static partial class Pdf417Code {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { decoded = null!; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { decoded = null!; return false; }
             return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
         } finally {
@@ -204,7 +204,7 @@ public static partial class Pdf417Code {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { decoded = null!; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { decoded = null!; return false; }
             return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
         } finally {

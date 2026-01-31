@@ -320,7 +320,13 @@ internal static class WebpVp8lDecoder {
         var transformHeight = (height + blockSize - 1) >> sizeBits;
         if (transformWidth <= 0 || transformHeight <= 0) return false;
 
-        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out var predictorPixels)) return false;
+        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, readMetaPrefix: true, out var predictorPixels)) {
+            var fallback = reader;
+            if (!TryDecodeImageNoTransforms(ref fallback, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out predictorPixels)) {
+                return false;
+            }
+            reader = fallback;
+        }
         var modes = new int[predictorPixels.Length];
         for (var i = 0; i < predictorPixels.Length; i++) {
             var green = (predictorPixels[i] >> 8) & 0xFF;
@@ -357,15 +363,20 @@ internal static class WebpVp8lDecoder {
         }
 
         var probe = reader;
-        if (!TryDecodeImageNoTransformsWithReason(ref probe, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out var predictorPixels, out reason)) {
-            var sigProbe = reader;
-            var nextByte = sigProbe.ReadBits(8);
-            if (nextByte >= 0) {
-                reason = $"{reason} (next byte 0x{nextByte:X2})";
+        if (!TryDecodeImageNoTransformsWithReason(ref probe, transformWidth, transformHeight, depth + 1, readMetaPrefix: true, out var predictorPixels, out reason)) {
+            var fallback = reader;
+            if (!TryDecodeImageNoTransformsWithReason(ref fallback, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out predictorPixels, out reason)) {
+                var sigProbe = reader;
+                var nextByte = sigProbe.ReadBits(8);
+                if (nextByte >= 0) {
+                    reason = $"{reason} (next byte 0x{nextByte:X2})";
+                }
+                return false;
             }
-            return false;
+            reader = fallback;
+        } else {
+            reader = probe;
         }
-        reader = probe;
 
         var modes = new int[predictorPixels.Length];
         for (var i = 0; i < predictorPixels.Length; i++) {
@@ -389,7 +400,13 @@ internal static class WebpVp8lDecoder {
         var transformHeight = (height + blockSize - 1) >> sizeBits;
         if (transformWidth <= 0 || transformHeight <= 0) return false;
 
-        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out var transformPixels)) return false;
+        if (!TryDecodeImageNoTransforms(ref reader, transformWidth, transformHeight, depth + 1, readMetaPrefix: true, out var transformPixels)) {
+            var fallback = reader;
+            if (!TryDecodeImageNoTransforms(ref fallback, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out transformPixels)) {
+                return false;
+            }
+            reader = fallback;
+        }
         transform = new WebpTransform(WebpTransformType.Color, sizeBits, transformWidth, transformHeight, transformPixels);
         return true;
     }
@@ -420,15 +437,20 @@ internal static class WebpVp8lDecoder {
         }
 
         var probe = reader;
-        if (!TryDecodeImageNoTransformsWithReason(ref probe, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out var transformPixels, out reason)) {
-            var sigProbe = reader;
-            var nextByte = sigProbe.ReadBits(8);
-            if (nextByte >= 0) {
-                reason = $"{reason} (next byte 0x{nextByte:X2})";
+        if (!TryDecodeImageNoTransformsWithReason(ref probe, transformWidth, transformHeight, depth + 1, readMetaPrefix: true, out var transformPixels, out reason)) {
+            var fallback = reader;
+            if (!TryDecodeImageNoTransformsWithReason(ref fallback, transformWidth, transformHeight, depth + 1, readMetaPrefix: false, out transformPixels, out reason)) {
+                var sigProbe = reader;
+                var nextByte = sigProbe.ReadBits(8);
+                if (nextByte >= 0) {
+                    reason = $"{reason} (next byte 0x{nextByte:X2})";
+                }
+                return false;
             }
-            return false;
+            reader = fallback;
+        } else {
+            reader = probe;
         }
-        reader = probe;
 
         transform = new WebpTransform(WebpTransformType.Color, sizeBits, transformWidth, transformHeight, transformPixels);
         return true;
@@ -449,7 +471,13 @@ internal static class WebpVp8lDecoder {
         var colorTableSize = colorTableSizeMinus1 + 1;
         if (colorTableSize <= 0) return false;
 
-        if (!TryDecodeImageNoTransforms(ref reader, colorTableSize, 1, depth + 1, readMetaPrefix: false, out var paletteDeltas)) return false;
+        if (!TryDecodeImageNoTransforms(ref reader, colorTableSize, 1, depth + 1, readMetaPrefix: true, out var paletteDeltas)) {
+            var fallback = reader;
+            if (!TryDecodeImageNoTransforms(ref fallback, colorTableSize, 1, depth + 1, readMetaPrefix: false, out paletteDeltas)) {
+                return false;
+            }
+            reader = fallback;
+        }
         var palette = BuildColorTableFromDeltas(paletteDeltas);
 
         var widthBits = GetColorIndexWidthBits(colorTableSize);
@@ -492,15 +520,20 @@ internal static class WebpVp8lDecoder {
         }
 
         var probe = reader;
-        if (!TryDecodeImageNoTransformsWithReason(ref probe, colorTableSize, 1, depth + 1, readMetaPrefix: false, out var paletteDeltas, out reason)) {
-            var sigProbe = reader;
-            var nextByte = sigProbe.ReadBits(8);
-            if (nextByte >= 0) {
-                reason = $"{reason} (next byte 0x{nextByte:X2})";
+        if (!TryDecodeImageNoTransformsWithReason(ref probe, colorTableSize, 1, depth + 1, readMetaPrefix: true, out var paletteDeltas, out reason)) {
+            var fallback = reader;
+            if (!TryDecodeImageNoTransformsWithReason(ref fallback, colorTableSize, 1, depth + 1, readMetaPrefix: false, out paletteDeltas, out reason)) {
+                var sigProbe = reader;
+                var nextByte = sigProbe.ReadBits(8);
+                if (nextByte >= 0) {
+                    reason = $"{reason} (next byte 0x{nextByte:X2})";
+                }
+                return false;
             }
-            return false;
+            reader = fallback;
+        } else {
+            reader = probe;
         }
-        reader = probe;
         var palette = BuildColorTableFromDeltas(paletteDeltas);
 
         var widthBits = GetColorIndexWidthBits(colorTableSize);

@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using CodeGlyphX.Rendering.Jpeg;
 
 namespace CodeGlyphX;
 
@@ -28,6 +29,34 @@ public sealed partial class CodeGlyphDecodeOptions {
     public CodeGlyphDecodeOptions WithImage(Action<ImageDecodeOptions> configure) {
         if (configure is null) throw new ArgumentNullException(nameof(configure));
         configure(EnsureImage());
+        return this;
+    }
+
+    /// <summary>
+    /// Sets JPEG decoding options on the image decode options.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// var options = new CodeGlyphDecodeOptions()
+    ///     .WithJpegOptions(highQualityChroma: true, allowTruncated: true);
+    /// </code>
+    /// </example>
+    public CodeGlyphDecodeOptions WithJpegOptions(JpegDecodeOptions options) {
+        EnsureImage().JpegOptions = options;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets JPEG decoding options on the image decode options.
+    /// </summary>
+    /// <example>
+    /// <code>
+    /// var options = new CodeGlyphDecodeOptions()
+    ///     .WithJpegOptions(highQualityChroma: true);
+    /// </code>
+    /// </example>
+    public CodeGlyphDecodeOptions WithJpegOptions(bool highQualityChroma = false, bool allowTruncated = false) {
+        EnsureImage().JpegOptions = new JpegDecodeOptions(highQualityChroma, allowTruncated);
         return this;
     }
 

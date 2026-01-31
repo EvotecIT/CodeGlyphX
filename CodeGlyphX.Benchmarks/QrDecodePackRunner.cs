@@ -687,6 +687,7 @@ internal static class QrDecodePackRunner {
         var model = BuildReportModel(options, results, nowUtc);
         var sb = new StringBuilder(8192);
         sb.AppendLine("dateUtc,mode,pack,packCategory,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
+        sb.AppendLine("dateUtc,mode,pack,packCategory,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
 
         var date = nowUtc.ToString("O");
         foreach (var pack in model.Packs) {

@@ -35,6 +35,12 @@ public sealed class RendererFormatTests {
         var bmp = QrCode.Render(payload, OutputFormat.Bmp).Data;
         Assert.True(IsBmp(bmp));
 
+        var gif = QrCode.Render(payload, OutputFormat.Gif).Data;
+        Assert.True(IsGif(gif));
+
+        var tiff = QrCode.Render(payload, OutputFormat.Tiff).Data;
+        Assert.True(IsTiff(tiff));
+
         var ppm = QrCode.Render(payload, OutputFormat.Ppm).Data;
         Assert.True(IsPpm(ppm));
 
@@ -170,6 +176,182 @@ public sealed class RendererFormatTests {
     }
 
     [Fact]
+    public void Matrix_Ascii_HalfBlocks_Compresses_Height() {
+        var matrix = new BitMatrix(2, 2);
+        matrix[0, 0] = true;
+        matrix[1, 1] = true;
+
+        var ascii = MatrixAsciiRenderer.Render(matrix, new MatrixAsciiRenderOptions {
+            QuietZone = 0,
+            UseHalfBlocks = true,
+            UseAnsiColors = false
+        });
+
+        var lines = ascii.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+        Assert.Single(lines);
+        Assert.Contains("▀", ascii, StringComparison.Ordinal);
+        Assert.Contains("▄", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AsciiConsole_Fit_Clamps_Scale() {
+        var matrix = new BitMatrix(21, 21);
+        var options = AsciiConsole.Fit(matrix, new AsciiConsoleOptions {
+            WindowWidth = 60,
+            WindowHeight = 20,
+            MinScale = 2,
+            MaxScale = 2
+        });
+
+        Assert.Equal(2, options.Scale);
+    }
+
+    [Fact]
+    public void AsciiConsole_Fit_Shrinks_ModuleWidth_When_Needed() {
+        var matrix = new BitMatrix(29, 29);
+        var options = AsciiConsole.Fit(matrix, new AsciiConsoleOptions {
+            WindowWidth = 40,
+            WindowHeight = 40,
+            UseHalfBlocks = false,
+            AllowModuleWidthShrink = true,
+            MinScale = 1,
+            MaxScale = 1
+        });
+
+        Assert.Equal(1, options.ModuleWidth);
+    }
+
+    [Fact]
+    public void Qr_Ascii_Console_Extras_Use_HalfBlocks() {
+        var payload = "https://example.com/console";
+        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+            AsciiConsole = new AsciiConsoleOptions {
+                UseHalfBlocks = true,
+                UseAnsiColors = false,
+                WindowWidth = 200,
+                WindowHeight = 200
+            }
+        }).GetText();
+
+        Assert.Contains("▀", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AsciiConsole_Disables_Unicode_When_Encoding_Does_Not_Support() {
+        var matrix = new BitMatrix(21, 21);
+        var options = AsciiConsole.Fit(matrix, new AsciiConsoleOptions {
+            OutputEncoding = Encoding.ASCII,
+            UseHalfBlocks = true,
+            UseUnicodeBlocks = true,
+            UseAnsiColors = false
+        });
+
+        Assert.False(options.UseHalfBlocks);
+        Assert.False(options.UseUnicodeBlocks);
+    }
+
+    [Fact]
+    public void AsciiConsole_Upgrades_ModuleWidth_When_HalfBlocks_Disabled() {
+        var matrix = new BitMatrix(21, 21);
+        var options = AsciiConsole.Fit(matrix, new AsciiConsoleOptions {
+            OutputEncoding = Encoding.ASCII,
+            UseHalfBlocks = true,
+            UseUnicodeBlocks = true,
+            UseAnsiColors = false
+        });
+
+        Assert.Equal(2, options.ModuleWidth);
+    }
+
+    [Fact]
+    public void AsciiConsole_Overrides_Dark_Light_Glyphs() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var options = AsciiConsole.Fit(matrix, new AsciiConsoleOptions {
+            UseHalfBlocks = false,
+            UseUnicodeBlocks = false,
+            UseAnsiColors = false,
+            Dark = "X",
+            Light = ".",
+            QuietZone = 0,
+            WindowWidth = 10,
+            WindowHeight = 5
+        });
+
+        var ascii = MatrixAsciiRenderer.Render(matrix, options);
+        Assert.Contains("X", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AsciiConsole_HalfBlock_FgOnly_Does_Not_Emit_Background_Color() {
+        var payload = "https://example.com/console";
+        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+            AsciiConsole = new AsciiConsoleOptions {
+                UseHalfBlocks = true,
+                HalfBlockUseBackground = false,
+                UseAnsiColors = true,
+                WindowWidth = 120,
+                WindowHeight = 60
+            }
+        }).GetText();
+
+        Assert.DoesNotContain("\u001b[48;", ascii, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AsciiConsole_AspectRatio_Sets_ModuleWidth() {
+        var matrix = new BitMatrix(21, 21);
+        var options = AsciiConsole.Fit(matrix, new AsciiConsoleOptions {
+            UseHalfBlocks = false,
+            CellAspectRatio = 0.5,
+            UseAnsiColors = false
+        });
+
+        Assert.Equal(2, options.ModuleWidth);
+    }
+
+    [Fact]
+    public void AsciiConsole_TargetWidth_Adjusts_Scale() {
+        var matrix = new BitMatrix(21, 21);
+        var options = AsciiConsole.Fit(matrix, new AsciiConsoleOptions {
+            WindowWidth = 40,
+            WindowHeight = 20,
+            TargetWidth = 100,
+            TargetHeight = 100,
+            PaddingColumns = 0,
+            PaddingRows = 0,
+            UseHalfBlocks = false,
+            ModuleWidth = 1,
+            ModuleHeight = 1,
+            QuietZone = 0,
+            MinScale = 1,
+            MaxScale = 4,
+            UseAnsiColors = false
+        });
+
+        Assert.Equal(4, options.Scale);
+    }
+
+    [Fact]
+    public void AsciiConsole_PreferScanReliability_Enables_Contrast_Safety() {
+        var matrix = new BitMatrix(21, 21);
+        var options = AsciiConsole.Fit(matrix, new AsciiConsoleOptions {
+            PreferScanReliability = true,
+            UseHalfBlocks = true,
+            UseAnsiColors = true,
+            ColorizeLight = false,
+            HalfBlockUseBackground = false,
+            MinQuietZone = 0
+        });
+
+        Assert.True(options.UseHalfBlockBackground);
+        Assert.True(options.AnsiColorizeLight);
+        Assert.True(options.EnsureDarkContrast);
+        Assert.True(options.QuietZone >= 2);
+    }
+
+    [Fact]
     public void Qr_Ascii_Scale_Increases_Output_Size() {
         var payload = "https://example.com";
         var baseAscii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
@@ -218,6 +400,12 @@ public sealed class RendererFormatTests {
 
         var bmp = BarcodeBmpRenderer.Render(barcode, new BarcodePngRenderOptions());
         Assert.True(IsBmp(bmp));
+
+        var gif = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Gif).Data;
+        Assert.True(IsGif(gif));
+
+        var tiff = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Tiff).Data;
+        Assert.True(IsTiff(tiff));
 
         var ppm = BarcodePpmRenderer.Render(barcode, new BarcodePngRenderOptions());
         Assert.True(IsPpm(ppm));
@@ -336,6 +524,22 @@ public sealed class RendererFormatTests {
     private static bool IsBmp(byte[] data) {
         if (data is null || data.Length < 2) return false;
         return data[0] == (byte)'B' && data[1] == (byte)'M';
+    }
+
+    private static bool IsGif(byte[] data) {
+        if (data is null || data.Length < 6) return false;
+        return data[0] == (byte)'G' &&
+               data[1] == (byte)'I' &&
+               data[2] == (byte)'F' &&
+               data[3] == (byte)'8' &&
+               (data[4] == (byte)'7' || data[4] == (byte)'9') &&
+               data[5] == (byte)'a';
+    }
+
+    private static bool IsTiff(byte[] data) {
+        if (data is null || data.Length < 4) return false;
+        return (data[0] == (byte)'I' && data[1] == (byte)'I' && data[2] == 42 && data[3] == 0) ||
+               (data[0] == (byte)'M' && data[1] == (byte)'M' && data[2] == 0 && data[3] == 42);
     }
 
     private static bool IsPpm(byte[] data) {

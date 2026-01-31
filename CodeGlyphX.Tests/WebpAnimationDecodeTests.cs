@@ -7,6 +7,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpAnimationDecodeTests {
     [Fact]
     public void Webp_ManagedDecode_AnimatedWebp_DecodesFirstFrame() {
@@ -154,7 +156,20 @@ public sealed class WebpAnimationDecodeTests {
         AssertPixel(frames[2].Rgba, canvasWidth, 2, 2, 7, 8, 9, 255);
     }
 
-    private static byte[] BuildLiteralOnlyVp8lPayload(int width, int height, int r, int g, int b, int a) {
+    [Fact]
+    public void Webp_ManagedDecode_AnimatedWebp_Vp8_Interframe_Skips_Frame() {
+        var vp8Payload = BuildInterframePayload(WebpVp8TestHelper.CreateBoolData(4));
+        var webp = BuildAnimatedWebpVp8(vp8Payload, width: 1, height: 1);
+
+        Assert.True(WebpReader.TryDecodeAnimationFrames(webp, out var frames, out var canvasWidth, out var canvasHeight, out _));
+        Assert.Equal(1, canvasWidth);
+        Assert.Equal(1, canvasHeight);
+        Assert.Single(frames);
+        Assert.Equal(4, frames[0].Rgba.Length);
+        Assert.Equal(new byte[] { 0, 0, 0, 0 }, frames[0].Rgba);
+    }
+
+    internal static byte[] BuildLiteralOnlyVp8lPayload(int width, int height, int r, int g, int b, int a) {
         var writer = new BitWriterLsb();
 
         writer.WriteBits(0x2F, 8);
@@ -191,7 +206,7 @@ public sealed class WebpAnimationDecodeTests {
         Assert.Equal(a, rgba[index + 3]);
     }
 
-    private static byte[] BuildAnimatedWebp(
+    internal static byte[] BuildAnimatedWebp(
         byte[] vp8lPayload,
         int canvasWidth,
         int canvasHeight,
@@ -213,7 +228,7 @@ public sealed class WebpAnimationDecodeTests {
         return BuildAnimatedWebp(new[] { frame }, canvasWidth, canvasHeight, bgraBackground, loopCount: 0);
     }
 
-    private static byte[] BuildAnimatedWebp(
+    internal static byte[] BuildAnimatedWebp(
         AnimationFrameSpec[] frames,
         int canvasWidth,
         int canvasHeight,
@@ -248,8 +263,8 @@ public sealed class WebpAnimationDecodeTests {
 
         foreach (var frame in frames) {
             using var framePayload = new MemoryStream();
-            WriteU24LE(framePayload, frame.X / 2);
-            WriteU24LE(framePayload, frame.Y / 2);
+            WriteU24LE(framePayload, frame.X);
+            WriteU24LE(framePayload, frame.Y);
             WriteU24LE(framePayload, frame.Width - 1);
             WriteU24LE(framePayload, frame.Height - 1);
             WriteU24LE(framePayload, frame.DurationMs);
@@ -272,7 +287,57 @@ public sealed class WebpAnimationDecodeTests {
         return bytes;
     }
 
-    private readonly struct AnimationFrameSpec {
+    private static byte[] BuildAnimatedWebpVp8(byte[] vp8Payload, int width, int height) {
+        using var ms = new MemoryStream();
+
+        WriteAscii(ms, "RIFF");
+        WriteU32LE(ms, 0);
+        WriteAscii(ms, "WEBP");
+
+        using (var vp8x = new MemoryStream()) {
+            vp8x.WriteByte(0x02); // animation flag
+            vp8x.WriteByte(0);
+            vp8x.WriteByte(0);
+            vp8x.WriteByte(0);
+            WriteU24LE(vp8x, width - 1);
+            WriteU24LE(vp8x, height - 1);
+            WriteChunk(ms, "VP8X", vp8x.ToArray());
+        }
+
+        using (var anim = new MemoryStream()) {
+            WriteU32LE(anim, 0);
+            WriteU16LE(anim, 0);
+            WriteChunk(ms, "ANIM", anim.ToArray());
+        }
+
+        using (var framePayload = new MemoryStream()) {
+            WriteU24LE(framePayload, 0);
+            WriteU24LE(framePayload, 0);
+            WriteU24LE(framePayload, width - 1);
+            WriteU24LE(framePayload, height - 1);
+            WriteU24LE(framePayload, 1);
+            framePayload.WriteByte(0);
+            WriteChunk(framePayload, "VP8 ", vp8Payload);
+            WriteChunk(ms, "ANMF", framePayload.ToArray());
+        }
+
+        var bytes = ms.ToArray();
+        WriteU32LE(bytes, 4, (uint)(bytes.Length - 8));
+        return bytes;
+    }
+
+    private static byte[] BuildInterframePayload(byte[] boolData) {
+        var partitionSize = boolData.Length;
+        var payload = new byte[3 + partitionSize];
+        var frameTag = (partitionSize << 5) | (1 << 4) | 1;
+        payload[0] = (byte)(frameTag & 0xFF);
+        payload[1] = (byte)((frameTag >> 8) & 0xFF);
+        payload[2] = (byte)((frameTag >> 16) & 0xFF);
+        boolData.CopyTo(payload.AsSpan(3));
+        return payload;
+    }
+
+    internal readonly struct AnimationFrameSpec {
         public AnimationFrameSpec(
             byte[] vp8lPayload,
             int x,
@@ -302,7 +367,7 @@ public sealed class WebpAnimationDecodeTests {
         public bool DisposeToBackground { get; }
     }
 
-    private static bool UsesAlpha(AnimationFrameSpec[] frames) {
+    internal static bool UsesAlpha(AnimationFrameSpec[] frames) {
         for (var i = 0; i < frames.Length; i++) {
             var payload = frames[i].Vp8lPayload;
             if (payload.Length < 5) continue;
@@ -320,7 +385,7 @@ public sealed class WebpAnimationDecodeTests {
             | (buffer[offset + 3] << 24));
     }
 
-    private static void WriteChunk(Stream stream, string fourCc, byte[] payload) {
+    internal static void WriteChunk(Stream stream, string fourCc, byte[] payload) {
         WriteAscii(stream, fourCc);
         WriteU32LE(stream, (uint)payload.Length);
         stream.Write(payload, 0, payload.Length);
@@ -329,30 +394,30 @@ public sealed class WebpAnimationDecodeTests {
         }
     }
 
-    private static void WriteAscii(Stream stream, string text) {
+    internal static void WriteAscii(Stream stream, string text) {
         var bytes = Encoding.ASCII.GetBytes(text);
         stream.Write(bytes, 0, bytes.Length);
     }
 
-    private static void WriteU16LE(Stream stream, ushort value) {
+    internal static void WriteU16LE(Stream stream, ushort value) {
         stream.WriteByte((byte)(value & 0xFF));
         stream.WriteByte((byte)((value >> 8) & 0xFF));
     }
 
-    private static void WriteU24LE(Stream stream, int value) {
+    internal static void WriteU24LE(Stream stream, int value) {
         stream.WriteByte((byte)(value & 0xFF));
         stream.WriteByte((byte)((value >> 8) & 0xFF));
         stream.WriteByte((byte)((value >> 16) & 0xFF));
     }
 
-    private static void WriteU32LE(Stream stream, uint value) {
+    internal static void WriteU32LE(Stream stream, uint value) {
         stream.WriteByte((byte)(value & 0xFF));
         stream.WriteByte((byte)((value >> 8) & 0xFF));
         stream.WriteByte((byte)((value >> 16) & 0xFF));
         stream.WriteByte((byte)((value >> 24) & 0xFF));
     }
 
-    private static void WriteU32LE(byte[] buffer, int offset, uint value) {
+    internal static void WriteU32LE(byte[] buffer, int offset, uint value) {
         buffer[offset] = (byte)(value & 0xFF);
         buffer[offset + 1] = (byte)((value >> 8) & 0xFF);
         buffer[offset + 2] = (byte)((value >> 16) & 0xFF);

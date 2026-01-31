@@ -726,36 +726,32 @@ internal static partial class QrPixelDecoder {
                     ? Math.Max(4, Math.Min(width, height) / 60)
                     : Math.Max(8, Math.Min(width, height) / 40);
                 var minTile = options?.AggressiveSampling == true ? 24 : 48;
-
-                var coarseGrid = options?.StylizedSampling == true && list.Count == 0 && grid >= 4 && Math.Min(width, height) >= 600
-                    ? 2
-                    : 0;
-                for (var pass = 0; pass < 2; pass++) {
-                    var gridToScan = pass == 0 ? coarseGrid : grid;
-                    if (gridToScan < 2) continue;
-                    if (tileBudget.IsExpired) break;
-
-                    var tileOptions = options;
-                    if (options is not null && tileBudgetMs > 0) {
-                        var divisor = Math.Max(1, gridToScan * gridToScan);
-                        var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
-                        if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
-                            tileOptions = new QrPixelDecodeOptions {
-                                Profile = options.Profile,
-                                MaxDimension = options.MaxDimension,
-                                MaxScale = options.MaxScale,
-                                MaxMilliseconds = options.MaxMilliseconds,
-                                BudgetMilliseconds = perTileBudget,
-                                AutoCrop = options.AutoCrop,
-                                EnableTileScan = false,
-                                TileGrid = options.TileGrid,
-                                DisableTransforms = options.DisableTransforms,
-                                AggressiveSampling = options.AggressiveSampling,
-                                StylizedSampling = options.StylizedSampling
-                            };
-                        }
+                var tileOptions = options;
+                if (options is not null && tileBudgetMs > 0) {
+                    var gridBudget = options.TileGrid > 0
+                        ? grid
+                        : (options.AggressiveSampling == true ? maxGrid : grid);
+                    var divisor = Math.Max(1, gridBudget * gridBudget);
+                    var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
+                    if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
+                        tileOptions = new QrPixelDecodeOptions {
+                            Profile = options.Profile,
+                            MaxDimension = options.MaxDimension,
+                            MaxScale = options.MaxScale,
+                            MaxMilliseconds = options.MaxMilliseconds,
+                            BudgetMilliseconds = perTileBudget,
+                            AutoCrop = options.AutoCrop,
+                            EnableTileScan = false,
+                            TileGrid = options.TileGrid,
+                            DisableTransforms = options.DisableTransforms,
+                            AggressiveSampling = options.AggressiveSampling,
+                            StylizedSampling = options.StylizedSampling
+                        };
                     }
+                }
 
+                void ScanGrid(ReadOnlySpan<byte> pixelSpan, int gridToScan) {
+                    if (gridToScan < 2) return;
                     var tileW = width / gridToScan;
                     var tileH = height / gridToScan;
                     for (var ty = 0; ty < gridToScan; ty++) {
@@ -778,10 +774,10 @@ internal static partial class QrPixelDecoder {
                             var startIndex = (long)y0 * stride + x0 * 4L;
                             var requiredLen = (long)(th - 1) * stride + tw * 4L;
                             if (startIndex < 0 || requiredLen <= 0) continue;
-                            if (startIndex + requiredLen > pixels.Length) continue;
+                            if (startIndex + requiredLen > pixelSpan.Length) continue;
                             if (tileBudget.IsNearDeadline(120)) break;
 
-                            var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
+                            var tileSpan = pixelSpan.Slice((int)startIndex, (int)requiredLen);
                             if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
                                 AddResult(list, seen, decodedSingle, accept);
                             } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
@@ -793,6 +789,11 @@ internal static partial class QrPixelDecoder {
                         if (tileBudget.IsExpired) break;
                     }
                 }
+
+                if (options?.StylizedSampling == true && list.Count == 0 && grid >= 4 && Math.Min(width, height) >= 600) {
+                    ScanGrid(pixels, 2);
+                }
+                ScanGrid(pixels, grid);
 
                 if (options?.AggressiveSampling == true && !tileBudget.IsExpired && grid < maxGrid) {
                     var hadResults = list.Count > 0;

@@ -13,15 +13,10 @@ public static class WebpWriter {
     /// Current limitations:
     /// - VP8L lossless is a managed subset; single prefix-code group (no entropy tiling).
     /// - Limited LZ77/back-reference search; favors short distances.
-    /// - Color indexing is limited to palettes up to 16 colors.
-    /// - Metadata chunks (VP8X/ICCP/EXIF/XMP) are not written.
+    /// - Color indexing is limited to palettes up to 256 colors.
     /// </remarks>
     public static byte[] WriteRgba32(int width, int height, ReadOnlySpan<byte> rgba, int stride) {
-        if (WebpVp8lEncoder.TryEncodeLiteralRgba32(rgba, width, height, stride, out var webp, out var reason)) {
-            return webp;
-        }
-
-        throw new NotSupportedException($"Managed WebP encode is limited to a minimal VP8L subset: {reason}");
+        return WriteRgba32(width, height, rgba, stride, default);
     }
 
     /// <summary>
@@ -29,7 +24,23 @@ public static class WebpWriter {
     /// </summary>
     public static byte[] WriteRgba32(int width, int height, byte[] rgba, int stride) {
         if (rgba is null) throw new ArgumentNullException(nameof(rgba));
-        return WriteRgba32(width, height, rgba.AsSpan(), stride);
+        return WriteRgba32(width, height, rgba.AsSpan(), stride, default);
+    }
+
+    /// <summary>
+    /// Encodes an RGBA32 buffer as WebP lossless (managed VP8L subset) with metadata chunks.
+    /// </summary>
+    public static byte[] WriteRgba32(int width, int height, ReadOnlySpan<byte> rgba, int stride, WebpMetadata metadata) {
+        if (WebpVp8lEncoder.TryEncodeLiteralRgba32(rgba, width, height, stride, out var webp, out var reason)) {
+            if (!metadata.HasData) return webp;
+            if (!TryExtractVp8lPayload(webp, out var vp8lPayload)) {
+                throw new FormatException("Encoded VP8L payload could not be extracted.");
+            }
+            var alphaUsed = ComputeAlphaUsed(rgba, width, height, stride);
+            return WriteStillWebpContainer(width, height, alphaUsed, "VP8L", vp8lPayload, alphPayload: null, metadata);
+        }
+
+        throw new NotSupportedException($"Managed WebP encode is limited to a minimal VP8L subset: {reason}");
     }
 
     /// <summary>
@@ -39,17 +50,29 @@ public static class WebpWriter {
     /// Falls back to VP8L with pre-quantized RGB when VP8 lossy encoding is unavailable.
     /// </remarks>
     public static byte[] WriteRgba32Lossy(int width, int height, ReadOnlySpan<byte> rgba, int stride, int quality) {
+        return WriteRgba32Lossy(width, height, rgba, stride, quality, default);
+    }
+
+    /// <summary>
+    /// Encodes an RGBA32 buffer as a lossy WebP using a managed VP8 (lossy) bitstream when possible, with metadata.
+    /// </summary>
+    public static byte[] WriteRgba32Lossy(int width, int height, ReadOnlySpan<byte> rgba, int stride, int quality, WebpMetadata metadata) {
         if (quality is < 0 or > 100) throw new ArgumentOutOfRangeException(nameof(quality));
         if (quality >= 100) {
-            return WriteRgba32(width, height, rgba, stride);
+            return WriteRgba32(width, height, rgba, stride, metadata);
         }
 
         if (WebpVp8Encoder.TryEncodeLossyRgba32(rgba, width, height, stride, quality, out var webp, out _)) {
-            return webp;
+            if (!metadata.HasData) return webp;
+            if (!TryExtractVp8Payload(webp, out var vp8Payload, out var alphPayload)) {
+                throw new FormatException("Encoded VP8 payload could not be extracted.");
+            }
+            var alphaUsed = alphPayload is { Length: > 0 };
+            return WriteStillWebpContainer(width, height, alphaUsed, "VP8 ", vp8Payload, alphPayload, metadata);
         }
 
         var quantized = QuantizeRgba(rgba, width, height, stride, quality);
-        return WriteRgba32(width, height, quantized, width * 4);
+        return WriteRgba32(width, height, quantized, width * 4, metadata);
     }
 
     /// <summary>
@@ -57,7 +80,15 @@ public static class WebpWriter {
     /// </summary>
     public static byte[] WriteRgba32Lossy(int width, int height, byte[] rgba, int stride, int quality) {
         if (rgba is null) throw new ArgumentNullException(nameof(rgba));
-        return WriteRgba32Lossy(width, height, rgba.AsSpan(), stride, quality);
+        return WriteRgba32Lossy(width, height, rgba.AsSpan(), stride, quality, default);
+    }
+
+    /// <summary>
+    /// Encodes an RGBA32 buffer as a lossy WebP by quantizing pixels and using VP8L, with metadata.
+    /// </summary>
+    public static byte[] WriteRgba32Lossy(int width, int height, byte[] rgba, int stride, int quality, WebpMetadata metadata) {
+        if (rgba is null) throw new ArgumentNullException(nameof(rgba));
+        return WriteRgba32Lossy(width, height, rgba.AsSpan(), stride, quality, metadata);
     }
 
     /// <summary>
@@ -68,6 +99,18 @@ public static class WebpWriter {
         int canvasHeight,
         ReadOnlySpan<WebpAnimationFrame> frames,
         WebpAnimationOptions options) {
+        return WriteAnimationRgba32(canvasWidth, canvasHeight, frames, options, default);
+    }
+
+    /// <summary>
+    /// Encodes an animated WebP from RGBA32 frames (VP8L frames) with metadata chunks.
+    /// </summary>
+    public static byte[] WriteAnimationRgba32(
+        int canvasWidth,
+        int canvasHeight,
+        ReadOnlySpan<WebpAnimationFrame> frames,
+        WebpAnimationOptions options,
+        WebpMetadata metadata) {
         if (canvasWidth <= 0 || canvasHeight <= 0) throw new ArgumentOutOfRangeException(nameof(canvasWidth));
         if (canvasWidth > 0x1000000 || canvasHeight > 0x1000000) {
             throw new ArgumentOutOfRangeException(nameof(canvasWidth), "Canvas dimensions must fit in 24-bit WebP size fields.");
@@ -94,7 +137,7 @@ public static class WebpWriter {
             framePayloads[i] = BuildAnmfPayload(frame, vp8lPayload, "VP8L", alphPayload: null);
         }
 
-        return WriteAnimatedWebpContainer(canvasWidth, canvasHeight, alphaUsed, options, framePayloads);
+        return WriteAnimatedWebpContainer(canvasWidth, canvasHeight, alphaUsed, options, framePayloads, metadata);
     }
 
     /// <summary>
@@ -106,7 +149,20 @@ public static class WebpWriter {
         WebpAnimationFrame[] frames,
         WebpAnimationOptions options) {
         if (frames is null) throw new ArgumentNullException(nameof(frames));
-        return WriteAnimationRgba32(canvasWidth, canvasHeight, frames.AsSpan(), options);
+        return WriteAnimationRgba32(canvasWidth, canvasHeight, frames.AsSpan(), options, default);
+    }
+
+    /// <summary>
+    /// Encodes an animated WebP from RGBA32 frames (VP8L frames) with metadata chunks.
+    /// </summary>
+    public static byte[] WriteAnimationRgba32(
+        int canvasWidth,
+        int canvasHeight,
+        WebpAnimationFrame[] frames,
+        WebpAnimationOptions options,
+        WebpMetadata metadata) {
+        if (frames is null) throw new ArgumentNullException(nameof(frames));
+        return WriteAnimationRgba32(canvasWidth, canvasHeight, frames.AsSpan(), options, metadata);
     }
 
     /// <summary>
@@ -118,9 +174,22 @@ public static class WebpWriter {
         ReadOnlySpan<WebpAnimationFrame> frames,
         WebpAnimationOptions options,
         int quality) {
+        return WriteAnimationRgba32Lossy(canvasWidth, canvasHeight, frames, options, quality, default);
+    }
+
+    /// <summary>
+    /// Encodes an animated WebP from RGBA32 frames (managed VP8 lossy intra, with VP8L fallback) with metadata.
+    /// </summary>
+    public static byte[] WriteAnimationRgba32Lossy(
+        int canvasWidth,
+        int canvasHeight,
+        ReadOnlySpan<WebpAnimationFrame> frames,
+        WebpAnimationOptions options,
+        int quality,
+        WebpMetadata metadata) {
         if (quality is < 0 or > 100) throw new ArgumentOutOfRangeException(nameof(quality));
         if (quality >= 100) {
-            return WriteAnimationRgba32(canvasWidth, canvasHeight, frames, options);
+            return WriteAnimationRgba32(canvasWidth, canvasHeight, frames, options, metadata);
         }
         if (canvasWidth <= 0 || canvasHeight <= 0) throw new ArgumentOutOfRangeException(nameof(canvasWidth));
         if (canvasWidth > 0x1000000 || canvasHeight > 0x1000000) {
@@ -156,7 +225,7 @@ public static class WebpWriter {
             framePayloads[i] = BuildAnmfPayload(frame, vp8lPayload, "VP8L", alphPayload: null);
         }
 
-        return WriteAnimatedWebpContainer(canvasWidth, canvasHeight, alphaUsed, options, framePayloads);
+        return WriteAnimatedWebpContainer(canvasWidth, canvasHeight, alphaUsed, options, framePayloads, metadata);
     }
 
     /// <summary>
@@ -169,7 +238,21 @@ public static class WebpWriter {
         WebpAnimationOptions options,
         int quality) {
         if (frames is null) throw new ArgumentNullException(nameof(frames));
-        return WriteAnimationRgba32Lossy(canvasWidth, canvasHeight, frames.AsSpan(), options, quality);
+        return WriteAnimationRgba32Lossy(canvasWidth, canvasHeight, frames.AsSpan(), options, quality, default);
+    }
+
+    /// <summary>
+    /// Encodes an animated WebP from RGBA32 frames (managed VP8 lossy intra, with VP8L fallback) with metadata.
+    /// </summary>
+    public static byte[] WriteAnimationRgba32Lossy(
+        int canvasWidth,
+        int canvasHeight,
+        WebpAnimationFrame[] frames,
+        WebpAnimationOptions options,
+        int quality,
+        WebpMetadata metadata) {
+        if (frames is null) throw new ArgumentNullException(nameof(frames));
+        return WriteAnimationRgba32Lossy(canvasWidth, canvasHeight, frames.AsSpan(), options, quality, metadata);
     }
 
     private static byte[] QuantizeRgba(ReadOnlySpan<byte> rgba, int width, int height, int stride, int quality) {
@@ -231,7 +314,7 @@ public static class WebpWriter {
         }
     }
 
-    private static bool ComputeAlphaUsed(byte[] rgba, int width, int height, int stride) {
+    private static bool ComputeAlphaUsed(ReadOnlySpan<byte> rgba, int width, int height, int stride) {
         var alphaOffset = 3;
         for (var y = 0; y < height; y++) {
             var offset = y * stride + alphaOffset;
@@ -317,17 +400,20 @@ public static class WebpWriter {
         int canvasHeight,
         bool alphaUsed,
         WebpAnimationOptions options,
-        byte[][] framePayloads) {
+        byte[][] framePayloads,
+        WebpMetadata metadata) {
         using var ms = new System.IO.MemoryStream();
         WriteAscii(ms, "RIFF");
         WriteU32LE(ms, 0);
         WriteAscii(ms, "WEBP");
 
         var vp8x = new byte[10];
-        vp8x[0] = (byte)((alphaUsed ? 0x02 : 0x00) | 0x10); // alpha + animation
+        vp8x[0] = BuildVp8xFlags(alphaUsed, metadata, animation: true);
         WriteU24LE(vp8x, 4, canvasWidth - 1);
         WriteU24LE(vp8x, 7, canvasHeight - 1);
         WriteChunk(ms, "VP8X", vp8x);
+
+        WriteMetadataChunks(ms, metadata);
 
         var animPayload = new byte[6];
         if (options.LoopCount is < 0 or > 0xFFFF) {
@@ -345,6 +431,60 @@ public static class WebpWriter {
         var riffSize = checked((uint)(bytes.Length - 8));
         WriteU32LE(bytes, 4, riffSize);
         return bytes;
+    }
+
+    private static byte[] WriteStillWebpContainer(
+        int width,
+        int height,
+        bool alphaUsed,
+        string imageFourCc,
+        byte[] imagePayload,
+        byte[]? alphPayload,
+        WebpMetadata metadata) {
+        using var ms = new System.IO.MemoryStream();
+        WriteAscii(ms, "RIFF");
+        WriteU32LE(ms, 0);
+        WriteAscii(ms, "WEBP");
+
+        var vp8x = new byte[10];
+        vp8x[0] = BuildVp8xFlags(alphaUsed, metadata, animation: false);
+        WriteU24LE(vp8x, 4, width - 1);
+        WriteU24LE(vp8x, 7, height - 1);
+        WriteChunk(ms, "VP8X", vp8x);
+
+        WriteMetadataChunks(ms, metadata);
+
+        if (alphPayload is { Length: > 0 }) {
+            WriteChunk(ms, "ALPH", alphPayload);
+        }
+        WriteChunk(ms, imageFourCc, imagePayload);
+
+        var bytes = ms.ToArray();
+        var riffSize = checked((uint)(bytes.Length - 8));
+        WriteU32LE(bytes, 4, riffSize);
+        return bytes;
+    }
+
+    private static void WriteMetadataChunks(System.IO.Stream stream, WebpMetadata metadata) {
+        if (metadata.Icc is { Length: > 0 }) {
+            WriteChunk(stream, "ICCP", metadata.Icc);
+        }
+        if (metadata.Exif is { Length: > 0 }) {
+            WriteChunk(stream, "EXIF", metadata.Exif);
+        }
+        if (metadata.Xmp is { Length: > 0 }) {
+            WriteChunk(stream, "XMP ", metadata.Xmp);
+        }
+    }
+
+    private static byte BuildVp8xFlags(bool alphaUsed, WebpMetadata metadata, bool animation) {
+        byte flags = 0;
+        if (metadata.Icc is { Length: > 0 }) flags |= 0x01;
+        if (alphaUsed) flags |= 0x02;
+        if (metadata.Exif is { Length: > 0 }) flags |= 0x04;
+        if (metadata.Xmp is { Length: > 0 }) flags |= 0x08;
+        if (animation) flags |= 0x10;
+        return flags;
     }
 
     private static byte[] BuildAnmfPayload(WebpAnimationFrame frame, byte[] imagePayload, string imageFourCc, byte[]? alphPayload) {

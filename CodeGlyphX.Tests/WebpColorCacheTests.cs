@@ -3,6 +3,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpColorCacheTests {
     [Fact]
     public void Vp8l_ColorCacheIndex_KnownPixel_IsStable() {

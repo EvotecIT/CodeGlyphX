@@ -3,6 +3,7 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Eps;
+using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Html;
 using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
@@ -15,6 +16,7 @@ using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
@@ -53,12 +55,30 @@ public static partial class Barcode {
                 }
                 return RenderedOutput.FromText(format, html);
             }
-            case OutputFormat.Jpeg:
-                return RenderedOutput.FromBinary(format, BarcodeJpegRenderer.Render(barcode, opts, options?.JpegQuality ?? 90));
-            case OutputFormat.Webp:
-                return RenderedOutput.FromBinary(format, BarcodeWebpRenderer.Render(barcode, opts, options?.WebpQuality ?? 100));
+            case OutputFormat.Jpeg: {
+                var jpegOptions = options?.JpegOptions;
+                var data = jpegOptions is null
+                    ? BarcodeJpegRenderer.Render(barcode, opts, options?.JpegQuality ?? 90)
+                    : BarcodeJpegRenderer.Render(barcode, opts, jpegOptions);
+                return RenderedOutput.FromBinary(format, data);
+            }
+            case OutputFormat.Webp: {
+                var quality = options?.WebpQuality ?? 100;
+                if (RenderAnimationHelpers.TryRenderBarcodeWebp(extras, opts, quality, out var webp)) {
+                    return RenderedOutput.FromBinary(format, webp);
+                }
+                return RenderedOutput.FromBinary(format, BarcodeWebpRenderer.Render(barcode, opts, quality));
+            }
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, BarcodeBmpRenderer.Render(barcode, opts));
+            case OutputFormat.Gif: {
+                if (RenderAnimationHelpers.TryRenderBarcodeGif(extras, opts, out var gif)) {
+                    return RenderedOutput.FromBinary(format, gif);
+                }
+                return RenderedOutput.FromBinary(format, BarcodeGifRenderer.Render(barcode, opts));
+            }
+            case OutputFormat.Tiff:
+                return RenderedOutput.FromBinary(format, BarcodeTiffRenderer.Render(barcode, opts, extras?.TiffCompression ?? TiffCompressionMode.Auto));
             case OutputFormat.Ppm:
                 return RenderedOutput.FromBinary(format, BarcodePpmRenderer.Render(barcode, opts));
             case OutputFormat.Pbm:

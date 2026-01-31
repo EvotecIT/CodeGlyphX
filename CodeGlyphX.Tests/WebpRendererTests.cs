@@ -6,6 +6,8 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("WebpTests")]
+
 public sealed class WebpRendererTests {
     [Fact]
     public void WebpRenderer_Qr_Lossy_Encodes() {
