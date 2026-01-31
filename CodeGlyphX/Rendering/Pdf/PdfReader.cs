@@ -127,24 +127,25 @@ public static class PdfReader {
         endOffset = imageIdx + ImageToken.Length;
 
         var dictStart = LastIndexOfToken(data, (byte)'<', (byte)'<', imageIdx);
-        var dictEnd = IndexOfToken(data, (byte)'>', (byte)'>', imageIdx);
-        if (dictStart < 0 || dictEnd < 0 || dictEnd <= dictStart) {
+        if (dictStart < 0) {
             return false;
         }
 
-        var dict = data.Slice(dictStart, dictEnd + 2 - dictStart);
+        if (!TryReadDictionarySliceAt(data, dictStart, out var dict, out var dictEnd)) {
+            return false;
+        }
         if (IndexOfToken(dict, SubtypeToken, 0) < 0) {
-            endOffset = dictEnd + 2;
+            endOffset = dictEnd;
             return false;
         }
 
         if (!TryParseImageInfo(data, dict, out info)) {
-            endOffset = dictEnd + 2;
+            endOffset = dictEnd;
             return false;
         }
 
-        if (!TryReadStream(data, dictEnd + 2, info.StreamLength, out stream, out endOffset)) {
-            endOffset = dictEnd + 2;
+        if (!TryReadStream(data, dictEnd, info.StreamLength, out stream, out endOffset)) {
+            endOffset = dictEnd;
             return false;
         }
 
