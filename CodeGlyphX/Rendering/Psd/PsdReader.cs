@@ -41,7 +41,7 @@ public static class PsdReader {
         var version = ReadU16BE(data, 4);
         if (version != 1 && version != 2) throw new FormatException("Unsupported PSD version.");
 
-        var channels = ReadU16BE(data, 12);
+        var channels = (int)ReadU16BE(data, 12);
         height = (int)ReadU32BE(data, 14);
         width = (int)ReadU32BE(data, 18);
         var depth = ReadU16BE(data, 22);

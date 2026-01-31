@@ -1422,7 +1422,7 @@ public static class TiffWriter {
             return writer.ToArray();
         }
 
-        var prefix = data[0];
+        var prefix = (int)data[0];
         for (var i = 1; i < data.Length; i++) {
             var b = data[i];
             var key = (prefix << 8) | b;

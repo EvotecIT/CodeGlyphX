@@ -679,11 +679,10 @@ internal static partial class QrPixelDecoder {
                     ? Math.Max(4, Math.Min(width, height) / 60)
                     : Math.Max(8, Math.Min(width, height) / 40);
                 var minTile = options?.AggressiveSampling == true ? 24 : 48;
-                var tileOptions = options;
-                if (options is not null && tileBudgetMs > 0) {
-                    var gridBudget = options.TileGrid > 0
-                        ? grid
-                        : (options.AggressiveSampling == true ? maxGrid : grid);
+
+                QrPixelDecodeOptions ResolveTileOptions(int gridBudget) {
+                    var tileOptions = options!;
+                    if (options is null || tileBudgetMs <= 0) return tileOptions;
                     var divisor = Math.Max(1, gridBudget * gridBudget);
                     var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
                     if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
@@ -701,48 +700,60 @@ internal static partial class QrPixelDecoder {
                             StylizedSampling = options.StylizedSampling
                         };
                     }
+                    return tileOptions;
                 }
-                var tileW = width / grid;
-                var tileH = height / grid;
-                for (var ty = 0; ty < grid; ty++) {
-                    for (var tx = 0; tx < grid; tx++) {
-                        if (tileBudget.IsExpired) break;
-                        var x0 = tx * tileW;
-                        var y0 = ty * tileH;
-                        var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
-                        var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
 
-                        x0 = Math.Max(0, x0 - pad);
-                        y0 = Math.Max(0, y0 - pad);
-                        x1 = Math.Min(width, x1 + pad);
-                        y1 = Math.Min(height, y1 + pad);
+                void ScanGrid(ReadOnlySpan<byte> pixelSpan, int gridToScan) {
+                    if (gridToScan < 2) return;
+                    var tileOptions = ResolveTileOptions(gridToScan);
+                    var tileW = width / gridToScan;
+                    var tileH = height / gridToScan;
+                    for (var ty = 0; ty < gridToScan; ty++) {
+                        for (var tx = 0; tx < gridToScan; tx++) {
+                            if (tileBudget.IsExpired) break;
+                            var x0 = tx * tileW;
+                            var y0 = ty * tileH;
+                            var x1 = (tx == gridToScan - 1) ? width : (tx + 1) * tileW;
+                            var y1 = (ty == gridToScan - 1) ? height : (ty + 1) * tileH;
 
-                        var tw = x1 - x0;
-                        var th = y1 - y0;
-                        if (tw < minTile || th < minTile) continue;
+                            x0 = Math.Max(0, x0 - pad);
+                            y0 = Math.Max(0, y0 - pad);
+                            x1 = Math.Min(width, x1 + pad);
+                            y1 = Math.Min(height, y1 + pad);
 
-                        var startIndex = (long)y0 * stride + x0 * 4L;
-                        var requiredLen = (long)(th - 1) * stride + tw * 4L;
-                        if (startIndex < 0 || requiredLen <= 0) continue;
-                        if (startIndex + requiredLen > pixels.Length) continue;
-                        if (tileBudget.IsNearDeadline(120)) break;
+                            var tw = x1 - x0;
+                            var th = y1 - y0;
+                            if (tw < minTile || th < minTile) continue;
 
-                        var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                        if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
-                            AddResult(list, seen, decodedSingle, accept);
-                        } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
-                            for (var i = 0; i < decodedList.Length; i++) {
-                                AddResult(list, seen, decodedList[i], accept);
+                            var startIndex = (long)y0 * stride + x0 * 4L;
+                            var requiredLen = (long)(th - 1) * stride + tw * 4L;
+                            if (startIndex < 0 || requiredLen <= 0) continue;
+                            if (startIndex + requiredLen > pixelSpan.Length) continue;
+                            if (tileBudget.IsNearDeadline(120)) break;
+
+                            var tileSpan = pixelSpan.Slice((int)startIndex, (int)requiredLen);
+                            if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
+                                AddResult(list, seen, decodedSingle, accept);
+                            } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+                                for (var i = 0; i < decodedList.Length; i++) {
+                                    AddResult(list, seen, decodedList[i], accept);
+                                }
                             }
                         }
+                        if (tileBudget.IsExpired) break;
                     }
-                    if (tileBudget.IsExpired) break;
                 }
+
+                if (options?.StylizedSampling == true && list.Count == 0 && grid >= 4 && Math.Min(width, height) >= 600) {
+                    ScanGrid(pixels, 2);
+                }
+                ScanGrid(pixels, grid);
 
                 if (options?.AggressiveSampling == true && !tileBudget.IsExpired && grid < maxGrid) {
                     var hadResults = list.Count > 0;
                     for (var extraGrid = grid + 1; extraGrid <= maxGrid; extraGrid++) {
                         var beforeCount = list.Count;
+                        var tileOptions = ResolveTileOptions(extraGrid);
                         if (tileBudget.IsExpired) break;
                         var extraTileW = width / extraGrid;
                         var extraTileH = height / extraGrid;

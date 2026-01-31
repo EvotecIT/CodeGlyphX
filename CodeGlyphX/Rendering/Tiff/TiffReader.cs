@@ -37,6 +37,9 @@ public static class TiffReader {
     private const int CompressionPackBits = 32773;
     private const int CompressionDeflateAdobe = 32946;
 
+    /// <summary>
+    /// Checks if the data starts with a valid TIFF header.
+    /// </summary>
     public static bool IsTiff(ReadOnlySpan<byte> data) {
         if (data.Length < 8) return false;
         var little = data[0] == (byte)'I' && data[1] == (byte)'I';
@@ -78,6 +81,9 @@ public static class TiffReader {
         return pages.ToArray();
     }
 
+    /// <summary>
+    /// Decodes the first TIFF page to an RGBA buffer.
+    /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
         if (!IsTiff(data)) throw new FormatException("Not a TIFF image.");
 

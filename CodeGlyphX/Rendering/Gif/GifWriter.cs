@@ -302,6 +302,32 @@ public static class GifWriter {
         return optimized;
     }
 
+    private static void FillCanvas(byte[] canvas, byte r, byte g, byte b, byte a) {
+        for (var i = 0; i < canvas.Length; i += 4) {
+            canvas[i + 0] = r;
+            canvas[i + 1] = g;
+            canvas[i + 2] = b;
+            canvas[i + 3] = a;
+        }
+    }
+
+    private static void ClearRect(byte[] canvas, int canvasW, int canvasH, int left, int top, int width, int height, byte r, byte g, byte b, byte a) {
+        for (var y = 0; y < height; y++) {
+            var dstY = top + y;
+            if ((uint)dstY >= (uint)canvasH) continue;
+            var dstRow = dstY * canvasW * 4;
+            for (var x = 0; x < width; x++) {
+                var dstX = left + x;
+                if ((uint)dstX >= (uint)canvasW) continue;
+                var dst = dstRow + dstX * 4;
+                canvas[dst + 0] = r;
+                canvas[dst + 1] = g;
+                canvas[dst + 2] = b;
+                canvas[dst + 3] = a;
+            }
+        }
+    }
+
     private static bool TryComputeDiffBounds(
         byte[] canvas,
         int canvasWidth,
@@ -854,7 +880,7 @@ public static class GifWriter {
         var writer = new GifBitWriter(data.Length / 2 + 16);
 
         writer.Write(clearCode, codeSize);
-        var prefix = data[0];
+        var prefix = (int)data[0];
         for (var i = 1; i < data.Length; i++) {
             var c = data[i];
             var key = (prefix << 8) | c;
