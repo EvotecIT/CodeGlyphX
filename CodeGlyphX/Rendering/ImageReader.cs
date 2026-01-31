@@ -214,28 +214,26 @@ public static partial class ImageReader {
         var resolvedHeight = 0;
         var resolvedOptions = default(ImageAnimationOptions);
 
-        var frames = WithAnimationLimits(options, () => {
-            if (GifReader.IsGif(data)) {
-                if (!GifReader.TryDecodeAnimationFrames(data, out var gifFrames, out resolvedWidth, out resolvedHeight, out var gifOptions)) {
-                    throw new FormatException("Unsupported or invalid animated GIF.");
-                }
-                resolvedOptions = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
-                return MapGifFrames(gifFrames);
+        using var scope = ApplyAnimationLimits(options);
+        ImageAnimationFrame[] frames;
+        if (GifReader.IsGif(data)) {
+            if (!GifReader.TryDecodeAnimationFrames(data, out var gifFrames, out resolvedWidth, out resolvedHeight, out var gifOptions)) {
+                throw new FormatException("Unsupported or invalid animated GIF.");
             }
-
-            if (WebpReader.IsWebp(data)) {
-                if (WebpReader.TryDecodeAnimationFrames(data, out var webpFrames, out resolvedWidth, out resolvedHeight, out var webpOptions)) {
-                    resolvedOptions = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
-                    return MapWebpFrames(webpFrames);
-                }
-
+            resolvedOptions = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
+            frames = MapGifFrames(gifFrames);
+        } else if (WebpReader.IsWebp(data)) {
+            if (WebpReader.TryDecodeAnimationFrames(data, out var webpFrames, out resolvedWidth, out resolvedHeight, out var webpOptions)) {
+                resolvedOptions = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
+                frames = MapWebpFrames(webpFrames);
+            } else {
                 var rgba = WebpReader.DecodeRgba32(data, out resolvedWidth, out resolvedHeight);
                 resolvedOptions = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
-                return new[] { new ImageAnimationFrame(rgba, resolvedWidth, resolvedHeight, resolvedWidth * 4, durationMs: 0) };
+                frames = new[] { new ImageAnimationFrame(rgba, resolvedWidth, resolvedHeight, resolvedWidth * 4, durationMs: 0) };
             }
-
+        } else {
             throw new FormatException("Unsupported animated image format.");
-        });
+        }
 
         width = resolvedWidth;
         height = resolvedHeight;
@@ -275,28 +273,26 @@ public static partial class ImageReader {
         var resolvedHeight = 0;
         var resolvedOptions = default(ImageAnimationOptions);
 
-        var frames = WithAnimationLimits(options, () => {
-            if (GifReader.IsGif(data)) {
-                if (!GifReader.TryDecodeAnimationCanvasFrames(data, out var gifFrames, out resolvedWidth, out resolvedHeight, out var gifOptions)) {
-                    throw new FormatException("Unsupported or invalid animated GIF.");
-                }
-                resolvedOptions = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
-                return MapGifFrames(gifFrames);
+        using var scope = ApplyAnimationLimits(options);
+        ImageAnimationFrame[] frames;
+        if (GifReader.IsGif(data)) {
+            if (!GifReader.TryDecodeAnimationCanvasFrames(data, out var gifFrames, out resolvedWidth, out resolvedHeight, out var gifOptions)) {
+                throw new FormatException("Unsupported or invalid animated GIF.");
             }
-
-            if (WebpReader.IsWebp(data)) {
-                if (WebpReader.TryDecodeAnimationCanvasFrames(data, out var webpFrames, out resolvedWidth, out resolvedHeight, out var webpOptions)) {
-                    resolvedOptions = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
-                    return MapWebpFrames(webpFrames);
-                }
-
+            resolvedOptions = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
+            frames = MapGifFrames(gifFrames);
+        } else if (WebpReader.IsWebp(data)) {
+            if (WebpReader.TryDecodeAnimationCanvasFrames(data, out var webpFrames, out resolvedWidth, out resolvedHeight, out var webpOptions)) {
+                resolvedOptions = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
+                frames = MapWebpFrames(webpFrames);
+            } else {
                 var rgba = WebpReader.DecodeRgba32(data, out resolvedWidth, out resolvedHeight);
                 resolvedOptions = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
-                return new[] { new ImageAnimationFrame(rgba, resolvedWidth, resolvedHeight, resolvedWidth * 4, durationMs: 0) };
+                frames = new[] { new ImageAnimationFrame(rgba, resolvedWidth, resolvedHeight, resolvedWidth * 4, durationMs: 0) };
             }
-
+        } else {
             throw new FormatException("Unsupported animated image format.");
-        });
+        }
 
         width = resolvedWidth;
         height = resolvedHeight;
@@ -326,7 +322,8 @@ public static partial class ImageReader {
         EnsureWithinLimits(data, options, pageIndex: 0);
         int resolvedWidth = 0;
         int resolvedHeight = 0;
-        var rgba = WithAnimationLimits(options, () => DecodeRgba32CompositeCore(data, options?.JpegOptions, out resolvedWidth, out resolvedHeight));
+        using var scope = ApplyAnimationLimits(options);
+        var rgba = DecodeRgba32CompositeCore(data, options?.JpegOptions, out resolvedWidth, out resolvedHeight);
         width = resolvedWidth;
         height = resolvedHeight;
         return rgba;
@@ -379,30 +376,45 @@ public static partial class ImageReader {
         return MaxAnimationFramePixels;
     }
 
-    private static T WithAnimationLimits<T>(ImageDecodeOptions? options, Func<T> action) {
-        if (options is null) return action();
+    private static IDisposable? ApplyAnimationLimits(ImageDecodeOptions? options) {
+        if (options is null) return null;
         var maxFrames = ResolveMaxAnimationFrames(options);
         var maxDuration = ResolveMaxAnimationDurationMs(options);
         var maxFramePixels = ResolveMaxAnimationFramePixels(options);
 
         if (maxFrames == MaxAnimationFrames && maxDuration == MaxAnimationDurationMs && maxFramePixels == MaxAnimationFramePixels) {
-            return action();
+            return null;
         }
 
-        lock (AnimationLimitLock) {
-            var prevFrames = MaxAnimationFrames;
-            var prevDuration = MaxAnimationDurationMs;
-            var prevFramePixels = MaxAnimationFramePixels;
-            try {
-                MaxAnimationFrames = maxFrames;
-                MaxAnimationDurationMs = maxDuration;
-                MaxAnimationFramePixels = maxFramePixels;
-                return action();
-            } finally {
-                MaxAnimationFrames = prevFrames;
-                MaxAnimationDurationMs = prevDuration;
-                MaxAnimationFramePixels = prevFramePixels;
-            }
+        System.Threading.Monitor.Enter(AnimationLimitLock);
+        var prevFrames = MaxAnimationFrames;
+        var prevDuration = MaxAnimationDurationMs;
+        var prevFramePixels = MaxAnimationFramePixels;
+        MaxAnimationFrames = maxFrames;
+        MaxAnimationDurationMs = maxDuration;
+        MaxAnimationFramePixels = maxFramePixels;
+        return new AnimationLimitScope(prevFrames, prevDuration, prevFramePixels);
+    }
+
+    private sealed class AnimationLimitScope : IDisposable {
+        private readonly int prevFrames;
+        private readonly int prevDuration;
+        private readonly long prevFramePixels;
+        private bool disposed;
+
+        public AnimationLimitScope(int prevFrames, int prevDuration, long prevFramePixels) {
+            this.prevFrames = prevFrames;
+            this.prevDuration = prevDuration;
+            this.prevFramePixels = prevFramePixels;
+        }
+
+        public void Dispose() {
+            if (disposed) return;
+            disposed = true;
+            MaxAnimationFrames = prevFrames;
+            MaxAnimationDurationMs = prevDuration;
+            MaxAnimationFramePixels = prevFramePixels;
+            System.Threading.Monitor.Exit(AnimationLimitLock);
         }
     }
 
