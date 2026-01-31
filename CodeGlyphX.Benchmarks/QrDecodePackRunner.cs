@@ -500,6 +500,10 @@ internal static class QrDecodePackRunner {
                 var packSummary = Summarize(engineGroup.ToList());
                 var externalTag = engineGroup.First().EngineIsExternal ? " (external)" : string.Empty;
                 sb.AppendLine($"  Engine: {engineGroup.Key}{externalTag}  runs={packSummary.Runs}  decode%={packSummary.DecodeRate:P0}  expected%={packSummary.ExpectedRate:P0}  medianMs={packSummary.MedianMs:F1}  p95Ms={packSummary.P95Ms:F1}");
+                var failureBreakdown = FormatFailureBreakdown(engineGroup);
+                if (!string.IsNullOrWhiteSpace(failureBreakdown)) {
+                    sb.AppendLine($"    Failures: {failureBreakdown}");
+                }
                 foreach (var result in engineGroup.OrderBy(r => r.Scenario.Name, StringComparer.OrdinalIgnoreCase)) {
                     var median = Percentile(result.Times, 0.50);
                     var p95 = Percentile(result.Times, 0.95);
@@ -619,6 +623,41 @@ internal static class QrDecodePackRunner {
 
     private static string FormatFailure(QrDecodeFailureReason reason) {
         return reason == QrDecodeFailureReason.None ? "ok" : reason.ToString().ToLowerInvariant();
+    }
+
+    private static string? FormatFailureBreakdown(IEnumerable<QrDecodeScenarioResult> results) {
+        var counts = new Dictionary<QrDecodeFailureReason, int>();
+        var total = 0;
+        foreach (var info in results.SelectMany(r => r.Infos)) {
+            var failure = info.Module.Failure;
+            if (failure == QrDecodeFailureReason.None) continue;
+            if (!counts.TryGetValue(failure, out var count)) count = 0;
+            counts[failure] = count + 1;
+            total++;
+        }
+
+        if (total == 0) return null;
+
+        var ordered = counts
+            .OrderByDescending(kv => kv.Value)
+            .ThenBy(kv => kv.Key)
+            .ToArray();
+        var take = Math.Min(3, ordered.Length);
+        var parts = new List<string>(take + 1);
+        var topSum = 0;
+        for (var i = 0; i < take; i++) {
+            var (failure, count) = ordered[i];
+            topSum += count;
+            parts.Add($"{FormatFailure(failure)}={count} ({count / (double)total:P0})");
+        }
+        if (ordered.Length > take) {
+            var remaining = total - topSum;
+            if (remaining > 0) {
+                parts.Add($"+{remaining} other ({remaining / (double)total:P0})");
+            }
+        }
+
+        return string.Join(", ", parts);
     }
 
     private static string BuildJsonReport(QrDecodePackRunnerOptions options, List<QrDecodeScenarioResult> results, DateTime nowUtc) {
