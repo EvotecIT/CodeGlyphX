@@ -22,6 +22,7 @@ internal sealed class QrDecodePackRunnerOptions {
     public required QrPackMode Mode { get; init; }
     public required HashSet<string> Packs { get; init; }
     public required IReadOnlyList<IQrDecodeEngine> Engines { get; init; }
+    public required IReadOnlyList<string> ScenarioFilters { get; init; }
     public required QrReportFormats ReportFormats { get; init; }
     public string? ReportsDirectory { get; init; }
     public required int Iterations { get; init; }
@@ -44,6 +45,7 @@ internal static class QrDecodePackRunner {
         var remaining = new List<string>(args.Length);
         var packList = new List<string>(8);
         var engineList = new List<string>(4);
+        var scenarioList = new List<string>(4);
         var runRequested = false;
 
         QrPackMode? mode = null;
@@ -67,6 +69,13 @@ internal static class QrDecodePackRunner {
             if (string.Equals(arg, "--pack", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length) {
                 runRequested = true;
                 AddPacks(packList, args[++i]);
+                continue;
+            }
+
+            if ((string.Equals(arg, "--scenario", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(arg, "--scenarios", StringComparison.OrdinalIgnoreCase)) && i + 1 < args.Length) {
+                runRequested = true;
+                AddScenarios(scenarioList, args[++i]);
                 continue;
             }
 
@@ -154,10 +163,12 @@ internal static class QrDecodePackRunner {
         var packs = ResolvePacks(packList, resolvedMode);
         var availableEngines = QrDecodeEngines.Create();
         var engines = ResolveEngines(availableEngines, engineList);
+        var scenarioFilters = ResolveScenarioFilters(scenarioList);
         options = new QrDecodePackRunnerOptions {
             Mode = resolvedMode,
             Packs = packs,
             Engines = engines,
+            ScenarioFilters = scenarioFilters,
             ReportFormats = resolvedFormats,
             ReportsDirectory = reportsDir,
             Iterations = resolvedIterations,
@@ -172,6 +183,7 @@ internal static class QrDecodePackRunner {
     public static int Run(QrDecodePackRunnerOptions options) {
         var scenarios = QrDecodeScenarioPacks.GetScenarios(options.Mode)
             .Where(s => options.Packs.Contains(s.Pack))
+            .Where(s => MatchesScenarioFilters(s.Name, options.ScenarioFilters))
             .ToArray();
 
         if (scenarios.Length == 0) {
@@ -454,6 +466,9 @@ internal static class QrDecodePackRunner {
         sb.AppendLine($"Date (UTC): {nowUtc:yyyy-MM-dd HH:mm:ss}");
         sb.AppendLine($"Mode: {options.Mode}");
         sb.AppendLine($"Packs: {string.Join(", ", packs)}");
+        if (options.ScenarioFilters.Count > 0) {
+            sb.AppendLine($"Scenarios: {string.Join(", ", options.ScenarioFilters)}");
+        }
         sb.AppendLine($"Iterations: {options.Iterations} (min iteration ms: {options.MinIterationMilliseconds}, ops cap: {options.OpsCap})");
         sb.AppendLine($"Engines: {string.Join(", ", options.Engines.Select(e => e.Name))} (external runs cap: {options.ExternalRunsCap})");
         sb.AppendLine($"Runtime: {RuntimeInformation.FrameworkDescription} | OS: {RuntimeInformation.OSDescription} | Arch: {RuntimeInformation.ProcessArchitecture}");
@@ -922,6 +937,33 @@ internal static class QrDecodePackRunner {
             var pack = parts[i].Trim();
             if (pack.Length > 0) packList.Add(pack);
         }
+    }
+
+    private static void AddScenarios(List<string> scenarioList, string scenarioArg) {
+        if (string.IsNullOrWhiteSpace(scenarioArg)) return;
+        var parts = scenarioArg.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        for (var i = 0; i < parts.Length; i++) {
+            var scenario = parts[i].Trim();
+            if (scenario.Length > 0) scenarioList.Add(scenario);
+        }
+    }
+
+    private static IReadOnlyList<string> ResolveScenarioFilters(List<string> scenarios) {
+        if (scenarios.Count == 0) return Array.Empty<string>();
+        return scenarios
+            .Select(s => s.Trim())
+            .Where(s => s.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+    private static bool MatchesScenarioFilters(string scenarioName, IReadOnlyList<string> filters) {
+        if (filters.Count == 0) return true;
+        for (var i = 0; i < filters.Count; i++) {
+            var filter = filters[i];
+            if (scenarioName.Contains(filter, StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        return false;
     }
 
     private static QrPackMode ParseMode(string? value) {
