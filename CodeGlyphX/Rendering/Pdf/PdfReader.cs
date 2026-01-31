@@ -944,9 +944,19 @@ public static class PdfReader {
 
     private static bool TryReadFirstNameInArrayAfterKey(ReadOnlySpan<byte> data, string key, out string name) {
         name = string.Empty;
-        if (!TryReadNameArrayAfterKey(data, key, out var names)) return false;
-        if (names.Length == 0) return false;
-        name = names[0];
+        var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
+        if (idx < 0) return false;
+        var i = idx + key.Length;
+        SkipWhitespace(data, ref i);
+        if (i >= data.Length || data[i] != (byte)'[') return false;
+        i++;
+        SkipWhitespace(data, ref i);
+        if (i >= data.Length || data[i] != (byte)'/') return false;
+        i++;
+        var start = i;
+        while (i < data.Length && !IsDelimiter(data[i])) i++;
+        if (i <= start) return false;
+        name = GetAsciiString(data, start, i - start);
         return true;
     }
 
@@ -963,12 +973,12 @@ public static class PdfReader {
         var idx = data.IndexOf(System.Text.Encoding.ASCII.GetBytes(key));
         if (idx < 0) return false;
         var i = idx + key.Length;
-        while (i < data.Length && IsDelimiter(data[i])) i++;
+        SkipWhitespace(data, ref i);
         if (i >= data.Length || data[i] != (byte)'[') return false;
         i++;
         var list = new System.Collections.Generic.List<float>();
         while (i < data.Length) {
-            while (i < data.Length && IsDelimiter(data[i])) i++;
+            SkipWhitespace(data, ref i);
             if (i >= data.Length) break;
             if (data[i] == (byte)']') {
                 i++;
@@ -1451,7 +1461,7 @@ public static class PdfReader {
     }
 
     private static void SkipDelimiters(ReadOnlySpan<byte> data, ref int index) {
-        while (index < data.Length && IsDelimiter(data[index])) index++;
+        while (index < data.Length && IsDelimiter(data[index]) && data[index] != (byte)'/') index++;
     }
 
     private static void SkipWhitespace(ReadOnlySpan<byte> data, ref int index) {
