@@ -16,7 +16,8 @@ public sealed class QrDecodingSamplesSweepTests {
         "qr-art-drip-variants.png",
         "qr-art-solid-bg-grid.png",
         "qr-art-gear-illustration-grid.png",
-        "qr-illustration-template.jpg"
+        "qr-illustration-template.jpg",
+        "qr-dot-aa-soft.png"
     };
 
     private static readonly HashSet<string> SupportedExtensions = new(StringComparer.OrdinalIgnoreCase) {
