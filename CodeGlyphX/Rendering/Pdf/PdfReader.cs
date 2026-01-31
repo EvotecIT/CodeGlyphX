@@ -168,7 +168,13 @@ public static class PdfReader {
         if (!TryParseInlineImageInfo(data, dict, out info)) return false;
 
         var dataStart = idIndex + InlineImageDataToken.Length;
-        SkipWhitespace(data, ref dataStart);
+        if (dataStart < data.Length && IsWhitespaceByte(data[dataStart])) {
+            if (data[dataStart] == (byte)'\r' && dataStart + 1 < data.Length && data[dataStart + 1] == (byte)'\n') {
+                dataStart += 2;
+            } else {
+                dataStart++;
+            }
+        }
         if (dataStart >= data.Length) return false;
 
         if (!TryReadInlineImageData(data, dataStart, out stream, out var eiIndex)) return false;
@@ -785,7 +791,15 @@ public static class PdfReader {
             var afterIndex = i + InlineImageEndToken.Length;
             var afterOk = afterIndex >= data.Length || IsDelimiter(data[afterIndex]);
             if (!beforeOk || !afterOk) continue;
-            stream = data.Slice(dataStart, i - dataStart);
+            var dataEnd = i;
+            if (dataEnd > dataStart && IsWhitespaceByte(data[dataEnd - 1])) {
+                if (data[dataEnd - 1] == (byte)'\n' && dataEnd - 2 >= dataStart && data[dataEnd - 2] == (byte)'\r') {
+                    dataEnd -= 2;
+                } else {
+                    dataEnd--;
+                }
+            }
+            stream = data.Slice(dataStart, dataEnd - dataStart);
             eiIndex = i;
             return true;
         }
@@ -1448,7 +1462,7 @@ public static class PdfReader {
 
     private static bool TryReadLookupToken(ReadOnlySpan<byte> data, ref int index, out byte[] lookup) {
         lookup = Array.Empty<byte>();
-        SkipDelimiters(data, ref index);
+        SkipWhitespace(data, ref index);
         if (index >= data.Length) return false;
         if (data[index] == (byte)'<') {
             return TryReadHexString(data, ref index, out lookup);
@@ -1465,6 +1479,10 @@ public static class PdfReader {
 
     private static void SkipWhitespace(ReadOnlySpan<byte> data, ref int index) {
         while (index < data.Length && data[index] <= 32) index++;
+    }
+
+    private static bool IsWhitespaceByte(byte b) {
+        return b == 0 || b == (byte)' ' || b == (byte)'\t' || b == (byte)'\r' || b == (byte)'\n' || b == (byte)'\f';
     }
 
     private static bool IsNumberStart(byte b) {
