@@ -153,7 +153,7 @@ internal static partial class QrPixelDecoder {
             stylizedSampling: false);
     }
 
-    private static QrProfileSettings ApplyOverrides(QrProfileSettings settings, QrPixelDecodeOptions? options, int scaleStart) {
+    private static QrProfileSettings ApplyOverrides(QrProfileSettings settings, QrPixelDecodeOptions? options, int scaleStart, int minDim) {
         if (options is null && scaleStart <= 1) return settings;
 
         var maxScale = settings.MaxScale;
@@ -194,6 +194,16 @@ internal static partial class QrPixelDecoder {
                 if (collectMaxScale < maxScale) {
                     var boostedCollect = maxScale <= 3 ? maxScale : Math.Min(maxScale, collectMaxScale + 1);
                     collectMaxScale = boostedCollect;
+                }
+                if (minDim >= 480 && maxScale < 8) {
+                    var boost = minDim >= 900 ? 3 : minDim >= 800 ? 2 : 1;
+                    var boostedMax = Math.Min(8, maxScale + boost);
+                    if (boostedMax > maxScale) {
+                        maxScale = boostedMax;
+                        if (collectMaxScale < maxScale) {
+                            collectMaxScale = Math.Min(maxScale, collectMaxScale + 1);
+                        }
+                    }
                 }
             }
             if (effectiveMaxMs > 0) {
@@ -250,6 +260,21 @@ internal static partial class QrPixelDecoder {
             minContrast,
             aggressiveSampling,
             stylizedSampling);
+    }
+
+    private static QrProfileSettings GetPrepassSettings(QrProfileSettings settings) {
+        return new QrProfileSettings(
+            maxScale: Math.Min(settings.MaxScale, 2),
+            collectMaxScale: 1,
+            allowTransforms: false,
+            allowContrastStretch: false,
+            allowNormalize: false,
+            allowAdaptiveThreshold: false,
+            allowBlur: false,
+            allowExtraThresholds: false,
+            minContrast: Math.Max(12, settings.MinContrast),
+            aggressiveSampling: false,
+            stylizedSampling: false);
     }
 
     private static int GetScaleStart(QrPixelDecodeOptions? options, int width, int height) {
@@ -334,7 +359,7 @@ internal static partial class QrPixelDecoder {
             else if (effectiveMaxMs <= 1600 && profile == QrDecodeProfile.Robust) profile = QrDecodeProfile.Balanced;
         }
         var settings = GetProfileSettings(profile, Math.Min(width, height));
-        settings = ApplyOverrides(settings, options, scaleStart);
+        settings = ApplyOverrides(settings, options, scaleStart, Math.Min(width, height));
         var budgetMilliseconds = options?.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options?.MaxMilliseconds ?? 0;
         var budget = new DecodeBudget(budgetMilliseconds, cancellationToken);
 
@@ -349,6 +374,28 @@ internal static partial class QrPixelDecoder {
                 dimension: 0,
                 moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(failure));
             return false;
+        }
+
+        var prepassSettings = GetPrepassSettings(settings);
+
+        if (options?.AutoCrop == true && !budget.IsNearDeadline(240)) {
+            if (TryDecodeAutoCrop(pixels, width, height, stride, fmt, scaleStart, settings, prepassSettings, options, budget, accept, out result, out var diagCrop)) {
+                diagnostics = diagCrop;
+                return true;
+            }
+            best = Better(best, diagCrop);
+        }
+
+        if (scaleStart < settings.MaxScale && Math.Max(width, height) >= 900 && !budget.IsNearDeadline(200)) {
+            var maxPrepassScale = Math.Min(settings.MaxScale, scaleStart + 2);
+            for (var scale = scaleStart + 1; scale <= maxPrepassScale; scale++) {
+                if (budget.IsExpired) break;
+                if (TryDecodeAtScale(pixels, width, height, stride, fmt, scale, prepassSettings, budget, accept, out result, out var diagPrepass)) {
+                    diagnostics = diagPrepass;
+                    return true;
+                }
+                best = Better(best, diagPrepass);
+            }
         }
 
         // Prefer a full finder-pattern based decode (robust to extra background/noise).
@@ -585,7 +632,7 @@ internal static partial class QrPixelDecoder {
             else if (effectiveMaxMs <= 1600 && profile == QrDecodeProfile.Robust) profile = QrDecodeProfile.Balanced;
         }
         var settings = GetProfileSettings(profile, Math.Min(width, height));
-        settings = ApplyOverrides(settings, options, scaleStart);
+        settings = ApplyOverrides(settings, options, scaleStart, Math.Min(width, height));
         var budgetMilliseconds = options?.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options?.MaxMilliseconds ?? 0;
         var enableTileScan = allowTileScan && options?.EnableTileScan == true;
         var tileBudgetMs = 0;
@@ -605,12 +652,12 @@ internal static partial class QrPixelDecoder {
         var useTileBudget = enableTileScan && budgetMilliseconds > 0;
 
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
-        var pool = new QrGrayImagePool();
+        var pool = RentGrayPool();
+        var seen = RentSeenSet();
         try {
             if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale: scaleStart, settings.MinContrast, shouldStop, pool, out var baseImage)) {
                 return false;
             }
-            var seen = new HashSet<byte[]>(ByteArrayComparer.Instance);
             using var list = new PooledList<QrDecoded>(4);
             var baseExpired = false;
 
@@ -679,64 +726,72 @@ internal static partial class QrPixelDecoder {
                     ? Math.Max(4, Math.Min(width, height) / 60)
                     : Math.Max(8, Math.Min(width, height) / 40);
                 var minTile = options?.AggressiveSampling == true ? 24 : 48;
-                var tileOptions = options;
-                if (options is not null && tileBudgetMs > 0) {
-                    var gridBudget = options.TileGrid > 0
-                        ? grid
-                        : (options.AggressiveSampling == true ? maxGrid : grid);
-                    var divisor = Math.Max(1, gridBudget * gridBudget);
-                    var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
-                    if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
-                        tileOptions = new QrPixelDecodeOptions {
-                            Profile = options.Profile,
-                            MaxDimension = options.MaxDimension,
-                            MaxScale = options.MaxScale,
-                            MaxMilliseconds = options.MaxMilliseconds,
-                            BudgetMilliseconds = perTileBudget,
-                            AutoCrop = options.AutoCrop,
-                            EnableTileScan = false,
-                            TileGrid = options.TileGrid,
-                            DisableTransforms = options.DisableTransforms,
-                            AggressiveSampling = options.AggressiveSampling,
-                            StylizedSampling = options.StylizedSampling
-                        };
-                    }
-                }
-                var tileW = width / grid;
-                var tileH = height / grid;
-                for (var ty = 0; ty < grid; ty++) {
-                    for (var tx = 0; tx < grid; tx++) {
-                        if (tileBudget.IsExpired) break;
-                        var x0 = tx * tileW;
-                        var y0 = ty * tileH;
-                        var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
-                        var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
 
-                        x0 = Math.Max(0, x0 - pad);
-                        y0 = Math.Max(0, y0 - pad);
-                        x1 = Math.Min(width, x1 + pad);
-                        y1 = Math.Min(height, y1 + pad);
+                var coarseGrid = options?.StylizedSampling == true && list.Count == 0 && grid >= 4 && Math.Min(width, height) >= 600
+                    ? 2
+                    : 0;
+                for (var pass = 0; pass < 2; pass++) {
+                    var gridToScan = pass == 0 ? coarseGrid : grid;
+                    if (gridToScan < 2) continue;
+                    if (tileBudget.IsExpired) break;
 
-                        var tw = x1 - x0;
-                        var th = y1 - y0;
-                        if (tw < minTile || th < minTile) continue;
-
-                        var startIndex = (long)y0 * stride + x0 * 4L;
-                        var requiredLen = (long)(th - 1) * stride + tw * 4L;
-                        if (startIndex < 0 || requiredLen <= 0) continue;
-                        if (startIndex + requiredLen > pixels.Length) continue;
-                        if (tileBudget.IsNearDeadline(120)) break;
-
-                        var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                        if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
-                            AddResult(list, seen, decodedSingle, accept);
-                        } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
-                            for (var i = 0; i < decodedList.Length; i++) {
-                                AddResult(list, seen, decodedList[i], accept);
-                            }
+                    var tileOptions = options;
+                    if (options is not null && tileBudgetMs > 0) {
+                        var divisor = Math.Max(1, gridToScan * gridToScan);
+                        var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
+                        if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
+                            tileOptions = new QrPixelDecodeOptions {
+                                Profile = options.Profile,
+                                MaxDimension = options.MaxDimension,
+                                MaxScale = options.MaxScale,
+                                MaxMilliseconds = options.MaxMilliseconds,
+                                BudgetMilliseconds = perTileBudget,
+                                AutoCrop = options.AutoCrop,
+                                EnableTileScan = false,
+                                TileGrid = options.TileGrid,
+                                DisableTransforms = options.DisableTransforms,
+                                AggressiveSampling = options.AggressiveSampling,
+                                StylizedSampling = options.StylizedSampling
+                            };
                         }
                     }
-                    if (tileBudget.IsExpired) break;
+
+                    var tileW = width / gridToScan;
+                    var tileH = height / gridToScan;
+                    for (var ty = 0; ty < gridToScan; ty++) {
+                        for (var tx = 0; tx < gridToScan; tx++) {
+                            if (tileBudget.IsExpired) break;
+                            var x0 = tx * tileW;
+                            var y0 = ty * tileH;
+                            var x1 = (tx == gridToScan - 1) ? width : (tx + 1) * tileW;
+                            var y1 = (ty == gridToScan - 1) ? height : (ty + 1) * tileH;
+
+                            x0 = Math.Max(0, x0 - pad);
+                            y0 = Math.Max(0, y0 - pad);
+                            x1 = Math.Min(width, x1 + pad);
+                            y1 = Math.Min(height, y1 + pad);
+
+                            var tw = x1 - x0;
+                            var th = y1 - y0;
+                            if (tw < minTile || th < minTile) continue;
+
+                            var startIndex = (long)y0 * stride + x0 * 4L;
+                            var requiredLen = (long)(th - 1) * stride + tw * 4L;
+                            if (startIndex < 0 || requiredLen <= 0) continue;
+                            if (startIndex + requiredLen > pixels.Length) continue;
+                            if (tileBudget.IsNearDeadline(120)) break;
+
+                            var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
+                            if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
+                                AddResult(list, seen, decodedSingle, accept);
+                            } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+                                for (var i = 0; i < decodedList.Length; i++) {
+                                    AddResult(list, seen, decodedList[i], accept);
+                                }
+                            }
+                        }
+                        if (tileBudget.IsExpired) break;
+                    }
                 }
 
                 if (options?.AggressiveSampling == true && !tileBudget.IsExpired && grid < maxGrid) {
@@ -744,6 +799,26 @@ internal static partial class QrPixelDecoder {
                     for (var extraGrid = grid + 1; extraGrid <= maxGrid; extraGrid++) {
                         var beforeCount = list.Count;
                         if (tileBudget.IsExpired) break;
+                        var tileOptions = options;
+                        if (options is not null && tileBudgetMs > 0) {
+                            var divisor = Math.Max(1, extraGrid * extraGrid);
+                            var perTileBudget = Math.Max(200, tileBudgetMs / divisor);
+                            if (perTileBudget > 0 && options.BudgetMilliseconds != perTileBudget) {
+                                tileOptions = new QrPixelDecodeOptions {
+                                    Profile = options.Profile,
+                                    MaxDimension = options.MaxDimension,
+                                    MaxScale = options.MaxScale,
+                                    MaxMilliseconds = options.MaxMilliseconds,
+                                    BudgetMilliseconds = perTileBudget,
+                                    AutoCrop = options.AutoCrop,
+                                    EnableTileScan = false,
+                                    TileGrid = options.TileGrid,
+                                    DisableTransforms = options.DisableTransforms,
+                                    AggressiveSampling = options.AggressiveSampling,
+                                    StylizedSampling = options.StylizedSampling
+                                };
+                            }
+                        }
                         var extraTileW = width / extraGrid;
                         var extraTileH = height / extraGrid;
                         for (var ty = 0; ty < extraGrid; ty++) {
@@ -794,6 +869,10 @@ internal static partial class QrPixelDecoder {
                 CollectFromWhitespaceGrid(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
+            if (options?.AggressiveSampling == true && options?.StylizedSampling == true && list.Count == 0 && !budget.IsNearDeadline(260)) {
+                CollectFromCandidateRois(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
+            }
+
             if (options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(250)) {
                 CollectFromDensityTiles(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
@@ -808,16 +887,70 @@ internal static partial class QrPixelDecoder {
                 }
             }
 
+            if (options is { AggressiveSampling: true } && options.StylizedSampling != true && list.Count == 0 && !budget.IsNearDeadline(200)) {
+                var baseOptions = options;
+                var stylizedBudget = GetSecondaryPassBudget(baseOptions, budget, minBudget: 600, maxBudget: 1800, divisor: 2);
+                if (stylizedBudget > 0) {
+                    var stylizedOptions = new QrPixelDecodeOptions {
+                        Profile = baseOptions.Profile,
+                        MaxDimension = baseOptions.MaxDimension,
+                        MaxScale = baseOptions.MaxScale,
+                        MaxMilliseconds = baseOptions.MaxMilliseconds,
+                        BudgetMilliseconds = stylizedBudget,
+                        AutoCrop = baseOptions.AutoCrop,
+                        EnableTileScan = false,
+                        TileGrid = baseOptions.TileGrid,
+                        DisableTransforms = baseOptions.DisableTransforms,
+                        AggressiveSampling = true,
+                        StylizedSampling = true
+                    };
+                    if (TryDecodeAll(pixels, width, height, stride, fmt, stylizedOptions, accept, cancellationToken, allowTileScan: false, out var fallbackResults) && fallbackResults.Length > 0) {
+                        results = fallbackResults;
+                        return true;
+                    }
+                }
+            }
+
             if (list.Count == 0) return false;
             results = list.ToArray();
             return true;
         } finally {
-            pool.ReturnAll();
+            ReturnSeenSet(seen);
+            ReturnGrayPool(pool);
         }
     }
 
     private static int GetEffectiveMaxMilliseconds(QrPixelDecodeOptions options) {
         return options.BudgetMilliseconds > 0 ? 0 : options.MaxMilliseconds;
+    }
+
+    private static int GetSecondaryPassBudget(QrPixelDecodeOptions? options, DecodeBudget budget, int minBudget, int maxBudget, int divisor) {
+        if (options is null) return 0;
+        var baseBudget = options.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options.MaxMilliseconds;
+        if (baseBudget <= 0) return 0;
+        var scaled = baseBudget / Math.Max(1, divisor);
+        if (scaled < minBudget) scaled = minBudget;
+        if (scaled > maxBudget) scaled = maxBudget;
+        if (budget.MaxMilliseconds > 0 && scaled > budget.MaxMilliseconds) scaled = budget.MaxMilliseconds;
+        return scaled;
+    }
+
+    private static QrPixelDecodeOptions? GetSecondaryPassOptions(QrPixelDecodeOptions? options, int budgetMs) {
+        if (options is null || budgetMs <= 0) return options;
+        if (options.BudgetMilliseconds == budgetMs && !options.AutoCrop) return options;
+        return new QrPixelDecodeOptions {
+            Profile = options.Profile,
+            MaxDimension = options.MaxDimension,
+            MaxScale = options.MaxScale,
+            MaxMilliseconds = options.MaxMilliseconds,
+            BudgetMilliseconds = budgetMs,
+            AutoCrop = false,
+            EnableTileScan = false,
+            TileGrid = options.TileGrid,
+            DisableTransforms = options.DisableTransforms,
+            AggressiveSampling = options.AggressiveSampling,
+            StylizedSampling = options.StylizedSampling
+        };
     }
 
     private static void CollectFromWhitespaceGrid(
@@ -964,6 +1097,8 @@ internal static partial class QrPixelDecoder {
 
         Span<(int X, int Y, int Score)> top = stackalloc (int, int, int)[24];
         var topCount = 0;
+        var perAttemptBudget = GetSecondaryPassBudget(options, budget, minBudget: 400, maxBudget: options?.StylizedSampling == true ? 1600 : 1200, divisor: options?.StylizedSampling == true ? 4 : 6);
+        var attemptOptions = GetSecondaryPassOptions(options, perAttemptBudget);
 
         for (var ty = 0; ty < grid; ty++) {
             if (budget.IsNearDeadline(200)) return;
@@ -1066,7 +1201,7 @@ internal static partial class QrPixelDecoder {
             if (startIndex + requiredLen > pixels.Length) continue;
 
             var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, attemptOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
                 AddResult(results, seen, decodedList[0], accept);
                 return;
             }
@@ -1093,7 +1228,8 @@ internal static partial class QrPixelDecoder {
 
         var minDim = Math.Min(w, h);
         var tileMin = minDim < 64 ? minDim : 64;
-        var tileSize = Math.Clamp(minDim / 3, tileMin, minDim);
+        var tileDivisor = options?.StylizedSampling == true ? 2 : 3;
+        var tileSize = Math.Clamp(minDim / tileDivisor, tileMin, minDim);
         var step = Math.Max(16, tileSize / 2);
         var thresholds = image.ThresholdMap;
         var threshold = image.Threshold;
@@ -1102,6 +1238,8 @@ internal static partial class QrPixelDecoder {
 
         Span<(int X, int Y, int Score)> top = stackalloc (int, int, int)[20];
         var topCount = 0;
+        var perAttemptBudget = GetSecondaryPassBudget(options, budget, minBudget: 400, maxBudget: options?.StylizedSampling == true ? 1600 : 1200, divisor: options?.StylizedSampling == true ? 4 : 6);
+        var attemptOptions = GetSecondaryPassOptions(options, perAttemptBudget);
 
         for (var y = 0; y + tileSize <= h; y += step) {
             if (budget.IsNearDeadline(200)) return;
@@ -1199,10 +1337,205 @@ internal static partial class QrPixelDecoder {
             if (startIndex + requiredLen > pixels.Length) continue;
 
             var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, attemptOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
                 AddResult(results, seen, decodedList[0], accept);
                 return;
             }
+        }
+    }
+
+    private static void CollectFromCandidateRois(
+        ReadOnlySpan<byte> pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat fmt,
+        QrGrayImage image,
+        int scale,
+        QrPixelDecodeOptions? options,
+        Func<QrDecoded, bool>? accept,
+        CancellationToken cancellationToken,
+        DecodeBudget budget,
+        PooledList<QrDecoded> results,
+        HashSet<byte[]> seen) {
+        if (budget.IsExpired || budget.IsNearDeadline(200)) return;
+        if (scale <= 0) return;
+
+        var candidates = RentCandidateList();
+        try {
+            var aggressive = options?.AggressiveSampling == true;
+            var perAttemptBudget = GetSecondaryPassBudget(options, budget, minBudget: 500, maxBudget: 1800, divisor: options?.StylizedSampling == true ? 4 : 6);
+            var attemptOptions = GetSecondaryPassOptions(options, perAttemptBudget);
+            Func<bool>? shouldStop = budget.Enabled ? (() => budget.IsNearDeadline(180)) : null;
+            QrFinderPatternDetector.FindCandidates(image, invert: false, candidates, aggressive, shouldStop, rowStepOverride: 0, maxCandidates: 48, allowFullScan: true, requireDiagonalCheck: false);
+            if (candidates.Count < 3) {
+                QrFinderPatternDetector.FindCandidates(image, invert: true, candidates, aggressive, shouldStop, rowStepOverride: 0, maxCandidates: 48, allowFullScan: true, requireDiagonalCheck: false);
+            }
+            if (candidates.Count < 3) return;
+
+            var sizeBuf = new double[Math.Min(candidates.Count, 64)];
+            var sizeCount = 0;
+            for (var i = 0; i < candidates.Count && sizeCount < sizeBuf.Length; i++) {
+                var ms = candidates[i].ModuleSize;
+                if (ms > 0) sizeBuf[sizeCount++] = ms;
+            }
+            if (sizeCount == 0) return;
+
+            Array.Sort(sizeBuf, 0, sizeCount);
+            var medianSize = sizeBuf[sizeCount / 2];
+            if (medianSize <= 0) return;
+
+            var link = Math.Max(24.0, medianSize * (options?.StylizedSampling == true ? 24.0 : 32.0));
+            var link2 = link * link;
+
+            var visited = new bool[candidates.Count];
+            var queue = new int[candidates.Count];
+
+            Span<SingleFinderOrientation> orientationsBuf = stackalloc SingleFinderOrientation[3];
+            Span<int> dimsBuf = stackalloc int[12];
+
+            for (var i = 0; i < candidates.Count; i++) {
+                if (visited[i]) continue;
+                if (budget.IsNearDeadline(200)) return;
+
+                var qHead = 0;
+                var qTail = 0;
+                visited[i] = true;
+                queue[qTail++] = i;
+
+                var minX = double.PositiveInfinity;
+                var minY = double.PositiveInfinity;
+                var maxX = double.NegativeInfinity;
+                var maxY = double.NegativeInfinity;
+                var maxModule = 0.0;
+                var clusterCount = 0;
+
+                while (qHead < qTail) {
+                    var idx = queue[qHead++];
+                    var c = candidates[idx];
+                    clusterCount++;
+                    if (c.ModuleSize > maxModule) maxModule = c.ModuleSize;
+                    if (c.X < minX) minX = c.X;
+                    if (c.Y < minY) minY = c.Y;
+                    if (c.X > maxX) maxX = c.X;
+                    if (c.Y > maxY) maxY = c.Y;
+
+                    for (var j = 0; j < candidates.Count; j++) {
+                        if (visited[j]) continue;
+                        var dX = candidates[j].X - c.X;
+                        var dY = candidates[j].Y - c.Y;
+                        var d2 = dX * dX + dY * dY;
+                        if (d2 <= link2) {
+                            visited[j] = true;
+                            queue[qTail++] = j;
+                        }
+                    }
+                }
+
+                if (clusterCount < 3 || double.IsInfinity(minX) || double.IsInfinity(minY)) continue;
+
+                var clusterList = new List<QrFinderPatternDetector.FinderPattern>(clusterCount);
+                for (var q = 0; q < qTail; q++) {
+                    clusterList.Add(candidates[queue[q]]);
+                }
+                if (clusterList.Count >= 3) {
+                    clusterList.Sort(static (a, b) => b.Count.CompareTo(a.Count));
+                    var maxTry = Math.Min(clusterList.Count, options?.StylizedSampling == true ? 6 : 4);
+                    for (var ci = 0; ci < maxTry; ci++) {
+                        if (budget.IsNearDeadline(200)) break;
+                        var c = clusterList[ci];
+                        var moduleSize = c.ModuleSize;
+                        if (moduleSize <= 0) continue;
+
+                        var oCount = 0;
+                        var fx = c.X / image.Width;
+                        var fy = c.Y / image.Height;
+                        if (fx <= 0.55 && fy <= 0.55) orientationsBuf[oCount++] = SingleFinderOrientation.TopLeft;
+                        if (fx >= 0.45 && fy <= 0.55) orientationsBuf[oCount++] = SingleFinderOrientation.TopRight;
+                        if (fx <= 0.55 && fy >= 0.45) orientationsBuf[oCount++] = SingleFinderOrientation.BottomLeft;
+                        if (oCount == 0) {
+                            orientationsBuf[oCount++] = SingleFinderOrientation.TopLeft;
+                            orientationsBuf[oCount++] = SingleFinderOrientation.TopRight;
+                            orientationsBuf[oCount++] = SingleFinderOrientation.BottomLeft;
+                        }
+
+                        for (var oi = 0; oi < oCount; oi++) {
+                            if (!TryGetMaxDimension(image, c, moduleSize, orientationsBuf[oi], out var maxDim)) continue;
+                            var dimsCount = 0;
+                            var baseDim = NearestValidDimension(maxDim);
+                            AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim);
+                            AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim - 4);
+                            if (options?.StylizedSampling == true) {
+                                AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim + 4);
+                            }
+                            AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim - 8);
+                            if (options?.StylizedSampling == true) {
+                                AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim + 8);
+                            }
+                            AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim - 12);
+                            if (options?.StylizedSampling == true) {
+                                AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim + 12);
+                            }
+                            AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim - 16);
+                            if (options?.StylizedSampling == true) {
+                                AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim + 16);
+                            }
+                            AddDimensionCandidate(ref dimsBuf, ref dimsCount, baseDim - 20);
+
+                            var maxDims = budget.Enabled ? Math.Min(dimsCount, options?.StylizedSampling == true ? 5 : 3) : dimsCount;
+                            for (var di = 0; di < maxDims; di++) {
+                                if (budget.IsNearDeadline(180)) break;
+                                var dim = dimsBuf[di];
+                                if (!TryGetBoundingBoxFromSingleFinder(image, c, moduleSize, orientationsBuf[oi], dim, out var roiMinX, out var roiMinY, out var roiMaxX, out var roiMaxY)) {
+                                    continue;
+                                }
+
+                                var padPx = Math.Max(4, (int)Math.Round(moduleSize * scale * 2.0));
+                                var roiPx0 = Math.Max(0, (roiMinX * scale) - padPx);
+                                var roiPy0 = Math.Max(0, (roiMinY * scale) - padPx);
+                                var roiPx1 = Math.Min(width - 1, (roiMaxX * scale) + padPx);
+                                var roiPy1 = Math.Min(height - 1, (roiMaxY * scale) + padPx);
+                                var roiW = roiPx1 - roiPx0 + 1;
+                                var roiH = roiPy1 - roiPy0 + 1;
+                                if (roiW < 64 || roiH < 64) continue;
+
+                                var roiStartIndex = (long)roiPy0 * stride + roiPx0 * 4L;
+                                var roiRequiredLen = (long)(roiH - 1) * stride + roiW * 4L;
+                                if (roiStartIndex < 0 || roiRequiredLen <= 0) continue;
+                                if (roiStartIndex + roiRequiredLen > pixels.Length) continue;
+
+                                var roiSpan = pixels.Slice((int)roiStartIndex, (int)roiRequiredLen);
+                                if (TryDecodeAll(roiSpan, roiW, roiH, stride, fmt, attemptOptions, accept, cancellationToken, allowTileScan: false, out var roiDecodedList) && roiDecodedList.Length > 0) {
+                                    AddResult(results, seen, roiDecodedList[0], accept);
+                                    if (budget.IsNearDeadline(160)) return;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                var padGray = maxModule > 0 ? maxModule * (options?.StylizedSampling == true ? 8.0 : 6.0) : 12.0;
+                var px0 = Math.Max(0, QrMath.RoundToInt((minX - padGray) * scale));
+                var py0 = Math.Max(0, QrMath.RoundToInt((minY - padGray) * scale));
+                var px1 = Math.Min(width - 1, QrMath.RoundToInt((maxX + padGray) * scale));
+                var py1 = Math.Min(height - 1, QrMath.RoundToInt((maxY + padGray) * scale));
+                var tw = px1 - px0 + 1;
+                var th = py1 - py0 + 1;
+                if (tw < 64 || th < 64) continue;
+
+                var startIndex = (long)py0 * stride + px0 * 4L;
+                var requiredLen = (long)(th - 1) * stride + tw * 4L;
+                if (startIndex < 0 || requiredLen <= 0) continue;
+                if (startIndex + requiredLen > pixels.Length) continue;
+
+                var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
+                if (TryDecodeAll(tileSpan, tw, th, stride, fmt, attemptOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+                    AddResult(results, seen, decodedList[0], accept);
+                    if (budget.IsNearDeadline(160)) return;
+                }
+            }
+        } finally {
+            ReturnCandidateList(candidates);
         }
     }
 
@@ -1267,7 +1600,7 @@ internal static partial class QrPixelDecoder {
             }
 
             var scaledSettings = GetProfileSettings(profile, Math.Min(upW, upH));
-            scaledSettings = ApplyOverrides(scaledSettings, options, scaleStart: 1);
+            scaledSettings = ApplyOverrides(scaledSettings, options, scaleStart: 1, minDim: Math.Min(upW, upH));
             return TryDecodeAtScale(buffer, upW, upH, upStride, fmt, scale: 1, scaledSettings, budget, accept, out result, out diagnostics);
         } finally {
             ArrayPool<byte>.Shared.Return(buffer, clearArray: false);

@@ -9,7 +9,7 @@ using ZXing.Common;
 
 namespace CodeGlyphX.Benchmarks;
 
-internal readonly record struct DecodeEngineResult(bool Success, int Count, string[] Texts);
+internal readonly record struct DecodeEngineResult(bool Success, int Count, string[] Texts, QrPixelDecodeInfo? Info);
 
 internal interface IQrDecodeEngine {
     string Name { get; }
@@ -43,10 +43,20 @@ internal static class QrDecodeEngines {
                 data.Stride,
                 PixelFormat.Rgba32,
                 out decoded,
-                out _,
+                out var info,
                 options);
             if (!okAll || decoded.Length == 0) {
-                if (QrDecoder.TryDecode(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, out var single, out _, options)) {
+                var okSingle = QrDecoder.TryDecode(
+                    data.Rgba,
+                    data.Width,
+                    data.Height,
+                    data.Stride,
+                    PixelFormat.Rgba32,
+                    out var single,
+                    out var infoSingle,
+                    options);
+                info = infoSingle;
+                if (okSingle) {
                     decoded = new[] { single };
                 } else {
                     decoded = Array.Empty<QrDecoded>();
@@ -54,7 +64,7 @@ internal static class QrDecodeEngines {
             }
 
             if (decoded.Length == 0) {
-                return new DecodeEngineResult(false, 0, Array.Empty<string>());
+                return new DecodeEngineResult(false, 0, Array.Empty<string>(), info);
             }
 
             var texts = decoded
@@ -62,28 +72,39 @@ internal static class QrDecodeEngines {
                 .Where(t => !string.IsNullOrWhiteSpace(t))
                 .Distinct(StringComparer.Ordinal)
                 .ToArray();
-            return new DecodeEngineResult(texts.Length > 0, decoded.Length, texts);
+            return new DecodeEngineResult(texts.Length > 0, decoded.Length, texts, info);
         }
     }
 
 #if COMPARE_ZXING
     private sealed class ZXingEngine : IQrDecodeEngine {
-        private readonly BarcodeReaderGeneric _reader = new() {
-            Options = new DecodingOptions { PossibleFormats = new[] { BarcodeFormat.QR_CODE } }
-        };
+        private readonly BarcodeReaderGeneric _reader = new();
 
         public string Name => "ZXing.Net";
         public bool IsExternal => true;
         public IReadOnlyList<string> Aliases { get; } = new[] { "zxing", "zxingnet", "zxing.net", "zx" };
 
         public DecodeEngineResult Decode(QrDecodeScenarioData data, QrPixelDecodeOptions options) {
+            var tryHarder = WantsTryHarder(options);
+            _reader.Options = new DecodingOptions {
+                PossibleFormats = new[] { BarcodeFormat.QR_CODE },
+                TryHarder = tryHarder
+            };
             var result = _reader.Decode(data.Rgba, data.Width, data.Height, RGBLuminanceSource.BitmapFormat.RGBA32);
             if (result is null || string.IsNullOrWhiteSpace(result.Text)) {
-                return new DecodeEngineResult(false, 0, Array.Empty<string>());
+                return new DecodeEngineResult(false, 0, Array.Empty<string>(), null);
             }
 
-            return new DecodeEngineResult(true, 1, new[] { result.Text });
+            return new DecodeEngineResult(true, 1, new[] { result.Text }, null);
         }
     }
 #endif
+
+    private static bool WantsTryHarder(QrPixelDecodeOptions options) {
+        return options.Profile == QrDecodeProfile.Robust ||
+               options.AggressiveSampling ||
+               options.StylizedSampling ||
+               options.AutoCrop ||
+               options.EnableTileScan;
+    }
 }

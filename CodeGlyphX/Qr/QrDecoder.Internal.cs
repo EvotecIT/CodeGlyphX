@@ -165,7 +165,7 @@ public static partial class QrDecoder {
 
         if (candidates.Length == 0) return false;
 
-        var functionMask = QrStructureAnalysis.BuildFunctionMask(version, modules.Width);
+        var functionMask = QrStructureAnalysis.GetFunctionMask(version);
         var failureEcc = candidates[0].ErrorCorrectionLevel;
         var failureMask = candidates[0].Mask;
         var sawPayloadFailure = false;
@@ -226,6 +226,37 @@ public static partial class QrDecoder {
         return best;
     }
 
+    internal static bool TryDecodeAllFormatCandidates(BitMatrix modules, Func<bool>? shouldStop, out QrDecoded result, out QrDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        if (shouldStop?.Invoke() == true) {
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Cancelled);
+            return false;
+        }
+
+        if (modules is null || modules.Width != modules.Height) {
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.InvalidInput);
+            return false;
+        }
+
+        var size = modules.Width;
+        var version = (size - 17) / 4;
+        if (version is < 1 or > 40 || size != version * 4 + 17) {
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.InvalidSize, version);
+            return false;
+        }
+
+        if (shouldStop?.Invoke() == true) {
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Cancelled, version);
+            return false;
+        }
+
+        TryDecodeFormat(modules, out _, out var formatBestDistance, out var bitsA, out var bitsB);
+        var allCandidates = BuildAllFormatCandidates(bitsA, bitsB);
+        return TryDecodeWithCandidates(modules, version, allCandidates, formatBestDistance, requireBothWithin: false, shouldStop, out result, out diagnostics);
+    }
+
     private static int CountBits(int x) {
         unchecked {
             x = x - ((x >> 1) & 0x55555555);
@@ -274,110 +305,18 @@ public static partial class QrDecoder {
         var done = false;
         try {
             if (shouldStop is null) {
-                for (var right = size - 1; right >= 1; right -= 2) {
-                    if (right == 6) right = 5;
-                    var x0 = right;
-                    var x1 = right - 1;
-                    var x0m2 = xMod2[x0];
-                    var x1m2 = xMod2[x1];
-                    var x0m3 = xMod3[x0];
-                    var x1m3 = xMod3[x1];
-                    var x0d3 = xDiv3Parity[x0];
-                    var x1d3 = xDiv3Parity[x1];
-
-                    for (var vert = 0; vert < size; vert++) {
-                        var y = upward ? size - 1 - vert : vert;
-                        var rowOffset = y * size;
-                        var ym2 = yMod2[y];
-                        var ym3 = yMod3[y];
-                        var yExp3 = yMod3Expected[y];
-                        var yd2 = yDiv2Parity[y];
-                        var ym2Zero = yMod2Zero[y] != 0;
-                        var ym3Zero = yMod3Zero[y] != 0;
-                        bool invert0;
-                        bool invert1;
-                        switch (mask) {
-                            case 0:
-                                invert0 = x0m2 == ym2;
-                                invert1 = x1m2 == ym2;
-                                break;
-                            case 1:
-                                invert0 = ym2 == 0;
-                                invert1 = invert0;
-                                break;
-                            case 2:
-                                invert0 = x0m3 == 0;
-                                invert1 = x1m3 == 0;
-                                break;
-                            case 3:
-                                invert0 = x0m3 == yExp3;
-                                invert1 = x1m3 == yExp3;
-                                break;
-                            case 4:
-                                invert0 = x0d3 == yd2;
-                                invert1 = x1d3 == yd2;
-                                break;
-                            case 5:
-                                invert0 = (x0m2 == 0 || ym2Zero) && (x0m3 == 0 || ym3Zero);
-                                invert1 = (x1m2 == 0 || ym2Zero) && (x1m3 == 0 || ym3Zero);
-                                break;
-                            case 6: {
-                                var xyMod3Parity0 = x0m3 == ym3 && x0m3 != 0;
-                                invert0 = (x0m2 & ym2) == (xyMod3Parity0 ? (byte)1 : (byte)0);
-                                var xyMod3Parity1 = x1m3 == ym3 && x1m3 != 0;
-                                invert1 = (x1m2 & ym2) == (xyMod3Parity1 ? (byte)1 : (byte)0);
-                                break;
-                            }
-                            case 7: {
-                                var xyMod3Parity0 = x0m3 == ym3 && x0m3 != 0;
-                                invert0 = (x0m2 != ym2) == xyMod3Parity0;
-                                var xyMod3Parity1 = x1m3 == ym3 && x1m3 != 0;
-                                invert1 = (x1m2 != ym2) == xyMod3Parity1;
-                                break;
-                            }
-                            default:
-                                invert0 = QrMask.ShouldInvert(mask, x0, y);
-                                invert1 = QrMask.ShouldInvert(mask, x1, y);
-                                break;
-                        }
-
-                        var idx0 = rowOffset + x0;
-                        var wordIndex0 = idx0 >> 5;
-                        var bitMask0 = 1u << (idx0 & 31);
-                        if ((functionWords[wordIndex0] & bitMask0) == 0) {
-                            var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
-                            if (invert0) bit = !bit;
-                            if (bit) {
-                                codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
-                            }
-                            bitIndex++;
-                            if (bitIndex == totalBits) {
-                                done = true;
-                            }
-                        }
-
-                        if (done) break;
-
-                        var idx1 = rowOffset + x1;
-                        var wordIndex1 = idx1 >> 5;
-                        var bitMask1 = 1u << (idx1 & 31);
-                        if ((functionWords[wordIndex1] & bitMask1) == 0) {
-                            var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
-                            if (invert1) bit = !bit;
-                            if (bit) {
-                                codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
-                            }
-                            bitIndex++;
-                            if (bitIndex == totalBits) {
-                                done = true;
-                            }
-                        }
-                        if (done) break;
-                    }
-                    if (done) break;
-
-                    upward = !upward;
-                }
+                var ok = mask switch {
+                    0 => ExtractMask0NoStop(size, moduleWords, functionWords, totalBits, codewords, xMod2, yMod2),
+                    1 => ExtractMask1NoStop(size, moduleWords, functionWords, totalBits, codewords, yMod2),
+                    2 => ExtractMask2NoStop(size, moduleWords, functionWords, totalBits, codewords, xMod3),
+                    3 => ExtractMask3NoStop(size, moduleWords, functionWords, totalBits, codewords, xMod3, yMod3Expected),
+                    4 => ExtractMask4NoStop(size, moduleWords, functionWords, totalBits, codewords, xDiv3Parity, yDiv2Parity),
+                    5 => ExtractMask5NoStop(size, moduleWords, functionWords, totalBits, codewords, xMod2, xMod3, yMod2Zero, yMod3Zero),
+                    6 => ExtractMask6NoStop(size, moduleWords, functionWords, totalBits, codewords, xMod2, xMod3, yMod2, yMod3),
+                    7 => ExtractMask7NoStop(size, moduleWords, functionWords, totalBits, codewords, xMod2, xMod3, yMod2, yMod3),
+                    _ => ExtractMaskFallbackNoStop(size, moduleWords, functionWords, totalBits, codewords, mask)
+                };
+                if (!ok) return false;
             } else {
                 for (var right = size - 1; right >= 1; right -= 2) {
                     if (right == 6) right = 5;
@@ -490,6 +429,563 @@ public static partial class QrDecoder {
         } finally {
             ArrayPool<byte>.Shared.Return(codewords, clearArray: false);
         }
+    }
+
+    private static bool ExtractMask0NoStop(
+        int size,
+        uint[] moduleWords,
+        uint[] functionWords,
+        int totalBits,
+        byte[] codewords,
+        ReadOnlySpan<byte> xMod2,
+        ReadOnlySpan<byte> yMod2) {
+        var bitIndex = 0;
+        var upward = true;
+        var done = false;
+
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+            var x0 = right;
+            var x1 = right - 1;
+            var x0m2 = xMod2[x0];
+            var x1m2 = xMod2[x1];
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
+                var ym2 = yMod2[y];
+                var invert0 = x0m2 == ym2;
+                var invert1 = x1m2 == ym2;
+
+                var idx0 = rowOffset + x0;
+                var wordIndex0 = idx0 >> 5;
+                var bitMask0 = 1u << (idx0 & 31);
+                if ((functionWords[wordIndex0] & bitMask0) == 0) {
+                    var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
+                    if (invert0) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+
+                var idx1 = rowOffset + x1;
+                var wordIndex1 = idx1 >> 5;
+                var bitMask1 = 1u << (idx1 & 31);
+                if ((functionWords[wordIndex1] & bitMask1) == 0) {
+                    var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
+                    if (invert1) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+            }
+            if (done) break;
+            upward = !upward;
+        }
+
+        return true;
+    }
+
+    private static bool ExtractMask1NoStop(
+        int size,
+        uint[] moduleWords,
+        uint[] functionWords,
+        int totalBits,
+        byte[] codewords,
+        ReadOnlySpan<byte> yMod2) {
+        var bitIndex = 0;
+        var upward = true;
+        var done = false;
+
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+            var x0 = right;
+            var x1 = right - 1;
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
+                var invert = yMod2[y] == 0;
+
+                var idx0 = rowOffset + x0;
+                var wordIndex0 = idx0 >> 5;
+                var bitMask0 = 1u << (idx0 & 31);
+                if ((functionWords[wordIndex0] & bitMask0) == 0) {
+                    var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
+                    if (invert) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+
+                var idx1 = rowOffset + x1;
+                var wordIndex1 = idx1 >> 5;
+                var bitMask1 = 1u << (idx1 & 31);
+                if ((functionWords[wordIndex1] & bitMask1) == 0) {
+                    var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
+                    if (invert) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+            }
+            if (done) break;
+            upward = !upward;
+        }
+
+        return true;
+    }
+
+    private static bool ExtractMask2NoStop(
+        int size,
+        uint[] moduleWords,
+        uint[] functionWords,
+        int totalBits,
+        byte[] codewords,
+        ReadOnlySpan<byte> xMod3) {
+        var bitIndex = 0;
+        var upward = true;
+        var done = false;
+
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+            var x0 = right;
+            var x1 = right - 1;
+            var x0m3 = xMod3[x0];
+            var x1m3 = xMod3[x1];
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
+                var invert0 = x0m3 == 0;
+                var invert1 = x1m3 == 0;
+
+                var idx0 = rowOffset + x0;
+                var wordIndex0 = idx0 >> 5;
+                var bitMask0 = 1u << (idx0 & 31);
+                if ((functionWords[wordIndex0] & bitMask0) == 0) {
+                    var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
+                    if (invert0) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+
+                var idx1 = rowOffset + x1;
+                var wordIndex1 = idx1 >> 5;
+                var bitMask1 = 1u << (idx1 & 31);
+                if ((functionWords[wordIndex1] & bitMask1) == 0) {
+                    var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
+                    if (invert1) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+            }
+            if (done) break;
+            upward = !upward;
+        }
+
+        return true;
+    }
+
+    private static bool ExtractMask3NoStop(
+        int size,
+        uint[] moduleWords,
+        uint[] functionWords,
+        int totalBits,
+        byte[] codewords,
+        ReadOnlySpan<byte> xMod3,
+        ReadOnlySpan<byte> yMod3Expected) {
+        var bitIndex = 0;
+        var upward = true;
+        var done = false;
+
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+            var x0 = right;
+            var x1 = right - 1;
+            var x0m3 = xMod3[x0];
+            var x1m3 = xMod3[x1];
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
+                var yExp3 = yMod3Expected[y];
+                var invert0 = x0m3 == yExp3;
+                var invert1 = x1m3 == yExp3;
+
+                var idx0 = rowOffset + x0;
+                var wordIndex0 = idx0 >> 5;
+                var bitMask0 = 1u << (idx0 & 31);
+                if ((functionWords[wordIndex0] & bitMask0) == 0) {
+                    var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
+                    if (invert0) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+
+                var idx1 = rowOffset + x1;
+                var wordIndex1 = idx1 >> 5;
+                var bitMask1 = 1u << (idx1 & 31);
+                if ((functionWords[wordIndex1] & bitMask1) == 0) {
+                    var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
+                    if (invert1) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+            }
+            if (done) break;
+            upward = !upward;
+        }
+
+        return true;
+    }
+
+    private static bool ExtractMask4NoStop(
+        int size,
+        uint[] moduleWords,
+        uint[] functionWords,
+        int totalBits,
+        byte[] codewords,
+        ReadOnlySpan<byte> xDiv3Parity,
+        ReadOnlySpan<byte> yDiv2Parity) {
+        var bitIndex = 0;
+        var upward = true;
+        var done = false;
+
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+            var x0 = right;
+            var x1 = right - 1;
+            var x0d3 = xDiv3Parity[x0];
+            var x1d3 = xDiv3Parity[x1];
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
+                var yd2 = yDiv2Parity[y];
+                var invert0 = x0d3 == yd2;
+                var invert1 = x1d3 == yd2;
+
+                var idx0 = rowOffset + x0;
+                var wordIndex0 = idx0 >> 5;
+                var bitMask0 = 1u << (idx0 & 31);
+                if ((functionWords[wordIndex0] & bitMask0) == 0) {
+                    var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
+                    if (invert0) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+
+                var idx1 = rowOffset + x1;
+                var wordIndex1 = idx1 >> 5;
+                var bitMask1 = 1u << (idx1 & 31);
+                if ((functionWords[wordIndex1] & bitMask1) == 0) {
+                    var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
+                    if (invert1) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+            }
+            if (done) break;
+            upward = !upward;
+        }
+
+        return true;
+    }
+
+    private static bool ExtractMask5NoStop(
+        int size,
+        uint[] moduleWords,
+        uint[] functionWords,
+        int totalBits,
+        byte[] codewords,
+        ReadOnlySpan<byte> xMod2,
+        ReadOnlySpan<byte> xMod3,
+        ReadOnlySpan<byte> yMod2Zero,
+        ReadOnlySpan<byte> yMod3Zero) {
+        var bitIndex = 0;
+        var upward = true;
+        var done = false;
+
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+            var x0 = right;
+            var x1 = right - 1;
+            var x0m2 = xMod2[x0];
+            var x1m2 = xMod2[x1];
+            var x0m3 = xMod3[x0];
+            var x1m3 = xMod3[x1];
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
+                var ym2Zero = yMod2Zero[y] != 0;
+                var ym3Zero = yMod3Zero[y] != 0;
+                var invert0 = (x0m2 == 0 || ym2Zero) && (x0m3 == 0 || ym3Zero);
+                var invert1 = (x1m2 == 0 || ym2Zero) && (x1m3 == 0 || ym3Zero);
+
+                var idx0 = rowOffset + x0;
+                var wordIndex0 = idx0 >> 5;
+                var bitMask0 = 1u << (idx0 & 31);
+                if ((functionWords[wordIndex0] & bitMask0) == 0) {
+                    var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
+                    if (invert0) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+
+                var idx1 = rowOffset + x1;
+                var wordIndex1 = idx1 >> 5;
+                var bitMask1 = 1u << (idx1 & 31);
+                if ((functionWords[wordIndex1] & bitMask1) == 0) {
+                    var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
+                    if (invert1) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+            }
+            if (done) break;
+            upward = !upward;
+        }
+
+        return true;
+    }
+
+    private static bool ExtractMask6NoStop(
+        int size,
+        uint[] moduleWords,
+        uint[] functionWords,
+        int totalBits,
+        byte[] codewords,
+        ReadOnlySpan<byte> xMod2,
+        ReadOnlySpan<byte> xMod3,
+        ReadOnlySpan<byte> yMod2,
+        ReadOnlySpan<byte> yMod3) {
+        var bitIndex = 0;
+        var upward = true;
+        var done = false;
+
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+            var x0 = right;
+            var x1 = right - 1;
+            var x0m2 = xMod2[x0];
+            var x1m2 = xMod2[x1];
+            var x0m3 = xMod3[x0];
+            var x1m3 = xMod3[x1];
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
+                var ym2 = yMod2[y];
+                var ym3 = yMod3[y];
+                var xyMod3Parity0 = x0m3 == ym3 && x0m3 != 0;
+                var invert0 = (x0m2 & ym2) == (xyMod3Parity0 ? (byte)1 : (byte)0);
+                var xyMod3Parity1 = x1m3 == ym3 && x1m3 != 0;
+                var invert1 = (x1m2 & ym2) == (xyMod3Parity1 ? (byte)1 : (byte)0);
+
+                var idx0 = rowOffset + x0;
+                var wordIndex0 = idx0 >> 5;
+                var bitMask0 = 1u << (idx0 & 31);
+                if ((functionWords[wordIndex0] & bitMask0) == 0) {
+                    var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
+                    if (invert0) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+
+                var idx1 = rowOffset + x1;
+                var wordIndex1 = idx1 >> 5;
+                var bitMask1 = 1u << (idx1 & 31);
+                if ((functionWords[wordIndex1] & bitMask1) == 0) {
+                    var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
+                    if (invert1) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+            }
+            if (done) break;
+            upward = !upward;
+        }
+
+        return true;
+    }
+
+    private static bool ExtractMask7NoStop(
+        int size,
+        uint[] moduleWords,
+        uint[] functionWords,
+        int totalBits,
+        byte[] codewords,
+        ReadOnlySpan<byte> xMod2,
+        ReadOnlySpan<byte> xMod3,
+        ReadOnlySpan<byte> yMod2,
+        ReadOnlySpan<byte> yMod3) {
+        var bitIndex = 0;
+        var upward = true;
+        var done = false;
+
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+            var x0 = right;
+            var x1 = right - 1;
+            var x0m2 = xMod2[x0];
+            var x1m2 = xMod2[x1];
+            var x0m3 = xMod3[x0];
+            var x1m3 = xMod3[x1];
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
+                var ym2 = yMod2[y];
+                var ym3 = yMod3[y];
+                var xyMod3Parity0 = x0m3 == ym3 && x0m3 != 0;
+                var invert0 = (x0m2 != ym2) == xyMod3Parity0;
+                var xyMod3Parity1 = x1m3 == ym3 && x1m3 != 0;
+                var invert1 = (x1m2 != ym2) == xyMod3Parity1;
+
+                var idx0 = rowOffset + x0;
+                var wordIndex0 = idx0 >> 5;
+                var bitMask0 = 1u << (idx0 & 31);
+                if ((functionWords[wordIndex0] & bitMask0) == 0) {
+                    var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
+                    if (invert0) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+
+                var idx1 = rowOffset + x1;
+                var wordIndex1 = idx1 >> 5;
+                var bitMask1 = 1u << (idx1 & 31);
+                if ((functionWords[wordIndex1] & bitMask1) == 0) {
+                    var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
+                    if (invert1) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+            }
+            if (done) break;
+            upward = !upward;
+        }
+
+        return true;
+    }
+
+    private static bool ExtractMaskFallbackNoStop(
+        int size,
+        uint[] moduleWords,
+        uint[] functionWords,
+        int totalBits,
+        byte[] codewords,
+        int mask) {
+        var bitIndex = 0;
+        var upward = true;
+        var done = false;
+
+        for (var right = size - 1; right >= 1; right -= 2) {
+            if (right == 6) right = 5;
+            var x0 = right;
+            var x1 = right - 1;
+
+            for (var vert = 0; vert < size; vert++) {
+                var y = upward ? size - 1 - vert : vert;
+                var rowOffset = y * size;
+                var invert0 = QrMask.ShouldInvert(mask, x0, y);
+                var invert1 = QrMask.ShouldInvert(mask, x1, y);
+
+                var idx0 = rowOffset + x0;
+                var wordIndex0 = idx0 >> 5;
+                var bitMask0 = 1u << (idx0 & 31);
+                if ((functionWords[wordIndex0] & bitMask0) == 0) {
+                    var bit = (moduleWords[wordIndex0] & bitMask0) != 0;
+                    if (invert0) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+
+                var idx1 = rowOffset + x1;
+                var wordIndex1 = idx1 >> 5;
+                var bitMask1 = 1u << (idx1 & 31);
+                if ((functionWords[wordIndex1] & bitMask1) == 0) {
+                    var bit = (moduleWords[wordIndex1] & bitMask1) != 0;
+                    if (invert1) bit = !bit;
+                    if (bit) {
+                        codewords[bitIndex >> 3] |= (byte)(1 << (7 - (bitIndex & 7)));
+                    }
+                    bitIndex++;
+                    if (bitIndex == totalBits) done = true;
+                }
+                if (done) break;
+            }
+            if (done) break;
+            upward = !upward;
+        }
+
+        return true;
     }
 
     private static bool TryCorrectAndExtractData(byte[] codewords, int codewordCount, int version, QrErrorCorrectionLevel ecc, Func<bool>? shouldStop, out byte[] dataCodewords) {

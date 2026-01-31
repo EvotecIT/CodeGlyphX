@@ -60,10 +60,10 @@ public class QrDecodeBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        LoadRgba("Assets/DecodingSamples/qr-clean-small.png", out _cleanRgba, out _cleanWidth, out _cleanHeight);
-        LoadRgba("Assets/DecodingSamples/qr-noisy-ui.png", out _noisyRgba, out _noisyWidth, out _noisyHeight);
-        LoadRgba("Assets/DecodingSamples/qr-screenshot-1.png", out _screenshotRgba, out _screenshotWidth, out _screenshotHeight);
-        LoadRgba("Assets/DecodingSamples/qr-dot-aa.png", out _antialiasRgba, out _antialiasWidth, out _antialiasHeight);
+        LoadSample("Assets/DecodingSamples/qr-clean-small.png", out _cleanRgba, out _cleanWidth, out _cleanHeight);
+        LoadSample("Assets/DecodingSamples/qr-noisy-ui.png", out _noisyRgba, out _noisyWidth, out _noisyHeight);
+        LoadSample("Assets/DecodingSamples/qr-screenshot-1.png", out _screenshotRgba, out _screenshotWidth, out _screenshotHeight);
+        LoadSample("Assets/DecodingSamples/qr-dot-aa.png", out _antialiasRgba, out _antialiasWidth, out _antialiasHeight);
 #if !BENCH_QUICK
         BuildLogoSample(out _logoRgba, out _logoWidth, out _logoHeight);
 #endif
@@ -134,13 +134,12 @@ public class QrDecodeBenchmarks
         return QrDecoder.TryDecode(_noQuietRgba, _noQuietWidth, _noQuietHeight, _noQuietWidth * 4, PixelFormat.Rgba32, out _, _robust);
     }
 
-    private static void LoadRgba(string relativePath, out byte[] rgba, out int width, out int height)
+    private static void LoadSample(string relativePath, out byte[] rgba, out int width, out int height)
     {
-        var bytes = RepoFiles.ReadRepoFile(relativePath);
-        if (!ImageReader.TryDecodeRgba32(bytes, out rgba, out width, out height))
-        {
-            throw new InvalidOperationException($"Failed to decode image '{relativePath}'.");
-        }
+        var data = QrDecodeSampleFactory.LoadSample(relativePath);
+        rgba = data.Rgba;
+        width = data.Width;
+        height = data.Height;
     }
 
 #if !BENCH_QUICK
@@ -154,49 +153,32 @@ public class QrDecodeBenchmarks
             out _);
         var options = QrPresets.Logo(logo);
         var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
-        DecodePng(png, out rgba, out width, out height);
+        QrDecodeSampleFactory.DecodePng(png, out rgba, out width, out height);
     }
 #endif
 
     private static void BuildFancySample(out byte[] rgba, out int width, out int height)
     {
-        var options = new QrEasyOptions { Style = QrRenderStyle.Fancy };
-        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
-        DecodePng(png, out rgba, out width, out height);
+        var data = QrDecodeSampleFactory.BuildFancyGenerated(SampleText);
+        rgba = data.Rgba;
+        width = data.Width;
+        height = data.Height;
     }
 
     private static void BuildResampledSample(out byte[] rgba, out int width, out int height)
     {
-        var options = new QrEasyOptions { ModuleSize = 8 };
-        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
-        DecodePng(png, out var baseRgba, out var baseWidth, out var baseHeight);
-
-        var downW = Math.Max(1, (int)Math.Round(baseWidth * 0.62));
-        var downH = Math.Max(1, (int)Math.Round(baseHeight * 0.62));
-        var down = QrDecodeImageOps.ResampleBilinear(baseRgba, baseWidth, baseHeight, downW, downH);
-
-        var upW = Math.Max(1, (int)Math.Round(baseWidth * 1.12));
-        var upH = Math.Max(1, (int)Math.Round(baseHeight * 1.12));
-        var up = QrDecodeImageOps.ResampleBilinear(down, downW, downH, upW, upH);
-
-        rgba = up;
-        width = upW;
-        height = upH;
+        var data = QrDecodeSampleFactory.BuildResampledGenerated(SampleText);
+        rgba = data.Rgba;
+        width = data.Width;
+        height = data.Height;
     }
 
     private static void BuildNoQuietSample(out byte[] rgba, out int width, out int height)
     {
-        var options = new QrEasyOptions { QuietZone = 0, ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
-        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
-        DecodePng(png, out rgba, out width, out height);
-    }
-
-    private static void DecodePng(byte[] png, out byte[] rgba, out int width, out int height)
-    {
-        if (!ImageReader.TryDecodeRgba32(png, out rgba, out width, out height))
-        {
-            throw new InvalidOperationException("Failed to decode generated QR PNG sample.");
-        }
+        var data = QrDecodeSampleFactory.BuildNoQuietGenerated(SampleText);
+        rgba = data.Rgba;
+        width = data.Width;
+        height = data.Height;
     }
 
 }

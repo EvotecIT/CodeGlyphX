@@ -13,6 +13,23 @@ namespace CodeGlyphX;
 /// Current scope: byte + kanji payloads on clean/generated images and clean on-screen QR codes.
 /// </remarks>
 public static partial class QrDecoder {
+    [ThreadStatic]
+    private static System.Collections.Generic.HashSet<byte[]>? t_seenSet;
+
+    private static System.Collections.Generic.HashSet<byte[]> RentSeenSet() {
+        var set = t_seenSet;
+        if (set is null) return new System.Collections.Generic.HashSet<byte[]>(ByteArrayComparer.Instance);
+        t_seenSet = null;
+        set.Clear();
+        return set;
+    }
+
+    private static void ReturnSeenSet(System.Collections.Generic.HashSet<byte[]> set) {
+        set.Clear();
+        if (t_seenSet is null) {
+            t_seenSet = set;
+        }
+    }
     /// <summary>
     /// Attempts to decode a QR code from an exact module grid (no quiet zone).
     /// </summary>
@@ -239,78 +256,102 @@ public static partial class QrDecoder {
     private static bool ApplyTileScan(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions options, CancellationToken cancellationToken, ref QrDecoded[] results) {
         if (width <= 0 || height <= 0 || stride < width * 4) return results.Length > 0;
         var list = new System.Collections.Generic.List<QrDecoded>(results.Length + 4);
-        var seen = new System.Collections.Generic.HashSet<byte[]>(ByteArrayComparer.Instance);
-        for (var i = 0; i < results.Length; i++) {
-            if (seen.Add(results[i].Bytes)) list.Add(results[i]);
-        }
+        var seen = RentSeenSet();
+        try {
+            for (var i = 0; i < results.Length; i++) {
+                if (seen.Add(results[i].Bytes)) list.Add(results[i]);
+            }
 
-        var budgetMs = options.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options.MaxMilliseconds;
-        var tileBudgetMs = budgetMs > 0 ? Math.Max(300, budgetMs / 2) : 0;
-        var sw = tileBudgetMs > 0 ? System.Diagnostics.Stopwatch.StartNew() : null;
+            var budgetMs = options.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options.MaxMilliseconds;
+            var tileBudgetMs = budgetMs > 0 ? Math.Max(300, budgetMs / 2) : 0;
+            var sw = tileBudgetMs > 0 ? System.Diagnostics.Stopwatch.StartNew() : null;
 
-        bool ShouldStop() {
-            if (cancellationToken.IsCancellationRequested) return true;
-            if (tileBudgetMs > 0 && sw is not null && sw.ElapsedMilliseconds >= tileBudgetMs) return true;
-            return false;
-        }
+            bool ShouldStop() {
+                if (cancellationToken.IsCancellationRequested) return true;
+                if (tileBudgetMs > 0 && sw is not null && sw.ElapsedMilliseconds >= tileBudgetMs) return true;
+                return false;
+            }
 
-        var grid = options.TileGrid > 0 ? options.TileGrid : (Math.Max(width, height) >= 900 ? 3 : 2);
-        if (grid < 2) grid = 2;
-        if (grid > 8) grid = 8;
-        var pad = Math.Max(8, Math.Min(width, height) / 40);
-        var perTileBudgetMs = tileBudgetMs > 0 ? Math.Max(200, tileBudgetMs / (grid * grid)) : 0;
-        var tileOptions = options;
-        if (perTileBudgetMs > 0 && options.BudgetMilliseconds != perTileBudgetMs) {
-            tileOptions = new QrPixelDecodeOptions {
-                Profile = options.Profile,
-                MaxDimension = options.MaxDimension,
-                MaxScale = options.MaxScale,
-                MaxMilliseconds = options.MaxMilliseconds,
-                BudgetMilliseconds = perTileBudgetMs,
-                AutoCrop = options.AutoCrop,
-                EnableTileScan = false,
-                TileGrid = options.TileGrid,
-                DisableTransforms = options.DisableTransforms,
-                AggressiveSampling = options.AggressiveSampling,
-                StylizedSampling = options.StylizedSampling
-            };
-        }
-        var tileW = width / grid;
-        var tileH = height / grid;
+            var grid = options.TileGrid > 0 ? options.TileGrid : (Math.Max(width, height) >= 900 ? 3 : 2);
+            if (grid < 2) grid = 2;
+            if (grid > 8) grid = 8;
+            var pad = Math.Max(8, Math.Min(width, height) / 40);
 
-        for (var ty = 0; ty < grid; ty++) {
-            for (var tx = 0; tx < grid; tx++) {
+            var coarseGrid = options.StylizedSampling && results.Length == 0 && grid >= 4 && Math.Min(width, height) >= 600
+                ? 2
+                : 0;
+            var extraGrid = options.StylizedSampling && results.Length == 0 && grid < 6 && Math.Min(width, height) >= 600
+                ? 6
+                : 0;
+            for (var pass = 0; pass < 3; pass++) {
+                var gridToScan = pass switch {
+                    0 => coarseGrid,
+                    1 => grid,
+                    _ => extraGrid
+                };
+                if (gridToScan < 2) continue;
+                if (pass == 2 && list.Count > 0) break;
                 if (ShouldStop()) break;
-                var x0 = tx * tileW;
-                var y0 = ty * tileH;
-                var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
-                var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
 
-                x0 = Math.Max(0, x0 - pad);
-                y0 = Math.Max(0, y0 - pad);
-                x1 = Math.Min(width, x1 + pad);
-                y1 = Math.Min(height, y1 + pad);
+                var tileOptions = options;
+                if (tileBudgetMs > 0) {
+                    var perTileBudgetMs = Math.Max(200, tileBudgetMs / (gridToScan * gridToScan));
+                    if (perTileBudgetMs > 0 && options.BudgetMilliseconds != perTileBudgetMs) {
+                        tileOptions = new QrPixelDecodeOptions {
+                            Profile = options.Profile,
+                            MaxDimension = options.MaxDimension,
+                            MaxScale = options.MaxScale,
+                            MaxMilliseconds = options.MaxMilliseconds,
+                            BudgetMilliseconds = perTileBudgetMs,
+                            AutoCrop = options.AutoCrop,
+                            EnableTileScan = false,
+                            TileGrid = options.TileGrid,
+                            DisableTransforms = options.DisableTransforms,
+                            AggressiveSampling = options.AggressiveSampling,
+                            StylizedSampling = options.StylizedSampling
+                        };
+                    }
+                }
 
-                var tw = x1 - x0;
-                var th = y1 - y0;
-                if (tw < 48 || th < 48) continue;
+                var tileW = width / gridToScan;
+                var tileH = height / gridToScan;
+                for (var ty = 0; ty < gridToScan; ty++) {
+                    for (var tx = 0; tx < gridToScan; tx++) {
+                        if (ShouldStop()) break;
+                        var x0 = tx * tileW;
+                        var y0 = ty * tileH;
+                        var x1 = (tx == gridToScan - 1) ? width : (tx + 1) * tileW;
+                        var y1 = (ty == gridToScan - 1) ? height : (ty + 1) * tileH;
 
-                var startIndex = (long)y0 * stride + x0 * 4L;
-                var requiredLen = (long)(th - 1) * stride + tw * 4L;
-                if (startIndex < 0 || requiredLen <= 0) continue;
-                if (startIndex + requiredLen > pixels.Length) continue;
+                        x0 = Math.Max(0, x0 - pad);
+                        y0 = Math.Max(0, y0 - pad);
+                        x1 = Math.Min(width, x1 + pad);
+                        y1 = Math.Min(height, y1 + pad);
 
-                var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                if (TryDecode(tileSpan, tw, th, stride, fmt, out var decoded, tileOptions, cancellationToken)) {
-                    if (seen.Add(decoded.Bytes)) list.Add(decoded);
+                        var tw = x1 - x0;
+                        var th = y1 - y0;
+                        if (tw < 48 || th < 48) continue;
+
+                        var startIndex = (long)y0 * stride + x0 * 4L;
+                        var requiredLen = (long)(th - 1) * stride + tw * 4L;
+                        if (startIndex < 0 || requiredLen <= 0) continue;
+                        if (startIndex + requiredLen > pixels.Length) continue;
+
+                        var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
+                        if (TryDecode(tileSpan, tw, th, stride, fmt, out var decoded, tileOptions, cancellationToken)) {
+                            if (seen.Add(decoded.Bytes)) list.Add(decoded);
+                        }
+                    }
+                    if (ShouldStop()) break;
                 }
             }
-            if (ShouldStop()) break;
-        }
 
-        if (list.Count == results.Length) return results.Length > 0;
-        results = list.ToArray();
-        return results.Length > 0;
+            if (list.Count == results.Length) return results.Length > 0;
+            results = list.ToArray();
+            return results.Length > 0;
+        } finally {
+            ReturnSeenSet(seen);
+        }
     }
 
     internal static bool TryDecodePixelsInternal(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {

@@ -15,13 +15,15 @@ internal static class QrAlignmentPatternFinder {
         double vyY,
         double moduleSize,
         out double centerX,
-        out double centerY) {
+        out double centerY,
+        int minScore = 22,
+        double radiusScale = 4.0) {
         centerX = 0;
         centerY = 0;
 
-        var r = (int)Math.Round(moduleSize * 4.0);
+        var r = (int)Math.Round(moduleSize * radiusScale);
         if (r < 6) r = 6;
-        if (r > 48) r = 48;
+        if (r > 64) r = 64;
 
         var x0 = (int)Math.Round(predictedX) - r;
         var y0 = (int)Math.Round(predictedY) - r;
@@ -54,14 +56,14 @@ internal static class QrAlignmentPatternFinder {
         }
 
         // Accept a near-perfect match; allow a few errors for anti-aliasing.
-        if (bestScore < 22) return false;
+        if (bestScore < minScore) return false;
 
         centerX = bestX;
         centerY = bestY;
         return true;
     }
 
-    private static int ScoreAt(
+    internal static int ScoreAt(
         QrGrayImage image,
         bool invert,
         double centerX,
