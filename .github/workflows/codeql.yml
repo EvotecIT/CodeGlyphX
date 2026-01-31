@@ -41,7 +41,10 @@ jobs:
           languages: csharp
 
       - name: Restore
-        run: dotnet restore CodeGlyphX.sln
+        run: |
+          dotnet restore CodeGlyphX.sln
+          dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net8.0
+          dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net10.0
 
       - name: Build
         run: dotnet build CodeGlyphX.sln -c Release --no-restore
