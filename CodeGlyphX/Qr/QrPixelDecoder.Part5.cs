@@ -1005,7 +1005,8 @@ internal static partial class QrPixelDecoder {
         int scanMinX = 0,
         int scanMinY = 0,
         int scanMaxX = -1,
-        int scanMaxY = -1) {
+        int scanMaxY = -1,
+        bool allowAdaptiveFallback = true) {
         result = null!;
         diagnostics = default;
 
@@ -1018,6 +1019,15 @@ internal static partial class QrPixelDecoder {
         if (scanMaxX >= width) scanMaxX = width - 1;
         if (scanMaxY >= height) scanMaxY = height - 1;
         if (scanMinX > scanMaxX || scanMinY > scanMaxY) return false;
+
+        var scanWidth = scanMaxX - scanMinX + 1;
+        var scanHeight = scanMaxY - scanMinY + 1;
+        var canRetryAdaptive = allowAdaptiveFallback &&
+            stylized &&
+            image.ThresholdMap is null &&
+            scanWidth >= 160 &&
+            scanHeight >= 160 &&
+            !budget.IsNearDeadline(200);
 
         var minX = scanMaxX;
         var minY = scanMaxY;
@@ -1267,8 +1277,43 @@ internal static partial class QrPixelDecoder {
             }
         }
 
+        if (canRetryAdaptive && !budget.IsExpired) {
+            var window = ResolveAdaptiveWindowSize(Math.Min(scanWidth, scanHeight));
+            var adaptive = image.WithAdaptiveThreshold(window, offset: 4);
+            if (TryDecodeByBoundingBox(
+                    scale,
+                    threshold,
+                    adaptive,
+                    invert,
+                    accept,
+                    aggressive,
+                    stylized,
+                    budget,
+                    out result,
+                    out var adaptiveDiag,
+                    candidateCount,
+                    candidateTriplesTried,
+                    scanMinX,
+                    scanMinY,
+                    scanMaxX,
+                    scanMaxY,
+                    allowAdaptiveFallback: false)) {
+                diagnostics = adaptiveDiag;
+                return true;
+            }
+            best = Better(best, adaptiveDiag);
+        }
+
         diagnostics = best;
         return false;
+    }
+
+    private static int ResolveAdaptiveWindowSize(int minDim) {
+        if (minDim >= 900) return 41;
+        if (minDim >= 600) return 31;
+        if (minDim >= 360) return 25;
+        if (minDim >= 240) return 21;
+        return 15;
     }
 
     private static bool TryGetCandidateBounds(
