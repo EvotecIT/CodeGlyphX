@@ -26,6 +26,14 @@ public static class RenderExtensions {
     }
 
     /// <summary>
+    /// Writes binary data to a file under the specified directory with a safe file name.
+    /// </summary>
+    public static string WriteBinarySafe(this byte[] data, string directory, string fileName) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return RenderIO.WriteBinarySafe(directory, fileName, data);
+    }
+
+    /// <summary>
     /// Writes binary data to a stream.
     /// </summary>
     public static void WriteBinary(this byte[] data, Stream stream) {
@@ -45,6 +53,13 @@ public static class RenderExtensions {
     /// </summary>
     public static string WriteText(this string text, string directory, string fileName, Encoding? encoding = null) {
         return RenderIO.WriteText(directory, fileName, text, encoding);
+    }
+
+    /// <summary>
+    /// Writes text to a file under the specified directory with a safe file name.
+    /// </summary>
+    public static string WriteTextSafe(this string text, string directory, string fileName, Encoding? encoding = null) {
+        return RenderIO.WriteTextSafe(directory, fileName, text, encoding);
     }
 
     /// <summary>

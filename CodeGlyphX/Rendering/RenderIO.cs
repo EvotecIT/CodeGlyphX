@@ -55,6 +55,20 @@ public static class RenderIO {
     }
 
     /// <summary>
+    /// Writes binary data to a file under the specified directory with a safe file name.
+    /// </summary>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name (no path separators).</param>
+    /// <param name="data">Binary data to write.</param>
+    /// <returns>The output file path.</returns>
+    public static string WriteBinarySafe(string directory, string fileName, byte[] data) {
+        if (directory is null) throw new ArgumentNullException(nameof(directory));
+        if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+        EnsureSafeFileName(fileName);
+        return WriteBinary(Path.Combine(directory, fileName), data);
+    }
+
+    /// <summary>
     /// Writes binary data to a file under the specified directory asynchronously.
     /// </summary>
     /// <param name="directory">Output directory.</param>
@@ -65,6 +79,21 @@ public static class RenderIO {
     public static Task<string> WriteBinaryAsync(string directory, string fileName, byte[] data, CancellationToken cancellationToken = default) {
         if (directory is null) throw new ArgumentNullException(nameof(directory));
         if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+        return WriteBinaryAsync(Path.Combine(directory, fileName), data, cancellationToken);
+    }
+
+    /// <summary>
+    /// Writes binary data to a file under the specified directory asynchronously with a safe file name.
+    /// </summary>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name (no path separators).</param>
+    /// <param name="data">Binary data to write.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The output file path.</returns>
+    public static Task<string> WriteBinarySafeAsync(string directory, string fileName, byte[] data, CancellationToken cancellationToken = default) {
+        if (directory is null) throw new ArgumentNullException(nameof(directory));
+        if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+        EnsureSafeFileName(fileName);
         return WriteBinaryAsync(Path.Combine(directory, fileName), data, cancellationToken);
     }
 
@@ -439,6 +468,21 @@ public static class RenderIO {
     }
 
     /// <summary>
+    /// Writes text to a file under the specified directory with a safe file name.
+    /// </summary>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name (no path separators).</param>
+    /// <param name="text">Text content.</param>
+    /// <param name="encoding">Optional text encoding (defaults to UTF-8).</param>
+    /// <returns>The output file path.</returns>
+    public static string WriteTextSafe(string directory, string fileName, string? text, Encoding? encoding = null) {
+        if (directory is null) throw new ArgumentNullException(nameof(directory));
+        if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+        EnsureSafeFileName(fileName);
+        return WriteText(Path.Combine(directory, fileName), text, encoding);
+    }
+
+    /// <summary>
     /// Writes text to a file under the specified directory asynchronously.
     /// </summary>
     /// <param name="directory">Output directory.</param>
@@ -451,6 +495,34 @@ public static class RenderIO {
         if (directory is null) throw new ArgumentNullException(nameof(directory));
         if (fileName is null) throw new ArgumentNullException(nameof(fileName));
         return WriteTextAsync(Path.Combine(directory, fileName), text, encoding, cancellationToken);
+    }
+
+    /// <summary>
+    /// Writes text to a file under the specified directory asynchronously with a safe file name.
+    /// </summary>
+    /// <param name="directory">Output directory.</param>
+    /// <param name="fileName">Output file name (no path separators).</param>
+    /// <param name="text">Text content.</param>
+    /// <param name="encoding">Optional text encoding (defaults to UTF-8).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The output file path.</returns>
+    public static Task<string> WriteTextSafeAsync(string directory, string fileName, string? text, Encoding? encoding = null, CancellationToken cancellationToken = default) {
+        if (directory is null) throw new ArgumentNullException(nameof(directory));
+        if (fileName is null) throw new ArgumentNullException(nameof(fileName));
+        EnsureSafeFileName(fileName);
+        return WriteTextAsync(Path.Combine(directory, fileName), text, encoding, cancellationToken);
+    }
+
+    private static void EnsureSafeFileName(string fileName) {
+        if (string.IsNullOrWhiteSpace(fileName)) throw new ArgumentException("File name cannot be empty.", nameof(fileName));
+        if (fileName == "." || fileName == "..") throw new ArgumentException("File name cannot be a path segment.", nameof(fileName));
+        if (Path.IsPathRooted(fileName)) throw new ArgumentException("File name must not be rooted.", nameof(fileName));
+        if (!string.Equals(Path.GetFileName(fileName), fileName, StringComparison.Ordinal)) {
+            throw new ArgumentException("File name must not contain path separators.", nameof(fileName));
+        }
+        if (fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0) {
+            throw new ArgumentException("File name contains invalid characters.", nameof(fileName));
+        }
     }
 
     private static void EnsureDirectory(string path) {
