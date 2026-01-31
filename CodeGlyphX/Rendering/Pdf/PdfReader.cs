@@ -168,9 +168,7 @@ public static class PdfReader {
         if (!TryParseInlineImageInfo(data, dict, out info)) return false;
 
         var dataStart = idIndex + InlineImageDataToken.Length;
-        while (dataStart < data.Length && IsDelimiter(data[dataStart])) {
-            dataStart++;
-        }
+        SkipWhitespace(data, ref dataStart);
         if (dataStart >= data.Length) return false;
 
         if (!TryReadInlineImageData(data, dataStart, out stream, out var eiIndex)) return false;
