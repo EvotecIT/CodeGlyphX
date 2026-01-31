@@ -49,4 +49,15 @@ public sealed class ImageDecodeOptionsTests {
         Assert.True(QR.TryDecodePng(png, imageOptions, options: null, out var decoded));
         Assert.Equal("HELLO-WORLD", decoded.Text);
     }
+
+    [Fact]
+    public void ImageDecodeOptions_Safe_Sets_DefaultCaps() {
+        var options = ImageDecodeOptions.Safe();
+
+        Assert.Equal(64 * 1024 * 1024, options.MaxBytes);
+        Assert.Equal(20_000_000, options.MaxPixels);
+        Assert.Equal(120, options.MaxAnimationFrames);
+        Assert.Equal(60_000, options.MaxAnimationDurationMs);
+        Assert.Equal(20_000_000, options.MaxAnimationFramePixels);
+    }
 }
