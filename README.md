@@ -42,6 +42,17 @@ Status: Actively developed · Stable core · Expanding format support
 - Payload helpers for QR (WiFi, email/phone/SMS, contacts, calendar, payments, crypto, social, OTP)
 - Friendly APIs: one-liners + options + fluent presets
 
+## Security & Safe Usage
+
+When decoding untrusted images, use explicit limits via `ImageDecodeOptions` (recommended presets: `Safe()` / `UltraSafe()`) and pass them to `ImageReader` or `QrImageDecoder`. Global defaults (`ImageReader.MaxImageBytes`, `ImageReader.MaxPixels`) are set to conservative values, but you should tune them for your environment.
+
+```csharp
+var safe = ImageDecodeOptions.UltraSafe(maxBytes: 8 * 1024 * 1024, maxPixels: 8_000_000);
+var rgba = ImageReader.DecodeRgba32(bytes, safe, out var width, out var height);
+```
+
+See `SECURITY.md` for reporting guidance and `FUZZING.md` for the decoder fuzzing harness.
+
 ## Roadmap & Website
 
 - Roadmap: `ROADMAP.md`
