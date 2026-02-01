@@ -33,114 +33,98 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, out string text) {
-        return TryDecodePng(png, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(byte[] png, out string text)
+        => TryDecodePng(png, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, CancellationToken cancellationToken, out string text) {
-        return TryDecodePng(png, null, cancellationToken, out text);
-    }
+    public static bool TryDecodePng(byte[] png, CancellationToken cancellationToken, out string text)
+        => TryDecodePng(png, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes with image decode options.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, out string text) {
-        return TryDecodePng(png, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, out string text)
+        => TryDecodePng(png, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        return TryDecodePngCore(png, options, cancellationToken, out text, out _);
-    }
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text)
+        => TryDecodePngCore(png, options, cancellationToken, out text, out _);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes in a span.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text) {
-        return TryDecodePng(png, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text)
+        => TryDecodePng(png, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes in a span, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, CancellationToken cancellationToken, out string text) {
-        return TryDecodePng(png, null, cancellationToken, out text);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, CancellationToken cancellationToken, out string text)
+        => TryDecodePng(png, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text) {
-        return TryDecodePng(png, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text)
+        => TryDecodePng(png, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        return TryDecodePngCore(png.ToArray(), options, cancellationToken, out text, out _);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text)
+        => TryDecodePngCore(png.ToArray(), options, cancellationToken, out text, out _);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(byte[] png, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes with image decode options, cancellation, and diagnostics.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes in a span, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePngCore(png.ToArray(), options, cancellationToken, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePngCore(png.ToArray(), options, cancellationToken, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG file.
     /// </summary>
-    public static bool TryDecodePngFile(string path, out string text) {
-        return TryDecodePngFile(path, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePngFile(string path, out string text)
+        => TryDecodePngFile(path, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG file with image decode options.
     /// </summary>
-    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, out string text) {
-        return TryDecodePngFile(path, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, out string text)
+        => TryDecodePngFile(path, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG file with image decode options, with cancellation.
@@ -155,16 +139,14 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG file, with diagnostics.
     /// </summary>
-    public static bool TryDecodePngFile(string path, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePngFile(path, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePngFile(string path, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePngFile(path, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG file with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePngFile(path, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePngFile(path, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG file with image decode options, cancellation, and diagnostics.
@@ -179,16 +161,14 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG stream.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, out string text) {
-        return TryDecodePng(stream, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(Stream stream, out string text)
+        => TryDecodePng(stream, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG stream with image decode options.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out string text) {
-        return TryDecodePng(stream, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out string text)
+        => TryDecodePng(stream, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG stream with image decode options, with cancellation.
@@ -199,16 +179,14 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG stream, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePng(stream, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(Stream stream, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePng(stream, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG stream with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodePng(stream, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodePng(stream, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG stream with image decode options, cancellation, and diagnostics.
@@ -219,30 +197,26 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from a PNG stream, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out string text) {
-        return TryDecodePng(stream, null, cancellationToken, out text);
-    }
+    public static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out string text)
+        => TryDecodePng(stream, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, out string text) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(byte[] image, out string text)
+        => TryDecodeImage(image, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, CancellationToken cancellationToken, out string text) {
-        return TryDecodeImage(image, null, cancellationToken, out text);
-    }
+    public static bool TryDecodeImage(byte[] image, CancellationToken cancellationToken, out string text)
+        => TryDecodeImage(image, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text)
+        => TryDecodeImage(image, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
@@ -264,37 +238,32 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(byte[] image, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats with image decode options, cancellation, and diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImageCore(image, options, cancellationToken, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodeImageCore(image, options, cancellationToken, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats in a span, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
@@ -331,84 +300,74 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats in a span.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text)
+        => TryDecodeImage(image, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats in a span, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, CancellationToken cancellationToken, out string text) {
-        return TryDecodeImage(image, null, cancellationToken, out text);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, CancellationToken cancellationToken, out string text)
+        => TryDecodeImage(image, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text)
+        => TryDecodeImage(image, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        return DecodeResultHelpers.TryDecodeImage(
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text)
+        => DecodeResultHelpers.TryDecodeImage(
             image,
             options,
             cancellationToken,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded)
                 => DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded),
             out text);
-    }
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, out string text) {
-        return TryDecodeImage(stream, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(Stream stream, out string text)
+        => TryDecodeImage(stream, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out string text) {
-        return TryDecodeImage(stream, null, cancellationToken, out text);
-    }
+    public static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out string text)
+        => TryDecodeImage(stream, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text) {
-        return TryDecodeImage(stream, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text)
+        => TryDecodeImage(stream, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        return DecodeResultHelpers.TryDecodeImage(
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text)
+        => DecodeResultHelpers.TryDecodeImage(
             stream,
             options,
             cancellationToken,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded)
                 => DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded),
             out text);
-    }
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from an image stream, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(stream, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(Stream stream, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodeImage(stream, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from an image stream with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(stream, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text, out DataMatrixDecodeDiagnostics diagnostics)
+        => TryDecodeImage(stream, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from an image stream with image decode options, cancellation, and diagnostics.
@@ -458,37 +417,32 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Attempts to decode all Data Matrix symbols from common image formats.
     /// </summary>
-    public static bool TryDecodeAllImage(byte[] image, out string[] texts) {
-        return TryDecodeAllImage(image, null, CancellationToken.None, out texts);
-    }
+    public static bool TryDecodeAllImage(byte[] image, out string[] texts)
+        => TryDecodeAllImage(image, null, CancellationToken.None, out texts);
 
     /// <summary>
     /// Attempts to decode all Data Matrix symbols from common image formats with image decode options.
     /// </summary>
-    public static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions? options, out string[] texts) {
-        return TryDecodeAllImage(image, options, CancellationToken.None, out texts);
-    }
+    public static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions? options, out string[] texts)
+        => TryDecodeAllImage(image, options, CancellationToken.None, out texts);
 
     /// <summary>
     /// Attempts to decode all Data Matrix symbols from common image formats with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
-        return TryDecodeAllImageCore(image, options, cancellationToken, out texts);
-    }
+    public static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts)
+        => TryDecodeAllImageCore(image, options, cancellationToken, out texts);
 
     /// <summary>
     /// Attempts to decode all Data Matrix symbols from an image stream.
     /// </summary>
-    public static bool TryDecodeAllImage(Stream stream, out string[] texts) {
-        return TryDecodeAllImage(stream, null, CancellationToken.None, out texts);
-    }
+    public static bool TryDecodeAllImage(Stream stream, out string[] texts)
+        => TryDecodeAllImage(stream, null, CancellationToken.None, out texts);
 
     /// <summary>
     /// Attempts to decode all Data Matrix symbols from an image stream with image decode options.
     /// </summary>
-    public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, out string[] texts) {
-        return TryDecodeAllImage(stream, options, CancellationToken.None, out texts);
-    }
+    public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, out string[] texts)
+        => TryDecodeAllImage(stream, options, CancellationToken.None, out texts);
 
     /// <summary>
     /// Attempts to decode all Data Matrix symbols from an image stream with image decode options, with cancellation.

@@ -33,207 +33,178 @@ public static partial class AztecCode {
     /// <summary>
     /// Attempts to decode an Aztec symbol from a module matrix.
     /// </summary>
-    public static bool TryDecode(BitMatrix modules, out string value) {
-        return AztecDecoder.TryDecode(modules, out value);
-    }
+    public static bool TryDecode(BitMatrix modules, out string value)
+        => AztecDecoder.TryDecode(modules, out value);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a module matrix, with cancellation.
     /// </summary>
-    public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value) {
-        return AztecDecoder.TryDecode(modules, cancellationToken, out value);
-    }
+    public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value)
+        => AztecDecoder.TryDecode(modules, cancellationToken, out value);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a module matrix, with diagnostics.
     /// </summary>
-    public static bool TryDecode(BitMatrix modules, out string value, out AztecDecodeDiagnostics diagnostics) {
-        return AztecDecoder.TryDecode(modules, out value, out diagnostics);
-    }
+    public static bool TryDecode(BitMatrix modules, out string value, out AztecDecodeDiagnostics diagnostics)
+        => AztecDecoder.TryDecode(modules, out value, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a module matrix, with cancellation and diagnostics.
     /// </summary>
-    public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics) {
-        return AztecDecoder.TryDecode(modules, cancellationToken, out value, out diagnostics);
-    }
+    public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics)
+        => AztecDecoder.TryDecode(modules, cancellationToken, out value, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels.
     /// </summary>
-    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value) {
-        return AztecDecoder.TryDecode(pixels, width, height, stride, format, out value);
-    }
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value)
+        => AztecDecoder.TryDecode(pixels, width, height, stride, format, out value);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels, with cancellation.
     /// </summary>
-    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
-        return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
-    }
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value)
+        => AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels, with diagnostics.
     /// </summary>
-    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value, out AztecDecodeDiagnostics diagnostics) {
-        return AztecDecoder.TryDecode(pixels, width, height, stride, format, out value, out diagnostics);
-    }
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out string value, out AztecDecodeDiagnostics diagnostics)
+        => AztecDecoder.TryDecode(pixels, width, height, stride, format, out value, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels, with cancellation and diagnostics.
     /// </summary>
-    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics) {
-        return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value, out diagnostics);
-    }
+    public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics)
+        => AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value, out diagnostics);
 
 #if NET8_0_OR_GREATER
     /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels.
     /// </summary>
-    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out string value) {
-        return AztecDecoder.TryDecode(pixels, width, height, stride, format, out value);
-    }
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out string value)
+        => AztecDecoder.TryDecode(pixels, width, height, stride, format, out value);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels, with cancellation.
     /// </summary>
-    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
-        return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
-    }
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value)
+        => AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels, with diagnostics.
     /// </summary>
-    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out string value, out AztecDecodeDiagnostics diagnostics) {
-        return AztecDecoder.TryDecode(pixels, width, height, stride, format, out value, out diagnostics);
-    }
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out string value, out AztecDecodeDiagnostics diagnostics)
+        => AztecDecoder.TryDecode(pixels, width, height, stride, format, out value, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from raw pixels, with cancellation and diagnostics.
     /// </summary>
-    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics) {
-        return AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value, out diagnostics);
-    }
+    public static bool TryDecode(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, out AztecDecodeDiagnostics diagnostics)
+        => AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out value, out diagnostics);
 #endif
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, out string text) {
-        return TryDecodePng(png, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(byte[] png, out string text)
+        => TryDecodePng(png, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, CancellationToken cancellationToken, out string text) {
-        return TryDecodePng(png, null, cancellationToken, out text);
-    }
+    public static bool TryDecodePng(byte[] png, CancellationToken cancellationToken, out string text)
+        => TryDecodePng(png, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes with image decode options.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, out string text) {
-        return TryDecodePng(png, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, out string text)
+        => TryDecodePng(png, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        return TryDecodePngCore(png, options, cancellationToken, out text, out _);
-    }
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text)
+        => TryDecodePngCore(png, options, cancellationToken, out text, out _);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes in a span.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text) {
-        return TryDecodePng(png, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text)
+        => TryDecodePng(png, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes in a span, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, CancellationToken cancellationToken, out string text) {
-        return TryDecodePng(png, null, cancellationToken, out text);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, CancellationToken cancellationToken, out string text)
+        => TryDecodePng(png, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text) {
-        return TryDecodePng(png, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text)
+        => TryDecodePng(png, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        return TryDecodePngCore(png.ToArray(), options, cancellationToken, out text, out _);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text)
+        => TryDecodePngCore(png.ToArray(), options, cancellationToken, out text, out _);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(byte[] png, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes with image decode options, cancellation, and diagnostics.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes in a span, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePng(png, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePng(png, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, cancellation, and diagnostics.
     /// </summary>
-    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePngCore(png.ToArray(), options, cancellationToken, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePngCore(png.ToArray(), options, cancellationToken, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG file.
     /// </summary>
-    public static bool TryDecodePngFile(string path, out string text) {
-        return TryDecodePngFile(path, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePngFile(string path, out string text)
+        => TryDecodePngFile(path, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG file, with cancellation.
     /// </summary>
-    public static bool TryDecodePngFile(string path, CancellationToken cancellationToken, out string text) {
-        return TryDecodePngFile(path, null, cancellationToken, out text);
-    }
+    public static bool TryDecodePngFile(string path, CancellationToken cancellationToken, out string text)
+        => TryDecodePngFile(path, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG file with image decode options.
     /// </summary>
-    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, out string text) {
-        return TryDecodePngFile(path, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, out string text)
+        => TryDecodePngFile(path, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG file with image decode options, with cancellation.
@@ -248,16 +219,14 @@ public static partial class AztecCode {
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG file, with diagnostics.
     /// </summary>
-    public static bool TryDecodePngFile(string path, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePngFile(path, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePngFile(string path, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePngFile(path, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG file with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePngFile(path, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePngFile(path, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG file with image decode options, cancellation, and diagnostics.
@@ -272,51 +241,44 @@ public static partial class AztecCode {
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG stream.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, out string text) {
-        return TryDecodePng(stream, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(Stream stream, out string text)
+        => TryDecodePng(stream, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG stream with image decode options.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out string text) {
-        return TryDecodePng(stream, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out string text)
+        => TryDecodePng(stream, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG stream, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePng(stream, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(Stream stream, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePng(stream, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG stream with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodePng(stream, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodePng(stream, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, out string text) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(byte[] image, out string text)
+        => TryDecodeImage(image, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, CancellationToken cancellationToken, out string text) {
-        return TryDecodeImage(image, null, cancellationToken, out text);
-    }
+    public static bool TryDecodeImage(byte[] image, CancellationToken cancellationToken, out string text)
+        => TryDecodeImage(image, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text)
+        => TryDecodeImage(image, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
@@ -338,71 +300,62 @@ public static partial class AztecCode {
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(byte[] image, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats with image decode options, cancellation, and diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodeImageCore(image, options, cancellationToken, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodeImageCore(image, options, cancellationToken, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats in a span.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text)
+        => TryDecodeImage(image, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats in a span, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, CancellationToken cancellationToken, out string text) {
-        return TryDecodeImage(image, null, cancellationToken, out text);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, CancellationToken cancellationToken, out string text)
+        => TryDecodeImage(image, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats in a span with image decode options.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text)
+        => TryDecodeImage(image, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        return DecodeResultHelpers.TryDecodeImage(
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text)
+        => DecodeResultHelpers.TryDecodeImage(
             image,
             options,
             cancellationToken,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded)
                 => AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded),
             out text);
-    }
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats in a span, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodeImage(image, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodeImage(image, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from common image formats in a span with image decode options, cancellation, and diagnostics.
@@ -439,50 +392,44 @@ public static partial class AztecCode {
     /// <summary>
     /// Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, out string text) {
-        return TryDecodeImage(stream, null, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(Stream stream, out string text)
+        => TryDecodeImage(stream, null, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA), with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out string text) {
-        return TryDecodeImage(stream, null, cancellationToken, out text);
-    }
+    public static bool TryDecodeImage(Stream stream, CancellationToken cancellationToken, out string text)
+        => TryDecodeImage(stream, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text) {
-        return TryDecodeImage(stream, options, CancellationToken.None, out text);
-    }
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text)
+        => TryDecodeImage(stream, options, CancellationToken.None, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        return DecodeResultHelpers.TryDecodeImage(
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text)
+        => DecodeResultHelpers.TryDecodeImage(
             stream,
             options,
             cancellationToken,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded)
                 => AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded),
             out text);
-    }
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from an image stream, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(stream, null, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(Stream stream, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodeImage(stream, null, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from an image stream with image decode options, with diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics) {
-        return TryDecodeImage(stream, options, CancellationToken.None, out text, out diagnostics);
-    }
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, out string text, out AztecDecodeDiagnostics diagnostics)
+        => TryDecodeImage(stream, options, CancellationToken.None, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from an image stream with image decode options, cancellation, and diagnostics.
@@ -532,37 +479,32 @@ public static partial class AztecCode {
     /// <summary>
     /// Attempts to decode all Aztec symbols from common image formats.
     /// </summary>
-    public static bool TryDecodeAllImage(byte[] image, out string[] texts) {
-        return TryDecodeAllImage(image, null, CancellationToken.None, out texts);
-    }
+    public static bool TryDecodeAllImage(byte[] image, out string[] texts)
+        => TryDecodeAllImage(image, null, CancellationToken.None, out texts);
 
     /// <summary>
     /// Attempts to decode all Aztec symbols from common image formats with image decode options.
     /// </summary>
-    public static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions? options, out string[] texts) {
-        return TryDecodeAllImage(image, options, CancellationToken.None, out texts);
-    }
+    public static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions? options, out string[] texts)
+        => TryDecodeAllImage(image, options, CancellationToken.None, out texts);
 
     /// <summary>
     /// Attempts to decode all Aztec symbols from common image formats with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
-        return TryDecodeAllImageCore(image, options, cancellationToken, out texts);
-    }
+    public static bool TryDecodeAllImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts)
+        => TryDecodeAllImageCore(image, options, cancellationToken, out texts);
 
     /// <summary>
     /// Attempts to decode all Aztec symbols from an image stream.
     /// </summary>
-    public static bool TryDecodeAllImage(Stream stream, out string[] texts) {
-        return TryDecodeAllImage(stream, null, CancellationToken.None, out texts);
-    }
+    public static bool TryDecodeAllImage(Stream stream, out string[] texts)
+        => TryDecodeAllImage(stream, null, CancellationToken.None, out texts);
 
     /// <summary>
     /// Attempts to decode all Aztec symbols from an image stream with image decode options.
     /// </summary>
-    public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, out string[] texts) {
-        return TryDecodeAllImage(stream, options, CancellationToken.None, out texts);
-    }
+    public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, out string[] texts)
+        => TryDecodeAllImage(stream, options, CancellationToken.None, out texts);
 
     /// <summary>
     /// Attempts to decode all Aztec symbols from an image stream with image decode options, with cancellation.
@@ -573,9 +515,8 @@ public static partial class AztecCode {
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG stream, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out string text) {
-        return TryDecodePng(stream, null, cancellationToken, out text);
-    }
+    public static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out string text)
+        => TryDecodePng(stream, null, cancellationToken, out text);
 
     /// <summary>
     /// Attempts to decode an Aztec symbol from a PNG stream with image decode options, with cancellation.
