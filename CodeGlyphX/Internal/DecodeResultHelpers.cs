@@ -106,7 +106,7 @@ internal static class DecodeResultHelpers {
         var maxBytes = options?.MaxBytes ?? 0;
         if (maxBytes <= 0) maxBytes = ImageReader.MaxImageBytes;
         if (maxBytes > 0 && image.Length > maxBytes) {
-            message = "image payload exceeds size limits";
+            message = GuardMessages.ForBytes("image payload exceeds size limits", image.Length, maxBytes);
             return false;
         }
 
@@ -115,7 +115,7 @@ internal static class DecodeResultHelpers {
         if (maxPixels > 0 && info.IsValid) {
             var pixels = (long)info.Width * info.Height;
             if (pixels > maxPixels) {
-                message = "image dimensions exceed size limits";
+                message = GuardMessages.ForPixels("image dimensions exceed size limits", info.Width, info.Height, pixels, maxPixels);
                 return false;
             }
         }

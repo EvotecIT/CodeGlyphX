@@ -26,15 +26,17 @@ namespace CodeGlyphX.Rendering;
 public static partial class ImageReader {
     private static readonly byte[] PngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
     private const string ImagePayloadLimitMessage = "Image payload exceeds size limits.";
+    private const string ImageDimensionsLimitMessage = "Image dimensions exceed limits.";
     private static readonly System.Threading.AsyncLocal<AnimationLimitOverride?> AnimationLimitOverrides = new();
 
     /// <summary>
-    /// Default maximum pixel count allowed for managed decodes.
+    /// Default maximum pixel count allowed for managed decodes (~50,000,000 pixels).
+    /// (~200 MB RGBA or roughly 14k x 3.5k).
     /// </summary>
     public const long DefaultMaxPixels = 50_000_000;
 
     /// <summary>
-    /// Default maximum image payload size (bytes) for stream decoding.
+    /// Default maximum image payload size (bytes) for stream decoding (~128 MB).
     /// </summary>
     public const int DefaultMaxImageBytes = 128 * 1024 * 1024;
 
@@ -353,7 +355,7 @@ public static partial class ImageReader {
         var maxBytes = ResolveMaxBytes(options);
         if (maxBytes > 0 && data.Length > maxBytes) {
             ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxBytes, maxBytes, data.Length, ImageFormat.Unknown, pageIndex));
-            throw new FormatException(ImagePayloadLimitMessage);
+            throw new FormatException(GuardMessages.ForBytes(ImagePayloadLimitMessage, data.Length, maxBytes));
         }
 
         var maxPixels = ResolveMaxPixels(options);
@@ -363,7 +365,7 @@ public static partial class ImageReader {
                 var pixels = (long)info.Width * info.Height;
                 if (pixels > maxPixels) {
                     ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxPixels, maxPixels, pixels, info.Format, pageIndex));
-                    throw new FormatException("Image dimensions exceed limits.");
+                    throw new FormatException(GuardMessages.ForPixels(ImageDimensionsLimitMessage, info.Width, info.Height, pixels, maxPixels));
                 }
             }
             return;
@@ -373,7 +375,7 @@ public static partial class ImageReader {
             var pixels = (long)pageInfo.Width * pageInfo.Height;
             if (pixels > maxPixels) {
                 ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxPixels, maxPixels, pixels, pageInfo.Format, pageIndex));
-                throw new FormatException("Image dimensions exceed limits.");
+                throw new FormatException(GuardMessages.ForPixels(ImageDimensionsLimitMessage, pageInfo.Width, pageInfo.Height, pixels, maxPixels));
             }
         }
     }

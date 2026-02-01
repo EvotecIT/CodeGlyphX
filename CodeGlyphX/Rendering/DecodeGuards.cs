@@ -6,7 +6,9 @@ internal static class DecodeGuards {
     public static void EnsurePayloadWithinLimits(int length, string message) {
         if (length < 0) throw new FormatException(message);
         var maxBytes = ImageReader.MaxImageBytes;
-        if (maxBytes > 0 && length > maxBytes) throw new FormatException(message);
+        if (maxBytes > 0 && length > maxBytes) {
+            throw new FormatException(GuardMessages.ForBytes(message, length, maxBytes));
+        }
     }
 
     public static bool TryEnsurePixelCount(int width, int height, out int pixels) {
@@ -24,14 +26,15 @@ internal static class DecodeGuards {
     }
 
     public static int EnsurePixelCount(int width, int height, string message) {
-        if (!TryEnsurePixelCount(width, height, out var pixels)) {
-            throw new FormatException(message);
-        }
-        return pixels;
+        if (TryEnsurePixelCount(width, height, out var pixels)) return pixels;
+        var total = (long)width * height;
+        throw new FormatException(GuardMessages.ForPixels(message, width, height, total, ImageReader.MaxPixels));
     }
 
     public static int EnsureByteCount(long bytes, string message) {
-        if (!TryEnsureByteCount(bytes, out var count)) throw new FormatException(message);
+        if (!TryEnsureByteCount(bytes, out var count)) {
+            throw new FormatException(GuardMessages.ForBytes(message, bytes, int.MaxValue));
+        }
         return count;
     }
 
