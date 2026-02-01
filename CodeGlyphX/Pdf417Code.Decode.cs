@@ -201,15 +201,8 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Attempts to decode a PDF417 symbol from a PNG stream with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        return DecodeResultHelpers.TryDecodeBinaryStream(
-            stream,
-            options,
-            cancellationToken,
-            static (byte[] png, ImageDecodeOptions? opts, CancellationToken token, out string decoded)
-                => TryDecodePng(png, opts, token, out decoded),
-            out text);
-    }
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text)
+        => DecodeResultHelpers.TryDecodeBinaryStream(stream, options, cancellationToken, TryDecodePng, out text);
 
     /// <summary>
     /// Attempts to decode a PDF417 symbol from a PNG stream, with diagnostics.
@@ -228,17 +221,8 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Attempts to decode a PDF417 symbol from a PNG stream with image decode options, cancellation, and diagnostics.
     /// </summary>
-    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
-        return DecodeResultHelpers.TryDecodeBinaryStreamWithDiagnostics(
-            stream,
-            options,
-            cancellationToken,
-            FailureInvalid,
-            FailureCancelled,
-            TryDecodePngCore,
-            out text,
-            out diagnostics);
-    }
+    public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics)
+        => DecodeResultHelpers.TryDecodeBinaryStreamWithDiagnostics(stream, options, cancellationToken, FailureInvalid, FailureCancelled, TryDecodePngCore, out text, out diagnostics);
 
     /// <summary>
     /// Attempts to decode a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
@@ -417,9 +401,8 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Attempts to decode all PDF417 symbols from an image stream with image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
-        return DecodeResultHelpers.TryDecodeAllImageStream(stream, options, cancellationToken, TryDecodeAllImageCore, out texts);
-    }
+    public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts)
+        => DecodeResultHelpers.TryDecodeAllImageStream(stream, options, cancellationToken, TryDecodeAllImageCore, out texts);
 
     /// <summary>
     /// Attempts to decode a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA).
@@ -472,17 +455,8 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Attempts to decode a PDF417 symbol from an image stream with image decode options, cancellation, and diagnostics.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
-        return DecodeResultHelpers.TryDecodeImageStreamWithDiagnostics(
-            stream,
-            options,
-            cancellationToken,
-            FailureInvalid,
-            FailureCancelled,
-            TryDecodeImageCore,
-            out text,
-            out diagnostics);
-    }
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics)
+        => DecodeResultHelpers.TryDecodeImageStreamWithDiagnostics(stream, options, cancellationToken, FailureInvalid, FailureCancelled, TryDecodeImageCore, out text, out diagnostics);
 
     /// <summary>
     /// Decodes a PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
