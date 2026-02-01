@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using CodeGlyphX.Aztec;
@@ -516,51 +515,24 @@ public static partial class AztecCode {
     /// Decodes an Aztec symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
     /// </summary>
     public static DecodeResult<string> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
-        var stopwatch = Stopwatch.StartNew();
-        if (!DecodeResultHelpers.TryCheckImageLimits(image, options, out var info, out var formatKnown, out var limitMessage)) {
-            return new DecodeResult<string>(DecodeFailureReason.InvalidInput, info, stopwatch.Elapsed, limitMessage);
-        }
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) {
-                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
-            }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
-                var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
-                return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
-            }
-
-            info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
-
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
-            }
-            if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out var text)) {
-                return new DecodeResult<string>(text, info, stopwatch.Elapsed);
-            }
-            var failure = DecodeResultHelpers.FailureForDecode(token);
-            return new DecodeResult<string>(failure, info, stopwatch.Elapsed);
-        } catch (Exception ex) {
-            return new DecodeResult<string>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        return DecodeResultHelpers.DecodeImageResult(
+            image,
+            options,
+            cancellationToken,
+            (byte[] rgba, int width, int height, CancellationToken token, out string text)
+                => AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text));
     }
 
     /// <summary>
     /// Decodes an Aztec symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
     /// </summary>
     public static DecodeResult<string> DecodeImageResult(Stream stream, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeImageResult(buffer.AsSpan(), options, cancellationToken);
-        }
-        var maxBytes = options?.MaxBytes > 0 ? options.MaxBytes : ImageReader.MaxImageBytes;
-        if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
-            return new DecodeResult<string>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
-        }
-        return DecodeImageResult(data, options, cancellationToken);
+        return DecodeResultHelpers.DecodeImageResult(
+            stream,
+            options,
+            cancellationToken,
+            (byte[] rgba, int width, int height, CancellationToken token, out string text)
+                => AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text));
     }
 
     /// <summary>

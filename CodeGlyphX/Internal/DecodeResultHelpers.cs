@@ -1,10 +1,14 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Internal;
 
 internal static class DecodeResultHelpers {
+    public delegate bool PixelDecodeString(byte[] rgba, int width, int height, CancellationToken token, out string text);
+
     public static bool TryGetImageInfo(ReadOnlySpan<byte> image, out ImageInfo info, out bool formatKnown) {
         formatKnown = ImageReader.TryDetectFormat(image, out var format);
         if (formatKnown && ImageReader.TryReadInfo(image, out info)) return true;
@@ -50,5 +54,51 @@ internal static class DecodeResultHelpers {
         }
 
         return true;
+    }
+
+    public static DecodeResult<string> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, PixelDecodeString decode) {
+        var stopwatch = Stopwatch.StartNew();
+        if (!TryCheckImageLimits(image, options, out var info, out var formatKnown, out var limitMessage)) {
+            return new DecodeResult<string>(DecodeFailureReason.InvalidInput, info, stopwatch.Elapsed, limitMessage);
+        }
+
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) {
+                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
+                var imageFailure = FailureForImageRead(image, formatKnown, token);
+                return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
+            }
+
+            info = EnsureDimensions(info, formatKnown, width, height);
+
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
+            }
+            if (decode(rgba, width, height, token, out var text)) {
+                return new DecodeResult<string>(text, info, stopwatch.Elapsed);
+            }
+            var failure = FailureForDecode(token);
+            return new DecodeResult<string>(failure, info, stopwatch.Elapsed);
+        } catch (Exception ex) {
+            return new DecodeResult<string>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    public static DecodeResult<string> DecodeImageResult(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, PixelDecodeString decode) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            return DecodeImageResult(buffer.AsSpan(), options, cancellationToken, decode);
+        }
+        var maxBytes = options?.MaxBytes > 0 ? options.MaxBytes : ImageReader.MaxImageBytes;
+        if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
+            return new DecodeResult<string>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
+        }
+        return DecodeImageResult(data, options, cancellationToken, decode);
     }
 }
