@@ -27,6 +27,8 @@ public static class TiffReader {
     private const ushort TagTileLength = 323;
     private const ushort TagTileOffsets = 324;
     private const ushort TagTileByteCounts = 325;
+    private const string TiffRowLimitMessage = "TIFF row exceeds size limits.";
+    private const string TiffStripLimitMessage = "TIFF strip exceeds size limits.";
     private const string TiffTileLimitMessage = "TIFF tile exceeds size limits.";
 
     private const ushort TypeByte = 1;
@@ -285,7 +287,7 @@ public static class TiffReader {
             if (photometric != 0 && photometric != 1 && photometric != 3) {
                 throw new FormatException("Unsupported TIFF photometric for 1-bit samples.");
             }
-            var bytesPerRowPacked = DecodeGuards.EnsureByteCount(((long)width + 7) / 8, "TIFF row exceeds size limits.");
+            var bytesPerRowPacked = DecodeGuards.EnsureByteCount(((long)width + 7) / 8, TiffRowLimitMessage);
             if (!useTiles) {
                 if (stripOffsets is null || stripByteCounts is null || stripOffsets.Length == 0) {
                     throw new FormatException("Missing TIFF strip data.");
@@ -298,7 +300,7 @@ public static class TiffReader {
                     if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF strip length.");
 
                     var rowsInStrip = Math.Min(rowsPerStrip, height - row);
-                    var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * bytesPerRowPacked, "TIFF strip exceeds size limits.");
+                    var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * bytesPerRowPacked, TiffStripLimitMessage);
                     var stripSpan = DecodeChunk(data, offset, count, expected, compression, predictor, bytesPerRowPacked, 1, 1, little, out _);
 
                     for (var r = 0; r < rowsInStrip; r++) {
@@ -350,8 +352,8 @@ public static class TiffReader {
 
         var bytesPerSample = bitsPerSampleValue / 8;
         var bytesPerPixel = DecodeGuards.EnsureByteCount((long)samplesPerPixel * bytesPerSample, "TIFF pixel exceeds size limits.");
-        var bytesPerRow = DecodeGuards.EnsureByteCount((long)width * bytesPerPixel, "TIFF row exceeds size limits.");
-        var planeRowBytes = DecodeGuards.EnsureByteCount((long)width * bytesPerSample, "TIFF row exceeds size limits.");
+        var bytesPerRow = DecodeGuards.EnsureByteCount((long)width * bytesPerPixel, TiffRowLimitMessage);
+        var planeRowBytes = DecodeGuards.EnsureByteCount((long)width * bytesPerSample, TiffRowLimitMessage);
 
         if (!useTiles && planar == 1) {
             var row = 0;
@@ -362,7 +364,7 @@ public static class TiffReader {
                 if (count < 0 || offset + count > data.Length) throw new FormatException("Invalid TIFF strip length.");
 
                 var rowsInStrip = Math.Min(rowsPerStrip, height - row);
-                var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * bytesPerRow, "TIFF strip exceeds size limits.");
+                var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * bytesPerRow, TiffStripLimitMessage);
                 var stripSpan = DecodeChunk(data, offset, count, expected, compression, predictor, bytesPerRow, samplesPerPixel, bytesPerSample, little, out _);
 
                 var srcIndex = 0;
@@ -386,7 +388,7 @@ public static class TiffReader {
             var row = 0;
             for (var s = 0; s < stripsPerPlane && row < height; s++) {
                 var rowsInStrip = Math.Min(rowsPerStrip, height - row);
-                var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * planeRowBytes, "TIFF strip exceeds size limits.");
+                var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * planeRowBytes, TiffStripLimitMessage);
 
                 var planes = new byte[samplesPerPixel][];
                 for (var p = 0; p < samplesPerPixel; p++) {

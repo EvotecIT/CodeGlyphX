@@ -25,6 +25,7 @@ namespace CodeGlyphX.Rendering;
 /// </summary>
 public static partial class ImageReader {
     private static readonly byte[] PngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
+    private const string ImagePayloadLimitMessage = "Image payload exceeds size limits.";
     private static readonly System.Threading.AsyncLocal<AnimationLimitOverride?> AnimationLimitOverrides = new();
 
     /// <summary>
@@ -352,7 +353,7 @@ public static partial class ImageReader {
         var maxBytes = ResolveMaxBytes(options);
         if (maxBytes > 0 && data.Length > maxBytes) {
             ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxBytes, maxBytes, data.Length, ImageFormat.Unknown, pageIndex));
-            throw new FormatException("Image payload exceeds size limits.");
+            throw new FormatException(ImagePayloadLimitMessage);
         }
 
         var maxPixels = ResolveMaxPixels(options);
@@ -447,7 +448,7 @@ public static partial class ImageReader {
         var maxBytes = ResolveMaxBytes(options);
         if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
             ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxBytes, maxBytes, 0, ImageFormat.Unknown));
-            throw new FormatException("Image payload exceeds size limits.");
+            throw new FormatException(ImagePayloadLimitMessage);
         }
         return data;
     }

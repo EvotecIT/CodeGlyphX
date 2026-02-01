@@ -5,6 +5,7 @@ using CodeGlyphX.Rendering;
 namespace CodeGlyphX.Rendering.Jpeg;
 
 internal static class JpegWriter {
+    private const string JpegOutputLimitMessage = "JPEG output exceeds size limits.";
     private static readonly byte[] ZigZag = {
         0, 1, 8, 16, 9, 2, 3, 10,
         17, 24, 32, 25, 18, 11, 4, 5,
@@ -122,8 +123,8 @@ internal static class JpegWriter {
     private static void WriteRgbaCore(Stream stream, int width, int height, byte[] rgba, int stride, int rowOffset, int rowStride, JpegEncodeOptions options, string bufferName, string bufferMessage) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-        _ = RenderGuards.EnsureOutputPixels(width, height, "JPEG output exceeds size limits.");
-        _ = RenderGuards.EnsureOutputBytes((long)width * height * 4, "JPEG output exceeds size limits.");
+        _ = RenderGuards.EnsureOutputPixels(width, height, JpegOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)width * height * 4, JpegOutputLimitMessage);
         if (rgba is null) throw new ArgumentNullException(bufferName);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rowStride < rowOffset + stride) throw new ArgumentOutOfRangeException(nameof(rowStride));

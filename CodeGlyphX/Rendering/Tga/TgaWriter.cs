@@ -9,6 +9,7 @@ namespace CodeGlyphX.Rendering.Tga;
 /// </summary>
 public static class TgaWriter {
     private const int MaxDimension = 16384;
+    private const string TgaOutputLimitMessage = "TGA output exceeds size limits.";
     /// <summary>
     /// Writes a TGA byte array from an RGBA buffer.
     /// </summary>
@@ -27,8 +28,8 @@ public static class TgaWriter {
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         if (width > MaxDimension) throw new ArgumentOutOfRangeException(nameof(width));
         if (height > MaxDimension) throw new ArgumentOutOfRangeException(nameof(height));
-        _ = RenderGuards.EnsureOutputPixels(width, height, "TGA output exceeds size limits.");
-        _ = RenderGuards.EnsureOutputBytes((long)width * height * 4, "TGA output exceeds size limits.");
+        _ = RenderGuards.EnsureOutputPixels(width, height, TgaOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)width * height * 4, TgaOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
@@ -42,7 +43,7 @@ public static class TgaWriter {
         header[17] = 0x28; // top-left origin, 8 bits alpha
         stream.Write(header, 0, header.Length);
 
-        var rowBytes = RenderGuards.EnsureOutputBytes((long)width * 4, "TGA output exceeds size limits.");
+        var rowBytes = RenderGuards.EnsureOutputBytes((long)width * 4, TgaOutputLimitMessage);
         var row = new byte[rowBytes];
         for (var y = 0; y < height; y++) {
             var srcRow = y * stride;

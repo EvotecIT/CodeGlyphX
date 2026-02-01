@@ -10,6 +10,7 @@ namespace CodeGlyphX.Rendering.Pam;
 /// Writes PAM (P7) images from RGBA buffers.
 /// </summary>
 public static class PamWriter {
+    private const string PamOutputLimitMessage = "PAM output exceeds size limits.";
     /// <summary>
     /// Writes a PAM byte array from an RGBA buffer.
     /// </summary>
@@ -46,7 +47,7 @@ public static class PamWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-        _ = RenderGuards.EnsureOutputPixels(width, height, "PAM output exceeds size limits.");
+        _ = RenderGuards.EnsureOutputPixels(width, height, PamOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rowStride < rowOffset + stride) throw new ArgumentOutOfRangeException(nameof(rowStride));
         if (rgba.Length < (height - 1) * rowStride + rowOffset + width * 4) throw new ArgumentException(bufferMessage, bufferName);
@@ -55,8 +56,8 @@ public static class PamWriter {
             $"P7\nWIDTH {width}\nHEIGHT {height}\nDEPTH 4\nMAXVAL 255\nTUPLTYPE RGB_ALPHA\nENDHDR\n");
         stream.Write(header, 0, header.Length);
 
-        var rowBytes = RenderGuards.EnsureOutputBytes((long)width * 4, "PAM output exceeds size limits.");
-        _ = RenderGuards.EnsureOutputBytes((long)height * rowBytes, "PAM output exceeds size limits.");
+        var rowBytes = RenderGuards.EnsureOutputBytes((long)width * 4, PamOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)height * rowBytes, PamOutputLimitMessage);
         var row = ArrayPool<byte>.Shared.Rent(rowBytes);
         try {
             for (var y = 0; y < height; y++) {

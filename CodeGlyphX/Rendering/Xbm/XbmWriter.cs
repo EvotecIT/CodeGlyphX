@@ -8,6 +8,7 @@ namespace CodeGlyphX.Rendering.Xbm;
 /// Writes XBM (X Bitmap) images from RGBA buffers.
 /// </summary>
 public static class XbmWriter {
+    private const string XbmOutputLimitMessage = "XBM output exceeds size limits.";
     /// <summary>
     /// Writes an XBM string from an RGBA buffer.
     /// </summary>
@@ -34,19 +35,19 @@ public static class XbmWriter {
         string bufferMessage) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-        _ = RenderGuards.EnsureOutputPixels(width, height, "XBM output exceeds size limits.");
+        _ = RenderGuards.EnsureOutputPixels(width, height, XbmOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rowStride < rowOffset + stride) throw new ArgumentOutOfRangeException(nameof(rowStride));
         if (rgba.Length < (height - 1) * rowStride + rowOffset + width * 4) throw new ArgumentException(bufferMessage, bufferName);
 
         var safeName = SanitizeName(string.IsNullOrWhiteSpace(name) ? "codeglyphx" : name!);
-        var rowBytes = RenderGuards.EnsureOutputBytes(((long)width + 7) / 8, "XBM output exceeds size limits.");
+        var rowBytes = RenderGuards.EnsureOutputBytes(((long)width + 7) / 8, XbmOutputLimitMessage);
         var sb = new StringBuilder();
         sb.Append("#define ").Append(safeName).Append("_width ").Append(width).Append('\n');
         sb.Append("#define ").Append(safeName).Append("_height ").Append(height).Append('\n');
         sb.Append("static unsigned char ").Append(safeName).Append("_bits[] = {\n");
 
-        var totalBytes = RenderGuards.EnsureOutputBytes((long)rowBytes * height, "XBM output exceeds size limits.");
+        var totalBytes = RenderGuards.EnsureOutputBytes((long)rowBytes * height, XbmOutputLimitMessage);
         var count = 0;
         for (var y = 0; y < height; y++) {
             var srcRow = y * rowStride + rowOffset;

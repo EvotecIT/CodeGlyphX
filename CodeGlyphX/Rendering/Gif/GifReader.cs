@@ -9,12 +9,14 @@ namespace CodeGlyphX.Rendering.Gif;
 public static class GifReader {
     private const string GifDimensionsLimitMessage = "GIF dimensions exceed size limits.";
     private const string GifFrameLimitMessage = "GIF frame exceeds size limits.";
+    private const string GifPayloadLimitMessage = "GIF payload exceeds size limits.";
+    private const string GifDataLimitMessage = "GIF data exceeds size limits.";
 
     /// <summary>
     /// Decodes a GIF image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> gif, out int width, out int height) {
-        DecodeGuards.EnsurePayloadWithinLimits(gif.Length, "GIF payload exceeds size limits.");
+        DecodeGuards.EnsurePayloadWithinLimits(gif.Length, GifPayloadLimitMessage);
         if (gif.Length < 13) throw new FormatException("Invalid GIF header.");
         if (!IsGif(gif)) throw new FormatException("Invalid GIF signature.");
 
@@ -228,7 +230,7 @@ public static class GifReader {
         out int canvasWidth,
         out int canvasHeight,
         out GifAnimationOptions options) {
-        DecodeGuards.EnsurePayloadWithinLimits(gif.Length, "GIF payload exceeds size limits.");
+        DecodeGuards.EnsurePayloadWithinLimits(gif.Length, GifPayloadLimitMessage);
         if (gif.Length < 13) throw new FormatException("Invalid GIF header.");
         if (!IsGif(gif)) throw new FormatException("Invalid GIF signature.");
 
@@ -631,11 +633,11 @@ public static class GifReader {
             offset += size;
             if (offset > data.Length) throw new FormatException("Truncated GIF sub-block.");
             total += size;
-            if (total > int.MaxValue) throw new FormatException("GIF data exceeds size limits.");
+            if (total > int.MaxValue) throw new FormatException(GifDataLimitMessage);
         }
 
         if (total == 0) return Array.Empty<byte>();
-        var output = new byte[DecodeGuards.EnsureByteCount(total, "GIF data exceeds size limits.")];
+        var output = new byte[DecodeGuards.EnsureByteCount(total, GifDataLimitMessage)];
         var dst = 0;
         var pos = start;
         while (pos < data.Length) {
