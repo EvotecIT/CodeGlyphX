@@ -31,11 +31,11 @@ public static class EpsWriter {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         _ = RenderGuards.EnsureOutputPixels(width, height, EpsOutputLimitMessage);
-        _ = RenderGuards.EnsureOutputBytes((long)width * height * 3, EpsOutputLimitMessage);
+        var rgbLength = RenderGuards.EnsureOutputBytes((long)width * height * 3, EpsOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
-        var rgb = ToRgb(width, height, rgba, stride, background ?? Rgba32.White);
+        var rgb = ToRgb(width, height, rgba, stride, background ?? Rgba32.White, rgbLength);
         WriteRgb24(stream, width, height, rgb);
     }
 
@@ -56,9 +56,9 @@ public static class EpsWriter {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         _ = RenderGuards.EnsureOutputPixels(width, height, EpsOutputLimitMessage);
-        _ = RenderGuards.EnsureOutputBytes((long)width * height * 3, EpsOutputLimitMessage);
+        var rgbLength = RenderGuards.EnsureOutputBytes((long)width * height * 3, EpsOutputLimitMessage);
         if (rgb is null) throw new ArgumentNullException(nameof(rgb));
-        if (rgb.Length < width * height * 3) throw new ArgumentException("RGB buffer is too small.", nameof(rgb));
+        if (rgb.Length < rgbLength) throw new ArgumentException("RGB buffer is too small.", nameof(rgb));
 
         using var writer = new StreamWriter(stream, Encoding.ASCII, 1024, leaveOpen: true);
         writer.WriteLine("%!PS-Adobe-3.0 EPSF-3.0");
@@ -100,8 +100,8 @@ public static class EpsWriter {
         writer.WriteLine(">");
     }
 
-    private static byte[] ToRgb(int width, int height, ReadOnlySpan<byte> rgba, int stride, Rgba32 background) {
-        var rgb = new byte[width * height * 3];
+    private static byte[] ToRgb(int width, int height, ReadOnlySpan<byte> rgba, int stride, Rgba32 background, int rgbLength) {
+        var rgb = new byte[rgbLength];
         var bgR = background.R;
         var bgG = background.G;
         var bgB = background.B;
