@@ -1863,7 +1863,8 @@ public static class PdfReader {
         if (predictor >= 10) {
             for (var i = 0; i < components.Length; i++) {
                 var componentCount = components[i];
-                var expected = ((long)width * componentCount + 1) * height;
+                var rowBytes = (long)width * (long)componentCount + 1L;
+                var expected = rowBytes * (long)height;
                 if (TryMatchLength(length, expected, componentCount, out colors)) return true;
             }
             return false;
@@ -1872,7 +1873,7 @@ public static class PdfReader {
         var pixelCount = (long)width * height;
         for (var i = 0; i < components.Length; i++) {
             var componentCount = components[i];
-            var expected = pixelCount * componentCount;
+            var expected = pixelCount * (long)componentCount;
             if (TryMatchLength(length, expected, componentCount, out colors)) return true;
         }
         return false;
