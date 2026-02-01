@@ -12,6 +12,7 @@ internal static class DecodeResultHelpers {
     public delegate bool PixelDecodeString(byte[] rgba, int width, int height, CancellationToken token, out string text);
     public delegate bool PixelDecodeWithDiagnostics<TDiag>(byte[] rgba, int width, int height, CancellationToken token, out string text, out TDiag diagnostics);
     public delegate bool PixelDecodeWithStride(byte[] rgba, int width, int height, int stride, CancellationToken token, out string text);
+    private delegate bool TryGetRgba(CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure);
 
     public static bool TryGetImageInfo(ReadOnlySpan<byte> image, out ImageInfo info, out bool formatKnown) {
         formatKnown = ImageReader.TryDetectFormat(image, out var format);
@@ -111,14 +112,13 @@ internal static class DecodeResultHelpers {
         }
     }
 
-    public static bool TryDecodePngWithDiagnostics<TDiag>(
-        byte[] png,
+    private static bool TryDecodeWithDiagnosticsCore<TDiag>(
         ImageDecodeOptions? options,
         CancellationToken cancellationToken,
-        string failureInvalid,
         string failureCancelled,
         string failureDownscale,
         string failureNoDecoded,
+        TryGetRgba getRgba,
         PixelDecodeWithDiagnostics<TDiag> decode,
         Func<TDiag> createDiagnostics,
         Func<TDiag, string?> getFailure,
@@ -126,7 +126,6 @@ internal static class DecodeResultHelpers {
         out string text,
         out TDiag diagnostics) {
         diagnostics = createDiagnostics();
-        if (png is null) throw new ArgumentNullException(nameof(png));
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) {
@@ -134,12 +133,11 @@ internal static class DecodeResultHelpers {
                 setFailure(diagnostics, failureCancelled);
                 return false;
             }
-            if (!TryCheckImageLimits(png, options, out _, out _, out var limitMessage)) {
+            if (!getRgba(token, out var rgba, out var width, out var height, out var failure)) {
                 text = string.Empty;
-                setFailure(diagnostics, limitMessage ?? failureInvalid);
+                setFailure(diagnostics, failure ?? failureCancelled);
                 return false;
             }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
                 setFailure(diagnostics, token.IsCancellationRequested ? failureCancelled : failureDownscale);
@@ -159,6 +157,47 @@ internal static class DecodeResultHelpers {
         }
     }
 
+    public static bool TryDecodePngWithDiagnostics<TDiag>(
+        byte[] png,
+        ImageDecodeOptions? options,
+        CancellationToken cancellationToken,
+        string failureInvalid,
+        string failureCancelled,
+        string failureDownscale,
+        string failureNoDecoded,
+        PixelDecodeWithDiagnostics<TDiag> decode,
+        Func<TDiag> createDiagnostics,
+        Func<TDiag, string?> getFailure,
+        Action<TDiag, string> setFailure,
+        out string text,
+        out TDiag diagnostics) {
+        if (png is null) throw new ArgumentNullException(nameof(png));
+        return TryDecodeWithDiagnosticsCore(
+            options,
+            cancellationToken,
+            failureCancelled,
+            failureDownscale,
+            failureNoDecoded,
+            (CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure) => {
+                if (!TryCheckImageLimits(png, options, out _, out _, out var limitMessage)) {
+                    failure = limitMessage ?? failureInvalid;
+                    rgba = Array.Empty<byte>();
+                    width = 0;
+                    height = 0;
+                    return false;
+                }
+                rgba = PngReader.DecodeRgba32(png, out width, out height);
+                failure = null;
+                return true;
+            },
+            decode,
+            createDiagnostics,
+            getFailure,
+            setFailure,
+            out text,
+            out diagnostics);
+    }
+
     public static bool TryDecodeImageWithDiagnostics<TDiag>(
         byte[] image,
         ImageDecodeOptions? options,
@@ -173,37 +212,27 @@ internal static class DecodeResultHelpers {
         Action<TDiag, string> setFailure,
         out string text,
         out TDiag diagnostics) {
-        diagnostics = createDiagnostics();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) {
-                text = string.Empty;
-                setFailure(diagnostics, failureCancelled);
-                return false;
-            }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
-                text = string.Empty;
-                setFailure(diagnostics, failureUnsupported);
-                return false;
-            }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                setFailure(diagnostics, token.IsCancellationRequested ? failureCancelled : failureDownscale);
-                return false;
-            }
-            if (decode(rgba, width, height, token, out text, out var diag)) {
-                diagnostics = diag;
+        return TryDecodeWithDiagnosticsCore(
+            options,
+            cancellationToken,
+            failureCancelled,
+            failureDownscale,
+            failureNoDecoded,
+            (CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure) => {
+                if (!ImageReader.TryDecodeRgba32(image, options, out rgba, out width, out height)) {
+                    failure = failureUnsupported;
+                    return false;
+                }
+                failure = null;
                 return true;
-            }
-            diagnostics = diag;
-            if (getFailure(diagnostics) is null) setFailure(diagnostics, failureNoDecoded);
-            text = string.Empty;
-            return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+            },
+            decode,
+            createDiagnostics,
+            getFailure,
+            setFailure,
+            out text,
+            out diagnostics);
     }
 
     public static bool TryDecodeAllImage(
