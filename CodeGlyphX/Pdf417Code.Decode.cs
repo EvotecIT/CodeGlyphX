@@ -516,37 +516,43 @@ public static partial class Pdf417Code {
     }
 
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        var context = new DecodeResultHelpers.DiagnosticsContext<Pdf417DecodeDiagnostics> {
+            FailureInvalid = FailureInvalid,
+            FailureCancelled = FailureCancelled,
+            FailureDownscale = FailureDownscale,
+            FailureNoDecoded = FailureNoPdf417,
+            Create = static () => new Pdf417DecodeDiagnostics(),
+            GetFailure = static diag => diag.Failure,
+            SetFailure = static (diag, value) => diag.Failure = value
+        };
         return DecodeResultHelpers.TryDecodePngWithDiagnostics(
             png,
             options,
             cancellationToken,
-            FailureInvalid,
-            FailureCancelled,
-            FailureDownscale,
-            FailureNoPdf417,
+            context,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out Pdf417DecodeDiagnostics diag)
                 => Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
-            static () => new Pdf417DecodeDiagnostics(),
-            static diag => diag.Failure,
-            static (diag, value) => diag.Failure = value,
             out text,
             out diagnostics);
     }
 
     private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
+        var context = new DecodeResultHelpers.DiagnosticsContext<Pdf417DecodeDiagnostics> {
+            FailureCancelled = FailureCancelled,
+            FailureDownscale = FailureDownscale,
+            FailureNoDecoded = FailureNoPdf417,
+            FailureUnsupported = "Unsupported image format.",
+            Create = static () => new Pdf417DecodeDiagnostics(),
+            GetFailure = static diag => diag.Failure,
+            SetFailure = static (diag, value) => diag.Failure = value
+        };
         return DecodeResultHelpers.TryDecodeImageWithDiagnostics(
             image,
             options,
             cancellationToken,
-            FailureCancelled,
-            FailureDownscale,
-            "Unsupported image format.",
-            FailureNoPdf417,
+            context,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out Pdf417DecodeDiagnostics diag)
                 => Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
-            static () => new Pdf417DecodeDiagnostics(),
-            static diag => diag.Failure,
-            static (diag, value) => diag.Failure = value,
             out text,
             out diagnostics);
     }

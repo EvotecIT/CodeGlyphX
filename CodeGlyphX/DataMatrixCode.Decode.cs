@@ -515,37 +515,43 @@ public static partial class DataMatrixCode {
     }
 
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        var context = new DecodeResultHelpers.DiagnosticsContext<DataMatrixDecodeDiagnostics> {
+            FailureInvalid = FailureInvalid,
+            FailureCancelled = FailureCancelled,
+            FailureDownscale = FailureDownscale,
+            FailureNoDecoded = FailureNoDataMatrix,
+            Create = static () => new DataMatrixDecodeDiagnostics(),
+            GetFailure = static diag => diag.Failure,
+            SetFailure = static (diag, value) => diag.Failure = value
+        };
         return DecodeResultHelpers.TryDecodePngWithDiagnostics(
             png,
             options,
             cancellationToken,
-            FailureInvalid,
-            FailureCancelled,
-            FailureDownscale,
-            FailureNoDataMatrix,
+            context,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out DataMatrixDecodeDiagnostics diag)
                 => DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
-            static () => new DataMatrixDecodeDiagnostics(),
-            static diag => diag.Failure,
-            static (diag, value) => diag.Failure = value,
             out text,
             out diagnostics);
     }
 
     private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
+        var context = new DecodeResultHelpers.DiagnosticsContext<DataMatrixDecodeDiagnostics> {
+            FailureCancelled = FailureCancelled,
+            FailureDownscale = FailureDownscale,
+            FailureNoDecoded = FailureNoDataMatrix,
+            FailureUnsupported = "Unsupported image format.",
+            Create = static () => new DataMatrixDecodeDiagnostics(),
+            GetFailure = static diag => diag.Failure,
+            SetFailure = static (diag, value) => diag.Failure = value
+        };
         return DecodeResultHelpers.TryDecodeImageWithDiagnostics(
             image,
             options,
             cancellationToken,
-            FailureCancelled,
-            FailureDownscale,
-            "Unsupported image format.",
-            FailureNoDataMatrix,
+            context,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out DataMatrixDecodeDiagnostics diag)
                 => DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
-            static () => new DataMatrixDecodeDiagnostics(),
-            static diag => diag.Failure,
-            static (diag, value) => diag.Failure = value,
             out text,
             out diagnostics);
     }

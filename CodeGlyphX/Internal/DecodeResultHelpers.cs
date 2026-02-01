@@ -14,6 +14,37 @@ internal static class DecodeResultHelpers {
     public delegate bool PixelDecodeWithStride(byte[] rgba, int width, int height, int stride, CancellationToken token, out string text);
     private delegate bool TryGetRgba(CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure);
 
+    internal struct DiagnosticsContext<TDiag> {
+        public string FailureCancelled;
+        public string FailureDownscale;
+        public string FailureNoDecoded;
+        public string FailureInvalid;
+        public string FailureUnsupported;
+        public Func<TDiag> Create;
+        public Func<TDiag, string?> GetFailure;
+        public Action<TDiag, string> SetFailure;
+    }
+
+    private struct DecodeAllContext {
+        public CancellationToken Token;
+        public PixelDecodeWithStride Decode;
+        public List<string> List;
+        public HashSet<string> Seen;
+    }
+
+    private struct TileContext {
+        public int Width;
+        public int Height;
+        public int Stride;
+        public int Pad;
+        public int Grid;
+        public int TileW;
+        public int TileH;
+        public int Tx;
+        public int Ty;
+        public CancellationToken Token;
+    }
+
     public static bool TryGetImageInfo(ReadOnlySpan<byte> image, out ImageInfo info, out bool formatKnown) {
         formatKnown = ImageReader.TryDetectFormat(image, out var format);
         if (formatKnown && ImageReader.TryReadInfo(image, out info)) return true;
@@ -115,32 +146,27 @@ internal static class DecodeResultHelpers {
     private static bool TryDecodeWithDiagnosticsCore<TDiag>(
         ImageDecodeOptions? options,
         CancellationToken cancellationToken,
-        string failureCancelled,
-        string failureDownscale,
-        string failureNoDecoded,
+        DiagnosticsContext<TDiag> context,
         TryGetRgba getRgba,
         PixelDecodeWithDiagnostics<TDiag> decode,
-        Func<TDiag> createDiagnostics,
-        Func<TDiag, string?> getFailure,
-        Action<TDiag, string> setFailure,
         out string text,
         out TDiag diagnostics) {
-        diagnostics = createDiagnostics();
+        diagnostics = context.Create();
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) {
                 text = string.Empty;
-                setFailure(diagnostics, failureCancelled);
+                context.SetFailure(diagnostics, context.FailureCancelled);
                 return false;
             }
             if (!getRgba(token, out var rgba, out var width, out var height, out var failure)) {
                 text = string.Empty;
-                setFailure(diagnostics, failure ?? failureCancelled);
+                context.SetFailure(diagnostics, failure ?? context.FailureCancelled);
                 return false;
             }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
-                setFailure(diagnostics, token.IsCancellationRequested ? failureCancelled : failureDownscale);
+                context.SetFailure(diagnostics, token.IsCancellationRequested ? context.FailureCancelled : context.FailureDownscale);
                 return false;
             }
             if (decode(rgba, width, height, token, out text, out var diag)) {
@@ -148,7 +174,7 @@ internal static class DecodeResultHelpers {
                 return true;
             }
             diagnostics = diag;
-            if (getFailure(diagnostics) is null) setFailure(diagnostics, failureNoDecoded);
+            if (context.GetFailure(diagnostics) is null) context.SetFailure(diagnostics, context.FailureNoDecoded);
             text = string.Empty;
             return false;
         } finally {
@@ -161,26 +187,18 @@ internal static class DecodeResultHelpers {
         byte[] png,
         ImageDecodeOptions? options,
         CancellationToken cancellationToken,
-        string failureInvalid,
-        string failureCancelled,
-        string failureDownscale,
-        string failureNoDecoded,
+        DiagnosticsContext<TDiag> context,
         PixelDecodeWithDiagnostics<TDiag> decode,
-        Func<TDiag> createDiagnostics,
-        Func<TDiag, string?> getFailure,
-        Action<TDiag, string> setFailure,
         out string text,
         out TDiag diagnostics) {
         if (png is null) throw new ArgumentNullException(nameof(png));
         return TryDecodeWithDiagnosticsCore(
             options,
             cancellationToken,
-            failureCancelled,
-            failureDownscale,
-            failureNoDecoded,
+            context,
             (CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure) => {
                 if (!TryCheckImageLimits(png, options, out _, out _, out var limitMessage)) {
-                    failure = limitMessage ?? failureInvalid;
+                    failure = limitMessage ?? context.FailureInvalid;
                     rgba = Array.Empty<byte>();
                     width = 0;
                     height = 0;
@@ -191,9 +209,6 @@ internal static class DecodeResultHelpers {
                 return true;
             },
             decode,
-            createDiagnostics,
-            getFailure,
-            setFailure,
             out text,
             out diagnostics);
     }
@@ -202,35 +217,24 @@ internal static class DecodeResultHelpers {
         byte[] image,
         ImageDecodeOptions? options,
         CancellationToken cancellationToken,
-        string failureCancelled,
-        string failureDownscale,
-        string failureUnsupported,
-        string failureNoDecoded,
+        DiagnosticsContext<TDiag> context,
         PixelDecodeWithDiagnostics<TDiag> decode,
-        Func<TDiag> createDiagnostics,
-        Func<TDiag, string?> getFailure,
-        Action<TDiag, string> setFailure,
         out string text,
         out TDiag diagnostics) {
         if (image is null) throw new ArgumentNullException(nameof(image));
         return TryDecodeWithDiagnosticsCore(
             options,
             cancellationToken,
-            failureCancelled,
-            failureDownscale,
-            failureNoDecoded,
+            context,
             (CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure) => {
                 if (!ImageReader.TryDecodeRgba32(image, options, out rgba, out width, out height)) {
-                    failure = failureUnsupported;
+                    failure = context.FailureUnsupported;
                     return false;
                 }
                 failure = null;
                 return true;
             },
             decode,
-            createDiagnostics,
-            getFailure,
-            setFailure,
             out text,
             out diagnostics);
     }
@@ -254,9 +258,15 @@ internal static class DecodeResultHelpers {
 
             var list = new List<string>(4);
             var seen = new HashSet<string>(StringComparer.Ordinal);
-            CollectAllFromRgba(rgba, width, height, width * 4, token, decode, list, seen);
+            var context = new DecodeAllContext {
+                Token = token,
+                Decode = decode,
+                List = list,
+                Seen = seen
+            };
+            CollectAllFromRgba(rgba, width, height, width * 4, context);
             if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                CollectAllFromRgba(original, originalWidth, originalHeight, originalWidth * 4, token, decode, list, seen);
+                CollectAllFromRgba(original, originalWidth, originalHeight, originalWidth * 4, context);
             }
 
             if (list.Count == 0) return false;
@@ -273,17 +283,14 @@ internal static class DecodeResultHelpers {
         int width,
         int height,
         int stride,
-        CancellationToken token,
-        PixelDecodeWithStride decode,
-        List<string> list,
-        HashSet<string> seen) {
-        if (token.IsCancellationRequested) return;
-        if (decode(rgba, width, height, stride, token, out var text)) {
-            AddUnique(list, seen, text);
+        DecodeAllContext context) {
+        if (context.Token.IsCancellationRequested) return;
+        if (context.Decode(rgba, width, height, stride, context.Token, out var text)) {
+            AddUnique(context.List, context.Seen, text);
         }
-        ScanTiles(rgba, width, height, stride, token, (tile, tw, th, tstride) => {
-            if (decode(tile, tw, th, tstride, token, out var value)) {
-                AddUnique(list, seen, value);
+        ScanTiles(rgba, width, height, stride, context.Token, (tile, tw, th, tstride) => {
+            if (context.Decode(tile, tw, th, tstride, context.Token, out var value)) {
+                AddUnique(context.List, context.Seen, value);
             }
         });
     }
@@ -294,39 +301,77 @@ internal static class DecodeResultHelpers {
     }
 
     private static void ScanTiles(byte[] rgba, int width, int height, int stride, CancellationToken token, Action<byte[], int, int, int> onTile) {
-        if (width <= 0 || height <= 0 || stride < width * 4) return;
-        var grid = Math.Max(width, height) >= 720 ? 3 : 2;
-        var pad = Math.Max(8, Math.Min(width, height) / 40);
-        var tileW = width / grid;
-        var tileH = height / grid;
+        if (!TryGetTileGrid(width, height, stride, out var grid, out var pad, out var tileW, out var tileH)) return;
 
         for (var ty = 0; ty < grid; ty++) {
             for (var tx = 0; tx < grid; tx++) {
                 if (token.IsCancellationRequested) return;
-                var x0 = tx * tileW;
-                var y0 = ty * tileH;
-                var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
-                var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
-
-                x0 = Math.Max(0, x0 - pad);
-                y0 = Math.Max(0, y0 - pad);
-                x1 = Math.Min(width, x1 + pad);
-                y1 = Math.Min(height, y1 + pad);
-
-                var tw = x1 - x0;
-                var th = y1 - y0;
-                if (tw < 48 || th < 48) continue;
-
-                var tileStride = tw * 4;
-                var tile = new byte[tileStride * th];
-                for (var y = 0; y < th; y++) {
-                    if (token.IsCancellationRequested) return;
-                    Buffer.BlockCopy(rgba, (y0 + y) * stride + x0 * 4, tile, y * tileStride, tileStride);
+                var context = new TileContext {
+                    Width = width,
+                    Height = height,
+                    Stride = stride,
+                    Pad = pad,
+                    Grid = grid,
+                    TileW = tileW,
+                    TileH = tileH,
+                    Tx = tx,
+                    Ty = ty,
+                    Token = token
+                };
+                if (!TryBuildTile(rgba, context, out var tile, out var tw, out var th, out var tileStride)) {
+                    continue;
                 }
-
                 onTile(tile, tw, th, tileStride);
             }
         }
+    }
+
+    private static bool TryGetTileGrid(int width, int height, int stride, out int grid, out int pad, out int tileW, out int tileH) {
+        if (width <= 0 || height <= 0 || stride < width * 4) {
+            grid = 0;
+            pad = 0;
+            tileW = 0;
+            tileH = 0;
+            return false;
+        }
+        grid = Math.Max(width, height) >= 720 ? 3 : 2;
+        pad = Math.Max(8, Math.Min(width, height) / 40);
+        tileW = width / grid;
+        tileH = height / grid;
+        if (tileW <= 0 || tileH <= 0) return false;
+        return true;
+    }
+
+    private static bool TryBuildTile(
+        byte[] rgba,
+        TileContext context,
+        out byte[] tile,
+        out int tw,
+        out int th,
+        out int tileStride) {
+        var x0 = context.Tx * context.TileW;
+        var y0 = context.Ty * context.TileH;
+        var x1 = (context.Tx == context.Grid - 1) ? context.Width : (context.Tx + 1) * context.TileW;
+        var y1 = (context.Ty == context.Grid - 1) ? context.Height : (context.Ty + 1) * context.TileH;
+
+        x0 = Math.Max(0, x0 - context.Pad);
+        y0 = Math.Max(0, y0 - context.Pad);
+        x1 = Math.Min(context.Width, x1 + context.Pad);
+        y1 = Math.Min(context.Height, y1 + context.Pad);
+
+        tw = x1 - x0;
+        th = y1 - y0;
+        tileStride = 0;
+        tile = Array.Empty<byte>();
+        if (tw < 48 || th < 48) return false;
+
+        tileStride = tw * 4;
+        tile = new byte[tileStride * th];
+        for (var y = 0; y < th; y++) {
+            if (context.Token.IsCancellationRequested) return false;
+            Buffer.BlockCopy(rgba, (y0 + y) * context.Stride + x0 * 4, tile, y * tileStride, tileStride);
+        }
+        return true;
     }
 
     public static DecodeResult<string> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, PixelDecodeString decode) {
