@@ -75,44 +75,62 @@ internal static class WebpManagedDecoder {
 
         var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
         var decodedFrames = new WebpAnimationFrame[frameInfos.Count];
-        byte[]? lastFrame = null;
-        var lastWidth = 0;
-        var lastHeight = 0;
+        var state = new AnimationFrameState();
         for (var i = 0; i < frameInfos.Count; i++) {
-            var frame = frameInfos[i];
-            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, maxFramePixels, out var framePixels)) {
+            if (!TryDecodeAnimationFrame(frameInfos[i], maxFramePixels, ref state, out var decoded)) {
                 return false;
             }
-            if (!DecodeGuards.TryEnsureByteCount((long)frame.Width * 4, out var frameStride)) {
-                return false;
-            }
-
-            var rgba = frame.Rgba;
-            if (rgba.Length == 0) {
-                if (!DecodeGuards.TryEnsureByteCount((long)framePixels * 4, out var frameBytes)) {
-                    return false;
-                }
-                rgba = new byte[frameBytes];
-                if (lastFrame is not null && lastWidth == frame.Width && lastHeight == frame.Height) {
-                    Buffer.BlockCopy(lastFrame, 0, rgba, 0, rgba.Length);
-                }
-            }
-            decodedFrames[i] = new WebpAnimationFrame(
-                rgba,
-                frame.Width,
-                frame.Height,
-                frameStride,
-                frame.DurationMs,
-                frame.X,
-                frame.Y,
-                frame.Blend,
-                frame.DisposeToBackground);
-            lastFrame = rgba;
-            lastWidth = frame.Width;
-            lastHeight = frame.Height;
+            decodedFrames[i] = decoded;
         }
 
         frames = decodedFrames;
+        return true;
+    }
+
+    private struct AnimationFrameState {
+        public byte[]? LastFrame;
+        public int LastWidth;
+        public int LastHeight;
+    }
+
+    private static bool TryDecodeAnimationFrame(
+        WebpAnimationFrameInfo frame,
+        long maxFramePixels,
+        ref AnimationFrameState state,
+        out WebpAnimationFrame decoded) {
+        decoded = default;
+
+        if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, maxFramePixels, out var framePixels)) {
+            return false;
+        }
+        if (!DecodeGuards.TryEnsureByteCount((long)frame.Width * 4, out var frameStride)) {
+            return false;
+        }
+
+        var rgba = frame.Rgba;
+        if (rgba.Length == 0) {
+            if (!DecodeGuards.TryEnsureByteCount((long)framePixels * 4, out var frameBytes)) {
+                return false;
+            }
+            rgba = new byte[frameBytes];
+            if (state.LastFrame is not null && state.LastWidth == frame.Width && state.LastHeight == frame.Height) {
+                Buffer.BlockCopy(state.LastFrame, 0, rgba, 0, rgba.Length);
+            }
+        }
+
+        decoded = new WebpAnimationFrame(
+            rgba,
+            frame.Width,
+            frame.Height,
+            frameStride,
+            frame.DurationMs,
+            frame.X,
+            frame.Y,
+            frame.Blend,
+            frame.DisposeToBackground);
+        state.LastFrame = rgba;
+        state.LastWidth = frame.Width;
+        state.LastHeight = frame.Height;
         return true;
     }
 

@@ -1859,15 +1859,23 @@ public static class PdfReader {
         colors = 0;
         if (width <= 0 || height <= 0) return false;
 
+        var components = new[] { 3, 4, 1 };
         if (predictor >= 10) {
-            if (TryMatchLength(length, ((long)width * 3 + 1) * height, 3, out colors)) return true;
-            if (TryMatchLength(length, ((long)width * 4 + 1) * height, 4, out colors)) return true;
-            return TryMatchLength(length, ((long)width + 1) * height, 1, out colors);
+            for (var i = 0; i < components.Length; i++) {
+                var componentCount = components[i];
+                var expected = ((long)width * componentCount + 1) * height;
+                if (TryMatchLength(length, expected, componentCount, out colors)) return true;
+            }
+            return false;
         }
 
-        if (TryMatchLength(length, (long)width * height * 3, 3, out colors)) return true;
-        if (TryMatchLength(length, (long)width * height * 4, 4, out colors)) return true;
-        return TryMatchLength(length, (long)width * height, 1, out colors);
+        var pixelCount = (long)width * height;
+        for (var i = 0; i < components.Length; i++) {
+            var componentCount = components[i];
+            var expected = pixelCount * componentCount;
+            if (TryMatchLength(length, expected, componentCount, out colors)) return true;
+        }
+        return false;
     }
 
     private static bool TryMatchLength(int length, long expected, int componentCount, out int colors) {
@@ -2179,30 +2187,47 @@ public static class PdfReader {
 
     private static bool TryExpandIndexed(PdfImageInfo info, byte[] indices, out byte[] rgba) {
         rgba = Array.Empty<byte>();
+        if (!TryGetIndexedExpandContext(info, indices, out var context)) return false;
+
+        rgba = DecodeGuards.AllocateRgba32(info.Width, info.Height, PdfImageLimitMessage);
+        switch (context.BaseComponents) {
+            case 1:
+                ExpandIndexedGray(info, indices, rgba, context.PixelCount);
+                break;
+            case 3:
+                ExpandIndexedRgb(info, indices, rgba, context.PixelCount);
+                break;
+            default:
+                ExpandIndexedCmyk(info, indices, rgba, context.PixelCount);
+                break;
+        }
+        return true;
+    }
+
+    private readonly struct IndexedExpandContext {
+        public IndexedExpandContext(int pixelCount, int baseComponents) {
+            PixelCount = pixelCount;
+            BaseComponents = baseComponents;
+        }
+
+        public int PixelCount { get; }
+        public int BaseComponents { get; }
+    }
+
+    private static bool TryGetIndexedExpandContext(PdfImageInfo info, byte[] indices, out IndexedExpandContext context) {
+        context = default;
         if (info.IndexedLookup is null) return false;
         if (info.IndexedHighVal < 0) return false;
         if (info.Width <= 0 || info.Height <= 0) return false;
         if (!DecodeGuards.TryEnsurePixelCount(info.Width, info.Height, out var pixelCount)) return false;
         if (indices.Length < pixelCount) return false;
-
         if (!TryGetIndexedBaseComponents(info.IndexedBase, out var baseComponents)) return false;
 
         var entryCount = info.IndexedHighVal + 1;
         var lookupBytes = DecodeGuards.EnsureByteCount((long)entryCount * baseComponents, "PDF indexed lookup exceeds size limits.");
         if (info.IndexedLookup.Length < lookupBytes) return false;
 
-        rgba = DecodeGuards.AllocateRgba32(info.Width, info.Height, PdfImageLimitMessage);
-        switch (baseComponents) {
-            case 1:
-                ExpandIndexedGray(info, indices, rgba, pixelCount);
-                break;
-            case 3:
-                ExpandIndexedRgb(info, indices, rgba, pixelCount);
-                break;
-            default:
-                ExpandIndexedCmyk(info, indices, rgba, pixelCount);
-                break;
-        }
+        context = new IndexedExpandContext(pixelCount, baseComponents);
         return true;
     }
 
