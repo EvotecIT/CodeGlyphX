@@ -377,29 +377,27 @@ public static partial class ImageReader {
         }
     }
 
-    private static int ResolveMaxBytes(ImageDecodeOptions? options) {
-        if (options is not null && options.MaxBytes > 0) return options.MaxBytes;
-        return MaxImageBytes;
+    private static int ResolveMaxBytes(ImageDecodeOptions? options)
+        => ResolveMaxInt(options?.MaxBytes, MaxImageBytes);
+
+    private static long ResolveMaxPixels(ImageDecodeOptions? options)
+        => ResolveMaxLong(options?.MaxPixels, MaxPixels);
+
+    private static int ResolveMaxAnimationFrames(ImageDecodeOptions? options)
+        => ResolveMaxInt(options?.MaxAnimationFrames, MaxAnimationFrames);
+
+    private static int ResolveMaxAnimationDurationMs(ImageDecodeOptions? options)
+        => ResolveMaxInt(options?.MaxAnimationDurationMs, MaxAnimationDurationMs);
+
+    private static long ResolveMaxAnimationFramePixels(ImageDecodeOptions? options)
+        => ResolveMaxLong(options?.MaxAnimationFramePixels, MaxAnimationFramePixels);
+
+    private static int ResolveMaxInt(int? value, int fallback) {
+        return value.GetValueOrDefault() > 0 ? value.GetValueOrDefault() : fallback;
     }
 
-    private static long ResolveMaxPixels(ImageDecodeOptions? options) {
-        if (options is not null && options.MaxPixels > 0) return options.MaxPixels;
-        return MaxPixels;
-    }
-
-    private static int ResolveMaxAnimationFrames(ImageDecodeOptions? options) {
-        if (options is not null && options.MaxAnimationFrames > 0) return options.MaxAnimationFrames;
-        return MaxAnimationFrames;
-    }
-
-    private static int ResolveMaxAnimationDurationMs(ImageDecodeOptions? options) {
-        if (options is not null && options.MaxAnimationDurationMs > 0) return options.MaxAnimationDurationMs;
-        return MaxAnimationDurationMs;
-    }
-
-    private static long ResolveMaxAnimationFramePixels(ImageDecodeOptions? options) {
-        if (options is not null && options.MaxAnimationFramePixels > 0) return options.MaxAnimationFramePixels;
-        return MaxAnimationFramePixels;
+    private static long ResolveMaxLong(long? value, long fallback) {
+        return value.GetValueOrDefault() > 0 ? value.GetValueOrDefault() : fallback;
     }
 
     private static IDisposable? ApplyAnimationLimits(ImageDecodeOptions? options) {
