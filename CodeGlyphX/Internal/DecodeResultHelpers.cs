@@ -14,15 +14,43 @@ internal static class DecodeResultHelpers {
     public delegate bool PixelDecodeWithStride(byte[] rgba, int width, int height, int stride, CancellationToken token, out string text);
     private delegate bool TryGetRgba(CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure);
 
-    internal struct DiagnosticsContext<TDiag> {
-        public string FailureCancelled;
-        public string FailureDownscale;
-        public string FailureNoDecoded;
-        public string FailureInvalid;
-        public string FailureUnsupported;
-        public Func<TDiag> Create;
-        public Func<TDiag, string?> GetFailure;
-        public Action<TDiag, string> SetFailure;
+    internal const string FailureUnsupportedImageFormat = "Unsupported image format.";
+
+    internal readonly struct DecodeFailureMessages {
+        public readonly string FailureCancelled;
+        public readonly string FailureDownscale;
+        public readonly string FailureNoDecoded;
+        public readonly string FailureInvalid;
+        public readonly string FailureUnsupported;
+
+        private DecodeFailureMessages(
+            string failureCancelled,
+            string failureDownscale,
+            string failureNoDecoded,
+            string failureInvalid,
+            string failureUnsupported) {
+            FailureCancelled = failureCancelled;
+            FailureDownscale = failureDownscale;
+            FailureNoDecoded = failureNoDecoded;
+            FailureInvalid = failureInvalid;
+            FailureUnsupported = failureUnsupported;
+        }
+
+        public static DecodeFailureMessages ForPng(
+            string failureInvalid,
+            string failureCancelled,
+            string failureDownscale,
+            string failureNoDecoded) {
+            return new DecodeFailureMessages(failureCancelled, failureDownscale, failureNoDecoded, failureInvalid, string.Empty);
+        }
+
+        public static DecodeFailureMessages ForImage(
+            string failureCancelled,
+            string failureDownscale,
+            string failureUnsupported,
+            string failureNoDecoded) {
+            return new DecodeFailureMessages(failureCancelled, failureDownscale, failureNoDecoded, string.Empty, failureUnsupported);
+        }
     }
 
     private struct DecodeAllContext {
@@ -146,35 +174,37 @@ internal static class DecodeResultHelpers {
     private static bool TryDecodeWithDiagnosticsCore<TDiag>(
         ImageDecodeOptions? options,
         CancellationToken cancellationToken,
-        DiagnosticsContext<TDiag> context,
+        DecodeFailureMessages failures,
         TryGetRgba getRgba,
         PixelDecodeWithDiagnostics<TDiag> decode,
         out string text,
-        out TDiag diagnostics) {
-        diagnostics = context.Create();
+        out TDiag diagnostics)
+        where TDiag : class, IDecodeDiagnostics, new() {
+        var defaultDiagnostics = new TDiag();
+        diagnostics = defaultDiagnostics;
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) {
                 text = string.Empty;
-                context.SetFailure(diagnostics, context.FailureCancelled);
+                diagnostics.SetFailure(failures.FailureCancelled);
                 return false;
             }
             if (!getRgba(token, out var rgba, out var width, out var height, out var failure)) {
                 text = string.Empty;
-                context.SetFailure(diagnostics, failure ?? context.FailureCancelled);
+                diagnostics.SetFailure(failure ?? failures.FailureCancelled);
                 return false;
             }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
                 text = string.Empty;
-                context.SetFailure(diagnostics, token.IsCancellationRequested ? context.FailureCancelled : context.FailureDownscale);
+                diagnostics.SetFailure(token.IsCancellationRequested ? failures.FailureCancelled : failures.FailureDownscale);
                 return false;
             }
             if (decode(rgba, width, height, token, out text, out var diag)) {
-                diagnostics = diag;
+                diagnostics = diag ?? defaultDiagnostics;
                 return true;
             }
-            diagnostics = diag;
-            if (context.GetFailure(diagnostics) is null) context.SetFailure(diagnostics, context.FailureNoDecoded);
+            diagnostics = diag ?? defaultDiagnostics;
+            if (diagnostics.Failure is null) diagnostics.SetFailure(failures.FailureNoDecoded);
             text = string.Empty;
             return false;
         } finally {
@@ -187,18 +217,19 @@ internal static class DecodeResultHelpers {
         byte[] png,
         ImageDecodeOptions? options,
         CancellationToken cancellationToken,
-        DiagnosticsContext<TDiag> context,
+        DecodeFailureMessages failures,
         PixelDecodeWithDiagnostics<TDiag> decode,
         out string text,
-        out TDiag diagnostics) {
+        out TDiag diagnostics)
+        where TDiag : class, IDecodeDiagnostics, new() {
         if (png is null) throw new ArgumentNullException(nameof(png));
         return TryDecodeWithDiagnosticsCore(
             options,
             cancellationToken,
-            context,
+            failures,
             (CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure) => {
                 if (!TryCheckImageLimits(png, options, out _, out _, out var limitMessage)) {
-                    failure = limitMessage ?? context.FailureInvalid;
+                    failure = limitMessage ?? failures.FailureInvalid;
                     rgba = Array.Empty<byte>();
                     width = 0;
                     height = 0;
@@ -217,18 +248,19 @@ internal static class DecodeResultHelpers {
         byte[] image,
         ImageDecodeOptions? options,
         CancellationToken cancellationToken,
-        DiagnosticsContext<TDiag> context,
+        DecodeFailureMessages failures,
         PixelDecodeWithDiagnostics<TDiag> decode,
         out string text,
-        out TDiag diagnostics) {
+        out TDiag diagnostics)
+        where TDiag : class, IDecodeDiagnostics, new() {
         if (image is null) throw new ArgumentNullException(nameof(image));
         return TryDecodeWithDiagnosticsCore(
             options,
             cancellationToken,
-            context,
+            failures,
             (CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure) => {
                 if (!ImageReader.TryDecodeRgba32(image, options, out rgba, out width, out height)) {
-                    failure = context.FailureUnsupported;
+                    failure = failures.FailureUnsupported;
                     return false;
                 }
                 failure = null;
@@ -264,12 +296,12 @@ internal static class DecodeResultHelpers {
                 List = list,
                 Seen = seen
             };
-            CollectAllFromRgba(rgba, width, height, width * 4, context);
+            var found = CollectAllFromRgba(rgba, width, height, width * 4, context);
             if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                CollectAllFromRgba(original, originalWidth, originalHeight, originalWidth * 4, context);
+                found |= CollectAllFromRgba(original, originalWidth, originalHeight, originalWidth * 4, context);
             }
 
-            if (list.Count == 0) return false;
+            if (!found) return false;
             texts = list.ToArray();
             return true;
         } finally {
@@ -278,26 +310,32 @@ internal static class DecodeResultHelpers {
         }
     }
 
-    private static void CollectAllFromRgba(
+    private static bool CollectAllFromRgba(
         byte[] rgba,
         int width,
         int height,
         int stride,
         DecodeAllContext context) {
-        if (context.Token.IsCancellationRequested) return;
+        if (context.Token.IsCancellationRequested) return false;
+        var found = false;
         if (context.Decode(rgba, width, height, stride, context.Token, out var text)) {
-            AddUnique(context.List, context.Seen, text);
+            found |= AddUnique(context.List, context.Seen, text);
         }
         ScanTiles(rgba, width, height, stride, context.Token, (tile, tw, th, tstride) => {
             if (context.Decode(tile, tw, th, tstride, context.Token, out var value)) {
-                AddUnique(context.List, context.Seen, value);
+                found |= AddUnique(context.List, context.Seen, value);
             }
         });
+        return found;
     }
 
-    private static void AddUnique(List<string> list, HashSet<string> seen, string text) {
-        if (string.IsNullOrEmpty(text)) return;
-        if (seen.Add(text)) list.Add(text);
+    private static bool AddUnique(List<string> list, HashSet<string> seen, string text) {
+        if (string.IsNullOrEmpty(text)) return false;
+        if (seen.Add(text)) {
+            list.Add(text);
+            return true;
+        }
+        return false;
     }
 
     private static void ScanTiles(byte[] rgba, int width, int height, int stride, CancellationToken token, Action<byte[], int, int, int> onTile) {

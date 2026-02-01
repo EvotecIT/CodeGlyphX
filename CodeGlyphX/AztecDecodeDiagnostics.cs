@@ -3,7 +3,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// Diagnostics for Aztec decoding.
 /// </summary>
-public sealed class AztecDecodeDiagnostics {
+public sealed class AztecDecodeDiagnostics : IDecodeDiagnostics {
     /// <summary>
     /// Number of decode attempts (threshold/orientation combinations).
     /// </summary>
@@ -28,4 +28,6 @@ public sealed class AztecDecodeDiagnostics {
     /// Optional failure message when decoding fails.
     /// </summary>
     public string? Failure { get; internal set; }
+
+    void IDecodeDiagnostics.SetFailure(string? value) => Failure = value;
 }

@@ -608,20 +608,12 @@ public static partial class AztecCode {
     }
 
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
-        var context = new DecodeResultHelpers.DiagnosticsContext<AztecDecodeDiagnostics> {
-            FailureInvalid = FailureInvalid,
-            FailureCancelled = FailureCancelled,
-            FailureDownscale = FailureDownscale,
-            FailureNoDecoded = FailureNoDecoded,
-            Create = static () => new AztecDecodeDiagnostics(),
-            GetFailure = static diag => diag.Failure,
-            SetFailure = static (diag, value) => diag.Failure = value
-        };
+        var failures = DecodeResultHelpers.DecodeFailureMessages.ForPng(FailureInvalid, FailureCancelled, FailureDownscale, FailureNoDecoded);
         return DecodeResultHelpers.TryDecodePngWithDiagnostics(
             png,
             options,
             cancellationToken,
-            context,
+            failures,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out AztecDecodeDiagnostics diag)
                 => AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
             out text,
@@ -629,20 +621,12 @@ public static partial class AztecCode {
     }
 
     private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
-        var context = new DecodeResultHelpers.DiagnosticsContext<AztecDecodeDiagnostics> {
-            FailureCancelled = FailureCancelled,
-            FailureDownscale = FailureDownscale,
-            FailureNoDecoded = FailureNoDecoded,
-            FailureUnsupported = "Unsupported image format.",
-            Create = static () => new AztecDecodeDiagnostics(),
-            GetFailure = static diag => diag.Failure,
-            SetFailure = static (diag, value) => diag.Failure = value
-        };
+        var failures = DecodeResultHelpers.DecodeFailureMessages.ForImage(FailureCancelled, FailureDownscale, DecodeResultHelpers.FailureUnsupportedImageFormat, FailureNoDecoded);
         return DecodeResultHelpers.TryDecodeImageWithDiagnostics(
             image,
             options,
             cancellationToken,
-            context,
+            failures,
             (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out AztecDecodeDiagnostics diag)
                 => AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
             out text,
