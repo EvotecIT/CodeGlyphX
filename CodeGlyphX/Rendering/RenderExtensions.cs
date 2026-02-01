@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.IO;
+using System.Net;
 
 namespace CodeGlyphX.Rendering;
 
@@ -33,6 +34,14 @@ public static class RenderExtensions {
     }
 
     /// <summary>
+    /// Writes binary data to a file under the specified directory with a safe file name.
+    /// </summary>
+    public static string WriteBinarySafe(this byte[] data, string directory, string fileName) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return RenderIO.WriteBinarySafe(directory, fileName, data);
+    }
+
+    /// <summary>
     /// Writes text to a file.
     /// </summary>
     public static string WriteText(this string text, string path, Encoding? encoding = null) {
@@ -51,6 +60,13 @@ public static class RenderExtensions {
     /// </summary>
     public static void WriteText(this string text, Stream stream, Encoding? encoding = null) {
         RenderIO.WriteText(stream, text, encoding);
+    }
+
+    /// <summary>
+    /// Writes text to a file under the specified directory with a safe file name.
+    /// </summary>
+    public static string WriteTextSafe(this string text, string directory, string fileName, Encoding? encoding = null) {
+        return RenderIO.WriteTextSafe(directory, fileName, text, encoding);
     }
 
     /// <summary>
@@ -100,11 +116,12 @@ public static class RenderExtensions {
     /// </summary>
     public static string WrapHtml(this string innerHtml, string? title) {
         title ??= string.Empty;
+        var safeTitle = WebUtility.HtmlEncode(title);
         return "<!doctype html>" +
                "<html lang=\"en\">" +
                "<head><meta charset=\"utf-8\"/>" +
                "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"/>" +
-               $"<title>{title}</title></head>" +
+               $"<title>{safeTitle}</title></head>" +
                "<body style=\"background:#f5f7fb;font-family:Segoe UI,Arial,sans-serif;\">" +
                "<div style=\"padding:24px;\">" + innerHtml + "</div></body></html>";
     }

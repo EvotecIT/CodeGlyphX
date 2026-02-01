@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Webp;
 
@@ -21,6 +22,10 @@ internal static class WebpManagedDecoder {
         height = 0;
         if (!WebpReader.IsWebp(data)) return false;
         if (data.Length > WebpReader.MaxWebpBytes) return false;
+        if (WebpReader.TryReadDimensions(data, out var limitWidth, out var limitHeight)
+            && !DecodeGuards.TryEnsurePixelCount(limitWidth, limitHeight, out _)) {
+            return false;
+        }
 
         if (!TryEnumerateChunks(data, out var chunkSpan, out var chunks)) return false;
 
@@ -64,36 +69,68 @@ internal static class WebpManagedDecoder {
         if (!TryDecodeAnimationFrameInfoList(data, out var frameInfos, out canvasWidth, out canvasHeight, out options)) {
             return false;
         }
+        if (!DecodeGuards.TryEnsurePixelCount(canvasWidth, canvasHeight, out _)) {
+            return false;
+        }
 
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
         var decodedFrames = new WebpAnimationFrame[frameInfos.Count];
-        byte[]? lastFrame = null;
-        var lastWidth = 0;
-        var lastHeight = 0;
+        var state = new AnimationFrameState();
         for (var i = 0; i < frameInfos.Count; i++) {
-            var frame = frameInfos[i];
-            var rgba = frame.Rgba;
-            if (rgba.Length == 0) {
-                rgba = new byte[checked(frame.Width * frame.Height * 4)];
-                if (lastFrame is not null && lastWidth == frame.Width && lastHeight == frame.Height) {
-                    Buffer.BlockCopy(lastFrame, 0, rgba, 0, rgba.Length);
-                }
+            if (!TryDecodeAnimationFrame(frameInfos[i], maxFramePixels, ref state, out var decoded)) {
+                return false;
             }
-            decodedFrames[i] = new WebpAnimationFrame(
-                rgba,
-                frame.Width,
-                frame.Height,
-                frame.Width * 4,
-                frame.DurationMs,
-                frame.X,
-                frame.Y,
-                frame.Blend,
-                frame.DisposeToBackground);
-            lastFrame = rgba;
-            lastWidth = frame.Width;
-            lastHeight = frame.Height;
+            decodedFrames[i] = decoded;
         }
 
         frames = decodedFrames;
+        return true;
+    }
+
+    private struct AnimationFrameState {
+        public byte[]? LastFrame;
+        public int LastWidth;
+        public int LastHeight;
+    }
+
+    private static bool TryDecodeAnimationFrame(
+        WebpAnimationFrameInfo frame,
+        long maxFramePixels,
+        ref AnimationFrameState state,
+        out WebpAnimationFrame decoded) {
+        decoded = default;
+
+        if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, maxFramePixels, out var framePixels)) {
+            return false;
+        }
+        if (!DecodeGuards.TryEnsureByteCount((long)frame.Width * 4, out var frameStride)) {
+            return false;
+        }
+
+        var rgba = frame.Rgba;
+        if (rgba.Length == 0) {
+            if (!DecodeGuards.TryEnsureByteCount((long)framePixels * 4, out var frameBytes)) {
+                return false;
+            }
+            rgba = new byte[frameBytes];
+            if (state.LastFrame is not null && state.LastWidth == frame.Width && state.LastHeight == frame.Height) {
+                Buffer.BlockCopy(state.LastFrame, 0, rgba, 0, rgba.Length);
+            }
+        }
+
+        decoded = new WebpAnimationFrame(
+            rgba,
+            frame.Width,
+            frame.Height,
+            frameStride,
+            frame.DurationMs,
+            frame.X,
+            frame.Y,
+            frame.Blend,
+            frame.DisposeToBackground);
+        state.LastFrame = rgba;
+        state.LastWidth = frame.Width;
+        state.LastHeight = frame.Height;
         return true;
     }
 
@@ -111,14 +148,28 @@ internal static class WebpManagedDecoder {
         if (!TryDecodeAnimationFrameInfoList(data, out var frameInfos, out canvasWidth, out canvasHeight, out options)) {
             return false;
         }
+        if (!DecodeGuards.TryEnsurePixelCount(canvasWidth, canvasHeight, out var canvasPixels)) {
+            return false;
+        }
+        if (!DecodeGuards.TryEnsureByteCount((long)canvasPixels * 4, out var canvasBytes)) {
+            return false;
+        }
+        if (!DecodeGuards.TryEnsureByteCount((long)canvasWidth * 4, out var canvasStride)) {
+            return false;
+        }
 
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
         var backgroundBgra = options.BackgroundBgra;
-        var canvas = new byte[checked(canvasWidth * canvasHeight * 4)];
+        var canvas = new byte[canvasBytes];
         FillBackground(canvas, backgroundBgra);
 
         var renderedFrames = new WebpAnimationFrame[frameInfos.Count];
         for (var i = 0; i < frameInfos.Count; i++) {
             var frame = frameInfos[i];
+            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, maxFramePixels, out _)) {
+                return false;
+            }
+
             if (frame.Rgba.Length == 0) {
                 var emptySnapshot = new byte[canvas.Length];
                 Buffer.BlockCopy(canvas, 0, emptySnapshot, 0, canvas.Length);
@@ -126,7 +177,7 @@ internal static class WebpManagedDecoder {
                     emptySnapshot,
                     canvasWidth,
                     canvasHeight,
-                    canvasWidth * 4,
+                    canvasStride,
                     frame.DurationMs,
                     0,
                     0,
@@ -146,7 +197,7 @@ internal static class WebpManagedDecoder {
                 snapshot,
                 canvasWidth,
                 canvasHeight,
-                canvasWidth * 4,
+                canvasStride,
                 frame.DurationMs,
                 0,
                 0,
@@ -212,6 +263,11 @@ internal static class WebpManagedDecoder {
             if (!TryReadVp8X(vp8xPayload, out canvasWidth, out canvasHeight, out _)) return false;
         }
 
+        var maxFrames = ImageReader.EffectiveMaxAnimationFrames;
+        var maxDurationMs = ImageReader.EffectiveMaxAnimationDurationMs;
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
+        var totalDuration = 0L;
+
         for (var i = 0; i < chunks.Length; i++) {
             if (chunks[i].FourCc != FourCcAnmf) continue;
             var payload = chunkSpan.Slice(chunks[i].DataOffset, chunks[i].Length);
@@ -225,6 +281,24 @@ internal static class WebpManagedDecoder {
             if (frame.X < 0 || frame.Y < 0) return false;
             if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) return false;
 
+            if (maxFrames > 0 && frames.Count >= maxFrames) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFrames, maxFrames, frames.Count + 1, ImageFormat.Webp));
+                return false;
+            }
+            var framePixels = (long)frame.Width * frame.Height;
+            if (maxFramePixels > 0 && framePixels > maxFramePixels) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFramePixels, maxFramePixels, framePixels, ImageFormat.Webp));
+                return false;
+            }
+            if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, maxFramePixels, out _)) return false;
+            if (frame.DurationMs > 0) {
+                var nextTotal = totalDuration + frame.DurationMs;
+                if (maxDurationMs > 0 && nextTotal > maxDurationMs) {
+                    ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationDurationMs, maxDurationMs, nextTotal, ImageFormat.Webp));
+                    return false;
+                }
+                totalDuration = nextTotal;
+            }
             frames.Add(frame);
         }
 
@@ -306,8 +380,11 @@ internal static class WebpManagedDecoder {
 
         if (frame.X < 0 || frame.Y < 0) return false;
         if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(frame.Width, frame.Height, ImageReader.EffectiveMaxAnimationFramePixels, out _)) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(canvasWidth, canvasHeight, out var canvasPixels)) return false;
+        if (!DecodeGuards.TryEnsureByteCount((long)canvasPixels * 4, out var canvasBytes)) return false;
 
-        var canvas = new byte[checked(canvasWidth * canvasHeight * 4)];
+        var canvas = new byte[canvasBytes];
         FillBackground(canvas, background);
 
         if (frame.Blend) {
@@ -365,6 +442,13 @@ internal static class WebpManagedDecoder {
         var width = ReadU24LE(payload, 6) + 1;
         var height = ReadU24LE(payload, 9) + 1;
         if (width <= 0 || height <= 0) return false;
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
+        var framePixels = (long)width * height;
+        if (maxFramePixels > 0 && framePixels > maxFramePixels) {
+            ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFramePixels, maxFramePixels, framePixels, ImageFormat.Webp));
+            return false;
+        }
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, maxFramePixels, out _)) return false;
 
         var duration = ReadU24LE(payload, 12);
         if (duration <= 0) duration = 1;
@@ -528,6 +612,10 @@ internal static class WebpManagedDecoder {
             reason = "Alpha dimensions are invalid.";
             return false;
         }
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var alphaPixels)) {
+            reason = "Alpha dimensions exceed size limits.";
+            return false;
+        }
         if (payload.Length < 1) {
             reason = "Alpha chunk is too small.";
             return false;
@@ -539,7 +627,7 @@ internal static class WebpManagedDecoder {
         var preprocessing = (header >> 4) & 0x3;
 
         if (compression == 0) {
-            var required = checked(width * height);
+            var required = alphaPixels;
             if (payload.Length - 1 < required) {
                 reason = "Alpha chunk payload is too small.";
                 return false;
@@ -550,7 +638,7 @@ internal static class WebpManagedDecoder {
                 reason = "Failed to decode lossless alpha image-stream.";
                 return false;
             }
-            alpha = new byte[checked(width * height)];
+            alpha = new byte[alphaPixels];
             for (var i = 0; i < argb.Length; i++) {
                 alpha[i] = (byte)((argb[i] >> 8) & 0xFF); // green channel holds alpha values
             }

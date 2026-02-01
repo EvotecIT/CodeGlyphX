@@ -325,7 +325,9 @@ public static partial class Barcode {
     /// </summary>
     public static DecodeResult<BarcodeDecoded> DecodeImageResult(ReadOnlySpan<byte> image, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
         var stopwatch = Stopwatch.StartNew();
-        _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
+        if (!DecodeResultHelpers.TryCheckImageLimits(image, options, out var info, out var formatKnown, out var limitMessage)) {
+            return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.InvalidInput, info, stopwatch.Elapsed, limitMessage);
+        }
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) {
@@ -370,7 +372,10 @@ public static partial class Barcode {
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
             return DecodeImageResult(buffer.AsSpan(), expectedType, options, decodeOptions, cancellationToken);
         }
-        var data = RenderIO.ReadBinary(stream);
+        var maxBytes = options?.MaxBytes > 0 ? options.MaxBytes : ImageReader.MaxImageBytes;
+        if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
+            return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
+        }
         return DecodeImageResult(data, expectedType, options, decodeOptions, cancellationToken);
     }
 
@@ -386,7 +391,7 @@ public static partial class Barcode {
     /// </summary>
     public static bool TryDecodePngFile(string path, out BarcodeDecoded decoded) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        var png = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, options: null, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, out decoded);
     }
 
@@ -396,7 +401,7 @@ public static partial class Barcode {
     public static bool TryDecodePngFile(string path, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
-        var png = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, options: null, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, null, cancellationToken, out decoded);
     }
 
@@ -427,7 +432,7 @@ public static partial class Barcode {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
-        var png = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, options, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, null, options, decodeOptions, cancellationToken, out decoded);
     }
 
@@ -436,7 +441,7 @@ public static partial class Barcode {
     /// </summary>
     public static bool TryDecodePng(Stream stream, out BarcodeDecoded decoded) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var png = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, options: null, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, out decoded);
     }
 
@@ -446,7 +451,7 @@ public static partial class Barcode {
     public static bool TryDecodePng(Stream stream, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
-        var png = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, options: null, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, null, cancellationToken, out decoded);
     }
 
@@ -477,7 +482,7 @@ public static partial class Barcode {
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
-        var png = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, options, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, null, options, decodeOptions, cancellationToken, out decoded);
     }
 
@@ -567,5 +572,17 @@ public static partial class Barcode {
         };
     }
 
+    private static int ResolveMaxBytes(ImageDecodeOptions? options) {
+        if (options is not null && options.MaxBytes > 0) return options.MaxBytes;
+        return ImageReader.MaxImageBytes;
+    }
+
+    private static bool TryReadBinary(string path, ImageDecodeOptions? options, out byte[] data) {
+        return RenderIO.TryReadBinary(path, ResolveMaxBytes(options), out data);
+    }
+
+    private static bool TryReadBinary(Stream stream, ImageDecodeOptions? options, out byte[] data) {
+        return RenderIO.TryReadBinary(stream, ResolveMaxBytes(options), out data);
+    }
 
 }

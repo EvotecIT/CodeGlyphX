@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Rendering.Eps;
@@ -9,6 +10,8 @@ namespace CodeGlyphX.Rendering.Eps;
 /// Minimal EPS writer for embedding RGB images.
 /// </summary>
 public static class EpsWriter {
+    private const string EpsOutputLimitMessage = "EPS output exceeds size limits.";
+
     private static readonly char[] Hex = "0123456789ABCDEF".ToCharArray();
 
     /// <summary>
@@ -27,6 +30,8 @@ public static class EpsWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, EpsOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)width * height * 3, EpsOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
@@ -50,6 +55,8 @@ public static class EpsWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, EpsOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)width * height * 3, EpsOutputLimitMessage);
         if (rgb is null) throw new ArgumentNullException(nameof(rgb));
         if (rgb.Length < width * height * 3) throw new ArgumentException("RGB buffer is too small.", nameof(rgb));
 

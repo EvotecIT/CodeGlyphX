@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Website", "CodeG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Playground", "CodeGlyphX.Playground\CodeGlyphX.Playground.csproj", "{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Fuzz", "CodeGlyphX.Fuzz\CodeGlyphX.Fuzz.csproj", "{5F95770E-DFC2-499A-8409-C20571D11916}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,18 @@ Global
 		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Release|x64.Build.0 = Release|Any CPU
 		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Release|x86.ActiveCfg = Release|Any CPU
 		{FA3C7382-5CB5-492D-A69B-DED4868ADCDB}.Release|x86.Build.0 = Release|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Debug|x64.Build.0 = Debug|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Release|x64.ActiveCfg = Release|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Release|x64.Build.0 = Release|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F95770E-DFC2-499A-8409-C20571D11916}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

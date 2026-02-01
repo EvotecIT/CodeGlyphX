@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Png;
 
@@ -24,6 +25,7 @@ public static class IcoReader {
     /// Decodes an ICO/CUR image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> ico, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(ico.Length, "ICO payload exceeds size limits.");
         if (!IsIco(ico)) throw new FormatException("Invalid ICO header.");
         var count = ReadUInt16LE(ico, 4);
         if (count <= 0) throw new FormatException("ICO contains no images.");
@@ -85,18 +87,29 @@ public static class IcoReader {
         var bpp = ReadUInt16LE(dib, 14);
         var colorsUsed = headerSize >= 44 ? ReadUInt32LE(dib, 32) : 0;
 
+        var absWidth = Math.Abs(width);
         var absHeight = Math.Abs(height);
         var newHeight = absHeight / 2;
         if (newHeight <= 0) throw new FormatException("Invalid ICO image height.");
         if (height < 0) newHeight = -newHeight;
+        if (absWidth <= 0) throw new FormatException("Invalid ICO image width.");
+        if (!DecodeGuards.TryEnsurePixelCount(absWidth, Math.Abs(newHeight), out _)) {
+            throw new FormatException("ICO dimensions exceed size limits.");
+        }
 
         var paletteCount = 0;
         if (bpp <= 8) {
             paletteCount = colorsUsed != 0 ? (int)colorsUsed : 1 << bpp;
+            if (paletteCount <= 0 || paletteCount > (1 << bpp) || paletteCount > 256) {
+                throw new FormatException("Invalid ICO palette.");
+            }
         }
 
-        var dataOffset = 14 + headerSize + paletteCount * 4;
-        var fileSize = 14 + dib.Length;
+        var paletteBytes = paletteCount > 0
+            ? DecodeGuards.EnsureByteCount((long)paletteCount * 4, "Invalid ICO palette.")
+            : 0;
+        var dataOffset = DecodeGuards.EnsureByteCount((long)14 + headerSize + paletteBytes, "Invalid ICO image offset.");
+        var fileSize = DecodeGuards.EnsureByteCount((long)14 + dib.Length, "ICO image exceeds size limits.");
 
         var bmp = new byte[fileSize];
         bmp[0] = (byte)'B';
@@ -142,4 +155,3 @@ public static class IcoReader {
         WriteUInt32LE(data, offset, unchecked((uint)value));
     }
 }
-

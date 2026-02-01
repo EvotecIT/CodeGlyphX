@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Bmp;
 
@@ -7,6 +8,8 @@ namespace CodeGlyphX.Rendering.Bmp;
 /// Writes BMP images from RGBA buffers.
 /// </summary>
 public static class BmpWriter {
+    private const string BmpOutputLimitMessage = "BMP output exceeds size limits.";
+
     /// <summary>
     /// Writes a BMP (32-bit BGRA) byte array from an RGBA buffer.
     /// </summary>
@@ -23,14 +26,15 @@ public static class BmpWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, BmpOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
         const int fileHeaderSize = 14;
         const int infoHeaderSize = 108;
         var dataOffset = fileHeaderSize + infoHeaderSize;
-        var rowSize = width * 4;
-        var imageSize = rowSize * height;
+        var rowSize = RenderGuards.EnsureOutputBytes((long)width * 4, BmpOutputLimitMessage);
+        var imageSize = RenderGuards.EnsureOutputBytes((long)rowSize * height, BmpOutputLimitMessage);
         var fileSize = dataOffset + imageSize;
 
         var header = new byte[fileHeaderSize + infoHeaderSize];
@@ -93,14 +97,15 @@ public static class BmpWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, BmpOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
         const int fileHeaderSize = 14;
         const int infoHeaderSize = 40;
         var dataOffset = fileHeaderSize + infoHeaderSize;
-        var rowSize = ((width * 3 + 3) / 4) * 4;
-        var imageSize = rowSize * height;
+        var rowSize = RenderGuards.EnsureOutputBytes(((long)width * 3 + 3) / 4 * 4, BmpOutputLimitMessage);
+        var imageSize = RenderGuards.EnsureOutputBytes((long)rowSize * height, BmpOutputLimitMessage);
         var fileSize = dataOffset + imageSize;
 
         var header = new byte[fileHeaderSize + infoHeaderSize];

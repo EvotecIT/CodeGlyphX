@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Pgm;
 
@@ -11,6 +12,7 @@ public static class PgmReader {
     /// Decodes a PGM image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> pgm, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(pgm.Length, "PGM payload exceeds size limits.");
         if (pgm.Length < 2) throw new FormatException("Invalid PGM data.");
         if (pgm[0] != (byte)'P') throw new FormatException("Invalid PGM signature.");
         var format = pgm[1];
@@ -26,8 +28,8 @@ public static class PgmReader {
 
         SkipWhitespaceAndComments(pgm, ref pos);
 
-        var pixelCount = (long)width * height;
-        var rgba = new byte[(int)pixelCount * 4];
+        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "PGM dimensions exceed size limits.");
+        var rgba = DecodeGuards.AllocateRgba32(width, height, "PGM dimensions exceed size limits.");
 
         if (format == (byte)'2') {
             for (var i = 0; i < pixelCount; i++) {
@@ -44,7 +46,7 @@ public static class PgmReader {
         }
 
         var bytesPerSample = maxVal > 255 ? 2 : 1;
-        var required = pos + pixelCount * bytesPerSample;
+        var required = (long)pos + (long)pixelCount * bytesPerSample;
         if (required > pgm.Length) throw new FormatException("Truncated PGM data.");
 
         if (bytesPerSample == 1) {

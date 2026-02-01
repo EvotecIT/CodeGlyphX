@@ -19,6 +19,11 @@ public static class SvgBarcodeRenderer {
         if (opts.QuietZone < 0) throw new ArgumentOutOfRangeException(nameof(opts.QuietZone));
         if (opts.HeightModules <= 0) throw new ArgumentOutOfRangeException(nameof(opts.HeightModules));
 
+        var barColor = RenderSanitizer.SafeCssColor(opts.BarColor, RenderDefaults.BarcodeForegroundCss);
+        var backgroundColor = RenderSanitizer.SafeCssColor(opts.BackgroundColor, RenderDefaults.BarcodeBackgroundCss);
+        var labelColor = RenderSanitizer.SafeCssColor(opts.LabelColor, RenderDefaults.BarcodeForegroundCss);
+        var labelFontFamily = RenderSanitizer.SafeFontFamily(opts.LabelFontFamily, RenderDefaults.BarcodeLabelFontFamily);
+
         var outWidthModules = barcode.TotalModules + opts.QuietZone * 2;
         var widthPx = outWidthModules * opts.ModuleSize;
         var heightPx = opts.HeightModules * opts.ModuleSize;
@@ -36,9 +41,9 @@ public static class SvgBarcodeRenderer {
             .Append(totalHeightModules.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
             .Append("\" shape-rendering=\"crispEdges\">");
 
-        sb.Append("<rect width=\"100%\" height=\"100%\" fill=\"").Append(opts.BackgroundColor).Append("\"/>");
+        sb.Append("<rect width=\"100%\" height=\"100%\" fill=\"").Append(backgroundColor).Append("\"/>");
 
-        sb.Append("<g fill=\"").Append(opts.BarColor).Append("\">");
+        sb.Append("<g fill=\"").Append(barColor).Append("\">");
         var x = opts.QuietZone;
         for (var i = 0; i < barcode.Segments.Count; i++) {
             var seg = barcode.Segments[i];
@@ -57,9 +62,9 @@ public static class SvgBarcodeRenderer {
             sb.Append("<text x=\"").Append(outWidthModules / 2.0)
                 .Append("\" y=\"").Append(labelY.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
                 .Append("\" text-anchor=\"middle\" dominant-baseline=\"hanging\" fill=\"")
-                .Append(opts.LabelColor).Append("\" font-size=\"")
+                .Append(labelColor).Append("\" font-size=\"")
                 .Append(labelFontModules.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
-                .Append("\" font-family=\"").Append(opts.LabelFontFamily).Append("\">")
+                .Append("\" font-family=\"").Append(labelFontFamily).Append("\">")
                 .Append(System.Security.SecurityElement.Escape(labelText))
                 .Append("</text>");
         }

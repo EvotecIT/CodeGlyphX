@@ -10,6 +10,7 @@ namespace CodeGlyphX.Rendering.Pgm;
 /// Writes PGM (P5) images from RGBA buffers.
 /// </summary>
 public static class PgmWriter {
+    private const string PgmOutputLimitMessage = "PGM output exceeds size limits.";
     /// <summary>
     /// Writes a PGM byte array from an RGBA buffer.
     /// </summary>
@@ -46,6 +47,7 @@ public static class PgmWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, PgmOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rowStride < rowOffset + stride) throw new ArgumentOutOfRangeException(nameof(rowStride));
         if (rgba.Length < (height - 1) * rowStride + rowOffset + width * 4) throw new ArgumentException(bufferMessage, bufferName);
@@ -53,7 +55,9 @@ public static class PgmWriter {
         var header = Encoding.ASCII.GetBytes($"P5\n{width} {height}\n255\n");
         stream.Write(header, 0, header.Length);
 
-        var row = ArrayPool<byte>.Shared.Rent(width);
+        var rowBytes = RenderGuards.EnsureOutputBytes(width, PgmOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)height * rowBytes, PgmOutputLimitMessage);
+        var row = ArrayPool<byte>.Shared.Rent(rowBytes);
         try {
             for (var y = 0; y < height; y++) {
                 var srcRow = y * rowStride + rowOffset;
@@ -72,7 +76,7 @@ public static class PgmWriter {
                     var lum = LumaTables.Luma(r, g, b);
                     row[x] = (byte)lum;
                 }
-                stream.Write(row, 0, width);
+                stream.Write(row, 0, rowBytes);
             }
         } finally {
             ArrayPool<byte>.Shared.Return(row);

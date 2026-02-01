@@ -15,6 +15,7 @@ public static class TiffWriter {
     private const ushort BilevelTileEntryCount = 10;
     private const ushort PredictorTag = 317;
     private const int BitsPerSampleSize = 8;
+    private const string TiffOutputLimitMessage = "TIFF output exceeds size limits.";
 
     /// <summary>
     /// Writes a TIFF byte array from an RGBA buffer (single page).
@@ -91,6 +92,8 @@ public static class TiffWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, TiffOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)width * height * 4, TiffOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
         if (rowsPerStrip <= 0) throw new ArgumentOutOfRangeException(nameof(rowsPerStrip));

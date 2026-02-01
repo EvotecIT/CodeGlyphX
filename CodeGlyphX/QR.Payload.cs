@@ -165,7 +165,7 @@ public static partial class QR {
         decoded = null!;
         if (stream is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var data = RenderIO.ReadBinary(stream);
+        if (!RenderIO.TryReadBinary(stream, ImageReader.MaxImageBytes, out var data)) return false;
         if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) return false;
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
     }
@@ -219,7 +219,7 @@ public static partial class QR {
         decoded = Array.Empty<QrDecoded>();
         if (stream is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var data = RenderIO.ReadBinary(stream);
+        if (!RenderIO.TryReadBinary(stream, ImageReader.MaxImageBytes, out var data)) return false;
         if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) return false;
         return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
     }

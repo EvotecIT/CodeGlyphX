@@ -3,7 +3,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// Diagnostics for PDF417 decoding.
 /// </summary>
-public sealed class Pdf417DecodeDiagnostics {
+public sealed class Pdf417DecodeDiagnostics : IDecodeDiagnostics {
     /// <summary>
     /// Number of decode attempts.
     /// </summary>
@@ -33,4 +33,6 @@ public sealed class Pdf417DecodeDiagnostics {
     /// Optional failure message when decoding fails.
     /// </summary>
     public string? Failure { get; internal set; }
+
+    void IDecodeDiagnostics.SetFailure(string? value) => Failure = value;
 }

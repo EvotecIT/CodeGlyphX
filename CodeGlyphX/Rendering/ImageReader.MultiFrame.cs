@@ -126,9 +126,10 @@ public static partial class ImageReader {
         out GifAnimationOptions options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) { frames = Array.Empty<GifAnimationFrame>(); canvasWidth = 0; canvasHeight = 0; options = default; return false; }
             return TryDecodeGifAnimationFrames(buffer.AsSpan(), out frames, out canvasWidth, out canvasHeight, out options);
         }
-        var data = RenderIO.ReadBinary(stream);
+        if (!RenderIO.TryReadBinary(stream, MaxImageBytes, out var data)) { frames = Array.Empty<GifAnimationFrame>(); canvasWidth = 0; canvasHeight = 0; options = default; return false; }
         return TryDecodeGifAnimationFrames(data, out frames, out canvasWidth, out canvasHeight, out options);
     }
 
@@ -143,9 +144,10 @@ public static partial class ImageReader {
         out GifAnimationOptions options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) { frames = Array.Empty<GifAnimationFrame>(); canvasWidth = 0; canvasHeight = 0; options = default; return false; }
             return TryDecodeGifAnimationCanvasFrames(buffer.AsSpan(), out frames, out canvasWidth, out canvasHeight, out options);
         }
-        var data = RenderIO.ReadBinary(stream);
+        if (!RenderIO.TryReadBinary(stream, MaxImageBytes, out var data)) { frames = Array.Empty<GifAnimationFrame>(); canvasWidth = 0; canvasHeight = 0; options = default; return false; }
         return TryDecodeGifAnimationCanvasFrames(data, out frames, out canvasWidth, out canvasHeight, out options);
     }
 
@@ -268,9 +270,10 @@ public static partial class ImageReader {
         out WebpAnimationOptions options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) { frames = Array.Empty<WebpAnimationFrame>(); canvasWidth = 0; canvasHeight = 0; options = default; return false; }
             return TryDecodeWebpAnimationFrames(buffer.AsSpan(), out frames, out canvasWidth, out canvasHeight, out options);
         }
-        var data = RenderIO.ReadBinary(stream);
+        if (!RenderIO.TryReadBinary(stream, MaxImageBytes, out var data)) { frames = Array.Empty<WebpAnimationFrame>(); canvasWidth = 0; canvasHeight = 0; options = default; return false; }
         return TryDecodeWebpAnimationFrames(data, out frames, out canvasWidth, out canvasHeight, out options);
     }
 
@@ -285,9 +288,10 @@ public static partial class ImageReader {
         out WebpAnimationOptions options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) { frames = Array.Empty<WebpAnimationFrame>(); canvasWidth = 0; canvasHeight = 0; options = default; return false; }
             return TryDecodeWebpAnimationCanvasFrames(buffer.AsSpan(), out frames, out canvasWidth, out canvasHeight, out options);
         }
-        var data = RenderIO.ReadBinary(stream);
+        if (!RenderIO.TryReadBinary(stream, MaxImageBytes, out var data)) { frames = Array.Empty<WebpAnimationFrame>(); canvasWidth = 0; canvasHeight = 0; options = default; return false; }
         return TryDecodeWebpAnimationCanvasFrames(data, out frames, out canvasWidth, out canvasHeight, out options);
     }
 
@@ -316,9 +320,10 @@ public static partial class ImageReader {
     public static bool TryDecodeTiffPagesRgba32(Stream stream, out TiffRgba32Page[] pages) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) { pages = Array.Empty<TiffRgba32Page>(); return false; }
             return TryDecodeTiffPagesRgba32(buffer.AsSpan(), out pages);
         }
-        var data = RenderIO.ReadBinary(stream);
+        if (!RenderIO.TryReadBinary(stream, MaxImageBytes, out var data)) { pages = Array.Empty<TiffRgba32Page>(); return false; }
         return TryDecodeTiffPagesRgba32(data, out pages);
     }
 
@@ -336,9 +341,10 @@ public static partial class ImageReader {
     public static TiffRgba32Page[] DecodeTiffPagesRgba32(Stream stream) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
+            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) throw new FormatException("Image payload exceeds size limits.");
             return DecodeTiffPagesRgba32(buffer.AsSpan());
         }
-        var data = RenderIO.ReadBinary(stream);
+        var data = RenderIO.ReadBinary(stream, MaxImageBytes);
         return DecodeTiffPagesRgba32(data);
     }
 

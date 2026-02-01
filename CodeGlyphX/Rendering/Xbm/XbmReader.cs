@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Xbm;
 
@@ -10,23 +11,26 @@ namespace CodeGlyphX.Rendering.Xbm;
 /// </summary>
 public static class XbmReader {
     private const int MaxDimension = 16384;
+    private const string XbmDimensionsLimitMessage = "XBM dimensions exceed size limits.";
 
     /// <summary>
     /// Decodes an XBM image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> xbm, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(xbm.Length, "XBM payload exceeds size limits.");
         var text = System.Text.Encoding.ASCII.GetString(xbm.ToArray());
         width = ExtractDefineValue(text, "_width");
         height = ExtractDefineValue(text, "_height");
         if (width <= 0 || height <= 0) throw new FormatException("Invalid XBM dimensions.");
         if (width > MaxDimension || height > MaxDimension) throw new FormatException("XBM dimensions are too large.");
-        var pixelCount = (long)width * height;
+        _ = DecodeGuards.EnsurePixelCount(width, height, XbmDimensionsLimitMessage);
 
         var bytes = ExtractByteArray(text);
         var rowBytes = (width + 7) / 8;
-        if (bytes.Count < rowBytes * height) throw new FormatException("Truncated XBM data.");
+        var expected = DecodeGuards.EnsureByteCount((long)rowBytes * height, XbmDimensionsLimitMessage);
+        if (bytes.Count < expected) throw new FormatException("Truncated XBM data.");
 
-        var rgba = new byte[width * height * 4];
+        var rgba = DecodeGuards.AllocateRgba32(width, height, XbmDimensionsLimitMessage);
         for (var y = 0; y < height; y++) {
             var rowStart = y * rowBytes;
             for (var x = 0; x < width; x++) {

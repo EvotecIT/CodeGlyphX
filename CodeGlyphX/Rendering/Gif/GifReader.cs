@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Gif;
 
@@ -6,16 +7,23 @@ namespace CodeGlyphX.Rendering.Gif;
 /// Decodes GIF images to RGBA buffers and animation frames.
 /// </summary>
 public static class GifReader {
+    private const string GifDimensionsLimitMessage = "GIF dimensions exceed size limits.";
+    private const string GifFrameLimitMessage = "GIF frame exceeds size limits.";
+    private const string GifPayloadLimitMessage = "GIF payload exceeds size limits.";
+    private const string GifDataLimitMessage = "GIF data exceeds size limits.";
+
     /// <summary>
     /// Decodes a GIF image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> gif, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(gif.Length, GifPayloadLimitMessage);
         if (gif.Length < 13) throw new FormatException("Invalid GIF header.");
         if (!IsGif(gif)) throw new FormatException("Invalid GIF signature.");
 
         width = ReadUInt16LE(gif, 6);
         height = ReadUInt16LE(gif, 8);
         if (width <= 0 || height <= 0) throw new FormatException("Invalid GIF dimensions.");
+        var canvasPixels = DecodeGuards.EnsurePixelCount(width, height, GifDimensionsLimitMessage);
 
         var packed = gif[10];
         var gctFlag = (packed & 0x80) != 0;
@@ -35,13 +43,13 @@ public static class GifReader {
         var hasTransparency = false;
 
         // Prepare background.
-        var rgba = new byte[width * height * 4];
+        var rgba = DecodeGuards.AllocateRgba32(width, height, GifDimensionsLimitMessage);
         if (!globalTable.IsEmpty && bgIndex < gctSize) {
             var p = bgIndex * 3;
             var br = globalTable[p + 0];
             var bg = globalTable[p + 1];
             var bb = globalTable[p + 2];
-            for (var i = 0; i < width * height; i++) {
+            for (var i = 0; i < canvasPixels; i++) {
                 var dst = i * 4;
                 rgba[dst + 0] = br;
                 rgba[dst + 1] = bg;
@@ -112,7 +120,8 @@ public static class GifReader {
             var minCodeSize = gif[offset++];
 
             var imageData = ReadSubBlocks(gif, ref offset);
-            var pixels = new byte[imgW * imgH];
+            _ = DecodeGuards.EnsurePixelCount(imgW, imgH, GifFrameLimitMessage);
+            var pixels = DecodeGuards.AllocatePixelBuffer(imgW, imgH, GifFrameLimitMessage);
             var written = LzwDecode(imageData, minCodeSize, pixels);
             if (written < imgW * imgH) {
                 // Leave remaining pixels as 0.
@@ -221,12 +230,14 @@ public static class GifReader {
         out int canvasWidth,
         out int canvasHeight,
         out GifAnimationOptions options) {
+        DecodeGuards.EnsurePayloadWithinLimits(gif.Length, GifPayloadLimitMessage);
         if (gif.Length < 13) throw new FormatException("Invalid GIF header.");
         if (!IsGif(gif)) throw new FormatException("Invalid GIF signature.");
 
         canvasWidth = ReadUInt16LE(gif, 6);
         canvasHeight = ReadUInt16LE(gif, 8);
         if (canvasWidth <= 0 || canvasHeight <= 0) throw new FormatException("Invalid GIF dimensions.");
+        _ = DecodeGuards.EnsurePixelCount(canvasWidth, canvasHeight, GifDimensionsLimitMessage);
 
         var packed = gif[10];
         var gctFlag = (packed & 0x80) != 0;
@@ -256,7 +267,11 @@ public static class GifReader {
         options = new GifAnimationOptions(loopCount: 0, backgroundRgba: (uint)(bgR | (bgG << 8) | (bgB << 16) | (bgA << 24)));
 
         var frames = new System.Collections.Generic.List<GifAnimationFrame>();
-        byte[]? canvas = composite ? new byte[canvasWidth * canvasHeight * 4] : null;
+        var maxFrames = ImageReader.EffectiveMaxAnimationFrames;
+        var maxDurationMs = ImageReader.EffectiveMaxAnimationDurationMs;
+        var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
+        var totalDuration = 0L;
+        byte[]? canvas = composite ? DecodeGuards.AllocateRgba32(canvasWidth, canvasHeight, GifDimensionsLimitMessage) : null;
         if (canvas is not null) {
             FillCanvas(canvas, bgR, bgG, bgB, bgA);
         }
@@ -312,6 +327,26 @@ public static class GifReader {
             var imgH = ReadUInt16LE(gif, offset + 6);
             var imgPacked = gif[offset + 8];
             offset += 9;
+            if (maxFrames > 0 && frames.Count >= maxFrames) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFrames, maxFrames, frames.Count + 1, ImageFormat.Gif));
+                throw new FormatException("GIF frame count exceeds limits.");
+            }
+            var framePixels = (long)imgW * imgH;
+            if (maxFramePixels > 0 && framePixels > maxFramePixels) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFramePixels, maxFramePixels, framePixels, ImageFormat.Gif));
+                throw new FormatException(GifFrameLimitMessage);
+            }
+            if (!DecodeGuards.TryEnsurePixelCount(imgW, imgH, maxFramePixels, out _)) {
+                throw new FormatException(GifFrameLimitMessage);
+            }
+            if (delay > 0) {
+                var nextTotal = totalDuration + delay;
+                if (maxDurationMs > 0 && nextTotal > maxDurationMs) {
+                    ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationDurationMs, maxDurationMs, nextTotal, ImageFormat.Gif));
+                    throw new FormatException("GIF animation duration exceeds limits.");
+                }
+                totalDuration = nextTotal;
+            }
 
             var lctFlag = (imgPacked & 0x80) != 0;
             var interlaced = (imgPacked & 0x40) != 0;
@@ -329,12 +364,12 @@ public static class GifReader {
             if (offset >= gif.Length) throw new FormatException("Missing GIF image data.");
             var minCodeSize = gif[offset++];
             var imageData = ReadSubBlocks(gif, ref offset);
-            var pixels = new byte[imgW * imgH];
+            var pixels = DecodeGuards.AllocatePixelBuffer(imgW, imgH, GifFrameLimitMessage);
             _ = LzwDecode(imageData, minCodeSize, pixels);
 
             var durationMs = delay;
             if (!composite) {
-                var frameRgba = new byte[imgW * imgH * 4];
+                var frameRgba = DecodeGuards.AllocateRgba32(imgW, imgH, GifFrameLimitMessage);
                 if (!interlaced) {
                     DecodeFrame(pixels, imgW, imgH, colorTable, hasTransparency, transparentIndex, frameRgba);
                 } else {
@@ -590,7 +625,7 @@ public static class GifReader {
     }
 
     private static byte[] ReadSubBlocks(ReadOnlySpan<byte> data, ref int offset) {
-        var total = 0;
+        var total = 0L;
         var start = offset;
         while (offset < data.Length) {
             var size = data[offset++];
@@ -598,9 +633,11 @@ public static class GifReader {
             offset += size;
             if (offset > data.Length) throw new FormatException("Truncated GIF sub-block.");
             total += size;
+            if (total > int.MaxValue) throw new FormatException(GifDataLimitMessage);
         }
 
-        var output = new byte[total];
+        if (total == 0) return Array.Empty<byte>();
+        var output = new byte[DecodeGuards.EnsureByteCount(total, GifDataLimitMessage)];
         var dst = 0;
         var pos = start;
         while (pos < data.Length) {

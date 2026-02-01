@@ -24,6 +24,9 @@ public static class SvgQrRenderer {
         opts.ForegroundGradient?.Validate();
         opts.Eyes?.Validate();
 
+        opts.DarkColor = RenderSanitizer.SafeCssColor(opts.DarkColor, RenderDefaults.QrForegroundCss);
+        opts.LightColor = RenderSanitizer.SafeCssColor(opts.LightColor, RenderDefaults.QrBackgroundCss);
+
         var size = modules.Width;
         var outSize = size + opts.QuietZone * 2;
         var px = outSize * opts.ModuleSize;
