@@ -13,6 +13,7 @@ public static class XpmReader {
     private const int MaxDimension = 16384;
     private const int MaxColors = 65536;
     private const int MaxCharsPerPixel = 8;
+    private const string XpmDimensionsLimitMessage = "XPM dimensions exceed size limits.";
 
     /// <summary>
     /// Decodes an XPM image to an RGBA buffer.
@@ -32,9 +33,9 @@ public static class XpmReader {
         if (width <= 0 || height <= 0 || colors <= 0 || charsPerPixel <= 0) throw new FormatException("Invalid XPM header.");
         if (width > MaxDimension || height > MaxDimension) throw new FormatException("XPM dimensions are too large.");
         if (colors > MaxColors || charsPerPixel > MaxCharsPerPixel) throw new FormatException("XPM color table is too large.");
-        _ = DecodeGuards.EnsurePixelCount(width, height, "XPM dimensions exceed size limits.");
+        _ = DecodeGuards.EnsurePixelCount(width, height, XpmDimensionsLimitMessage);
 
-        var requiredStrings = 1 + colors + height;
+        var requiredStrings = checked(1 + colors + height);
         if (strings.Count < requiredStrings) throw new FormatException("Truncated XPM data.");
 
         var palette = new Dictionary<string, Rgba32>(StringComparer.Ordinal);
@@ -46,7 +47,7 @@ public static class XpmReader {
             palette[key] = value;
         }
 
-        var rgba = DecodeGuards.AllocateRgba32(width, height, "XPM dimensions exceed size limits.");
+        var rgba = DecodeGuards.AllocateRgba32(width, height, XpmDimensionsLimitMessage);
         for (var y = 0; y < height; y++) {
             var line = strings[1 + colors + y];
             if ((long)line.Length < (long)width * charsPerPixel) throw new FormatException("Invalid XPM pixel data.");
