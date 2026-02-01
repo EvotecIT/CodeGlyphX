@@ -31,7 +31,6 @@ public static partial class Pdf417Code {
     private const string FailureInvalid = "Invalid input.";
     private const string FailureDownscale = "Image downscale failed.";
     private const string FailureNoPdf417 = "No PDF417 decoded.";
-    private const int MinTileSize = 48;
     /// <summary>
     /// Attempts to decode a PDF417 symbol from PNG bytes.
     /// </summary>
@@ -553,97 +552,13 @@ public static partial class Pdf417Code {
     }
 
     private static bool TryDecodeAllImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
-        texts = Array.Empty<string>();
-        if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) return false;
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
-            var original = rgba;
-            var originalWidth = width;
-            var originalHeight = height;
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) return false;
-
-            var list = new System.Collections.Generic.List<string>(4);
-            var seen = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
-            CollectAllFromRgba(rgba, width, height, width * 4, token, list, seen);
-            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                CollectAllFromRgba(original, originalWidth, originalHeight, originalWidth * 4, token, list, seen);
-            }
-
-            if (list.Count == 0) return false;
-            texts = list.ToArray();
-            return true;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
-    }
-
-    private static void CollectAllFromRgba(byte[] rgba, int width, int height, int stride, CancellationToken token, System.Collections.Generic.List<string> list, System.Collections.Generic.HashSet<string> seen) {
-        if (token.IsCancellationRequested) return;
-        if (Pdf417Decoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, token, out string text)) {
-            AddUnique(list, seen, text);
-        }
-        ScanTiles(rgba, width, height, stride, token, (tile, tw, th, tstride) => {
-            if (Pdf417Decoder.TryDecode(tile, tw, th, tstride, PixelFormat.Rgba32, token, out string value)) {
-                AddUnique(list, seen, value);
-            }
-        });
-    }
-
-    private static void AddUnique(System.Collections.Generic.List<string> list, System.Collections.Generic.HashSet<string> seen, string text) {
-        if (string.IsNullOrEmpty(text)) return;
-        if (seen.Add(text)) list.Add(text);
-    }
-
-    private static void ScanTiles(byte[] rgba, int width, int height, int stride, CancellationToken token, Action<byte[], int, int, int> onTile) {
-        if (width <= 0 || height <= 0 || stride < width * 4) return;
-        var grid = Math.Max(width, height) >= 720 ? 3 : 2;
-        var pad = Math.Max(8, Math.Min(width, height) / 40);
-        var tileW = width / grid;
-        var tileH = height / grid;
-        for (var ty = 0; ty < grid; ty++) {
-            if (!ProcessTileRow(rgba, width, height, stride, token, onTile, grid, pad, tileW, tileH, ty)) return;
-        }
-    }
-
-    private static bool ProcessTileRow(byte[] rgba, int width, int height, int stride, CancellationToken token, Action<byte[], int, int, int> onTile, int grid, int pad, int tileW, int tileH, int ty) {
-        for (var tx = 0; tx < grid; tx++) {
-            if (token.IsCancellationRequested) return false;
-            if (!TryGetTileBounds(width, height, grid, pad, tileW, tileH, tx, ty, out var x0, out var y0, out var tw, out var th)) {
-                continue;
-            }
-            if (!TryCopyTile(rgba, stride, x0, y0, tw, th, token, out var tile, out var tileStride)) return false;
-            onTile(tile, tw, th, tileStride);
-        }
-        return true;
-    }
-
-    private static bool TryGetTileBounds(int width, int height, int grid, int pad, int tileW, int tileH, int tx, int ty, out int x0, out int y0, out int tw, out int th) {
-        x0 = tx * tileW;
-        y0 = ty * tileH;
-        var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
-        var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
-
-        x0 = Math.Max(0, x0 - pad);
-        y0 = Math.Max(0, y0 - pad);
-        x1 = Math.Min(width, x1 + pad);
-        y1 = Math.Min(height, y1 + pad);
-
-        tw = x1 - x0;
-        th = y1 - y0;
-        return tw >= MinTileSize && th >= MinTileSize;
-    }
-
-    private static bool TryCopyTile(byte[] rgba, int stride, int x0, int y0, int tw, int th, CancellationToken token, out byte[] tile, out int tileStride) {
-        tileStride = tw * 4;
-        tile = new byte[tileStride * th];
-        for (var y = 0; y < th; y++) {
-            if (token.IsCancellationRequested) return false;
-            Buffer.BlockCopy(rgba, (y0 + y) * stride + x0 * 4, tile, y * tileStride, tileStride);
-        }
-        return true;
+        return DecodeResultHelpers.TryDecodeAllImage(
+            image,
+            options,
+            cancellationToken,
+            (byte[] rgba, int width, int height, int stride, CancellationToken token, out string decoded)
+                => Pdf417Decoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, token, out decoded),
+            out texts);
     }
 
     /// <summary>

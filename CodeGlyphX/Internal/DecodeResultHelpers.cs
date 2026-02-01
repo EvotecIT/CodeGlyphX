@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -10,6 +11,7 @@ namespace CodeGlyphX.Internal;
 internal static class DecodeResultHelpers {
     public delegate bool PixelDecodeString(byte[] rgba, int width, int height, CancellationToken token, out string text);
     public delegate bool PixelDecodeWithDiagnostics<TDiag>(byte[] rgba, int width, int height, CancellationToken token, out string text, out TDiag diagnostics);
+    public delegate bool PixelDecodeWithStride(byte[] rgba, int width, int height, int stride, CancellationToken token, out string text);
 
     public static bool TryGetImageInfo(ReadOnlySpan<byte> image, out ImageInfo info, out bool formatKnown) {
         formatKnown = ImageReader.TryDetectFormat(image, out var format);
@@ -201,6 +203,100 @@ internal static class DecodeResultHelpers {
         } finally {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
+        }
+    }
+
+    public static bool TryDecodeAllImage(
+        byte[] image,
+        ImageDecodeOptions? options,
+        CancellationToken cancellationToken,
+        PixelDecodeWithStride decode,
+        out string[] texts) {
+        texts = Array.Empty<string>();
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) return false;
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
+            var original = rgba;
+            var originalWidth = width;
+            var originalHeight = height;
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) return false;
+
+            var list = new List<string>(4);
+            var seen = new HashSet<string>(StringComparer.Ordinal);
+            CollectAllFromRgba(rgba, width, height, width * 4, token, decode, list, seen);
+            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
+                CollectAllFromRgba(original, originalWidth, originalHeight, originalWidth * 4, token, decode, list, seen);
+            }
+
+            if (list.Count == 0) return false;
+            texts = list.ToArray();
+            return true;
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    private static void CollectAllFromRgba(
+        byte[] rgba,
+        int width,
+        int height,
+        int stride,
+        CancellationToken token,
+        PixelDecodeWithStride decode,
+        List<string> list,
+        HashSet<string> seen) {
+        if (token.IsCancellationRequested) return;
+        if (decode(rgba, width, height, stride, token, out var text)) {
+            AddUnique(list, seen, text);
+        }
+        ScanTiles(rgba, width, height, stride, token, (tile, tw, th, tstride) => {
+            if (decode(tile, tw, th, tstride, token, out var value)) {
+                AddUnique(list, seen, value);
+            }
+        });
+    }
+
+    private static void AddUnique(List<string> list, HashSet<string> seen, string text) {
+        if (string.IsNullOrEmpty(text)) return;
+        if (seen.Add(text)) list.Add(text);
+    }
+
+    private static void ScanTiles(byte[] rgba, int width, int height, int stride, CancellationToken token, Action<byte[], int, int, int> onTile) {
+        if (width <= 0 || height <= 0 || stride < width * 4) return;
+        var grid = Math.Max(width, height) >= 720 ? 3 : 2;
+        var pad = Math.Max(8, Math.Min(width, height) / 40);
+        var tileW = width / grid;
+        var tileH = height / grid;
+
+        for (var ty = 0; ty < grid; ty++) {
+            for (var tx = 0; tx < grid; tx++) {
+                if (token.IsCancellationRequested) return;
+                var x0 = tx * tileW;
+                var y0 = ty * tileH;
+                var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
+                var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
+
+                x0 = Math.Max(0, x0 - pad);
+                y0 = Math.Max(0, y0 - pad);
+                x1 = Math.Min(width, x1 + pad);
+                y1 = Math.Min(height, y1 + pad);
+
+                var tw = x1 - x0;
+                var th = y1 - y0;
+                if (tw < 48 || th < 48) continue;
+
+                var tileStride = tw * 4;
+                var tile = new byte[tileStride * th];
+                for (var y = 0; y < th; y++) {
+                    if (token.IsCancellationRequested) return;
+                    Buffer.BlockCopy(rgba, (y0 + y) * stride + x0 * 4, tile, y * tileStride, tileStride);
+                }
+
+                onTile(tile, tw, th, tileStride);
+            }
         }
     }
 
