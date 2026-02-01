@@ -202,10 +202,13 @@ public static partial class Pdf417Code {
     /// Attempts to decode a PDF417 symbol from a PNG stream with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
-        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var png)) { text = string.Empty; return false; }
-        return TryDecodePng(png, options, cancellationToken, out text);
+        return DecodeResultHelpers.TryDecodeBinaryStream(
+            stream,
+            options,
+            cancellationToken,
+            static (byte[] png, ImageDecodeOptions? opts, CancellationToken token, out string decoded)
+                => TryDecodePng(png, opts, token, out decoded),
+            out text);
     }
 
     /// <summary>
@@ -226,10 +229,15 @@ public static partial class Pdf417Code {
     /// Attempts to decode a PDF417 symbol from a PNG stream with image decode options, cancellation, and diagnostics.
     /// </summary>
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var png)) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureInvalid }; return false; }
-        return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
+        return DecodeResultHelpers.TryDecodeBinaryStreamWithDiagnostics(
+            stream,
+            options,
+            cancellationToken,
+            FailureInvalid,
+            FailureCancelled,
+            TryDecodePngCore,
+            out text,
+            out diagnostics);
     }
 
     /// <summary>
@@ -410,9 +418,7 @@ public static partial class Pdf417Code {
     /// Attempts to decode all PDF417 symbols from an image stream with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (!DecodeResultHelpers.TryReadImageBytes(stream, options, cancellationToken, out var data, out _)) { texts = Array.Empty<string>(); return false; }
-        return TryDecodeAllImageCore(data, options, cancellationToken, out texts);
+        return DecodeResultHelpers.TryDecodeAllImageStream(stream, options, cancellationToken, TryDecodeAllImageCore, out texts);
     }
 
     /// <summary>
@@ -467,13 +473,15 @@ public static partial class Pdf417Code {
     /// Attempts to decode a PDF417 symbol from an image stream with image decode options, cancellation, and diagnostics.
     /// </summary>
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (!DecodeResultHelpers.TryReadImageBytes(stream, options, cancellationToken, out var data, out var cancelled)) {
-            text = string.Empty;
-            diagnostics = new Pdf417DecodeDiagnostics { Failure = cancelled ? FailureCancelled : FailureInvalid };
-            return false;
-        }
-        return TryDecodeImageCore(data, options, cancellationToken, out text, out diagnostics);
+        return DecodeResultHelpers.TryDecodeImageStreamWithDiagnostics(
+            stream,
+            options,
+            cancellationToken,
+            FailureInvalid,
+            FailureCancelled,
+            TryDecodeImageCore,
+            out text,
+            out diagnostics);
     }
 
     /// <summary>

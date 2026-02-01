@@ -12,6 +12,9 @@ internal static class DecodeResultHelpers {
     public delegate bool PixelDecodeString(byte[] rgba, int width, int height, CancellationToken token, out string text);
     public delegate bool PixelDecodeWithDiagnostics<TDiag>(byte[] rgba, int width, int height, CancellationToken token, out string text, out TDiag diagnostics);
     public delegate bool PixelDecodeWithStride(byte[] rgba, int width, int height, int stride, CancellationToken token, out string text);
+    public delegate bool TryDecodeBytes(byte[] data, ImageDecodeOptions? options, CancellationToken token, out string text);
+    public delegate bool TryDecodeBytesWithDiagnostics<TDiag>(byte[] data, ImageDecodeOptions? options, CancellationToken token, out string text, out TDiag diagnostics);
+    public delegate bool TryDecodeAllBytes(byte[] data, ImageDecodeOptions? options, CancellationToken token, out string[] texts);
     private delegate bool TryGetRgba(CancellationToken token, out byte[] rgba, out int width, out int height, out string? failure);
 
     internal const string FailureUnsupportedImageFormat = "Unsupported image format.";
@@ -169,6 +172,75 @@ internal static class DecodeResultHelpers {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
         }
+    }
+
+    public static bool TryDecodeBinaryStream(
+        Stream stream,
+        ImageDecodeOptions? options,
+        CancellationToken cancellationToken,
+        TryDecodeBytes decode,
+        out string text) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
+        if (!TryReadBinary(stream, options, out var data)) { text = string.Empty; return false; }
+        return decode(data, options, cancellationToken, out text);
+    }
+
+    public static bool TryDecodeBinaryStreamWithDiagnostics<TDiag>(
+        Stream stream,
+        ImageDecodeOptions? options,
+        CancellationToken cancellationToken,
+        string failureInvalid,
+        string failureCancelled,
+        TryDecodeBytesWithDiagnostics<TDiag> decode,
+        out string text,
+        out TDiag diagnostics)
+        where TDiag : class, IDecodeDiagnostics, new() {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (cancellationToken.IsCancellationRequested) {
+            text = string.Empty;
+            diagnostics = new TDiag();
+            diagnostics.SetFailure(failureCancelled);
+            return false;
+        }
+        if (!TryReadBinary(stream, options, out var data)) {
+            text = string.Empty;
+            diagnostics = new TDiag();
+            diagnostics.SetFailure(failureInvalid);
+            return false;
+        }
+        return decode(data, options, cancellationToken, out text, out diagnostics);
+    }
+
+    public static bool TryDecodeImageStreamWithDiagnostics<TDiag>(
+        Stream stream,
+        ImageDecodeOptions? options,
+        CancellationToken cancellationToken,
+        string failureInvalid,
+        string failureCancelled,
+        TryDecodeBytesWithDiagnostics<TDiag> decode,
+        out string text,
+        out TDiag diagnostics)
+        where TDiag : class, IDecodeDiagnostics, new() {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (!TryReadImageBytes(stream, options, cancellationToken, out var data, out var cancelled)) {
+            text = string.Empty;
+            diagnostics = new TDiag();
+            diagnostics.SetFailure(cancelled ? failureCancelled : failureInvalid);
+            return false;
+        }
+        return decode(data, options, cancellationToken, out text, out diagnostics);
+    }
+
+    public static bool TryDecodeAllImageStream(
+        Stream stream,
+        ImageDecodeOptions? options,
+        CancellationToken cancellationToken,
+        TryDecodeAllBytes decode,
+        out string[] texts) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        if (!TryReadImageBytes(stream, options, cancellationToken, out var data, out _)) { texts = Array.Empty<string>(); return false; }
+        return decode(data, options, cancellationToken, out texts);
     }
 
     private static bool TryDecodeWithDiagnosticsCore<TDiag>(
