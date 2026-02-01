@@ -9,6 +9,9 @@ namespace CodeGlyphX.Rendering.Png;
 
 internal static class PngDecoder {
     private static readonly byte[] Signature = { 137, 80, 78, 71, 13, 10, 26, 10 };
+    private const string PngPayloadLimitMessage = "PNG payload exceeds size limits.";
+    private const string PngIdatLimitMessage = "PNG IDAT payload exceeds size limits.";
+    private const string PngDimensionsLimitMessage = "PNG dimensions exceed size limits.";
 
     public static byte[] DecodeRgba32(byte[] png, out int width, out int height) {
         if (png is null) throw new ArgumentNullException(nameof(png));
@@ -19,7 +22,7 @@ internal static class PngDecoder {
         if (png is null) throw new ArgumentNullException(nameof(png));
         if (offset < 0 || length < 0 || offset + length > png.Length) throw new ArgumentOutOfRangeException(nameof(length));
         if (length < Signature.Length) throw new FormatException("Invalid PNG signature.");
-        DecodeGuards.EnsurePayloadWithinLimits(length, "PNG payload exceeds size limits.");
+        DecodeGuards.EnsurePayloadWithinLimits(length, PngPayloadLimitMessage);
 
         for (var i = 0; i < Signature.Length; i++) {
             if (png[offset + i] != Signature[i]) throw new FormatException("Invalid PNG signature.");
@@ -80,7 +83,7 @@ internal static class PngDecoder {
             } else if (MatchType(png, typeOffset, "IDAT")) {
                 if (chunkLength > 0) {
                     idatTotal = checked(idatTotal + chunkLength);
-                    DecodeGuards.EnsurePayloadWithinLimits(idatTotal, "PNG IDAT payload exceeds size limits.");
+                    DecodeGuards.EnsurePayloadWithinLimits(idatTotal, PngIdatLimitMessage);
                 }
                 if (idatCount == 0) {
                     singleIdatOffset = dataOffset;
@@ -96,7 +99,7 @@ internal static class PngDecoder {
         }
 
         if (width <= 0 || height <= 0) throw new FormatException("Missing IHDR.");
-        _ = DecodeGuards.EnsurePixelCount(width, height, "PNG dimensions exceed size limits.");
+        _ = DecodeGuards.EnsurePixelCount(width, height, PngDimensionsLimitMessage);
         if (compression != 0 || filter != 0) throw new FormatException("Unsupported PNG compression/filter method.");
         if (interlace != 0 && interlace != 1) throw new FormatException("Unsupported PNG interlace method.");
 
@@ -125,11 +128,11 @@ internal static class PngDecoder {
         }
 
         var rowBytes = bitDepth < 8
-            ? DecodeGuards.EnsureByteCount(((long)width * bitDepth + 7) / 8, "PNG dimensions exceed size limits.")
-            : DecodeGuards.EnsureByteCount((long)width * channels * (bitDepth / 8), "PNG dimensions exceed size limits.");
+            ? DecodeGuards.EnsureByteCount(((long)width * bitDepth + 7) / 8, PngDimensionsLimitMessage)
+            : DecodeGuards.EnsureByteCount((long)width * channels * (bitDepth / 8), PngDimensionsLimitMessage);
         var bytesPerPixel = (bitDepth * channels + 7) / 8;
         var expected = interlace == 0
-            ? DecodeGuards.EnsureByteCount((long)height * (rowBytes + 1), "PNG dimensions exceed size limits.")
+            ? DecodeGuards.EnsureByteCount((long)height * (rowBytes + 1), PngDimensionsLimitMessage)
             : GetAdam7ExpectedSize(width, height, bitDepth, channels);
         var scanlines = ArrayPool<byte>.Shared.Rent(expected);
 
@@ -209,13 +212,13 @@ internal static class PngDecoder {
     }
 
     private static byte[] DecodeNonInterlaced(ReadOnlySpan<byte> scanlines, int width, int height, int rowBytes, int bytesPerPixel) {
-        var raw = new byte[DecodeGuards.EnsureByteCount((long)height * rowBytes, "PNG dimensions exceed size limits.")];
+        var raw = new byte[DecodeGuards.EnsureByteCount((long)height * rowBytes, PngDimensionsLimitMessage)];
         Unfilter(scanlines, raw, rowBytes, height, bytesPerPixel);
         return raw;
     }
 
     private static byte[] DecodeAdam7(ReadOnlySpan<byte> scanlines, int width, int height, int rowBytes, int bitDepth, int channels, int bytesPerPixel) {
-        var raw = new byte[DecodeGuards.EnsureByteCount((long)height * rowBytes, "PNG dimensions exceed size limits.")];
+        var raw = new byte[DecodeGuards.EnsureByteCount((long)height * rowBytes, PngDimensionsLimitMessage)];
         var offset = 0;
         var passes = Adam7Passes;
         for (var i = 0; i < passes.Length; i++) {
@@ -227,14 +230,14 @@ internal static class PngDecoder {
             }
 
             var passRowBytes = bitDepth < 8
-                ? DecodeGuards.EnsureByteCount(((long)passWidth * bitDepth + 7) / 8, "PNG dimensions exceed size limits.")
-                : DecodeGuards.EnsureByteCount((long)passWidth * channels * (bitDepth / 8), "PNG dimensions exceed size limits.");
-            var passExpected = DecodeGuards.EnsureByteCount((long)passHeight * (passRowBytes + 1), "PNG dimensions exceed size limits.");
+                ? DecodeGuards.EnsureByteCount(((long)passWidth * bitDepth + 7) / 8, PngDimensionsLimitMessage)
+                : DecodeGuards.EnsureByteCount((long)passWidth * channels * (bitDepth / 8), PngDimensionsLimitMessage);
+            var passExpected = DecodeGuards.EnsureByteCount((long)passHeight * (passRowBytes + 1), PngDimensionsLimitMessage);
             if (offset + passExpected > scanlines.Length) {
                 throw new FormatException("Invalid Adam7 scanline data.");
             }
 
-            var passRawLength = DecodeGuards.EnsureByteCount((long)passHeight * passRowBytes, "PNG dimensions exceed size limits.");
+            var passRawLength = DecodeGuards.EnsureByteCount((long)passHeight * passRowBytes, PngDimensionsLimitMessage);
             var passRaw = ArrayPool<byte>.Shared.Rent(passRawLength);
             try {
                 Unfilter(scanlines.Slice(offset, passExpected), passRaw, passRowBytes, passHeight, bytesPerPixel);
@@ -287,10 +290,10 @@ internal static class PngDecoder {
                 continue;
             }
             var passRowBytes = bitDepth < 8
-                ? DecodeGuards.EnsureByteCount(((long)passWidth * bitDepth + 7) / 8, "PNG dimensions exceed size limits.")
-                : DecodeGuards.EnsureByteCount((long)passWidth * channels * (bitDepth / 8), "PNG dimensions exceed size limits.");
+                ? DecodeGuards.EnsureByteCount(((long)passWidth * bitDepth + 7) / 8, PngDimensionsLimitMessage)
+                : DecodeGuards.EnsureByteCount((long)passWidth * channels * (bitDepth / 8), PngDimensionsLimitMessage);
             total += (long)passHeight * (passRowBytes + 1);
-            if (total > int.MaxValue) throw new FormatException("PNG dimensions exceed size limits.");
+            if (total > int.MaxValue) throw new FormatException(PngDimensionsLimitMessage);
         }
         return (int)total;
     }
@@ -303,8 +306,8 @@ internal static class PngDecoder {
     private static byte[] ExpandToRgba(byte[] raw, int width, int height, int colorType, int bitDepth, byte[]? palette, byte[]? transparency) {
         if (colorType == 6 && bitDepth == 8 && transparency is null) return raw;
 
-        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "PNG dimensions exceed size limits.");
-        var rgba = new byte[DecodeGuards.EnsureByteCount((long)pixelCount * 4, "PNG dimensions exceed size limits.")];
+        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, PngDimensionsLimitMessage);
+        var rgba = new byte[DecodeGuards.EnsureByteCount((long)pixelCount * 4, PngDimensionsLimitMessage)];
         if (colorType == 2 && bitDepth == 8) {
             var tr = transparency is { Length: >= 6 } ? ReadUInt16BE(transparency, 0) >> 8 : -1;
             var tg = transparency is { Length: >= 6 } ? ReadUInt16BE(transparency, 2) >> 8 : -1;
@@ -405,7 +408,7 @@ internal static class PngDecoder {
         }
 
         if (colorType == 0 && bitDepth < 8) {
-            var rowBytes = DecodeGuards.EnsureByteCount(((long)width * bitDepth + 7) / 8, "PNG dimensions exceed size limits.");
+            var rowBytes = DecodeGuards.EnsureByteCount(((long)width * bitDepth + 7) / 8, PngDimensionsLimitMessage);
             var max = (1 << bitDepth) - 1;
             var transparent = transparency is { Length: >= 2 }
                 ? ReadUInt16BE(transparency, 0) >> (16 - bitDepth)
@@ -447,7 +450,7 @@ internal static class PngDecoder {
                 return rgba;
             }
             if (bitDepth < 8) {
-                var rowBytes = DecodeGuards.EnsureByteCount(((long)width * bitDepth + 7) / 8, "PNG dimensions exceed size limits.");
+                var rowBytes = DecodeGuards.EnsureByteCount(((long)width * bitDepth + 7) / 8, PngDimensionsLimitMessage);
                 for (var y = 0; y < height; y++) {
                     var rowStart = y * rowBytes;
                     for (var x = 0; x < width; x++) {
