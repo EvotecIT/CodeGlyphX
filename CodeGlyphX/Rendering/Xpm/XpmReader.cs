@@ -34,8 +34,8 @@ public static class XpmReader {
         if (colors > MaxColors || charsPerPixel > MaxCharsPerPixel) throw new FormatException("XPM color table is too large.");
         _ = DecodeGuards.EnsurePixelCount(width, height, "XPM dimensions exceed size limits.");
 
-        var requiredStrings = 1L + colors + height;
-        if (requiredStrings > int.MaxValue || strings.Count < requiredStrings) throw new FormatException("Truncated XPM data.");
+        var requiredStrings = 1 + colors + height;
+        if (strings.Count < requiredStrings) throw new FormatException("Truncated XPM data.");
 
         var palette = new Dictionary<string, Rgba32>(StringComparer.Ordinal);
         for (var i = 0; i < colors; i++) {

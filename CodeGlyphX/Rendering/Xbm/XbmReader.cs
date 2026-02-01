@@ -27,7 +27,7 @@ public static class XbmReader {
         var bytes = ExtractByteArray(text);
         var rowBytes = (width + 7) / 8;
         var expected = (long)rowBytes * height;
-        if (expected > int.MaxValue || bytes.Count < expected) throw new FormatException("Truncated XBM data.");
+        if (bytes.Count < expected) throw new FormatException("Truncated XBM data.");
 
         var rgba = DecodeGuards.AllocateRgba32(width, height, "XBM dimensions exceed size limits.");
         for (var y = 0; y < height; y++) {
