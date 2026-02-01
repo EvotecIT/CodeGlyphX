@@ -116,6 +116,13 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes an image to an RGBA buffer (auto-detected) using safe defaults for untrusted inputs.
+    /// </summary>
+    public static byte[] DecodeRgba32Safe(byte[] data, out int width, out int height) {
+        return DecodeRgba32(data, ImageDecodeOptions.Safe(), out width, out height);
+    }
+
+    /// <summary>
     /// Decodes a multipage image to an RGBA buffer (auto-detected).
     /// </summary>
     public static byte[] DecodeRgba32(byte[] data, int pageIndex, out int width, out int height) {
@@ -508,6 +515,13 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes an image stream to an RGBA buffer (auto-detected) using safe defaults for untrusted inputs.
+    /// </summary>
+    public static byte[] DecodeRgba32Safe(Stream stream, out int width, out int height) {
+        return DecodeRgba32(stream, ImageDecodeOptions.Safe(), out width, out height);
+    }
+
+    /// <summary>
     /// Decodes a multipage image stream to an RGBA buffer (auto-detected).
     /// </summary>
     public static byte[] DecodeRgba32(Stream stream, int pageIndex, out int width, out int height) {
@@ -594,6 +608,13 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Attempts to decode an image to an RGBA buffer (auto-detected) using safe defaults for untrusted inputs.
+    /// </summary>
+    public static bool TryDecodeRgba32Safe(byte[] data, out byte[] rgba, out int width, out int height) {
+        return TryDecodeRgba32(data, ImageDecodeOptions.Safe(), out rgba, out width, out height);
+    }
+
+    /// <summary>
     /// Attempts to decode an image stream to an RGBA buffer (auto-detected).
     /// </summary>
     public static bool TryDecodeRgba32(Stream stream, out byte[] rgba, out int width, out int height) {
@@ -623,6 +644,13 @@ public static partial class ImageReader {
             height = 0;
             return false;
         }
+    }
+
+    /// <summary>
+    /// Attempts to decode an image stream to an RGBA buffer (auto-detected) using safe defaults for untrusted inputs.
+    /// </summary>
+    public static bool TryDecodeRgba32Safe(Stream stream, out byte[] rgba, out int width, out int height) {
+        return TryDecodeRgba32(stream, ImageDecodeOptions.Safe(), out rgba, out width, out height);
     }
 
     /// <summary>

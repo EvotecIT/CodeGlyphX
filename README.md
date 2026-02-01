@@ -51,6 +51,8 @@ var safe = ImageDecodeOptions.UltraSafe(maxBytes: 8 * 1024 * 1024, maxPixels: 8_
 var rgba = ImageReader.DecodeRgba32(bytes, safe, out var width, out var height);
 ```
 
+Convenience helpers: `ImageReader.DecodeRgba32Safe` / `TryDecodeRgba32Safe` apply safe defaults for untrusted inputs.
+
 See `SECURITY.md` for reporting guidance and `FUZZING.md` for the decoder fuzzing harness.
 
 ## Roadmap & Website
