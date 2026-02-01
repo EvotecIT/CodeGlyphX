@@ -11,7 +11,9 @@ public sealed class ImageReaderHostileTests {
         var png = BuildPngHeader(width: 100_000, height: 100_000);
         var options = new ImageDecodeOptions { MaxPixels = 10_000_000 };
 
-        Assert.Throws<FormatException>(() => ImageReader.DecodeRgba32(png, options, out _, out _));
+        var ex = Assert.Throws<FormatException>(() => ImageReader.DecodeRgba32(png, options, out _, out _));
+        Assert.Contains("got 100000x100000", ex.Message);
+        Assert.Contains("max 10,000,000 px", ex.Message);
     }
 
     [Fact]
@@ -27,7 +29,9 @@ public sealed class ImageReaderHostileTests {
         var data = new byte[32];
         var options = new ImageDecodeOptions { MaxBytes = 8 };
 
-        Assert.Throws<FormatException>(() => ImageReader.DecodeRgba32(data, options, out _, out _));
+        var ex = Assert.Throws<FormatException>(() => ImageReader.DecodeRgba32(data, options, out _, out _));
+        Assert.Contains("got 32 B", ex.Message);
+        Assert.Contains("max 8 B", ex.Message);
     }
 
 

@@ -32,4 +32,21 @@ public sealed class RenderIOTests {
         Assert.True(File.Exists(path));
         Assert.Equal("hello", File.ReadAllText(path));
     }
+
+    [Fact]
+    public void ReadBinary_Rejects_AboveMaxBytes() {
+        var dir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(dir);
+        var path = Path.Combine(dir, "data.bin");
+        File.WriteAllBytes(path, new byte[16]);
+
+        try {
+            var ex = Assert.Throws<FormatException>(() => RenderIO.ReadBinary(path, maxBytes: 8));
+            Assert.Contains("got 16 B", ex.Message);
+            Assert.Contains("max 8 B", ex.Message);
+        } finally {
+            if (File.Exists(path)) File.Delete(path);
+            if (Directory.Exists(dir)) Directory.Delete(dir, recursive: true);
+        }
+    }
 }
