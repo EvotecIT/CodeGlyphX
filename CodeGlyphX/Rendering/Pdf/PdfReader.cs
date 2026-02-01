@@ -18,6 +18,7 @@ public static class PdfReader {
     private static readonly byte[] InlineImageToken = { (byte)'B', (byte)'I' };
     private static readonly byte[] InlineImageDataToken = { (byte)'I', (byte)'D' };
     private static readonly byte[] InlineImageEndToken = { (byte)'E', (byte)'I' };
+    private const string PdfImageLimitMessage = "PDF image exceeds size limits.";
 
     private enum PdfColorSpaceKind {
         Unknown = 0,
@@ -666,7 +667,7 @@ public static class PdfReader {
                 ranges[c * 2 + 1] = ScaleMaskValue(max, maxValue);
             }
 
-            var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "PDF image exceeds size limits.");
+            var pixelCount = DecodeGuards.EnsurePixelCount(width, height, PdfImageLimitMessage);
             alpha = new byte[pixelCount];
             for (var i = 0; i < pixelCount; i++) {
                 var baseIndex = i * colors;
@@ -698,7 +699,7 @@ public static class PdfReader {
             rawRanges[c * 2 + 1] = max;
         }
 
-        var count = DecodeGuards.EnsurePixelCount(width, height, "PDF image exceeds size limits.");
+        var count = DecodeGuards.EnsurePixelCount(width, height, PdfImageLimitMessage);
         alpha = new byte[count];
         for (var i = 0; i < count; i++) {
             var baseIndex = i * colors;
@@ -1857,47 +1858,24 @@ public static class PdfReader {
     private static bool TryInferColorsFromLength(int length, int width, int height, int predictor, out int colors) {
         colors = 0;
         if (width <= 0 || height <= 0) return false;
+
         if (predictor >= 10) {
-            var rgb = ((long)width * 3 + 1) * height;
-            if (rgb > int.MaxValue) return false;
-            if (length == rgb) {
-                colors = 3;
-                return true;
-            }
-            var cmyk = ((long)width * 4 + 1) * height;
-            if (cmyk > int.MaxValue) return false;
-            if (length == cmyk) {
-                colors = 4;
-                return true;
-            }
-            var gray = ((long)width + 1) * height;
-            if (gray > int.MaxValue) return false;
-            if (length == gray) {
-                colors = 1;
-                return true;
-            }
-            return false;
+            if (TryMatchLength(length, ((long)width * 3 + 1) * height, 3, out colors)) return true;
+            if (TryMatchLength(length, ((long)width * 4 + 1) * height, 4, out colors)) return true;
+            return TryMatchLength(length, ((long)width + 1) * height, 1, out colors);
         }
 
-        var rgbRaw = (long)width * height * 3;
-        if (rgbRaw > int.MaxValue) return false;
-        if (length == rgbRaw) {
-            colors = 3;
-            return true;
-        }
-        var cmykRaw = (long)width * height * 4;
-        if (cmykRaw > int.MaxValue) return false;
-        if (length == cmykRaw) {
-            colors = 4;
-            return true;
-        }
-        var grayRaw = (long)width * height;
-        if (grayRaw > int.MaxValue) return false;
-        if (length == grayRaw) {
-            colors = 1;
-            return true;
-        }
-        return false;
+        if (TryMatchLength(length, (long)width * height * 3, 3, out colors)) return true;
+        if (TryMatchLength(length, (long)width * height * 4, 4, out colors)) return true;
+        return TryMatchLength(length, (long)width * height, 1, out colors);
+    }
+
+    private static bool TryMatchLength(int length, long expected, int componentCount, out int colors) {
+        colors = 0;
+        if (expected > int.MaxValue) return false;
+        if (length != expected) return false;
+        colors = componentCount;
+        return true;
     }
 
     private static byte[] DecompressFlate(ReadOnlySpan<byte> src, int expected) {
@@ -1989,9 +1967,9 @@ public static class PdfReader {
     }
 
     private static bool TryApplyPngPredictor(byte[] data, int width, int height, int colors, out byte[] output) {
-        var outputLength = DecodeGuards.EnsureByteCount((long)width * height * colors, "PDF image exceeds size limits.");
+        var outputLength = DecodeGuards.EnsureByteCount((long)width * height * colors, PdfImageLimitMessage);
         output = new byte[outputLength];
-        var rowSize = DecodeGuards.EnsureByteCount((long)width * colors, "PDF image exceeds size limits.");
+        var rowSize = DecodeGuards.EnsureByteCount((long)width * colors, PdfImageLimitMessage);
         var srcOffset = 0;
         for (var y = 0; y < height; y++) {
             if (srcOffset >= data.Length) return false;
@@ -2207,47 +2185,79 @@ public static class PdfReader {
         if (!DecodeGuards.TryEnsurePixelCount(info.Width, info.Height, out var pixelCount)) return false;
         if (indices.Length < pixelCount) return false;
 
-        var baseComponents = info.IndexedBase switch {
-            PdfColorSpaceKind.DeviceGray => 1,
-            PdfColorSpaceKind.DeviceRGB => 3,
-            PdfColorSpaceKind.DeviceCMYK => 4,
-            _ => 0
-        };
-        if (baseComponents == 0) return false;
+        if (!TryGetIndexedBaseComponents(info.IndexedBase, out var baseComponents)) return false;
 
         var entryCount = info.IndexedHighVal + 1;
         var lookupBytes = DecodeGuards.EnsureByteCount((long)entryCount * baseComponents, "PDF indexed lookup exceeds size limits.");
         if (info.IndexedLookup.Length < lookupBytes) return false;
 
-        rgba = DecodeGuards.AllocateRgba32(info.Width, info.Height, "PDF image exceeds size limits.");
-        for (var i = 0; i < pixelCount; i++) {
-            var index = indices[i];
-            if (index > info.IndexedHighVal) index = (byte)info.IndexedHighVal;
-            var lookupOffset = index * baseComponents;
-            var dst = i * 4;
-            if (baseComponents == 1) {
-                var v = info.IndexedLookup[lookupOffset];
-                rgba[dst + 0] = v;
-                rgba[dst + 1] = v;
-                rgba[dst + 2] = v;
-                rgba[dst + 3] = 255;
-            } else if (baseComponents == 3) {
-                rgba[dst + 0] = info.IndexedLookup[lookupOffset + 0];
-                rgba[dst + 1] = info.IndexedLookup[lookupOffset + 1];
-                rgba[dst + 2] = info.IndexedLookup[lookupOffset + 2];
-                rgba[dst + 3] = 255;
-            } else {
-                var c = info.IndexedLookup[lookupOffset + 0];
-                var m = info.IndexedLookup[lookupOffset + 1];
-                var y = info.IndexedLookup[lookupOffset + 2];
-                var k = info.IndexedLookup[lookupOffset + 3];
-                rgba[dst + 0] = (byte)(255 - Math.Min(255, c + k));
-                rgba[dst + 1] = (byte)(255 - Math.Min(255, m + k));
-                rgba[dst + 2] = (byte)(255 - Math.Min(255, y + k));
-                rgba[dst + 3] = 255;
-            }
+        rgba = DecodeGuards.AllocateRgba32(info.Width, info.Height, PdfImageLimitMessage);
+        switch (baseComponents) {
+            case 1:
+                ExpandIndexedGray(info, indices, rgba, pixelCount);
+                break;
+            case 3:
+                ExpandIndexedRgb(info, indices, rgba, pixelCount);
+                break;
+            default:
+                ExpandIndexedCmyk(info, indices, rgba, pixelCount);
+                break;
         }
         return true;
+    }
+
+    private static bool TryGetIndexedBaseComponents(PdfColorSpaceKind kind, out int components) {
+        components = kind switch {
+            PdfColorSpaceKind.DeviceGray => 1,
+            PdfColorSpaceKind.DeviceRGB => 3,
+            PdfColorSpaceKind.DeviceCMYK => 4,
+            _ => 0
+        };
+        return components != 0;
+    }
+
+    private static void ExpandIndexedGray(PdfImageInfo info, byte[] indices, byte[] rgba, int pixelCount) {
+        for (var i = 0; i < pixelCount; i++) {
+            var index = ClampIndex(indices[i], info.IndexedHighVal);
+            var v = info.IndexedLookup![index];
+            var dst = i * 4;
+            rgba[dst + 0] = v;
+            rgba[dst + 1] = v;
+            rgba[dst + 2] = v;
+            rgba[dst + 3] = 255;
+        }
+    }
+
+    private static void ExpandIndexedRgb(PdfImageInfo info, byte[] indices, byte[] rgba, int pixelCount) {
+        for (var i = 0; i < pixelCount; i++) {
+            var index = ClampIndex(indices[i], info.IndexedHighVal);
+            var lookupOffset = index * 3;
+            var dst = i * 4;
+            rgba[dst + 0] = info.IndexedLookup![lookupOffset + 0];
+            rgba[dst + 1] = info.IndexedLookup![lookupOffset + 1];
+            rgba[dst + 2] = info.IndexedLookup![lookupOffset + 2];
+            rgba[dst + 3] = 255;
+        }
+    }
+
+    private static void ExpandIndexedCmyk(PdfImageInfo info, byte[] indices, byte[] rgba, int pixelCount) {
+        for (var i = 0; i < pixelCount; i++) {
+            var index = ClampIndex(indices[i], info.IndexedHighVal);
+            var lookupOffset = index * 4;
+            var c = info.IndexedLookup![lookupOffset + 0];
+            var m = info.IndexedLookup![lookupOffset + 1];
+            var y = info.IndexedLookup![lookupOffset + 2];
+            var k = info.IndexedLookup![lookupOffset + 3];
+            var dst = i * 4;
+            rgba[dst + 0] = (byte)(255 - Math.Min(255, c + k));
+            rgba[dst + 1] = (byte)(255 - Math.Min(255, m + k));
+            rgba[dst + 2] = (byte)(255 - Math.Min(255, y + k));
+            rgba[dst + 3] = 255;
+        }
+    }
+
+    private static int ClampIndex(byte index, int max) {
+        return index > max ? max : index;
     }
 
     private static bool TryDecodeAscii85(ReadOnlySpan<byte> src, out byte[] decoded) {
