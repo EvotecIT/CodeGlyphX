@@ -31,7 +31,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeAuto(Stream stream, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var image = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, options?.Image, out var image)) { decoded = null!; return false; }
         return TryDecodeAuto(image, out decoded, options);
     }
 
@@ -40,7 +40,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeAllAuto(Stream stream, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var image = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, options?.Image, out var image)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
         return TryDecodeAllAuto(image, out decoded, options);
     }
 
@@ -49,7 +49,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeAutoFile(string path, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options = null) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        var image = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, options?.Image, out var image)) { decoded = null!; return false; }
         return TryDecodeAuto(image, out decoded, options);
     }
 
@@ -58,7 +58,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeAllAutoFile(string path, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options = null) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        var image = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, options?.Image, out var image)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
         return TryDecodeAllAuto(image, out decoded, options);
     }
 

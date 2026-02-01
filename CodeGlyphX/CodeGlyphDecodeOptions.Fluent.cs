@@ -117,6 +117,22 @@ public sealed partial class CodeGlyphDecodeOptions {
     }
 
     /// <summary>
+    /// Sets the maximum pixel count allowed for non-QR image decoding.
+    /// </summary>
+    public CodeGlyphDecodeOptions WithImageMaxPixels(long maxPixels) {
+        EnsureImage().MaxPixels = maxPixels;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the maximum input size in bytes for non-QR image decoding.
+    /// </summary>
+    public CodeGlyphDecodeOptions WithImageMaxBytes(int maxBytes) {
+        EnsureImage().MaxBytes = maxBytes;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the QR profile for this decode.
     /// </summary>
     public CodeGlyphDecodeOptions WithQrProfile(QrDecodeProfile profile) {

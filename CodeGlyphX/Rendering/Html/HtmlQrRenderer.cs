@@ -20,6 +20,9 @@ public static class HtmlQrRenderer {
         if (opts.ModuleSize <= 0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize));
         if (opts.QuietZone < 0) throw new ArgumentOutOfRangeException(nameof(opts.QuietZone));
 
+        var darkColor = RenderSanitizer.SafeCssColor(opts.DarkColor, RenderDefaults.QrForegroundCss);
+        var lightColor = RenderSanitizer.SafeCssColor(opts.LightColor, RenderDefaults.QrBackgroundCss);
+
         var size = modules.Width;
         var outSize = size + opts.QuietZone * 2;
         var px = outSize * opts.ModuleSize;
@@ -27,7 +30,7 @@ public static class HtmlQrRenderer {
         var sb = new StringBuilder(outSize * outSize * 4);
         sb.Append("<table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;");
         if (!opts.EmailSafeTable) {
-            sb.Append("background:").Append(opts.LightColor).Append(';');
+            sb.Append("background:").Append(lightColor).Append(';');
         }
         sb.Append("\">");
 
@@ -43,12 +46,12 @@ public static class HtmlQrRenderer {
                 if (opts.EmailSafeTable) {
                     sb.Append("<td colspan=\"").Append(run).Append("\" width=\"").Append(run * opts.ModuleSize)
                         .Append("\" height=\"").Append(opts.ModuleSize).Append("\" bgcolor=\"")
-                        .Append(isDark ? opts.DarkColor : opts.LightColor)
+                        .Append(isDark ? darkColor : lightColor)
                         .Append("\" style=\"line-height:0;font-size:0;\">&nbsp;</td>");
                 } else {
                     sb.Append("<td colspan=\"").Append(run).Append("\" style=\"width:").Append(run * opts.ModuleSize)
                         .Append("px;height:").Append(opts.ModuleSize).Append("px;background:")
-                        .Append(isDark ? opts.DarkColor : opts.LightColor)
+                        .Append(isDark ? darkColor : lightColor)
                         .Append(";\"></td>");
                 }
 
@@ -72,8 +75,8 @@ public static class HtmlQrRenderer {
         var svg = new CodeGlyphX.Rendering.Svg.QrSvgRenderOptions {
             ModuleSize = opts.ModuleSize,
             QuietZone = opts.QuietZone,
-            DarkColor = opts.DarkColor,
-            LightColor = opts.LightColor,
+            DarkColor = darkColor,
+            LightColor = lightColor,
             Logo = opts.Logo,
             ModuleShape = opts.ModuleShape,
             ModuleScale = opts.ModuleScale,

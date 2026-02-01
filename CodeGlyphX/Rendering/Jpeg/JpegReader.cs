@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Jpeg;
 
@@ -88,6 +89,7 @@ public static partial class JpegReader {
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height, JpegDecodeOptions options) {
         if (!IsJpeg(data)) throw new FormatException("Invalid JPEG signature.");
+        DecodeGuards.EnsurePayloadWithinLimits(data.Length, "JPEG payload exceeds size limits.");
 
         var quantTables = new int[4][];
         var dcTables = new HuffmanTable[4];

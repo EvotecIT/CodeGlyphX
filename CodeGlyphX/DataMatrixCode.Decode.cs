@@ -188,7 +188,7 @@ public static partial class DataMatrixCode {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
-        var png = RenderIO.ReadBinary(path);
+        if (!DecodeResultHelpers.TryReadBinary(path, options, out var png)) { text = string.Empty; return false; }
         return TryDecodePng(png, options, cancellationToken, out text);
     }
 
@@ -212,7 +212,11 @@ public static partial class DataMatrixCode {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new DataMatrixDecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        var png = RenderIO.ReadBinary(path);
+        if (!DecodeResultHelpers.TryReadBinary(path, options, out var png)) {
+            text = string.Empty;
+            diagnostics = new DataMatrixDecodeDiagnostics { Failure = "Invalid input." };
+            return false;
+        }
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
 
@@ -236,7 +240,7 @@ public static partial class DataMatrixCode {
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
-        var png = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var png)) { text = string.Empty; return false; }
         return TryDecodePng(png, options, cancellationToken, out text);
     }
 
@@ -260,7 +264,11 @@ public static partial class DataMatrixCode {
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new DataMatrixDecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        var png = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var png)) {
+            text = string.Empty;
+            diagnostics = new DataMatrixDecodeDiagnostics { Failure = "Invalid input." };
+            return false;
+        }
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
 
@@ -442,7 +450,7 @@ public static partial class DataMatrixCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            var data = RenderIO.ReadBinary(stream);
+            if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) { text = string.Empty; return false; }
             if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
             return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
@@ -472,7 +480,11 @@ public static partial class DataMatrixCode {
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new DataMatrixDecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        var data = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) {
+            text = string.Empty;
+            diagnostics = new DataMatrixDecodeDiagnostics { Failure = "Invalid input." };
+            return false;
+        }
         return TryDecodeImageCore(data, options, cancellationToken, out text, out diagnostics);
     }
 
@@ -526,7 +538,9 @@ public static partial class DataMatrixCode {
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
             return DecodeImageResult(buffer.AsSpan(), options, cancellationToken);
         }
-        var data = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) {
+            return new DecodeResult<string>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
+        }
         return DecodeImageResult(data, options, cancellationToken);
     }
 
@@ -578,7 +592,7 @@ public static partial class DataMatrixCode {
     public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { texts = Array.Empty<string>(); return false; }
-        var data = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) { texts = Array.Empty<string>(); return false; }
         return TryDecodeAllImageCore(data, options, cancellationToken, out texts);
     }
 

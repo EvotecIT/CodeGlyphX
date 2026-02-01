@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Pam;
 
@@ -12,6 +13,7 @@ public static class PamReader {
     /// Decodes a PAM image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> pam, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(pam.Length, "PAM payload exceeds size limits.");
         if (pam.Length < 2) throw new FormatException("Invalid PAM data.");
         if (pam[0] != (byte)'P' || pam[1] != (byte)'7') throw new FormatException("Invalid PAM signature.");
 
@@ -61,10 +63,10 @@ public static class PamReader {
         if (depth is not (1 or 2 or 3 or 4)) throw new FormatException("Unsupported PAM depth.");
         if (tupleType is null) throw new FormatException("Missing PAM tuple type.");
 
-        var pixelCount = (long)width * height;
-        var rgba = new byte[(int)pixelCount * 4];
+        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "PAM dimensions exceed size limits.");
+        var rgba = DecodeGuards.AllocateRgba32(width, height, "PAM dimensions exceed size limits.");
         var bytesPerSample = maxVal > 255 ? 2 : 1;
-        var required = (long)pos + pixelCount * depth * bytesPerSample;
+        var required = (long)pos + (long)pixelCount * depth * bytesPerSample;
         if (required > pam.Length) throw new FormatException("Truncated PAM data.");
 
         var src = pos;

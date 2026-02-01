@@ -17,6 +17,9 @@ public static class MatrixSvgRenderer {
         if (opts.ModuleSize <= 0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize));
         if (opts.QuietZone < 0) throw new ArgumentOutOfRangeException(nameof(opts.QuietZone));
 
+        var darkColor = RenderSanitizer.SafeCssColor(opts.DarkColor, RenderDefaults.QrForegroundCss);
+        var lightColor = RenderSanitizer.SafeCssColor(opts.LightColor, RenderDefaults.QrBackgroundCss);
+
         var outWidth = modules.Width + opts.QuietZone * 2;
         var outHeight = modules.Height + opts.QuietZone * 2;
         var pxWidth = outWidth * opts.ModuleSize;
@@ -28,9 +31,9 @@ public static class MatrixSvgRenderer {
             .Append("\" viewBox=\"0 0 ").Append(outWidth).Append(' ').Append(outHeight)
             .Append("\" shape-rendering=\"crispEdges\">");
 
-        sb.Append("<rect width=\"100%\" height=\"100%\" fill=\"").Append(opts.LightColor).Append("\"/>");
+        sb.Append("<rect width=\"100%\" height=\"100%\" fill=\"").Append(lightColor).Append("\"/>");
 
-        sb.Append("<path fill=\"").Append(opts.DarkColor).Append("\" d=\"");
+        sb.Append("<path fill=\"").Append(darkColor).Append("\" d=\"");
         for (var y = 0; y < modules.Height; y++) {
             var outY = y + opts.QuietZone;
             var runStart = -1;

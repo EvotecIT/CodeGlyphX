@@ -409,7 +409,7 @@ public static class QrImageDecoder {
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions: null, out var data)) { decoded = null!; return false; }
         return TryDecodeImageFallback(data, options: null, cancellationToken: default, out decoded, out _);
 #endif
     }
@@ -421,14 +421,14 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
-            var data = RenderIO.ReadBinary(stream);
+            if (!TryReadBinary(stream, imageOptions: null, out var data)) { decoded = null!; info = default; return false; }
             return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out info);
         }
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions: null, out var data)) { decoded = null!; info = default; return false; }
         return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out info);
 #endif
     }
@@ -440,14 +440,14 @@ public static class QrImageDecoder {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
-            var data = RenderIO.ReadBinary(stream);
+            if (!TryReadBinary(stream, imageOptions: null, out var data)) { decoded = null!; return false; }
             return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out _);
         }
         var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions: null, out var data)) { decoded = null!; return false; }
         return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out _);
 #endif
     }
@@ -465,11 +465,11 @@ public static class QrImageDecoder {
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions, out var data)) { decoded = null!; return false; }
         return TryDecodeImageCore(data, imageOptions, options, cancellationToken, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions, out var data)) { decoded = null!; return false; }
         return TryDecodeImageFallback(data, imageOptions, options, cancellationToken, out decoded, out _);
 #endif
     }
@@ -487,11 +487,11 @@ public static class QrImageDecoder {
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? imageOptions, out QrDecoded decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions, out var data)) { decoded = null!; info = default; return false; }
         return TryDecodeImageCore(data, imageOptions, options, cancellationToken, out decoded, out info);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions, out var data)) { decoded = null!; info = default; return false; }
         return TryDecodeImageFallback(data, imageOptions, options, cancellationToken, out decoded, out info);
 #endif
     }
@@ -515,7 +515,9 @@ public static class QrImageDecoder {
     public static DecodeResult<QrDecoded> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? imageOptions = null, QrPixelDecodeOptions? options = null, CancellationToken cancellationToken = default) {
 #if NET8_0_OR_GREATER
         var stopwatch = Stopwatch.StartNew();
-        _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
+        if (!DecodeResultHelpers.TryCheckImageLimits(image, imageOptions, out var info, out var formatKnown, out var limitMessage)) {
+            return new DecodeResult<QrDecoded>(DecodeFailureReason.InvalidInput, info, stopwatch.Elapsed, limitMessage);
+        }
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) {
@@ -587,11 +589,17 @@ public static class QrImageDecoder {
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
             return DecodeImageResult(buffer.AsSpan(), imageOptions, options, cancellationToken);
         }
-        var data = RenderIO.ReadBinary(stream);
+        var maxBytes = imageOptions?.MaxBytes > 0 ? imageOptions.MaxBytes : ImageReader.MaxImageBytes;
+        if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
+            return new DecodeResult<QrDecoded>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
+        }
         return DecodeImageResult(data, imageOptions, options, cancellationToken);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        var maxBytes = imageOptions?.MaxBytes > 0 ? imageOptions.MaxBytes : ImageReader.MaxImageBytes;
+        if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
+            return new DecodeResult<QrDecoded>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
+        }
         return DecodeImageResult(data, imageOptions, options, cancellationToken);
 #endif
     }
@@ -613,7 +621,7 @@ public static class QrImageDecoder {
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions: null, out var data)) { decoded = Array.Empty<QrDecoded>(); return false; }
         return TryDecodeAllImageFallback(data, imageOptions: null, options: null, cancellationToken: default, out decoded);
 #endif
     }
@@ -628,7 +636,7 @@ public static class QrImageDecoder {
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions: null, out var data)) { decoded = Array.Empty<QrDecoded>(); return false; }
         return TryDecodeAllImageFallback(data, imageOptions: null, options, cancellationToken: default, out decoded);
 #endif
     }
@@ -646,11 +654,11 @@ public static class QrImageDecoder {
     public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions, out var data)) { decoded = Array.Empty<QrDecoded>(); return false; }
         return TryDecodeAllImageCore(data, imageOptions, options, cancellationToken, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions, out var data)) { decoded = Array.Empty<QrDecoded>(); return false; }
         return TryDecodeAllImageFallback(data, imageOptions, options, cancellationToken, out decoded);
 #endif
     }
@@ -848,6 +856,11 @@ public static class QrImageDecoder {
     private static void Consider(int value, ref int budgetMs) {
         if (value <= 0) return;
         budgetMs = budgetMs <= 0 ? value : Math.Min(budgetMs, value);
+    }
+
+    private static bool TryReadBinary(Stream stream, ImageDecodeOptions? imageOptions, out byte[] data) {
+        var maxBytes = imageOptions?.MaxBytes > 0 ? imageOptions.MaxBytes : ImageReader.MaxImageBytes;
+        return RenderIO.TryReadBinary(stream, maxBytes, out data);
     }
 
     private static bool TryDecodeImageFallback(byte[] image, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
