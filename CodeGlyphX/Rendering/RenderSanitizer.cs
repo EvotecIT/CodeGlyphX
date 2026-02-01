@@ -22,7 +22,8 @@ internal static class RenderSanitizer {
             }
         }
         var result = sb.ToString().Trim();
-        return result.Length == 0 ? fallback : result;
+        if (result.Length == 0) return fallback;
+        return result;
     }
 
     private static bool IsHexColor(string value) {

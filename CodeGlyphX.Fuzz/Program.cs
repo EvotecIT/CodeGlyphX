@@ -44,15 +44,13 @@ public static class Program {
     private static void Try(Action action) {
         try {
             action();
-        } catch (FormatException ex) {
-            LogExpectedException(ex);
-        } catch (ArgumentException ex) {
-            LogExpectedException(ex);
-        } catch (InvalidOperationException ex) {
-            LogExpectedException(ex);
-        } catch (IOException ex) {
+        } catch (Exception ex) when (IsExpectedException(ex)) {
             LogExpectedException(ex);
         }
+    }
+
+    private static bool IsExpectedException(Exception ex) {
+        return ex is FormatException || ex is ArgumentException || ex is InvalidOperationException || ex is IOException;
     }
 
     private static void LogExpectedException(Exception ex) {
