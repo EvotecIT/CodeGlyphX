@@ -7,6 +7,8 @@ namespace CodeGlyphX.Rendering.Webp;
 /// Managed WebP writer (VP8L lossless subset + VP8 lossy intra + animation container).
 /// </summary>
 public static class WebpWriter {
+    private const string WebpOutputLimitMessage = "WebP output exceeds size limits.";
+
     /// <summary>
     /// Encodes an RGBA32 buffer as WebP lossless (managed VP8L subset).
     /// </summary>
@@ -118,8 +120,8 @@ public static class WebpWriter {
         if (canvasWidth > 0x1000000 || canvasHeight > 0x1000000) {
             throw new ArgumentOutOfRangeException(nameof(canvasWidth), "Canvas dimensions must fit in 24-bit WebP size fields.");
         }
-        _ = RenderGuards.EnsureOutputPixels(canvasWidth, canvasHeight, "WebP output exceeds size limits.");
-        _ = RenderGuards.EnsureOutputBytes((long)canvasWidth * canvasHeight * 4, "WebP output exceeds size limits.");
+        _ = RenderGuards.EnsureOutputPixels(canvasWidth, canvasHeight, WebpOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)canvasWidth * canvasHeight * 4, WebpOutputLimitMessage);
         if (frames.Length == 0) throw new ArgumentException("At least one frame is required.", nameof(frames));
 
         var alphaUsed = false;
@@ -200,8 +202,8 @@ public static class WebpWriter {
         if (canvasWidth > 0x1000000 || canvasHeight > 0x1000000) {
             throw new ArgumentOutOfRangeException(nameof(canvasWidth), "Canvas dimensions must fit in 24-bit WebP size fields.");
         }
-        _ = RenderGuards.EnsureOutputPixels(canvasWidth, canvasHeight, "WebP output exceeds size limits.");
-        _ = RenderGuards.EnsureOutputBytes((long)canvasWidth * canvasHeight * 4, "WebP output exceeds size limits.");
+        _ = RenderGuards.EnsureOutputPixels(canvasWidth, canvasHeight, WebpOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)canvasWidth * canvasHeight * 4, WebpOutputLimitMessage);
         if (frames.Length == 0) throw new ArgumentException("At least one frame is required.", nameof(frames));
 
         var alphaUsed = false;
@@ -274,7 +276,7 @@ public static class WebpWriter {
         if (bits > 8) bits = 8;
         var shift = 8 - bits;
 
-        var outputBytes = RenderGuards.EnsureOutputBytes((long)width * height * 4, "WebP output exceeds size limits.");
+        var outputBytes = RenderGuards.EnsureOutputBytes((long)width * height * 4, WebpOutputLimitMessage);
         var output = new byte[outputBytes];
         var dstStride = minStride;
         for (var y = 0; y < height; y++) {
@@ -307,8 +309,8 @@ public static class WebpWriter {
         if (frame.Width > 0x1000000 || frame.Height > 0x1000000) {
             throw new ArgumentOutOfRangeException(nameof(frame), "Frame dimensions must fit in 24-bit WebP size fields.");
         }
-        _ = RenderGuards.EnsureOutputPixels(frame.Width, frame.Height, "WebP output exceeds size limits.");
-        _ = RenderGuards.EnsureOutputBytes((long)frame.Width * frame.Height * 4, "WebP output exceeds size limits.");
+        _ = RenderGuards.EnsureOutputPixels(frame.Width, frame.Height, WebpOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)frame.Width * frame.Height * 4, WebpOutputLimitMessage);
         if (frame.Stride < frame.Width * 4) throw new ArgumentOutOfRangeException(nameof(frame.Stride));
         if (frame.X < 0 || frame.Y < 0) throw new ArgumentOutOfRangeException(nameof(frame));
         if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) {
@@ -339,8 +341,8 @@ public static class WebpWriter {
     private static void EnsureRgbaArgs(int width, int height, ReadOnlySpan<byte> rgba, int stride, string bufferName) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-        _ = RenderGuards.EnsureOutputPixels(width, height, "WebP output exceeds size limits.");
-        _ = RenderGuards.EnsureOutputBytes((long)width * height * 4, "WebP output exceeds size limits.");
+        _ = RenderGuards.EnsureOutputPixels(width, height, WebpOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)width * height * 4, WebpOutputLimitMessage);
         var minStride = checked(width * 4);
         if (stride < minStride) throw new ArgumentOutOfRangeException(nameof(stride));
         var requiredBytes = checked((height - 1) * stride + minStride);

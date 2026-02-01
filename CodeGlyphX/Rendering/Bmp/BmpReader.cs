@@ -13,6 +13,8 @@ public static class BmpReader {
     private const uint BiBitFields = 3;
     private const uint BiAlphaBitFields = 6;
 
+    private const string BmpDimensionsLimitMessage = "BMP dimensions exceed size limits.";
+
     /// <summary>
     /// Decodes a BMP image to an RGBA buffer.
     /// </summary>
@@ -45,7 +47,7 @@ public static class BmpReader {
 
         width = w;
         height = h;
-        _ = DecodeGuards.EnsurePixelCount(width, height, "BMP dimensions exceed size limits.");
+        _ = DecodeGuards.EnsurePixelCount(width, height, BmpDimensionsLimitMessage);
 
         if (dataOffset < 0 || dataOffset >= bmp.Length) throw new FormatException("Invalid BMP pixel data offset.");
 
@@ -71,7 +73,7 @@ public static class BmpReader {
             var required = (long)dataOffset + (long)rowStride * height;
             if (required > bmp.Length) throw new FormatException("Truncated BMP data.");
 
-            var rgba = DecodeGuards.AllocateRgba32(width, height, "BMP dimensions exceed size limits.");
+            var rgba = DecodeGuards.AllocateRgba32(width, height, BmpDimensionsLimitMessage);
             for (var y = 0; y < height; y++) {
                 var srcRow = topDown ? y : (height - 1 - y);
                 var src = dataOffset + srcRow * rowStride;
@@ -94,7 +96,7 @@ public static class BmpReader {
             var required = (long)dataOffset + (long)rowStride * height;
             if (required > bmp.Length) throw new FormatException("Truncated BMP data.");
 
-            var rgba = DecodeGuards.AllocateRgba32(width, height, "BMP dimensions exceed size limits.");
+            var rgba = DecodeGuards.AllocateRgba32(width, height, BmpDimensionsLimitMessage);
             for (var y = 0; y < height; y++) {
                 var srcRow = topDown ? y : (height - 1 - y);
                 var src = dataOffset + srcRow * rowStride;
@@ -133,7 +135,7 @@ public static class BmpReader {
                 alphaMask = 0;
             }
 
-            var rgba = DecodeGuards.AllocateRgba32(width, height, "BMP dimensions exceed size limits.");
+            var rgba = DecodeGuards.AllocateRgba32(width, height, BmpDimensionsLimitMessage);
             for (var y = 0; y < height; y++) {
                 var srcRow = topDown ? y : (height - 1 - y);
                 var src = dataOffset + srcRow * rowStride;
@@ -159,9 +161,9 @@ public static class BmpReader {
             var paletteBytes = DecodeGuards.EnsureByteCount((long)paletteCount * 4, "Invalid BMP palette.");
             if ((long)paletteOffset + paletteBytes > bmp.Length) throw new FormatException("Invalid BMP palette.");
 
-            var rgba = DecodeGuards.AllocateRgba32(width, height, "BMP dimensions exceed size limits.");
+            var rgba = DecodeGuards.AllocateRgba32(width, height, BmpDimensionsLimitMessage);
             if (compression == BiRle8 || compression == BiRle4) {
-                var indices = DecodeGuards.AllocatePixelBuffer(width, height, "BMP dimensions exceed size limits.");
+                var indices = DecodeGuards.AllocatePixelBuffer(width, height, BmpDimensionsLimitMessage);
                 if (compression == BiRle8) {
                     DecodeRle8(bmp.Slice(dataOffset), indices, width, height, topDown);
                 } else {

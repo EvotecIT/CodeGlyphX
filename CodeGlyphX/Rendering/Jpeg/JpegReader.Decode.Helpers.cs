@@ -7,6 +7,7 @@ public static partial class JpegReader {
     private const int HuffmanFastBits = 9;
     private const int ConstBits = 13;
     private const int Pass1Bits = 2;
+    private const string JpegDimensionsLimitMessage = "JPEG dimensions exceed limits.";
     private static readonly int[] CrToR = new int[256];
     private static readonly int[] CrToG = new int[256];
     private static readonly int[] CbToG = new int[256];
@@ -37,7 +38,7 @@ public static partial class JpegReader {
     }
 
     private static byte[] ComposeRgba(JpegFrame frame, BaselineComponentState[] states, int? adobeTransform, bool highQualityChroma) {
-        var rgba = DecodeGuards.AllocateRgba32(frame.Width, frame.Height, "JPEG dimensions exceed limits.");
+        var rgba = DecodeGuards.AllocateRgba32(frame.Width, frame.Height, JpegDimensionsLimitMessage);
         var maxH = frame.MaxH;
         var maxV = frame.MaxV;
 
@@ -529,7 +530,7 @@ public static partial class JpegReader {
         var components = data[5];
         if (width == 0 || height == 0) throw new FormatException("Invalid JPEG dimensions.");
         if (!DecodeGuards.TryEnsurePixelCount(width, height, out _)) {
-            throw new FormatException("JPEG dimensions exceed limits.");
+            throw new FormatException(JpegDimensionsLimitMessage);
         }
         if (components == 0) throw new FormatException("Invalid JPEG component count.");
         if (data.Length < 6 + components * 3) throw new FormatException("Invalid JPEG SOF segment.");
@@ -699,7 +700,7 @@ public static partial class JpegReader {
         var srcHeight = height;
         var destWidth = (orientation >= 5 && orientation <= 8) ? srcHeight : srcWidth;
         var destHeight = (orientation >= 5 && orientation <= 8) ? srcWidth : srcHeight;
-        var result = DecodeGuards.AllocateRgba32(destWidth, destHeight, "JPEG dimensions exceed limits.");
+        var result = DecodeGuards.AllocateRgba32(destWidth, destHeight, JpegDimensionsLimitMessage);
 
         for (var y = 0; y < destHeight; y++) {
             for (var x = 0; x < destWidth; x++) {
@@ -808,8 +809,8 @@ public static partial class JpegReader {
             Component = component;
             BlocksPerRow = blocksPerRow;
             BlocksPerCol = blocksPerCol;
-            Stride = DecodeGuards.EnsureByteCount((long)blocksPerRow * 8, "JPEG dimensions exceed limits.");
-            var bufferLength = DecodeGuards.EnsureByteCount((long)Stride * blocksPerCol * 8, "JPEG dimensions exceed limits.");
+            Stride = DecodeGuards.EnsureByteCount((long)blocksPerRow * 8, JpegDimensionsLimitMessage);
+            var bufferLength = DecodeGuards.EnsureByteCount((long)Stride * blocksPerCol * 8, JpegDimensionsLimitMessage);
             Buffer = new int[bufferLength];
             BlockCoeffs = new int[64];
             BlockPixels = new int[64];
@@ -836,8 +837,8 @@ public static partial class JpegReader {
                 if (comp.QuantId >= quantTables.Length || quantTables[comp.QuantId] is null) {
                     throw new FormatException("Missing JPEG quantization table.");
                 }
-                var blocksPerRow = DecodeGuards.EnsureByteCount((long)mcuCols * comp.H, "JPEG dimensions exceed limits.");
-                var blocksPerCol = DecodeGuards.EnsureByteCount((long)mcuRows * comp.V, "JPEG dimensions exceed limits.");
+                var blocksPerRow = DecodeGuards.EnsureByteCount((long)mcuCols * comp.H, JpegDimensionsLimitMessage);
+                var blocksPerCol = DecodeGuards.EnsureByteCount((long)mcuRows * comp.V, JpegDimensionsLimitMessage);
                 components[i] = new ProgressiveComponentState(comp, blocksPerRow, blocksPerCol);
             }
 
@@ -896,9 +897,9 @@ public static partial class JpegReader {
             Component = component;
             BlocksPerRow = blocksPerRow;
             BlocksPerCol = blocksPerCol;
-            Stride = DecodeGuards.EnsureByteCount((long)blocksPerRow * 8, "JPEG dimensions exceed limits.");
-            var coeffLength = DecodeGuards.EnsureByteCount((long)BlocksPerRow * BlocksPerCol * 64, "JPEG dimensions exceed limits.");
-            var bufferLength = DecodeGuards.EnsureByteCount((long)Stride * blocksPerCol * 8, "JPEG dimensions exceed limits.");
+            Stride = DecodeGuards.EnsureByteCount((long)blocksPerRow * 8, JpegDimensionsLimitMessage);
+            var coeffLength = DecodeGuards.EnsureByteCount((long)BlocksPerRow * BlocksPerCol * 64, JpegDimensionsLimitMessage);
+            var bufferLength = DecodeGuards.EnsureByteCount((long)Stride * blocksPerCol * 8, JpegDimensionsLimitMessage);
             Coeffs = new int[coeffLength];
             Buffer = new int[bufferLength];
             BlockCoeffs = new int[64];
