@@ -515,64 +515,39 @@ public static partial class DataMatrixCode {
     }
 
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        diagnostics = new DataMatrixDecodeDiagnostics();
-        if (png is null) throw new ArgumentNullException(nameof(png));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!DecodeResultHelpers.TryCheckImageLimits(png, options, out _, out _, out var limitMessage)) {
-                text = string.Empty;
-                diagnostics.Failure = limitMessage ?? FailureInvalid;
-                return false;
-            }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
-                diagnostics = dmDiag;
-                return true;
-            }
-            diagnostics = dmDiag;
-            diagnostics.Failure ??= FailureNoDataMatrix;
-            text = string.Empty;
-            return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        return DecodeResultHelpers.TryDecodePngWithDiagnostics(
+            png,
+            options,
+            cancellationToken,
+            FailureInvalid,
+            FailureCancelled,
+            FailureDownscale,
+            FailureNoDataMatrix,
+            (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out DataMatrixDecodeDiagnostics diag)
+                => DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
+            static () => new DataMatrixDecodeDiagnostics(),
+            static diag => diag.Failure,
+            static (diag, value) => diag.Failure = value,
+            out text,
+            out diagnostics);
     }
 
     private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
-        diagnostics = new DataMatrixDecodeDiagnostics();
-        if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
-                text = string.Empty;
-                diagnostics.Failure ??= "Unsupported image format.";
-                return false;
-            }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
-                diagnostics = dmDiag;
-                return true;
-            }
-            diagnostics = dmDiag;
-            diagnostics.Failure ??= FailureNoDataMatrix;
-            text = string.Empty;
-            return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        return DecodeResultHelpers.TryDecodeImageWithDiagnostics(
+            image,
+            options,
+            cancellationToken,
+            FailureCancelled,
+            FailureDownscale,
+            "Unsupported image format.",
+            FailureNoDataMatrix,
+            (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out DataMatrixDecodeDiagnostics diag)
+                => DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
+            static () => new DataMatrixDecodeDiagnostics(),
+            static diag => diag.Failure,
+            static (diag, value) => diag.Failure = value,
+            out text,
+            out diagnostics);
     }
 
     private static bool TryDecodeAllImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {

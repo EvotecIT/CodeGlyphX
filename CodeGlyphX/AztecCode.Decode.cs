@@ -608,64 +608,39 @@ public static partial class AztecCode {
     }
 
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
-        diagnostics = new AztecDecodeDiagnostics();
-        if (png is null) throw new ArgumentNullException(nameof(png));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!DecodeResultHelpers.TryCheckImageLimits(png, options, out _, out _, out var limitMessage)) {
-                text = string.Empty;
-                diagnostics.Failure = limitMessage ?? FailureInvalid;
-                return false;
-            }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var aztecDiag)) {
-                diagnostics = aztecDiag;
-                return true;
-            }
-            diagnostics = aztecDiag;
-            diagnostics.Failure ??= FailureNoDecoded;
-            text = string.Empty;
-            return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        return DecodeResultHelpers.TryDecodePngWithDiagnostics(
+            png,
+            options,
+            cancellationToken,
+            FailureInvalid,
+            FailureCancelled,
+            FailureDownscale,
+            FailureNoDecoded,
+            (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out AztecDecodeDiagnostics diag)
+                => AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
+            static () => new AztecDecodeDiagnostics(),
+            static diag => diag.Failure,
+            static (diag, value) => diag.Failure = value,
+            out text,
+            out diagnostics);
     }
 
     private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
-        diagnostics = new AztecDecodeDiagnostics();
-        if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
-                text = string.Empty;
-                diagnostics.Failure ??= "Unsupported image format.";
-                return false;
-            }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var aztecDiag)) {
-                diagnostics = aztecDiag;
-                return true;
-            }
-            diagnostics = aztecDiag;
-            diagnostics.Failure ??= FailureNoDecoded;
-            text = string.Empty;
-            return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        return DecodeResultHelpers.TryDecodeImageWithDiagnostics(
+            image,
+            options,
+            cancellationToken,
+            FailureCancelled,
+            FailureDownscale,
+            "Unsupported image format.",
+            FailureNoDecoded,
+            (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out AztecDecodeDiagnostics diag)
+                => AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
+            static () => new AztecDecodeDiagnostics(),
+            static diag => diag.Failure,
+            static (diag, value) => diag.Failure = value,
+            out text,
+            out diagnostics);
     }
 
     private static bool TryDecodeAllImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {

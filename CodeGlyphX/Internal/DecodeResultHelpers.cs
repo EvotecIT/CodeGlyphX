@@ -3,11 +3,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Internal;
 
 internal static class DecodeResultHelpers {
     public delegate bool PixelDecodeString(byte[] rgba, int width, int height, CancellationToken token, out string text);
+    public delegate bool PixelDecodeWithDiagnostics<TDiag>(byte[] rgba, int width, int height, CancellationToken token, out string text, out TDiag diagnostics);
 
     public static bool TryGetImageInfo(ReadOnlySpan<byte> image, out ImageInfo info, out bool formatKnown) {
         formatKnown = ImageReader.TryDetectFormat(image, out var format);
@@ -101,6 +103,101 @@ internal static class DecodeResultHelpers {
             if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
             return decode(rgba, width, height, token, out text);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    public static bool TryDecodePngWithDiagnostics<TDiag>(
+        byte[] png,
+        ImageDecodeOptions? options,
+        CancellationToken cancellationToken,
+        string failureInvalid,
+        string failureCancelled,
+        string failureDownscale,
+        string failureNoDecoded,
+        PixelDecodeWithDiagnostics<TDiag> decode,
+        Func<TDiag> createDiagnostics,
+        Func<TDiag, string?> getFailure,
+        Action<TDiag, string> setFailure,
+        out string text,
+        out TDiag diagnostics) {
+        diagnostics = createDiagnostics();
+        if (png is null) throw new ArgumentNullException(nameof(png));
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) {
+                text = string.Empty;
+                setFailure(diagnostics, failureCancelled);
+                return false;
+            }
+            if (!TryCheckImageLimits(png, options, out _, out _, out var limitMessage)) {
+                text = string.Empty;
+                setFailure(diagnostics, limitMessage ?? failureInvalid);
+                return false;
+            }
+            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                text = string.Empty;
+                setFailure(diagnostics, token.IsCancellationRequested ? failureCancelled : failureDownscale);
+                return false;
+            }
+            if (decode(rgba, width, height, token, out text, out var diag)) {
+                diagnostics = diag;
+                return true;
+            }
+            diagnostics = diag;
+            if (getFailure(diagnostics) is null) setFailure(diagnostics, failureNoDecoded);
+            text = string.Empty;
+            return false;
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    public static bool TryDecodeImageWithDiagnostics<TDiag>(
+        byte[] image,
+        ImageDecodeOptions? options,
+        CancellationToken cancellationToken,
+        string failureCancelled,
+        string failureDownscale,
+        string failureUnsupported,
+        string failureNoDecoded,
+        PixelDecodeWithDiagnostics<TDiag> decode,
+        Func<TDiag> createDiagnostics,
+        Func<TDiag, string?> getFailure,
+        Action<TDiag, string> setFailure,
+        out string text,
+        out TDiag diagnostics) {
+        diagnostics = createDiagnostics();
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) {
+                text = string.Empty;
+                setFailure(diagnostics, failureCancelled);
+                return false;
+            }
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
+                text = string.Empty;
+                setFailure(diagnostics, failureUnsupported);
+                return false;
+            }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
+                text = string.Empty;
+                setFailure(diagnostics, token.IsCancellationRequested ? failureCancelled : failureDownscale);
+                return false;
+            }
+            if (decode(rgba, width, height, token, out text, out var diag)) {
+                diagnostics = diag;
+                return true;
+            }
+            diagnostics = diag;
+            if (getFailure(diagnostics) is null) setFailure(diagnostics, failureNoDecoded);
+            text = string.Empty;
+            return false;
         } finally {
             budgetCts?.Dispose();
             budgetScope?.Dispose();

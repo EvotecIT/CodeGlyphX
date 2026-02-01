@@ -517,64 +517,39 @@ public static partial class Pdf417Code {
     }
 
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
-        diagnostics = new Pdf417DecodeDiagnostics();
-        if (png is null) throw new ArgumentNullException(nameof(png));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!DecodeResultHelpers.TryCheckImageLimits(png, options, out _, out _, out var limitMessage)) {
-                text = string.Empty;
-                diagnostics.Failure = limitMessage ?? FailureInvalid;
-                return false;
-            }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var pdfDiag)) {
-                diagnostics = pdfDiag;
-                return true;
-            }
-            diagnostics = pdfDiag;
-            diagnostics.Failure ??= FailureNoPdf417;
-            text = string.Empty;
-            return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        return DecodeResultHelpers.TryDecodePngWithDiagnostics(
+            png,
+            options,
+            cancellationToken,
+            FailureInvalid,
+            FailureCancelled,
+            FailureDownscale,
+            FailureNoPdf417,
+            (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out Pdf417DecodeDiagnostics diag)
+                => Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
+            static () => new Pdf417DecodeDiagnostics(),
+            static diag => diag.Failure,
+            static (diag, value) => diag.Failure = value,
+            out text,
+            out diagnostics);
     }
 
     private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
-        diagnostics = new Pdf417DecodeDiagnostics();
-        if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
-                text = string.Empty;
-                diagnostics.Failure ??= "Unsupported image format.";
-                return false;
-            }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var pdfDiag)) {
-                diagnostics = pdfDiag;
-                return true;
-            }
-            diagnostics = pdfDiag;
-            diagnostics.Failure ??= FailureNoPdf417;
-            text = string.Empty;
-            return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        return DecodeResultHelpers.TryDecodeImageWithDiagnostics(
+            image,
+            options,
+            cancellationToken,
+            FailureCancelled,
+            FailureDownscale,
+            "Unsupported image format.",
+            FailureNoPdf417,
+            (byte[] rgba, int width, int height, CancellationToken token, out string decoded, out Pdf417DecodeDiagnostics diag)
+                => Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded, out diag),
+            static () => new Pdf417DecodeDiagnostics(),
+            static diag => diag.Failure,
+            static (diag, value) => diag.Failure = value,
+            out text,
+            out diagnostics);
     }
 
     private static bool TryDecodeAllImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
