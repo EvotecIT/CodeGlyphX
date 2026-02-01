@@ -10,6 +10,7 @@ namespace CodeGlyphX.Rendering;
 /// Simple file and stream helpers for rendered assets.
 /// </summary>
 public static class RenderIO {
+    private const string InputLimitMessage = "Input exceeds size limits.";
     /// <summary>
     /// Writes binary data to a file and returns the full path.
     /// </summary>
@@ -141,7 +142,7 @@ public static class RenderIO {
         if (maxBytes <= 0) return ReadBinary(path);
         var info = new FileInfo(path);
         if (info.Exists && info.Length > maxBytes) {
-            throw new FormatException("Input exceeds size limits.");
+            throw new FormatException(InputLimitMessage);
         }
         return File.ReadAllBytes(path);
     }
@@ -170,7 +171,7 @@ public static class RenderIO {
         if (maxBytes <= 0) return await ReadBinaryAsync(path, cancellationToken).ConfigureAwait(false);
         var info = new FileInfo(path);
         if (info.Exists && info.Length > maxBytes) {
-            throw new FormatException("Input exceeds size limits.");
+            throw new FormatException(InputLimitMessage);
         }
         using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
         return await ReadBinaryAsync(fs, maxBytes, cancellationToken).ConfigureAwait(false);
@@ -200,7 +201,7 @@ public static class RenderIO {
         if (maxBytes <= 0) return ReadBinary(stream);
 
         if (stream is MemoryStream memory) {
-            if (memory.Length > maxBytes) throw new FormatException("Input exceeds size limits.");
+            if (memory.Length > maxBytes) throw new FormatException(InputLimitMessage);
             return memory.ToArray();
         }
 
@@ -211,7 +212,7 @@ public static class RenderIO {
             var read = stream.Read(buffer, 0, buffer.Length);
             if (read <= 0) break;
             total += read;
-            if (total > maxBytes) throw new FormatException("Input exceeds size limits.");
+            if (total > maxBytes) throw new FormatException(InputLimitMessage);
             ms.Write(buffer, 0, read);
         }
         return ms.ToArray();
@@ -243,7 +244,7 @@ public static class RenderIO {
         if (maxBytes <= 0) return await ReadBinaryAsync(stream, cancellationToken).ConfigureAwait(false);
 
         if (stream is MemoryStream memory) {
-            if (memory.Length > maxBytes) throw new FormatException("Input exceeds size limits.");
+            if (memory.Length > maxBytes) throw new FormatException(InputLimitMessage);
             return memory.ToArray();
         }
 
@@ -254,7 +255,7 @@ public static class RenderIO {
             var read = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
             if (read <= 0) break;
             total += read;
-            if (total > maxBytes) throw new FormatException("Input exceeds size limits.");
+            if (total > maxBytes) throw new FormatException(InputLimitMessage);
             await ms.WriteAsync(buffer, 0, read, cancellationToken).ConfigureAwait(false);
         }
         return ms.ToArray();

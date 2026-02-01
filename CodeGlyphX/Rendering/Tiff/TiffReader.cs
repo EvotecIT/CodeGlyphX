@@ -27,6 +27,7 @@ public static class TiffReader {
     private const ushort TagTileLength = 323;
     private const ushort TagTileOffsets = 324;
     private const ushort TagTileByteCounts = 325;
+    private const string TiffTileLimitMessage = "TIFF tile exceeds size limits.";
 
     private const ushort TypeByte = 1;
     private const ushort TypeShort = 3;
@@ -316,7 +317,7 @@ public static class TiffReader {
                 var tilesDown = (height + tileLength - 1) / tileLength;
                 var tileCount = Math.Min(tileOffsets!.Length, tileByteCounts!.Length);
                 var bytesPerTileRow = (tileWidth + 7) / 8;
-                var expectedBytes = DecodeGuards.EnsureByteCount((long)tileLength * bytesPerTileRow, "TIFF tile exceeds size limits.");
+                var expectedBytes = DecodeGuards.EnsureByteCount((long)tileLength * bytesPerTileRow, TiffTileLimitMessage);
 
                 for (var t = 0; t < tileCount && t < tilesAcross * tilesDown; t++) {
                     var offset = tileOffsets[t];
@@ -413,8 +414,8 @@ public static class TiffReader {
             var tilesAcross = (width + tileWidth - 1) / tileWidth;
             var tilesDown = (height + tileLength - 1) / tileLength;
             var tileCount = Math.Min(tileOffsets!.Length, tileByteCounts!.Length);
-            var tileRowBytes = DecodeGuards.EnsureByteCount((long)tileWidth * bytesPerPixel, "TIFF tile exceeds size limits.");
-            var expected = DecodeGuards.EnsureByteCount((long)tileWidth * tileLength * bytesPerPixel, "TIFF tile exceeds size limits.");
+            var tileRowBytes = DecodeGuards.EnsureByteCount((long)tileWidth * bytesPerPixel, TiffTileLimitMessage);
+            var expected = DecodeGuards.EnsureByteCount((long)tileWidth * tileLength * bytesPerPixel, TiffTileLimitMessage);
 
             if (planar == 1) {
                 for (var t = 0; t < tileCount && t < tilesAcross * tilesDown; t++) {
@@ -446,8 +447,8 @@ public static class TiffReader {
                 if (tileOffsets.Length < expectedEntries || tileByteCounts.Length < expectedEntries) {
                     throw new FormatException("Invalid TIFF planar tile layout.");
                 }
-                var planeTileRowBytes = DecodeGuards.EnsureByteCount((long)tileWidth * bytesPerSample, "TIFF tile exceeds size limits.");
-                var expectedPlane = DecodeGuards.EnsureByteCount((long)tileWidth * tileLength * bytesPerSample, "TIFF tile exceeds size limits.");
+                var planeTileRowBytes = DecodeGuards.EnsureByteCount((long)tileWidth * bytesPerSample, TiffTileLimitMessage);
+                var expectedPlane = DecodeGuards.EnsureByteCount((long)tileWidth * tileLength * bytesPerSample, TiffTileLimitMessage);
 
                 for (var t = 0; t < tilesPerPlane; t++) {
                     var planes = new byte[samplesPerPixel][];
