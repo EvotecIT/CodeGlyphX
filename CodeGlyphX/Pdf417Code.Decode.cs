@@ -157,7 +157,7 @@ public static partial class Pdf417Code {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
-        if (!TryReadBinary(path, options, out var png)) { text = string.Empty; return false; }
+        if (!DecodeResultHelpers.TryReadBinary(path, options, out var png)) { text = string.Empty; return false; }
         return TryDecodePng(png, options, cancellationToken, out text);
     }
 
@@ -181,7 +181,7 @@ public static partial class Pdf417Code {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        if (!TryReadBinary(path, options, out var png)) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureInvalid }; return false; }
+        if (!DecodeResultHelpers.TryReadBinary(path, options, out var png)) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureInvalid }; return false; }
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
 
@@ -205,7 +205,7 @@ public static partial class Pdf417Code {
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
-        if (!TryReadBinary(stream, options, out var png)) { text = string.Empty; return false; }
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var png)) { text = string.Empty; return false; }
         return TryDecodePng(png, options, cancellationToken, out text);
     }
 
@@ -229,7 +229,7 @@ public static partial class Pdf417Code {
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        if (!TryReadBinary(stream, options, out var png)) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureInvalid }; return false; }
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var png)) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureInvalid }; return false; }
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
 
@@ -363,16 +363,13 @@ public static partial class Pdf417Code {
     /// Attempts to decode a PDF417 symbol from common image formats in a span with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
-            return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        return DecodeResultHelpers.TryDecodeImage(
+            image,
+            options,
+            cancellationToken,
+            (byte[] rgba, int width, int height, CancellationToken token, out string decoded)
+                => Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded),
+            out text);
     }
 
     /// <summary>
@@ -415,8 +412,7 @@ public static partial class Pdf417Code {
     /// </summary>
     public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (cancellationToken.IsCancellationRequested) { texts = Array.Empty<string>(); return false; }
-        if (!TryReadBinary(stream, options, out var data)) { texts = Array.Empty<string>(); return false; }
+        if (!DecodeResultHelpers.TryReadImageBytes(stream, options, cancellationToken, out var data, out _)) { texts = Array.Empty<string>(); return false; }
         return TryDecodeAllImageCore(data, options, cancellationToken, out texts);
     }
 
@@ -445,18 +441,13 @@ public static partial class Pdf417Code {
     /// Attempts to decode a PDF417 symbol from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!TryReadBinary(stream, options, out var data)) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
-            return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        return DecodeResultHelpers.TryDecodeImage(
+            stream,
+            options,
+            cancellationToken,
+            (byte[] rgba, int width, int height, CancellationToken token, out string decoded)
+                => Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded),
+            out text);
     }
 
     /// <summary>
@@ -478,9 +469,11 @@ public static partial class Pdf417Code {
     /// </summary>
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out Pdf417DecodeDiagnostics diagnostics) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        var maxBytes = options?.MaxBytes > 0 ? options.MaxBytes : ImageReader.MaxImageBytes;
-        if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) { text = string.Empty; diagnostics = new Pdf417DecodeDiagnostics { Failure = FailureInvalid }; return false; }
+        if (!DecodeResultHelpers.TryReadImageBytes(stream, options, cancellationToken, out var data, out var cancelled)) {
+            text = string.Empty;
+            diagnostics = new Pdf417DecodeDiagnostics { Failure = cancelled ? FailureCancelled : FailureInvalid };
+            return false;
+        }
         return TryDecodeImageCore(data, options, cancellationToken, out text, out diagnostics);
     }
 
@@ -752,19 +745,6 @@ public static partial class Pdf417Code {
             LightColor = ColorUtils.ToCss(opts.Background),
             EmailSafeTable = opts.HtmlEmailSafeTable
         };
-    }
-
-    private static int ResolveMaxBytes(ImageDecodeOptions? options) {
-        if (options is not null && options.MaxBytes > 0) return options.MaxBytes;
-        return ImageReader.MaxImageBytes;
-    }
-
-    private static bool TryReadBinary(string path, ImageDecodeOptions? options, out byte[] data) {
-        return RenderIO.TryReadBinary(path, ResolveMaxBytes(options), out data);
-    }
-
-    private static bool TryReadBinary(Stream stream, ImageDecodeOptions? options, out byte[] data) {
-        return RenderIO.TryReadBinary(stream, ResolveMaxBytes(options), out data);
     }
 
 }

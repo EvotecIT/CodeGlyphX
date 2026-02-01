@@ -56,6 +56,57 @@ internal static class DecodeResultHelpers {
         return true;
     }
 
+    public static int ResolveMaxBytes(ImageDecodeOptions? options) {
+        if (options is not null && options.MaxBytes > 0) return options.MaxBytes;
+        return ImageReader.MaxImageBytes;
+    }
+
+    public static bool TryReadBinary(string path, ImageDecodeOptions? options, out byte[] data) {
+        return RenderIO.TryReadBinary(path, ResolveMaxBytes(options), out data);
+    }
+
+    public static bool TryReadBinary(Stream stream, ImageDecodeOptions? options, out byte[] data) {
+        return RenderIO.TryReadBinary(stream, ResolveMaxBytes(options), out data);
+    }
+
+    public static bool TryReadImageBytes(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out byte[] data, out bool cancelled) {
+        data = Array.Empty<byte>();
+        cancelled = false;
+        if (cancellationToken.IsCancellationRequested) {
+            cancelled = true;
+            return false;
+        }
+        return TryReadBinary(stream, options, out data);
+    }
+
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, PixelDecodeString decode, out string text) {
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            return decode(rgba, width, height, token, out text);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
+    public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, PixelDecodeString decode, out string text) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        try {
+            if (token.IsCancellationRequested) { text = string.Empty; return false; }
+            if (!TryReadBinary(stream, options, out var data)) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            return decode(rgba, width, height, token, out text);
+        } finally {
+            budgetCts?.Dispose();
+            budgetScope?.Dispose();
+        }
+    }
+
     public static DecodeResult<string> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, PixelDecodeString decode) {
         var stopwatch = Stopwatch.StartNew();
         if (!TryCheckImageLimits(image, options, out var info, out var formatKnown, out var limitMessage)) {
