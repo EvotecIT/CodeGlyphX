@@ -37,8 +37,14 @@ internal static class RenderSanitizer {
     private static bool IsRgbColor(string value) {
         if (!value.EndsWith(")", StringComparison.Ordinal)) return false;
         var lower = value.ToLowerInvariant();
-        var start = lower.StartsWith("rgba(") ? 5 : lower.StartsWith("rgb(") ? 4 : 0;
-        if (start == 0) return false;
+        int start;
+        if (lower.StartsWith("rgba(")) {
+            start = 5;
+        } else if (lower.StartsWith("rgb(")) {
+            start = 4;
+        } else {
+            return false;
+        }
         for (var i = start; i < value.Length - 1; i++) {
             var c = value[i];
             if (!(char.IsDigit(c) || c == ' ' || c == ',' || c == '.' || c == '%' || c == '\t')) {
