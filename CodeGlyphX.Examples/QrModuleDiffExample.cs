@@ -46,22 +46,20 @@ internal static class QrModuleDiffExample {
             }
 
             var dim = observed.Width;
-            var version = (dim - 17) / 4;
             var match = DimRegex.Match(file);
             if (match.Success && int.TryParse(match.Groups["dim"].Value, out var parsedDim)) {
                 if (parsedDim == observed.Width) {
                     dim = parsedDim;
-                    version = (dim - 17) / 4;
                 }
             }
 
-            if (version < 1 || version > 40) {
+            if (!QrStructureAnalysis.TryGetVersionFromSize(dim, out var version)) {
                 lines.Add($"{Path.GetFileName(file)}: SKIP (bad version)");
                 continue;
             }
 
             var results = new List<(QrErrorCorrectionLevel ecc, int mask, int mismatches, int dataMismatches, int dataTotal)>();
-            var functionMask = BuildFunctionMask(version, observed.Width);
+            var functionMask = QrStructureAnalysis.BuildFunctionMask(version, observed.Width);
             foreach (QrErrorCorrectionLevel ecc in Enum.GetValues(typeof(QrErrorCorrectionLevel))) {
                 for (var mask = 0; mask < 8; mask++) {
                     try {
@@ -176,84 +174,4 @@ internal static class QrModuleDiffExample {
         return total;
     }
 
-    private static BitMatrix BuildFunctionMask(int version, int size) {
-        var isFunction = new BitMatrix(size, size);
-
-        MarkFinder(0, 0, isFunction);
-        MarkFinder(size - 7, 0, isFunction);
-        MarkFinder(0, size - 7, isFunction);
-
-        for (var i = 0; i < size; i++) {
-            isFunction[6, i] = true;
-            isFunction[i, 6] = true;
-        }
-
-        var align = GetAlignmentPatternPositions(version);
-        for (var i = 0; i < align.Length; i++) {
-            for (var j = 0; j < align.Length; j++) {
-                if ((i == 0 && j == 0) || (i == 0 && j == align.Length - 1) || (i == align.Length - 1 && j == 0)) {
-                    continue;
-                }
-                MarkAlignment(align[i], align[j], isFunction);
-            }
-        }
-
-        isFunction[8, size - 8] = true;
-
-        for (var i = 0; i <= 5; i++) isFunction[8, i] = true;
-        isFunction[8, 7] = true;
-        isFunction[8, 8] = true;
-        isFunction[7, 8] = true;
-        for (var i = 9; i < 15; i++) isFunction[14 - i, 8] = true;
-        for (var i = 0; i < 8; i++) isFunction[size - 1 - i, 8] = true;
-        for (var i = 8; i < 15; i++) isFunction[8, size - 15 + i] = true;
-
-        if (version >= 7) {
-            for (var i = 0; i < 18; i++) {
-                var a = size - 11 + (i % 3);
-                var b = i / 3;
-                isFunction[a, b] = true;
-                isFunction[b, a] = true;
-            }
-        }
-
-        return isFunction;
-    }
-
-    private static int[] GetAlignmentPatternPositions(int version) {
-        if (version == 1) return Array.Empty<int>();
-
-        var numAlign = (version / 7) + 2;
-        var size = (version * 4) + 17;
-        var step = version == 32
-            ? 26
-            : ((version * 4 + numAlign * 2 + 1) / (2 * numAlign - 2)) * 2;
-
-        var result = new int[numAlign];
-        result[0] = 6;
-        result[numAlign - 1] = size - 7;
-        for (var i = 1; i < numAlign - 1; i++) {
-            result[i] = result[numAlign - 1] - step * (numAlign - 1 - i);
-        }
-        return result;
-    }
-
-    private static void MarkFinder(int x, int y, BitMatrix isFunction) {
-        for (var dy = -1; dy <= 7; dy++) {
-            for (var dx = -1; dx <= 7; dx++) {
-                var xx = x + dx;
-                var yy = y + dy;
-                if ((uint)xx >= (uint)isFunction.Width || (uint)yy >= (uint)isFunction.Height) continue;
-                isFunction[xx, yy] = true;
-            }
-        }
-    }
-
-    private static void MarkAlignment(int x, int y, BitMatrix isFunction) {
-        for (var dy = -2; dy <= 2; dy++) {
-            for (var dx = -2; dx <= 2; dx++) {
-                isFunction[x + dx, y + dy] = true;
-            }
-        }
-    }
 }
