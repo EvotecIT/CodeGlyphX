@@ -127,6 +127,22 @@ public sealed partial class CodeGlyphDecodeOptions {
     }
 
     /// <summary>
+    /// Maximum pixel count allowed for non-QR image decoding (width * height). Set to 0 to disable.
+    /// </summary>
+    public long MaxImagePixels {
+        get => Image?.MaxPixels ?? 0;
+        set => EnsureImage().MaxPixels = value;
+    }
+
+    /// <summary>
+    /// Maximum input size in bytes for non-QR image decoding. Set to 0 to disable.
+    /// </summary>
+    public int MaxImageBytes {
+        get => Image?.MaxBytes ?? 0;
+        set => EnsureImage().MaxBytes = value;
+    }
+
+    /// <summary>
     /// Maximum milliseconds to spend decoding non-QR symbols (best effort). Set to 0 to disable.
     /// </summary>
     public int MaxImageMilliseconds {

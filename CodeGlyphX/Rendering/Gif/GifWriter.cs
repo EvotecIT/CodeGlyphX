@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Gif;
 
@@ -8,6 +9,8 @@ namespace CodeGlyphX.Rendering.Gif;
 /// Writes GIF images from RGBA buffers.
 /// </summary>
 public static class GifWriter {
+    private const string GifOutputLimitMessage = "GIF output exceeds size limits.";
+
     /// <summary>
     /// Writes a GIF byte array from an RGBA buffer (single frame).
     /// </summary>
@@ -24,10 +27,12 @@ public static class GifWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, GifOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
-        var indices = new byte[width * height];
+        var indexBytes = RenderGuards.EnsureOutputBytes((long)width * height, GifOutputLimitMessage);
+        var indices = new byte[indexBytes];
         BuildPalette(rgba, width, height, stride, indices, out var palette, out var hasTransparency, out var transparentIndex);
 
         var colorTableSize = 1;
@@ -106,6 +111,8 @@ public static class GifWriter {
         if (frames.Length == 0) throw new ArgumentException("At least one frame is required.", nameof(frames));
         if (canvasWidth <= 0) throw new ArgumentOutOfRangeException(nameof(canvasWidth));
         if (canvasHeight <= 0) throw new ArgumentOutOfRangeException(nameof(canvasHeight));
+        _ = RenderGuards.EnsureOutputPixels(canvasWidth, canvasHeight, GifOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)canvasWidth * canvasHeight * 4, GifOutputLimitMessage);
 
         for (var i = 0; i < frames.Length; i++) {
             ValidateFrame(frames[i], canvasWidth, canvasHeight);
@@ -271,6 +278,7 @@ public static class GifWriter {
     private static void ValidateFrame(GifAnimationFrame frame, int canvasWidth, int canvasHeight) {
         if (frame.Width <= 0) throw new ArgumentOutOfRangeException(nameof(frame.Width));
         if (frame.Height <= 0) throw new ArgumentOutOfRangeException(nameof(frame.Height));
+        _ = RenderGuards.EnsureOutputPixels(frame.Width, frame.Height, GifOutputLimitMessage);
         if (frame.Stride < frame.Width * 4) throw new ArgumentOutOfRangeException(nameof(frame.Stride));
         if (frame.Rgba.Length < (frame.Height - 1) * frame.Stride + frame.Width * 4) {
             throw new ArgumentException("RGBA buffer is too small.", nameof(frame.Rgba));
@@ -289,7 +297,8 @@ public static class GifWriter {
         byte bgG,
         byte bgB,
         byte bgA) {
-        var canvas = new byte[canvasWidth * canvasHeight * 4];
+        var canvasBytes = RenderGuards.EnsureOutputBytes((long)canvasWidth * canvasHeight * 4, GifOutputLimitMessage);
+        var canvas = new byte[canvasBytes];
         FillCanvas(canvas, bgR, bgG, bgB, bgA);
         var optimized = new GifAnimationFrame[frames.Length];
 

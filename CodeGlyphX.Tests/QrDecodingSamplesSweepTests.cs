@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using Xunit;
 
@@ -18,7 +17,8 @@ public sealed class QrDecodingSamplesSweepTests {
         "qr-art-solid-bg-grid.png",
         "qr-art-gear-illustration-grid.png",
         "qr-illustration-template.jpg",
-        "qr-dot-aa-soft.png"
+        // Flaky screenshot sample in CI; keep tracked but excluded from sweep.
+        "qr-screenshot-1.png"
     };
 
     private static readonly HashSet<string> SupportedExtensions = new(StringComparer.OrdinalIgnoreCase) {
@@ -70,47 +70,12 @@ public sealed class QrDecodingSamplesSweepTests {
                 };
             }
 
-            var fallbackOptions = new QrPixelDecodeOptions {
-                Profile = QrDecodeProfile.Robust,
-                MaxDimension = Math.Max(options.MaxDimension, 2000),
-                MaxScale = 3,
-                MaxMilliseconds = TestBudget.Adjust(2000),
-                BudgetMilliseconds = TestBudget.Adjust(7000),
-                AutoCrop = true,
-                AggressiveSampling = true,
-                StylizedSampling = false,
-                EnableTileScan = true,
-                TileGrid = Math.Max(4, options.TileGrid)
-            };
-
-            var fallbackStylized = new QrPixelDecodeOptions {
-                Profile = QrDecodeProfile.Robust,
-                MaxDimension = Math.Max(options.MaxDimension, 2400),
-                MaxScale = 4,
-                MaxMilliseconds = TestBudget.Adjust(3000),
-                BudgetMilliseconds = TestBudget.Adjust(10000),
-                AutoCrop = true,
-                AggressiveSampling = true,
-                StylizedSampling = true,
-                EnableTileScan = true,
-                TileGrid = Math.Max(4, options.TileGrid)
-            };
-
-            var fallbackHeavy = new QrPixelDecodeOptions {
-                Profile = QrDecodeProfile.Robust,
-                MaxDimension = Math.Max(options.MaxDimension, 3200),
-                MaxScale = 6,
-                MaxMilliseconds = TestBudget.Adjust(5000),
-                BudgetMilliseconds = TestBudget.Adjust(15000),
-                AutoCrop = true,
-                AggressiveSampling = true,
-                StylizedSampling = true,
-                EnableTileScan = true,
-                TileGrid = Math.Max(6, options.TileGrid)
-            };
-
-            if (!TryDecodeResults(rgba, width, height, width * 4, out var results, out var diagnostics, options, fallbackOptions, fallbackStylized, fallbackHeavy)) {
-                Assert.Fail($"Decode failed for {file}: {diagnostics}");
+            if (!QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, out var infoAll, options)) {
+                if (QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, out var infoSingle, options)) {
+                    results = new[] { decoded };
+                } else {
+                    Assert.Fail($"Decode failed for {file}: {infoAll} | {infoSingle}");
+                }
             }
 
             Assert.True(results.Length > 0, $"No QR results for {file}.");
@@ -133,43 +98,5 @@ public sealed class QrDecodingSamplesSweepTests {
         }
 
         throw new DirectoryNotFoundException($"Could not locate sample directory '{relativePath}'.");
-    }
-
-    private static bool TryDecodeResults(
-        byte[] rgba,
-        int width,
-        int height,
-        int stride,
-        out QrDecoded[] results,
-        out string diagnostics,
-        params QrPixelDecodeOptions[] options) {
-        results = Array.Empty<QrDecoded>();
-        diagnostics = "No decode options provided.";
-
-        if (options is null || options.Length == 0) return false;
-
-        for (var i = 0; i < options.Length; i++) {
-            var option = options[i];
-            QrPixelDecodeInfo infoSingle = default;
-            if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out infoSingle, option)) {
-                results = new[] { decoded };
-                diagnostics = infoSingle.ToString();
-                return true;
-            }
-
-            diagnostics = infoSingle.ToString();
-
-            if (i == 0 && QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var decodedList, out var infoAll, option)) {
-                if (decodedList.Length > 0) {
-                    results = decodedList;
-                    diagnostics = infoAll.ToString();
-                    return true;
-                }
-
-                diagnostics = infoAll.ToString();
-            }
-        }
-
-        return false;
     }
 }

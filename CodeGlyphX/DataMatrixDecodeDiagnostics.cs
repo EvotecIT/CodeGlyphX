@@ -3,7 +3,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// Diagnostics for Data Matrix decoding.
 /// </summary>
-public sealed class DataMatrixDecodeDiagnostics {
+public sealed class DataMatrixDecodeDiagnostics : IDecodeDiagnostics {
     /// <summary>
     /// Number of decode attempts (rotations + mirror).
     /// </summary>
@@ -23,5 +23,6 @@ public sealed class DataMatrixDecodeDiagnostics {
     /// Optional failure message when decoding fails.
     /// </summary>
     public string? Failure { get; internal set; }
-}
 
+    void IDecodeDiagnostics.SetFailure(string? value) => Failure = value;
+}

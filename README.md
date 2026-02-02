@@ -42,6 +42,19 @@ Status: Actively developed · Stable core · Expanding format support
 - Payload helpers for QR (WiFi, email/phone/SMS, contacts, calendar, payments, crypto, social, OTP)
 - Friendly APIs: one-liners + options + fluent presets
 
+## Security & Safe Usage
+
+When decoding untrusted images, use explicit limits via `ImageDecodeOptions` (recommended presets: `Safe()` / `UltraSafe()`) and pass them to `ImageReader` or `QrImageDecoder`. Global defaults (`ImageReader.MaxImageBytes`, `ImageReader.MaxPixels`) are set to conservative values, but you should tune them for your environment.
+
+```csharp
+var safe = ImageDecodeOptions.UltraSafe(maxBytes: 8 * 1024 * 1024, maxPixels: 8_000_000);
+var rgba = ImageReader.DecodeRgba32(bytes, safe, out var width, out var height);
+```
+
+Convenience helpers: `ImageReader.DecodeRgba32Safe` / `TryDecodeRgba32Safe` apply safe defaults for untrusted inputs.
+
+See `SECURITY.md` for reporting guidance and `FUZZING.md` for the decoder fuzzing harness.
+
 ## Roadmap & Website
 
 - Roadmap: `ROADMAP.md`
@@ -440,7 +453,7 @@ Auto-detect helper: `QrPayloads.Detect("...")` builds the best-known payload for
 ### Known gaps / not supported (decode)
 
 - ImageReader.DecodeRgba32 returns the first animation frame only (GIF/WebP); use ImageReader.DecodeAnimationFrames/DecodeAnimationCanvasFrames or GifReader/WebpReader for full animations. Use ImageReader.TryReadAnimationInfo for lightweight frame/loop metadata.
-- Managed WebP decode supports VP8/VP8L stills; default size limit is 256 MB (configurable via `WebpReader.MaxWebpBytes`)
+- Managed WebP decode supports VP8/VP8L stills; default size limit is 128 MB (configurable via `WebpReader.MaxWebpBytes`)
 - Managed WebP encode is VP8 (lossy intra-only) and VP8L (lossless)
 - WebP VP8 interframes in animations are currently treated as repeats of the previous frame (best-effort)
 - AVIF, HEIC, JPEG2000 are not supported (format detection only)
@@ -660,6 +673,30 @@ var decode = new CodeGlyphDecodeOptions()
 
 CodeGlyph.TryDecodeImage(File.ReadAllBytes("code.jpg"), out var symbol, decode);
 ```
+
+### Decode safety (untrusted images)
+
+For untrusted inputs, pass `ImageDecodeOptions` to cap payload bytes, pixel counts, and animation limits.
+Use the `Safe()` preset as a baseline, or `UltraSafe()` for tighter hostile-input caps, then adjust as needed.
+
+```csharp
+using CodeGlyphX;
+
+var imageOptions = ImageDecodeOptions.Safe();
+if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("screen.png"), imageOptions, options: null, out var decoded)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+Defaults (when you do not pass options) are capped by `ImageReader.DefaultMaxPixels` (50,000,000)
+and `ImageReader.DefaultMaxImageBytes` (128 MB). Override per call with `ImageDecodeOptions` (including
+animation limits), or globally via `ImageReader.MaxPixels` / `ImageReader.MaxImageBytes` /
+`ImageReader.MaxAnimationFrames` / `ImageReader.MaxAnimationDurationMs` / `ImageReader.MaxAnimationFramePixels`.
+
+Migration note: if you previously allowed unlimited decoding, set the global limits to `0` or raise them
+explicitly for your environment.
+
+Telemetry: subscribe to `ImageReader.LimitViolation` to capture guard hits in production.
 
 ## WPF controls
 

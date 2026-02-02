@@ -635,6 +635,7 @@ internal static partial class QrPixelDecoder {
         settings = ApplyOverrides(settings, options, scaleStart, Math.Min(width, height));
         var budgetMilliseconds = options?.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options?.MaxMilliseconds ?? 0;
         var enableTileScan = allowTileScan && options?.EnableTileScan == true;
+        var allowAggressivePasses = allowTileScan;
         var tileBudgetMs = 0;
         var baseBudgetMs = budgetMilliseconds;
         if (enableTileScan && budgetMilliseconds > 0) {
@@ -866,23 +867,23 @@ internal static partial class QrPixelDecoder {
                 }
             }
 
-            if (options?.AggressiveSampling == true && list.Count == 0 && !budget.IsExpired && !budget.IsNearDeadline(200)) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsExpired && !budget.IsNearDeadline(200)) {
                 CollectFromWhitespaceGrid(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
-            if (options?.AggressiveSampling == true && options?.StylizedSampling == true && list.Count == 0 && !budget.IsNearDeadline(260)) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && options?.StylizedSampling == true && list.Count == 0 && !budget.IsNearDeadline(260)) {
                 CollectFromCandidateRois(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
-            if (options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(250)) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(250)) {
                 CollectFromDensityTiles(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
-            if (options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(250)) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(250)) {
                 CollectFromOverlappingTiles(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
-            if (options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(300) && Math.Max(width, height) <= 900) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(300) && Math.Max(width, height) <= 900) {
                 if (TryDecodeUpscaled(pixels, width, height, stride, fmt, profile, options, accept, cancellationToken, budget, out var decodedUpscaled, out _)) {
                     AddResult(list, seen, decodedUpscaled, accept);
                 }

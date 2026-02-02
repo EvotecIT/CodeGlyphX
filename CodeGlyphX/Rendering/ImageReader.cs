@@ -25,6 +25,79 @@ namespace CodeGlyphX.Rendering;
 /// </summary>
 public static partial class ImageReader {
     private static readonly byte[] PngSignature = { 137, 80, 78, 71, 13, 10, 26, 10 };
+    private const string ImagePayloadLimitMessage = "Image payload exceeds size limits.";
+    private const string ImageDimensionsLimitMessage = "Image dimensions exceed limits.";
+    private static readonly System.Threading.AsyncLocal<AnimationLimitOverride?> AnimationLimitOverrides = new();
+
+    /// <summary>
+    /// Default maximum pixel count allowed for managed decodes (~50,000,000 pixels).
+    /// (~200 MB RGBA or roughly 14k x 3.5k).
+    /// </summary>
+    public const long DefaultMaxPixels = 50_000_000;
+
+    /// <summary>
+    /// Default maximum image payload size (bytes) for stream decoding (~128 MB).
+    /// </summary>
+    public const int DefaultMaxImageBytes = 128 * 1024 * 1024;
+
+    /// <summary>
+    /// Default maximum animation frame count allowed for managed decodes.
+    /// </summary>
+    public const int DefaultMaxAnimationFrames = 256;
+
+    /// <summary>
+    /// Default maximum total animation duration (milliseconds) for managed decodes.
+    /// </summary>
+    public const int DefaultMaxAnimationDurationMs = 120_000;
+
+    /// <summary>
+    /// Default maximum animation frame pixel count allowed for managed decodes.
+    /// </summary>
+    public const long DefaultMaxAnimationFramePixels = DefaultMaxPixels;
+
+    /// <summary>
+    /// Maximum pixel count allowed for managed decodes (width * height). Set to 0 to disable.
+    /// </summary>
+    public static long MaxPixels { get; set; } = DefaultMaxPixels;
+
+    /// <summary>
+    /// Maximum image payload size (bytes) for stream decoding. Set to 0 to disable.
+    /// </summary>
+    public static int MaxImageBytes { get; set; } = DefaultMaxImageBytes;
+
+    /// <summary>
+    /// Maximum animation frame count allowed for managed decodes. Set to 0 to disable.
+    /// </summary>
+    public static int MaxAnimationFrames { get; set; } = DefaultMaxAnimationFrames;
+
+    /// <summary>
+    /// Maximum total animation duration (milliseconds) allowed for managed decodes. Set to 0 to disable.
+    /// </summary>
+    public static int MaxAnimationDurationMs { get; set; } = DefaultMaxAnimationDurationMs;
+
+    /// <summary>
+    /// Maximum pixel count allowed per animation frame. Set to 0 to disable.
+    /// </summary>
+    public static long MaxAnimationFramePixels { get; set; } = DefaultMaxAnimationFramePixels;
+
+    /// <summary>
+    /// Optional handler invoked when decode limits are violated.
+    /// </summary>
+    public static event Action<ImageDecodeLimitViolation>? LimitViolation;
+
+    internal static int EffectiveMaxAnimationFrames => AnimationLimitOverrides.Value?.MaxFrames ?? MaxAnimationFrames;
+    internal static int EffectiveMaxAnimationDurationMs => AnimationLimitOverrides.Value?.MaxDurationMs ?? MaxAnimationDurationMs;
+    internal static long EffectiveMaxAnimationFramePixels => AnimationLimitOverrides.Value?.MaxFramePixels ?? MaxAnimationFramePixels;
+
+    internal static void ReportLimitViolation(ImageDecodeLimitViolation violation) {
+        var handler = LimitViolation;
+        if (handler is null) return;
+        try {
+            handler(violation);
+        } catch {
+            // Avoid breaking decode callers if the telemetry handler throws.
+        }
+    }
 
     /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected).
@@ -40,6 +113,13 @@ public static partial class ImageReader {
     public static byte[] DecodeRgba32(byte[] data, ImageDecodeOptions? options, out int width, out int height) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         return DecodeRgba32((ReadOnlySpan<byte>)data, options, out width, out height);
+    }
+
+    /// <summary>
+    /// Decodes an image to an RGBA buffer (auto-detected) using safe defaults for untrusted inputs.
+    /// </summary>
+    public static byte[] DecodeRgba32Safe(byte[] data, out int width, out int height) {
+        return DecodeRgba32(data, ImageDecodeOptions.Safe(), out width, out height);
     }
 
     /// <summary>
@@ -82,6 +162,14 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes animation frames (non-composited) (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationFrames(byte[] data, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return DecodeAnimationFrames((ReadOnlySpan<byte>)data, options, out width, out height, out animationOptions);
+    }
+
+    /// <summary>
     /// Decodes animation frames composited onto a full canvas (auto-detected).
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(byte[] data, out int width, out int height, out ImageAnimationOptions options) {
@@ -90,9 +178,18 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Decodes animation frames composited onto a full canvas (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(byte[] data, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return DecodeAnimationCanvasFrames((ReadOnlySpan<byte>)data, options, out width, out height, out animationOptions);
+    }
+
+    /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected).
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
+        EnsureWithinLimits(data, options: null, pageIndex: 0);
         return DecodeRgba32Core(data, null, out width, out height);
     }
 
@@ -100,6 +197,7 @@ public static partial class ImageReader {
     /// Decodes an image to an RGBA buffer (auto-detected) with decode options.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height) {
+        EnsureWithinLimits(data, options, pageIndex: 0);
         return DecodeRgba32Core(data, options?.JpegOptions, out width, out height);
     }
 
@@ -131,28 +229,45 @@ public static partial class ImageReader {
     /// Decodes animation frames (non-composited) (auto-detected).
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationFrames(ReadOnlySpan<byte> data, out int width, out int height, out ImageAnimationOptions options) {
-        if (data.Length < 2) throw new FormatException("Unknown image format.");
+        return DecodeAnimationFrames(data, options: null, out width, out height, out options);
+    }
 
+    /// <summary>
+    /// Decodes animation frames (non-composited) (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationFrames(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (data.Length < 2) throw new FormatException("Unknown image format.");
+        EnsureWithinLimits(data, options, pageIndex: 0);
+
+        var resolvedWidth = 0;
+        var resolvedHeight = 0;
+        var resolvedOptions = default(ImageAnimationOptions);
+
+        using var scope = ApplyAnimationLimits(options);
+        ImageAnimationFrame[] frames;
         if (GifReader.IsGif(data)) {
-            if (!GifReader.TryDecodeAnimationFrames(data, out var frames, out width, out height, out var gifOptions)) {
+            if (!GifReader.TryDecodeAnimationFrames(data, out var gifFrames, out resolvedWidth, out resolvedHeight, out var gifOptions)) {
                 throw new FormatException("Unsupported or invalid animated GIF.");
             }
-            options = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
-            return MapGifFrames(frames);
-        }
-
-        if (WebpReader.IsWebp(data)) {
-            if (WebpReader.TryDecodeAnimationFrames(data, out var frames, out width, out height, out var webpOptions)) {
-                options = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
-                return MapWebpFrames(frames);
+            resolvedOptions = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
+            frames = MapGifFrames(gifFrames);
+        } else if (WebpReader.IsWebp(data)) {
+            if (WebpReader.TryDecodeAnimationFrames(data, out var webpFrames, out resolvedWidth, out resolvedHeight, out var webpOptions)) {
+                resolvedOptions = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
+                frames = MapWebpFrames(webpFrames);
+            } else {
+                var rgba = WebpReader.DecodeRgba32(data, out resolvedWidth, out resolvedHeight);
+                resolvedOptions = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
+                frames = new[] { new ImageAnimationFrame(rgba, resolvedWidth, resolvedHeight, resolvedWidth * 4, durationMs: 0) };
             }
-
-            var rgba = WebpReader.DecodeRgba32(data, out width, out height);
-            options = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
-            return new[] { new ImageAnimationFrame(rgba, width, height, width * 4, durationMs: 0) };
+        } else {
+            throw new FormatException("Unsupported animated image format.");
         }
 
-        throw new FormatException("Unsupported animated image format.");
+        width = resolvedWidth;
+        height = resolvedHeight;
+        animationOptions = resolvedOptions;
+        return frames;
     }
 
     /// <summary>
@@ -160,6 +275,7 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, int pageIndex, out int width, out int height) {
         if (pageIndex < 0) throw new ArgumentOutOfRangeException(nameof(pageIndex));
+        EnsureWithinLimits(data, options: null, pageIndex);
         if (pageIndex == 0) return DecodeRgba32(data, out width, out height);
         if (data.Length < 2) throw new FormatException("Unknown image format.");
 
@@ -172,34 +288,52 @@ public static partial class ImageReader {
     /// Decodes animation frames composited onto a full canvas (auto-detected).
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(ReadOnlySpan<byte> data, out int width, out int height, out ImageAnimationOptions options) {
-        if (data.Length < 2) throw new FormatException("Unknown image format.");
+        return DecodeAnimationCanvasFrames(data, options: null, out width, out height, out options);
+    }
 
+    /// <summary>
+    /// Decodes animation frames composited onto a full canvas (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (data.Length < 2) throw new FormatException("Unknown image format.");
+        EnsureWithinLimits(data, options, pageIndex: 0);
+
+        var resolvedWidth = 0;
+        var resolvedHeight = 0;
+        var resolvedOptions = default(ImageAnimationOptions);
+
+        using var scope = ApplyAnimationLimits(options);
+        ImageAnimationFrame[] frames;
         if (GifReader.IsGif(data)) {
-            if (!GifReader.TryDecodeAnimationCanvasFrames(data, out var frames, out width, out height, out var gifOptions)) {
+            if (!GifReader.TryDecodeAnimationCanvasFrames(data, out var gifFrames, out resolvedWidth, out resolvedHeight, out var gifOptions)) {
                 throw new FormatException("Unsupported or invalid animated GIF.");
             }
-            options = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
-            return MapGifFrames(frames);
-        }
-
-        if (WebpReader.IsWebp(data)) {
-            if (WebpReader.TryDecodeAnimationCanvasFrames(data, out var frames, out width, out height, out var webpOptions)) {
-                options = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
-                return MapWebpFrames(frames);
+            resolvedOptions = new ImageAnimationOptions(gifOptions.LoopCount, gifOptions.BackgroundRgba);
+            frames = MapGifFrames(gifFrames);
+        } else if (WebpReader.IsWebp(data)) {
+            if (WebpReader.TryDecodeAnimationCanvasFrames(data, out var webpFrames, out resolvedWidth, out resolvedHeight, out var webpOptions)) {
+                resolvedOptions = new ImageAnimationOptions(webpOptions.LoopCount, ConvertBgraToRgba(webpOptions.BackgroundBgra));
+                frames = MapWebpFrames(webpFrames);
+            } else {
+                var rgba = WebpReader.DecodeRgba32(data, out resolvedWidth, out resolvedHeight);
+                resolvedOptions = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
+                frames = new[] { new ImageAnimationFrame(rgba, resolvedWidth, resolvedHeight, resolvedWidth * 4, durationMs: 0) };
             }
-
-            var rgba = WebpReader.DecodeRgba32(data, out width, out height);
-            options = new ImageAnimationOptions(loopCount: 1, backgroundRgba: 0);
-            return new[] { new ImageAnimationFrame(rgba, width, height, width * 4, durationMs: 0) };
+        } else {
+            throw new FormatException("Unsupported animated image format.");
         }
 
-        throw new FormatException("Unsupported animated image format.");
+        width = resolvedWidth;
+        height = resolvedHeight;
+        animationOptions = resolvedOptions;
+        return frames;
     }
 
     /// <summary>
     /// Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
     /// </summary>
     public static byte[] DecodeRgba32Composite(ReadOnlySpan<byte> data, out int width, out int height) {
+        EnsureWithinLimits(data, options: null, pageIndex: 0);
         return DecodeRgba32CompositeCore(data, null, out width, out height);
     }
 
@@ -214,7 +348,118 @@ public static partial class ImageReader {
     /// </code>
     /// </example>
     public static byte[] DecodeRgba32Composite(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out int width, out int height) {
-        return DecodeRgba32CompositeCore(data, options?.JpegOptions, out width, out height);
+        EnsureWithinLimits(data, options, pageIndex: 0);
+        int resolvedWidth = 0;
+        int resolvedHeight = 0;
+        using var scope = ApplyAnimationLimits(options);
+        var rgba = DecodeRgba32CompositeCore(data, options?.JpegOptions, out resolvedWidth, out resolvedHeight);
+        width = resolvedWidth;
+        height = resolvedHeight;
+        return rgba;
+    }
+
+    private static void EnsureWithinLimits(ReadOnlySpan<byte> data, ImageDecodeOptions? options, int pageIndex) {
+        var maxBytes = ResolveMaxBytes(options);
+        if (maxBytes > 0 && data.Length > maxBytes) {
+            ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxBytes, maxBytes, data.Length, ImageFormat.Unknown, pageIndex));
+            throw new FormatException(GuardMessages.ForBytes(ImagePayloadLimitMessage, data.Length, maxBytes));
+        }
+
+        var maxPixels = ResolveMaxPixels(options);
+        if (maxPixels <= 0) return;
+        if (pageIndex == 0) {
+            if (TryReadInfo(data, out var info) && info.IsValid) {
+                var pixels = (long)info.Width * info.Height;
+                if (pixels > maxPixels) {
+                    ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxPixels, maxPixels, pixels, info.Format, pageIndex));
+                    throw new FormatException(GuardMessages.ForPixels(ImageDimensionsLimitMessage, info.Width, info.Height, pixels, maxPixels));
+                }
+            }
+            return;
+        }
+
+        if (TryReadInfo(data, pageIndex, out var pageInfo) && pageInfo.IsValid) {
+            var pixels = (long)pageInfo.Width * pageInfo.Height;
+            if (pixels > maxPixels) {
+                ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxPixels, maxPixels, pixels, pageInfo.Format, pageIndex));
+                throw new FormatException(GuardMessages.ForPixels(ImageDimensionsLimitMessage, pageInfo.Width, pageInfo.Height, pixels, maxPixels));
+            }
+        }
+    }
+
+    private static int ResolveMaxBytes(ImageDecodeOptions? options)
+        => ResolveMaxInt(options?.MaxBytes, MaxImageBytes);
+
+    private static long ResolveMaxPixels(ImageDecodeOptions? options)
+        => ResolveMaxLong(options?.MaxPixels, MaxPixels);
+
+    private static int ResolveMaxAnimationFrames(ImageDecodeOptions? options)
+        => ResolveMaxInt(options?.MaxAnimationFrames, MaxAnimationFrames);
+
+    private static int ResolveMaxAnimationDurationMs(ImageDecodeOptions? options)
+        => ResolveMaxInt(options?.MaxAnimationDurationMs, MaxAnimationDurationMs);
+
+    private static long ResolveMaxAnimationFramePixels(ImageDecodeOptions? options)
+        => ResolveMaxLong(options?.MaxAnimationFramePixels, MaxAnimationFramePixels);
+
+    private static int ResolveMaxInt(int? value, int fallback) {
+        return value.GetValueOrDefault() > 0 ? value.GetValueOrDefault() : fallback;
+    }
+
+    private static long ResolveMaxLong(long? value, long fallback) {
+        return value.GetValueOrDefault() > 0 ? value.GetValueOrDefault() : fallback;
+    }
+
+    private static IDisposable? ApplyAnimationLimits(ImageDecodeOptions? options) {
+        if (options is null) return null;
+        var maxFrames = ResolveMaxAnimationFrames(options);
+        var maxDuration = ResolveMaxAnimationDurationMs(options);
+        var maxFramePixels = ResolveMaxAnimationFramePixels(options);
+
+        if (maxFrames == MaxAnimationFrames && maxDuration == MaxAnimationDurationMs && maxFramePixels == MaxAnimationFramePixels) {
+            return null;
+        }
+
+        var previous = AnimationLimitOverrides.Value;
+        AnimationLimitOverrides.Value = new AnimationLimitOverride(maxFrames, maxDuration, maxFramePixels);
+        return new AnimationLimitScope(previous);
+    }
+
+    private sealed class AnimationLimitScope : IDisposable {
+        private readonly AnimationLimitOverride? previous;
+        private bool disposed;
+
+        public AnimationLimitScope(AnimationLimitOverride? previous) {
+            this.previous = previous;
+        }
+
+        public void Dispose() {
+            if (disposed) return;
+            disposed = true;
+            AnimationLimitOverrides.Value = previous;
+        }
+    }
+
+    private sealed class AnimationLimitOverride {
+        public readonly int MaxFrames;
+        public readonly int MaxDurationMs;
+        public readonly long MaxFramePixels;
+
+        public AnimationLimitOverride(int maxFrames, int maxDurationMs, long maxFramePixels) {
+            MaxFrames = maxFrames;
+            MaxDurationMs = maxDurationMs;
+            MaxFramePixels = maxFramePixels;
+        }
+    }
+
+    private static byte[] ReadStream(Stream stream, ImageDecodeOptions? options) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var maxBytes = ResolveMaxBytes(options);
+        if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
+            ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxBytes, maxBytes, 0, ImageFormat.Unknown));
+            throw new FormatException(ImagePayloadLimitMessage);
+        }
+        return data;
     }
 
     private static byte[] DecodeRgba32CompositeCore(ReadOnlySpan<byte> data, JpegDecodeOptions? jpegOptions, out int width, out int height) {
@@ -256,15 +501,8 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32(Stream stream, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32(buffer.AsSpan(), out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32(segment.AsSpan(), out width, out height);
-        }
-        return DecodeRgba32(ms.ToArray(), out width, out height);
+        var data = ReadStream(stream, options: null);
+        return DecodeRgba32(data, out width, out height);
     }
 
     /// <summary>
@@ -272,15 +510,15 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32(Stream stream, ImageDecodeOptions? options, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32(buffer.AsSpan(), options, out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32(segment.AsSpan(), options, out width, out height);
-        }
-        return DecodeRgba32(ms.ToArray(), options, out width, out height);
+        var data = ReadStream(stream, options);
+        return DecodeRgba32(data, options, out width, out height);
+    }
+
+    /// <summary>
+    /// Decodes an image stream to an RGBA buffer (auto-detected) using safe defaults for untrusted inputs.
+    /// </summary>
+    public static byte[] DecodeRgba32Safe(Stream stream, out int width, out int height) {
+        return DecodeRgba32(stream, ImageDecodeOptions.Safe(), out width, out height);
     }
 
     /// <summary>
@@ -288,15 +526,8 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32(Stream stream, int pageIndex, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32(buffer.AsSpan(), pageIndex, out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32(segment.AsSpan(), pageIndex, out width, out height);
-        }
-        return DecodeRgba32(ms.ToArray(), pageIndex, out width, out height);
+        var data = ReadStream(stream, options: null);
+        return DecodeRgba32(data, pageIndex, out width, out height);
     }
 
     /// <summary>
@@ -304,15 +535,8 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32Composite(Stream stream, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32Composite(buffer.AsSpan(), out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32Composite(segment.AsSpan(), out width, out height);
-        }
-        return DecodeRgba32Composite(ms.ToArray(), out width, out height);
+        var data = ReadStream(stream, options: null);
+        return DecodeRgba32Composite(data, out width, out height);
     }
 
     /// <summary>
@@ -327,15 +551,8 @@ public static partial class ImageReader {
     /// </example>
     public static byte[] DecodeRgba32Composite(Stream stream, ImageDecodeOptions? options, out int width, out int height) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeRgba32Composite(buffer.AsSpan(), options, out width, out height);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeRgba32Composite(segment.AsSpan(), options, out width, out height);
-        }
-        return DecodeRgba32Composite(ms.ToArray(), options, out width, out height);
+        var data = ReadStream(stream, options);
+        return DecodeRgba32Composite(data, options, out width, out height);
     }
 
     /// <summary>
@@ -343,15 +560,17 @@ public static partial class ImageReader {
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(Stream stream, out int width, out int height, out ImageAnimationOptions options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeAnimationCanvasFrames(buffer.AsSpan(), out width, out height, out options);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeAnimationCanvasFrames(segment.AsSpan(), out width, out height, out options);
-        }
-        return DecodeAnimationCanvasFrames(ms.ToArray(), out width, out height, out options);
+        var data = ReadStream(stream, options: null);
+        return DecodeAnimationCanvasFrames(data, out width, out height, out options);
+    }
+
+    /// <summary>
+    /// Decodes animation frames composited onto a full canvas from a stream (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationCanvasFrames(Stream stream, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = ReadStream(stream, options);
+        return DecodeAnimationCanvasFrames(data, options, out width, out height, out animationOptions);
     }
 
     /// <summary>
@@ -359,15 +578,17 @@ public static partial class ImageReader {
     /// </summary>
     public static ImageAnimationFrame[] DecodeAnimationFrames(Stream stream, out int width, out int height, out ImageAnimationOptions options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeAnimationFrames(buffer.AsSpan(), out width, out height, out options);
-        }
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        if (ms.TryGetBuffer(out var segment)) {
-            return DecodeAnimationFrames(segment.AsSpan(), out width, out height, out options);
-        }
-        return DecodeAnimationFrames(ms.ToArray(), out width, out height, out options);
+        var data = ReadStream(stream, options: null);
+        return DecodeAnimationFrames(data, out width, out height, out options);
+    }
+
+    /// <summary>
+    /// Decodes animation frames (non-composited) from a stream (auto-detected) with decode options.
+    /// </summary>
+    public static ImageAnimationFrame[] DecodeAnimationFrames(Stream stream, ImageDecodeOptions? options, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        var data = ReadStream(stream, options);
+        return DecodeAnimationFrames(data, options, out width, out height, out animationOptions);
     }
 
     /// <summary>
@@ -384,6 +605,13 @@ public static partial class ImageReader {
     public static bool TryDecodeRgba32(byte[] data, ImageDecodeOptions? options, out byte[] rgba, out int width, out int height) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         return TryDecodeRgba32((ReadOnlySpan<byte>)data, options, out rgba, out width, out height);
+    }
+
+    /// <summary>
+    /// Attempts to decode an image to an RGBA buffer (auto-detected) using safe defaults for untrusted inputs.
+    /// </summary>
+    public static bool TryDecodeRgba32Safe(byte[] data, out byte[] rgba, out int width, out int height) {
+        return TryDecodeRgba32(data, ImageDecodeOptions.Safe(), out rgba, out width, out height);
     }
 
     /// <summary>
@@ -416,6 +644,13 @@ public static partial class ImageReader {
             height = 0;
             return false;
         }
+    }
+
+    /// <summary>
+    /// Attempts to decode an image stream to an RGBA buffer (auto-detected) using safe defaults for untrusted inputs.
+    /// </summary>
+    public static bool TryDecodeRgba32Safe(Stream stream, out byte[] rgba, out int width, out int height) {
+        return TryDecodeRgba32(stream, ImageDecodeOptions.Safe(), out rgba, out width, out height);
     }
 
     /// <summary>
@@ -588,6 +823,22 @@ public static partial class ImageReader {
     }
 
     /// <summary>
+    /// Attempts to decode animation frames composited onto a full canvas (auto-detected) with decode options.
+    /// </summary>
+    public static bool TryDecodeAnimationCanvasFrames(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out ImageAnimationFrame[] frames, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        try {
+            frames = DecodeAnimationCanvasFrames(data, options, out width, out height, out animationOptions);
+            return true;
+        } catch (FormatException) {
+            frames = Array.Empty<ImageAnimationFrame>();
+            width = 0;
+            height = 0;
+            animationOptions = default;
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Attempts to decode animation frames (non-composited) (auto-detected).
     /// </summary>
     public static bool TryDecodeAnimationFrames(ReadOnlySpan<byte> data, out ImageAnimationFrame[] frames, out int width, out int height, out ImageAnimationOptions options) {
@@ -599,6 +850,22 @@ public static partial class ImageReader {
             width = 0;
             height = 0;
             options = default;
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to decode animation frames (non-composited) (auto-detected) with decode options.
+    /// </summary>
+    public static bool TryDecodeAnimationFrames(ReadOnlySpan<byte> data, ImageDecodeOptions? options, out ImageAnimationFrame[] frames, out int width, out int height, out ImageAnimationOptions animationOptions) {
+        try {
+            frames = DecodeAnimationFrames(data, options, out width, out height, out animationOptions);
+            return true;
+        } catch (FormatException) {
+            frames = Array.Empty<ImageAnimationFrame>();
+            width = 0;
+            height = 0;
+            animationOptions = default;
             return false;
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Ppm;
 
@@ -11,6 +12,7 @@ public static class PpmReader {
     /// Decodes a PPM/PGM image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> ppm, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(ppm.Length, "PPM payload exceeds size limits.");
         if (ppm.Length < 2) throw new FormatException("Invalid PPM data.");
         if (ppm[0] != (byte)'P') throw new FormatException("Invalid PPM signature.");
 
@@ -31,10 +33,10 @@ public static class PpmReader {
         if (maxVal <= 0 || maxVal > 65535) throw new FormatException("Unsupported PPM max value.");
 
         SkipWhitespaceAndComments(ppm, ref pos);
-        var pixelCount = width * height;
+        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "PPM dimensions exceed size limits.");
 
         if (isAscii) {
-            var rgba = new byte[pixelCount * 4];
+            var rgba = DecodeGuards.AllocateRgba32(width, height, "PPM dimensions exceed size limits.");
             var channels = isColor ? 3 : 1;
             for (var i = 0; i < pixelCount; i++) {
                 var dst = i * 4;
@@ -61,7 +63,7 @@ public static class PpmReader {
         var channelsPerPixel = isColor ? 3 : 1;
         var required = (long)pos + (long)pixelCount * channelsPerPixel * bytesPerSample;
         if (required > ppm.Length) throw new FormatException("Truncated PPM data.");
-        var rgbaRaw = new byte[pixelCount * 4];
+        var rgbaRaw = DecodeGuards.AllocateRgba32(width, height, "PPM dimensions exceed size limits.");
         var srcRaw = pos;
         for (var i = 0; i < pixelCount; i++) {
             var dst = i * 4;
@@ -109,6 +111,7 @@ public static class PpmReader {
             var c = data[pos];
             if (c < (byte)'0' || c > (byte)'9') break;
             sawDigit = true;
+            if (value > (int.MaxValue - 9) / 10) throw new FormatException("PPM header value too large.");
             value = value * 10 + (c - (byte)'0');
             pos++;
         }

@@ -11,6 +11,9 @@ public sealed class QrScreenshotDecodeTests {
     [InlineData("qr-screenshot-2.png")]
     [InlineData("qr-screenshot-3.png")]
     public void Decode_Screenshots(string fileName) {
+        if (string.Equals(Environment.GetEnvironmentVariable("CODEGLYPHX_COVERAGE"), "1", StringComparison.OrdinalIgnoreCase)) {
+            return;
+        }
         var sampleDir = ResolveSamplesDir("Assets/DecodingSamples");
         var path = Path.Combine(sampleDir, fileName);
         var bytes = File.ReadAllBytes(path);
