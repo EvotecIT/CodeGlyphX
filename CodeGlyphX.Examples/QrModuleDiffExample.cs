@@ -49,8 +49,10 @@ internal static class QrModuleDiffExample {
             var version = (dim - 17) / 4;
             var match = DimRegex.Match(file);
             if (match.Success && int.TryParse(match.Groups["dim"].Value, out var parsedDim)) {
-                dim = parsedDim;
-                version = (dim - 17) / 4;
+                if (parsedDim == observed.Width) {
+                    dim = parsedDim;
+                    version = (dim - 17) / 4;
+                }
             }
 
             if (version < 1 || version > 40) {
