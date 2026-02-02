@@ -9,6 +9,7 @@ namespace CodeGlyphX.Examples;
 
 internal static class QrHardArtDiagnosticsExample {
     private static readonly string[] HardArtFiles = {
+        "qr-art-jess3-characters-grid.png",
         "qr-art-facebook-splash-grid.png",
         "qr-art-montage-grid.png",
         "qr-art-stripe-eye-grid.png",
