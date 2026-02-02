@@ -106,57 +106,94 @@ internal static class QrDecodeScenarioPacks {
 
     public static List<QrDecodeScenario> GetScenarios(QrPackMode mode) {
         var scenarios = new List<QrDecodeScenario>(32);
+        var idealOptions = IdealOptions(mode);
+        var stressOptions = StressOptions(mode);
+        var screenshotOptions = ScreenshotOptions(mode);
+        var multiOptions = MultiOptions(mode);
+        var artOptions = ArtOptions(mode);
 
         // Ideal pack: common "should always work" cases.
-        scenarios.Add(Sample(Ideal, "clean-small", "Assets/DecodingSamples/qr-clean-small.png", IdealOptions(mode), ExpectedCleanSmall));
-        scenarios.Add(Sample(Ideal, "clean-large", "Assets/DecodingSamples/qr-clean-large.png", IdealOptions(mode), ExpectedCleanLarge));
-        scenarios.Add(Sample(Ideal, "generator-ui", "Assets/DecodingSamples/qr-generator-ui.png", IdealOptions(mode), "https://qrstud.io/qrmnky"));
-        scenarios.Add(Sample(Ideal, "dot-aa", "Assets/DecodingSamples/qr-dot-aa.png", IdealOptions(mode), "DOT-AA"));
+        AddSamples(
+            scenarios,
+            Ideal,
+            idealOptions,
+            ("clean-small", "Assets/DecodingSamples/qr-clean-small.png", ExpectedCleanSmall),
+            ("clean-large", "Assets/DecodingSamples/qr-clean-large.png", ExpectedCleanLarge),
+            ("generator-ui", "Assets/DecodingSamples/qr-generator-ui.png", "https://qrstud.io/qrmnky"),
+            ("dot-aa", "Assets/DecodingSamples/qr-dot-aa.png", "DOT-AA"));
 
         // Stress pack: resampling, noise, quiet-zone removal, longer payloads.
-        scenarios.Add(Sample(Stress, "noisy-ui", "Assets/DecodingSamples/qr-noisy-ui.png", StressOptions(mode), ExpectedNoisyUi));
-        scenarios.Add(Generated(Stress, "resampled-generated", BuildResampledGenerated, StressOptions(mode), GeneratedPayload));
-        scenarios.Add(Generated(Stress, "resampled-noisy-generated", BuildNoisyResampledGenerated, StressOptions(mode), GeneratedPayload));
-        scenarios.Add(Generated(Stress, "screenshot-like-generated", BuildScreenshotLikeGenerated, StressOptions(mode), GeneratedPayload));
-        scenarios.Add(Generated(Stress, "partial-quiet-generated", BuildPartialQuietGenerated, StressOptions(mode), GeneratedPayload));
-        scenarios.Add(Generated(Stress, "jpeg-60-generated", BuildJpegCompressedGenerated, StressOptions(mode), GeneratedPayload));
-        scenarios.Add(Generated(Stress, "no-quiet-generated", BuildNoQuietGenerated, StressOptions(mode), GeneratedPayload));
-        scenarios.Add(Generated(Stress, "long-payload-generated", BuildLongPayloadGenerated, StressOptions(mode), LongPayload));
+        AddSamples(
+            scenarios,
+            Stress,
+            stressOptions,
+            ("noisy-ui", "Assets/DecodingSamples/qr-noisy-ui.png", ExpectedNoisyUi));
+        AddGenerated(
+            scenarios,
+            Stress,
+            stressOptions,
+            ("resampled-generated", BuildResampledGenerated, GeneratedPayload),
+            ("resampled-noisy-generated", BuildNoisyResampledGenerated, GeneratedPayload),
+            ("screenshot-like-generated", BuildScreenshotLikeGenerated, GeneratedPayload),
+            ("partial-quiet-generated", BuildPartialQuietGenerated, GeneratedPayload),
+            ("jpeg-60-generated", BuildJpegCompressedGenerated, GeneratedPayload),
+            ("no-quiet-generated", BuildNoQuietGenerated, GeneratedPayload),
+            ("long-payload-generated", BuildLongPayloadGenerated, LongPayload));
         if (mode == QrPackMode.Full) {
-            scenarios.Add(Generated(Stress, "blurred-generated", BuildBlurredGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "glare-generated", BuildGlareGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "motion-blur-generated", BuildMotionBlurGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "sheared-generated", BuildShearedGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "low-contrast-generated", BuildLowContrastGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "low-contrast-glare-generated", BuildLowContrastGlareGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "rotated-generated", BuildRotatedGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "jpeg-35-generated", BuildJpegCompressedLowGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "keystone-generated", BuildKeystoneGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "jpeg-35-blur-generated", BuildJpegBlurGenerated, StressOptions(mode), GeneratedPayload));
-            scenarios.Add(Generated(Stress, "salt-pepper-generated", BuildSaltPepperGenerated, StressOptions(mode), GeneratedPayload));
+            AddGenerated(
+                scenarios,
+                Stress,
+                stressOptions,
+                ("blurred-generated", BuildBlurredGenerated, GeneratedPayload),
+                ("glare-generated", BuildGlareGenerated, GeneratedPayload),
+                ("motion-blur-generated", BuildMotionBlurGenerated, GeneratedPayload),
+                ("sheared-generated", BuildShearedGenerated, GeneratedPayload),
+                ("low-contrast-generated", BuildLowContrastGenerated, GeneratedPayload),
+                ("low-contrast-glare-generated", BuildLowContrastGlareGenerated, GeneratedPayload),
+                ("rotated-generated", BuildRotatedGenerated, GeneratedPayload),
+                ("jpeg-35-generated", BuildJpegCompressedLowGenerated, GeneratedPayload),
+                ("keystone-generated", BuildKeystoneGenerated, GeneratedPayload),
+                ("jpeg-35-blur-generated", BuildJpegBlurGenerated, GeneratedPayload),
+                ("salt-pepper-generated", BuildSaltPepperGenerated, GeneratedPayload));
         }
 
         // Screenshot pack: UI captures with multiple elements.
-        scenarios.Add(Sample(Screenshot, "screenshot-1", "Assets/DecodingSamples/qr-screenshot-1.png", ScreenshotOptions(mode), ExpectedCleanSmall));
-        scenarios.Add(Sample(Screenshot, "screenshot-2", "Assets/DecodingSamples/qr-screenshot-2.png", ScreenshotOptions(mode), "What did I just tell you? Now we're both disappointed!"));
-        scenarios.Add(Sample(Screenshot, "screenshot-3", "Assets/DecodingSamples/qr-screenshot-3.png", ScreenshotOptions(mode), ExpectedCleanSmall));
+        AddSamples(
+            scenarios,
+            Screenshot,
+            screenshotOptions,
+            ("screenshot-1", "Assets/DecodingSamples/qr-screenshot-1.png", ExpectedCleanSmall),
+            ("screenshot-2", "Assets/DecodingSamples/qr-screenshot-2.png", "What did I just tell you? Now we're both disappointed!"),
+            ("screenshot-3", "Assets/DecodingSamples/qr-screenshot-3.png", ExpectedCleanSmall));
 
         // Multi pack: many codes in one image + screenshot-like degradation.
-        scenarios.Add(Generated(Multi, "multi-8-screenshot-like", BuildMultiQrScreenshotLike, MultiOptions(mode), MultiPayloads));
+        AddGeneratedMulti(
+            scenarios,
+            Multi,
+            multiOptions,
+            ("multi-8-screenshot-like", BuildMultiQrScreenshotLike, MultiPayloads));
 
         // Art pack: stylized QR art, including the known hard set.
-        scenarios.Add(Sample(Art, "art-dots-variants", "Assets/DecodingSamples/qr-art-dots-variants.png", ArtOptions(mode), ExpectedJess3));
-        scenarios.Add(Sample(Art, "art-jess3-grid", "Assets/DecodingSamples/qr-art-jess3-characters-grid.png", ArtOptions(mode), ExpectedJess3));
-        scenarios.Add(Sample(Art, "art-jess3-splash", "Assets/DecodingSamples/qr-art-jess3-characters-splash.png", ArtOptions(mode), ExpectedJess3));
-        scenarios.Add(Sample(Art, "art-jess3-splash-variant", "Assets/DecodingSamples/qr-art-jess3-characters-splash-variant.png", ArtOptions(mode), ExpectedJess3));
+        AddSamples(
+            scenarios,
+            Art,
+            artOptions,
+            ("art-dots-variants", "Assets/DecodingSamples/qr-art-dots-variants.png", ExpectedJess3),
+            ("art-jess3-grid", "Assets/DecodingSamples/qr-art-jess3-characters-grid.png", ExpectedJess3),
+            ("art-jess3-splash", "Assets/DecodingSamples/qr-art-jess3-characters-splash.png", ExpectedJess3),
+            ("art-jess3-splash-variant", "Assets/DecodingSamples/qr-art-jess3-characters-splash-variant.png", ExpectedJess3));
 
         if (mode == QrPackMode.Full) {
-            scenarios.Add(Sample(Art, "art-facebook-splash-grid", "Assets/DecodingSamples/qr-art-facebook-splash-grid.png", ArtOptions(mode), ExpectedFacebookJess3));
-            scenarios.Add(Sample(Art, "art-montage-grid", "Assets/DecodingSamples/qr-art-montage-grid.png", ArtOptions(mode), ExpectedZip2Montage));
-            scenarios.Add(Sample(Art, "art-stripe-eye-grid", "Assets/DecodingSamples/qr-art-stripe-eye-grid.png", ArtOptions(mode), ExpectedJess3));
-            scenarios.Add(Sample(Art, "art-drip-variants", "Assets/DecodingSamples/qr-art-drip-variants.png", ArtOptions(mode), ExpectedJess3));
-            scenarios.Add(Sample(Art, "art-solid-bg-grid", "Assets/DecodingSamples/qr-art-solid-bg-grid.png", ArtOptions(mode), ExpectedJess3));
-            scenarios.Add(Sample(Art, "art-gear-illustration-grid", "Assets/DecodingSamples/qr-art-gear-illustration-grid.png", ArtOptions(mode), ExpectedJess3));
+            AddSamples(
+                scenarios,
+                Art,
+                artOptions,
+                ("art-facebook-splash-grid", "Assets/DecodingSamples/qr-art-facebook-splash-grid.png", ExpectedFacebookJess3),
+                ("art-montage-grid", "Assets/DecodingSamples/qr-art-montage-grid.png", ExpectedZip2Montage),
+                ("art-stripe-eye-grid", "Assets/DecodingSamples/qr-art-stripe-eye-grid.png", ExpectedJess3),
+                ("art-drip-variants", "Assets/DecodingSamples/qr-art-drip-variants.png", ExpectedJess3),
+                ("art-solid-bg-grid", "Assets/DecodingSamples/qr-art-solid-bg-grid.png", ExpectedJess3),
+                ("art-gear-illustration-grid", "Assets/DecodingSamples/qr-art-gear-illustration-grid.png", ExpectedJess3));
         }
 
         return scenarios;
@@ -197,6 +234,27 @@ internal static class QrDecodeScenarioPacks {
             build,
             options,
             expectedTexts);
+    }
+
+    private static void AddSamples(List<QrDecodeScenario> scenarios, string pack, QrPixelDecodeOptions options, params (string Name, string Path, string Expected)[] items) {
+        for (var i = 0; i < items.Length; i++) {
+            var item = items[i];
+            scenarios.Add(Sample(pack, item.Name, item.Path, options, item.Expected));
+        }
+    }
+
+    private static void AddGenerated(List<QrDecodeScenario> scenarios, string pack, QrPixelDecodeOptions options, params (string Name, Func<QrDecodeScenarioData> Build, string Expected)[] items) {
+        for (var i = 0; i < items.Length; i++) {
+            var item = items[i];
+            scenarios.Add(Generated(pack, item.Name, item.Build, options, item.Expected));
+        }
+    }
+
+    private static void AddGeneratedMulti(List<QrDecodeScenario> scenarios, string pack, QrPixelDecodeOptions options, params (string Name, Func<QrDecodeScenarioData> Build, string[] Expected)[] items) {
+        for (var i = 0; i < items.Length; i++) {
+            var item = items[i];
+            scenarios.Add(Generated(pack, item.Name, item.Build, options, item.Expected));
+        }
     }
 
     private static QrPixelDecodeOptions IdealOptions(QrPackMode mode) {

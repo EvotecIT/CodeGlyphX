@@ -435,7 +435,6 @@ internal static class QrDecodePackRunner {
             if (widthPx <= 0 || heightPx <= 0 || stridePx <= 0) return -1;
             var black = 0L;
             var total = (long)widthPx * heightPx;
-            if (total <= 0) return -1;
             for (var y = 0; y < heightPx; y++) {
                 var row = y * stridePx;
                 var p = row;

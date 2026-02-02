@@ -38,47 +38,65 @@ internal static class QrDecodeSampleFactory {
     }
 
     public static QrDecodeScenarioData BuildBlurredGenerated(string payload = DefaultPayload, int blurRadius = 1) {
-        var data = RenderQrImage(payload, OutputFormat.Png);
-        QrDecodeImageOps.ApplyBoxBlur(data.Rgba, data.Width, data.Height, data.Stride, blurRadius);
-        return data;
+        return BuildWithTransform(
+            payload,
+            OutputFormat.Png,
+            null,
+            data => QrDecodeImageOps.ApplyBoxBlur(data.Rgba, data.Width, data.Height, data.Stride, blurRadius));
     }
 
     public static QrDecodeScenarioData BuildGlareGenerated(string payload = DefaultPayload, byte alphaStart = 8, byte alphaEnd = 64) {
-        var data = RenderQrImage(payload, OutputFormat.Png);
-        QrDecodeImageOps.ApplyLinearGradientOverlay(data.Rgba, data.Width, data.Height, data.Stride, 255, 255, 255, alphaStart, alphaEnd);
-        return data;
+        return BuildWithTransform(
+            payload,
+            OutputFormat.Png,
+            null,
+            data => QrDecodeImageOps.ApplyLinearGradientOverlay(data.Rgba, data.Width, data.Height, data.Stride, 255, 255, 255, alphaStart, alphaEnd));
     }
 
     public static QrDecodeScenarioData BuildMotionBlurGenerated(string payload = DefaultPayload, int blurRadius = 6) {
-        var data = RenderQrImage(payload, OutputFormat.Png);
-        QrDecodeImageOps.ApplyMotionBlurHorizontal(data.Rgba, data.Width, data.Height, data.Stride, blurRadius);
-        return data;
+        return BuildWithTransform(
+            payload,
+            OutputFormat.Png,
+            null,
+            data => QrDecodeImageOps.ApplyMotionBlurHorizontal(data.Rgba, data.Width, data.Height, data.Stride, blurRadius));
     }
 
     public static QrDecodeScenarioData BuildShearedGenerated(string payload = DefaultPayload, int maxShiftPx = 0) {
-        var data = RenderQrImage(payload, OutputFormat.Png);
-        var shift = maxShiftPx > 0 ? maxShiftPx : Math.Max(6, data.Width / 14);
-        QrDecodeImageOps.ApplyHorizontalShear(data.Rgba, data.Width, data.Height, data.Stride, shift, 255, 255, 255, 255);
-        return data;
+        return BuildWithTransform(
+            payload,
+            OutputFormat.Png,
+            null,
+            data => {
+                var shift = maxShiftPx > 0 ? maxShiftPx : Math.Max(6, data.Width / 14);
+                QrDecodeImageOps.ApplyHorizontalShear(data.Rgba, data.Width, data.Height, data.Stride, shift, 255, 255, 255, 255);
+            });
     }
 
     public static QrDecodeScenarioData BuildLowContrastGenerated(string payload = DefaultPayload, double factor = 0.55, int bias = 0) {
-        var data = RenderQrImage(payload, OutputFormat.Png);
-        QrDecodeImageOps.ApplyContrast(data.Rgba, data.Width, data.Height, data.Stride, factor, bias);
-        return data;
+        return BuildWithTransform(
+            payload,
+            OutputFormat.Png,
+            null,
+            data => QrDecodeImageOps.ApplyContrast(data.Rgba, data.Width, data.Height, data.Stride, factor, bias));
     }
 
     public static QrDecodeScenarioData BuildLowContrastGlareGenerated(string payload = DefaultPayload) {
-        var data = RenderQrImage(payload, OutputFormat.Png);
-        QrDecodeImageOps.ApplyContrast(data.Rgba, data.Width, data.Height, data.Stride, 0.55, 0);
-        QrDecodeImageOps.ApplyLinearGradientOverlay(data.Rgba, data.Width, data.Height, data.Stride, 255, 255, 255, 16, 80);
-        return data;
+        return BuildWithTransform(
+            payload,
+            OutputFormat.Png,
+            null,
+            data => {
+                QrDecodeImageOps.ApplyContrast(data.Rgba, data.Width, data.Height, data.Stride, 0.55, 0);
+                QrDecodeImageOps.ApplyLinearGradientOverlay(data.Rgba, data.Width, data.Height, data.Stride, 255, 255, 255, 16, 80);
+            });
     }
 
     public static QrDecodeScenarioData BuildRotatedGenerated(string payload = DefaultPayload, double degrees = 8.0) {
-        var data = RenderQrImage(payload, OutputFormat.Png);
-        var rotated = QrDecodeImageOps.RotateBilinear(data.Rgba, data.Width, data.Height, data.Stride, degrees, 255, 255, 255, 255);
-        return new QrDecodeScenarioData(rotated, data.Width, data.Height);
+        return BuildWithReplacement(
+            payload,
+            OutputFormat.Png,
+            null,
+            data => QrDecodeImageOps.RotateBilinear(data.Rgba, data.Width, data.Height, data.Stride, degrees, 255, 255, 255, 255));
     }
 
     public static QrDecodeScenarioData BuildPartialQuietGenerated(string payload = DefaultPayload, int quietZoneModules = 4, int cropModules = 2) {
@@ -96,15 +114,19 @@ internal static class QrDecodeSampleFactory {
     }
 
     public static QrDecodeScenarioData BuildJpegBlurGenerated(string payload = DefaultPayload, int quality = 35, int blurRadius = 1) {
-        var data = BuildJpegCompressedGenerated(payload, quality);
-        QrDecodeImageOps.ApplyBoxBlur(data.Rgba, data.Width, data.Height, data.Stride, blurRadius);
-        return data;
+        return BuildWithTransform(
+            payload,
+            OutputFormat.Jpeg,
+            options => options.JpegQuality = quality,
+            data => QrDecodeImageOps.ApplyBoxBlur(data.Rgba, data.Width, data.Height, data.Stride, blurRadius));
     }
 
     public static QrDecodeScenarioData BuildSaltPepperGenerated(string payload = DefaultPayload, double probability = 0.02, int seed = 1337) {
-        var data = RenderQrImage(payload, OutputFormat.Png);
-        QrDecodeImageOps.ApplySaltPepperNoise(data.Rgba, data.Width, data.Height, data.Stride, probability, seed);
-        return data;
+        return BuildWithTransform(
+            payload,
+            OutputFormat.Png,
+            null,
+            data => QrDecodeImageOps.ApplySaltPepperNoise(data.Rgba, data.Width, data.Height, data.Stride, probability, seed));
     }
 
     public static QrDecodeScenarioData BuildScreenshotLikeGenerated(string payload = DefaultPayload, int noiseAmplitude = 8, int blurRadius = 1) {
@@ -117,9 +139,11 @@ internal static class QrDecodeSampleFactory {
     }
 
     public static QrDecodeScenarioData BuildKeystoneGenerated(string payload = DefaultPayload, double topScale = 0.78, double bottomScale = 1.0) {
-        var data = RenderQrImage(payload, OutputFormat.Png);
-        var keystone = QrDecodeImageOps.ApplyVerticalKeystone(data.Rgba, data.Width, data.Height, data.Stride, topScale, bottomScale, 255, 255, 255, 255);
-        return new QrDecodeScenarioData(keystone, data.Width, data.Height);
+        return BuildWithReplacement(
+            payload,
+            OutputFormat.Png,
+            null,
+            data => QrDecodeImageOps.ApplyVerticalKeystone(data.Rgba, data.Width, data.Height, data.Stride, topScale, bottomScale, 255, 255, 255, 255));
     }
 
     public static QrDecodeScenarioData BuildNoQuietGenerated(string payload = DefaultPayload) {
@@ -140,6 +164,18 @@ internal static class QrDecodeSampleFactory {
             options.TargetSizeIncludesQuietZone = true;
             options.QuietZone = 4;
         });
+    }
+
+    private static QrDecodeScenarioData BuildWithTransform(string payload, OutputFormat format, Action<QrEasyOptions>? configure, Action<QrDecodeScenarioData> transform) {
+        var data = RenderQrImage(payload, format, configure);
+        transform(data);
+        return data;
+    }
+
+    private static QrDecodeScenarioData BuildWithReplacement(string payload, OutputFormat format, Action<QrEasyOptions>? configure, Func<QrDecodeScenarioData, byte[]> transform) {
+        var data = RenderQrImage(payload, format, configure);
+        var pixels = transform(data);
+        return new QrDecodeScenarioData(pixels, data.Width, data.Height);
     }
 
     private static QrDecodeScenarioData RenderQrImage(string payload, OutputFormat format, Action<QrEasyOptions>? configure = null) {
