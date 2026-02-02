@@ -215,9 +215,8 @@ public static class WebpReader {
     }
 
     private static void EnsureWebpDimensionsWithinLimits(ReadOnlySpan<byte> data) {
-        if (!TryEnsureWebpDimensionsWithinLimits(data)) {
-            throw new FormatException("WebP dimensions exceed size limits.");
-        }
+        if (!TryReadDimensions(data, out var width, out var height)) return;
+        _ = DecodeGuards.EnsurePixelCount(width, height, "WebP dimensions exceed size limits.");
     }
 
     private static int ReadU16LE(ReadOnlySpan<byte> data, int offset) {

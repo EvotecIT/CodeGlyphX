@@ -341,7 +341,9 @@ public static partial class ImageReader {
     public static TiffRgba32Page[] DecodeTiffPagesRgba32(Stream stream) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) throw new FormatException("Image payload exceeds size limits.");
+            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) {
+                throw new FormatException(GuardMessages.ForBytes(ImagePayloadLimitMessage, buffer.Count, MaxImageBytes));
+            }
             return DecodeTiffPagesRgba32(buffer.AsSpan());
         }
         var data = RenderIO.ReadBinary(stream, MaxImageBytes);

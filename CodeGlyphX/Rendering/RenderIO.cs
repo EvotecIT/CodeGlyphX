@@ -142,7 +142,7 @@ public static class RenderIO {
         if (maxBytes <= 0) return ReadBinary(path);
         var info = new FileInfo(path);
         if (info.Exists && info.Length > maxBytes) {
-            throw new FormatException(InputLimitMessage);
+            throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, info.Length, maxBytes));
         }
         return File.ReadAllBytes(path);
     }
@@ -171,7 +171,7 @@ public static class RenderIO {
         if (maxBytes <= 0) return await ReadBinaryAsync(path, cancellationToken).ConfigureAwait(false);
         var info = new FileInfo(path);
         if (info.Exists && info.Length > maxBytes) {
-            throw new FormatException(InputLimitMessage);
+            throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, info.Length, maxBytes));
         }
         using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
         return await ReadBinaryAsync(fs, maxBytes, cancellationToken).ConfigureAwait(false);
@@ -201,7 +201,9 @@ public static class RenderIO {
         if (maxBytes <= 0) return ReadBinary(stream);
 
         if (stream is MemoryStream memory) {
-            if (memory.Length > maxBytes) throw new FormatException(InputLimitMessage);
+            if (memory.Length > maxBytes) {
+                throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, memory.Length, maxBytes));
+            }
             return memory.ToArray();
         }
 
@@ -212,7 +214,7 @@ public static class RenderIO {
             var read = stream.Read(buffer, 0, buffer.Length);
             if (read <= 0) break;
             total += read;
-            if (total > maxBytes) throw new FormatException(InputLimitMessage);
+            if (total > maxBytes) throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, total, maxBytes));
             ms.Write(buffer, 0, read);
         }
         return ms.ToArray();
@@ -244,7 +246,9 @@ public static class RenderIO {
         if (maxBytes <= 0) return await ReadBinaryAsync(stream, cancellationToken).ConfigureAwait(false);
 
         if (stream is MemoryStream memory) {
-            if (memory.Length > maxBytes) throw new FormatException(InputLimitMessage);
+            if (memory.Length > maxBytes) {
+                throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, memory.Length, maxBytes));
+            }
             return memory.ToArray();
         }
 
@@ -255,7 +259,7 @@ public static class RenderIO {
             var read = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
             if (read <= 0) break;
             total += read;
-            if (total > maxBytes) throw new FormatException(InputLimitMessage);
+            if (total > maxBytes) throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, total, maxBytes));
             await ms.WriteAsync(buffer, 0, read, cancellationToken).ConfigureAwait(false);
         }
         return ms.ToArray();
