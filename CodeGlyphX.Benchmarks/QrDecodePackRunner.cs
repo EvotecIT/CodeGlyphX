@@ -433,8 +433,8 @@ internal static class QrDecodePackRunner {
                 options);
 
             if (widthPx <= 0 || heightPx <= 0 || stridePx <= 0) return -1;
-            var black = 0;
-            var total = widthPx * heightPx;
+            var black = 0L;
+            var total = (long)widthPx * heightPx;
             for (var y = 0; y < heightPx; y++) {
                 var row = y * stridePx;
                 var p = row;
@@ -442,7 +442,7 @@ internal static class QrDecodePackRunner {
                     if (pixels[p] == 0) black++;
                 }
             }
-            return total == 0 ? -1 : black / (double)total;
+            return black / (double)total;
         } catch {
             return -1;
         }
@@ -643,8 +643,7 @@ internal static class QrDecodePackRunner {
     private static string? FormatFailureBreakdown(IEnumerable<QrDecodeScenarioResult> results) {
         var counts = new Dictionary<QrDecodeFailureReason, int>();
         var total = 0;
-        foreach (var info in results.SelectMany(r => r.Infos)) {
-            var failure = info.Module.Failure;
+        foreach (var failure in results.SelectMany(r => r.Infos).Select(info => info.Module.Failure)) {
             if (failure == QrDecodeFailureReason.None) continue;
             if (!counts.TryGetValue(failure, out var count)) count = 0;
             counts[failure] = count + 1;
@@ -686,7 +685,6 @@ internal static class QrDecodePackRunner {
     private static string BuildCsvReport(QrDecodePackRunnerOptions options, List<QrDecodeScenarioResult> results, DateTime nowUtc) {
         var model = BuildReportModel(options, results, nowUtc);
         var sb = new StringBuilder(8192);
-        sb.AppendLine("dateUtc,mode,pack,packCategory,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
         sb.AppendLine("dateUtc,mode,pack,packCategory,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
 
         var date = nowUtc.ToString("O");
