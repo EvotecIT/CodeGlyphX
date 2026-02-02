@@ -1,0 +1,78 @@
+{
+  "SchemaVersion": 1,
+  "Name": "CodeGlyphX",
+  "BaseUrl": "https://codeglyphx.com",
+  "DefaultTheme": "codeglyphx",
+  "TrailingSlash": "always",
+  "ContentRoot": "content",
+  "ThemesRoot": "themes",
+  "DataRoot": "../Assets/Data",
+  "StaticAssets": [
+    { "Source": "static" }
+  ],
+  "Collections": [
+    {
+      "Name": "pages",
+      "Input": "content",
+      "Output": "/",
+      "DefaultLayout": "base",
+      "UseToc": false,
+      "Include": ["*.md", "**/*.md"]
+    }
+  ],
+  "Head": {
+    "Links": [
+      { "Rel": "icon", "Href": "/codeglyphx-qr-icon.png", "Type": "image/png" },
+      { "Rel": "apple-touch-icon", "Href": "/codeglyphx-qr-icon.png" }
+    ]
+  },
+  "Social": {
+    "Enabled": true,
+    "SiteName": "CodeGlyphX",
+    "Image": "/codeglyphx-qr-icon.png",
+    "TwitterCard": "summary"
+  },
+  "StructuredData": {
+    "Enabled": true,
+    "Breadcrumbs": true
+  },
+  "Redirects": [
+    { "From": "/docs/api", "To": "/api", "Status": 301 }
+  ],
+  "AssetRegistry": {
+    "CssStrategy": "standard",
+    "Bundles": [
+      { "Name": "global", "Css": ["/css/fonts.css", "/css/app.css"], "Js": ["/js/main.js"] },
+      { "Name": "docs", "Css": ["/css/api-docs.css"], "Js": ["/js/docs-sidebar.js"] },
+      { "Name": "home", "Js": ["/js/style-board.js"] },
+      { "Name": "benchmarks", "Js": ["/js/benchmark.js"] },
+      { "Name": "showcase", "Js": ["/js/carousel.js"] }
+    ],
+    "RouteBundles": [
+      { "Match": "/", "Bundles": ["global", "home"] },
+      { "Match": "/docs/**", "Bundles": ["global", "docs"] },
+      { "Match": "/api/**", "Bundles": ["global", "docs"] },
+      { "Match": "/benchmarks/**", "Bundles": ["global", "benchmarks"] },
+      { "Match": "/showcase/**", "Bundles": ["global", "showcase"] },
+      { "Match": "/**", "Bundles": ["global"] }
+    ],
+    "CriticalCss": [
+      { "Name": "codeglyphx", "Path": "static/css/critical.css" }
+    ]
+  },
+  "LinkRules": {
+    "ExternalRel": "noopener",
+    "ExternalTarget": "_blank",
+    "AddExternalIcon": true
+  },
+  "A11y": {
+    "SkipLinkLabel": "Skip to content",
+    "ExternalLinkLabel": "Opens in a new tab",
+    "NavToggleLabel": "Toggle navigation",
+    "SearchLabel": "Search"
+  },
+  "LinkCheck": {
+    "Enabled": true,
+    "IncludeExternal": false
+  }
+}

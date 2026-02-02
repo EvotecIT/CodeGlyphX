@@ -380,6 +380,7 @@ binarized-*.png
 .playwright-mcp/*
 .claude/*
 site/
+Website.PowerForge/_site/
 temp-playground/
 temp-hash/
 temp-docs/

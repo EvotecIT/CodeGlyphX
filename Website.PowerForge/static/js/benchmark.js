@@ -1,0 +1,723 @@
+// Benchmark page renderer
+(function() {
+  let currentMode = 'quick';
+  let currentOs = 'windows';
+  let summaryData = null;
+  let detailData = null;
+
+  function loadJson(url) {
+    return fetch(url, { cache: 'no-store' })
+      .then(function(res) { return res.ok ? res.json() : null; })
+      .catch(function() { return null; });
+  }
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    return String(text).replace(/[&<>"']/g, function(m) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+    });
+  }
+
+  function getRatingIcon(rating) {
+    switch (rating) {
+      case 'good':
+        return '<span class="rating-icon rating-good" aria-label="Good">●</span>';
+      case 'ok':
+        return '<span class="rating-icon rating-ok" aria-label="Okay">●</span>';
+      case 'bad':
+        return '<span class="rating-icon rating-bad" aria-label="Needs improvement">●</span>';
+      default:
+        return '<span class="rating-icon">-</span>';
+    }
+  }
+
+  function getEntry(data, os, mode) {
+    return data?.[os]?.[mode] ?? null;
+  }
+
+  function normalizeOs(value) {
+    if (!value) return null;
+    const key = String(value).toLowerCase();
+    if (key === 'win') return 'windows';
+    if (key === 'mac' || key === 'osx' || key === 'darwin') return 'macos';
+    if (key === 'windows' || key === 'linux' || key === 'macos') return key;
+    return null;
+  }
+
+  function normalizeMode(value) {
+    if (!value) return null;
+    const key = String(value).toLowerCase();
+    return (key === 'quick' || key === 'full') ? key : null;
+  }
+
+  function readUrlSelection() {
+    const params = new URLSearchParams(globalThis.location.search);
+    return {
+      os: normalizeOs(params.get('os')),
+      mode: normalizeMode(params.get('mode'))
+    };
+  }
+
+  function updateUrlSelection() {
+    if (!globalThis.history?.replaceState) return;
+    const params = new URLSearchParams(globalThis.location.search);
+    params.set('os', currentOs);
+    params.set('mode', currentMode);
+    const query = params.toString();
+    const url = query ? (globalThis.location.pathname + '?' + query) : globalThis.location.pathname;
+    globalThis.history.replaceState(null, '', url);
+  }
+
+  function hasEntryData(entry) {
+    return !!(entry && (entry.summary?.length || entry.comparisons?.length));
+  }
+
+  function hasDataFor(os, mode) {
+    return hasEntryData(getEntry(summaryData, os, mode)) || hasEntryData(getEntry(detailData, os, mode));
+  }
+
+  function getAvailableModes(os) {
+    return ['full', 'quick'].filter(function(mode) { return hasDataFor(os, mode); });
+  }
+
+  function applyUrlSelection() {
+    const selection = readUrlSelection();
+    if (!selection.os) return false;
+
+    const availableModes = getAvailableModes(selection.os);
+    if (!availableModes.length) return false;
+
+    currentOs = selection.os;
+    if (selection.mode && availableModes.includes(selection.mode)) {
+      currentMode = selection.mode;
+    } else {
+      currentMode = availableModes[0];
+    }
+    return true;
+  }
+
+  function findBestEntry(data) {
+    // Priority: windows full > windows quick > linux full > linux quick > macos
+    const order = [
+      ['windows', 'full'], ['windows', 'quick'],
+      ['linux', 'full'], ['linux', 'quick'],
+      ['macos', 'full'], ['macos', 'quick']
+    ];
+    for (let i = 0; i < order.length; i++) {
+      const entry = getEntry(data, order[i][0], order[i][1]);
+      if (hasEntryData(entry)) {
+        currentOs = order[i][0];
+        currentMode = order[i][1];
+        return entry;
+      }
+    }
+    return null;
+  }
+
+  function formatDate(isoString) {
+    if (!isoString) return 'Unknown';
+    try {
+      const d = new Date(isoString);
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    } catch {
+      return isoString;
+    }
+  }
+
+  function formatMode(mode) {
+    if (!mode) return 'Unknown';
+    return mode.charAt(0).toUpperCase() + mode.slice(1);
+  }
+
+  function formatOs(os) {
+    if (!os) return 'Unknown';
+    if (os === 'macos') return 'macOS';
+    if (os === 'windows') return 'Windows';
+    if (os === 'linux') return 'Linux';
+    return os;
+  }
+
+  function renderMeta(entry) {
+    const container = document.querySelector('[data-benchmark-meta]');
+    if (!container) return;
+
+    if (!entry) {
+      container.innerHTML = '<p class="benchmark-warning">No benchmark data available.</p>';
+      return;
+    }
+
+    const meta = entry.meta || {};
+    let html = '<div class="benchmark-meta-grid">';
+    html += '<div class="meta-item"><span class="meta-label">Last Updated</span><span class="meta-value">' + escapeHtml(formatDate(entry.generatedUtc)) + '</span></div>';
+    html += '<div class="meta-item"><span class="meta-label">Mode</span><span class="meta-value">' + escapeHtml(formatMode(entry.runMode)) + '</span></div>';
+    html += '<div class="meta-item"><span class="meta-label">OS</span><span class="meta-value">' + escapeHtml(entry.os || 'unknown') + '</span></div>';
+    html += '<div class="meta-item"><span class="meta-label">Framework</span><span class="meta-value">' + escapeHtml(entry.framework || 'unknown') + '</span></div>';
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  function renderOsSelector(summaryData, detailData) {
+    const buttons = document.querySelectorAll('.benchmark-os-btn');
+    const noteEl = document.querySelector('[data-os-note]');
+    let noteText = '';
+
+    buttons.forEach(function(btn) {
+      const os = btn.dataset.os;
+      const availableModes = getAvailableModes(os);
+      const hasData = availableModes.length > 0;
+
+      btn.disabled = !hasData;
+      btn.classList.toggle('active', os === currentOs);
+
+      if (!hasData) {
+        btn.title = 'No benchmark data available for ' + formatOs(os);
+      } else {
+        btn.title = '';
+      }
+
+      if (os === currentOs) {
+        if (hasData) {
+          noteText = 'Available modes: ' + availableModes.map(formatMode).join(', ');
+        } else {
+          noteText = 'No benchmark data available yet.';
+        }
+      }
+
+      btn.onclick = function() {
+        if (this.disabled) return;
+        currentOs = os;
+        if (!availableModes.includes(currentMode)) {
+          currentMode = availableModes[0];
+        }
+        renderAll();
+      };
+    });
+
+    if (noteEl) {
+      noteEl.textContent = noteText || 'No benchmark data available yet.';
+    }
+  }
+
+  function renderModeSelector(summaryData, detailData) {
+    const buttons = document.querySelectorAll('.benchmark-mode-btn');
+    const noteEl = document.querySelector('[data-mode-note]');
+
+    buttons.forEach(function(btn) {
+      const mode = btn.dataset.mode;
+      const hasData = hasDataFor(currentOs, mode);
+
+      btn.disabled = !hasData;
+      btn.classList.toggle('active', mode === currentMode);
+
+      if (!hasData) {
+        btn.title = 'No ' + mode + ' benchmark data available yet';
+      } else {
+        btn.title = '';
+      }
+
+      btn.onclick = function() {
+        if (this.disabled) return;
+        currentMode = mode;
+        buttons.forEach(function(b) { b.classList.toggle('active', b.dataset.mode === mode); });
+        renderAll();
+      };
+    });
+
+    // Update note
+    if (noteEl) {
+      const entry = getEntry(summaryData, currentOs, currentMode);
+      if (entry && entry.runModeDetails) {
+        noteEl.textContent = entry.runModeDetails;
+      } else if (currentMode === 'quick') {
+        noteEl.textContent = 'Quick mode: Fewer iterations, higher variance. Use for rough estimates only.';
+      } else {
+        noteEl.textContent = 'Full mode: BenchmarkDotNet defaults with statistical analysis.';
+      }
+    }
+  }
+
+  function renderVendorCell(vendor, delta, extraClass) {
+    if (!vendor || (!vendor.mean && !vendor.allocated)) {
+      return '<td class="bench-na">-</td>';
+    }
+    const cls = extraClass ? ' class="' + extraClass + '"' : '';
+    let html = '<td' + cls + '>';
+    if (vendor.mean) {
+      html += '<div>' + escapeHtml(vendor.mean) + '</div>';
+    }
+    if (vendor.allocated) {
+      html += '<div class="bench-dim">' + escapeHtml(vendor.allocated) + '</div>';
+    }
+    if (delta) {
+      html += '<div class="bench-dim bench-delta">' + escapeHtml(delta) + '</div>';
+    }
+    html += '</td>';
+    return html;
+  }
+
+  function renderSummaryTable(entry) {
+    const container = document.querySelector('[data-benchmark-summary]');
+    if (!container) return;
+
+    if (!entry || !entry.summary || !entry.summary.length) {
+      container.innerHTML = '<p class="benchmark-no-data">No comparison summary available for this mode.</p>';
+      return;
+    }
+
+    const vendorSet = {};
+    entry.summary.forEach(function(item) {
+      if (item.vendors) {
+        Object.keys(item.vendors).forEach(function(v) {
+          if (v !== 'CodeGlyphX') vendorSet[v] = true;
+        });
+      }
+    });
+    const preferred = ['ZXing.Net', 'QRCoder', 'Barcoder'];
+    const vendorList = preferred.filter(function(v) { return vendorSet[v]; });
+    Object.keys(vendorSet).forEach(function(v) {
+      if (preferred.indexOf(v) === -1) vendorList.push(v);
+    });
+
+    let html = '<div class="table-scroll"><table class="bench-table bench-summary-table">';
+    html += '<thead><tr>';
+    html += '<th>Benchmark</th>';
+    html += '<th>Scenario</th>';
+    html += '<th>Fastest</th>';
+    html += '<th>CodeGlyphX</th>';
+    vendorList.forEach(function(v) {
+      html += '<th>' + escapeHtml(v) + '</th>';
+    });
+    html += '<th>CodeGlyphX vs Fastest</th>';
+    html += '<th>Alloc vs Fastest</th>';
+    html += '<th>Rating</th>';
+    html += '</tr></thead><tbody>';
+
+    entry.summary.forEach(function(item) {
+      html += '<tr>';
+      html += '<td>' + escapeHtml(item.benchmark || '') + '</td>';
+      html += '<td>' + escapeHtml(item.scenario || '') + '</td>';
+
+      html += '<td class="bench-fastest">';
+      html += '<div>' + escapeHtml(item.fastestVendor || '') + '</div>';
+      if (item.fastestMean) html += '<div class="bench-dim">' + escapeHtml(item.fastestMean) + '</div>';
+      html += '</td>';
+
+      const cgx = item.vendors?.['CodeGlyphX'] || {};
+      const isCgxFastest = item.fastestVendor === 'CodeGlyphX';
+      html += renderVendorCell(cgx, '', isCgxFastest ? 'bench-winner' : '');
+
+      vendorList.forEach(function(v) {
+        const vendor = item.vendors?.[v];
+        const delta = item.deltas?.[v] || '';
+        html += renderVendorCell(vendor, delta, '');
+      });
+
+      html += '<td>' + escapeHtml(item.codeGlyphXVsFastestText || (item.codeGlyphXVsFastest ? item.codeGlyphXVsFastest + ' x' : '-')) + '</td>';
+      html += '<td>' + escapeHtml(item.codeGlyphXAllocVsFastestText || (item.codeGlyphXAllocVsFastest ? item.codeGlyphXAllocVsFastest + ' x' : '-')) + '</td>';
+
+      const ratingClass = 'bench-rating-' + (item.rating || 'unknown');
+      const ratingIcon = getRatingIcon(item.rating);
+      html += '<td class="' + ratingClass + '" title="' + escapeHtml(item.rating || '') + '">' + ratingIcon + '</td>';
+      html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+
+    // Add legend
+    html += '<div class="bench-legend">';
+    html += '<span class="bench-legend-item">' + getRatingIcon('good') + ' within 10% time, 25% allocation</span>';
+    html += '<span class="bench-legend-item">' + getRatingIcon('ok') + ' within 50% time, 100% allocation</span>';
+    html += '<span class="bench-legend-item">' + getRatingIcon('bad') + ' outside these bounds</span>';
+    html += '</div>';
+
+    container.innerHTML = html;
+  }
+
+  function renderDetails(entry) {
+    const container = document.querySelector('[data-benchmark-details]');
+    if (!container) return;
+
+    if (!entry || !entry.comparisons || !entry.comparisons.length) {
+      container.innerHTML = '<p class="benchmark-no-data">No detailed comparison data available for this mode.</p>';
+      return;
+    }
+
+    let html = '';
+    entry.comparisons.forEach(function(comp) {
+      html += '<div class="benchmark-detail-section">';
+      html += '<h3>' + escapeHtml(comp.title) + '</h3>';
+
+      if (!comp.scenarios || !comp.scenarios.length) {
+        html += '<p class="bench-na">No scenarios</p>';
+        html += '</div>';
+        return;
+      }
+
+      html += '<div class="table-scroll"><table class="bench-table bench-detail-table">';
+      html += '<thead><tr><th>Scenario</th>';
+
+      // Collect all vendors from all scenarios
+      const allVendors = {};
+      comp.scenarios.forEach(function(s) {
+        if (s.vendors) {
+          Object.keys(s.vendors).forEach(function(v) { allVendors[v] = true; });
+        }
+      });
+      const vendorList = Object.keys(allVendors).sort(function(a, b) {
+        if (a === 'CodeGlyphX') return -1;
+        if (b === 'CodeGlyphX') return 1;
+        return a.localeCompare(b);
+      });
+
+      vendorList.forEach(function(v) {
+        html += '<th>' + escapeHtml(v) + '</th>';
+      });
+      html += '</tr></thead><tbody>';
+
+      comp.scenarios.forEach(function(scenario) {
+        html += '<tr>';
+        html += '<td>' + escapeHtml(scenario.name) + '</td>';
+
+        vendorList.forEach(function(v) {
+          const vendor = scenario.vendors?.[v];
+          if (vendor && (vendor.mean || vendor.allocated)) {
+            html += '<td>';
+            if (vendor.mean) {
+              html += '<div>' + escapeHtml(vendor.mean) + '</div>';
+            }
+            if (vendor.allocated) {
+              html += '<div class="bench-dim">' + escapeHtml(vendor.allocated) + '</div>';
+            }
+            const delta = scenario.deltas?.[v];
+            if (delta) {
+              html += '<div class="bench-dim bench-delta">' + escapeHtml(delta) + '</div>';
+            }
+            html += '</td>';
+          } else {
+            html += '<td class="bench-na">-</td>';
+          }
+        });
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      html += '</div>';
+    });
+
+    container.innerHTML = html;
+  }
+
+  function renderBaseline(entry) {
+    const container = document.querySelector('[data-benchmark-baseline]');
+    if (!container) return;
+
+    if (!entry || !entry.baselines || !entry.baselines.length) {
+      container.innerHTML = '<p class="benchmark-no-data">No baseline data available for this mode.</p>';
+      return;
+    }
+
+    let html = '';
+    entry.baselines.forEach(function(baseline) {
+      html += '<div class="benchmark-detail-section">';
+      html += '<h3>' + escapeHtml(baseline.title) + '</h3>';
+
+      if (!baseline.rows || !baseline.rows.length) {
+        html += '<p class="bench-na">No data</p>';
+        html += '</div>';
+        return;
+      }
+
+      html += '<div class="table-scroll"><table class="bench-table bench-baseline-table">';
+      html += '<thead><tr><th>Scenario</th><th>Mean</th><th>Allocated</th></tr></thead>';
+      html += '<tbody>';
+
+      baseline.rows.forEach(function(row) {
+        html += '<tr>';
+        html += '<td>' + escapeHtml(row.scenario) + '</td>';
+        html += '<td>' + escapeHtml(row.mean || '-') + '</td>';
+        html += '<td>' + escapeHtml(row.allocated || '-') + '</td>';
+        html += '</tr>';
+      });
+
+      html += '</tbody></table></div>';
+      html += '</div>';
+    });
+
+    container.innerHTML = html;
+  }
+
+  function renderEnvironment(entry) {
+    const container = document.querySelector('[data-benchmark-environment]');
+    if (!container) return;
+
+    if (!entry || !entry.meta) {
+      container.innerHTML = '<p class="benchmark-no-data">No environment info available.</p>';
+      return;
+    }
+
+    const meta = entry.meta;
+    let html = '<div class="benchmark-env-grid">';
+
+    const items = [
+      ['OS', meta.osDescription],
+      ['Architecture', meta.osArchitecture || meta.processArchitecture],
+      ['.NET SDK', meta.dotnetSdk],
+      ['Runtime', meta.runtime],
+      ['Processors', meta.processorCount]
+    ];
+
+    items.forEach(function(item) {
+      if (item[1]) {
+        html += '<div class="env-item"><span class="env-label">' + escapeHtml(item[0]) + '</span>';
+        html += '<span class="env-value">' + escapeHtml(item[1]) + '</span></div>';
+      }
+    });
+
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  function formatPercent(value) {
+    if (value === null || value === undefined || Number.isNaN(value)) return 'n/a';
+    const pct = Math.round(value * 100);
+    return pct + '%';
+  }
+
+  function renderPackRunner(entry) {
+    const container = document.querySelector('[data-benchmark-pack-runner]');
+    if (!container) return;
+
+    const pack = entry && entry.packRunner;
+    if (!pack || !pack.packs || !pack.packs.length) {
+      container.innerHTML = '<p class="benchmark-no-data">No QR reliability data available for this mode.</p>';
+      return;
+    }
+
+    const engines = pack.engines || [];
+    const packs = pack.packs || [];
+    let html = '';
+
+    if (engines.length) {
+      html += '<div class="pack-runner-engines">';
+      engines.forEach(function(engine) {
+        const expected = formatPercent(engine.expectedRate);
+        const fails = (engine.failingScenarios || []).slice(0, 4);
+        html += '<div class="pack-engine-card' + (engine.isExternal ? ' pack-engine-external' : '') + '">';
+        html += '<div class="pack-engine-name">' + escapeHtml(engine.name || 'unknown') + '</div>';
+        html += '<div class="pack-engine-rate">expected ' + escapeHtml(expected) + '</div>';
+        if (fails.length) {
+          html += '<div class="pack-engine-fails">misses: ' + escapeHtml(fails.join(', ')) + '</div>';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    const engineNames = [];
+    packs.forEach(function(p) {
+      (p.engines || []).forEach(function(e) {
+        if (engineNames.indexOf(e.name) === -1) engineNames.push(e.name);
+      });
+    });
+    engineNames.sort();
+
+    html += '<div class="pack-runner-table-wrap">';
+    html += '<table class="bench-table pack-runner-table">';
+    html += '<thead><tr><th>Pack</th><th>Scenarios</th>';
+    engineNames.forEach(function(name) {
+      html += '<th>' + escapeHtml(name) + '</th>';
+    });
+    html += '</tr></thead><tbody>';
+
+    packs.forEach(function(p) {
+      const byEngine = {};
+      (p.engines || []).forEach(function(e) { byEngine[e.name] = e; });
+
+      html += '<tr>';
+      html += '<td>' + escapeHtml(p.name || '') + '</td>';
+      html += '<td>' + escapeHtml(String(p.scenarioCount || 0)) + '</td>';
+
+      engineNames.forEach(function(name) {
+        const e = byEngine[name];
+        if (!e) {
+          html += '<td class="bench-na">-</td>';
+          return;
+        }
+        const expected = formatPercent(e.expectedRate);
+        const failClass = (e.expectedRate || 0) < 0.9999 ? 'pack-rate-bad' : 'pack-rate-good';
+        html += '<td class="' + failClass + '">';
+        html += '<div>' + escapeHtml(expected) + '</div>';
+        if (e.failingScenarios && e.failingScenarios.length) {
+          const sampleFails = e.failingScenarios.slice(0, 3).join(', ');
+          html += '<div class="bench-dim">misses: ' + escapeHtml(sampleFails) + '</div>';
+        }
+        html += '</td>';
+      });
+
+      html += '</tr>';
+    });
+
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+  }
+
+  function renderNotes(entry) {
+    const container = document.querySelector('[data-benchmark-notes]');
+    if (!container || !entry || !entry.notes || !entry.notes.length) return;
+
+    let html = '<ul>';
+    entry.notes.forEach(function(note) {
+      if (!note || !note.trim()) return;
+      html += '<li>' + escapeHtml(note) + '</li>';
+    });
+    html += '</ul>';
+    container.innerHTML = html;
+  }
+
+  function parseTimeValue(str) {
+    if (!str) return null;
+    // Parse values like "1.234 ms", "567.8 μs", "12.3 ns"
+    const match = str.match(/^([\d.]+)\s*(ms|μs|us|ns)/i);
+    if (!match) return null;
+    const value = parseFloat(match[1]);
+    const unit = match[2].toLowerCase();
+    // Convert to microseconds for comparison
+    if (unit === 'ms') return value * 1000;
+    if (unit === 'μs' || unit === 'us') return value;
+    if (unit === 'ns') return value / 1000;
+    return value;
+  }
+
+  function renderCharts(entry) {
+    const container = document.querySelector('[data-benchmark-charts]');
+    if (!container) return;
+
+    if (!entry || !entry.summary || !entry.summary.length) {
+      container.innerHTML = '<p class="benchmark-no-data">No chart data available for this mode.</p>';
+      return;
+    }
+
+    // Collect chart data from summary
+    const chartData = [];
+    entry.summary.forEach(function(item) {
+      const scenario = item.scenario || item.benchmark || '';
+      const cgxMean = item.vendors?.['CodeGlyphX']?.mean || item.codeGlyphXMean;
+      const fastestMean = item.fastestMean;
+      const fastestVendor = item.fastestVendor;
+
+      if (cgxMean && fastestMean) {
+        const cgxValue = parseTimeValue(cgxMean);
+        const fastestValue = parseTimeValue(fastestMean);
+        if (cgxValue && fastestValue) {
+          chartData.push({
+            scenario: scenario,
+            cgxValue: cgxValue,
+            cgxLabel: cgxMean,
+            fastestValue: fastestValue,
+            fastestLabel: fastestMean,
+            fastestVendor: fastestVendor,
+            isCgxFastest: fastestVendor === 'CodeGlyphX',
+            rating: item.rating
+          });
+        }
+      }
+    });
+
+    if (!chartData.length) {
+      container.innerHTML = '<p class="benchmark-no-data">No chart data available for this mode.</p>';
+      return;
+    }
+
+    // Find max value for scaling
+    let maxValue = 0;
+    chartData.forEach(function(d) {
+      maxValue = Math.max(maxValue, d.cgxValue, d.fastestValue);
+    });
+
+    let html = '<div class="benchmark-charts-container">';
+
+    chartData.forEach(function(d) {
+      const cgxPct = (d.cgxValue / maxValue) * 100;
+      const fastestPct = (d.fastestValue / maxValue) * 100;
+
+      html += '<div class="chart-row">';
+      html += '<div class="chart-scenario">' + escapeHtml(d.scenario) + '</div>';
+      html += '<div class="chart-bars">';
+
+      // CodeGlyphX bar
+      html += '<div class="chart-bar-row">';
+      html += '<span class="chart-bar-label">CodeGlyphX</span>';
+      html += '<div class="chart-bar-container">';
+      html += '<div class="chart-bar chart-bar-cgx' + (d.isCgxFastest ? ' chart-bar-winner' : '') + '" style="width: ' + cgxPct + '%"></div>';
+      html += '<span class="chart-bar-value">' + escapeHtml(d.cgxLabel) + '</span>';
+      html += '</div></div>';
+
+      // Fastest competitor bar (only if different from CodeGlyphX)
+      if (!d.isCgxFastest) {
+        html += '<div class="chart-bar-row">';
+        html += '<span class="chart-bar-label">' + escapeHtml(d.fastestVendor) + '</span>';
+        html += '<div class="chart-bar-container">';
+        html += '<div class="chart-bar chart-bar-fastest" style="width: ' + fastestPct + '%"></div>';
+        html += '<span class="chart-bar-value">' + escapeHtml(d.fastestLabel) + '</span>';
+        html += '</div></div>';
+      }
+
+      html += '</div></div>';
+    });
+
+    html += '</div>';
+
+    // Add chart legend
+    html += '<div class="chart-legend">';
+    html += '<span class="chart-legend-item"><span class="chart-legend-color chart-legend-cgx"></span> CodeGlyphX</span>';
+    html += '<span class="chart-legend-item"><span class="chart-legend-color chart-legend-fastest"></span> Fastest Competitor</span>';
+    html += '<span class="chart-legend-item"><span class="chart-legend-color chart-legend-winner"></span> Winner (fastest overall)</span>';
+    html += '</div>';
+
+    container.innerHTML = html;
+  }
+
+  function renderAll() {
+    const summaryEntry = getEntry(summaryData, currentOs, currentMode);
+    const detailEntry = getEntry(detailData, currentOs, currentMode);
+    const entry = summaryEntry || detailEntry;
+
+    renderMeta(entry);
+    renderOsSelector(summaryData, detailData);
+    renderModeSelector(summaryData, detailData);
+    renderSummaryTable(summaryEntry);
+    renderCharts(summaryEntry);
+    renderDetails(detailEntry);
+    renderBaseline(detailEntry);
+    renderEnvironment(entry);
+    renderPackRunner(entry);
+    renderNotes(entry);
+    updateUrlSelection();
+  }
+
+  function init() {
+    // Check if we're on the benchmark page
+    if (!document.querySelector('.benchmark-page')) return;
+
+    Promise.all([
+      loadJson('/data/benchmark-summary.json'),
+      loadJson('/data/benchmark.json')
+    ]).then(function(results) {
+      summaryData = results[0];
+      detailData = results[1];
+
+      // Find best available entry to set initial mode
+      if (!applyUrlSelection()) {
+        findBestEntry(summaryData) || findBestEntry(detailData);
+      }
+
+      renderAll();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

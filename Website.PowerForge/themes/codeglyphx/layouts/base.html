@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ if page.title && page.title != "" }}{{ page.title }} - {{ site_name }}{{ else }}{{ site_name }}{{ end }}</title>
+  {{ description_meta_html }}
+  {{ canonical_html }}
+  <link rel="icon" type="image/png" href="/codeglyphx-qr-icon.png" />
+  <link rel="apple-touch-icon" href="/codeglyphx-qr-icon.png" />
+  <link rel="preconnect" href="https://img.shields.io" crossorigin />
+  <link rel="dns-prefetch" href="https://img.shields.io" />
+  <script>(function(){const t=localStorage.getItem('theme')||'auto';document.documentElement.dataset.theme=t;})();</script>
+  <style>:root{--bg-dark:#0a0e14;--bg-card:#151b23;--text:#e6edf3;--text-muted:#8b949e;--primary:#2f81f7;--primary-light:#58a6ff}[data-theme="light"]{--bg-dark:#ffffff;--bg-card:#f6f8fa;--text:#1f2328;--text-muted:#656d76;--primary:#0969da;--primary-light:#0550ae}*,*::before,*::after{box-sizing:border-box}html,body{margin:0;padding:0;min-height:100vh}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;background:var(--bg-dark);color:var(--text);line-height:1.6}svg{max-width:100%;height:auto}.header svg,.nav svg,.nav-icon svg,.nav-cta svg,.btn-icon{width:20px;height:20px;flex-shrink:0}.feature-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center}.feature-icon svg{width:24px;height:24px}.hero-code-preview{display:flex;justify-content:center;gap:1.5rem}.code-preview-item{width:80px;height:80px;padding:12px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px}.code-preview-item svg{width:100%;height:100%}.barcode-preview{width:120px;height:60px}.header{position:sticky;top:0;z-index:100;background:var(--bg-dark);border-bottom:1px solid rgba(255,255,255,0.1)}.header-content{display:flex;align-items:center;justify-content:space-between;max-width:1400px;margin:0 auto;padding:0.75rem 1.5rem}.brand{display:flex;align-items:center;gap:0.5rem;text-decoration:none;color:var(--text);font-weight:600}.brand-icon img{width:28px;height:28px}.nav{display:flex;align-items:center;gap:1rem}.nav-links{display:flex;gap:0.25rem}.nav-links a{padding:0.5rem 1rem;color:var(--text-muted);text-decoration:none}.nav-actions{display:flex;align-items:center;gap:0.5rem}.theme-toggle{display:flex;align-items:center;gap:0.25rem;padding:0.25rem;background:var(--bg-card);border-radius:8px}.theme-toggle button{display:flex;align-items:center;justify-content:center;width:32px;height:32px;padding:0;background:transparent;border:none;border-radius:6px;color:var(--text-muted);cursor:pointer}.theme-toggle button.active{background:var(--primary);color:white}.theme-toggle button svg{width:18px;height:18px}.theme-cycle-btn{background:transparent;border:none;cursor:pointer;color:var(--text-muted)}.hero{min-height:60vh}.nav-cta{display:flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:var(--primary);color:#fff;border-radius:8px;text-decoration:none;font-weight:600}.nav-icon{display:flex;padding:0.5rem;color:var(--text-muted)}.copy-btn{opacity:0}</style>
+  {{ assets.critical_css_html }}
+  {{ assets.preloads_html }}
+  {{ extra_css_html }}
+  {{ assets.css_html }}
+  {{ head_html }}
+  {{ opengraph_html }}
+  {{ structured_data_html }}
+</head>
+<body{{ body_class }}>
+  <div class="page">
+    {{ include "header" }}
+    <main>
+{{ content }}
+    </main>
+    {{ include "footer" }}
+  </div>
+  {{ assets.js_html }}
+  {{ extra_scripts_html }}
+</body>
+</html>
