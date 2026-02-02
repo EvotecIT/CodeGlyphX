@@ -45,6 +45,8 @@ internal sealed class QrDecodeScenarioData {
     public int Stride { get; }
 }
 
+internal readonly record struct QrPackInfo(string Name, string Category, string Description, string Guidance);
+
 internal static class QrDecodeScenarioPacks {
     public const string Ideal = "ideal";
     public const string Stress = "stress";
@@ -53,6 +55,54 @@ internal static class QrDecodeScenarioPacks {
     public const string Multi = "multi";
 
     public static readonly string[] AllPacks = { Ideal, Stress, Art, Screenshot, Multi };
+    private static readonly IReadOnlyDictionary<string, QrPackInfo> PackInfo = new Dictionary<string, QrPackInfo>(StringComparer.OrdinalIgnoreCase) {
+        {
+            Ideal,
+            new QrPackInfo(
+                Ideal,
+                "ideal",
+                "Clean renders and baseline samples that should always decode.",
+                "Expect ~100% decode/expected; failures are regressions.")
+        },
+        {
+            Stress,
+            new QrPackInfo(
+                Stress,
+                "stress/realism",
+                "Resampling, noise, glare, missing quiet zone, and long payloads.",
+                "Track progress; occasional misses are expected but should trend down.")
+        },
+        {
+            Screenshot,
+            new QrPackInfo(
+                Screenshot,
+                "realism",
+                "UI screenshots with surrounding clutter and scaling artifacts.",
+                "Decode rate should improve over time; latency is secondary.")
+        },
+        {
+            Multi,
+            new QrPackInfo(
+                Multi,
+                "realism",
+                "Multiple codes in one image with screenshot-like degradation.",
+                "Expect higher latency; focus on correctness and recall.")
+        },
+        {
+            Art,
+            new QrPackInfo(
+                Art,
+                "stylized",
+                "Illustrated/stylized QR art from the hard sample set.",
+                "Decode% is a reliability goal; track changes carefully.")
+        }
+    };
+
+    public static QrPackInfo GetPackInfo(string pack) {
+        return PackInfo.TryGetValue(pack, out var info)
+            ? info
+            : new QrPackInfo(pack, "unknown", string.Empty, string.Empty);
+    }
 
     public static List<QrDecodeScenario> GetScenarios(QrPackMode mode) {
         var scenarios = new List<QrDecodeScenario>(32);
@@ -66,8 +116,25 @@ internal static class QrDecodeScenarioPacks {
         // Stress pack: resampling, noise, quiet-zone removal, longer payloads.
         scenarios.Add(Sample(Stress, "noisy-ui", "Assets/DecodingSamples/qr-noisy-ui.png", StressOptions(mode), ExpectedNoisyUi));
         scenarios.Add(Generated(Stress, "resampled-generated", BuildResampledGenerated, StressOptions(mode), GeneratedPayload));
+        scenarios.Add(Generated(Stress, "resampled-noisy-generated", BuildNoisyResampledGenerated, StressOptions(mode), GeneratedPayload));
+        scenarios.Add(Generated(Stress, "screenshot-like-generated", BuildScreenshotLikeGenerated, StressOptions(mode), GeneratedPayload));
+        scenarios.Add(Generated(Stress, "partial-quiet-generated", BuildPartialQuietGenerated, StressOptions(mode), GeneratedPayload));
+        scenarios.Add(Generated(Stress, "jpeg-60-generated", BuildJpegCompressedGenerated, StressOptions(mode), GeneratedPayload));
         scenarios.Add(Generated(Stress, "no-quiet-generated", BuildNoQuietGenerated, StressOptions(mode), GeneratedPayload));
         scenarios.Add(Generated(Stress, "long-payload-generated", BuildLongPayloadGenerated, StressOptions(mode), LongPayload));
+        if (mode == QrPackMode.Full) {
+            scenarios.Add(Generated(Stress, "blurred-generated", BuildBlurredGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "glare-generated", BuildGlareGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "motion-blur-generated", BuildMotionBlurGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "sheared-generated", BuildShearedGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "low-contrast-generated", BuildLowContrastGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "low-contrast-glare-generated", BuildLowContrastGlareGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "rotated-generated", BuildRotatedGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "jpeg-35-generated", BuildJpegCompressedLowGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "keystone-generated", BuildKeystoneGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "jpeg-35-blur-generated", BuildJpegBlurGenerated, StressOptions(mode), GeneratedPayload));
+            scenarios.Add(Generated(Stress, "salt-pepper-generated", BuildSaltPepperGenerated, StressOptions(mode), GeneratedPayload));
+        }
 
         // Screenshot pack: UI captures with multiple elements.
         scenarios.Add(Sample(Screenshot, "screenshot-1", "Assets/DecodingSamples/qr-screenshot-1.png", ScreenshotOptions(mode), ExpectedCleanSmall));
@@ -84,8 +151,8 @@ internal static class QrDecodeScenarioPacks {
         scenarios.Add(Sample(Art, "art-jess3-splash-variant", "Assets/DecodingSamples/qr-art-jess3-characters-splash-variant.png", ArtOptions(mode), ExpectedJess3));
 
         if (mode == QrPackMode.Full) {
-            scenarios.Add(Sample(Art, "art-facebook-splash-grid", "Assets/DecodingSamples/qr-art-facebook-splash-grid.png", ArtOptions(mode), ExpectedJess3));
-            scenarios.Add(Sample(Art, "art-montage-grid", "Assets/DecodingSamples/qr-art-montage-grid.png", ArtOptions(mode), ExpectedJess3));
+            scenarios.Add(Sample(Art, "art-facebook-splash-grid", "Assets/DecodingSamples/qr-art-facebook-splash-grid.png", ArtOptions(mode), ExpectedFacebookJess3));
+            scenarios.Add(Sample(Art, "art-montage-grid", "Assets/DecodingSamples/qr-art-montage-grid.png", ArtOptions(mode), ExpectedZip2Montage));
             scenarios.Add(Sample(Art, "art-stripe-eye-grid", "Assets/DecodingSamples/qr-art-stripe-eye-grid.png", ArtOptions(mode), ExpectedJess3));
             scenarios.Add(Sample(Art, "art-drip-variants", "Assets/DecodingSamples/qr-art-drip-variants.png", ArtOptions(mode), ExpectedJess3));
             scenarios.Add(Sample(Art, "art-solid-bg-grid", "Assets/DecodingSamples/qr-art-solid-bg-grid.png", ArtOptions(mode), ExpectedJess3));
@@ -97,6 +164,8 @@ internal static class QrDecodeScenarioPacks {
 
     private const string GeneratedPayload = QrDecodeSampleFactory.DefaultPayload;
     private const string ExpectedJess3 = "http://jess3.com";
+    private const string ExpectedFacebookJess3 = "http://www.facebook.com/JESS3";
+    private const string ExpectedZip2Montage = "http://zip2.it/brqr#793618522169349375768512169081277855174341298682677390128336508746685343206314554540757831128512012765565340457163802334869373954682682661341296002959959682672725341202682890853371864448104673341141687721219362682984020043955491325341340146702703341956113384000533341141";
     private const string ExpectedCleanLarge = "This is a quick test! 123#?";
     private const string ExpectedCleanSmall = "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=jnll6mrqknd57pmn&issuer=Microsoft";
     private const string ExpectedNoisyUi = "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=pqhjwcgzncvzykhd&issuer=Microsoft";
@@ -200,6 +269,66 @@ internal static class QrDecodeScenarioPacks {
 
     private static QrDecodeScenarioData BuildResampledGenerated() {
         return QrDecodeSampleFactory.BuildResampledGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildNoisyResampledGenerated() {
+        return QrDecodeSampleFactory.BuildNoisyResampledGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildScreenshotLikeGenerated() {
+        return QrDecodeSampleFactory.BuildScreenshotLikeGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildBlurredGenerated() {
+        return QrDecodeSampleFactory.BuildBlurredGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildGlareGenerated() {
+        return QrDecodeSampleFactory.BuildGlareGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildMotionBlurGenerated() {
+        return QrDecodeSampleFactory.BuildMotionBlurGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildShearedGenerated() {
+        return QrDecodeSampleFactory.BuildShearedGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildLowContrastGenerated() {
+        return QrDecodeSampleFactory.BuildLowContrastGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildLowContrastGlareGenerated() {
+        return QrDecodeSampleFactory.BuildLowContrastGlareGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildRotatedGenerated() {
+        return QrDecodeSampleFactory.BuildRotatedGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildPartialQuietGenerated() {
+        return QrDecodeSampleFactory.BuildPartialQuietGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildJpegCompressedGenerated() {
+        return QrDecodeSampleFactory.BuildJpegCompressedGenerated(GeneratedPayload, 60);
+    }
+
+    private static QrDecodeScenarioData BuildJpegCompressedLowGenerated() {
+        return QrDecodeSampleFactory.BuildJpegCompressedGenerated(GeneratedPayload, 35);
+    }
+
+    private static QrDecodeScenarioData BuildKeystoneGenerated() {
+        return QrDecodeSampleFactory.BuildKeystoneGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildJpegBlurGenerated() {
+        return QrDecodeSampleFactory.BuildJpegBlurGenerated(GeneratedPayload);
+    }
+
+    private static QrDecodeScenarioData BuildSaltPepperGenerated() {
+        return QrDecodeSampleFactory.BuildSaltPepperGenerated(GeneratedPayload);
     }
 
     private static QrDecodeScenarioData BuildNoQuietGenerated() {
