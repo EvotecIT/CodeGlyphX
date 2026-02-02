@@ -12,8 +12,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static async Task<CodeGlyphDecoded?> TryDecodePngAsync(Stream stream, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var png = await RenderIO.ReadBinaryAsync(stream, cancellationToken).ConfigureAwait(false);
-        if (cancellationToken.IsCancellationRequested) return null;
+        var png = await TryReadBinaryAsync(stream, imageOptions: null, cancellationToken).ConfigureAwait(false);
+        if (png is null || cancellationToken.IsCancellationRequested) return null;
         return TryDecodePng(png, out var decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions) ? decoded : null;
     }
 
@@ -22,8 +22,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static async Task<CodeGlyphDecoded?> TryDecodePngFileAsync(string path, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        var png = await RenderIO.ReadBinaryAsync(path, cancellationToken).ConfigureAwait(false);
-        if (cancellationToken.IsCancellationRequested) return null;
+        var png = await TryReadBinaryAsync(path, imageOptions: null, cancellationToken).ConfigureAwait(false);
+        if (png is null || cancellationToken.IsCancellationRequested) return null;
         return TryDecodePng(png, out var decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions) ? decoded : null;
     }
 
@@ -32,8 +32,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static async Task<CodeGlyphDecoded[]> TryDecodeAllPngAsync(Stream stream, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var png = await RenderIO.ReadBinaryAsync(stream, cancellationToken).ConfigureAwait(false);
-        if (cancellationToken.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
+        var png = await TryReadBinaryAsync(stream, imageOptions: null, cancellationToken).ConfigureAwait(false);
+        if (png is null || cancellationToken.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
         return TryDecodeAllPng(png, out var decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions) ? decoded : Array.Empty<CodeGlyphDecoded>();
     }
 
@@ -42,8 +42,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static async Task<CodeGlyphDecoded[]> TryDecodeAllPngFileAsync(string path, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        var png = await RenderIO.ReadBinaryAsync(path, cancellationToken).ConfigureAwait(false);
-        if (cancellationToken.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
+        var png = await TryReadBinaryAsync(path, imageOptions: null, cancellationToken).ConfigureAwait(false);
+        if (png is null || cancellationToken.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
         return TryDecodeAllPng(png, out var decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions) ? decoded : Array.Empty<CodeGlyphDecoded>();
     }
 
@@ -52,8 +52,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static async Task<CodeGlyphDecoded?> TryDecodeImageAsync(Stream stream, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var image = await RenderIO.ReadBinaryAsync(stream, cancellationToken).ConfigureAwait(false);
-        if (cancellationToken.IsCancellationRequested) return null;
+        var image = await TryReadBinaryAsync(stream, imageOptions: null, cancellationToken).ConfigureAwait(false);
+        if (image is null || cancellationToken.IsCancellationRequested) return null;
         return TryDecodeImage(image, out var decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions) ? decoded : null;
     }
 
@@ -62,8 +62,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static async Task<CodeGlyphDecoded?> TryDecodeImageFileAsync(string path, BarcodeType? expectedBarcode = null, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        var image = await RenderIO.ReadBinaryAsync(path, cancellationToken).ConfigureAwait(false);
-        if (cancellationToken.IsCancellationRequested) return null;
+        var image = await TryReadBinaryAsync(path, imageOptions: null, cancellationToken).ConfigureAwait(false);
+        if (image is null || cancellationToken.IsCancellationRequested) return null;
         return TryDecodeImage(image, out var decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions) ? decoded : null;
     }
 
@@ -72,8 +72,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static async Task<CodeGlyphDecoded[]> TryDecodeAllImageAsync(Stream stream, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var image = await RenderIO.ReadBinaryAsync(stream, cancellationToken).ConfigureAwait(false);
-        if (cancellationToken.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
+        var image = await TryReadBinaryAsync(stream, imageOptions: null, cancellationToken).ConfigureAwait(false);
+        if (image is null || cancellationToken.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
         return TryDecodeAllImage(image, out var decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions) ? decoded : Array.Empty<CodeGlyphDecoded>();
     }
 
@@ -82,8 +82,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static async Task<CodeGlyphDecoded[]> TryDecodeAllImageFileAsync(string path, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        var image = await RenderIO.ReadBinaryAsync(path, cancellationToken).ConfigureAwait(false);
-        if (cancellationToken.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
+        var image = await TryReadBinaryAsync(path, imageOptions: null, cancellationToken).ConfigureAwait(false);
+        if (image is null || cancellationToken.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
         return TryDecodeAllImage(image, out var decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions) ? decoded : Array.Empty<CodeGlyphDecoded>();
     }
 
@@ -93,8 +93,8 @@ public static partial class CodeGlyph {
     public static async Task<CodeGlyphDecoded?> TryDecodeImageAsync(Stream stream, CodeGlyphDecodeOptions? options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var token = options?.CancellationToken ?? default;
-        var image = await RenderIO.ReadBinaryAsync(stream, token).ConfigureAwait(false);
-        if (token.IsCancellationRequested) return null;
+        var image = await TryReadBinaryAsync(stream, options?.Image, token).ConfigureAwait(false);
+        if (image is null || token.IsCancellationRequested) return null;
         return TryDecodeImage(image, out var decoded, options) ? decoded : null;
     }
 
@@ -104,8 +104,8 @@ public static partial class CodeGlyph {
     public static async Task<CodeGlyphDecoded[]> TryDecodeAllImageAsync(Stream stream, CodeGlyphDecodeOptions? options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var token = options?.CancellationToken ?? default;
-        var image = await RenderIO.ReadBinaryAsync(stream, token).ConfigureAwait(false);
-        if (token.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
+        var image = await TryReadBinaryAsync(stream, options?.Image, token).ConfigureAwait(false);
+        if (image is null || token.IsCancellationRequested) return Array.Empty<CodeGlyphDecoded>();
         return TryDecodeAllImage(image, out var decoded, options) ? decoded : Array.Empty<CodeGlyphDecoded>();
     }
 
@@ -125,5 +125,13 @@ public static partial class CodeGlyph {
         var decoded = await TryDecodePngAsync(stream, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions).ConfigureAwait(false);
         if (decoded is null) throw new FormatException("PNG does not contain a decodable symbol.");
         return decoded;
+    }
+
+    private static async Task<byte[]?> TryReadBinaryAsync(Stream stream, ImageDecodeOptions? imageOptions, CancellationToken cancellationToken) {
+        return await RenderIO.TryReadBinaryAsync(stream, ResolveMaxBytes(imageOptions), cancellationToken).ConfigureAwait(false);
+    }
+
+    private static async Task<byte[]?> TryReadBinaryAsync(string path, ImageDecodeOptions? imageOptions, CancellationToken cancellationToken) {
+        return await RenderIO.TryReadBinaryAsync(path, ResolveMaxBytes(imageOptions), cancellationToken).ConfigureAwait(false);
     }
 }

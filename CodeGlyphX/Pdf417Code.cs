@@ -121,8 +121,10 @@ public static partial class Pdf417Code {
     public static byte[] Jpeg(ReadOnlySpan<byte> data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         var opts = BuildPngOptions(renderOptions);
-        var quality = renderOptions?.JpegQuality ?? 85;
-        return MatrixJpegRenderer.Render(modules, opts, quality);
+        var jpegOptions = renderOptions?.JpegOptions;
+        return jpegOptions is null
+            ? MatrixJpegRenderer.Render(modules, opts, renderOptions?.JpegQuality ?? 85)
+            : MatrixJpegRenderer.Render(modules, opts, jpegOptions);
     }
 
     /// <summary>
@@ -333,8 +335,10 @@ public static partial class Pdf417Code {
     public static byte[] Jpeg(string text, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = Encode(text, encodeOptions);
         var opts = BuildPngOptions(renderOptions);
-        var quality = renderOptions?.JpegQuality ?? 85;
-        return MatrixJpegRenderer.Render(modules, opts, quality);
+        var jpegOptions = renderOptions?.JpegOptions;
+        return jpegOptions is null
+            ? MatrixJpegRenderer.Render(modules, opts, renderOptions?.JpegQuality ?? 85)
+            : MatrixJpegRenderer.Render(modules, opts, jpegOptions);
     }
 
     /// <summary>
@@ -471,8 +475,10 @@ public static partial class Pdf417Code {
     public static byte[] Jpeg(byte[] data, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeBytes(data, encodeOptions);
         var opts = BuildPngOptions(renderOptions);
-        var quality = renderOptions?.JpegQuality ?? 85;
-        return MatrixJpegRenderer.Render(modules, opts, quality);
+        var jpegOptions = renderOptions?.JpegOptions;
+        return jpegOptions is null
+            ? MatrixJpegRenderer.Render(modules, opts, renderOptions?.JpegQuality ?? 85)
+            : MatrixJpegRenderer.Render(modules, opts, jpegOptions);
     }
 
     /// <summary>

@@ -17,6 +17,8 @@ public sealed class DecodeOptionsFluentTests {
             .WithQrProfile(QrDecodeProfile.Fast)
             .WithAggressiveQrSampling()
             .WithImageBudget(300, 500)
+            .WithImageMaxPixels(1234)
+            .WithImageMaxBytes(2048)
             .WithBarcode(b => b.WithCode39Checksum(Code39ChecksumPolicy.StripIfValid));
 
         Assert.Equal(BarcodeType.Code128, options.ExpectedBarcode);
@@ -32,6 +34,8 @@ public sealed class DecodeOptionsFluentTests {
         Assert.True(options.Qr.AggressiveSampling);
         Assert.Equal(300, options.Image!.MaxMilliseconds);
         Assert.Equal(500, options.Image.MaxDimension);
+        Assert.Equal(1234, options.Image.MaxPixels);
+        Assert.Equal(2048, options.Image.MaxBytes);
         Assert.Equal(Code39ChecksumPolicy.StripIfValid, options.Barcode!.Code39Checksum);
     }
 
@@ -55,9 +59,13 @@ public sealed class DecodeOptionsFluentTests {
     [Fact]
     public void ImageDecodeOptions_Fluent_Configures_Options() {
         var options = new ImageDecodeOptions()
-            .WithBudget(150, 320);
+            .WithBudget(150, 320)
+            .WithMaxPixels(5000)
+            .WithMaxBytes(8192);
 
         Assert.Equal(150, options.MaxMilliseconds);
         Assert.Equal(320, options.MaxDimension);
+        Assert.Equal(5000, options.MaxPixels);
+        Assert.Equal(8192, options.MaxBytes);
     }
 }

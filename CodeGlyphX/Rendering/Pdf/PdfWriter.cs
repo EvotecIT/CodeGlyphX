@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Rendering.Pdf;
@@ -9,6 +10,8 @@ namespace CodeGlyphX.Rendering.Pdf;
 /// Minimal PDF writer for embedding RGB images.
 /// </summary>
 public static class PdfWriter {
+    private const string PdfOutputLimitMessage = "PDF output exceeds size limits.";
+
     /// <summary>
     /// Writes a single-page PDF containing the supplied RGBA image.
     /// </summary>
@@ -25,10 +28,12 @@ public static class PdfWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, PdfOutputLimitMessage);
+        var rgbLength = RenderGuards.EnsureOutputBytes((long)width * height * 3, PdfOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
-        var rgb = ToRgb(width, height, rgba, stride, background ?? Rgba32.White);
+        var rgb = ToRgb(width, height, rgba, stride, background ?? Rgba32.White, rgbLength);
         WriteRgb24(stream, width, height, rgb);
     }
 
@@ -48,8 +53,10 @@ public static class PdfWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, PdfOutputLimitMessage);
+        var rgbLength = RenderGuards.EnsureOutputBytes((long)width * height * 3, PdfOutputLimitMessage);
         if (rgb is null) throw new ArgumentNullException(nameof(rgb));
-        if (rgb.Length < width * height * 3) throw new ArgumentException("RGB buffer is too small.", nameof(rgb));
+        if (rgb.Length < rgbLength) throw new ArgumentException("RGB buffer is too small.", nameof(rgb));
 
         var offsets = new long[6];
         var writer = new StreamWriter(stream, Encoding.ASCII, 1024, leaveOpen: true);
@@ -95,10 +102,10 @@ public static class PdfWriter {
         writer.WriteLine("5 0 obj");
         writer.WriteLine($"<< /Type /XObject /Subtype /Image /Width {width} /Height {height}");
         writer.WriteLine("   /ColorSpace /DeviceRGB /BitsPerComponent 8");
-        writer.WriteLine($"   /Length {width * height * 3} >>");
+        writer.WriteLine($"   /Length {rgbLength} >>");
         writer.WriteLine("stream");
         writer.Flush();
-        stream.Write(rgb, 0, width * height * 3);
+        stream.Write(rgb, 0, rgbLength);
         writer.WriteLine();
         writer.WriteLine("endstream");
         writer.WriteLine("endobj");
@@ -119,8 +126,8 @@ public static class PdfWriter {
         writer.Flush();
     }
 
-    private static byte[] ToRgb(int width, int height, ReadOnlySpan<byte> rgba, int stride, Rgba32 background) {
-        var rgb = new byte[width * height * 3];
+    private static byte[] ToRgb(int width, int height, ReadOnlySpan<byte> rgba, int stride, Rgba32 background, int rgbLength) {
+        var rgb = new byte[rgbLength];
         var bgR = background.R;
         var bgG = background.G;
         var bgB = background.B;

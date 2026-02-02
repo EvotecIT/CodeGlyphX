@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.Text;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Ppm;
 
@@ -9,6 +10,7 @@ namespace CodeGlyphX.Rendering.Ppm;
 /// Writes PPM (P6) images from RGBA buffers.
 /// </summary>
 public static class PpmWriter {
+    private const string PpmOutputLimitMessage = "PPM output exceeds size limits.";
     /// <summary>
     /// Writes a PPM byte array from an RGBA buffer.
     /// </summary>
@@ -45,6 +47,7 @@ public static class PpmWriter {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, PpmOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
         if (rowStride < rowOffset + stride) throw new ArgumentOutOfRangeException(nameof(rowStride));
         if (rgba.Length < (height - 1) * rowStride + rowOffset + width * 4) throw new ArgumentException(bufferMessage, bufferName);
@@ -52,7 +55,9 @@ public static class PpmWriter {
         var header = Encoding.ASCII.GetBytes($"P6\n{width} {height}\n255\n");
         stream.Write(header, 0, header.Length);
 
-        var row = ArrayPool<byte>.Shared.Rent(width * 3);
+        var rowBytes = RenderGuards.EnsureOutputBytes((long)width * 3, PpmOutputLimitMessage);
+        _ = RenderGuards.EnsureOutputBytes((long)height * rowBytes, PpmOutputLimitMessage);
+        var row = ArrayPool<byte>.Shared.Rent(rowBytes);
         try {
             for (var y = 0; y < height; y++) {
                 var srcRow = y * rowStride + rowOffset;
@@ -73,7 +78,7 @@ public static class PpmWriter {
                     row[dst++] = g;
                     row[dst++] = b;
                 }
-                stream.Write(row, 0, width * 3);
+                stream.Write(row, 0, rowBytes);
             }
         } finally {
             ArrayPool<byte>.Shared.Return(row);

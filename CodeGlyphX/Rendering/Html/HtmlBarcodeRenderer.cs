@@ -19,6 +19,11 @@ public static class HtmlBarcodeRenderer {
         if (opts.QuietZone < 0) throw new ArgumentOutOfRangeException(nameof(opts.QuietZone));
         if (opts.HeightModules <= 0) throw new ArgumentOutOfRangeException(nameof(opts.HeightModules));
 
+        var barColor = RenderSanitizer.SafeCssColor(opts.BarColor, RenderDefaults.BarcodeForegroundCss);
+        var backgroundColor = RenderSanitizer.SafeCssColor(opts.BackgroundColor, RenderDefaults.BarcodeBackgroundCss);
+        var labelColor = RenderSanitizer.SafeCssColor(opts.LabelColor, RenderDefaults.BarcodeForegroundCss);
+        var labelFontFamily = RenderSanitizer.SafeFontFamily(opts.LabelFontFamily, RenderDefaults.BarcodeLabelFontFamily);
+
         var outModules = barcode.TotalModules + opts.QuietZone * 2;
         var heightPx = opts.HeightModules * opts.ModuleSize;
         var labelText = BarcodeLabelText.Normalize(opts.LabelText);
@@ -28,15 +33,15 @@ public static class HtmlBarcodeRenderer {
         sb.Append("<table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;\">");
         sb.Append("<tr>");
 
-        AppendCell(sb, opts.EmailSafeTable, opts.QuietZone * opts.ModuleSize, heightPx, opts.BackgroundColor);
+        AppendCell(sb, opts.EmailSafeTable, opts.QuietZone * opts.ModuleSize, heightPx, backgroundColor);
 
         for (var i = 0; i < barcode.Segments.Count; i++) {
             var seg = barcode.Segments[i];
-            var color = seg.IsBar ? opts.BarColor : opts.BackgroundColor;
+            var color = seg.IsBar ? barColor : backgroundColor;
             AppendCell(sb, opts.EmailSafeTable, seg.Modules * opts.ModuleSize, heightPx, color);
         }
 
-        AppendCell(sb, opts.EmailSafeTable, opts.QuietZone * opts.ModuleSize, heightPx, opts.BackgroundColor);
+        AppendCell(sb, opts.EmailSafeTable, opts.QuietZone * opts.ModuleSize, heightPx, backgroundColor);
 
         sb.Append("</tr></table>");
 
@@ -47,22 +52,22 @@ public static class HtmlBarcodeRenderer {
                 if (opts.LabelMargin > 0) {
                     sb.Append("<table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;width:")
                         .Append(outModules * opts.ModuleSize).Append("px;\"><tr><td height=\"")
-                        .Append(opts.LabelMargin).Append("\" bgcolor=\"").Append(opts.BackgroundColor)
+                        .Append(opts.LabelMargin).Append("\" bgcolor=\"").Append(backgroundColor)
                         .Append("\"></td></tr></table>");
                 }
                 sb.Append("<table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;width:")
                     .Append(outModules * opts.ModuleSize).Append("px;\"><tr><td align=\"center\" height=\"")
-                    .Append(labelHeight).Append("\" bgcolor=\"").Append(opts.BackgroundColor)
-                    .Append("\" style=\"font-family:").Append(opts.LabelFontFamily).Append(";font-size:")
-                    .Append(opts.LabelFontSize).Append("px;color:").Append(opts.LabelColor).Append(";\">")
+                    .Append(labelHeight).Append("\" bgcolor=\"").Append(backgroundColor)
+                    .Append("\" style=\"font-family:").Append(labelFontFamily).Append(";font-size:")
+                    .Append(opts.LabelFontSize).Append("px;color:").Append(labelColor).Append(";\">")
                     .Append(encoded).Append("</td></tr></table>");
             } else {
                 sb.Append("<div style=\"width:").Append(outModules * opts.ModuleSize).Append("px;");
                 if (opts.LabelMargin > 0) {
                     sb.Append("margin-top:").Append(opts.LabelMargin).Append("px;");
                 }
-                sb.Append("text-align:center;font-family:").Append(opts.LabelFontFamily).Append(";font-size:")
-                    .Append(opts.LabelFontSize).Append("px;color:").Append(opts.LabelColor).Append(";\">")
+                sb.Append("text-align:center;font-family:").Append(labelFontFamily).Append(";font-size:")
+                    .Append(opts.LabelFontSize).Append("px;color:").Append(labelColor).Append(";\">")
                     .Append(encoded).Append("</div>");
             }
         }

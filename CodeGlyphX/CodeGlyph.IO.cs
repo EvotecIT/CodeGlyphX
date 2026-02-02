@@ -92,7 +92,7 @@ public static partial class CodeGlyph {
         decoded = null!;
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) return false;
-        var png = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, imageOptions: null, out var png)) return false;
         return TryDecodePng(png, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
@@ -103,7 +103,7 @@ public static partial class CodeGlyph {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) return false;
-        var png = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, imageOptions: null, out var png)) return false;
         return TryDecodeAllPng(png, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
@@ -114,7 +114,7 @@ public static partial class CodeGlyph {
         decoded = null!;
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) return false;
-        var png = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions: null, out var png)) return false;
         return TryDecodePng(png, out decoded, expectedBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
@@ -125,7 +125,7 @@ public static partial class CodeGlyph {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) return false;
-        var png = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, imageOptions: null, out var png)) return false;
         return TryDecodeAllPng(png, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
@@ -431,7 +431,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
         if (image is null) throw new ArgumentNullException(nameof(image));
-        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
         return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 
@@ -441,7 +441,7 @@ public static partial class CodeGlyph {
     public static bool TryDecodeImage(byte[] image, out CodeGlyphDecoded decoded, out CodeGlyphDecodeDiagnostics diagnostics, CodeGlyphDecodeOptions? options) {
         diagnostics = new CodeGlyphDecodeDiagnostics();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+        if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) {
             decoded = null!;
             SetFailure(diagnostics, DecodeFailureReason.UnsupportedFormat, "Unsupported image format.");
             return false;
@@ -465,7 +465,9 @@ public static partial class CodeGlyph {
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
             return DecodeImageResult(buffer.AsSpan(), options);
         }
-        var data = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, options?.Image, out var data)) {
+            return new DecodeResult<CodeGlyphDecoded>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
+        }
         return DecodeImageResult(data, options);
     }
 
@@ -478,13 +480,15 @@ public static partial class CodeGlyph {
 
     private static DecodeResult<CodeGlyphDecoded> DecodeImageResult(ReadOnlySpan<byte> image, CodeGlyphDecodeOptions? options) {
         var stopwatch = Stopwatch.StartNew();
-        _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
+        if (!DecodeResultHelpers.TryCheckImageLimits(image, options?.Image, out var info, out var formatKnown, out var limitMessage)) {
+            return new DecodeResult<CodeGlyphDecoded>(DecodeFailureReason.InvalidInput, info, stopwatch.Elapsed, limitMessage);
+        }
         var token = options?.CancellationToken ?? default;
         try {
             if (token.IsCancellationRequested) {
                 return new DecodeResult<CodeGlyphDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) {
                 var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
                 return new DecodeResult<CodeGlyphDecoded>(imageFailure, info, stopwatch.Elapsed);
             }
@@ -515,7 +519,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeAllImage(byte[] image, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
         if (image is null) throw new ArgumentNullException(nameof(image));
-        if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options?.Image, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
         return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 
@@ -524,8 +528,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeImage(Stream stream, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
-        if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+        if (!TryReadBinary(stream, options?.Image, out var data)) { decoded = null!; return false; }
+        if (!ImageReader.TryDecodeRgba32(data, options?.Image, out var rgba, out var width, out var height)) { decoded = null!; return false; }
         return TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 
@@ -534,8 +538,8 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeAllImage(Stream stream, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var data = RenderIO.ReadBinary(stream);
-        if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+        if (!TryReadBinary(stream, options?.Image, out var data)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
+        if (!ImageReader.TryDecodeRgba32(data, options?.Image, out var rgba, out var width, out var height)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
         return TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options);
     }
 
@@ -544,7 +548,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodePngFile(string path, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        var png = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, options?.Image, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, out decoded, options);
     }
 
@@ -553,7 +557,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeAllPngFile(string path, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
         if (path is null) throw new ArgumentNullException(nameof(path));
-        var png = RenderIO.ReadBinary(path);
+        if (!TryReadBinary(path, options?.Image, out var png)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
         return TryDecodeAllPng(png, out decoded, options);
     }
 
@@ -562,7 +566,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodePng(Stream stream, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var png = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, options?.Image, out var png)) { decoded = null!; return false; }
         return TryDecodePng(png, out decoded, options);
     }
 
@@ -571,7 +575,7 @@ public static partial class CodeGlyph {
     /// </summary>
     public static bool TryDecodeAllPng(Stream stream, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var png = RenderIO.ReadBinary(stream);
+        if (!TryReadBinary(stream, options?.Image, out var png)) { decoded = Array.Empty<CodeGlyphDecoded>(); return false; }
         return TryDecodeAllPng(png, out decoded, options);
     }
 
@@ -587,6 +591,19 @@ public static partial class CodeGlyph {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
         }
+    }
+
+    private static int ResolveMaxBytes(ImageDecodeOptions? imageOptions) {
+        if (imageOptions is not null && imageOptions.MaxBytes > 0) return imageOptions.MaxBytes;
+        return CodeGlyphX.Rendering.ImageReader.MaxImageBytes;
+    }
+
+    private static bool TryReadBinary(string path, ImageDecodeOptions? imageOptions, out byte[] data) {
+        return RenderIO.TryReadBinary(path, ResolveMaxBytes(imageOptions), out data);
+    }
+
+    private static bool TryReadBinary(Stream stream, ImageDecodeOptions? imageOptions, out byte[] data) {
+        return RenderIO.TryReadBinary(stream, ResolveMaxBytes(imageOptions), out data);
     }
 
     private static bool TryDecodeWithImageBudget(
@@ -965,5 +982,3 @@ public static partial class CodeGlyph {
     }
 
 }
-
-

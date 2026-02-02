@@ -588,6 +588,7 @@ internal static partial class QrPixelDecoder {
         settings = ApplyOverrides(settings, options, scaleStart);
         var budgetMilliseconds = options?.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options?.MaxMilliseconds ?? 0;
         var enableTileScan = allowTileScan && options?.EnableTileScan == true;
+        var allowAggressivePasses = allowTileScan;
         var tileBudgetMs = 0;
         var baseBudgetMs = budgetMilliseconds;
         if (enableTileScan && budgetMilliseconds > 0) {
@@ -679,6 +680,7 @@ internal static partial class QrPixelDecoder {
                     ? Math.Max(4, Math.Min(width, height) / 60)
                     : Math.Max(8, Math.Min(width, height) / 40);
                 var minTile = options?.AggressiveSampling == true ? 24 : 48;
+
                 var tileOptions = options;
                 if (options is not null && tileBudgetMs > 0) {
                     var gridBudget = options.TileGrid > 0
@@ -702,42 +704,51 @@ internal static partial class QrPixelDecoder {
                         };
                     }
                 }
-                var tileW = width / grid;
-                var tileH = height / grid;
-                for (var ty = 0; ty < grid; ty++) {
-                    for (var tx = 0; tx < grid; tx++) {
-                        if (tileBudget.IsExpired) break;
-                        var x0 = tx * tileW;
-                        var y0 = ty * tileH;
-                        var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
-                        var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
 
-                        x0 = Math.Max(0, x0 - pad);
-                        y0 = Math.Max(0, y0 - pad);
-                        x1 = Math.Min(width, x1 + pad);
-                        y1 = Math.Min(height, y1 + pad);
+                void ScanGrid(ReadOnlySpan<byte> pixelSpan, int gridToScan) {
+                    if (gridToScan < 2) return;
+                    var tileW = width / gridToScan;
+                    var tileH = height / gridToScan;
+                    for (var ty = 0; ty < gridToScan; ty++) {
+                        for (var tx = 0; tx < gridToScan; tx++) {
+                            if (tileBudget.IsExpired) break;
+                            var x0 = tx * tileW;
+                            var y0 = ty * tileH;
+                            var x1 = (tx == gridToScan - 1) ? width : (tx + 1) * tileW;
+                            var y1 = (ty == gridToScan - 1) ? height : (ty + 1) * tileH;
 
-                        var tw = x1 - x0;
-                        var th = y1 - y0;
-                        if (tw < minTile || th < minTile) continue;
+                            x0 = Math.Max(0, x0 - pad);
+                            y0 = Math.Max(0, y0 - pad);
+                            x1 = Math.Min(width, x1 + pad);
+                            y1 = Math.Min(height, y1 + pad);
 
-                        var startIndex = (long)y0 * stride + x0 * 4L;
-                        var requiredLen = (long)(th - 1) * stride + tw * 4L;
-                        if (startIndex < 0 || requiredLen <= 0) continue;
-                        if (startIndex + requiredLen > pixels.Length) continue;
-                        if (tileBudget.IsNearDeadline(120)) break;
+                            var tw = x1 - x0;
+                            var th = y1 - y0;
+                            if (tw < minTile || th < minTile) continue;
 
-                        var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                        if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
-                            AddResult(list, seen, decodedSingle, accept);
-                        } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
-                            for (var i = 0; i < decodedList.Length; i++) {
-                                AddResult(list, seen, decodedList[i], accept);
+                            var startIndex = (long)y0 * stride + x0 * 4L;
+                            var requiredLen = (long)(th - 1) * stride + tw * 4L;
+                            if (startIndex < 0 || requiredLen <= 0) continue;
+                            if (startIndex + requiredLen > pixelSpan.Length) continue;
+                            if (tileBudget.IsNearDeadline(120)) break;
+
+                            var tileSpan = pixelSpan.Slice((int)startIndex, (int)requiredLen);
+                            if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
+                                AddResult(list, seen, decodedSingle, accept);
+                            } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+                                for (var i = 0; i < decodedList.Length; i++) {
+                                    AddResult(list, seen, decodedList[i], accept);
+                                }
                             }
                         }
+                        if (tileBudget.IsExpired) break;
                     }
-                    if (tileBudget.IsExpired) break;
                 }
+
+                if (options?.StylizedSampling == true && list.Count == 0 && grid >= 4 && Math.Min(width, height) >= 600) {
+                    ScanGrid(pixels, 2);
+                }
+                ScanGrid(pixels, grid);
 
                 if (options?.AggressiveSampling == true && !tileBudget.IsExpired && grid < maxGrid) {
                     var hadResults = list.Count > 0;
@@ -790,19 +801,19 @@ internal static partial class QrPixelDecoder {
                 }
             }
 
-            if (options?.AggressiveSampling == true && list.Count == 0 && !budget.IsExpired && !budget.IsNearDeadline(200)) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsExpired && !budget.IsNearDeadline(200)) {
                 CollectFromWhitespaceGrid(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
-            if (options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(250)) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(250)) {
                 CollectFromDensityTiles(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
-            if (options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(250)) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(250)) {
                 CollectFromOverlappingTiles(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
-            if (options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(300) && Math.Max(width, height) <= 900) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(300) && Math.Max(width, height) <= 900) {
                 if (TryDecodeUpscaled(pixels, width, height, stride, fmt, profile, options, accept, cancellationToken, budget, out var decodedUpscaled, out _)) {
                     AddResult(list, seen, decodedUpscaled, accept);
                 }

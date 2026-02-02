@@ -98,6 +98,14 @@ public static partial class Pdf417Code {
         }
 
         /// <summary>
+        /// Sets JPEG encoding options.
+        /// </summary>
+        public Pdf417Builder WithJpegOptions(JpegEncodeOptions options) {
+            _renderOptions.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
+            return this;
+        }
+
+        /// <summary>
         /// Enables HTML email-safe table rendering.
         /// </summary>
         public Pdf417Builder WithHtmlEmailSafeTable(bool enabled = true) {

@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Webp;
 
@@ -16,7 +17,7 @@ public static class WebpReader {
     /// <summary>
     /// Default maximum managed WebP payload size (in bytes).
     /// </summary>
-    public const int DefaultMaxWebpBytes = 256 * 1024 * 1024;
+    public const int DefaultMaxWebpBytes = 128 * 1024 * 1024;
 
     /// <summary>
     /// Maximum managed WebP payload size (in bytes).
@@ -67,10 +68,8 @@ public static class WebpReader {
             if (fourCc == FourCcVp8X && TryReadVp8XSize(chunk, out width, out height)) return true;
             if (fourCc == FourCcVp8L && TryReadVp8LSize(chunk, out width, out height)) return true;
             if (fourCc == FourCcVp8 && TryReadVp8Size(chunk, out width, out height)) return true;
-            if (fourCc == FourCcAnmf && anmfWidth == 0 && anmfHeight == 0) {
-                if (TryReadAnmfSize(chunk, out anmfWidth, out anmfHeight)) {
-                    // Keep scanning for VP8X/VP8/VP8L, but remember the first ANMF size.
-                }
+            if (fourCc == FourCcAnmf && anmfWidth == 0 && anmfHeight == 0 && TryReadAnmfSize(chunk, out anmfWidth, out anmfHeight)) {
+                // Keep scanning for VP8X/VP8/VP8L, but remember the first ANMF size.
             }
 
             var padded = chunkLength + (chunkLength & 1);
@@ -94,6 +93,7 @@ public static class WebpReader {
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
         if (!IsWebp(data)) throw new FormatException("Invalid WebP container.");
         if (data.Length > MaxWebpBytes) throw new FormatException("WebP payload exceeds the managed size limit.");
+        EnsureWebpDimensionsWithinLimits(data);
         if (WebpManagedDecoder.TryDecodeRgba32(data, out var managedRgba, out width, out height)) {
             return managedRgba;
         }
@@ -115,6 +115,7 @@ public static class WebpReader {
         options = default;
         if (!IsWebp(data)) return false;
         if (data.Length > MaxWebpBytes) return false;
+        if (!TryEnsureWebpDimensionsWithinLimits(data)) return false;
         return WebpManagedDecoder.TryDecodeAnimationFrames(data, out frames, out canvasWidth, out canvasHeight, out options);
     }
 
@@ -147,6 +148,7 @@ public static class WebpReader {
         options = default;
         if (!IsWebp(data)) return false;
         if (data.Length > MaxWebpBytes) return false;
+        if (!TryEnsureWebpDimensionsWithinLimits(data)) return false;
         return WebpManagedDecoder.TryDecodeAnimationCanvasFrames(data, out frames, out canvasWidth, out canvasHeight, out options);
     }
 
@@ -205,6 +207,16 @@ public static class WebpReader {
         width = widthMinus1 + 1;
         height = heightMinus1 + 1;
         return width > 0 && height > 0;
+    }
+
+    private static bool TryEnsureWebpDimensionsWithinLimits(ReadOnlySpan<byte> data) {
+        if (!TryReadDimensions(data, out var width, out var height)) return true;
+        return DecodeGuards.TryEnsurePixelCount(width, height, out _);
+    }
+
+    private static void EnsureWebpDimensionsWithinLimits(ReadOnlySpan<byte> data) {
+        if (!TryReadDimensions(data, out var width, out var height)) return;
+        _ = DecodeGuards.EnsurePixelCount(width, height, "WebP dimensions exceed size limits.");
     }
 
     private static int ReadU16LE(ReadOnlySpan<byte> data, int offset) {

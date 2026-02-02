@@ -22,6 +22,7 @@ internal sealed class QrDecodePackRunnerOptions {
     public required QrPackMode Mode { get; init; }
     public required HashSet<string> Packs { get; init; }
     public required IReadOnlyList<IQrDecodeEngine> Engines { get; init; }
+    public required IReadOnlyList<string> ScenarioFilters { get; init; }
     public required QrReportFormats ReportFormats { get; init; }
     public string? ReportsDirectory { get; init; }
     public required int Iterations { get; init; }
@@ -44,6 +45,7 @@ internal static class QrDecodePackRunner {
         var remaining = new List<string>(args.Length);
         var packList = new List<string>(8);
         var engineList = new List<string>(4);
+        var scenarioList = new List<string>(4);
         var runRequested = false;
 
         QrPackMode? mode = null;
@@ -67,6 +69,13 @@ internal static class QrDecodePackRunner {
             if (string.Equals(arg, "--pack", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length) {
                 runRequested = true;
                 AddPacks(packList, args[++i]);
+                continue;
+            }
+
+            if ((string.Equals(arg, "--scenario", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(arg, "--scenarios", StringComparison.OrdinalIgnoreCase)) && i + 1 < args.Length) {
+                runRequested = true;
+                AddScenarios(scenarioList, args[++i]);
                 continue;
             }
 
@@ -154,10 +163,12 @@ internal static class QrDecodePackRunner {
         var packs = ResolvePacks(packList, resolvedMode);
         var availableEngines = QrDecodeEngines.Create();
         var engines = ResolveEngines(availableEngines, engineList);
+        var scenarioFilters = ResolveScenarioFilters(scenarioList);
         options = new QrDecodePackRunnerOptions {
             Mode = resolvedMode,
             Packs = packs,
             Engines = engines,
+            ScenarioFilters = scenarioFilters,
             ReportFormats = resolvedFormats,
             ReportsDirectory = reportsDir,
             Iterations = resolvedIterations,
@@ -172,6 +183,7 @@ internal static class QrDecodePackRunner {
     public static int Run(QrDecodePackRunnerOptions options) {
         var scenarios = QrDecodeScenarioPacks.GetScenarios(options.Mode)
             .Where(s => options.Packs.Contains(s.Pack))
+            .Where(s => MatchesScenarioFilters(s.Name, options.ScenarioFilters))
             .ToArray();
 
         if (scenarios.Length == 0) {
@@ -180,22 +192,23 @@ internal static class QrDecodePackRunner {
         }
 
         var nowUtc = DateTime.UtcNow;
-        var results = new List<QrDecodeScenarioResult>(scenarios.Length * options.Engines.Count);
-        foreach (var engine in options.Engines) {
-            foreach (var scenario in scenarios) {
-                var data = scenario.CreateData();
-                results.Add(RunScenario(engine, scenario, data, options));
-            }
-        }
-
-        var report = BuildReport(options, results, nowUtc);
-        Console.WriteLine(report);
-
         var hasCustomReportsDir = !string.IsNullOrWhiteSpace(options.ReportsDirectory);
         var reportsDir = hasCustomReportsDir
             ? Path.GetFullPath(options.ReportsDirectory!)
             : RepoFiles.EnsureReportDirectory();
         Directory.CreateDirectory(reportsDir);
+        var dumpFailures = ShouldDumpFailures();
+
+        var results = new List<QrDecodeScenarioResult>(scenarios.Length * options.Engines.Count);
+        foreach (var engine in options.Engines) {
+            foreach (var scenario in scenarios) {
+                var data = scenario.CreateData();
+                results.Add(RunScenario(engine, scenario, data, options, reportsDir, nowUtc, dumpFailures));
+            }
+        }
+
+        var report = BuildReport(options, results, nowUtc);
+        Console.WriteLine(report);
 
         var modeName = options.Mode.ToString().ToLowerInvariant();
         var stamp = nowUtc.ToString("yyyyMMdd-HHmmss");
@@ -225,7 +238,7 @@ internal static class QrDecodePackRunner {
         return 0;
     }
 
-    private static QrDecodeScenarioResult RunScenario(IQrDecodeEngine engine, QrDecodeScenario scenario, QrDecodeScenarioData data, QrDecodePackRunnerOptions options) {
+    private static QrDecodeScenarioResult RunScenario(IQrDecodeEngine engine, QrDecodeScenario scenario, QrDecodeScenarioData data, QrDecodePackRunnerOptions options, string reportsDir, DateTime nowUtc, bool dumpFailures) {
         var times = new List<double>(options.Iterations * 4);
         var infos = new List<QrPixelDecodeInfo>(options.Iterations * 4);
         var decodeSuccess = 0;
@@ -235,7 +248,7 @@ internal static class QrDecodePackRunner {
         // Calibration run to determine ops-per-iteration.
         var calibration = DecodeOnce(engine, data, scenario.Options, scenario.ExpectedTexts);
         times.Add(calibration.ElapsedMilliseconds);
-        if (calibration.Info is { } info) infos.Add(info);
+        if (calibration.Info is { } calibrationInfo) infos.Add(calibrationInfo);
         if (calibration.Decoded) decodeSuccess++;
         if (calibration.ExpectedMatched) expectedMatch++;
         decodedCountSum += calibration.DecodedCount;
@@ -261,10 +274,16 @@ internal static class QrDecodePackRunner {
         for (var run = 1; run < targetRuns; run++) {
             var res = DecodeOnce(engine, data, scenario.Options, scenario.ExpectedTexts);
             times.Add(res.ElapsedMilliseconds);
-            if (res.Info is { } info) infos.Add(info);
+            if (res.Info is { } runInfo) infos.Add(runInfo);
             if (res.Decoded) decodeSuccess++;
             if (res.ExpectedMatched) expectedMatch++;
             decodedCountSum += res.DecodedCount;
+        }
+
+        if (dumpFailures &&
+            (decodeSuccess == 0 ||
+             (scenario.ExpectedTexts is { Length: > 0 } && expectedMatch == 0))) {
+            DumpFailureDebug(reportsDir, nowUtc, engine, scenario, data);
         }
 
         return new QrDecodeScenarioResult(
@@ -304,6 +323,141 @@ internal static class QrDecodePackRunner {
         return true;
     }
 
+    private static bool ShouldDumpFailures() {
+        var value = Environment.GetEnvironmentVariable("CODEGLYPHX_BENCH_DUMP_FAILS");
+        return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void DumpFailureDebug(string reportsDir, DateTime nowUtc, IQrDecodeEngine engine, QrDecodeScenario scenario, QrDecodeScenarioData data) {
+        var root = Path.Combine(reportsDir, $"qr-decode-failures-{nowUtc:yyyyMMdd-HHmmss}");
+        var packDir = Path.Combine(root, SanitizeFileName(scenario.Pack));
+        var engineDir = Path.Combine(packDir, SanitizeFileName(engine.Name));
+        Directory.CreateDirectory(engineDir);
+
+        var baseName = SanitizeFileName(scenario.Name);
+        var opts = new global::CodeGlyphX.QrPixelDebugOptions();
+        global::CodeGlyphX.QrPixelDebug.RenderToFile(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, global::CodeGlyphX.QrPixelDebugMode.Grayscale, engineDir, $"{baseName}-gray.png", opts);
+        global::CodeGlyphX.QrPixelDebug.RenderToFile(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, global::CodeGlyphX.QrPixelDebugMode.Threshold, engineDir, $"{baseName}-threshold.png", opts);
+        global::CodeGlyphX.QrPixelDebug.RenderToFile(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, global::CodeGlyphX.QrPixelDebugMode.Binarized, engineDir, $"{baseName}-bin.png", opts);
+        global::CodeGlyphX.QrPixelDebug.RenderToFile(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, global::CodeGlyphX.QrPixelDebugMode.Heatmap, engineDir, $"{baseName}-heatmap.png", opts);
+
+        var adaptive = new global::CodeGlyphX.QrPixelDebugOptions {
+            AdaptiveThreshold = true,
+            AdaptiveWindowSize = 25,
+            AdaptiveOffset = 4
+        };
+        global::CodeGlyphX.QrPixelDebug.RenderToFile(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, global::CodeGlyphX.QrPixelDebugMode.Binarized, engineDir, $"{baseName}-bin-adaptive.png", adaptive);
+
+        var metaPath = Path.Combine(engineDir, $"{baseName}-meta.txt");
+        var metaLines = new List<string> {
+            $"Pack: {scenario.Pack}",
+            $"Scenario: {scenario.Name}",
+            $"Engine: {engine.Name}",
+            $"Size: {data.Width}x{data.Height}",
+            $"Options: {FormatOptions(scenario.Options)}",
+            $"Expected: {(scenario.ExpectedTexts is null ? "any" : string.Join(" | ", scenario.ExpectedTexts))}"
+        };
+
+        var baseRatio = ComputeBinarizedBlackRatio(data, new global::CodeGlyphX.QrPixelDebugOptions());
+        if (baseRatio >= 0) metaLines.Add($"BinarizedBlack%: {baseRatio:P1}");
+        var adaptiveRatio = ComputeBinarizedBlackRatio(data, new global::CodeGlyphX.QrPixelDebugOptions {
+            AdaptiveThreshold = true,
+            AdaptiveWindowSize = 25,
+            AdaptiveOffset = 4
+        });
+        if (adaptiveRatio >= 0) metaLines.Add($"BinarizedAdaptiveBlack%: {adaptiveRatio:P1}");
+
+        try {
+            var engineResult = engine.Decode(data, scenario.Options);
+            metaLines.Add($"EngineDecodedCount: {engineResult.Count}");
+            metaLines.Add($"EngineSuccess: {engineResult.Success}");
+            if (engineResult.Texts.Length > 0) {
+                for (var i = 0; i < engineResult.Texts.Length; i++) {
+                    var text = engineResult.Texts[i] ?? string.Empty;
+                    var textPreview = text.Length > 400 ? text[..400] + "..." : text;
+                    metaLines.Add($"EngineText[{i}]: textLen={text.Length} text=\"{textPreview}\"");
+                }
+            }
+        } catch (Exception ex) {
+            metaLines.Add($"EngineDecodeError: {ex.GetType().Name} {ex.Message}");
+        }
+
+        var prevModuleDumpDir = Environment.GetEnvironmentVariable("CODEGLYPHX_QR_MODULE_DUMP_DIR");
+        var prevModuleDumpLimit = Environment.GetEnvironmentVariable("CODEGLYPHX_QR_MODULE_DUMP_LIMIT");
+        Environment.SetEnvironmentVariable("CODEGLYPHX_QR_MODULE_DUMP_DIR", Path.Combine(engineDir, "modules", baseName));
+        if (string.IsNullOrWhiteSpace(prevModuleDumpLimit)) {
+            Environment.SetEnvironmentVariable("CODEGLYPHX_QR_MODULE_DUMP_LIMIT", "3");
+        }
+        try {
+            if (QrDecoder.TryDecodeAll(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, out var decoded, out var info, scenario.Options)) {
+                metaLines.Add($"DecodedCount: {decoded.Length}");
+                metaLines.Add($"InfoAll: {info}");
+                for (var i = 0; i < decoded.Length; i++) {
+                    var text = decoded[i].Text ?? string.Empty;
+                    var textPreview = text.Length > 120 ? text[..120] + "..." : text;
+                    metaLines.Add($"Result[{i}]: v{decoded[i].Version} {decoded[i].ErrorCorrectionLevel} m{decoded[i].Mask} textLen={text.Length} text=\"{textPreview}\"");
+                }
+            } else {
+                metaLines.Add($"InfoAll: {info}");
+            }
+
+            if (QrDecoder.TryDecode(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, out var single, out var infoSingle, scenario.Options)) {
+                var text = single.Text ?? string.Empty;
+                var textPreview = text.Length > 120 ? text[..120] + "..." : text;
+                metaLines.Add($"Single: v{single.Version} {single.ErrorCorrectionLevel} m{single.Mask} textLen={text.Length} text=\"{textPreview}\"");
+                metaLines.Add($"InfoSingle: {infoSingle}");
+            } else {
+                metaLines.Add($"InfoSingle: {infoSingle}");
+            }
+        } finally {
+            Environment.SetEnvironmentVariable("CODEGLYPHX_QR_MODULE_DUMP_DIR", prevModuleDumpDir);
+            Environment.SetEnvironmentVariable("CODEGLYPHX_QR_MODULE_DUMP_LIMIT", prevModuleDumpLimit);
+        }
+
+        File.WriteAllLines(metaPath, metaLines);
+    }
+
+    private static double ComputeBinarizedBlackRatio(QrDecodeScenarioData data, global::CodeGlyphX.QrPixelDebugOptions options) {
+        try {
+            var pixels = global::CodeGlyphX.QrPixelDebug.RenderPixels(
+                data.Rgba,
+                data.Width,
+                data.Height,
+                data.Stride,
+                PixelFormat.Rgba32,
+                global::CodeGlyphX.QrPixelDebugMode.Binarized,
+                out var widthPx,
+                out var heightPx,
+                out var stridePx,
+                options);
+
+            if (widthPx <= 0 || heightPx <= 0 || stridePx <= 0) return -1;
+            var black = 0L;
+            var total = (long)widthPx * heightPx;
+            for (var y = 0; y < heightPx; y++) {
+                var row = y * stridePx;
+                var p = row;
+                for (var x = 0; x < widthPx; x++, p += 4) {
+                    if (pixels[p] == 0) black++;
+                }
+            }
+            return black / (double)total;
+        } catch {
+            return -1;
+        }
+    }
+
+    private static string SanitizeFileName(string name) {
+        if (string.IsNullOrWhiteSpace(name)) return "unnamed";
+        var invalid = Path.GetInvalidFileNameChars();
+        var buffer = name.ToCharArray();
+        for (var i = 0; i < buffer.Length; i++) {
+            if (invalid.Contains(buffer[i])) buffer[i] = '_';
+        }
+        return new string(buffer);
+    }
+
     private static string BuildReport(QrDecodePackRunnerOptions options, List<QrDecodeScenarioResult> results, DateTime nowUtc) {
         var sb = new StringBuilder(4096);
         var packs = options.Packs.OrderBy(p => p, StringComparer.OrdinalIgnoreCase).ToArray();
@@ -312,6 +466,9 @@ internal static class QrDecodePackRunner {
         sb.AppendLine($"Date (UTC): {nowUtc:yyyy-MM-dd HH:mm:ss}");
         sb.AppendLine($"Mode: {options.Mode}");
         sb.AppendLine($"Packs: {string.Join(", ", packs)}");
+        if (options.ScenarioFilters.Count > 0) {
+            sb.AppendLine($"Scenarios: {string.Join(", ", options.ScenarioFilters)}");
+        }
         sb.AppendLine($"Iterations: {options.Iterations} (min iteration ms: {options.MinIterationMilliseconds}, ops cap: {options.OpsCap})");
         sb.AppendLine($"Engines: {string.Join(", ", options.Engines.Select(e => e.Name))} (external runs cap: {options.ExternalRunsCap})");
         sb.AppendLine($"Runtime: {RuntimeInformation.FrameworkDescription} | OS: {RuntimeInformation.OSDescription} | Arch: {RuntimeInformation.ProcessArchitecture}");
@@ -328,12 +485,40 @@ internal static class QrDecodePackRunner {
 
         foreach (var group in results.GroupBy(r => r.Scenario.Pack).OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase)) {
             var scenarioCount = group.Select(r => r.Scenario.Name).Distinct(StringComparer.Ordinal).Count();
-            sb.AppendLine($"Pack: {group.Key}  scenarios={scenarioCount}");
+            var info = QrDecodeScenarioPacks.GetPackInfo(group.Key);
+            var categoryLabel = string.IsNullOrWhiteSpace(info.Category) ? string.Empty : $" ({info.Category})";
+            sb.AppendLine($"Pack: {group.Key}{categoryLabel}  scenarios={scenarioCount}");
+            if (!string.IsNullOrWhiteSpace(info.Description)) sb.AppendLine($"  Notes: {info.Description}");
+            if (!string.IsNullOrWhiteSpace(info.Guidance)) sb.AppendLine($"  Guidance: {info.Guidance}");
+
+            var engineSummaries = group
+                .GroupBy(r => r.EngineName)
+                .OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase)
+                .Select(g => (Name: g.Key, Summary: Summarize(g.ToList())))
+                .ToArray();
+            var baselineName = engineSummaries
+                .Select(s => s.Name)
+                .FirstOrDefault(n => string.Equals(n, "CodeGlyphX", StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(baselineName) && engineSummaries.Length > 1) {
+                var baseline = engineSummaries.First(s => string.Equals(s.Name, baselineName, StringComparison.OrdinalIgnoreCase)).Summary;
+                sb.AppendLine("  Delta vs CodeGlyphX (pack summary):");
+                foreach (var summary in engineSummaries.Where(s => !string.Equals(s.Name, baselineName, StringComparison.OrdinalIgnoreCase))) {
+                    var decodeDelta = FormatRateDelta(summary.Summary.DecodeRate, baseline.DecodeRate);
+                    var expectedDelta = FormatRateDelta(summary.Summary.ExpectedRate, baseline.ExpectedRate);
+                    var medianDelta = FormatMsDelta(summary.Summary.MedianMs, baseline.MedianMs);
+                    var p95Delta = FormatMsDelta(summary.Summary.P95Ms, baseline.P95Ms);
+                    sb.AppendLine($"    - {summary.Name,-14} decode {decodeDelta} expected {expectedDelta} median {medianDelta} p95 {p95Delta}");
+                }
+            }
 
             foreach (var engineGroup in group.GroupBy(r => r.EngineName).OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase)) {
                 var packSummary = Summarize(engineGroup.ToList());
                 var externalTag = engineGroup.First().EngineIsExternal ? " (external)" : string.Empty;
                 sb.AppendLine($"  Engine: {engineGroup.Key}{externalTag}  runs={packSummary.Runs}  decode%={packSummary.DecodeRate:P0}  expected%={packSummary.ExpectedRate:P0}  medianMs={packSummary.MedianMs:F1}  p95Ms={packSummary.P95Ms:F1}");
+                var failureBreakdown = FormatFailureBreakdown(engineGroup);
+                if (!string.IsNullOrWhiteSpace(failureBreakdown)) {
+                    sb.AppendLine($"    Failures: {failureBreakdown}");
+                }
                 foreach (var result in engineGroup.OrderBy(r => r.Scenario.Name, StringComparer.OrdinalIgnoreCase)) {
                     var median = Percentile(result.Times, 0.50);
                     var p95 = Percentile(result.Times, 0.95);
@@ -345,6 +530,23 @@ internal static class QrDecodePackRunner {
                     var diagLabel = diagSummary is null ? "diag=n/a" : $"diag={FormatDiagnostics(diagSummary.Value)}";
                     sb.AppendLine(
                         $"    - {result.Scenario.Name,-26} size={result.Width}x{result.Height} ops={result.OpsPerIteration,2} decode%={decodeRate,6:P0} expected%={expectedRate,6:P0} medianMs={median,7:F1} p95Ms={p95,7:F1} decoded~={result.AvgDecodedCount,4:F1} expected={expectedLabel} opt={optionsLabel} {diagLabel}");
+                }
+
+                var slowest = engineGroup
+                    .Select(r => new {
+                        r.Scenario.Name,
+                        Median = Percentile(r.Times, 0.50),
+                        P95 = Percentile(r.Times, 0.95)
+                    })
+                    .OrderByDescending(r => r.Median)
+                    .ThenBy(r => r.Name, StringComparer.OrdinalIgnoreCase)
+                    .Take(3)
+                    .ToArray();
+                if (slowest.Length > 0) {
+                    sb.AppendLine("    Slowest (median ms):");
+                    for (var i = 0; i < slowest.Length; i++) {
+                        sb.AppendLine($"      - {slowest[i].Name,-26} medianMs={slowest[i].Median,7:F1} p95Ms={slowest[i].P95,7:F1}");
+                    }
                 }
             }
             sb.AppendLine();
@@ -425,8 +627,51 @@ internal static class QrDecodePackRunner {
         return $"s{summary.ScaleMedian} t{summary.ThresholdMedian} inv{summary.InvertRate:P0} cand{summary.CandidateMedian} tri{summary.TriplesMedian} dim{summary.DimensionMedian} ok{summary.SuccessRate:P0} fail={topFailure}";
     }
 
+    private static string FormatRateDelta(double value, double baseline) {
+        return $"{(value - baseline) * 100:+0;-0;0}pt";
+    }
+
+    private static string FormatMsDelta(double value, double baseline) {
+        if (baseline <= 0) return "n/a";
+        return $"{(value - baseline) / baseline * 100:+0;-0;0}%";
+    }
+
     private static string FormatFailure(QrDecodeFailureReason reason) {
         return reason == QrDecodeFailureReason.None ? "ok" : reason.ToString().ToLowerInvariant();
+    }
+
+    private static string? FormatFailureBreakdown(IEnumerable<QrDecodeScenarioResult> results) {
+        var counts = new Dictionary<QrDecodeFailureReason, int>();
+        var total = 0;
+        foreach (var failure in results.SelectMany(r => r.Infos).Select(info => info.Module.Failure)) {
+            if (failure == QrDecodeFailureReason.None) continue;
+            if (!counts.TryGetValue(failure, out var count)) count = 0;
+            counts[failure] = count + 1;
+            total++;
+        }
+
+        if (total == 0) return null;
+
+        var ordered = counts
+            .OrderByDescending(kv => kv.Value)
+            .ThenBy(kv => kv.Key)
+            .ToArray();
+        var take = Math.Min(3, ordered.Length);
+        var parts = new List<string>(take + 1);
+        var topSum = 0;
+        for (var i = 0; i < take; i++) {
+            var (failure, count) = ordered[i];
+            topSum += count;
+            parts.Add($"{FormatFailure(failure)}={count} ({count / (double)total:P0})");
+        }
+        if (ordered.Length > take) {
+            var remaining = total - topSum;
+            if (remaining > 0) {
+                parts.Add($"+{remaining} other ({remaining / (double)total:P0})");
+            }
+        }
+
+        return string.Join(", ", parts);
     }
 
     private static string BuildJsonReport(QrDecodePackRunnerOptions options, List<QrDecodeScenarioResult> results, DateTime nowUtc) {
@@ -440,7 +685,7 @@ internal static class QrDecodePackRunner {
     private static string BuildCsvReport(QrDecodePackRunnerOptions options, List<QrDecodeScenarioResult> results, DateTime nowUtc) {
         var model = BuildReportModel(options, results, nowUtc);
         var sb = new StringBuilder(8192);
-        sb.AppendLine("dateUtc,mode,pack,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
+        sb.AppendLine("dateUtc,mode,pack,packCategory,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
 
         var date = nowUtc.ToString("O");
         foreach (var pack in model.Packs) {
@@ -449,6 +694,7 @@ internal static class QrDecodePackRunner {
                     sb.Append(date).Append(',');
                     sb.Append(model.Mode).Append(',');
                     sb.Append(pack.Name).Append(',');
+                    sb.Append(pack.Category).Append(',');
                     sb.Append(engine.Name).Append(',');
                     sb.Append(engine.IsExternal ? "true" : "false").Append(',');
                     sb.Append(scenario.Name).Append(',');
@@ -540,8 +786,12 @@ internal static class QrDecodePackRunner {
                     })
                     .ToArray();
 
+                var info = QrDecodeScenarioPacks.GetPackInfo(packGroup.Key);
                 return new PackModel {
                     Name = packGroup.Key,
+                    Category = info.Category,
+                    Description = info.Description,
+                    Guidance = info.Guidance,
                     ScenarioCount = scenarioCount,
                     Engines = engines
                 };
@@ -688,6 +938,33 @@ internal static class QrDecodePackRunner {
         }
     }
 
+    private static void AddScenarios(List<string> scenarioList, string scenarioArg) {
+        if (string.IsNullOrWhiteSpace(scenarioArg)) return;
+        var parts = scenarioArg.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        for (var i = 0; i < parts.Length; i++) {
+            var scenario = parts[i].Trim();
+            if (scenario.Length > 0) scenarioList.Add(scenario);
+        }
+    }
+
+    private static IReadOnlyList<string> ResolveScenarioFilters(List<string> scenarios) {
+        if (scenarios.Count == 0) return Array.Empty<string>();
+        return scenarios
+            .Select(s => s.Trim())
+            .Where(s => s.Length > 0)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+    private static bool MatchesScenarioFilters(string scenarioName, IReadOnlyList<string> filters) {
+        if (filters.Count == 0) return true;
+        for (var i = 0; i < filters.Count; i++) {
+            var filter = filters[i];
+            if (scenarioName.Contains(filter, StringComparison.OrdinalIgnoreCase)) return true;
+        }
+        return false;
+    }
+
     private static QrPackMode ParseMode(string? value) {
         if (string.Equals(value, "full", StringComparison.OrdinalIgnoreCase)) return QrPackMode.Full;
         return QrPackMode.Quick;
@@ -731,6 +1008,9 @@ internal static class QrDecodePackRunner {
 
     private sealed class PackModel {
         public required string Name { get; init; }
+        public required string Category { get; init; }
+        public required string Description { get; init; }
+        public required string Guidance { get; init; }
         public required int ScenarioCount { get; init; }
         public required EngineModel[] Engines { get; init; }
     }

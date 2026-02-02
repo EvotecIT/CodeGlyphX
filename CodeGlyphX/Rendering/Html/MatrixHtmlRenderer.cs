@@ -17,13 +17,16 @@ public static class MatrixHtmlRenderer {
         if (opts.ModuleSize <= 0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleSize));
         if (opts.QuietZone < 0) throw new ArgumentOutOfRangeException(nameof(opts.QuietZone));
 
+        var darkColor = RenderSanitizer.SafeCssColor(opts.DarkColor, RenderDefaults.QrForegroundCss);
+        var lightColor = RenderSanitizer.SafeCssColor(opts.LightColor, RenderDefaults.QrBackgroundCss);
+
         var outWidth = modules.Width + opts.QuietZone * 2;
         var outHeight = modules.Height + opts.QuietZone * 2;
 
         var sb = new StringBuilder(outWidth * outHeight * 4);
         sb.Append("<table cellpadding=\"0\" cellspacing=\"0\" style=\"border-collapse:collapse;");
         if (!opts.EmailSafeTable) {
-            sb.Append("background:").Append(opts.LightColor).Append(';');
+            sb.Append("background:").Append(lightColor).Append(';');
         }
         sb.Append("\">");
 
@@ -39,12 +42,12 @@ public static class MatrixHtmlRenderer {
                 if (opts.EmailSafeTable) {
                     sb.Append("<td colspan=\"").Append(run).Append("\" width=\"").Append(run * opts.ModuleSize)
                         .Append("\" height=\"").Append(opts.ModuleSize).Append("\" bgcolor=\"")
-                        .Append(isDark ? opts.DarkColor : opts.LightColor)
+                        .Append(isDark ? darkColor : lightColor)
                         .Append("\" style=\"line-height:0;font-size:0;\">&nbsp;</td>");
                 } else {
                     sb.Append("<td colspan=\"").Append(run).Append("\" style=\"width:").Append(run * opts.ModuleSize)
                         .Append("px;height:").Append(opts.ModuleSize).Append("px;background:")
-                        .Append(isDark ? opts.DarkColor : opts.LightColor)
+                        .Append(isDark ? darkColor : lightColor)
                         .Append(";\"></td>");
                 }
 

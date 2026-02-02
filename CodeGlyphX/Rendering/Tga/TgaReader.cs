@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Rendering.Tga;
 
@@ -10,6 +11,7 @@ public static class TgaReader {
     /// Decodes a TGA image to an RGBA buffer.
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> tga, out int width, out int height) {
+        DecodeGuards.EnsurePayloadWithinLimits(tga.Length, "TGA payload exceeds size limits.");
         if (tga.Length < 18) throw new FormatException("Invalid TGA header.");
 
         var idLength = tga[0];
@@ -28,6 +30,7 @@ public static class TgaReader {
         width = ReadUInt16LE(tga, 12);
         height = ReadUInt16LE(tga, 14);
         if (width <= 0 || height <= 0) throw new FormatException("Invalid TGA dimensions.");
+        _ = DecodeGuards.EnsurePixelCount(width, height, "TGA dimensions exceed size limits.");
 
         var bpp = tga[16];
         if (isColorMapped) {
@@ -44,19 +47,24 @@ public static class TgaReader {
         var colorMapFirst = ReadUInt16LE(tga, 3);
         var colorMapLength = ReadUInt16LE(tga, 5);
         var colorMapDepth = tga[7];
-        var colorMapBytes = colorMapType != 0 ? colorMapLength * (colorMapDepth / 8) : 0;
+        if (colorMapType != 0 && colorMapDepth is not (16 or 24 or 32)) {
+            throw new FormatException("Unsupported TGA color map depth.");
+        }
+        var colorMapBytes = colorMapType != 0
+            ? DecodeGuards.EnsureByteCount((long)colorMapLength * (colorMapDepth / 8), "Invalid TGA color map.")
+            : 0;
 
         var dataOffset = 18 + idLength + colorMapBytes;
         if (dataOffset > tga.Length) throw new FormatException("Truncated TGA data.");
 
         var bytesPerPixel = bpp / 8;
-        var rowStride = width * bytesPerPixel;
+        var rowStride = DecodeGuards.EnsureByteCount((long)width * bytesPerPixel, "TGA row exceeds size limits.");
         if (!isRle) {
-            var required = dataOffset + rowStride * height;
+            var required = (long)dataOffset + (long)rowStride * height;
             if (required > tga.Length) throw new FormatException("Truncated TGA data.");
         }
 
-        var rgba = new byte[width * height * 4];
+        var rgba = DecodeGuards.AllocateRgba32(width, height, "TGA dimensions exceed size limits.");
 
         if (isRle) {
             DecodeRle(tga.Slice(dataOffset), rgba, width, height, originTop, bytesPerPixel, bpp, isColorMapped, isGrayscale, tga, colorMapType, colorMapFirst, colorMapLength, colorMapDepth);
@@ -104,7 +112,7 @@ public static class TgaReader {
         int colorMapFirst,
         int colorMapLength,
         int colorMapDepth) {
-        var pixelCount = width * height;
+        var pixelCount = DecodeGuards.EnsurePixelCount(width, height, "TGA dimensions exceed size limits.");
         var outIndex = 0;
         var pos = 0;
         while (outIndex < pixelCount && pos < data.Length) {
@@ -174,8 +182,9 @@ public static class TgaReader {
                 rgba[dst + 3] = 255;
                 return;
             }
-            var mapOffset = 18 + fullData[0] + entry * (colorMapDepth / 8);
-            if (mapOffset + (colorMapDepth / 8) > fullData.Length) throw new FormatException("Invalid TGA color map.");
+            var entryBytes = colorMapDepth / 8;
+            var mapOffset = 18 + fullData[0] + entry * entryBytes;
+            if ((long)mapOffset + entryBytes > fullData.Length) throw new FormatException("Invalid TGA color map.");
             if (colorMapDepth == 24) {
                 rgba[dst + 0] = fullData[mapOffset + 2];
                 rgba[dst + 1] = fullData[mapOffset + 1];

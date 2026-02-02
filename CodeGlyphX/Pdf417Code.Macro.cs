@@ -65,8 +65,10 @@ public static partial class Pdf417Code {
     public static byte[] JpegMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = EncodeMacro(text, macro, encodeOptions);
         var opts = BuildPngOptions(renderOptions);
-        var quality = renderOptions?.JpegQuality ?? 85;
-        return MatrixJpegRenderer.Render(modules, opts, quality);
+        var jpegOptions = renderOptions?.JpegOptions;
+        return jpegOptions is null
+            ? MatrixJpegRenderer.Render(modules, opts, renderOptions?.JpegQuality ?? 85)
+            : MatrixJpegRenderer.Render(modules, opts, jpegOptions);
     }
 
     /// <summary>

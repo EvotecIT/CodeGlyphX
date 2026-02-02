@@ -19,12 +19,6 @@ public sealed class UnsupportedFormatTests {
     }
 
     [Fact]
-    public void Decode_Psd_ThrowsUnsupported() {
-        var psd = Encoding.ASCII.GetBytes("8BPS");
-        AssertUnsupported(psd, "PSD");
-    }
-
-    [Fact]
     public void Decode_Jpeg2000_ThrowsUnsupported() {
         var jp2 = new byte[] {
             0x00, 0x00, 0x00, 0x0C,

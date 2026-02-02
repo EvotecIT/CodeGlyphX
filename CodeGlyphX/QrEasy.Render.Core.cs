@@ -283,7 +283,9 @@ public static partial class QrEasy {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, qr);
-        return QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality);
+        return opts.JpegOptions is null
+            ? QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality)
+            : QrJpegRenderer.Render(qr.Modules, render, opts.JpegOptions);
     }
 
     /// <summary>
@@ -325,7 +327,11 @@ public static partial class QrEasy {
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, qr);
-        QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
+        if (opts.JpegOptions is null) {
+            QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
+        } else {
+            QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegOptions);
+        }
     }
 
     /// <summary>
@@ -400,7 +406,9 @@ public static partial class QrEasy {
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
         var render = BuildPngOptions(opts, qr);
-        return QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality);
+        return opts.JpegOptions is null
+            ? QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality)
+            : QrJpegRenderer.Render(qr.Modules, render, opts.JpegOptions);
     }
 
     /// <summary>
@@ -424,7 +432,11 @@ public static partial class QrEasy {
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
         var render = BuildPngOptions(opts, qr);
-        QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
+        if (opts.JpegOptions is null) {
+            QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegQuality);
+        } else {
+            QrJpegRenderer.RenderToStream(qr.Modules, render, stream, opts.JpegOptions);
+        }
     }
 
     /// <summary>

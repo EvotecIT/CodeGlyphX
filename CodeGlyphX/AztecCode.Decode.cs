@@ -281,7 +281,7 @@ public static partial class AztecCode {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
-        var png = RenderIO.ReadBinary(path);
+        if (!DecodeResultHelpers.TryReadBinary(path, options, out var png)) { text = string.Empty; return false; }
         return TryDecodePng(png, options, cancellationToken, out text);
     }
 
@@ -305,7 +305,11 @@ public static partial class AztecCode {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new AztecDecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        var png = RenderIO.ReadBinary(path);
+        if (!DecodeResultHelpers.TryReadBinary(path, options, out var png)) {
+            text = string.Empty;
+            diagnostics = new AztecDecodeDiagnostics { Failure = "Invalid input." };
+            return false;
+        }
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
 
@@ -366,7 +370,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
@@ -424,7 +428,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
@@ -455,7 +459,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
                 text = string.Empty;
                 diagnostics.Failure ??= "Unsupported image format.";
                 return false;
@@ -508,8 +512,8 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            var data = RenderIO.ReadBinary(stream);
-            if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+            if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) { text = string.Empty; return false; }
+            if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
@@ -538,7 +542,11 @@ public static partial class AztecCode {
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new AztecDecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        var data = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) {
+            text = string.Empty;
+            diagnostics = new AztecDecodeDiagnostics { Failure = "Invalid input." };
+            return false;
+        }
         return TryDecodeImageCore(data, options, cancellationToken, out text, out diagnostics);
     }
 
@@ -561,7 +569,7 @@ public static partial class AztecCode {
             if (token.IsCancellationRequested) {
                 return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
             }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
                 var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
                 return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
             }
@@ -592,7 +600,9 @@ public static partial class AztecCode {
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
             return DecodeImageResult(buffer.AsSpan(), options, cancellationToken);
         }
-        var data = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) {
+            return new DecodeResult<string>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
+        }
         return DecodeImageResult(data, options, cancellationToken);
     }
 
@@ -644,7 +654,7 @@ public static partial class AztecCode {
     public static bool TryDecodeAllImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { texts = Array.Empty<string>(); return false; }
-        var data = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) { texts = Array.Empty<string>(); return false; }
         return TryDecodeAllImageCore(data, options, cancellationToken, out texts);
     }
 
@@ -661,7 +671,7 @@ public static partial class AztecCode {
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; return false; }
-        var png = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var png)) { text = string.Empty; return false; }
         return TryDecodePng(png, options, cancellationToken, out text);
     }
 
@@ -671,7 +681,11 @@ public static partial class AztecCode {
     public static bool TryDecodePng(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (cancellationToken.IsCancellationRequested) { text = string.Empty; diagnostics = new AztecDecodeDiagnostics { Failure = FailureCancelled }; return false; }
-        var png = RenderIO.ReadBinary(stream);
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var png)) {
+            text = string.Empty;
+            diagnostics = new AztecDecodeDiagnostics { Failure = "Invalid input." };
+            return false;
+        }
         return TryDecodePngCore(png, options, cancellationToken, out text, out diagnostics);
     }
 
@@ -707,7 +721,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) {
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
                 text = string.Empty;
                 diagnostics.Failure ??= "Unsupported image format.";
                 return false;
@@ -737,7 +751,7 @@ public static partial class AztecCode {
         var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
         try {
             if (token.IsCancellationRequested) return false;
-            if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
+            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
             var original = rgba;
             var originalWidth = width;
             var originalHeight = height;

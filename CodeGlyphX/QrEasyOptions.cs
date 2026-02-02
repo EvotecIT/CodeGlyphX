@@ -1,5 +1,6 @@
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Webp;
 
 namespace CodeGlyphX;
@@ -229,6 +230,12 @@ public sealed class QrEasyOptions {
     /// JPEG quality (1..100).
     /// </summary>
     public int JpegQuality { get; set; } = 85;
+
+    /// <summary>
+    /// Optional JPEG encoding options (subsampling/progressive/metadata/etc).
+    /// When set, overrides <see cref="JpegQuality"/> where applicable.
+    /// </summary>
+    public JpegEncodeOptions? JpegOptions { get; set; }
 
     /// <summary>
     /// WebP quality (0..100). A value of 100 uses lossless VP8L.

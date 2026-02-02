@@ -156,6 +156,19 @@ public sealed class WebpAnimationDecodeTests {
         AssertPixel(frames[2].Rgba, canvasWidth, 2, 2, 7, 8, 9, 255);
     }
 
+    [Fact]
+    public void Webp_ManagedDecode_AnimatedWebp_Vp8_Interframe_Skips_Frame() {
+        var vp8Payload = BuildInterframePayload(WebpVp8TestHelper.CreateBoolData(4));
+        var webp = BuildAnimatedWebpVp8(vp8Payload, width: 1, height: 1);
+
+        Assert.True(WebpReader.TryDecodeAnimationFrames(webp, out var frames, out var canvasWidth, out var canvasHeight, out _));
+        Assert.Equal(1, canvasWidth);
+        Assert.Equal(1, canvasHeight);
+        Assert.Single(frames);
+        Assert.Equal(4, frames[0].Rgba.Length);
+        Assert.Equal(new byte[] { 0, 0, 0, 0 }, frames[0].Rgba);
+    }
+
     internal static byte[] BuildLiteralOnlyVp8lPayload(int width, int height, int r, int g, int b, int a) {
         var writer = new BitWriterLsb();
 
@@ -272,6 +285,56 @@ public sealed class WebpAnimationDecodeTests {
         var riffSize = checked((uint)(bytes.Length - 8));
         WriteU32LE(bytes, 4, riffSize);
         return bytes;
+    }
+
+    private static byte[] BuildAnimatedWebpVp8(byte[] vp8Payload, int width, int height) {
+        using var ms = new MemoryStream();
+
+        WriteAscii(ms, "RIFF");
+        WriteU32LE(ms, 0);
+        WriteAscii(ms, "WEBP");
+
+        using (var vp8x = new MemoryStream()) {
+            vp8x.WriteByte(0x02); // animation flag
+            vp8x.WriteByte(0);
+            vp8x.WriteByte(0);
+            vp8x.WriteByte(0);
+            WriteU24LE(vp8x, width - 1);
+            WriteU24LE(vp8x, height - 1);
+            WriteChunk(ms, "VP8X", vp8x.ToArray());
+        }
+
+        using (var anim = new MemoryStream()) {
+            WriteU32LE(anim, 0);
+            WriteU16LE(anim, 0);
+            WriteChunk(ms, "ANIM", anim.ToArray());
+        }
+
+        using (var framePayload = new MemoryStream()) {
+            WriteU24LE(framePayload, 0);
+            WriteU24LE(framePayload, 0);
+            WriteU24LE(framePayload, width - 1);
+            WriteU24LE(framePayload, height - 1);
+            WriteU24LE(framePayload, 1);
+            framePayload.WriteByte(0);
+            WriteChunk(framePayload, "VP8 ", vp8Payload);
+            WriteChunk(ms, "ANMF", framePayload.ToArray());
+        }
+
+        var bytes = ms.ToArray();
+        WriteU32LE(bytes, 4, (uint)(bytes.Length - 8));
+        return bytes;
+    }
+
+    private static byte[] BuildInterframePayload(byte[] boolData) {
+        var partitionSize = boolData.Length;
+        var payload = new byte[3 + partitionSize];
+        var frameTag = (partitionSize << 5) | (1 << 4) | 1;
+        payload[0] = (byte)(frameTag & 0xFF);
+        payload[1] = (byte)((frameTag >> 8) & 0xFF);
+        payload[2] = (byte)((frameTag >> 16) & 0xFF);
+        boolData.CopyTo(payload.AsSpan(3));
+        return payload;
     }
 
     internal readonly struct AnimationFrameSpec {

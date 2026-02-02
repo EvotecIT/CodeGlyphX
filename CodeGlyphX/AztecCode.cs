@@ -135,7 +135,9 @@ public static partial class AztecCode {
     public static byte[] Jpeg(string text, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = Encode(text, encodeOptions);
         var opts = ToPngOptions(renderOptions);
-        return MatrixJpegRenderer.Render(modules, opts, renderOptions?.JpegQuality ?? 85);
+        return renderOptions?.JpegOptions is null
+            ? MatrixJpegRenderer.Render(modules, opts, renderOptions?.JpegQuality ?? 85)
+            : MatrixJpegRenderer.Render(modules, opts, renderOptions.JpegOptions);
     }
 
     /// <summary>
@@ -155,7 +157,9 @@ public static partial class AztecCode {
     public static byte[] Jpeg(ReadOnlySpan<byte> data, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null) {
         var modules = Encode(data, encodeOptions);
         var opts = ToPngOptions(renderOptions);
-        return MatrixJpegRenderer.Render(modules, opts, renderOptions?.JpegQuality ?? 85);
+        return renderOptions?.JpegOptions is null
+            ? MatrixJpegRenderer.Render(modules, opts, renderOptions?.JpegQuality ?? 85)
+            : MatrixJpegRenderer.Render(modules, opts, renderOptions.JpegOptions);
     }
 
     /// <summary>

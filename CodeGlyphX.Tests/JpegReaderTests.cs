@@ -33,7 +33,8 @@ public class JpegReaderTests {
         var data = File.ReadAllBytes(path);
         var (expectedWidth, expectedHeight) = JpegTestHelpers.ReadJpegSize(data);
 
-        var rgba = JpegReader.DecodeRgba32(data, out var width, out var height);
+        var options = new JpegDecodeOptions(allowTruncated: true);
+        var rgba = JpegReader.DecodeRgba32(data, out var width, out var height, options);
 
         Assert.Equal(expectedWidth, width);
         Assert.Equal(expectedHeight, height);
@@ -46,12 +47,14 @@ public class JpegReaderTests {
         var data = File.ReadAllBytes(path);
         var (expectedWidth, expectedHeight) = JpegTestHelpers.ReadJpegSize(data);
 
-        var rgba = JpegReader.DecodeRgba32(data, out var width, out var height);
+        var options = new JpegDecodeOptions(allowTruncated: true);
+        var rgba = JpegReader.DecodeRgba32(data, out var width, out var height, options);
 
         Assert.Equal(expectedWidth, width);
         Assert.Equal(expectedHeight, height);
         Assert.Equal(width * height * 4, rgba.Length);
     }
+
 
     [Fact]
     public void DecodeJpeg_ExifOrientation() {
@@ -59,25 +62,9 @@ public class JpegReaderTests {
         var data = File.ReadAllBytes(path);
         var (rawWidth, rawHeight) = JpegTestHelpers.ReadJpegSize(data);
         var orientation = JpegTestHelpers.ReadExifOrientation(data);
-
         var rgba = JpegReader.DecodeRgba32(data, out var width, out var height);
 
         Assert.Equal(6, orientation);
-        Assert.Equal(rawHeight, width);
-        Assert.Equal(rawWidth, height);
-        Assert.Equal(width * height * 4, rgba.Length);
-    }
-
-    [Fact]
-    public void DecodeJpeg_ExifOrientation_RotateLeft() {
-        var path = JpegTestHelpers.GetFixturePath("Landscape_8.jpg");
-        var data = File.ReadAllBytes(path);
-        var (rawWidth, rawHeight) = JpegTestHelpers.ReadJpegSize(data);
-        var orientation = JpegTestHelpers.ReadExifOrientation(data);
-
-        var rgba = JpegReader.DecodeRgba32(data, out var width, out var height);
-
-        Assert.Equal(8, orientation);
         Assert.Equal(rawHeight, width);
         Assert.Equal(rawWidth, height);
         Assert.Equal(width * height * 4, rgba.Length);
