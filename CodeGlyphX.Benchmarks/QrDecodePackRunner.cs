@@ -643,8 +643,7 @@ internal static class QrDecodePackRunner {
     private static string? FormatFailureBreakdown(IEnumerable<QrDecodeScenarioResult> results) {
         var counts = new Dictionary<QrDecodeFailureReason, int>();
         var total = 0;
-        foreach (var info in results.SelectMany(r => r.Infos)) {
-            var failure = info.Module.Failure;
+        foreach (var failure in results.SelectMany(r => r.Infos).Select(info => info.Module.Failure)) {
             if (failure == QrDecodeFailureReason.None) continue;
             if (!counts.TryGetValue(failure, out var count)) count = 0;
             counts[failure] = count + 1;
