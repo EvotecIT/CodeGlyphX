@@ -162,7 +162,7 @@ internal static class QrDecodeImageOps {
 
     public static void ApplyDeterministicNoise(byte[] pixels, int width, int height, int stride, int amplitude, int seed) {
         if (amplitude <= 0) return;
-        var rng = new Random(seed);
+        var rng = new Random(seed); // NOSONAR
         for (var y = 0; y < height; y++) {
             var row = y * stride;
             for (var x = 0; x < width; x++) {

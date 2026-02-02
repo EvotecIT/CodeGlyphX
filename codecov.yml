@@ -4,3 +4,5 @@ coverage:
 
 ignore:
   - "CodeGlyphX.Fuzz/**"
+  - "CodeGlyphX.Benchmarks/**"
+  - "CodeGlyphX.Examples/**"

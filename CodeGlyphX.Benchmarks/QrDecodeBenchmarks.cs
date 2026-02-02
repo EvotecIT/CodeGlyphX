@@ -153,7 +153,9 @@ public class QrDecodeBenchmarks
             out _);
         var options = QrPresets.Logo(logo);
         var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
-        QrDecodeSampleFactory.DecodePng(png, out rgba, out width, out height);
+        if (!ImageReader.TryDecodeRgba32(png, out rgba, out width, out height)) {
+            throw new InvalidOperationException("Failed to decode logo QR sample.");
+        }
     }
 #endif
 

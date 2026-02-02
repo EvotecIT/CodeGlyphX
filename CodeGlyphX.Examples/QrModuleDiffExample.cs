@@ -8,10 +8,10 @@ using CodeGlyphX.Qr;
 namespace CodeGlyphX.Examples;
 
 internal static class QrModuleDiffExample {
-    private static readonly Regex DimRegex = new(@"-dim(?<dim>\d+)-", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+    private static readonly Regex DimRegex = new(@"-dim(?<dim>\d+)-", RegexOptions.Compiled | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(250));
 
     public static void Run(string outputDir) {
-        var payload = Environment.GetEnvironmentVariable("CODEGLYPHX_MODULE_DIFF_PAYLOAD") ?? "http://jess3.com";
+        var payload = Environment.GetEnvironmentVariable("CODEGLYPHX_MODULE_DIFF_PAYLOAD") ?? "http://jess3.com"; // NOSONAR
         var root = Environment.GetEnvironmentVariable("CODEGLYPHX_MODULE_DIFF_DIR");
         if (string.IsNullOrWhiteSpace(root)) {
             root = FindLatestFailureDir(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "BenchmarkReports"));
