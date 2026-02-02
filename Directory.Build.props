@@ -15,8 +15,4 @@
     <MSBuildProjectExtensionsPath>obj/$(TargetFramework)/</MSBuildProjectExtensionsPath>
   </PropertyGroup>
 
-  <!-- Provide net472 reference assemblies on non-Windows hosts for compile-only builds. -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net472' and '$(OS)' != 'Windows_NT'">
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.3" PrivateAssets="all" />
-  </ItemGroup>
 </Project>
