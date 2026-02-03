@@ -481,11 +481,13 @@ def build_section(
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
     lines = []
-    lines.append(f"## {os_name.upper()}")
+    run_mode_title = "Quick" if run_mode == "quick" else "Full"
+    lines.append(f"## {os_name.upper()} ({run_mode_title})")
     lines.append("")
     lines.append(f"Updated: {timestamp}")
     lines.append(f"Framework: {framework}")
     lines.append(f"Configuration: {configuration}")
+    lines.append(f"OS: {platform.platform()} | Arch: {platform.machine()} | CPU: {os.cpu_count()}")
     lines.append(f"Artifacts: {artifacts_path}")
     lines.append("How to read:")
     lines.append("- Mean: average time per operation. Lower is better.")
@@ -493,9 +495,13 @@ def build_section(
     lines.append("- CodeGlyphX vs Fastest: CodeGlyphX mean divided by the fastest mean for that scenario. 1 x means CodeGlyphX is fastest; 1.5 x means ~50% slower.")
     lines.append("- CodeGlyphX Alloc vs Fastest: CodeGlyphX allocated divided by the fastest allocation for that scenario. 1 x means CodeGlyphX allocates the least; higher is more allocations.")
     lines.append("- Rating: good/ok/bad based on time + allocation ratios (good <=1.1x and <=1.25x alloc, ok <=1.5x and <=2.0x alloc).")
+    lines.append("- Δ lines in comparison tables show vendor ratios vs CodeGlyphX (time / alloc).")
     lines.append("- Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing.")
+    lines.append("- Quick and Full runs include the same scenario list; only the iteration settings differ.")
+    lines.append("- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.")
     lines.append("Notes:")
     lines.append(f"- {run_mode_details}")
+    lines.append("- Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.")
     lines.append("- Comparisons target PNG output and include encode+render (not encode-only).")
     lines.append("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
     lines.append("- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).")
@@ -549,6 +555,9 @@ def build_template(blocks):
             "- Quick runs default to `publish=false` (draft).",
             "- Full runs default to `publish=true`.",
             "- Override with `-Publish` or `-NoPublish` on the report generator.",
+            "",
+            "**QR decode pack runner CSV schema**",
+            "- Columns: dateUtc, mode, pack, packCategory, packDescription, packGuidance, engine, isExternal, scenario, width, height, runs, opsPerIteration, decodeRate, expectedRate, medianMs, p95Ms, avgDecodedCount, expected, options, diagScaleMedian, diagThresholdMedian, diagInvertRate, diagCandidateMedian, diagTriplesMedian, diagDimensionMedian, diagSuccessRate, diagTopFailure.",
             "",
             blocks["windows_quick"],
             "",

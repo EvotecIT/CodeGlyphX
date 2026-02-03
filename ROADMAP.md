@@ -31,6 +31,10 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 
 ## Recently completed (for context)
 - Benchmark controls + filters for quick vs full runs, plus report clarity/metadata.
+- Benchmark reports now include OS/CPU metadata and aligned quick/full guidance. [bench][docs]
+- Expanded stress pack with stronger generated variants (noise/contrast/quiet-zone). [bench]
+- Added website-flow round-trip decode tests without large binaries. [tests][dx]
+- Added screenshot decode walkthrough example + env toggle. [dx]
 - net472 parity documentation (feature matrix + guidance).
 - Added stylized art decode pack to scenario runs with pass‑rate + timing summaries.
 - CI: PR website build check (static output) before merge.
@@ -40,12 +44,8 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 
 ## Milestones (priority, no dates)
 ### P0 — Reliability & clarity
-- Stress/realism pack expansion + clear ideal/stress labels in reports. [bench]
-- Add environment metadata to quick summaries + keep quick/full guidance current. [bench][docs]
-- Regression tests that mirror the website flow (round-trip encode/decode, no committed large binaries). [tests][dx]
 - Close remaining heavy-illustration failures in `Assets/DecodingSamples`. [decoder]
 - Lightweight multi-scale search + adaptive binarization tuned for stylized QR. [decoder][docs]
-- Console examples: ASCII QR render + screenshot decode walkthrough. [dx]
 
 ### P1 — Performance & styling foundation
 - Reduce allocations in hot decode loops + mask-specialized traversal. [perf]
@@ -62,9 +62,7 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 - Illustrated QR art backlog (sprite/atlas, experimental AI overlay). [art][safety]
 
 ## Backlog — Benchmarks & reporting
-- Stress/realism pack expansion with clear "ideal vs stress" labels in reports. [bench]
 - Keep quick/full guidance current and add a short "how to interpret" blurb per pack. [bench][docs]
-- Add environment metadata (CPU, OS, runtime) into summaries for quick runs. [bench]
 
 ## Backlog — Decoder robustness
 - Close the remaining heavy-illustration failures in `Assets/DecodingSamples`. [decoder]
@@ -77,7 +75,6 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 - Optional SIMD for thresholding/binarization where it wins on real inputs. [perf]
 
 ## Backlog — Developer experience
-- Add regression tests that mirror the website flow (round-trip encode/decode, no committed large binaries). [dx][tests]
 - Improve console examples (ASCII QR render + screenshot decode walkthrough). [dx]
 
 ## Next — QR Styling & Presets (weeks)
@@ -130,13 +127,10 @@ This list is mostly **work we still want to do**. The "Recently completed" secti
 
 ## Wins by size (guide)
 ### Fast wins (hours)
-- Examples polish: console QR render + screenshot decode example. [dx]
-- Add decode regression tests without committing large binaries. [tests]
-- Small benchmark report wording/legend tweaks. [bench][docs]
+- Pack labeling in reports and website tables. [bench][docs]
 
 ### Small wins (1-3 days)
 - Stress/realism pack expansion (scaled UI shots, noise, quiet-zone variants). [bench]
-- Pack labeling in reports and website tables. [bench][docs]
 - Lightweight multi-scale decode pass before fallback. [decoder]
 
 ### Big wins (1-3 weeks)

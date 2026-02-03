@@ -39,6 +39,7 @@ internal static class QrDecodePackRunner {
         QrDecodeScenarioPacks.Multi,
         QrDecodeScenarioPacks.Art
     };
+    private const int FullArtRunCap = 2;
 
     public static bool TryParseArgs(string[] args, out QrDecodePackRunnerOptions options, out string[] remainingArgs) {
         options = null!;
@@ -266,7 +267,8 @@ internal static class QrDecodePackRunner {
             targetRuns = Math.Min(targetRuns, options.Iterations);
         }
         if (options.Mode == QrPackMode.Full && string.Equals(scenario.Pack, QrDecodeScenarioPacks.Art, StringComparison.OrdinalIgnoreCase)) {
-            targetRuns = Math.Min(targetRuns, 2);
+            // Art pack runs are heavier; cap full-mode repetitions to keep total run time reasonable.
+            targetRuns = Math.Min(targetRuns, FullArtRunCap);
         }
         if (engine.IsExternal) {
             targetRuns = Math.Min(targetRuns, options.ExternalRunsCap);
@@ -475,9 +477,11 @@ internal static class QrDecodePackRunner {
         sb.AppendLine($"CPU: {Environment.ProcessorCount} logical cores | GC: {(GCSettings.IsServerGC ? "Server" : "Workstation")}");
         sb.AppendLine();
         sb.AppendLine("Interpretation:");
-        sb.AppendLine("- decode% = any QR decoded");
-        sb.AppendLine("- expected% = expected payload(s) decoded");
-        sb.AppendLine("- ideal packs should be ~100%; stress/art packs track reliability progress");
+        sb.AppendLine("- decode% = any QR decoded in the image");
+        sb.AppendLine("- expected% = decoded payload matches the expected target(s)");
+        sb.AppendLine("- ideal packs are clean synthetic; should trend ~100%");
+        sb.AppendLine("- stress/screenshot/art packs track robustness progress (lower % is expected during tuning)");
+        sb.AppendLine("- quick mode uses fewer reps/ops; use full mode for baseline numbers");
         sb.AppendLine("- external engines run fewer reps to keep runs tractable");
         sb.AppendLine("- opt = decode option summary for the scenario");
         sb.AppendLine("- diag = median diagnostics (scale/threshold/invert/candidates/dimension) when available");
@@ -685,7 +689,7 @@ internal static class QrDecodePackRunner {
     private static string BuildCsvReport(QrDecodePackRunnerOptions options, List<QrDecodeScenarioResult> results, DateTime nowUtc) {
         var model = BuildReportModel(options, results, nowUtc);
         var sb = new StringBuilder(8192);
-        sb.AppendLine("dateUtc,mode,pack,packCategory,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
+        sb.AppendLine("dateUtc,mode,pack,packCategory,packDescription,packGuidance,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
 
         var date = nowUtc.ToString("O");
         foreach (var pack in model.Packs) {
@@ -695,6 +699,8 @@ internal static class QrDecodePackRunner {
                     sb.Append(model.Mode).Append(',');
                     sb.Append(pack.Name).Append(',');
                     sb.Append(pack.Category).Append(',');
+                    sb.Append(EscapeCsv(pack.Description)).Append(',');
+                    sb.Append(EscapeCsv(pack.Guidance)).Append(',');
                     sb.Append(engine.Name).Append(',');
                     sb.Append(engine.IsExternal ? "true" : "false").Append(',');
                     sb.Append(scenario.Name).Append(',');
