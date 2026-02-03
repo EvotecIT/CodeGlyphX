@@ -58,6 +58,8 @@ See `SECURITY.md` for reporting guidance and `FUZZING.md` for the decoder fuzzin
 ## Roadmap & Website
 
 - Roadmap: `ROADMAP.md`
+- Benchmarks: `BENCHMARK.md`
+- Website docs: `WEBSITE.md`
 
 ## Installation
 
