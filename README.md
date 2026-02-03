@@ -195,6 +195,19 @@ if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out v
 }
 ```
 
+Screenshot decode preset:
+
+```csharp
+var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: 600, maxDimension: 1400);
+var qrOptions = QrPixelDecodeOptions.Screen(maxMilliseconds: 600, maxDimension: 1400);
+qrOptions.EnableTileScan = true;
+qrOptions.TileGrid = 3;
+
+if (QrImageDecoder.TryDecodeImage(bytes, imageOptions, out var decoded, out var info, qrOptions)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
 ## Supported .NET Versions and Dependencies
 
 ### Core Library (CodeGlyphX)
