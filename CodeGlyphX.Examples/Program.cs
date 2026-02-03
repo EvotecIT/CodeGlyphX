@@ -46,6 +46,15 @@ internal static class Program {
             return;
         }
 
+        var runScreenshotWalkthrough = Environment.GetEnvironmentVariable("CODEGLYPHX_SCREENSHOT_WALKTHROUGH");
+        if (!string.IsNullOrEmpty(runScreenshotWalkthrough) &&
+            (string.Equals(runScreenshotWalkthrough, "1", StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(runScreenshotWalkthrough, "true", StringComparison.OrdinalIgnoreCase))) {
+            runner.Run("QR (screenshot walkthrough)", QrScreenshotWalkthroughExample.Run);
+            runner.PrintSummary();
+            return;
+        }
+
         runner.Run("QR (basic)", QrGenerationExample.Run);
         runner.Run("QR (ascii console)", QrAsciiExample.Run);
         runner.Run("QR (payloads)", QrPayloadsExample.Run);

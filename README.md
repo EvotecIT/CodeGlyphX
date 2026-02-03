@@ -65,6 +65,23 @@ See `SECURITY.md` for reporting guidance and `FUZZING.md` for the decoder fuzzin
 dotnet add package CodeGlyphX
 ```
 
+## Examples
+
+Run all examples:
+
+```powershell
+dotnet run --project CodeGlyphX.Examples
+```
+
+Outputs land under `CodeGlyphX.Examples/bin/<TFM>/Examples`.
+
+Targeted runs (set one env var at a time):
+- `CODEGLYPHX_DIAG_QR=1` - QR diagnostics
+- `CODEGLYPHX_DECODE_HARD_ART=1` - hard art diagnostics
+- `CODEGLYPHX_DECODE_SAMPLES=1` - decode sample sweep
+- `CODEGLYPHX_MODULE_DIFF=1` - module diff render
+- `CODEGLYPHX_SCREENSHOT_WALKTHROUGH=1` - screenshot decode walkthrough
+
 ## Target Framework Feature Matrix
 
 CodeGlyphX targets `netstandard2.0`, `net472`, `net8.0`, and `net10.0`. Most features are available everywhere, but the full QR pixel pipeline and Span-based APIs are net8+ only.
