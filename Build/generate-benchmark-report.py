@@ -481,7 +481,8 @@ def build_section(
     timestamp = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
 
     lines = []
-    lines.append(f"## {os_name.upper()}")
+    run_mode_title = "Quick" if run_mode == "quick" else "Full"
+    lines.append(f"## {os_name.upper()} ({run_mode_title})")
     lines.append("")
     lines.append(f"Updated: {timestamp}")
     lines.append(f"Framework: {framework}")
