@@ -644,6 +644,11 @@ $lines.Add("")
 $lines.Add("Updated: $timestamp")
 $lines.Add("Framework: $Framework")
 $lines.Add("Configuration: $Configuration")
+$runtime = [System.Runtime.InteropServices.RuntimeInformation]::FrameworkDescription
+$osDescription = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription
+$arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
+$cpuCount = [Environment]::ProcessorCount
+$lines.Add("OS: $osDescription | Arch: $arch | CPU: $cpuCount | Runtime: $runtime")
 $lines.Add("Artifacts: $ArtifactsPath")
 $lines.Add("### How to read")
 $lines.Add("- Mean: average time per operation. Lower is better.")

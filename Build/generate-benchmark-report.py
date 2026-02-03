@@ -486,6 +486,7 @@ def build_section(
     lines.append(f"Updated: {timestamp}")
     lines.append(f"Framework: {framework}")
     lines.append(f"Configuration: {configuration}")
+    lines.append(f"OS: {platform.platform()} | Arch: {platform.machine()} | CPU: {os.cpu_count()}")
     lines.append(f"Artifacts: {artifacts_path}")
     lines.append("How to read:")
     lines.append("- Mean: average time per operation. Lower is better.")
