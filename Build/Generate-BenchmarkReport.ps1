@@ -644,6 +644,11 @@ $lines.Add("")
 $lines.Add("Updated: $timestamp")
 $lines.Add("Framework: $Framework")
 $lines.Add("Configuration: $Configuration")
+$runtime = [System.Runtime.InteropServices.RuntimeInformation]::FrameworkDescription
+$osDescription = [System.Runtime.InteropServices.RuntimeInformation]::OSDescription
+$arch = [System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture
+$cpuCount = [Environment]::ProcessorCount
+$lines.Add("OS: $osDescription | Arch: $arch | CPU: $cpuCount | Runtime: $runtime")
 $lines.Add("Artifacts: $ArtifactsPath")
 $lines.Add("### How to read")
 $lines.Add("- Mean: average time per operation. Lower is better.")
@@ -1234,6 +1239,9 @@ $template = @(
     "- Quick runs default to `publish=false` (draft).",
     "- Full runs default to `publish=true`.",
     "- Override with `-Publish` or `-NoPublish` on the report generator.",
+    "",
+    "**QR decode pack runner CSV schema**",
+    "- Columns: dateUtc, mode, pack, packCategory, packDescription, packGuidance, engine, isExternal, scenario, width, height, runs, opsPerIteration, decodeRate, expectedRate, medianMs, p95Ms, avgDecodedCount, expected, options, diagScaleMedian, diagThresholdMedian, diagInvertRate, diagCandidateMedian, diagTriplesMedian, diagDimensionMedian, diagSuccessRate, diagTopFailure.",
     "",
     $blocks["windowsQuick"],
     "",
