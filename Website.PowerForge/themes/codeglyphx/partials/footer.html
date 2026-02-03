@@ -8,25 +8,38 @@
             <p>Zero-dependency QR &amp; barcode toolkit for .NET</p>
         </div>
         <div class="footer-links">
+            {{ assign product_menu = null }}
+            {{ assign resources_menu = null }}
+            {{ assign company_menu = null }}
+            {{ for menu in navigation.menus }}
+                {{ if menu.name == "footer-product" }}{{ assign product_menu = menu }}{{ end }}
+                {{ if menu.name == "footer-resources" }}{{ assign resources_menu = menu }}{{ end }}
+                {{ if menu.name == "footer-company" }}{{ assign company_menu = menu }}{{ end }}
+            {{ end }}
+
             <div class="footer-section">
                 <h3>Product</h3>
-                <a href="/">Home</a>
-                <a href="/playground/">Playground</a>
-                <a href="/docs/">Docs</a>
-                <a href="/benchmarks/">Benchmarks</a>
-                <a href="/showcase/">Showcase</a>
+                {{ if product_menu && product_menu.items }}
+                    {{ for item in product_menu.items }}
+                        <a href="{{ item.url }}" {{ if item.target }}target="{{ item.target }}"{{ end }} {{ if item.rel }}rel="{{ item.rel }}"{{ end }}>{{ item.title }}</a>
+                    {{ end }}
+                {{ end }}
             </div>
             <div class="footer-section">
                 <h3>Resources</h3>
-                <a href="/faq/">FAQ</a>
-                <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" aria-label="NuGet Package (opens in new tab)">NuGet Package</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" aria-label="GitHub Repository (opens in new tab)">GitHub Repository</a>
-                <a href="https://github.com/EvotecIT/CodeGlyphX/issues" target="_blank" rel="noopener" aria-label="Report Issue (opens in new tab)">Report Issue</a>
+                {{ if resources_menu && resources_menu.items }}
+                    {{ for item in resources_menu.items }}
+                        <a href="{{ item.url }}" {{ if item.target }}target="{{ item.target }}"{{ end }} {{ if item.rel }}rel="{{ item.rel }}"{{ end }} aria-label="{{ if item.aria_label }}{{ item.aria_label }}{{ else }}{{ item.title }}{{ end }}">{{ item.title }}</a>
+                    {{ end }}
+                {{ end }}
             </div>
             <div class="footer-section">
                 <h3>Company</h3>
-                <a href="https://evotec.xyz" target="_blank" rel="noopener" aria-label="Evotec Services (opens in new tab)">Evotec Services</a>
-                <a href="https://evotec.xyz/hub" target="_blank" rel="noopener" aria-label="Blog (opens in new tab)">Blog</a>
+                {{ if company_menu && company_menu.items }}
+                    {{ for item in company_menu.items }}
+                        <a href="{{ item.url }}" {{ if item.target }}target="{{ item.target }}"{{ end }} {{ if item.rel }}rel="{{ item.rel }}"{{ end }} aria-label="{{ if item.aria_label }}{{ item.aria_label }}{{ else }}{{ item.title }}{{ end }}">{{ item.title }}</a>
+                    {{ end }}
+                {{ end }}
             </div>
         </div>
         <div class="footer-bottom">
