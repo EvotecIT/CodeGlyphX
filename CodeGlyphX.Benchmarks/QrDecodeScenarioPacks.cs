@@ -154,7 +154,11 @@ internal static class QrDecodeScenarioPacks {
                 ("jpeg-35-generated", BuildJpegCompressedLowGenerated, GeneratedPayload),
                 ("keystone-generated", BuildKeystoneGenerated, GeneratedPayload),
                 ("jpeg-35-blur-generated", BuildJpegBlurGenerated, GeneratedPayload),
-                ("salt-pepper-generated", BuildSaltPepperGenerated, GeneratedPayload));
+                ("salt-pepper-generated", BuildSaltPepperGenerated, GeneratedPayload),
+                ("resampled-noisy-strong-generated", () => QrDecodeSampleFactory.BuildNoisyResampledGenerated(GeneratedPayload, noiseAmplitude: 20, noiseSeed: 4242), GeneratedPayload),
+                ("screenshot-like-strong-generated", () => QrDecodeSampleFactory.BuildScreenshotLikeGenerated(GeneratedPayload, noiseAmplitude: 14, blurRadius: 2), GeneratedPayload),
+                ("partial-quiet-tight-generated", () => QrDecodeSampleFactory.BuildPartialQuietGenerated(GeneratedPayload, quietZoneModules: 2, cropModules: 3), GeneratedPayload),
+                ("low-contrast-strong-generated", () => QrDecodeSampleFactory.BuildLowContrastGenerated(GeneratedPayload, factor: 0.40, bias: 0), GeneratedPayload));
         }
 
         // Screenshot pack: UI captures with multiple elements.
