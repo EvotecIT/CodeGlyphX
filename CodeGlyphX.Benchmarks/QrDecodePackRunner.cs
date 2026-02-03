@@ -475,9 +475,11 @@ internal static class QrDecodePackRunner {
         sb.AppendLine($"CPU: {Environment.ProcessorCount} logical cores | GC: {(GCSettings.IsServerGC ? "Server" : "Workstation")}");
         sb.AppendLine();
         sb.AppendLine("Interpretation:");
-        sb.AppendLine("- decode% = any QR decoded");
-        sb.AppendLine("- expected% = expected payload(s) decoded");
-        sb.AppendLine("- ideal packs should be ~100%; stress/art packs track reliability progress");
+        sb.AppendLine("- decode% = any QR decoded in the image");
+        sb.AppendLine("- expected% = decoded payload matches the expected target(s)");
+        sb.AppendLine("- ideal packs are clean synthetic; should trend ~100%");
+        sb.AppendLine("- stress/screenshot/art packs track robustness progress (lower % is expected during tuning)");
+        sb.AppendLine("- quick mode uses fewer reps/ops; use full mode for baseline numbers");
         sb.AppendLine("- external engines run fewer reps to keep runs tractable");
         sb.AppendLine("- opt = decode option summary for the scenario");
         sb.AppendLine("- diag = median diagnostics (scale/threshold/invert/candidates/dimension) when available");
