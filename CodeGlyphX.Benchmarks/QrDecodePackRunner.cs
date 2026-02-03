@@ -687,7 +687,7 @@ internal static class QrDecodePackRunner {
     private static string BuildCsvReport(QrDecodePackRunnerOptions options, List<QrDecodeScenarioResult> results, DateTime nowUtc) {
         var model = BuildReportModel(options, results, nowUtc);
         var sb = new StringBuilder(8192);
-        sb.AppendLine("dateUtc,mode,pack,packCategory,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
+        sb.AppendLine("dateUtc,mode,pack,packCategory,packDescription,packGuidance,engine,isExternal,scenario,width,height,runs,opsPerIteration,decodeRate,expectedRate,medianMs,p95Ms,avgDecodedCount,expected,options,diagScaleMedian,diagThresholdMedian,diagInvertRate,diagCandidateMedian,diagTriplesMedian,diagDimensionMedian,diagSuccessRate,diagTopFailure");
 
         var date = nowUtc.ToString("O");
         foreach (var pack in model.Packs) {
@@ -697,6 +697,8 @@ internal static class QrDecodePackRunner {
                     sb.Append(model.Mode).Append(',');
                     sb.Append(pack.Name).Append(',');
                     sb.Append(pack.Category).Append(',');
+                    sb.Append(EscapeCsv(pack.Description)).Append(',');
+                    sb.Append(EscapeCsv(pack.Guidance)).Append(',');
                     sb.Append(engine.Name).Append(',');
                     sb.Append(engine.IsExternal ? "true" : "false").Append(',');
                     sb.Append(scenario.Name).Append(',');
