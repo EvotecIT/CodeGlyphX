@@ -39,6 +39,7 @@ internal static class QrDecodePackRunner {
         QrDecodeScenarioPacks.Multi,
         QrDecodeScenarioPacks.Art
     };
+    private const int FullArtRunCap = 2;
 
     public static bool TryParseArgs(string[] args, out QrDecodePackRunnerOptions options, out string[] remainingArgs) {
         options = null!;
@@ -266,7 +267,8 @@ internal static class QrDecodePackRunner {
             targetRuns = Math.Min(targetRuns, options.Iterations);
         }
         if (options.Mode == QrPackMode.Full && string.Equals(scenario.Pack, QrDecodeScenarioPacks.Art, StringComparison.OrdinalIgnoreCase)) {
-            targetRuns = Math.Min(targetRuns, 2);
+            // Art pack runs are heavier; cap full-mode repetitions to keep total run time reasonable.
+            targetRuns = Math.Min(targetRuns, FullArtRunCap);
         }
         if (engine.IsExternal) {
             targetRuns = Math.Min(targetRuns, options.ExternalRunsCap);

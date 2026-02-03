@@ -12,6 +12,9 @@
 - Full runs default to publish=true.
 - Override with -Publish or -NoPublish on the report generator.
 
+**QR decode pack runner CSV schema**
+- Columns: dateUtc, mode, pack, packCategory, packDescription, packGuidance, engine, isExternal, scenario, width, height, runs, opsPerIteration, decodeRate, expectedRate, medianMs, p95Ms, avgDecodedCount, expected, options, diagScaleMedian, diagThresholdMedian, diagInvertRate, diagCandidateMedian, diagTriplesMedian, diagDimensionMedian, diagSuccessRate, diagTopFailure.
+
 <!-- BENCHMARK:WINDOWS:QUICK:START -->
 ## WINDOWS (Quick)
 
