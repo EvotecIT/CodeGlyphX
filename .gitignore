@@ -389,6 +389,10 @@ temp-check/
 docfx/
 *.bak/
 api.bak/
+Website/_site/
+Website/_temp/
+CodeGlyphX.Website/wwwroot/api-docs/
+CodeGlyphX.Website/wwwroot/api/
 
 # External image samples (downloaded at test time)
 CodeGlyphX.Tests/Fixtures/ImageSamples/*.png

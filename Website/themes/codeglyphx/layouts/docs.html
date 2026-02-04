@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ page.title }}</title>
+  {{ description_meta_html }}
+  {{ canonical_html }}
+  {{ head_html }}
+  <script>(function(){const t=localStorage.getItem('theme')||'auto';document.documentElement.dataset.theme=t;})();</script>
+  {{ assets.preloads_html }}
+  {{ assets.critical_css_html }}
+  {{ include "theme-tokens" }}
+  {{ extra_css_html }}
+  {{ assets.css_html }}
+  {{ opengraph_html }}
+  {{ structured_data_html }}
+</head>
+<body{{ if body_class != "" }} class="{{ body_class }}"{{ end }}>
+  <div class="page">
+{{ include "header" -}}
+<main>
+  <div class="docs-layout">
+    <button class="docs-sidebar-toggle" aria-label="Toggle documentation menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+        <path d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+      <span>Documentation Menu</span>
+    </button>
+    <div class="docs-sidebar-overlay"></div>
+    <aside class="docs-sidebar">
+{{ include "docs-sidebar" }}
+    </aside>
+    <div class="docs-content">
+{{ content }}
+    </div>
+  </div>
+</main>
+{{ include "footer" -}}
+  </div>
+  {{ assets.js_html }}
+  {{ extra_scripts_html }}
+</body>
+</html>
