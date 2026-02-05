@@ -90,17 +90,31 @@ if (-not $PowerForge) {
 
 Write-Host "Using: $PowerForge $($PowerForgeArgs -join ' ')" -ForegroundColor DarkGray
 
+function Assert-SiteOutput {
+    param(
+        [Parameter(Mandatory)]
+        [string]$SiteRoot
+    )
+
+    $notFoundPage = Join-Path $SiteRoot '404.html'
+    if (-not (Test-Path -LiteralPath $notFoundPage -PathType Leaf)) {
+        throw "Build validation failed: expected '$notFoundPage' for GitHub Pages 404 handling."
+    }
+}
+
 try {
     if ($Serve) {
         Write-Host 'Building website...' -ForegroundColor Cyan
-        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json
+        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile
         if ($LASTEXITCODE -ne 0) { throw "Build failed (exit code $LASTEXITCODE)" }
+        Assert-SiteOutput -SiteRoot (Join-Path $PSScriptRoot '_site')
         Write-Host "Starting dev server on http://localhost:$Port ..." -ForegroundColor Cyan
         & $PowerForge @PowerForgeArgs serve --path _site --port $Port
     } else {
         Write-Host 'Building website...' -ForegroundColor Cyan
-        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json
+        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile
         if ($LASTEXITCODE -ne 0) { throw "Build failed (exit code $LASTEXITCODE)" }
+        Assert-SiteOutput -SiteRoot (Join-Path $PSScriptRoot '_site')
         Write-Host 'Build complete -> _site/' -ForegroundColor Green
     }
 } finally {
