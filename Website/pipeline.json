@@ -13,13 +13,6 @@
       "clean": true
     },
     {
-      "task": "markdown-fix",
-      "id": "markdown-fix-docs",
-      "dependsOn": "build-site",
-      "root": "./content/docs",
-      "apply": false
-    },
-    {
       "task": "verify",
       "id": "verify-site",
       "dependsOn": "build-site",
