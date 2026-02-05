@@ -78,6 +78,9 @@
       { "Name": "codeglyphx", "Path": "themes/codeglyphx/critical.css" }
     ]
   },
+  "Prism": {
+    "DefaultLanguage": "csharp"
+  },
   "A11y": {
     "SkipLinkLabel": "Skip to content",
     "ExternalLinkLabel": "Opens in a new tab",

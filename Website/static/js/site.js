@@ -98,9 +98,12 @@ globalThis.setTheme = setTheme;
     }
 
     function initCodeBlocks() {
-        const defaultCodeLanguage = document.body?.dataset?.codeLanguage
+        let defaultCodeLanguage = document.body?.dataset?.codeLanguage
             || document.documentElement?.dataset?.codeLanguage
             || 'language-csharp';
+        if (defaultCodeLanguage && !defaultCodeLanguage.startsWith('language-')) {
+            defaultCodeLanguage = `language-${defaultCodeLanguage}`;
+        }
         const blocks = Array.from(document.querySelectorAll('pre.code-block, .docs-content pre, .docs-static pre, .type-detail pre'))
             .filter((block) => !block.classList.contains('initialized'));
         const signatures = Array.from(document.querySelectorAll('code.signature'))

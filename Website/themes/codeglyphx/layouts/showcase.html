@@ -16,7 +16,7 @@
   {{ opengraph_html }}
   {{ structured_data_html }}
 </head>
-<body{{ if body_class != "" }} class="{{ body_class }}"{{ end }}>
+<body{{ if body_class != "" }} class="{{ body_class }}"{{ end }}{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
   <div class="page">
 {{ include "header" -}}
 <main>
