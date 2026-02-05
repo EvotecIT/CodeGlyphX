@@ -98,6 +98,9 @@ globalThis.setTheme = setTheme;
     }
 
     function initCodeBlocks() {
+        const defaultCodeLanguage = document.body?.dataset?.codeLanguage
+            || document.documentElement?.dataset?.codeLanguage
+            || 'language-csharp';
         const blocks = Array.from(document.querySelectorAll('pre.code-block, .docs-content pre, .docs-static pre, .type-detail pre'))
             .filter((block) => !block.classList.contains('initialized'));
         const signatures = Array.from(document.querySelectorAll('code.signature'))
@@ -158,7 +161,7 @@ globalThis.setTheme = setTheme;
                     if (!codeEl.classList.contains('prism-highlighted')) {
                         const codeLanguage = Array.from(codeEl.classList).find((cls) => cls.startsWith('language-'));
                         const blockLanguage = Array.from(block.classList).find((cls) => cls.startsWith('language-'));
-                        const targetLanguage = codeLanguage || blockLanguage || 'language-plain';
+                        const targetLanguage = codeLanguage || blockLanguage || defaultCodeLanguage;
                         if (!codeLanguage) {
                             codeEl.classList.add(targetLanguage);
                         }
