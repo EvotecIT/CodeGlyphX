@@ -216,7 +216,7 @@
     const captionEl = gallery.querySelector('.showcase-carousel-caption');
     const counterEl = gallery.querySelector('.showcase-carousel-counter');
 
-    function updateCarousel() {
+    const updateCarousel = function() {
       const themeCaptions = captions[currentTheme];
       const totalSlides = themeCaptions.length;
 
@@ -247,13 +247,13 @@
       // Update caption and counter
       if (captionEl) captionEl.textContent = themeCaptions[currentSlide];
       if (counterEl) counterEl.textContent = (currentSlide + 1) + ' / ' + totalSlides;
-    }
+    };
 
-    function goToSlide(index) {
+    const goToSlide = function(index) {
       const totalSlides = captions[currentTheme].length;
       currentSlide = ((index % totalSlides) + totalSlides) % totalSlides;
       updateCarousel();
-    }
+    };
 
     // Theme tab clicks
     themeTabs.forEach(function(tab) {

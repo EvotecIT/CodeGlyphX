@@ -70,7 +70,10 @@
       { "Match": "/playground/**", "Bundles": ["global"] },
       { "Match": "/pricing/**", "Bundles": ["global"] }
     ],
-    "Preloads": [],
+    "Preloads": [
+      { "Rel": "preload", "Href": "/fonts/inter/Inter-400-latin.woff2", "As": "font", "Type": "font/woff2", "Crossorigin": "anonymous" },
+      { "Rel": "preload", "Href": "/fonts/inter/Inter-600-latin.woff2", "As": "font", "Type": "font/woff2", "Crossorigin": "anonymous" }
+    ],
     "CriticalCss": [
       { "Name": "codeglyphx", "Path": "themes/codeglyphx/critical.css" }
     ]

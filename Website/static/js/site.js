@@ -41,7 +41,7 @@ globalThis.setTheme = setTheme;
         }
         const css = document.createElement('link');
         css.rel = 'stylesheet';
-        css.href = '/vendor/prism/prism-tomorrow.min.css';
+        css.href = '/css/prism-theme.css';
         document.head.appendChild(css);
 
         const loadScript = (src, done) => {

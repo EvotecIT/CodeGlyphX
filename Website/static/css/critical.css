@@ -1,22 +1,75 @@
 /* Critical CSS - inlined for fast initial render */
 /* Contains only above-the-fold styles: theme vars, body, loading spinner */
+/* IMPORTANT: These values MUST match app.css exactly to prevent FOUC */
 
 :root {
-    --bg-dark: #0a0e14;
-    --bg-card: #151b23;
-    --text: #e6edf3;
-    --text-muted: #8b949e;
-    --primary: #2f81f7;
-    --primary-light: #58a6ff;
+    /* Colors */
+    --primary: #8b5cf6;
+    --primary-light: #a78bfa;
+    --primary-dark: #7c3aed;
+    --secondary: #06b6d4;
+    --accent: #f472b6;
+    --success: #10b981;
+
+    /* Backgrounds */
+    --bg-dark: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-card-hover: #1a1a25;
+    --bg-input: #1e1e2a;
+    --bg-code: #0d0d12;
+
+    /* Text */
+    --text: #f4f4f5;
+    --text-muted: #c1c7d6;
+    --text-dim: #9aa4b2;
+
+    /* Borders */
+    --border: #27272a;
+    --border-light: #3f3f46;
+
+    /* Effects */
+    --glow-primary: 0 0 40px rgba(139, 92, 246, 0.3);
+    --glow-secondary: 0 0 40px rgba(6, 182, 212, 0.2);
+    --radius: 12px;
+    --radius-lg: 20px;
+
+    /* Header */
+    --header-bg: rgba(10, 10, 15, 0.8);
+    --header-border: rgba(255, 255, 255, 0.05);
 }
 
 [data-theme="light"] {
-    --bg-dark: #ffffff;
-    --bg-card: #f6f8fa;
-    --text: #1f2328;
-    --text-muted: #656d76;
-    --primary: #0969da;
-    --primary-light: #0550ae;
+    /* Colors */
+    --primary: #6d28d9;
+    --primary-light: #7c3aed;
+    --primary-dark: #5b21b6;
+    --secondary: #0e7490;
+    --accent: #db2777;
+    --success: #047857;
+
+    /* Backgrounds */
+    --bg-dark: #f8fafc;
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+    --bg-input: #f1f5f9;
+    --bg-code: #f8fafc;
+
+    /* Text */
+    --text: #1e293b;
+    --text-muted: #475569;
+    --text-dim: #64748b;
+
+    /* Borders */
+    --border: #e2e8f0;
+    --border-light: #cbd5e1;
+
+    /* Effects */
+    --glow-primary: 0 0 40px rgba(124, 58, 237, 0.15);
+    --glow-secondary: 0 0 40px rgba(8, 145, 178, 0.1);
+
+    /* Header */
+    --header-bg: rgba(248, 250, 252, 0.9);
+    --header-border: rgba(0, 0, 0, 0.05);
 }
 
 *, *::before, *::after {
@@ -30,7 +83,7 @@ html, body {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg-dark);
     color: var(--text);
     line-height: 1.6;
@@ -129,31 +182,35 @@ svg {
     height: 60px;
 }
 
-/* Basic header layout to prevent content flash */
+/* Basic header layout to prevent content flash - MUST match app.css (fixed) */
 .header {
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1rem 2rem;
     background: var(--bg-dark);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--header-border);
 }
 
 .header-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 1400px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0.75rem 1.5rem;
 }
 
 .brand {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 800;
     text-decoration: none;
     color: var(--text);
-    font-weight: 600;
 }
 
 .brand-icon img {
