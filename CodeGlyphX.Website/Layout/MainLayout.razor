@@ -177,7 +177,7 @@
 
     private static readonly NavLink[] DefaultPrimaryLinks =
     {
-        new NavLink("/", "Home"),
+        new NavLink("/", "Home", true),
         new NavLink("/docs/", "Docs"),
         new NavLink("/playground/", "Playground", true),
         new NavLink("/benchmarks/", "Benchmarks"),
@@ -189,7 +189,7 @@
     {
         Product = new List<NavLink>
         {
-            new NavLink("/", "Home"),
+            new NavLink("/", "Home", true),
             new NavLink("/playground/", "Playground"),
             new NavLink("/docs/", "Docs"),
             new NavLink("/benchmarks/", "Benchmarks"),
