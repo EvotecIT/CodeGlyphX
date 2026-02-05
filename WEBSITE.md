@@ -212,6 +212,14 @@ Options:
 - Or update the engine/template to auto-add language class based on content detection
 - Or change site.js default from `language-plain` to `language-csharp`
 
+### 10.1. Docs Markdown Migration (future)
+
+**Priority**: Medium
+
+Convert HTML-heavy docs (`<pre class="code-block">`, inline `<h1>`, `<p>`, etc.)
+to proper Markdown with fenced code blocks and language tags. This keeps content
+clean, makes syntax highlighting reliable, and removes the need for raw HTML.
+
 ### 11. Interactive Examples Enhancement
 
 **Priority**: Low
