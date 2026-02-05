@@ -154,12 +154,20 @@
         get
         {
             var relative = Nav.ToBaseRelativePath(Nav.Uri);
+            if (string.IsNullOrEmpty(relative))
+            {
+                return true;
+            }
             if (relative.StartsWith("playground", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
 
             var basePath = new Uri(Nav.BaseUri).AbsolutePath.TrimEnd('/');
+            if (string.IsNullOrEmpty(basePath))
+            {
+                basePath = "/";
+            }
             return basePath.EndsWith("/playground", StringComparison.OrdinalIgnoreCase);
         }
     }
@@ -289,10 +297,20 @@
         }
     };
 
-    private static bool IsStaticPage(string href)
+    private bool IsStaticPage(string href)
     {
-        return string.Equals(href, "/", StringComparison.OrdinalIgnoreCase) ||
-               href.Contains("/docs/", StringComparison.OrdinalIgnoreCase) ||
+        if (string.Equals(href, "/", StringComparison.OrdinalIgnoreCase))
+        {
+            var basePath = new Uri(Nav.BaseUri).AbsolutePath.TrimEnd('/');
+            if (string.IsNullOrEmpty(basePath))
+            {
+                basePath = "/";
+            }
+            // When hosted under /playground/, "/" is the static site home.
+            return string.Equals(basePath, "/playground", StringComparison.OrdinalIgnoreCase);
+        }
+
+        return href.Contains("/docs/", StringComparison.OrdinalIgnoreCase) ||
                href.Contains("/faq/", StringComparison.OrdinalIgnoreCase) ||
                href.Contains("/benchmarks/", StringComparison.OrdinalIgnoreCase) ||
                href.Contains("/showcase/", StringComparison.OrdinalIgnoreCase) ||
