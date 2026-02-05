@@ -93,13 +93,13 @@ Write-Host "Using: $PowerForge $($PowerForgeArgs -join ' ')" -ForegroundColor Da
 try {
     if ($Serve) {
         Write-Host 'Building website...' -ForegroundColor Cyan
-        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json
+        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile
         if ($LASTEXITCODE -ne 0) { throw "Build failed (exit code $LASTEXITCODE)" }
         Write-Host "Starting dev server on http://localhost:$Port ..." -ForegroundColor Cyan
         & $PowerForge @PowerForgeArgs serve --path _site --port $Port
     } else {
         Write-Host 'Building website...' -ForegroundColor Cyan
-        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json
+        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile
         if ($LASTEXITCODE -ne 0) { throw "Build failed (exit code $LASTEXITCODE)" }
         Write-Host 'Build complete -> _site/' -ForegroundColor Green
     }
