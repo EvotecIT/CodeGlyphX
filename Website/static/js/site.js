@@ -358,6 +358,112 @@ globalThis.setTheme = setTheme;
         });
     }
 
+    function initShowcaseCarousel() {
+        const galleries = Array.from(document.querySelectorAll('.showcase-gallery'))
+            .filter((gallery) => gallery.dataset.bound !== 'true');
+
+        galleries.forEach((gallery) => {
+            gallery.dataset.bound = 'true';
+            const carouselId = gallery.dataset.carousel;
+            const dataScript = document.querySelector(`script.carousel-data[data-carousel="${carouselId}"]`);
+            if (!dataScript) return;
+
+            let captions = null;
+            try {
+                captions = JSON.parse(dataScript.textContent || '{}');
+            } catch {
+                return;
+            }
+
+            const themeTabs = Array.from(gallery.querySelectorAll('.showcase-gallery-tab'));
+            const slides = Array.from(gallery.querySelectorAll('.showcase-carousel-slide'));
+            const prevBtn = gallery.querySelector('.showcase-carousel-nav.prev');
+            const nextBtn = gallery.querySelector('.showcase-carousel-nav.next');
+            const dots = Array.from(gallery.querySelectorAll('.showcase-carousel-dot'));
+            const thumbContainers = Array.from(gallery.querySelectorAll('.showcase-carousel-thumbs'));
+            const captionEl = gallery.querySelector('.showcase-carousel-caption');
+            const counterEl = gallery.querySelector('.showcase-carousel-counter');
+
+            if (!themeTabs.length || !slides.length) return;
+
+            let currentTheme = themeTabs.find((tab) => tab.classList.contains('active'))?.dataset.theme
+                || themeTabs[0]?.dataset.theme
+                || 'dark';
+            let currentSlide = 0;
+
+            const updateCarousel = () => {
+                const themeCaptions = captions?.[currentTheme] || [];
+                const totalSlides = themeCaptions.length || 0;
+
+                slides.forEach((slide) => {
+                    const isCurrentTheme = slide.dataset.theme === currentTheme;
+                    const isCurrentSlide = Number.parseInt(slide.dataset.index || '0', 10) === currentSlide;
+                    slide.style.display = isCurrentTheme ? '' : 'none';
+                    slide.classList.toggle('active', isCurrentTheme && isCurrentSlide);
+                });
+
+                dots.forEach((dot, idx) => {
+                    dot.classList.toggle('active', idx === currentSlide);
+                });
+
+                thumbContainers.forEach((container) => {
+                    const isCurrentTheme = container.dataset.themeContainer === currentTheme;
+                    container.style.display = isCurrentTheme ? '' : 'none';
+                    if (isCurrentTheme) {
+                        Array.from(container.querySelectorAll('.showcase-carousel-thumb')).forEach((thumb, idx) => {
+                            thumb.classList.toggle('active', idx === currentSlide);
+                        });
+                    }
+                });
+
+                if (captionEl && totalSlides > 0) {
+                    captionEl.textContent = themeCaptions[currentSlide] || '';
+                }
+                if (counterEl && totalSlides > 0) {
+                    counterEl.textContent = `${currentSlide + 1} / ${totalSlides}`;
+                }
+            };
+
+            const goToSlide = (index) => {
+                const totalSlides = (captions?.[currentTheme] || []).length || 0;
+                if (!totalSlides) return;
+                currentSlide = ((index % totalSlides) + totalSlides) % totalSlides;
+                updateCarousel();
+            };
+
+            themeTabs.forEach((tab) => {
+                tab.addEventListener('click', () => {
+                    currentTheme = tab.dataset.theme || currentTheme;
+                    currentSlide = 0;
+                    themeTabs.forEach((t) => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    updateCarousel();
+                });
+            });
+
+            if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+            if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+
+            dots.forEach((dot) => {
+                dot.addEventListener('click', () => {
+                    const idx = Number.parseInt(dot.dataset.index || '0', 10);
+                    goToSlide(idx);
+                });
+            });
+
+            thumbContainers.forEach((container) => {
+                Array.from(container.querySelectorAll('.showcase-carousel-thumb')).forEach((thumb) => {
+                    thumb.addEventListener('click', () => {
+                        const idx = Number.parseInt(thumb.dataset.index || '0', 10);
+                        goToSlide(idx);
+                    });
+                });
+            });
+
+            updateCarousel();
+        });
+    }
+
     document.addEventListener('click', (event) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
@@ -375,6 +481,7 @@ globalThis.setTheme = setTheme;
             initTimer = 0;
             initCodeBlocks();
             initDocsNav();
+            initShowcaseCarousel();
             renderBenchmarkSummary();
         }, 100);
     }
