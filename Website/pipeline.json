@@ -29,6 +29,13 @@
       "include": "**/*, *"
     },
     {
+      "task": "copy",
+      "source": "./static/api",
+      "destination": "./_site/playground/api",
+      "clean": true,
+      "include": "**/*, *"
+    },
+    {
       "task": "apidocs",
       "xml": "../CodeGlyphX/bin/Release/net10.0/CodeGlyphX.xml",
       "assembly": "../CodeGlyphX/bin/Release/net10.0/CodeGlyphX.dll",

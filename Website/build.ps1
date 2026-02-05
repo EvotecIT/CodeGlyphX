@@ -30,6 +30,7 @@ Push-Location $PSScriptRoot
 
 # Resolve PowerForge.Web.Cli executable (prefer local fresh build)
 $PowerForge = $null
+$PowerForgeArgs = @()
 if ([string]::IsNullOrWhiteSpace($PowerForgeRoot)) {
     $candidate = Join-Path $PSScriptRoot '..\PSPublishModule'
     if (Test-Path $candidate) {
@@ -51,7 +52,11 @@ if ([string]::IsNullOrWhiteSpace($PowerForgeRoot)) {
 if (-not [string]::IsNullOrWhiteSpace($PowerForgeRoot)) {
     $PowerForgeCliProject = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\PowerForge.Web.Cli.csproj'
     $PowerForgeReleaseExe = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Release\net10.0\PowerForge.Web.Cli.exe'
+    $PowerForgeReleaseAppHost = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Release\net10.0\PowerForge.Web.Cli'
+    $PowerForgeReleaseDll = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Release\net10.0\PowerForge.Web.Cli.dll'
     $PowerForgeDebugExe = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Debug\net10.0\PowerForge.Web.Cli.exe'
+    $PowerForgeDebugAppHost = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Debug\net10.0\PowerForge.Web.Cli'
+    $PowerForgeDebugDll = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Debug\net10.0\PowerForge.Web.Cli.dll'
 }
 
 if (-not $SkipBuildTool -and $PowerForgeCliProject -and (Test-Path $PowerForgeCliProject)) {
@@ -62,8 +67,18 @@ if (-not $SkipBuildTool -and $PowerForgeCliProject -and (Test-Path $PowerForgeCl
 
 if ($PowerForgeReleaseExe -and (Test-Path $PowerForgeReleaseExe)) {
     $PowerForge = $PowerForgeReleaseExe
+} elseif ($PowerForgeReleaseAppHost -and (Test-Path $PowerForgeReleaseAppHost)) {
+    $PowerForge = $PowerForgeReleaseAppHost
+} elseif ($PowerForgeReleaseDll -and (Test-Path $PowerForgeReleaseDll)) {
+    $PowerForge = 'dotnet'
+    $PowerForgeArgs = @($PowerForgeReleaseDll)
 } elseif ($PowerForgeDebugExe -and (Test-Path $PowerForgeDebugExe)) {
     $PowerForge = $PowerForgeDebugExe
+} elseif ($PowerForgeDebugAppHost -and (Test-Path $PowerForgeDebugAppHost)) {
+    $PowerForge = $PowerForgeDebugAppHost
+} elseif ($PowerForgeDebugDll -and (Test-Path $PowerForgeDebugDll)) {
+    $PowerForge = 'dotnet'
+    $PowerForgeArgs = @($PowerForgeDebugDll)
 } else {
     $PowerForge = Get-Command powerforge-web -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source
 }
@@ -73,18 +88,18 @@ if (-not $PowerForge) {
     exit 1
 }
 
-Write-Host "Using: $PowerForge" -ForegroundColor DarkGray
+Write-Host "Using: $PowerForge $($PowerForgeArgs -join ' ')" -ForegroundColor DarkGray
 
 try {
     if ($Serve) {
         Write-Host 'Building website...' -ForegroundColor Cyan
-        & $PowerForge pipeline --config pipeline.json
+        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json
         if ($LASTEXITCODE -ne 0) { throw "Build failed (exit code $LASTEXITCODE)" }
         Write-Host "Starting dev server on http://localhost:$Port ..." -ForegroundColor Cyan
-        & $PowerForge serve --path _site --port $Port
+        & $PowerForge @PowerForgeArgs serve --path _site --port $Port
     } else {
         Write-Host 'Building website...' -ForegroundColor Cyan
-        & $PowerForge pipeline --config pipeline.json
+        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json
         if ($LASTEXITCODE -ne 0) { throw "Build failed (exit code $LASTEXITCODE)" }
         Write-Host 'Build complete -> _site/' -ForegroundColor Green
     }
