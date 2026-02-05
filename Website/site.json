@@ -68,7 +68,8 @@
       { "Match": "/showcase/**", "Bundles": ["global"] },
       { "Match": "/docs/**", "Bundles": ["global"] },
       { "Match": "/playground/**", "Bundles": ["global"] },
-      { "Match": "/pricing/**", "Bundles": ["global"] }
+      { "Match": "/pricing/**", "Bundles": ["global"] },
+      { "Match": "/**", "Bundles": ["global"] }
     ],
     "Preloads": [
       { "Rel": "preload", "Href": "/fonts/inter/Inter-400-latin.woff2", "As": "font", "Type": "font/woff2", "Crossorigin": "anonymous" },
