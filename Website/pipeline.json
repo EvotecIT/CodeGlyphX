@@ -7,21 +7,35 @@
   "steps": [
     {
       "task": "build",
+      "id": "build-site",
       "config": "./site.json",
       "out": "./_site",
       "clean": true
     },
     {
+      "task": "markdown-fix",
+      "id": "markdown-fix-docs",
+      "dependsOn": "build-site",
+      "root": "./content/docs",
+      "apply": false
+    },
+    {
       "task": "verify",
+      "id": "verify-site",
+      "dependsOn": "build-site",
       "config": "./site.json"
     },
     {
       "task": "dotnet-build",
+      "id": "build-library",
+      "dependsOn": "verify-site",
       "project": "../CodeGlyphX/CodeGlyphX.csproj",
       "configuration": "Release"
     },
     {
       "task": "dotnet-publish",
+      "id": "publish-playground",
+      "dependsOn": "build-library",
       "project": "../CodeGlyphX.Website/CodeGlyphX.Website.csproj",
       "out": "./_temp/playground",
       "clean": true,
@@ -32,6 +46,8 @@
     },
     {
       "task": "overlay",
+      "id": "overlay-playground",
+      "dependsOn": "publish-playground",
       "source": "./_temp/playground/wwwroot",
       "destination": "./_site/playground",
       "clean": true,
@@ -39,6 +55,8 @@
     },
     {
       "task": "overlay",
+      "id": "overlay-playground-api",
+      "dependsOn": "overlay-playground",
       "source": "./static/api",
       "destination": "./_site/playground/api",
       "clean": true,
@@ -46,6 +64,8 @@
     },
     {
       "task": "apidocs",
+      "id": "build-apidocs",
+      "dependsOn": "build-library",
       "xml": "../CodeGlyphX/bin/Release/net10.0/CodeGlyphX.xml",
       "assembly": "../CodeGlyphX/bin/Release/net10.0/CodeGlyphX.dll",
       "out": "./_site/api",
@@ -62,6 +82,8 @@
     },
     {
       "task": "llms",
+      "id": "build-llms",
+      "dependsOn": "build-apidocs",
       "siteRoot": "./_site",
       "apiIndex": "./_site/api/index.json",
       "apiBase": "/api",
@@ -72,6 +94,8 @@
     },
     {
       "task": "sitemap",
+      "id": "build-sitemap",
+      "dependsOn": "build-llms",
       "siteRoot": "./_site",
       "baseUrl": "https://codeglyphx.com",
       "apiSitemap": "./_site/api/sitemap.xml",
@@ -93,6 +117,8 @@
     },
     {
       "task": "optimize",
+      "id": "optimize-site",
+      "dependsOn": "build-sitemap",
       "siteRoot": "./_site",
       "criticalCss": "./themes/codeglyphx/critical.css",
       "minifyHtml": true,
@@ -101,6 +127,8 @@
     },
     {
       "task": "audit",
+      "id": "audit-site",
+      "dependsOn": "optimize-site",
       "siteRoot": "./_site",
       "exclude": "**/*.scripts.html,**/*.head.html,**/api-fragments/**,api-fragments/**",
       "ignoreNav": "sitemap/**,playground/index.html,playground/404.html",
