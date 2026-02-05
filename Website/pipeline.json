@@ -29,7 +29,7 @@
       "include": "**/*, *"
     },
     {
-      "task": "copy",
+      "task": "overlay",
       "source": "./static/api",
       "destination": "./_site/playground/api",
       "clean": true,
