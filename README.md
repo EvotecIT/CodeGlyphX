@@ -277,7 +277,7 @@ Regression triage
 
 Docs/artifacts
 - Update `BENCHMARK.md` and `Assets/Data/benchmark*.json`.
-- If public API docs changed, regenerate website docs: `pwsh Build/Build-Website.ps1`.
+- If public API docs changed, regenerate website docs: `pwsh Website/build.ps1`.
 
 ### Run benchmarks
 
