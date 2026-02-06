@@ -133,7 +133,7 @@
       "navCanonicalRequired": true,
       "navRequiredLinks": "/,/docs/",
       "minNavCoveragePercent": 95,
-      "requiredRoutes": "/,/404.html,/api/",
+      "requiredRoutes": "/,/docs/,/404.html,/api/",
       "failOnCategories": "nav,link,asset,rendered-console-error,rendered-request-failure",
       "rendered": true,
       "renderedEnsureInstalled": false,
@@ -149,3 +149,4 @@
     }
   ]
 }
+
