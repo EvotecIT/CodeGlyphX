@@ -207,7 +207,15 @@
 
       const img = document.createElement('img');
       img.loading = 'lazy';
+      img.decoding = 'async';
       img.alt = item.name || 'QR style';
+      if (item.width && item.height) {
+        img.width = item.width;
+        img.height = item.height;
+      } else {
+        img.width = 400;
+        img.height = 400;
+      }
       img.src = base + item.file;
       card.appendChild(img);
 

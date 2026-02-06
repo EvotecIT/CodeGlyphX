@@ -47,8 +47,8 @@
   },
   "EditLinks": {
     "Enabled": true,
-    "Template": "https://github.com/EvotecIT/PSPublishModule/edit/master/{path}",
-    "PathBase": "Samples/PowerForge.Web.CodeGlyphX.Sample"
+    "Template": "https://github.com/EvotecIT/CodeGlyphX/edit/master/{path}",
+    "PathBase": "Website"
   },
   "Redirects": [
     { "From": "/docs/api", "To": "/api/", "Status": 301, "MatchType": "Exact", "PreserveQuery": true },
