@@ -70,6 +70,8 @@
       "headerHtml": "./static/api-fragments/header.html",
       "footerHtml": "./static/api-fragments/footer.html",
       "nav": "./site.json",
+      "sourceRoot": "../CodeGlyphX",
+      "sourceUrl": "https://github.com/EvotecIT/CodeGlyphX/blob/master/{path}#L{line}",
       "includeNamespace": "CodeGlyphX",
       "excludeType": "CodeGlyphX.Rendering.Gif.BarcodeGifRenderer,CodeGlyphX.Rendering.Gif.GifAnimationFrame,CodeGlyphX.Rendering.Gif.GifAnimationOptions,CodeGlyphX.Rendering.Gif.GifDisposal,CodeGlyphX.Rendering.Gif.GifWriter,CodeGlyphX.Rendering.Gif.MatrixGifRenderer,CodeGlyphX.Rendering.Gif.QrGifRenderer,CodeGlyphX.Rendering.Pdf.PdfReader,CodeGlyphX.Rendering.Psd.PsdReader,CodeGlyphX.Rendering.Tiff.BarcodeTiffRenderer,CodeGlyphX.Rendering.Tiff.MatrixTiffRenderer,CodeGlyphX.Rendering.Tiff.QrTiffRenderer,CodeGlyphX.Rendering.Tiff.TiffCompression,CodeGlyphX.Rendering.Tiff.TiffRgba32Page,CodeGlyphX.Rendering.Tiff.TiffWriter,CodeGlyphX.Rendering.Jpeg.JpegEncodeOptions,CodeGlyphX.Rendering.Jpeg.JpegMetadata,CodeGlyphX.Rendering.Jpeg.JpegSubsampling"
     },
