@@ -14,13 +14,13 @@ CodeGlyphX is available as a NuGet package and can be installed in several ways.
 
 ## .NET CLI
 
-```csharp
+```bash
 dotnet add package CodeGlyphX
 ```
 
 ## Package Manager Console
 
-```csharp
+```powershell
 Install-Package CodeGlyphX
 ```
 
@@ -35,9 +35,7 @@ Add the following to your `.csproj` file:
 ## Supported Frameworks
 
 - **.NET 8.0+** - Full support, no additional dependencies
-
 - **.NET Standard 2.0** - Requires System.Memory 4.5.5
-
 - **.NET Framework 4.7.2+** - Requires System.Memory 4.5.5
 
 ## Feature Availability

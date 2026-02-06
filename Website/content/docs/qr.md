@@ -88,22 +88,22 @@ Full source code for these presets lives in
 
 | Style | Recipe | Extras |
 | --- | --- | --- |
-| **Neon Dot** | Shape: Dot   <br>Eyes: Target   <br>Palette: Random (cyan/magenta/yellow)   <br>Canvas: Dark gradient | — |
-| **Candy Checker** | Shape: Rounded   <br>Eyes: Badge   <br>Palette: Checker (pink/yellow)   <br>Canvas: Dots pattern | — |
-| **Pastel Rings** | Shape: Squircle   <br>Eyes: DoubleRing   <br>Palette: Rings (pastels)   <br>Canvas: Checker pattern | Scale map: Radial |
-| **Ocean Grid** | Shape: DotGrid   <br>Eyes: Single   <br>Palette: Cycle (ocean blues)   <br>Canvas: Grid pattern | — |
-| **Mono Badge** | Shape: Square   <br>Eyes: Badge   <br>Palette: None (mono)   <br>Canvas: White with black border | — |
-| **Bracket Tech** | Shape: Diamond   <br>Eyes: Bracket   <br>Palette: Random (teal/blue/white)   <br>Canvas: Dark gradient | Scale map: Rings |
-| **Sunset Sticker** | Shape: Rounded   <br>Eyes: Target   <br>Palette: Cycle (sunset warm)   <br>Canvas: Warm gradient | Logo: Warm circle |
-| **Aurora** | Shape: Circle   <br>Eyes: DoubleRing   <br>Palette: Random (aurora hues)   <br>Canvas: Dots pattern | Scale map: Random |
-| **Mint Board** | Shape: Squircle   <br>Eyes: Single   <br>Palette: Checker (mint)   <br>Canvas: Mint border | — |
-| **Deep Space** | Shape: Dot   <br>Eyes: Target   <br>Palette: Rings (purple/teal)   <br>Canvas: Night gradient | Logo: Cool circle |
-| **Leaf Bloom** | Shape: Leaf   <br>Eyes: DoubleRing   <br>Palette: Cycle (greens)   <br>Canvas: Forest gradient | — |
-| **Wave Pulse** | Shape: Wave   <br>Eyes: Target   <br>Palette: Random (electric blue)   <br>Canvas: Dots pattern | — |
-| **Ink Blob** | Shape: Blob   <br>Eyes: Badge   <br>Palette: Random (grayscale)   <br>Canvas: Light border | — |
-| **Soft Diamond** | Shape: SoftDiamond   <br>Eyes: DoubleRing   <br>Palette: Rings (peach/pink)   <br>Canvas: Warm gradient | — |
-| **Sticker Grid** | Shape: Square   <br>Eyes: Badge   <br>Palette: Cycle (mono)   <br>Canvas: Grid pattern | — |
-| **Center Pop** | Shape: Rounded   <br>Eyes: Single   <br>Palette: Cycle (navy) + Zones   <br>Canvas: Clean border | Logo: Warm circle   <br>Zones: Center + corners |
+| **Neon Dot** | Shape: Dot; Eyes: Target; Palette: Random (cyan/magenta/yellow); Canvas: Dark gradient | — |
+| **Candy Checker** | Shape: Rounded; Eyes: Badge; Palette: Checker (pink/yellow); Canvas: Dots pattern | — |
+| **Pastel Rings** | Shape: Squircle; Eyes: DoubleRing; Palette: Rings (pastels); Canvas: Checker pattern | Scale map: Radial |
+| **Ocean Grid** | Shape: DotGrid; Eyes: Single; Palette: Cycle (ocean blues); Canvas: Grid pattern | — |
+| **Mono Badge** | Shape: Square; Eyes: Badge; Palette: None (mono); Canvas: White with black border | — |
+| **Bracket Tech** | Shape: Diamond; Eyes: Bracket; Palette: Random (teal/blue/white); Canvas: Dark gradient | Scale map: Rings |
+| **Sunset Sticker** | Shape: Rounded; Eyes: Target; Palette: Cycle (sunset warm); Canvas: Warm gradient | Logo: Warm circle |
+| **Aurora** | Shape: Circle; Eyes: DoubleRing; Palette: Random (aurora hues); Canvas: Dots pattern | Scale map: Random |
+| **Mint Board** | Shape: Squircle; Eyes: Single; Palette: Checker (mint); Canvas: Mint border | — |
+| **Deep Space** | Shape: Dot; Eyes: Target; Palette: Rings (purple/teal); Canvas: Night gradient | Logo: Cool circle |
+| **Leaf Bloom** | Shape: Leaf; Eyes: DoubleRing; Palette: Cycle (greens); Canvas: Forest gradient | — |
+| **Wave Pulse** | Shape: Wave; Eyes: Target; Palette: Random (electric blue); Canvas: Dots pattern | — |
+| **Ink Blob** | Shape: Blob; Eyes: Badge; Palette: Random (grayscale); Canvas: Light border | — |
+| **Soft Diamond** | Shape: SoftDiamond; Eyes: DoubleRing; Palette: Rings (peach/pink); Canvas: Warm gradient | — |
+| **Sticker Grid** | Shape: Square; Eyes: Badge; Palette: Cycle (mono); Canvas: Grid pattern | — |
+| **Center Pop** | Shape: Rounded; Eyes: Single; Palette: Cycle (navy) + Zones; Canvas: Clean border | Logo: Warm circle; Zones: Center + corners |
 
 #### Preset Starting Point (Neon Dot)
 

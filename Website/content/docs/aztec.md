@@ -27,11 +27,8 @@ AztecCode.Save("Ticket data", "aztec.png", errorCorrectionPercent: 33);
 ## Use Cases
 
 - **Transportation** - Train and airline tickets
-
 - **Event tickets** - Mobile ticketing apps
-
 - **Patient wristbands** - Healthcare identification
-
 - **Curved surfaces** - Bottles, tubes, cylinders
 
 ## Advantages

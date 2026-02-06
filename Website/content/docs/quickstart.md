@@ -14,7 +14,7 @@ Get up and running with CodeGlyphX in under a minute.
 
 ## 1. Install the Package
 
-```csharp
+```bash
 dotnet add package CodeGlyphX
 ```
 

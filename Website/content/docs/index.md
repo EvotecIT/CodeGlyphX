@@ -18,13 +18,9 @@ for generating and decoding QR codes, barcodes, and other 2D matrix codes.
 ## Key Features
 
 - **Zero external dependencies** - No System.Drawing, SkiaSharp, or ImageSharp required
-
 - **Full encode & decode** - Round-trip support for all symbologies
-
 - **Multiple output formats** - PNG, SVG, PDF, EPS, HTML, and many more
-
 - **Cross-platform** - Windows, Linux, macOS
-
 - **AOT compatible** - Works with Native AOT and trimming
 
 ## Supported Symbologies
@@ -40,17 +36,11 @@ Code 128, GS1-128, Code 39/93/11, Codabar, MSI, Plessey, Telepen, Pharmacode, Co
 ## Documentation Map
 
 - **QR & Micro QR** - Core encoding, error correction, and QR specifics. [QR docs](/docs/qr/)
-
 - **Styling & presets** - Module shapes, palettes, logos, and the style board gallery. [Styling options](/docs/qr/#styling-options)
-
 - **Payload helpers** - WiFi, vCards, OTP, SEPA, and more. [Payload helpers](/docs/payloads/)
-
 - **Image decoding** - Decode from images and screenshots. [Image decoding](/docs/decoding/)
-
 - **Output formats** - PNG, SVG, PDF, EPS, HTML, and more. [Output formats](/docs/renderers/)
-
 - **API Reference** - Full type and method documentation. [API reference](/api/)
-
 - **FAQ** - Common questions and troubleshooting. [FAQ](/faq/)
 
 ## Quick Example

@@ -27,11 +27,8 @@ DataMatrixCode.Save("SERIAL-12345", "datamatrix.svg", size: DataMatrixSize.Squar
 ## Use Cases
 
 - **Electronics manufacturing** - Component marking and tracking
-
 - **Healthcare** - Medical device identification (UDI)
-
 - **Aerospace** - Part serialization
-
 - **Postal services** - High-density mail sorting
 
 ## Features
