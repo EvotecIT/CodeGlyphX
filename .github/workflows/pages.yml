@@ -44,7 +44,7 @@ jobs:
           test -f Website/_site/docs/index.html
           test -f Website/_site/playground/index.html
           test -f Website/_site/404.html
-          grep -q '<link rel=stylesheet' Website/_site/404.html
+          grep -Eqi "<link[^>]+rel=[^>]*stylesheet" Website/_site/404.html
 
       # Playwright smoke coverage is handled by the PowerForge.Web audit step
 
