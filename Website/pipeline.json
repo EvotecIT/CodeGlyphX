@@ -117,6 +117,10 @@
       "minifyHtml": true,
       "minifyCss": true,
       "minifyJs": true,
+      "optimizeImages": true,
+      "imageExtensions": [".png", ".jpg", ".jpeg", ".webp"],
+      "imageQuality": 82,
+      "imageStripMetadata": true,
       "reportPath": "./_reports/optimize-report.json"
     },
     {
