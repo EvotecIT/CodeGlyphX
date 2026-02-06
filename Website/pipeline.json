@@ -131,10 +131,12 @@
       "reportPath": "./_reports/optimize-report.json"
     },
     {
-      "task": "audit",
-      "id": "audit-site",
+      "task": "doctor",
+      "id": "doctor-site",
       "dependsOn": "optimize-site",
       "siteRoot": "./_site",
+      "noBuild": true,
+      "noVerify": true,
       "exclude": "**/*.scripts.html,**/*.head.html,**/api-fragments/**,api-fragments/**",
       "ignoreNav": "sitemap/**,playground/index.html,playground/404.html",
       "noDefaultIgnoreNav": true,
