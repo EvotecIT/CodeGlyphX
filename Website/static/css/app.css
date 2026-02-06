@@ -2469,6 +2469,16 @@ code.signature:focus-within .copy-btn {
     color: var(--text-muted);
 }
 
+.docs-content ul,
+.docs-content ol {
+    margin: 0 0 1rem 1.5rem;
+    color: var(--text-muted);
+}
+
+.docs-content li {
+    margin-bottom: 0.35rem;
+}
+
 .docs-status {
     display: inline-flex;
     align-items: center;
@@ -2497,6 +2507,39 @@ code.signature:focus-within .copy-btn {
 .docs-content pre code {
     background: none;
     padding: 0;
+}
+
+.docs-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.docs-content thead tr {
+    border-bottom: 1px solid var(--border);
+}
+
+.docs-content tbody {
+    color: var(--text-muted);
+}
+
+.docs-content tbody tr {
+    border-bottom: 1px solid var(--border);
+}
+
+.docs-content tbody tr:last-child {
+    border-bottom: none;
+}
+
+.docs-content th,
+.docs-content td {
+    text-align: left;
+    padding: 0.75rem;
+    vertical-align: top;
+}
+
+.docs-content td strong {
+    color: var(--text);
 }
 
 .edit-on-github {
