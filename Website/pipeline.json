@@ -121,6 +121,11 @@
       "imageExtensions": [".png", ".jpg", ".jpeg", ".webp"],
       "imageQuality": 82,
       "imageStripMetadata": true,
+      "imageGenerateWebp": true,
+      "imagePreferNextGen": true,
+      "imageWidths": [480, 960, 1440],
+      "imageEnhanceTags": true,
+      "imageMaxTotalBytes": 70000000,
       "reportPath": "./_reports/optimize-report.json"
     },
     {
