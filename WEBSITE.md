@@ -38,7 +38,7 @@ pwsh Website/build.ps1
 3) Publish Blazor playground into `/playground`
 4) Generate API reference into `/api` (docs template + JSON)
 5) Generate `llms.txt` and `sitemap.xml`
-6) Optimize + audit
+6) Optimize + doctor (final validation; skips duplicate build/verify)
 
 ## API Reference
 The API reference is generated under `/api`. `/docs/api` is a redirect for legacy links.
