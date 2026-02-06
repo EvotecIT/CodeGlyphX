@@ -116,7 +116,8 @@
       "criticalCss": "./themes/codeglyphx/critical.css",
       "minifyHtml": true,
       "minifyCss": true,
-      "minifyJs": true
+      "minifyJs": true,
+      "reportPath": "./_reports/optimize-report.json"
     },
     {
       "task": "audit",
@@ -131,6 +132,8 @@
       "navCanonicalSelector": "header nav.nav",
       "navCanonicalRequired": true,
       "navRequiredLinks": "/,/docs/",
+      "minNavCoveragePercent": 95,
+      "requiredRoutes": "/,/404.html,/api/",
       "failOnCategories": "nav,link,asset,rendered-console-error,rendered-request-failure",
       "rendered": true,
       "renderedEnsureInstalled": false,
