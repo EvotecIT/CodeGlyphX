@@ -24,6 +24,7 @@ public sealed class QrDecodingSamplesSweepTests {
     private static readonly HashSet<string> SlowFallbackFiles = new(StringComparer.OrdinalIgnoreCase) {
         // These are covered by QrDecodingSamplesTests (with heavier fallbacks),
         // but can fail in the lightweight sweep on some CI runners.
+        "qr-dot-aa.png",
         "qr-dot-aa-soft.png",
         "qr-art-jess3-characters-splash-variant.png"
     };
