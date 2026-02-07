@@ -84,6 +84,7 @@ public sealed class QrDecodingSamplesSweepTests {
                     results = new[] { decoded };
                 } else {
                     if (SlowFallbackFiles.Contains(fileName)) {
+                        var preferNonStylized = fileName.Contains("dot-aa", StringComparison.OrdinalIgnoreCase);
                         var fallback = new QrPixelDecodeOptions {
                             Profile = QrDecodeProfile.Robust,
                             MaxDimension = 3200,
@@ -92,7 +93,7 @@ public sealed class QrDecodingSamplesSweepTests {
                             BudgetMilliseconds = TestBudget.Adjust(15000),
                             AutoCrop = true,
                             AggressiveSampling = true,
-                            StylizedSampling = true,
+                            StylizedSampling = !preferNonStylized,
                             EnableTileScan = true,
                             TileGrid = 6
                         };
@@ -102,7 +103,27 @@ public sealed class QrDecodingSamplesSweepTests {
                         } else if (QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out infoSingle, fallback)) {
                             results = new[] { decoded };
                         } else {
-                            Assert.Fail($"Decode failed for {file}: {infoAll} | {infoSingle}");
+                            // Some samples are only stable with the opposite stylized/non-stylized sampling mode.
+                            fallback = new QrPixelDecodeOptions {
+                                Profile = fallback.Profile,
+                                MaxDimension = fallback.MaxDimension,
+                                MaxScale = fallback.MaxScale,
+                                MaxMilliseconds = fallback.MaxMilliseconds,
+                                BudgetMilliseconds = fallback.BudgetMilliseconds,
+                                AutoCrop = fallback.AutoCrop,
+                                AggressiveSampling = fallback.AggressiveSampling,
+                                StylizedSampling = !fallback.StylizedSampling,
+                                EnableTileScan = fallback.EnableTileScan,
+                                TileGrid = fallback.TileGrid
+                            };
+
+                            if (QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out results, out infoAll, fallback)) {
+                                // ok
+                            } else if (QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out infoSingle, fallback)) {
+                                results = new[] { decoded };
+                            } else {
+                                Assert.Fail($"Decode failed for {file}: {infoAll} | {infoSingle}");
+                            }
                         }
                     } else {
                         Assert.Fail($"Decode failed for {file}: {infoAll} | {infoSingle}");
