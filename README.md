@@ -58,12 +58,31 @@ See `SECURITY.md` for reporting guidance and `FUZZING.md` for the decoder fuzzin
 ## Roadmap & Website
 
 - Roadmap: `ROADMAP.md`
+- Benchmarks: `BENCHMARK.md`
+- Website docs: `WEBSITE.md`
 
 ## Installation
 
 ```powershell
 dotnet add package CodeGlyphX
 ```
+
+## Examples
+
+Run all examples:
+
+```powershell
+dotnet run --project CodeGlyphX.Examples
+```
+
+Outputs land under `CodeGlyphX.Examples/bin/<TFM>/Examples`.
+
+Targeted runs (set one env var at a time):
+- `CODEGLYPHX_DIAG_QR=1` - QR diagnostics
+- `CODEGLYPHX_DECODE_HARD_ART=1` - hard art diagnostics
+- `CODEGLYPHX_DECODE_SAMPLES=1` - decode sample sweep
+- `CODEGLYPHX_MODULE_DIFF=1` - module diff render
+- `CODEGLYPHX_SCREENSHOT_WALKTHROUGH=1` - screenshot decode walkthrough
 
 ## Target Framework Feature Matrix
 
@@ -178,6 +197,19 @@ if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out v
 }
 ```
 
+Screenshot decode preset:
+
+```csharp
+var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: 600, maxDimension: 1400);
+var qrOptions = QrPixelDecodeOptions.Screen(maxMilliseconds: 600, maxDimension: 1400);
+qrOptions.EnableTileScan = true;
+qrOptions.TileGrid = 3;
+
+if (QrImageDecoder.TryDecodeImage(bytes, imageOptions, out var decoded, out var info, qrOptions)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
 ## Supported .NET Versions and Dependencies
 
 ### Core Library (CodeGlyphX)
@@ -245,7 +277,7 @@ Regression triage
 
 Docs/artifacts
 - Update `BENCHMARK.md` and `Assets/Data/benchmark*.json`.
-- If public API docs changed, regenerate website docs: `pwsh Build/Build-Website.ps1`.
+- If public API docs changed, regenerate website docs: `pwsh Website/build.ps1`.
 
 ### Run benchmarks
 

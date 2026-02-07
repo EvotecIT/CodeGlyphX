@@ -23,55 +23,35 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Restore
-        run: dotnet restore CodeGlyphX.Website/CodeGlyphX.Website.csproj
+      - name: Checkout PSPublishModule
+        uses: actions/checkout@v4
+        with:
+          repository: EvotecIT/PSPublishModule
+          ref: main
+          path: PSPublishModule
 
-      - name: Verify Blazor host index
-        run: pwsh Build/Verify-BlazorHost.ps1
-
-      - name: Install PSParseHTML module
-        shell: pwsh
-        run: |
-          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-          Install-Module PSParseHTML -Force -Scope CurrentUser
+      - name: Build PowerForge.Web.Cli
+        run: dotnet build PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj -c Release
 
       - name: Build website (static + playground)
-        run: pwsh Build/Publish-WebsitePages.ps1 -Configuration Release -Framework net10.0 -OutputPath site -MinifyAssets
+        working-directory: Website
+        run: dotnet ../PSPublishModule/PowerForge.Web.Cli/bin/Release/net10.0/PowerForge.Web.Cli.dll pipeline --config pipeline.json
 
       - name: Verify website output
         run: |
-          test -f site/.nojekyll
-          test -f site/index.html
-          test -f site/docs/index.html
-          test -f site/playground/index.html
+          test -f Website/_site/.nojekyll
+          test -f Website/_site/index.html
+          test -f Website/_site/docs/index.html
+          test -f Website/_site/playground/index.html
+          test -f Website/_site/404.html
+          grep -Eqi "<link[^>]+rel=[^>]*stylesheet" Website/_site/404.html
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Playwright
-        run: |
-          npm install playwright serve
-          npx playwright install chromium --with-deps
-
-      - name: Test website
-        run: |
-          # Start local server in background
-          npx serve site -l 5051 &
-          SERVER_PID=$!
-          sleep 3
-
-          # Run all website tests
-          node Build/website-smoke-tests.js
-
-          # Cleanup
-          kill $SERVER_PID 2>/dev/null || true
+      # Playwright smoke coverage is handled by the PowerForge.Web audit step
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: Website/_site
 
   deploy:
     runs-on: ubuntu-latest

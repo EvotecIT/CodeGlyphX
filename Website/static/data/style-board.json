@@ -1,0 +1,310 @@
+[
+  {
+    "name": "Neon Dot",
+    "file": "neon-dot.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=neon-dot#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Neon Glow",
+    "file": "neon-glow.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=neon-glow#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Liquid Glass",
+    "file": "liquid-glass.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=liquid-glass#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Card Frame",
+    "file": "card-frame.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=card-frame#styling-options",
+    "width": 467,
+    "height": 471
+  },
+  {
+    "name": "Sticker Frame",
+    "file": "sticker-frame.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=sticker-frame#styling-options",
+    "width": 436,
+    "height": 440
+  },
+  {
+    "name": "Top Badge",
+    "file": "top-badge.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=top-badge#styling-options",
+    "width": 446,
+    "height": 449
+  },
+  {
+    "name": "Ribbon Tab",
+    "file": "ribbon-tab.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=ribbon-tab#styling-options",
+    "width": 450,
+    "height": 453
+  },
+  {
+    "name": "Gradient Frame",
+    "file": "gradient-frame.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=gradient-frame#styling-options",
+    "width": 417,
+    "height": 420
+  },
+  {
+    "name": "Stitched Frame",
+    "file": "stitched-frame.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=stitched-frame#styling-options",
+    "width": 412,
+    "height": 415
+  },
+  {
+    "name": "Quiet Band",
+    "file": "quiet-band.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=quiet-band#styling-options",
+    "width": 433,
+    "height": 436
+  },
+  {
+    "name": "Warm Harmony",
+    "file": "warm-harmony.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=warm-harmony#styling-options",
+    "width": 417,
+    "height": 420
+  },
+  {
+    "name": "Eye Sparkle",
+    "file": "eye-sparkle.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=eye-sparkle#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Candy Checker",
+    "file": "candy-checker.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=candy-checker#styling-options",
+    "width": 391,
+    "height": 393
+  },
+  {
+    "name": "Pastel Rings",
+    "file": "pastel-rings.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=pastel-rings#styling-options",
+    "width": 391,
+    "height": 393
+  },
+  {
+    "name": "Inset Rings",
+    "file": "inset-rings.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=inset-rings#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Ocean Grid",
+    "file": "ocean-grid.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=ocean-grid#styling-options",
+    "width": 420,
+    "height": 422
+  },
+  {
+    "name": "Stripe Frame",
+    "file": "stripe-frame.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=stripe-frame#styling-options",
+    "width": 391,
+    "height": 393
+  },
+  {
+    "name": "Crosshatch Pop",
+    "file": "crosshatch-pop.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=crosshatch-pop#styling-options",
+    "width": 391,
+    "height": 393
+  },
+  {
+    "name": "Mono Badge",
+    "file": "mono-badge.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=mono-badge#styling-options",
+    "width": 415,
+    "height": 417
+  },
+  {
+    "name": "Bracket Tech",
+    "file": "bracket-tech.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=bracket-tech#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Cut Corner Tech",
+    "file": "cut-corner-tech.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=cut-corner-tech#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Sunset Sticker",
+    "file": "sunset-sticker.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=sunset-sticker#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Aurora",
+    "file": "aurora.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=aurora#styling-options",
+    "width": 420,
+    "height": 422
+  },
+  {
+    "name": "Speckle Splash",
+    "file": "speckle-splash.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=speckle-splash#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Bead Cluster",
+    "file": "bead-cluster.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=bead-cluster#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Shape Blend",
+    "file": "shape-blend.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=shape-blend#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Jittered Ink",
+    "file": "jittered-ink.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=jittered-ink#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Edge Drips",
+    "file": "edge-drips.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=edge-drips#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Halftone Bloom",
+    "file": "halftone-bloom.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=halftone-bloom#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Vignette Noir",
+    "file": "vignette-noir.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=vignette-noir#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Grain Paper",
+    "file": "grain-paper.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=grain-paper#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Eye Accents",
+    "file": "eye-accents.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=eye-accents#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Eye Rays",
+    "file": "eye-rays.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=eye-rays#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Eye Stripes",
+    "file": "eye-stripes.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=eye-stripes#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Mint Board",
+    "file": "mint-board.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=mint-board#styling-options",
+    "width": 415,
+    "height": 417
+  },
+  {
+    "name": "Deep Space",
+    "file": "deep-space.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=deep-space#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Leaf Bloom",
+    "file": "leaf-bloom.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=leaf-bloom#styling-options",
+    "width": 425,
+    "height": 427
+  },
+  {
+    "name": "Wave Pulse",
+    "file": "wave-pulse.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=wave-pulse#styling-options",
+    "width": 420,
+    "height": 422
+  },
+  {
+    "name": "Ink Blob",
+    "file": "ink-blob.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=ink-blob#styling-options",
+    "width": 415,
+    "height": 417
+  },
+  {
+    "name": "Soft Diamond",
+    "file": "soft-diamond.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=soft-diamond#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Sticker Grid",
+    "file": "sticker-grid.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=sticker-grid#styling-options",
+    "width": 391,
+    "height": 393
+  },
+  {
+    "name": "Connected Melt",
+    "file": "connected-melt.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=connected-melt#styling-options",
+    "width": 396,
+    "height": 398
+  },
+  {
+    "name": "Minimal Mono",
+    "file": "minimal-mono.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=minimal-mono#styling-options",
+    "width": 386,
+    "height": 388
+  },
+  {
+    "name": "Center Pop",
+    "file": "center-pop.png",
+    "payload": "https://codeglyphx.com/docs/qr?style=center-pop#styling-options",
+    "width": 386,
+    "height": 388
+  }
+]
