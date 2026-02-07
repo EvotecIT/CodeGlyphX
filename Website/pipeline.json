@@ -134,6 +134,7 @@
       "task": "doctor",
       "id": "doctor-site",
       "dependsOn": "optimize-site",
+      "config": "./site.json",
       "siteRoot": "./_site",
       "noBuild": true,
       "noVerify": true,
