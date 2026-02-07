@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: EvotecIT/PSPublishModule
-          ref: v2-speedgonzales
+          ref: main
           path: PSPublishModule
 
       - name: Build PowerForge.Web.Cli
