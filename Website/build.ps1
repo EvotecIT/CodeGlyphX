@@ -6,6 +6,13 @@
 .PARAMETER Serve
     Build the full pipeline and start the development server.
 
+.PARAMETER Fast
+    Run the pipeline with `--fast` (recommended for local iteration).
+    When `-Serve` is used, fast mode is enabled by default unless `-NoFast` is set.
+
+.PARAMETER NoFast
+    Disable fast mode when `-Serve` is used.
+
 .PARAMETER Port
     Server port (default: 8080).
 
@@ -20,6 +27,8 @@
 
 param(
     [switch]$Serve,
+    [switch]$Fast,
+    [switch]$NoFast,
     [int]$Port = 8080,
     [switch]$SkipBuildTool,
     [string]$PowerForgeRoot = $env:POWERFORGE_ROOT
@@ -103,16 +112,25 @@ function Assert-SiteOutput {
 }
 
 try {
+    $UseFast = ($Fast -or ($Serve -and -not $NoFast))
     if ($Serve) {
         Write-Host 'Building website...' -ForegroundColor Cyan
-        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile
+        if ($UseFast) {
+            & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile --fast
+        } else {
+            & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile
+        }
         if ($LASTEXITCODE -ne 0) { throw "Build failed (exit code $LASTEXITCODE)" }
         Assert-SiteOutput -SiteRoot (Join-Path $PSScriptRoot '_site')
         Write-Host "Starting dev server on http://localhost:$Port ..." -ForegroundColor Cyan
         & $PowerForge @PowerForgeArgs serve --path _site --port $Port
     } else {
         Write-Host 'Building website...' -ForegroundColor Cyan
-        & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile
+        if ($UseFast) {
+            & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile --fast
+        } else {
+            & $PowerForge @PowerForgeArgs pipeline --config pipeline.json --profile
+        }
         if ($LASTEXITCODE -ne 0) { throw "Build failed (exit code $LASTEXITCODE)" }
         Assert-SiteOutput -SiteRoot (Join-Path $PSScriptRoot '_site')
         Write-Host 'Build complete -> _site/' -ForegroundColor Green
