@@ -5,6 +5,8 @@
 
 .PARAMETER Serve
     Build the full pipeline and start the development server.
+    When `-Serve` uses dev mode (default), it will also skip the heaviest steps (`optimize`,`audit`)
+    unless you explicitly pass `-Only` or `-Skip`.
 
 .PARAMETER Fast
     Run the pipeline with `--fast` (recommended for local iteration).
@@ -131,6 +133,13 @@ function Assert-SiteOutput {
 try {
     $UseDev = ($Dev -or ($Serve -and -not $NoDev))
     $UseFast = ($Fast -or ($Serve -and -not $NoFast))
+
+    # Keep local serve iterations fast by default.
+    # Users can override this by explicitly passing -Only or -Skip, or by disabling dev mode (-NoDev).
+    if ($Serve -and $UseDev -and $Only.Count -eq 0 -and $Skip.Count -eq 0) {
+        $Skip = @('optimize', 'audit')
+    }
+
     $pipelineArgs = @('pipeline', '--config', 'pipeline.json', '--profile')
     if ($UseDev) {
         $pipelineArgs += '--dev'
