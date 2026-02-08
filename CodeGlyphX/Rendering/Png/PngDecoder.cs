@@ -159,8 +159,16 @@ internal static class PngDecoder {
                 idatStream = new MemoryStream(idatBuffer, 0, idatTotal, writable: false);
             }
 
-            using (var z = CreateZLibStream(idatStream)) {
-                ReadExact(z, scanlines, expected);
+            try {
+                using (var z = CreateZLibStream(idatStream)) {
+                    ReadExact(z, scanlines, expected);
+                }
+            } catch (InvalidDataException) {
+                // Some PNGs in the wild (and a few of our stylized samples) decode fine with raw DEFLATE but fail
+                // strict zlib checksum validation. Fall back to a raw-DEFLATE stream when available.
+                if (!TryReadDeflateFallback(idatStream, scanlines, expected)) {
+                    throw;
+                }
             }
 
             var raw = interlace == 0
@@ -183,6 +191,23 @@ internal static class PngDecoder {
             var read = s.Read(buffer, offset, length - offset);
             if (read <= 0) throw new FormatException("Truncated PNG data.");
             offset += read;
+        }
+    }
+
+    private static bool TryReadDeflateFallback(Stream idatStream, byte[] scanlines, int expected) {
+        try {
+            // Best effort rewind. All callers currently pass MemoryStream.
+            if (idatStream.CanSeek) idatStream.Position = 0;
+
+            var data = idatStream is MemoryStream ms ? ms.ToArray() : ReadAllBytes(idatStream);
+            if (data.Length < 6) return false;
+
+            // zlib stream: 2 byte header + deflate payload + 4 byte Adler32 checksum.
+            using var deflate = new DeflateStream(new MemoryStream(data, 2, data.Length - 6, writable: false), CompressionMode.Decompress, leaveOpen: false);
+            ReadExact(deflate, scanlines, expected);
+            return true;
+        } catch {
+            return false;
         }
     }
 
