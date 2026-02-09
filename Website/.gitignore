@@ -1,0 +1,7 @@
+_site/
+_temp/
+_reports/
+
+# PowerForge audit artifacts (keep baselines committed, ignore generated outputs)
+.powerforge/audit-summary*
+.powerforge/audit.sarif*

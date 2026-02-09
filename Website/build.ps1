@@ -136,12 +136,19 @@ function Assert-SiteOutput {
 try {
     $UseDev = ($Dev -or ($Serve -and -not $NoDev))
     $UseFast = ($Fast -or ($Serve -and -not $NoFast))
+    $IsCI = ($env:CI -and $env:CI.ToString().ToLowerInvariant() -eq 'true') -or
+            ($env:GITHUB_ACTIONS -and $env:GITHUB_ACTIONS.ToString().ToLowerInvariant() -eq 'true') -or
+            ($env:TF_BUILD -and $env:TF_BUILD.ToString().ToLowerInvariant() -eq 'true')
 
     $pipelineArgsBase = @('pipeline', '--config', 'pipeline.json', '--profile')
     if ($UseDev) {
         $pipelineArgsBase += '--dev'
     } elseif ($UseFast) {
         $pipelineArgsBase += '--fast'
+    }
+    if ($IsCI -and -not $UseDev) {
+        # CI contract: run any steps gated behind modes:["ci"] (strict verify, baselines, budgets).
+        $pipelineArgsBase += @('--mode', 'ci')
     }
     if ($Only -and $Only.Count -gt 0) {
         $pipelineArgsBase += @('--only', ($Only -join ','))

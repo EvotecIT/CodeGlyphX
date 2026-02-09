@@ -1,5 +1,5 @@
 {
-  "$schema": "../PSPublishModule/Schemas/powerforge.web.pipelinespec.schema.json",
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/main/schemas/powerforge.web.pipelinespec.schema.json",
   "cache": true,
   "cachePath": "./_temp/pipeline-cache.json",
   "profile": true,
@@ -16,7 +16,21 @@
       "task": "verify",
       "id": "verify-site",
       "dependsOn": "build-site",
+      "skipModes": ["ci"],
       "config": "./site.json"
+    },
+    {
+      "task": "verify",
+      "id": "verify-ci",
+      "dependsOn": "build-site",
+      "modes": ["ci"],
+      "config": "./site.json",
+      "baseline": "./.powerforge/verify-baseline.json",
+      "failOnNewWarnings": true,
+      "failOnNavLint": true,
+      "failOnThemeContract": true,
+      "warningPreviewCount": 10,
+      "errorPreviewCount": 10
     },
     {
       "task": "dotnet-build",
@@ -140,6 +154,9 @@
       "siteRoot": "./_site",
       "noBuild": true,
       "noVerify": true,
+      "baseline": "./.powerforge/audit-baseline.json",
+      "failOnNewIssues": true,
+      "maxTotalFiles": 2200,
       "exclude": "**/*.scripts.html,**/*.head.html,**/api-fragments/**,api-fragments/**",
       "ignoreNav": "sitemap/**,playground/index.html,playground/404.html",
       "noDefaultIgnoreNav": true,
@@ -150,7 +167,7 @@
       "navRequiredLinks": "/,/docs/",
       "minNavCoveragePercent": 95,
       "requiredRoutes": "/,/docs/,/404.html,/api/",
-      "failOnCategories": "nav,link,asset,rendered-console-error,rendered-request-failure",
+      "failOnCategories": "budget,nav,link,asset,rendered-console-error,rendered-request-failure",
       "rendered": true,
       "renderedEnsureInstalled": false,
       "renderedMaxPages": 10,

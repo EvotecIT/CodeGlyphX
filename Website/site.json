@@ -1,9 +1,10 @@
 {
-  "$schema": "../Schemas/powerforge.web.sitespec.schema.json",
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/main/schemas/powerforge.web.sitespec.schema.json",
   "SchemaVersion": 1,
   "Name": "CodeGlyphX",
   "BaseUrl": "https://codeglyphx.com",
   "DefaultTheme": "codeglyphx",
+  "Features": ["docs", "apiDocs", "notFound"],
   "TrailingSlash": "always",
   "ContentRoot": "content",
   "ThemesRoot": "themes",
@@ -17,6 +18,7 @@
       "Input": "content/pages",
       "Output": "/",
       "DefaultLayout": "home",
+      "UseToc": false,
       "Include": ["*.md", "**/*.md"]
     },
     {
@@ -24,6 +26,7 @@
       "Input": "content/docs",
       "Output": "/docs",
       "DefaultLayout": "docs",
+      "UseToc": false,
       "Include": ["*.md", "**/*.md"]
     }
   ],
