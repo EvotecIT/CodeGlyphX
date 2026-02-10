@@ -16,6 +16,9 @@
 
         <nav class="nav" aria-label="Main navigation">
             <div class="nav-links">
+                {{~ if pf && pf.nav_links ~}}
+                {{ pf.nav_links "main" }}
+                {{~ else ~}}
                 {{~ for menu in navigation.menus ~}}
                 {{~ if menu.name == "main" ~}}
                 {{~ for item in menu.items ~}}
@@ -25,8 +28,12 @@
                 {{~ end ~}}
                 {{~ end ~}}
                 {{~ end ~}}
+                {{~ end ~}}
             </div>
             <div class="nav-actions">
+                {{~ if pf && pf.nav_actions ~}}
+                {{ pf.nav_actions }}
+                {{~ else ~}}
                 {{~ if navigation.actions && navigation.actions.size > 0 ~}}
                 {{~ for action in navigation.actions ~}}
                 {{~ if action.kind && action.kind == "button" ~}}
@@ -40,6 +47,7 @@
                     {{ if action.icon_html && action.icon_html != "" }}{{ action.icon_html }}{{ else if action.icon && action.icon != "" }}{{ action.icon }}{{ end }}
                     {{ if action.text && action.text != "" }} {{ action.text }}{{ else if (!action.icon_html && !action.icon) && action.title && action.title != "" }} {{ action.title }}{{ end }}
                 </a>
+                {{~ end ~}}
                 {{~ end ~}}
                 {{~ end ~}}
                 {{~ end ~}}
