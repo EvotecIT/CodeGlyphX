@@ -84,6 +84,7 @@
       "template": "docs",
       "injectCriticalCss": true,
       "nav": "./site.json",
+      "navContextPath": "/",
       "sourceRoot": "..",
       "sourceUrl": "https://github.com/EvotecIT/CodeGlyphX/blob/master/{path}#L{line}",
       "includeNamespace": "CodeGlyphX",
