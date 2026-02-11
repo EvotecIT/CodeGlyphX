@@ -33,6 +33,7 @@
     "docs": {
       "requiredLayouts": ["docs"],
       "requiredPartials": ["header", "footer", "docs-sidebar"],
+      "cssHrefs": ["/css/app.css"],
       "requiredCssSelectors": [".docs-layout"]
     },
     "notFound": {
