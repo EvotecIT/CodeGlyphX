@@ -1,12 +1,18 @@
-﻿$GitHubAccessToken = Get-Content -Raw 'C:\Support\Important\GithubAPI.txt'
+param(
+    [string] $ConfigPath = "$PSScriptRoot\project.build.json",
+    [Nullable[bool]] $Build = $true,
+    [Nullable[bool]] $Plan,
+    [string] $PlanPath
+)
 
-$publishGitHubReleaseAssetSplat = @{
-    ProjectPath          = "$PSScriptRoot\..\CodeGlyphX"
-    GitHubAccessToken    = $GitHubAccessToken
-    GitHubUsername       = "EvotecIT"
-    GitHubRepositoryName = "CodeGlyphX"
-    IsPreRelease         = $false
-    GenerateReleaseNotes = $true
+$invokeParams = @{
+    ConfigPath = $ConfigPath
+    UpdateVersions = $false
+    Build = $Build
+    PublishNuget = $false
+    PublishGitHub = $true
 }
+if ($null -ne $Plan) { $invokeParams.Plan = $Plan }
+if ($PlanPath) { $invokeParams.PlanPath = $PlanPath }
 
-Publish-GitHubReleaseAsset @publishGitHubReleaseAssetSplat
+& "$PSScriptRoot\Build-Project.ps1" @invokeParams

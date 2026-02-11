@@ -1,6 +1,19 @@
-Import-Module PSPublishModule -Force -ErrorAction Stop
+param(
+    [string] $ConfigPath = "$PSScriptRoot\project.build.json",
+    [Nullable[bool]] $UpdateVersions = $true,
+    [Nullable[bool]] $Build = $true,
+    [Nullable[bool]] $Plan,
+    [string] $PlanPath
+)
 
-$certificateThumbprint = '483292C9E317AA13B07BB7A96AE9D1A5ED9E7703'
-Invoke-DotNetReleaseBuild -ProjectPath @(
-    "$PSScriptRoot\..\CodeGlyphX\CodeGlyphX.csproj"
-) -CertificateThumbprint $certificateThumbprint
+$invokeParams = @{
+    ConfigPath = $ConfigPath
+    UpdateVersions = $UpdateVersions
+    Build = $Build
+    PublishNuget = $false
+    PublishGitHub = $false
+}
+if ($null -ne $Plan) { $invokeParams.Plan = $Plan }
+if ($PlanPath) { $invokeParams.PlanPath = $PlanPath }
+
+& "$PSScriptRoot\Build-Project.ps1" @invokeParams
