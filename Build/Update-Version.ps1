@@ -1,5 +1,17 @@
-﻿Import-Module PSPublishModule -Force
+param(
+    [string] $ConfigPath = "$PSScriptRoot\project.build.json",
+    [object] $Plan,
+    [string] $PlanPath
+)
 
-Get-ProjectVersion -Path "C:\Support\GitHub\CodeMatrix" -ExcludeFolders @('C:\Support\GitHub\CodeMatrix\Module\Artefacts') | Format-Table
+$params = @{
+    ConfigPath     = $ConfigPath
+    UpdateVersions = $true
+    Build          = $false
+    PublishNuget   = $false
+    PublishGitHub  = $false
+}
+if ($null -ne $Plan) { $params.Plan = $Plan }
+if ($PlanPath) { $params.PlanPath = $PlanPath }
 
-Set-ProjectVersion -Path "C:\Support\GitHub\CodeMatrix" -NewVersion "1.1.0" -Verbose -ExcludeFolders @('C:\Support\GitHub\CodeMatrix\Module\Artefacts')
+& "$PSScriptRoot\Build-Project.ps1" @params
