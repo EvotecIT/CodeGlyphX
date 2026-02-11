@@ -417,6 +417,23 @@
     border: 1px solid color-mix(in srgb, var(--api-accent-soft) 60%, var(--border));
 }
 
+.chip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.type-chip.class .chip-icon { background: rgba(244, 114, 182, 0.22); color: var(--api-accent); }
+.type-chip.enum .chip-icon { background: rgba(139, 92, 246, 0.22); color: #a78bfa; }
+.type-chip.interface .chip-icon { background: rgba(16, 185, 129, 0.22); color: #10b981; }
+.type-chip.struct .chip-icon { background: rgba(251, 191, 36, 0.22); color: #f59e0b; }
+
 .type-chip:hover {
     border-color: var(--api-accent-strong);
     color: white;
