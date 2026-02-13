@@ -37,7 +37,8 @@
       "id": "build-library",
       "dependsOn": "verify-site",
       "project": "../CodeGlyphX/CodeGlyphX.csproj",
-      "configuration": "Release"
+      "configuration": "Release",
+      "skipIfProjectMissing": true
     },
     {
       "task": "dotnet-publish",
@@ -49,7 +50,8 @@
       "configuration": "Release",
       "framework": "net10.0",
       "baseHref": "/playground/",
-      "defineConstants": "TRACE;PLAYGROUND_BUILD"
+      "defineConstants": "TRACE;PLAYGROUND_BUILD",
+      "skipIfProjectMissing": true
     },
     {
       "task": "overlay",
