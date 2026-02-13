@@ -2,8 +2,8 @@ param(
     [string] $ConfigPath = "$PSScriptRoot\project.build.json",
     [Nullable[bool]] $UpdateVersions,
     [Nullable[bool]] $Build,
-    [Nullable[bool]] $PublishNuget = $false,
-    [Nullable[bool]] $PublishGitHub = $false,
+    [Nullable[bool]] $PublishNuget = $true,
+    [Nullable[bool]] $PublishGitHub = $true,
     [Nullable[bool]] $Plan,
     [string] $PlanPath
 )

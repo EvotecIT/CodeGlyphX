@@ -9,12 +9,14 @@
       "ProjectName": "CodeGlyphX",
       "CsprojPath": "C:\\Support\\GitHub\\CodeMatrix\\CodeGlyphX\\CodeGlyphX.csproj",
       "IsPackable": true,
-      "OldVersion": "1.1.1",
+      "OldVersion": "1.2.0",
       "NewVersion": "1.2.0",
       "Packages": [
         "C:\\Support\\GitHub\\CodeMatrix\\Artefacts\\ProjectBuild\\packages\\CodeGlyphX.1.2.0.nupkg"
       ]
     }
   ],
-  "PublishedPackages": []
+  "PublishedPackages": [
+    "C:\\Support\\GitHub\\CodeMatrix\\Artefacts\\ProjectBuild\\packages\\CodeGlyphX.1.2.0.nupkg"
+  ]
 }
