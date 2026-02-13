@@ -1,0 +1,81 @@
+{
+  "entries": [
+    {
+      "path": "/",
+      "title": "Home",
+      "section": "Product",
+      "priority": "1.0",
+      "changefreq": "weekly"
+    },
+    {
+      "path": "/playground/",
+      "title": "Playground",
+      "section": "Product",
+      "priority": "0.9",
+      "changefreq": "weekly"
+    },
+    {
+      "path": "/docs/",
+      "title": "Documentation",
+      "section": "Docs",
+      "priority": "0.9",
+      "changefreq": "weekly"
+    },
+    {
+      "path": "/benchmarks/",
+      "title": "Benchmarks",
+      "section": "Resources",
+      "priority": "0.8",
+      "changefreq": "monthly"
+    },
+    {
+      "path": "/faq/",
+      "title": "FAQ",
+      "section": "Resources",
+      "priority": "0.8",
+      "changefreq": "monthly"
+    },
+    {
+      "path": "/showcase/",
+      "title": "Showcase",
+      "section": "Resources",
+      "priority": "0.7",
+      "changefreq": "monthly"
+    },
+    {
+      "path": "/pricing/",
+      "title": "Pricing",
+      "section": "Product",
+      "priority": "0.7",
+      "changefreq": "monthly"
+    },
+    {
+      "path": "/api/",
+      "title": "API Reference",
+      "section": "API",
+      "priority": "0.8",
+      "changefreq": "weekly"
+    },
+    {
+      "path": "/llms.txt",
+      "title": "LLMS TXT",
+      "section": "Machine Readable",
+      "priority": "0.3",
+      "changefreq": "monthly"
+    },
+    {
+      "path": "/llms.json",
+      "title": "LLMS JSON",
+      "section": "Machine Readable",
+      "priority": "0.3",
+      "changefreq": "monthly"
+    },
+    {
+      "path": "/llms-full.txt",
+      "title": "LLMS Full",
+      "section": "Machine Readable",
+      "priority": "0.4",
+      "changefreq": "monthly"
+    }
+  ]
+}

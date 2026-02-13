@@ -6,7 +6,7 @@
   "engine": "scriban",
   "extends": "nova",
   "scriptsPath": "scripts",
-  "features": ["docs", "apiDocs", "notFound"],
+  "features": ["docs", "apiDocs", "search", "notFound"],
   "slots": {
     "header": "header",
     "footer": "footer",
