@@ -102,9 +102,42 @@
       "coveragePreviewCount": 10
     },
     {
+      "task": "xref-merge",
+      "id": "merge-xref",
+      "dependsOn": "build-apidocs",
+      "out": "./data/xrefmap.json",
+      "mapFiles": ["./_site/api/xrefmap.json"],
+      "preferLast": true,
+      "maxReferences": 12000,
+      "maxDuplicates": 50,
+      "maxReferenceGrowthCount": 2500,
+      "maxReferenceGrowthPercent": 40
+    },
+    {
+      "task": "build",
+      "id": "build-site-xref-refresh",
+      "dependsOn": "merge-xref",
+      "config": "./site.json",
+      "out": "./_site",
+      "clean": false
+    },
+    {
+      "task": "verify",
+      "id": "verify-ci-final",
+      "dependsOn": "build-site-xref-refresh",
+      "modes": ["ci"],
+      "config": "./site.json",
+      "baseline": "./.powerforge/verify-baseline.json",
+      "failOnNewWarnings": true,
+      "failOnNavLint": true,
+      "failOnThemeContract": true,
+      "warningPreviewCount": 10,
+      "errorPreviewCount": 10
+    },
+    {
       "task": "llms",
       "id": "build-llms",
-      "dependsOn": "build-apidocs",
+      "dependsOn": "verify-ci-final",
       "siteRoot": "./_site",
       "apiIndex": "./_site/api/index.json",
       "apiBase": "/api",
