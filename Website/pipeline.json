@@ -153,21 +153,10 @@
       "siteRoot": "./_site",
       "baseUrl": "https://codeglyphx.com",
       "apiSitemap": "./_site/api/sitemap.xml",
+      "entriesJson": "./data/sitemap.entries.json",
+      "json": true,
       "html": true,
-      "htmlTitle": "CodeGlyphX Sitemap",
-      "entries": [
-        { "path": "/", "priority": "1.0", "changefreq": "weekly" },
-        { "path": "/playground/", "priority": "0.9", "changefreq": "weekly" },
-        { "path": "/docs/", "priority": "0.9", "changefreq": "weekly" },
-        { "path": "/benchmarks/", "priority": "0.8", "changefreq": "monthly" },
-        { "path": "/faq/", "priority": "0.8", "changefreq": "monthly" },
-        { "path": "/showcase/", "priority": "0.7", "changefreq": "monthly" },
-        { "path": "/pricing/", "priority": "0.7", "changefreq": "monthly" },
-        { "path": "/api/", "priority": "0.8", "changefreq": "weekly" },
-        { "path": "/llms.txt", "priority": "0.3", "changefreq": "monthly" },
-        { "path": "/llms.json", "priority": "0.3", "changefreq": "monthly" },
-        { "path": "/llms-full.txt", "priority": "0.4", "changefreq": "monthly" }
-      ]
+      "htmlTitle": "CodeGlyphX Sitemap"
     },
     {
       "task": "optimize",
