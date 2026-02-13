@@ -96,7 +96,20 @@
     "ExternalTarget": "_blank",
     "AddExternalIcon": true
   },
+  "Xref": {
+    "Enabled": true,
+    "MapFiles": ["data/xrefmap.json"],
+    "WarnOnMissing": true,
+    "EmitMap": true,
+    "MaxWarnings": 25
+  },
   "Navigation": {
+    "Surfaces": [
+      { "Name": "main", "Path": "/", "PrimaryMenu": "main" },
+      { "Name": "docs", "Path": "/docs/", "Collection": "docs", "Layout": "docs", "PrimaryMenu": "main" },
+      { "Name": "apidocs", "Path": "/api/", "Layout": "apiDocs", "PrimaryMenu": "main" },
+      { "Name": "notFound", "Path": "/404/", "PrimaryMenu": "main" }
+    ],
     "Menus": [
       {
         "Name": "main",
