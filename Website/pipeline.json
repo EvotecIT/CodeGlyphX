@@ -37,7 +37,8 @@
       "id": "build-library",
       "dependsOn": "verify-site",
       "project": "../CodeGlyphX/CodeGlyphX.csproj",
-      "configuration": "Release"
+      "configuration": "Release",
+      "skipIfProjectMissing": true
     },
     {
       "task": "dotnet-publish",

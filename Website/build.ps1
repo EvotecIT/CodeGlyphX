@@ -36,8 +36,12 @@
 .PARAMETER PowerForgeRoot
     Root folder of PSPublishModule (overrides $env:POWERFORGE_ROOT).
 
+.PARAMETER CI
+    Force pipeline CI mode locally (equivalent to setting CI=true).
+
 .EXAMPLE
     ./build.ps1
+    ./build.ps1 -CI
     ./build.ps1 -Serve
     ./build.ps1 -Serve -Port 3000
 #>
@@ -52,6 +56,7 @@ param(
     [int]$Port = 8080,
     [string[]]$Only = @(),
     [string[]]$Skip = @(),
+    [switch]$CI,
     [switch]$SkipBuildTool,
     [string]$PowerForgeRoot = $env:POWERFORGE_ROOT
 )
@@ -136,7 +141,8 @@ function Assert-SiteOutput {
 try {
     $UseDev = ($Dev -or ($Serve -and -not $NoDev))
     $UseFast = ($Fast -or ($Serve -and -not $NoFast))
-    $IsCI = ($env:CI -and $env:CI.ToString().ToLowerInvariant() -eq 'true') -or
+    $IsCI = $CI -or
+            ($env:CI -and $env:CI.ToString().ToLowerInvariant() -eq 'true') -or
             ($env:GITHUB_ACTIONS -and $env:GITHUB_ACTIONS.ToString().ToLowerInvariant() -eq 'true') -or
             ($env:TF_BUILD -and $env:TF_BUILD.ToString().ToLowerInvariant() -eq 'true')
 
@@ -161,6 +167,9 @@ try {
     if ($Watch) {
         $pipelineArgs += '--watch'
     }
+
+    $modeLabel = $UseDev ? 'dev' : ($UseFast ? 'fast' : ($IsCI ? 'ci' : 'default'))
+    Write-Host "Pipeline mode: $modeLabel" -ForegroundColor DarkGray
 
     if ($Serve) {
         Write-Host 'Building website...' -ForegroundColor Cyan
