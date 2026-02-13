@@ -194,7 +194,7 @@
       "failOnNewIssues": true,
       "maxTotalFiles": 2200,
       "exclude": "**/*.scripts.html,**/*.head.html,**/api-fragments/**,api-fragments/**",
-      "ignoreNav": "sitemap/**,playground/index.html,playground/404.html",
+      "ignoreNav": "sitemap/**,search/**,playground/index.html,playground/404.html",
       "noDefaultIgnoreNav": true,
       "navSelector": "header nav.nav",
       "navCanonicalPath": "index.html",
