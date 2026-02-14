@@ -61,7 +61,7 @@
     "CssStrategy": "blocking",
     "Bundles": [
       { "Name": "global", "Css": ["/css/app.css"], "Js": ["/js/site.js"] },
-      { "Name": "docs", "Css": ["/css/api.css"], "Js": ["/js/site.js"] }
+      { "Name": "docs", "Css": ["/css/app.css", "/css/api.css"], "Js": ["/js/site.js"] }
     ],
     "RouteBundles": [
       { "Match": "/api/**", "Bundles": ["docs"] },
