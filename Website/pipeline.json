@@ -53,24 +53,6 @@
       "defineConstants": "TRACE;PLAYGROUND_BUILD"
     },
     {
-      "task": "overlay",
-      "id": "overlay-playground",
-      "dependsOn": "publish-playground",
-      "source": "./_temp/playground/wwwroot",
-      "destination": "./_site/playground",
-      "clean": true,
-      "include": "**/*, *"
-    },
-    {
-      "task": "overlay",
-      "id": "overlay-playground-api",
-      "dependsOn": "overlay-playground",
-      "source": "./static/api",
-      "destination": "./_site/playground/api",
-      "clean": true,
-      "include": "**/*, *"
-    },
-    {
       "task": "apidocs",
       "id": "build-apidocs",
       "dependsOn": "build-library",
@@ -123,9 +105,27 @@
       "clean": false
     },
     {
+      "task": "overlay",
+      "id": "overlay-playground",
+      "dependsOn": "publish-playground",
+      "source": "./_temp/playground/wwwroot",
+      "destination": "./_site/playground",
+      "clean": true,
+      "include": "**/*, *"
+    },
+    {
+      "task": "overlay",
+      "id": "overlay-playground-api",
+      "dependsOn": "overlay-playground",
+      "source": "./static/api",
+      "destination": "./_site/playground/api",
+      "clean": true,
+      "include": "**/*, *"
+    },
+    {
       "task": "verify",
       "id": "verify-ci-final",
-      "dependsOn": "build-site-xref-refresh",
+      "dependsOn": "overlay-playground-api",
       "modes": ["ci"],
       "config": "./site.json",
       "baseline": "./.powerforge/verify-baseline.json",
