@@ -15,7 +15,8 @@ concurrency:
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    # Prefer private/self-hosted runners for private repos to reduce hosted spend.
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
     timeout-minutes: 15
     permissions:
       security-events: write
