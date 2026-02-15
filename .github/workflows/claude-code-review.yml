@@ -18,7 +18,8 @@ jobs:
         #   github.event.pull_request.user.login == 'new-developer' ||
         #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
 
-        runs-on: [ubuntu-latest]
+        # Prefer private/self-hosted runners for private repos to reduce hosted spend.
+        runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
         permissions:
             contents: read
             pull-requests: read

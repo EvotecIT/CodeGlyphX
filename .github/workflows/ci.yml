@@ -13,12 +13,19 @@ concurrency:
 jobs:
   build-test:
     name: Build & Test (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
+    # Prefer private/self-hosted runners for private repos to reduce hosted spend.
+    runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            selfHostedRunner: '["self-hosted","linux"]'
+          - os: macos-latest
+            selfHostedRunner: '["self-hosted","macOS"]'
+          - os: windows-latest
+            selfHostedRunner: '["self-hosted","windows"]'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -101,7 +108,8 @@ jobs:
 
   website-build:
     name: Website Build (PR)
-    runs-on: ubuntu-latest
+    # Prefer private/self-hosted runners for private repos to reduce hosted spend.
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
     timeout-minutes: 10
     if: github.event_name == 'pull_request'
     steps:
@@ -138,7 +146,8 @@ jobs:
 
   coverage:
     name: Coverage (linux)
-    runs-on: ubuntu-latest
+    # Prefer private/self-hosted runners for private repos to reduce hosted spend.
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
     timeout-minutes: 20
     steps:
       - name: Checkout
