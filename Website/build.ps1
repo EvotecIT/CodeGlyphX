@@ -64,35 +64,69 @@ param(
 $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
 
+function Resolve-PowerForgeRoot {
+    param(
+        [string]$RequestedRoot
+    )
+
+    $candidates = @()
+    if (-not [string]::IsNullOrWhiteSpace($RequestedRoot)) {
+        $candidates += $RequestedRoot
+    }
+    if (-not [string]::IsNullOrWhiteSpace($env:POWERFORGE_ROOT)) {
+        $candidates += $env:POWERFORGE_ROOT
+    }
+
+    # Walk up and probe for a sibling PSPublishModule folder (works for common mono-root layouts).
+    $here = (Resolve-Path -LiteralPath $PSScriptRoot).Path
+    $cursor = $here
+    for ($i = 0; $i -lt 8; $i++) {
+        $parent = Split-Path -Parent $cursor
+        if ([string]::IsNullOrWhiteSpace($parent) -or $parent -eq $cursor) { break }
+        $candidates += (Join-Path $parent 'PSPublishModule')
+        $cursor = $parent
+    }
+
+    # Maintainer defaults + WSL-style mounts.
+    if ($IsWindows) {
+        $candidates += 'C:\Support\GitHub\PSPublishModule'
+    }
+    $candidates += '/mnt/c/Support/GitHub/PSPublishModule'
+
+    foreach ($candidate in ($candidates | Select-Object -Unique)) {
+        if ([string]::IsNullOrWhiteSpace($candidate)) { continue }
+        try {
+            $root = (Resolve-Path -LiteralPath $candidate -ErrorAction Stop).Path
+        } catch {
+            continue
+        }
+
+        $cliProject = Join-Path $root 'PowerForge.Web.Cli\PowerForge.Web.Cli.csproj'
+        if (Test-Path -LiteralPath $cliProject -PathType Leaf) {
+            return $root
+        }
+    }
+
+    return $null
+}
+
 # Resolve PowerForge.Web.Cli executable (prefer local fresh build)
 $PowerForge = $null
 $PowerForgeArgs = @()
-if ([string]::IsNullOrWhiteSpace($PowerForgeRoot)) {
-    $candidate = Join-Path $PSScriptRoot '..\PSPublishModule'
-    if (Test-Path $candidate) {
-        $PowerForgeRoot = (Resolve-Path $candidate).Path
-    } else {
-        $scriptRoot = (Resolve-Path $PSScriptRoot).Path
-        $parent = Split-Path -Parent $scriptRoot
-        if ($parent) {
-            $grandParent = Split-Path -Parent $parent
-            if ($grandParent) {
-                $candidate = Join-Path $grandParent 'PSPublishModule'
-                if (Test-Path $candidate) {
-                    $PowerForgeRoot = (Resolve-Path $candidate).Path
-                }
-            }
-        }
-    }
-}
+$PowerForgeRoot = Resolve-PowerForgeRoot -RequestedRoot $PowerForgeRoot
 if (-not [string]::IsNullOrWhiteSpace($PowerForgeRoot)) {
     $PowerForgeCliProject = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\PowerForge.Web.Cli.csproj'
-    $PowerForgeReleaseExe = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Release\net10.0\PowerForge.Web.Cli.exe'
-    $PowerForgeReleaseAppHost = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Release\net10.0\PowerForge.Web.Cli'
-    $PowerForgeReleaseDll = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Release\net10.0\PowerForge.Web.Cli.dll'
-    $PowerForgeDebugExe = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Debug\net10.0\PowerForge.Web.Cli.exe'
-    $PowerForgeDebugAppHost = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Debug\net10.0\PowerForge.Web.Cli'
-    $PowerForgeDebugDll = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\bin\Debug\net10.0\PowerForge.Web.Cli.dll'
+
+    $tfms = @('net10.0', 'net8.0')
+    foreach ($tfm in $tfms) {
+        if (-not $PowerForgeReleaseExe) { $PowerForgeReleaseExe = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Release\\$tfm\\PowerForge.Web.Cli.exe" }
+        if (-not $PowerForgeReleaseAppHost) { $PowerForgeReleaseAppHost = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Release\\$tfm\\PowerForge.Web.Cli" }
+        if (-not $PowerForgeReleaseDll) { $PowerForgeReleaseDll = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Release\\$tfm\\PowerForge.Web.Cli.dll" }
+
+        if (-not $PowerForgeDebugExe) { $PowerForgeDebugExe = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Debug\\$tfm\\PowerForge.Web.Cli.exe" }
+        if (-not $PowerForgeDebugAppHost) { $PowerForgeDebugAppHost = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Debug\\$tfm\\PowerForge.Web.Cli" }
+        if (-not $PowerForgeDebugDll) { $PowerForgeDebugDll = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Debug\\$tfm\\PowerForge.Web.Cli.dll" }
+    }
 }
 
 if (-not $SkipBuildTool -and $PowerForgeCliProject -and (Test-Path $PowerForgeCliProject)) {
@@ -120,7 +154,7 @@ if ($PowerForgeReleaseExe -and (Test-Path $PowerForgeReleaseExe)) {
 }
 
 if (-not $PowerForge) {
-    Write-Error 'PowerForge.Web.Cli not found. Build PSPublishModule first, install the global tool, or pass -PowerForgeRoot.'
+    Write-Error 'PowerForge.Web.Cli not found. Install the global tool (powerforge-web), set POWERFORGE_ROOT (path to PSPublishModule), or pass -PowerForgeRoot.'
     exit 1
 }
 
