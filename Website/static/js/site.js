@@ -6,6 +6,7 @@ function getTheme() {
 function setTheme(theme) {
     localStorage.setItem('theme', theme);
     document.documentElement.dataset.theme = theme;
+    globalThis.CodeGlyphX?.renderMermaidDiagrams?.();
 }
 
 // Expose to global scope for Blazor JS interop
@@ -13,6 +14,10 @@ globalThis.getTheme = getTheme;
 globalThis.setTheme = setTheme;
 
 (() => {
+    const mermaidScriptUrl = 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js';
+    let mermaidLoadPromise = null;
+    let mermaidThemeObserver = null;
+
     function copyText(text) {
         if (!text) return;
         if (navigator.clipboard?.writeText) {
@@ -67,6 +72,136 @@ globalThis.setTheme = setTheme;
         document.head.appendChild(script);
     }
 
+    function loadDynamicScript(src) {
+        return new Promise((resolve) => {
+            const existing = document.querySelector(`script[data-dynamic-src="${src}"]`);
+            if (existing) {
+                if (existing.getAttribute('data-loaded') === 'true') {
+                    resolve(true);
+                    return;
+                }
+                existing.addEventListener('load', () => resolve(true), { once: true });
+                existing.addEventListener('error', () => resolve(false), { once: true });
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = src;
+            script.async = true;
+            script.defer = true;
+            script.setAttribute('data-dynamic-src', src);
+            script.addEventListener('load', () => {
+                script.setAttribute('data-loaded', 'true');
+                resolve(true);
+            }, { once: true });
+            script.addEventListener('error', () => resolve(false), { once: true });
+            document.head.appendChild(script);
+        });
+    }
+
+    function resolveThemeKind() {
+        const theme = document.documentElement.dataset.theme || localStorage.getItem('theme') || 'auto';
+        if (theme === 'light') return 'light';
+        if (theme === 'dark') return 'dark';
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+
+    function getCssVar(name, fallback) {
+        const value = getComputedStyle(document.documentElement).getPropertyValue(name);
+        if (!value) return fallback;
+        const trimmed = value.trim();
+        return trimmed || fallback;
+    }
+
+    function getMermaidConfig() {
+        const isLight = resolveThemeKind() === 'light';
+        return {
+            startOnLoad: false,
+            securityLevel: 'strict',
+            theme: 'base',
+            flowchart: { curve: 'basis' },
+            themeVariables: {
+                background: getCssVar('--bg-code', isLight ? '#f6f8fa' : '#0d0d12'),
+                primaryColor: getCssVar('--bg-card', isLight ? '#ffffff' : '#12121a'),
+                primaryTextColor: getCssVar('--text', isLight ? '#1e293b' : '#f4f4f5'),
+                primaryBorderColor: getCssVar('--primary', isLight ? '#6d28d9' : '#8b5cf6'),
+                lineColor: getCssVar('--text-muted', isLight ? '#475569' : '#c1c7d6'),
+                secondaryColor: getCssVar('--bg-input', isLight ? '#f1f5f9' : '#1e1e2a'),
+                tertiaryColor: getCssVar('--bg-card-hover', isLight ? '#e2e8f0' : '#1a1a25'),
+                clusterBkg: getCssVar('--bg-input', isLight ? '#f1f5f9' : '#1e1e2a'),
+                clusterBorder: getCssVar('--border', isLight ? '#e2e8f0' : '#27272a'),
+                fontFamily: getCssVar('--font-body', 'Inter, Segoe UI, sans-serif'),
+                fontSize: '15px'
+            }
+        };
+    }
+
+    function ensureMermaidLoaded() {
+        if (window.mermaid) {
+            return Promise.resolve(true);
+        }
+        if (!mermaidLoadPromise) {
+            mermaidLoadPromise = loadDynamicScript(mermaidScriptUrl);
+        }
+        return mermaidLoadPromise;
+    }
+
+    function normalizeMermaidBlocks() {
+        const blocks = Array.from(document.querySelectorAll('pre code.language-mermaid'));
+        blocks.forEach((code) => {
+            const pre = code.closest('pre');
+            if (!pre) return;
+            if (pre.parentElement?.classList.contains('mermaid-diagram')) return;
+            const source = (code.textContent || '').trim();
+            if (!source) return;
+
+            const host = document.createElement('div');
+            host.className = 'mermaid-diagram';
+            host.setAttribute('data-mermaid-source', source);
+            pre.replaceWith(host);
+        });
+    }
+
+    async function renderMermaidDiagrams() {
+        normalizeMermaidBlocks();
+        const hosts = Array.from(document.querySelectorAll('.mermaid-diagram[data-mermaid-source]'));
+        if (!hosts.length) return;
+
+        const loaded = await ensureMermaidLoaded();
+        if (!loaded || !window.mermaid) return;
+
+        window.mermaid.initialize(getMermaidConfig());
+        const nodes = [];
+        hosts.forEach((host) => {
+            const source = host.getAttribute('data-mermaid-source') || '';
+            host.classList.remove('mermaid-diagram-failed');
+            host.innerHTML = '';
+
+            const diagram = document.createElement('div');
+            diagram.className = 'mermaid';
+            diagram.textContent = source;
+            host.appendChild(diagram);
+            nodes.push(diagram);
+        });
+
+        try {
+            await window.mermaid.run({ nodes });
+        } catch (err) {
+            console.warn('Mermaid render failed', err);
+            hosts.forEach((host) => {
+                if (host.querySelector('svg')) return;
+                host.classList.add('mermaid-diagram-failed');
+                const fallback = document.createElement('pre');
+                const code = document.createElement('code');
+                code.className = 'language-mermaid';
+                code.textContent = host.getAttribute('data-mermaid-source') || '';
+                fallback.appendChild(code);
+                host.innerHTML = '';
+                host.appendChild(fallback);
+            });
+        }
+    }
+
     function createCopyButton(textProvider, options) {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -105,7 +240,8 @@ globalThis.setTheme = setTheme;
             defaultCodeLanguage = `language-${defaultCodeLanguage}`;
         }
         const blocks = Array.from(document.querySelectorAll('pre.code-block, .docs-content pre, .docs-static pre, .type-detail pre'))
-            .filter((block) => !block.classList.contains('initialized'));
+            .filter((block) => !block.classList.contains('initialized'))
+            .filter((block) => !block.querySelector('code.language-mermaid'));
         const signatures = Array.from(document.querySelectorAll('code.signature'))
             .filter((sig) => !sig.classList.contains('initialized'));
 
@@ -479,6 +615,7 @@ globalThis.setTheme = setTheme;
         if (initTimer) return;
         initTimer = globalThis.setTimeout(() => {
             initTimer = 0;
+            renderMermaidDiagrams();
             initCodeBlocks();
             initDocsNav();
             initShowcaseCarousel();
@@ -495,9 +632,24 @@ globalThis.setTheme = setTheme;
     const observer = new MutationObserver(scheduleInit);
     observer.observe(document.body, { childList: true, subtree: true });
 
+    if (!mermaidThemeObserver) {
+        mermaidThemeObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+                    renderMermaidDiagrams();
+                }
+            });
+        });
+        mermaidThemeObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
+    }
+
     globalThis.CodeGlyphX = globalThis.CodeGlyphX || {};
     globalThis.CodeGlyphX.initCodeBlocks = initCodeBlocks;
     globalThis.CodeGlyphX.renderBenchmarkSummary = renderBenchmarkSummary;
+    globalThis.CodeGlyphX.renderMermaidDiagrams = renderMermaidDiagrams;
 })();
 
 // File drop handling for Blazor InputFile
@@ -582,6 +734,7 @@ globalThis.CodeGlyphX.setupDropZone = function(dropZoneElement, inputFileElement
         localStorage.setItem('theme', theme);
         updateActiveTheme(theme);
         updateCycleButton(theme);
+        globalThis.CodeGlyphX?.renderMermaidDiagrams?.();
     }
 
     var currentTheme = getThemeLocal();
