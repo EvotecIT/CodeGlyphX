@@ -101,7 +101,9 @@
 
           if (attempt < maxAttempts) {
             const baseDelay = Math.min(250 * Math.pow(2, attempt - 1), 2000);
-            const jitter = Math.floor(Math.random() * 120);
+            const jitter = (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function')
+              ? (crypto.getRandomValues(new Uint8Array(1))[0] % 120)
+              : 0;
             await delay(baseDelay + jitter);
           }
         }
