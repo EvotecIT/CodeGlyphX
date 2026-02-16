@@ -81,11 +81,12 @@
           try {
             let requestInput = input;
             if (attempt > 1) {
-              const rawUrl = typeof input === 'string'
-                ? input
-                : (input && typeof input.url === 'string' ? input.url : '');
-              if (rawUrl) {
-                requestInput = withRetryHint(rawUrl, attempt);
+              if (typeof input === 'string') {
+                requestInput = withRetryHint(input, attempt);
+              } else if (input instanceof Request) {
+                requestInput = new Request(withRetryHint(input.url, attempt), input);
+              } else if (input && typeof input.url === 'string') {
+                requestInput = withRetryHint(input.url, attempt);
               }
             }
 
