@@ -26,6 +26,94 @@
     <a class="dismiss">×</a>
   </div>
   <script src="js/site.js"></script>
+  <script>
+    (function () {
+      if (typeof window.fetch !== 'function') {
+        return;
+      }
+
+      const originalFetch = window.fetch.bind(window);
+
+      function isFrameworkRequest(input, init) {
+        const method = ((init && init.method) || 'GET').toString().toUpperCase();
+        if (method !== 'GET') {
+          return false;
+        }
+
+        const rawUrl = typeof input === 'string'
+          ? input
+          : (input && typeof input.url === 'string' ? input.url : '');
+        if (!rawUrl) {
+          return false;
+        }
+
+        try {
+          const resolved = new URL(rawUrl, window.location.href);
+          return resolved.pathname.includes('/_framework/');
+        } catch {
+          return rawUrl.includes('/_framework/');
+        }
+      }
+
+      function withRetryHint(url, attempt) {
+        try {
+          const resolved = new URL(url, window.location.href);
+          resolved.searchParams.set('_pfretry', String(attempt));
+          return resolved.toString();
+        } catch {
+          return url;
+        }
+      }
+
+      function delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      window.fetch = async function (input, init) {
+        if (!isFrameworkRequest(input, init)) {
+          return originalFetch(input, init);
+        }
+
+        const maxAttempts = 4;
+        let lastError = null;
+
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+          try {
+            let requestInput = input;
+            if (attempt > 1) {
+              const rawUrl = typeof input === 'string'
+                ? input
+                : (input && typeof input.url === 'string' ? input.url : '');
+              if (rawUrl) {
+                requestInput = withRetryHint(rawUrl, attempt);
+              }
+            }
+
+            const response = await originalFetch(requestInput, init);
+            if (response.status < 500 || response.status >= 600) {
+              return response;
+            }
+
+            lastError = new Error('Framework resource returned HTTP ' + response.status + '.');
+          } catch (error) {
+            lastError = error;
+          }
+
+          if (attempt < maxAttempts) {
+            const baseDelay = Math.min(250 * Math.pow(2, attempt - 1), 2000);
+            const jitter = Math.floor(Math.random() * 120);
+            await delay(baseDelay + jitter);
+          }
+        }
+
+        if (lastError) {
+          throw lastError;
+        }
+
+        return originalFetch(input, init);
+      };
+    })();
+  </script>
   <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>
