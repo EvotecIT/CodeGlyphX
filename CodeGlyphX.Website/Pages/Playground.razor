@@ -11,13 +11,16 @@
         <div class="card">
             <h2>Playground unavailable</h2>
             <p>@_loadError</p>
+            <div class="download-buttons">
+                <button type="button" class="btn btn-primary" @onclick="RetryLoadAsync">Retry now</button>
+            </div>
         </div>
     }
-    else if (_playgroundType == null)
+    else if (_isLoading || _playgroundType == null)
     {
         <div class="card">
             <h2>Loading playground...</h2>
-            <p>Downloading the CodeGlyphX engine. This is only required the first time you open the playground.</p>
+            <p>@_loadingMessage</p>
         </div>
     }
     else
@@ -27,44 +30,122 @@
 </div>
 
 @code {
+    private static readonly string[][] AssemblyCandidateSets =
+    {
+        new[] { "CodeGlyphX.Playground.wasm", "CodeGlyphX.wasm" },
+        new[] { "CodeGlyphX.Playground.dll", "CodeGlyphX.dll" }
+    };
+    private const int MaxAttemptsPerCandidateSet = 4;
+
     private Type? _playgroundType;
     private string? _loadError;
+    private bool _isLoading = true;
+    private string _loadingMessage = "Downloading the CodeGlyphX engine. This is only required the first time you open the playground.";
     private int _componentKey;
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            Exception? lastError = null;
+        await LoadPlaygroundAsync();
+    }
 
-            foreach (var candidates in new[]
-                     {
-                         new[] { "CodeGlyphX.Playground.wasm", "CodeGlyphX.wasm" },
-                         new[] { "CodeGlyphX.Playground.dll", "CodeGlyphX.dll" }
-                     })
+    private async Task RetryLoadAsync()
+    {
+        _playgroundType = null;
+        _loadError = null;
+        _isLoading = true;
+        _loadingMessage = "Retrying playground startup...";
+        _componentKey = 0;
+        StateHasChanged();
+        await LoadPlaygroundAsync();
+    }
+
+    private async Task LoadPlaygroundAsync()
+    {
+        _isLoading = true;
+        _playgroundType = null;
+        _loadError = null;
+
+        Exception? lastError = null;
+
+        foreach (var candidateSet in AssemblyCandidateSets)
+        {
+            for (var attempt = 1; attempt <= MaxAttemptsPerCandidateSet; attempt++)
             {
+                _loadingMessage = $"Downloading {candidateSet[0]} (attempt {attempt}/{MaxAttemptsPerCandidateSet})...";
+                StateHasChanged();
+
                 try
                 {
-                    var assemblies = await AssemblyLoader.LoadAssembliesAsync(candidates);
+                    var assemblies = await AssemblyLoader.LoadAssembliesAsync(candidateSet);
                     _playgroundType = assemblies
                         .Select(assembly => assembly.GetType("CodeGlyphX.Playground.Playground"))
                         .FirstOrDefault(type => type != null);
                     if (_playgroundType != null)
-                        break;
+                    {
+                        _isLoading = false;
+                        _loadingMessage = string.Empty;
+                        return;
+                    }
                 }
                 catch (Exception ex)
                 {
                     lastError = ex;
+                    if (attempt < MaxAttemptsPerCandidateSet && IsTransientDownloadError(ex))
+                    {
+                        await Task.Delay(GetRetryDelay(attempt));
+                        continue;
+                    }
                 }
-            }
 
-            if (_playgroundType is null)
-                _loadError = lastError?.Message ?? "Playground component failed to load.";
+                break;
+            }
         }
-        catch (Exception ex)
+
+        _isLoading = false;
+        _loadingMessage = string.Empty;
+        _loadError = BuildLoadErrorMessage(lastError);
+    }
+
+    private static bool IsTransientDownloadError(Exception error)
+    {
+        for (Exception? current = error; current != null; current = current.InnerException)
         {
-            _loadError = ex.Message;
+            var message = current.Message ?? string.Empty;
+            if (message.Contains("503", StringComparison.OrdinalIgnoreCase) ||
+                message.Contains("502", StringComparison.OrdinalIgnoreCase) ||
+                message.Contains("504", StringComparison.OrdinalIgnoreCase) ||
+                message.Contains("failed to fetch", StringComparison.OrdinalIgnoreCase) ||
+                message.Contains("network", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
         }
+        return false;
+    }
+
+    private static TimeSpan GetRetryDelay(int attempt)
+    {
+        return attempt switch
+        {
+            1 => TimeSpan.FromMilliseconds(300),
+            2 => TimeSpan.FromMilliseconds(700),
+            _ => TimeSpan.FromMilliseconds(1500)
+        };
+    }
+
+    private static string BuildLoadErrorMessage(Exception? error)
+    {
+        if (error is null)
+        {
+            return "Playground component failed to load.";
+        }
+
+        if (IsTransientDownloadError(error))
+        {
+            return $"Temporary download failure after retries ({error.Message}). Click Retry now.";
+        }
+
+        return error.Message;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
