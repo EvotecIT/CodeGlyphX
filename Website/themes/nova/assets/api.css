@@ -471,6 +471,33 @@
     line-height: 1.4;
 }
 
+.member-header pre.member-signature {
+    overflow: auto;
+    white-space: pre;
+    word-break: normal;
+    overflow-wrap: normal;
+}
+
+.member-card pre::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.member-card pre::-webkit-scrollbar-track {
+    background: color-mix(in srgb, var(--bg-code) 85%, transparent);
+    border-radius: 999px;
+}
+
+.member-card pre::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--api-accent-soft) 60%, var(--border));
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+}
+
+.member-card pre::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--api-accent-strong) 58%, var(--api-accent-soft));
+}
+
 .member-summary,
 .member-remarks,
 .type-summary,
