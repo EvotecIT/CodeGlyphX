@@ -115,14 +115,12 @@ jobs:
             cloudflare purge \
             --zone-id "${{ secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX }}" \
             --token-env CLOUDFLARE_API_TOKEN \
-            --base-url "https://codeglyphx.com" \
-            --path "/,/docs/,/api/,/blog/,/showcase/,/pricing/,/benchmarks/,/faq/,/search/,/sitemap/,/playground/,/404.html,/sitemap.xml,/llms.txt,/llms-full.txt,/llms.json"
+            --site-config "Website/site.json"
 
       - name: Verify Cloudflare cache status (key routes)
         if: steps.cloudflare.outputs.enabled == 'true'
         run: |
           dotnet PSPublishModule/PowerForge.Web.Cli/bin/Release/net10.0/PowerForge.Web.Cli.dll \
             cloudflare verify \
-            --base-url "https://codeglyphx.com" \
-            --path "/,/docs/,/api/,/showcase/,/search/,/sitemap/,/playground/" \
+            --site-config "Website/site.json" \
             --warmup 1
