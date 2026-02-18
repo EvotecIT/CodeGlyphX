@@ -42,7 +42,11 @@
     "Enabled": true,
     "SiteName": "CodeGlyphX",
     "Image": "/codeglyphx-qr-icon.png",
-    "TwitterCard": "summary"
+    "TwitterCard": "summary_large_image",
+    "AutoGenerateCards": true,
+    "GeneratedCardsPath": "/assets/social/generated",
+    "GeneratedCardWidth": 1200,
+    "GeneratedCardHeight": 630
   },
   "StructuredData": {
     "Enabled": true,
@@ -81,6 +85,17 @@
     "CriticalCss": [
       { "Name": "codeglyphx", "Path": "themes/codeglyphx/critical.css" }
     ]
+  },
+  "AssetPolicy": {
+    "Mode": "local",
+    "Hashing": {
+      "Enabled": false,
+      "Extensions": [".css", ".js"]
+    },
+    "CacheHeaders": {
+      "Enabled": true,
+      "OutputPath": "_headers"
+    }
   },
   "Prism": {
     "DefaultLanguage": "csharp"
