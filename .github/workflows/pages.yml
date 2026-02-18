@@ -73,16 +73,29 @@ jobs:
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
     needs: deploy
-    if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX != '' }}
     permissions:
       contents: read
     steps:
+      - name: Resolve Cloudflare settings
+        id: cloudflare
+        run: |
+          token="${{ secrets.CLOUDFLARE_API_TOKEN }}"
+          zone="${{ secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX }}"
+          if [ -z "$token" ] || [ -z "$zone" ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare purge/verify skipped: missing required secrets."
+            exit 0
+          fi
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+
       - name: Setup .NET 10
+        if: steps.cloudflare.outputs.enabled == 'true'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
       - name: Checkout PSPublishModule
+        if: steps.cloudflare.outputs.enabled == 'true'
         uses: actions/checkout@v4
         with:
           repository: EvotecIT/PSPublishModule
@@ -90,9 +103,11 @@ jobs:
           path: PSPublishModule
 
       - name: Build PowerForge.Web.Cli
+        if: steps.cloudflare.outputs.enabled == 'true'
         run: dotnet build PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj -c Release
 
       - name: Purge Cloudflare cache (key routes)
+        if: steps.cloudflare.outputs.enabled == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
@@ -104,6 +119,7 @@ jobs:
             --path "/,/docs/,/api/,/blog/,/showcase/,/pricing/,/benchmarks/,/faq/,/search/,/sitemap/,/playground/,/404.html,/sitemap.xml,/llms.txt,/llms-full.txt,/llms.json"
 
       - name: Verify Cloudflare cache status (key routes)
+        if: steps.cloudflare.outputs.enabled == 'true'
         run: |
           dotnet PSPublishModule/PowerForge.Web.Cli/bin/Release/net10.0/PowerForge.Web.Cli.dll \
             cloudflare verify \
