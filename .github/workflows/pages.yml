@@ -68,3 +68,45 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  purge-cloudflare:
+    # Prefer private/self-hosted runners for private repos to reduce hosted spend.
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
+    needs: deploy
+    if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX != '' }}
+    permissions:
+      contents: read
+    steps:
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Checkout PSPublishModule
+        uses: actions/checkout@v4
+        with:
+          repository: EvotecIT/PSPublishModule
+          ref: main
+          path: PSPublishModule
+
+      - name: Build PowerForge.Web.Cli
+        run: dotnet build PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj -c Release
+
+      - name: Purge Cloudflare cache (key routes)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          dotnet PSPublishModule/PowerForge.Web.Cli/bin/Release/net10.0/PowerForge.Web.Cli.dll \
+            cloudflare purge \
+            --zone-id "${{ secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX }}" \
+            --token-env CLOUDFLARE_API_TOKEN \
+            --base-url "https://codeglyphx.com" \
+            --path "/,/docs/,/api/,/blog/,/showcase/,/pricing/,/benchmarks/,/faq/,/search/,/sitemap/,/playground/,/404.html,/sitemap.xml,/llms.txt,/llms-full.txt,/llms.json"
+
+      - name: Verify Cloudflare cache status (key routes)
+        run: |
+          dotnet PSPublishModule/PowerForge.Web.Cli/bin/Release/net10.0/PowerForge.Web.Cli.dll \
+            cloudflare verify \
+            --base-url "https://codeglyphx.com" \
+            --path "/,/docs/,/api/,/showcase/,/search/,/sitemap/,/playground/" \
+            --warmup 1
