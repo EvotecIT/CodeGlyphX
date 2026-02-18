@@ -181,8 +181,6 @@
       "imageWidths": [480, 960, 1440],
       "imageEnhanceTags": true,
       "imageMaxTotalBytes": 70000000,
-      "hashAssets": true,
-      "hashExtensions": [".css", ".js"],
       "cacheHeaders": true,
       "cacheHeadersOut": "_headers",
       "reportPath": "./_reports/optimize-report.json"
@@ -198,7 +196,7 @@
       "noVerify": true,
       "baseline": "./.powerforge/audit-baseline.json",
       "failOnNewIssues": true,
-      "maxTotalFiles": 2200,
+      "maxTotalFiles": 4000,
       "exclude": "**/*.scripts.html,**/*.head.html,**/api-fragments/**,api-fragments/**",
       "ignoreNav": "sitemap/**,search/**,playground/index.html,playground/404.html",
       "noDefaultIgnoreNav": true,

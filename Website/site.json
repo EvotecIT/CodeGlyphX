@@ -89,7 +89,7 @@
   "AssetPolicy": {
     "Mode": "local",
     "Hashing": {
-      "Enabled": true,
+      "Enabled": false,
       "Extensions": [".css", ".js"]
     },
     "CacheHeaders": {
