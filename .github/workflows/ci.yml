@@ -13,7 +13,7 @@ concurrency:
 env:
   # Optional repo/org variable: POWERFORGE_REF (branch/tag/SHA) for controlled engine rollouts.
   POWERFORGE_REPOSITORY: EvotecIT/PSPublishModule
-  POWERFORGE_REF: ${{ vars.POWERFORGE_REF != '' && vars.POWERFORGE_REF || '77253ad381bcc5f70db62f10ef513913f7c37b49' }}
+  POWERFORGE_REF: ${{ vars.POWERFORGE_REF != '' && vars.POWERFORGE_REF || 'ab58992450def6b736a2ea87e6a492400250959f' }}
 
 jobs:
   build-test:
@@ -178,3 +178,4 @@ jobs:
           files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
           fail_ci_if_error: false
           verbose: true
+
