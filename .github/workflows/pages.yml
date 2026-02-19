@@ -101,6 +101,10 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Checkout
+        if: steps.cloudflare.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+
       - name: Checkout PSPublishModule
         if: steps.cloudflare.outputs.enabled == 'true'
         uses: actions/checkout@v4
