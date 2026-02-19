@@ -10,6 +10,11 @@ concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Optional repo/org variable: POWERFORGE_REF (branch/tag/SHA) for controlled engine rollouts.
+  POWERFORGE_REPOSITORY: EvotecIT/PSPublishModule
+  POWERFORGE_REF: ${{ vars.POWERFORGE_REF != '' && vars.POWERFORGE_REF || 'ab58992450def6b736a2ea87e6a492400250959f' }}
+
 jobs:
   build-test:
     name: Build & Test (${{ matrix.os }})
@@ -124,8 +129,8 @@ jobs:
       - name: Checkout PSPublishModule
         uses: actions/checkout@v4
         with:
-          repository: EvotecIT/PSPublishModule
-          ref: main
+          repository: ${{ env.POWERFORGE_REPOSITORY }}
+          ref: ${{ env.POWERFORGE_REF }}
           path: PSPublishModule
 
       - name: Build PowerForge.Web.Cli
@@ -173,3 +178,4 @@ jobs:
           files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
           fail_ci_if_error: false
           verbose: true
+
