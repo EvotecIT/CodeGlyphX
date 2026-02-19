@@ -9,6 +9,11 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+env:
+  # Optional repo/org variable: POWERFORGE_REF (branch/tag/SHA) for controlled engine rollouts.
+  POWERFORGE_REPOSITORY: EvotecIT/PSPublishModule
+  POWERFORGE_REF: ${{ vars.POWERFORGE_REF != '' && vars.POWERFORGE_REF || '77253ad381bcc5f70db62f10ef513913f7c37b49' }}
+
 jobs:
   build:
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
@@ -27,8 +32,8 @@ jobs:
       - name: Checkout PSPublishModule
         uses: actions/checkout@v4
         with:
-          repository: EvotecIT/PSPublishModule
-          ref: main
+          repository: ${{ env.POWERFORGE_REPOSITORY }}
+          ref: ${{ env.POWERFORGE_REF }}
           path: PSPublishModule
 
       - name: Build PowerForge.Web.Cli
@@ -98,8 +103,8 @@ jobs:
         if: steps.cloudflare.outputs.enabled == 'true'
         uses: actions/checkout@v4
         with:
-          repository: EvotecIT/PSPublishModule
-          ref: main
+          repository: ${{ env.POWERFORGE_REPOSITORY }}
+          ref: ${{ env.POWERFORGE_REF }}
           path: PSPublishModule
 
       - name: Build PowerForge.Web.Cli
