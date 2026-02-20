@@ -63,6 +63,7 @@
       "title": "CodeGlyphX API Reference",
       "baseUrl": "/api",
       "format": "both",
+      "legacyAliasMode": "omit",
       "css": "/css/app.css,/css/api.css",
       "template": "docs",
       "injectCriticalCss": true,
