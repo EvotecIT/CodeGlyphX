@@ -16,6 +16,10 @@ namespace CodeGlyphX.Qr;
 internal static partial class QrPixelDecoder {
     [ThreadStatic]
     private static List<QrFinderPatternDetector.FinderPattern>? t_candidateList;
+    [ThreadStatic]
+    private static QrGrayImagePool? t_grayPool;
+    [ThreadStatic]
+    private static HashSet<byte[]>? t_seenSet;
 
     private static List<QrFinderPatternDetector.FinderPattern> RentCandidateList() {
         var list = t_candidateList;
@@ -30,6 +34,176 @@ internal static partial class QrPixelDecoder {
         if (t_candidateList is null) {
             t_candidateList = list;
         }
+    }
+
+    private static QrGrayImagePool RentGrayPool() {
+        var pool = t_grayPool;
+        if (pool is null) return new QrGrayImagePool();
+        t_grayPool = null;
+        return pool;
+    }
+
+    private static void ReturnGrayPool(QrGrayImagePool pool) {
+        pool.ReturnAll();
+        if (t_grayPool is null) {
+            t_grayPool = pool;
+        }
+    }
+
+    private static HashSet<byte[]> RentSeenSet() {
+        var set = t_seenSet;
+        if (set is null) return new HashSet<byte[]>(ByteArrayComparer.Instance);
+        t_seenSet = null;
+        set.Clear();
+        return set;
+    }
+
+    private static void ReturnSeenSet(HashSet<byte[]> set) {
+        set.Clear();
+        if (t_seenSet is null) {
+            t_seenSet = set;
+        }
+    }
+
+    private static bool TryDecodeAutoCrop(
+        ReadOnlySpan<byte> pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat fmt,
+        int scaleStart,
+        QrProfileSettings settings,
+        QrProfileSettings prepassSettings,
+        QrPixelDecodeOptions? options,
+        DecodeBudget budget,
+        Func<QrDecoded, bool>? accept,
+        out QrDecoded result,
+        out QrPixelDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        if (budget.IsExpired || budget.IsNearDeadline(140)) return false;
+        var maxDim = Math.Max(width, height);
+        if (maxDim < 220) return false;
+
+        var cropScale = Math.Clamp(scaleStart < 2 ? 2 : scaleStart, 2, 6);
+        while (maxDim / cropScale > 900 && cropScale < 6) {
+            cropScale++;
+        }
+
+        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(140) : null;
+        var pool = RentGrayPool();
+        var candidates = RentCandidateList();
+        try {
+            if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, cropScale, settings.MinContrast, shouldStop, pool, out var baseImage)) {
+                return false;
+            }
+
+            var aggressive = options?.AggressiveSampling == true || options?.StylizedSampling == true;
+            var requireDiagonal = !aggressive;
+            QrFinderPatternDetector.FindCandidates(baseImage, invert: false, candidates, aggressive, shouldStop, rowStepOverride: 0, maxCandidates: 40, allowFullScan: true, requireDiagonalCheck: requireDiagonal);
+            if (candidates.Count < 3) {
+                QrFinderPatternDetector.FindCandidates(baseImage, invert: true, candidates, aggressive, shouldStop, rowStepOverride: 0, maxCandidates: 40, allowFullScan: true, requireDiagonalCheck: requireDiagonal);
+            }
+            if (candidates.Count < 3) return false;
+
+            var minX = double.PositiveInfinity;
+            var minY = double.PositiveInfinity;
+            var maxX = double.NegativeInfinity;
+            var maxY = double.NegativeInfinity;
+            var maxModule = 0.0;
+
+            for (var i = 0; i < candidates.Count; i++) {
+                var c = candidates[i];
+                if (c.X < minX) minX = c.X;
+                if (c.Y < minY) minY = c.Y;
+                if (c.X > maxX) maxX = c.X;
+                if (c.Y > maxY) maxY = c.Y;
+                if (c.ModuleSize > maxModule) maxModule = c.ModuleSize;
+            }
+
+            if (double.IsInfinity(minX) || double.IsInfinity(minY)) return false;
+
+            var pad = maxModule > 0 ? maxModule * 6.0 : 12.0;
+            static int Clamp(int value, int min, int max) => value < min ? min : value > max ? max : value;
+
+            var bminX = Clamp(QrMath.RoundToInt(minX - pad), 0, baseImage.Width - 1);
+            var bminY = Clamp(QrMath.RoundToInt(minY - pad), 0, baseImage.Height - 1);
+            var bmaxX = Clamp(QrMath.RoundToInt(maxX + pad), 0, baseImage.Width - 1);
+            var bmaxY = Clamp(QrMath.RoundToInt(maxY + pad), 0, baseImage.Height - 1);
+
+            if (bmaxX <= bminX || bmaxY <= bminY) return false;
+
+            var left = bminX * cropScale;
+            var top = bminY * cropScale;
+            var right = Math.Min(width, (bmaxX + 1) * cropScale);
+            var bottom = Math.Min(height, (bmaxY + 1) * cropScale);
+
+            var cropW = right - left;
+            var cropH = bottom - top;
+            if (cropW < 64 || cropH < 64) return false;
+            if (cropW >= (int)(width * 0.95) && cropH >= (int)(height * 0.95)) return false;
+
+            var startIndex = (long)top * stride + left * 4L;
+            var requiredLen = (long)(cropH - 1) * stride + cropW * 4L;
+            if (startIndex >= 0 && requiredLen > 0 && startIndex + requiredLen <= pixels.Length) {
+                var cropSpan = pixels.Slice((int)startIndex, (int)requiredLen);
+                var cropScaleStart = GetScaleStart(options, cropW, cropH);
+                if (TryDecodeAtScale(cropSpan, cropW, cropH, stride, fmt, cropScaleStart, prepassSettings, budget, accept, out result, out diagnostics)) {
+                    return true;
+                }
+            }
+
+            var needsPad = bminX == 0 || bminY == 0 || bmaxX == baseImage.Width - 1 || bmaxY == baseImage.Height - 1;
+            if (!needsPad) return false;
+
+            var cropStride = cropW * 4;
+            var cropBytes = cropStride * cropH;
+            var cropBuffer = ArrayPool<byte>.Shared.Rent(cropBytes);
+            try {
+                for (var y = 0; y < cropH; y++) {
+                    var srcOffset = (top + y) * stride + left * 4;
+                    var dstOffset = y * cropStride;
+                    pixels.Slice(srcOffset, cropStride).CopyTo(cropBuffer.AsSpan(dstOffset, cropStride));
+                }
+
+                var cropSpan = cropBuffer.AsSpan(0, cropBytes);
+                var padPx = maxModule > 0 ? (int)Math.Round(maxModule * cropScale * 2.0) : 12;
+                if (padPx < 4) padPx = 4;
+
+                if (!budget.IsNearDeadline(160)) {
+                    var paddedW = cropW + padPx * 2;
+                    var paddedH = cropH + padPx * 2;
+                    var paddedStride = paddedW * 4;
+                    var paddedBytes = paddedStride * paddedH;
+                    var paddedBuffer = ArrayPool<byte>.Shared.Rent(paddedBytes);
+                    try {
+                        var paddedSpan = paddedBuffer.AsSpan(0, paddedBytes);
+                        paddedSpan.Fill(255);
+                        for (var y = 0; y < cropH; y++) {
+                            var srcOffset = y * cropStride;
+                            var dstOffset = (y + padPx) * paddedStride + padPx * 4;
+                            cropSpan.Slice(srcOffset, cropStride).CopyTo(paddedSpan.Slice(dstOffset, cropStride));
+                        }
+
+                        var paddedScaleStart = GetScaleStart(options, paddedW, paddedH);
+                        if (TryDecodeAtScale(paddedSpan, paddedW, paddedH, paddedStride, fmt, paddedScaleStart, prepassSettings, budget, accept, out result, out diagnostics)) {
+                            return true;
+                        }
+                    } finally {
+                        ArrayPool<byte>.Shared.Return(paddedBuffer);
+                    }
+                }
+            } finally {
+                ArrayPool<byte>.Shared.Return(cropBuffer);
+            }
+        } finally {
+            ReturnCandidateList(candidates);
+            ReturnGrayPool(pool);
+        }
+
+        if (budget.IsExpired) return false;
+        return false;
     }
 
     private static bool TryDecodeAtScale(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, int scale, QrProfileSettings settings, DecodeBudget budget, Func<QrDecoded, bool>? accept, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
@@ -49,7 +223,7 @@ internal static partial class QrPixelDecoder {
         }
 
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
-        var pool = new QrGrayImagePool();
+        var pool = RentGrayPool();
         var candidates = RentCandidateList();
         try {
             if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale, settings.MinContrast, shouldStop, pool, out var baseImage)) {
@@ -152,7 +326,7 @@ internal static partial class QrPixelDecoder {
             return false;
         } finally {
             ReturnCandidateList(candidates);
-            pool.ReturnAll();
+            ReturnGrayPool(pool);
         }
     }
 
@@ -199,6 +373,12 @@ internal static partial class QrPixelDecoder {
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, mid + 32);
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Threshold - 32);
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Threshold + 32);
+            }
+            if (settings.StylizedSampling) {
+                AddThresholdCandidate(ref thresholds, ref thresholdCount, mid - 48);
+                AddThresholdCandidate(ref thresholds, ref thresholdCount, mid + 48);
+                AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Min + 4);
+                AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Max - 4);
             }
             if (thresholdCount < thresholds.Length) {
                 AddPercentileThresholds(baseImage, ref thresholds, ref thresholdCount);
@@ -357,6 +537,36 @@ internal static partial class QrPixelDecoder {
             }
         }
 
+        if (settings.AllowAdaptiveThreshold && settings.StylizedSampling && !budget.IsNearDeadline(180)) {
+            var adaptiveWide = baseImage.WithAdaptiveThreshold(windowSize: 35, offset: 2, pool);
+            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptiveWide, invert: false, candidates, accept, settings.AggressiveSampling, settings.StylizedSampling, budget, out result, out var diagAW)) {
+                diagnostics = diagAW;
+                return true;
+            }
+            best = Better(best, diagAW);
+
+            if (TryDecodeFromGray(scale, baseImage.Threshold, adaptiveWide, invert: true, candidates, accept, settings.AggressiveSampling, settings.StylizedSampling, budget, out result, out var diagAWI)) {
+                diagnostics = diagAWI;
+                return true;
+            }
+            best = Better(best, diagAWI);
+
+            if (!budget.IsNearDeadline(180)) {
+                var adaptiveWide2 = baseImage.WithAdaptiveThreshold(windowSize: 41, offset: 0, pool);
+                if (TryDecodeFromGray(scale, baseImage.Threshold, adaptiveWide2, invert: false, candidates, accept, settings.AggressiveSampling, settings.StylizedSampling, budget, out result, out var diagAW2)) {
+                    diagnostics = diagAW2;
+                    return true;
+                }
+                best = Better(best, diagAW2);
+
+                if (TryDecodeFromGray(scale, baseImage.Threshold, adaptiveWide2, invert: true, candidates, accept, settings.AggressiveSampling, settings.StylizedSampling, budget, out result, out var diagAW2I)) {
+                    diagnostics = diagAW2I;
+                    return true;
+                }
+                best = Better(best, diagAW2I);
+            }
+        }
+
         if (settings.AllowBlur) {
             if (budget.IsNearDeadline(150)) {
                 diagnostics = best;
@@ -460,6 +670,36 @@ internal static partial class QrPixelDecoder {
                         return true;
                     }
                     best = Better(best, diagB13);
+                }
+
+                if (settings.StylizedSampling && !budget.IsNearDeadline(280)) {
+                    var blurred5 = baseImage.WithBoxBlur(radius: 5, pool);
+                    if (TryDecodeFromGray(scale, blurred5.Threshold, blurred5, invert: false, candidates, accept, settings.AggressiveSampling, settings.StylizedSampling, budget, out result, out var diagB14)) {
+                        diagnostics = diagB14;
+                        return true;
+                    }
+                    best = Better(best, diagB14);
+
+                    if (TryDecodeFromGray(scale, blurred5.Threshold, blurred5, invert: true, candidates, accept, settings.AggressiveSampling, settings.StylizedSampling, budget, out result, out var diagB15)) {
+                        diagnostics = diagB15;
+                        return true;
+                    }
+                    best = Better(best, diagB15);
+
+                    if (!budget.IsNearDeadline(300)) {
+                        var blurred6 = baseImage.WithBoxBlur(radius: 6, pool);
+                        if (TryDecodeFromGray(scale, blurred6.Threshold, blurred6, invert: false, candidates, accept, settings.AggressiveSampling, settings.StylizedSampling, budget, out result, out var diagB16)) {
+                            diagnostics = diagB16;
+                            return true;
+                        }
+                        best = Better(best, diagB16);
+
+                        if (TryDecodeFromGray(scale, blurred6.Threshold, blurred6, invert: true, candidates, accept, settings.AggressiveSampling, settings.StylizedSampling, budget, out result, out var diagB17)) {
+                            diagnostics = diagB17;
+                            return true;
+                        }
+                        best = Better(best, diagB17);
+                    }
                 }
             }
         }
@@ -646,6 +886,26 @@ internal static partial class QrPixelDecoder {
                     }
                     best = Better(best, diagClose3);
                 }
+
+                if (settings.StylizedSampling &&
+                    Math.Min(baseImage.Width, baseImage.Height) >= 700 &&
+                    !budget.IsNearDeadline(200)) {
+                    var closed4 = baseImage.WithBinaryClose(4, pool);
+                    if (TryDecodeWithImage(scale, closed4, settings, candidates, budget, accept, pool, out result, out var diagClose4)) {
+                        diagnostics = diagClose4;
+                        return true;
+                    }
+                    best = Better(best, diagClose4);
+
+                    if (!budget.IsNearDeadline(200)) {
+                        var closed5 = baseImage.WithBinaryClose(5, pool);
+                        if (TryDecodeWithImage(scale, closed5, settings, candidates, budget, accept, pool, out result, out var diagClose5)) {
+                            diagnostics = diagClose5;
+                            return true;
+                        }
+                        best = Better(best, diagClose5);
+                    }
+                }
             }
 
             if (!budget.IsNearDeadline(200)) {
@@ -672,12 +932,37 @@ internal static partial class QrPixelDecoder {
                 diagnostics = best;
                 return false;
             }
-            var normalized = baseImage.WithLocalNormalize(GetNormalizeWindow(baseImage), pool);
+            var baseWindow = GetNormalizeWindow(baseImage);
+            var normalized = baseImage.WithLocalNormalize(baseWindow, pool);
             if (TryDecodeWithImage(scale, normalized, settings, candidates, budget, accept, pool, out result, out var diagNorm)) {
                 diagnostics = diagNorm;
                 return true;
             }
             best = Better(best, diagNorm);
+
+            if (settings.StylizedSampling && !budget.IsNearDeadline(200)) {
+                var wideWindow = Math.Min(63, baseWindow + 12);
+                if ((wideWindow & 1) == 0) wideWindow++;
+                if (wideWindow != baseWindow) {
+                    var normalizedWide = baseImage.WithLocalNormalize(wideWindow, pool);
+                    if (TryDecodeWithImage(scale, normalizedWide, settings, candidates, budget, accept, pool, out result, out var diagNormWide)) {
+                        diagnostics = diagNormWide;
+                        return true;
+                    }
+                    best = Better(best, diagNormWide);
+                }
+
+                var narrowWindow = Math.Max(11, baseWindow / 2);
+                if ((narrowWindow & 1) == 0) narrowWindow++;
+                if (narrowWindow != baseWindow && !budget.IsNearDeadline(200)) {
+                    var normalizedNarrow = baseImage.WithLocalNormalize(narrowWindow, pool);
+                    if (TryDecodeWithImage(scale, normalizedNarrow, settings, candidates, budget, accept, pool, out result, out var diagNormNarrow)) {
+                        diagnostics = diagNormNarrow;
+                        return true;
+                    }
+                    best = Better(best, diagNormNarrow);
+                }
+            }
         }
         if (settings.AllowContrastStretch) {
             if (budget.IsNearDeadline(150)) {
@@ -685,8 +970,9 @@ internal static partial class QrPixelDecoder {
                 return false;
             }
             var range = baseImage.Max - baseImage.Min;
-            if (range < 48) {
-                var stretched = baseImage.WithContrastStretch(48, pool);
+            var stretchRange = settings.StylizedSampling ? 64 : 48;
+            if (range < stretchRange || (settings.StylizedSampling && range < 96)) {
+                var stretched = baseImage.WithContrastStretch(stretchRange, pool);
                 if (!ReferenceEquals(stretched.Gray, baseImage.Gray)) {
                     if (TryDecodeWithImage(scale, stretched, settings, candidates, budget, accept, pool, out result, out var diagStretch)) {
                         diagnostics = diagStretch;
@@ -948,6 +1234,12 @@ internal static partial class QrPixelDecoder {
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, mid - 32);
                 AddThresholdCandidate(ref thresholds, ref thresholdCount, mid + 32);
             }
+            if (settings.StylizedSampling) {
+                AddThresholdCandidate(ref thresholds, ref thresholdCount, mid - 48);
+                AddThresholdCandidate(ref thresholds, ref thresholdCount, mid + 48);
+                AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Min + 4);
+                AddThresholdCandidate(ref thresholds, ref thresholdCount, baseImage.Max - 4);
+            }
             if (thresholdCount < thresholds.Length) {
                 AddPercentileThresholds(baseImage, ref thresholds, ref thresholdCount);
             }
@@ -970,6 +1262,18 @@ internal static partial class QrPixelDecoder {
             CollectFromImage(image, invert: true, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
         }
 
+        if (settings.StylizedSampling && settings.AggressiveSampling && list.Count == 0 && !budget.IsNearDeadline(150)) {
+            var baseBinary = baseImage.WithThreshold(baseImage.Threshold);
+            var closed = baseBinary.WithBinaryClose(1, pool);
+            CollectFromImage(closed, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            CollectFromImage(closed, invert: true, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            if (list.Count == 0 && !budget.IsNearDeadline(150)) {
+                var opened = baseBinary.WithBinaryOpen(1, pool);
+                CollectFromImage(opened, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+                CollectFromImage(opened, invert: true, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            }
+        }
+
         if (settings.AllowAdaptiveThreshold) {
             if (budget.IsNearDeadline(150)) return;
             var minDim = baseImage.Width < baseImage.Height ? baseImage.Width : baseImage.Height;
@@ -989,6 +1293,12 @@ internal static partial class QrPixelDecoder {
             var adaptive = baseImage.WithAdaptiveThreshold(windowSize: 15, offset: 8, pool);
             CollectFromImage(adaptive, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
             CollectFromImage(adaptive, invert: true, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+
+            if (settings.StylizedSampling && !budget.IsNearDeadline(150)) {
+                var adaptiveLarge = baseImage.WithAdaptiveThreshold(windowSize: 25, offset: 4, pool);
+                CollectFromImage(adaptiveLarge, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+                CollectFromImage(adaptiveLarge, invert: true, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            }
 
             if (!budget.IsExpired && settings.AllowBlur && settings.AggressiveSampling) {
                 if (budget.IsNearDeadline(150)) return;

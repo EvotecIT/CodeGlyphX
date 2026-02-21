@@ -2,6 +2,9 @@
 using System;
 using System.Buffers;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics;
+using System.Runtime.Intrinsics.X86;
+using System.Runtime.InteropServices;
 using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Qr;
@@ -348,6 +351,52 @@ internal readonly struct QrGrayImage {
         }
     }
 
+    public QrGrayImage Crop(int minX, int minY, int maxX, int maxY) => Crop(minX, minY, maxX, maxY, pool: null);
+
+    public QrGrayImage Crop(int minX, int minY, int maxX, int maxY, QrGrayImagePool? pool) {
+        if (minX < 0) minX = 0;
+        if (minY < 0) minY = 0;
+        if (maxX >= Width) maxX = Width - 1;
+        if (maxY >= Height) maxY = Height - 1;
+        if (maxX < minX || maxY < minY) return this;
+
+        var w = maxX - minX + 1;
+        var h = maxY - minY + 1;
+        if (w == Width && h == Height) return this;
+
+        var total = w * h;
+        var cropped = RentBuffer(total, pool);
+        byte[]? croppedThresholds = null;
+        if (ThresholdMap is not null) {
+            croppedThresholds = RentBuffer(total, pool);
+        }
+
+        Span<int> histogram = stackalloc int[256];
+        byte min = 255;
+        byte max = 0;
+
+        var srcWidth = Width;
+        for (var y = 0; y < h; y++) {
+            var srcRow = (y + minY) * srcWidth + minX;
+            var dstRow = y * w;
+            Array.Copy(Gray, srcRow, cropped, dstRow, w);
+
+            if (croppedThresholds is not null) {
+                Array.Copy(ThresholdMap!, srcRow, croppedThresholds, dstRow, w);
+            }
+
+            for (var x = 0; x < w; x++) {
+                var v = cropped[dstRow + x];
+                histogram[v]++;
+                if (v < min) min = v;
+                if (v > max) max = v;
+            }
+        }
+
+        var threshold = ComputeOtsuThreshold(histogram, total);
+        return new QrGrayImage(w, h, cropped, min, max, threshold, croppedThresholds);
+    }
+
     public QrGrayImage Rotate90() => Rotate90(pool: null);
 
     public QrGrayImage Rotate90(QrGrayImagePool? pool) {
@@ -381,19 +430,12 @@ internal readonly struct QrGrayImage {
         var temp = RentBuffer(total, pool);
         var gray = RentBuffer(total, pool);
 
-        var thresholds = ThresholdMap;
-        var threshold = Threshold;
-        for (var i = 0; i < total; i++) {
-            var t = thresholds is null ? threshold : thresholds[i];
-            mask[i] = Gray[i] <= t ? (byte)1 : (byte)0;
-        }
+        FillMask(Gray, ThresholdMap, Threshold, mask, total);
 
         Dilate(mask, temp, w, h, radius);
         Erode(temp, mask, w, h, radius);
 
-        for (var i = 0; i < total; i++) {
-            gray[i] = mask[i] == 1 ? (byte)0 : (byte)255;
-        }
+        MaskToGray(mask, gray, total);
 
         return new QrGrayImage(w, h, gray, min: 0, max: 255, threshold: 127, thresholdMap: null);
     }
@@ -410,19 +452,12 @@ internal readonly struct QrGrayImage {
         var temp = RentBuffer(total, pool);
         var gray = RentBuffer(total, pool);
 
-        var thresholds = ThresholdMap;
-        var threshold = Threshold;
-        for (var i = 0; i < total; i++) {
-            var t = thresholds is null ? threshold : thresholds[i];
-            mask[i] = Gray[i] <= t ? (byte)1 : (byte)0;
-        }
+        FillMask(Gray, ThresholdMap, Threshold, mask, total);
 
         Erode(mask, temp, w, h, radius);
         Dilate(temp, mask, w, h, radius);
 
-        for (var i = 0; i < total; i++) {
-            gray[i] = mask[i] == 1 ? (byte)0 : (byte)255;
-        }
+        MaskToGray(mask, gray, total);
 
         return new QrGrayImage(w, h, gray, min: 0, max: 255, threshold: 127, thresholdMap: null);
     }
@@ -440,12 +475,7 @@ internal readonly struct QrGrayImage {
         var eroded = RentBuffer(total, pool);
         var gray = RentBuffer(total, pool);
 
-        var thresholds = ThresholdMap;
-        var threshold = Threshold;
-        for (var i = 0; i < total; i++) {
-            var t = thresholds is null ? threshold : thresholds[i];
-            mask[i] = Gray[i] <= t ? (byte)1 : (byte)0;
-        }
+        FillMask(Gray, ThresholdMap, Threshold, mask, total);
 
         Dilate(mask, dilated, w, h, radius);
         Erode(mask, eroded, w, h, radius);
@@ -550,6 +580,7 @@ internal readonly struct QrGrayImage {
 
         if (scale == 1) {
             if (fmt == PixelFormat.Bgra32) {
+                var opaque = IsOpaque(pixels, width, height, stride);
                 for (var y = 0; y < outH; y++) {
                     if (shouldStop?.Invoke() == true) return false;
                     var p = y * stride;
@@ -558,14 +589,16 @@ internal readonly struct QrGrayImage {
                         var b = pixels[p + 0];
                         var g = pixels[p + 1];
                         var r = pixels[p + 2];
-                        var a = pixels[p + 3];
                         p += 4;
 
-                        if (a != 255) {
-                            var invA = 255 - a;
-                            r = (byte)((r * a + 255 * invA + 127) / 255);
-                            g = (byte)((g * a + 255 * invA + 127) / 255);
-                            b = (byte)((b * a + 255 * invA + 127) / 255);
+                        if (!opaque) {
+                            var a = pixels[p - 1];
+                            if (a != 255) {
+                                var invA = 255 - a;
+                                r = (byte)((r * a + 255 * invA + 127) / 255);
+                                g = (byte)((g * a + 255 * invA + 127) / 255);
+                                b = (byte)((b * a + 255 * invA + 127) / 255);
+                            }
                         }
 
                         var lum = (299 * r + 587 * g + 114 * b + 500) / 1000;
@@ -579,6 +612,7 @@ internal readonly struct QrGrayImage {
                     }
                 }
             } else {
+                var opaque = IsOpaque(pixels, width, height, stride);
                 for (var y = 0; y < outH; y++) {
                     if (shouldStop?.Invoke() == true) return false;
                     var p = y * stride;
@@ -587,14 +621,16 @@ internal readonly struct QrGrayImage {
                         var r = pixels[p + 0];
                         var g = pixels[p + 1];
                         var b = pixels[p + 2];
-                        var a = pixels[p + 3];
                         p += 4;
 
-                        if (a != 255) {
-                            var invA = 255 - a;
-                            r = (byte)((r * a + 255 * invA + 127) / 255);
-                            g = (byte)((g * a + 255 * invA + 127) / 255);
-                            b = (byte)((b * a + 255 * invA + 127) / 255);
+                        if (!opaque) {
+                            var a = pixels[p - 1];
+                            if (a != 255) {
+                                var invA = 255 - a;
+                                r = (byte)((r * a + 255 * invA + 127) / 255);
+                                g = (byte)((g * a + 255 * invA + 127) / 255);
+                                b = (byte)((b * a + 255 * invA + 127) / 255);
+                            }
                         }
 
                         var lum = (299 * r + 587 * g + 114 * b + 500) / 1000;
@@ -1423,6 +1459,82 @@ internal readonly struct QrGrayImage {
 
     private static byte[] RentBuffer(int size, QrGrayImagePool? pool) {
         return pool is null ? new byte[size] : pool.Rent(size);
+    }
+
+    private static bool IsOpaque(ReadOnlySpan<byte> pixels, int width, int height, int stride) {
+        for (var y = 0; y < height; y++) {
+            var idx = y * stride + 3;
+            for (var x = 0; x < width; x++) {
+                if (pixels[idx] != 255) return false;
+                idx += 4;
+            }
+        }
+        return true;
+    }
+
+    private static void FillMask(byte[] gray, byte[]? thresholds, byte threshold, byte[] mask, int total) {
+        if (thresholds is null && Sse2.IsSupported && total >= 16) {
+            var xor = Vector128.Create((byte)0x80);
+            var thresh = Vector128.Create(threshold);
+            var threshSigned = Sse2.Xor(thresh, xor);
+            var ones = Vector128.Create((byte)1);
+            var allOnes = Vector128.Create((byte)0xFF);
+            ref var gRef = ref MemoryMarshal.GetReference(gray.AsSpan());
+            ref var mRef = ref MemoryMarshal.GetReference(mask.AsSpan());
+            var last = total - 16;
+            var i = 0;
+
+            for (; i <= last; i += 16) {
+                var src = Unsafe.ReadUnaligned<Vector128<byte>>(ref Unsafe.Add(ref gRef, i));
+                var srcSigned = Sse2.Xor(src, xor);
+                var gt = Sse2.CompareGreaterThan(srcSigned.AsSByte(), threshSigned.AsSByte()).AsByte();
+                var le = Sse2.AndNot(gt, allOnes);
+                var outMask = Sse2.And(le, ones);
+                Unsafe.WriteUnaligned(ref Unsafe.Add(ref mRef, i), outMask);
+            }
+
+            for (; i < total; i++) {
+                mask[i] = (byte)(gray[i] <= threshold ? 1 : 0);
+            }
+
+            return;
+        }
+
+        if (thresholds is null) {
+            for (var i = 0; i < total; i++) {
+                mask[i] = (byte)(gray[i] <= threshold ? 1 : 0);
+            }
+            return;
+        }
+
+        for (var i = 0; i < total; i++) {
+            mask[i] = (byte)(gray[i] <= thresholds[i] ? 1 : 0);
+        }
+    }
+
+    private static void MaskToGray(byte[] mask, byte[] gray, int total) {
+        if (Sse2.IsSupported && total >= 16) {
+            var zero = Vector128<byte>.Zero;
+            ref var mRef = ref MemoryMarshal.GetReference(mask.AsSpan());
+            ref var gRef = ref MemoryMarshal.GetReference(gray.AsSpan());
+            var last = total - 16;
+            var i = 0;
+
+            for (; i <= last; i += 16) {
+                var src = Unsafe.ReadUnaligned<Vector128<byte>>(ref Unsafe.Add(ref mRef, i));
+                var outGray = Sse2.Subtract(zero, src);
+                Unsafe.WriteUnaligned(ref Unsafe.Add(ref gRef, i), outGray);
+            }
+
+            for (; i < total; i++) {
+                gray[i] = (byte)(0 - mask[i]);
+            }
+            return;
+        }
+
+        for (var i = 0; i < total; i++) {
+            gray[i] = (byte)(0 - mask[i]);
+        }
     }
 
     private static void Dilate(ReadOnlySpan<byte> src, Span<byte> dst, int width, int height, int radius) {

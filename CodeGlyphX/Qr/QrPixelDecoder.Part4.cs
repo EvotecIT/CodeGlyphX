@@ -13,6 +13,21 @@ using CodeGlyphX;
 namespace CodeGlyphX.Qr;
 
 internal static partial class QrPixelDecoder {
+    [ThreadStatic]
+    private static BitMatrix?[]? t_scratchMatrices;
+
+    private static BitMatrix RentScratchMatrix(int dimension) {
+        var cache = t_scratchMatrices ??= new BitMatrix?[178];
+        var matrix = cache[dimension];
+        if (matrix is null) {
+            matrix = new BitMatrix(dimension, dimension);
+            cache[dimension] = matrix;
+            return matrix;
+        }
+
+        matrix.Clear();
+        return matrix;
+    }
     private static PooledList<Component> FindComponents(
         QrGrayImage image,
         bool invert,
@@ -430,12 +445,108 @@ internal static partial class QrPixelDecoder {
         var n = Math.Min(candidates.Count, tightBudget ? 5 : nLimit);
         var triedTriples = 0;
         var bboxAttempts = 0;
+        var roiAttempts = 0;
         var maxTriples = maxTriplesOverride > 0 ? maxTriplesOverride : (aggressive ? 240 : 40);
         if (budget.Enabled && maxTriplesOverride <= 0) {
-            maxTriples = Math.Min(maxTriples, aggressive ? 160 : 20);
+            var cap = aggressive ? (stylized ? 240 : 160) : (stylized ? 32 : 20);
+            maxTriples = Math.Min(maxTriples, cap);
         }
         if (tightBudget && candidates.Count > 12) {
             maxTriples = Math.Min(maxTriples, aggressive ? 32 : 12);
+        }
+
+        var useNeighborGate = false;
+        var minLink2 = 0.0;
+        var maxLink2 = 0.0;
+        var linkScale2 = 0.0;
+        Span<double> nnDist2 = stackalloc double[0];
+        var candSpan = CollectionsMarshal.AsSpan(candidates);
+        if (candSpan.Length > n) candSpan = candSpan.Slice(0, n);
+        if (stylized && n >= 9 && !budget.IsNearDeadline(200)) {
+            nnDist2 = stackalloc double[n];
+            useNeighborGate = TryBuildNeighborGate(candSpan, stylized, nnDist2, out minLink2, out maxLink2, out linkScale2);
+        }
+
+        var moduleRatioLimitBase = moduleRatioLimit;
+        var sideRatioLimitBase = sideRatioLimit;
+        if (stylized && !budget.IsNearDeadline(240)) {
+            if (moduleRatioLimitBase > 0) moduleRatioLimitBase = Math.Max(moduleRatioLimitBase, 2.6);
+            if (sideRatioLimitBase > 0) sideRatioLimitBase = Math.Max(sideRatioLimitBase, 2.8);
+        }
+
+        Span<ScoredTriple> scoredTriples = stackalloc ScoredTriple[8];
+        var scoredCount = 0;
+        var useTimingScore = stylized && n >= 6 && !budget.IsNearDeadline(280);
+        if (useTimingScore) {
+            var scoreScanLimit = Math.Min(maxTriples * 2, 140);
+            var scanned = 0;
+            var moduleRatioLimitScore = stylized && !budget.IsNearDeadline(240) ? 2.6 : 1.75;
+            var ratioLimitScore = stylized && !budget.IsNearDeadline(240) ? 2.8 : 1.8;
+            for (var i = 0; i < n - 2 && scanned < scoreScanLimit; i++) {
+                for (var j = i + 1; j < n - 1 && scanned < scoreScanLimit; j++) {
+                    for (var k = j + 1; k < n && scanned < scoreScanLimit; k++) {
+                        if (budget.IsExpired) break;
+                        scanned++;
+
+                        var a = candSpan[i];
+                        var b = candSpan[j];
+                        var c = candSpan[k];
+                        if (useNeighborGate && !PassesNeighborGate(candSpan, nnDist2, i, j, k, minLink2, maxLink2, linkScale2)) {
+                            continue;
+                        }
+
+                        var msMin = Math.Min(a.ModuleSize, Math.Min(b.ModuleSize, c.ModuleSize));
+                        var msMax = Math.Max(a.ModuleSize, Math.Max(b.ModuleSize, c.ModuleSize));
+                        if (msMin <= 0) continue;
+                        if (moduleRatioLimitScore > 0 && msMax > msMin * moduleRatioLimitScore) continue;
+
+                        if (!TryOrderAsTlTrBl(a, b, c, ratioLimitScore, out var tl, out var tr, out var bl)) continue;
+                        if (!TryEstimateDimensionForTriple(tl, tr, bl, msMin, out var dimension)) continue;
+                        if (dimension < 25) continue;
+
+                        var score = ComputeTimingScore(image, invert, tl, tr, bl, dimension, msMin);
+                        if (score <= 0) continue;
+                        InsertScoredTriple(ref scoredTriples, ref scoredCount, i, j, k, score);
+                    }
+                }
+            }
+        }
+
+        if (scoredCount > 0) {
+            for (var s = 0; s < scoredCount; s++) {
+                if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
+                triedTriples++;
+                if (triedTriples > maxTriples) return false;
+                var scored = scoredTriples[s];
+                var a = candidates[scored.I];
+                var b = candidates[scored.J];
+                var c = candidates[scored.K];
+                var ratioLimit = stylized && !budget.IsNearDeadline(240) ? 2.8 : 1.8;
+                if (!TryOrderAsTlTrBl(a, b, c, ratioLimit, out var tl, out var tr, out var bl)) continue;
+                if (TrySampleAndDecode(scale, threshold, image, invert, tl, tr, bl, candidates.Count, triedTriples, accept, aggressive, stylized, budget, out result, out var diag)) {
+                    diagnostics = diag;
+                    return true;
+                }
+                diagnostics = Better(diagnostics, diag);
+
+                if (bboxAttempts < 4 && TryGetCandidateBounds(tl, tr, bl, image.Width, image.Height, out var bminX, out var bminY, out var bmaxX, out var bmaxY)) {
+                    bboxAttempts++;
+                    if (TryDecodeByBoundingBox(scale, threshold, image, invert, accept, aggressive, stylized, budget, out result, out var diagB, candidates.Count, triedTriples, bminX, bminY, bmaxX, bmaxY)) {
+                        diagnostics = diagB;
+                        return true;
+                    }
+                    diagnostics = Better(diagnostics, diagB);
+
+                    if (stylized && aggressive && roiAttempts < 2 && !budget.IsNearDeadline(200)) {
+                        roiAttempts++;
+                        if (TryDecodeFromCroppedRegion(scale, threshold, image, accept, aggressive, stylized, budget, bminX, bminY, bmaxX, bmaxY, out result, out var diagR)) {
+                            diagnostics = diagR;
+                            return true;
+                        }
+                        diagnostics = Better(diagnostics, diagR);
+                    }
+                }
+            }
         }
 
         for (var i = 0; i < n - 2; i++) {
@@ -444,16 +555,26 @@ internal static partial class QrPixelDecoder {
                     if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
                     triedTriples++;
                     if (triedTriples > maxTriples) return false;
+                    if (useTimingScore && IsScoredTriple(scoredTriples, scoredCount, i, j, k)) {
+                        continue;
+                    }
                     var a = candidates[i];
                     var b = candidates[j];
                     var c = candidates[k];
+                    if (useNeighborGate && !PassesNeighborGate(candSpan, nnDist2, i, j, k, minLink2, maxLink2, linkScale2)) {
+                        continue;
+                    }
 
                     var msMin = Math.Min(a.ModuleSize, Math.Min(b.ModuleSize, c.ModuleSize));
                     var msMax = Math.Max(a.ModuleSize, Math.Max(b.ModuleSize, c.ModuleSize));
                     if (msMin <= 0) continue;
-                    if (msMax > msMin * moduleRatioLimit) continue;
+                    if (moduleRatioLimitBase > 0 && msMax > msMin * moduleRatioLimitBase) continue;
 
-                    if (!TryOrderAsTlTrBl(a, b, c, sideRatioLimit, out var tl, out var tr, out var bl)) continue;
+                    var tl = default(QrFinderPatternDetector.FinderPattern);
+                    var tr = default(QrFinderPatternDetector.FinderPattern);
+                    var bl = default(QrFinderPatternDetector.FinderPattern);
+                    var ratioLimit = sideRatioLimitBase > 0 ? sideRatioLimitBase : 1.8;
+                    if (!TryOrderAsTlTrBl(a, b, c, ratioLimit, out tl, out tr, out bl)) continue;
                     if (TrySampleAndDecode(scale, threshold, image, invert, tl, tr, bl, candidates.Count, triedTriples, accept, aggressive, stylized, budget, out result, out var diag)) {
                         diagnostics = diag;
                         return true;
@@ -469,6 +590,15 @@ internal static partial class QrPixelDecoder {
                             return true;
                         }
                         diagnostics = Better(diagnostics, diagB);
+
+                        if (stylized && aggressive && roiAttempts < 2 && !budget.IsNearDeadline(200)) {
+                            roiAttempts++;
+                            if (TryDecodeFromCroppedRegion(scale, threshold, image, accept, aggressive, stylized, budget, bminX, bminY, bmaxX, bmaxY, out result, out var diagR)) {
+                                diagnostics = diagR;
+                                return true;
+                            }
+                            diagnostics = Better(diagnostics, diagR);
+                        }
                     }
                 }
             }
@@ -502,6 +632,76 @@ internal static partial class QrPixelDecoder {
         return false;
     }
 
+    private static bool TryDecodeFromCroppedRegion(
+        int scale,
+        byte threshold,
+        QrGrayImage image,
+        Func<QrDecoded, bool>? accept,
+        bool aggressive,
+        bool stylized,
+        DecodeBudget budget,
+        int minX,
+        int minY,
+        int maxX,
+        int maxY,
+        out QrDecoded result,
+        out QrPixelDecodeDiagnostics diagnostics) {
+        result = null!;
+        diagnostics = default;
+
+        if (budget.IsExpired || budget.IsNearDeadline(160)) return false;
+
+        var pad = Math.Max(4, Math.Min(image.Width, image.Height) / 120);
+        minX -= pad;
+        minY -= pad;
+        maxX += pad;
+        maxY += pad;
+
+        minX = Math.Max(0, minX);
+        minY = Math.Max(0, minY);
+        maxX = Math.Min(image.Width - 1, maxX);
+        maxY = Math.Min(image.Height - 1, maxY);
+
+        var cropW = maxX - minX + 1;
+        var cropH = maxY - minY + 1;
+        if (cropW < 96 || cropH < 96) return false;
+        if (cropW >= image.Width && cropH >= image.Height) return false;
+
+        var pool = RentGrayPool();
+        var candidates = RentCandidateList();
+        try {
+            var cropped = image.Crop(minX, minY, maxX, maxY, pool);
+            if (cropped.Width <= 0 || cropped.Height <= 0) return false;
+
+            Func<bool>? shouldStop = budget.Enabled || budget.CanCancel ? () => budget.IsExpired : null;
+            var requireDiagonal = !aggressive;
+
+            QrFinderPatternDetector.FindCandidates(cropped, invert: false, candidates, aggressive, shouldStop, rowStepOverride: 0, maxCandidates: 40, allowFullScan: true, requireDiagonalCheck: requireDiagonal);
+            var diagF = default(QrPixelDecodeDiagnostics);
+            if (candidates.Count >= 3 &&
+                TryDecodeFromFinderCandidates(scale, threshold, cropped, invert: false, candidates, candidatesSorted: false, accept, aggressive, stylized, budget, out result, out diagF)) {
+                diagnostics = diagF;
+                return true;
+            }
+            if (candidates.Count > 0) diagnostics = Better(diagnostics, diagF);
+
+            candidates.Clear();
+            QrFinderPatternDetector.FindCandidates(cropped, invert: true, candidates, aggressive, shouldStop, rowStepOverride: 0, maxCandidates: 40, allowFullScan: true, requireDiagonalCheck: requireDiagonal);
+            var diagI = default(QrPixelDecodeDiagnostics);
+            if (candidates.Count >= 3 &&
+                TryDecodeFromFinderCandidates(scale, threshold, cropped, invert: true, candidates, candidatesSorted: false, accept, aggressive, stylized, budget, out result, out diagI)) {
+                diagnostics = diagI;
+                return true;
+            }
+            if (candidates.Count > 0) diagnostics = Better(diagnostics, diagI);
+        } finally {
+            ReturnCandidateList(candidates);
+            ReturnGrayPool(pool);
+        }
+
+        return false;
+    }
+
     private static bool TryDecodeFromComponentFindersCore(
         int scale,
         byte threshold,
@@ -530,6 +730,13 @@ internal static partial class QrPixelDecoder {
         Span<QrFinderPatternDetector.FinderPattern> top = stackalloc QrFinderPatternDetector.FinderPattern[20];
         var topCount = 0;
 
+        var ratioLimit = aggressive ? 1.7 : 1.45;
+        var minFillRatio = aggressive ? 0.04 : 0.08;
+        if (stylized) {
+            ratioLimit = Math.Min(2.1, ratioLimit + 0.35);
+            minFillRatio = Math.Max(0.02, minFillRatio - 0.02);
+        }
+
         for (var i = 0; i < comps.Count; i++) {
             if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
             var c = comps[i];
@@ -539,10 +746,10 @@ internal static partial class QrPixelDecoder {
             if (w > maxSize || h > maxSize) continue;
 
             var ratio = w > h ? (double)w / h : (double)h / w;
-            if (ratio > (aggressive ? 1.7 : 1.45)) continue;
+            if (ratio > ratioLimit) continue;
 
             var fillRatio = c.Area / (double)(w * h);
-            if (fillRatio < (aggressive ? 0.04 : 0.08)) continue;
+            if (fillRatio < minFillRatio) continue;
 
             var moduleSize = (w + h) * 0.5 / 7.0;
             if (moduleSize < 0.9) continue;
@@ -708,13 +915,19 @@ internal static partial class QrPixelDecoder {
                 }
             }
 
-            Span<Candidate> candidates = stackalloc Candidate[64];
+            Span<Candidate> candidates = stackalloc Candidate[96];
             var candidateCount = 0;
 
             var minOuterRatio = aggressive ? 0.25 : 0.35;
             var minCenterRatio = aggressive ? 0.25 : 0.35;
             var maxInnerRatio = aggressive ? 0.85 : 0.75;
             var minScore = aggressive ? 0.30 : 0.45;
+            if (stylized) {
+                minOuterRatio = Math.Max(0.08, minOuterRatio - 0.12);
+                minCenterRatio = Math.Max(0.08, minCenterRatio - 0.12);
+                maxInnerRatio = Math.Min(0.98, maxInnerRatio + 0.12);
+                minScore = Math.Max(0.10, minScore - 0.14);
+            }
 
             for (var ms = minMs; ms <= maxMs; ms += ms < 6 ? 1 : 2) {
                 if (budget.IsNearDeadline(180)) break;
@@ -722,7 +935,8 @@ internal static partial class QrPixelDecoder {
                 var halfInner = (int)Math.Round(ms * 2.5);
                 var halfCenter = (int)Math.Round(ms * 1.5);
                 if (halfCenter < 1) continue;
-                var step = Math.Max(2, (int)Math.Round(ms * 1.0));
+                var stepFactor = stylized ? 0.8 : 1.0;
+                var step = Math.Max(2, (int)Math.Round(ms * stepFactor));
 
                 var minX = halfOuter;
                 var maxX = w - 1 - halfOuter;
@@ -1144,7 +1358,20 @@ internal static partial class QrPixelDecoder {
         AddDimensionCandidate(ref candidates, ref candidatesCount, baseDim);
         var dimHc = NearestValidDimension(dimH);
         var dimVc = NearestValidDimension(dimV);
-        if (tightBudget) {
+        var lockTo41 = false;
+        if (stylized &&
+            baseDim == 41 &&
+            dimHc == 41 &&
+            dimVc == 41 &&
+            moduleSize >= 4.0 &&
+            !budget.IsNearDeadline(200)) {
+            lockTo41 = ShouldLockDimension41(image, invert, tl, tr, bl, dimension: 41, moduleSize, tightBudget);
+        }
+
+        if (lockTo41) {
+            candidatesCount = 0;
+            AddDimensionCandidate(ref candidates, ref candidatesCount, 41);
+        } else if (tightBudget) {
             if (Math.Abs(dimHc - baseDim) >= 4) {
                 AddDimensionCandidate(ref candidates, ref candidatesCount, dimHc);
             }
@@ -1187,13 +1414,67 @@ internal static partial class QrPixelDecoder {
         list[count++] = dimension;
     }
 
+    private static bool ShouldLockDimension41(
+        QrGrayImage image,
+        bool invert,
+        QrFinderPatternDetector.FinderPattern tl,
+        QrFinderPatternDetector.FinderPattern tr,
+        QrFinderPatternDetector.FinderPattern bl,
+        int dimension,
+        double moduleSize,
+        bool tightBudget) {
+        if (dimension != 41 || moduleSize <= 0) return false;
+
+        var modulesBetweenCenters = dimension - 7;
+        if (modulesBetweenCenters <= 0) return false;
+
+        var vxX = (tr.X - tl.X) / modulesBetweenCenters;
+        var vxY = (tr.Y - tl.Y) / modulesBetweenCenters;
+        var vyX = (bl.X - tl.X) / modulesBetweenCenters;
+        var vyY = (bl.Y - tl.Y) / modulesBetweenCenters;
+
+        double phaseX;
+        double phaseY;
+        if (tightBudget) {
+            QrPixelSampling.RefinePhase(image, invert, tl.X, tl.Y, vxX, vxY, vyX, vyY, dimension, out phaseX, out phaseY);
+        } else {
+            QrPixelSampling.RefineTransform(image, invert, tl.X, tl.Y, vxX, vxY, vyX, vyY, dimension, out vxX, out vxY, out vyX, out vyY, out phaseX, out phaseY);
+        }
+
+        var refinedModuleSize = (Math.Sqrt(vxX * vxX + vxY * vxY) + Math.Sqrt(vyX * vyX + vyY * vyY)) / 2.0;
+        if (refinedModuleSize <= 0) return false;
+
+        const double finderCenterToCorner = 3.5;
+        var cornerTlX = tl.X - (vxX + vyX) * finderCenterToCorner;
+        var cornerTlY = tl.Y - (vxY + vyY) * finderCenterToCorner;
+        var cornerTrX = cornerTlX + vxX * dimension;
+        var cornerTrY = cornerTlY + vxY * dimension;
+        var cornerBlX = cornerTlX + vyX * dimension;
+        var cornerBlY = cornerTlY + vyY * dimension;
+        var cornerBrX = cornerTlX + (vxX + vyX) * dimension;
+        var cornerBrY = cornerTlY + (vxY + vyY) * dimension;
+
+        var transform = QrPerspectiveTransform.QuadrilateralToQuadrilateral(
+            0, 0,
+            dimension, 0,
+            dimension, dimension,
+            0, dimension,
+            cornerTlX, cornerTlY,
+            cornerTrX, cornerTrY,
+            cornerBrX, cornerBrY,
+            cornerBlX, cornerBlY);
+
+        var score = ComputeTimingAlternationsForTransform(image, invert, transform, dimension, refinedModuleSize, phaseX, phaseY);
+        return score >= 0 && score < 10;
+    }
+
     private static bool TrySampleAndDecodeDimension(int scale, byte threshold, QrGrayImage image, bool invert, QrFinderPatternDetector.FinderPattern tl, QrFinderPatternDetector.FinderPattern tr, QrFinderPatternDetector.FinderPattern bl, int dimension, int candidateCount, int candidateTriplesTried, Func<QrDecoded, bool>? accept, bool aggressive, bool stylized, DecodeBudget budget, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
         result = null!;
         diagnostics = default;
 
         if (budget.IsExpired) return false;
 
-        var scratch = new global::CodeGlyphX.BitMatrix(dimension, dimension);
+        var scratch = RentScratchMatrix(dimension);
         var modulesBetweenCenters = dimension - 7;
         if (modulesBetweenCenters <= 0) return false;
 
@@ -1324,7 +1605,8 @@ internal static partial class QrPixelDecoder {
         if (aggressive &&
             moduleDiagR.Failure is global::CodeGlyphX.QrDecodeFailure.ReedSolomon or global::CodeGlyphX.QrDecodeFailure.Payload &&
             !budget.IsNearDeadline(200)) {
-            QrPixelSampling.RefineTransformWide(image, invert, tl.X, tl.Y, vxX, vxY, vyX, vyY, dimension, out var wvxX, out var wvxY, out var wvyX, out var wvyY, out var wPhaseX, out var wPhaseY);
+            var extended = stylized && dimension >= 25;
+            QrPixelSampling.RefineTransformWide(image, invert, tl.X, tl.Y, vxX, vxY, vyX, vyY, dimension, extended, out var wvxX, out var wvxY, out var wvyX, out var wvyY, out var wPhaseX, out var wPhaseY);
 
             var wModuleSize = (Math.Sqrt(wvxX * wvxX + wvxY * wvxY) + Math.Sqrt(wvyX * wvyX + wvyY * wvyY)) / 2.0;
             var wCornerTlX = tl.X - (wvxX + wvyX) * finderCenterToCorner;
@@ -1388,7 +1670,49 @@ internal static partial class QrPixelDecoder {
                 var predX = tl.X + vxX * dxA + vyX * dyA;
                 var predY = tl.Y + vxY * dxA + vyY * dyA;
 
-                if (QrAlignmentPatternFinder.TryFind(image, invert, predX, predY, vxX, vxY, vyX, vyY, moduleSize, out var ax, out var ay)) {
+                var foundAlign = QrAlignmentPatternFinder.TryFind(image, invert, predX, predY, vxX, vxY, vyX, vyY, moduleSize, out var ax, out var ay);
+                if (!foundAlign &&
+                    stylized &&
+                    dimension >= 25 &&
+                    moduleSize >= 3.0 &&
+                    candidateTriplesTried <= 6 &&
+                    !budget.IsNearDeadline(200)) {
+                    var minScore = dimension >= 41 ? 20 : 18;
+                    var radiusScale = dimension >= 65 ? 6.0 : 5.0;
+                    foundAlign = QrAlignmentPatternFinder.TryFind(
+                        image,
+                        invert,
+                        predX,
+                        predY,
+                        vxX,
+                        vxY,
+                        vyX,
+                        vyY,
+                        moduleSize,
+                        out ax,
+                        out ay,
+                        minScore: minScore,
+                        radiusScale: radiusScale);
+                    if (!foundAlign) {
+                        var adaptive = image.WithAdaptiveThreshold(windowSize: 31, offset: 4);
+                        foundAlign = QrAlignmentPatternFinder.TryFind(
+                            adaptive,
+                            invert,
+                            predX,
+                            predY,
+                            vxX,
+                            vxY,
+                            vyX,
+                            vyY,
+                            moduleSize,
+                            out ax,
+                            out ay,
+                            minScore: minScore,
+                            radiusScale: radiusScale);
+                    }
+                }
+
+                if (foundAlign) {
                     // Convert the alignment center back into an estimated outer bottom-right corner.
                     // The bottom-right alignment center is at (dimension-6.5, dimension-6.5) in module-center coordinates,
                     // i.e. 6.5 modules inward from the outer corner along both axes.
@@ -1401,6 +1725,113 @@ internal static partial class QrPixelDecoder {
                     }
 
                     best = Better(best, moduleDiagA);
+                }
+
+                if (stylized &&
+                    dimension == 41 &&
+                    moduleSize >= 6.0 &&
+                    align.Length >= 2 &&
+                    candidateTriplesTried <= 6 &&
+                    best.Failure is global::CodeGlyphX.QrDecodeFailure.ReedSolomon or global::CodeGlyphX.QrDecodeFailure.Payload &&
+                    !budget.IsNearDeadline(220)) {
+                    var baseTransform = QrPerspectiveTransform.QuadrilateralToQuadrilateral(
+                        0, 0,
+                        dimension, 0,
+                        dimension, dimension,
+                        0, dimension,
+                        cornerTlX, cornerTlY,
+                        cornerTrX, cornerTrY,
+                        cornerBrXr0, cornerBrYr0,
+                        cornerBlX, cornerBlY);
+                    var baseScore = ComputeTimingAlternationsForTransform(image, invert, baseTransform, dimension, moduleSize, phaseX, phaseY);
+
+                    var bestScore = baseScore;
+                    var bestCornerBrX = cornerBrXr0;
+                    var bestCornerBrY = cornerBrYr0;
+
+                    Span<int> offsets = stackalloc int[] { 0, 4, 8, 12 };
+                    for (var oi = 0; oi < offsets.Length; oi++) {
+                        if (budget.IsNearDeadline(200)) break;
+                        var offset = offsets[oi];
+                        var source = offset == 0 ? image : image.WithAdaptiveThreshold(windowSize: 31, offset);
+
+                        if (QrAlignmentPatternFinder.TryFind(
+                                source,
+                                invert,
+                                predX,
+                                predY,
+                                vxX,
+                                vxY,
+                                vyX,
+                                vyY,
+                                moduleSize,
+                                out var axSweep,
+                                out var aySweep,
+                                minScore: 20,
+                                radiusScale: 6.0)) {
+                            var cornerBrXA = axSweep + (vxX + vyX) * 6.5;
+                            var cornerBrYA = aySweep + (vxY + vyY) * 6.5;
+                            var sweepTransform = QrPerspectiveTransform.QuadrilateralToQuadrilateral(
+                                0, 0,
+                                dimension, 0,
+                                dimension, dimension,
+                                0, dimension,
+                                cornerTlX, cornerTlY,
+                                cornerTrX, cornerTrY,
+                                cornerBrXA, cornerBrYA,
+                                cornerBlX, cornerBlY);
+                            var score = ComputeTimingAlternationsForTransform(image, invert, sweepTransform, dimension, moduleSize, phaseX, phaseY);
+                            if (score > bestScore) {
+                                bestScore = score;
+                                bestCornerBrX = cornerBrXA;
+                                bestCornerBrY = cornerBrYA;
+                            }
+                        }
+                    }
+
+                    if (bestScore <= baseScore) {
+                        const double scanRange = 2.0;
+                        const double scanStep = 0.5;
+                        var bestAlignScore = -1;
+
+                        for (var oy = -scanRange; oy <= scanRange; oy += scanStep) {
+                            if (budget.IsNearDeadline(190)) break;
+                            for (var ox = -scanRange; ox <= scanRange; ox += scanStep) {
+                                if (budget.IsNearDeadline(190)) break;
+                                var candX = predX + vxX * ox + vyX * oy;
+                                var candY = predY + vxY * ox + vyY * oy;
+                                var alignScore = QrAlignmentPatternFinder.ScoreAt(image, invert, candX, candY, vxX, vxY, vyX, vyY);
+                                if (alignScore < 18) continue;
+
+                                var cornerBrXA = candX + (vxX + vyX) * 6.5;
+                                var cornerBrYA = candY + (vxY + vyY) * 6.5;
+                                var sweepTransform = QrPerspectiveTransform.QuadrilateralToQuadrilateral(
+                                    0, 0,
+                                    dimension, 0,
+                                    dimension, dimension,
+                                    0, dimension,
+                                    cornerTlX, cornerTlY,
+                                    cornerTrX, cornerTrY,
+                                    cornerBrXA, cornerBrYA,
+                                    cornerBlX, cornerBlY);
+                                var score = ComputeTimingAlternationsForTransform(image, invert, sweepTransform, dimension, moduleSize, phaseX, phaseY);
+                                if (score > bestScore || (score == bestScore && alignScore > bestAlignScore)) {
+                                    bestScore = score;
+                                    bestAlignScore = alignScore;
+                                    bestCornerBrX = cornerBrXA;
+                                    bestCornerBrY = cornerBrYA;
+                                }
+                            }
+                        }
+                    }
+
+                    if (bestScore >= baseScore + 2) {
+                        if (TrySampleWithCorners(image, invert, phaseX, phaseY, dimension, scratch, cornerTlX, cornerTlY, cornerTrX, cornerTrY, bestCornerBrX, bestCornerBrY, cornerBlX, cornerBlY, moduleSize, accept, aggressive, stylized, budget, out result, out var moduleDiagSweep)) {
+                            diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, moduleDiagSweep);
+                            return true;
+                        }
+                        best = Better(best, moduleDiagSweep);
+                    }
                 }
             }
         }
@@ -1440,6 +1871,60 @@ internal static partial class QrPixelDecoder {
         return false;
     }
 
+    private static int ComputeTimingAlternationsForTransform(
+        QrGrayImage image,
+        bool invert,
+        in QrPerspectiveTransform transform,
+        int dimension,
+        double moduleSize,
+        double phaseX,
+        double phaseY) {
+        var start = 8;
+        var end = dimension - 9;
+        if (end <= start) return -1;
+
+        var delta = QrPixelSampling.GetSampleDeltaCenterForModule(moduleSize);
+        if (!TrySampleTimingModuleForTransform(image, invert, transform, start + 0.5 + phaseX, 6.5 + phaseY, delta, out var lastRow)) {
+            return -1;
+        }
+
+        var rowAlt = 0;
+        for (var x = start + 1; x <= end; x++) {
+            if (!TrySampleTimingModuleForTransform(image, invert, transform, x + 0.5 + phaseX, 6.5 + phaseY, delta, out var v)) {
+                return -1;
+            }
+            if (v != lastRow) rowAlt++;
+            lastRow = v;
+        }
+
+        if (!TrySampleTimingModuleForTransform(image, invert, transform, 6.5 + phaseX, start + 0.5 + phaseY, delta, out var lastCol)) {
+            return -1;
+        }
+
+        var colAlt = 0;
+        for (var y = start + 1; y <= end; y++) {
+            if (!TrySampleTimingModuleForTransform(image, invert, transform, 6.5 + phaseX, y + 0.5 + phaseY, delta, out var v)) {
+                return -1;
+            }
+            if (v != lastCol) colAlt++;
+            lastCol = v;
+        }
+
+        return rowAlt + colAlt;
+    }
+
+    private static bool TrySampleTimingModuleForTransform(QrGrayImage image, bool invert, in QrPerspectiveTransform transform, double x, double y, double delta, out bool value) {
+        transform.Transform(x, y, out var sx, out var sy);
+        if (!double.IsFinite(sx + sy)) {
+            value = false;
+            return false;
+        }
+
+        value = QrPixelSampling.SampleModuleCenter3x3WithDelta(image, sx, sy, invert, delta);
+        return true;
+    }
+
+
     private static bool TrySampleWithCornerJitter(
         QrGrayImage image,
         bool invert,
@@ -1472,18 +1957,27 @@ internal static partial class QrPixelDecoder {
         var checkBudget = budget.Enabled || budget.CanCancel;
         if (checkBudget && budget.IsExpired) return false;
 
-        Span<double> offsets = stackalloc double[3];
+        Span<double> offsets = stackalloc double[5];
         offsets[0] = -0.60;
         offsets[1] = 0.0;
         offsets[2] = 0.60;
+        var offsetCount = 3;
+        if (stylized && dimension >= 25 && moduleSizePx >= 3.0 && !(checkBudget && budget.IsNearDeadline(140))) {
+            offsets[0] = -0.90;
+            offsets[1] = -0.45;
+            offsets[2] = 0.0;
+            offsets[3] = 0.45;
+            offsets[4] = 0.90;
+            offsetCount = 5;
+        }
 
         var best = default(global::CodeGlyphX.QrDecodeDiagnostics);
         const double jitterEpsilon = 1e-9;
 
-        for (var yi = 0; yi < offsets.Length; yi++) {
+        for (var yi = 0; yi < offsetCount; yi++) {
             if (checkBudget && budget.IsExpired) return false;
             var oy = offsets[yi];
-            for (var xi = 0; xi < offsets.Length; xi++) {
+            for (var xi = 0; xi < offsetCount; xi++) {
                 if (checkBudget && budget.IsExpired) return false;
                 var ox = offsets[xi];
                 if (Math.Abs(ox) <= jitterEpsilon && Math.Abs(oy) <= jitterEpsilon) continue;

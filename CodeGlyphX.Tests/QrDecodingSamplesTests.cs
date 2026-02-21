@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading;
+using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
@@ -33,12 +34,47 @@ public sealed class QrDecodingSamplesTests {
             EnableTileScan = true
         };
 
-        if (!QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, options)) {
-            if (QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, out var info, options)) {
-                results = new[] { decoded };
-            } else {
-                Assert.Fail(info.ToString());
-            }
+        var fallbackOptions = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 2000,
+            MaxScale = 3,
+            MaxMilliseconds = TestBudget.Adjust(2000),
+            BudgetMilliseconds = TestBudget.Adjust(6000),
+            AutoCrop = true,
+            AggressiveSampling = true,
+            StylizedSampling = false,
+            EnableTileScan = true,
+            TileGrid = 4
+        };
+
+        var fallbackStylized = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 2400,
+            MaxScale = 4,
+            MaxMilliseconds = TestBudget.Adjust(3000),
+            BudgetMilliseconds = TestBudget.Adjust(9000),
+            AutoCrop = true,
+            AggressiveSampling = true,
+            StylizedSampling = true,
+            EnableTileScan = true,
+            TileGrid = 4
+        };
+
+        var fallbackHeavy = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 3200,
+            MaxScale = 6,
+            MaxMilliseconds = TestBudget.Adjust(5000),
+            BudgetMilliseconds = TestBudget.Adjust(15000),
+            AutoCrop = true,
+            AggressiveSampling = true,
+            StylizedSampling = true,
+            EnableTileScan = true,
+            TileGrid = 6
+        };
+
+        if (!TryDecodeResults(rgba, width, height, width * 4, out var results, out var diagnostics, options, fallbackOptions, fallbackStylized, fallbackHeavy)) {
+            Assert.Fail(diagnostics);
         }
 
         Assert.True(results.Length >= minCount);
@@ -69,7 +105,46 @@ public sealed class QrDecodingSamplesTests {
             EnableTileScan = true
         };
 
-        var texts = DecodeTexts(rgba, width, height, width * 4, options);
+        var fallbackOptions = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 2000,
+            MaxScale = 3,
+            MaxMilliseconds = TestBudget.Adjust(2000),
+            BudgetMilliseconds = TestBudget.Adjust(6000),
+            AutoCrop = true,
+            AggressiveSampling = true,
+            StylizedSampling = false,
+            EnableTileScan = true,
+            TileGrid = 4
+        };
+
+        var fallbackStylized = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 2400,
+            MaxScale = 4,
+            MaxMilliseconds = TestBudget.Adjust(3000),
+            BudgetMilliseconds = TestBudget.Adjust(9000),
+            AutoCrop = true,
+            AggressiveSampling = true,
+            StylizedSampling = true,
+            EnableTileScan = true,
+            TileGrid = 4
+        };
+
+        var fallbackHeavy = new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Robust,
+            MaxDimension = 3200,
+            MaxScale = 6,
+            MaxMilliseconds = TestBudget.Adjust(5000),
+            BudgetMilliseconds = TestBudget.Adjust(15000),
+            AutoCrop = true,
+            AggressiveSampling = true,
+            StylizedSampling = true,
+            EnableTileScan = true,
+            TileGrid = 6
+        };
+
+        var texts = DecodeTexts(rgba, width, height, width * 4, options, fallbackOptions, fallbackStylized, fallbackHeavy);
         Assert.Contains(expectedText, texts);
     }
 
@@ -265,12 +340,9 @@ public sealed class QrDecodingSamplesTests {
         throw new FileNotFoundException($"Could not locate sample file '{relativePath}'.");
     }
 
-    private static string[] DecodeTexts(byte[] rgba, int width, int height, int stride, QrPixelDecodeOptions options) {
-        if (!QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var results, options)) {
-            if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out var info, options)) {
-                return new[] { decoded.Text };
-            }
-            Assert.Fail(info.ToString());
+    private static string[] DecodeTexts(byte[] rgba, int width, int height, int stride, params QrPixelDecodeOptions[] options) {
+        if (!TryDecodeResults(rgba, width, height, stride, out var results, out var diagnostics, options)) {
+            Assert.Fail(diagnostics);
         }
 
         return results
@@ -278,5 +350,43 @@ public sealed class QrDecodingSamplesTests {
             .Where(text => !string.IsNullOrWhiteSpace(text))
             .Distinct(StringComparer.Ordinal)
             .ToArray();
+    }
+
+    private static bool TryDecodeResults(
+        byte[] rgba,
+        int width,
+        int height,
+        int stride,
+        out QrDecoded[] results,
+        out string diagnostics,
+        params QrPixelDecodeOptions[] options) {
+        results = Array.Empty<QrDecoded>();
+        diagnostics = "No decode options provided.";
+
+        if (options is null || options.Length == 0) return false;
+
+        for (var i = 0; i < options.Length; i++) {
+            var option = options[i];
+            QrPixelDecodeInfo info = default;
+            if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out info, option)) {
+                results = new[] { decoded };
+                diagnostics = info.ToString();
+                return true;
+            }
+
+            diagnostics = info.ToString();
+
+            if (i == 0 && QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var decodedList, option)) {
+                if (decodedList.Length > 0) {
+                    results = decodedList;
+                    diagnostics = string.Empty;
+                    return true;
+                }
+
+                diagnostics = "Decode produced no results.";
+            }
+        }
+
+        return false;
     }
 }

@@ -9,11 +9,13 @@
     <RestoreFallbackFolders></RestoreFallbackFolders>
   </PropertyGroup>
 
-  <!-- Keep per-TFM obj folders isolated for the multi-target test project. -->
-  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'CodeGlyphX.Tests' and '$(TargetFramework)' != ''">
-    <BaseIntermediateOutputPath>obj/$(TargetFramework)/</BaseIntermediateOutputPath>
-    <MSBuildProjectExtensionsPath>obj/$(TargetFramework)/</MSBuildProjectExtensionsPath>
-  </PropertyGroup>
+  <!--
+    Keep test builds reliable across SDKs.
+
+    We intentionally do NOT override BaseIntermediateOutputPath/MSBuildProjectExtensionsPath for the multi-target
+    test project. Overriding those paths per-TFM can cause restore/build mismatches (NETSDK1004: project.assets.json
+    not found) because restore runs with TargetFramework unset, while build expects per-TFM assets paths.
+  -->
 
   <!-- Provide net472 reference assemblies on non-Windows hosts for compile-only builds. -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net472' and '$(OS)' != 'Windows_NT'">
