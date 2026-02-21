@@ -66,6 +66,8 @@
       "legacyAliasMode": "omit",
       "css": "/css/app.css,/css/api.css",
       "template": "docs",
+      "templateDocsIndex": "./themes/codeglyphx/apidocs/docs-index.html",
+      "templateDocsType": "./themes/codeglyphx/apidocs/docs-type.html",
       "injectCriticalCss": true,
       "nav": "./site.json",
       "navContextPath": "/",

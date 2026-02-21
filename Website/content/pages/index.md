@@ -51,10 +51,10 @@ meta.extra_scripts_file: index.scripts.html
 
         <div class="hero-badges">
             <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="hero-badge-link">
-                <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" width="100" height="20" loading="lazy" />
+                <img src="https://img.shields.io/github/stars/EvotecIT/CodeGlyphX?style=social" alt="GitHub stars" width="100" height="20" loading="lazy" decoding="async" />
             </a>
             <a href="https://www.nuget.org/packages/CodeGlyphX" target="_blank" rel="noopener" class="hero-badge-link">
-                <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" width="100" height="20" loading="lazy" />
+                <img src="https://img.shields.io/nuget/dt/CodeGlyphX" alt="NuGet downloads" width="100" height="20" loading="lazy" decoding="async" />
             </a>
         </div>
 
