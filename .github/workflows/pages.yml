@@ -12,7 +12,7 @@ concurrency:
 env:
   # Optional repo/org variable: POWERFORGE_REF (branch/tag/SHA) for controlled engine rollouts.
   POWERFORGE_REPOSITORY: EvotecIT/PSPublishModule
-  POWERFORGE_REF: ${{ vars.POWERFORGE_REF != '' && vars.POWERFORGE_REF || 'a9b7144f30da9edd6e06e644c3fc05535baec26a' }}
+  POWERFORGE_REF: ${{ vars.POWERFORGE_REF != '' && vars.POWERFORGE_REF || '83bb21dba0f8a102851c08cb7ed615d1cf061aa1' }}
 
 jobs:
   build:
@@ -135,4 +135,5 @@ jobs:
             cloudflare verify \
             --site-config "Website/site.json" \
             --warmup 1
+
 
