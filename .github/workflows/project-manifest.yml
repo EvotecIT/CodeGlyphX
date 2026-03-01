@@ -1,0 +1,35 @@
+name: Project Manifest
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - "Build/Export-ProjectManifest.ps1"
+      - "CodeGlyphX/**/*.csproj"
+      - "WebsiteArtifacts/project-manifest.json"
+
+jobs:
+  verify-manifest:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate Manifest
+        shell: pwsh
+        run: |
+          ./Build/Export-ProjectManifest.ps1
+
+      - name: Verify Manifest Is Committed
+        shell: pwsh
+        run: |
+          git diff --exit-code -- WebsiteArtifacts/project-manifest.json
+
+      - name: Upload Manifest Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-manifest
+          path: WebsiteArtifacts/project-manifest.json
