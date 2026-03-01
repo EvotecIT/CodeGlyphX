@@ -4321,9 +4321,36 @@ section {
 .pf-release-button--item {
     width: 100%;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+
+.pf-release-button-media {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.45rem;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    overflow: hidden;
+    flex: 0 0 auto;
+}
+
+.pf-release-button-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pf-release-button-content {
+    min-width: 0;
+    flex: 1;
+    display: grid;
+    gap: 0.28rem;
 }
 
 .pf-release-button-label {
+    display: inline-block;
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -4335,6 +4362,41 @@ section {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     opacity: 0.82;
+}
+
+.pf-release-button-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.32rem;
+}
+
+.pf-release-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.12rem 0.45rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-size: 0.64rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: rgba(148, 163, 184, 0.08);
+}
+
+.pf-release-badge--platform {
+    border-color: rgba(6, 182, 212, 0.45);
+    color: #67E8F9;
+}
+
+.pf-release-badge--arch {
+    border-color: rgba(99, 102, 241, 0.45);
+    color: #C7D2FE;
+}
+
+.pf-release-badge--kind {
+    border-color: rgba(14, 165, 233, 0.45);
+    color: #7DD3FC;
 }
 
 .pf-release-empty {
@@ -4487,6 +4549,16 @@ section {
     align-items: center;
 }
 
+.pf-release-asset-thumb {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--border);
+    object-fit: cover;
+    display: block;
+    background: var(--bg-card);
+}
+
 .pf-release-asset-link {
     font-weight: 600;
     color: var(--primary-light);
@@ -4499,6 +4571,41 @@ section {
 .pf-release-asset-meta {
     font-size: 0.78rem;
     color: var(--text-dim);
+}
+
+.pf-release-asset-badges {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.pf-release-asset-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.12rem 0.45rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    font-size: 0.64rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: rgba(148, 163, 184, 0.08);
+}
+
+.pf-release-asset-badge--platform {
+    border-color: rgba(6, 182, 212, 0.45);
+    color: #67E8F9;
+}
+
+.pf-release-asset-badge--arch {
+    border-color: rgba(99, 102, 241, 0.45);
+    color: #C7D2FE;
+}
+
+.pf-release-asset-badge--kind {
+    border-color: rgba(14, 165, 233, 0.45);
+    color: #7DD3FC;
 }
 
 @media (max-width: 768px) {
