@@ -1,5 +1,19 @@
 <footer class="footer">
     <div class="footer-content">
+        {{ footer_product = null }}
+        {{ footer_resources = null }}
+        {{ footer_company = null }}
+        {{ if navigation.menus }}
+        {{ for menu in navigation.menus }}
+        {{ if menu.name == "footer-product" }}
+        {{ footer_product = menu }}
+        {{ else if menu.name == "footer-resources" }}
+        {{ footer_resources = menu }}
+        {{ else if menu.name == "footer-company" }}
+        {{ footer_company = menu }}
+        {{ end }}
+        {{ end }}
+        {{ end }}
         <div class="footer-brand">
             <div class="footer-logo">
                 <img src="/codeglyphx-qr-icon.png" alt="{{ site.name }} logo" width="28" height="28" loading="lazy" decoding="async" />
@@ -8,42 +22,42 @@
             <p>Zero-dependency QR &amp; barcode toolkit for .NET</p>
         </div>
         <div class="footer-links">
-      <div class="footer-section">
+      {{ if footer_product && footer_product.items && footer_product.items.size > 0 }}
+      <section class="footer-section">
         <h3>Product</h3>
-        {{~ for menu in navigation.menus ~}}
-        {{~ if menu.name == "footer-product" ~}}
-        {{~ for item in menu.items ~}}
+        <ul class="footer-list{{ if footer_product.items.size > 8 }} is-dense{{ end }}{{ if footer_product.items.size > 14 }} is-mega{{ end }}{{ if footer_product.items.size > 20 }} is-scroll{{ end }}">
+        {{~ for item in footer_product.items ~}}
         {{~ if item.url ~}}
-        <a href="{{ item.url }}"{{ if item.target }} target="{{ item.target }}"{{ end }}{{ if item.rel }} rel="{{ item.rel }}"{{ end }}>{{ item.title }}</a>
+        <li><a href="{{ item.url }}"{{ if item.target }} target="{{ item.target }}"{{ end }}{{ if item.rel }} rel="{{ item.rel }}"{{ end }}{{ if item.external }} target="_blank" rel="noopener"{{ end }}>{{ item.title }}</a></li>
         {{~ end ~}}
         {{~ end ~}}
-        {{~ end ~}}
-        {{~ end ~}}
-      </div>
-      <div class="footer-section">
+        </ul>
+      </section>
+      {{ end }}
+      {{ if footer_resources && footer_resources.items && footer_resources.items.size > 0 }}
+      <section class="footer-section">
         <h3>Resources</h3>
-        {{~ for menu in navigation.menus ~}}
-        {{~ if menu.name == "footer-resources" ~}}
-        {{~ for item in menu.items ~}}
+        <ul class="footer-list{{ if footer_resources.items.size > 8 }} is-dense{{ end }}{{ if footer_resources.items.size > 14 }} is-mega{{ end }}{{ if footer_resources.items.size > 20 }} is-scroll{{ end }}">
+        {{~ for item in footer_resources.items ~}}
         {{~ if item.url ~}}
-        <a href="{{ item.url }}"{{ if item.target }} target="{{ item.target }}"{{ end }}{{ if item.rel }} rel="{{ item.rel }}"{{ end }}>{{ item.title }}</a>
+        <li><a href="{{ item.url }}"{{ if item.target }} target="{{ item.target }}"{{ end }}{{ if item.rel }} rel="{{ item.rel }}"{{ end }}{{ if item.external }} target="_blank" rel="noopener"{{ end }}>{{ item.title }}</a></li>
         {{~ end ~}}
         {{~ end ~}}
-        {{~ end ~}}
-        {{~ end ~}}
-      </div>
-      <div class="footer-section">
+        </ul>
+      </section>
+      {{ end }}
+      {{ if footer_company && footer_company.items && footer_company.items.size > 0 }}
+      <section class="footer-section">
         <h3>Company</h3>
-        {{~ for menu in navigation.menus ~}}
-        {{~ if menu.name == "footer-company" ~}}
-        {{~ for item in menu.items ~}}
+        <ul class="footer-list{{ if footer_company.items.size > 8 }} is-dense{{ end }}{{ if footer_company.items.size > 14 }} is-mega{{ end }}{{ if footer_company.items.size > 20 }} is-scroll{{ end }}">
+        {{~ for item in footer_company.items ~}}
         {{~ if item.url ~}}
-        <a href="{{ item.url }}"{{ if item.target }} target="{{ item.target }}"{{ end }}{{ if item.rel }} rel="{{ item.rel }}"{{ end }}>{{ item.title }}</a>
+        <li><a href="{{ item.url }}"{{ if item.target }} target="{{ item.target }}"{{ end }}{{ if item.rel }} rel="{{ item.rel }}"{{ end }}{{ if item.external }} target="_blank" rel="noopener"{{ end }}>{{ item.title }}</a></li>
         {{~ end ~}}
         {{~ end ~}}
-        {{~ end ~}}
-        {{~ end ~}}
-      </div>
+        </ul>
+      </section>
+      {{ end }}
         </div>
         <div class="footer-bottom">
             <div class="footer-badges">
