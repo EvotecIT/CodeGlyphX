@@ -127,6 +127,8 @@
           { "Title": "Docs", "Url": "/docs/" },
           { "Title": "Benchmarks", "Url": "/benchmarks/" },
           { "Title": "Showcase", "Url": "/showcase/" },
+          { "Title": "Downloads", "Url": "/downloads/" },
+          { "Title": "Changelog", "Url": "/changelog/" },
           { "Title": "Pricing", "Url": "/pricing/" }
         ]
       },
@@ -138,6 +140,8 @@
           { "Title": "Docs", "Url": "/docs/" },
           { "Title": "Benchmarks", "Url": "/benchmarks/" },
           { "Title": "Showcase", "Url": "/showcase/" },
+          { "Title": "Downloads", "Url": "/downloads/" },
+          { "Title": "Changelog", "Url": "/changelog/" },
           { "Title": "Pricing", "Url": "/pricing/" }
         ]
       },
@@ -145,6 +149,8 @@
         "Name": "footer-resources",
         "Items": [
           { "Title": "FAQ", "Url": "/faq/" },
+          { "Title": "Downloads", "Url": "/downloads/" },
+          { "Title": "Changelog", "Url": "/changelog/" },
           { "Title": "NuGet Package", "Url": "https://www.nuget.org/packages/CodeGlyphX", "External": true },
           { "Title": "GitHub Repository", "Url": "https://github.com/EvotecIT/CodeGlyphX", "External": true },
           { "Title": "Report Issue", "Url": "https://github.com/EvotecIT/CodeGlyphX/issues", "External": true },

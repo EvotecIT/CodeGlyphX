@@ -6,8 +6,33 @@
   "profilePath": "./_temp/pipeline-profile.json",
   "steps": [
     {
+      "task": "release-hub",
+      "id": "build-release-hub",
+      "source": "github",
+      "repo": "EvotecIT/CodeGlyphX",
+      "tokenEnv": "GITHUB_TOKEN",
+      "out": "./data/release-hub.json",
+      "title": "CodeGlyphX Releases",
+      "maxReleases": 300,
+      "pageSize": 100,
+      "maxPages": 4,
+      "includePrerelease": true,
+      "products": [
+        { "id": "codeglyphx", "name": "CodeGlyphX", "order": 10 }
+      ],
+      "assetRules": [
+        {
+          "product": "codeglyphx",
+          "label": "CodeGlyphX",
+          "match": ["*CodeGlyphX*.zip"],
+          "kind": "zip"
+        }
+      ]
+    },
+    {
       "task": "build",
       "id": "build-site",
+      "dependsOn": "build-release-hub",
       "config": "./site.json",
       "out": "./_site",
       "clean": true

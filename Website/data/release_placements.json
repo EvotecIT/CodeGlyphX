@@ -1,0 +1,66 @@
+{
+  "home": {
+    "hero_download": {
+      "product": "codeglyphx",
+      "channel": "stable",
+      "kind": "zip",
+      "label": "Download Latest ZIP",
+      "class": "btn btn-secondary"
+    },
+    "downloads_matrix": {
+      "product": "codeglyphx",
+      "channel": "stable",
+      "groupBy": "release",
+      "limit": 12,
+      "class": "pf-release-buttons--matrix"
+    }
+  },
+  "changelog": {
+    "primary": {
+      "product": "codeglyphx",
+      "channel": "stable",
+      "kind": "zip",
+      "label": "Download Latest ZIP",
+      "class": "btn btn-primary"
+    },
+    "downloads_matrix": {
+      "product": "codeglyphx",
+      "channel": "stable",
+      "groupBy": "release",
+      "limit": 12,
+      "class": "pf-release-buttons--matrix"
+    },
+    "timeline": {
+      "limit": 300,
+      "includePreview": true
+    }
+  },
+  "downloads": {
+    "primary": {
+      "product": "codeglyphx",
+      "channel": "stable",
+      "kind": "zip",
+      "label": "Download Latest ZIP",
+      "class": "btn btn-primary"
+    },
+    "stable_by_release": {
+      "product": "codeglyphx",
+      "channel": "stable",
+      "groupBy": "release",
+      "limit": 30,
+      "class": "pf-release-buttons--matrix"
+    },
+    "stable_by_kind": {
+      "product": "codeglyphx",
+      "channel": "stable",
+      "groupBy": "kind",
+      "limit": 30,
+      "class": "pf-release-buttons--matrix"
+    },
+    "timeline": {
+      "product": "codeglyphx",
+      "limit": 300,
+      "includePreview": true
+    }
+  }
+}
