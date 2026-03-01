@@ -29,11 +29,5 @@ canonical: https://codeglyphx.com/changelog/
 {{< release-button placement="changelog.primary" product="codeglyphx" >}}
   </div>
 
-  <section class="pf-release-downloads-panel cgx-release-panel">
-    <h2>Download Matrix</h2>
-    <p>All stable downloadable assets grouped by release.</p>
-{{< release-buttons placement="changelog.downloads_matrix" >}}
-  </section>
-
 {{< release-changelog placement="changelog.timeline" >}}
 </section>

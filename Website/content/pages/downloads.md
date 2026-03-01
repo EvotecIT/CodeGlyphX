@@ -40,6 +40,4 @@ canonical: https://codeglyphx.com/downloads/
     <p>Alternative view grouped by package type.</p>
 {{< release-buttons placement="downloads.stable_by_kind" >}}
   </section>
-
-{{< release-changelog placement="downloads.timeline" >}}
 </section>
