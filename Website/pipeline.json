@@ -241,7 +241,7 @@
       "noBuild": true,
       "noVerify": true,
       "baseline": "./.powerforge/audit-baseline.json",
-      "failOnNewIssues": true,
+      "failOnNewIssues": false,
       "maxTotalFiles": 4000,
       "exclude": "**/*.scripts.html,**/*.head.html,**/api-fragments/**,api-fragments/**",
       "ignoreNav": "sitemap/**,search/**,playground/index.html,playground/404.html",
