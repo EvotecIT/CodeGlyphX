@@ -37,6 +37,7 @@ meta.extra_scripts_file: index.scripts.html
                 </svg>
                 View on NuGet
             </a>
+            {{< release-button placement="home.hero_download" product="codeglyphx" >}}
         </div>
 
         <div class="install-command">
@@ -48,6 +49,12 @@ meta.extra_scripts_file: index.scripts.html
                 </svg>
             </button>
         </div>
+
+        <section class="pf-release-downloads-panel">
+            <h2>Latest Stable Downloads</h2>
+            <p>Quick download matrix grouped by release so users can choose the exact package build they need.</p>
+            {{< release-buttons placement="home.downloads_matrix" >}}
+        </section>
 
         <div class="hero-badges">
             <a href="https://github.com/EvotecIT/CodeGlyphX" target="_blank" rel="noopener" class="hero-badge-link">

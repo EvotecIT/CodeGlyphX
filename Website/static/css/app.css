@@ -4282,3 +4282,227 @@ section {
         padding: 5rem 1rem 3rem;
     }
 }
+
+/* ============================================
+   Release Hub
+   ============================================ */
+.cgx-release-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.pf-release-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    line-height: 1.35;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.pf-release-button:not(.btn) {
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.pf-release-button:not(.btn):hover {
+    border-color: var(--primary);
+    color: var(--primary-light);
+    transform: translateY(-1px);
+    box-shadow: var(--glow-primary);
+}
+
+.pf-release-button--item {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.pf-release-button-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pf-release-button-meta {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.82;
+}
+
+.pf-release-empty {
+    border: 1px dashed var(--border-light);
+    border-radius: var(--radius);
+    padding: 0.85rem 1rem;
+    margin: 1rem 0;
+    color: var(--text-muted);
+    background: var(--bg-card);
+}
+
+.pf-release-buttons {
+    display: grid;
+    gap: 0.85rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.pf-release-buttons-list {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.pf-release-group {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    background: var(--bg-card);
+}
+
+.pf-release-group-title {
+    margin: 0 0 0.6rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+.pf-release-downloads-panel {
+    margin: 1.1rem 0 1.4rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(6, 182, 212, 0.06));
+}
+
+.pf-release-downloads-panel h2 {
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
+}
+
+.pf-release-downloads-panel p {
+    margin: 0 0 0.75rem;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+
+.pf-release-buttons--matrix .pf-release-group-title {
+    letter-spacing: 0.1em;
+}
+
+.pf-release-buttons--matrix .pf-release-group {
+    background: rgba(15, 23, 42, 0.28);
+}
+
+.pf-release-changelog {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.pf-release-entry {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.1rem;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(6, 182, 212, 0.08));
+}
+
+.pf-release-entry-header h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.15rem;
+}
+
+.pf-release-entry-header h3 a {
+    color: var(--text);
+}
+
+.pf-release-entry-header h3 a:hover {
+    color: var(--primary-light);
+}
+
+.pf-release-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin: 0 0 0.65rem;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.pf-release-chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.12rem 0.55rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid transparent;
+}
+
+.pf-release-chip--preview {
+    background: rgba(251, 191, 36, 0.2);
+    border-color: rgba(251, 191, 36, 0.4);
+    color: #FDE68A;
+}
+
+.pf-release-chip--latest {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #6EE7B7;
+}
+
+.pf-release-chip--latest-preview {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.4);
+    color: #93C5FD;
+}
+
+.pf-release-body {
+    margin-bottom: 0.75rem;
+}
+
+.pf-release-body > :first-child {
+    margin-top: 0;
+}
+
+.pf-release-assets {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+}
+
+.pf-release-asset-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.7rem;
+    align-items: center;
+}
+
+.pf-release-asset-link {
+    font-weight: 600;
+    color: var(--primary-light);
+}
+
+.pf-release-asset-link:hover {
+    color: var(--primary);
+}
+
+.pf-release-asset-meta {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+}
+
+@media (max-width: 768px) {
+    .pf-release-downloads-panel {
+        padding: 0.85rem;
+    }
+}

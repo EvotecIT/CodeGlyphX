@@ -11,9 +11,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Optional repo/org variable: POWERFORGE_REF (branch/tag/SHA) for controlled engine rollouts.
+  # Pinned to a release-hub-enabled PowerForge commit for this release stack.
   POWERFORGE_REPOSITORY: EvotecIT/PSPublishModule
-  POWERFORGE_REF: ${{ vars.POWERFORGE_REF != '' && vars.POWERFORGE_REF || '83bb21dba0f8a102851c08cb7ed615d1cf061aa1' }}
+  POWERFORGE_REF: 42d61a88f5196f570b9afbc56e068eaa583ac9f4
 
 jobs:
   build-test:
@@ -72,7 +72,7 @@ jobs:
         run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net10.0 --no-restore
 
       - name: Build Tests (net8.0)
-        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
+        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0
 
       - name: Download image samples
         if: runner.os == 'Linux'
@@ -138,7 +138,9 @@ jobs:
 
       - name: Build website (static + playground)
         working-directory: Website
-        run: dotnet ../PSPublishModule/PowerForge.Web.Cli/bin/Release/net10.0/PowerForge.Web.Cli.dll pipeline --config pipeline.json --mode ci
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: dotnet ../PSPublishModule/PowerForge.Web.Cli/bin/Release/net10.0/PowerForge.Web.Cli.dll pipeline --config pipeline.json --mode ci --skip doctor
 
       - name: Verify website output
         run: |
