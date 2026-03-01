@@ -11,17 +11,25 @@ meta.structured_data: true
 canonical: https://codeglyphx.com/changelog/
 ---
 
-<section class="faq-page">
+<section class="faq-page cgx-release-page">
   <div class="faq-hero">
     <h1>Changelog</h1>
     <p>Releases and assets pulled from GitHub so this page stays current automatically.</p>
+  </div>
+
+  <p class="cgx-release-intro">Use this page for release notes and migration context. For direct binaries, go to <a href="/downloads/">Downloads</a>.</p>
+
+  <div class="cgx-release-quicklinks" aria-label="Release resources">
+    <a href="/downloads/">Downloads</a>
+    <a href="/docs/">Documentation</a>
+    <a href="/docs/quickstart/">Quick Start</a>
   </div>
 
   <div class="cgx-release-cta">
 {{< release-button placement="changelog.primary" product="codeglyphx" >}}
   </div>
 
-  <section class="pf-release-downloads-panel">
+  <section class="pf-release-downloads-panel cgx-release-panel">
     <h2>Download Matrix</h2>
     <p>All stable downloadable assets grouped by release.</p>
 {{< release-buttons placement="changelog.downloads_matrix" >}}

@@ -127,8 +127,6 @@
           { "Title": "Docs", "Url": "/docs/" },
           { "Title": "Benchmarks", "Url": "/benchmarks/" },
           { "Title": "Showcase", "Url": "/showcase/" },
-          { "Title": "Downloads", "Url": "/downloads/" },
-          { "Title": "Changelog", "Url": "/changelog/" },
           { "Title": "Pricing", "Url": "/pricing/" }
         ]
       },
