@@ -10,9 +10,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Optional repo/org variable: POWERFORGE_REF (branch/tag/SHA) for controlled engine rollouts.
+  # Pinned to a release-hub-enabled PowerForge commit for this release stack.
   POWERFORGE_REPOSITORY: EvotecIT/PSPublishModule
-  POWERFORGE_REF: ${{ vars.POWERFORGE_REF != '' && vars.POWERFORGE_REF || '42d61a88f5196f570b9afbc56e068eaa583ac9f4' }}
+  POWERFORGE_REF: 42d61a88f5196f570b9afbc56e068eaa583ac9f4
 
 jobs:
   build:
