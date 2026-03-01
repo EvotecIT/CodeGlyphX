@@ -1,0 +1,24 @@
+{
+  "slug": "codeglyphx",
+  "name": "CodeGlyphX",
+  "mode": "hub-full",
+  "version": "1.2.0",
+  "generatedAt": "2026-03-01T08:09:33+01:00",
+  "commit": "ab4e3a3",
+  "description": "No-deps QR & barcode toolkit for .NET.",
+  "surfaces": {
+    "docs": true,
+    "apiDotNet": true,
+    "apiPowerShell": false,
+    "changelog": true,
+    "releases": true
+  },
+  "links": {
+    "website": "https://codeglyphx.com",
+    "docs": "https://codeglyphx.com/docs/",
+    "apiDotNet": "https://codeglyphx.com/api/",
+    "changelog": "https://codeglyphx.com/changelog/",
+    "releases": "https://github.com/EvotecIT/CodeGlyphX/releases",
+    "source": "https://github.com/EvotecIT/CodeGlyphX"
+  }
+}
