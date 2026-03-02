@@ -50,7 +50,17 @@
   },
   "StructuredData": {
     "Enabled": true,
-    "Breadcrumbs": true
+    "Breadcrumbs": true,
+    "OrganizationLegalName": "Evotec Services sp. z o.o.",
+    "OrganizationDescription": "Zero-dependency QR and barcode toolkit for .NET developers.",
+    "OrganizationLogo": "/codeglyphx-qr-icon.png",
+    "OrganizationSameAs": [
+      "https://github.com/EvotecIT/CodeGlyphX",
+      "https://www.nuget.org/packages/CodeGlyphX",
+      "https://evotec.xyz"
+    ],
+    "OrganizationEmail": "support@evotec.xyz",
+    "OrganizationContactUrl": "/faq/"
   },
   "EditLinks": {
     "Enabled": true,
