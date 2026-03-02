@@ -489,7 +489,33 @@ body:has(.page-playground) {
     gap: 1rem;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero-secondary-links {
+    display: flex;
+    gap: 0.65rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.hero-secondary-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.42rem 0.95rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(6, 182, 212, 0.04));
+    font-size: 0.93rem;
+}
+
+.hero-secondary-links a:hover {
+    color: var(--text);
+    border-color: rgba(139, 92, 246, 0.55);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.16), rgba(6, 182, 212, 0.08));
 }
 
 /* Buttons */
@@ -4632,6 +4658,40 @@ section {
     color: var(--primary);
 }
 
+.pf-release-body a.pf-release-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border: 1px solid rgba(148, 163, 184, 0.32);
+    border-radius: 999px;
+    padding: 0.08rem 0.46rem;
+    text-decoration: none;
+    line-height: 1.35;
+    font-size: 0.84em;
+    background: rgba(15, 23, 42, 0.36);
+}
+
+.pf-release-body a.pf-release-link:hover {
+    border-color: rgba(139, 92, 246, 0.5);
+    background: rgba(139, 92, 246, 0.12);
+}
+
+.pf-release-link--mention {
+    color: #A5B4FC;
+    border-color: rgba(99, 102, 241, 0.45);
+}
+
+.pf-release-link--pr,
+.pf-release-link--issue {
+    color: #67E8F9;
+    border-color: rgba(6, 182, 212, 0.5);
+}
+
+.pf-release-link--compare {
+    color: #C4B5FD;
+    border-color: rgba(139, 92, 246, 0.5);
+}
+
 .pf-release-body > :first-child {
     margin-top: 0;
 }
@@ -4649,6 +4709,10 @@ section {
     flex-wrap: wrap;
     gap: 0.45rem 0.7rem;
     align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.48rem 0.58rem;
+    background: rgba(15, 23, 42, 0.24);
 }
 
 .pf-release-asset-thumb {
@@ -4664,6 +4728,9 @@ section {
 .pf-release-asset-link {
     font-weight: 600;
     color: var(--primary-light);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
 }
 
 .pf-release-asset-link:hover {

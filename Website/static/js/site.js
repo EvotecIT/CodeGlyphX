@@ -600,6 +600,25 @@ globalThis.setTheme = setTheme;
         });
     }
 
+    function getFriendlyReleaseUrlInfo(url) {
+        const prMatch = url.match(/^https?:\/\/github\.com\/[^/]+\/[^/]+\/pull\/(\d+)(?:[/?#].*)?$/i);
+        if (prMatch) {
+            return { label: `PR #${prMatch[1]}`, className: 'pf-release-link--pr' };
+        }
+
+        const issueMatch = url.match(/^https?:\/\/github\.com\/[^/]+\/[^/]+\/issues\/(\d+)(?:[/?#].*)?$/i);
+        if (issueMatch) {
+            return { label: `Issue #${issueMatch[1]}`, className: 'pf-release-link--issue' };
+        }
+
+        const compareMatch = url.match(/^https?:\/\/github\.com\/[^/]+\/[^/]+\/compare\/[^?#]+$/i);
+        if (compareMatch) {
+            return { label: 'Full Changelog', className: 'pf-release-link--compare' };
+        }
+
+        return { label: url.replace(/^https?:\/\//i, ''), className: '' };
+    }
+
     function linkifyReleaseBodyUrls() {
         const containers = Array.from(document.querySelectorAll('.pf-release-body'))
             .filter((container) => container.dataset.linkified !== 'true');
@@ -610,7 +629,7 @@ globalThis.setTheme = setTheme;
                 NodeFilter.SHOW_TEXT,
                 {
                     acceptNode(node) {
-                        if (!node?.nodeValue || !/https?:\/\//i.test(node.nodeValue)) {
+                        if (!node?.nodeValue || !/(https?:\/\/|@[A-Za-z0-9-]{1,39})/i.test(node.nodeValue)) {
                             return NodeFilter.FILTER_REJECT;
                         }
                         const parent = node.parentElement;
@@ -635,42 +654,69 @@ globalThis.setTheme = setTheme;
 
             textNodes.forEach((node) => {
                 const source = node.nodeValue || '';
-                const urlPattern = /https?:\/\/[^\s<>()]+/gi;
+                const tokenPattern = /(https?:\/\/[^\s<>()]+)|@([A-Za-z0-9-]{1,39})/gi;
                 let lastIndex = 0;
-                let match = urlPattern.exec(source);
+                let match = tokenPattern.exec(source);
                 if (!match) return;
 
                 const fragment = document.createDocumentFragment();
                 while (match) {
-                    const raw = match[0];
-                    let url = raw;
-                    let suffix = '';
-                    while (/[.,;:!?)]$/.test(url)) {
-                        suffix = url.slice(-1) + suffix;
-                        url = url.slice(0, -1);
-                    }
+                    const rawUrl = match[1];
+                    const mentionUser = match[2];
+                    const token = match[0];
 
                     if (match.index > lastIndex) {
                         fragment.appendChild(document.createTextNode(source.slice(lastIndex, match.index)));
                     }
 
-                    if (url) {
-                        const anchor = document.createElement('a');
-                        anchor.href = url;
-                        anchor.textContent = url;
-                        anchor.target = '_blank';
-                        anchor.rel = 'noopener';
-                        fragment.appendChild(anchor);
+                    if (rawUrl) {
+                        let url = rawUrl;
+                        let suffix = '';
+                        while (/[.,;:!?)]$/.test(url)) {
+                            suffix = url.slice(-1) + suffix;
+                            url = url.slice(0, -1);
+                        }
+
+                        if (url) {
+                            const linkInfo = getFriendlyReleaseUrlInfo(url);
+                            const anchor = document.createElement('a');
+                            anchor.href = url;
+                            anchor.textContent = linkInfo.label;
+                            anchor.target = '_blank';
+                            anchor.rel = 'noopener';
+                            anchor.className = `pf-release-link ${linkInfo.className}`.trim();
+                            if (linkInfo.label !== url) {
+                                anchor.title = url;
+                            }
+                            fragment.appendChild(anchor);
+                        } else {
+                            fragment.appendChild(document.createTextNode(token));
+                        }
+
+                        if (suffix) {
+                            fragment.appendChild(document.createTextNode(suffix));
+                        }
                     } else {
-                        fragment.appendChild(document.createTextNode(raw));
+                        const mentionToken = `@${mentionUser}`;
+                        const previousChar = match.index > 0 ? source.charAt(match.index - 1) : '';
+                        const isLikelyEmail = previousChar && /[A-Za-z0-9._-]/.test(previousChar);
+
+                        if (isLikelyEmail) {
+                            fragment.appendChild(document.createTextNode(mentionToken));
+                        } else {
+                            const anchor = document.createElement('a');
+                            anchor.href = `https://github.com/${mentionUser}`;
+                            anchor.textContent = mentionToken;
+                            anchor.target = '_blank';
+                            anchor.rel = 'noopener';
+                            anchor.className = 'pf-release-link pf-release-link--mention';
+                            anchor.title = `GitHub profile: ${mentionUser}`;
+                            fragment.appendChild(anchor);
+                        }
                     }
 
-                    if (suffix) {
-                        fragment.appendChild(document.createTextNode(suffix));
-                    }
-
-                    lastIndex = match.index + raw.length;
-                    match = urlPattern.exec(source);
+                    lastIndex = match.index + token.length;
+                    match = tokenPattern.exec(source);
                 }
 
                 if (lastIndex < source.length) {
