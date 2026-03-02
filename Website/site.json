@@ -133,13 +133,11 @@
       {
         "Name": "footer-product",
         "Items": [
-          { "Title": "Home", "Url": "/" },
           { "Title": "Playground", "Url": "/playground/" },
           { "Title": "Docs", "Url": "/docs/" },
+          { "Title": "API Reference", "Url": "/api/" },
           { "Title": "Benchmarks", "Url": "/benchmarks/" },
           { "Title": "Showcase", "Url": "/showcase/" },
-          { "Title": "Downloads", "Url": "/downloads/" },
-          { "Title": "Changelog", "Url": "/changelog/" },
           { "Title": "Pricing", "Url": "/pricing/" }
         ]
       },
