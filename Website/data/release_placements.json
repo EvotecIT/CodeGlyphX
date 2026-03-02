@@ -6,13 +6,6 @@
       "kind": "zip",
       "label": "Download Latest ZIP",
       "class": "btn btn-secondary"
-    },
-    "downloads_matrix": {
-      "product": "codeglyphx",
-      "channel": "stable",
-      "groupBy": "release",
-      "limit": 12,
-      "class": "pf-release-buttons--matrix"
     }
   },
   "changelog": {
