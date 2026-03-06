@@ -3,6 +3,9 @@ name: Deploy Website
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'Website/**'
+      - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 concurrency:
