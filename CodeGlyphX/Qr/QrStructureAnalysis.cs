@@ -1,8 +1,11 @@
+using System;
+using System.Threading;
 using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Qr;
 
 internal static class QrStructureAnalysis {
+    private static readonly BitMatrix?[] FunctionMaskCache = new BitMatrix[41];
     internal static bool TryGetVersionFromSize(int size, out int version) {
         version = (size - 17) / 4;
         return version is >= 1 and <= 40 && version * 4 + 17 == size;
@@ -57,6 +60,20 @@ internal static class QrStructureAnalysis {
         return isFunction;
     }
 
+    internal static BitMatrix GetFunctionMask(int version) {
+        if ((uint)version >= (uint)FunctionMaskCache.Length) {
+            throw new ArgumentOutOfRangeException(nameof(version));
+        }
+
+        var cached = FunctionMaskCache[version];
+        if (cached is not null) return cached;
+
+        var size = version * 4 + 17;
+        var built = BuildFunctionMask(version, size);
+        Interlocked.CompareExchange(ref FunctionMaskCache[version], built, null);
+        return FunctionMaskCache[version]!;
+    }
+
     private static void MarkFinder(int x, int y, BitMatrix isFunction) {
         for (var dy = -1; dy <= 7; dy++) {
             for (var dx = -1; dx <= 7; dx++) {
@@ -76,4 +93,3 @@ internal static class QrStructureAnalysis {
         }
     }
 }
-
