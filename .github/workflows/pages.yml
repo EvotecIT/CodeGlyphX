@@ -13,9 +13,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # Pinned to a release-hub-enabled PowerForge commit for this release stack.
+  # Pinned to a PowerForge commit that keeps release-hub support and clears current NuGet vulnerability gates.
   POWERFORGE_REPOSITORY: EvotecIT/PSPublishModule
-  POWERFORGE_REF: 42d61a88f5196f570b9afbc56e068eaa583ac9f4
+  POWERFORGE_REF: 228ee7214bb3286402ec695580a82cc37d1daf9d
 
 jobs:
   build:
@@ -39,8 +39,10 @@ jobs:
           ref: ${{ env.POWERFORGE_REF }}
           path: PSPublishModule
 
-      - name: Build PowerForge.Web.Cli
-        run: dotnet build PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj -c Release
+      - name: Restore and build PowerForge.Web.Cli
+        run: |
+          dotnet restore PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj --force-evaluate
+          dotnet build PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj -c Release --no-restore
 
       - name: Build website (static + playground)
         working-directory: Website
@@ -117,9 +119,11 @@ jobs:
           ref: ${{ env.POWERFORGE_REF }}
           path: PSPublishModule
 
-      - name: Build PowerForge.Web.Cli
+      - name: Restore and build PowerForge.Web.Cli
         if: steps.cloudflare.outputs.enabled == 'true'
-        run: dotnet build PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj -c Release
+        run: |
+          dotnet restore PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj --force-evaluate
+          dotnet build PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj -c Release --no-restore
 
       - name: Purge Cloudflare cache (key routes)
         if: steps.cloudflare.outputs.enabled == 'true'
