@@ -347,6 +347,57 @@
     gap: 1rem;
 }
 
+body.pf-api-docs .api-overview-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(250px, 300px);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+body.pf-api-docs .type-detail-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 260px);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+body.pf-api-docs .type-detail-rail {
+    position: sticky;
+    top: 1.5rem;
+    display: grid;
+    gap: 1rem;
+    align-self: start;
+}
+
+body.pf-api-docs .type-detail-rail .type-toc {
+    margin: 0;
+}
+
+body.pf-api-docs .type-detail-rail .type-toc ul {
+    max-height: calc(100vh - 12rem);
+    overflow: auto;
+    padding-right: 0.2rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.32) transparent;
+}
+
+body.pf-api-docs .type-detail-rail .type-toc ul::-webkit-scrollbar {
+    width: 8px;
+}
+
+body.pf-api-docs .type-detail-rail .type-toc ul::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+body.pf-api-docs .type-detail-rail .type-toc ul::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 999px;
+}
+
+body.pf-api-docs .type-detail-rail .type-toc ul::-webkit-scrollbar-thumb:hover {
+    background: rgba(244, 114, 182, 0.42);
+}
+
 .quick-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -1225,6 +1276,17 @@
 .sidebar-nav {
     scrollbar-width: thin;
     scrollbar-color: rgba(148, 163, 184, 0.2) transparent;
+}
+
+@media (max-width: 1100px) {
+    body.pf-api-docs .api-overview-grid,
+    body.pf-api-docs .type-detail-shell {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    body.pf-api-docs .type-detail-rail {
+        position: static;
+    }
 }
 
 /* ============================================
