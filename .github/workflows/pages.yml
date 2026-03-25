@@ -15,7 +15,7 @@ concurrency:
 env:
   # Pinned to a PowerForge commit that keeps release-hub support and clears current NuGet vulnerability gates.
   POWERFORGE_REPOSITORY: EvotecIT/PSPublishModule
-  POWERFORGE_REF: 228ee7214bb3286402ec695580a82cc37d1daf9d
+  POWERFORGE_REF: 4751f06a2a52d926fc222a709ea6f0fff3d022c7
 
 jobs:
   build:
