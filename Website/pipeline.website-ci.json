@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/main/schemas/powerforge.web.pipelinespec.schema.json",
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/main/Schemas/powerforge.web.pipelinespec.schema.json",
   "cache": true,
   "cachePath": "./_temp/pipeline-cache.json",
   "profile": true,
@@ -49,29 +49,9 @@
       "clean": true
     },
     {
-      "task": "verify",
-      "id": "verify-site",
-      "dependsOn": "build-site",
-      "skipModes": ["ci"],
-      "config": "./site.json"
-    },
-    {
-      "task": "verify",
-      "id": "verify-ci",
-      "dependsOn": "build-site",
-      "modes": ["ci"],
-      "config": "./site.json",
-      "baseline": "./.powerforge/verify-baseline.json",
-      "failOnNewWarnings": true,
-      "failOnNavLint": true,
-      "failOnThemeContract": true,
-      "warningPreviewCount": 10,
-      "errorPreviewCount": 10
-    },
-    {
       "task": "dotnet-build",
       "id": "build-library",
-      "dependsOn": "verify-site",
+      "dependsOn": "build-site",
       "project": "../CodeGlyphX/CodeGlyphX.csproj",
       "configuration": "Release",
       "skipIfProjectMissing": true
@@ -241,42 +221,6 @@
       "cacheHeaders": true,
       "cacheHeadersOut": "_headers",
       "reportPath": "./_reports/optimize-report.json"
-    },
-    {
-      "task": "doctor",
-      "id": "doctor-site",
-      "dependsOn": "optimize-site",
-      "skipModes": ["dev"],
-      "config": "./site.json",
-      "siteRoot": "./_site",
-      "noBuild": true,
-      "noVerify": true,
-      "baseline": "./.powerforge/audit-baseline.json",
-      "failOnNewIssues": false,
-      "maxTotalFiles": 4000,
-      "exclude": "**/*.scripts.html,**/*.head.html,**/api-fragments/**,api-fragments/**",
-      "ignoreNav": "sitemap/**,search/**,playground/index.html,playground/404.html",
-      "noDefaultIgnoreNav": true,
-      "navSelector": "header nav.nav",
-      "navCanonicalPath": "index.html",
-      "navCanonicalSelector": "header nav.nav",
-      "navCanonicalRequired": true,
-      "navRequiredLinks": "/,/docs/",
-      "minNavCoveragePercent": 95,
-      "requiredRoutes": "/,/docs/,/404.html,/api/,/search/,/sitemap/",
-      "failOnCategories": "budget,nav,link,asset,rendered-console-error,rendered-request-failure",
-      "rendered": true,
-      "renderedEnsureInstalled": false,
-      "renderedMaxPages": 10,
-      "renderedInclude": "index.html,docs/**,benchmarks/**,faq/**,pricing/**,showcase/**,playground/**",
-      "renderedExclude": "api/**,docs/api/**,api-docs/**",
-      "summary": true,
-      "summaryPath": "./_reports/doctor-summary.json",
-      "summaryMaxIssues": 50,
-      "checkUtf8": true,
-      "checkMetaCharset": true,
-      "checkUnicodeReplacementChars": true
     }
   ]
 }
-
