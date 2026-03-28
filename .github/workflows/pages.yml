@@ -38,8 +38,8 @@ jobs:
         shell: pwsh
         run: |
           $lockPath = [string]'${{ env.POWERFORGE_LOCK_PATH }}'
-          $resolvedRepository = [string]'${{ vars.POWERFORGE_REPOSITORY }}'
-          $resolvedRef = [string]'${{ vars.POWERFORGE_REF }}'
+          $resolvedRepository = ''
+          $resolvedRef = ''
 
           if (([string]::IsNullOrWhiteSpace($resolvedRepository) -or [string]::IsNullOrWhiteSpace($resolvedRef)) -and (Test-Path -LiteralPath $lockPath)) {
             $lock = Get-Content -LiteralPath $lockPath -Raw | ConvertFrom-Json
@@ -57,7 +57,7 @@ jobs:
           }
 
           if ([string]::IsNullOrWhiteSpace($resolvedRepository) -or [string]::IsNullOrWhiteSpace($resolvedRef)) {
-            throw "Provide POWERFORGE_REPOSITORY + POWERFORGE_REF overrides or commit a valid engine lock file at '$lockPath'."
+            throw "Commit a valid engine lock file at '$lockPath'."
           }
 
           if ($resolvedRef -notmatch '^(?:[0-9a-fA-F]{40}|[0-9a-fA-F]{64})$') {
