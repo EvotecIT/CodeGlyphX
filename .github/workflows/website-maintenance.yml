@@ -24,4 +24,3 @@ jobs:
       powerforge_repository_override: ${{ vars.POWERFORGE_REPOSITORY }}
       powerforge_ref_override: ${{ vars.POWERFORGE_REF }}
       report_artifact_name: powerforge-website-maintenance-reports
-    secrets: inherit
