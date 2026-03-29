@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
   workflow_dispatch:
 
@@ -33,12 +33,12 @@ jobs:
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
 
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
 
       - name: Restore Core
         run: dotnet restore CodeGlyphX/CodeGlyphX.csproj
@@ -111,7 +111,7 @@ jobs:
     if: github.event_name == 'pull_request'
     permissions:
       contents: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@e03dfef1b91cc7f58dfb87f3b4dc6b3dac32744a
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@9cdc20a49acb8492c6f81cd6863c393837b1a477
     with:
       website_root: Website
       pipeline_config: Website/pipeline.website-ci.json
@@ -131,7 +131,7 @@ jobs:
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
 
       - name: Restore Tests
         run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net8.0
@@ -148,5 +148,3 @@ jobs:
           files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
           fail_ci_if_error: false
           verbose: true
-
-
