@@ -398,6 +398,129 @@ body.pf-api-docs .type-detail-rail .type-toc ul::-webkit-scrollbar-thumb:hover {
     background: rgba(244, 114, 182, 0.42);
 }
 
+body.pf-api-docs .namespace-select.pf-enhanced-native {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+body.pf-api-docs .pf-combobox {
+    position: relative;
+}
+
+body.pf-api-docs .pf-combobox-trigger {
+    position: relative;
+    width: 100%;
+    padding: 0.6rem 2rem 0.6rem 0.9rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    line-height: 1.2;
+    text-align: left;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+body.pf-api-docs .pf-combobox-trigger:focus-visible,
+body.pf-api-docs .pf-combobox-trigger:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.12);
+}
+
+body.pf-api-docs .pf-combobox-trigger::after {
+    content: "";
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--text-dim);
+    border-bottom: 2px solid var(--text-dim);
+    transform: translateY(-65%) rotate(45deg);
+    transition: transform 0.15s ease;
+}
+
+body.pf-api-docs .pf-combobox.open .pf-combobox-trigger::after {
+    transform: translateY(-40%) rotate(225deg);
+}
+
+body.pf-api-docs .pf-combobox-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 70;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 12px 28px rgba(5, 5, 12, 0.35);
+    padding: 0.3rem;
+}
+
+body.pf-api-docs .pf-combobox-list {
+    max-height: min(280px, 42vh);
+    overflow: auto;
+    display: grid;
+    gap: 2px;
+    padding-right: 2px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.45) rgba(15, 23, 42, 0.85);
+}
+
+body.pf-api-docs .pf-combobox-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+body.pf-api-docs .pf-combobox-list::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.75);
+    border-radius: 999px;
+}
+
+body.pf-api-docs .pf-combobox-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(148, 163, 184, 0.55), rgba(148, 163, 184, 0.35));
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+}
+
+body.pf-api-docs .pf-combobox-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(244, 114, 182, 0.58), rgba(148, 163, 184, 0.4));
+}
+
+body.pf-api-docs .pf-combobox-option {
+    display: block;
+    width: 100%;
+    padding: 0.45rem 0.55rem;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text);
+    font-size: 0.82rem;
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+}
+
+body.pf-api-docs .pf-combobox-option:hover,
+body.pf-api-docs .pf-combobox-option:focus-visible {
+    background: rgba(244, 114, 182, 0.14);
+    color: var(--text);
+    outline: none;
+}
+
+body.pf-api-docs .pf-combobox-option.active {
+    background: rgba(244, 114, 182, 0.2);
+    color: var(--text);
+}
+
 .quick-card {
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -431,6 +554,40 @@ body.pf-api-docs .type-detail-rail .type-toc ul::-webkit-scrollbar-thumb:hover {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--bg-card);
+}
+
+.namespace-group-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+}
+
+.namespace-group-actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 0.85rem;
+}
+
+.overview-group-toggle {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: rgba(15, 23, 42, 0.42);
+    color: var(--text);
+    border-radius: 999px;
+    padding: 0.45rem 0.85rem;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.overview-group-toggle:hover {
+    border-color: var(--primary);
+    background: rgba(244, 114, 182, 0.1);
+    color: var(--text);
+    transform: translateY(-1px);
 }
 
 .type-chips {
@@ -1127,6 +1284,55 @@ body.pf-api-docs .type-detail-rail .type-toc ul::-webkit-scrollbar-thumb:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 0.4rem;
+}
+
+.example-origin {
+    margin: 0.35rem 0 0.45rem;
+}
+
+.example-origin-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: none;
+}
+
+.example-origin-badge.example-origin-authored {
+    border-color: rgba(16, 185, 129, 0.42);
+    background: rgba(6, 95, 70, 0.22);
+    color: #6ee7b7;
+}
+
+.example-origin-badge.example-origin-imported {
+    border-color: rgba(56, 189, 248, 0.42);
+    background: rgba(8, 47, 73, 0.28);
+    color: #7dd3fc;
+}
+
+.example-origin-badge.example-origin-generated {
+    border-color: rgba(244, 114, 182, 0.42);
+    background: rgba(80, 7, 36, 0.3);
+    color: #f9a8d4;
+}
+
+.example-origin-badge.example-origin-other {
+    border-color: rgba(148, 163, 184, 0.32);
+    background: rgba(15, 23, 42, 0.72);
+    color: var(--text);
+}
+
+.example-media-meta {
+    margin: -0.1rem 0 0;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    line-height: 1.5;
 }
 
 /* ============================================
