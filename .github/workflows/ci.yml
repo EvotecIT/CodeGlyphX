@@ -2,18 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
   workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
-env:
-  # Pinned to a PowerForge commit that keeps release-hub support and clears current NuGet vulnerability gates.
-  POWERFORGE_REPOSITORY: EvotecIT/PSPublishModule
-  POWERFORGE_REF: 4751f06a2a52d926fc222a709ea6f0fff3d022c7
 
 jobs:
   build-test:
@@ -38,12 +33,12 @@ jobs:
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
 
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
 
       - name: Restore Core
         run: dotnet restore CodeGlyphX/CodeGlyphX.csproj
@@ -113,45 +108,16 @@ jobs:
 
   website-build:
     name: Website Build (PR)
-    # Prefer private/self-hosted runners for private repos to reduce hosted spend.
-    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
-    timeout-minutes: 10
     if: github.event_name == 'pull_request'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup .NET 10
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Checkout PSPublishModule
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.POWERFORGE_REPOSITORY }}
-          ref: ${{ env.POWERFORGE_REF }}
-          path: PSPublishModule
-
-      - name: Restore and build PowerForge.Web.Cli
-        run: |
-          dotnet restore PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj --force-evaluate
-          dotnet build PSPublishModule/PowerForge.Web.Cli/PowerForge.Web.Cli.csproj -c Release --no-restore
-
-      - name: Build website (static + playground)
-        working-directory: Website
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: dotnet ../PSPublishModule/PowerForge.Web.Cli/bin/Release/net10.0/PowerForge.Web.Cli.dll pipeline --config pipeline.json --mode ci --skip doctor
-
-      - name: Verify website output
-        run: |
-          test -f Website/_site/.nojekyll
-          test -f Website/_site/index.html
-          test -f Website/_site/docs/index.html
-          test -f Website/_site/playground/index.html
-
-      # Playwright smoke coverage is handled by the PowerForge.Web audit step
+    permissions:
+      contents: read
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@30f4082c1a7d79bc8419d12ac87b43f88919eea2
+    with:
+      website_root: Website
+      pipeline_config: Website/pipeline.website-ci.json
+      runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
+      powerforge_web_tag: PowerForgeWeb-v1.0.0-preview-20260328151156
+      report_artifact_name: powerforge-website-reports
 
   coverage:
     name: Coverage (linux)
@@ -165,7 +131,7 @@ jobs:
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: "8.0.x"
 
       - name: Restore Tests
         run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net8.0
@@ -182,5 +148,3 @@ jobs:
           files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
           fail_ci_if_error: false
           verbose: true
-
-
