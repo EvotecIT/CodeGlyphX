@@ -988,23 +988,8 @@ public static class QrImageDecoder {
         if (cancellationToken.IsCancellationRequested) return false;
 
         var grayscale = BuildGrayscale(rgba, width, height, stride);
-        if (TryDecodeGrayscale(grayscale, width, height, options, cancellationToken, out decoded, out info)) {
+        if (TryDecodeGrayscaleVariants(grayscale, width, height, options, cancellationToken, out decoded, out info)) {
             return true;
-        }
-
-        // The legacy pipeline remains best-effort compared to the net8 QR pixel decoder.
-        // These extra grayscale passes are intentionally scoped to clean/generated assets
-        // (for example PNGs with antialiasing or transparency), not noisy camera photos.
-        if (TryContrastStretch(grayscale, out var contrast)) {
-            if (TryDecodeGrayscale(contrast, width, height, options, cancellationToken, out decoded, out info)) {
-                return true;
-            }
-        }
-
-        if (TryLocalNormalize(grayscale, width, height, out var normalized)) {
-            if (TryDecodeGrayscale(normalized, width, height, options, cancellationToken, out decoded, out info)) {
-                return true;
-            }
         }
 
         // Low-risk fallback for clean colored PNGs: if luminance contrast is weak but
@@ -1032,6 +1017,32 @@ public static class QrImageDecoder {
         return false;
     }
 
+    private static bool TryDecodeGrayscaleVariants(byte[] grayscale, int width, int height, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+        decoded = null!;
+        info = default;
+
+        if (TryDecodeGrayscale(grayscale, width, height, options, cancellationToken, out decoded, out info)) {
+            return true;
+        }
+
+        // The legacy pipeline remains best-effort compared to the net8 QR pixel decoder.
+        // These extra grayscale passes are intentionally scoped to clean/generated assets
+        // (for example PNGs with antialiasing or transparency), not noisy camera photos.
+        if (TryContrastStretch(grayscale, out var contrast)) {
+            if (TryDecodeGrayscale(contrast, width, height, options, cancellationToken, out decoded, out info)) {
+                return true;
+            }
+        }
+
+        if (TryLocalNormalize(grayscale, width, height, out var normalized)) {
+            if (TryDecodeGrayscale(normalized, width, height, options, cancellationToken, out decoded, out info)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static bool TryDecodeColorVariants(byte[] rgba, int width, int height, int stride, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
         decoded = null!;
         info = default;
@@ -1039,20 +1050,8 @@ public static class QrImageDecoder {
 
         for (var variant = 0; variant < 4; variant++) {
             var gray = BuildChannelGrayscale(rgba, width, height, stride, variant);
-            if (TryDecodeGrayscale(gray, width, height, options, cancellationToken, out decoded, out info)) {
+            if (TryDecodeGrayscaleVariants(gray, width, height, options, cancellationToken, out decoded, out info)) {
                 return true;
-            }
-
-            if (TryContrastStretch(gray, out var contrast)) {
-                if (TryDecodeGrayscale(contrast, width, height, options, cancellationToken, out decoded, out info)) {
-                    return true;
-                }
-            }
-
-            if (TryLocalNormalize(gray, width, height, out var normalized)) {
-                if (TryDecodeGrayscale(normalized, width, height, options, cancellationToken, out decoded, out info)) {
-                    return true;
-                }
             }
         }
 
@@ -1100,16 +1099,7 @@ public static class QrImageDecoder {
             var row = y * stride;
             for (var x = 0; x < width; x++) {
                 var i = row + (x * 4);
-                var r = rgba[i + 0];
-                var g = rgba[i + 1];
-                var b = rgba[i + 2];
-                var a = rgba[i + 3];
-                if (a != 255) {
-                    var invA = 255 - a;
-                    r = (byte)((r * a + 255 * invA + 127) / 255);
-                    g = (byte)((g * a + 255 * invA + 127) / 255);
-                    b = (byte)((b * a + 255 * invA + 127) / 255);
-                }
+                ReadCompositedRgba(rgba, i, out var r, out var g, out var b);
                 var lum = (299 * r) + (587 * g) + (114 * b);
                 gray[dst++] = (byte)(lum / 1000);
             }
@@ -1124,17 +1114,7 @@ public static class QrImageDecoder {
             var row = y * stride;
             for (var x = 0; x < width; x++) {
                 var i = row + (x * 4);
-                var r = rgba[i + 0];
-                var g = rgba[i + 1];
-                var b = rgba[i + 2];
-                var a = rgba[i + 3];
-                if (a != 255) {
-                    var invA = 255 - a;
-                    r = (byte)((r * a + 255 * invA + 127) / 255);
-                    g = (byte)((g * a + 255 * invA + 127) / 255);
-                    b = (byte)((b * a + 255 * invA + 127) / 255);
-                }
-
+                ReadCompositedRgba(rgba, i, out var r, out var g, out var b);
                 gray[dst++] = variant switch {
                     0 => r,
                     1 => g,
@@ -1144,6 +1124,19 @@ public static class QrImageDecoder {
             }
         }
         return gray;
+    }
+
+    private static void ReadCompositedRgba(byte[] rgba, int index, out byte r, out byte g, out byte b) {
+        r = rgba[index + 0];
+        g = rgba[index + 1];
+        b = rgba[index + 2];
+        var a = rgba[index + 3];
+        if (a == 255) return;
+
+        var invA = 255 - a;
+        r = (byte)((r * a + 255 * invA + 127) / 255);
+        g = (byte)((g * a + 255 * invA + 127) / 255);
+        b = (byte)((b * a + 255 * invA + 127) / 255);
     }
 
     private static byte[] InvertGrayscale(byte[] gray) {
