@@ -21,6 +21,8 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Compile Include="Net472\**\*.cs" />
+    <Compile Include="QrImageDecodeParityData.cs" />
+    <Compile Include="QrImageDecodeParitySharedTests.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
