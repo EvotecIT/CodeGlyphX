@@ -194,14 +194,9 @@ public static partial class QrPngRenderer {
     }
 
     private static Rgba32 CompositeForeground(Rgba32 foreground, Rgba32 background) {
-        if (foreground.A == 255 && background.A == 255) return foreground;
-        var sa = foreground.A;
-        var inv = 255 - sa;
-        var r = (byte)((foreground.R * sa + background.R * inv + 127) / 255);
-        var g = (byte)((foreground.G * sa + background.G * inv + 127) / 255);
-        var b = (byte)((foreground.B * sa + background.B * inv + 127) / 255);
-        var a = (byte)((sa + background.A * inv + 127) / 255);
-        return new Rgba32(r, g, b, a);
+        // Reuse the shared compositor so the simple square path matches the
+        // general renderer when foreground alpha is less than fully opaque.
+        return ComposeOver(foreground, background);
     }
 
 }

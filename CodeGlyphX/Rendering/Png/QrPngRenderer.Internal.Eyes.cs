@@ -1113,16 +1113,7 @@ public static partial class QrPngRenderer {
                     continue;
                 }
 
-                var dr = scanlines[dst + 0];
-                var dg = scanlines[dst + 1];
-                var db = scanlines[dst + 2];
-                var da = scanlines[dst + 3];
-
-                var inv = 255 - sa;
-                scanlines[dst + 0] = (byte)((sr * sa + dr * inv + 127) / 255);
-                scanlines[dst + 1] = (byte)((sg * sa + dg * inv + 127) / 255);
-                scanlines[dst + 2] = (byte)((sb * sa + db * inv + 127) / 255);
-                scanlines[dst + 3] = (byte)((sa + da * inv + 127) / 255);
+                BlendPixelAt(scanlines, dst, new Rgba32(sr, sg, sb, sa));
             }
         }
     }
