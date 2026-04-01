@@ -117,6 +117,25 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_SimpleRgba_TransparentForeground_LeavesBackgroundUnchanged() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var png = QrPngRenderer.Render(matrix, new QrPngRenderOptions {
+            ModuleSize = 1,
+            QuietZone = 0,
+            Foreground = new Rgba32(0, 0, 0, 0),
+            Background = new Rgba32(12, 34, 56, 78),
+        });
+
+        var (rgba, _, _, _) = PngTestDecoder.DecodeRgba32(png);
+        Assert.Equal(12, rgba[0]);
+        Assert.Equal(34, rgba[1]);
+        Assert.Equal(56, rgba[2]);
+        Assert.Equal(78, rgba[3]);
+    }
+
+    [Fact]
     public void Render_GeneralPath_Preserves_Straight_Alpha_Over_Transparent_Background() {
         var matrix = new BitMatrix(1, 1);
         matrix[0, 0] = true;
@@ -136,6 +155,28 @@ public sealed class QrPngRendererTests {
         Assert.Equal(0, rgba[center + 1]);
         Assert.Equal(0, rgba[center + 2]);
         Assert.Equal(128, rgba[center + 3]);
+    }
+
+    [Fact]
+    public void Render_GeneralPath_TransparentForeground_LeavesBackgroundUnchanged() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var png = QrPngRenderer.Render(matrix, new QrPngRenderOptions {
+            ModuleSize = 5,
+            QuietZone = 0,
+            Foreground = new Rgba32(0, 0, 0, 0),
+            Background = new Rgba32(12, 34, 56, 78),
+            ModuleShape = QrPngModuleShape.Circle,
+            ModuleScale = 0.8,
+        });
+
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+        var center = (height / 2) * stride + (width / 2) * 4;
+        Assert.Equal(12, rgba[center + 0]);
+        Assert.Equal(34, rgba[center + 1]);
+        Assert.Equal(56, rgba[center + 2]);
+        Assert.Equal(78, rgba[center + 3]);
     }
 
     [Fact]

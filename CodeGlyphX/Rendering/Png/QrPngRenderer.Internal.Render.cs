@@ -520,6 +520,8 @@ public static partial class QrPngRenderer {
     }
 
     private static Rgba32 CompositeColor(Rgba32 foreground, Rgba32 background) {
+        // Keep solid-module precompositing aligned with the per-pixel renderer so
+        // transparent output stores straight-alpha colors consistently.
         return ComposeOver(foreground, background);
     }
 
@@ -3142,6 +3144,8 @@ public static partial class QrPngRenderer {
         return m < 0 ? m + modulus : m;
     }
 
+    // Compose straight-alpha colors using Porter-Duff "over" so transparent
+    // canvases preserve the source RGB instead of leaking hidden background RGB.
     private static Rgba32 ComposeOver(Rgba32 top, Rgba32 bottom) {
         var ta = top.A;
         if (ta == 0) return bottom;
@@ -3177,6 +3181,8 @@ public static partial class QrPngRenderer {
         BlendPixelAt(scanlines, rowStart, color);
     }
 
+    // Blend onto the stored RGBA pixel with the same straight-alpha math used by
+    // the simple and solid paths. This keeps modules, eyes, and logos consistent.
     private static void BlendPixelAt(byte[] buffer, int offset, Rgba32 color) {
         if (color.A == 0) return;
         if (color.A == 255) {
