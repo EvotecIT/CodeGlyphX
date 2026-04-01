@@ -57,6 +57,23 @@ public sealed class RoundTripTests {
     }
 
     [Fact]
+    public void Encode_RenderTransparentPng_DecodePixels_RoundTrip() {
+        var text = "Transparent round-trip";
+        var qr = QrCodeEncoder.EncodeText(text, QrErrorCorrectionLevel.M, 1, 10, null);
+        var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
+            ModuleSize = 8,
+            QuietZone = 4,
+            Foreground = Rgba32.Black,
+            Background = new Rgba32(255, 255, 255, 0)
+        });
+
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+        Assert.Equal(0, rgba[3]);
+        Assert.True(QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal(text, decoded.Text);
+    }
+
+    [Fact]
     public void DecodePixels_FinderBased_CanIgnoreNoiseOutsideQr() {
         var text = "Noise outside QR";
         var qr = QrCodeEncoder.EncodeText(text, QrErrorCorrectionLevel.M, 1, 10, null);

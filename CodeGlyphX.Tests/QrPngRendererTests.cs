@@ -98,6 +98,72 @@ public sealed class QrPngRendererTests {
     }
 
     [Fact]
+    public void Render_SimpleRgba_Preserves_Straight_Alpha_Over_Transparent_Background() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var png = QrPngRenderer.Render(matrix, new QrPngRenderOptions {
+            ModuleSize = 1,
+            QuietZone = 0,
+            Foreground = new Rgba32(0, 0, 0, 128),
+            Background = new Rgba32(255, 255, 255, 0),
+        });
+
+        var (rgba, _, _, _) = PngTestDecoder.DecodeRgba32(png);
+        Assert.Equal(0, rgba[0]);
+        Assert.Equal(0, rgba[1]);
+        Assert.Equal(0, rgba[2]);
+        Assert.Equal(128, rgba[3]);
+    }
+
+    [Fact]
+    public void Render_GeneralPath_Preserves_Straight_Alpha_Over_Transparent_Background() {
+        var matrix = new BitMatrix(1, 1);
+        matrix[0, 0] = true;
+
+        var png = QrPngRenderer.Render(matrix, new QrPngRenderOptions {
+            ModuleSize = 5,
+            QuietZone = 0,
+            Foreground = new Rgba32(0, 0, 0, 128),
+            Background = new Rgba32(255, 255, 255, 0),
+            ModuleShape = QrPngModuleShape.Circle,
+            ModuleScale = 0.8,
+        });
+
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+        var center = (height / 2) * stride + (width / 2) * 4;
+        Assert.Equal(0, rgba[center + 0]);
+        Assert.Equal(0, rgba[center + 1]);
+        Assert.Equal(0, rgba[center + 2]);
+        Assert.Equal(128, rgba[center + 3]);
+    }
+
+    [Fact]
+    public void Render_LogoOverlay_Preserves_Straight_Alpha_Over_Transparent_Background() {
+        var matrix = new BitMatrix(1, 1);
+        var logoRgba = new byte[] { 255, 0, 0, 128 };
+
+        var png = QrPngRenderer.Render(matrix, new QrPngRenderOptions {
+            ModuleSize = 12,
+            QuietZone = 0,
+            Foreground = Rgba32.Black,
+            Background = new Rgba32(255, 255, 255, 0),
+            Logo = new QrPngLogoOptions(logoRgba, 1, 1) {
+                Scale = 1.0,
+                PaddingPx = 0,
+                DrawBackground = false,
+            },
+        });
+
+        var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
+        var center = (height / 2) * stride + (width / 2) * 4;
+        Assert.Equal(255, rgba[center + 0]);
+        Assert.Equal(0, rgba[center + 1]);
+        Assert.Equal(0, rgba[center + 2]);
+        Assert.Equal(128, rgba[center + 3]);
+    }
+
+    [Fact]
     public void Render_With_SpecklePattern_Changes_With_Seed() {
         var matrix = new BitMatrix(1, 1);
         matrix[0, 0] = true;

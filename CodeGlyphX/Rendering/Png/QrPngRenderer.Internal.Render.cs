@@ -443,23 +443,7 @@ public static partial class QrPngRenderer {
                     }
                 }
 
-                if (outColor.A == 255) {
-                    scanlines[rowStart + 0] = outColor.R;
-                    scanlines[rowStart + 1] = outColor.G;
-                    scanlines[rowStart + 2] = outColor.B;
-                    scanlines[rowStart + 3] = 255;
-                } else {
-                    var dr = scanlines[rowStart + 0];
-                    var dg = scanlines[rowStart + 1];
-                    var db = scanlines[rowStart + 2];
-                    var da = scanlines[rowStart + 3];
-                    var sa = outColor.A;
-                    var inv = 255 - sa;
-                    scanlines[rowStart + 0] = (byte)((outColor.R * sa + dr * inv + 127) / 255);
-                    scanlines[rowStart + 1] = (byte)((outColor.G * sa + dg * inv + 127) / 255);
-                    scanlines[rowStart + 2] = (byte)((outColor.B * sa + db * inv + 127) / 255);
-                    scanlines[rowStart + 3] = (byte)((sa + da * inv + 127) / 255);
-                }
+                BlendPixelAt(scanlines, rowStart, outColor);
                 rowStart += 4;
             }
         }
@@ -522,23 +506,7 @@ public static partial class QrPngRenderer {
                     }
                 }
 
-                if (outColor.A == 255) {
-                    scanlines[rowStart + 0] = outColor.R;
-                    scanlines[rowStart + 1] = outColor.G;
-                    scanlines[rowStart + 2] = outColor.B;
-                    scanlines[rowStart + 3] = 255;
-                } else {
-                    var dr = scanlines[rowStart + 0];
-                    var dg = scanlines[rowStart + 1];
-                    var db = scanlines[rowStart + 2];
-                    var da = scanlines[rowStart + 3];
-                    var sa = outColor.A;
-                    var inv = 255 - sa;
-                    scanlines[rowStart + 0] = (byte)((outColor.R * sa + dr * inv + 127) / 255);
-                    scanlines[rowStart + 1] = (byte)((outColor.G * sa + dg * inv + 127) / 255);
-                    scanlines[rowStart + 2] = (byte)((outColor.B * sa + db * inv + 127) / 255);
-                    scanlines[rowStart + 3] = (byte)((sa + da * inv + 127) / 255);
-                }
+                BlendPixelAt(scanlines, rowStart, outColor);
                 rowStart += 4;
             }
         }
@@ -552,14 +520,7 @@ public static partial class QrPngRenderer {
     }
 
     private static Rgba32 CompositeColor(Rgba32 foreground, Rgba32 background) {
-        if (foreground.A == 255) return foreground;
-        var sa = foreground.A;
-        var inv = 255 - sa;
-        var r = (byte)((foreground.R * sa + background.R * inv + 127) / 255);
-        var g = (byte)((foreground.G * sa + background.G * inv + 127) / 255);
-        var b = (byte)((foreground.B * sa + background.B * inv + 127) / 255);
-        var a = (byte)((sa + background.A * inv + 127) / 255);
-        return new Rgba32(r, g, b, a);
+        return ComposeOver(foreground, background);
     }
 
     private static void ComputeLayout(
@@ -3213,24 +3174,31 @@ public static partial class QrPngRenderer {
         }
 
         var rowStart = y * (stride + 1) + 1 + x * 4;
-        var dr = scanlines[rowStart + 0];
-        var dg = scanlines[rowStart + 1];
-        var db = scanlines[rowStart + 2];
-        var da = scanlines[rowStart + 3];
-        var sa = color.A;
-        var invSa = 255 - sa;
-        var outA = sa + (da * invSa + 127) / 255;
-        if (outA == 0) {
-            scanlines[rowStart + 0] = 0;
-            scanlines[rowStart + 1] = 0;
-            scanlines[rowStart + 2] = 0;
-            scanlines[rowStart + 3] = 0;
+        BlendPixelAt(scanlines, rowStart, color);
+    }
+
+    private static void BlendPixelAt(byte[] buffer, int offset, Rgba32 color) {
+        if (color.A == 0) return;
+        if (color.A == 255) {
+            buffer[offset + 0] = color.R;
+            buffer[offset + 1] = color.G;
+            buffer[offset + 2] = color.B;
+            buffer[offset + 3] = 255;
             return;
         }
-        scanlines[rowStart + 0] = (byte)((color.R * sa + dr * da * invSa / 255 + outA / 2) / outA);
-        scanlines[rowStart + 1] = (byte)((color.G * sa + dg * da * invSa / 255 + outA / 2) / outA);
-        scanlines[rowStart + 2] = (byte)((color.B * sa + db * da * invSa / 255 + outA / 2) / outA);
-        scanlines[rowStart + 3] = (byte)outA;
+
+        var composed = ComposeOver(
+            color,
+            new Rgba32(
+                buffer[offset + 0],
+                buffer[offset + 1],
+                buffer[offset + 2],
+                buffer[offset + 3]));
+
+        buffer[offset + 0] = composed.R;
+        buffer[offset + 1] = composed.G;
+        buffer[offset + 2] = composed.B;
+        buffer[offset + 3] = composed.A;
     }
 
     private static void FillBackgroundGradient(byte[] scanlines, int widthPx, int heightPx, int stride, QrPngGradientOptions gradient) {
