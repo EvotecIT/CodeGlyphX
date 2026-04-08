@@ -6,8 +6,10 @@ namespace CodeGlyphX.Qr;
 
 internal static class QrPixelSampling {
     private static readonly double[] PhaseOffsetsCoarse = { -0.35, -0.15, 0.0, 0.15, 0.35 };
+    private static readonly double[] PhaseOffsetsCoarseExtended = { -0.65, -0.45, -0.25, 0.0, 0.25, 0.45, 0.65 };
     private static readonly double[] ScaleFactors = { 0.94, 0.97, 1.0, 1.03, 1.06 };
     private static readonly double[] ScaleFactorsWide = { 0.9, 0.95, 1.0, 1.05, 1.1 };
+    private static readonly double[] ScaleFactorsWideStylized = { 0.85, 0.92, 1.0, 1.08, 1.15 };
 
     public static void RefineTransform(
         QrGrayImage image,
@@ -47,7 +49,7 @@ internal static class QrPixelSampling {
                 var svxX = vxX * scaleX;
                 var svxY = vxY * scaleX;
 
-                FindBestPhase(image, invert, tlX, tlY, svxX, svxY, svyX, svyY, dimension, out var phX, out var phY, out var dist, out var timing);
+                FindBestPhase(image, invert, tlX, tlY, svxX, svxY, svyX, svyY, dimension, extended: false, out var phX, out var phY, out var dist, out var timing);
 
                 // Prefer lower format distance, then higher timing alternation. Break ties by staying closer to the original scale.
                 var scalePenalty = Math.Abs(scaleX - 1.0) + Math.Abs(scaleY - 1.0);
@@ -82,6 +84,7 @@ internal static class QrPixelSampling {
         double vyX,
         double vyY,
         int dimension,
+        bool extended,
         out double bestVxX,
         out double bestVxY,
         out double bestVyX,
@@ -100,17 +103,18 @@ internal static class QrPixelSampling {
         var bestScalePenalty = double.PositiveInfinity;
         const double scaleEpsilon = 1e-6;
 
-        for (var sy = 0; sy < ScaleFactorsWide.Length; sy++) {
-            var scaleY = ScaleFactorsWide[sy];
+        var scales = extended ? ScaleFactorsWideStylized : ScaleFactorsWide;
+        for (var sy = 0; sy < scales.Length; sy++) {
+            var scaleY = scales[sy];
             var svyX = vyX * scaleY;
             var svyY = vyY * scaleY;
 
-            for (var sx = 0; sx < ScaleFactorsWide.Length; sx++) {
-                var scaleX = ScaleFactorsWide[sx];
+            for (var sx = 0; sx < scales.Length; sx++) {
+                var scaleX = scales[sx];
                 var svxX = vxX * scaleX;
                 var svxY = vxY * scaleX;
 
-                FindBestPhase(image, invert, tlX, tlY, svxX, svxY, svyX, svyY, dimension, out var phX, out var phY, out var dist, out var timing);
+                FindBestPhase(image, invert, tlX, tlY, svxX, svxY, svyX, svyY, dimension, extended, out var phX, out var phY, out var dist, out var timing);
 
                 var scalePenalty = Math.Abs(scaleX - 1.0) + Math.Abs(scaleY - 1.0);
 
@@ -146,7 +150,7 @@ internal static class QrPixelSampling {
         int dimension,
         out double bestPhaseX,
         out double bestPhaseY) {
-        FindBestPhase(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, out bestPhaseX, out bestPhaseY, out _, out _);
+        FindBestPhase(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, extended: false, out bestPhaseX, out bestPhaseY, out _, out _);
     }
 
     public static bool SampleModule9(QrGrayImage image, double sx, double sy, double oxX, double oxY, double oyX, double oyY, bool invert) {
@@ -246,19 +250,21 @@ internal static class QrPixelSampling {
         double vyX,
         double vyY,
         int dimension,
+        bool extended,
         out double bestX,
         out double bestY,
         out int bestDist,
         out int bestTiming) {
+        var coarseOffsets = extended ? PhaseOffsetsCoarseExtended : PhaseOffsetsCoarse;
         bestX = 0;
         bestY = 0;
         bestDist = int.MaxValue;
         bestTiming = int.MinValue;
 
-        for (var yi = 0; yi < PhaseOffsetsCoarse.Length; yi++) {
-            var oy = PhaseOffsetsCoarse[yi];
-            for (var xi = 0; xi < PhaseOffsetsCoarse.Length; xi++) {
-                var ox = PhaseOffsetsCoarse[xi];
+        for (var yi = 0; yi < coarseOffsets.Length; yi++) {
+            var oy = coarseOffsets[yi];
+            for (var xi = 0; xi < coarseOffsets.Length; xi++) {
+                var ox = coarseOffsets[xi];
 
                 var dist = ComputeFormatDistance(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, ox, oy);
                 var timing = ComputeTimingAlternations(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, ox, oy);
@@ -276,26 +282,40 @@ internal static class QrPixelSampling {
 
         // Small refinement pass around the best coarse point.
         Span<double> fine = stackalloc double[5];
-        fine[0] = bestX - 0.10;
-        fine[1] = bestX - 0.05;
-        fine[2] = bestX;
-        fine[3] = bestX + 0.05;
-        fine[4] = bestX + 0.10;
-
         Span<double> fineY = stackalloc double[5];
-        fineY[0] = bestY - 0.10;
-        fineY[1] = bestY - 0.05;
-        fineY[2] = bestY;
-        fineY[3] = bestY + 0.05;
-        fineY[4] = bestY + 0.10;
+        if (extended) {
+            fine[0] = bestX - 0.20;
+            fine[1] = bestX - 0.10;
+            fine[2] = bestX;
+            fine[3] = bestX + 0.10;
+            fine[4] = bestX + 0.20;
+
+            fineY[0] = bestY - 0.20;
+            fineY[1] = bestY - 0.10;
+            fineY[2] = bestY;
+            fineY[3] = bestY + 0.10;
+            fineY[4] = bestY + 0.20;
+        } else {
+            fine[0] = bestX - 0.10;
+            fine[1] = bestX - 0.05;
+            fine[2] = bestX;
+            fine[3] = bestX + 0.05;
+            fine[4] = bestX + 0.10;
+
+            fineY[0] = bestY - 0.10;
+            fineY[1] = bestY - 0.05;
+            fineY[2] = bestY;
+            fineY[3] = bestY + 0.05;
+            fineY[4] = bestY + 0.10;
+        }
 
         bestDist = int.MaxValue;
         bestTiming = int.MinValue;
 
         for (var yi = 0; yi < fineY.Length; yi++) {
-            var oy = Math.Clamp(fineY[yi], -0.49, 0.49);
+            var oy = Math.Clamp(fineY[yi], extended ? -0.75 : -0.49, extended ? 0.75 : 0.49);
             for (var xi = 0; xi < fine.Length; xi++) {
-                var ox = Math.Clamp(fine[xi], -0.49, 0.49);
+                var ox = Math.Clamp(fine[xi], extended ? -0.75 : -0.49, extended ? 0.75 : 0.49);
 
                 var dist = ComputeFormatDistance(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, ox, oy);
                 var timing = ComputeTimingAlternations(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, ox, oy);
@@ -1450,6 +1470,61 @@ internal static class QrPixelSampling {
         return black >= required;
     }
 
+    public static bool SampleModule25Mean(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
+        var d = GetSampleDelta5x5(moduleSizePx);
+        return SampleModule25MeanCore(image, sx, sy, invert, d, bias: 0);
+    }
+
+    public static bool SampleModule25MeanLoose(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
+        var d = GetSampleDelta5x5(moduleSizePx);
+        return SampleModule25MeanCore(image, sx, sy, invert, d, bias: 8);
+    }
+
+    internal static bool SampleModule25MeanWithDelta(QrGrayImage image, double sx, double sy, bool invert, double d) {
+        return SampleModule25MeanCore(image, sx, sy, invert, d, bias: 0);
+    }
+
+    internal static bool SampleModule25MeanLooseWithDelta(QrGrayImage image, double sx, double sy, bool invert, double d) {
+        return SampleModule25MeanCore(image, sx, sy, invert, d, bias: 8);
+    }
+
+    internal static bool SampleModule25MeanExtraLooseWithDelta(QrGrayImage image, double sx, double sy, bool invert, double d) {
+        return SampleModule25MeanCore(image, sx, sy, invert, d, bias: 24);
+    }
+
+    private static bool SampleModule25MeanCore(QrGrayImage image, double sx, double sy, bool invert, double d, int bias) {
+        var thresholdMap = image.ThresholdMap;
+        const int count = 25;
+        var sumLum = 0;
+        var sumThr = 0;
+
+        if (thresholdMap is null) {
+            var threshold = image.Threshold;
+            for (var iy = -2; iy <= 2; iy++) {
+                var y = sy + iy * d;
+                for (var ix = -2; ix <= 2; ix++) {
+                    var x = sx + ix * d;
+                    sumLum += SampleLumaBilinear(image, x, y);
+                }
+            }
+            var isBlack = sumLum <= threshold * count + bias * count;
+            return invert ? !isBlack : isBlack;
+        }
+
+        for (var iy = -2; iy <= 2; iy++) {
+            var y = sy + iy * d;
+            for (var ix = -2; ix <= 2; ix++) {
+                var x = sx + ix * d;
+                SampleLumaThresholdBilinear(image, x, y, out var lum, out var thr);
+                sumLum += lum;
+                sumThr += thr;
+            }
+        }
+
+        var black = sumLum <= sumThr + bias * count;
+        return invert ? !black : black;
+    }
+
     public static bool SampleModule25Nearest(QrGrayImage image, double sx, double sy, bool invert, double moduleSizePx) {
         var d = GetSampleDelta5x5(moduleSizePx);
         return SampleModule25NearestCore(image, sx, sy, invert, d, required: 13);
@@ -1466,6 +1541,10 @@ internal static class QrPixelSampling {
 
     internal static bool SampleModule25NearestLooseWithDelta(QrGrayImage image, double sx, double sy, bool invert, double d) {
         return SampleModule25NearestCore(image, sx, sy, invert, d, required: 7);
+    }
+
+    internal static bool SampleModule25NearestExtraLooseWithDelta(QrGrayImage image, double sx, double sy, bool invert, double d) {
+        return SampleModule25NearestCore(image, sx, sy, invert, d, required: 5);
     }
 
     private static bool SampleModule25NearestCore(QrGrayImage image, double sx, double sy, bool invert, double d, int required) {
@@ -1504,6 +1583,16 @@ internal static class QrPixelSampling {
             py2 = QrMath.RoundToInt(startY + d * 2);
             py3 = QrMath.RoundToInt(startY + d * 3);
             py4 = QrMath.RoundToInt(endY);
+            if ((uint)px0 > (uint)maxX) px0 = px0 < 0 ? 0 : maxX;
+            if ((uint)px1 > (uint)maxX) px1 = px1 < 0 ? 0 : maxX;
+            if ((uint)px2 > (uint)maxX) px2 = px2 < 0 ? 0 : maxX;
+            if ((uint)px3 > (uint)maxX) px3 = px3 < 0 ? 0 : maxX;
+            if ((uint)px4 > (uint)maxX) px4 = px4 < 0 ? 0 : maxX;
+            if ((uint)py0 > (uint)maxY) py0 = py0 < 0 ? 0 : maxY;
+            if ((uint)py1 > (uint)maxY) py1 = py1 < 0 ? 0 : maxY;
+            if ((uint)py2 > (uint)maxY) py2 = py2 < 0 ? 0 : maxY;
+            if ((uint)py3 > (uint)maxY) py3 = py3 < 0 ? 0 : maxY;
+            if ((uint)py4 > (uint)maxY) py4 = py4 < 0 ? 0 : maxY;
         } else {
             px0 = ClampRound(startX, maxX);
             px1 = ClampRound(startX + d, maxX);
@@ -1933,6 +2022,7 @@ internal static class QrPixelSampling {
     internal static double GetSampleDeltaCenterForModule(double moduleSizePx) => GetSampleDeltaCenter(moduleSizePx);
 
     internal static double GetSampleDelta5x5ForModule(double moduleSizePx) => GetSampleDelta5x5(moduleSizePx);
+    internal static double GetSampleDelta5x5WideForModule(double moduleSizePx) => GetSampleDelta5x5Wide(moduleSizePx);
 
     internal static double GetSampleDeltaRingForModule(double moduleSizePx) => GetSampleDeltaRing(moduleSizePx);
 
@@ -1977,6 +2067,19 @@ internal static class QrPixelSampling {
 
         // If modules are tiny, fall back to a small but non-zero delta.
         if (d < 0.20) d = 0.20;
+
+        return d;
+    }
+
+    private static double GetSampleDelta5x5Wide(double moduleSizePx) {
+        if (!(moduleSizePx > 0)) return 1.0;
+
+        // Wider coverage for stylized large modules to average heavy fills/gradients.
+        var d = moduleSizePx * 0.28;
+        if (d < 0.40) d = 0.40;
+
+        var max = moduleSizePx * 0.35;
+        if (d > max) d = max;
 
         return d;
     }
@@ -2269,6 +2372,17 @@ internal static class QrPixelSampling {
         if (rounded < 0) rounded = 0;
         else if (rounded > 255) rounded = 255;
         return (byte)rounded;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    internal static void SampleLumaWithThreshold(QrGrayImage image, double x, double y, out byte lum, out byte threshold) {
+        if (image.ThresholdMap is null) {
+            lum = SampleLumaBilinear(image, x, y);
+            threshold = image.Threshold;
+            return;
+        }
+
+        SampleLumaThresholdBilinear(image, x, y, out lum, out threshold);
     }
 }
 #endif
