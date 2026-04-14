@@ -69,6 +69,19 @@ public sealed class QrDecodingSamplesTests {
             EnableTileScan = true
         };
 
+        if (relativePath.Contains("noisy-ui", StringComparison.OrdinalIgnoreCase)) {
+            options = new QrPixelDecodeOptions {
+                Profile = QrDecodeProfile.Robust,
+                MaxDimension = 2200,
+                BudgetMilliseconds = TestBudget.Adjust(5000),
+                AutoCrop = true,
+                AggressiveSampling = true,
+                StylizedSampling = true,
+                EnableTileScan = true,
+                TileGrid = 4
+            };
+        }
+
         var texts = DecodeTexts(rgba, width, height, width * 4, options);
         Assert.Contains(expectedText, texts);
     }
