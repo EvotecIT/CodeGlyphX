@@ -17,7 +17,7 @@
   },
   "featureContracts": {
     "apiDocs": {
-      "requiredPartials": ["api-header", "api-footer"],
+      "requiredPartials": ["api-header", "api-footer", "theme-tokens"],
       "cssHrefs": ["/css/app.css", "/css/api.css"],
       "requiredCssSelectors": [
         ".api-layout",
@@ -32,7 +32,7 @@
     },
     "docs": {
       "requiredLayouts": ["docs"],
-      "requiredPartials": ["header", "footer", "docs-sidebar"],
+      "requiredPartials": ["header", "footer", "docs-sidebar", "theme-tokens"],
       "cssHrefs": ["/css/app.css"],
       "requiredCssSelectors": [".docs-layout"]
     },
