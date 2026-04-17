@@ -117,6 +117,7 @@ jobs:
       pipeline_config: Website/pipeline.website-ci.json
       engine_mode: source
       runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
+      powerforge_repository: EvotecIT/PSPublishModule
       powerforge_ref: 6b08cecc26f870d0d6797be673b4a959638aed42
       powerforge_web_tag: PowerForgeWeb-v1.0.0-preview-202604140746
       report_artifact_name: powerforge-website-reports
