@@ -210,6 +210,17 @@
       "cacheHeaders": true,
       "cacheHeadersOut": "_headers",
       "reportPath": "./_reports/optimize-report.json"
+    },
+    {
+      "task": "agent-ready",
+      "id": "agent-ready",
+      "dependsOn": "optimize-site",
+      "modes": ["ci"],
+      "operation": "prepare",
+      "config": "./site.json",
+      "siteRoot": "./_site",
+      "output": "./_reports/agent-ready.json",
+      "failOnFailures": true
     }
   ]
 }

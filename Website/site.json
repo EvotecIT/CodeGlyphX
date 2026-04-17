@@ -36,6 +36,9 @@
       { "Rel": "apple-touch-icon", "Href": "/codeglyphx-qr-icon.png" },
       { "Rel": "preconnect", "Href": "https://img.shields.io", "Crossorigin": "anonymous" },
       { "Rel": "dns-prefetch", "Href": "https://img.shields.io" }
+    ],
+    "Meta": [
+      { "Name": "robots", "Content": "index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" }
     ]
   },
   "Social": {
@@ -61,6 +64,77 @@
     ],
     "OrganizationEmail": "support@evotec.xyz",
     "OrganizationContactUrl": "/faq/"
+  },
+  "AgentReadiness": {
+    "Enabled": true,
+    "HeadersPath": "_headers",
+    "LinkHeaders": true,
+    "Robots": true,
+    "SecurityHeaders": {
+      "Enabled": true,
+      "ContentSecurityPolicyValue": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    },
+    "ContentSignals": {
+      "Enabled": true,
+      "Search": true,
+      "AiInput": true,
+      "AiTrain": false
+    },
+    "BotRules": [
+      { "UserAgent": "GPTBot", "Allow": "/" },
+      { "UserAgent": "ChatGPT-User", "Allow": "/" },
+      { "UserAgent": "OAI-SearchBot", "Allow": "/" },
+      { "UserAgent": "ClaudeBot", "Allow": "/" },
+      { "UserAgent": "Claude-SearchBot", "Allow": "/" },
+      { "UserAgent": "Claude-User", "Allow": "/" },
+      { "UserAgent": "PerplexityBot", "Allow": "/" },
+      { "UserAgent": "Perplexity-User", "Allow": "/" },
+      { "UserAgent": "Google-Extended", "Allow": "/" },
+      { "UserAgent": "Applebot-Extended", "Allow": "/" },
+      { "UserAgent": "Meta-ExternalAgent", "Allow": "/" },
+      { "UserAgent": "Amazonbot", "Allow": "/" },
+      { "UserAgent": "CCBot", "Allow": "/" }
+    ],
+    "ApiCatalog": {
+      "Enabled": true,
+      "Entries": [
+        { "Anchor": "/api/", "ServiceDesc": "/api/index.json", "ServiceDoc": "/api/", "Title": "CodeGlyphX API Reference" }
+      ]
+    },
+    "AgentSkills": {
+      "Enabled": true,
+      "Skills": [
+        {
+          "Name": "codeglyphx-site-assistant",
+          "Type": "skill-md",
+          "Description": "Use CodeGlyphX documentation, API reference, sitemap, and llms files.",
+          "Content": "---\nname: codeglyphx-site-assistant\ndescription: Use CodeGlyphX documentation, API reference, sitemap, and llms resources.\n---\n\n# CodeGlyphX Site Assistant\n\nUse this skill when answering questions about CodeGlyphX.\n\n- Prefer canonical pages from https://codeglyphx.com.\n- Use `/docs/` for product and workflow guidance.\n- Use `/api/` for .NET API reference.\n- Check `/llms.txt`, `/llms.json`, and `/llms-full.txt` when present for agent-readable summaries.\n- Check `/.well-known/api-catalog` before assuming API documentation paths.\n- Respect `/robots.txt` and Content-Signal preferences.\n"
+        }
+      ]
+    },
+    "AgentsJson": {
+      "Enabled": true,
+      "Description": "Agent-facing discovery metadata for CodeGlyphX documentation, API reference, and support resources."
+    },
+    "A2AAgentCard": {
+      "Enabled": true,
+      "Name": "CodeGlyphX Documentation Discovery",
+      "Description": "Discover CodeGlyphX documentation, API reference, llms summaries, sitemap, and project resources.",
+      "Url": "/",
+      "DocumentationUrl": "/docs/",
+      "Skills": [
+        {
+          "Id": "documentation-discovery",
+          "Name": "Documentation discovery",
+          "Description": "Find CodeGlyphX product documentation, API reference, release resources, and support pages.",
+          "Tags": ["documentation", "api-reference", "sitemap", "llms"]
+        }
+      ]
+    },
+    "McpServerCard": { "Enabled": false },
+    "OpenApi": { "Enabled": false },
+    "WebMcp": false,
+    "MarkdownNegotiation": true
   },
   "EditLinks": {
     "Enabled": true,
