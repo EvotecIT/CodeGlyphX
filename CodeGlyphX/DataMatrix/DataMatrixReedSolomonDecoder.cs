@@ -12,7 +12,7 @@ internal static class DataMatrixReedSolomonDecoder {
         var hasError = false;
         for (var i = 0; i < eccLen; i++) {
             var eval = (byte)0;
-            var x = DataMatrixReedSolomon.ExpOf(i);
+            var x = DataMatrixReedSolomon.ExpOf(i + 1); // ISO 16022: evaluate at α¹…α^n, not α⁰…α^(n-1)
             for (var j = 0; j < codewords.Length; j++) eval = (byte)(DataMatrixReedSolomon.Multiply(eval, x) ^ codewords[j]);
             syndromes[i] = eval;
             if (eval != 0) hasError = true;
@@ -104,7 +104,7 @@ internal static class DataMatrixReedSolomonDecoder {
         // Verify
         for (var i = 0; i < eccLen; i++) {
             var eval = (byte)0;
-            var x = DataMatrixReedSolomon.ExpOf(i);
+            var x = DataMatrixReedSolomon.ExpOf(i + 1); // ISO 16022: evaluate at α¹…α^n, not α⁰…α^(n-1)
             for (var j = 0; j < codewords.Length; j++) eval = (byte)(DataMatrixReedSolomon.Multiply(eval, x) ^ codewords[j]);
             if (eval != 0) return false;
         }
