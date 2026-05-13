@@ -297,9 +297,11 @@ public static class DataMatrixEncoder {
                     matrix[startCol + x, startRow + regionTotalRows - 1] = true;
                 }
                 // Left border (solid) + Right border (alternating)
+                // Right column: dark at odd y (continues the clock track from the top timing row,
+                // which ends light at x=N-1 for all even-width ECC200 symbols).
                 for (var y = 1; y < regionTotalRows - 1; y++) {
                     matrix[startCol, startRow + y] = true;
-                    matrix[startCol + regionTotalCols - 1, startRow + y] = (y & 1) == 0;
+                    matrix[startCol + regionTotalCols - 1, startRow + y] = (y & 1) != 0;
                 }
 
                 for (var y = 0; y < regionDataRows; y++) {

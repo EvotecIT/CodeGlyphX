@@ -25,7 +25,7 @@ internal static class DataMatrixReedSolomon {
         var result = new byte[degree];
         result[degree - 1] = 1;
 
-        byte root = 1;
+        byte root = 2; // ISO 16022: generator roots start at α¹, not α⁰
         for (var i = 0; i < degree; i++) {
             for (var j = 0; j < result.Length; j++) {
                 result[j] = Multiply(result[j], root);

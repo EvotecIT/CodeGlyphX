@@ -7,6 +7,35 @@ namespace CodeGlyphX.Tests;
 
 public class DataMatrixDecoderTests {
     [Fact]
+    public void DataMatrix_Encode_SingleCharacter_UsesIsoTimingPattern() {
+        var matrix = DataMatrixEncoder.Encode("A");
+
+        Assert.Equal(10, matrix.Width);
+        Assert.Equal(10, matrix.Height);
+
+        for (var x = 0; x < matrix.Width; x++) {
+            Assert.Equal((x & 1) == 0, matrix[x, 0]);
+            Assert.True(matrix[x, matrix.Height - 1]);
+        }
+
+        for (var y = 1; y < matrix.Height - 1; y++) {
+            Assert.True(matrix[0, y]);
+            Assert.Equal((y & 1) != 0, matrix[matrix.Width - 1, y]);
+        }
+
+        Assert.True(DataMatrixDecoder.TryDecode(matrix, out var text));
+        Assert.Equal("A", text);
+    }
+
+    [Fact]
+    public void DataMatrix_ReedSolomon_ForSingleAsciiSymbol_UsesIso16022Roots() {
+        var divisor = DataMatrixReedSolomon.ComputeDivisor(5);
+        var ecc = DataMatrixReedSolomon.ComputeRemainder(new byte[] { 66, 129, 71 }, divisor);
+
+        Assert.Equal(new byte[] { 180, 133, 93, 98, 187 }, ecc);
+    }
+
+    [Fact]
     public void DataMatrix_Decode_C40_Basic() {
         var codewords = EncodeTripletMode(230, 14, 15, 16, 5, 6, 7); // ABC123
         var text = DataMatrixDecoder.DecodeDataCodewords(codewords);
