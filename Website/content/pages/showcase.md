@@ -11,7 +11,6 @@ meta.data_mode: override
 meta.social: true
 meta.social_description: See CodeGlyphX in action powering real-world applications.
 meta.structured_data: true
-meta.extra_scripts_file: showcase.scripts.html
 canonical: https://codeglyphx.com/showcase/
 ---
 
