@@ -37,8 +37,9 @@ If you don't have the engine repo next to this repo, set:
   - `CLOUDFLARE_API_TOKEN`
   - `CLOUDFLARE_ZONE_ID_CODEGLYPHX`
 - Post-deploy cache commands are standardized and route-driven from site config:
+  - `pwsh ./scripts/Set-CloudflareCacheRules.ps1`
   - `cloudflare purge --site-config "Website/site.json"`
-  - `cloudflare verify --site-config "Website/site.json" --warmup 1`
+  - `cloudflare verify --site-config "Website/site.json" --warmup 2`
 - Canonical cache-rule guidance lives in:
   - `C:\Support\GitHub\PSPublishModule\Docs\PowerForge.Web.Cloudflare.md`
 
