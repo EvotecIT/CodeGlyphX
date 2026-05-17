@@ -195,6 +195,7 @@
       "siteRoot": "./_site",
       "config": "./site.json",
       "criticalCss": "./themes/codeglyphx/critical.css",
+      "cssStrategy": "blocking",
       "minifyHtml": true,
       "minifyCss": true,
       "minifyJs": true,
