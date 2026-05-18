@@ -251,9 +251,6 @@ if ($null -ne $current -and $current.result -and $current.result.rules) {
 }
 
 $payload = [ordered]@{
-    name  = 'PowerForge cache rules'
-    kind  = 'zone'
-    phase = $phase
     rules = @($desiredRules + $existingRules)
 }
 
