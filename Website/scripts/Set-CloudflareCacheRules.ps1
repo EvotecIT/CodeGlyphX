@@ -194,12 +194,8 @@ function Invoke-CloudflareJson {
         }
 
         $detail = Get-CloudflareErrorDetail -ErrorRecord $_
-        Write-Output 'Cloudflare API request failed.'
-        Write-Output "  Method: $Method"
-        Write-Output "  Endpoint: $(Get-CloudflareLogUri -Uri $Uri)"
-        Write-Output "  Detail: $detail"
-
-        throw 'Cloudflare API request failed. See log details above.'
+        $logUri = Get-CloudflareLogUri -Uri $Uri
+        throw "Cloudflare API request failed. Method: $Method. Endpoint: $logUri. Detail: $detail"
     }
 }
 
@@ -273,4 +269,4 @@ if (-not $updated.success) {
 }
 
 Start-Sleep -Seconds 10
-Write-Host "Configured $($desiredRules.Count) PowerForge cache rule(s) for $HostName."
+Write-Output "Configured $($desiredRules.Count) PowerForge cache rule(s) for $HostName."
