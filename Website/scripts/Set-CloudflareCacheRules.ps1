@@ -37,7 +37,7 @@ function Get-CloudflareErrorDetail {
                 $parts.Add("HTTP $statusCode")
             }
         } catch {
-            # Some response types do not expose a numeric status code.
+            Write-Verbose "Cloudflare error response did not expose a numeric status code: $($_.Exception.Message)"
         }
     }
 
@@ -58,7 +58,7 @@ function Get-CloudflareErrorDetail {
                 }
             }
         } catch {
-            # Best-effort only; the original exception message is still included below.
+            Write-Verbose "Cloudflare error response body could not be read: $($_.Exception.Message)"
         }
     }
 
@@ -87,6 +87,7 @@ function Get-CloudflareErrorDetail {
                 $parts.Add(($body -replace '\s+', ' ').Trim())
             }
         } catch {
+            Write-Verbose "Cloudflare error response body was not JSON: $($_.Exception.Message)"
             $parts.Add(($body -replace '\s+', ' ').Trim())
         }
     }
