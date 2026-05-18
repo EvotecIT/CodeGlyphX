@@ -21,6 +21,108 @@ $headers = @{
     Authorization = "Bearer $ApiToken"
 }
 
+function ConvertTo-OneLine {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Value
+    )
+
+    return ($Value -replace '\s+', ' ').Trim()
+}
+
+function Get-CloudflareStatusDetail {
+    param(
+        [object] $Response
+    )
+
+    $statusCode = $null
+    if ($response) {
+        try {
+            $statusCode = [int]$response.StatusCode
+        } catch {
+            Write-Verbose "Cloudflare error response did not expose a numeric status code: $($_.Exception.Message)"
+        }
+    }
+
+    if ($statusCode -gt 0) {
+        return "HTTP $statusCode"
+    }
+
+    return $null
+}
+
+function Get-CloudflareErrorBody {
+    param(
+        [Parameter(Mandatory)]
+        [System.Management.Automation.ErrorRecord] $ErrorRecord
+    )
+
+    if ($ErrorRecord.ErrorDetails -and -not [string]::IsNullOrWhiteSpace($ErrorRecord.ErrorDetails.Message)) {
+        return $ErrorRecord.ErrorDetails.Message
+    }
+
+    $response = $ErrorRecord.Exception.Response
+    if (-not $response) {
+        return $null
+    }
+
+    try {
+        $stream = $response.GetResponseStream()
+        if (-not $stream) {
+            return $null
+        }
+
+        $reader = [System.IO.StreamReader]::new($stream)
+        try {
+            return $reader.ReadToEnd()
+        } finally {
+            $reader.Dispose()
+        }
+    } catch {
+        Write-Verbose "Cloudflare error response body could not be read: $($_.Exception.Message)"
+        return $null
+    }
+}
+
+function Format-CloudflareApiMessages {
+    param(
+        [object[]] $Messages
+    )
+
+    return @($Messages | Where-Object { $_ } | ForEach-Object {
+        $codeProperty = $_.PSObject.Properties['code']
+        $messageProperty = $_.PSObject.Properties['message']
+        $code = if ($codeProperty -and $codeProperty.Value) { "[$($codeProperty.Value)] " } else { '' }
+        $message = if ($messageProperty) { [string]$messageProperty.Value } else { ConvertTo-OneLine -Value ([string]$_) }
+        "$code$message"
+    })
+}
+
+function Get-CloudflareBodyDetail {
+    param(
+        [string] $Body
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Body)) {
+        return $null
+    }
+
+    try {
+        $json = $Body | ConvertFrom-Json -ErrorAction Stop
+        $messages = @()
+        $messages += Format-CloudflareApiMessages -Messages @($json.errors)
+        $messages += Format-CloudflareApiMessages -Messages @($json.messages)
+
+        if ($messages.Count -gt 0) {
+            return ($messages -join '; ')
+        }
+    } catch {
+        Write-Verbose "Cloudflare error response body was not JSON: $($_.Exception.Message)"
+    }
+
+    return ConvertTo-OneLine -Value $Body
+}
+
 function Get-CloudflareErrorDetail {
     param(
         [Parameter(Mandatory)]
@@ -28,68 +130,16 @@ function Get-CloudflareErrorDetail {
     )
 
     $parts = [System.Collections.Generic.List[string]]::new()
-    $response = $ErrorRecord.Exception.Response
+    $statusDetail = Get-CloudflareStatusDetail -Response $ErrorRecord.Exception.Response
+    $body = Get-CloudflareErrorBody -ErrorRecord $ErrorRecord
+    $bodyDetail = Get-CloudflareBodyDetail -Body $body
 
-    if ($response) {
-        try {
-            $statusCode = [int]$response.StatusCode
-            if ($statusCode -gt 0) {
-                $parts.Add("HTTP $statusCode")
-            }
-        } catch {
-            Write-Verbose "Cloudflare error response did not expose a numeric status code: $($_.Exception.Message)"
-        }
+    if (-not [string]::IsNullOrWhiteSpace($statusDetail)) {
+        $parts.Add($statusDetail)
     }
 
-    $body = $null
-    if ($ErrorRecord.ErrorDetails -and -not [string]::IsNullOrWhiteSpace($ErrorRecord.ErrorDetails.Message)) {
-        $body = $ErrorRecord.ErrorDetails.Message
-    }
-
-    if ([string]::IsNullOrWhiteSpace($body) -and $response) {
-        try {
-            $stream = $response.GetResponseStream()
-            if ($stream) {
-                $reader = [System.IO.StreamReader]::new($stream)
-                try {
-                    $body = $reader.ReadToEnd()
-                } finally {
-                    $reader.Dispose()
-                }
-            }
-        } catch {
-            Write-Verbose "Cloudflare error response body could not be read: $($_.Exception.Message)"
-        }
-    }
-
-    if (-not [string]::IsNullOrWhiteSpace($body)) {
-        try {
-            $json = $body | ConvertFrom-Json -ErrorAction Stop
-            $messages = @()
-
-            if ($json.errors) {
-                $messages += @($json.errors | ForEach-Object {
-                    $code = if ($_.code) { "[$($_.code)] " } else { '' }
-                    "$code$($_.message)"
-                })
-            }
-
-            if ($json.messages) {
-                $messages += @($json.messages | ForEach-Object {
-                    $code = if ($_.code) { "[$($_.code)] " } else { '' }
-                    "$code$($_.message)"
-                })
-            }
-
-            if ($messages.Count -gt 0) {
-                $parts.Add(($messages -join '; '))
-            } else {
-                $parts.Add(($body -replace '\s+', ' ').Trim())
-            }
-        } catch {
-            Write-Verbose "Cloudflare error response body was not JSON: $($_.Exception.Message)"
-            $parts.Add(($body -replace '\s+', ' ').Trim())
-        }
+    if (-not [string]::IsNullOrWhiteSpace($bodyDetail)) {
+        $parts.Add($bodyDetail)
     }
 
     if ($parts.Count -eq 0) {
