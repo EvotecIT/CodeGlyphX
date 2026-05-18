@@ -21,6 +21,83 @@ $headers = @{
     Authorization = "Bearer $ApiToken"
 }
 
+function Get-CloudflareErrorDetail {
+    param(
+        [Parameter(Mandatory)]
+        [System.Management.Automation.ErrorRecord] $ErrorRecord
+    )
+
+    $parts = [System.Collections.Generic.List[string]]::new()
+    $response = $ErrorRecord.Exception.Response
+
+    if ($response) {
+        try {
+            $statusCode = [int]$response.StatusCode
+            if ($statusCode -gt 0) {
+                $parts.Add("HTTP $statusCode")
+            }
+        } catch {
+            # Some response types do not expose a numeric status code.
+        }
+    }
+
+    $body = $null
+    if ($ErrorRecord.ErrorDetails -and -not [string]::IsNullOrWhiteSpace($ErrorRecord.ErrorDetails.Message)) {
+        $body = $ErrorRecord.ErrorDetails.Message
+    }
+
+    if ([string]::IsNullOrWhiteSpace($body) -and $response) {
+        try {
+            $stream = $response.GetResponseStream()
+            if ($stream) {
+                $reader = [System.IO.StreamReader]::new($stream)
+                try {
+                    $body = $reader.ReadToEnd()
+                } finally {
+                    $reader.Dispose()
+                }
+            }
+        } catch {
+            # Best-effort only; the original exception message is still included below.
+        }
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($body)) {
+        try {
+            $json = $body | ConvertFrom-Json -ErrorAction Stop
+            $messages = @()
+
+            if ($json.errors) {
+                $messages += @($json.errors | ForEach-Object {
+                    $code = if ($_.code) { "[$($_.code)] " } else { '' }
+                    "$code$($_.message)"
+                })
+            }
+
+            if ($json.messages) {
+                $messages += @($json.messages | ForEach-Object {
+                    $code = if ($_.code) { "[$($_.code)] " } else { '' }
+                    "$code$($_.message)"
+                })
+            }
+
+            if ($messages.Count -gt 0) {
+                $parts.Add(($messages -join '; '))
+            } else {
+                $parts.Add(($body -replace '\s+', ' ').Trim())
+            }
+        } catch {
+            $parts.Add(($body -replace '\s+', ' ').Trim())
+        }
+    }
+
+    if ($parts.Count -eq 0) {
+        $parts.Add($ErrorRecord.Exception.Message)
+    }
+
+    return ($parts -join ': ')
+}
+
 function Invoke-CloudflareJson {
     param(
         [Parameter(Mandatory)]
@@ -52,7 +129,8 @@ function Invoke-CloudflareJson {
             return $null
         }
 
-        throw
+        $detail = Get-CloudflareErrorDetail -ErrorRecord $_
+        throw "Cloudflare API $Method $Uri failed. $detail"
     }
 }
 
