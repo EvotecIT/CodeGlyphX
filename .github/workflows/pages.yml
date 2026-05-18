@@ -9,19 +9,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  actions: write
   contents: read
-  pages: write
-  id-token: write
 
 jobs:
   website-deploy:
     uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-deploy.yml@2f2a6d96e9c562040e3e844d6511c0b6a26971fc
+    permissions:
+      actions: write
+      contents: read
+      pages: write
+      id-token: write
     with:
       website_root: Website
       pipeline_config: Website/pipeline.json
       site_output_path: Website/_site
-      post_deploy_pipeline_config: Website/pipeline.cloudflare.json
       engine_mode: source
       runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
       powerforge_repository: EvotecIT/PSPublishModule
@@ -29,5 +30,49 @@ jobs:
       require_seo_doctor_guardrail: false
     secrets:
       indexnow_key: ${{ secrets.INDEXNOW_KEY }}
+      cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX }}
+
+  cloudflare-cache-rules:
+    needs: website-deploy
+    runs-on: ${{ github.event.repository.private && fromJson('["self-hosted","linux"]') || fromJson('["ubuntu-latest"]') }}
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout website
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          token: ${{ github.token }}
+          ref: ${{ github.sha }}
+
+      - name: Configure Cloudflare cache rules
+        shell: pwsh
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          ./Website/scripts/Set-CloudflareCacheRules.ps1
+
+  cloudflare-post-deploy:
+    needs: cloudflare-cache-rules
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@2f2a6d96e9c562040e3e844d6511c0b6a26971fc
+    permissions:
+      actions: write
+      contents: read
+    with:
+      website_root: Website
+      pipeline_config: Website/pipeline.cloudflare.json
+      engine_mode: source
+      runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
+      timeout_minutes: 40
+      dotnet_version: 10.0.x
+      report_artifact_name: powerforge-website-post-deploy-reports
+      powerforge_repository: EvotecIT/PSPublishModule
+      powerforge_ref: 2f2a6d96e9c562040e3e844d6511c0b6a26971fc
+      pipeline_mode: ci
+      use_playwright_cache: false
+    secrets:
       cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX }}
