@@ -2,23 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/main/Schemas/powerforge.web.pipelinespec.schema.json",
   "steps": [
     {
-      "task": "exec",
-      "id": "configure-cache-rules",
-      "command": "pwsh",
-      "argsList": [
-        "-NoLogo",
-        "-NoProfile",
-        "-ExecutionPolicy",
-        "Bypass",
-        "-File",
-        "./scripts/Set-CloudflareCacheRules.ps1"
-      ],
-      "timeoutSeconds": 120
-    },
-    {
       "task": "cloudflare",
       "id": "purge-cache",
-      "dependsOn": "configure-cache-rules",
       "operation": "purge",
       "siteConfig": "./site.json",
       "zoneIdEnv": "CLOUDFLARE_ZONE_ID",
