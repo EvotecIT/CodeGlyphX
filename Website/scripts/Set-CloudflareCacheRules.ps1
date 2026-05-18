@@ -21,6 +21,19 @@ $headers = @{
     Authorization = "Bearer $ApiToken"
 }
 
+function Get-CloudflareLogUri {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Uri
+    )
+
+    if ([string]::IsNullOrWhiteSpace($ZoneId)) {
+        return $Uri
+    }
+
+    return $Uri.Replace($ZoneId, '<zone>')
+}
+
 function ConvertTo-OneLine {
     param(
         [Parameter(Mandatory)]
@@ -181,7 +194,12 @@ function Invoke-CloudflareJson {
         }
 
         $detail = Get-CloudflareErrorDetail -ErrorRecord $_
-        throw "Cloudflare API $Method $Uri failed. $detail"
+        Write-Output 'Cloudflare API request failed.'
+        Write-Output "  Method: $Method"
+        Write-Output "  Endpoint: $(Get-CloudflareLogUri -Uri $Uri)"
+        Write-Output "  Detail: $detail"
+
+        throw 'Cloudflare API request failed. See log details above.'
     }
 }
 
