@@ -32,6 +32,6 @@
     <None Include="..\\Assets\\Logo\\codeglyphx-qr-icon.png" Pack="true" PackagePath="/" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Memory" Version="4.5.5" />
+    <PackageReference Include="System.Memory" Version="4.6.3" />
   </ItemGroup>
 </Project>
