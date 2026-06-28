@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   website-deploy:
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-deploy.yml@4ed420f8b83a2c66d4f474658ee5be8ff6aa68ce
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-deploy.yml@9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
     permissions:
       actions: write
       contents: read
@@ -26,7 +26,7 @@ jobs:
       engine_mode: source
       runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: 4ed420f8b83a2c66d4f474658ee5be8ff6aa68ce
+      powerforge_ref: 9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
       require_seo_doctor_guardrail: false
     secrets:
       indexnow_key: ${{ secrets.INDEXNOW_KEY }}
@@ -57,7 +57,7 @@ jobs:
 
   cloudflare-post-deploy:
     needs: cloudflare-cache-rules
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@4ed420f8b83a2c66d4f474658ee5be8ff6aa68ce
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
     permissions:
       actions: write
       contents: read
@@ -70,7 +70,7 @@ jobs:
       dotnet_version: 10.0.x
       report_artifact_name: powerforge-website-post-deploy-reports
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: 4ed420f8b83a2c66d4f474658ee5be8ff6aa68ce
+      powerforge_ref: 9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
       pipeline_mode: ci
       use_playwright_cache: false
     secrets:
