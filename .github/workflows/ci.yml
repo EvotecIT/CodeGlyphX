@@ -111,6 +111,7 @@ jobs:
     if: github.event_name == 'pull_request'
     permissions:
       contents: read
+      packages: read
     uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
     with:
       website_root: Website

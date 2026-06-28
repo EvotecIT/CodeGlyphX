@@ -17,6 +17,7 @@ jobs:
     permissions:
       actions: write
       contents: read
+      packages: read
       pages: write
       id-token: write
     with:
@@ -61,6 +62,7 @@ jobs:
     permissions:
       actions: write
       contents: read
+      packages: read
     with:
       website_root: Website
       pipeline_config: Website/pipeline.cloudflare.json
