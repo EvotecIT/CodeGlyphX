@@ -15,7 +15,7 @@ public sealed class SwissQrCodePayload {
     private readonly Contact? _ultimateCreditor;
     private readonly AdditionalInformation _additionalInformation;
     private readonly decimal? _amount;
-    private readonly QrSwissCurrency _currency;
+    private readonly SwissQrCurrency _currency;
     private readonly Contact? _debitor;
     private readonly Reference _reference;
     private readonly string? _alternativeProcedure1;
@@ -26,7 +26,7 @@ public sealed class SwissQrCodePayload {
     /// </summary>
     public SwissQrCodePayload(
         Iban iban,
-        QrSwissCurrency currency,
+        SwissQrCurrency currency,
         Contact creditor,
         Reference reference,
         AdditionalInformation? additionalInformation = null,
@@ -46,10 +46,10 @@ public sealed class SwissQrCodePayload {
         _currency = currency;
         _debitor = debitor;
         _reference = reference ?? throw new ArgumentNullException(nameof(reference));
-        if (_iban.IsQrIban && _reference.RefType != Reference.ReferenceType.QRR) {
+        if (_iban.IsQrIban && _reference.RefType != SwissQrReferenceType.QRR) {
             throw new ArgumentException("If QR-IBAN is used, you have to choose \"QRR\" as reference type.", nameof(reference));
         }
-        if (!_iban.IsQrIban && _reference.RefType == Reference.ReferenceType.QRR) {
+        if (!_iban.IsQrIban && _reference.RefType == SwissQrReferenceType.QRR) {
             throw new ArgumentException("If non QR-IBAN is used, you have to choose either \"SCOR\" or \"NON\" as reference type.", nameof(reference));
         }
         if (alternativeProcedure1 is not null && alternativeProcedure1.Length > 100) {
@@ -151,45 +151,12 @@ public sealed class SwissQrCodePayload {
     /// Reference section.
     /// </summary>
     public sealed class Reference {
-        /// <summary>
-        /// Reference type.
-        /// </summary>
-        public enum ReferenceType {
-            /// <summary>
-            /// QR reference (QRR).
-            /// </summary>
-            QRR,
-            /// <summary>
-            /// Creditor reference (SCOR).
-            /// </summary>
-            SCOR,
-            /// <summary>
-            /// No reference (NON).
-            /// </summary>
-            NON
-        }
-
-        /// <summary>
-        /// Reference text type.
-        /// </summary>
-        public enum ReferenceTextType {
-            /// <summary>
-            /// QR reference text.
-            /// </summary>
-            QrReference,
-            /// <summary>
-            /// Creditor reference ISO 11649.
-            /// </summary>
-            CreditorReferenceIso11649
-        }
-
         private readonly string? _reference;
-        private readonly ReferenceTextType? _referenceTextType;
 
         /// <summary>
         /// Reference type.
         /// </summary>
-        public ReferenceType RefType { get; }
+        public SwissQrReferenceType RefType { get; }
 
         /// <summary>
         /// Reference text (single line).
@@ -199,21 +166,20 @@ public sealed class SwissQrCodePayload {
         /// <summary>
         /// Creates a reference section.
         /// </summary>
-        public Reference(ReferenceType referenceType, string? reference = null, ReferenceTextType? referenceTextType = null) {
+        public Reference(SwissQrReferenceType referenceType, string? reference = null) {
             RefType = referenceType;
-            _referenceTextType = referenceTextType;
-            if (referenceType == ReferenceType.NON && reference != null) {
+            if (referenceType == SwissQrReferenceType.NON && reference != null) {
                 throw new ArgumentException("Reference is only allowed when referenceType not equals \"NON\".");
             }
-            if (referenceType != ReferenceType.NON && reference != null && !referenceTextType.HasValue) {
-                throw new ArgumentException("ReferenceTextType must be set when using the reference text.");
+            if (referenceType != SwissQrReferenceType.NON && string.IsNullOrWhiteSpace(reference)) {
+                throw new ArgumentException("Reference is required when referenceType is \"QRR\" or \"SCOR\".", nameof(reference));
             }
-            if (referenceTextType == ReferenceTextType.QrReference && reference != null) {
+            if (referenceType == SwissQrReferenceType.QRR && reference != null) {
                 if (reference.Length > 27) throw new ArgumentException("QR-references have to be shorter than 28 chars.");
                 if (!RegexCache.DigitsRequired().IsMatch(reference)) throw new ArgumentException("QR-reference must exist out of digits only.");
                 if (!QrPayloadValidation.ChecksumMod10(reference)) throw new ArgumentException("QR-reference is invalid. Checksum error.");
             }
-            if (referenceTextType == ReferenceTextType.CreditorReferenceIso11649 && reference != null && reference.Length > 25) {
+            if (referenceType == SwissQrReferenceType.SCOR && reference != null && reference.Length > 25) {
                 throw new ArgumentException("Creditor references (ISO 11649) have to be shorter than 26 chars.");
             }
             _reference = reference;
@@ -224,36 +190,22 @@ public sealed class SwissQrCodePayload {
     /// IBAN section.
     /// </summary>
     public sealed class Iban {
-        /// <summary>
-        /// IBAN type.
-        /// </summary>
-        public enum IbanType {
-            /// <summary>
-            /// Standard IBAN.
-            /// </summary>
-            Iban,
-            /// <summary>
-            /// QR-IBAN.
-            /// </summary>
-            QrIban
-        }
-
         private readonly string _iban;
-        private readonly IbanType _ibanType;
+        private readonly SwissQrIbanType _ibanType;
 
         /// <summary>
         /// True when the IBAN is a QR-IBAN.
         /// </summary>
-        public bool IsQrIban => _ibanType == IbanType.QrIban;
+        public bool IsQrIban => _ibanType == SwissQrIbanType.QrIban;
 
         /// <summary>
         /// Creates an IBAN instance.
         /// </summary>
-        public Iban(string iban, IbanType ibanType) {
-            if (ibanType == IbanType.Iban && !QrPayloadValidation.IsValidIban(iban)) {
+        public Iban(string iban, SwissQrIbanType ibanType) {
+            if (ibanType == SwissQrIbanType.Iban && !QrPayloadValidation.IsValidIban(iban)) {
                 throw new ArgumentException("The IBAN entered isn't valid.", nameof(iban));
             }
-            if (ibanType == IbanType.QrIban && !QrPayloadValidation.IsValidQrIban(iban)) {
+            if (ibanType == SwissQrIbanType.QrIban && !QrPayloadValidation.IsValidQrIban(iban)) {
                 throw new ArgumentException("The QR-IBAN entered isn't valid.", nameof(iban));
             }
             if (!iban.StartsWith("CH", StringComparison.Ordinal) && !iban.StartsWith("LI", StringComparison.Ordinal)) {
@@ -275,43 +227,29 @@ public sealed class SwissQrCodePayload {
     /// Contact section.
     /// </summary>
     public sealed class Contact {
-        /// <summary>
-        /// Contact address type.
-        /// </summary>
-        public enum AddressType {
-            /// <summary>
-            /// Structured address.
-            /// </summary>
-            StructuredAddress,
-            /// <summary>
-            /// Combined address.
-            /// </summary>
-            CombinedAddress
-        }
-
         private readonly string _name;
         private readonly string _zipCode;
         private readonly string _city;
         private readonly string _country;
         private readonly string? _streetOrAddressLine1;
         private readonly string? _houseNumberOrAddressLine2;
-        private readonly AddressType _addressType;
+        private readonly SwissQrAddressType _addressType;
 
         /// <summary>
         /// Creates a contact with a structured address.
         /// </summary>
         public static Contact CreateStructured(string name, string street, string houseNumber, string zipCode, string city, string country) {
-            return new Contact(name, zipCode, city, country, street, houseNumber, AddressType.StructuredAddress);
+            return new Contact(name, zipCode, city, country, street, houseNumber, SwissQrAddressType.StructuredAddress);
         }
 
         /// <summary>
         /// Creates a contact with a combined address.
         /// </summary>
         public static Contact CreateCombined(string name, string addressLine1, string addressLine2, string country) {
-            return new Contact(name, null, null, country, addressLine1, addressLine2, AddressType.CombinedAddress);
+            return new Contact(name, null, null, country, addressLine1, addressLine2, SwissQrAddressType.CombinedAddress);
         }
 
-        private Contact(string name, string? zipCode, string? city, string country, string? streetOrAddressLine1, string? houseNumberOrAddressLine2, AddressType addressType) {
+        private Contact(string name, string? zipCode, string? city, string country, string? streetOrAddressLine1, string? houseNumberOrAddressLine2, SwissQrAddressType addressType) {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name must not be empty.", nameof(name));
             if (name.Length > 70) throw new ArgumentException("Name must be shorter than 71 chars.", nameof(name));
             if (!IsTwoLetterCode(country)) throw new ArgumentException("Country must be a valid two-letter code.", nameof(country));
@@ -322,7 +260,7 @@ public sealed class SwissQrCodePayload {
             _streetOrAddressLine1 = streetOrAddressLine1;
             _houseNumberOrAddressLine2 = houseNumberOrAddressLine2;
 
-            if (_addressType == AddressType.StructuredAddress) {
+            if (_addressType == SwissQrAddressType.StructuredAddress) {
                 if (string.IsNullOrEmpty(zipCode)) throw new ArgumentException("Zip code must not be empty.", nameof(zipCode));
                 if (string.IsNullOrEmpty(city)) throw new ArgumentException("City must not be empty.", nameof(city));
                 _zipCode = zipCode!;
@@ -339,7 +277,7 @@ public sealed class SwissQrCodePayload {
         /// </summary>
         public override string ToString() {
             var sb = new StringBuilder();
-            sb.Append(_addressType == AddressType.StructuredAddress ? "S" : "K").Append(Br);
+            sb.Append(_addressType == SwissQrAddressType.StructuredAddress ? "S" : "K").Append(Br);
             sb.Append(_name.Replace("\n", "")).Append(Br);
             var line1 = _streetOrAddressLine1;
             var line2 = _houseNumberOrAddressLine2;

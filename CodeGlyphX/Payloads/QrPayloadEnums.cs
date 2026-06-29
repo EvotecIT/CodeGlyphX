@@ -283,20 +283,6 @@ public enum QrRussiaPaymentEncoding {
 }
 
 /// <summary>
-/// Swiss QR currency codes.
-/// </summary>
-public enum QrSwissCurrency {
-    /// <summary>
-    /// CHF.
-    /// </summary>
-    CHF,
-    /// <summary>
-    /// EUR.
-    /// </summary>
-    EUR
-}
-
-/// <summary>
 /// Shadowsocks cipher methods.
 /// </summary>
 public enum QrShadowSocksMethod {

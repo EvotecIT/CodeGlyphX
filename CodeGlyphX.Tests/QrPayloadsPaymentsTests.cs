@@ -41,4 +41,36 @@ public sealed class QrPayloadsPaymentsTests {
             "ST00012|Name=ACME LLC|PersonalAcc=40702810900000000001|BankName=ACME BANK|BIC=044525225|CorrespAcc=30101810400000000225|PayeeINN=7700000000|KPP=770001001|Sum=12345|Purpose=Invoice 123",
             payload);
     }
+
+    [Fact]
+    public void SwissQrCodePayload_UsesPublicSwissEnums() {
+        var iban = new SwissQrCodePayload.Iban("CH9300762011623852957", SwissQrIbanType.Iban);
+        var creditor = SwissQrCodePayload.Contact.CreateStructured("Evotec GmbH", "", "", "8000", "Zurich", "CH");
+        var reference = new SwissQrCodePayload.Reference(SwissQrReferenceType.SCOR, "RF18539007547034");
+
+        var payload = new SwissQrCodePayload(
+            iban,
+            SwissQrCurrency.CHF,
+            creditor,
+            reference).ToString();
+
+        Assert.Contains("\nCHF\n", payload);
+        Assert.Contains("\nSCOR\nRF18539007547034\n", payload);
+    }
+
+    [Theory]
+    [InlineData(SwissQrReferenceType.QRR)]
+    [InlineData(SwissQrReferenceType.SCOR)]
+    public void SwissQrCodePayload_RequiresReferenceForReferenceTypes(SwissQrReferenceType referenceType) {
+        var exception = Assert.Throws<ArgumentException>(() => new SwissQrCodePayload.Reference(referenceType));
+
+        Assert.Contains("Reference is required", exception.Message);
+    }
+
+    [Fact]
+    public void SwissQrCodePayload_RejectsReferenceForNonReferenceType() {
+        var exception = Assert.Throws<ArgumentException>(() => new SwissQrCodePayload.Reference(SwissQrReferenceType.NON, "RF18539007547034"));
+
+        Assert.Contains("Reference is only allowed", exception.Message);
+    }
 }
