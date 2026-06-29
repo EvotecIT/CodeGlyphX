@@ -58,6 +58,23 @@ public sealed class QrPayloadsPaymentsTests {
         Assert.Contains("\nSCOR\nRF18539007547034\n", payload);
     }
 
+    [Fact]
+    public void SwissQrCodePayload_BuildsQrIbanPayloadWithQrReference() {
+        var iban = new SwissQrCodePayload.Iban("CH4431999123000889012", SwissQrIbanType.QrIban);
+        var creditor = SwissQrCodePayload.Contact.CreateCombined("Evotec GmbH", "Main Street 1", "8000 Zurich", "CH");
+        var reference = new SwissQrCodePayload.Reference(SwissQrReferenceType.QRR, "210000000003139471430009017");
+
+        var payload = new SwissQrCodePayload(
+            iban,
+            SwissQrCurrency.EUR,
+            creditor,
+            reference).ToString();
+
+        Assert.Contains("\nK\nEvotec GmbH\nMain Street 1\n8000 Zurich\n\n\nCH\n", payload);
+        Assert.Contains("\nEUR\n", payload);
+        Assert.Contains("\nQRR\n210000000003139471430009017\n", payload);
+    }
+
     [Theory]
     [InlineData(SwissQrReferenceType.QRR)]
     [InlineData(SwissQrReferenceType.SCOR)]
@@ -72,5 +89,41 @@ public sealed class QrPayloadsPaymentsTests {
         var exception = Assert.Throws<ArgumentException>(() => new SwissQrCodePayload.Reference(SwissQrReferenceType.NON, "RF18539007547034"));
 
         Assert.Contains("Reference is only allowed", exception.Message);
+    }
+
+    [Fact]
+    public void SwissQrCodePayload_RejectsInvalidQrReference() {
+        var exception = Assert.Throws<ArgumentException>(() => new SwissQrCodePayload.Reference(SwissQrReferenceType.QRR, "RF18539007547034"));
+
+        Assert.Contains("QR-reference must exist out of digits only", exception.Message);
+    }
+
+    [Fact]
+    public void SwissQrCodePayload_RejectsLongCreditorReference() {
+        var exception = Assert.Throws<ArgumentException>(() => new SwissQrCodePayload.Reference(SwissQrReferenceType.SCOR, "RF185390075470340000000000"));
+
+        Assert.Contains("Creditor references", exception.Message);
+    }
+
+    [Fact]
+    public void SwissQrCodePayload_RejectsQrIbanWithoutQrReferenceType() {
+        var iban = new SwissQrCodePayload.Iban("CH4431999123000889012", SwissQrIbanType.QrIban);
+        var creditor = SwissQrCodePayload.Contact.CreateStructured("Evotec GmbH", "", "", "8000", "Zurich", "CH");
+        var reference = new SwissQrCodePayload.Reference(SwissQrReferenceType.SCOR, "RF18539007547034");
+
+        var exception = Assert.Throws<ArgumentException>(() => new SwissQrCodePayload(iban, SwissQrCurrency.CHF, creditor, reference));
+
+        Assert.Contains("QR-IBAN", exception.Message);
+    }
+
+    [Fact]
+    public void SwissQrCodePayload_RejectsQrReferenceTypeWithoutQrIban() {
+        var iban = new SwissQrCodePayload.Iban("CH9300762011623852957", SwissQrIbanType.Iban);
+        var creditor = SwissQrCodePayload.Contact.CreateStructured("Evotec GmbH", "", "", "8000", "Zurich", "CH");
+        var reference = new SwissQrCodePayload.Reference(SwissQrReferenceType.QRR, "210000000003139471430009017");
+
+        var exception = Assert.Throws<ArgumentException>(() => new SwissQrCodePayload(iban, SwissQrCurrency.CHF, creditor, reference));
+
+        Assert.Contains("non QR-IBAN", exception.Message);
     }
 }
