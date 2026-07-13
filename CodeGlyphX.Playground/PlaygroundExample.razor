@@ -126,7 +126,9 @@ else
         }
         else if (category == "Barcode")
         {
-            return "// ASP.NET Core Minimal API endpoint" + nl
+            return "using CodeGlyphX;" + nl
+                + "using CodeGlyphX.Rendering;" + nl + nl
+                + "// ASP.NET Core Minimal API endpoint" + nl
                 + "app.MapGet(\"/barcode/{text}\", (string text) =>" + nl
                 + "{" + nl
                 + "    var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).Data;" + nl
@@ -224,7 +226,8 @@ else
         else if (category == "Barcode")
         {
             return "// Blazor component with dynamic barcode" + nl
-                + "@using CodeGlyphX" + nl + nl
+                + "@using CodeGlyphX" + nl
+                + "@using CodeGlyphX.Rendering" + nl + nl
                 + "<img src=\"@_barcodeDataUri\" alt=\"Barcode\" />" + nl + nl
                 + "@code {" + nl
                 + "    private string _barcodeDataUri = \"\";" + nl + nl
@@ -315,7 +318,8 @@ else
         else if (category == "Barcode")
         {
             return "// .NET MAUI - Display barcode in Image control" + nl
-                + "using CodeGlyphX;" + nl + nl
+                + "using CodeGlyphX;" + nl
+                + "using CodeGlyphX.Rendering;" + nl + nl
                 + "// In your ViewModel or code-behind:" + nl
                 + "var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).Data;" + nl
                 + "BarcodeImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
@@ -363,6 +367,7 @@ else
         {
             return "' ASP.NET Core Controller example" + nl
                 + "Imports CodeGlyphX" + nl
+                + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports Microsoft.AspNetCore.Mvc" + nl + nl
                 + "Public Class BarcodeController" + nl
                 + "    Inherits ControllerBase" + nl + nl
@@ -415,6 +420,7 @@ else
         {
             return "' .NET MAUI - Display barcode in Image control" + nl
                 + "Imports CodeGlyphX" + nl
+                + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
                 + "Dim png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).Data" + nl

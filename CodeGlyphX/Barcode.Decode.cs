@@ -85,16 +85,8 @@ public static partial class Barcode {
         try {
             if (token.IsCancellationRequested) { decoded = null!; return false; }
             var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            var original = rgba;
-            var originalWidth = width;
-            var originalHeight = height;
             if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { decoded = null!; return false; }
-            if (BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded)) return true;
-            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                return BarcodeDecoder.TryDecode(original, originalWidth, originalHeight, originalWidth * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
-            }
-            decoded = null!;
-            return false;
+            return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
         } finally {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
@@ -164,16 +156,7 @@ public static partial class Barcode {
         try {
             if (token.IsCancellationRequested) return false;
             if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
-            var original = rgba;
-            var originalWidth = width;
-            var originalHeight = height;
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) return false;
-            if (BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded)) return true;
-            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                return BarcodeDecoder.TryDecode(original, originalWidth, originalHeight, originalWidth * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
-            }
-            decoded = null!;
-            return false;
+            return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
         } finally {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
@@ -217,16 +200,7 @@ public static partial class Barcode {
         try {
             if (token.IsCancellationRequested) return false;
             if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
-            var original = rgba;
-            var originalWidth = width;
-            var originalHeight = height;
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) return false;
-            if (BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded)) return true;
-            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                return BarcodeDecoder.TryDecode(original, originalWidth, originalHeight, originalWidth * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
-            }
-            decoded = null!;
-            return false;
+            return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
         } finally {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
@@ -296,16 +270,7 @@ public static partial class Barcode {
         try {
             if (token.IsCancellationRequested) return false;
             var rgba = ImageReader.DecodeRgba32(stream, options, out var width, out var height);
-            var original = rgba;
-            var originalWidth = width;
-            var originalHeight = height;
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) return false;
-            if (BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded)) return true;
-            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                return BarcodeDecoder.TryDecode(original, originalWidth, originalHeight, originalWidth * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
-            }
-            decoded = null!;
-            return false;
+            return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
         } finally {
             budgetCts?.Dispose();
             budgetScope?.Dispose();
@@ -340,18 +305,7 @@ public static partial class Barcode {
 
             info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
 
-            var original = rgba;
-            var originalWidth = width;
-            var originalHeight = height;
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
-            }
             if (BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out var decoded)) {
-                return new DecodeResult<BarcodeDecoded>(decoded, info, stopwatch.Elapsed);
-            }
-            if (!ReferenceEquals(rgba, original)
-                && !token.IsCancellationRequested
-                && BarcodeDecoder.TryDecode(original, originalWidth, originalHeight, originalWidth * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded)) {
                 return new DecodeResult<BarcodeDecoded>(decoded, info, stopwatch.Elapsed);
             }
             var failure = DecodeResultHelpers.FailureForDecode(token);

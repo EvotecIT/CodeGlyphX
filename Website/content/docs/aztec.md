@@ -27,6 +27,17 @@ AztecCode.Save("Ticket data", "aztec.png", new AztecEncodeOptions {
 });
 ```
 
+Binary payloads use the same generic rendering and file APIs:
+
+```csharp
+using CodeGlyphX.Rendering;
+
+byte[] payload = { 0x00, 0x01, 0xFE, 0xFF };
+
+var png = AztecCode.Render(payload, OutputFormat.Png).Data;
+AztecCode.Save(payload, "binary-ticket.svg");
+```
+
 ## Use Cases
 
 - **Transportation** - Train and airline tickets

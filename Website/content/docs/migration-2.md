@@ -108,7 +108,7 @@ The `QrDecoder.TryDecodeAll(..., out QrPixelDecodeInfo, ...)` overloads were rem
 - `0` disables that per-call limit.
 - A positive value is an explicit per-call limit.
 
-`MaxDimension` now resizes the decoded single-image RGBA output after the codec validates the original image. It is not a promise to reduce the codec's peak memory use.
+`MaxDimension` now resizes the decoded single-image RGBA output after the codec validates the original image. Recognition uses that bounded output only and does not silently retry the original resolution. It is not a promise to reduce the codec's peak memory use.
 
 ## WebP animation failures
 

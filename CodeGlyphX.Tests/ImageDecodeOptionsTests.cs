@@ -35,10 +35,27 @@ public sealed class ImageDecodeOptionsTests {
             HeightModules = 40
         });
 
-        var options = new ImageDecodeOptions { MaxDimension = 200 };
+        var options = new ImageDecodeOptions { MaxDimension = 600 };
 
         Assert.True(Barcode.TryDecodePng(png, BarcodeType.Code128, options, out var decoded));
         Assert.Equal("TEST-123", decoded.Text);
+    }
+
+    [Fact]
+    public void Barcode_MaxDimension_Is_A_Hard_Recognition_Bound() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "BOUND-123");
+        var png = BarcodePngRenderer.Render(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 12,
+            QuietZone = 10,
+            HeightModules = 40
+        });
+
+        Assert.True(Barcode.TryDecodePng(png, BarcodeType.Code128, out _));
+        Assert.False(Barcode.TryDecodePng(
+            png,
+            BarcodeType.Code128,
+            new ImageDecodeOptions { MaxDimension = 1 },
+            out _));
     }
 
     [Fact]

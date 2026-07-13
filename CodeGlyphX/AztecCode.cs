@@ -66,6 +66,25 @@ public static partial class AztecCode {
         return OutputWriter.Write(path, output);
     }
 
+    /// <summary>
+    /// Saves an Aztec binary payload to a file based on extension.
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string Save(byte[] data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return Save((ReadOnlySpan<byte>)data, path, encodeOptions, renderOptions, extras);
+    }
+
+    /// <summary>
+    /// Saves an Aztec binary payload to a file based on extension.
+    /// Defaults to PNG when no extension is provided.
+    /// </summary>
+    public static string Save(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
+        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+        var output = Render(data, format, encodeOptions, renderOptions, extras);
+        return OutputWriter.Write(path, output);
+    }
+
     private static MatrixPngRenderOptions ToPngOptions(MatrixOptions? options) {
         var opts = options ?? new MatrixOptions();
         return new MatrixPngRenderOptions {

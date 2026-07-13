@@ -74,7 +74,7 @@ PNG, JPEG, WebP, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, and XPM are
 ## Resource-limit semantics
 
 - `MaxBytes` and `MaxPixels`: `null` inherits the corresponding `ImageReader` global; `0` disables that per-call limit.
-- `MaxDimension`: validates the original image first and then resizes the single-image RGBA output. It does not reduce codec peak memory.
+- `MaxDimension`: validates the original image first and then resizes the single-image RGBA output. Recognition uses only the resized pixels and does not retry at the original resolution. It does not reduce codec peak memory.
 - `RecognitionBudgetMilliseconds`: cooperatively limits symbol recognition after raster decoding; it does not time the codec.
 - Animation frame, duration, and per-frame pixel limits follow the same `null`/`0`/positive inheritance model.
 

@@ -98,7 +98,21 @@ public partial class Playground {
                 };
                 if (DecodeStopAfterFirst)
                 {
-                    if (QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var qrAll, qrOptions, token)
+                    if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var qr, qrOptions, token))
+                    {
+                        AddDecodeResult("QR", qr.Text);
+                        found = true;
+                        DecodeStatus = $"Decode finished in {sw.ElapsedMilliseconds} ms";
+                        return;
+                    }
+
+                    var fallbackBudget = RemainingBudget();
+                    if (fallbackBudget > 0)
+                    {
+                        qrOptions.BudgetMilliseconds = fallbackBudget;
+                    }
+                    if (fallbackBudget > 0
+                        && QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var qrAll, qrOptions, token)
                         && qrAll.Length > 0)
                     {
                         AddDecodeResult("QR", qrAll[0].Text);

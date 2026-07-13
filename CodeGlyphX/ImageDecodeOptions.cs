@@ -10,8 +10,9 @@ public sealed partial class ImageDecodeOptions {
     /// <summary>
     /// Maximum output dimension, in pixels, for single-image decoding and symbol recognition.
     /// Raster codecs validate the original image against <see cref="MaxPixels"/> first, then resize
-    /// the decoded RGBA output. This setting does not reduce codec memory use. Set to 0 to keep the
-    /// original dimensions.
+    /// the decoded RGBA output. Symbol recognition uses only that resized output and does not retry
+    /// at the original resolution. This setting does not reduce codec memory use. Set to 0 to keep
+    /// the original dimensions.
     /// </summary>
     public int MaxDimension { get; set; } = 0;
 
