@@ -110,17 +110,19 @@ else
 
         if (category == "QR" || category == "SpecialQR")
         {
-            return "// ASP.NET Core Minimal API endpoint" + nl
+            return "using CodeGlyphX;" + nl
+                + "using CodeGlyphX.Rendering;" + nl + nl
+                + "// ASP.NET Core Minimal API endpoint" + nl
                 + "app.MapGet(\"/qr\", () =>" + nl
                 + "{" + nl
-                + "    var png = QR.ToPng(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\");" + nl
+                + "    var png = QrCode.Render(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).Data;" + nl
                 + "    return Results.File(png, \"image/png\", \"qrcode.png\");" + nl
                 + "});" + nl + nl
                 + "// Or in a Controller" + nl
                 + "[HttpGet(\"qr/{text}\")]" + nl
                 + "public IActionResult GetQrCode(string text)" + nl
                 + "{" + nl
-                + "    var png = QR.ToPng(text);" + nl
+                + "    var png = QrCode.Render(text, OutputFormat.Png).Data;" + nl
                 + "    return File(png, \"image/png\");" + nl
                 + "}";
         }
@@ -150,17 +152,19 @@ else
                 "Aztec" => "AztecCode",
                 _ => "DataMatrixCode"
             };
-            return "// ASP.NET Core Minimal API endpoint" + nl
+            return "using CodeGlyphX;" + nl
+                + "using CodeGlyphX.Rendering;" + nl + nl
+                + "// ASP.NET Core Minimal API endpoint" + nl
                 + "app.MapGet(\"/matrix/{text}\", (string text) =>" + nl
                 + "{" + nl
-                + "    var png = " + method + ".ToPng(text);" + nl
+                + "    var png = " + method + ".Render(text, OutputFormat.Png).Data;" + nl
                 + "    return Results.File(png, \"image/png\", \"matrix.png\");" + nl
                 + "});" + nl + nl
                 + "// Or in a Controller" + nl
                 + "[HttpGet(\"matrix/{text}\")]" + nl
                 + "public IActionResult GetMatrix(string text)" + nl
                 + "{" + nl
-                + "    var png = " + method + ".ToPng(text);" + nl
+                + "    var png = " + method + ".Render(text, OutputFormat.Png).Data;" + nl
                 + "    return File(png, \"image/png\");" + nl
                 + "}";
         }
@@ -212,13 +216,14 @@ else
         if (category == "QR" || category == "SpecialQR")
         {
             return "// Blazor component with dynamic QR code" + nl
-                + "@using CodeGlyphX" + nl + nl
+                + "@using CodeGlyphX" + nl
+                + "@using CodeGlyphX.Rendering" + nl + nl
                 + "<img src=\"@_qrDataUri\" alt=\"QR Code\" />" + nl + nl
                 + "@code {" + nl
                 + "    private string _qrDataUri = \"\";" + nl + nl
                 + "    protected override void OnInitialized()" + nl
                 + "    {" + nl
-                + "        var png = QR.ToPng(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\");" + nl
+                + "        var png = QrCode.Render(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).Data;" + nl
                 + "        _qrDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
                 + "    }" + nl
                 + "}";
@@ -247,13 +252,14 @@ else
                 _ => "DataMatrixCode"
             };
             return "// Blazor component with dynamic matrix code" + nl
-                + "@using CodeGlyphX" + nl + nl
+                + "@using CodeGlyphX" + nl
+                + "@using CodeGlyphX.Rendering" + nl + nl
                 + "<img src=\"@_matrixDataUri\" alt=\"Matrix Code\" />" + nl + nl
                 + "@code {" + nl
                 + "    private string _matrixDataUri = \"\";" + nl + nl
                 + "    protected override void OnInitialized()" + nl
                 + "    {" + nl
-                + "        var png = " + method + ".ToPng(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\");" + nl
+                + "        var png = " + method + ".Render(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\", OutputFormat.Png).Data;" + nl
                 + "        _matrixDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
                 + "    }" + nl
                 + "}";
@@ -308,9 +314,10 @@ else
         if (category == "QR" || category == "SpecialQR")
         {
             return "// .NET MAUI - Display QR code in Image control" + nl
-                + "using CodeGlyphX;" + nl + nl
+                + "using CodeGlyphX;" + nl
+                + "using CodeGlyphX.Rendering;" + nl + nl
                 + "// In your ViewModel or code-behind:" + nl
-                + "var png = QR.ToPng(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\");" + nl
+                + "var png = QrCode.Render(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).Data;" + nl
                 + "QrImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
                 + "// XAML:" + nl
                 + "// <Image x:Name=\"QrImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
@@ -335,9 +342,10 @@ else
                 _ => "DataMatrixCode"
             };
             return "// .NET MAUI - Display matrix code in Image control" + nl
-                + "using CodeGlyphX;" + nl + nl
+                + "using CodeGlyphX;" + nl
+                + "using CodeGlyphX.Rendering;" + nl + nl
                 + "// In your ViewModel or code-behind:" + nl
-                + "var png = " + method + ".ToPng(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\");" + nl
+                + "var png = " + method + ".Render(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\", OutputFormat.Png).Data;" + nl
                 + "MatrixImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
                 + "// XAML:" + nl
                 + "// <Image x:Name=\"MatrixImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
@@ -353,12 +361,13 @@ else
         {
             return "' ASP.NET Core Controller example" + nl
                 + "Imports CodeGlyphX" + nl
+                + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports Microsoft.AspNetCore.Mvc" + nl + nl
                 + "Public Class QrController" + nl
                 + "    Inherits ControllerBase" + nl + nl
                 + "    <HttpGet(\"qr/{text}\")>" + nl
                 + "    Public Function GetQrCode(text As String) As IActionResult" + nl
-                + "        Dim png = QR.ToPng(text)" + nl
+                + "        Dim png = QrCode.Render(text, OutputFormat.Png).Data" + nl
                 + "        Return File(png, \"image/png\", \"qrcode.png\")" + nl
                 + "    End Function" + nl
                 + "End Class";
@@ -388,12 +397,13 @@ else
             };
             return "' ASP.NET Core Controller example" + nl
                 + "Imports CodeGlyphX" + nl
+                + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports Microsoft.AspNetCore.Mvc" + nl + nl
                 + "Public Class MatrixController" + nl
                 + "    Inherits ControllerBase" + nl + nl
                 + "    <HttpGet(\"matrix/{text}\")>" + nl
                 + "    Public Function GetMatrix(text As String) As IActionResult" + nl
-                + "        Dim png = " + method + ".ToPng(text)" + nl
+                + "        Dim png = " + method + ".Render(text, OutputFormat.Png).Data" + nl
                 + "        Return File(png, \"image/png\", \"matrix.png\")" + nl
                 + "    End Function" + nl
                 + "End Class";
@@ -409,9 +419,10 @@ else
         {
             return "' .NET MAUI - Display QR code in Image control" + nl
                 + "Imports CodeGlyphX" + nl
+                + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = QR.ToPng(\"" + EscapeForVbString(Host?.Content ?? "https://example.com") + "\")" + nl
+                + "Dim png = QrCode.Render(\"" + EscapeForVbString(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).Data" + nl
                 + "QrImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"QrImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
@@ -438,9 +449,10 @@ else
             };
             return "' .NET MAUI - Display matrix code in Image control" + nl
                 + "Imports CodeGlyphX" + nl
+                + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = " + method + ".ToPng(\"" + EscapeForVbString(Host?.MatrixContent ?? "Data") + "\")" + nl
+                + "Dim png = " + method + ".Render(\"" + EscapeForVbString(Host?.MatrixContent ?? "Data") + "\", OutputFormat.Png).Data" + nl
                 + "MatrixImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"MatrixImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
