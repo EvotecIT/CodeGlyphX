@@ -91,6 +91,81 @@ public sealed class ImageDecodeOptionsTests {
     }
 
     [Fact]
+    public void Aztec_OptionAware_Image_Transports_RoundTrip_WithDiagnostics() {
+        const string payload = "AZTEC-IMAGE-OPTIONS";
+        var png = AztecCode.Render(payload, OutputFormat.Png).Data;
+        var options = new ImageDecodeOptions { RecognitionBudgetMilliseconds = TestBudget.Adjust(2000) };
+
+        Assert.True(AztecCode.TryDecodeImage(png, options, CancellationToken.None, out var byteText));
+        Assert.Equal(payload, byteText);
+
+        Assert.True(AztecCode.TryDecodeImage((ReadOnlySpan<byte>)png, options, CancellationToken.None, out var spanText, out var diagnostics));
+        Assert.Equal(payload, spanText);
+        Assert.Null(diagnostics.Failure);
+
+        Assert.True(AztecCode.TryDecodePng((ReadOnlySpan<byte>)png, options, CancellationToken.None, out var spanPngText));
+        Assert.Equal(payload, spanPngText);
+
+        Assert.True(AztecCode.TryDecodePng(png, options, CancellationToken.None, out var diagnosedPngText, out var pngDiagnostics));
+        Assert.Equal(payload, diagnosedPngText);
+        Assert.Null(pngDiagnostics.Failure);
+
+        using var stream = new MemoryStream(png, writable: false);
+        Assert.True(AztecCode.TryDecodeImage(stream, options, CancellationToken.None, out var streamText));
+        Assert.Equal(payload, streamText);
+    }
+
+    [Fact]
+    public void DataMatrix_OptionAware_Image_Transports_RoundTrip_WithDiagnostics() {
+        const string payload = "DATA-MATRIX-IMAGE-OPTIONS";
+        var png = DataMatrixCode.Render(payload, OutputFormat.Png).Data;
+        var options = new ImageDecodeOptions { RecognitionBudgetMilliseconds = TestBudget.Adjust(2000) };
+
+        Assert.True(DataMatrixCode.TryDecodePng(png, options, CancellationToken.None, out var byteText));
+        Assert.Equal(payload, byteText);
+
+        Assert.True(DataMatrixCode.TryDecodeImage((ReadOnlySpan<byte>)png, options, CancellationToken.None, out var spanText, out var diagnostics));
+        Assert.Equal(payload, spanText);
+        Assert.Null(diagnostics.Failure);
+
+        Assert.True(DataMatrixCode.TryDecodePng((ReadOnlySpan<byte>)png, options, CancellationToken.None, out var spanPngText));
+        Assert.Equal(payload, spanPngText);
+
+        Assert.True(DataMatrixCode.TryDecodePng(png, options, CancellationToken.None, out var diagnosedPngText, out var pngDiagnostics));
+        Assert.Equal(payload, diagnosedPngText);
+        Assert.Null(pngDiagnostics.Failure);
+
+        using var stream = new MemoryStream(png, writable: false);
+        Assert.True(DataMatrixCode.TryDecodeImage(stream, options, CancellationToken.None, out var streamText));
+        Assert.Equal(payload, streamText);
+    }
+
+    [Fact]
+    public void Pdf417_OptionAware_Image_Transports_RoundTrip_WithDiagnostics() {
+        const string payload = "PDF417-IMAGE-OPTIONS";
+        var png = Pdf417Code.Render(payload, OutputFormat.Png).Data;
+        var options = new ImageDecodeOptions { RecognitionBudgetMilliseconds = TestBudget.Adjust(2000) };
+
+        Assert.True(Pdf417Code.TryDecodePng(png, options, CancellationToken.None, out string byteText));
+        Assert.Equal(payload, byteText);
+
+        Assert.True(Pdf417Code.TryDecodeImage((ReadOnlySpan<byte>)png, options, CancellationToken.None, out var spanText, out var diagnostics));
+        Assert.Equal(payload, spanText);
+        Assert.Null(diagnostics.Failure);
+
+        Assert.True(Pdf417Code.TryDecodePng((ReadOnlySpan<byte>)png, options, CancellationToken.None, out string spanPngText));
+        Assert.Equal(payload, spanPngText);
+
+        Assert.True(Pdf417Code.TryDecodePng(png, options, CancellationToken.None, out var diagnosedPngText, out var pngDiagnostics));
+        Assert.Equal(payload, diagnosedPngText);
+        Assert.Null(pngDiagnostics.Failure);
+
+        using var stream = new MemoryStream(png, writable: false);
+        Assert.True(Pdf417Code.TryDecodeImage(stream, options, CancellationToken.None, out var streamText));
+        Assert.Equal(payload, streamText);
+    }
+
+    [Fact]
     public void ImageDecodeOptions_Guarded_Sets_DefaultCaps() {
         var options = ImageDecodeOptions.Guarded();
 

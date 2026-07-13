@@ -19,19 +19,25 @@ public static partial class Pdf417Decoder {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
 
-        if (TryDecodeCore(modules, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
+        if (TryDecodeCore(modules, cancellationToken, diagnostics, out value)) return MarkSuccessful(diagnostics);
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeWithStartPattern(modules, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
+        if (TryDecodeWithStartPattern(modules, cancellationToken, diagnostics, out value)) return MarkSuccessful(diagnostics);
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         diagnostics.MirroredTried = true;
         var mirror = MirrorX(modules);
-        if (TryDecodeCore(mirror, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
+        if (TryDecodeCore(mirror, cancellationToken, diagnostics, out value)) return MarkSuccessful(diagnostics);
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeWithStartPattern(mirror, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
+        if (TryDecodeWithStartPattern(mirror, cancellationToken, diagnostics, out value)) return MarkSuccessful(diagnostics);
 
         value = string.Empty;
         diagnostics.Failure ??= "No PDF417 decoded.";
         return false;
+    }
+
+    private static bool MarkSuccessful(Pdf417DecodeDiagnostics diagnostics) {
+        diagnostics.Success = true;
+        diagnostics.Failure = null;
+        return true;
     }
 
     private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value) {
@@ -266,8 +272,7 @@ public static partial class Pdf417Decoder {
         foreach (var threshold in BuildThresholds(pixels, width, height, stride, format)) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
             if (TryDecodeFromPixels(pixels, width, height, stride, format, threshold, cancellationToken, diagnostics, out value)) {
-                diagnostics.Success = true;
-                return true;
+                return MarkSuccessful(diagnostics);
             }
         }
         value = string.Empty;
