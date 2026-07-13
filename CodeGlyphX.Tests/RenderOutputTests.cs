@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using CodeGlyphX.Rendering;
 using Xunit;
 
@@ -38,6 +39,28 @@ public class RenderOutputTests {
 
         var text = output.GetText();
         Assert.Contains("<title>Render Output Test</title>", text, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void BarcodeBuilder_Uses_Generic_Render_And_Save_Surface() {
+        var builder = Barcode.Create(BarcodeType.Code128, "BUILDER-123");
+        var svg = builder.Render(OutputFormat.Svg);
+
+        Assert.Equal(OutputFormat.Svg, svg.Format);
+        Assert.Contains("<svg", svg.GetText(), StringComparison.OrdinalIgnoreCase);
+
+        using var stream = new MemoryStream();
+        builder.Save(stream, OutputFormat.Png);
+        Assert.True(stream.Length > 8);
+        Assert.Equal(0x89, stream.GetBuffer()[0]);
+
+        var path = Path.Combine(Path.GetTempPath(), $"codeglyphx-barcode-{Guid.NewGuid():N}.svg");
+        try {
+            Assert.Equal(path, builder.Save(path));
+            Assert.Contains("<svg", File.ReadAllText(path), StringComparison.OrdinalIgnoreCase);
+        } finally {
+            if (File.Exists(path)) File.Delete(path);
+        }
     }
 
     [Fact]

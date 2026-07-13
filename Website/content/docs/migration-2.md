@@ -42,6 +42,19 @@ AztecCode.Save("TICKET-42", "ticket.svg");
 
 `BarcodeEasy` was removed. `Barcode` is the single linear-barcode facade.
 
+OTP output follows the same generic builder contract. The `TotpPng`, `HotpSvg`, `SaveTotpPng`, `SaveHotpWebp`, and other format-specific combinations were removed. URI-only helpers remain available as `TotpUri(...)` and `HotpUri(...)`.
+
+```csharp
+var totp = Otp.Totp("ACME", "alice@example.com", "MZXW6")
+    .WithParameters(OtpAlgorithm.Sha256, digits: 8, period: 60);
+
+byte[] png = totp.Render(OutputFormat.Png).Data;
+totp.Save("acme-alice.svg");
+
+using var output = File.Create("acme-alice.pdf");
+totp.Save(output, OutputFormat.Pdf);
+```
+
 ## QR art
 
 The implementation-oriented `QrArtPresets` surface was removed. Configure the public art model instead:

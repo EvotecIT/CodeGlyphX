@@ -175,7 +175,7 @@ public static class QrArtHeuristics {
             }
         } else if (options.ForegroundGradient is null) {
             var colors = patternActive
-                ? new[] { options.Foreground, ComposeOver(pattern!.Color, options.Foreground) }
+                ? new[] { options.Foreground, Rgba32Compositor.ComposeOver(pattern!.Color, options.Foreground) }
                 : new[] { options.Foreground };
             var contrast = MinContrast(colors, bg);
             if (contrast < 4.5) {
@@ -244,30 +244,9 @@ public static class QrArtHeuristics {
         for (var i = 0; i < colors.Length; i++) {
             var color = colors[i];
             list.Add(color);
-            list.Add(ComposeOver(pattern.Color, color));
+            list.Add(Rgba32Compositor.ComposeOver(pattern.Color, color));
         }
         return list.ToArray();
-    }
-
-    private static Rgba32 ComposeOver(Rgba32 top, Rgba32 bottom) {
-        var ta = top.A;
-        if (ta == 0) return bottom;
-        if (ta == 255 && bottom.A == 255) return top;
-
-        var ba = bottom.A;
-        var inv = 255 - ta;
-        var outA = ta + (ba * inv + 127) / 255;
-        if (outA <= 0) return new Rgba32(0, 0, 0, 0);
-
-        var outRPre = top.R * ta + (int)((bottom.R * ba * (long)inv + 127) / 255);
-        var outGPre = top.G * ta + (int)((bottom.G * ba * (long)inv + 127) / 255);
-        var outBPre = top.B * ta + (int)((bottom.B * ba * (long)inv + 127) / 255);
-
-        var outR = (outRPre + outA / 2) / outA;
-        var outG = (outGPre + outA / 2) / outA;
-        var outB = (outBPre + outA / 2) / outA;
-
-        return new Rgba32((byte)outR, (byte)outG, (byte)outB, (byte)outA);
     }
 
     private static Rgba32[] CollectPalettes(QrPngPaletteOptions? basePalette, QrPngPaletteZoneOptions? zones) {

@@ -5,7 +5,7 @@ using CodeGlyphX.Rendering;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Simple OTP helpers with fluent and static APIs.
+/// Creates standards-based OTP URIs and QR codes.
 /// </summary>
 public static class Otp {
     /// <summary>
@@ -38,276 +38,6 @@ public static class Otp {
         return OtpAuthHotp.Create(issuer, account, secret, counter, alg, digits);
     }
 
-    private static RenderedOutput RenderUri(string uri, OutputFormat format, QrEasyOptions? options = null, RenderExtras? extras = null) {
-        return QrCode.Render(uri, format, options, extras);
-    }
-
-    /// <summary>
-    /// Renders a TOTP QR as PNG from a Base32 secret.
-    /// </summary>
-    public static byte[] TotpPng(string issuer, string account, string secretBase32, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return RenderUri(uri, OutputFormat.Png, options).Data;
-    }
-
-    /// <summary>
-    /// Renders a TOTP QR as SVG from a Base32 secret.
-    /// </summary>
-    public static string TotpSvg(string issuer, string account, string secretBase32, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return RenderUri(uri, OutputFormat.Svg, options).GetText();
-    }
-
-    /// <summary>
-    /// Renders a TOTP QR as HTML from a Base32 secret.
-    /// </summary>
-    public static string TotpHtml(string issuer, string account, string secretBase32, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return RenderUri(uri, OutputFormat.Html, options).GetText();
-    }
-
-    /// <summary>
-    /// Renders a TOTP QR as JPEG from a Base32 secret.
-    /// </summary>
-    public static byte[] TotpJpeg(string issuer, string account, string secretBase32, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return RenderUri(uri, OutputFormat.Jpeg, options).Data;
-    }
-
-    /// <summary>
-    /// Renders a TOTP QR as WebP from a Base32 secret.
-    /// </summary>
-    public static byte[] TotpWebp(string issuer, string account, string secretBase32, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return RenderUri(uri, OutputFormat.Webp, options).Data;
-    }
-
-    /// <summary>
-    /// Renders a HOTP QR as PNG from a Base32 secret.
-    /// </summary>
-    public static byte[] HotpPng(string issuer, string account, string secretBase32, long counter, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return RenderUri(uri, OutputFormat.Png, options).Data;
-    }
-
-    /// <summary>
-    /// Renders a HOTP QR as SVG from a Base32 secret.
-    /// </summary>
-    public static string HotpSvg(string issuer, string account, string secretBase32, long counter, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return RenderUri(uri, OutputFormat.Svg, options).GetText();
-    }
-
-    /// <summary>
-    /// Renders a HOTP QR as HTML from a Base32 secret.
-    /// </summary>
-    public static string HotpHtml(string issuer, string account, string secretBase32, long counter, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return RenderUri(uri, OutputFormat.Html, options).GetText();
-    }
-
-    /// <summary>
-    /// Renders a HOTP QR as JPEG from a Base32 secret.
-    /// </summary>
-    public static byte[] HotpJpeg(string issuer, string account, string secretBase32, long counter, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return RenderUri(uri, OutputFormat.Jpeg, options).Data;
-    }
-
-    /// <summary>
-    /// Renders a HOTP QR as WebP from a Base32 secret.
-    /// </summary>
-    public static byte[] HotpWebp(string issuer, string account, string secretBase32, long counter, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return RenderUri(uri, OutputFormat.Webp, options).Data;
-    }
-
-    /// <summary>
-    /// Saves a TOTP PNG to a file.
-    /// </summary>
-    public static string SaveTotpPng(string issuer, string account, string secretBase32, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Png, options));
-    }
-
-    /// <summary>
-    /// Saves a TOTP PNG to a stream.
-    /// </summary>
-    public static void SaveTotpPng(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Png, options));
-    }
-
-    /// <summary>
-    /// Saves a TOTP SVG to a file.
-    /// </summary>
-    public static string SaveTotpSvg(string issuer, string account, string secretBase32, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Svg, options));
-    }
-
-    /// <summary>
-    /// Saves a TOTP SVG to a stream.
-    /// </summary>
-    public static void SaveTotpSvg(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Svg, options));
-    }
-
-    /// <summary>
-    /// Saves a TOTP HTML to a file.
-    /// </summary>
-    public static string SaveTotpHtml(string issuer, string account, string secretBase32, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30, string? title = null) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Html, options, extras));
-    }
-
-    /// <summary>
-    /// Saves a TOTP HTML to a stream.
-    /// </summary>
-    public static void SaveTotpHtml(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30, string? title = null) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Html, options, extras));
-    }
-
-    /// <summary>
-    /// Saves a TOTP JPEG to a file.
-    /// </summary>
-    public static string SaveTotpJpeg(string issuer, string account, string secretBase32, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Jpeg, options));
-    }
-
-    /// <summary>
-    /// Saves a TOTP JPEG to a stream.
-    /// </summary>
-    public static void SaveTotpJpeg(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Jpeg, options));
-    }
-
-    /// <summary>
-    /// Saves a TOTP WebP to a file.
-    /// </summary>
-    public static string SaveTotpWebp(string issuer, string account, string secretBase32, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Webp, options));
-    }
-
-    /// <summary>
-    /// Saves a TOTP WebP to a stream.
-    /// </summary>
-    public static void SaveTotpWebp(string issuer, string account, string secretBase32, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Webp, options));
-    }
-
-    /// <summary>
-    /// Saves a HOTP PNG to a file.
-    /// </summary>
-    public static string SaveHotpPng(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Png, options));
-    }
-
-    /// <summary>
-    /// Saves a HOTP PNG to a stream.
-    /// </summary>
-    public static void SaveHotpPng(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Png, options));
-    }
-
-    /// <summary>
-    /// Saves a HOTP SVG to a file.
-    /// </summary>
-    public static string SaveHotpSvg(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Svg, options));
-    }
-
-    /// <summary>
-    /// Saves a HOTP SVG to a stream.
-    /// </summary>
-    public static void SaveHotpSvg(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Svg, options));
-    }
-
-    /// <summary>
-    /// Saves a HOTP HTML to a file.
-    /// </summary>
-    public static string SaveHotpHtml(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, string? title = null) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Html, options, extras));
-    }
-
-    /// <summary>
-    /// Saves a HOTP HTML to a stream.
-    /// </summary>
-    public static void SaveHotpHtml(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, string? title = null) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Html, options, extras));
-    }
-
-    /// <summary>
-    /// Saves a HOTP JPEG to a file.
-    /// </summary>
-    public static string SaveHotpJpeg(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Jpeg, options));
-    }
-
-    /// <summary>
-    /// Saves a HOTP JPEG to a stream.
-    /// </summary>
-    public static void SaveHotpJpeg(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Jpeg, options));
-    }
-
-    /// <summary>
-    /// Saves a HOTP WebP to a file.
-    /// </summary>
-    public static string SaveHotpWebp(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        return OutputWriter.Write(path, RenderUri(uri, OutputFormat.Webp, options));
-    }
-
-    /// <summary>
-    /// Saves a HOTP WebP to a stream.
-    /// </summary>
-    public static void SaveHotpWebp(string issuer, string account, string secretBase32, long counter, Stream stream, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        OutputWriter.Write(stream, RenderUri(uri, OutputFormat.Webp, options));
-    }
-
-    /// <summary>
-    /// Saves a TOTP QR based on file extension (.png/.webp/.svg/.html/.jpg/.bmp/.pdf/.eps).
-    /// Defaults to PNG when no extension is provided.
-    /// </summary>
-    public static string SaveTotp(string issuer, string account, string secretBase32, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, int period = 30, string? title = null) {
-        var uri = TotpUri(issuer, account, secretBase32, alg, digits, period);
-        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, RenderUri(uri, format, options, extras));
-    }
-
-    /// <summary>
-    /// Saves a HOTP QR based on file extension (.png/.webp/.svg/.html/.jpg/.bmp/.pdf/.eps).
-    /// Defaults to PNG when no extension is provided.
-    /// </summary>
-    public static string SaveHotp(string issuer, string account, string secretBase32, long counter, string path, QrEasyOptions? options = null, OtpAlgorithm alg = OtpAlgorithm.Sha1, int digits = 6, string? title = null) {
-        var uri = HotpUri(issuer, account, secretBase32, counter, alg, digits);
-        var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, RenderUri(uri, format, options, extras));
-    }
-
     /// <summary>
     /// Starts a fluent TOTP builder.
     /// </summary>
@@ -320,6 +50,20 @@ public static class Otp {
     /// </summary>
     public static HotpBuilder Hotp(string issuer, string account, string secretBase32, long counter, QrEasyOptions? options = null) {
         return new HotpBuilder(issuer, account, OtpAuthSecret.FromBase32(secretBase32), counter, options);
+    }
+
+    private static RenderedOutput RenderUri(string uri, OutputFormat format, QrEasyOptions options, RenderExtras? extras) {
+        return QrCode.Render(uri, format, options, extras);
+    }
+
+    private static string SaveUri(string uri, string path, QrEasyOptions options, RenderExtras? extras) {
+        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+        return OutputWriter.Write(path, RenderUri(uri, format, options, extras));
+    }
+
+    private static void SaveUri(string uri, Stream stream, OutputFormat format, QrEasyOptions options, RenderExtras? extras) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        OutputWriter.Write(stream, RenderUri(uri, format, options, extras));
     }
 
     /// <summary>
@@ -389,25 +133,20 @@ public static class Otp {
         /// <summary>
         /// Renders the configured TOTP QR code to the requested output format.
         /// </summary>
-        public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
-            return RenderUri(Uri(), format, Options, extras);
-        }
+        public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) =>
+            RenderUri(Uri(), format, Options, extras);
 
         /// <summary>
         /// Saves the configured TOTP QR code, selecting the output format from the file extension.
         /// </summary>
-        public string Save(string path, RenderExtras? extras = null) {
-            var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-            return OutputWriter.Write(path, Render(format, extras));
-        }
+        public string Save(string path, RenderExtras? extras = null) =>
+            SaveUri(Uri(), path, Options, extras);
 
         /// <summary>
         /// Writes the configured TOTP QR code to a stream in the requested output format.
         /// </summary>
-        public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
-            OutputWriter.Write(stream, Render(format, extras));
-        }
+        public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) =>
+            SaveUri(Uri(), stream, format, Options, extras);
     }
 
     /// <summary>
@@ -477,24 +216,19 @@ public static class Otp {
         /// <summary>
         /// Renders the configured HOTP QR code to the requested output format.
         /// </summary>
-        public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
-            return RenderUri(Uri(), format, Options, extras);
-        }
+        public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) =>
+            RenderUri(Uri(), format, Options, extras);
 
         /// <summary>
         /// Saves the configured HOTP QR code, selecting the output format from the file extension.
         /// </summary>
-        public string Save(string path, RenderExtras? extras = null) {
-            var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-            return OutputWriter.Write(path, Render(format, extras));
-        }
+        public string Save(string path, RenderExtras? extras = null) =>
+            SaveUri(Uri(), path, Options, extras);
 
         /// <summary>
         /// Writes the configured HOTP QR code to a stream in the requested output format.
         /// </summary>
-        public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
-            if (stream is null) throw new ArgumentNullException(nameof(stream));
-            OutputWriter.Write(stream, Render(format, extras));
-        }
+        public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) =>
+            SaveUri(Uri(), stream, format, Options, extras);
     }
 }

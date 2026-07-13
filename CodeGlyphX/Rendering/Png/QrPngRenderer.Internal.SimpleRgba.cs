@@ -196,7 +196,7 @@ public static partial class QrPngRenderer {
     private static Rgba32 CompositeForeground(Rgba32 foreground, Rgba32 background) {
         // Reuse the shared compositor so the simple square path matches the
         // general renderer when foreground alpha is less than fully opaque.
-        return ComposeOver(foreground, background);
+        return Rgba32Compositor.ComposeOver(foreground, background);
     }
 
 }
