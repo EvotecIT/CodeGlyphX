@@ -129,14 +129,14 @@ else
             return "// ASP.NET Core Minimal API endpoint" + nl
                 + "app.MapGet(\"/barcode/{text}\", (string text) =>" + nl
                 + "{" + nl
-                + "    var png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text);" + nl
+                + "    var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).Data;" + nl
                 + "    return Results.File(png, \"image/png\", \"barcode.png\");" + nl
                 + "});" + nl + nl
                 + "// Or in a Controller" + nl
                 + "[HttpGet(\"barcode/{text}\")]" + nl
                 + "public IActionResult GetBarcode(string text)" + nl
                 + "{" + nl
-                + "    var png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text);" + nl
+                + "    var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).Data;" + nl
                 + "    return File(png, \"image/png\");" + nl
                 + "}";
         }
@@ -230,7 +230,7 @@ else
                 + "    private string _barcodeDataUri = \"\";" + nl + nl
                 + "    protected override void OnInitialized()" + nl
                 + "    {" + nl
-                + "        var png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\");" + nl
+                + "        var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).Data;" + nl
                 + "        _barcodeDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
                 + "    }" + nl
                 + "}";
@@ -317,7 +317,7 @@ else
             return "// .NET MAUI - Display barcode in Image control" + nl
                 + "using CodeGlyphX;" + nl + nl
                 + "// In your ViewModel or code-behind:" + nl
-                + "var png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\");" + nl
+                + "var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).Data;" + nl
                 + "BarcodeImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
                 + "// XAML:" + nl
                 + "// <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";
@@ -368,7 +368,7 @@ else
                 + "    Inherits ControllerBase" + nl + nl
                 + "    <HttpGet(\"barcode/{text}\")>" + nl
                 + "    Public Function GetBarcode(text As String) As IActionResult" + nl
-                + "        Dim png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text)" + nl
+                + "        Dim png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).Data" + nl
                 + "        Return File(png, \"image/png\", \"barcode.png\")" + nl
                 + "    End Function" + nl
                 + "End Class";
@@ -417,7 +417,7 @@ else
                 + "Imports CodeGlyphX" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = Barcode.Png(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.BarcodeContent ?? "12345") + "\")" + nl
+                + "Dim png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).Data" + nl
                 + "BarcodeImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";
