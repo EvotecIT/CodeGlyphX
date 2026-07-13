@@ -169,31 +169,42 @@ public static class QrArtHeuristics {
         var patternActive = pattern is not null && pattern.ThicknessPx > 0 && (pattern.BlendMode == QrPngForegroundPatternBlendMode.Mask || pattern.Color.A != 0);
 
         if (options.ForegroundPalette is not null || options.ForegroundPaletteZones is not null) {
-            var palettes = CollectPalettes(options.ForegroundPalette, options.ForegroundPaletteZones);
-            var colors = patternActive
-                ? AddPatternVariants(palettes, pattern!)
-                : palettes;
-            var min = MinContrast(colors, bg);
-            if (min < 4.5) {
-                evaluation.Add(QrArtWarningKind.LowContrastPalette, "Palette includes low-contrast colors against the background.", 30);
-            }
-        } else if (options.ForegroundGradient is null) {
-            var colors = patternActive
-                ? new[] { options.Foreground, Rgba32Compositor.ComposeOver(pattern!.Color, options.Foreground) }
-                : new[] { options.Foreground };
-            var contrast = MinContrast(colors, bg);
-            if (contrast < 4.5) {
-                evaluation.Add(QrArtWarningKind.LowContrast, $"Foreground/background contrast {contrast:0.00} is low.", 30);
-            }
-        } else {
-            var gradientColors = new[] { options.ForegroundGradient.StartColor, options.ForegroundGradient.EndColor };
-            var colors = patternActive
-                ? AddPatternVariants(gradientColors, pattern!)
-                : gradientColors;
-            var min = MinContrast(colors, bg);
-            if (min < 4.5) {
-                evaluation.Add(QrArtWarningKind.LowContrastGradient, "Gradient includes low-contrast colors against the background.", 30);
-            }
+            EvaluatePaletteContrast(options, evaluation, bg, pattern, patternActive);
+            return;
+        }
+
+        if (options.ForegroundGradient is null) {
+            EvaluateSolidContrast(options, evaluation, bg, pattern, patternActive);
+            return;
+        }
+
+        EvaluateGradientContrast(options, evaluation, bg, pattern, patternActive);
+    }
+
+    private static void EvaluatePaletteContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrPngForegroundPatternOptions? pattern, bool patternActive) {
+        var palettes = CollectPalettes(options.ForegroundPalette, options.ForegroundPaletteZones);
+        var colors = patternActive ? AddPatternVariants(palettes, pattern!) : palettes;
+        if (MinContrast(colors, backgrounds) < 4.5) {
+            evaluation.Add(QrArtWarningKind.LowContrastPalette, "Palette includes low-contrast colors against the background.", 30);
+        }
+    }
+
+    private static void EvaluateSolidContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrPngForegroundPatternOptions? pattern, bool patternActive) {
+        var colors = patternActive
+            ? new[] { options.Foreground, Rgba32Compositor.ComposeOver(pattern!.Color, options.Foreground) }
+            : new[] { options.Foreground };
+        var contrast = MinContrast(colors, backgrounds);
+        if (contrast < 4.5) {
+            evaluation.Add(QrArtWarningKind.LowContrast, $"Foreground/background contrast {contrast:0.00} is low.", 30);
+        }
+    }
+
+    private static void EvaluateGradientContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrPngForegroundPatternOptions? pattern, bool patternActive) {
+        var gradient = options.ForegroundGradient!;
+        var gradientColors = new[] { gradient.StartColor, gradient.EndColor };
+        var colors = patternActive ? AddPatternVariants(gradientColors, pattern!) : gradientColors;
+        if (MinContrast(colors, backgrounds) < 4.5) {
+            evaluation.Add(QrArtWarningKind.LowContrastGradient, "Gradient includes low-contrast colors against the background.", 30);
         }
     }
 
