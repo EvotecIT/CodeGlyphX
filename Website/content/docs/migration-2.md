@@ -100,7 +100,7 @@ The `ImageReader.DecodeRgba32Safe(...)` and `TryDecodeRgba32Safe(...)` convenien
 
 QR decoding also has one time control in 2.0. `QrPixelDecodeOptions.MaxMilliseconds` and its silent profile downgrades were removed. Set `BudgetMilliseconds`, use `WithBudgetMilliseconds(...)`, or set `CodeGlyphDecodeOptions.QrBudgetMilliseconds`. The budget applies to one public decode call, is checked cooperatively between passes, and is not a hard real-time deadline.
 
-The `QrDecoder.TryDecodeAll(..., out QrPixelDecodeInfo, ...)` overloads were removed because the multi-code path did not collect those finder diagnostics and returned synthetic values. Use the remaining `TryDecodeAll` overloads for multi-code results. Use single-code `TryDecode(..., out QrPixelDecodeInfo, ...)` when detailed attempt diagnostics are required.
+The `QrDecoder.TryDecodeAll(..., out QrPixelDecodeInfo, ...)` and `CodeGlyph.TryDecodeAll(..., out CodeGlyphDecodeDiagnostics, ...)` overloads were removed because the multi-code paths did not collect representative QR finder diagnostics and could report success with missing or synthetic details. Use the remaining `TryDecodeAll` overloads for multi-code results. Use single-code `TryDecode(..., out QrPixelDecodeInfo, ...)` or `CodeGlyph.TryDecode(..., out CodeGlyphDecodeDiagnostics, ...)` when detailed attempt diagnostics are required.
 
 `ImageDecodeOptions.MaxBytes`, `MaxPixels`, and animation limits are nullable in 2.0:
 

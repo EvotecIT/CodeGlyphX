@@ -1,6 +1,7 @@
 using System;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -66,6 +67,31 @@ public sealed class ImageReaderLimitsTests {
 
             Assert.True(result.IsSuccess, result.Message);
             Assert.Equal("UNLIMITED-BYTES", result.Value?.Text);
+        } finally {
+            ImageReader.MaxImageBytes = previous;
+        }
+    }
+
+    [Fact]
+    public void BarcodePng_Option_Zero_Disables_Global_MaxBytes() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "UNLIMITED-BARCODE");
+        var png = BarcodePngRenderer.Render(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 6,
+            QuietZone = 10,
+            HeightModules = 40
+        });
+        var previous = ImageReader.MaxImageBytes;
+        try {
+            ImageReader.MaxImageBytes = 1;
+
+            var success = Barcode.TryDecodePng(
+                png,
+                BarcodeType.Code128,
+                new ImageDecodeOptions { MaxBytes = 0 },
+                out var decoded);
+
+            Assert.True(success);
+            Assert.Equal("UNLIMITED-BARCODE", decoded.Text);
         } finally {
             ImageReader.MaxImageBytes = previous;
         }

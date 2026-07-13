@@ -255,11 +255,13 @@ public static partial class QR {
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
         decoded = null!;
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) return false;
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
+            var rgba = ImageReader.DecodeRgba32(png, imageOptions, out var width, out var height);
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out budgetCts, out budgetScope);
             return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
         } finally {
             budgetCts?.Dispose();
@@ -271,11 +273,13 @@ public static partial class QR {
         decoded = null!;
         info = default;
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) return false;
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
+            var rgba = ImageReader.DecodeRgba32(png, imageOptions, out var width, out var height);
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out budgetCts, out budgetScope);
             return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
         } finally {
             budgetCts?.Dispose();
@@ -286,11 +290,13 @@ public static partial class QR {
     private static bool TryDecodeAllPngCore(byte[] png, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) return false;
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
+            var rgba = ImageReader.DecodeRgba32(png, imageOptions, out var width, out var height);
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out budgetCts, out budgetScope);
             return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
         } finally {
             budgetCts?.Dispose();

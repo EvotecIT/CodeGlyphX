@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using CodeGlyphX.Rendering;
-using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Internal;
 
@@ -144,11 +143,13 @@ internal static class DecodeResultHelpers {
     }
 
     public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, PixelDecodeString decode, out string text) {
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
             if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             return decode(rgba, width, height, token, out text);
         } finally {
             budgetCts?.Dispose();
@@ -158,12 +159,14 @@ internal static class DecodeResultHelpers {
 
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, PixelDecodeString decode, out string text) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
             if (!TryReadBinary(stream, options, out var data)) { text = string.Empty; return false; }
             if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             return decode(rgba, width, height, token, out text);
         } finally {
             budgetCts?.Dispose();
@@ -251,7 +254,9 @@ internal static class DecodeResultHelpers {
         where TDiag : class, IDecodeDiagnostics, new() {
         var defaultDiagnostics = new TDiag();
         diagnostics = defaultDiagnostics;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) {
                 text = string.Empty;
@@ -263,11 +268,7 @@ internal static class DecodeResultHelpers {
                 diagnostics.SetFailure(failure ?? failures.FailureCancelled);
                 return false;
             }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.SetFailure(token.IsCancellationRequested ? failures.FailureCancelled : failures.FailureDownscale);
-                return false;
-            }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             if (decode(rgba, width, height, token, out text, out var diag)) {
                 diagnostics = diag ?? defaultDiagnostics;
                 return true;
@@ -304,7 +305,7 @@ internal static class DecodeResultHelpers {
                     height = 0;
                     return false;
                 }
-                rgba = PngReader.DecodeRgba32(png, out width, out height);
+                rgba = ImageReader.DecodeRgba32(png, options, out width, out height);
                 failure = null;
                 return true;
             },
@@ -348,14 +349,13 @@ internal static class DecodeResultHelpers {
         out string[] texts) {
         texts = Array.Empty<string>();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) return false;
             if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
-            var original = rgba;
-            var originalWidth = width;
-            var originalHeight = height;
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) return false;
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
 
             var list = new List<string>(4);
             var seen = new HashSet<string>(StringComparer.Ordinal);
@@ -366,9 +366,6 @@ internal static class DecodeResultHelpers {
                 Seen = seen
             };
             var found = CollectAllFromRgba(rgba, width, height, width * 4, context);
-            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                found |= CollectAllFromRgba(original, originalWidth, originalHeight, originalWidth * 4, context);
-            }
 
             if (!found) return false;
             texts = list.ToArray();
@@ -487,7 +484,9 @@ internal static class DecodeResultHelpers {
             return new DecodeResult<string>(DecodeFailureReason.InvalidInput, info, stopwatch.Elapsed, limitMessage);
         }
 
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) {
                 return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
@@ -496,12 +495,10 @@ internal static class DecodeResultHelpers {
                 var imageFailure = FailureForImageRead(image, formatKnown, token);
                 return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
             }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
 
             info = EnsureDimensions(info, formatKnown, width, height);
 
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
-            }
             if (decode(rgba, width, height, token, out var text)) {
                 return new DecodeResult<string>(text, info, stopwatch.Elapsed);
             }

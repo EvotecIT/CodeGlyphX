@@ -15,7 +15,6 @@ using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Pam;
 using CodeGlyphX.Rendering.Pbm;
 using CodeGlyphX.Rendering.Pgm;
-using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Pdf;
 using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Svg;
@@ -28,7 +27,6 @@ namespace CodeGlyphX;
 
 public static partial class AztecCode {
     private const string FailureCancelled = "Cancelled.";
-    private const string FailureDownscale = "Image downscale failed.";
     private const string FailureNoDecoded = "No Aztec decoded.";
     /// <summary>
     /// Attempts to decode an Aztec symbol from a module matrix.
@@ -142,11 +140,13 @@ public static partial class AztecCode {
     /// </summary>
     public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (png is null) throw new ArgumentNullException(nameof(png));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
             budgetCts?.Dispose();
@@ -179,11 +179,13 @@ public static partial class AztecCode {
     /// Attempts to decode an Aztec symbol from PNG bytes in a span with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
             budgetCts?.Dispose();
@@ -231,15 +233,13 @@ public static partial class AztecCode {
     /// </summary>
     public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
         diagnostics = new AztecDecodeDiagnostics();
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
+            var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var azDiag)) {
                 diagnostics = azDiag;
                 return true;
@@ -367,11 +367,13 @@ public static partial class AztecCode {
     /// </summary>
     public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
             if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
             budgetCts?.Dispose();
@@ -425,11 +427,13 @@ public static partial class AztecCode {
     /// Attempts to decode an Aztec symbol from common image formats in a span with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
             if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
             budgetCts?.Dispose();
@@ -456,7 +460,9 @@ public static partial class AztecCode {
     /// </summary>
     public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
         diagnostics = new AztecDecodeDiagnostics();
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
             if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
@@ -464,11 +470,7 @@ public static partial class AztecCode {
                 diagnostics.Failure ??= "Unsupported image format.";
                 return false;
             }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var azDiag)) {
                 diagnostics = azDiag;
                 return true;
@@ -509,12 +511,14 @@ public static partial class AztecCode {
     /// </summary>
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; return false; }
             if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) { text = string.Empty; return false; }
             if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             return AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
         } finally {
             budgetCts?.Dispose();
@@ -564,7 +568,9 @@ public static partial class AztecCode {
     public static DecodeResult<string> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
         var stopwatch = Stopwatch.StartNew();
         _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) {
                 return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
@@ -573,12 +579,10 @@ public static partial class AztecCode {
                 var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
                 return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
             }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
 
             info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
 
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
-            }
             if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out var text)) {
                 return new DecodeResult<string>(text, info, stopwatch.Elapsed);
             }
@@ -692,15 +696,13 @@ public static partial class AztecCode {
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
         diagnostics = new AztecDecodeDiagnostics();
         if (png is null) throw new ArgumentNullException(nameof(png));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
+            var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var aztecDiag)) {
                 diagnostics = aztecDiag;
                 return true;
@@ -718,7 +720,9 @@ public static partial class AztecCode {
     private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out AztecDecodeDiagnostics diagnostics) {
         diagnostics = new AztecDecodeDiagnostics();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
             if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
@@ -726,11 +730,7 @@ public static partial class AztecCode {
                 diagnostics.Failure ??= "Unsupported image format.";
                 return false;
             }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
             if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var aztecDiag)) {
                 diagnostics = aztecDiag;
                 return true;
@@ -748,21 +748,17 @@ public static partial class AztecCode {
     private static bool TryDecodeAllImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
         texts = Array.Empty<string>();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        CancellationTokenSource? budgetCts = null;
+        IDisposable? budgetScope = null;
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) return false;
             if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
-            var original = rgba;
-            var originalWidth = width;
-            var originalHeight = height;
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) return false;
+            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
 
             var list = new System.Collections.Generic.List<string>(4);
             var seen = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
             CollectAllFromRgba(rgba, width, height, width * 4, token, list, seen);
-            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                CollectAllFromRgba(original, originalWidth, originalHeight, originalWidth * 4, token, list, seen);
-            }
 
             if (list.Count == 0) return false;
             texts = list.ToArray();

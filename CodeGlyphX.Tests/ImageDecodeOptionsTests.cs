@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Threading;
 using CodeGlyphX;
 using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Rendering;
@@ -59,6 +62,26 @@ public sealed class ImageDecodeOptionsTests {
     }
 
     [Fact]
+    public void Barcode_RecognitionBudget_Starts_After_Stream_Decode() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "POST-RASTER-BUDGET");
+        var png = BarcodePngRenderer.Render(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 6,
+            QuietZone = 10,
+            HeightModules = 40
+        });
+        using var stream = new DelayedReadStream(png, delayMilliseconds: 1200);
+
+        var success = Barcode.TryDecodeImage(
+            stream,
+            BarcodeType.Code128,
+            new ImageDecodeOptions { RecognitionBudgetMilliseconds = 1000 },
+            out var decoded);
+
+        Assert.True(success);
+        Assert.Equal("POST-RASTER-BUDGET", decoded.Text);
+    }
+
+    [Fact]
     public void Qr_Downscales_WithImageOptions() {
         var png = QrCode.Render("HELLO-WORLD", OutputFormat.Png, new QrEasyOptions { ModuleSize = 18, QuietZone = 4 }).Data;
         var imageOptions = new ImageDecodeOptions { MaxDimension = 200 };
@@ -94,5 +117,44 @@ public sealed class ImageDecodeOptionsTests {
         var options = ImageDecodeOptions.Guarded(maxAnimationFramePixels: 0);
 
         Assert.Equal(0, options.MaxAnimationFramePixels);
+    }
+
+    private sealed class DelayedReadStream : Stream {
+        private readonly Stream _inner;
+        private readonly int _delayMilliseconds;
+        private bool _delayed;
+
+        public DelayedReadStream(byte[] data, int delayMilliseconds) {
+            _inner = new MemoryStream(data, writable: false);
+            _delayMilliseconds = delayMilliseconds;
+        }
+
+        public override bool CanRead => _inner.CanRead;
+        public override bool CanSeek => _inner.CanSeek;
+        public override bool CanWrite => false;
+        public override long Length => _inner.Length;
+        public override long Position {
+            get => _inner.Position;
+            set => _inner.Position = value;
+        }
+
+        public override void Flush() { }
+
+        public override int Read(byte[] buffer, int offset, int count) {
+            if (!_delayed) {
+                _delayed = true;
+                Thread.Sleep(_delayMilliseconds);
+            }
+            return _inner.Read(buffer, offset, count);
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => _inner.Seek(offset, origin);
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+
+        protected override void Dispose(bool disposing) {
+            if (disposing) _inner.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }
