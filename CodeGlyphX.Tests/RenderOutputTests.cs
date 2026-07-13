@@ -1,4 +1,5 @@
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 using System;
 using System.IO;
 using Xunit;
@@ -74,6 +75,57 @@ public class RenderOutputTests {
         Assert.IsType<BarcodeBuilder>(barcode);
         Assert.IsType<DataMatrixBuilder>(dataMatrix);
         Assert.IsType<Pdf417Builder>(pdf417);
+    }
+
+    [Fact]
+    public void QrBuilder_Uses_Generic_Render_And_Save_Surface() {
+        var builder = QR.Create("QR-BUILDER-CONTRACT")
+            .WithModuleSize(6)
+            .WithQuietZone(4)
+            .WithColors(Rgba32.Black, Rgba32.White)
+            .WithErrorCorrection(QrErrorCorrectionLevel.H);
+
+        Assert.True(builder.Encode().Size > 0);
+        Assert.Contains("<svg", builder.Render(OutputFormat.Svg).GetText(), StringComparison.OrdinalIgnoreCase);
+
+        using var stream = new MemoryStream();
+        builder.Save(stream, OutputFormat.Png);
+        Assert.True(stream.Length > 8);
+        Assert.Equal(0x89, stream.GetBuffer()[0]);
+    }
+
+    [Fact]
+    public void DataMatrixBuilder_Uses_Generic_Render_And_Save_Surface() {
+        var builder = DataMatrixCode.Create("DATA-MATRIX-BUILDER-CONTRACT")
+            .WithModuleSize(5)
+            .WithQuietZone(2)
+            .WithColors(Rgba32.Black, Rgba32.White)
+            .WithOptions(options => options.HtmlEmailSafeTable = true);
+
+        Assert.True(builder.Encode().Width > 0);
+        Assert.Contains("<svg", builder.Render(OutputFormat.Svg).GetText(), StringComparison.OrdinalIgnoreCase);
+
+        using var stream = new MemoryStream();
+        builder.Save(stream, OutputFormat.Png);
+        Assert.True(stream.Length > 8);
+        Assert.Equal(0x89, stream.GetBuffer()[0]);
+    }
+
+    [Fact]
+    public void Pdf417Builder_Uses_Generic_Render_And_Save_Surface() {
+        var builder = Pdf417Code.Create("PDF417-BUILDER-CONTRACT")
+            .WithModuleSize(3)
+            .WithQuietZone(2)
+            .WithColors(Rgba32.Black, Rgba32.White)
+            .WithCompact();
+
+        Assert.True(builder.Encode().Width > 0);
+        Assert.Contains("<svg", builder.Render(OutputFormat.Svg).GetText(), StringComparison.OrdinalIgnoreCase);
+
+        using var stream = new MemoryStream();
+        builder.Save(stream, OutputFormat.Png);
+        Assert.True(stream.Length > 8);
+        Assert.Equal(0x89, stream.GetBuffer()[0]);
     }
 
     [Fact]
