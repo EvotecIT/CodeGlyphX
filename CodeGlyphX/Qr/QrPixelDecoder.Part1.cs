@@ -350,7 +350,7 @@ internal static partial class QrPixelDecoder {
         }
 
         diagnostics = best;
-        if (options?.AggressiveSampling == true && !budget.IsNearDeadline(300) && Math.Max(width, height) <= 900) {
+        if (options?.AggressiveSampling == true && !budget.IsNearDeadline(300)) {
             if (TryDecodeUpscaled(pixels, width, height, stride, fmt, profile, options, accept, cancellationToken, budget, out result, out var diagUpscaled)) {
                 diagnostics = diagUpscaled;
                 return true;
@@ -613,7 +613,7 @@ internal static partial class QrPixelDecoder {
                 CollectFromOverlappingTiles(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
-            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(300) && Math.Max(width, height) <= 900) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(300)) {
                 if (TryDecodeUpscaled(pixels, width, height, stride, fmt, profile, options, accept, cancellationToken, budget, out var decodedUpscaled, out _)) {
                     AddResult(list, seen, decodedUpscaled, accept);
                 }
@@ -1031,16 +1031,13 @@ internal static partial class QrPixelDecoder {
         diagnostics = default;
 
         if (budget.IsNearDeadline(250)) return false;
-        if (width <= 0 || height <= 0) return false;
+        if (width <= 0 || width > 900 || height <= 0 || height > 900) return false;
 
         var upW = width * 2;
         var upH = height * 2;
-        if (upW <= 0 || upH <= 0) return false;
-        if (upW > 2800 || upH > 2800) return false;
 
         var upStride = upW * 4;
         var required = (long)upStride * upH;
-        if (required > 160_000_000) return false;
 
         var buffer = ArrayPool<byte>.Shared.Rent((int)required);
         try {

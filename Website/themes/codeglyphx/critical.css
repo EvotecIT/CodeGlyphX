@@ -75,8 +75,6 @@
     --header-bg: rgba(248, 250, 252, 0.9);
     --header-border: rgba(0, 0, 0, 0.05);
 }
-+
-
 /* Auto theme follows the system during first paint as well as after app.css loads. */
 @media (prefers-color-scheme: light) {
     [data-theme="auto"] {

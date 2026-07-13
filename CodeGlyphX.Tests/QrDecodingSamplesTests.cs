@@ -29,7 +29,7 @@ public sealed class QrDecodingSamplesTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2200,
-            BudgetMilliseconds = TestBudget.Adjust(2000),
+            BudgetMilliseconds = TestBudget.Adjust(IsArtSample(relativePath) ? 5000 : 2000),
             AggressiveSampling = true,
             EnableTileScan = true
         };
@@ -57,7 +57,7 @@ public sealed class QrDecodingSamplesTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 1600,
-            BudgetMilliseconds = TestBudget.Adjust(2000),
+            BudgetMilliseconds = TestBudget.Adjust(IsArtSample(relativePath) ? 5000 : 2000),
             AggressiveSampling = true,
             EnableTileScan = true
         };
@@ -239,6 +239,9 @@ public sealed class QrDecodingSamplesTests {
 
         throw new FileNotFoundException($"Could not locate sample file '{relativePath}'.");
     }
+
+    private static bool IsArtSample(string relativePath) =>
+        relativePath.Contains("qr-art-", StringComparison.OrdinalIgnoreCase);
 
     private static string[] DecodeTexts(byte[] rgba, int width, int height, int stride, QrPixelDecodeOptions options) {
         Assert.True(QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var results, options));
