@@ -39,17 +39,42 @@ internal static class ImageDecodeHelper {
         return true;
     }
 
-    public static CancellationToken BeginRecognitionBudget(CancellationToken cancellationToken, ImageDecodeOptions? options, out CancellationTokenSource? budgetCts, out IDisposable? budgetScope) {
-        budgetCts = null;
-        budgetScope = null;
-        if (options is null || options.RecognitionBudgetMilliseconds <= 0) return cancellationToken;
-        budgetScope = Internal.DecodeBudget.Begin(options.RecognitionBudgetMilliseconds);
-        if (cancellationToken.CanBeCanceled) {
-            budgetCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            budgetCts.CancelAfter(options.RecognitionBudgetMilliseconds);
-            return budgetCts.Token;
+    public static RecognitionBudgetScope BeginRecognitionBudget(CancellationToken cancellationToken, ImageDecodeOptions? options, out CancellationToken token) {
+        return BeginRecognitionBudget(cancellationToken, options?.RecognitionBudgetMilliseconds ?? 0, out token);
+    }
+
+    public static RecognitionBudgetScope BeginRecognitionBudget(CancellationToken cancellationToken, int milliseconds, out CancellationToken token) {
+        if (milliseconds <= 0) {
+            token = cancellationToken;
+            return new RecognitionBudgetScope(null, null);
         }
-        budgetCts = new CancellationTokenSource(options.RecognitionBudgetMilliseconds);
-        return budgetCts.Token;
+
+        var decodeScope = Internal.DecodeBudget.Begin(milliseconds);
+        try {
+            var cancellationSource = cancellationToken.CanBeCanceled
+                ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
+                : new CancellationTokenSource();
+            cancellationSource.CancelAfter(milliseconds);
+            token = cancellationSource.Token;
+            return new RecognitionBudgetScope(cancellationSource, decodeScope);
+        } catch {
+            decodeScope?.Dispose();
+            throw;
+        }
+    }
+}
+
+internal readonly struct RecognitionBudgetScope : IDisposable {
+    private readonly CancellationTokenSource? _cancellationSource;
+    private readonly IDisposable? _decodeScope;
+
+    public RecognitionBudgetScope(CancellationTokenSource? cancellationSource, IDisposable? decodeScope) {
+        _cancellationSource = cancellationSource;
+        _decodeScope = decodeScope;
+    }
+
+    public void Dispose() {
+        _cancellationSource?.Dispose();
+        _decodeScope?.Dispose();
     }
 }

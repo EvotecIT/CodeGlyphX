@@ -107,7 +107,7 @@ Limit semantics are deliberate:
 
 - `MaxBytes` and `MaxPixels`: `null` uses the corresponding `ImageReader` global; `0` disables that per-call limit.
 - `MaxDimension`: codecs validate the original dimensions first, then the single-image RGBA result is resized. It is not a codec-memory limit.
-- `RecognitionBudgetMilliseconds`: applies to barcode/matrix recognition after raster decoding. It does not time-box the image codec.
+- `RecognitionBudgetMilliseconds`: applies to barcode/matrix recognition after raster decoding. It does not time-box the image codec. Multi-format `CodeGlyph` entry points give each candidate decoder this budget; it is not a wall-clock limit for the complete candidate sequence.
 - `ImageReader.LimitViolation`: reports guard failures for telemetry.
 
 See [SECURITY.md](SECURITY.md) for reporting and [FUZZING.md](FUZZING.md) for the bounded decoder harness.

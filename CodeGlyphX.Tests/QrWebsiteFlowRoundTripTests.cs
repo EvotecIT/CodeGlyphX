@@ -65,7 +65,7 @@ public sealed class QrWebsiteFlowRoundTripTests {
         if (qrOptions is null) {
             qrOptions = QrPixelDecodeOptions.Balanced();
             qrOptions.AutoCrop = true;
-            qrOptions.BudgetMilliseconds = 2000;
+            qrOptions.BudgetMilliseconds = TestBudget.Adjust(2000);
         }
 
         var success = QrImageDecoder.TryDecodeImage(png, imageOptions, out var decoded, out var info, qrOptions);

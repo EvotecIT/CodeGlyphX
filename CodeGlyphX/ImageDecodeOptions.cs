@@ -30,7 +30,9 @@ public sealed partial class ImageDecodeOptions {
 
     /// <summary>
     /// Cooperative time budget, in milliseconds, for barcode and matrix recognition after raster
-    /// decoding. Image codecs do not use this value. Set to 0 to disable the recognition budget.
+    /// decoding. Image codecs do not use this value. Multi-format <see cref="CodeGlyph"/> entry points
+    /// apply the budget to each candidate decoder rather than to the complete candidate sequence.
+    /// Set to 0 to disable the recognition budget.
     /// </summary>
     public int RecognitionBudgetMilliseconds { get; set; }
 

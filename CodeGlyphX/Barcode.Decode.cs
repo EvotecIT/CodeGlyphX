@@ -81,18 +81,11 @@ public static partial class Barcode {
     /// </summary>
     public static bool TryDecodePng(byte[] png, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         if (png is null) throw new ArgumentNullException(nameof(png));
-        CancellationTokenSource? budgetCts = null;
-        IDisposable? budgetScope = null;
         var token = cancellationToken;
-        try {
-            if (token.IsCancellationRequested) { decoded = null!; return false; }
-            var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
-            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
-            return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        if (token.IsCancellationRequested) { decoded = null!; return false; }
+        var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
     }
 
     /// <summary>
@@ -154,18 +147,11 @@ public static partial class Barcode {
     public static bool TryDecodeImage(byte[] image, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
         if (image is null) throw new ArgumentNullException(nameof(image));
-        CancellationTokenSource? budgetCts = null;
-        IDisposable? budgetScope = null;
         var token = cancellationToken;
-        try {
-            if (token.IsCancellationRequested) return false;
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
-            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
-            return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        if (token.IsCancellationRequested) return false;
+        if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
     }
 
     /// <summary>
@@ -201,18 +187,11 @@ public static partial class Barcode {
     /// </summary>
     public static bool TryDecodeImage(ReadOnlySpan<byte> image, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
-        CancellationTokenSource? budgetCts = null;
-        IDisposable? budgetScope = null;
         var token = cancellationToken;
-        try {
-            if (token.IsCancellationRequested) return false;
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
-            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
-            return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        if (token.IsCancellationRequested) return false;
+        if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
     }
 
     /// <summary>
@@ -274,18 +253,11 @@ public static partial class Barcode {
     public static bool TryDecodeImage(Stream stream, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        CancellationTokenSource? budgetCts = null;
-        IDisposable? budgetScope = null;
         var token = cancellationToken;
-        try {
-            if (token.IsCancellationRequested) return false;
-            var rgba = ImageReader.DecodeRgba32(stream, options, out var width, out var height);
-            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
-            return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        if (token.IsCancellationRequested) return false;
+        var rgba = ImageReader.DecodeRgba32(stream, options, out var width, out var height);
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
     }
 
     /// <summary>
@@ -304,8 +276,6 @@ public static partial class Barcode {
         if (!DecodeResultHelpers.TryCheckImageLimits(image, options, out var info, out var formatKnown, out var limitMessage)) {
             return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.InvalidInput, info, stopwatch.Elapsed, limitMessage);
         }
-        CancellationTokenSource? budgetCts = null;
-        IDisposable? budgetScope = null;
         var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) {
@@ -315,7 +285,7 @@ public static partial class Barcode {
                 var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
                 return new DecodeResult<BarcodeDecoded>(imageFailure, info, stopwatch.Elapsed);
             }
-            token = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out budgetCts, out budgetScope);
+            using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
 
             info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
 
@@ -326,9 +296,6 @@ public static partial class Barcode {
             return new DecodeResult<BarcodeDecoded>(failure, info, stopwatch.Elapsed);
         } catch (Exception ex) {
             return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
         }
     }
 

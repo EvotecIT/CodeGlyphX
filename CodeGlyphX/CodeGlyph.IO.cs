@@ -509,16 +509,8 @@ public static partial class CodeGlyph {
 
     private static bool TryWithImageBudget(ImageDecodeOptions? imageOptions, CancellationToken cancellationToken, Func<CancellationToken, bool> action) {
         if (cancellationToken.IsCancellationRequested) return false;
-        if (imageOptions is null || imageOptions.RecognitionBudgetMilliseconds <= 0) return action(cancellationToken);
-
-        var budgetToken = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
-        try {
-            if (budgetToken.IsCancellationRequested) return false;
-            return action(budgetToken);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out var token);
+        return !token.IsCancellationRequested && action(token);
     }
 
     private static int ResolveMaxBytes(ImageDecodeOptions? imageOptions) {

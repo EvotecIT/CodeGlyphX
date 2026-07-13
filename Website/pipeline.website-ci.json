@@ -69,7 +69,7 @@
       "baseUrl": "/api",
       "format": "both",
       "legacyAliasMode": "omit",
-      "css": "/css/app.css,/css/api.css",
+      "css": "/css/app.css,/css/prism-theme.css,/css/api.css",
       "template": "docs",
       "templateDocsIndex": "./themes/codeglyphx/apidocs/docs-index.html",
       "templateDocsType": "./themes/codeglyphx/apidocs/docs-type.html",
