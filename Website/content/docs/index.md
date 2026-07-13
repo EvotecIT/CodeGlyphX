@@ -10,18 +10,15 @@ layout: docs
 
 # CodeGlyphX Documentation
 
-Welcome to the CodeGlyphX documentation. CodeGlyphX is a zero-dependency .NET library
-for generating and decoding QR codes, barcodes, and other 2D matrix codes.
-
-> **Status:** Actively developed - Stable core - Expanding format support
+CodeGlyphX is a pure-managed .NET library for generating and decoding QR codes, linear barcodes, and 2D matrix codes. It does not require native graphics libraries.
 
 ## Key Features
 
-- **Zero external dependencies** - No System.Drawing, SkiaSharp, or ImageSharp required
-- **Full encode & decode** - Round-trip support for all symbologies
+- **No native graphics dependencies** - No System.Drawing, SkiaSharp, or ImageSharp required
+- **Encode and decode** - Supported symbologies have explicit APIs and documented limits
 - **Multiple output formats** - PNG, SVG, PDF, EPS, HTML, and many more
 - **Cross-platform** - Windows, Linux, macOS
-- **AOT compatible** - Works with Native AOT and trimming
+- **AOT validated** - CI publishes and executes a `net8.0` NativeAOT consumer
 
 ## Supported Symbologies
 
@@ -42,6 +39,7 @@ Code 128, GS1-128, Code 39/93/11, Codabar, MSI, Plessey, Telepen, Pharmacode, Co
 - **Output formats** - PNG, SVG, PDF, EPS, HTML, and more. [Output formats](/docs/renderers/)
 - **API Reference** - Full type and method documentation. [API reference](/api/)
 - **FAQ** - Common questions and troubleshooting. [FAQ](/faq/)
+- **2.0 migration** - Removed aliases and behavior changes. [Migration guide](/docs/migration-2/)
 
 ## Quick Example
 

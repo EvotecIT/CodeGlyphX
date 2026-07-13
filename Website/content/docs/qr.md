@@ -21,7 +21,9 @@ using CodeGlyphX;
 QR.Save("https://example.com", "qr.png");
 
 // With error correction level
-QR.Save("https://example.com", "qr.png", QrErrorCorrection.H);
+QR.Save("https://example.com", "qr.png", new QrEasyOptions {
+    ErrorCorrectionLevel = QrErrorCorrectionLevel.H
+});
 ```
 
 ## Error Correction Levels
@@ -37,6 +39,7 @@ QR.Save("https://example.com", "qr.png", QrErrorCorrection.H);
 
 ```csharp
 using CodeGlyphX;
+using CodeGlyphX.Rendering.Png;
 
 var options = new QrEasyOptions
 {
@@ -54,6 +57,19 @@ var options = new QrEasyOptions
 
 QR.Save("https://example.com", "styled-qr.png", options);
 ```
+
+For a high-level art theme, start with conservative guardrails and inspect the static report:
+
+```csharp
+var options = new QrEasyOptions {
+    Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Conservative, intensity: 60)
+};
+
+var report = QrEasy.EvaluateScanHeuristics("https://example.com", options);
+QR.Save("https://example.com", "styled-qr.png", options);
+```
+
+`PassesHeuristics` checks configuration properties such as contrast, quiet zone, module scale, functional-pattern protection, and logo coverage. It is not a decode test and cannot guarantee interoperability. Test the final artifact on every scanner, authenticator, camera, display, print process, and device class your product supports.
 
 ### Fluent Builder (logo + styling)
 
@@ -73,7 +89,8 @@ var png = QR.Create("https://example.com")
     .WithLogoScale(0.22)
     .WithLogoPaddingPx(6)
     .WithStyle(QrRenderStyle.Fancy)
-    .Png();
+    .Render(OutputFormat.Png)
+    .Data;
 ```
 
 ### Style Board Presets (Homepage Gallery)
@@ -82,6 +99,7 @@ The homepage style board is generated from a curated set of presets. Each QR pay
 points back to this section and includes a `?style=slug` hint for tracking or
 future deep-linking. All presets use error correction `H`, a 384px target size,
 and a quiet zone of 4 modules to keep them crisp while remaining web-friendly.
+They are visual examples, not scanner-certification fixtures. Several deliberately artistic recipes exceed what some readers or cameras can handle.
 
 Full source code for these presets lives in
 [QrStyleBoardExample.cs](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrStyleBoardExample.cs).

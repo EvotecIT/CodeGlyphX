@@ -40,9 +40,9 @@ public static class AsciiConsolePresets {
     }
 
     /// <summary>
-    /// Compact output with scan-friendly defaults.
+    /// Compact output with a conservative QR layout.
     /// </summary>
-    public static AsciiConsoleOptions ScanSafe() {
+    public static AsciiConsoleOptions ConservativeQr() {
         return new AsciiConsoleOptions {
             UseHalfBlocks = true,
             HalfBlockUseBackground = true,
@@ -52,13 +52,13 @@ public static class AsciiConsolePresets {
             MaxScale = 2,
             UseAnsiColors = true,
             ColorizeLight = true,
-            PreferScanReliability = true,
+            UseConservativeQrLayout = true,
             CellAspectRatio = 0.5
         };
     }
 
     /// <summary>
-    /// Tiny output for tight layouts (may be less scan-friendly).
+    /// Tiny output for tight layouts; validate readability in the target terminal.
     /// </summary>
     public static AsciiConsoleOptions Tiny() {
         return new AsciiConsoleOptions {

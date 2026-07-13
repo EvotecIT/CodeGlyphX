@@ -194,138 +194,29 @@ public static partial class Pdf417Code {
             return _text is not null ? Pdf417Code.Encode(_text, _encodeOptions) : Pdf417Code.EncodeBytes(_bytes!, _encodeOptions);
         }
 
-        private RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+        /// <summary>
+        /// Renders the configured PDF417 code to the requested output format.
+        /// </summary>
+        public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
             return _text is not null
                 ? Pdf417Code.Render(_text, format, _encodeOptions, _renderOptions, extras)
                 : Pdf417Code.Render(_bytes!, format, _encodeOptions, _renderOptions, extras);
         }
 
         /// <summary>
-        /// Renders PNG bytes.
+        /// Saves the configured PDF417 code, selecting the output format from the file extension.
         /// </summary>
-        public byte[] Png() {
-            return Render(OutputFormat.Png).Data;
+        public string Save(string path, RenderExtras? extras = null) {
+            var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+            return OutputWriter.Write(path, Render(format, extras));
         }
 
         /// <summary>
-        /// Renders SVG markup.
+        /// Writes the configured PDF417 code to a stream in the requested output format.
         /// </summary>
-        public string Svg() {
-            return Render(OutputFormat.Svg).GetText();
-        }
-
-        /// <summary>
-        /// Renders HTML markup.
-        /// </summary>
-        public string Html() {
-            return Render(OutputFormat.Html).GetText();
-        }
-
-        /// <summary>
-        /// Renders JPEG bytes.
-        /// </summary>
-        public byte[] Jpeg() {
-            return Render(OutputFormat.Jpeg).Data;
-        }
-
-        /// <summary>
-        /// Renders BMP bytes.
-        /// </summary>
-        public byte[] Bmp() {
-            return Render(OutputFormat.Bmp).Data;
-        }
-
-        /// <summary>
-        /// Renders PDF bytes.
-        /// </summary>
-        /// <param name="renderMode">Vector or raster output.</param>
-        public byte[] Pdf(RenderMode renderMode = RenderMode.Vector) {
-            return Render(OutputFormat.Pdf, new RenderExtras { VectorMode = renderMode }).Data;
-        }
-
-        /// <summary>
-        /// Renders EPS text.
-        /// </summary>
-        /// <param name="renderMode">Vector or raster output.</param>
-        public string Eps(RenderMode renderMode = RenderMode.Vector) {
-            return Render(OutputFormat.Eps, new RenderExtras { VectorMode = renderMode }).GetText();
-        }
-
-        /// <summary>
-        /// Renders ASCII text.
-        /// </summary>
-        public string Ascii(MatrixAsciiRenderOptions? options = null) {
-            return Render(OutputFormat.Ascii, new RenderExtras { MatrixAscii = options }).GetText();
-        }
-
-        /// <summary>
-        /// Saves output based on file extension.
-        /// </summary>
-        public string Save(string path, string? title = null) {
-            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-            if (_text is not null) return Pdf417Code.Save(_text, path, _encodeOptions, _renderOptions, extras);
-            return Pdf417Code.Save(_bytes!, path, _encodeOptions, _renderOptions, extras);
-        }
-
-        /// <summary>
-        /// Saves PNG to a file.
-        /// </summary>
-        public string SavePng(string path) {
-            return OutputWriter.Write(path, Render(OutputFormat.Png));
-        }
-
-        /// <summary>
-        /// Saves SVG to a file.
-        /// </summary>
-        public string SaveSvg(string path) {
-            return OutputWriter.Write(path, Render(OutputFormat.Svg));
-        }
-
-        /// <summary>
-        /// Saves HTML to a file.
-        /// </summary>
-        public string SaveHtml(string path, string? title = null) {
-            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-            return OutputWriter.Write(path, Render(OutputFormat.Html, extras));
-        }
-
-        /// <summary>
-        /// Saves JPEG to a file.
-        /// </summary>
-        public string SaveJpeg(string path) {
-            return OutputWriter.Write(path, Render(OutputFormat.Jpeg));
-        }
-
-        /// <summary>
-        /// Saves WebP to a file.
-        /// </summary>
-        public string SaveWebp(string path) {
-            return OutputWriter.Write(path, Render(OutputFormat.Webp));
-        }
-
-        /// <summary>
-        /// Saves BMP to a file.
-        /// </summary>
-        public string SaveBmp(string path) {
-            return OutputWriter.Write(path, Render(OutputFormat.Bmp));
-        }
-
-        /// <summary>
-        /// Saves PDF to a file.
-        /// </summary>
-    /// <param name="path">Output file path.</param>
-        /// <param name="renderMode">Vector or raster output.</param>
-        public string SavePdf(string path, RenderMode renderMode = RenderMode.Vector) {
-            return OutputWriter.Write(path, Render(OutputFormat.Pdf, new RenderExtras { VectorMode = renderMode }));
-        }
-
-        /// <summary>
-        /// Saves EPS to a file.
-        /// </summary>
-    /// <param name="path">Output file path.</param>
-        /// <param name="renderMode">Vector or raster output.</param>
-        public string SaveEps(string path, RenderMode renderMode = RenderMode.Vector) {
-            return OutputWriter.Write(path, Render(OutputFormat.Eps, new RenderExtras { VectorMode = renderMode }));
+        public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            OutputWriter.Write(stream, Render(format, extras));
         }
     }
 

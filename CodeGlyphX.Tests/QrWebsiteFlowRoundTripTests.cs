@@ -45,13 +45,12 @@ public sealed class QrWebsiteFlowRoundTripTests {
         var logoOptions = QrPresets.Logo(logo);
         logoOptions.LogoScale = 0.10;
         logoOptions.LogoDrawBackground = false;
-        var png = QR.Create(payload, logoOptions).Png();
+        var png = QR.Create(payload, logoOptions).Render(OutputFormat.Png).Data;
 
         Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
         var decodeOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             AggressiveSampling = true,
-            MaxMilliseconds = TestBudget.Adjust(2500),
             BudgetMilliseconds = TestBudget.Adjust(2500),
             MaxDimension = 1400
         };
@@ -62,11 +61,10 @@ public sealed class QrWebsiteFlowRoundTripTests {
     }
 
     private static void AssertRoundTrip(string payload, byte[] png, QrPixelDecodeOptions? qrOptions = null, ImageDecodeOptions? imageOptions = null) {
-        imageOptions ??= ImageDecodeOptions.Safe();
+        imageOptions ??= ImageDecodeOptions.Guarded();
         if (qrOptions is null) {
             qrOptions = QrPixelDecodeOptions.Balanced();
             qrOptions.AutoCrop = true;
-            qrOptions.MaxMilliseconds = 2000;
             qrOptions.BudgetMilliseconds = 2000;
         }
 

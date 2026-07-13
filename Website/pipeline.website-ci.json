@@ -122,18 +122,9 @@
       "include": "**/*, *"
     },
     {
-      "task": "overlay",
-      "id": "overlay-playground-api",
-      "dependsOn": "overlay-playground",
-      "source": "./static/api",
-      "destination": "./_site/playground/api",
-      "clean": true,
-      "include": "**/*, *"
-    },
-    {
       "task": "verify",
       "id": "verify-ci-final",
-      "dependsOn": "overlay-playground-api",
+      "dependsOn": "overlay-playground",
       "modes": ["ci"],
       "config": "./site.json",
       "baseline": "./.powerforge/verify-baseline.json",
@@ -165,7 +156,7 @@
       "entriesJson": "./data/sitemap.entries.json",
       "includeNoIndexHtml": false,
       "noDefaultExclude": false,
-      "excludePatterns": ["**/api-fragments/**", "**/*.scripts.html", "**/*.head.html"],
+      "excludePatterns": ["**/*.scripts.html", "**/*.head.html"],
       "includeGeneratedHtmlRouteInXml": false,
       "json": true,
       "jsonOut": "./_site/sitemap/index.json",

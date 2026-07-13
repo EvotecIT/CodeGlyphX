@@ -55,7 +55,7 @@
     "Enabled": true,
     "Breadcrumbs": true,
     "OrganizationLegalName": "Evotec Services sp. z o.o.",
-    "OrganizationDescription": "Zero-dependency QR and barcode toolkit for .NET developers.",
+    "OrganizationDescription": "Pure-managed QR and barcode toolkit for .NET developers.",
     "OrganizationLogo": "/codeglyphx-qr-icon.png",
     "OrganizationSameAs": [
       "https://github.com/EvotecIT/CodeGlyphX",
@@ -148,8 +148,8 @@
   "AssetRegistry": {
     "CssStrategy": "blocking",
     "Bundles": [
-      { "Name": "global", "Css": ["/css/app.css"], "Js": ["/js/site.js"] },
-      { "Name": "docs", "Css": ["/css/app.css", "/css/api.css"], "Js": ["/js/site.js"] }
+      { "Name": "global", "Css": ["/css/fonts.css", "/css/app.css", "/css/prism-theme.css"], "Js": ["/js/site.js"] },
+      { "Name": "docs", "Css": ["/css/fonts.css", "/css/app.css", "/css/prism-theme.css", "/css/api.css"], "Js": ["/js/site.js"] }
     ],
     "RouteBundles": [
       { "Match": "/api/**", "Bundles": ["docs"] },

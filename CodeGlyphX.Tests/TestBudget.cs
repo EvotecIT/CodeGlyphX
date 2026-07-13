@@ -19,7 +19,11 @@ internal static class TestBudget {
             return configured;
         }
 
+        return IsCoverageRun() ? DefaultCoverageMultiplier : 1;
+    }
+
+    private static bool IsCoverageRun() {
         var coverage = Environment.GetEnvironmentVariable("CODEGLYPHX_COVERAGE");
-        return string.Equals(coverage, "1", StringComparison.OrdinalIgnoreCase) ? DefaultCoverageMultiplier : 1;
+        return string.Equals(coverage, "1", StringComparison.OrdinalIgnoreCase);
     }
 }

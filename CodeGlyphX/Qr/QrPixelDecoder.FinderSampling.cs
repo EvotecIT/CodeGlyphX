@@ -423,7 +423,7 @@ internal static partial class QrPixelDecoder {
         if (!candidatesSorted) {
             candidates.Sort(static (a, b) => b.Count.CompareTo(a.Count));
         }
-        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var tightBudget = budget.Enabled && budget.BudgetMilliseconds <= 800;
         var nLimit = maxCandidatesOverride > 0
             ? maxCandidatesOverride
             : (budget.Enabled ? (aggressive ? 24 : 8) : (aggressive ? 32 : 12));
@@ -1124,7 +1124,7 @@ internal static partial class QrPixelDecoder {
         var moduleSize = (tl.ModuleSize + tr.ModuleSize + bl.ModuleSize) / 3.0;
         if (moduleSize <= 0) return false;
 
-        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var tightBudget = budget.Enabled && budget.BudgetMilliseconds <= 800;
         var distX = Distance(tl.X, tl.Y, tr.X, tr.Y);
         var distY = Distance(tl.X, tl.Y, bl.X, bl.Y);
         if (distX <= 0 || distY <= 0) return false;
@@ -1226,7 +1226,7 @@ internal static partial class QrPixelDecoder {
         }
 
         var best = moduleDiag0;
-        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var tightBudget = budget.Enabled && budget.BudgetMilliseconds <= 800;
 
         // Refine sampling using format/timing patterns as a score:
         // - phase (sub-module offsets) + small scale adjustment of vx/vy (finder centers can be slightly off).

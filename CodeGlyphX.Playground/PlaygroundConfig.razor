@@ -74,8 +74,8 @@ else
             </div>
 
             <div class="form-group">
-                <label>Max time (ms): @Host.DecodeMaxMilliseconds</label>
-                <input type="range" min="200" max="10000" step="250" @bind="Host.DecodeMaxMilliseconds" @bind:after="Host.MarkDecodePresetCustom" />
+                <label>Total decode budget (ms): @Host.DecodeBudgetMilliseconds</label>
+                <input type="range" min="200" max="10000" step="250" @bind="Host.DecodeBudgetMilliseconds" @bind:after="Host.MarkDecodePresetCustom" />
             </div>
 
             <div class="form-group">
@@ -563,12 +563,12 @@ else
                     </div>
                 </AccordionSection>
 
-                @* Safety Overlay *@
-                <AccordionSection Title="Safety Overlay" @bind-IsOpen="_debugOpen">
+                @* Layout debug overlay *@
+                <AccordionSection Title="Layout overlay" @bind-IsOpen="_debugOpen">
                     <div class="form-group">
                         <label>
                             <input type="checkbox" @bind="Host.EnableDebugOverlay" @bind:after="Host.GenerateCode" />
-                            Enable safety overlay
+                            Show layout overlay
                         </label>
                         @if (Host.EnableDebugOverlay)
                         {

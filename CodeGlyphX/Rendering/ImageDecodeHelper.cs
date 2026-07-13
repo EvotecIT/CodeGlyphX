@@ -42,14 +42,14 @@ internal static class ImageDecodeHelper {
     public static CancellationToken ApplyBudget(CancellationToken cancellationToken, ImageDecodeOptions? options, out CancellationTokenSource? budgetCts, out IDisposable? budgetScope) {
         budgetCts = null;
         budgetScope = null;
-        if (options is null || options.MaxMilliseconds <= 0) return cancellationToken;
-        budgetScope = Internal.DecodeBudget.Begin(options.MaxMilliseconds);
+        if (options is null || options.RecognitionBudgetMilliseconds <= 0) return cancellationToken;
+        budgetScope = Internal.DecodeBudget.Begin(options.RecognitionBudgetMilliseconds);
         if (cancellationToken.CanBeCanceled) {
             budgetCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            budgetCts.CancelAfter(options.MaxMilliseconds);
+            budgetCts.CancelAfter(options.RecognitionBudgetMilliseconds);
             return budgetCts.Token;
         }
-        budgetCts = new CancellationTokenSource(options.MaxMilliseconds);
+        budgetCts = new CancellationTokenSource(options.RecognitionBudgetMilliseconds);
         return budgetCts.Token;
     }
 }

@@ -169,7 +169,7 @@ public static partial class CodeGlyph {
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
         var imageOptions = options?.Image;
-        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0)) {
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.RecognitionBudgetMilliseconds <= 0)) {
             return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token, barcode);
         }
 
@@ -196,7 +196,7 @@ public static partial class CodeGlyph {
         var barcode = options?.Barcode;
         var imageOptions = options?.Image;
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
-        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0)) {
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.RecognitionBudgetMilliseconds <= 0)) {
             return TryDecode(pixels, width, height, stride, format, out decoded, out diagnostics, expected, prefer, qr, token, barcode);
         }
 
@@ -230,7 +230,7 @@ public static partial class CodeGlyph {
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
         var imageOptions = options?.Image;
-        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0)) {
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.RecognitionBudgetMilliseconds <= 0)) {
             return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token, barcode);
         }
 
@@ -258,7 +258,7 @@ public static partial class CodeGlyph {
         var barcode = options?.Barcode;
         var imageOptions = options?.Image;
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
-        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0)) {
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.RecognitionBudgetMilliseconds <= 0)) {
             return TryDecodeAll(pixels, width, height, stride, format, out decoded, out diagnostics, expected, include, prefer, qr, token, barcode);
         }
 
@@ -292,7 +292,7 @@ public static partial class CodeGlyph {
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
         var imageOptions = options?.Image;
-        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0)) {
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.RecognitionBudgetMilliseconds <= 0)) {
             return TryDecode(pixels, width, height, stride, format, out decoded, expected, prefer, qr, token, barcode);
         }
 
@@ -319,7 +319,7 @@ public static partial class CodeGlyph {
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
         var imageOptions = options?.Image;
-        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0)) {
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.RecognitionBudgetMilliseconds <= 0)) {
             return TryDecodeAll(pixels, width, height, stride, format, out decoded, expected, include, prefer, qr, token, barcode);
         }
 
@@ -347,7 +347,7 @@ public static partial class CodeGlyph {
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
         var imageOptions = options?.Image;
-        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0)) {
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.RecognitionBudgetMilliseconds <= 0)) {
             return TryDecodeAll(pixels, width, height, stride, format, out decoded, out diagnostics, expected, include, prefer, qr, token, barcode);
         }
 
@@ -382,7 +382,7 @@ public static partial class CodeGlyph {
         var token = options is null ? default : options.CancellationToken;
         var barcode = options?.Barcode;
         var imageOptions = options?.Image;
-        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0)) {
+        if (imageOptions is null || (imageOptions.MaxDimension <= 0 && imageOptions.RecognitionBudgetMilliseconds <= 0)) {
             return TryDecode(pixels, width, height, stride, format, out decoded, out diagnostics, expected, prefer, qr, token, barcode);
         }
 
@@ -581,7 +581,7 @@ public static partial class CodeGlyph {
 
     private static bool TryWithImageBudget(ImageDecodeOptions? imageOptions, CancellationToken cancellationToken, Func<CancellationToken, bool> action) {
         if (cancellationToken.IsCancellationRequested) return false;
-        if (imageOptions is null || imageOptions.MaxMilliseconds <= 0) return action(cancellationToken);
+        if (imageOptions is null || imageOptions.RecognitionBudgetMilliseconds <= 0) return action(cancellationToken);
 
         var budgetToken = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
         try {
@@ -594,8 +594,7 @@ public static partial class CodeGlyph {
     }
 
     private static int ResolveMaxBytes(ImageDecodeOptions? imageOptions) {
-        if (imageOptions is not null && imageOptions.MaxBytes > 0) return imageOptions.MaxBytes;
-        return CodeGlyphX.Rendering.ImageReader.MaxImageBytes;
+        return Math.Max(0, imageOptions?.MaxBytes ?? CodeGlyphX.Rendering.ImageReader.MaxImageBytes);
     }
 
     private static bool TryReadBinary(string path, ImageDecodeOptions? imageOptions, out byte[] data) {
@@ -921,13 +920,10 @@ public static partial class CodeGlyph {
         }
 
         if (IsCancelled(cancellationToken, diagnostics)) return false;
-        if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, out var qrInfo, qrOptions, cancellationToken)) {
-            diagnostics.Qr = qrInfo;
+        if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, qrOptions, cancellationToken)) {
             for (var i = 0; i < qrResults.Length; i++) {
                 list.Add(new CodeGlyphDecoded(qrResults[i]));
             }
-        } else {
-            diagnostics.Qr = qrInfo;
         }
 
         if (IsCancelled(cancellationToken, diagnostics)) return false;

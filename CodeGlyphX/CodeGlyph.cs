@@ -461,8 +461,7 @@ public static partial class CodeGlyph {
         var squareish = IsSquareish(width, height);
         var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800,
-            MaxMilliseconds = 800
+            BudgetMilliseconds = 800
         };
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
         var foundQr = false;
@@ -532,8 +531,7 @@ public static partial class CodeGlyph {
         var squareish = IsSquareish(width, height);
         var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800,
-            MaxMilliseconds = 800
+            BudgetMilliseconds = 800
         };
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
         var foundQr = false;
@@ -552,14 +550,11 @@ public static partial class CodeGlyph {
 
         if (squareish) {
             if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, out var qrInfo, qrOptionsLocal, cancellationToken)) {
-                diagnostics.Qr = qrInfo;
+            if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, qrOptionsLocal, cancellationToken)) {
                 for (var i = 0; i < qrResults.Length; i++) {
                     list.Add(new CodeGlyphDecoded(qrResults[i]));
                 }
                 foundQr = qrResults.Length > 0;
-            } else {
-                diagnostics.Qr = qrInfo;
             }
 
             if (!preferQr || !foundQr) {
@@ -1096,8 +1091,7 @@ public static partial class CodeGlyph {
         var squareish = IsSquareish(width, height);
         var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800,
-            MaxMilliseconds = 800
+            BudgetMilliseconds = 800
         };
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
         var foundQr = false;
@@ -1166,8 +1160,7 @@ public static partial class CodeGlyph {
         var squareish = IsSquareish(width, height);
         var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800,
-            MaxMilliseconds = 800
+            BudgetMilliseconds = 800
         };
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
         var foundQr = false;
@@ -1186,14 +1179,11 @@ public static partial class CodeGlyph {
 
         if (squareish) {
             if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, out var qrInfo, qrOptionsLocal, cancellationToken)) {
-                diagnostics.Qr = qrInfo;
+            if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, qrOptionsLocal, cancellationToken)) {
                 for (var i = 0; i < qrResults.Length; i++) {
                     list.Add(new CodeGlyphDecoded(qrResults[i]));
                 }
                 foundQr = qrResults.Length > 0;
-            } else {
-                diagnostics.Qr = qrInfo;
             }
 
             if (!preferQr || !foundQr) {

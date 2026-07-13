@@ -23,13 +23,8 @@ public sealed partial class QrPixelDecodeOptions {
     public int MaxScale { get; set; } = 0;
 
     /// <summary>
-    /// Maximum milliseconds to spend decoding (best effort). Set to 0 to disable.
-    /// </summary>
-    public int MaxMilliseconds { get; set; } = 0;
-
-    /// <summary>
-    /// Hard budget in milliseconds for decoding (best effort), without profile downgrades.
-    /// When set, this is used for internal time budgeting instead of MaxMilliseconds.
+    /// Cooperative time budget in milliseconds for one public decode call. Set to 0 to disable.
+    /// The decoder checks this budget between recognition passes; it is not a hard real-time limit.
     /// </summary>
     public int BudgetMilliseconds { get; set; } = 0;
 
@@ -94,11 +89,10 @@ public sealed partial class QrPixelDecodeOptions {
     /// <summary>
     /// Screen preset (budgeted decode for UI capture scenarios).
     /// </summary>
-    public static QrPixelDecodeOptions Screen(int maxMilliseconds = 300, int maxDimension = 1200) {
-        var budget = Math.Max(0, maxMilliseconds);
+    public static QrPixelDecodeOptions Screen(int budgetMilliseconds = 300, int maxDimension = 1200) {
+        var budget = Math.Max(0, budgetMilliseconds);
         return new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
-            MaxMilliseconds = budget,
             BudgetMilliseconds = budget,
             MaxDimension = Math.Max(0, maxDimension),
             AutoCrop = true

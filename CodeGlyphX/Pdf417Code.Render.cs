@@ -25,7 +25,7 @@ public static partial class Pdf417Code {
     /// Renders a PDF417 byte payload to the requested output format.
     /// </summary>
     public static RenderedOutput Render(byte[] data, OutputFormat format, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
-        var modules = EncodeBytes(data, encodeOptions);
+        var modules = Pdf417Encoder.EncodeBytes(data, encodeOptions);
         return Render(modules, format, renderOptions, extras);
     }
 
@@ -34,7 +34,7 @@ public static partial class Pdf417Code {
     /// Renders a PDF417 byte payload to the requested output format.
     /// </summary>
     public static RenderedOutput Render(ReadOnlySpan<byte> data, OutputFormat format, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
-        var modules = EncodeBytes(data, encodeOptions);
+        var modules = Pdf417Encoder.EncodeBytes(data, encodeOptions);
         return Render(modules, format, renderOptions, extras);
     }
 #endif

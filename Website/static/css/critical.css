@@ -10,6 +10,8 @@
     --secondary: #06b6d4;
     --accent: #f472b6;
     --success: #10b981;
+    --warning: #fbbf24;
+    --error: #f87171;
 
     /* Backgrounds */
     --bg-dark: #0a0a0f;
@@ -46,6 +48,8 @@
     --secondary: #0e7490;
     --accent: #db2777;
     --success: #047857;
+    --warning: #92400e;
+    --error: #b91c1c;
 
     /* Backgrounds */
     --bg-dark: #f8fafc;
@@ -71,6 +75,36 @@
     --header-bg: rgba(248, 250, 252, 0.9);
     --header-border: rgba(0, 0, 0, 0.05);
 }
++
+
+/* Auto theme follows the system during first paint as well as after app.css loads. */
+@media (prefers-color-scheme: light) {
+    [data-theme="auto"] {
+        --primary: #6d28d9;
+        --primary-light: #7c3aed;
+        --primary-dark: #5b21b6;
+        --secondary: #0e7490;
+        --accent: #db2777;
+        --success: #047857;
+        --warning: #92400e;
+        --error: #b91c1c;
+        --bg-dark: #f8fafc;
+        --bg-card: #ffffff;
+        --bg-card-hover: #f1f5f9;
+        --bg-input: #f1f5f9;
+        --bg-code: #f8fafc;
+        --text: #1e293b;
+        --text-muted: #475569;
+        --text-dim: #64748b;
+        --border: #e2e8f0;
+        --border-light: #cbd5e1;
+        --glow-primary: 0 0 40px rgba(124, 58, 237, 0.15);
+        --glow-secondary: 0 0 40px rgba(8, 145, 178, 0.1);
+        --header-bg: rgba(248, 250, 252, 0.9);
+        --header-border: rgba(0, 0, 0, 0.05);
+    }
+}
+
 
 *, *::before, *::after {
     box-sizing: border-box;

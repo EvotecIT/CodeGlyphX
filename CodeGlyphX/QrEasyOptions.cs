@@ -100,14 +100,15 @@ public sealed class QrEasyOptions {
     public QrArtOptions? Art { get; set; }
 
     /// <summary>
-    /// When true, applies scan-safety auto-tuning for art-heavy styles.
+    /// When true, applies conservative static guardrails for art-heavy styles.
+    /// This does not validate the rendered output with a decoder.
     /// </summary>
-    public bool ArtAutoTune { get; set; } = true;
+    public bool ArtGuardrailsEnabled { get; set; } = true;
 
     /// <summary>
-    /// Minimum safety score target (0..100) for art auto-tuning.
+    /// Minimum static heuristic score target (0..100) for art guardrails.
     /// </summary>
-    public int ArtAutoTuneMinScore { get; set; } = 80;
+    public int ArtGuardrailMinimumScore { get; set; } = 80;
 
     /// <summary>
     /// Overrides the module shape (when set).
@@ -136,7 +137,7 @@ public sealed class QrEasyOptions {
 
 
     /// <summary>
-    /// When true, keeps non-eye functional patterns at a stable, scan-friendly style.
+    /// When true, keeps non-eye functional patterns at a conventional style.
     /// </summary>
     public bool ProtectFunctionalPatterns { get; set; } = true;
 
@@ -202,12 +203,12 @@ public sealed class QrEasyOptions {
 
     /// <summary>
     /// Whether to draw a background plate behind the logo.
-    /// When enabled, the encoder may auto-bump the minimum version for scan safety.
+    /// When enabled, the encoder may auto-bump the minimum version to reduce logo coverage.
     /// </summary>
     public bool LogoDrawBackground { get; set; } = true;
 
     /// <summary>
-    /// When true, bumps <see cref="MinVersion"/> to a safer minimum for logo background plates.
+    /// When true, bumps <see cref="MinVersion"/> to a more conservative minimum for logo background plates.
     /// </summary>
     public bool AutoBumpVersionForLogoBackground { get; set; } = true;
 

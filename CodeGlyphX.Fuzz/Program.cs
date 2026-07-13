@@ -29,6 +29,7 @@ public static class Program {
 
     private static readonly int TimeoutMs = ReadIntEnv("CODEGLYPHX_FUZZ_TIMEOUT_MS", 2000);
     private static readonly long MaxMemoryBytes = ReadLongEnv("CODEGLYPHX_FUZZ_MAX_MB", 256) * 1024L * 1024L;
+    private static readonly long MaxInputBytes = ReadLongEnv("CODEGLYPHX_FUZZ_MAX_INPUT_MB", 8) * 1024L * 1024L;
 
     public static int Main(string[] args) {
         var data = ReadInput(args);
@@ -40,25 +41,38 @@ public static class Program {
 
     private static byte[] ReadInput(string[] args) {
         if (args.Length > 0 && !string.IsNullOrWhiteSpace(args[0])) {
-            return File.ReadAllBytes(args[0]);
+            using var file = File.OpenRead(args[0]);
+            return ReadBounded(file);
         }
 
         using var stdin = Console.OpenStandardInput();
-        using var ms = new MemoryStream();
-        stdin.CopyTo(ms);
-        return ms.ToArray();
+        return ReadBounded(stdin);
+    }
+
+    private static byte[] ReadBounded(Stream stream) {
+        if (MaxInputBytes > 0 && stream.CanSeek && stream.Length > MaxInputBytes) return Array.Empty<byte>();
+
+        using var output = new MemoryStream();
+        var buffer = new byte[81920];
+        while (true) {
+            var read = stream.Read(buffer, 0, buffer.Length);
+            if (read <= 0) break;
+            if (MaxInputBytes > 0 && output.Length + read > MaxInputBytes) return Array.Empty<byte>();
+            output.Write(buffer, 0, read);
+        }
+        return output.ToArray();
     }
 
     private static void RunFuzz(byte[] data) {
-        var options = ImageDecodeOptions.UltraSafe();
-        if (TimeoutMs > 0) options.MaxMilliseconds = TimeoutMs;
+        var options = ImageDecodeOptions.Strict();
+        if (TimeoutMs > 0) options.RecognitionBudgetMilliseconds = TimeoutMs;
 
         Run("ImageReader.TryDetectFormat", () => _ = ImageReader.TryDetectFormat(data, out _));
         Run("ImageReader.TryReadInfo", () => _ = ImageReader.TryReadInfo(data, out _));
         Run("ImageReader.TryReadAnimationInfo", () => _ = ImageReader.TryReadAnimationInfo(data, out _));
         Run("ImageReader.TryReadPageCount", () => _ = ImageReader.TryReadPageCount(data, out _));
         Run("ImageReader.TryDecodeRgba32", () => _ = ImageReader.TryDecodeRgba32(data, options, out _, out _, out _));
-        Run("ImageReader.TryDecodeRgba32Composite", () => _ = ImageReader.TryDecodeRgba32Composite(data, options, out _, out _));
+        Run("ImageReader.TryDecodeRgba32Composite", () => _ = ImageReader.TryDecodeRgba32Composite(data, options, out _, out _, out _));
         Run("ImageReader.TryDecodeAnimationFrames", () => _ = ImageReader.TryDecodeAnimationFrames(data, options, out _, out _, out _, out _));
         Run("ImageReader.TryDecodeAnimationCanvasFrames", () => _ = ImageReader.TryDecodeAnimationCanvasFrames(data, options, out _, out _, out _, out _));
 

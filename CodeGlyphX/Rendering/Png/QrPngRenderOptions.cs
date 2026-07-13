@@ -104,7 +104,7 @@ public sealed partial class QrPngRenderOptions {
 
     /// <summary>
     /// When true, keeps non-eye functional patterns (timing/alignment/format/version/dark module)
-    /// at full scale and a stable foreground color for scan reliability.
+    /// at full scale and a stable foreground color to preserve conventional geometry.
     /// </summary>
     public bool ProtectFunctionalPatterns { get; set; } = true;
 

@@ -42,7 +42,7 @@ public sealed class WebpDecodeEndToEndTests {
         Assert.True(QrDecoder.TryDecode(decodedRgba, decodedWidth, decodedHeight, decodedWidth * 4, PixelFormat.Rgba32, out var decoded, new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             AggressiveSampling = true,
-            MaxMilliseconds = 2000
+            BudgetMilliseconds = 2000
         }));
         Assert.Equal(payload, decoded.Text);
     }

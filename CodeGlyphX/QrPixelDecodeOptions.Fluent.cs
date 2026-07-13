@@ -28,18 +28,10 @@ public sealed partial class QrPixelDecodeOptions {
     }
 
     /// <summary>
-    /// Sets the maximum decode time budget.
+    /// Sets the cooperative time budget for one public decode call.
     /// </summary>
-    public QrPixelDecodeOptions WithMaxMilliseconds(int maxMilliseconds) {
-        MaxMilliseconds = maxMilliseconds;
-        return this;
-    }
-
-    /// <summary>
-    /// Sets a hard decode time budget without profile downgrades.
-    /// </summary>
-    public QrPixelDecodeOptions WithBudgetMilliseconds(int maxMilliseconds) {
-        BudgetMilliseconds = maxMilliseconds < 0 ? 0 : maxMilliseconds;
+    public QrPixelDecodeOptions WithBudgetMilliseconds(int budgetMilliseconds) {
+        BudgetMilliseconds = budgetMilliseconds < 0 ? 0 : budgetMilliseconds;
         return this;
     }
 
@@ -54,9 +46,8 @@ public sealed partial class QrPixelDecodeOptions {
     /// <summary>
     /// Sets the time+dimension budget in one call.
     /// </summary>
-    public QrPixelDecodeOptions WithBudget(int maxMilliseconds, int maxDimension = 0) {
-        MaxMilliseconds = Math.Max(0, maxMilliseconds);
-        BudgetMilliseconds = MaxMilliseconds;
+    public QrPixelDecodeOptions WithBudget(int budgetMilliseconds, int maxDimension = 0) {
+        BudgetMilliseconds = Math.Max(0, budgetMilliseconds);
         if (maxDimension > 0) {
             MaxDimension = maxDimension;
         }

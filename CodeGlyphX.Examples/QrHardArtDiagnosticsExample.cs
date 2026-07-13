@@ -55,15 +55,9 @@ internal static class QrHardArtDiagnosticsExample {
             }
 
             var baseName = Path.GetFileNameWithoutExtension(fileName);
-            var okAll = QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, out var infoAll, options);
+            var okAll = QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, options);
             if (!okAll || results.Length == 0) {
-                var okSingle = QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var single, out var infoSingle, options);
-                if (okSingle) {
-                    results = new[] { single };
-                    lines.Add($"{fileName}: OK (single) {single.Text}");
-                } else {
-                    lines.Add($"{fileName}: FAIL {infoAll} | {infoSingle}");
-                }
+                lines.Add($"{fileName}: FAIL (multi-decode returned no results)");
             } else {
                 var payloads = results
                     .Select(r => r.Text)

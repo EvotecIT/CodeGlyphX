@@ -3,9 +3,10 @@ using System;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Result of OTP QR scan safety evaluation.
+/// Result of static OTP QR rendering heuristics.
+/// This report does not decode the rendered artifact.
 /// </summary>
-public sealed class OtpQrSafetyReport {
+public sealed class OtpQrHeuristicReport {
     /// <summary>
     /// Gets the color contrast ratio.
     /// </summary>
@@ -40,9 +41,10 @@ public sealed class OtpQrSafetyReport {
     public int RecommendedQuietZone { get; }
 
     /// <summary>
-    /// Gets whether the rendering is likely OTP-safe.
+    /// Gets whether the configuration passes the static OTP checks.
+    /// Passing does not guarantee scanner or authenticator interoperability.
     /// </summary>
-    public bool IsOtpSafe =>
+    public bool PassesHeuristics =>
         HasSufficientContrast &&
         HasSufficientQuietZone &&
         HasSufficientModuleSize &&
@@ -58,7 +60,7 @@ public sealed class OtpQrSafetyReport {
     /// </summary>
     public string[] Issues { get; }
 
-    internal OtpQrSafetyReport(
+    internal OtpQrHeuristicReport(
         double contrastRatio,
         bool hasSufficientContrast,
         bool hasSufficientQuietZone,

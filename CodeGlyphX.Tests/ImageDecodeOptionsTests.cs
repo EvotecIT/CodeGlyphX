@@ -18,8 +18,8 @@ public sealed class ImageDecodeOptionsTests {
             out var stride);
 
         var options = new CodeGlyphDecodeOptions {
-            Image = new ImageDecodeOptions { MaxDimension = 200, MaxMilliseconds = 200 },
-            Qr = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast, MaxMilliseconds = 200 }
+            Image = new ImageDecodeOptions { MaxDimension = 200, RecognitionBudgetMilliseconds = 200 },
+            Qr = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast, BudgetMilliseconds = 200 }
         };
 
         Assert.True(CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options));
@@ -51,8 +51,8 @@ public sealed class ImageDecodeOptionsTests {
     }
 
     [Fact]
-    public void ImageDecodeOptions_Safe_Sets_DefaultCaps() {
-        var options = ImageDecodeOptions.Safe();
+    public void ImageDecodeOptions_Guarded_Sets_DefaultCaps() {
+        var options = ImageDecodeOptions.Guarded();
 
         Assert.Equal(64 * 1024 * 1024, options.MaxBytes);
         Assert.Equal(20_000_000, options.MaxPixels);
@@ -62,13 +62,20 @@ public sealed class ImageDecodeOptionsTests {
     }
 
     [Fact]
-    public void ImageDecodeOptions_UltraSafe_Sets_Tighter_Caps() {
-        var options = ImageDecodeOptions.UltraSafe();
+    public void ImageDecodeOptions_Strict_Sets_Tighter_Caps() {
+        var options = ImageDecodeOptions.Strict();
 
         Assert.Equal(8 * 1024 * 1024, options.MaxBytes);
         Assert.Equal(8_000_000, options.MaxPixels);
         Assert.Equal(60, options.MaxAnimationFrames);
         Assert.Equal(15_000, options.MaxAnimationDurationMs);
         Assert.Equal(8_000_000, options.MaxAnimationFramePixels);
+    }
+
+    [Fact]
+    public void ImageDecodeOptions_Guarded_ZeroAnimationFramePixels_DisablesThatLimit() {
+        var options = ImageDecodeOptions.Guarded(maxAnimationFramePixels: 0);
+
+        Assert.Equal(0, options.MaxAnimationFramePixels);
     }
 }

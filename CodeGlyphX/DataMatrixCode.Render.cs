@@ -17,7 +17,7 @@ public static partial class DataMatrixCode {
     /// Renders a Data Matrix byte payload to the requested output format.
     /// </summary>
     public static RenderedOutput Render(byte[] data, OutputFormat format, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderExtras? extras = null) {
-        var modules = EncodeBytes(data, mode);
+        var modules = DataMatrixEncoder.EncodeBytes(data, mode);
         return Render(modules, format, options, extras);
     }
 
@@ -26,7 +26,7 @@ public static partial class DataMatrixCode {
     /// Renders a Data Matrix byte payload to the requested output format.
     /// </summary>
     public static RenderedOutput Render(ReadOnlySpan<byte> data, OutputFormat format, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderExtras? extras = null) {
-        var modules = EncodeBytes(data, mode);
+        var modules = DataMatrixEncoder.EncodeBytes(data, mode);
         return Render(modules, format, options, extras);
     }
 #endif

@@ -41,7 +41,7 @@ public sealed class CodeGlyphDecodeOptionsTests {
     public void Options_ProxyProperties_CreateQrOptions() {
         var options = new CodeGlyphDecodeOptions {
             Profile = QrDecodeProfile.Fast,
-            MaxMilliseconds = 321,
+            QrBudgetMilliseconds = 321,
             MaxDimension = 1234,
             MaxScale = 3,
             DisableTransforms = true,
@@ -50,7 +50,7 @@ public sealed class CodeGlyphDecodeOptionsTests {
 
         Assert.NotNull(options.Qr);
         Assert.Equal(QrDecodeProfile.Fast, options.Qr!.Profile);
-        Assert.Equal(321, options.Qr.MaxMilliseconds);
+        Assert.Equal(321, options.Qr.BudgetMilliseconds);
         Assert.Equal(1234, options.Qr.MaxDimension);
         Assert.Equal(3, options.Qr.MaxScale);
         Assert.True(options.Qr.DisableTransforms);
@@ -59,14 +59,14 @@ public sealed class CodeGlyphDecodeOptionsTests {
 
     [Fact]
     public void ScreenPreset_SetsQrBudget() {
-        var options = CodeGlyphDecodeOptions.Screen(maxMilliseconds: 250, maxDimension: 900);
+        var options = CodeGlyphDecodeOptions.Screen(budgetMilliseconds: 250, maxDimension: 900);
 
         Assert.NotNull(options.Qr);
         Assert.Equal(QrDecodeProfile.Balanced, options.Qr!.Profile);
-        Assert.Equal(250, options.Qr.MaxMilliseconds);
+        Assert.Equal(250, options.Qr.BudgetMilliseconds);
         Assert.Equal(900, options.Qr.MaxDimension);
         Assert.NotNull(options.Image);
-        Assert.Equal(250, options.Image!.MaxMilliseconds);
+        Assert.Equal(250, options.Image!.RecognitionBudgetMilliseconds);
         Assert.Equal(900, options.Image.MaxDimension);
     }
 

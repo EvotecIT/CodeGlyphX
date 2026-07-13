@@ -72,7 +72,7 @@ public sealed class OtpTests {
     }
 
     [Fact]
-    public void OtpQrSafety_Report_Flags_Unsafe_Rendering() {
+    public void OtpQrHeuristics_Flag_Nonconforming_Render_Options() {
         var secret = Encoding.ASCII.GetBytes("foo");
         var qr = OtpQrPreset.EncodeTotp("ACME", "john", secret);
 
@@ -82,8 +82,8 @@ public sealed class OtpTests {
             foreground: new CodeGlyphX.Rendering.Png.Rgba32(200, 200, 200),
             background: new CodeGlyphX.Rendering.Png.Rgba32(255, 255, 255));
 
-        var report = OtpQrSafety.Evaluate(qr, opts);
-        Assert.False(report.IsOtpSafe);
+        var report = OtpQrHeuristics.Evaluate(qr, opts);
+        Assert.False(report.PassesHeuristics);
         Assert.False(report.HasSufficientContrast);
         Assert.False(report.HasSufficientQuietZone);
         Assert.False(report.HasSufficientModuleSize);
@@ -92,13 +92,13 @@ public sealed class OtpTests {
     }
 
     [Fact]
-    public void OtpQrSafety_Report_Allows_Default_Preset() {
+    public void OtpQrHeuristics_Default_Preset_Passes_Static_Checks() {
         var secret = Encoding.ASCII.GetBytes("foo");
         var qr = OtpQrPreset.EncodeTotp("ACME", "john", secret);
         var opts = OtpQrPreset.CreatePngRenderOptions();
 
-        var report = OtpQrSafety.Evaluate(qr, opts);
-        Assert.True(report.IsOtpSafe);
+        var report = OtpQrHeuristics.Evaluate(qr, opts);
+        Assert.True(report.PassesHeuristics);
         Assert.Equal(100, report.Score);
         Assert.Empty(report.Issues);
     }

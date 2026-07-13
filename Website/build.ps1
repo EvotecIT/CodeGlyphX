@@ -87,11 +87,15 @@ function Resolve-PowerForgeRoot {
         $cursor = $parent
     }
 
-    # Maintainer defaults + WSL-style mounts.
-    if ($IsWindows) {
-        $candidates += 'C:\Support\GitHub\PSPublishModule'
+    $evotecRoot = $env:EVOTEC_GITHUB_ROOT
+    if ([string]::IsNullOrWhiteSpace($evotecRoot)) {
+        $evotecRoot = if ($IsWindows) {
+            'C:\Support\GitHub'
+        } else {
+            Join-Path $HOME 'Documents/GitHub'
+        }
     }
-    $candidates += '/mnt/c/Support/GitHub/PSPublishModule'
+    $candidates += (Join-Path $evotecRoot 'PSPublishModule')
 
     foreach ($candidate in ($candidates | Select-Object -Unique)) {
         if ([string]::IsNullOrWhiteSpace($candidate)) { continue }

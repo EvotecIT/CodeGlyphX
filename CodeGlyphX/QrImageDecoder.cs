@@ -589,14 +589,14 @@ public static class QrImageDecoder {
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
             return DecodeImageResult(buffer.AsSpan(), imageOptions, options, cancellationToken);
         }
-        var maxBytes = imageOptions?.MaxBytes > 0 ? imageOptions.MaxBytes : ImageReader.MaxImageBytes;
+        var maxBytes = Math.Max(0, imageOptions?.MaxBytes ?? ImageReader.MaxImageBytes);
         if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
             return new DecodeResult<QrDecoded>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
         }
         return DecodeImageResult(data, imageOptions, options, cancellationToken);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var maxBytes = imageOptions?.MaxBytes > 0 ? imageOptions.MaxBytes : ImageReader.MaxImageBytes;
+        var maxBytes = Math.Max(0, imageOptions?.MaxBytes ?? ImageReader.MaxImageBytes);
         if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
             return new DecodeResult<QrDecoded>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
         }
@@ -797,7 +797,7 @@ public static class QrImageDecoder {
 
     private static QrPixelDecodeOptions? MergeDecodeOptions(ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options) {
         if (imageOptions is null) return options;
-        if (imageOptions.MaxDimension <= 0 && imageOptions.MaxMilliseconds <= 0) return options;
+        if (imageOptions.MaxDimension <= 0 && imageOptions.RecognitionBudgetMilliseconds <= 0) return options;
 
         var merged = options is null ? new QrPixelDecodeOptions() : CloneOptions(options);
         if (imageOptions.MaxDimension > 0 && (merged.MaxDimension <= 0 || merged.MaxDimension > imageOptions.MaxDimension)) {
@@ -806,8 +806,8 @@ public static class QrImageDecoder {
         if (imageOptions.MaxDimension <= 0 && merged.MaxDimension < 0) {
             merged.MaxDimension = 0;
         }
-        if (imageOptions.MaxMilliseconds > 0 && merged.MaxMilliseconds <= 0) {
-            merged.MaxMilliseconds = imageOptions.MaxMilliseconds;
+        if (imageOptions.RecognitionBudgetMilliseconds > 0 && merged.BudgetMilliseconds <= 0) {
+            merged.BudgetMilliseconds = imageOptions.RecognitionBudgetMilliseconds;
         }
         return merged;
     }
@@ -817,7 +817,6 @@ public static class QrImageDecoder {
             Profile = options.Profile,
             MaxDimension = options.MaxDimension,
             MaxScale = options.MaxScale,
-            MaxMilliseconds = options.MaxMilliseconds,
             BudgetMilliseconds = options.BudgetMilliseconds,
             AutoCrop = options.AutoCrop,
             EnableTileScan = options.EnableTileScan,
@@ -847,9 +846,8 @@ public static class QrImageDecoder {
 
     private static int GetBudgetMs(ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options) {
         var budgetMs = 0;
-        Consider(imageOptions?.MaxMilliseconds ?? 0, ref budgetMs);
+        Consider(imageOptions?.RecognitionBudgetMilliseconds ?? 0, ref budgetMs);
         Consider(options?.BudgetMilliseconds ?? 0, ref budgetMs);
-        Consider(options?.MaxMilliseconds ?? 0, ref budgetMs);
         return budgetMs;
     }
 
@@ -859,7 +857,7 @@ public static class QrImageDecoder {
     }
 
     private static bool TryReadBinary(Stream stream, ImageDecodeOptions? imageOptions, out byte[] data) {
-        var maxBytes = imageOptions?.MaxBytes > 0 ? imageOptions.MaxBytes : ImageReader.MaxImageBytes;
+        var maxBytes = Math.Max(0, imageOptions?.MaxBytes ?? ImageReader.MaxImageBytes);
         return RenderIO.TryReadBinary(stream, maxBytes, out data);
     }
 

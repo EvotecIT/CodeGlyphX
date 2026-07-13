@@ -148,9 +148,10 @@ public sealed class AsciiConsoleOptions {
     public AsciiPaletteOptions? DarkPalette { get; set; }
 
     /// <summary>
-    /// When true, enables scan-friendly defaults (quiet zone, background fill, contrast clamp).
+    /// When true, preserves a more conventional QR layout (quiet zone, background fill, contrast clamp).
+    /// This does not guarantee that a terminal rendering will scan.
     /// </summary>
-    public bool PreferScanReliability { get; set; }
+    public bool UseConservativeQrLayout { get; set; }
 
     /// <summary>
     /// When true, clamps dark colors to a maximum luminance.

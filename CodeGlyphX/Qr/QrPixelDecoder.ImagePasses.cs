@@ -64,7 +64,7 @@ internal static partial class QrPixelDecoder {
                 return false;
             }
 
-            if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+            if (budget.Enabled && budget.BudgetMilliseconds <= 800) {
                 var tightSettings = new QrProfileSettings(
                     settings.MaxScale,
                     settings.CollectMaxScale,
@@ -215,7 +215,7 @@ internal static partial class QrPixelDecoder {
         }
 
         var best = default(QrPixelDecodeDiagnostics);
-        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var tightBudget = budget.Enabled && budget.BudgetMilliseconds <= 800;
         var thresholdLimit = GetBudgetThresholdLimit(budget);
         if (thresholdCount > thresholdLimit) {
             thresholdCount = thresholdLimit;
@@ -916,10 +916,32 @@ internal static partial class QrPixelDecoder {
         return false;
     }
 
-    private static void CollectAllFromImage(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<byte[]> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, QrGrayImagePool? pool) {
+    private static void CollectAllFromImage(int scale, QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<byte[]> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, QrGrayImagePool? pool) {
         if (budget.IsExpired) return;
         var candidates = RentCandidateList();
         try {
+            // Multi-result decoding must recognize every symbol that the single-result path can
+            // recognize. Run its conservative primary pass against the already-created gray image,
+            // then continue collecting additional symbols within the same caller budget.
+            if (Math.Max(baseImage.Width, baseImage.Height) <= 900) {
+                if (TryDecodeFromGray(
+                        scale,
+                        baseImage.Threshold,
+                        baseImage,
+                        invert: false,
+                        candidates,
+                        accept,
+                        aggressive: settings.AggressiveSampling,
+                        stylized: settings.StylizedSampling,
+                        budget,
+                        out var primary,
+                        out _)) {
+                    AddResult(list, seen, primary, accept);
+                }
+                candidates.Clear();
+                if (budget.IsExpired) return;
+            }
+
             CollectAllFromImageCore(baseImage, settings, list, seen, accept, budget, candidates, pool);
             if (settings.AllowNormalize) {
                 if (budget.IsNearDeadline(150)) return;

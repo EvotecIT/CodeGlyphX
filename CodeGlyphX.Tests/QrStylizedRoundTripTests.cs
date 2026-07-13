@@ -1,6 +1,4 @@
-using System;
 using System.Threading;
-using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
@@ -8,41 +6,17 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class QrStylizedRoundTripTests {
-    [Fact(Skip = "Heavy stylization is still unreliable in the pixel decoder on this branch.")]
-    public void QrDecode_StylizedLargeImages_RoundTripLikePlayground() {
-        const int targetSize = 1600;
-        const int maxDimension = 1600;
-        const int budgetMs = 12000;
-
-        RoundTripLargeStylized("https://example.com/neon-dot", CreateNeonDotOptions(targetSize), maxDimension, budgetMs);
-        RoundTripLargeStylized("https://example.com/candy-checker", CreateCandyCheckerOptions(targetSize), maxDimension, budgetMs);
-    }
-
-    [Fact(Skip = "Heavy stylization is still unreliable in the pixel decoder on this branch.")]
-    public void QrDecode_NewArtPresets_RoundTrip() {
-        const int targetSize = 1200;
-        const int maxDimension = 1200;
-        const int budgetMs = 12000;
-
-        RoundTripLargeStylized("https://example.com/connected-melt", CreateConnectedMeltOptions(targetSize), maxDimension, budgetMs);
-        RoundTripLargeStylized("https://example.com/neon-glow", CreateNeonGlowOptions(targetSize), maxDimension, budgetMs);
-    }
-
     [Fact]
     public void QrDecode_ArtFeatures_RoundTrip_Smoke() {
         const string payload = "https://example.com/art-smoke";
-        const int targetSize = 1000;
-        const int maxDimension = 1200;
-        const int budgetMs = 6000;
-
         var options = new QrEasyOptions {
             ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
-            TargetSizePx = targetSize,
+            TargetSizePx = 1000,
             TargetSizeIncludesQuietZone = true,
             ModuleSize = 10,
             QuietZone = 4,
-            Foreground = R(30, 60, 120),
-            Background = R(255, 255, 255),
+            Foreground = new Rgba32(30, 60, 120),
+            Background = new Rgba32(255, 255, 255),
             BackgroundSupersample = 2,
             ModuleShape = QrPngModuleShape.ConnectedRounded,
             ModuleScale = 0.95,
@@ -51,8 +25,8 @@ public sealed class QrStylizedRoundTripTests {
                 FrameStyle = QrPngEyeFrameStyle.Glow,
                 OuterShape = QrPngModuleShape.Rounded,
                 InnerShape = QrPngModuleShape.Circle,
-                OuterColor = R(30, 60, 120),
-                InnerColor = R(60, 140, 255),
+                OuterColor = new Rgba32(30, 60, 120),
+                InnerColor = new Rgba32(60, 140, 255),
                 OuterCornerRadiusPx = 6,
                 InnerCornerRadiusPx = 4,
                 GlowRadiusPx = 18,
@@ -60,206 +34,21 @@ public sealed class QrStylizedRoundTripTests {
             },
         };
 
-        RoundTripLargeStylized(payload, options, maxDimension, budgetMs);
-    }
-
-    private static void RoundTripLargeStylized(string payload, QrEasyOptions options, int maxDimension, int budgetMs) {
-        var png = RenderPng(payload, options);
+        var png = QrCode.Render(payload, OutputFormat.Png, options).Data;
         Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
 
         var decodeOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             AggressiveSampling = true,
             StylizedSampling = true,
-            BudgetMilliseconds = budgetMs,
-            MaxDimension = maxDimension,
+            BudgetMilliseconds = 6000,
+            MaxDimension = 1200,
             AutoCrop = true
         };
 
         Assert.True(
-            QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decodedAll, out var info, decodeOptions, CancellationToken.None),
-            info.ToString());
-        Assert.Contains(decodedAll, decoded => decoded.Text == payload);
-    }
-
-    private static byte[] RenderPng(string payload, QrEasyOptions options) {
-        return QrCode.Render(payload, OutputFormat.Png, options).Data;
-    }
-
-    private static QrEasyOptions CreateNeonDotOptions(int targetSizePx) {
-        return new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
-            TargetSizePx = targetSizePx,
-            TargetSizeIncludesQuietZone = true,
-            ModuleSize = 10,
-            QuietZone = 4,
-            Foreground = R(0, 255, 213),
-            Background = R(255, 255, 255),
-            BackgroundSupersample = 2,
-            ModuleShape = QrPngModuleShape.Dot,
-            ModuleScale = 0.9,
-            ForegroundPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Random,
-                Seed = 14001,
-                RingSize = 2,
-                ApplyToEyes = false,
-                Colors = new[] { R(0, 255, 213), R(255, 59, 255), R(255, 214, 0) }
-            },
-            Eyes = new QrPngEyeOptions {
-                UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.Target,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle,
-                OuterColor = R(0, 255, 213),
-                InnerColor = R(255, 59, 255),
-                OuterCornerRadiusPx = 6,
-                InnerCornerRadiusPx = 4
-            }
-        };
-    }
-
-    private static QrEasyOptions CreateCandyCheckerOptions(int targetSizePx) {
-        return new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
-            TargetSizePx = targetSizePx,
-            TargetSizeIncludesQuietZone = true,
-            ModuleSize = 10,
-            QuietZone = 4,
-            Foreground = R(255, 107, 107),
-            Background = R(255, 255, 255),
-            BackgroundSupersample = 2,
-            ModuleShape = QrPngModuleShape.Rounded,
-            ModuleScale = 0.9,
-            ForegroundPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Checker,
-                Seed = 0,
-                RingSize = 2,
-                ApplyToEyes = false,
-                Colors = new[] { R(255, 107, 107), R(255, 217, 61) }
-            },
-            Eyes = new QrPngEyeOptions {
-                UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.Badge,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle,
-                OuterColor = R(255, 107, 107),
-                InnerColor = R(255, 217, 61),
-                OuterCornerRadiusPx = 6,
-                InnerCornerRadiusPx = 4
-            }
-        };
-    }
-
-    private static QrEasyOptions CreateConnectedMeltOptions(int targetSizePx) {
-        return new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
-            TargetSizePx = targetSizePx,
-            TargetSizeIncludesQuietZone = true,
-            ModuleSize = 10,
-            QuietZone = 4,
-            Foreground = R(88, 120, 255),
-            Background = R(255, 255, 255),
-            BackgroundSupersample = 2,
-            ModuleShape = QrPngModuleShape.ConnectedRounded,
-            ModuleScale = 0.9,
-            ModuleScaleMap = new QrPngModuleScaleMapOptions {
-                Mode = QrPngModuleScaleMode.Radial,
-                MinScale = 0.86,
-                MaxScale = 1.0,
-                RingSize = 2,
-            },
-            ForegroundPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Cycle,
-                RingSize = 2,
-                ApplyToEyes = false,
-                Colors = new[] { R(88, 120, 255), R(120, 96, 255), R(88, 210, 255) }
-            },
-            Eyes = new QrPngEyeOptions {
-                UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.Target,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle,
-                OuterColor = R(88, 120, 255),
-                InnerColor = R(88, 210, 255),
-                OuterCornerRadiusPx = 6,
-                InnerCornerRadiusPx = 4,
-            }
-        };
-    }
-
-    private static QrEasyOptions CreateNeonGlowOptions(int targetSizePx) {
-        return new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
-            TargetSizePx = targetSizePx,
-            TargetSizeIncludesQuietZone = true,
-            ModuleSize = 10,
-            QuietZone = 4,
-            Foreground = R(0, 255, 240),
-            Background = R(255, 255, 255),
-            BackgroundSupersample = 2,
-            ModuleShape = QrPngModuleShape.Dot,
-            ModuleScale = 0.9,
-            ModuleScaleMap = new QrPngModuleScaleMapOptions {
-                Mode = QrPngModuleScaleMode.Radial,
-                MinScale = 0.82,
-                MaxScale = 1.0,
-                RingSize = 2,
-            },
-            ForegroundPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Cycle,
-                RingSize = 2,
-                ApplyToEyes = false,
-                Colors = new[] { R(0, 255, 240), R(0, 170, 255), R(255, 92, 255) }
-            },
-            Eyes = new QrPngEyeOptions {
-                UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.Glow,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle,
-                OuterColor = R(0, 255, 240),
-                InnerColor = R(255, 92, 255),
-                OuterCornerRadiusPx = 6,
-                InnerCornerRadiusPx = 4,
-                GlowRadiusPx = 30,
-                GlowAlpha = 130,
-                GlowColor = R(0, 200, 255, 200),
-            }
-        };
-    }
-
-    private static Rgba32 R(byte r, byte g, byte b, byte a = 255) => new(r, g, b, a);
-
-    private static byte[] ResizeNearest(byte[] rgba, int width, int height, int maxDimension, out int newWidth, out int newHeight) {
-        if (maxDimension <= 0 || (width <= maxDimension && height <= maxDimension)) {
-            newWidth = width;
-            newHeight = height;
-            return rgba;
-        }
-
-        var scale = Math.Min(1.0, maxDimension / (double)Math.Max(width, height));
-        newWidth = Math.Max(1, (int)Math.Round(width * scale));
-        newHeight = Math.Max(1, (int)Math.Round(height * scale));
-
-        var dst = new byte[newWidth * newHeight * 4];
-        var xRatio = width / (double)newWidth;
-        var yRatio = height / (double)newHeight;
-        var srcStride = width * 4;
-
-        for (var y = 0; y < newHeight; y++) {
-            var srcY = Math.Min(height - 1, (int)(y * yRatio));
-            var srcRow = srcY * srcStride;
-            var dstRow = y * newWidth * 4;
-            for (var x = 0; x < newWidth; x++) {
-                var srcX = Math.Min(width - 1, (int)(x * xRatio));
-                var srcIndex = srcRow + srcX * 4;
-                var dstIndex = dstRow + x * 4;
-                dst[dstIndex + 0] = rgba[srcIndex + 0];
-                dst[dstIndex + 1] = rgba[srcIndex + 1];
-                dst[dstIndex + 2] = rgba[srcIndex + 2];
-                dst[dstIndex + 3] = rgba[srcIndex + 3];
-            }
-        }
-
-        return dst;
+            QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, decodeOptions, CancellationToken.None),
+            "Multi-decode should recover the rendered art-smoke payload.");
+        Assert.Contains(decoded, result => result.Text == payload);
     }
 }

@@ -72,7 +72,7 @@ public static partial class QrEasy {
             CellAspectRatio = consoleOptions.CellAspectRatio,
             DarkGradient = consoleOptions.DarkGradient,
             DarkPalette = consoleOptions.DarkPalette,
-            PreferScanReliability = consoleOptions.PreferScanReliability,
+            UseConservativeQrLayout = consoleOptions.UseConservativeQrLayout,
             EnsureDarkContrast = consoleOptions.EnsureDarkContrast,
             MaxDarkLuminance = consoleOptions.MaxDarkLuminance,
             DarkColor = consoleOptions.DarkColor,

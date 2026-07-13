@@ -3,7 +3,7 @@ using System;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Ready-to-use QR presets with safe defaults for common scenarios.
+/// Ready-to-use QR presets with conservative defaults for common scenarios.
 /// </summary>
 public static class QrPresets {
     /// <summary>
@@ -28,7 +28,7 @@ public static class QrPresets {
     };
 
     /// <summary>
-    /// Preset for logo overlays (high correction + safe logo defaults).
+    /// Preset for logo overlays (high correction plus conservative logo defaults).
     /// </summary>
     public static QrEasyOptions Logo(byte[] logoPng, double? logoScale = null) {
         if (logoPng is null) throw new ArgumentNullException(nameof(logoPng));

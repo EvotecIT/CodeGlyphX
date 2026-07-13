@@ -5,7 +5,7 @@ using CodeGlyphX.Rendering.Png;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Warning kinds for QR art safety evaluation.
+/// Warning kinds for static QR art heuristic evaluation.
 /// </summary>
 public enum QrArtWarningKind {
     /// <summary>
@@ -76,11 +76,12 @@ public readonly struct QrArtWarning {
 }
 
 /// <summary>
-/// Safety score and warnings for QR art/custom styling.
+/// Static heuristic score and warnings for QR art/custom styling.
+/// This report does not decode the rendered output and cannot guarantee scanner interoperability.
 /// </summary>
-public sealed class QrArtSafetyReport {
+public sealed class QrArtHeuristicReport {
     /// <summary>
-    /// Safety score (0..100).
+    /// Heuristic score (0..100).
     /// </summary>
     public int Score { get; }
 
@@ -90,24 +91,26 @@ public sealed class QrArtSafetyReport {
     public QrArtWarning[] Warnings { get; }
 
     /// <summary>
-    /// Indicates whether the configuration is likely safe for scanning.
+    /// Indicates whether the configuration passes the library's static checks.
+    /// Passing does not guarantee that a rendered QR code will scan.
     /// </summary>
-    public bool IsSafe => Score >= 70;
+    public bool PassesHeuristics => Score >= 70;
 
-    internal QrArtSafetyReport(int score, QrArtWarning[] warnings) {
+    internal QrArtHeuristicReport(int score, QrArtWarning[] warnings) {
         Score = Math.Min(Math.Max(score, 0), 100);
         Warnings = warnings ?? Array.Empty<QrArtWarning>();
     }
 }
 
 /// <summary>
-/// Evaluates QR art/render options for scan safety.
+/// Evaluates QR art/render options using static heuristics.
+/// It does not render or decode the result; validate final artifacts with target scanners.
 /// </summary>
-public static class QrArtSafety {
+public static class QrArtHeuristics {
     /// <summary>
     /// Evaluates a QR render configuration.
     /// </summary>
-    public static QrArtSafetyReport Evaluate(QrCode qr, QrPngRenderOptions options) {
+    public static QrArtHeuristicReport Evaluate(QrCode qr, QrPngRenderOptions options) {
         if (qr is null) throw new ArgumentNullException(nameof(qr));
         if (options is null) throw new ArgumentNullException(nameof(options));
 
@@ -215,7 +218,7 @@ public static class QrArtSafety {
             }
         }
 
-        return new QrArtSafetyReport(score, warnings.ToArray());
+        return new QrArtHeuristicReport(score, warnings.ToArray());
     }
 
     private static double ContrastRatio(Rgba32 a, Rgba32 b) {

@@ -94,11 +94,11 @@ public sealed partial class CodeGlyphDecodeOptions {
     }
 
     /// <summary>
-    /// Maximum milliseconds to spend decoding QR (best effort). Set to 0 to disable.
+    /// Cooperative time budget in milliseconds for one QR decode call. Set to 0 to disable.
     /// </summary>
-    public int MaxMilliseconds {
-        get => Qr?.MaxMilliseconds ?? 0;
-        set => EnsureQr().MaxMilliseconds = value;
+    public int QrBudgetMilliseconds {
+        get => Qr?.BudgetMilliseconds ?? 0;
+        set => EnsureQr().BudgetMilliseconds = value;
     }
 
     /// <summary>
@@ -129,25 +129,25 @@ public sealed partial class CodeGlyphDecodeOptions {
     /// <summary>
     /// Maximum pixel count allowed for non-QR image decoding (width * height). Set to 0 to disable.
     /// </summary>
-    public long MaxImagePixels {
-        get => Image?.MaxPixels ?? 0;
+    public long? MaxImagePixels {
+        get => Image?.MaxPixels;
         set => EnsureImage().MaxPixels = value;
     }
 
     /// <summary>
     /// Maximum input size in bytes for non-QR image decoding. Set to 0 to disable.
     /// </summary>
-    public int MaxImageBytes {
-        get => Image?.MaxBytes ?? 0;
+    public int? MaxImageBytes {
+        get => Image?.MaxBytes;
         set => EnsureImage().MaxBytes = value;
     }
 
     /// <summary>
-    /// Maximum milliseconds to spend decoding non-QR symbols (best effort). Set to 0 to disable.
+    /// Cooperative time budget for non-QR symbol recognition after raster decoding. Set to 0 to disable.
     /// </summary>
-    public int MaxImageMilliseconds {
-        get => Image?.MaxMilliseconds ?? 0;
-        set => EnsureImage().MaxMilliseconds = value;
+    public int ImageRecognitionBudgetMilliseconds {
+        get => Image?.RecognitionBudgetMilliseconds ?? 0;
+        set => EnsureImage().RecognitionBudgetMilliseconds = value;
     }
 
     /// <summary>
@@ -158,10 +158,10 @@ public sealed partial class CodeGlyphDecodeOptions {
     /// <summary>
     /// Screen preset (budgeted decode for UI capture scenarios).
     /// </summary>
-    public static CodeGlyphDecodeOptions Screen(int maxMilliseconds = 300, int maxDimension = 1200) {
+    public static CodeGlyphDecodeOptions Screen(int budgetMilliseconds = 300, int maxDimension = 1200) {
         return new CodeGlyphDecodeOptions {
-            Qr = QrPixelDecodeOptions.Screen(maxMilliseconds, maxDimension),
-            Image = ImageDecodeOptions.Screen(maxMilliseconds, maxDimension)
+            Qr = QrPixelDecodeOptions.Screen(budgetMilliseconds, maxDimension),
+            Image = ImageDecodeOptions.Screen(budgetMilliseconds, maxDimension)
         };
     }
 

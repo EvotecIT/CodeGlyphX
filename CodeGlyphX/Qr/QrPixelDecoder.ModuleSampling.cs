@@ -317,7 +317,7 @@ internal static partial class QrPixelDecoder {
             return false;
         }
 
-        if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+        if (budget.Enabled && budget.BudgetMilliseconds <= 800) {
             moduleDiagnostics = moduleDiag;
             return false;
         }
@@ -1234,7 +1234,7 @@ internal static partial class QrPixelDecoder {
             return true;
         }
 
-        if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+        if (budget.Enabled && budget.BudgetMilliseconds <= 800) {
             diagnostics = best;
             return false;
         }

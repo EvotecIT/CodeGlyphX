@@ -38,12 +38,12 @@ public partial class Playground {
                 _decodeCts.Dispose();
             }
             _decodeCts = new CancellationTokenSource();
-            if (DecodeMaxMilliseconds > 0)
+            if (DecodeBudgetMilliseconds > 0)
             {
-                _decodeCts.CancelAfter(DecodeMaxMilliseconds);
+                _decodeCts.CancelAfter(DecodeBudgetMilliseconds);
             }
             var token = _decodeCts.Token;
-            using var budgetScope = CodeGlyphBudget.Begin(DecodeMaxMilliseconds);
+            using var budgetScope = CodeGlyphBudget.Begin(DecodeBudgetMilliseconds);
 
             using var stream = file.OpenReadStream(15 * 1024 * 1024);
             using var ms = new MemoryStream();
@@ -74,7 +74,7 @@ public partial class Playground {
 
             int RemainingBudget()
             {
-                var remaining = DecodeMaxMilliseconds - (int)sw.ElapsedMilliseconds;
+                var remaining = DecodeBudgetMilliseconds - (int)sw.ElapsedMilliseconds;
                 return remaining < 0 ? 0 : remaining;
             }
 
@@ -92,28 +92,19 @@ public partial class Playground {
                     Profile = QrDecodeProfile.Robust,
                     AggressiveSampling = true,
                     StylizedSampling = true,
-                    BudgetMilliseconds = DecodeMaxMilliseconds,
+                    BudgetMilliseconds = qrBudget,
                     MaxDimension = DecodeDownscale ? DecodeMaxDimension : 0,
                     EnableTileScan = true
                 };
                 if (DecodeStopAfterFirst)
                 {
-                    if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var qr, qrOptions, token))
+                    if (QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var qrAll, qrOptions, token)
+                        && qrAll.Length > 0)
                     {
-                        AddDecodeResult("QR", qr.Text);
+                        AddDecodeResult("QR", qrAll[0].Text);
                         found = true;
                         DecodeStatus = $"Decode finished in {sw.ElapsedMilliseconds} ms";
                         return;
-                    }
-                    if (QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var qrAll, qrOptions, token))
-                    {
-                        if (qrAll.Length > 0)
-                        {
-                            AddDecodeResult("QR", qrAll[0].Text);
-                            found = true;
-                            DecodeStatus = $"Decode finished in {sw.ElapsedMilliseconds} ms";
-                            return;
-                        }
                     }
                 }
                 else
@@ -306,7 +297,7 @@ public partial class Playground {
 
             if (token.IsCancellationRequested)
             {
-                DecodeError = DecodeMaxMilliseconds > 0 && sw.ElapsedMilliseconds >= DecodeMaxMilliseconds
+                DecodeError = DecodeBudgetMilliseconds > 0 && sw.ElapsedMilliseconds >= DecodeBudgetMilliseconds
                     ? "Time budget exceeded."
                     : "Decode cancelled.";
                 return;
@@ -390,7 +381,7 @@ public partial class Playground {
         ErrorMessage = null;
         ImageDataUri = null;
         SvgDataUri = null;
-        SafetyReport = null;
+        HeuristicReport = null;
         DecodeImageDataUri = null;
         DecodeError = null;
         DecodeResults.Clear();

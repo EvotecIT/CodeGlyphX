@@ -185,7 +185,7 @@ public partial class Playground {
     internal string? ImageDataUri { get; set; }
     internal string? SvgDataUri { get; set; }
     internal string? ErrorMessage { get; set; }
-    internal QrArtSafetyReport? SafetyReport { get; set; }
+    internal QrArtHeuristicReport? HeuristicReport { get; set; }
     internal string? DecodeImageDataUri { get; set; }
     internal string? DecodeError { get; set; }
     internal readonly List<DecodeResult> DecodeResults = new();
@@ -196,7 +196,7 @@ public partial class Playground {
     internal bool DecodeStopAfterFirst { get; set; } = true;
     internal string DecodeQualityPreset { get; set; } = "Balanced";
     internal int DecodeMaxDimension { get; set; } = 2048;
-    internal int DecodeMaxMilliseconds { get; set; } = 2000;
+    internal int DecodeBudgetMilliseconds { get; set; } = 2000;
     internal bool IsDecoding { get; set; }
     internal string DecodeStatus { get; set; } = string.Empty;
     internal CancellationTokenSource? _decodeCts;
@@ -229,20 +229,20 @@ public partial class Playground {
                 DecodeDownscale = true;
                 DecodeStopAfterFirst = true;
                 DecodeMaxDimension = 1024;
-                DecodeMaxMilliseconds = 600;
+                DecodeBudgetMilliseconds = 600;
                 break;
             case "Quality":
                 DecodeDownscale = false;
                 DecodeStopAfterFirst = true;
                 DecodeMaxDimension = 4096;
-                DecodeMaxMilliseconds = 8000;
+                DecodeBudgetMilliseconds = 8000;
                 break;
             case "Balanced":
             default:
                 DecodeDownscale = true;
                 DecodeStopAfterFirst = true;
                 DecodeMaxDimension = 2048;
-                DecodeMaxMilliseconds = 2000;
+                DecodeBudgetMilliseconds = 2000;
                 break;
         }
     }

@@ -60,7 +60,7 @@ internal static class QrModuleDiffExample {
 
             var results = new List<(QrErrorCorrectionLevel ecc, int mask, int mismatches, int dataMismatches, int dataTotal)>();
             var functionMask = QrStructureAnalysis.BuildFunctionMask(version, observed.Width);
-            foreach (QrErrorCorrectionLevel ecc in Enum.GetValues(typeof(QrErrorCorrectionLevel))) {
+            foreach (var ecc in Enum.GetValues<QrErrorCorrectionLevel>()) {
                 for (var mask = 0; mask < 8; mask++) {
                     try {
                         var qr = QrCodeEncoder.EncodeText(payload, ecc, version, version, mask);

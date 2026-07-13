@@ -73,6 +73,8 @@
     --secondary: #06b6d4;
     --accent: #f472b6;
     --success: #10b981;
+    --warning: #fbbf24;
+    --error: #f87171;
 
     /* Backgrounds */
     --bg-dark: #0a0a0f;
@@ -113,6 +115,8 @@
     --secondary: #0e7490;
     --accent: #db2777;
     --success: #047857;
+    --warning: #92400e;
+    --error: #b91c1c;
 
     /* Backgrounds */
     --bg-dark: #f8fafc;
@@ -152,6 +156,8 @@
         --secondary: #0e7490;
         --accent: #db2777;
         --success: #047857;
+        --warning: #92400e;
+        --error: #b91c1c;
 
         /* Backgrounds */
         --bg-dark: #f8fafc;
@@ -360,7 +366,7 @@ body:has(.page-playground) {
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: var(--primary-dark);
     color: white !important;
     border-radius: 8px;
     font-weight: 600;
@@ -454,10 +460,7 @@ body:has(.page-playground) {
 .hero h1 {
     font-size: clamp(1.75rem, 6vw, 4.5rem);
     margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text);
     word-wrap: break-word;
     overflow-wrap: break-word;
     max-width: 100%;
@@ -746,10 +749,7 @@ body:has(.page-playground) {
 .stat-item .stat-number {
     font-size: 2.5rem;
     font-weight: 600;
-    background: linear-gradient(135deg, var(--primary-light), var(--secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary-light);
     margin-bottom: 0.5rem;
     display: block;
 }
@@ -1086,50 +1086,6 @@ body:has(.page-playground) {
 .mermaid-diagram-failed {
     border-color: rgba(239, 68, 68, 0.55);
 }
-
-/* PrismJS theme overrides for light mode */
-[data-theme="light"] .code-block,
-[data-theme="light"] .code-block code {
-    background: #f6f8fa !important;
-    color: #24292e;
-}
-
-[data-theme="light"] .token.comment,
-[data-theme="light"] .token.prolog,
-[data-theme="light"] .token.doctype,
-[data-theme="light"] .token.cdata { color: #6a737d; }
-
-[data-theme="light"] .token.punctuation { color: #24292e; }
-
-[data-theme="light"] .token.property,
-[data-theme="light"] .token.tag,
-[data-theme="light"] .token.boolean,
-[data-theme="light"] .token.number,
-[data-theme="light"] .token.constant,
-[data-theme="light"] .token.symbol,
-[data-theme="light"] .token.deleted { color: #005cc5; }
-
-[data-theme="light"] .token.selector,
-[data-theme="light"] .token.attr-name,
-[data-theme="light"] .token.string,
-[data-theme="light"] .token.char,
-[data-theme="light"] .token.builtin,
-[data-theme="light"] .token.inserted { color: #22863a; }
-
-[data-theme="light"] .token.operator,
-[data-theme="light"] .token.entity,
-[data-theme="light"] .token.url { color: #d73a49; }
-
-[data-theme="light"] .token.atrule,
-[data-theme="light"] .token.attr-value,
-[data-theme="light"] .token.keyword { color: #d73a49; }
-
-[data-theme="light"] .token.function,
-[data-theme="light"] .token.class-name { color: #6f42c1; }
-
-[data-theme="light"] .token.regex,
-[data-theme="light"] .token.important,
-[data-theme="light"] .token.variable { color: #e36209; }
 
 /* Legacy manual highlighting (fallback) - dark mode */
 .code-block .keyword { color: #c678dd; }
@@ -1728,10 +1684,7 @@ code.signature:focus-within .copy-btn {
 .showcase-hero h1 {
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     margin: 1rem 0;
-    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+    color: var(--text);
 }
 
 /* Focus styles consolidated above */
@@ -1810,7 +1763,7 @@ code.signature:focus-within .copy-btn {
     margin-bottom: 1.5rem;
 }
 
-.showcase-details h4 {
+.showcase-details h3 {
     font-size: 0.875rem;
     color: var(--text);
     margin: 0 0 0.75rem 0;
@@ -2156,10 +2109,7 @@ code.signature:focus-within .copy-btn {
     text-align: center;
     font-size: clamp(2rem, 5vw, 2.75rem);
     margin-bottom: 0.25rem;
-    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+    color: var(--text);
 }
 
 .playground-subtitle {
@@ -2558,10 +2508,7 @@ code.signature:focus-within .copy-btn {
 .docs-content h1 {
     font-size: clamp(2.25rem, 4vw, 3rem);
     margin-bottom: 0.75rem;
-    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+    color: var(--text);
 }
 
 .docs-content h2 {
@@ -3421,10 +3368,7 @@ section {
 .faq-hero h1 {
     font-size: clamp(2.5rem, 5vw, 3.5rem);
     margin: 1rem 0;
-    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+    color: var(--text);
 }
 
 /* Focus styles consolidated above */
@@ -3561,10 +3505,7 @@ section {
 .benchmark-hero h1 {
     font-size: clamp(2.25rem, 4vw, 3rem);
     margin-bottom: 0.75rem;
-    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 50%, var(--secondary) 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+    color: var(--text);
 }
 
 .benchmark-intro {
@@ -4110,10 +4051,7 @@ section {
 .pricing-hero h1 {
     font-size: clamp(2rem, 5vw, 3.5rem);
     margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--text) 0%, var(--primary-light) 60%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text);
 }
 
 /* Focus styles consolidated above */

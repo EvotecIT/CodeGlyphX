@@ -5,14 +5,14 @@ namespace CodeGlyphX.Rendering;
 internal static class DecodeGuards {
     public static void EnsurePayloadWithinLimits(int length, string message) {
         if (length < 0) throw new FormatException(message);
-        var maxBytes = ImageReader.MaxImageBytes;
+        var maxBytes = ImageReader.EffectiveMaxImageBytes;
         if (maxBytes > 0 && length > maxBytes) {
             throw new FormatException(GuardMessages.ForBytes(message, length, maxBytes));
         }
     }
 
     public static bool TryEnsurePixelCount(int width, int height, out int pixels) {
-        return TryEnsurePixelCount(width, height, ImageReader.MaxPixels, out pixels);
+        return TryEnsurePixelCount(width, height, ImageReader.EffectiveMaxPixels, out pixels);
     }
 
     public static bool TryEnsurePixelCount(int width, int height, long maxPixels, out int pixels) {
@@ -28,7 +28,7 @@ internal static class DecodeGuards {
     public static int EnsurePixelCount(int width, int height, string message) {
         if (TryEnsurePixelCount(width, height, out var pixels)) return pixels;
         var total = (long)width * height;
-        throw new FormatException(GuardMessages.ForPixels(message, width, height, total, ImageReader.MaxPixels));
+        throw new FormatException(GuardMessages.ForPixels(message, width, height, total, ImageReader.EffectiveMaxPixels));
     }
 
     public static int EnsureByteCount(long bytes, string message) {

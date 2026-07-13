@@ -1,4 +1,4 @@
-Image Samples (optional)
+Image Samples
 
 This folder is the **image format corpus** for ImageReader coverage tests
 (PNG/TIFF edge cases, interlace, packed bit-depths, palettes, etc.). The files
@@ -10,8 +10,8 @@ Download:
 If you want to store samples outside the repo, set:
   CODEGLYPHX_IMAGE_SAMPLES
 
-Tests will skip if no image files are present. Once samples exist, missing
-required entries will fail the test.
+CI downloads the hash-pinned corpus before running tests. Missing required
+entries fail the suite instead of being reported as passing tests.
 
 Manifest:
   manifest.json

@@ -1,6 +1,6 @@
 ---
 title: Image Decoding - CodeGlyphX
-description: Decode barcodes and QR codes from images.
+description: Decode QR codes, barcodes, and matrix codes from supported image formats.
 slug: decoding
 collection: docs
 layout: docs
@@ -10,72 +10,96 @@ layout: docs
 
 # Image Decoding
 
-CodeGlyphX includes a built-in decoder for reading QR codes and barcodes from images.
+Use `QrImageDecoder` when only QR is expected. Use `CodeGlyph` for unified QR, linear-barcode, Data Matrix, PDF417, and Aztec recognition.
 
-## Basic Usage
+## QR-only decoding
 
 ```csharp
 using CodeGlyphX;
 
-// Decode from file
-byte[] imageBytes = File.ReadAllBytes("qrcode.png");
+byte[] image = File.ReadAllBytes("qrcode.png");
+var imageOptions = ImageDecodeOptions.Strict(
+    maxBytes: 8 * 1024 * 1024,
+    maxPixels: 8_000_000,
+    maxDimension: 1600);
+var qrOptions = QrPixelDecodeOptions.Screen(
+    budgetMilliseconds: 500,
+    maxDimension: 1600);
 
-if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
-{
-    Console.WriteLine($"Decoded: {result.Text}");
-    Console.WriteLine($"Format: {result.BarcodeFormat}");
+if (QrImageDecoder.TryDecodeImage(image, imageOptions, qrOptions, out var decoded)) {
+    Console.WriteLine(decoded.Text);
 }
-
-// Decode from stream
-using var stream = File.OpenRead("barcode.png");
-var decodeResult = QrImageDecoder.DecodeImage(stream);
 ```
 
-## Supported Formats for Decoding
-
-- **Images:** PNG, JPEG, WebP, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, XPM
-- **QR Codes:** Standard QR, Micro QR
-- **1D Barcodes:** Code 128, Code 39/93, EAN/UPC, ITF, Codabar, MSI, Telepen, Plessey, more
-- **2D Matrix:** Data Matrix, PDF417, Aztec
-
-## Known Gaps (Decoding)
-
-- AVIF, HEIC, JPEG2000
-- ImageReader.DecodeRgba32 returns the first GIF/WebP frame; use ImageReader.DecodeGifAnimationFrames / DecodeWebpAnimationFrames (or GifReader/WebpReader) for animation frames
-- ImageReader.DecodeRgba32 returns the first TIFF page; use ImageReader.TryDecodeTiffPagesRgba32 (or TiffReader.DecodePagesRgba32) for multi-page
-- PDF decode supports image-only PDFs with embedded JPEG/Flate; PS decode still needs rasterization
-
-## Format Corpus (Optional)
-
-We maintain external image samples to validate edge cases (PNG/TIFF suites, packed bit-depths, interlace, etc.). These are not stored in the repo.
-
-```powershell
-// Download the image format corpus
-pwsh Build/Download-ImageSamples.ps1
-
-// Download external barcode/QR samples
-pwsh Build/Download-ExternalSamples.ps1
-```
-
-## Handling Multiple Results
+## Unified decoding
 
 ```csharp
-// Decode all barcodes in an image
-var results = QrImageDecoder.DecodeAllImages(imageBytes);
+var options = new CodeGlyphDecodeOptions {
+    Qr = QrPixelDecodeOptions.Screen(budgetMilliseconds: 500, maxDimension: 1600),
+    Image = ImageDecodeOptions.Strict(
+        maxBytes: 8 * 1024 * 1024,
+        maxPixels: 8_000_000,
+        maxDimension: 1600)
+        .WithRecognitionBudget(500)
+};
 
-foreach (var barcode in results)
-{
-    Console.WriteLine($"{barcode.BarcodeFormat}: {barcode.Text}");
+if (CodeGlyph.TryDecodeImage(image, out var decoded, options)) {
+    Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
 }
+```
+
+Stream input uses the same contract:
+
+```csharp
+using var stream = File.OpenRead("barcode.png");
+if (CodeGlyph.TryDecodeImage(stream, out var decoded, options)) {
+    Console.WriteLine(decoded.Text);
+}
+```
+
+## Multiple results
+
+```csharp
+if (CodeGlyph.TryDecodeAllImage(image, out var results, options)) {
+    foreach (var result in results) {
+        Console.WriteLine($"{result.Kind}: {result.Text}");
+    }
+}
+```
+
+## Supported raster inputs
+
+PNG, JPEG, WebP, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, and XPM are handled by the managed image reader. PSD and PDF have narrower documented decode paths.
+
+## Resource-limit semantics
+
+- `MaxBytes` and `MaxPixels`: `null` inherits the corresponding `ImageReader` global; `0` disables that per-call limit.
+- `MaxDimension`: validates the original image first and then resizes the single-image RGBA output. It does not reduce codec peak memory.
+- `RecognitionBudgetMilliseconds`: cooperatively limits symbol recognition after raster decoding; it does not time the codec.
+- Animation frame, duration, and per-frame pixel limits follow the same `null`/`0`/positive inheritance model.
+
+## Known limits
+
+- AVIF, HEIC, and JPEG 2000 are not supported.
+- `ImageReader.DecodeRgba32` returns the first GIF/WebP frame. Use the animation APIs for multiple frames.
+- Unsupported VP8 WebP animation interframes fail; CodeGlyphX does not substitute transparent or repeated pixels.
+- `ImageReader.DecodeRgba32` returns the first TIFF page. Use the TIFF page APIs for multi-page input.
+- PDF decode is limited to supported embedded JPEG/Flate image cases; PostScript requires external rasterization.
+- The `netstandard2.0` and `net472` QR pixel fallback is intended for clean/generated images. Use `net8.0` or newer for the full screenshot and stylized-code pipeline.
+
+## Optional external corpora
+
+The repository keeps downloaded image and barcode corpora out of Git. Fetch them before the extended sample tests:
+
+```powershell
+pwsh Build/Download-ImageSamples.ps1
+pwsh Build/Download-ExternalSamples.ps1
 ```
 
 ## Diagnostics
 
 ```csharp
-using CodeGlyphX;
-
-if (!CodeGlyph.TryDecodeImage(imageBytes, out var decoded, out var diagnostics, options: null))
-{
+if (!CodeGlyph.TryDecodeImage(image, out var decoded, out var diagnostics, options)) {
     Console.WriteLine(diagnostics.FailureReason);
     Console.WriteLine(diagnostics.Failure);
 }

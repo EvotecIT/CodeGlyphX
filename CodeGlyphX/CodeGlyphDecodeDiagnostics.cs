@@ -15,7 +15,8 @@ public sealed class CodeGlyphDecodeDiagnostics {
     public CodeGlyphKind? SuccessKind { get; internal set; }
 
     /// <summary>
-    /// QR diagnostics (when attempted).
+    /// QR diagnostics for single-result decoding (when attempted).
+    /// Multi-result decoding leaves this unset because it does not collect one representative finder attempt.
     /// </summary>
     public QrPixelDecodeInfo? Qr { get; internal set; }
 

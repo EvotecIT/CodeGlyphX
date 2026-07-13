@@ -386,98 +386,27 @@ public static class Otp {
         /// </summary>
         public QrCode Encode() => QrEasy.Encode(Uri(), Options);
 
-        private RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+        /// <summary>
+        /// Renders the configured TOTP QR code to the requested output format.
+        /// </summary>
+        public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
             return RenderUri(Uri(), format, Options, extras);
         }
 
         /// <summary>
-        /// Renders PNG bytes.
+        /// Saves the configured TOTP QR code, selecting the output format from the file extension.
         /// </summary>
-        public byte[] Png() => Render(OutputFormat.Png).Data;
-
-        /// <summary>
-        /// Renders SVG text.
-        /// </summary>
-        public string Svg() => Render(OutputFormat.Svg).GetText();
-
-        /// <summary>
-        /// Renders HTML text.
-        /// </summary>
-        public string Html() => Render(OutputFormat.Html).GetText();
-
-        /// <summary>
-        /// Renders JPEG bytes.
-        /// </summary>
-        public byte[] Jpeg() => Render(OutputFormat.Jpeg).Data;
-
-        /// <summary>
-        /// Renders WebP bytes.
-        /// </summary>
-        public byte[] Webp() => Render(OutputFormat.Webp).Data;
-
-        /// <summary>
-        /// Saves PNG to a file.
-        /// </summary>
-        public string SavePng(string path) => OutputWriter.Write(path, Render(OutputFormat.Png));
-
-        /// <summary>
-        /// Saves PNG to a stream.
-        /// </summary>
-        public void SavePng(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Png));
-
-        /// <summary>
-        /// Saves SVG to a file.
-        /// </summary>
-        public string SaveSvg(string path) => OutputWriter.Write(path, Render(OutputFormat.Svg));
-
-        /// <summary>
-        /// Saves SVG to a stream.
-        /// </summary>
-        public void SaveSvg(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Svg));
-
-        /// <summary>
-        /// Saves HTML to a file.
-        /// </summary>
-        public string SaveHtml(string path, string? title = null) {
-            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-            return OutputWriter.Write(path, Render(OutputFormat.Html, extras));
-        }
-
-        /// <summary>
-        /// Saves HTML to a stream.
-        /// </summary>
-        public void SaveHtml(Stream stream, string? title = null) {
-            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-            OutputWriter.Write(stream, Render(OutputFormat.Html, extras));
-        }
-
-        /// <summary>
-        /// Saves JPEG to a file.
-        /// </summary>
-        public string SaveJpeg(string path) => OutputWriter.Write(path, Render(OutputFormat.Jpeg));
-
-        /// <summary>
-        /// Saves JPEG to a stream.
-        /// </summary>
-        public void SaveJpeg(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Jpeg));
-
-        /// <summary>
-        /// Saves WebP to a file.
-        /// </summary>
-        public string SaveWebp(string path) => OutputWriter.Write(path, Render(OutputFormat.Webp));
-
-        /// <summary>
-        /// Saves WebP to a stream.
-        /// </summary>
-        public void SaveWebp(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Webp));
-
-        /// <summary>
-        /// Saves based on file extension (.png/.webp/.svg/.html/.jpg). Defaults to PNG when no extension is provided.
-        /// </summary>
-        public string Save(string path, string? title = null) {
-            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+        public string Save(string path, RenderExtras? extras = null) {
             var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
             return OutputWriter.Write(path, Render(format, extras));
+        }
+
+        /// <summary>
+        /// Writes the configured TOTP QR code to a stream in the requested output format.
+        /// </summary>
+        public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            OutputWriter.Write(stream, Render(format, extras));
         }
     }
 
@@ -545,98 +474,27 @@ public static class Otp {
         /// </summary>
         public QrCode Encode() => QrEasy.Encode(Uri(), Options);
 
-        private RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+        /// <summary>
+        /// Renders the configured HOTP QR code to the requested output format.
+        /// </summary>
+        public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
             return RenderUri(Uri(), format, Options, extras);
         }
 
         /// <summary>
-        /// Renders PNG bytes.
+        /// Saves the configured HOTP QR code, selecting the output format from the file extension.
         /// </summary>
-        public byte[] Png() => Render(OutputFormat.Png).Data;
-
-        /// <summary>
-        /// Renders SVG text.
-        /// </summary>
-        public string Svg() => Render(OutputFormat.Svg).GetText();
-
-        /// <summary>
-        /// Renders HTML text.
-        /// </summary>
-        public string Html() => Render(OutputFormat.Html).GetText();
-
-        /// <summary>
-        /// Renders JPEG bytes.
-        /// </summary>
-        public byte[] Jpeg() => Render(OutputFormat.Jpeg).Data;
-
-        /// <summary>
-        /// Renders WebP bytes.
-        /// </summary>
-        public byte[] Webp() => Render(OutputFormat.Webp).Data;
-
-        /// <summary>
-        /// Saves PNG to a file.
-        /// </summary>
-        public string SavePng(string path) => OutputWriter.Write(path, Render(OutputFormat.Png));
-
-        /// <summary>
-        /// Saves PNG to a stream.
-        /// </summary>
-        public void SavePng(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Png));
-
-        /// <summary>
-        /// Saves SVG to a file.
-        /// </summary>
-        public string SaveSvg(string path) => OutputWriter.Write(path, Render(OutputFormat.Svg));
-
-        /// <summary>
-        /// Saves SVG to a stream.
-        /// </summary>
-        public void SaveSvg(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Svg));
-
-        /// <summary>
-        /// Saves HTML to a file.
-        /// </summary>
-        public string SaveHtml(string path, string? title = null) {
-            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-            return OutputWriter.Write(path, Render(OutputFormat.Html, extras));
-        }
-
-        /// <summary>
-        /// Saves HTML to a stream.
-        /// </summary>
-        public void SaveHtml(Stream stream, string? title = null) {
-            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
-            OutputWriter.Write(stream, Render(OutputFormat.Html, extras));
-        }
-
-        /// <summary>
-        /// Saves JPEG to a file.
-        /// </summary>
-        public string SaveJpeg(string path) => OutputWriter.Write(path, Render(OutputFormat.Jpeg));
-
-        /// <summary>
-        /// Saves JPEG to a stream.
-        /// </summary>
-        public void SaveJpeg(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Jpeg));
-
-        /// <summary>
-        /// Saves WebP to a file.
-        /// </summary>
-        public string SaveWebp(string path) => OutputWriter.Write(path, Render(OutputFormat.Webp));
-
-        /// <summary>
-        /// Saves WebP to a stream.
-        /// </summary>
-        public void SaveWebp(Stream stream) => OutputWriter.Write(stream, Render(OutputFormat.Webp));
-
-        /// <summary>
-        /// Saves based on file extension (.png/.webp/.svg/.html/.jpg). Defaults to PNG when no extension is provided.
-        /// </summary>
-        public string Save(string path, string? title = null) {
-            var extras = string.IsNullOrEmpty(title) ? null : new RenderExtras { HtmlTitle = title };
+        public string Save(string path, RenderExtras? extras = null) {
             var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
             return OutputWriter.Write(path, Render(format, extras));
+        }
+
+        /// <summary>
+        /// Writes the configured HOTP QR code to a stream in the requested output format.
+        /// </summary>
+        public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+            if (stream is null) throw new ArgumentNullException(nameof(stream));
+            OutputWriter.Write(stream, Render(format, extras));
         }
     }
 }

@@ -12,7 +12,7 @@
           "id": "what-is-codeglyphx",
           "question": "What is CodeGlyphX?",
           "answer": [
-            "<p>CodeGlyphX is a zero-dependency .NET library for generating and decoding QR codes, barcodes, and 2D matrix codes. It's written entirely in C# with no native dependencies, making it fully portable across Windows, Linux, macOS, and WebAssembly.</p>"
+            "<p>CodeGlyphX is a pure-managed .NET library for generating and decoding QR codes, barcodes, and 2D matrix codes. It has no native graphics dependencies, and CI tests Windows, Linux, and macOS.</p>"
           ]
         },
         {
@@ -20,7 +20,7 @@
           "question": "Which .NET versions are supported?",
           "answer": [
             "<p>CodeGlyphX targets multiple frameworks for maximum compatibility:</p>",
-            "<ul><li><strong>.NET 8.0 and .NET 10.0</strong> - Full support with AOT and trimming</li><li><strong>.NET Framework 4.7.2</strong> - For legacy Windows applications</li><li><strong>.NET Standard 2.0</strong> - For cross-platform compatibility with older runtimes</li></ul>"
+            "<ul><li><strong>.NET 8.0 and .NET 10.0</strong> - Full library surface with trim/AOT analyzers; CI executes a .NET 8 NativeAOT smoke application</li><li><strong>.NET Framework 4.7.2</strong> - Legacy Windows compatibility with a reduced QR image fallback</li><li><strong>.NET Standard 2.0</strong> - Older-runtime compatibility with a reduced QR image fallback</li></ul>"
           ]
         },
         {
@@ -31,11 +31,11 @@
           ]
         },
         {
-          "id": "zero-dependencies",
-          "question": "What does \"zero dependencies\" mean?",
+          "id": "native-dependencies",
+          "question": "Does CodeGlyphX require native graphics dependencies?",
           "answer": [
-            "<p>On .NET 8.0+, CodeGlyphX has no external NuGet package dependencies beyond the runtime itself. It includes its own PNG encoder, image processing, and all encoding algorithms. This means smaller deployment size, no version conflicts, and no transitive dependency chains.</p>",
-            "<p><em>Note: .NET Standard 2.0 and .NET Framework 4.7.2 targets include System.Memory for Span&lt;T&gt; support.</em></p>"
+            "<p>No. CodeGlyphX does not require System.Drawing, SkiaSharp, ImageSharp, or a native codec library. The .NET 8.0 and .NET 10.0 package targets have no runtime package dependency.</p>",
+            "<p><em>.NET Standard 2.0 and .NET Framework 4.7.2 include the managed System.Memory package.</em></p>"
           ]
         }
       ]
@@ -47,21 +47,21 @@
           "id": "aot-compatible",
           "question": "Does CodeGlyphX work with Native AOT?",
           "answer": [
-            "<p>Yes. On .NET 8.0 and .NET 10.0, CodeGlyphX is fully compatible with Native AOT compilation. It uses no reflection, no dynamic code generation, and no runtime IL emission. You can publish AOT-compiled applications that use CodeGlyphX without any warnings or runtime issues.</p>"
+            "<p>Yes for the supported modern targets. The library enables AOT analyzers for .NET 8.0 and .NET 10.0, and CI publishes and executes a .NET 8.0 NativeAOT consumer using the primary public APIs.</p>"
           ]
         },
         {
           "id": "trimming-safe",
           "question": "Is it trimming-safe?",
           "answer": [
-            "<p>Yes. On .NET 8.0+, CodeGlyphX is annotated for full trimming compatibility. When you publish with <code>PublishTrimmed=true</code>, the linker can safely remove unused code paths without breaking functionality. No <code>TrimmerRootAssembly</code> workarounds needed.</p>"
+            "<p>The .NET 8.0 and .NET 10.0 targets enable the trim analyzer. Keep the analyzer enabled in consuming applications and treat any new warning as a release blocker.</p>"
           ]
         },
         {
           "id": "single-file",
           "question": "Can I use it in single-file deployments?",
           "answer": [
-            "<p>Yes. On .NET 8.0+, CodeGlyphX works perfectly with <code>PublishSingleFile=true</code>. Since it has no native dependencies or satellite assemblies, your entire application including QR generation can be a single executable file.</p>"
+            "<p>Yes. The modern targets enable the single-file analyzer and do not require native codec libraries. Validate the exact set of APIs used by your application during publish.</p>"
           ]
         }
       ]
@@ -121,21 +121,21 @@
           "id": "maui",
           "question": "Does it work with .NET MAUI?",
           "answer": [
-            "<p>Yes. CodeGlyphX works on all MAUI platforms: Android, iOS, macOS, and Windows. Since it has no platform-specific dependencies, the same code works identically across all targets.</p>"
+            "<p>CodeGlyphX is pure managed and can be referenced by .NET MAUI applications without adding a native image-codec library. CI does not execute MAUI applications, so validate the APIs, trimming settings, and artifacts you use on each target device before shipping.</p>"
           ]
         },
         {
           "id": "aspnet",
           "question": "Can I use it in ASP.NET Core?",
           "answer": [
-            "<p>Yes. CodeGlyphX is commonly used in ASP.NET Core applications to generate QR codes dynamically. You can return PNG images directly from controllers or minimal API endpoints, generate codes in Razor Pages, or use it in background services.</p>"
+            "<p>Yes. ASP.NET Core applications can return generated PNG or SVG data from controllers and minimal API endpoints, or generate artifacts in Razor Pages and background services. Apply input and image limits when accepting untrusted content.</p>"
           ]
         },
         {
           "id": "azure-functions",
           "question": "Does it work in Azure Functions / AWS Lambda?",
           "answer": [
-            "<p>Yes. CodeGlyphX's zero-dependency design makes it ideal for serverless environments. No native libraries to configure, no special deployment steps. It works out of the box in both consumption and premium plans.</p>"
+            "<p>CodeGlyphX can run in serverless .NET workloads without a native image-codec library. Choose a supported target framework and validate cold-start time, memory limits, trimming or AOT settings, and the exact artifact in the hosting environment.</p>"
           ]
         }
       ]
@@ -147,14 +147,14 @@
           "id": "performance",
           "question": "How fast is CodeGlyphX?",
           "answer": [
-            "<p>CodeGlyphX is optimized for performance. QR code and barcode generation is fast enough for real-time use cases including API endpoints and interactive applications. The library is suitable for high-throughput scenarios like batch generation.</p>"
+            "<p>Performance depends on the symbology, output format, image size, decode profile, and input quality. Use the repository benchmarks as comparative evidence, then measure your own payloads and deployment target before setting latency or throughput expectations.</p>"
           ]
         },
         {
           "id": "memory",
           "question": "What about memory usage?",
           "answer": [
-            "<p>On .NET 8.0+, CodeGlyphX uses <code>Span&lt;T&gt;</code> and <code>Memory&lt;T&gt;</code> to minimize allocations where possible. The library is designed to be efficient for both single-use and batch processing scenarios.</p>"
+            "<p>Memory use varies with raster dimensions, codec, and decode search profile. Set <code>MaxBytes</code>, <code>MaxPixels</code>, and <code>MaxDimension</code> for untrusted images, and measure representative batch workloads rather than assuming a fixed allocation profile.</p>"
           ]
         }
       ]
@@ -181,7 +181,7 @@
           "id": "help",
           "question": "Where can I get help?",
           "answer": [
-            "<p>For questions, bug reports, or feature requests, please open an issue on the <a href=\"https://github.com/EvotecIT/CodeGlyphX/issues\" target=\"_blank\" rel=\"noopener\">GitHub repository</a>. For documentation and examples, see the <a href=\"/docs/\">Documentation</a> section.</p>"
+            "<p>For questions, bug reports, or feature requests, please open an issue on <a href=\"https://github.com/EvotecIT/CodeGlyphX/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>. For documentation and examples, see the <a href=\"/docs/\">Documentation</a> section.</p>"
           ]
         }
       ]

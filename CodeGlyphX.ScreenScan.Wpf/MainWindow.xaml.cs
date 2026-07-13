@@ -89,7 +89,7 @@ public partial class MainWindow : Window {
                 var maxDim = Math.Max(w, h);
                 var options = new QrPixelDecodeOptions {
                     Profile = _decodeProfile,
-                    MaxMilliseconds = 400,
+                    BudgetMilliseconds = 400,
                     MaxDimension = maxDim > 1600 ? 1600 : 0
                 };
 

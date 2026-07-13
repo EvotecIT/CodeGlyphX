@@ -1,6 +1,6 @@
 ---
-title: CodeGlyphX - Zero-Dependency QR & Barcode Toolkit for .NET
-description: CodeGlyphX is a blazing-fast, zero-dependency .NET library for generating and decoding QR codes, barcodes, Data Matrix, PDF417, and Aztec codes.
+title: CodeGlyphX - Pure-Managed QR & Barcode Toolkit for .NET
+description: CodeGlyphX is a pure-managed .NET library for generating and decoding QR codes, barcodes, Data Matrix, PDF417, and Aztec codes without native graphics dependencies.
 slug: index
 collection: pages
 layout: home
@@ -16,12 +16,12 @@ meta.extra_scripts_file: index.scripts.html
             <span>Open Source &bull; Apache 2.0 License</span>
         </div>
 
-        <h1>Generate QR Codes &amp; Barcodes<br/>Without Dependencies</h1>
+        <h1>Generate QR Codes &amp; Barcodes<br/>Without Native Graphics Dependencies</h1>
 
         <p class="hero-tagline">
-            CodeGlyphX is a blazing-fast, zero-dependency .NET library for encoding and decoding
-            QR codes, Data Matrix, PDF417, Aztec, and all major 1D barcode formats.
-            No System.Drawing. No SkiaSharp. Just pure .NET.
+            CodeGlyphX is a pure-managed .NET library for encoding and decoding
+            QR codes, Data Matrix, PDF417, Aztec, and common 1D barcode formats.
+            No System.Drawing, SkiaSharp, or ImageSharp.
         </p>
 
         <div class="hero-buttons">
@@ -131,7 +131,7 @@ meta.extra_scripts_file: index.scripts.html
         </div>
         <div class="stat-item">
             <span class="stat-number">0</span>
-            <p>Dependencies</p>
+            <p>Native Dependencies</p>
         </div>
         <div class="stat-item">
             <span class="stat-number">3</span>
@@ -145,7 +145,7 @@ meta.extra_scripts_file: index.scripts.html
     <div class="section-header">
         <span class="section-label">Why CodeGlyphX?</span>
         <h2>Built for Modern .NET Development</h2>
-        <p>Everything you need for barcode generation and scanning, with none of the bloat.</p>
+        <p>Pure-managed encoding, rendering, and supported decoding paths with explicit limits.</p>
     </div>
 
     <div class="features-grid">
@@ -155,7 +155,7 @@ meta.extra_scripts_file: index.scripts.html
                     <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
             </div>
-            <h3>Zero Dependencies</h3>
+            <h3>No Native Graphics Stack</h3>
             <p>No System.Drawing, SkiaSharp, or ImageSharp required. Pure managed code that deploys anywhere without native library headaches.</p>
         </div>
 
@@ -166,7 +166,7 @@ meta.extra_scripts_file: index.scripts.html
                 </svg>
             </div>
             <h3>Encode &amp; Decode</h3>
-            <p>Full round-trip support. Generate codes and read them back from PNG, JPEG, BMP, GIF, and more with robust pixel detection.</p>
+            <p>Generate codes and decode supported symbols from PNG, JPEG, BMP, GIF, and other documented image formats.</p>
         </div>
 
         <div class="feature-card">
@@ -216,7 +216,7 @@ meta.extra_scripts_file: index.scripts.html
                 </svg>
             </div>
             <h3>AOT &amp; Trim Ready</h3>
-            <p>No reflection, no runtime codegen. Fully compatible with Native AOT publishing and aggressive trimming.</p>
+            <p>CI publishes and executes a real .NET 8 NativeAOT consumer using the public APIs.</p>
         </div>
 
         <div class="feature-card">
@@ -226,7 +226,7 @@ meta.extra_scripts_file: index.scripts.html
                 </svg>
             </div>
             <h3>Cross-Platform</h3>
-            <p>Runs identically on Windows, Linux, and macOS. Targets .NET 8+, .NET Standard 2.0, and .NET Framework 4.7.2.</p>
+            <p>CI builds and tests Windows, Linux, and macOS. Targets .NET 8, .NET 10, .NET Standard 2.0, and .NET Framework 4.7.2.</p>
         </div>
 
         <div class="feature-card">
@@ -276,8 +276,8 @@ meta.extra_scripts_file: index.scripts.html
 <section class="symbologies">
     <div class="section-header">
         <span class="section-label">Supported Formats</span>
-        <h2>Every Barcode You Need</h2>
-        <p>From retail EAN codes to industrial Data Matrix, CodeGlyphX has you covered.</p>
+        <h2>Supported Barcode Families</h2>
+        <p>From retail EAN codes to industrial Data Matrix, with the exact formats documented below.</p>
     </div>
 
     <div class="symbology-category">
@@ -334,11 +334,12 @@ meta.extra_scripts_file: index.scripts.html
     <div class="section-header">
         <span class="section-label">Simple API</span>
         <h2>One Line of Code</h2>
-        <p>Generate any barcode format with intuitive, discoverable APIs.</p>
+        <p>Use one extension-based save path across supported formats.</p>
     </div>
 
     <div class="code-example-container">
-        <pre class="code-block"><span class="keyword">using</span> CodeGlyphX;
+        <pre class="code-block"><span class="keyword">using</span> System.IO;
+<span class="keyword">using</span> CodeGlyphX;
 
 <span class="comment">// QR Code - one liner</span>
 QR.Save(<span class="string">"https://evotec.xyz"</span>, <span class="string">"website.png"</span>);
@@ -347,7 +348,7 @@ QR.Save(<span class="string">"https://evotec.xyz"</span>, <span class="string">"
 
 <span class="comment">// Barcodes</span>
 Barcode.Save(BarcodeType.Code128, <span class="string">"PRODUCT-12345"</span>, <span class="string">"barcode.png"</span>);
-Barcode.Save(BarcodeType.Ean13, <span class="string">"5901234123457"</span>, <span class="string">"ean.png"</span>);
+Barcode.Save(BarcodeType.EAN, <span class="string">"5901234123457"</span>, <span class="string">"ean.png"</span>);
 
 <span class="comment">// 2D codes</span>
 DataMatrixCode.Save(<span class="string">"Serial: ABC123"</span>, <span class="string">"datamatrix.png"</span>);
@@ -386,20 +387,20 @@ QR.Save(QrPayloads.OneTimePassword(
 ), <span class="string">"otp.png"</span>);
 
 <span class="comment">// Contact card</span>
-QR.Save(QrPayloads.VCard(
+QR.Save(QrPayload.VCard(
     firstName: <span class="string">"Przemyslaw"</span>,
     lastName: <span class="string">"Klys"</span>,
     email: <span class="string">"contact@evotec.pl"</span>,
-    website: <span class="string">"https://evotec.xyz"</span>
+    organization: <span class="string">"Evotec Services"</span>
 ), <span class="string">"contact.png"</span>);
 
 <span class="comment">// SEPA payment (European bank transfer)</span>
 QR.Save(QrPayloads.Girocode(
     iban: <span class="string">"DE89370400440532013000"</span>,
     bic: <span class="string">"COBADEFFXXX"</span>,
-    recipientName: <span class="string">"Evotec Services"</span>,
+    name: <span class="string">"Evotec Services"</span>,
     amount: 99.99m,
-    reference: <span class="string">"Invoice 2024-001"</span>
+    remittanceInformation: <span class="string">"Invoice 2024-001"</span>
 ), <span class="string">"payment.png"</span>);</pre>
     </div>
 </section>

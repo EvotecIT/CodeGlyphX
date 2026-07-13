@@ -8,7 +8,7 @@
             "name": "What is CodeGlyphX?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "CodeGlyphX is a zero-dependency .NET library for generating and decoding QR codes, barcodes, and 2D matrix codes. It's written entirely in C# with no native dependencies, making it fully portable across Windows, Linux, macOS, and WebAssembly."
+                "text": "CodeGlyphX is a pure-managed .NET library for generating and decoding QR codes, barcodes, and 2D matrix codes. It has no native graphics dependencies, and CI tests Windows, Linux, and macOS."
             }
         },
         {
@@ -16,7 +16,7 @@
             "name": "Which .NET versions are supported?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "CodeGlyphX targets multiple frameworks for maximum compatibility: .NET 8.0 and .NET 10.0 - Full support with AOT and trimming .NET Framework 4.7.2 - For legacy Windows applications .NET Standard 2.0 - For cross-platform compatibility with older runtimes"
+                "text": "CodeGlyphX targets .NET 8.0 and .NET 10.0 with the full library surface and trim/AOT analyzers. CI executes a .NET 8 NativeAOT smoke application. .NET Framework 4.7.2 and .NET Standard 2.0 provide compatibility with a reduced QR image fallback."
             }
         },
         {
@@ -29,10 +29,10 @@
         },
         {
             "@type": "Question",
-            "name": "What does \"zero dependencies\" mean?",
+            "name": "Does CodeGlyphX require native graphics dependencies?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "On .NET 8.0+, CodeGlyphX has no external NuGet package dependencies beyond the runtime itself. It includes its own PNG encoder, image processing, and all encoding algorithms. This means smaller deployment size, no version conflicts, and no transitive dependency chains. Note: .NET Standard 2.0 and .NET Framework 4.7.2 targets include System.Memory for Span&lt;T&gt; support."
+                "text": "No. CodeGlyphX does not require System.Drawing, SkiaSharp, ImageSharp, or a native codec library. The .NET 8.0 and .NET 10.0 targets have no runtime package dependency. .NET Standard 2.0 and .NET Framework 4.7.2 include the managed System.Memory package."
             }
         },
         {
@@ -40,7 +40,7 @@
             "name": "Does CodeGlyphX work with Native AOT?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. On .NET 8.0 and .NET 10.0, CodeGlyphX is fully compatible with Native AOT compilation. It uses no reflection, no dynamic code generation, and no runtime IL emission. You can publish AOT-compiled applications that use CodeGlyphX without any warnings or runtime issues."
+                "text": "The library enables AOT analyzers for .NET 8.0 and .NET 10.0, and CI publishes and executes a .NET 8.0 NativeAOT consumer using the primary public APIs."
             }
         },
         {
@@ -48,7 +48,7 @@
             "name": "Is it trimming-safe?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. On .NET 8.0+, CodeGlyphX is annotated for full trimming compatibility. When you publish with PublishTrimmed=true , the linker can safely remove unused code paths without breaking functionality. No TrimmerRootAssembly workarounds needed."
+                "text": "The .NET 8.0 and .NET 10.0 targets enable the trim analyzer. Keep the analyzer enabled in consuming applications and treat any new warning as a release blocker."
             }
         },
         {
@@ -56,7 +56,7 @@
             "name": "Can I use it in single-file deployments?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. On .NET 8.0+, CodeGlyphX works perfectly with PublishSingleFile=true . Since it has no native dependencies or satellite assemblies, your entire application including QR generation can be a single executable file."
+                "text": "The modern targets enable the single-file analyzer and do not require native codec libraries. Validate the exact APIs used by your application during publish."
             }
         },
         {
@@ -112,7 +112,7 @@
             "name": "Does it work with .NET MAUI?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. CodeGlyphX works on all MAUI platforms: Android, iOS, macOS, and Windows. Since it has no platform-specific dependencies, the same code works identically across all targets."
+                "text": "CodeGlyphX is pure managed and can be referenced by .NET MAUI applications without adding a native image-codec library. CI does not execute MAUI applications, so validate the APIs, trimming settings, and artifacts you use on each target device before shipping."
             }
         },
         {
@@ -120,7 +120,7 @@
             "name": "Can I use it in ASP.NET Core?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. CodeGlyphX is commonly used in ASP.NET Core applications to generate QR codes dynamically. You can return PNG images directly from controllers or minimal API endpoints, generate codes in Razor Pages, or use it in background services."
+                "text": "Yes. ASP.NET Core applications can return generated PNG or SVG data from controllers and minimal API endpoints, or generate artifacts in Razor Pages and background services. Apply input and image limits when accepting untrusted content."
             }
         },
         {
@@ -128,7 +128,7 @@
             "name": "Does it work in Azure Functions / AWS Lambda?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. CodeGlyphX's zero-dependency design makes it ideal for serverless environments. No native libraries to configure, no special deployment steps. It works out of the box in both consumption and premium plans."
+                "text": "CodeGlyphX can run in serverless .NET workloads without a native image-codec library. Choose a supported target framework and validate cold-start time, memory limits, trimming or AOT settings, and the exact artifact in the hosting environment."
             }
         },
         {
@@ -136,7 +136,7 @@
             "name": "How fast is CodeGlyphX?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "CodeGlyphX is optimized for performance. QR code and barcode generation is fast enough for real-time use cases including API endpoints and interactive applications. The library is suitable for high-throughput scenarios like batch generation."
+                "text": "Performance depends on the symbology, output format, image size, decode profile, and input quality. Use the repository benchmarks as comparative evidence, then measure your own payloads and deployment target before setting latency or throughput expectations."
             }
         },
         {
@@ -144,7 +144,7 @@
             "name": "What about memory usage?",
             "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "On .NET 8.0+, CodeGlyphX uses Span&lt;T&gt; and Memory&lt;T&gt; to minimize allocations where possible. The library is designed to be efficient for both single-use and batch processing scenarios."
+                "text": "Memory use varies with raster dimensions, codec, and decode search profile. Set MaxBytes, MaxPixels, and MaxDimension for untrusted images, and measure representative batch workloads rather than assuming a fixed allocation profile."
             }
         },
         {

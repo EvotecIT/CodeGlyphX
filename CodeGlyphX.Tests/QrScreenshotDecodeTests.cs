@@ -11,16 +11,12 @@ public sealed class QrScreenshotDecodeTests {
     [InlineData("qr-screenshot-2.png")]
     [InlineData("qr-screenshot-3.png")]
     public void Decode_Screenshots(string fileName) {
-        if (string.Equals(Environment.GetEnvironmentVariable("CODEGLYPHX_COVERAGE"), "1", StringComparison.OrdinalIgnoreCase)) {
-            return;
-        }
         var sampleDir = ResolveSamplesDir("Assets/DecodingSamples");
         var path = Path.Combine(sampleDir, fileName);
         var bytes = File.ReadAllBytes(path);
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 3200,
-            MaxMilliseconds = TestBudget.Adjust(18000),
             BudgetMilliseconds = TestBudget.Adjust(18000),
             AutoCrop = true,
             AggressiveSampling = true,

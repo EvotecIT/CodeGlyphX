@@ -4,9 +4,10 @@ using CodeGlyphX.Rendering.Png;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Safety checks for OTP QR rendering parameters.
+/// Static heuristic checks for OTP QR rendering parameters.
+/// These checks do not render or decode the output.
 /// </summary>
-public static class OtpQrSafety {
+public static class OtpQrHeuristics {
     /// <summary>
     /// Recommended quiet zone size in modules.
     /// </summary>
@@ -37,9 +38,9 @@ public static class OtpQrSafety {
     }
 
     /// <summary>
-    /// Evaluates OTP scan safety for a rendered QR code.
+    /// Evaluates static OTP QR heuristics for an encoded QR code and render options.
     /// </summary>
-    public static OtpQrSafetyReport Evaluate(QrCode qr, QrPngRenderOptions opts, bool requireHighEcc = true) {
+    public static OtpQrHeuristicReport Evaluate(QrCode qr, QrPngRenderOptions opts, bool requireHighEcc = true) {
         if (qr is null) throw new ArgumentNullException(nameof(qr));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
 
@@ -95,7 +96,7 @@ public static class OtpQrSafety {
 
         if (score < 0) score = 0;
 
-        return new OtpQrSafetyReport(
+        return new OtpQrHeuristicReport(
             contrast,
             hasContrast,
             hasQuietZone,

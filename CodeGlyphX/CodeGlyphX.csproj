@@ -1,22 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net472;net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(PublishAot)' != 'true'">netstandard2.0;net472;net8.0;net10.0</TargetFrameworks>
+    <TargetFrameworks Condition="'$(PublishAot)' == 'true'">net8.0;net10.0</TargetFrameworks>
     <Title>CodeGlyphX</Title>
     <PackageId>CodeGlyphX</PackageId>
-    <Description>No-deps QR + barcode toolkit for .NET (encode/decode, payload helpers, and renderers: SVG/HTML/PNG/JPEG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA/ICO/PDF/EPS/SVGZ/ASCII).</Description>
+    <Description>Pure-managed QR, barcode, matrix-code, payload, image, and document rendering toolkit for .NET.</Description>
     <Authors>Przemyslaw Klys</Authors>
     <Company>Evotec</Company>
-    <PackageTags>qr;barcode;datamatrix;pdf417;aztec;otp;no-deps</PackageTags>
+    <PackageTags>qr;barcode;datamatrix;pdf417;aztec;otp;pure-managed</PackageTags>
     <PackageProjectUrl>https://github.com/EvotecIT/CodeGlyphX</PackageProjectUrl>
     <RepositoryUrl>https://github.com/EvotecIT/CodeGlyphX</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageIcon>codeglyphx-qr-icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <VersionPrefix>1.3.0</VersionPrefix>
+    <VersionPrefix>2.0.0</VersionPrefix>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' And ('$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net10.0') ">
     <IsTrimmable>true</IsTrimmable>
     <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
@@ -33,5 +40,8 @@
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Memory" Version="4.6.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
   </ItemGroup>
 </Project>

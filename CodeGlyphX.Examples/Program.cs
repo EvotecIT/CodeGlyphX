@@ -10,12 +10,18 @@ internal static class Program {
         var outputDir = ExampleRunner.PrepareOutputDirectory();
         var runner = new ExampleRunner(outputDir);
 
+        if (IsEnabled("CODEGLYPHX_CI_SMOKE")) {
+            runner.Run("Public API smoke", FlagshipApiExample.Run);
+            Environment.ExitCode = runner.PrintSummary() == 0 ? 0 : 1;
+            return;
+        }
+
         var runDiagnostics = Environment.GetEnvironmentVariable("CODEGLYPHX_DIAG_QR");
         if (!string.IsNullOrEmpty(runDiagnostics) &&
             (string.Equals(runDiagnostics, "1", StringComparison.OrdinalIgnoreCase) ||
              string.Equals(runDiagnostics, "true", StringComparison.OrdinalIgnoreCase))) {
             runner.Run("QR (diagnostics)", QrDiagnosticsExample.Run);
-            runner.PrintSummary();
+            Environment.ExitCode = runner.PrintSummary() == 0 ? 0 : 1;
             return;
         }
 
@@ -24,7 +30,7 @@ internal static class Program {
             (string.Equals(runHardArtDiagnostics, "1", StringComparison.OrdinalIgnoreCase) ||
              string.Equals(runHardArtDiagnostics, "true", StringComparison.OrdinalIgnoreCase))) {
             runner.Run("QR (hard art diagnostics)", QrHardArtDiagnosticsExample.Run);
-            runner.PrintSummary();
+            Environment.ExitCode = runner.PrintSummary() == 0 ? 0 : 1;
             return;
         }
 
@@ -33,7 +39,7 @@ internal static class Program {
             (string.Equals(runDecodeSamples, "1", StringComparison.OrdinalIgnoreCase) ||
              string.Equals(runDecodeSamples, "true", StringComparison.OrdinalIgnoreCase))) {
             runner.Run("QR (decode samples)", QrDecodeSamplesExample.Run);
-            runner.PrintSummary();
+            Environment.ExitCode = runner.PrintSummary() == 0 ? 0 : 1;
             return;
         }
 
@@ -42,7 +48,7 @@ internal static class Program {
             (string.Equals(runModuleDiff, "1", StringComparison.OrdinalIgnoreCase) ||
              string.Equals(runModuleDiff, "true", StringComparison.OrdinalIgnoreCase))) {
             runner.Run("QR (module diff)", QrModuleDiffExample.Run);
-            runner.PrintSummary();
+            Environment.ExitCode = runner.PrintSummary() == 0 ? 0 : 1;
             return;
         }
 
@@ -51,7 +57,7 @@ internal static class Program {
             (string.Equals(runScreenshotWalkthrough, "1", StringComparison.OrdinalIgnoreCase) ||
              string.Equals(runScreenshotWalkthrough, "true", StringComparison.OrdinalIgnoreCase))) {
             runner.Run("QR (screenshot walkthrough)", QrScreenshotWalkthroughExample.Run);
-            runner.PrintSummary();
+            Environment.ExitCode = runner.PrintSummary() == 0 ? 0 : 1;
             return;
         }
 
@@ -59,7 +65,7 @@ internal static class Program {
         runner.Run("QR (ascii console)", QrAsciiExample.Run);
         runner.Run("QR (payloads)", QrPayloadsExample.Run);
         runner.Run("QR (styling)", QrFancyExample.Run);
-        runner.Run("QR (art presets)", QrArtPresetsExample.Run);
+        runner.Run("QR (art themes)", QrArtThemesExample.Run);
         runner.Run("QR (connected)", QrConnectedExample.Run);
         runner.Run("QR (glow eyes)", QrGlowExample.Run);
         runner.Run("QR (style board)", QrStyleBoardExample.Run);
@@ -73,6 +79,12 @@ internal static class Program {
         runner.Run("Data Matrix", DataMatrixExample.Run);
         runner.Run("PDF417", Pdf417Example.Run);
 
-        runner.PrintSummary();
+        Environment.ExitCode = runner.PrintSummary() == 0 ? 0 : 1;
+    }
+
+    private static bool IsEnabled(string name) {
+        var value = Environment.GetEnvironmentVariable(name);
+        return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 }

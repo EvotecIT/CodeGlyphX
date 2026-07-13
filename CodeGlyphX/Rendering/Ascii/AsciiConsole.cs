@@ -50,7 +50,7 @@ public static class AsciiConsole {
         baseOptions.UseHalfBlockBackground = opts.HalfBlockUseBackground;
         if (opts.DarkGradient is not null) baseOptions.AnsiDarkGradient = opts.DarkGradient;
         if (opts.DarkPalette is not null) baseOptions.AnsiDarkPalette = opts.DarkPalette;
-        baseOptions.EnsureDarkContrast = opts.EnsureDarkContrast || opts.PreferScanReliability;
+        baseOptions.EnsureDarkContrast = opts.EnsureDarkContrast || opts.UseConservativeQrLayout;
         if (baseOptions.EnsureDarkContrast) {
             baseOptions.MaxDarkLuminance = opts.MaxDarkLuminance;
         }
@@ -81,7 +81,7 @@ public static class AsciiConsole {
                 baseOptions.ModuleHeight = 1;
             }
         }
-        if (opts.PreferScanReliability) {
+        if (opts.UseConservativeQrLayout) {
             baseOptions.UseHalfBlockBackground = true;
         }
         if (!baseOptions.UseHalfBlockBackground) {
@@ -89,14 +89,14 @@ public static class AsciiConsole {
         } else if (opts.ColorizeLight.HasValue) {
             baseOptions.AnsiColorizeLight = opts.ColorizeLight.Value;
         }
-        if (opts.PreferScanReliability) {
+        if (opts.UseConservativeQrLayout) {
             baseOptions.AnsiColorizeLight = true;
         }
         if (opts.Invert.HasValue) baseOptions.Invert = opts.Invert.Value;
 
         var quiet = opts.QuietZone ?? baseOptions.QuietZone;
         var minQuiet = Math.Max(0, opts.MinQuietZone);
-        if (opts.PreferScanReliability && minQuiet < 2) {
+        if (opts.UseConservativeQrLayout && minQuiet < 2) {
             minQuiet = 2;
         }
         if (quiet < minQuiet) quiet = minQuiet;
@@ -113,7 +113,7 @@ public static class AsciiConsole {
         var usableHeight = Math.Max(5, windowHeight - Math.Max(0, opts.PaddingRows));
 
         var quietChanged = false;
-        var allowQuietShrink = opts.AllowQuietZoneShrink && !opts.PreferScanReliability;
+        var allowQuietShrink = opts.AllowQuietZoneShrink && !opts.UseConservativeQrLayout;
         if (allowQuietShrink) {
             var maxQuietWidth = (usableWidth / moduleWidth - modules.Width) / 2;
             var maxQuietHeight = ((usableHeight * (useHalfBlocks ? 2 : 1)) / moduleHeight - modules.Height) / 2;

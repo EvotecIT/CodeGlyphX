@@ -36,35 +36,16 @@ internal static class QrDecodeEngines {
 
         public DecodeEngineResult Decode(QrDecodeScenarioData data, QrPixelDecodeOptions options) {
             QrDecoded[] decoded;
-            var okAll = QrDecoder.TryDecodeAll(
+            var ok = QrDecoder.TryDecodeAll(
                 data.Rgba,
                 data.Width,
                 data.Height,
                 data.Stride,
                 PixelFormat.Rgba32,
                 out decoded,
-                out var info,
                 options);
-            if (!okAll || decoded.Length == 0) {
-                var okSingle = QrDecoder.TryDecode(
-                    data.Rgba,
-                    data.Width,
-                    data.Height,
-                    data.Stride,
-                    PixelFormat.Rgba32,
-                    out var single,
-                    out var infoSingle,
-                    options);
-                info = infoSingle;
-                if (okSingle) {
-                    decoded = new[] { single };
-                } else {
-                    decoded = Array.Empty<QrDecoded>();
-                }
-            }
-
-            if (decoded.Length == 0) {
-                return new DecodeEngineResult(false, 0, Array.Empty<string>(), info);
+            if (!ok || decoded.Length == 0) {
+                return new DecodeEngineResult(false, 0, Array.Empty<string>(), null);
             }
 
             var texts = decoded
@@ -72,7 +53,7 @@ internal static class QrDecodeEngines {
                 .Where(t => !string.IsNullOrWhiteSpace(t))
                 .Distinct(StringComparer.Ordinal)
                 .ToArray();
-            return new DecodeEngineResult(texts.Length > 0, decoded.Length, texts, info);
+            return new DecodeEngineResult(texts.Length > 0, decoded.Length, texts, null);
         }
     }
 

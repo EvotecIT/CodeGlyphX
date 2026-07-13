@@ -103,15 +103,13 @@ internal static class DecodeResultHelpers {
         message = null;
         _ = TryGetImageInfo(image, out info, out formatKnown);
 
-        var maxBytes = options?.MaxBytes ?? 0;
-        if (maxBytes <= 0) maxBytes = ImageReader.MaxImageBytes;
+        var maxBytes = Math.Max(0, options?.MaxBytes ?? ImageReader.MaxImageBytes);
         if (maxBytes > 0 && image.Length > maxBytes) {
             message = GuardMessages.ForBytes("image payload exceeds size limits", image.Length, maxBytes);
             return false;
         }
 
-        var maxPixels = options?.MaxPixels ?? 0;
-        if (maxPixels <= 0) maxPixels = ImageReader.MaxPixels;
+        var maxPixels = Math.Max(0, options?.MaxPixels ?? ImageReader.MaxPixels);
         if (maxPixels > 0 && info.IsValid) {
             var pixels = (long)info.Width * info.Height;
             if (pixels > maxPixels) {
@@ -124,8 +122,7 @@ internal static class DecodeResultHelpers {
     }
 
     public static int ResolveMaxBytes(ImageDecodeOptions? options) {
-        if (options is not null && options.MaxBytes > 0) return options.MaxBytes;
-        return ImageReader.MaxImageBytes;
+        return Math.Max(0, options?.MaxBytes ?? ImageReader.MaxImageBytes);
     }
 
     public static bool TryReadBinary(string path, ImageDecodeOptions? options, out byte[] data) {
@@ -523,7 +520,7 @@ internal static class DecodeResultHelpers {
         if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
             return DecodeImageResult(buffer.AsSpan(), options, cancellationToken, decode);
         }
-        var maxBytes = options?.MaxBytes > 0 ? options.MaxBytes : ImageReader.MaxImageBytes;
+        var maxBytes = Math.Max(0, options?.MaxBytes ?? ImageReader.MaxImageBytes);
         if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
             return new DecodeResult<string>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
         }

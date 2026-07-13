@@ -7,6 +7,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Trait("Category", "CorpusTiming")]
 public sealed class QrDecodingSamplesSweepTests {
     private static readonly HashSet<string> SkipFiles = new(StringComparer.OrdinalIgnoreCase) {
         // Heavy illustration samples remain difficult; keep them tracked but skipped for now.
@@ -60,7 +61,6 @@ public sealed class QrDecodingSamplesSweepTests {
                 options = new QrPixelDecodeOptions {
                     Profile = QrDecodeProfile.Robust,
                     MaxDimension = 3200,
-                    MaxMilliseconds = TestBudget.Adjust(18000),
                     BudgetMilliseconds = TestBudget.Adjust(18000),
                     AutoCrop = true,
                     AggressiveSampling = true,
@@ -70,13 +70,9 @@ public sealed class QrDecodingSamplesSweepTests {
                 };
             }
 
-            if (!QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, out var infoAll, options)) {
-                if (QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, out var infoSingle, options)) {
-                    results = new[] { decoded };
-                } else {
-                    Assert.Fail($"Decode failed for {file}: {infoAll} | {infoSingle}");
-                }
-            }
+            Assert.True(
+                QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, options),
+                $"Multi-decode failed for {file}.");
 
             Assert.True(results.Length > 0, $"No QR results for {file}.");
         }

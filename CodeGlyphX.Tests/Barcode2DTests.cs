@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using CodeGlyphX;
 using System.Threading;
@@ -19,6 +20,15 @@ public sealed class Barcode2DTests {
         var matrix = MatrixBarcodeEncoder.EncodeKix("012345");
         Assert.Equal(47, matrix.Width);
         Assert.Equal(8, matrix.Height);
+    }
+
+    [Fact]
+    public void BarcodeEncoder_MatrixSymbol_Exception_Routes_To_Matrix_Pipeline() {
+        var exception = Assert.Throws<NotSupportedException>(() => BarcodeEncoder.Encode(BarcodeType.Postnet, "12345"));
+
+        Assert.Contains("multi-height representation", exception.Message);
+        Assert.Contains(nameof(MatrixBarcodeEncoder), exception.Message);
+        Assert.DoesNotContain("2D barcode", exception.Message);
     }
 
     [Fact]

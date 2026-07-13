@@ -6,7 +6,7 @@ using CodeGlyphX.Rendering;
 namespace CodeGlyphX.Examples;
 
 internal static class QrScreenshotWalkthroughExample {
-    private const int DefaultMaxMilliseconds = 600;
+    private const int DefaultBudgetMilliseconds = 600;
     private const int DefaultMaxDimension = 1400;
     private const int DefaultTileGrid = 3;
 
@@ -15,20 +15,20 @@ internal static class QrScreenshotWalkthroughExample {
         var screenshotPath = Path.Combine(samplesDir, "qr-screenshot-2.png");
         var imageBytes = File.ReadAllBytes(screenshotPath);
 
-        var maxMs = ReadEnvInt("CODEGLYPHX_SCREENSHOT_MAX_MS", DefaultMaxMilliseconds);
+        var budgetMs = ReadEnvInt("CODEGLYPHX_SCREENSHOT_BUDGET_MS", DefaultBudgetMilliseconds);
         var maxDimension = ReadEnvInt("CODEGLYPHX_SCREENSHOT_MAX_DIM", DefaultMaxDimension);
         var tileGrid = Math.Max(1, ReadEnvInt("CODEGLYPHX_SCREENSHOT_TILE_GRID", DefaultTileGrid));
 
-        var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: maxMs, maxDimension: maxDimension);
-        var qrOptions = QrPixelDecodeOptions.Screen(maxMilliseconds: maxMs, maxDimension: maxDimension);
+        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: budgetMs, maxDimension: maxDimension);
+        var qrOptions = QrPixelDecodeOptions.Screen(budgetMilliseconds: budgetMs, maxDimension: maxDimension);
         qrOptions.EnableTileScan = true;
         qrOptions.TileGrid = tileGrid;
 
         Console.WriteLine("Screenshot decode walkthrough:");
-        Console.WriteLine("1) Use ImageDecodeOptions.Screen for safe image limits.");
+        Console.WriteLine("1) Use ImageDecodeOptions.Screen for bounded image limits.");
         Console.WriteLine("2) Use QrPixelDecodeOptions.Screen + AutoCrop for UI captures.");
         Console.WriteLine("3) Enable tile scan if the screenshot may contain multiple codes.");
-        Console.WriteLine($"   (maxMs={maxMs}, maxDimension={maxDimension}, tileGrid={tileGrid})");
+        Console.WriteLine($"   (budgetMs={budgetMs}, maxDimension={maxDimension}, tileGrid={tileGrid})");
         Console.WriteLine();
 
         if (QrImageDecoder.TryDecodeImage(imageBytes, imageOptions, out var decoded, out var info, qrOptions)) {

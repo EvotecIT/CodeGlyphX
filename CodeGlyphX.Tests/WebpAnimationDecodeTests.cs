@@ -157,16 +157,12 @@ public sealed class WebpAnimationDecodeTests {
     }
 
     [Fact]
-    public void Webp_ManagedDecode_AnimatedWebp_Vp8_Interframe_Skips_Frame() {
+    public void Webp_ManagedDecode_AnimatedWebp_Rejects_Vp8_Interframe() {
         var vp8Payload = BuildInterframePayload(WebpVp8TestHelper.CreateBoolData(4));
         var webp = BuildAnimatedWebpVp8(vp8Payload, width: 1, height: 1);
 
-        Assert.True(WebpReader.TryDecodeAnimationFrames(webp, out var frames, out var canvasWidth, out var canvasHeight, out _));
-        Assert.Equal(1, canvasWidth);
-        Assert.Equal(1, canvasHeight);
-        Assert.Single(frames);
-        Assert.Equal(4, frames[0].Rgba.Length);
-        Assert.Equal(new byte[] { 0, 0, 0, 0 }, frames[0].Rgba);
+        Assert.False(WebpReader.TryDecodeAnimationFrames(webp, out _, out _, out _, out _));
+        Assert.False(WebpReader.TryDecodeAnimationCanvasFrames(webp, out _, out _, out _, out _));
     }
 
     internal static byte[] BuildLiteralOnlyVp8lPayload(int width, int height, int r, int g, int b, int a) {

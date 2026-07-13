@@ -7,13 +7,13 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
-public sealed class QrArtAutoTuneTests {
+public sealed class QrArtGuardrailTests {
     [Fact]
-    public void Art_AutoTune_Enforces_Core_Guardrails_And_Connections() {
+    public void Art_Guardrails_Enforce_Core_Geometry_And_Connections() {
         var payload = "https://example.com/auto-tune-core";
         var options = new QrEasyOptions {
-            Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Bold, intensity: 95, safetyMode: QrArtSafetyMode.Bold),
-            ArtAutoTune = true,
+            Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Bold, intensity: 95, guardrailMode: QrArtGuardrailMode.Bold),
+            ArtGuardrailsEnabled = true,
             QuietZone = 1,
             ProtectFunctionalPatterns = false,
             ProtectQuietZone = false,
@@ -28,15 +28,15 @@ public sealed class QrArtAutoTuneTests {
         Assert.True(render.ProtectFunctionalPatterns, "ProtectFunctionalPatterns should be enforced by auto-tune.");
         Assert.True(render.ProtectQuietZone, "ProtectQuietZone should be enforced by auto-tune.");
         Assert.Equal(QrPngModuleShape.ConnectedRounded, render.ModuleShape);
-        Assert.True(render.ModuleScale >= 0.86, $"ModuleScale should be clamped for art safety (was {render.ModuleScale:0.00}).");
+        Assert.True(render.ModuleScale >= 0.86, $"ModuleScale should be clamped by the art guardrails (was {render.ModuleScale:0.00}).");
     }
 
     [Fact]
-    public void Art_AutoTune_Falls_Back_On_Low_Contrast() {
+    public void Art_Guardrails_Fall_Back_On_Low_Contrast() {
         var payload = "https://example.com/auto-tune-contrast";
         var options = new QrEasyOptions {
-            Art = QrArt.Theme(QrArtTheme.StripeEyes, QrArtVariant.Safe, intensity: 60),
-            ArtAutoTune = true,
+            Art = QrArt.Theme(QrArtTheme.StripeEyes, QrArtVariant.Conservative, intensity: 60),
+            ArtGuardrailsEnabled = true,
             Foreground = new Rgba32(220, 220, 220),
             Background = new Rgba32(255, 255, 255),
             ForegroundGradient = new QrPngGradientOptions {
@@ -64,11 +64,11 @@ public sealed class QrArtAutoTuneTests {
     }
 
     [Fact]
-    public void Art_AutoTune_Does_Not_Mutate_User_Options() {
+    public void Art_Guardrails_Do_Not_Mutate_User_Options() {
         var payload = "https://example.com/auto-tune-no-mutation";
         var options = new QrEasyOptions {
-            Art = QrArt.Theme(QrArtTheme.PaintSplash, QrArtVariant.Bold, intensity: 95, safetyMode: QrArtSafetyMode.Safe),
-            ArtAutoTune = true,
+            Art = QrArt.Theme(QrArtTheme.PaintSplash, QrArtVariant.Bold, intensity: 95, guardrailMode: QrArtGuardrailMode.Conservative),
+            ArtGuardrailsEnabled = true,
             ModuleScaleMap = new QrPngModuleScaleMapOptions {
                 Mode = QrPngModuleScaleMode.Random,
                 MinScale = 0.5,
@@ -143,12 +143,12 @@ public sealed class QrArtAutoTuneTests {
     }
 
     [Fact]
-    public void Art_AutoTune_Engages_Strong_Clamp_When_MinScore_Is_High() {
+    public void Art_Guardrails_Engage_Strong_Clamp_When_MinimumScore_Is_High() {
         var payload = "https://example.com/auto-tune-strong-clamp";
         var options = new QrEasyOptions {
-            Art = QrArt.Theme(QrArtTheme.PaintSplash, QrArtVariant.Bold, intensity: 98, safetyMode: QrArtSafetyMode.Safe),
-            ArtAutoTune = true,
-            ArtAutoTuneMinScore = 99,
+            Art = QrArt.Theme(QrArtTheme.PaintSplash, QrArtVariant.Bold, intensity: 98, guardrailMode: QrArtGuardrailMode.Conservative),
+            ArtGuardrailsEnabled = true,
+            ArtGuardrailMinimumScore = 99,
             ModuleSize = 1,
             QuietZone = 1,
             ProtectFunctionalPatterns = false,
