@@ -42,7 +42,8 @@ internal static partial class QrPixelDecoder {
             return;
         }
 
-        CollectAllFromImage(scale, image, settings, list, seen, accept, budget, pool);
+        var sink = new QrCollectionSink(list, seen, accept);
+        CollectAllFromImage(scale, image, settings, sink, budget, pool);
         if (budget.IsExpired) return;
 
         if (settings.AllowContrastStretch) {
@@ -50,7 +51,7 @@ internal static partial class QrPixelDecoder {
             if (range < 48) {
                 var stretched = image.WithContrastStretch(48, pool);
                 if (!ReferenceEquals(stretched.Gray, image.Gray)) {
-                    CollectAllFromImage(scale, stretched, settings, list, seen, accept, budget, pool);
+                    CollectAllFromImage(scale, stretched, settings, sink, budget, pool);
                 }
             }
         }

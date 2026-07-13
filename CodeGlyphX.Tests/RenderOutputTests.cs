@@ -1,6 +1,6 @@
+using CodeGlyphX.Rendering;
 using System;
 using System.IO;
-using CodeGlyphX.Rendering;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -61,6 +61,19 @@ public class RenderOutputTests {
         } finally {
             if (File.Exists(path)) File.Delete(path);
         }
+    }
+
+    [Fact]
+    public void CreateFacades_Return_TopLevel_Builder_Types() {
+        QrBuilder qr = QR.Create("TOP-LEVEL-QR");
+        BarcodeBuilder barcode = Barcode.Create(BarcodeType.Code128, "TOP-LEVEL-BARCODE");
+        DataMatrixBuilder dataMatrix = DataMatrixCode.Create("TOP-LEVEL-DATA-MATRIX");
+        Pdf417Builder pdf417 = Pdf417Code.Create("TOP-LEVEL-PDF417");
+
+        Assert.IsType<QrBuilder>(qr);
+        Assert.IsType<BarcodeBuilder>(barcode);
+        Assert.IsType<DataMatrixBuilder>(dataMatrix);
+        Assert.IsType<Pdf417Builder>(pdf417);
     }
 
     [Fact]

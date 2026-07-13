@@ -18,6 +18,8 @@ Per-format methods such as `RenderPng`, `RenderSvg`, `SavePng`, stream variants,
 
 The same cleanup applies to fluent builders. Replace terminal calls such as `.Png()` or `.SaveSvg(path)` with `.Render(OutputFormat.Png).Data` or `.Save(path)`. Builders also provide `Save(stream, format)` for explicit stream output.
 
+Builder types are top-level in 2.0 instead of being nested under their static facades. Code that uses `var` is unchanged; explicit declarations should use `QrBuilder`, `BarcodeBuilder`, `DataMatrixBuilder`, or `Pdf417Builder` instead of `QR.QrBuilder`, `Barcode.BarcodeBuilder`, `DataMatrixCode.DataMatrixBuilder`, or `Pdf417Code.Pdf417Builder`.
+
 Use an explicit format for in-memory rendering:
 
 ```csharp

@@ -1,6 +1,6 @@
+using CodeGlyphX.Rendering.Png;
 using System;
 using System.Collections.Generic;
-using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX;
 
@@ -114,32 +114,42 @@ public static class QrArtHeuristics {
         if (qr is null) throw new ArgumentNullException(nameof(qr));
         if (options is null) throw new ArgumentNullException(nameof(options));
 
-        var score = 100;
-        var warnings = new List<QrArtWarning>(6);
+        var evaluation = new QrArtEvaluation();
+        EvaluateLayout(options, evaluation);
+        EvaluateContrast(options, evaluation);
+        EvaluateLogo(qr, options, evaluation);
+        return evaluation.ToReport();
+    }
 
-        void Add(QrArtWarningKind kind, string message, int penalty) {
-            warnings.Add(new QrArtWarning(kind, message));
-            score -= penalty;
-        }
-
+    private static void EvaluateLayout(QrPngRenderOptions options, QrArtEvaluation evaluation) {
         if (options.QuietZone < 4) {
-            Add(QrArtWarningKind.QuietZoneTooSmall, "Quiet zone below 4 modules can reduce scan reliability.", 20);
+            evaluation.Add(QrArtWarningKind.QuietZoneTooSmall, "Quiet zone below 4 modules can reduce scan reliability.", 20);
         }
 
         if (options.ModuleSize < 3) {
-            Add(QrArtWarningKind.ModuleSizeTooSmall, "Module size below 3px can be hard for cameras to resolve.", 10);
+            evaluation.Add(QrArtWarningKind.ModuleSizeTooSmall, "Module size below 3px can be hard for cameras to resolve.", 10);
         }
 
-        var minScale = options.ModuleScale;
-        if (options.ModuleScaleMap is not null) {
-            var mapMin = Math.Min(options.ModuleScaleMap.MinScale, options.ModuleScaleMap.MaxScale);
-            minScale *= mapMin;
-        }
-        if (minScale < 0.8) {
-            Add(QrArtWarningKind.ModuleScaleTooSmall, "Module scale below 0.8 can weaken timing/finder clarity.", 10);
+        if (GetMinimumScale(options) < 0.8) {
+            evaluation.Add(QrArtWarningKind.ModuleScaleTooSmall, "Module scale below 0.8 can weaken timing/finder clarity.", 10);
         }
 
-        var hasDecorativeModules = options.ModuleShape != QrPngModuleShape.Square
+        if (!options.ProtectFunctionalPatterns && HasDecorativeModules(options)) {
+            evaluation.Add(QrArtWarningKind.FunctionalPatternsUnprotected, "Decorative styling without functional pattern protection can reduce scan reliability.", 15);
+        }
+
+        if (options.BackgroundPattern is not null && options.QuietZone > 0 && !options.ProtectQuietZone) {
+            evaluation.Add(QrArtWarningKind.QuietZonePatterned, "Background patterns should avoid the quiet zone to preserve scan detection.", 20);
+        }
+    }
+
+    private static double GetMinimumScale(QrPngRenderOptions options) {
+        if (options.ModuleScaleMap is null) return options.ModuleScale;
+        return options.ModuleScale * Math.Min(options.ModuleScaleMap.MinScale, options.ModuleScaleMap.MaxScale);
+    }
+
+    private static bool HasDecorativeModules(QrPngRenderOptions options) {
+        return options.ModuleShape != QrPngModuleShape.Square
             || options.ModuleScale < 1.0
             || options.ModuleScaleMap is not null
             || options.ModuleShapeMap is not null
@@ -149,15 +159,9 @@ public static class QrArtHeuristics {
             || options.ForegroundPattern is not null
             || options.ForegroundPaletteZones is not null
             || options.Eyes is not null;
+    }
 
-        if (!options.ProtectFunctionalPatterns && hasDecorativeModules) {
-            Add(QrArtWarningKind.FunctionalPatternsUnprotected, "Decorative styling without functional pattern protection can reduce scan reliability.", 15);
-        }
-
-        if (options.BackgroundPattern is not null && options.QuietZone > 0 && !options.ProtectQuietZone) {
-            Add(QrArtWarningKind.QuietZonePatterned, "Background patterns should avoid the quiet zone to preserve scan detection.", 20);
-        }
-
+    private static void EvaluateContrast(QrPngRenderOptions options, QrArtEvaluation evaluation) {
         var bg = options.BackgroundGradient is null
             ? new[] { options.Background }
             : new[] { options.BackgroundGradient.StartColor, options.BackgroundGradient.EndColor };
@@ -171,7 +175,7 @@ public static class QrArtHeuristics {
                 : palettes;
             var min = MinContrast(colors, bg);
             if (min < 4.5) {
-                Add(QrArtWarningKind.LowContrastPalette, "Palette includes low-contrast colors against the background.", 30);
+                evaluation.Add(QrArtWarningKind.LowContrastPalette, "Palette includes low-contrast colors against the background.", 30);
             }
         } else if (options.ForegroundGradient is null) {
             var colors = patternActive
@@ -179,7 +183,7 @@ public static class QrArtHeuristics {
                 : new[] { options.Foreground };
             var contrast = MinContrast(colors, bg);
             if (contrast < 4.5) {
-                Add(QrArtWarningKind.LowContrast, $"Foreground/background contrast {contrast:0.00} is low.", 30);
+                evaluation.Add(QrArtWarningKind.LowContrast, $"Foreground/background contrast {contrast:0.00} is low.", 30);
             }
         } else {
             var gradientColors = new[] { options.ForegroundGradient.StartColor, options.ForegroundGradient.EndColor };
@@ -188,37 +192,41 @@ public static class QrArtHeuristics {
                 : gradientColors;
             var min = MinContrast(colors, bg);
             if (min < 4.5) {
-                Add(QrArtWarningKind.LowContrastGradient, "Gradient includes low-contrast colors against the background.", 30);
+                evaluation.Add(QrArtWarningKind.LowContrastGradient, "Gradient includes low-contrast colors against the background.", 30);
             }
         }
+    }
 
-        if (options.Logo is not null) {
-            var area = options.Logo.Scale * options.Logo.Scale;
-            if (options.Logo.DrawBackground && options.Logo.PaddingPx > 0 && options.ModuleSize > 0) {
-                var qrSizePx = qr.Size * options.ModuleSize;
-                if (qrSizePx > 0) {
-                    var logoPx = qrSizePx * options.Logo.Scale;
-                    var paddedPx = logoPx + options.Logo.PaddingPx * 2;
-                    var effectiveScale = paddedPx / qrSizePx;
-                    area = Math.Max(area, effectiveScale * effectiveScale);
-                }
-            }
-            if (area > 0.25) {
-                Add(QrArtWarningKind.LogoTooLarge, "Logo covers too much of the QR area (>25%).", 35);
-            } else if (area > 0.15) {
-                Add(QrArtWarningKind.LogoTooLarge, "Logo covers a large portion of the QR area (>15%).", 20);
-            }
+    private static void EvaluateLogo(QrCode qr, QrPngRenderOptions options, QrArtEvaluation evaluation) {
+        if (options.Logo is null) return;
 
-            if (qr.ErrorCorrectionLevel != QrErrorCorrectionLevel.H) {
-                Add(QrArtWarningKind.LogoNeedsHighEcc, "Logo overlays work best with error correction level H.", 15);
-            }
-
-            if (options.Logo.DrawBackground && qr.Version < 8) {
-                Add(QrArtWarningKind.LogoTooLarge, "Logo background plates are risky on small versions; consider a higher version or disable the background.", 15);
-            }
+        var area = GetEffectiveLogoArea(qr, options);
+        if (area > 0.25) {
+            evaluation.Add(QrArtWarningKind.LogoTooLarge, "Logo covers too much of the QR area (>25%).", 35);
+        } else if (area > 0.15) {
+            evaluation.Add(QrArtWarningKind.LogoTooLarge, "Logo covers a large portion of the QR area (>15%).", 20);
         }
 
-        return new QrArtHeuristicReport(score, warnings.ToArray());
+        if (qr.ErrorCorrectionLevel != QrErrorCorrectionLevel.H) {
+            evaluation.Add(QrArtWarningKind.LogoNeedsHighEcc, "Logo overlays work best with error correction level H.", 15);
+        }
+
+        if (options.Logo.DrawBackground && qr.Version < 8) {
+            evaluation.Add(QrArtWarningKind.LogoTooLarge, "Logo background plates are risky on small versions; consider a higher version or disable the background.", 15);
+        }
+    }
+
+    private static double GetEffectiveLogoArea(QrCode qr, QrPngRenderOptions options) {
+        var logo = options.Logo!;
+        var area = logo.Scale * logo.Scale;
+        if (!logo.DrawBackground || logo.PaddingPx <= 0 || options.ModuleSize <= 0) return area;
+
+        var qrSizePx = qr.Size * options.ModuleSize;
+        if (qrSizePx <= 0) return area;
+
+        var paddedPx = qrSizePx * logo.Scale + logo.PaddingPx * 2;
+        var effectiveScale = paddedPx / qrSizePx;
+        return Math.Max(area, effectiveScale * effectiveScale);
     }
 
     private static double ContrastRatio(Rgba32 a, Rgba32 b) {
@@ -282,5 +290,17 @@ public static class QrArtHeuristics {
         var g = ToLinear(c.G);
         var b = ToLinear(c.B);
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+
+    private sealed class QrArtEvaluation {
+        private readonly List<QrArtWarning> warnings = new(6);
+        private int score = 100;
+
+        public void Add(QrArtWarningKind kind, string message, int penalty) {
+            warnings.Add(new QrArtWarning(kind, message));
+            score -= penalty;
+        }
+
+        public QrArtHeuristicReport ToReport() => new(score, warnings.ToArray());
     }
 }

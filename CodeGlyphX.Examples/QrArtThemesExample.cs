@@ -1,12 +1,12 @@
-using System.IO;
 using CodeGlyphX;
 using CodeGlyphX.Payloads;
+using System.IO;
 
 namespace CodeGlyphX.Examples;
 
 internal static class QrArtThemesExample {
     public static void Run(string outputDir) {
-        var payload = QrPayload.Url("https://example.com/qr/art-themes");
+        var payload = QrPayload.Url("https://example.com/qr/art-themes"); // NOSONAR - RFC 2606 reserved example URI.
         var dir = Path.Combine(outputDir, "qr-art-themes");
         Directory.CreateDirectory(dir);
 

@@ -1,5 +1,5 @@
-using System;
 using CodeGlyphX.Rendering.Png;
+using System;
 
 namespace CodeGlyphX;
 
@@ -96,17 +96,18 @@ public static class OtpQrHeuristics {
 
         if (score < 0) score = 0;
 
-        return new OtpQrHeuristicReport(
-            contrast,
-            hasContrast,
-            hasQuietZone,
-            hasModuleSize,
-            hasOpaque,
-            hasEcc,
-            RecommendedModuleSize,
-            RecommendedQuietZone,
-            score,
-            issues.ToArray());
+        return new OtpQrHeuristicReport(new OtpQrHeuristicAssessment {
+            ContrastRatio = contrast,
+            HasSufficientContrast = hasContrast,
+            HasSufficientQuietZone = hasQuietZone,
+            HasSufficientModuleSize = hasModuleSize,
+            HasOpaqueColors = hasOpaque,
+            HasRecommendedErrorCorrection = hasEcc,
+            RecommendedModuleSize = RecommendedModuleSize,
+            RecommendedQuietZone = RecommendedQuietZone,
+            Score = score,
+            Issues = issues.ToArray()
+        });
     }
 
     private static double GetRelativeLuminance(Rgba32 color) {

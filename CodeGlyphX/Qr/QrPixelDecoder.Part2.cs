@@ -916,7 +916,7 @@ internal static partial class QrPixelDecoder {
         return false;
     }
 
-    private static void CollectAllFromImage(int scale, QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<byte[]> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, QrGrayImagePool? pool) {
+    private static void CollectAllFromImage(int scale, QrGrayImage baseImage, QrProfileSettings settings, QrCollectionSink sink, DecodeBudget budget, QrGrayImagePool? pool) {
         if (budget.IsExpired) return;
         var candidates = RentCandidateList();
         try {
@@ -930,24 +930,24 @@ internal static partial class QrPixelDecoder {
                         baseImage,
                         invert: false,
                         candidates,
-                        accept,
+                        sink.Accept,
                         aggressive: settings.AggressiveSampling,
                         stylized: settings.StylizedSampling,
                         budget,
                         out var primary,
                         out _)) {
-                    AddResult(list, seen, primary, accept);
+                    AddResult(sink.Results, sink.Seen, primary, sink.Accept);
                 }
                 candidates.Clear();
                 if (budget.IsExpired) return;
             }
 
-            CollectAllFromImageCore(baseImage, settings, list, seen, accept, budget, candidates, pool);
+            CollectAllFromImageCore(baseImage, settings, sink, budget, candidates, pool);
             if (settings.AllowNormalize) {
                 if (budget.IsNearDeadline(150)) return;
                 var normalized = baseImage.WithLocalNormalize(GetNormalizeWindow(baseImage), pool);
                 if (!budget.IsExpired) {
-                    CollectAllFromImageCore(normalized, settings, list, seen, accept, budget, candidates, pool);
+                    CollectAllFromImageCore(normalized, settings, sink, budget, candidates, pool);
                 }
             }
         } finally {
@@ -955,7 +955,7 @@ internal static partial class QrPixelDecoder {
         }
     }
 
-    private static void CollectAllFromImageCore(QrGrayImage baseImage, QrProfileSettings settings, PooledList<QrDecoded> list, HashSet<byte[]> seen, Func<QrDecoded, bool>? accept, DecodeBudget budget, List<QrFinderPatternDetector.FinderPattern> candidates, QrGrayImagePool? pool) {
+    private static void CollectAllFromImageCore(QrGrayImage baseImage, QrProfileSettings settings, QrCollectionSink sink, DecodeBudget budget, List<QrFinderPatternDetector.FinderPattern> candidates, QrGrayImagePool? pool) {
         Span<byte> thresholds = stackalloc byte[12];
         var thresholdCount = 0;
         if (settings.AllowExtraThresholds) {
@@ -988,8 +988,8 @@ internal static partial class QrPixelDecoder {
         for (var i = 0; i < thresholdCount; i++) {
             if (budget.IsExpired) return;
             var image = baseImage.WithThreshold(thresholds[i]);
-            CollectFromImage(image, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
-            CollectFromImage(image, invert: true, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            CollectFromImage(image, invert: false, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            CollectFromImage(image, invert: true, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
         }
 
         if (settings.AllowAdaptiveThreshold) {
@@ -999,25 +999,37 @@ internal static partial class QrPixelDecoder {
             var hybridRange = settings.AggressiveSampling ? 16 : 24;
             var hybridOffset = settings.AggressiveSampling ? 3 : 5;
             var hybrid = baseImage.WithHybridThreshold(blockSize, hybridRange, hybridOffset, pool);
-            CollectFromImage(hybrid, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
-            CollectFromImage(hybrid, invert: true, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            CollectFromImage(hybrid, invert: false, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            CollectFromImage(hybrid, invert: true, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
             if (!budget.IsNearDeadline(150)) {
                 var hybridClosed = hybrid.WithBinaryClose(settings.AggressiveSampling ? 2 : 1, pool);
-                CollectFromImage(hybridClosed, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+                CollectFromImage(hybridClosed, invert: false, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
                 var hybridOpen = hybrid.WithBinaryOpen(1, pool);
-                CollectFromImage(hybridOpen, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+                CollectFromImage(hybridOpen, invert: false, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
             }
             if (budget.IsNearDeadline(150)) return;
             var adaptive = baseImage.WithAdaptiveThreshold(windowSize: 15, offset: 8, pool);
-            CollectFromImage(adaptive, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
-            CollectFromImage(adaptive, invert: true, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            CollectFromImage(adaptive, invert: false, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+            CollectFromImage(adaptive, invert: true, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
 
             if (!budget.IsExpired && settings.AllowBlur && settings.AggressiveSampling) {
                 if (budget.IsNearDeadline(150)) return;
                 var adaptiveSoft = baseImage.WithAdaptiveThreshold(windowSize: 31, offset: 0, pool);
-                CollectFromImage(adaptiveSoft, invert: false, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
-                CollectFromImage(adaptiveSoft, invert: true, list, seen, accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+                CollectFromImage(adaptiveSoft, invert: false, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
+                CollectFromImage(adaptiveSoft, invert: true, sink.Results, sink.Seen, sink.Accept, candidates, budget, settings.AggressiveSampling, settings.StylizedSampling);
             }
+        }
+    }
+
+    private readonly struct QrCollectionSink {
+        public PooledList<QrDecoded> Results { get; }
+        public HashSet<byte[]> Seen { get; }
+        public Func<QrDecoded, bool>? Accept { get; }
+
+        public QrCollectionSink(PooledList<QrDecoded> results, HashSet<byte[]> seen, Func<QrDecoded, bool>? accept) {
+            Results = results;
+            Seen = seen;
+            Accept = accept;
         }
     }
 

@@ -64,7 +64,7 @@ param(
 $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
 
-function Resolve-PowerForgeRoot {
+function Get-PowerForgeRootCandidates {
     param(
         [string]$RequestedRoot
     )
@@ -97,7 +97,15 @@ function Resolve-PowerForgeRoot {
     }
     $candidates += (Join-Path $evotecRoot 'PSPublishModule')
 
-    foreach ($candidate in ($candidates | Select-Object -Unique)) {
+    return $candidates | Select-Object -Unique
+}
+
+function Resolve-PowerForgeRoot {
+    param(
+        [string]$RequestedRoot
+    )
+
+    foreach ($candidate in (Get-PowerForgeRootCandidates -RequestedRoot $RequestedRoot)) {
         if ([string]::IsNullOrWhiteSpace($candidate)) { continue }
         try {
             $root = (Resolve-Path -LiteralPath $candidate -ErrorAction Stop).Path

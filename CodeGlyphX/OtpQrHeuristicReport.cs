@@ -60,26 +60,29 @@ public sealed class OtpQrHeuristicReport {
     /// </summary>
     public string[] Issues { get; }
 
-    internal OtpQrHeuristicReport(
-        double contrastRatio,
-        bool hasSufficientContrast,
-        bool hasSufficientQuietZone,
-        bool hasSufficientModuleSize,
-        bool hasOpaqueColors,
-        bool hasRecommendedErrorCorrection,
-        int recommendedModuleSize,
-        int recommendedQuietZone,
-        int score,
-        string[] issues) {
-        ContrastRatio = contrastRatio;
-        HasSufficientContrast = hasSufficientContrast;
-        HasSufficientQuietZone = hasSufficientQuietZone;
-        HasSufficientModuleSize = hasSufficientModuleSize;
-        HasOpaqueColors = hasOpaqueColors;
-        HasRecommendedErrorCorrection = hasRecommendedErrorCorrection;
-        RecommendedModuleSize = recommendedModuleSize;
-        RecommendedQuietZone = recommendedQuietZone;
-        Score = score;
-        Issues = issues ?? Array.Empty<string>();
+    internal OtpQrHeuristicReport(OtpQrHeuristicAssessment assessment) {
+        ContrastRatio = assessment.ContrastRatio;
+        HasSufficientContrast = assessment.HasSufficientContrast;
+        HasSufficientQuietZone = assessment.HasSufficientQuietZone;
+        HasSufficientModuleSize = assessment.HasSufficientModuleSize;
+        HasOpaqueColors = assessment.HasOpaqueColors;
+        HasRecommendedErrorCorrection = assessment.HasRecommendedErrorCorrection;
+        RecommendedModuleSize = assessment.RecommendedModuleSize;
+        RecommendedQuietZone = assessment.RecommendedQuietZone;
+        Score = assessment.Score;
+        Issues = assessment.Issues ?? Array.Empty<string>();
     }
+}
+
+internal struct OtpQrHeuristicAssessment {
+    public double ContrastRatio { get; set; }
+    public bool HasSufficientContrast { get; set; }
+    public bool HasSufficientQuietZone { get; set; }
+    public bool HasSufficientModuleSize { get; set; }
+    public bool HasOpaqueColors { get; set; }
+    public bool HasRecommendedErrorCorrection { get; set; }
+    public int RecommendedModuleSize { get; set; }
+    public int RecommendedQuietZone { get; set; }
+    public int Score { get; set; }
+    public string[]? Issues { get; set; }
 }

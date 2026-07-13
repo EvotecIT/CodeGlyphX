@@ -416,7 +416,7 @@ internal static partial class QrPixelDecoder {
             using var list = new PooledList<QrDecoded>(4);
             var baseExpired = false;
 
-            CollectAllFromImage(scaleStart, baseImage, settings, list, seen, accept, budget, pool);
+            CollectAllFromImage(scaleStart, baseImage, settings, new QrCollectionSink(list, seen, accept), budget, pool);
             if (budget.IsExpired) {
                 if (!enableTileScan) {
                     if (list.Count == 0) return false;
@@ -444,7 +444,7 @@ internal static partial class QrPixelDecoder {
                 if (settings.AllowContrastStretch && range < 48) {
                     var stretched = baseImage.WithContrastStretch(48, pool);
                     if (!ReferenceEquals(stretched.Gray, baseImage.Gray)) {
-                        CollectAllFromImage(scaleStart, stretched, settings, list, seen, accept, budget, pool);
+                        CollectAllFromImage(scaleStart, stretched, settings, new QrCollectionSink(list, seen, accept), budget, pool);
                         if (budget.IsExpired) {
                             if (!enableTileScan) {
                                 if (list.Count == 0) return false;

@@ -1,22 +1,22 @@
-using System;
-using System.IO;
 using CodeGlyphX;
 using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Ico;
-using CodeGlyphX.Rendering.Pdf;
-using CodeGlyphX.Rendering.Psd;
-using CodeGlyphX.Rendering.Pam;
-using CodeGlyphX.Rendering.Pgm;
-using CodeGlyphX.Rendering.Pbm;
 using CodeGlyphX.Rendering.Jpeg;
+using CodeGlyphX.Rendering.Pam;
+using CodeGlyphX.Rendering.Pbm;
+using CodeGlyphX.Rendering.Pdf;
+using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Ppm;
-using CodeGlyphX.Rendering.Tiff;
+using CodeGlyphX.Rendering.Psd;
 using CodeGlyphX.Rendering.Tga;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
+using System;
+using System.IO;
 
 namespace CodeGlyphX.Rendering;
 
@@ -89,8 +89,8 @@ public static partial class ImageReader {
     internal static int EffectiveMaxAnimationFrames => AnimationLimitOverrides.Value?.MaxFrames ?? MaxAnimationFrames;
     internal static int EffectiveMaxAnimationDurationMs => AnimationLimitOverrides.Value?.MaxDurationMs ?? MaxAnimationDurationMs;
     internal static long EffectiveMaxAnimationFramePixels => AnimationLimitOverrides.Value?.MaxFramePixels ?? MaxAnimationFramePixels;
-    internal static int EffectiveMaxImageBytes => DecodeLimitOverrides.Value?.MaxBytes ?? MaxImageBytes;
-    internal static long EffectiveMaxPixels => DecodeLimitOverrides.Value?.MaxPixels ?? MaxPixels;
+    internal static int EffectiveMaxImageBytes => DecodeLimitOverrides.Value?.ByteLimit ?? MaxImageBytes;
+    internal static long EffectiveMaxPixels => DecodeLimitOverrides.Value?.PixelLimit ?? MaxPixels;
 
     internal static void ReportLimitViolation(ImageDecodeLimitViolation violation) {
         var handler = LimitViolation;
@@ -447,12 +447,12 @@ public static partial class ImageReader {
     }
 
     private sealed class DecodeLimitOverride {
-        public readonly int MaxBytes;
-        public readonly long MaxPixels;
+        public readonly int ByteLimit;
+        public readonly long PixelLimit;
 
         public DecodeLimitOverride(int maxBytes, long maxPixels) {
-            MaxBytes = maxBytes;
-            MaxPixels = maxPixels;
+            ByteLimit = maxBytes;
+            PixelLimit = maxPixels;
         }
     }
 
