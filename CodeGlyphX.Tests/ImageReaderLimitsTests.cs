@@ -223,6 +223,63 @@ public sealed class ImageReaderLimitsTests {
     }
 
     [Fact]
+    public void QrPngFileAndStreamTryApis_ApplyMaxBytesBeforeBuffering() {
+        var png = QrCode.Render("QR-TRANSPORT-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var options = new ImageDecodeOptions { MaxBytes = png.Length - 1 };
+        var path = Path.GetTempFileName();
+
+        try {
+            File.WriteAllBytes(path, png);
+
+            Assert.False(QR.TryDecodePngFile(path, options, options: null, out var fileDecoded));
+            Assert.Null(fileDecoded);
+            Assert.False(QR.TryDecodePngFile(path, options, out fileDecoded, out _, options: null));
+            Assert.Null(fileDecoded);
+            Assert.False(QR.TryDecodeAllPngFile(path, options, options: null, out var allFileDecoded));
+            Assert.Empty(allFileDecoded);
+
+            using (var stream = new MemoryStream(png, writable: false)) {
+                Assert.False(QR.TryDecodePng(stream, options, options: null, out var streamDecoded));
+                Assert.Null(streamDecoded);
+                Assert.Equal(0, stream.Position);
+            }
+
+            using (var stream = new MemoryStream(png, writable: false)) {
+                Assert.False(QR.TryDecodePng(stream, options, out var streamDecoded, out _, options: null));
+                Assert.Null(streamDecoded);
+                Assert.Equal(0, stream.Position);
+            }
+        } finally {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void QrPngFileAndStreamTryApis_ApplyGlobalMaxBytesBeforeBuffering() {
+        var png = QrCode.Render("QR-GLOBAL-TRANSPORT-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var path = Path.GetTempFileName();
+        var previous = ImageReader.MaxImageBytes;
+
+        try {
+            File.WriteAllBytes(path, png);
+            ImageReader.MaxImageBytes = png.Length - 1;
+
+            Assert.False(QR.TryDecodePngFile(path, out var fileDecoded));
+            Assert.Null(fileDecoded);
+            Assert.False(QR.TryDecodeAllPngFile(path, out var allFileDecoded));
+            Assert.Empty(allFileDecoded);
+
+            using var stream = new MemoryStream(png, writable: false);
+            Assert.False(QR.TryDecodePng(stream, out var streamDecoded));
+            Assert.Null(streamDecoded);
+            Assert.Equal(0, stream.Position);
+        } finally {
+            ImageReader.MaxImageBytes = previous;
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
     public void ImageStreamTryApis_ReturnFalse_ForInvalidRaster() {
         var invalidImage = new byte[] { 0x00, 0x01, 0x02, 0x03 };
 

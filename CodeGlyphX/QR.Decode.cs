@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
@@ -107,7 +108,7 @@ public static partial class QR {
     public static bool TryDecodePngFile(string path, out QrDecoded decoded) {
         decoded = null!;
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, options: null, out var data)) return false;
         return TryDecodePng(data, out decoded);
     }
 
@@ -117,7 +118,7 @@ public static partial class QR {
     public static bool TryDecodePngFile(string path, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
         decoded = null!;
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, options: null, out var data)) return false;
         return TryDecodePng(data, options, cancellationToken, out decoded);
     }
 
@@ -135,7 +136,7 @@ public static partial class QR {
         decoded = null!;
         info = default;
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, imageOptions, out var data)) return false;
         return TryDecodePng(data, imageOptions, out decoded, out info, options, cancellationToken);
     }
 
@@ -152,7 +153,7 @@ public static partial class QR {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
         decoded = null!;
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, imageOptions, out var data)) return false;
         return TryDecodePng(data, imageOptions, options, cancellationToken, out decoded);
     }
 
@@ -162,7 +163,7 @@ public static partial class QR {
     public static bool TryDecodeAllPngFile(string path, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, options: null, out var data)) return false;
         return TryDecodeAllPng(data, out decoded);
     }
 
@@ -172,7 +173,7 @@ public static partial class QR {
     public static bool TryDecodeAllPngFile(string path, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, options: null, out var data)) return false;
         return TryDecodeAllPng(data, options, cancellationToken, out decoded);
     }
 
@@ -189,7 +190,7 @@ public static partial class QR {
     public static bool TryDecodeAllPngFile(string path, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, imageOptions, out var data)) return false;
         return TryDecodeAllPng(data, imageOptions, options, cancellationToken, out decoded);
     }
 
@@ -199,7 +200,7 @@ public static partial class QR {
     public static bool TryDecodePng(Stream stream, out QrDecoded decoded) {
         decoded = null!;
         if (stream is null) return false;
-        var data = stream.ReadBinary();
+        if (!DecodeResultHelpers.TryReadBinary(stream, options: null, out var data)) return false;
         return TryDecodePng(data, out decoded);
     }
 
@@ -210,7 +211,7 @@ public static partial class QR {
         decoded = null!;
         if (stream is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var data = stream.ReadBinary();
+        if (!DecodeResultHelpers.TryReadBinary(stream, options: null, out var data)) return false;
         return TryDecodePng(data, options, cancellationToken, out decoded);
     }
 
@@ -229,7 +230,7 @@ public static partial class QR {
         info = default;
         if (stream is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var data = stream.ReadBinary();
+        if (!DecodeResultHelpers.TryReadBinary(stream, imageOptions, out var data)) return false;
         return TryDecodePng(data, imageOptions, out decoded, out info, options, cancellationToken);
     }
 
@@ -247,7 +248,7 @@ public static partial class QR {
         decoded = null!;
         if (stream is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var data = stream.ReadBinary();
+        if (!DecodeResultHelpers.TryReadBinary(stream, imageOptions, out var data)) return false;
         return TryDecodePng(data, imageOptions, options, cancellationToken, out decoded);
     }
 
