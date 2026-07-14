@@ -770,9 +770,20 @@ public static partial class CodeGlyph {
 
         var list = new System.Collections.Generic.List<CodeGlyphDecoded>(4);
         var qrOptionsLocal = ResolveMultiQrOptions(qrOptions);
+        void AddAllBarcodes() {
+            BarcodeDecoded[] barcodes = Array.Empty<BarcodeDecoded>();
+            if (!TryWithImageBudget(imageOptions, cancellationToken, token =>
+                    BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out barcodes, expectedBarcode, barcodeOptions, token))) {
+                return;
+            }
+
+            for (var i = 0; i < barcodes.Length; i++) {
+                list.Add(new CodeGlyphDecoded(barcodes[i]));
+            }
+        }
 
         if (includeBarcode && preferBarcode) {
-            AddAllBarcodesWithImageBudget(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, imageOptions, list);
+            AddAllBarcodes();
         }
 
         if (cancellationToken.IsCancellationRequested) return false;
@@ -801,34 +812,12 @@ public static partial class CodeGlyph {
         }
 
         if (includeBarcode && !preferBarcode) {
-            AddAllBarcodesWithImageBudget(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, imageOptions, list);
+            AddAllBarcodes();
         }
 
         if (list.Count == 0) return false;
         decoded = list.ToArray();
         return true;
-    }
-
-    private static void AddAllBarcodesWithImageBudget(
-        byte[] pixels,
-        int width,
-        int height,
-        int stride,
-        PixelFormat format,
-        BarcodeType? expectedBarcode,
-        BarcodeDecodeOptions? barcodeOptions,
-        CancellationToken cancellationToken,
-        ImageDecodeOptions? imageOptions,
-        System.Collections.Generic.List<CodeGlyphDecoded> decoded) {
-        BarcodeDecoded[] barcodes = Array.Empty<BarcodeDecoded>();
-        if (!TryWithImageBudget(imageOptions, cancellationToken, token =>
-                BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out barcodes, expectedBarcode, barcodeOptions, token))) {
-            return;
-        }
-
-        for (var i = 0; i < barcodes.Length; i++) {
-            decoded.Add(new CodeGlyphDecoded(barcodes[i]));
-        }
     }
 
 }
