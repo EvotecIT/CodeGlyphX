@@ -818,10 +818,9 @@ public static partial class QrImageDecoder {
 
     private static bool TryDecodeAllFallbackCore(QrFallbackFrame frame, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
-        if (options?.EnableTileScan == true) {
-            if (TryDecodeAllTilesFallback(frame.Pixels, frame.Width, frame.Height, frame.Stride, frame.Format, options, cancellationToken, out decoded)) {
-                return decoded.Length > 0;
-            }
+        if (options?.EnableTileScan == true
+            && TryDecodeAllTilesFallback(frame.Pixels, frame.Width, frame.Height, frame.Stride, frame.Format, options, cancellationToken, out decoded)) {
+            return decoded.Length > 0;
         }
         if (!TryDecodeFallbackCore(frame, options, cancellationToken, out var single, out _)) {
             return false;
@@ -927,7 +926,6 @@ public static partial class QrImageDecoder {
         var width = frame.Width;
         var height = frame.Height;
         var stride = frame.Stride;
-        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         if (width <= 0 || height <= 0 || stride < width * 4) return false;
         if (cancellationToken.IsCancellationRequested) return false;
 
