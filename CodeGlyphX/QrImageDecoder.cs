@@ -733,7 +733,7 @@ public static class QrImageDecoder {
 
         var mergedOptions = MergeDecodeOptions(imageOptions, options);
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, GetBudgetMs(imageOptions, mergedOptions), out var token);
-        return TryDecodeFallback(rgba, width, height, width * 4, PixelFormat.Rgba32, mergedOptions, token, out decoded, out info);
+        return TryDecodeFallbackCore(rgba, width, height, width * 4, PixelFormat.Rgba32, mergedOptions, token, out decoded, out info);
     }
 
     private static bool TryDecodeAllImageFallback(byte[] image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
@@ -745,7 +745,7 @@ public static class QrImageDecoder {
         var mergedOptions = MergeDecodeOptions(imageOptions, options);
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, GetBudgetMs(imageOptions, mergedOptions), out var token);
         var stride = width * 4;
-        return TryDecodeAllFallback(rgba, width, height, stride, PixelFormat.Rgba32, mergedOptions, token, out decoded);
+        return TryDecodeAllFallbackCore(rgba, width, height, stride, PixelFormat.Rgba32, mergedOptions, token, out decoded);
     }
 
     private static QrPixelDecodeOptions? MergeDecodeOptions(ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options) {
@@ -812,13 +812,18 @@ public static class QrImageDecoder {
     }
 
     private static bool TryDecodeAllFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options?.BudgetMilliseconds ?? 0, out var token);
+        return TryDecodeAllFallbackCore(pixels, width, height, stride, format, options, token, out decoded);
+    }
+
+    private static bool TryDecodeAllFallbackCore(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (options?.EnableTileScan == true) {
             if (TryDecodeAllTilesFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded)) {
                 return decoded.Length > 0;
             }
         }
-        if (!TryDecodeFallback(pixels, width, height, stride, format, options, cancellationToken, out var single, out _)) {
+        if (!TryDecodeFallbackCore(pixels, width, height, stride, format, options, cancellationToken, out var single, out _)) {
             return false;
         }
         decoded = new[] { single };
@@ -876,7 +881,7 @@ public static class QrImageDecoder {
                 if (tw <= 0) continue;
 
                 var tile = CropRgba(rgba, width, height, stride, x0, y0, tw, th);
-                if (!TryDecodeFallback(tile, tw, th, tw * 4, PixelFormat.Rgba32, tileOptions, cancellationToken, out var result, out _)) {
+                if (!TryDecodeFallbackCore(tile, tw, th, tw * 4, PixelFormat.Rgba32, tileOptions, cancellationToken, out var result, out _)) {
                     continue;
                 }
 
@@ -911,6 +916,11 @@ public static class QrImageDecoder {
     }
 
     private static bool TryDecodeFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options?.BudgetMilliseconds ?? 0, out var token);
+        return TryDecodeFallbackCore(pixels, width, height, stride, format, options, token, out decoded, out info);
+    }
+
+    private static bool TryDecodeFallbackCore(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
         decoded = null!;
         info = default;
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
