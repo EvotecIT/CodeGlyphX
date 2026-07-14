@@ -97,6 +97,26 @@ public sealed class ImageReaderLimitsTests {
         }
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void BarcodeTryDecodePng_ReturnsFalse_WhenOptionLimitRejectsImage(bool limitBytes) {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "BARCODE-LIMIT");
+        var png = BarcodePngRenderer.Render(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 6,
+            QuietZone = 10,
+            HeightModules = 40
+        });
+        var options = limitBytes
+            ? new ImageDecodeOptions { MaxBytes = png.Length - 1 }
+            : new ImageDecodeOptions { MaxPixels = 1 };
+
+        var success = Barcode.TryDecodePng(png, BarcodeType.Code128, options, out var decoded);
+
+        Assert.False(success);
+        Assert.Null(decoded);
+    }
+
     [Fact]
     public void LimitViolation_Fires_OnMaxPixels() {
         var png = QrCode.Render("LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;

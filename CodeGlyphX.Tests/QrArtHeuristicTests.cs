@@ -1,4 +1,5 @@
 using System.Linq;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -30,6 +31,41 @@ public sealed class QrArtHeuristicTests {
                 warning.Kind == QrArtWarningKind.LowContrastPalette ||
                 warning.Kind == QrArtWarningKind.ModuleScaleTooSmall ||
                 warning.Kind == QrArtWarningKind.QuietZoneTooSmall);
+        }
+    }
+
+    [Fact]
+    public void TransparentForegrounds_AreScoredAfterCompositingOverBackground() {
+        const string payload = "https://example.com/transparent-contrast";
+        var transparentBlack = new Rgba32(0, 0, 0, 0);
+        var white = Rgba32.White;
+        var cases = new[] {
+            (
+                Options: new QrEasyOptions { Foreground = transparentBlack, Background = white },
+                Warning: QrArtWarningKind.LowContrast),
+            (
+                Options: new QrEasyOptions {
+                    Background = white,
+                    ForegroundGradient = new QrPngGradientOptions {
+                        StartColor = transparentBlack,
+                        EndColor = transparentBlack
+                    }
+                },
+                Warning: QrArtWarningKind.LowContrastGradient),
+            (
+                Options: new QrEasyOptions {
+                    Background = white,
+                    ForegroundPalette = new QrPngPaletteOptions {
+                        Colors = new[] { transparentBlack }
+                    }
+                },
+                Warning: QrArtWarningKind.LowContrastPalette)
+        };
+
+        foreach (var testCase in cases) {
+            var report = QrEasy.EvaluateScanHeuristics(payload, testCase.Options);
+
+            Assert.Contains(report.Warnings, warning => warning.Kind == testCase.Warning);
         }
     }
 }

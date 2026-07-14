@@ -81,9 +81,10 @@ public static partial class Barcode {
     /// </summary>
     public static bool TryDecodePng(byte[] png, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         if (png is null) throw new ArgumentNullException(nameof(png));
+        decoded = null!;
         var token = cancellationToken;
-        if (token.IsCancellationRequested) { decoded = null!; return false; }
-        var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+        if (token.IsCancellationRequested) return false;
+        if (!ImageReader.TryDecodeRgba32(png, options, out var rgba, out var width, out var height)) return false;
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
         return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
     }

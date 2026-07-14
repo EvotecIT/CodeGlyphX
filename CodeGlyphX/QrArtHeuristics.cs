@@ -251,7 +251,8 @@ public static class QrArtHeuristics {
         var min = double.MaxValue;
         for (var i = 0; i < foregrounds.Length; i++) {
             for (var j = 0; j < backgrounds.Length; j++) {
-                var contrast = ContrastRatio(foregrounds[i], backgrounds[j]);
+                var visibleForeground = Rgba32Compositor.ComposeOver(foregrounds[i], backgrounds[j]);
+                var contrast = ContrastRatio(visibleForeground, backgrounds[j]);
                 if (contrast < min) min = contrast;
             }
         }
