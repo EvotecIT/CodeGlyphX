@@ -5,7 +5,6 @@ using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
-using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX;
 
@@ -31,7 +30,7 @@ public static partial class QR {
         decoded = null!;
         if (png is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options: null, out var rgba, out var width, out var height)) return false;
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
     }
 
@@ -84,7 +83,7 @@ public static partial class QR {
         decoded = Array.Empty<QrDecoded>();
         if (png is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options: null, out var rgba, out var width, out var height)) return false;
         return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
     }
 
@@ -257,7 +256,7 @@ public static partial class QR {
         if (png is null) return false;
         var token = cancellationToken;
         if (token.IsCancellationRequested) return false;
-        var rgba = ImageReader.DecodeRgba32(png, imageOptions, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, imageOptions, out var rgba, out var width, out var height)) return false;
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out token);
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
     }
@@ -268,7 +267,7 @@ public static partial class QR {
         if (png is null) return false;
         var token = cancellationToken;
         if (token.IsCancellationRequested) return false;
-        var rgba = ImageReader.DecodeRgba32(png, imageOptions, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, imageOptions, out var rgba, out var width, out var height)) return false;
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out token);
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
     }
@@ -278,7 +277,7 @@ public static partial class QR {
         if (png is null) return false;
         var token = cancellationToken;
         if (token.IsCancellationRequested) return false;
-        var rgba = ImageReader.DecodeRgba32(png, imageOptions, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, imageOptions, out var rgba, out var width, out var height)) return false;
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out token);
         return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
     }

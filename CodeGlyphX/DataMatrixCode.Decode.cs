@@ -57,7 +57,7 @@ public static partial class DataMatrixCode {
         if (png is null) throw new ArgumentNullException(nameof(png));
         var token = cancellationToken;
         if (token.IsCancellationRequested) { text = string.Empty; return false; }
-        var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
         return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
     }
@@ -89,7 +89,7 @@ public static partial class DataMatrixCode {
     public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         var token = cancellationToken;
         if (token.IsCancellationRequested) { text = string.Empty; return false; }
-        var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
         return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
     }
@@ -136,7 +136,11 @@ public static partial class DataMatrixCode {
         diagnostics = new DataMatrixDecodeDiagnostics();
         var token = cancellationToken;
         if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-        var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) {
+            text = string.Empty;
+            diagnostics.Failure = ImageDecodeHelper.InvalidPngFailure;
+            return false;
+        }
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
         if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
             diagnostics = dmDiag;
@@ -552,7 +556,11 @@ public static partial class DataMatrixCode {
         if (png is null) throw new ArgumentNullException(nameof(png));
         var token = cancellationToken;
         if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-        var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) {
+            text = string.Empty;
+            diagnostics.Failure = ImageDecodeHelper.InvalidPngFailure;
+            return false;
+        }
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
         if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
             diagnostics = dmDiag;

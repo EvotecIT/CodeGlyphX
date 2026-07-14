@@ -1,11 +1,26 @@
 using System;
 using System.Threading;
-using CodeGlyphX.Rendering.Png;
 using CodeGlyphX;
+using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Rendering;
 
 internal static class ImageDecodeHelper {
+    /// <summary>Consistent diagnostic text for malformed or caller-rejected PNG input.</summary>
+    internal const string InvalidPngFailure = "Invalid PNG image or image limit exceeded.";
+
+    /// <summary>
+    /// Attempts to decode a PNG raster while honoring caller image limits and preserving non-throwing Try* facade semantics.
+    /// </summary>
+    public static bool TryDecodePngRgba32(ReadOnlySpan<byte> png, ImageDecodeOptions? options, out byte[] rgba, out int width, out int height) {
+        rgba = Array.Empty<byte>();
+        width = 0;
+        height = 0;
+        return ImageReader.TryDetectFormat(png, out var format)
+            && format == ImageFormat.Png
+            && ImageReader.TryDecodeRgba32(png, options, out rgba, out width, out height);
+    }
+
     public static bool TryDownscale(ref byte[] rgba, ref int width, ref int height, ImageDecodeOptions? options, CancellationToken cancellationToken) {
         if (options is null) return true;
         return TryDownscale(ref rgba, ref width, ref height, options.MaxDimension, cancellationToken);

@@ -405,7 +405,7 @@ public static partial class QrImageDecoder {
     public static bool TryDecodeImage(Stream stream, out QrDecoded decoded) {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+        if (!ImageReader.TryDecodeRgba32(stream, out var rgba, out var width, out var height)) { decoded = null!; return false; }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
@@ -424,7 +424,7 @@ public static partial class QrImageDecoder {
             if (!TryReadBinary(stream, imageOptions: null, out var data)) { decoded = null!; info = default; return false; }
             return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out info);
         }
-        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+        if (!ImageReader.TryDecodeRgba32(stream, out var rgba, out var width, out var height)) { decoded = null!; info = default; return false; }
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
@@ -443,7 +443,7 @@ public static partial class QrImageDecoder {
             if (!TryReadBinary(stream, imageOptions: null, out var data)) { decoded = null!; return false; }
             return TryDecodeImageFallback(data, options, cancellationToken: default, out decoded, out _);
         }
-        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+        if (!ImageReader.TryDecodeRgba32(stream, out var rgba, out var width, out var height)) { decoded = null!; return false; }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
@@ -609,7 +609,7 @@ public static partial class QrImageDecoder {
     public static bool TryDecodeAllImage(Stream stream, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+        if (!ImageReader.TryDecodeRgba32(stream, out var rgba, out var width, out var height)) { decoded = Array.Empty<QrDecoded>(); return false; }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));
@@ -624,7 +624,7 @@ public static partial class QrImageDecoder {
     public static bool TryDecodeAllImage(Stream stream, QrPixelDecodeOptions? options, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+        if (!ImageReader.TryDecodeRgba32(stream, out var rgba, out var width, out var height)) { decoded = Array.Empty<QrDecoded>(); return false; }
         return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, options, out decoded);
 #else
         if (stream is null) throw new ArgumentNullException(nameof(stream));

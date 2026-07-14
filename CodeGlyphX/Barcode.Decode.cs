@@ -216,7 +216,7 @@ public static partial class Barcode {
     public static bool TryDecodeImage(Stream stream, BarcodeType? expectedType, out BarcodeDecoded decoded) {
         decoded = null!;
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var rgba = ImageReader.DecodeRgba32(stream, out var width, out var height);
+        if (!ImageReader.TryDecodeRgba32(stream, out var rgba, out var width, out var height)) return false;
         return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, out decoded);
     }
 
@@ -256,7 +256,7 @@ public static partial class Barcode {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var token = cancellationToken;
         if (token.IsCancellationRequested) return false;
-        var rgba = ImageReader.DecodeRgba32(stream, options, out var width, out var height);
+        if (!ImageReader.TryDecodeRgba32(stream, options, out var rgba, out var width, out var height)) return false;
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
         return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
     }

@@ -36,7 +36,7 @@ public static partial class Pdf417Code {
         if (png is null) throw new ArgumentNullException(nameof(png));
         var token = cancellationToken;
         if (token.IsCancellationRequested) { decoded = null!; return false; }
-        var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
         return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
     }
@@ -68,7 +68,7 @@ public static partial class Pdf417Code {
     public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
         var token = cancellationToken;
         if (token.IsCancellationRequested) { decoded = null!; return false; }
-        var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
         return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
     }

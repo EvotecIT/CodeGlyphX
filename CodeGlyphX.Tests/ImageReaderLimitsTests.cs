@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using CodeGlyphX;
+using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
@@ -173,6 +174,77 @@ public sealed class ImageReaderLimitsTests {
         Assert.False(CodeGlyph.TryDecodePng(invalidPng, out var diagnosed, out var diagnostics, options: null));
         Assert.Null(diagnosed);
         Assert.Equal(DecodeFailureReason.InvalidInput, diagnostics.FailureReason);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void SymbolPngTryApis_ReturnFalse_WhenOptionLimitRejectsImage(bool limitBytes) {
+        var png = QrCode.Render("SYMBOL-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var options = limitBytes
+            ? new ImageDecodeOptions { MaxBytes = png.Length - 1 }
+            : new ImageDecodeOptions { MaxPixels = 1 };
+
+        Assert.False(AztecCode.TryDecodePng(png, options, out string aztec));
+        Assert.Empty(aztec);
+        Assert.False(AztecCode.TryDecodePng((ReadOnlySpan<byte>)png, options, out aztec));
+        Assert.Empty(aztec);
+        Assert.False(AztecCode.TryDecodePng(png, options, out aztec, out var aztecDiagnostics));
+        Assert.Empty(aztec);
+        Assert.NotNull(aztecDiagnostics.Failure);
+
+        Assert.False(DataMatrixCode.TryDecodePng(png, options, out string dataMatrix));
+        Assert.Empty(dataMatrix);
+        Assert.False(DataMatrixCode.TryDecodePng((ReadOnlySpan<byte>)png, options, out dataMatrix));
+        Assert.Empty(dataMatrix);
+        Assert.False(DataMatrixCode.TryDecodePng(png, options, out dataMatrix, out var dataMatrixDiagnostics));
+        Assert.Empty(dataMatrix);
+        Assert.NotNull(dataMatrixDiagnostics.Failure);
+
+        Assert.False(Pdf417Code.TryDecodePng(png, options, out string pdf417));
+        Assert.Empty(pdf417);
+        Assert.False(Pdf417Code.TryDecodePng((ReadOnlySpan<byte>)png, options, out pdf417));
+        Assert.Empty(pdf417);
+        Assert.False(Pdf417Code.TryDecodePng(png, options, out pdf417, out var pdf417Diagnostics));
+        Assert.Empty(pdf417);
+        Assert.NotNull(pdf417Diagnostics.Failure);
+
+        Assert.False(Pdf417Code.TryDecodePng(png, options, out Pdf417Decoded macroPdf417));
+        Assert.Null(macroPdf417);
+        Assert.False(Pdf417Code.TryDecodePng((ReadOnlySpan<byte>)png, options, out macroPdf417));
+        Assert.Null(macroPdf417);
+
+        Assert.False(QR.TryDecodePng(png, options, options: null, out var qr));
+        Assert.Null(qr);
+        Assert.False(QR.TryDecodePng(png, options, out qr, out _, options: null));
+        Assert.Null(qr);
+        Assert.False(QR.TryDecodeAllPng(png, options, options: null, out var allQr));
+        Assert.Empty(allQr);
+    }
+
+    [Fact]
+    public void ImageStreamTryApis_ReturnFalse_ForInvalidRaster() {
+        var invalidImage = new byte[] { 0x00, 0x01, 0x02, 0x03 };
+
+        using (var stream = new MemoryStream(invalidImage, writable: false)) {
+            Assert.False(Barcode.TryDecodeImage(stream, out var barcode));
+            Assert.Null(barcode);
+        }
+
+        using (var stream = new MemoryStream(invalidImage, writable: false)) {
+            Assert.False(CodeGlyph.TryDecodeImage(stream, out var codeGlyph));
+            Assert.Null(codeGlyph);
+        }
+
+        using (var stream = new MemoryStream(invalidImage, writable: false)) {
+            Assert.False(QrImageDecoder.TryDecodeImage(stream, out var qr));
+            Assert.Null(qr);
+        }
+
+        using (var stream = new MemoryStream(invalidImage, writable: false)) {
+            Assert.False(QrImageDecoder.TryDecodeAllImage(stream, out var allQr));
+            Assert.Empty(allQr);
+        }
     }
 
     [Fact]
