@@ -59,7 +59,7 @@ public static class DataBarExpandedDecoder {
 
     private static List<int> GetTotalCharsCandidates(int patternWidth) {
         var candidates = new List<int>(2);
-        for (var totalChars = 2; totalChars <= 22; totalChars++) {
+        for (var totalChars = 4; totalChars <= 22; totalChars++) {
             var finderCount = (totalChars / 2) + (totalChars & 1);
             var expectedWidth = (finderCount * 5) + (totalChars * 8) + 4;
             if (expectedWidth == patternWidth) candidates.Add(totalChars);

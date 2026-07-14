@@ -76,7 +76,7 @@ internal static class DataBarExpandedBinaryEncoder {
         if (content.Length > 16) {
             return EncodeGeneralField(content.Substring(16), bits);
         }
-        return null;
+        return GeneralFieldMode.Numeric;
     }
 
     private static void EncodeWeightMethod(string content, int method, List<bool> bits) {

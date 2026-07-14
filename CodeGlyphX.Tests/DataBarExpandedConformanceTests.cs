@@ -58,6 +58,27 @@ public sealed class DataBarExpandedConformanceTests {
     }
 
     [Fact]
+    public void StackedGtinOnlySymbol_RoundTripsWhenAnEvenCharacterCountIsRequired() {
+        const string input = "(01)12345678901231";
+
+        var matrix = DataBarExpandedEncoder.EncodeExpandedStacked(input, columns: 2);
+
+        Assert.True(DataBarExpandedDecoder.TryDecodeExpandedStacked(matrix, out var decoded));
+        Assert.Equal(Gs1.ElementString(input), decoded);
+    }
+
+    [Fact]
+    public void Decoder_RejectsImpossibleShortCharacterCountWithoutThrowing() {
+        var valid = DataBarExpandedEncoder.EncodeExpanded("(01)12345678901231");
+        var malformed = new List<BarSegment>(25);
+        for (var i = 0; i < 23; i++) malformed.Add(valid.Segments[i]);
+        malformed.Add(new BarSegment(true, 1));
+        malformed.Add(new BarSegment(false, 1));
+
+        Assert.False(DataBarExpandedDecoder.TryDecodeExpanded(new Barcode1D(malformed), out _));
+    }
+
+    [Fact]
     public void StackedSymbol_OddPartialBlock_RoundTripsWithoutUnnecessaryPadding() {
         var input = "(91)" + new string('A', 20);
 
