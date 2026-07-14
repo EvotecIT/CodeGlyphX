@@ -31,7 +31,8 @@ public static class MatrixSvgRenderer {
             .Append("\" viewBox=\"0 0 ").Append(outWidth).Append(' ').Append(outHeight)
             .Append("\" shape-rendering=\"crispEdges\">");
 
-        sb.Append("<rect width=\"100%\" height=\"100%\" fill=\"").Append(lightColor).Append("\"/>");
+        sb.Append("<rect width=\"").Append(outWidth).Append("\" height=\"").Append(outHeight)
+            .Append("\" fill=\"").Append(lightColor).Append("\"/>");
 
         sb.Append("<path fill=\"").Append(darkColor).Append("\" d=\"");
         for (var y = 0; y < modules.Height; y++) {

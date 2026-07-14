@@ -59,7 +59,7 @@ public static class DataBarExpandedDecoder {
 
     private static List<int> GetTotalCharsCandidates(int patternWidth) {
         var candidates = new List<int>(2);
-        for (var totalChars = 2; totalChars <= 21; totalChars++) {
+        for (var totalChars = 4; totalChars <= 22; totalChars++) {
             var finderCount = (totalChars / 2) + (totalChars & 1);
             var expectedWidth = (finderCount * 5) + (totalChars * 8) + 4;
             if (expectedWidth == patternWidth) candidates.Add(totalChars);
@@ -76,7 +76,7 @@ public static class DataBarExpandedDecoder {
         if (!TryBuildDataWidths(elements, dataChars, out var dataWidths, out var checkWidths)) return false;
         if (!TryDecodeDataValues(dataWidths, out var dataValues)) return false;
         if (!TryDecodeDataCharacter(checkWidths, out var checkChar)) return false;
-        if (!HasValidChecksum(dataWidths, dataChars, checkChar)) return false;
+        if (!DataBarExpandedSpecification.HasValidCheckCharacter(dataWidths, totalChars, checkChar)) return false;
         var bits = BuildDataBits(dataValues);
         return TryDecodePayload(bits, out content);
     }
@@ -91,6 +91,7 @@ public static class DataBarExpandedDecoder {
         var pos = headerSize;
 
         if (!TryDecodeByMethod(bits, encodingMethod, ref pos, sb)) return false;
+        if (sb.Length > 0 && sb[sb.Length - 1] == GroupSeparator) sb.Length--;
         content = sb.ToString();
         return true;
     }
@@ -270,8 +271,10 @@ public static class DataBarExpandedDecoder {
         foreach (var rowIndex in dataRows) {
             if (!TryExtractWidths(GetRow(modules, rowIndex), out var widths)) return false;
             if (widths.Length < 4) return false;
-            var blocks = (widths.Length - 4) / 21;
-            if ((widths.Length - 4) % 21 != 0) return false;
+            var contentElements = widths.Length - 4;
+            var remainder = contentElements % 21;
+            if (remainder != 0 && remainder != 13) return false;
+            var blocks = (contentElements / 21) + (remainder == 13 ? 1 : 0);
             if (blocks > maxBlocks) maxBlocks = blocks;
             rowRuns.Add(widths);
         }
@@ -279,37 +282,47 @@ public static class DataBarExpandedDecoder {
     }
 
     private static bool TryBuildStackedElements(List<int[]> rowRuns, int maxBlocks, out int[] elements) {
-        elements = new int[2 + (maxBlocks * rowRuns.Count * 21) + 2];
+        var totalBlocks = 0;
+        for (var row = 0; row < rowRuns.Count; row++) {
+            var contentElements = rowRuns[row].Length - 4;
+            totalBlocks += (contentElements / 21) + (contentElements % 21 == 13 ? 1 : 0);
+        }
+        elements = new int[2 + (totalBlocks * 21) + 2];
         Array.Clear(elements, 0, elements.Length);
 
         var currentBlock = 0;
         for (var rowIndex = 0; rowIndex < rowRuns.Count; rowIndex++) {
             var runs = rowRuns[rowIndex];
-            var blocks = (runs.Length - 4) / 21;
+            var contentElements = runs.Length - 4;
+            var hasPartialBlock = contentElements % 21 == 13;
+            var blocks = (contentElements / 21) + (hasPartialBlock ? 1 : 0);
             var currentRow = rowIndex + 1;
             var leftToRight = (currentRow % 2 == 1) || (maxBlocks % 2 == 1);
             if (runs[0] == 2) leftToRight = true;
 
+            var blockStart = 2;
             for (var blockIndex = 0; blockIndex < blocks; blockIndex++) {
-                var blockStart = 2 + (blockIndex * 21);
+                var partialSourceBlock = hasPartialBlock && (leftToRight ? blockIndex == blocks - 1 : blockIndex == 0);
+                var blockLength = partialSourceBlock ? 13 : 21;
                 var targetBlock = leftToRight ? currentBlock + blockIndex : currentBlock + (blocks - 1 - blockIndex);
                 var targetStart = 2 + (targetBlock * 21);
-                if (targetStart + 20 >= elements.Length) return false;
-                CopyBlock(elements, runs, blockStart, targetStart, leftToRight);
+                if (targetStart + blockLength - 1 >= elements.Length) return false;
+                CopyBlock(elements, runs, blockStart, targetStart, blockLength, leftToRight);
+                blockStart += blockLength;
             }
             currentBlock += blocks;
         }
         return true;
     }
 
-    private static void CopyBlock(int[] elements, int[] runs, int blockStart, int targetStart, bool leftToRight) {
+    private static void CopyBlock(int[] elements, int[] runs, int blockStart, int targetStart, int blockLength, bool leftToRight) {
         if (leftToRight) {
-            for (var j = 0; j < 21; j++) {
+            for (var j = 0; j < blockLength; j++) {
                 elements[targetStart + j] = runs[blockStart + j];
             }
         } else {
-            for (var j = 0; j < 21; j++) {
-                elements[targetStart + j] = runs[blockStart + (20 - j)];
+            for (var j = 0; j < blockLength; j++) {
+                elements[targetStart + j] = runs[blockStart + (blockLength - 1 - j)];
             }
         }
     }
@@ -375,18 +388,6 @@ public static class DataBarExpandedDecoder {
             dataValues[i] = value;
         }
         return true;
-    }
-
-    private static bool HasValidChecksum(int[][] dataWidths, int dataChars, int checkChar) {
-        var checksum = 0;
-        for (var i = 0; i < dataChars; i++) {
-            var row = DataBarExpandedTables.WEIGHT_ROWS[(((dataChars - 2) / 2) * 21) + i];
-            for (var j = 0; j < 8; j++) {
-                checksum += dataWidths[i][j] * DataBarExpandedTables.CHECKSUM_WEIGHT_EXP[(row * 8) + j];
-            }
-        }
-        var expectedCheck = (211 * ((dataChars + 1) - 4)) + (checksum % 211);
-        return checkChar == expectedCheck;
     }
 
     private static bool[] BuildDataBits(int[] dataValues) {
@@ -732,30 +733,7 @@ public static class DataBarExpandedDecoder {
     }
 
     private static bool TryDecodeDataCharacter(int[] widths, out int value) {
-        value = 0;
-        Span<int> odd = stackalloc int[4];
-        Span<int> even = stackalloc int[4];
-        odd[0] = widths[0];
-        odd[1] = widths[2];
-        odd[2] = widths[4];
-        odd[3] = widths[6];
-        even[0] = widths[1];
-        even[1] = widths[3];
-        even[2] = widths[5];
-        even[3] = widths[7];
-
-        for (var group = 1; group <= 5; group++) {
-            var vOdd = DataBarCommon.GetValue(odd, DataBarExpandedTables.MODULES_ODD_EXP[group - 1], 4, DataBarExpandedTables.WIDEST_ODD_EXP[group - 1], 0);
-            var vEven = DataBarCommon.GetValue(even, DataBarExpandedTables.MODULES_EVEN_EXP[group - 1], 4, DataBarExpandedTables.WIDEST_EVEN_EXP[group - 1], 1);
-            if (vOdd < 0 || vEven < 0) continue;
-            var candidate = (vOdd * DataBarExpandedTables.T_EVEN_EXP[group - 1]) + vEven + DataBarExpandedTables.G_SUM_EXP[group - 1];
-            if (candidate >= DataBarExpandedTables.GroupMin(group) && candidate <= DataBarExpandedTables.GroupMax(group)) {
-                value = candidate;
-                return true;
-            }
-        }
-
-        return false;
+        return DataBarExpandedSpecification.TryGetDataCharacterValue(widths, out value);
     }
 
     private static bool TryExtractWidths(Barcode1D barcode, out int[] widths) {
