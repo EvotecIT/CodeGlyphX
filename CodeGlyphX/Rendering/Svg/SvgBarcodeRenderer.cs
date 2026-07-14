@@ -41,7 +41,9 @@ public static class SvgBarcodeRenderer {
             .Append(totalHeightModules.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
             .Append("\" shape-rendering=\"crispEdges\">");
 
-        sb.Append("<rect width=\"100%\" height=\"100%\" fill=\"").Append(backgroundColor).Append("\"/>");
+        sb.Append("<rect width=\"").Append(outWidthModules).Append("\" height=\"")
+            .Append(totalHeightModules.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
+            .Append("\" fill=\"").Append(backgroundColor).Append("\"/>");
 
         sb.Append("<g fill=\"").Append(barColor).Append("\">");
         var x = opts.QuietZone;
@@ -58,10 +60,10 @@ public static class SvgBarcodeRenderer {
         if (hasLabel) {
             var labelFontModules = labelFontPx / (double)opts.ModuleSize;
             var labelMarginModules = labelMarginPx / (double)opts.ModuleSize;
-            var labelY = opts.HeightModules + labelMarginModules;
-            sb.Append("<text x=\"").Append(outWidthModules / 2.0)
-                .Append("\" y=\"").Append(labelY.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
-                .Append("\" text-anchor=\"middle\" dominant-baseline=\"hanging\" fill=\"")
+            var labelBaseline = opts.HeightModules + labelMarginModules + (labelFontModules * 0.8);
+            sb.Append("<text x=\"").Append((outWidthModules / 2.0).ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
+                .Append("\" y=\"").Append(labelBaseline.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
+                .Append("\" text-anchor=\"middle\" fill=\"")
                 .Append(labelColor).Append("\" font-size=\"")
                 .Append(labelFontModules.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture))
                 .Append("\" font-family=\"").Append(labelFontFamily).Append("\">")

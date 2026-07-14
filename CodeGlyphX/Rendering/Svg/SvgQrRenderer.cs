@@ -36,7 +36,8 @@ public static class SvgQrRenderer {
             .Append("\" viewBox=\"0 0 ").Append(outSize).Append(' ').Append(outSize)
             .Append("\" shape-rendering=\"crispEdges\">");
 
-        sb.Append("<rect width=\"100%\" height=\"100%\" fill=\"").Append(opts.LightColor).Append("\"/>");
+        sb.Append("<rect width=\"").Append(outSize).Append("\" height=\"").Append(outSize)
+            .Append("\" fill=\"").Append(opts.LightColor).Append("\"/>");
 
         var hasAdvanced = opts.ModuleShape != QrPngModuleShape.Square ||
                           Math.Abs(opts.ModuleScale - 1.0) > 0.0001 ||
