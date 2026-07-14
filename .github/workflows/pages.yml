@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   website-deploy:
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-deploy.yml@a1a187ad5452f499bc974d32ccd3cd28cd11e868
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-deploy.yml@b96b20c4ed0a9f18b8d51d9f4c1caa3595ed417c
     permissions:
       actions: write
       contents: read
