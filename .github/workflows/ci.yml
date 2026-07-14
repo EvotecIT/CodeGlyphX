@@ -117,6 +117,7 @@ jobs:
     name: Website Build (PR)
     if: github.event_name == 'pull_request'
     permissions:
+      actions: read
       contents: read
       packages: read
     uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@b96b20c4ed0a9f18b8d51d9f4c1caa3595ed417c
