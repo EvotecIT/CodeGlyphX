@@ -19,23 +19,12 @@ public sealed class ImageDecodeSamplesTests {
     public void Decode_ImageSamples_EndToEnd() {
         var samplesDir = ResolveSamplesDirectory();
         if (samplesDir is null) {
-            return;
+            Assert.Fail("Image sample directory is missing.");
         }
 
         var entries = LoadSamples(samplesDir);
         if (entries.Count == 0) {
-            return;
-        }
-
-        var anyPresent = false;
-        foreach (var entry in entries) {
-            if (File.Exists(entry.ImagePath)) {
-                anyPresent = true;
-                break;
-            }
-        }
-        if (!anyPresent) {
-            return;
+            Assert.Fail("Image sample manifest contains no entries.");
         }
 
         foreach (var entry in entries) {

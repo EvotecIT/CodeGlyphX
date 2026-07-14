@@ -87,34 +87,11 @@ public sealed class RendererFormatTests {
     }
 
     [Fact]
-    public void Qr_ArtPresets_Render_Png_Format() {
-        var payload = "https://example.com/art";
-#pragma warning disable CS0618 // QrArtPresets is deprecated in favor of QrArt.Theme + QrEasyOptions.Art.
-        var presets = new[] {
-            QrArtPresets.NeonGlowSafe(),
-            QrArtPresets.LiquidGlassSafe(),
-            QrArtPresets.ConnectedSquircleGlowSafe(),
-            QrArtPresets.CutCornerTechSafe(),
-            QrArtPresets.InsetRingsSafe(),
-            QrArtPresets.StripeEyesSafe(),
-            QrArtPresets.PaintSplashSafe(),
-            QrArtPresets.PaintSplashPastelSafe(),
-        };
-#pragma warning restore CS0618
-
-        foreach (var preset in presets) {
-            var png = QrCode.Render(payload, OutputFormat.Png, preset).Data;
-            Assert.True(ImageReader.TryDetectFormat(png, out var format));
-            Assert.Equal(ImageFormat.Png, format);
-        }
-    }
-
-    [Fact]
     public void Qr_ArtApi_Render_Png_Format() {
         var payload = "https://example.com/art-api";
         var arts = new[] {
-            QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Safe, intensity: 60),
-            QrArt.Theme(QrArtTheme.StripeEyes, QrArtVariant.Safe, intensity: 58),
+            QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Conservative, intensity: 60),
+            QrArt.Theme(QrArtTheme.StripeEyes, QrArtVariant.Conservative, intensity: 58),
             QrArt.Theme(QrArtTheme.PaintSplash, QrArtVariant.Pastel, intensity: 62),
         };
 
@@ -334,10 +311,10 @@ public sealed class RendererFormatTests {
     }
 
     [Fact]
-    public void AsciiConsole_PreferScanReliability_Enables_Contrast_Safety() {
+    public void AsciiConsole_ConservativeLayout_Enables_Contrast_Clamp() {
         var matrix = new BitMatrix(21, 21);
         var options = AsciiConsole.Fit(matrix, new AsciiConsoleOptions {
-            PreferScanReliability = true,
+            UseConservativeQrLayout = true,
             UseHalfBlocks = true,
             UseAnsiColors = true,
             ColorizeLight = false,

@@ -64,7 +64,7 @@ param(
 $ErrorActionPreference = 'Stop'
 Push-Location $PSScriptRoot
 
-function Resolve-PowerForgeRoot {
+function Get-PowerForgeRootCandidates {
     param(
         [string]$RequestedRoot
     )
@@ -87,13 +87,25 @@ function Resolve-PowerForgeRoot {
         $cursor = $parent
     }
 
-    # Maintainer defaults + WSL-style mounts.
-    if ($IsWindows) {
-        $candidates += 'C:\Support\GitHub\PSPublishModule'
+    $evotecRoot = $env:EVOTEC_GITHUB_ROOT
+    if ([string]::IsNullOrWhiteSpace($evotecRoot)) {
+        $evotecRoot = if ($IsWindows) {
+            'C:\Support\GitHub'
+        } else {
+            Join-Path $HOME 'Documents/GitHub'
+        }
     }
-    $candidates += '/mnt/c/Support/GitHub/PSPublishModule'
+    $candidates += (Join-Path $evotecRoot 'PSPublishModule')
 
-    foreach ($candidate in ($candidates | Select-Object -Unique)) {
+    return $candidates | Select-Object -Unique
+}
+
+function Resolve-PowerForgeRoot {
+    param(
+        [string]$RequestedRoot
+    )
+
+    foreach ($candidate in (Get-PowerForgeRootCandidates -RequestedRoot $RequestedRoot)) {
         if ([string]::IsNullOrWhiteSpace($candidate)) { continue }
         try {
             $root = (Resolve-Path -LiteralPath $candidate -ErrorAction Stop).Path

@@ -107,14 +107,14 @@ internal static class QrAsciiExample {
         var radialCompactAsciiOptions = AsciiConsole.Fit(qrCompact.Modules, radialCompactOptions);
         var radialCompactAscii = MatrixAsciiRenderer.Render(qrCompact.Modules, radialCompactAsciiOptions);
 
-        var scanSafeOptions = AsciiConsolePresets.ScanSafe();
-        scanSafeOptions.DarkColor = new Rgba32(10, 10, 10);
-        scanSafeOptions.LightColor = new Rgba32(255, 255, 255);
-        scanSafeOptions.TargetWidth = CompactTargetWidth;
-        scanSafeOptions.TargetHeight = CompactTargetHeight;
-        scanSafeOptions.CellAspectRatio = 0.45;
-        var scanSafeAsciiOptions = AsciiConsole.Fit(qrCompact.Modules, scanSafeOptions);
-        var scanSafeAscii = MatrixAsciiRenderer.Render(qrCompact.Modules, scanSafeAsciiOptions);
+        var conservativeOptions = AsciiConsolePresets.ConservativeQr();
+        conservativeOptions.DarkColor = new Rgba32(10, 10, 10);
+        conservativeOptions.LightColor = new Rgba32(255, 255, 255);
+        conservativeOptions.TargetWidth = CompactTargetWidth;
+        conservativeOptions.TargetHeight = CompactTargetHeight;
+        conservativeOptions.CellAspectRatio = 0.45;
+        var conservativeAsciiOptions = AsciiConsole.Fit(qrCompact.Modules, conservativeOptions);
+        var conservativeAscii = MatrixAsciiRenderer.Render(qrCompact.Modules, conservativeAsciiOptions);
 
         var tinyOptions = AsciiConsolePresets.Tiny();
         tinyOptions.DarkColor = new Rgba32(0, 0, 0);
@@ -170,8 +170,8 @@ internal static class QrAsciiExample {
         Console.WriteLine($"ANSI ASCII QR preview (radial compact, {qrCompact.Size}x{qrCompact.Size} modules, scale {radialCompactAsciiOptions.Scale}, half-blocks {radialCompactAsciiOptions.UseHalfBlocks}, module {radialCompactAsciiOptions.ModuleWidth}x{radialCompactAsciiOptions.ModuleHeight}):");
         Console.WriteLine(radialCompactAscii);
         Console.WriteLine();
-        Console.WriteLine($"ANSI ASCII QR preview (scan safe compact, {qrCompact.Size}x{qrCompact.Size} modules, scale {scanSafeAsciiOptions.Scale}, half-blocks {scanSafeAsciiOptions.UseHalfBlocks}, module {scanSafeAsciiOptions.ModuleWidth}x{scanSafeAsciiOptions.ModuleHeight}):");
-        Console.WriteLine(scanSafeAscii);
+        Console.WriteLine($"ANSI ASCII QR preview (conservative layout, {qrCompact.Size}x{qrCompact.Size} modules, scale {conservativeAsciiOptions.Scale}, half-blocks {conservativeAsciiOptions.UseHalfBlocks}, module {conservativeAsciiOptions.ModuleWidth}x{conservativeAsciiOptions.ModuleHeight}):");
+        Console.WriteLine(conservativeAscii);
         Console.WriteLine();
         Console.WriteLine($"ANSI ASCII QR preview (tiny target, {qrCompact.Size}x{qrCompact.Size} modules, scale {tinyAsciiOptions.Scale}, half-blocks {tinyAsciiOptions.UseHalfBlocks}, module {tinyAsciiOptions.ModuleWidth}x{tinyAsciiOptions.ModuleHeight}):");
         Console.WriteLine(tinyAscii);

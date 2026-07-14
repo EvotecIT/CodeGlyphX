@@ -1,8 +1,8 @@
 {
   "badge": "Open Source • Apache 2.0 License",
-  "title": "Generate QR Codes & Barcodes Without Dependencies",
-  "tagline": "Blazing-fast, zero-dependency .NET library for QR Codes, Data Matrix, PDF417, Aztec, and all major 1D barcodes. No System.Drawing. No SkiaSharp. Just pure .NET.",
-  "status": "Actively developed • Stable core • Expanding format support",
+  "title": "Generate QR Codes & Barcodes Without Native Graphics Dependencies",
+  "tagline": "Pure-managed .NET library for QR Codes, Data Matrix, PDF417, Aztec, and common 1D barcodes. No System.Drawing, SkiaSharp, or ImageSharp.",
+  "status": "Open source • Package and NativeAOT contracts validated in CI",
   "panelTitle": "Quick preview",
   "ctas": [
     { "label": "Try the Playground", "href": "/playground/", "style": "primary" },

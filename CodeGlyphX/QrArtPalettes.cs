@@ -46,7 +46,7 @@ public static class QrArtPalettes {
         });
 
     /// <summary>
-    /// High-contrast palette suitable for strong scanning reliability.
+    /// High-contrast palette with conservative color choices.
     /// </summary>
     public static QrArtPalette HighContrast() => new(
         background: new Rgba32(248, 248, 248),

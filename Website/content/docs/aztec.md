@@ -16,12 +16,26 @@ Aztec is a 2D matrix barcode designed for high readability even when printed at 
 
 ```csharp
 using CodeGlyphX;
+using CodeGlyphX.Aztec;
 
 // Simple Aztec code
 AztecCode.Save("Ticket: CONF-2024-001", "aztec.png");
 
 // With error correction percentage
-AztecCode.Save("Ticket data", "aztec.png", errorCorrectionPercent: 33);
+AztecCode.Save("Ticket data", "aztec.png", new AztecEncodeOptions {
+    ErrorCorrectionPercent = 33
+});
+```
+
+Binary payloads use the same generic rendering and file APIs:
+
+```csharp
+using CodeGlyphX.Rendering;
+
+byte[] payload = { 0x00, 0x01, 0xFE, 0xFF };
+
+var png = AztecCode.Render(payload, OutputFormat.Png).Data;
+AztecCode.Save(payload, "binary-ticket.svg");
 ```
 
 ## Use Cases

@@ -39,12 +39,12 @@ public sealed class ExternalDecodeSamplesTests {
     public void Decode_ExternalSamples_EndToEnd() {
         var samplesDir = ResolveSamplesDirectory();
         if (samplesDir is null) {
-            return;
+            Assert.Fail("External sample directory is missing.");
         }
 
         var entries = LoadSamples(samplesDir);
         if (entries.Count == 0) {
-            return;
+            Assert.Fail("External sample manifest contains no entries.");
         }
 
         foreach (var entry in entries) {
@@ -72,12 +72,11 @@ public sealed class ExternalDecodeSamplesTests {
                     AggressiveSampling = true,
                     EnableTileScan = true,
                     MaxDimension = 2000,
-                    MaxMilliseconds = 4000,
                     BudgetMilliseconds = 6000
                 },
                 Image = new ImageDecodeOptions {
                     MaxDimension = 2000,
-                    MaxMilliseconds = 4000
+                    RecognitionBudgetMilliseconds = 4000
                 },
                 Barcode = new BarcodeDecodeOptions {
                     EnableTileScan = true,

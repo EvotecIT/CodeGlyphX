@@ -185,132 +185,14 @@ public static partial class QrDecoder {
     /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile.
     /// </summary>
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, QrPixelDecodeOptions? options) {
-        var ok = QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, out results);
-        if (options?.EnableTileScan == true) {
-            ok = ApplyTileScan(pixels, width, height, stride, fmt, options, CancellationToken.None, ref results) || ok;
-        }
-        return ok;
+        return QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, out results);
     }
 
     /// <summary>
     /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs) using the specified profile, with cancellation.
     /// </summary>
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        var ok = QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, cancellationToken, out results);
-        if (options?.EnableTileScan == true && !cancellationToken.IsCancellationRequested) {
-            ok = ApplyTileScan(pixels, width, height, stride, fmt, options, cancellationToken, ref results) || ok;
-        }
-        return ok;
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.
-    /// </summary>
-    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info) {
-        var ok = QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, out results, out var diagnostics);
-        info = QrPixelDecodeInfo.FromInternal(diagnostics);
-        return ok;
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
-    /// </summary>
-    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options) {
-        var ok = QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, out results, out var diagnostics);
-        if (options?.EnableTileScan == true) {
-            ok = ApplyTileScan(pixels, width, height, stride, fmt, options, CancellationToken.None, ref results) || ok;
-        }
-        info = QrPixelDecodeInfo.FromInternal(diagnostics);
-        return ok;
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
-    /// </summary>
-    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        var ok = QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, cancellationToken, out results, out var diagnostics);
-        if (options?.EnableTileScan == true && !cancellationToken.IsCancellationRequested) {
-            ok = ApplyTileScan(pixels, width, height, stride, fmt, options, cancellationToken, ref results) || ok;
-        }
-        info = QrPixelDecodeInfo.FromInternal(diagnostics);
-        return ok;
-    }
-
-    private static bool ApplyTileScan(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions options, CancellationToken cancellationToken, ref QrDecoded[] results) {
-        if (width <= 0 || height <= 0 || stride < width * 4) return results.Length > 0;
-        var list = new System.Collections.Generic.List<QrDecoded>(results.Length + 4);
-        var seen = new System.Collections.Generic.HashSet<byte[]>(ByteArrayComparer.Instance);
-        for (var i = 0; i < results.Length; i++) {
-            if (seen.Add(results[i].Bytes)) list.Add(results[i]);
-        }
-
-        var budgetMs = options.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options.MaxMilliseconds;
-        var tileBudgetMs = budgetMs > 0 ? Math.Max(300, budgetMs / 2) : 0;
-        var sw = tileBudgetMs > 0 ? System.Diagnostics.Stopwatch.StartNew() : null;
-
-        bool ShouldStop() {
-            if (cancellationToken.IsCancellationRequested) return true;
-            if (tileBudgetMs > 0 && sw is not null && sw.ElapsedMilliseconds >= tileBudgetMs) return true;
-            return false;
-        }
-
-        var grid = options.TileGrid > 0 ? options.TileGrid : (Math.Max(width, height) >= 900 ? 3 : 2);
-        if (grid < 2) grid = 2;
-        if (grid > 8) grid = 8;
-        var pad = Math.Max(8, Math.Min(width, height) / 40);
-        var perTileBudgetMs = tileBudgetMs > 0 ? Math.Max(200, tileBudgetMs / (grid * grid)) : 0;
-        var tileOptions = options;
-        if (perTileBudgetMs > 0 && options.BudgetMilliseconds != perTileBudgetMs) {
-            tileOptions = new QrPixelDecodeOptions {
-                Profile = options.Profile,
-                MaxDimension = options.MaxDimension,
-                MaxScale = options.MaxScale,
-                MaxMilliseconds = options.MaxMilliseconds,
-                BudgetMilliseconds = perTileBudgetMs,
-                AutoCrop = options.AutoCrop,
-                EnableTileScan = false,
-                TileGrid = options.TileGrid,
-                DisableTransforms = options.DisableTransforms,
-                AggressiveSampling = options.AggressiveSampling,
-                StylizedSampling = options.StylizedSampling
-            };
-        }
-        var tileW = width / grid;
-        var tileH = height / grid;
-
-        for (var ty = 0; ty < grid; ty++) {
-            for (var tx = 0; tx < grid; tx++) {
-                if (ShouldStop()) break;
-                var x0 = tx * tileW;
-                var y0 = ty * tileH;
-                var x1 = (tx == grid - 1) ? width : (tx + 1) * tileW;
-                var y1 = (ty == grid - 1) ? height : (ty + 1) * tileH;
-
-                x0 = Math.Max(0, x0 - pad);
-                y0 = Math.Max(0, y0 - pad);
-                x1 = Math.Min(width, x1 + pad);
-                y1 = Math.Min(height, y1 + pad);
-
-                var tw = x1 - x0;
-                var th = y1 - y0;
-                if (tw < 48 || th < 48) continue;
-
-                var startIndex = (long)y0 * stride + x0 * 4L;
-                var requiredLen = (long)(th - 1) * stride + tw * 4L;
-                if (startIndex < 0 || requiredLen <= 0) continue;
-                if (startIndex + requiredLen > pixels.Length) continue;
-
-                var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                if (TryDecode(tileSpan, tw, th, stride, fmt, out var decoded, tileOptions, cancellationToken)) {
-                    if (seen.Add(decoded.Bytes)) list.Add(decoded);
-                }
-            }
-            if (ShouldStop()) break;
-        }
-
-        if (list.Count == results.Length) return results.Length > 0;
-        results = list.ToArray();
-        return results.Length > 0;
+        return QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, fmt, options, cancellationToken, out results);
     }
 
     internal static bool TryDecodePixelsInternal(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded result, out QrPixelDecodeDiagnostics diagnostics) {
@@ -480,63 +362,6 @@ public static partial class QrDecoder {
         return TryDecodeAll((ReadOnlySpan<byte>)pixels, width, height, stride, fmt, out results, options, cancellationToken);
 #else
         results = Array.Empty<QrDecoded>();
-        return false;
-#endif
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics.
-    /// </summary>
-    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info) {
-        if (pixels is null) {
-            results = Array.Empty<QrDecoded>();
-            info = default;
-            return false;
-        }
-
-#if NET8_0_OR_GREATER
-        return TryDecodeAll((ReadOnlySpan<byte>)pixels, width, height, stride, fmt, out results, out info);
-#else
-        results = Array.Empty<QrDecoded>();
-        info = default;
-        return false;
-#endif
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics and profile options.
-    /// </summary>
-    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options) {
-        if (pixels is null) {
-            results = Array.Empty<QrDecoded>();
-            info = default;
-            return false;
-        }
-
-#if NET8_0_OR_GREATER
-        return TryDecodeAll((ReadOnlySpan<byte>)pixels, width, height, stride, fmt, out results, out info, options);
-#else
-        results = Array.Empty<QrDecoded>();
-        info = default;
-        return false;
-#endif
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from raw pixel data (best-effort, clean inputs), with diagnostics, profile options, and cancellation.
-    /// </summary>
-    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        if (pixels is null) {
-            results = Array.Empty<QrDecoded>();
-            info = default;
-            return false;
-        }
-
-#if NET8_0_OR_GREATER
-        return TryDecodeAll((ReadOnlySpan<byte>)pixels, width, height, stride, fmt, out results, out info, options, cancellationToken);
-#else
-        results = Array.Empty<QrDecoded>();
-        info = default;
         return false;
 #endif
     }

@@ -42,12 +42,12 @@ public sealed class QrPngCanvasOptions {
     public QrPngCanvasHaloOptions? Halo { get; set; }
 
     /// <summary>
-    /// Optional edge vignette drawn on the canvas (QR-safe by default).
+    /// Optional edge vignette drawn outside the QR area by default.
     /// </summary>
     public QrPngCanvasVignetteOptions? Vignette { get; set; }
 
     /// <summary>
-    /// Optional grain/noise texture drawn on the canvas (QR-safe by default).
+    /// Optional grain/noise texture drawn outside the QR area by default.
     /// </summary>
     public QrPngCanvasGrainOptions? Grain { get; set; }
 

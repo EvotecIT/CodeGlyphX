@@ -140,19 +140,19 @@ public partial class Playground {
         return new Rgba32(color.R, color.G, color.B, (byte)alpha);
     }
 
-    internal string GetSafetyStatus()
+    internal string GetHeuristicStatus()
     {
-        if (SafetyReport is null) return string.Empty;
-        var score = SafetyReport.Score;
-        if (score >= 80) return "Safe";
-        if (score >= 60) return "Caution";
-        return "Risky";
+        if (HeuristicReport is null) return string.Empty;
+        var score = HeuristicReport.Score;
+        if (score >= 80) return "Strong";
+        if (score >= 60) return "Review";
+        return "Weak";
     }
 
-    internal string GetSafetyColor()
+    internal string GetHeuristicColor()
     {
-        if (SafetyReport is null) return "#94a3b8";
-        var score = SafetyReport.Score;
+        if (HeuristicReport is null) return "#94a3b8";
+        var score = HeuristicReport.Score;
         if (score >= 80) return "#22c55e";
         if (score >= 60) return "#f59e0b";
         return "#ef4444";

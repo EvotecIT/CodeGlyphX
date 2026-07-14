@@ -12,7 +12,7 @@ using CodeGlyphX.RoyalMail;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Decodes 2D barcode symbologies from a <see cref="BitMatrix"/>.
+/// Decodes matrix, stacked, postal, and other multi-height symbologies from a <see cref="BitMatrix"/>.
 /// </summary>
 public static class MatrixBarcodeDecoder {
     /// <summary>
@@ -111,7 +111,7 @@ public static class MatrixBarcodeDecoder {
             BarcodeType.DataMatrix => DataMatrixDecoder.TryDecode(modules, out text),
             BarcodeType.PDF417 => Pdf417Decoder.TryDecode(modules, out text),
             BarcodeType.MicroPDF417 => MicroPdf417Decoder.TryDecode(modules, out text),
-            _ => throw new NotSupportedException($"BarcodeType.{type} is not a 2D matrix barcode.")
+            _ => throw new NotSupportedException($"BarcodeType.{type} is not supported by MatrixBarcodeDecoder.")
         };
     }
 

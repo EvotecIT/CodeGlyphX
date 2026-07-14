@@ -10,56 +10,34 @@ internal static class Program {
         var outputDir = ExampleRunner.PrepareOutputDirectory();
         var runner = new ExampleRunner(outputDir);
 
-        var runDiagnostics = Environment.GetEnvironmentVariable("CODEGLYPHX_DIAG_QR");
-        if (!string.IsNullOrEmpty(runDiagnostics) &&
-            (string.Equals(runDiagnostics, "1", StringComparison.OrdinalIgnoreCase) ||
-             string.Equals(runDiagnostics, "true", StringComparison.OrdinalIgnoreCase))) {
-            runner.Run("QR (diagnostics)", QrDiagnosticsExample.Run);
-            runner.PrintSummary();
-            return;
+        if (!TryRunRequestedExample(runner)) {
+            RunDefaultExamples(runner);
         }
 
-        var runHardArtDiagnostics = Environment.GetEnvironmentVariable("CODEGLYPHX_DECODE_HARD_ART");
-        if (!string.IsNullOrEmpty(runHardArtDiagnostics) &&
-            (string.Equals(runHardArtDiagnostics, "1", StringComparison.OrdinalIgnoreCase) ||
-             string.Equals(runHardArtDiagnostics, "true", StringComparison.OrdinalIgnoreCase))) {
-            runner.Run("QR (hard art diagnostics)", QrHardArtDiagnosticsExample.Run);
-            runner.PrintSummary();
-            return;
-        }
+        Environment.ExitCode = runner.PrintSummary() == 0 ? 0 : 1;
+    }
 
-        var runDecodeSamples = Environment.GetEnvironmentVariable("CODEGLYPHX_DECODE_SAMPLES");
-        if (!string.IsNullOrEmpty(runDecodeSamples) &&
-            (string.Equals(runDecodeSamples, "1", StringComparison.OrdinalIgnoreCase) ||
-             string.Equals(runDecodeSamples, "true", StringComparison.OrdinalIgnoreCase))) {
-            runner.Run("QR (decode samples)", QrDecodeSamplesExample.Run);
-            runner.PrintSummary();
-            return;
-        }
+    private static bool TryRunRequestedExample(ExampleRunner runner) {
+        if (RunWhenEnabled(runner, "CODEGLYPHX_CI_SMOKE", "Public API smoke", FlagshipApiExample.Run)) return true;
+        if (RunWhenEnabled(runner, "CODEGLYPHX_DIAG_QR", "QR (diagnostics)", QrDiagnosticsExample.Run)) return true;
+        if (RunWhenEnabled(runner, "CODEGLYPHX_DECODE_HARD_ART", "QR (hard art diagnostics)", QrHardArtDiagnosticsExample.Run)) return true;
+        if (RunWhenEnabled(runner, "CODEGLYPHX_DECODE_SAMPLES", "QR (decode samples)", QrDecodeSamplesExample.Run)) return true;
+        if (RunWhenEnabled(runner, "CODEGLYPHX_MODULE_DIFF", "QR (module diff)", QrModuleDiffExample.Run)) return true;
+        return RunWhenEnabled(runner, "CODEGLYPHX_SCREENSHOT_WALKTHROUGH", "QR (screenshot walkthrough)", QrScreenshotWalkthroughExample.Run);
+    }
 
-        var runModuleDiff = Environment.GetEnvironmentVariable("CODEGLYPHX_MODULE_DIFF");
-        if (!string.IsNullOrEmpty(runModuleDiff) &&
-            (string.Equals(runModuleDiff, "1", StringComparison.OrdinalIgnoreCase) ||
-             string.Equals(runModuleDiff, "true", StringComparison.OrdinalIgnoreCase))) {
-            runner.Run("QR (module diff)", QrModuleDiffExample.Run);
-            runner.PrintSummary();
-            return;
-        }
+    private static bool RunWhenEnabled(ExampleRunner runner, string variable, string name, Action<string> run) {
+        if (!IsEnabled(variable)) return false;
+        runner.Run(name, run);
+        return true;
+    }
 
-        var runScreenshotWalkthrough = Environment.GetEnvironmentVariable("CODEGLYPHX_SCREENSHOT_WALKTHROUGH");
-        if (!string.IsNullOrEmpty(runScreenshotWalkthrough) &&
-            (string.Equals(runScreenshotWalkthrough, "1", StringComparison.OrdinalIgnoreCase) ||
-             string.Equals(runScreenshotWalkthrough, "true", StringComparison.OrdinalIgnoreCase))) {
-            runner.Run("QR (screenshot walkthrough)", QrScreenshotWalkthroughExample.Run);
-            runner.PrintSummary();
-            return;
-        }
-
+    private static void RunDefaultExamples(ExampleRunner runner) {
         runner.Run("QR (basic)", QrGenerationExample.Run);
         runner.Run("QR (ascii console)", QrAsciiExample.Run);
         runner.Run("QR (payloads)", QrPayloadsExample.Run);
         runner.Run("QR (styling)", QrFancyExample.Run);
-        runner.Run("QR (art presets)", QrArtPresetsExample.Run);
+        runner.Run("QR (art themes)", QrArtThemesExample.Run);
         runner.Run("QR (connected)", QrConnectedExample.Run);
         runner.Run("QR (glow eyes)", QrGlowExample.Run);
         runner.Run("QR (style board)", QrStyleBoardExample.Run);
@@ -72,7 +50,11 @@ internal static class Program {
         runner.Run("Barcode", BarcodeExample.Run);
         runner.Run("Data Matrix", DataMatrixExample.Run);
         runner.Run("PDF417", Pdf417Example.Run);
+    }
 
-        runner.PrintSummary();
+    private static bool IsEnabled(string name) {
+        var value = Environment.GetEnvironmentVariable(name);
+        return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase) ||
+               string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
     }
 }

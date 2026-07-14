@@ -9,6 +9,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Trait("Category", "CorpusTiming")]
 public sealed class QrDecodingSamplesTests {
     [Theory]
     [InlineData("Assets/DecodingSamples/qr-clean-large.png", 1)]
@@ -28,19 +29,12 @@ public sealed class QrDecodingSamplesTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2200,
-            BudgetMilliseconds = TestBudget.Adjust(2000),
+            BudgetMilliseconds = TestBudget.Adjust(IsArtSample(relativePath) ? 5000 : 2000),
             AggressiveSampling = true,
             EnableTileScan = true
         };
 
-        if (!QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, options)) {
-            if (QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, out var info, options)) {
-                results = new[] { decoded };
-            } else {
-                Assert.Fail(info.ToString());
-            }
-        }
-
+        Assert.True(QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, options));
         Assert.True(results.Length >= minCount);
     }
 
@@ -63,8 +57,7 @@ public sealed class QrDecodingSamplesTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 1600,
-            MaxMilliseconds = TestBudget.Adjust(800),
-            BudgetMilliseconds = TestBudget.Adjust(2000),
+            BudgetMilliseconds = TestBudget.Adjust(IsArtSample(relativePath) ? 5000 : 2000),
             AggressiveSampling = true,
             EnableTileScan = true
         };
@@ -141,36 +134,6 @@ public sealed class QrDecodingSamplesTests {
         }
     }
 
-    [Theory(Skip = "Pending stylized finder/decoder improvements for heavy illustration samples.")]
-    [InlineData("Assets/DecodingSamples/qr-art-facebook-splash-grid.png", 1)]
-    [InlineData("Assets/DecodingSamples/qr-art-montage-grid.png", 1)]
-    [InlineData("Assets/DecodingSamples/qr-art-stripe-eye-grid.png", 1)]
-    [InlineData("Assets/DecodingSamples/qr-art-drip-variants.png", 1)]
-    [InlineData("Assets/DecodingSamples/qr-art-solid-bg-grid.png", 1)]
-    [InlineData("Assets/DecodingSamples/qr-art-gear-illustration-grid.png", 1)]
-    public void QrDecode_StylizedIllustrationSamples_Pending(string relativePath, int minCount) {
-        var bytes = ReadRepoFile(relativePath);
-        Assert.True(ImageReader.TryDecodeRgba32(bytes, out var rgba, out var width, out var height));
-
-        var options = new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Robust,
-            MaxDimension = 2200,
-            BudgetMilliseconds = 2500,
-            AggressiveSampling = true,
-            EnableTileScan = true
-        };
-
-        if (!QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var results, options)) {
-            if (QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, out var info, options)) {
-                results = new[] { decoded };
-            } else {
-                Assert.Fail(info.ToString());
-            }
-        }
-
-        Assert.True(results.Length >= minCount);
-    }
-
     [Fact]
     public void QrDecode_IllustrationSample_CompletesUnderBudget() {
         var bytes = ReadRepoFile("Assets/DecodingSamples/qr-illustration-template.jpg");
@@ -196,7 +159,6 @@ public sealed class QrDecodingSamplesTests {
 
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
-            MaxMilliseconds = TestBudget.Adjust(5000),
             BudgetMilliseconds = TestBudget.Adjust(5000),
             MaxDimension = 1600,
             AggressiveSampling = true
@@ -278,14 +240,11 @@ public sealed class QrDecodingSamplesTests {
         throw new FileNotFoundException($"Could not locate sample file '{relativePath}'.");
     }
 
-    private static string[] DecodeTexts(byte[] rgba, int width, int height, int stride, QrPixelDecodeOptions options) {
-        if (!QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var results, options)) {
-            if (QrDecoder.TryDecode(rgba, width, height, stride, PixelFormat.Rgba32, out var decoded, out var info, options)) {
-                return new[] { decoded.Text };
-            }
-            Assert.Fail(info.ToString());
-        }
+    private static bool IsArtSample(string relativePath) =>
+        relativePath.Contains("qr-art-", StringComparison.OrdinalIgnoreCase);
 
+    private static string[] DecodeTexts(byte[] rgba, int width, int height, int stride, QrPixelDecodeOptions options) {
+        Assert.True(QrDecoder.TryDecodeAll(rgba, width, height, stride, PixelFormat.Rgba32, out var results, options));
         return results
             .Select(result => result.Text)
             .Where(text => !string.IsNullOrWhiteSpace(text))

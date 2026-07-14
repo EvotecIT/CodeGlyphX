@@ -47,13 +47,13 @@ public class MatrixCodeBenchmarks
     [Benchmark(Description = "PDF417 PNG")]
     public byte[] Pdf417_Png()
     {
-        return Pdf417Code.Create(LongText).Png();
+        return Pdf417Code.Create(LongText).Render(OutputFormat.Png).Data;
     }
 
     [Benchmark(Description = "PDF417 SVG")]
     public string Pdf417_Svg()
     {
-        return Pdf417Code.Create(LongText).Svg();
+        return Pdf417Code.Create(LongText).Render(OutputFormat.Svg).GetText();
     }
 
     [Benchmark(Description = "Aztec PNG")]

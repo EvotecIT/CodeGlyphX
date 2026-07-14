@@ -480,11 +480,6 @@ internal static class WebpManagedDecoder {
                 return true;
             }
 
-            if (WebpVp8Decoder.IsInterframe(vp8Payload)) {
-                frame = new WebpAnimationFrameInfo(x, y, width, height, duration, blend, disposeToBackground, Array.Empty<byte>());
-                return true;
-            }
-
             return false;
         }
 

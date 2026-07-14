@@ -10,11 +10,11 @@ using CodeGlyphX.RoyalMail;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Encodes 2D barcode symbologies into a <see cref="BitMatrix"/>.
+/// Encodes matrix, stacked, postal, and other multi-height symbologies into a <see cref="BitMatrix"/>.
 /// </summary>
 public static class MatrixBarcodeEncoder {
     /// <summary>
-    /// Encodes a 2D barcode using the specified <see cref="BarcodeType"/>.
+    /// Encodes a matrix, stacked, postal, or multi-height symbol using the specified <see cref="BarcodeType"/>.
     /// </summary>
     public static BitMatrix Encode(BarcodeType type, string value) {
         if (value is null) throw new ArgumentNullException(nameof(value));
@@ -33,7 +33,7 @@ public static class MatrixBarcodeEncoder {
             BarcodeType.DataMatrix => DataMatrix.DataMatrixEncoder.Encode(value),
             BarcodeType.PDF417 => Pdf417.Pdf417Encoder.Encode(value),
             BarcodeType.MicroPDF417 => Pdf417.MicroPdf417Encoder.Encode(value),
-            _ => throw new NotSupportedException($"BarcodeType.{type} is not a 2D matrix barcode.")
+            _ => throw new NotSupportedException($"BarcodeType.{type} is not supported by MatrixBarcodeEncoder.")
         };
     }
 

@@ -245,7 +245,7 @@ public partial class Playground {
                     };
                 }
 
-                SafetyReport = QrEasy.EvaluateSafety(Content, options);
+                HeuristicReport = QrEasy.EvaluateScanHeuristics(Content, options);
                 pngBytes = QrCode.Render(Content, OutputFormat.Png, options).Data;
                 svg = QrCode.Render(Content, OutputFormat.Svg, options).GetText();
             }

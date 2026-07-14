@@ -1,278 +1,131 @@
-# CodeGlyphX - AI Assistant Context
+# CodeGlyphX assistant context
 
-This file provides comprehensive context for AI coding assistants (Claude, Copilot, ChatGPT, etc.) to help users with CodeGlyphX.
+Use this file as a compact contract when suggesting CodeGlyphX APIs. The README, compiled examples, source XML comments, and generated API reference remain authoritative.
 
-## Quick Reference
+## Product boundary
 
-**What it is:** Zero-dependency .NET library for QR codes, barcodes, and 2D matrix codes
-**Install:** `dotnet add package CodeGlyphX`
-**License:** Apache-2.0
-**Targets:** .NET 8+, .NET 10+, .NET Standard 2.0, .NET Framework 4.7.2
+CodeGlyphX is a pure-managed .NET toolkit for QR codes, linear barcodes, Data Matrix, PDF417, Aztec, QR payloads, and image rendering/decoding. It does not use System.Drawing, SkiaSharp, ImageSharp, or a native codec library.
 
-## Core Patterns (Copy-Paste Ready)
+Targets:
 
-### QR Code Generation
+- `net8.0` and `net10.0`: full QR pixel pipeline, trim/AOT analyzers, no runtime package dependency
+- `netstandard2.0` and `net472`: managed `System.Memory` dependency and a less capable QR image fallback
+
+Do not describe every symbology or codec path as equally robust. Use the documented format matrix and known limits.
+
+## Primary rendering APIs
+
+Use extension-based `Save` for files:
 
 ```csharp
 using CodeGlyphX;
 
-// One-liner - format auto-detected from extension
 QR.Save("https://example.com", "qr.png");
-QR.Save("https://example.com", "qr.svg");
-QR.Save("https://example.com", "qr.pdf");
+Barcode.Save(BarcodeType.Code128, "PRODUCT-123", "barcode.svg");
+DataMatrixCode.Save("LOT-42", "lot.png");
+Pdf417Code.Save("DOCUMENT-42", "document.pdf");
+AztecCode.Save("TICKET-42", "ticket.svg");
+```
 
-// Get bytes instead of file
-byte[] png = QR.ToPng("https://example.com");
-string svg = QR.ToSvg("https://example.com");
+Use an explicit `OutputFormat` for memory or stream output:
 
-// With error correction
-QR.Save("data", "qr.png", QrErrorCorrectionLevel.H);
+```csharp
+using CodeGlyphX.Rendering;
 
-// Styled QR
-var opts = new QrEasyOptions {
+byte[] png = QrCode.Render("Hello", OutputFormat.Png).Data;
+string svg = Barcode.Render(BarcodeType.Code128, "PRODUCT-123", OutputFormat.Svg).GetText();
+
+using var stream = File.Create("hello.pdf");
+OutputWriter.Write(stream, QrCode.Render("Hello", OutputFormat.Pdf));
+```
+
+Do not suggest removed per-format facade or builder methods such as `RenderPng`, `ToPng`, `.Png()`, or `SaveSvg`. Builders terminate with `Render(format)`, `Save(path)`, or `Save(stream, format)`.
+
+## Options
+
+```csharp
+using CodeGlyphX.Rendering.Png;
+
+var options = new QrEasyOptions {
+    ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
     ModuleShape = QrPngModuleShape.Rounded,
-    ModuleCornerRadiusPx = 3,
-    Eyes = new QrPngEyeOptions {
-        OuterShape = QrPngModuleShape.Circle,
-        InnerShape = QrPngModuleShape.Circle,
-        OuterColor = new Rgba32(220, 20, 60),
-        InnerColor = new Rgba32(220, 20, 60)
-    }
+    Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Conservative, intensity: 60)
 };
-QR.Save("https://example.com", "styled.png", opts);
+
+QR.Save("https://example.com", "styled.png", options);
 ```
 
-### Barcode Generation
+Use `QrEasy.EvaluateScanHeuristics` for static checks, but never describe its score as proof that output will scan. Validate final artifacts on target scanners and devices.
+
+## Payloads
 
 ```csharp
-using CodeGlyphX;
-
-// 1D Barcodes
-Barcode.Save(BarcodeType.Code128, "PRODUCT-123", "barcode.png");
-Barcode.Save(BarcodeType.Ean13, "5901234123457", "ean.png");
-Barcode.Save(BarcodeType.Code39, "ABC123", "code39.png");
-Barcode.Save(BarcodeType.UpcA, "012345678905", "upca.png");
-
-// Get bytes
-byte[] png = Barcode.Png(BarcodeType.Code128, "data");
-```
-
-### 2D Matrix Codes
-
-```csharp
-using CodeGlyphX;
-
-DataMatrixCode.Save("Serial: ABC123", "datamatrix.png");
-Pdf417Code.Save("Document ID: 98765", "pdf417.png");
-AztecCode.Save("Ticket: CONF-2024", "aztec.png");
-
-// Get bytes
-byte[] dm = DataMatrixCode.ToPng("data");
-byte[] pdf = Pdf417Code.ToPng("data");
-byte[] az = AztecCode.ToPng("data");
-```
-
-### Decoding (Reading Barcodes)
-
-```csharp
-using CodeGlyphX;
-
-// QR decode
-if (QrImageDecoder.TryDecodeImage(File.ReadAllBytes("qr.png"), out var result))
-    Console.WriteLine(result.Text);
-
-// Barcode decode
-if (Barcode.TryDecodeImage(File.ReadAllBytes("barcode.png"), BarcodeType.Code128, out var barcode))
-    Console.WriteLine(barcode.Text);
-
-// Universal decode (tries all formats)
-if (CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded))
-    Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
-
-// Decode with options
-var opts = QrPixelDecodeOptions.Screen(maxMilliseconds: 300);
-QrImageDecoder.TryDecodeImage(bytes, opts, out var decoded);
-```
-
-### Payload Helpers (Structured QR Data)
-
-```csharp
-using CodeGlyphX;
 using CodeGlyphX.Payloads;
 
-// WiFi
 QR.Save(QrPayloads.Wifi("NetworkName", "Password123"), "wifi.png");
 
-// Contact (vCard)
-QR.Save(QrPayloads.VCard(
-    firstName: "John",
-    lastName: "Doe",
-    email: "john@example.com",
-    phone: "+1234567890"
-), "contact.png");
+QR.Save(QrPayload.VCard(
+    firstName: "Ava",
+    lastName: "Stone",
+    phone: "+14155550198",
+    email: "ava@example.com",
+    organization: "Example"), "contact.png");
 
-// OTP/2FA (Google Authenticator compatible)
 QR.Save(QrPayloads.OneTimePassword(
     OtpAuthType.Totp,
-    secret: "JBSWY3DPEHPK3PXP",
+    secretBase32: "JBSWY3DPEHPK3PXP",
     label: "user@example.com",
-    issuer: "MyApp"
-), "otp.png");
+    issuer: "Example"), "otp.png");
 
-// SEPA Payment
 QR.Save(QrPayloads.Girocode(
     iban: "DE89370400440532013000",
     bic: "COBADEFFXXX",
-    recipientName: "Company",
+    name: "Example",
     amount: 99.99m,
-    reference: "Invoice-001"
-), "payment.png");
-
-// URL, Email, Phone, SMS
-QR.Save(QrPayloads.Url("https://example.com"), "url.png");
-QR.Save(QrPayloads.Email("to@example.com", "Subject", "Body"), "email.png");
-QR.Save(QrPayloads.Phone("+1234567890"), "phone.png");
-QR.Save(QrPayloads.Sms("+1234567890", "Message"), "sms.png");
+    remittanceInformation: "Invoice-42"), "payment.png");
 ```
 
-## Supported Formats
+## Decoding
 
-### Barcode Types (BarcodeType enum)
-- `Code128`, `Gs1128` - High-density alphanumeric
-- `Code39`, `Code93` - Alphanumeric (A-Z, 0-9, symbols)
-- `Code11` - Numeric with optional checksum
-- `Codabar` - Numeric with start/stop chars
-- `Ean13`, `Ean8` - Retail (international)
-- `UpcA`, `UpcE` - Retail (North America)
-- `Itf14`, `Itf` - Interleaved 2 of 5
-- `Msi`, `Plessey` - Numeric with checksum
-- `Telepen` - Full ASCII
-- `Pharmacode`, `PharmacodeTwoTrack` - Pharmaceutical
-- `Code32` - Italian Pharmacode
-
-### Output Formats (by extension)
-- Raster: `.png`, `.jpg`, `.bmp`, `.tga`, `.ico`
-- Vector: `.svg`, `.svgz`, `.pdf`, `.eps`
-- Text: `.html`, `.htm`
-- API only: ASCII, raw RGBA pixels
-
-### 2D Matrix Codes
-- `DataMatrixCode` - Industrial/healthcare marking
-- `Pdf417Code` - ID cards, boarding passes
-- `AztecCode` - Tickets, curved surfaces
-
-## Platform Integration Examples
-
-### ASP.NET Core
+Use `QrImageDecoder` for QR-only input and `CodeGlyph` for unified recognition:
 
 ```csharp
-// Minimal API
-app.MapGet("/qr/{text}", (string text) =>
-{
-    var png = QR.ToPng(text);
-    return Results.File(png, "image/png", "qr.png");
-});
-
-// Controller
-[HttpGet("barcode/{text}")]
-public IActionResult GetBarcode(string text)
-{
-    var png = Barcode.Png(BarcodeType.Code128, text);
-    return File(png, "image/png");
-}
-```
-
-### Blazor
-
-```csharp
-@using CodeGlyphX
-
-<img src="@_qrDataUri" alt="QR Code" />
-
-@code {
-    private string _qrDataUri = "";
-
-    protected override void OnInitialized()
-    {
-        var png = QR.ToPng("https://example.com");
-        _qrDataUri = $"data:image/png;base64,{Convert.ToBase64String(png)}";
-    }
-}
-```
-
-### .NET MAUI
-
-```csharp
-using CodeGlyphX;
-
-var png = QR.ToPng("https://example.com");
-QrImage.Source = ImageSource.FromStream(() => new MemoryStream(png));
-```
-
-## Key Classes Reference
-
-| Class | Purpose | Main Methods |
-|-------|---------|--------------|
-| `QR` | QR code generation | `Save()`, `ToPng()`, `ToSvg()`, `ToPdf()` |
-| `Barcode` | 1D barcode generation | `Save()`, `Png()`, `Svg()` |
-| `DataMatrixCode` | Data Matrix generation | `Save()`, `ToPng()`, `ToSvg()` |
-| `Pdf417Code` | PDF417 generation | `Save()`, `ToPng()`, `ToSvg()` |
-| `AztecCode` | Aztec code generation | `Save()`, `ToPng()`, `ToSvg()` |
-| `QrImageDecoder` | QR decoding from images | `TryDecodeImage()`, `DecodeImage()` |
-| `CodeGlyph` | Universal decode | `TryDecode()`, `TryDecodeAllPng()` |
-| `QrPayloads` | Structured payloads | `Wifi()`, `VCard()`, `OneTimePassword()`, etc. |
-
-## Error Correction Levels (QR)
-
-| Level | Recovery | Use Case |
-|-------|----------|----------|
-| `L` | ~7% | Maximum data capacity |
-| `M` | ~15% | Default, balanced |
-| `Q` | ~25% | Higher reliability |
-| `H` | ~30% | Maximum error correction |
-
-## Common Patterns
-
-### Generate + Display in Web
-```csharp
-var base64 = Convert.ToBase64String(QR.ToPng("data"));
-var dataUri = $"data:image/png;base64,{base64}";
-```
-
-### Batch Generation
-```csharp
-foreach (var item in items)
-{
-    QR.Save(item.Data, $"qr_{item.Id}.png");
-}
-```
-
-### With Custom Colors
-```csharp
-var opts = new QrEasyOptions {
-    ForegroundColor = new Rgba32(0, 100, 150),
-    BackgroundColor = new Rgba32(255, 255, 255)
+byte[] image = File.ReadAllBytes("code.png");
+var options = new CodeGlyphDecodeOptions {
+    Qr = QrPixelDecodeOptions.Screen(budgetMilliseconds: 500, maxDimension: 1600),
+    Image = ImageDecodeOptions.Strict(
+        maxBytes: 8 * 1024 * 1024,
+        maxPixels: 8_000_000,
+        maxDimension: 1600)
+        .WithRecognitionBudget(500)
 };
-QR.Save("data", "colored.png", opts);
+
+if (CodeGlyph.TryDecodeImage(image, out var decoded, options)) {
+    Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
+}
 ```
 
-## Dependencies
+Decode limits:
 
-- **.NET 8+/10+**: Zero dependencies
-- **.NET Standard 2.0 / .NET Framework 4.7.2**: Requires `System.Memory` (4.5.5)
+- `MaxBytes`/`MaxPixels`: `null` inherits the `ImageReader` global, `0` disables that per-call limit, positive values are explicit limits.
+- `MaxDimension` resizes after original-image validation and is not a codec-memory limit.
+- `RecognitionBudgetMilliseconds` applies after raster decode during symbol recognition.
+- `QrPixelDecodeOptions.BudgetMilliseconds` is a cooperative budget for one public call. It does not silently change the selected decode profile and is not a hard real-time deadline.
+- Unsupported WebP VP8 animation interframes fail rather than returning fabricated pixels.
 
-## AOT & Trimming
+## Release evidence
 
-Fully compatible with Native AOT and trimming:
-```xml
-<PublishAot>true</PublishAot>
-<PublishTrimmed>true</PublishTrimmed>
-```
+Before claiming a release is ready, require:
+
+- complete solution build, including fuzz and examples
+- `net8.0`, `net10.0`, and Windows `net472` tests
+- inspected `.nupkg` and `.snupkg` contents for all four targets
+- a published and executed NativeAOT consumer
+- generated website/API docs built from current XML output
 
 ## Links
 
-- NuGet: https://www.nuget.org/packages/CodeGlyphX
-- GitHub: https://github.com/EvotecIT/CodeGlyphX
-- Docs: https://codeglyphx.com/docs/
-- API Reference: https://codeglyphx.com/api/
-- Playground: https://codeglyphx.com/playground/
+- [NuGet](https://www.nuget.org/packages/CodeGlyphX)
+- [Documentation](https://codeglyphx.com/docs/)
+- [API reference](https://codeglyphx.com/api/)
+- [2.0 migration](Website/content/docs/migration-2.md)

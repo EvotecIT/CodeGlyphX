@@ -42,7 +42,8 @@ internal static partial class QrPixelDecoder {
             return;
         }
 
-        CollectAllFromImage(image, settings, list, seen, accept, budget, pool);
+        var sink = new QrCollectionSink(list, seen, accept);
+        CollectAllFromImage(scale, image, settings, sink, budget, pool);
         if (budget.IsExpired) return;
 
         if (settings.AllowContrastStretch) {
@@ -50,7 +51,7 @@ internal static partial class QrPixelDecoder {
             if (range < 48) {
                 var stretched = image.WithContrastStretch(48, pool);
                 if (!ReferenceEquals(stretched.Gray, image.Gray)) {
-                    CollectAllFromImage(stretched, settings, list, seen, accept, budget, pool);
+                    CollectAllFromImage(scale, stretched, settings, sink, budget, pool);
                 }
             }
         }
@@ -101,7 +102,7 @@ internal static partial class QrPixelDecoder {
         bool stylized) {
         if (budget.IsExpired) return;
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var tightBudget = budget.Enabled && budget.BudgetMilliseconds <= 800;
         var rowStepOverride = 0;
         var maxCandidates = 0;
         if (tightBudget) {
@@ -331,7 +332,7 @@ internal static partial class QrPixelDecoder {
 
         // Finder-based sampling (robust to extra background/noise). Try multiple triples when the region contains UI/text.
         Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        var tightBudget = budget.Enabled && budget.MaxMilliseconds <= 800;
+        var tightBudget = budget.Enabled && budget.BudgetMilliseconds <= 800;
         var rowStepOverride = 0;
         if (tightBudget) {
             var minDim = image.Width < image.Height ? image.Width : image.Height;
@@ -446,7 +447,7 @@ internal static partial class QrPixelDecoder {
         }
 
         if (candidates.Count > 0) {
-            if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+            if (budget.Enabled && budget.BudgetMilliseconds <= 800) {
                 return false;
             }
             var maxSingleFinder = aggressive ? 20 : 30;
@@ -459,7 +460,7 @@ internal static partial class QrPixelDecoder {
             }
         }
 
-        if (budget.Enabled && budget.MaxMilliseconds <= 800) {
+        if (budget.Enabled && budget.BudgetMilliseconds <= 800) {
             return false;
         }
 

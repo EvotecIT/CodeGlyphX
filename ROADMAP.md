@@ -1,139 +1,41 @@
-# ROADMAP
+# CodeGlyphX roadmap
 
-This list is mostly **work we still want to do**. The "Recently completed" section is just context.
+The roadmap lists unresolved product work only. Completed implementation history belongs in releases and pull requests.
 
-## Vision
-**North star:** fastest, most reliable no-deps QR/barcode toolkit for .NET, with best-in-class screenshot/stylized decode and scan-safety guidance.
+## Current release boundary: 2.0
 
-**Pillars**
-- Decode robustness in real-world inputs (screenshots, gradients, heavy styling).
-- Styling + safety (presets that look great and still scan reliably).
-- Format breadth + conformance (clear compatibility + golden vectors).
-- Performance leadership (low-alloc, SIMD-ready, AOT-friendly).
-- Tooling & trust (benchmarks, docs, examples users can rely on).
+- [ ] Ship the smaller rendering API and documented migration path.
+- [ ] Keep solution, package, symbol, NativeAOT, docs, and website checks green on the release commit.
+- [ ] Publish 2.0 and verify the public NuGet package contents before recommending it to consumers.
 
-## Tag legend (lightweight ownership)
-- [bench] benchmarks/reporting
-- [decoder] decoding robustness
-- [perf] performance
-- [style] styling/presets
-- [webp] WebP support
-- [formats] image formats
-- [docs] documentation
-- [dx] developer experience
-- [tests] test coverage
-- [aot] AOT/readiness
-- [symbology] new symbologies
-- [platform] target frameworks/platforms
-- [ux] UI/playground/website
-- [art] illustrated/experimental art
-- [safety] scan-safety rules
+## Decoder reliability
 
-## Recently completed (for context)
-- Benchmark controls + filters for quick vs full runs, plus report clarity/metadata.
-- Benchmark reports now include OS/CPU metadata and aligned quick/full guidance. [bench][docs]
-- Expanded stress pack with stronger generated variants (noise/contrast/quiet-zone). [bench]
-- Added website-flow round-trip decode tests without large binaries. [tests][dx]
-- Added screenshot decode walkthrough example + env toggle. [dx]
-- net472 parity documentation (feature matrix + guidance).
-- Added stylized art decode pack to scenario runs with pass‑rate + timing summaries.
-- CI: PR website build check (static output) before merge.
-- Managed WebP VP8 lossy encode (intra), alpha (ALPH), segmentation, and skip-coefficient support. [formats][webp]
-- End-to-end WebP output across QR/Barcode/Matrix APIs (Save/Render + extension routing) + WebP quality options. [formats][webp][dx]
-- GIF/TIFF encoding support (palette optimization + dithering; TIFF compression options). [formats][docs]
+- [ ] Close remaining real stylized/illustrated QR failures with corpus-backed changes and per-image latency limits.
+- [ ] Expand QR screenshot, rotation, mirror, low-contrast, blur, and multi-code fixtures without making synthetic tests the only evidence.
+- [ ] Add golden/reference-backed pixels for managed image decoders where current tests only assert dimensions or non-empty output.
+- [ ] Keep `net472`/`netstandard2.0` fallback expectations separate from the full modern QR pixel pipeline.
 
-## Milestones (priority, no dates)
-### P0 — Reliability & clarity
-- Close remaining heavy-illustration failures in `Assets/DecodingSamples`. [decoder]
-- Lightweight multi-scale search + adaptive binarization tuned for stylized QR. [decoder][docs]
+## Codec conformance
 
-### P1 — Performance & styling foundation
-- Reduce allocations in hot decode loops + mask-specialized traversal. [perf]
-- Optional SIMD for thresholding/binarization where it wins on real inputs. [perf]
-- Styling Phase 1: per-module color rules, logo defaults, eye palette modes. [style]
-- Safety Phase 2: scan-safety constraints + warnings in reports. [style][safety]
-- Preset schema + v1 packs/shape sets/palettes. [style]
+- [ ] Either implement VP8 animation interframes or keep them as an explicit hard failure with fixtures.
+- [ ] Expand JPEG, GIF, TIFF, BMP, ICO, WebP, and Netpbm corpus coverage around malformed and boundary inputs.
+- [ ] Add new formats only with a clear support matrix, bounded decode behavior, and reference-backed tests.
 
-### P2 — Platform breadth & UX
-- Expand format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and schedule periodic **local** full runs. [formats]
-- AOT evaluation + documentation of safe paths. [aot]
-- Add symbology packs + golden vectors (MaxiCode, rMQR, etc.). [symbology][tests]
-- Playground template selector + website style gallery. [style][ux]
-- Illustrated QR art backlog (sprite/atlas, experimental AI overlay). [art][safety]
+## Performance
 
-## Backlog — Benchmarks & reporting
-- Keep quick/full guidance current and add a short "how to interpret" blurb per pack. [bench][docs]
+- [ ] Reduce decode-loop allocations only where BenchmarkDotNet and scenario-pack evidence shows a material win.
+- [ ] Evaluate SIMD thresholding/binarization on supported modern targets with correctness parity and end-to-end timing.
+- [ ] Keep quick benchmark reports for iteration and full reports for release decisions; never mix the two as one baseline.
 
-## Backlog — Decoder robustness
-- Close the remaining heavy-illustration failures in `Assets/DecodingSamples`. [decoder]
-- Add lightweight multi-scale search before heavy fallback paths to improve screenshots. [decoder]
-- Tune adaptive binarization for stylized inputs; capture perf tradeoffs in docs. [decoder][docs]
+## Product surfaces
 
-## Backlog — Performance
-- Reduce allocations in hot decode loops (pool block buffers, reuse scratch grids). [perf]
-- Mask-specialized decode traversal to remove per-cell mask math. [perf]
-- Optional SIMD for thresholding/binarization where it wins on real inputs. [perf]
+- [ ] Keep the website playground and generated API reference on the same public package/API shape as the README examples.
+- [ ] Add integration recipes only when their code is compiled or exercised by an owned example.
+- [ ] Add symbologies such as MaxiCode, rMQR, DotCode, or Han Xin only with conformance vectors and decode/encode scope stated up front.
 
-## Backlog — Developer experience
-- Improve console examples (ASCII QR render + screenshot decode walkthrough). [dx]
+## Non-goals
 
-## Next — QR Styling & Presets (weeks)
-### End-to-end “Fancy QR” pipeline (for Image #1/#2/#3/#4 style boards)
-**Phase 1 — Core rendering options (must come first)**
-- Add per-module color rules beyond palette zones (by mask bit/position, optional finder proximity rules). [style]
-- Add safe defaults for logo overlays + padding (sizing presets + ECC/version guidance). [style]
-- Add optional eye palette modes (multi-color) and finalize preset coverage for eye styles. [style]
-
-**Phase 2 — Safety + constraints**
-- Add scan-safety constraints: minimum eye clarity, timing pattern protection, and eye contrast checks. [style][safety]
-- Add timing/eye protection warnings surfaced in the safety report. [style][safety]
-
-**Phase 3 — Presets + assets**
-- Define preset schema (serializable) for full style (modules/eyes/palette/background/logo). [style]
-- Preset pack v1 (names + intent): [style]
-  - Classic, Bold, Soft, Dot, Grid, Tech, Stamp, Poster, Neon, Minimal, Sticker, Candy, Mono-High.
-- Shape set v1 (modules + eyes): [style]
-  - Modules: square, rounded, circle, dot, squircle, diamond, soft-diamond, leaf, wave, blob, dot-grid.
-  - Eyes (frame/ball): square, rounded, circle, squircle, diamond, bracket, double-ring, target, badge.
-- Add curated palette sets (brand, neon, pastel, mono-contrast, duotone). [style]
-
-**Phase 4 — Examples + gallery (after core options are in)**
-- Add a dedicated “style gallery” page (beyond the home section) if we want a full catalog view. [style][ux]
-
-**Phase 5 — UI integration (last)**
-- Playground: add template selector + live preview with preset export/import. [style][ux]
-- Website: add marketing gallery + download links (use generated assets, not manual images). [style][ux]
-
-## Backlog — Image formats
-- WebP: finish managed coverage (VP8 inter if encountered, broader VP8L features). [formats][webp]
-- Expand format corpus (JPEG progressive/CMYK, GIF variants, BMP/ICO edge cases) and schedule periodic **local** full runs. [formats]
-
-## Backlog — Platform & runtime
-- Evaluate AOT impact on cold start and size; document any AOT-safe paths. [aot]
-- Investigate net472 back-ports that do not hurt perf (targeted, opt-in). [platform]
-
-## Backlog — Symbologies
-- Add 2D/stacked formats in a staged order (MaxiCode, Code 16K/49, Codablock F, DotCode, Micro Data Matrix, rMQR, Grid Matrix, Han Xin, GS1 Composite). [symbology]
-- Build decoder test packs + golden vectors for each new format. [symbology][tests]
-
-## Later — Illustrated QR Art (backlog)
-- Sprite/atlas renderer for illustrated module tiles (no API calls). [art]
-- Optional AI overlay mode (experimental), gated behind safety checks and decode validation. [art][safety]
-
-## DX & Docs (ongoing)
-- Keep “quick vs full” benchmark guidance and preflight steps in README/docs. [docs]
-- Decision guide: “which symbology to pick” + “which target framework to pick”. [docs]
-- Publish a supported format matrix + known gaps; keep docs/FAQ in sync. [docs]
-
-## Wins by size (guide)
-### Fast wins (hours)
-- Pack labeling in reports and website tables. [bench][docs]
-
-### Small wins (1-3 days)
-- Stress/realism pack expansion (scaled UI shots, noise, quiet-zone variants). [bench]
-- Lightweight multi-scale decode pass before fallback. [decoder]
-
-### Big wins (1-3 weeks)
-- Close heavy-illustration decode failures in `Assets/DecodingSamples`. [decoder]
-- Mask-specialized traversal + allocation reductions in hot decode loops. [perf]
-- SIMD binarization for net8+ when it wins on real inputs. [perf]
+- Reintroducing per-format shortcut methods across every facade or builder.
+- Reporting success with placeholder, transparent, repeated, or otherwise fabricated decode output.
+- Adding downstream compatibility shims for unpublished or stale packages.
+- Claiming universal codec, symbology, trimming, or platform behavior beyond the validated matrix.

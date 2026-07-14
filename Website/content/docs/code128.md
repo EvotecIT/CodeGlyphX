@@ -21,7 +21,7 @@ using CodeGlyphX;
 Barcode.Save(BarcodeType.Code128, "PRODUCT-12345", "code128.png");
 
 // GS1-128 with Application Identifiers
-Barcode.Save(BarcodeType.Gs1128, "(01)09501101530003(17)250101", "gs1.png");
+Barcode.Save(BarcodeType.GS1_128, "(01)09501101530003(17)250101", "gs1.png");
 ```
 
 ## Character Sets

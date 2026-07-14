@@ -1,6 +1,6 @@
-External Samples (optional)
+External Samples
 
-This folder is the **barcode/QR corpus** used by optional decode tests.
+This folder is the **barcode/QR corpus** used by end-to-end decode tests.
 Place real-world barcode/QR images here. For each image, add a sidecar text file
 with the same base name and a .txt extension that contains the expected decoded
 text. For multi-code images, put one expected payload per line. Example:
@@ -11,6 +11,9 @@ You can also use the manifest:
   manifest.json
 The download script reads it and writes the sidecars for you.
 Use "required": false to mark optional samples (failures only log).
+
+CI downloads the manifest corpus before running tests. A missing required sample
+fails the suite instead of being reported as a passing test.
 
 Optional sidecars:
 - sample.kind : CodeGlyphKind (Qr, Barcode1D, DataMatrix, Pdf417, Aztec)

@@ -12,18 +12,18 @@ public sealed partial class ImageDecodeOptions {
     }
 
     /// <summary>
-    /// Sets the maximum decode time budget (milliseconds).
+    /// Sets the cooperative symbol-recognition budget. Raster image decoding itself is not timed.
     /// </summary>
-    public ImageDecodeOptions WithMaxMilliseconds(int maxMilliseconds) {
-        MaxMilliseconds = maxMilliseconds;
+    public ImageDecodeOptions WithRecognitionBudget(int milliseconds) {
+        RecognitionBudgetMilliseconds = milliseconds < 0 ? 0 : milliseconds;
         return this;
     }
 
     /// <summary>
-    /// Sets the time+dimension budget in one call.
+    /// Sets the symbol-recognition time budget and maximum output dimension in one call.
     /// </summary>
-    public ImageDecodeOptions WithBudget(int maxMilliseconds, int maxDimension = 0) {
-        MaxMilliseconds = maxMilliseconds;
+    public ImageDecodeOptions WithRecognitionBudget(int milliseconds, int maxDimension) {
+        RecognitionBudgetMilliseconds = milliseconds < 0 ? 0 : milliseconds;
         if (maxDimension > 0) {
             MaxDimension = maxDimension;
         }

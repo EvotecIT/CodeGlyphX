@@ -16,7 +16,7 @@ public sealed class DecodeOptionsFluentTests {
             .WithQrBudget(250, 640)
             .WithQrProfile(QrDecodeProfile.Fast)
             .WithAggressiveQrSampling()
-            .WithImageBudget(300, 500)
+            .WithImageRecognitionBudget(300, 500)
             .WithImageMaxPixels(1234)
             .WithImageMaxBytes(2048)
             .WithBarcode(b => b.WithCode39Checksum(Code39ChecksumPolicy.StripIfValid));
@@ -29,10 +29,10 @@ public sealed class DecodeOptionsFluentTests {
         Assert.NotNull(options.Image);
         Assert.NotNull(options.Barcode);
         Assert.Equal(QrDecodeProfile.Fast, options.Qr!.Profile);
-        Assert.Equal(250, options.Qr.MaxMilliseconds);
+        Assert.Equal(250, options.Qr.BudgetMilliseconds);
         Assert.Equal(640, options.Qr.MaxDimension);
         Assert.True(options.Qr.AggressiveSampling);
-        Assert.Equal(300, options.Image!.MaxMilliseconds);
+        Assert.Equal(300, options.Image!.RecognitionBudgetMilliseconds);
         Assert.Equal(500, options.Image.MaxDimension);
         Assert.Equal(1234, options.Image.MaxPixels);
         Assert.Equal(2048, options.Image.MaxBytes);
@@ -49,7 +49,7 @@ public sealed class DecodeOptionsFluentTests {
             .WithAggressiveSampling();
 
         Assert.Equal(QrDecodeProfile.Balanced, options.Profile);
-        Assert.Equal(200, options.MaxMilliseconds);
+        Assert.Equal(200, options.BudgetMilliseconds);
         Assert.Equal(420, options.MaxDimension);
         Assert.Equal(2, options.MaxScale);
         Assert.True(options.DisableTransforms);
@@ -59,11 +59,11 @@ public sealed class DecodeOptionsFluentTests {
     [Fact]
     public void ImageDecodeOptions_Fluent_Configures_Options() {
         var options = new ImageDecodeOptions()
-            .WithBudget(150, 320)
+            .WithRecognitionBudget(150, 320)
             .WithMaxPixels(5000)
             .WithMaxBytes(8192);
 
-        Assert.Equal(150, options.MaxMilliseconds);
+        Assert.Equal(150, options.RecognitionBudgetMilliseconds);
         Assert.Equal(320, options.MaxDimension);
         Assert.Equal(5000, options.MaxPixels);
         Assert.Equal(8192, options.MaxBytes);

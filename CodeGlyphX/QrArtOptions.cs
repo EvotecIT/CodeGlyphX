@@ -3,7 +3,7 @@ using System;
 namespace CodeGlyphX;
 
 /// <summary>
-/// High-level QR art options that map to scan-friendly render settings.
+/// High-level QR art options that map to decorative render settings.
 /// </summary>
 public sealed class QrArtOptions {
     /// <summary>
@@ -14,7 +14,7 @@ public sealed class QrArtOptions {
     /// <summary>
     /// Variant to apply within the theme.
     /// </summary>
-    public QrArtVariant Variant { get; set; } = QrArtVariant.Safe;
+    public QrArtVariant Variant { get; set; } = QrArtVariant.Conservative;
 
     /// <summary>
     /// Art intensity (0..100). Higher values increase decorative effects.
@@ -22,9 +22,9 @@ public sealed class QrArtOptions {
     public int Intensity { get; set; } = 50;
 
     /// <summary>
-    /// Safety guardrail strength applied after the theme.
+    /// Decorative guardrail strength applied after the theme.
     /// </summary>
-    public QrArtSafetyMode SafetyMode { get; set; } = QrArtSafetyMode.Safe;
+    public QrArtGuardrailMode GuardrailMode { get; set; } = QrArtGuardrailMode.Conservative;
 
     internal void Validate() {
         if (Intensity is < 0 or > 100) throw new ArgumentOutOfRangeException(nameof(Intensity));

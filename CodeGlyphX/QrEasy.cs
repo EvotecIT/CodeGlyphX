@@ -24,13 +24,13 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 /// <summary>
-/// One-line QR generation helpers with sane defaults.
+/// QR encoding, styling, and static art-heuristic helpers with practical defaults.
 /// </summary>
 /// <example>
 /// <code>
 /// using CodeGlyphX;
-/// var png = QrEasy.RenderPng("https://example.com");
-/// var svg = QrEasy.RenderSvg("https://example.com");
+/// var qr = QrEasy.Encode("https://example.com");
+/// var report = QrEasy.EvaluateScanHeuristics("https://example.com");
 /// </code>
 /// </example>
 public static partial class QrEasy {
@@ -62,24 +62,26 @@ public static partial class QrEasy {
     }
 
     /// <summary>
-    /// Evaluates QR art safety for a payload and options.
+    /// Evaluates static QR art heuristics for a payload and options.
+    /// This does not decode the rendered artifact or guarantee scanner interoperability.
     /// </summary>
-    public static QrArtSafetyReport EvaluateSafety(string payload, QrEasyOptions? options = null) {
+    public static QrArtHeuristicReport EvaluateScanHeuristics(string payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
         var qr = Encode(payload, opts);
         var render = BuildPngOptions(opts, qr);
-        return QrArtSafety.Evaluate(qr, render);
+        return QrArtHeuristics.Evaluate(qr, render);
     }
 
     /// <summary>
-    /// Evaluates QR art safety for a payload with embedded defaults.
+    /// Evaluates static QR art heuristics for a payload with embedded defaults.
+    /// This does not decode the rendered artifact or guarantee scanner interoperability.
     /// </summary>
-    public static QrArtSafetyReport EvaluateSafety(QrPayloadData payload, QrEasyOptions? options = null) {
+    public static QrArtHeuristicReport EvaluateScanHeuristics(QrPayloadData payload, QrEasyOptions? options = null) {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         var opts = MergeOptions(payload, options);
         var qr = Encode(payload.Text, opts);
         var render = BuildPngOptions(opts, qr);
-        return QrArtSafety.Evaluate(qr, render);
+        return QrArtHeuristics.Evaluate(qr, render);
     }
 }

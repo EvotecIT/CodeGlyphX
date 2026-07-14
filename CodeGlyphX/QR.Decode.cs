@@ -1,11 +1,11 @@
 using System;
 using System.IO;
 using System.Threading;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Bmp;
-using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX;
 
@@ -31,7 +31,7 @@ public static partial class QR {
         decoded = null!;
         if (png is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options: null, out var rgba, out var width, out var height)) return false;
         return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
     }
 
@@ -78,32 +78,13 @@ public static partial class QR {
     }
 
     /// <summary>
-    /// Attempts to decode all QR codes from a PNG byte array with diagnostics and options.
-    /// </summary>
-    public static bool TryDecodeAllPng(byte[] png, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
-        return TryDecodeAllPng(png, out decoded, out info, options, CancellationToken.None);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG byte array with diagnostics, options, and cancellation.
-    /// </summary>
-    public static bool TryDecodeAllPng(byte[] png, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        decoded = Array.Empty<QrDecoded>();
-        info = default;
-        if (png is null) return false;
-        if (cancellationToken.IsCancellationRequested) return false;
-        var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-        return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, cancellationToken);
-    }
-
-    /// <summary>
     /// Attempts to decode all QR codes from a PNG byte array with options and cancellation.
     /// </summary>
     public static bool TryDecodeAllPng(byte[] png, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (png is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options: null, out var rgba, out var width, out var height)) return false;
         return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, cancellationToken);
     }
 
@@ -122,26 +103,12 @@ public static partial class QR {
     }
 
     /// <summary>
-    /// Attempts to decode all QR codes from a PNG byte array with image decode options, diagnostics, and profile options.
-    /// </summary>
-    public static bool TryDecodeAllPng(byte[] png, ImageDecodeOptions? imageOptions, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
-        return TryDecodeAllPng(png, imageOptions, out decoded, out info, options, CancellationToken.None);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG byte array with image decode options, diagnostics, profile options, and cancellation.
-    /// </summary>
-    public static bool TryDecodeAllPng(byte[] png, ImageDecodeOptions? imageOptions, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        return TryDecodeAllPngCore(png, imageOptions, options, cancellationToken, out decoded, out info);
-    }
-
-    /// <summary>
     /// Attempts to decode a QR code from a PNG file.
     /// </summary>
     public static bool TryDecodePngFile(string path, out QrDecoded decoded) {
         decoded = null!;
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, options: null, out var data)) return false;
         return TryDecodePng(data, out decoded);
     }
 
@@ -151,7 +118,7 @@ public static partial class QR {
     public static bool TryDecodePngFile(string path, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
         decoded = null!;
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, options: null, out var data)) return false;
         return TryDecodePng(data, options, cancellationToken, out decoded);
     }
 
@@ -169,7 +136,7 @@ public static partial class QR {
         decoded = null!;
         info = default;
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, imageOptions, out var data)) return false;
         return TryDecodePng(data, imageOptions, out decoded, out info, options, cancellationToken);
     }
 
@@ -186,7 +153,7 @@ public static partial class QR {
     public static bool TryDecodePngFile(string path, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
         decoded = null!;
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, imageOptions, out var data)) return false;
         return TryDecodePng(data, imageOptions, options, cancellationToken, out decoded);
     }
 
@@ -196,7 +163,7 @@ public static partial class QR {
     public static bool TryDecodeAllPngFile(string path, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, options: null, out var data)) return false;
         return TryDecodeAllPng(data, out decoded);
     }
 
@@ -206,26 +173,8 @@ public static partial class QR {
     public static bool TryDecodeAllPngFile(string path, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, options: null, out var data)) return false;
         return TryDecodeAllPng(data, options, cancellationToken, out decoded);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG file with diagnostics and options.
-    /// </summary>
-    public static bool TryDecodeAllPngFile(string path, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
-        return TryDecodeAllPngFile(path, out decoded, out info, options, CancellationToken.None);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG file with diagnostics, options, and cancellation.
-    /// </summary>
-    public static bool TryDecodeAllPngFile(string path, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        decoded = Array.Empty<QrDecoded>();
-        info = default;
-        if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
-        return TryDecodeAllPng(data, out decoded, out info, options, cancellationToken);
     }
 
     /// <summary>
@@ -241,26 +190,8 @@ public static partial class QR {
     public static bool TryDecodeAllPngFile(string path, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
+        if (!DecodeResultHelpers.TryReadBinary(path, imageOptions, out var data)) return false;
         return TryDecodeAllPng(data, imageOptions, options, cancellationToken, out decoded);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG file with image decode options, diagnostics, and profile options.
-    /// </summary>
-    public static bool TryDecodeAllPngFile(string path, ImageDecodeOptions? imageOptions, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
-        return TryDecodeAllPngFile(path, imageOptions, out decoded, out info, options, CancellationToken.None);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG file with image decode options, diagnostics, profile options, and cancellation.
-    /// </summary>
-    public static bool TryDecodeAllPngFile(string path, ImageDecodeOptions? imageOptions, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        decoded = Array.Empty<QrDecoded>();
-        info = default;
-        if (string.IsNullOrWhiteSpace(path)) return false;
-        if (!path.TryReadBinary(out var data)) return false;
-        return TryDecodeAllPng(data, imageOptions, out decoded, out info, options, cancellationToken);
     }
 
     /// <summary>
@@ -269,7 +200,7 @@ public static partial class QR {
     public static bool TryDecodePng(Stream stream, out QrDecoded decoded) {
         decoded = null!;
         if (stream is null) return false;
-        var data = stream.ReadBinary();
+        if (!DecodeResultHelpers.TryReadBinary(stream, options: null, out var data)) return false;
         return TryDecodePng(data, out decoded);
     }
 
@@ -280,7 +211,7 @@ public static partial class QR {
         decoded = null!;
         if (stream is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var data = stream.ReadBinary();
+        if (!DecodeResultHelpers.TryReadBinary(stream, options: null, out var data)) return false;
         return TryDecodePng(data, options, cancellationToken, out decoded);
     }
 
@@ -299,7 +230,7 @@ public static partial class QR {
         info = default;
         if (stream is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var data = stream.ReadBinary();
+        if (!DecodeResultHelpers.TryReadBinary(stream, imageOptions, out var data)) return false;
         return TryDecodePng(data, imageOptions, out decoded, out info, options, cancellationToken);
     }
 
@@ -317,107 +248,39 @@ public static partial class QR {
         decoded = null!;
         if (stream is null) return false;
         if (cancellationToken.IsCancellationRequested) return false;
-        var data = stream.ReadBinary();
+        if (!DecodeResultHelpers.TryReadBinary(stream, imageOptions, out var data)) return false;
         return TryDecodePng(data, imageOptions, options, cancellationToken, out decoded);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG stream with diagnostics and options.
-    /// </summary>
-    public static bool TryDecodeAllPng(Stream stream, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
-        return TryDecodeAllPng(stream, out decoded, out info, options, CancellationToken.None);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG stream with diagnostics, options, and cancellation.
-    /// </summary>
-    public static bool TryDecodeAllPng(Stream stream, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        decoded = Array.Empty<QrDecoded>();
-        info = default;
-        if (stream is null) return false;
-        if (cancellationToken.IsCancellationRequested) return false;
-        var data = stream.ReadBinary();
-        return TryDecodeAllPng(data, out decoded, out info, options, cancellationToken);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG stream with image decode options, diagnostics, and profile options.
-    /// </summary>
-    public static bool TryDecodeAllPng(Stream stream, ImageDecodeOptions? imageOptions, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options = null) {
-        return TryDecodeAllPng(stream, imageOptions, out decoded, out info, options, CancellationToken.None);
-    }
-
-    /// <summary>
-    /// Attempts to decode all QR codes from a PNG stream with image decode options, diagnostics, profile options, and cancellation.
-    /// </summary>
-    public static bool TryDecodeAllPng(Stream stream, ImageDecodeOptions? imageOptions, out QrDecoded[] decoded, out QrPixelDecodeInfo info, QrPixelDecodeOptions? options, CancellationToken cancellationToken) {
-        decoded = Array.Empty<QrDecoded>();
-        info = default;
-        if (stream is null) return false;
-        if (cancellationToken.IsCancellationRequested) return false;
-        var data = stream.ReadBinary();
-        return TryDecodeAllPng(data, imageOptions, out decoded, out info, options, cancellationToken);
     }
 
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded) {
         decoded = null!;
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) return false;
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
-            return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) return false;
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, imageOptions, out var rgba, out var width, out var height)) return false;
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out token);
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
     }
 
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded decoded, out QrPixelDecodeInfo info) {
         decoded = null!;
         info = default;
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) return false;
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
-            return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) return false;
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, imageOptions, out var rgba, out var width, out var height)) return false;
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out token);
+        return QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
     }
 
     private static bool TryDecodeAllPngCore(byte[] png, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
         if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) return false;
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
-            return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) return false;
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, imageOptions, out var rgba, out var width, out var height)) return false;
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, imageOptions, out token);
+        return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, options, token);
     }
 
-    private static bool TryDecodeAllPngCore(byte[] png, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded, out QrPixelDecodeInfo info) {
-        decoded = Array.Empty<QrDecoded>();
-        info = default;
-        if (png is null) return false;
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, imageOptions, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) return false;
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, imageOptions, token)) return false;
-            return QrDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out decoded, out info, options, token);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
-    }
 }

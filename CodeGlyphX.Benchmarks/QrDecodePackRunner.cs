@@ -392,16 +392,13 @@ internal static class QrDecodePackRunner {
             Environment.SetEnvironmentVariable("CODEGLYPHX_QR_MODULE_DUMP_LIMIT", "3");
         }
         try {
-            if (QrDecoder.TryDecodeAll(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, out var decoded, out var info, scenario.Options)) {
+            if (QrDecoder.TryDecodeAll(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, out var decoded, scenario.Options)) {
                 metaLines.Add($"DecodedCount: {decoded.Length}");
-                metaLines.Add($"InfoAll: {info}");
                 for (var i = 0; i < decoded.Length; i++) {
                     var text = decoded[i].Text ?? string.Empty;
                     var textPreview = text.Length > 120 ? text[..120] + "..." : text;
                     metaLines.Add($"Result[{i}]: v{decoded[i].Version} {decoded[i].ErrorCorrectionLevel} m{decoded[i].Mask} textLen={text.Length} text=\"{textPreview}\"");
                 }
-            } else {
-                metaLines.Add($"InfoAll: {info}");
             }
 
             if (QrDecoder.TryDecode(data.Rgba, data.Width, data.Height, data.Stride, PixelFormat.Rgba32, out var single, out var infoSingle, scenario.Options)) {
@@ -483,6 +480,7 @@ internal static class QrDecodePackRunner {
         sb.AppendLine("- stress/screenshot/art packs track robustness progress (lower % is expected during tuning)");
         sb.AppendLine("- quick mode uses fewer reps/ops; use full mode for baseline numbers");
         sb.AppendLine("- external engines run fewer reps to keep runs tractable");
+        sb.AppendLine("- each operation invokes one public decode call; BudgetMilliseconds is per operation");
         sb.AppendLine("- opt = decode option summary for the scenario");
         sb.AppendLine("- diag = median diagnostics (scale/threshold/invert/candidates/dimension) when available");
         sb.AppendLine();
@@ -588,7 +586,7 @@ internal static class QrDecodePackRunner {
 
     private static string FormatOptions(QrPixelDecodeOptions options) {
         var tile = options.EnableTileScan ? options.TileGrid : 0;
-        return $"p={options.Profile} md={options.MaxDimension} ms={options.MaxMilliseconds} bud={options.BudgetMilliseconds} sc={options.MaxScale} crop={(options.AutoCrop ? 1 : 0)} tile={tile} agg={(options.AggressiveSampling ? 1 : 0)} styl={(options.StylizedSampling ? 1 : 0)} xform={(options.DisableTransforms ? 1 : 0)}";
+        return $"p={options.Profile} md={options.MaxDimension} budget={options.BudgetMilliseconds} sc={options.MaxScale} crop={(options.AutoCrop ? 1 : 0)} tile={tile} agg={(options.AggressiveSampling ? 1 : 0)} styl={(options.StylizedSampling ? 1 : 0)} xform={(options.DisableTransforms ? 1 : 0)}";
     }
 
     private static DiagnosticSummary? SummarizeDiagnostics(IReadOnlyList<QrPixelDecodeInfo> infos) {

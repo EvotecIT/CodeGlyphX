@@ -378,12 +378,14 @@ binarized-*.png
 
 # Website generated artifacts
 .playwright-mcp/*
+.playwright-cli/
 .claude/*
 site/
 temp-playground/
 temp-hash/
 temp-docs/
 Build/BenchmarkResults/
+Build/Artefacts/
 nul
 temp-check/
 docfx/
@@ -391,6 +393,7 @@ docfx/
 api.bak/
 Website/_site/
 Website/_temp/
+Website/data/release-hub.json
 CodeGlyphX.Website/wwwroot/api-docs/
 CodeGlyphX.Website/wwwroot/api/
 

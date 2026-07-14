@@ -1,7 +1,7 @@
 namespace CodeGlyphX;
 
 /// <summary>
-/// Barcode symbologies supported by <see cref="BarcodeEncoder"/>.
+/// Barcode and matrix symbologies recognized by CodeGlyphX facades.
 /// </summary>
 public enum BarcodeType {
     /// <summary>
@@ -133,19 +133,19 @@ public enum BarcodeType {
     /// </summary>
     UspsImb,
     /// <summary>
-    /// KIX Code (not supported).
+    /// KIX Code (matrix-symbol pipeline).
     /// </summary>
     KixCode,
     /// <summary>
-    /// Data Matrix (not supported in 1D encoder).
+    /// Data Matrix (matrix-symbol pipeline).
     /// </summary>
     DataMatrix,
     /// <summary>
-    /// PDF417 (not supported in 1D encoder).
+    /// PDF417 (matrix-symbol pipeline).
     /// </summary>
     PDF417,
     /// <summary>
-    /// MicroPDF417 (not supported in 1D encoder).
+    /// MicroPDF417 (matrix-symbol pipeline).
     /// </summary>
     MicroPDF417,
 }

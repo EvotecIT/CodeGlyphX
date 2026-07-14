@@ -42,6 +42,28 @@ public sealed class AztecTests {
     }
 
     [Fact]
+    public void Aztec_Binary_Render_And_Save_Use_Generic_Surface() {
+        var payload = new byte[] { 0x00, 0x01, 0x7F, 0x80, 0xFE, 0xFF };
+        var svg = AztecCode.Render(payload, OutputFormat.Svg).GetText();
+        Assert.Contains("<svg", svg, StringComparison.OrdinalIgnoreCase);
+
+        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.png");
+        try {
+            AztecCode.Save((ReadOnlySpan<byte>)payload, path);
+            var png = File.ReadAllBytes(path);
+            Assert.True(png.Length > 8);
+            Assert.Equal(0x89, png[0]);
+            Assert.Equal(0x50, png[1]);
+            Assert.Equal(0x4E, png[2]);
+            Assert.Equal(0x47, png[3]);
+        } finally {
+            if (File.Exists(path)) {
+                File.Delete(path);
+            }
+        }
+    }
+
+    [Fact]
     public void Aztec_Decode_Cancelled_ReturnsFalse() {
         var matrix = AztecCode.Encode("AZTEC-CANCEL");
         var pixels = MatrixPngRenderer.RenderPixels(matrix, new MatrixPngRenderOptions {

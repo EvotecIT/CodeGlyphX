@@ -14,7 +14,7 @@ public sealed class PngSuiteDecodeTests {
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
             .ToArray();
 
-        if (files.Length == 0) return;
+        Assert.NotEmpty(files);
 
         foreach (var file in files) {
             var bytes = File.ReadAllBytes(file);

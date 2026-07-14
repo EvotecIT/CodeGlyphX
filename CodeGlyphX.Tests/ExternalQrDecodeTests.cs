@@ -129,14 +129,6 @@ public sealed class ExternalQrDecodeTests {
         Assert.Equal(6, decoded.Mask);
     }
 
-    [Fact(Skip = "Encoder output differs from external generator for this vector; decoding external modules is the compatibility requirement.")]
-    public void EncodeText_Version9_Q_Mask6_MatchesExternalModules() {
-        var expected = ParseModules(Modules53_V9Q_M6);
-        var qr = QrCodeEncoder.EncodeText(Payload, QrErrorCorrectionLevel.Q, minVersion: 9, maxVersion: 9, forceMask: 6);
-        Assert.Equal(9, qr.Version);
-        AssertBitMatrixEqual(expected, qr.Modules);
-    }
-
     private static BitMatrix ParseModules(string[] rows) {
         var size = rows.Length;
         var matrix = new BitMatrix(size, size);
@@ -153,15 +145,4 @@ public sealed class ExternalQrDecodeTests {
         return matrix;
     }
 
-    private static void AssertBitMatrixEqual(BitMatrix expected, BitMatrix actual) {
-        Assert.Equal(expected.Width, actual.Width);
-        Assert.Equal(expected.Height, actual.Height);
-
-        for (var y = 0; y < expected.Height; y++) {
-            for (var x = 0; x < expected.Width; x++) {
-                if (expected[x, y] == actual[x, y]) continue;
-                Assert.Fail($"Mismatch at ({x},{y}).");
-            }
-        }
-    }
 }

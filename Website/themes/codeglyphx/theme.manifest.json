@@ -18,7 +18,7 @@
   "featureContracts": {
     "apiDocs": {
       "requiredPartials": ["api-header", "api-footer", "theme-tokens"],
-      "cssHrefs": ["/css/app.css", "/css/api.css"],
+      "cssHrefs": ["/css/app.css", "/css/prism-theme.css", "/css/api.css"],
       "requiredCssSelectors": [
         ".api-layout",
         ".api-sidebar",
@@ -33,7 +33,7 @@
     "docs": {
       "requiredLayouts": ["docs"],
       "requiredPartials": ["header", "footer", "docs-sidebar", "theme-tokens"],
-      "cssHrefs": ["/css/app.css"],
+      "cssHrefs": ["/css/app.css", "/css/prism-theme.css"],
       "requiredCssSelectors": [".docs-layout"]
     },
     "notFound": {

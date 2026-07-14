@@ -17,17 +17,17 @@ internal static partial class QrPixelDecoder {
     private readonly struct DecodeBudget {
         public bool Enabled { get; }
         public long Deadline { get; }
-        public int MaxMilliseconds { get; }
+        public int BudgetMilliseconds { get; }
         private readonly CancellationToken _cancellationToken;
         private readonly bool _hasCancellation;
 
-        public DecodeBudget(int maxMilliseconds, CancellationToken cancellationToken) {
-            MaxMilliseconds = maxMilliseconds;
+        public DecodeBudget(int budgetMilliseconds, CancellationToken cancellationToken) {
+            BudgetMilliseconds = budgetMilliseconds;
             _cancellationToken = cancellationToken;
             _hasCancellation = cancellationToken.CanBeCanceled;
-            if (maxMilliseconds > 0) {
+            if (budgetMilliseconds > 0) {
                 Enabled = true;
-                Deadline = Stopwatch.GetTimestamp() + (long)(maxMilliseconds * (Stopwatch.Frequency / 1000.0));
+                Deadline = Stopwatch.GetTimestamp() + (long)(budgetMilliseconds * (Stopwatch.Frequency / 1000.0));
             } else {
                 Enabled = false;
                 Deadline = 0;
@@ -51,9 +51,9 @@ internal static partial class QrPixelDecoder {
 
     private static int GetBudgetThresholdLimit(DecodeBudget budget) {
         if (!budget.Enabled) return int.MaxValue;
-        if (budget.MaxMilliseconds <= 400) return 1;
-        if (budget.MaxMilliseconds <= 800) return 3;
-        if (budget.MaxMilliseconds <= 1600) return 6;
+        if (budget.BudgetMilliseconds <= 400) return 1;
+        if (budget.BudgetMilliseconds <= 800) return 3;
+        if (budget.BudgetMilliseconds <= 1600) return 6;
         return int.MaxValue;
     }
 
@@ -169,7 +169,6 @@ internal static partial class QrPixelDecoder {
         var minContrast = settings.MinContrast;
 
         if (options is not null) {
-            var effectiveMaxMs = GetEffectiveMaxMilliseconds(options);
             if (options.MaxScale > 0) {
                 maxScale = Math.Min(maxScale, options.MaxScale);
                 collectMaxScale = Math.Min(collectMaxScale, options.MaxScale);
@@ -194,29 +193,6 @@ internal static partial class QrPixelDecoder {
                 if (collectMaxScale < maxScale) {
                     var boostedCollect = maxScale <= 3 ? maxScale : Math.Min(maxScale, collectMaxScale + 1);
                     collectMaxScale = boostedCollect;
-                }
-            }
-            if (effectiveMaxMs > 0) {
-                if (effectiveMaxMs <= 400) {
-                    maxScale = Math.Min(maxScale, 1);
-                    collectMaxScale = Math.Min(collectMaxScale, 1);
-                    allowTransforms = false;
-                    allowContrastStretch = false;
-                    allowNormalize = false;
-                    allowAdaptiveThreshold = false;
-                    allowBlur = false;
-                    allowExtraThresholds = false;
-                } else if (effectiveMaxMs <= 800) {
-                    maxScale = Math.Min(maxScale, 2);
-                    collectMaxScale = Math.Min(collectMaxScale, 1);
-                    allowTransforms = false;
-                    allowContrastStretch = false;
-                    allowNormalize = false;
-                    allowAdaptiveThreshold = false;
-                    allowBlur = false;
-                }
-                if (effectiveMaxMs <= 800 && !options.AggressiveSampling && !options.StylizedSampling) {
-                    aggressiveSampling = false;
                 }
             }
         }
@@ -254,18 +230,9 @@ internal static partial class QrPixelDecoder {
 
     private static int GetScaleStart(QrPixelDecodeOptions? options, int width, int height) {
         if (options is null) return 1;
-        var effectiveMaxMs = GetEffectiveMaxMilliseconds(options);
-        if (options.MaxDimension <= 0 && effectiveMaxMs <= 0) return 1;
+        if (options.MaxDimension <= 0) return 1;
         var maxDim = Math.Max(width, height);
-        var targetMax = options.MaxDimension > 0 ? options.MaxDimension : int.MaxValue;
-        if (effectiveMaxMs > 0) {
-            if (effectiveMaxMs <= 400) targetMax = Math.Min(targetMax, 400);
-            else if (effectiveMaxMs <= 800) {
-                var budgetMax = options.AggressiveSampling || options.Profile == QrDecodeProfile.Robust ? 1000 : 600;
-                targetMax = Math.Min(targetMax, budgetMax);
-            }
-        }
-        if (targetMax == int.MaxValue) return 1;
+        var targetMax = options.MaxDimension;
         if (maxDim <= targetMax) return 1;
         var scale = (int)Math.Ceiling(maxDim / (double)targetMax);
         return Math.Clamp(scale, 1, 8);
@@ -328,14 +295,9 @@ internal static partial class QrPixelDecoder {
         var best = default(QrPixelDecodeDiagnostics);
         var scaleStart = GetScaleStart(options, width, height);
         var profile = options?.Profile ?? QrDecodeProfile.Robust;
-        var effectiveMaxMs = options is null ? 0 : GetEffectiveMaxMilliseconds(options);
-        if (effectiveMaxMs > 0) {
-            if (effectiveMaxMs <= 800) profile = QrDecodeProfile.Fast;
-            else if (effectiveMaxMs <= 1600 && profile == QrDecodeProfile.Robust) profile = QrDecodeProfile.Balanced;
-        }
         var settings = GetProfileSettings(profile, Math.Min(width, height));
         settings = ApplyOverrides(settings, options, scaleStart);
-        var budgetMilliseconds = options?.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options?.MaxMilliseconds ?? 0;
+        var budgetMilliseconds = options?.BudgetMilliseconds ?? 0;
         var budget = new DecodeBudget(budgetMilliseconds, cancellationToken);
 
         if (budget.IsExpired) {
@@ -388,7 +350,7 @@ internal static partial class QrPixelDecoder {
         }
 
         diagnostics = best;
-        if (options?.AggressiveSampling == true && !budget.IsNearDeadline(300) && Math.Max(width, height) <= 900) {
+        if (options?.AggressiveSampling == true && !budget.IsNearDeadline(300)) {
             if (TryDecodeUpscaled(pixels, width, height, stride, fmt, profile, options, accept, cancellationToken, budget, out result, out var diagUpscaled)) {
                 diagnostics = diagUpscaled;
                 return true;
@@ -402,168 +364,12 @@ internal static partial class QrPixelDecoder {
         return TryDecodeAll(pixels, width, height, stride, fmt, options: null, accept: null, cancellationToken: default, out results);
     }
 
-    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, out QrDecoded[] results, out QrPixelDecodeDiagnostics diagnostics) {
-        results = Array.Empty<QrDecoded>();
-        diagnostics = default;
-
-        if (width <= 0 || height <= 0 || stride < width * 4 || pixels.Length < (height - 1) * stride + width * 4) {
-            diagnostics = new QrPixelDecodeDiagnostics(
-                scale: 0,
-                threshold: 0,
-                invert: false,
-                candidateCount: 0,
-                candidateTriplesTried: 0,
-                dimension: 0,
-                moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.InvalidInput));
-            return false;
-        }
-
-        var ok = TryDecodeAll(pixels, width, height, stride, fmt, options: null, accept: null, cancellationToken: default, out results);
-        if (!ok) {
-            diagnostics = new QrPixelDecodeDiagnostics(
-                scale: 1,
-                threshold: 0,
-                invert: false,
-                candidateCount: 0,
-                candidateTriplesTried: 0,
-                dimension: 0,
-                moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.Payload));
-            return false;
-        }
-
-        var first = results.Length > 0 ? results[0] : null;
-        var dimension = first is null ? 0 : (first.Version * 4 + 17);
-        var moduleDiag = first is null
-            ? new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.Payload)
-            : new global::CodeGlyphX.QrDecodeDiagnostics(
-                global::CodeGlyphX.QrDecodeFailure.None,
-                first.Version,
-                first.ErrorCorrectionLevel,
-                first.Mask,
-                formatBestDistance: -1);
-
-        diagnostics = new QrPixelDecodeDiagnostics(
-            scale: 1,
-            threshold: 0,
-            invert: false,
-            candidateCount: results.Length,
-            candidateTriplesTried: 0,
-            dimension: dimension,
-            moduleDiagnostics: moduleDiag);
-        return true;
-    }
-
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, out QrDecoded[] results) {
         return TryDecodeAll(pixels, width, height, stride, fmt, options, accept: null, cancellationToken: default, out results);
     }
 
-    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, out QrDecoded[] results, out QrPixelDecodeDiagnostics diagnostics) {
-        results = Array.Empty<QrDecoded>();
-        diagnostics = default;
-
-        if (width <= 0 || height <= 0 || stride < width * 4 || pixels.Length < (height - 1) * stride + width * 4) {
-            diagnostics = new QrPixelDecodeDiagnostics(
-                scale: 0,
-                threshold: 0,
-                invert: false,
-                candidateCount: 0,
-                candidateTriplesTried: 0,
-                dimension: 0,
-                moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.InvalidInput));
-            return false;
-        }
-
-        var ok = TryDecodeAll(pixels, width, height, stride, fmt, options, accept: null, cancellationToken: default, out results);
-        if (!ok) {
-            diagnostics = new QrPixelDecodeDiagnostics(
-                scale: 1,
-                threshold: 0,
-                invert: false,
-                candidateCount: 0,
-                candidateTriplesTried: 0,
-                dimension: 0,
-                moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.Payload));
-            return false;
-        }
-
-        var first = results.Length > 0 ? results[0] : null;
-        var dimension = first is null ? 0 : (first.Version * 4 + 17);
-        var moduleDiag = first is null
-            ? new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.Payload)
-            : new global::CodeGlyphX.QrDecodeDiagnostics(
-                global::CodeGlyphX.QrDecodeFailure.None,
-                first.Version,
-                first.ErrorCorrectionLevel,
-                first.Mask,
-                formatBestDistance: -1);
-
-        diagnostics = new QrPixelDecodeDiagnostics(
-            scale: 1,
-            threshold: 0,
-            invert: false,
-            candidateCount: results.Length,
-            candidateTriplesTried: 0,
-            dimension: dimension,
-            moduleDiagnostics: moduleDiag);
-        return true;
-    }
-
     public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] results) {
         return TryDecodeAll(pixels, width, height, stride, fmt, options, accept: null, cancellationToken, out results);
-    }
-
-    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] results, out QrPixelDecodeDiagnostics diagnostics) {
-        results = Array.Empty<QrDecoded>();
-        diagnostics = default;
-
-        if (width <= 0 || height <= 0 || stride < width * 4 || pixels.Length < (height - 1) * stride + width * 4) {
-            diagnostics = new QrPixelDecodeDiagnostics(
-                scale: 0,
-                threshold: 0,
-                invert: false,
-                candidateCount: 0,
-                candidateTriplesTried: 0,
-                dimension: 0,
-                moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.InvalidInput));
-            return false;
-        }
-
-        var ok = TryDecodeAll(pixels, width, height, stride, fmt, options, accept: null, cancellationToken, out results);
-        if (!ok) {
-            var failure = cancellationToken.IsCancellationRequested
-                ? global::CodeGlyphX.QrDecodeFailure.Cancelled
-                : global::CodeGlyphX.QrDecodeFailure.Payload;
-            diagnostics = new QrPixelDecodeDiagnostics(
-                scale: 1,
-                threshold: 0,
-                invert: false,
-                candidateCount: 0,
-                candidateTriplesTried: 0,
-                dimension: 0,
-                moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(failure));
-            return false;
-        }
-
-        var first = results.Length > 0 ? results[0] : null;
-        var dimension = first is null ? 0 : (first.Version * 4 + 17);
-        var moduleDiag = first is null
-            ? new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.Payload)
-            : new global::CodeGlyphX.QrDecodeDiagnostics(
-                global::CodeGlyphX.QrDecodeFailure.None,
-                first.Version,
-                first.ErrorCorrectionLevel,
-                first.Mask,
-                formatBestDistance: -1);
-
-        diagnostics = new QrPixelDecodeDiagnostics(
-            scale: 1,
-            threshold: 0,
-            invert: false,
-            candidateCount: results.Length,
-            candidateTriplesTried: 0,
-            dimension: dimension,
-            moduleDiagnostics: moduleDiag);
-        return true;
     }
 
     internal static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, Func<QrDecoded, bool>? accept, CancellationToken cancellationToken, out QrDecoded[] results) {
@@ -579,14 +385,9 @@ internal static partial class QrPixelDecoder {
 
         var scaleStart = GetScaleStart(options, width, height);
         var profile = options?.Profile ?? QrDecodeProfile.Robust;
-        var effectiveMaxMs = options is null ? 0 : GetEffectiveMaxMilliseconds(options);
-        if (effectiveMaxMs > 0) {
-            if (effectiveMaxMs <= 800) profile = QrDecodeProfile.Fast;
-            else if (effectiveMaxMs <= 1600 && profile == QrDecodeProfile.Robust) profile = QrDecodeProfile.Balanced;
-        }
         var settings = GetProfileSettings(profile, Math.Min(width, height));
         settings = ApplyOverrides(settings, options, scaleStart);
-        var budgetMilliseconds = options?.BudgetMilliseconds > 0 ? options.BudgetMilliseconds : options?.MaxMilliseconds ?? 0;
+        var budgetMilliseconds = options?.BudgetMilliseconds ?? 0;
         var enableTileScan = allowTileScan && options?.EnableTileScan == true;
         var allowAggressivePasses = allowTileScan;
         var tileBudgetMs = 0;
@@ -615,7 +416,7 @@ internal static partial class QrPixelDecoder {
             using var list = new PooledList<QrDecoded>(4);
             var baseExpired = false;
 
-            CollectAllFromImage(baseImage, settings, list, seen, accept, budget, pool);
+            CollectAllFromImage(scaleStart, baseImage, settings, new QrCollectionSink(list, seen, accept), budget, pool);
             if (budget.IsExpired) {
                 if (!enableTileScan) {
                     if (list.Count == 0) return false;
@@ -643,7 +444,7 @@ internal static partial class QrPixelDecoder {
                 if (settings.AllowContrastStretch && range < 48) {
                     var stretched = baseImage.WithContrastStretch(48, pool);
                     if (!ReferenceEquals(stretched.Gray, baseImage.Gray)) {
-                        CollectAllFromImage(stretched, settings, list, seen, accept, budget, pool);
+                        CollectAllFromImage(scaleStart, stretched, settings, new QrCollectionSink(list, seen, accept), budget, pool);
                         if (budget.IsExpired) {
                             if (!enableTileScan) {
                                 if (list.Count == 0) return false;
@@ -693,7 +494,6 @@ internal static partial class QrPixelDecoder {
                             Profile = options.Profile,
                             MaxDimension = options.MaxDimension,
                             MaxScale = options.MaxScale,
-                            MaxMilliseconds = options.MaxMilliseconds,
                             BudgetMilliseconds = perTileBudget,
                             AutoCrop = options.AutoCrop,
                             EnableTileScan = false,
@@ -813,7 +613,7 @@ internal static partial class QrPixelDecoder {
                 CollectFromOverlappingTiles(pixels, width, height, stride, fmt, baseImage, scaleStart, options, accept, cancellationToken, budget, list, seen);
             }
 
-            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(300) && Math.Max(width, height) <= 900) {
+            if (allowAggressivePasses && options?.AggressiveSampling == true && list.Count == 0 && !budget.IsNearDeadline(300)) {
                 if (TryDecodeUpscaled(pixels, width, height, stride, fmt, profile, options, accept, cancellationToken, budget, out var decodedUpscaled, out _)) {
                     AddResult(list, seen, decodedUpscaled, accept);
                 }
@@ -825,10 +625,6 @@ internal static partial class QrPixelDecoder {
         } finally {
             pool.ReturnAll();
         }
-    }
-
-    private static int GetEffectiveMaxMilliseconds(QrPixelDecodeOptions options) {
-        return options.BudgetMilliseconds > 0 ? 0 : options.MaxMilliseconds;
     }
 
     private static void CollectFromWhitespaceGrid(
@@ -1235,16 +1031,13 @@ internal static partial class QrPixelDecoder {
         diagnostics = default;
 
         if (budget.IsNearDeadline(250)) return false;
-        if (width <= 0 || height <= 0) return false;
+        if (width <= 0 || width > 900 || height <= 0 || height > 900) return false;
 
         var upW = width * 2;
         var upH = height * 2;
-        if (upW <= 0 || upH <= 0) return false;
-        if (upW > 2800 || upH > 2800) return false;
 
         var upStride = upW * 4;
         var required = (long)upStride * upH;
-        if (required > 160_000_000) return false;
 
         var buffer = ArrayPool<byte>.Shared.Rent((int)required);
         try {

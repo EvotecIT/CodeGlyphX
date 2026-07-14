@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using System.Text;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Tests.TestHelpers;
 using Xunit;
 
@@ -72,7 +74,7 @@ public sealed class OtpTests {
     }
 
     [Fact]
-    public void OtpQrSafety_Report_Flags_Unsafe_Rendering() {
+    public void OtpQrHeuristics_Flag_Nonconforming_Render_Options() {
         var secret = Encoding.ASCII.GetBytes("foo");
         var qr = OtpQrPreset.EncodeTotp("ACME", "john", secret);
 
@@ -82,8 +84,8 @@ public sealed class OtpTests {
             foreground: new CodeGlyphX.Rendering.Png.Rgba32(200, 200, 200),
             background: new CodeGlyphX.Rendering.Png.Rgba32(255, 255, 255));
 
-        var report = OtpQrSafety.Evaluate(qr, opts);
-        Assert.False(report.IsOtpSafe);
+        var report = OtpQrHeuristics.Evaluate(qr, opts);
+        Assert.False(report.PassesHeuristics);
         Assert.False(report.HasSufficientContrast);
         Assert.False(report.HasSufficientQuietZone);
         Assert.False(report.HasSufficientModuleSize);
@@ -92,13 +94,13 @@ public sealed class OtpTests {
     }
 
     [Fact]
-    public void OtpQrSafety_Report_Allows_Default_Preset() {
+    public void OtpQrHeuristics_Default_Preset_Passes_Static_Checks() {
         var secret = Encoding.ASCII.GetBytes("foo");
         var qr = OtpQrPreset.EncodeTotp("ACME", "john", secret);
         var opts = OtpQrPreset.CreatePngRenderOptions();
 
-        var report = OtpQrSafety.Evaluate(qr, opts);
-        Assert.True(report.IsOtpSafe);
+        var report = OtpQrHeuristics.Evaluate(qr, opts);
+        Assert.True(report.PassesHeuristics);
         Assert.Equal(100, report.Score);
         Assert.Empty(report.Issues);
     }
@@ -168,6 +170,34 @@ public sealed class OtpTests {
         Assert.Equal(OtpAuthType.Totp, result.Payload.Type);
         Assert.NotEmpty(qrDiag);
         Assert.NotEqual("qr-decode-failed", qrDiag);
+    }
+
+    [Fact]
+    public void OtpBuilders_Use_Generic_Render_And_Save_Surface() {
+        var totp = Otp.Totp("ACME", "alice@example.com", "MZXW6")
+            .WithParameters(OtpAlgorithm.Sha256, digits: 8, period: 60);
+        var svg = totp.Render(OutputFormat.Svg);
+
+        Assert.Contains("<svg", svg.GetText(), StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(QrErrorCorrectionLevel.H, totp.Encode().ErrorCorrectionLevel);
+
+        using var stream = new MemoryStream();
+        totp.Save(stream, OutputFormat.Png);
+        Assert.True(stream.Length > 8);
+        Assert.Equal(0x89, stream.GetBuffer()[0]);
+
+        var hotp = Otp.Hotp("ACME", "alice@example.com", "MZXW6", counter: 42)
+            .WithParameters(OtpAlgorithm.Sha1, digits: 6);
+        var path = Path.Combine(Path.GetTempPath(), $"codeglyphx-hotp-{Guid.NewGuid():N}.svg");
+        try {
+            Assert.Equal(path, hotp.Save(path));
+            Assert.Contains("<svg", File.ReadAllText(path), StringComparison.OrdinalIgnoreCase);
+            Assert.StartsWith("otpauth://hotp/", hotp.Uri(), StringComparison.Ordinal);
+        } finally {
+            if (File.Exists(path)) File.Delete(path);
+        }
+
+        Assert.Throws<ArgumentNullException>(() => hotp.Save(null!, OutputFormat.Png));
     }
 
     [Fact]

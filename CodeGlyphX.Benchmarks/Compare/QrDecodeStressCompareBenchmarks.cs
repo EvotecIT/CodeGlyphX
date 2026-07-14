@@ -41,7 +41,7 @@ public class QrDecodeStressCompareBenchmarks
     {
         Profile = QrDecodeProfile.Robust,
         AggressiveSampling = true,
-        MaxMilliseconds = 800,
+        BudgetMilliseconds = 800,
         MaxDimension = 1600
     };
 

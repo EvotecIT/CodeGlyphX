@@ -459,11 +459,7 @@ public static partial class CodeGlyph {
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         if (cancellationToken.IsCancellationRequested) return false;
         var squareish = IsSquareish(width, height);
-        var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800,
-            MaxMilliseconds = 800
-        };
+        var qrOptionsLocal = ResolveMultiQrOptions(qrOptions);
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
         var foundQr = false;
 
@@ -521,101 +517,18 @@ public static partial class CodeGlyph {
         return true;
     }
 
-    /// <summary>
-    /// Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels, with diagnostics.
-    /// </summary>
-    public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
-        diagnostics = new CodeGlyphDecodeDiagnostics();
-        decoded = Array.Empty<CodeGlyphDecoded>();
-        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
-        if (IsCancelled(cancellationToken, diagnostics)) return false;
-        var squareish = IsSquareish(width, height);
-        var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800,
-            MaxMilliseconds = 800
-        };
-        var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
-        var foundQr = false;
-
-        var list = new System.Collections.Generic.List<CodeGlyphDecoded>(4);
-
-        if (includeBarcode && preferBarcode) {
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
-                for (var i = 0; i < barcodes.Length; i++) {
-                    list.Add(new CodeGlyphDecoded(barcodes[i]));
-                }
-                diagnostics.Barcode = new BarcodeDecodeDiagnostics { Success = true, CandidateCount = barcodes.Length };
-            }
-        }
-
-        if (squareish) {
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, out var qrInfo, qrOptionsLocal, cancellationToken)) {
-                diagnostics.Qr = qrInfo;
-                for (var i = 0; i < qrResults.Length; i++) {
-                    list.Add(new CodeGlyphDecoded(qrResults[i]));
-                }
-                foundQr = qrResults.Length > 0;
-            } else {
-                diagnostics.Qr = qrInfo;
-            }
-
-            if (!preferQr || !foundQr) {
-                if (IsCancelled(cancellationToken, diagnostics)) return false;
-                if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
-                    diagnostics.Aztec = aztecDiag;
-                    list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
-                } else {
-                    diagnostics.Aztec = aztecDiag;
-                }
-            }
-        }
-
-        if (!preferQr || !foundQr) {
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
-                diagnostics.DataMatrix = dmDiag;
-                list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
-            } else {
-                diagnostics.DataMatrix = dmDiag;
-            }
-
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
-                diagnostics.Pdf417 = pdfDiag;
-                list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
-            } else {
-                diagnostics.Pdf417 = pdfDiag;
-            }
-        }
-
-        if (includeBarcode && !preferBarcode) {
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
-                for (var i = 0; i < barcodes.Length; i++) {
-                    list.Add(new CodeGlyphDecoded(barcodes[i]));
-                }
-                diagnostics.Barcode = new BarcodeDecodeDiagnostics { Success = true, CandidateCount = barcodes.Length };
-            }
-        }
-
-        if (list.Count == 0) {
-            SetNoResult(diagnostics);
-            return false;
-        }
-        diagnostics.Success = true;
-        diagnostics.SuccessKind = list.Count == 1 ? list[0].Kind : null;
-        decoded = list.ToArray();
-        return true;
-    }
-
     private static bool IsSquareish(int width, int height) {
         if (width <= 0 || height <= 0) return false;
         var min = width < height ? width : height;
         var max = width > height ? width : height;
         return (double)max / min <= 1.35d;
+    }
+
+    private static QrPixelDecodeOptions ResolveMultiQrOptions(QrPixelDecodeOptions? options) {
+        return options ?? new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Balanced,
+            BudgetMilliseconds = 800
+        };
     }
 
     private static bool IsCancelled(CancellationToken token, CodeGlyphDecodeDiagnostics diagnostics) {
@@ -1094,11 +1007,7 @@ public static partial class CodeGlyph {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (cancellationToken.IsCancellationRequested) return false;
         var squareish = IsSquareish(width, height);
-        var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800,
-            MaxMilliseconds = 800
-        };
+        var qrOptionsLocal = ResolveMultiQrOptions(qrOptions);
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
         var foundQr = false;
 
@@ -1156,94 +1065,6 @@ public static partial class CodeGlyph {
         return true;
     }
 
-    /// <summary>
-    /// Attempts to decode all QR codes and (optionally) a 1D barcode from raw pixels, with diagnostics.
-    /// </summary>
-    public static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, out CodeGlyphDecodeDiagnostics diagnostics, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
-        diagnostics = new CodeGlyphDecodeDiagnostics();
-        decoded = Array.Empty<CodeGlyphDecoded>();
-        if (IsCancelled(cancellationToken, diagnostics)) return false;
-        var squareish = IsSquareish(width, height);
-        var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800,
-            MaxMilliseconds = 800
-        };
-        var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
-        var foundQr = false;
-
-        var list = new System.Collections.Generic.List<CodeGlyphDecoded>(4);
-
-        if (includeBarcode && preferBarcode) {
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
-                for (var i = 0; i < barcodes.Length; i++) {
-                    list.Add(new CodeGlyphDecoded(barcodes[i]));
-                }
-                diagnostics.Barcode = new BarcodeDecodeDiagnostics { Success = true, CandidateCount = barcodes.Length };
-            }
-        }
-
-        if (squareish) {
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, out var qrInfo, qrOptionsLocal, cancellationToken)) {
-                diagnostics.Qr = qrInfo;
-                for (var i = 0; i < qrResults.Length; i++) {
-                    list.Add(new CodeGlyphDecoded(qrResults[i]));
-                }
-                foundQr = qrResults.Length > 0;
-            } else {
-                diagnostics.Qr = qrInfo;
-            }
-
-            if (!preferQr || !foundQr) {
-                if (IsCancelled(cancellationToken, diagnostics)) return false;
-                if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec, out var aztecDiag)) {
-                    diagnostics.Aztec = aztecDiag;
-                    list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
-                } else {
-                    diagnostics.Aztec = aztecDiag;
-                }
-            }
-        }
-
-        if (!preferQr || !foundQr) {
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
-                diagnostics.DataMatrix = dmDiag;
-                list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
-            } else {
-                diagnostics.DataMatrix = dmDiag;
-            }
-
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (Pdf417Decoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var pdf417, out var pdfDiag)) {
-                diagnostics.Pdf417 = pdfDiag;
-                list.Add(new CodeGlyphDecoded(CodeGlyphKind.Pdf417, pdf417));
-            } else {
-                diagnostics.Pdf417 = pdfDiag;
-            }
-        }
-
-        if (includeBarcode && !preferBarcode) {
-            if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out var barcodes, expectedBarcode, barcodeOptions, cancellationToken)) {
-                for (var i = 0; i < barcodes.Length; i++) {
-                    list.Add(new CodeGlyphDecoded(barcodes[i]));
-                }
-                diagnostics.Barcode = new BarcodeDecodeDiagnostics { Success = true, CandidateCount = barcodes.Length };
-            }
-        }
-
-        if (list.Count == 0) {
-            SetNoResult(diagnostics);
-            return false;
-        }
-        diagnostics.Success = true;
-        diagnostics.SuccessKind = list.Count == 1 ? list[0].Kind : null;
-        decoded = list.ToArray();
-        return true;
-    }
 #endif
 }
 

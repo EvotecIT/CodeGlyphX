@@ -16,9 +16,16 @@ Micro QR is a smaller version of the standard QR code, designed for applications
 
 ```csharp
 using CodeGlyphX;
+using CodeGlyphX.Rendering;
 
 // Generate Micro QR
-QR.Save("ABC123", "microqr.png", microQr: true);
+var micro = MicroQrCodeEncoder.EncodeAlphanumeric(
+    "ABC123",
+    QrErrorCorrectionLevel.L);
+
+OutputWriter.Write(
+    "microqr.png",
+    MatrixBarcode.Render(micro.Modules, OutputFormat.Png));
 ```
 
 ## Comparison with Standard QR

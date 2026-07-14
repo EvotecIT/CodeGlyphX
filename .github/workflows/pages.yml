@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   website-deploy:
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-deploy.yml@9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-deploy.yml@a1a187ad5452f499bc974d32ccd3cd28cd11e868
     permissions:
       actions: write
       contents: read
@@ -27,7 +27,7 @@ jobs:
       engine_mode: source
       runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: 9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
+      powerforge_ref: a1a187ad5452f499bc974d32ccd3cd28cd11e868
       require_seo_doctor_guardrail: false
     secrets:
       indexnow_key: ${{ secrets.INDEXNOW_KEY }}
@@ -42,7 +42,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout website
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           token: ${{ github.token }}
           ref: ${{ github.sha }}
@@ -58,7 +58,7 @@ jobs:
 
   cloudflare-post-deploy:
     needs: cloudflare-cache-rules
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@a1a187ad5452f499bc974d32ccd3cd28cd11e868
     permissions:
       actions: write
       contents: read
@@ -72,7 +72,7 @@ jobs:
       dotnet_version: 10.0.x
       report_artifact_name: powerforge-website-post-deploy-reports
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: 9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
+      powerforge_ref: a1a187ad5452f499bc974d32ccd3cd28cd11e868
       pipeline_mode: ci
       use_playwright_cache: false
     secrets:

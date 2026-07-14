@@ -52,7 +52,7 @@ public class QrDecodeBenchmarks
     };
     private readonly QrPixelDecodeOptions _robustNoisy = new() {
         Profile = QrDecodeProfile.Robust,
-        MaxMilliseconds = 800,
+        BudgetMilliseconds = 800,
         MaxDimension = 1600,
         AggressiveSampling = true
     };

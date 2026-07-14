@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Png;
@@ -52,7 +53,7 @@ public sealed class QrNet472SmokeTests {
             QuietZone = 8
         });
 
-        var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: 600, maxDimension: 900);
+        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: 600, maxDimension: 900);
         var ok = QrImageDecoder.TryDecodeImage(png, imageOptions, options: null, out var decoded);
         Assert.True(ok);
         Assert.Equal(Payload, decoded.Text);
@@ -67,7 +68,7 @@ public sealed class QrNet472SmokeTests {
         });
 
         using var stream = new System.IO.MemoryStream(png);
-        var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: 600, maxDimension: 1000);
+        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: 600, maxDimension: 1000);
         var ok = QrImageDecoder.TryDecodeImage(stream, imageOptions, options: null, out var decoded);
         Assert.True(ok);
         Assert.Equal(Payload, decoded.Text);
@@ -83,7 +84,7 @@ public sealed class QrNet472SmokeTests {
         var png = QrPngRenderer.Render(qr.Modules, opts);
 
         // Force a heavy downscale via ImageDecodeOptions.
-        var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: 800, maxDimension: 700);
+        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: 800, maxDimension: 700);
         var ok = QrImageDecoder.TryDecodeImage(png, imageOptions, options: new QrPixelDecodeOptions {
             MaxDimension = 4000
         }, out var decoded);
@@ -116,7 +117,7 @@ public sealed class QrNet472SmokeTests {
             QuietZone = 8
         });
 
-        var imageOptions = ImageDecodeOptions.Screen(maxMilliseconds: 700, maxDimension: 1200);
+        var imageOptions = ImageDecodeOptions.Screen(recognitionBudgetMilliseconds: 700, maxDimension: 1200);
         var result = QrImageDecoder.DecodeImageResult(png, imageOptions, new QrPixelDecodeOptions {
             MaxDimension = 2500
         });
@@ -199,7 +200,7 @@ public sealed class QrNet472SmokeTests {
             UseHalfBlocks = true,
             UseUnicodeBlocks = true,
             UseAnsiColors = true,
-            PreferScanReliability = true,
+            UseConservativeQrLayout = true,
             TargetWidth = 28,
             TargetHeight = 14,
             DarkGradient = new AsciiGradientOptions {
@@ -244,6 +245,32 @@ public sealed class QrNet472SmokeTests {
         Assert.Equal(Payload, decoded.Text);
     }
 
+    [Fact]
+    public void Net472_QrImageDecoder_RawPixelBudget_Bounds_NoResult() {
+        const int width = 400;
+        const int height = 400;
+        const int stride = width * 4;
+        var pixels = CreateNoisePixels(width, height, stride);
+        var options = QrPixelDecodeOptions.Robust();
+        options.BudgetMilliseconds = 100;
+        options.MaxDimension = 400;
+        options.AggressiveSampling = true;
+
+        var stopwatch = Stopwatch.StartNew();
+        var ok = QrImageDecoder.TryDecode(
+            pixels,
+            width,
+            height,
+            stride,
+            PixelFormat.Rgba32,
+            options,
+            out _);
+        stopwatch.Stop();
+
+        Assert.False(ok);
+        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(5), $"Decode exceeded its cooperative budget: {stopwatch.Elapsed}.");
+    }
+
     private static void AddLightNoise(byte[] rgba, int width, int height, int stride) {
         var rng = new Random(12345);
         for (var y = 0; y < height; y++) {
@@ -261,6 +288,24 @@ public sealed class QrNet472SmokeTests {
                 rgba[i + 3] = 255;
             }
         }
+    }
+
+    private static byte[] CreateNoisePixels(int width, int height, int stride) {
+        var pixels = new byte[height * stride];
+        uint state = 0xC0DEC0DE;
+        for (var y = 0; y < height; y++) {
+            var row = y * stride;
+            for (var x = 0; x < width; x++) {
+                state = unchecked((state * 1664525) + 1013904223);
+                var value = (byte)(state >> 24);
+                var offset = row + (x * 4);
+                pixels[offset] = value;
+                pixels[offset + 1] = (byte)(value ^ 0x5A);
+                pixels[offset + 2] = (byte)(255 - value);
+                pixels[offset + 3] = 255;
+            }
+        }
+        return pixels;
     }
 
     private static byte[] EncodePng(byte[] rgba, int width, int height, int stride) {

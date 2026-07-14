@@ -3,8 +3,9 @@
 This folder contains the PowerForge.Web website for CodeGlyphX.
 
 Repo layout (maintainer):
-- Website folder: `C:\Support\GitHub\CodeMatrix\Website`
-- Engine repo: `C:\Support\GitHub\PSPublishModule`
+- Repository root: `$env:EVOTEC_GITHUB_ROOT` on PowerShell or `$EVOTEC_GITHUB_ROOT` on POSIX shells; use the profile fallback only when it is unset
+- Website folder: `<Evotec repo root>/CodeGlyphX/Website`
+- Engine repo: `<Evotec repo root>/PSPublishModule`
 
 ## How To Build
 
@@ -41,7 +42,7 @@ If you don't have the engine repo next to this repo, set:
   - `cloudflare purge --site-config "Website/site.json"`
   - `cloudflare verify --site-config "Website/site.json" --warmup 2`
 - Canonical cache-rule guidance lives in:
-  - `C:\Support\GitHub\PSPublishModule\Docs\PowerForge.Web.Cloudflare.md`
+  - `<Evotec repo root>/PSPublishModule/Docs/PowerForge.Web.Cloudflare.md`
 
 ## Theme Best Practices (Nav Stability)
 

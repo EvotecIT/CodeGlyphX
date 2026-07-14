@@ -20,8 +20,11 @@ using CodeGlyphX;
 // Simple Data Matrix
 DataMatrixCode.Save("SERIAL-12345", "datamatrix.png");
 
-// With specific size
-DataMatrixCode.Save("SERIAL-12345", "datamatrix.svg", size: DataMatrixSize.Square24);
+// With rendering options
+DataMatrixCode.Save("SERIAL-12345", "datamatrix.svg", options: new MatrixOptions {
+    ModuleSize = 6,
+    QuietZone = 2
+});
 ```
 
 ## Use Cases

@@ -1,7 +1,7 @@
 namespace CodeGlyphX;
 
 /// <summary>
-/// Diagnostics for unified QR/barcode decoding.
+/// Diagnostics for unified symbol decoding.
 /// </summary>
 public sealed class CodeGlyphDecodeDiagnostics {
     /// <summary>
@@ -15,7 +15,7 @@ public sealed class CodeGlyphDecodeDiagnostics {
     public CodeGlyphKind? SuccessKind { get; internal set; }
 
     /// <summary>
-    /// QR diagnostics (when attempted).
+    /// QR diagnostics for single-result decoding (when attempted).
     /// </summary>
     public QrPixelDecodeInfo? Qr { get; internal set; }
 

@@ -1,4 +1,3 @@
-using System.Reflection;
 using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Examples;
@@ -12,15 +11,12 @@ internal sealed class ExampleRunner {
     }
 
     public static string PrepareOutputDirectory(string subfolderName = "Examples") {
-        var assemblyLocation = Assembly.GetExecutingAssembly().Location;
-        if (!string.IsNullOrEmpty(assemblyLocation)) {
-            var assemblyDirectory = Path.GetDirectoryName(assemblyLocation);
-            if (!string.IsNullOrEmpty(assemblyDirectory)) {
-                Directory.SetCurrentDirectory(assemblyDirectory);
-            }
-        }
+        Directory.SetCurrentDirectory(AppContext.BaseDirectory);
 
-        var outputDir = Path.Combine(Directory.GetCurrentDirectory(), subfolderName);
+        var configuredOutput = Environment.GetEnvironmentVariable("CODEGLYPHX_OUTPUT_DIR");
+        var outputDir = string.IsNullOrWhiteSpace(configuredOutput)
+            ? Path.Combine(Directory.GetCurrentDirectory(), subfolderName)
+            : Path.GetFullPath(configuredOutput);
         Directory.CreateDirectory(outputDir);
         return outputDir;
     }
@@ -41,7 +37,7 @@ internal sealed class ExampleRunner {
         }
     }
 
-    public void PrintSummary() {
+    public int PrintSummary() {
         var failures = 0;
         for (var i = 0; i < _results.Count; i++) {
             if (_results[i].Error is not null) failures++;
@@ -51,7 +47,7 @@ internal sealed class ExampleRunner {
         Console.WriteLine($"Examples written to: {_outputDir}");
         if (failures == 0) {
             Console.WriteLine($"All {_results.Count} examples completed.");
-            return;
+            return 0;
         }
 
         Console.WriteLine($"Completed with {failures} failure(s).");
@@ -60,6 +56,8 @@ internal sealed class ExampleRunner {
             if (result.Error is null) continue;
             Console.WriteLine($" - {result.Name}: {result.Error.Message}");
         }
+
+        return failures;
     }
 
     private static string Slugify(string value) {

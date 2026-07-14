@@ -114,7 +114,7 @@ public sealed class ImageFormatDecodeTests {
         Assert.True(QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             AggressiveSampling = true,
-            MaxMilliseconds = 2000
+            BudgetMilliseconds = 2000
         }));
         Assert.Equal(Payload, decoded.Text);
     }

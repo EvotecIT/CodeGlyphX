@@ -1,7 +1,3 @@
-using System;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Ascii;
@@ -12,15 +8,19 @@ using CodeGlyphX.Rendering.Ico;
 using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Pam;
 using CodeGlyphX.Rendering.Pbm;
-using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Pdf;
-using CodeGlyphX.Rendering.Ppm;
+using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
 using CodeGlyphX.Rendering.Xbm;
 using CodeGlyphX.Rendering.Xpm;
+using System;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace CodeGlyphX;
 
@@ -46,31 +46,11 @@ public static partial class QrEasy {
             render.ModuleScale = 0.9;
             render.ModuleCornerRadiusPx = 2;
         } else if (opts.Style == QrRenderStyle.Fancy) {
-            var start = opts.Foreground;
-            var end = Blend(opts.Foreground, Rgba32.White, 0.35);
             render.ModuleShape = QrPngModuleShape.Rounded;
             render.ModuleScale = 0.85;
             render.ModuleCornerRadiusPx = 3;
-            render.ForegroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
-                StartColor = start,
-                EndColor = end,
-            };
-            render.Eyes = new QrPngEyeOptions {
-                UseFrame = true,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle,
-                OuterCornerRadiusPx = 5,
-                InnerCornerRadiusPx = 4,
-                OuterGradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.Radial,
-                    StartColor = start,
-                    EndColor = end,
-                    CenterX = 0.35,
-                    CenterY = 0.35,
-                },
-                InnerColor = start,
-            };
+            render.ForegroundGradient = CreateFancyGradient(opts.Foreground);
+            render.Eyes = CreateFancyEyes(opts.Foreground);
         }
 
         if (opts.Art is not null) {
@@ -94,7 +74,7 @@ public static partial class QrEasy {
         var logo = BuildPngLogo(opts);
         if (logo is not null) render.Logo = logo;
 
-        ApplyArtAutoTune(qr, render, opts);
+        ApplyArtGuardrails(qr, render, opts);
 
         return render;
     }
@@ -119,31 +99,11 @@ public static partial class QrEasy {
             render.ModuleScale = 0.9;
             render.ModuleCornerRadiusPx = 2;
         } else if (opts.Style == QrRenderStyle.Fancy) {
-            var start = opts.Foreground;
-            var end = Blend(opts.Foreground, Rgba32.White, 0.35);
             render.ModuleShape = QrPngModuleShape.Rounded;
             render.ModuleScale = 0.85;
             render.ModuleCornerRadiusPx = 3;
-            render.ForegroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
-                StartColor = start,
-                EndColor = end,
-            };
-            render.Eyes = new QrPngEyeOptions {
-                UseFrame = true,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle,
-                OuterCornerRadiusPx = 5,
-                InnerCornerRadiusPx = 4,
-                OuterGradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.Radial,
-                    StartColor = start,
-                    EndColor = end,
-                    CenterX = 0.35,
-                    CenterY = 0.35,
-                },
-                InnerColor = start,
-            };
+            render.ForegroundGradient = CreateFancyGradient(opts.Foreground);
+            render.Eyes = CreateFancyEyes(opts.Foreground);
         }
 
         if (opts.ModuleShape.HasValue) render.ModuleShape = opts.ModuleShape.Value;
@@ -156,6 +116,32 @@ public static partial class QrEasy {
         if (logo is not null) render.Logo = logo;
 
         return render;
+    }
+
+    private static QrPngGradientOptions CreateFancyGradient(Rgba32 foreground) {
+        return new QrPngGradientOptions {
+            Type = QrPngGradientType.DiagonalDown,
+            StartColor = foreground,
+            EndColor = Blend(foreground, Rgba32.White, 0.35),
+        };
+    }
+
+    private static QrPngEyeOptions CreateFancyEyes(Rgba32 foreground) {
+        return new QrPngEyeOptions {
+            UseFrame = true,
+            OuterShape = QrPngModuleShape.Rounded,
+            InnerShape = QrPngModuleShape.Circle,
+            OuterCornerRadiusPx = 5,
+            InnerCornerRadiusPx = 4,
+            OuterGradient = new QrPngGradientOptions {
+                Type = QrPngGradientType.Radial,
+                StartColor = foreground,
+                EndColor = Blend(foreground, Rgba32.White, 0.35),
+                CenterX = 0.35,
+                CenterY = 0.35,
+            },
+            InnerColor = foreground,
+        };
     }
 
     private static int ResolveModuleSize(QrEasyOptions opts, int moduleCount) {
@@ -182,7 +168,7 @@ public static partial class QrEasy {
     }
 
     private static QrCode EncodePayload(string payload, QrEasyOptions opts) {
-        opts = ApplyArtAutoTunePreEncode(opts);
+        opts = ApplyArtGuardrailsPreEncode(opts);
         opts = ApplyLogoBackgroundVersionBump(opts);
         var ecc = opts.ErrorCorrectionLevel ?? GuessEcc(payload, opts.LogoPng is { Length: > 0 });
         if (opts.TextEncoding.HasValue) {
@@ -233,8 +219,8 @@ public static partial class QrEasy {
             BackgroundSupersample = opts.BackgroundSupersample,
             Style = opts.Style,
             Art = opts.Art,
-            ArtAutoTune = opts.ArtAutoTune,
-            ArtAutoTuneMinScore = opts.ArtAutoTuneMinScore,
+            ArtGuardrailsEnabled = opts.ArtGuardrailsEnabled,
+            ArtGuardrailMinimumScore = opts.ArtGuardrailMinimumScore,
             ModuleShape = opts.ModuleShape,
             ModuleScale = opts.ModuleScale,
             ModuleScaleMap = CloneScaleMap(opts.ModuleScaleMap),
@@ -637,26 +623,24 @@ public static partial class QrEasy {
         var preset = SelectArtPreset(art);
         ApplyArtDefaults(render, preset);
         ApplyArtIntensity(render, art);
-        ApplyArtSafetyMode(render, art);
+        ApplyThemeGuardrails(render, art);
     }
 
     private static QrEasyOptions SelectArtPreset(QrArtOptions art) {
-#pragma warning disable CS0618 // QrArtPresets is deprecated in favor of the high-level art API.
         return art.Theme switch {
-            QrArtTheme.NeonGlow => art.Variant == QrArtVariant.Bold ? QrArtPresets.NeonGlowBold() : QrArtPresets.NeonGlowSafe(),
-            QrArtTheme.LiquidGlass => art.Variant == QrArtVariant.Bold ? QrArtPresets.LiquidGlassBold() : QrArtPresets.LiquidGlassSafe(),
-            QrArtTheme.ConnectedSquircleGlow => art.Variant == QrArtVariant.Bold ? QrArtPresets.ConnectedSquircleGlowBold() : QrArtPresets.ConnectedSquircleGlowSafe(),
-            QrArtTheme.CutCornerTech => art.Variant == QrArtVariant.Bold ? QrArtPresets.CutCornerTechBold() : QrArtPresets.CutCornerTechSafe(),
-            QrArtTheme.InsetRings => art.Variant == QrArtVariant.Bold ? QrArtPresets.InsetRingsBold() : QrArtPresets.InsetRingsSafe(),
-            QrArtTheme.StripeEyes => art.Variant == QrArtVariant.Bold ? QrArtPresets.StripeEyesBold() : QrArtPresets.StripeEyesSafe(),
+            QrArtTheme.NeonGlow => art.Variant == QrArtVariant.Bold ? QrArtPresets.NeonGlowBold() : QrArtPresets.NeonGlowConservative(),
+            QrArtTheme.LiquidGlass => art.Variant == QrArtVariant.Bold ? QrArtPresets.LiquidGlassBold() : QrArtPresets.LiquidGlassConservative(),
+            QrArtTheme.ConnectedSquircleGlow => art.Variant == QrArtVariant.Bold ? QrArtPresets.ConnectedSquircleGlowBold() : QrArtPresets.ConnectedSquircleGlowConservative(),
+            QrArtTheme.CutCornerTech => art.Variant == QrArtVariant.Bold ? QrArtPresets.CutCornerTechBold() : QrArtPresets.CutCornerTechConservative(),
+            QrArtTheme.InsetRings => art.Variant == QrArtVariant.Bold ? QrArtPresets.InsetRingsBold() : QrArtPresets.InsetRingsConservative(),
+            QrArtTheme.StripeEyes => art.Variant == QrArtVariant.Bold ? QrArtPresets.StripeEyesBold() : QrArtPresets.StripeEyesConservative(),
             QrArtTheme.PaintSplash => art.Variant switch {
-                QrArtVariant.Pastel => art.SafetyMode == QrArtSafetyMode.Bold ? QrArtPresets.PaintSplashPastelBold() : QrArtPresets.PaintSplashPastelSafe(),
+                QrArtVariant.Pastel => art.GuardrailMode == QrArtGuardrailMode.Bold ? QrArtPresets.PaintSplashPastelBold() : QrArtPresets.PaintSplashPastelConservative(),
                 QrArtVariant.Bold => QrArtPresets.PaintSplashBold(),
-                _ => QrArtPresets.PaintSplashSafe(),
+                _ => QrArtPresets.PaintSplashConservative(),
             },
-            _ => QrArtPresets.PaintSplashSafe(),
+            _ => QrArtPresets.PaintSplashConservative(),
         };
-#pragma warning restore CS0618
     }
 
     private static void ApplyArtDefaults(QrPngRenderOptions render, QrEasyOptions preset) {
@@ -720,14 +704,14 @@ public static partial class QrEasy {
         }
     }
 
-    private static void ApplyArtSafetyMode(QrPngRenderOptions render, QrArtOptions art) {
+    private static void ApplyThemeGuardrails(QrPngRenderOptions render, QrArtOptions art) {
         render.ProtectFunctionalPatterns = true;
         render.ProtectQuietZone = true;
         render.QuietZone = Math.Max(render.QuietZone, 4);
 
-        var minScale = art.SafetyMode switch {
-            QrArtSafetyMode.Safe => 0.94,
-            QrArtSafetyMode.Balanced => 0.9,
+        var minScale = art.GuardrailMode switch {
+            QrArtGuardrailMode.Conservative => 0.94,
+            QrArtGuardrailMode.Balanced => 0.9,
             _ => 0.86,
         };
 
@@ -739,44 +723,24 @@ public static partial class QrEasy {
             }
         }
 
-        if (render.ForegroundPattern is not null && art.SafetyMode == QrArtSafetyMode.Safe) {
+        if (render.ForegroundPattern is not null && art.GuardrailMode == QrArtGuardrailMode.Conservative) {
             render.ForegroundPattern.Color = WithAlpha(render.ForegroundPattern.Color, Math.Min(render.ForegroundPattern.Color.A, (byte)140));
         }
 
         if (render.Canvas?.Splash is not null) {
             render.Canvas.Splash.ProtectQrArea = true;
-            if (art.SafetyMode == QrArtSafetyMode.Safe) {
+            if (art.GuardrailMode == QrArtGuardrailMode.Conservative) {
                 render.Canvas.Splash.Count = Math.Min(render.Canvas.Splash.Count, 20);
                 render.Canvas.Splash.DripChance = Math.Min(render.Canvas.Splash.DripChance, 0.6);
             }
         }
     }
 
-    private static QrEasyOptions ApplyArtAutoTunePreEncode(QrEasyOptions opts) {
-        if (!opts.ArtAutoTune) return opts;
+    private static QrEasyOptions ApplyArtGuardrailsPreEncode(QrEasyOptions opts) {
+        if (!opts.ArtGuardrailsEnabled) return opts;
 
         var hasLogo = opts.LogoPng is { Length: > 0 };
-        var paletteIsArt = opts.ForegroundPalette?.Colors is { Length: > 2 } || opts.ForegroundPaletteZones is not null;
-        var canvasIsArt = opts.Canvas?.Splash is not null
-            || opts.Canvas?.Halo is not null
-            || opts.Canvas?.Pattern is not null
-            || opts.Canvas?.Vignette is not null
-            || opts.Canvas?.Grain is not null;
-        var eyes = opts.Eyes;
-        var eyesIsArt = eyes is not null && (
-            eyes.SparkleCount > 0
-            || eyes.AccentRingCount > 0
-            || eyes.AccentRayCount > 0
-            || eyes.AccentStripeCount > 0);
-        var hasArtHints = opts.Art is not null
-            || opts.ForegroundPattern is not null
-            || opts.ModuleShapeMap is not null
-            || opts.ModuleJitter is not null
-            || canvasIsArt
-            || eyesIsArt
-            || paletteIsArt;
-
-        if (!hasLogo && !hasArtHints) return opts;
+        if (!hasLogo && !HasArtHints(opts)) return opts;
 
         var changed = false;
         var tuned = opts;
@@ -799,42 +763,74 @@ public static partial class QrEasy {
         return changed ? tuned : opts;
     }
 
-    private static void ApplyArtAutoTune(QrCode qr, QrPngRenderOptions render, QrEasyOptions opts) {
-        if (!opts.ArtAutoTune) return;
+    private static bool HasArtHints(QrEasyOptions opts) {
+        return opts.Art is not null
+            || opts.ForegroundPattern is not null
+            || opts.ModuleShapeMap is not null
+            || opts.ModuleJitter is not null
+            || HasCanvasArt(opts.Canvas)
+            || HasEyeArt(opts.Eyes)
+            || HasPaletteArt(opts.ForegroundPalette, opts.ForegroundPaletteZones);
+    }
 
-        var paletteIsArt = render.ForegroundPalette?.Colors is { Length: > 2 } || render.ForegroundPaletteZones is not null;
-        var canvasIsArt = render.Canvas?.Splash is not null
-            || render.Canvas?.Halo is not null
-            || render.Canvas?.Pattern is not null
-            || render.Canvas?.Vignette is not null
-            || render.Canvas?.Grain is not null;
-        var eyes = render.Eyes;
-        var eyesIsArt = eyes is not null && (
+    private static bool HasArtHints(QrPngRenderOptions render, QrEasyOptions opts) {
+        return opts.Art is not null
+            || render.ForegroundPattern is not null
+            || render.ModuleShapeMap is not null
+            || render.ModuleJitter is not null
+            || HasCanvasArt(render.Canvas)
+            || HasEyeArt(render.Eyes)
+            || HasPaletteArt(render.ForegroundPalette, render.ForegroundPaletteZones);
+    }
+
+    private static bool HasCanvasArt(QrPngCanvasOptions? canvas) {
+        return canvas?.Splash is not null
+            || canvas?.Halo is not null
+            || canvas?.Pattern is not null
+            || canvas?.Vignette is not null
+            || canvas?.Grain is not null;
+    }
+
+    private static bool HasEyeArt(QrPngEyeOptions? eyes) {
+        return eyes is not null && (
             eyes.SparkleCount > 0
             || eyes.AccentRingCount > 0
             || eyes.AccentRayCount > 0
             || eyes.AccentStripeCount > 0);
-        var hasArtHints = opts.Art is not null
-            || render.ForegroundPattern is not null
-            || render.ModuleShapeMap is not null
-            || render.ModuleJitter is not null
-            || canvasIsArt
-            || eyesIsArt
-            || paletteIsArt;
+    }
 
-        if (!hasArtHints) return;
+    private static bool HasPaletteArt(QrPngPaletteOptions? palette, QrPngPaletteZoneOptions? zones) {
+        return palette?.Colors is { Length: > 2 } || zones is not null;
+    }
 
-        var safetyMode = opts.Art?.SafetyMode ?? QrArtSafetyMode.Safe;
-        var targetScore = Math.Max(0, Math.Min(opts.ArtAutoTuneMinScore, 100));
+    private static void ApplyArtGuardrails(QrCode qr, QrPngRenderOptions render, QrEasyOptions opts) {
+        if (!opts.ArtGuardrailsEnabled || !HasArtHints(render, opts)) return;
 
-        // Always enforce the core scan guardrails when art is active.
+        var guardrailMode = opts.Art?.GuardrailMode ?? QrArtGuardrailMode.Conservative;
+        var targetScore = Math.Max(0, Math.Min(opts.ArtGuardrailMinimumScore, 100));
+        ApplyCoreArtGuardrails(render, guardrailMode);
+        ApplyCanvasArtGuardrails(render, guardrailMode);
+        ApplyEyeArtGuardrails(render, guardrailMode);
+
+        var report = QrArtHeuristics.Evaluate(qr, render);
+        if (HasLowContrastWarnings(report)) {
+            ApplyLowContrastFallback(render);
+            report = QrArtHeuristics.Evaluate(qr, render);
+        }
+
+        if (report.Score < targetScore) {
+            ApplyStrongGuardrailClamp(render, guardrailMode);
+        }
+    }
+
+    private static void ApplyCoreArtGuardrails(QrPngRenderOptions render, QrArtGuardrailMode guardrailMode) {
         render.ProtectFunctionalPatterns = true;
         render.ProtectQuietZone = true;
         render.QuietZone = Math.Max(render.QuietZone, 4);
 
-        var minScale = safetyMode switch {
-            QrArtSafetyMode.Safe => 0.94,
-            QrArtSafetyMode.Balanced => 0.9,
+        var minScale = guardrailMode switch {
+            QrArtGuardrailMode.Conservative => 0.94,
+            QrArtGuardrailMode.Balanced => 0.9,
             _ => 0.86,
         };
 
@@ -847,87 +843,34 @@ public static partial class QrEasy {
                 render.ModuleScaleMap.MaxScale = render.ModuleScaleMap.MinScale;
             }
         }
+    }
 
+    private static void ApplyCanvasArtGuardrails(QrPngRenderOptions render, QrArtGuardrailMode guardrailMode) {
         if (render.Canvas?.Splash is not null) {
             render.Canvas.Splash.ProtectQrArea = true;
         }
-        if (render.Canvas?.Halo is not null) {
-            var halo = render.Canvas.Halo;
-            halo.ProtectQrArea = true;
-            var haloRadiusMax = safetyMode switch {
-                QrArtSafetyMode.Safe => 48,
-                QrArtSafetyMode.Balanced => 64,
-                _ => 80,
-            };
-            halo.RadiusPx = Math.Min(halo.RadiusPx, haloRadiusMax);
-            var haloAlphaCap = safetyMode switch {
-                QrArtSafetyMode.Safe => (byte)96,
-                QrArtSafetyMode.Balanced => (byte)120,
-                _ => (byte)160,
-            };
-            if (halo.QrAreaAlphaMax == 0 || halo.QrAreaAlphaMax > haloAlphaCap) {
-                halo.QrAreaAlphaMax = haloAlphaCap;
-            }
-        }
-        if (render.Eyes is not null) {
-            var eye = render.Eyes;
-            eye.SparkleProtectQrArea = true;
-            eye.AccentRingProtectQrArea = true;
-            eye.AccentRayProtectQrArea = true;
-            eye.AccentStripeProtectQrArea = true;
+        var halo = render.Canvas?.Halo;
+        if (halo is null) return;
 
-            eye.SparkleCount = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(eye.SparkleCount, 28),
-                QrArtSafetyMode.Balanced => Math.Min(eye.SparkleCount, 36),
-                _ => Math.Min(eye.SparkleCount, 44),
-            };
-            eye.AccentRingCount = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(eye.AccentRingCount, 6),
-                QrArtSafetyMode.Balanced => Math.Min(eye.AccentRingCount, 8),
-                _ => Math.Min(eye.AccentRingCount, 10),
-            };
-            eye.AccentRayCount = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(eye.AccentRayCount, 18),
-                QrArtSafetyMode.Balanced => Math.Min(eye.AccentRayCount, 26),
-                _ => Math.Min(eye.AccentRayCount, 34),
-            };
-            eye.AccentStripeCount = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(eye.AccentStripeCount, 22),
-                QrArtSafetyMode.Balanced => Math.Min(eye.AccentStripeCount, 30),
-                _ => Math.Min(eye.AccentStripeCount, 38),
-            };
-
-            var eyeAlphaCap = safetyMode switch {
-                QrArtSafetyMode.Safe => (byte)128,
-                QrArtSafetyMode.Balanced => (byte)148,
-                _ => (byte)176,
-            };
-            if (eye.SparkleColor is not null) {
-                eye.SparkleColor = WithAlpha(eye.SparkleColor.Value, Math.Min(eye.SparkleColor.Value.A, eyeAlphaCap));
-            }
-            if (eye.AccentRingColor is not null) {
-                eye.AccentRingColor = WithAlpha(eye.AccentRingColor.Value, Math.Min(eye.AccentRingColor.Value.A, eyeAlphaCap));
-            }
-            if (eye.AccentRayColor is not null) {
-                eye.AccentRayColor = WithAlpha(eye.AccentRayColor.Value, Math.Min(eye.AccentRayColor.Value.A, eyeAlphaCap));
-            }
-            if (eye.AccentStripeColor is not null) {
-                eye.AccentStripeColor = WithAlpha(eye.AccentStripeColor.Value, Math.Min(eye.AccentStripeColor.Value.A, eyeAlphaCap));
-            }
-        }
-
-        var report = QrArtSafety.Evaluate(qr, render);
-        if (HasLowContrastWarnings(report)) {
-            ApplyLowContrastFallback(render);
-            report = QrArtSafety.Evaluate(qr, render);
-        }
-
-        if (report.Score >= targetScore) return;
-
-        ApplyStrongSafetyClamp(render, safetyMode);
+        halo.ProtectQrArea = true;
+        halo.RadiusPx = Math.Min(halo.RadiusPx, guardrailMode switch {
+            QrArtGuardrailMode.Conservative => 48,
+            QrArtGuardrailMode.Balanced => 64,
+            _ => 80,
+        });
+        var alphaCap = guardrailMode switch {
+            QrArtGuardrailMode.Conservative => (byte)96,
+            QrArtGuardrailMode.Balanced => (byte)120,
+            _ => (byte)160,
+        };
+        if (halo.QrAreaAlphaMax == 0 || halo.QrAreaAlphaMax > alphaCap) halo.QrAreaAlphaMax = alphaCap;
     }
 
-    private static bool HasLowContrastWarnings(QrArtSafetyReport report) {
+    private static void ApplyEyeArtGuardrails(QrPngRenderOptions render, QrArtGuardrailMode guardrailMode) {
+        ApplyEyeArtLimits(render.Eyes, guardrailMode, strong: false);
+    }
+
+    private static bool HasLowContrastWarnings(QrArtHeuristicReport report) {
         return report.Warnings.Any(static warning =>
             warning.Kind == QrArtWarningKind.LowContrast
             || warning.Kind == QrArtWarningKind.LowContrastGradient
@@ -950,10 +893,18 @@ public static partial class QrEasy {
         }
     }
 
-    private static void ApplyStrongSafetyClamp(QrPngRenderOptions render, QrArtSafetyMode safetyMode) {
-        var strongMinScale = safetyMode switch {
-            QrArtSafetyMode.Safe => 0.97,
-            QrArtSafetyMode.Balanced => 0.94,
+    private static void ApplyStrongGuardrailClamp(QrPngRenderOptions render, QrArtGuardrailMode guardrailMode) {
+        ApplyStrongModuleGuardrails(render, guardrailMode);
+        ApplyStrongPatternGuardrails(render);
+        ApplyStrongSplashGuardrails(render, guardrailMode);
+        ApplyStrongHaloGuardrails(render, guardrailMode);
+        ApplyStrongEyeGuardrails(render, guardrailMode);
+    }
+
+    private static void ApplyStrongModuleGuardrails(QrPngRenderOptions render, QrArtGuardrailMode guardrailMode) {
+        var strongMinScale = guardrailMode switch {
+            QrArtGuardrailMode.Conservative => 0.97,
+            QrArtGuardrailMode.Balanced => 0.94,
             _ => 0.9,
         };
 
@@ -964,94 +915,99 @@ public static partial class QrEasy {
                 render.ModuleScaleMap.MaxScale = render.ModuleScaleMap.MinScale;
             }
         }
+    }
 
+    private static void ApplyStrongPatternGuardrails(QrPngRenderOptions render) {
         if (render.ForegroundPattern is not null) {
             var pattern = render.ForegroundPattern;
             pattern.Color = WithAlpha(pattern.Color, Math.Min(pattern.Color.A, (byte)88));
             pattern.ThicknessPx = 1;
         }
+    }
 
-        if (render.Canvas?.Splash is not null) {
-            var splash = render.Canvas.Splash;
-            splash.ProtectQrArea = true;
-            splash.Count = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(splash.Count, 16),
-                QrArtSafetyMode.Balanced => Math.Min(splash.Count, 22),
-                _ => Math.Min(splash.Count, 28),
-            };
-            splash.DripChance = safetyMode == QrArtSafetyMode.Safe ? Math.Min(splash.DripChance, 0.45) : splash.DripChance;
-            splash.Color = WithAlpha(splash.Color, Math.Min(splash.Color.A, (byte)96));
-            if (splash.Colors is { Length: > 0 }) {
-                for (var i = 0; i < splash.Colors.Length; i++) {
-                    var color = splash.Colors[i];
-                    splash.Colors[i] = WithAlpha(color, Math.Min(color.A, (byte)96));
-                }
-            }
+    private static void ApplyStrongSplashGuardrails(QrPngRenderOptions render, QrArtGuardrailMode guardrailMode) {
+        var splash = render.Canvas?.Splash;
+        if (splash is null) return;
+
+        splash.ProtectQrArea = true;
+        splash.Count = guardrailMode switch {
+            QrArtGuardrailMode.Conservative => Math.Min(splash.Count, 16),
+            QrArtGuardrailMode.Balanced => Math.Min(splash.Count, 22),
+            _ => Math.Min(splash.Count, 28),
+        };
+        if (guardrailMode == QrArtGuardrailMode.Conservative) {
+            splash.DripChance = Math.Min(splash.DripChance, 0.45);
         }
+        splash.Color = WithAlpha(splash.Color, Math.Min(splash.Color.A, (byte)96));
+        if (splash.Colors is not { Length: > 0 }) return;
 
-        if (render.Canvas?.Halo is not null) {
-            var halo = render.Canvas.Halo;
-            halo.ProtectQrArea = true;
-            halo.RadiusPx = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(halo.RadiusPx, 40),
-                QrArtSafetyMode.Balanced => Math.Min(halo.RadiusPx, 56),
-                _ => Math.Min(halo.RadiusPx, 72),
-            };
-            var alphaCap = safetyMode switch {
-                QrArtSafetyMode.Safe => (byte)80,
-                QrArtSafetyMode.Balanced => (byte)104,
-                _ => (byte)140,
-            };
-            if (halo.QrAreaAlphaMax == 0 || halo.QrAreaAlphaMax > alphaCap) {
-                halo.QrAreaAlphaMax = alphaCap;
-            }
+        for (var i = 0; i < splash.Colors.Length; i++) {
+            var color = splash.Colors[i];
+            splash.Colors[i] = WithAlpha(color, Math.Min(color.A, (byte)96));
         }
-        if (render.Eyes is not null) {
-            var eye = render.Eyes;
-            eye.SparkleProtectQrArea = true;
-            eye.AccentRingProtectQrArea = true;
-            eye.AccentRayProtectQrArea = true;
-            eye.AccentStripeProtectQrArea = true;
+    }
 
-            eye.SparkleCount = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(eye.SparkleCount, 22),
-                QrArtSafetyMode.Balanced => Math.Min(eye.SparkleCount, 30),
-                _ => Math.Min(eye.SparkleCount, 38),
-            };
-            eye.AccentRingCount = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(eye.AccentRingCount, 4),
-                QrArtSafetyMode.Balanced => Math.Min(eye.AccentRingCount, 6),
-                _ => Math.Min(eye.AccentRingCount, 8),
-            };
-            eye.AccentRayCount = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(eye.AccentRayCount, 14),
-                QrArtSafetyMode.Balanced => Math.Min(eye.AccentRayCount, 22),
-                _ => Math.Min(eye.AccentRayCount, 30),
-            };
-            eye.AccentStripeCount = safetyMode switch {
-                QrArtSafetyMode.Safe => Math.Min(eye.AccentStripeCount, 18),
-                QrArtSafetyMode.Balanced => Math.Min(eye.AccentStripeCount, 26),
-                _ => Math.Min(eye.AccentStripeCount, 34),
+    private static void ApplyStrongHaloGuardrails(QrPngRenderOptions render, QrArtGuardrailMode guardrailMode) {
+        var halo = render.Canvas?.Halo;
+        if (halo is null) return;
+
+        halo.ProtectQrArea = true;
+        halo.RadiusPx = guardrailMode switch {
+            QrArtGuardrailMode.Conservative => Math.Min(halo.RadiusPx, 40),
+            QrArtGuardrailMode.Balanced => Math.Min(halo.RadiusPx, 56),
+            _ => Math.Min(halo.RadiusPx, 72),
+        };
+        var alphaCap = guardrailMode switch {
+            QrArtGuardrailMode.Conservative => (byte)80,
+            QrArtGuardrailMode.Balanced => (byte)104,
+            _ => (byte)140,
+        };
+        if (halo.QrAreaAlphaMax == 0 || halo.QrAreaAlphaMax > alphaCap) halo.QrAreaAlphaMax = alphaCap;
+    }
+
+    private static void ApplyStrongEyeGuardrails(QrPngRenderOptions render, QrArtGuardrailMode guardrailMode) {
+        ApplyEyeArtLimits(render.Eyes, guardrailMode, strong: true);
+    }
+
+    private static void ApplyEyeArtLimits(QrPngEyeOptions? eye, QrArtGuardrailMode guardrailMode, bool strong) {
+        if (eye is null) return;
+
+        var limits = strong
+            ? guardrailMode switch {
+                QrArtGuardrailMode.Conservative => (Sparkles: 22, Rings: 4, Rays: 14, Stripes: 18, Alpha: (byte)112),
+                QrArtGuardrailMode.Balanced => (Sparkles: 30, Rings: 6, Rays: 22, Stripes: 26, Alpha: (byte)132),
+                _ => (Sparkles: 38, Rings: 8, Rays: 30, Stripes: 34, Alpha: (byte)160),
+            }
+            : guardrailMode switch {
+                QrArtGuardrailMode.Conservative => (Sparkles: 28, Rings: 6, Rays: 18, Stripes: 22, Alpha: (byte)128),
+                QrArtGuardrailMode.Balanced => (Sparkles: 36, Rings: 8, Rays: 26, Stripes: 30, Alpha: (byte)148),
+                _ => (Sparkles: 44, Rings: 10, Rays: 34, Stripes: 38, Alpha: (byte)176),
             };
 
-            var eyeAlphaCap = safetyMode switch {
-                QrArtSafetyMode.Safe => (byte)112,
-                QrArtSafetyMode.Balanced => (byte)132,
-                _ => (byte)160,
-            };
-            if (eye.SparkleColor is not null) {
-                eye.SparkleColor = WithAlpha(eye.SparkleColor.Value, Math.Min(eye.SparkleColor.Value.A, eyeAlphaCap));
-            }
-            if (eye.AccentRingColor is not null) {
-                eye.AccentRingColor = WithAlpha(eye.AccentRingColor.Value, Math.Min(eye.AccentRingColor.Value.A, eyeAlphaCap));
-            }
-            if (eye.AccentRayColor is not null) {
-                eye.AccentRayColor = WithAlpha(eye.AccentRayColor.Value, Math.Min(eye.AccentRayColor.Value.A, eyeAlphaCap));
-            }
-            if (eye.AccentStripeColor is not null) {
-                eye.AccentStripeColor = WithAlpha(eye.AccentStripeColor.Value, Math.Min(eye.AccentStripeColor.Value.A, eyeAlphaCap));
-            }
-        }
+        ProtectEyeArt(eye);
+        eye.SparkleCount = Math.Min(eye.SparkleCount, limits.Sparkles);
+        eye.AccentRingCount = Math.Min(eye.AccentRingCount, limits.Rings);
+        eye.AccentRayCount = Math.Min(eye.AccentRayCount, limits.Rays);
+        eye.AccentStripeCount = Math.Min(eye.AccentStripeCount, limits.Stripes);
+        CapEyeArtAlpha(eye, limits.Alpha);
+    }
+
+    private static void ProtectEyeArt(QrPngEyeOptions eye) {
+        eye.SparkleProtectQrArea = true;
+        eye.AccentRingProtectQrArea = true;
+        eye.AccentRayProtectQrArea = true;
+        eye.AccentStripeProtectQrArea = true;
+    }
+
+    private static void CapEyeArtAlpha(QrPngEyeOptions eye, byte alphaCap) {
+        eye.SparkleColor = CapAlpha(eye.SparkleColor, alphaCap);
+        eye.AccentRingColor = CapAlpha(eye.AccentRingColor, alphaCap);
+        eye.AccentRayColor = CapAlpha(eye.AccentRayColor, alphaCap);
+        eye.AccentStripeColor = CapAlpha(eye.AccentStripeColor, alphaCap);
+    }
+
+    private static Rgba32? CapAlpha(Rgba32? color, byte alphaCap) {
+        return color is null ? null : WithAlpha(color.Value, Math.Min(color.Value.A, alphaCap));
     }
 
     private static QrPngModuleShape MapToConnectedShape(QrPngModuleShape shape) {

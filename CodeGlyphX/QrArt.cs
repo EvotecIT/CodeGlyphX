@@ -11,9 +11,9 @@ public static class QrArt {
     /// </summary>
     public static QrArtOptions Theme(
         QrArtTheme theme,
-        QrArtVariant variant = QrArtVariant.Safe,
+        QrArtVariant variant = QrArtVariant.Conservative,
         int intensity = 50,
-        QrArtSafetyMode safetyMode = QrArtSafetyMode.Safe) {
+        QrArtGuardrailMode guardrailMode = QrArtGuardrailMode.Conservative) {
         if (intensity < 0) intensity = 0;
         if (intensity > 100) intensity = 100;
 
@@ -21,7 +21,7 @@ public static class QrArt {
             Theme = theme,
             Variant = variant,
             Intensity = intensity,
-            SafetyMode = safetyMode,
+            GuardrailMode = guardrailMode,
         };
     }
 }

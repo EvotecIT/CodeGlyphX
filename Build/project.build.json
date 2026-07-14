@@ -3,7 +3,7 @@
   "RootPath": "..",
   "ExpectedVersion": null,
   "ExpectedVersionMap": {
-    "CodeGlyphX": "1.X.0"
+    "CodeGlyphX": "2.X.0"
   },
   "ExpectedVersionMapAsInclude": true,
   "ExpectedVersionMapUseWildcards": false,
@@ -25,7 +25,7 @@
   "StagingPath": "Artefacts/ProjectBuild",
   "CleanStaging": true,
   "PlanOutputPath": "Artefacts/ProjectBuild/project.build.plan.json",
-  "UpdateVersions": true,
+  "UpdateVersions": false,
   "Build": true,
   "PublishNuget": false,
   "PublishGitHub": false,
@@ -34,10 +34,10 @@
   "CertificateStore": "CurrentUser",
   "TimeStampServer": "http://timestamp.digicert.com",
   "PublishSource": "https://api.nuget.org/v3/index.json",
-  "PublishApiKeyFilePath": "C:\\Support\\Important\\NugetOrgEvotec.txt",
+  "PublishApiKeyEnvName": "NUGET_API_KEY",
   "SkipDuplicate": true,
   "PublishFailFast": true,
-  "GitHubAccessTokenFilePath": "C:\\Support\\Important\\GithubAPI.txt",
+  "GitHubAccessTokenEnvName": "GITHUB_TOKEN",
   "GitHubUsername": "EvotecIT",
   "GitHubRepositoryName": "CodeGlyphX",
   "GitHubIsPreRelease": false,

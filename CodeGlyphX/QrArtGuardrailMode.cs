@@ -1,15 +1,15 @@
 namespace CodeGlyphX;
 
 /// <summary>
-/// Safety guardrail strength for QR art styling.
+/// Decorative guardrail strength for QR art styling.
 /// </summary>
-public enum QrArtSafetyMode {
+public enum QrArtGuardrailMode {
     /// <summary>
-    /// Strong guardrails for maximum scan reliability.
+    /// Strong guardrails that preserve more conventional QR geometry.
     /// </summary>
-    Safe,
+    Conservative,
     /// <summary>
-    /// Balanced guardrails with moderate artistic freedom.
+    /// Moderate guardrails with additional artistic freedom.
     /// </summary>
     Balanced,
     /// <summary>

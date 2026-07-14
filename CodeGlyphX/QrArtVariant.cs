@@ -5,9 +5,9 @@ namespace CodeGlyphX;
 /// </summary>
 public enum QrArtVariant {
     /// <summary>
-    /// Scan-friendly default variant.
+    /// Conservative default variant with reduced decorative effects.
     /// </summary>
-    Safe,
+    Conservative,
     /// <summary>
     /// More decorative variant with stronger effects.
     /// </summary>

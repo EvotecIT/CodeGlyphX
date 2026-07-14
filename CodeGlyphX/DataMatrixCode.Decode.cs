@@ -16,8 +16,8 @@ using CodeGlyphX.Rendering.Pam;
 using CodeGlyphX.Rendering.Pbm;
 using CodeGlyphX.Rendering.Pgm;
 using CodeGlyphX.Rendering.Pdf;
-using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Ppm;
 using CodeGlyphX.Rendering.Svg;
 using CodeGlyphX.Rendering.Svgz;
 using CodeGlyphX.Rendering.Tga;
@@ -28,7 +28,6 @@ namespace CodeGlyphX;
 
 public static partial class DataMatrixCode {
     private const string FailureCancelled = "Cancelled.";
-    private const string FailureDownscale = "Image downscale failed.";
     private const string FailureNoDataMatrix = "No Data Matrix decoded.";
     /// <summary>
     /// Attempts to decode a Data Matrix symbol from PNG bytes.
@@ -56,16 +55,11 @@ public static partial class DataMatrixCode {
     /// </summary>
     public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (png is null) throw new ArgumentNullException(nameof(png));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
-            return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { text = string.Empty; return false; }
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
     }
 
     /// <summary>
@@ -93,16 +87,11 @@ public static partial class DataMatrixCode {
     /// Attempts to decode a Data Matrix symbol from PNG bytes in a span with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
-            return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { text = string.Empty; return false; }
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
     }
 
     /// <summary>
@@ -145,27 +134,22 @@ public static partial class DataMatrixCode {
     /// </summary>
     public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         diagnostics = new DataMatrixDecodeDiagnostics();
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
-                diagnostics = dmDiag;
-                return true;
-            }
-            diagnostics = dmDiag;
-            diagnostics.Failure ??= FailureNoDataMatrix;
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) {
             text = string.Empty;
+            diagnostics.Failure = ImageDecodeHelper.InvalidPngFailure;
             return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
         }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
+            diagnostics = dmDiag;
+            return true;
+        }
+        diagnostics = dmDiag;
+        diagnostics.Failure ??= FailureNoDataMatrix;
+        text = string.Empty;
+        return false;
     }
 
     /// <summary>
@@ -305,16 +289,11 @@ public static partial class DataMatrixCode {
     /// </summary>
     public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
-            return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { text = string.Empty; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
     }
 
     /// <summary>
@@ -357,31 +336,22 @@ public static partial class DataMatrixCode {
     /// </summary>
     public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         diagnostics = new DataMatrixDecodeDiagnostics();
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
-                text = string.Empty;
-                diagnostics.Failure ??= "Unsupported image format.";
-                return false;
-            }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
-                diagnostics = dmDiag;
-                return true;
-            }
-            diagnostics = dmDiag;
-            diagnostics.Failure ??= FailureNoDataMatrix;
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
             text = string.Empty;
+            diagnostics.Failure ??= "Unsupported image format.";
             return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
         }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
+            diagnostics = dmDiag;
+            return true;
+        }
+        diagnostics = dmDiag;
+        diagnostics.Failure ??= FailureNoDataMatrix;
+        text = string.Empty;
+        return false;
     }
 
     /// <summary>
@@ -409,16 +379,11 @@ public static partial class DataMatrixCode {
     /// Attempts to decode a Data Matrix symbol from common image formats in a span with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
-            return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { text = string.Empty; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
     }
 
     /// <summary>
@@ -447,17 +412,12 @@ public static partial class DataMatrixCode {
     /// </summary>
     public static bool TryDecodeImage(Stream stream, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; return false; }
-            if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) { text = string.Empty; return false; }
-            if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { text = string.Empty; return false; }
-            return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { text = string.Empty; return false; }
+        if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) { text = string.Empty; return false; }
+        if (!ImageReader.TryDecodeRgba32(data, options, out var rgba, out var width, out var height)) { text = string.Empty; return false; }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text);
     }
 
     /// <summary>
@@ -502,7 +462,7 @@ public static partial class DataMatrixCode {
     public static DecodeResult<string> DecodeImageResult(ReadOnlySpan<byte> image, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
         var stopwatch = Stopwatch.StartNew();
         _ = DecodeResultHelpers.TryGetImageInfo(image, out var info, out var formatKnown);
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
+        var token = cancellationToken;
         try {
             if (token.IsCancellationRequested) {
                 return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
@@ -511,12 +471,10 @@ public static partial class DataMatrixCode {
                 var imageFailure = DecodeResultHelpers.FailureForImageRead(image, formatKnown, token);
                 return new DecodeResult<string>(imageFailure, info, stopwatch.Elapsed);
             }
+            using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
 
             info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
 
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                return new DecodeResult<string>(DecodeFailureReason.Cancelled, info, stopwatch.Elapsed);
-            }
             if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out var text)) {
                 return new DecodeResult<string>(text, info, stopwatch.Elapsed);
             }
@@ -524,9 +482,6 @@ public static partial class DataMatrixCode {
             return new DecodeResult<string>(failure, info, stopwatch.Elapsed);
         } catch (Exception ex) {
             return new DecodeResult<string>(DecodeFailureReason.Error, info, stopwatch.Elapsed, ex.Message);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
         }
     }
 
@@ -599,85 +554,60 @@ public static partial class DataMatrixCode {
     private static bool TryDecodePngCore(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         diagnostics = new DataMatrixDecodeDiagnostics();
         if (png is null) throw new ArgumentNullException(nameof(png));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
-                diagnostics = dmDiag;
-                return true;
-            }
-            diagnostics = dmDiag;
-            diagnostics.Failure ??= FailureNoDataMatrix;
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) {
             text = string.Empty;
+            diagnostics.Failure = ImageDecodeHelper.InvalidPngFailure;
             return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
         }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
+            diagnostics = dmDiag;
+            return true;
+        }
+        diagnostics = dmDiag;
+        diagnostics.Failure ??= FailureNoDataMatrix;
+        text = string.Empty;
+        return false;
     }
 
     private static bool TryDecodeImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string text, out DataMatrixDecodeDiagnostics diagnostics) {
         diagnostics = new DataMatrixDecodeDiagnostics();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
-                text = string.Empty;
-                diagnostics.Failure ??= "Unsupported image format.";
-                return false;
-            }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) {
-                text = string.Empty;
-                diagnostics.Failure ??= token.IsCancellationRequested ? FailureCancelled : FailureDownscale;
-                return false;
-            }
-            if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
-                diagnostics = dmDiag;
-                return true;
-            }
-            diagnostics = dmDiag;
-            diagnostics.Failure ??= FailureNoDataMatrix;
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { text = string.Empty; diagnostics.Failure = FailureCancelled; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) {
             text = string.Empty;
+            diagnostics.Failure ??= "Unsupported image format.";
             return false;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
         }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out text, out var dmDiag)) {
+            diagnostics = dmDiag;
+            return true;
+        }
+        diagnostics = dmDiag;
+        diagnostics.Failure ??= FailureNoDataMatrix;
+        text = string.Empty;
+        return false;
     }
 
     private static bool TryDecodeAllImageCore(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out string[] texts) {
         texts = Array.Empty<string>();
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) return false;
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
-            var original = rgba;
-            var originalWidth = width;
-            var originalHeight = height;
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) return false;
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) return false;
+        if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
 
-            var list = new System.Collections.Generic.List<string>(4);
-            var seen = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
-            CollectAllFromRgba(rgba, width, height, width * 4, token, list, seen);
-            if (!ReferenceEquals(rgba, original) && !token.IsCancellationRequested) {
-                CollectAllFromRgba(original, originalWidth, originalHeight, originalWidth * 4, token, list, seen);
-            }
+        var list = new System.Collections.Generic.List<string>(4);
+        var seen = new System.Collections.Generic.HashSet<string>(StringComparer.Ordinal);
+        CollectAllFromRgba(rgba, width, height, width * 4, token, list, seen);
 
-            if (list.Count == 0) return false;
-            texts = list.ToArray();
-            return true;
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        if (list.Count == 0) return false;
+        texts = list.ToArray();
+        return true;
     }
 
     private static void CollectAllFromRgba(byte[] rgba, int width, int height, int stride, CancellationToken token, System.Collections.Generic.List<string> list, System.Collections.Generic.HashSet<string> seen) {

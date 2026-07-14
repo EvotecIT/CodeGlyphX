@@ -5,7 +5,7 @@
     "cards": [
       {
         "title": "Encode & Decode",
-        "text": "Full round-trip support with robust pixel detection and easy APIs.",
+        "text": "Encoding and documented decode paths for supported symbologies.",
         "icon": "cycle"
       },
       {
@@ -27,16 +27,16 @@
   },
   {
     "label": "Performance",
-    "note": "Fast, portable, and trimming-safe",
+    "note": "Portable and release-validated",
     "cards": [
       {
         "title": "AOT & Trim Ready",
-        "text": "No reflection tricks. Native AOT compatible and aggressively trimmed.",
+        "text": "CI publishes and executes a .NET 8 NativeAOT consumer.",
         "icon": "bolt"
       },
       {
         "title": "Cross-Platform",
-        "text": "Runs on Windows, Linux, macOS, .NET Standard 2.0+, .NET 8+.",
+        "text": "CI tests Windows, Linux, and macOS across current and legacy targets.",
         "icon": "globe"
       },
       {

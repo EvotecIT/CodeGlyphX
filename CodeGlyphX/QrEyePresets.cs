@@ -23,7 +23,7 @@ public static class QrEyePresets {
     };
 
     /// <summary>
-    /// Sunburst rays around eyes with safe spacing.
+    /// Sunburst rays around eyes with conservative spacing.
     /// </summary>
     public static QrPngEyeOptions Sunburst() => new() {
         UseFrame = true,

@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Examples;
 
-internal static class QrStyleBoardExample {
+internal static partial class QrStyleBoardExample {
     private const int StyleBoardTargetSizePx = 384;
     private const string StyleDocsBase = "https://codeglyphx.com/docs/qr?style=";
 
@@ -35,10 +36,7 @@ internal static class QrStyleBoardExample {
             manifestEntries.Add(new StyleBoardEntry(preset.Name, fileName, preset.Payload));
         }
 
-        var manifestJson = JsonSerializer.Serialize(manifestEntries, new JsonSerializerOptions {
-            WriteIndented = true,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
+        var manifestJson = JsonSerializer.Serialize(manifestEntries, typeof(List<StyleBoardEntry>), StyleBoardJsonContext.Default);
         manifestJson.WriteText(Path.Combine(dir, "style-board.json"));
         WriteHtmlIndex(dir, presets);
     }
@@ -548,6 +546,10 @@ internal static class QrStyleBoardExample {
     }
 
     private readonly record struct StyleBoardEntry(string Name, string File, string Payload);
+
+    [JsonSourceGenerationOptions(WriteIndented = true, PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
+    [JsonSerializable(typeof(List<StyleBoardEntry>))]
+    private sealed partial class StyleBoardJsonContext : JsonSerializerContext;
 
     private static QrEasyOptions BaseSticker(
         Rgba32 fg,

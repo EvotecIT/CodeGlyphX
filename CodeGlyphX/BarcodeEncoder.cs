@@ -26,7 +26,7 @@ public static class BarcodeEncoder {
     /// <summary>
     /// Encodes a barcode value using the specified <see cref="BarcodeType"/>.
     /// </summary>
-    /// <exception cref="NotSupportedException">Thrown when the requested type is not implemented yet.</exception>
+    /// <exception cref="NotSupportedException">Thrown when the requested type uses the matrix/stacked symbol pipeline.</exception>
     public static Barcode1D Encode(BarcodeType type, string value) {
         return type switch {
             BarcodeType.Code128 => Code128Encoder.Encode(value),
@@ -49,25 +49,28 @@ public static class BarcodeEncoder {
             BarcodeType.Telepen => TelepenEncoder.Encode(value),
             BarcodeType.Pharmacode => PharmacodeEncoder.Encode(value),
             BarcodeType.Code32 => Code32Encoder.Encode(value),
-            BarcodeType.PharmacodeTwoTrack => throw new NotSupportedException("BarcodeType.PharmacodeTwoTrack is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.KixCode => throw new NotSupportedException("BarcodeType.KixCode is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.Postnet => throw new NotSupportedException("BarcodeType.Postnet is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.Planet => throw new NotSupportedException("BarcodeType.Planet is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.RoyalMail4State => throw new NotSupportedException("BarcodeType.RoyalMail4State is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.AustraliaPost => throw new NotSupportedException("BarcodeType.AustraliaPost is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.JapanPost => throw new NotSupportedException("BarcodeType.JapanPost is a 2D barcode. Use MatrixBarcodeEncoder."),
+            BarcodeType.PharmacodeTwoTrack => throw UseMatrixEncoder(type),
+            BarcodeType.KixCode => throw UseMatrixEncoder(type),
+            BarcodeType.Postnet => throw UseMatrixEncoder(type),
+            BarcodeType.Planet => throw UseMatrixEncoder(type),
+            BarcodeType.RoyalMail4State => throw UseMatrixEncoder(type),
+            BarcodeType.AustraliaPost => throw UseMatrixEncoder(type),
+            BarcodeType.JapanPost => throw UseMatrixEncoder(type),
             BarcodeType.GS1DataBarTruncated => DataBar14Encoder.EncodeTruncated(value),
-            BarcodeType.GS1DataBarOmni => throw new NotSupportedException("BarcodeType.GS1DataBarOmni is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.GS1DataBarStacked => throw new NotSupportedException("BarcodeType.GS1DataBarStacked is a 2D barcode. Use MatrixBarcodeEncoder."),
+            BarcodeType.GS1DataBarOmni => throw UseMatrixEncoder(type),
+            BarcodeType.GS1DataBarStacked => throw UseMatrixEncoder(type),
             BarcodeType.GS1DataBarExpanded => DataBarExpandedEncoder.EncodeExpanded(value),
-            BarcodeType.GS1DataBarExpandedStacked => throw new NotSupportedException("BarcodeType.GS1DataBarExpandedStacked is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.UspsImb => throw new NotSupportedException("BarcodeType.UspsImb is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.DataMatrix => throw new NotSupportedException("BarcodeType.DataMatrix is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.PDF417 => throw new NotSupportedException("BarcodeType.PDF417 is a 2D barcode. Use MatrixBarcodeEncoder."),
-            BarcodeType.MicroPDF417 => throw new NotSupportedException("BarcodeType.MicroPDF417 is a 2D barcode. Use MatrixBarcodeEncoder."),
-            _ => throw new NotSupportedException(
-                $"BarcodeType.{type} is not supported yet. See ROADMAP.md: Phase 5 — Improvements."),
+            BarcodeType.GS1DataBarExpandedStacked => throw UseMatrixEncoder(type),
+            BarcodeType.UspsImb => throw UseMatrixEncoder(type),
+            BarcodeType.DataMatrix => throw UseMatrixEncoder(type),
+            BarcodeType.PDF417 => throw UseMatrixEncoder(type),
+            BarcodeType.MicroPDF417 => throw UseMatrixEncoder(type),
+            _ => throw new NotSupportedException($"BarcodeType.{type} is not supported by BarcodeEncoder."),
         };
+    }
+
+    private static NotSupportedException UseMatrixEncoder(BarcodeType type) {
+        return new NotSupportedException($"BarcodeType.{type} uses a matrix, stacked, postal, or other multi-height representation. Use MatrixBarcodeEncoder.");
     }
 
     /// <summary>

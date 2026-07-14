@@ -95,9 +95,9 @@ public sealed partial class CodeGlyphDecodeOptions {
     /// <summary>
     /// Applies a QR decode budget (milliseconds + optional max dimension).
     /// </summary>
-    public CodeGlyphDecodeOptions WithQrBudget(int maxMilliseconds, int maxDimension = 0) {
+    public CodeGlyphDecodeOptions WithQrBudget(int budgetMilliseconds, int maxDimension = 0) {
         var qr = EnsureQr();
-        qr.MaxMilliseconds = maxMilliseconds < 0 ? 0 : maxMilliseconds;
+        qr.BudgetMilliseconds = budgetMilliseconds < 0 ? 0 : budgetMilliseconds;
         if (maxDimension > 0) {
             qr.MaxDimension = maxDimension;
         }
@@ -105,11 +105,11 @@ public sealed partial class CodeGlyphDecodeOptions {
     }
 
     /// <summary>
-    /// Applies a non-QR image decode budget (milliseconds + optional max dimension).
+    /// Applies a non-QR symbol-recognition budget and optional maximum output dimension.
     /// </summary>
-    public CodeGlyphDecodeOptions WithImageBudget(int maxMilliseconds, int maxDimension = 0) {
+    public CodeGlyphDecodeOptions WithImageRecognitionBudget(int milliseconds, int maxDimension = 0) {
         var image = EnsureImage();
-        image.MaxMilliseconds = maxMilliseconds < 0 ? 0 : maxMilliseconds;
+        image.RecognitionBudgetMilliseconds = milliseconds < 0 ? 0 : milliseconds;
         if (maxDimension > 0) {
             image.MaxDimension = maxDimension;
         }

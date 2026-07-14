@@ -15,7 +15,7 @@ jobs:
     name: Build & Test (${{ matrix.os }})
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
-    timeout-minutes: 10
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -28,83 +28,90 @@ jobs:
             selfHostedRunner: '["self-hosted","windows"]'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
         with:
           dotnet-version: "8.0.x"
 
       - name: Setup .NET 10
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
         with:
           dotnet-version: "10.0.x"
 
-      - name: Restore Core
-        run: dotnet restore CodeGlyphX/CodeGlyphX.csproj
-
-      - name: Restore Tests (net8.0)
-        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net8.0
-
-      - name: Restore Tests (net472)
+      - name: Build complete solution
         if: runner.os == 'Windows'
-        run: dotnet restore CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -p:TargetFramework=net472
+        run: dotnet build CodeGlyphX.sln -c Release --nologo
 
-      - name: Restore Examples
-        run: dotnet restore CodeGlyphX.Examples/CodeGlyphX.Examples.csproj
-
-      - name: Restore WPF
-        if: runner.os == 'Windows'
+      - name: Build portable projects
+        if: runner.os != 'Windows'
         run: |
-          dotnet restore CodeGlyphX.Wpf/CodeGlyphX.Wpf.csproj
-          dotnet restore CodeGlyphX.ScreenScan.Wpf/CodeGlyphX.ScreenScan.Wpf.csproj
-          dotnet restore CodeGlyphX.Demo.Wpf/CodeGlyphX.Demo.Wpf.csproj
+          dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f netstandard2.0 --nologo
+          dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net8.0 --nologo
+          dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net10.0 --nologo
+          dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --nologo
+          dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net10.0 --nologo
+          dotnet build CodeGlyphX.Examples/CodeGlyphX.Examples.csproj -c Release --nologo
+          dotnet build CodeGlyphX.Fuzz/CodeGlyphX.Fuzz.csproj -c Release --nologo
 
-      - name: Build Core (net8.0)
-        run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net8.0 --no-restore
-
-      - name: Build Core (net10.0)
-        run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net10.0 --no-restore
-
-      - name: Build Tests (net8.0)
-        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0
-
-      - name: Download image samples
-        if: runner.os == 'Linux'
-        run: pwsh Build/Download-ImageSamples.ps1
+      - name: Download hash-pinned test corpora
+        shell: pwsh
+        run: |
+          ./Build/Download-ImageSamples.ps1 -NoUpdateManifest
+          ./Build/Download-ExternalSamples.ps1 -NoUpdateManifest
 
       - name: Test (net8.0)
         run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build
 
+      - name: Test (net10.0)
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net10.0 --no-restore --no-build
+
       - name: Upload coverage to Codecov
         if: runner.os == 'Linux' && github.event_name != 'pull_request'
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
           fail_ci_if_error: false
           verbose: true
 
-      - name: Build Examples (net8.0)
-        run: dotnet build CodeGlyphX.Examples/CodeGlyphX.Examples.csproj -c Release -f net8.0 --no-restore
-
-      - name: Build WPF (net8.0-windows)
-        if: runner.os == 'Windows'
-        run: |
-          dotnet build CodeGlyphX.Wpf/CodeGlyphX.Wpf.csproj -c Release -f net8.0-windows --no-restore
-          dotnet build CodeGlyphX.ScreenScan.Wpf/CodeGlyphX.ScreenScan.Wpf.csproj -c Release -f net8.0-windows --no-restore
-          dotnet build CodeGlyphX.Demo.Wpf/CodeGlyphX.Demo.Wpf.csproj -c Release -f net8.0-windows --no-restore
-
-      - name: Build Core (net472)
-        if: runner.os == 'Windows'
-        run: dotnet build CodeGlyphX/CodeGlyphX.csproj -c Release -f net472 --no-restore
-
-      - name: Build Tests (net472)
-        if: runner.os == 'Windows'
-        run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net472 --no-restore
-
       - name: Test (net472 smoke)
         if: runner.os == 'Windows'
         run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net472 --no-restore --no-build
+
+  release-contracts:
+    name: Package & NativeAOT contracts
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Pack release artifacts
+        run: dotnet pack CodeGlyphX/CodeGlyphX.csproj -c Release -o artifacts/packages --nologo
+
+      - name: Validate package contents
+        shell: pwsh
+        run: ./Build/Assert-Package.ps1 -PackageDirectory artifacts/packages
+
+      - name: Publish NativeAOT consumer
+        run: dotnet publish CodeGlyphX.Examples/CodeGlyphX.Examples.csproj -c Release -f net8.0 -r linux-x64 -p:PublishAot=true --self-contained true -o artifacts/aot-smoke --nologo
+
+      - name: Run NativeAOT public API smoke test
+        env:
+          CODEGLYPHX_CI_SMOKE: "1"
+          CODEGLYPHX_OUTPUT_DIR: ${{ github.workspace }}/artifacts/aot-output
+        run: ./artifacts/aot-smoke/CodeGlyphX.Examples
 
   website-build:
     name: Website Build (PR)
@@ -112,14 +119,14 @@ jobs:
     permissions:
       contents: read
       packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@a1a187ad5452f499bc974d32ccd3cd28cd11e868
     with:
       website_root: Website
       pipeline_config: Website/pipeline.website-ci.json
       engine_mode: source
       runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: 9d9f2d2c0fde07aaeb76518a787b52b49fbe5700
+      powerforge_ref: a1a187ad5452f499bc974d32ccd3cd28cd11e868
       report_artifact_name: powerforge-website-reports
 
   coverage:
@@ -129,10 +136,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Setup .NET 8
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
         with:
           dotnet-version: "8.0.x"
 
@@ -142,11 +149,17 @@ jobs:
       - name: Build Tests (net8.0)
         run: dotnet build CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore
 
-      - name: Test (net8.0 + coverage)
-        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --collect:"XPlat Code Coverage" --settings Build/coverage.runsettings
+      - name: Download hash-pinned test corpora
+        shell: pwsh
+        run: |
+          ./Build/Download-ImageSamples.ps1 -NoUpdateManifest
+          ./Build/Download-ExternalSamples.ps1 -NoUpdateManifest
+
+      - name: Test (net8.0 + coverage, excluding timing-sensitive corpus)
+        run: dotnet test CodeGlyphX.Tests/CodeGlyphX.Tests.csproj -c Release -f net8.0 --no-restore --no-build --filter "Category!=CorpusTiming" --collect:"XPlat Code Coverage" --settings Build/coverage.runsettings
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         with:
           files: ./CodeGlyphX.Tests/TestResults/**/coverage.cobertura.xml
           fail_ci_if_error: false

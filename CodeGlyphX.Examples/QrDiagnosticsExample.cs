@@ -9,12 +9,12 @@ internal static class QrDiagnosticsExample {
         var samplePath = ResolveSample("Assets/DecodingSamples/qr-noisy-ui.png");
         var bytes = File.ReadAllBytes(samplePath);
 
-        var maxMilliseconds = ReadIntEnv("CODEGLYPHX_DIAG_QR_MAXMS", 800);
+        var budgetMilliseconds = ReadIntEnv("CODEGLYPHX_DIAG_QR_BUDGET_MS", 800);
         var aggressive = ReadBoolEnv("CODEGLYPHX_DIAG_QR_AGG", true);
         var disableTransforms = ReadBoolEnv("CODEGLYPHX_DIAG_QR_DISABLE_TRANSFORMS", false);
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
-            MaxMilliseconds = maxMilliseconds,
+            BudgetMilliseconds = budgetMilliseconds,
             MaxDimension = 1600,
             AggressiveSampling = aggressive,
             DisableTransforms = disableTransforms

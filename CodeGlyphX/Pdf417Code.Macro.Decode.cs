@@ -4,7 +4,6 @@ using System.Threading;
 using CodeGlyphX.Internal;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
-using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX;
 
@@ -35,16 +34,11 @@ public static partial class Pdf417Code {
     /// </summary>
     public static bool TryDecodePng(byte[] png, ImageDecodeOptions? options, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
         if (png is null) throw new ArgumentNullException(nameof(png));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { decoded = null!; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { decoded = null!; return false; }
-            return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { decoded = null!; return false; }
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
     }
 
     /// <summary>
@@ -72,16 +66,11 @@ public static partial class Pdf417Code {
     /// Attempts to decode a Macro PDF417 symbol from PNG bytes in a span with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodePng(ReadOnlySpan<byte> png, ImageDecodeOptions? options, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { decoded = null!; return false; }
-            var rgba = PngReader.DecodeRgba32(png, out var width, out var height);
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { decoded = null!; return false; }
-            return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { decoded = null!; return false; }
+        if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
     }
 
     /// <summary>
@@ -164,16 +153,11 @@ public static partial class Pdf417Code {
     /// </summary>
     public static bool TryDecodeImage(byte[] image, ImageDecodeOptions? options, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
         if (image is null) throw new ArgumentNullException(nameof(image));
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { decoded = null!; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { decoded = null!; return false; }
-            return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { decoded = null!; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
     }
 
     /// <summary>
@@ -201,16 +185,11 @@ public static partial class Pdf417Code {
     /// Attempts to decode a Macro PDF417 symbol from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span with image decode options, with cancellation.
     /// </summary>
     public static bool TryDecodeImage(ReadOnlySpan<byte> image, ImageDecodeOptions? options, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
-        var token = ImageDecodeHelper.ApplyBudget(cancellationToken, options, out var budgetCts, out var budgetScope);
-        try {
-            if (token.IsCancellationRequested) { decoded = null!; return false; }
-            if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
-            if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, token)) { decoded = null!; return false; }
-            return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
-        } finally {
-            budgetCts?.Dispose();
-            budgetScope?.Dispose();
-        }
+        var token = cancellationToken;
+        if (token.IsCancellationRequested) { decoded = null!; return false; }
+        if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) { decoded = null!; return false; }
+        using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
+        return Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, token, out decoded);
     }
 
 }
