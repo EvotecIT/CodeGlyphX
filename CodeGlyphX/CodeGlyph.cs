@@ -459,10 +459,7 @@ public static partial class CodeGlyph {
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         if (cancellationToken.IsCancellationRequested) return false;
         var squareish = IsSquareish(width, height);
-        var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800
-        };
+        var qrOptionsLocal = ResolveMultiQrOptions(qrOptions);
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
         var foundQr = false;
 
@@ -525,6 +522,13 @@ public static partial class CodeGlyph {
         var min = width < height ? width : height;
         var max = width > height ? width : height;
         return (double)max / min <= 1.35d;
+    }
+
+    private static QrPixelDecodeOptions ResolveMultiQrOptions(QrPixelDecodeOptions? options) {
+        return options ?? new QrPixelDecodeOptions {
+            Profile = QrDecodeProfile.Balanced,
+            BudgetMilliseconds = 800
+        };
     }
 
     private static bool IsCancelled(CancellationToken token, CodeGlyphDecodeDiagnostics diagnostics) {
@@ -1003,10 +1007,7 @@ public static partial class CodeGlyph {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (cancellationToken.IsCancellationRequested) return false;
         var squareish = IsSquareish(width, height);
-        var qrOptionsLocal = qrOptions ?? new QrPixelDecodeOptions {
-            Profile = QrDecodeProfile.Balanced,
-            BudgetMilliseconds = 800
-        };
+        var qrOptionsLocal = ResolveMultiQrOptions(qrOptions);
         var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
         var foundQr = false;
 

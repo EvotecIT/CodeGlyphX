@@ -162,6 +162,7 @@ public static partial class CodeGlyph {
     /// Attempts to decode a QR or barcode from raw pixels using a single options object.
     /// </summary>
     public static bool TryDecode(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded decoded, CodeGlyphDecodeOptions? options) {
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         var expected = options?.ExpectedBarcode;
         var prefer = options?.PreferBarcode ?? false;
         var qr = options?.Qr;
@@ -222,6 +223,7 @@ public static partial class CodeGlyph {
     /// Attempts to decode all symbols from raw pixels using a single options object.
     /// </summary>
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, CodeGlyphDecodeOptions? options) {
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         var expected = options?.ExpectedBarcode;
         var include = options?.IncludeBarcode ?? true;
         var prefer = options?.PreferBarcode ?? false;
@@ -767,16 +769,14 @@ public static partial class CodeGlyph {
         if (cancellationToken.IsCancellationRequested) return false;
 
         var list = new System.Collections.Generic.List<CodeGlyphDecoded>(4);
+        var qrOptionsLocal = ResolveMultiQrOptions(qrOptions);
 
         if (includeBarcode && preferBarcode) {
-            BarcodeDecoded barcode = null!;
-            if (TryWithImageBudget(imageOptions, cancellationToken, token => BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, token, out barcode))) {
-                list.Add(new CodeGlyphDecoded(barcode));
-            }
+            AddAllBarcodesWithImageBudget(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, imageOptions, list);
         }
 
         if (cancellationToken.IsCancellationRequested) return false;
-        if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, qrOptions, cancellationToken)) {
+        if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, qrOptionsLocal, cancellationToken)) {
             for (var i = 0; i < qrResults.Length; i++) {
                 list.Add(new CodeGlyphDecoded(qrResults[i]));
             }
@@ -801,15 +801,34 @@ public static partial class CodeGlyph {
         }
 
         if (includeBarcode && !preferBarcode) {
-            BarcodeDecoded barcode = null!;
-            if (TryWithImageBudget(imageOptions, cancellationToken, token => BarcodeDecoder.TryDecode(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, token, out barcode))) {
-                list.Add(new CodeGlyphDecoded(barcode));
-            }
+            AddAllBarcodesWithImageBudget(pixels, width, height, stride, format, expectedBarcode, barcodeOptions, cancellationToken, imageOptions, list);
         }
 
         if (list.Count == 0) return false;
         decoded = list.ToArray();
         return true;
+    }
+
+    private static void AddAllBarcodesWithImageBudget(
+        byte[] pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        BarcodeType? expectedBarcode,
+        BarcodeDecodeOptions? barcodeOptions,
+        CancellationToken cancellationToken,
+        ImageDecodeOptions? imageOptions,
+        System.Collections.Generic.List<CodeGlyphDecoded> decoded) {
+        BarcodeDecoded[] barcodes = Array.Empty<BarcodeDecoded>();
+        if (!TryWithImageBudget(imageOptions, cancellationToken, token =>
+                BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, format, out barcodes, expectedBarcode, barcodeOptions, token))) {
+            return;
+        }
+
+        for (var i = 0; i < barcodes.Length; i++) {
+            decoded.Add(new CodeGlyphDecoded(barcodes[i]));
+        }
     }
 
 }

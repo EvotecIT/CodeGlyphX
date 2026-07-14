@@ -68,4 +68,21 @@ public sealed class QrArtHeuristicTests {
             Assert.Contains(report.Warnings, warning => warning.Kind == testCase.Warning);
         }
     }
+
+    [Fact]
+    public void PaletteZones_StillEvaluateTheBaseForeground() {
+        var report = QrEasy.EvaluateScanHeuristics("https://example.com/palette-zones", new QrEasyOptions {
+            ArtGuardrailsEnabled = false,
+            Foreground = Rgba32.White,
+            Background = Rgba32.White,
+            ForegroundPaletteZones = new QrPngPaletteZoneOptions {
+                CenterSize = 8,
+                CenterPalette = new QrPngPaletteOptions {
+                    Colors = new[] { Rgba32.Black }
+                }
+            }
+        });
+
+        Assert.Contains(report.Warnings, warning => warning.Kind == QrArtWarningKind.LowContrastPalette);
+    }
 }

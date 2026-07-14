@@ -66,6 +66,20 @@ public sealed class BarcodeDecoderTests {
     }
 
     [Fact]
+    public void DecodePng_RejectsBmp_WhenImageOptionsAreProvided() {
+        var bmp = Barcode.Render(BarcodeType.Code128, "PNG-ONLY", OutputFormat.Bmp, new BarcodeOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }).Data;
+        var options = ImageDecodeOptions.Guarded();
+
+        Assert.True(Barcode.TryDecodeImage(bmp, BarcodeType.Code128, options, out var decoded));
+        Assert.Equal("PNG-ONLY", decoded.Text);
+        Assert.False(Barcode.TryDecodePng(bmp, BarcodeType.Code128, options, out _));
+    }
+
+    [Fact]
     public void Decode_Code128_FromPng_Cancelled_ReturnsFalse() {
         var png = Barcode.Render(BarcodeType.Code128, "CANCEL-PNG", OutputFormat.Png, new BarcodeOptions {
             ModuleSize = 3,

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Tests.TestHelpers;
@@ -91,6 +92,45 @@ public sealed class CodeGlyphDecodeOptionsTests {
     }
 
     [Fact]
+    public void DecodeAll_WithImageBudget_ReturnsEveryBarcode() {
+        var top = RenderBarcode("BUDGET-TOP", out var topWidth, out var topHeight, out var topStride);
+        var bottom = RenderBarcode("BUDGET-BOTTOM", out var bottomWidth, out var bottomHeight, out var bottomStride);
+        var pixels = StackVertically(
+            top,
+            topWidth,
+            topHeight,
+            topStride,
+            bottom,
+            bottomWidth,
+            bottomHeight,
+            bottomStride,
+            out var width,
+            out var height,
+            out var stride);
+        var options = new CodeGlyphDecodeOptions {
+            ExpectedBarcode = BarcodeType.Code128,
+            PreferBarcode = true,
+            Image = new ImageDecodeOptions { RecognitionBudgetMilliseconds = TestBudget.Adjust(4000) }
+        };
+
+        Assert.True(CodeGlyph.TryDecodeAll(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options));
+        Assert.Contains(decoded, item => item.Kind == CodeGlyphKind.Barcode1D && item.Text == "BUDGET-TOP");
+        Assert.Contains(decoded, item => item.Kind == CodeGlyphKind.Barcode1D && item.Text == "BUDGET-BOTTOM");
+    }
+
+    [Fact]
+    public void RawPixelOptionsOverloads_RejectNullPixelsBeforeUsingImageOptions() {
+        var options = new CodeGlyphDecodeOptions {
+            Image = new ImageDecodeOptions { MaxDimension = 100 }
+        };
+
+        Assert.Throws<ArgumentNullException>(() =>
+            CodeGlyph.TryDecode(null!, 1, 1, 4, PixelFormat.Rgba32, out _, options));
+        Assert.Throws<ArgumentNullException>(() =>
+            CodeGlyph.TryDecodeAll(null!, 1, 1, 4, PixelFormat.Rgba32, out _, options));
+    }
+
+    [Fact]
     public void Presets_SetExpectedProfiles() {
         Assert.Equal(QrDecodeProfile.Fast, CodeGlyphDecodeOptions.Fast().Qr!.Profile);
         Assert.Equal(QrDecodeProfile.Balanced, CodeGlyphDecodeOptions.Balanced().Qr!.Profile);
@@ -112,5 +152,49 @@ public sealed class CodeGlyphDecodeOptionsTests {
         Assert.Equal(MsiChecksumPolicy.RequireValid, options.Barcode.MsiChecksum);
         Assert.Equal(Code11ChecksumPolicy.StripIfValid, options.Barcode.Code11Checksum);
         Assert.Equal(PlesseyChecksumPolicy.None, options.Barcode.PlesseyChecksum);
+    }
+
+    private static byte[] RenderBarcode(string text, out int width, out int height, out int stride) {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, text);
+        return BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3,
+            QuietZone = 10,
+            HeightModules = 40
+        }, out width, out height, out stride);
+    }
+
+    private static byte[] StackVertically(
+        byte[] top,
+        int topWidth,
+        int topHeight,
+        int topStride,
+        byte[] bottom,
+        int bottomWidth,
+        int bottomHeight,
+        int bottomStride,
+        out int width,
+        out int height,
+        out int stride) {
+        const int gap = 24;
+        width = Math.Max(topWidth, bottomWidth);
+        height = topHeight + gap + bottomHeight;
+        stride = width * 4;
+        var pixels = new byte[stride * height];
+        for (var i = 0; i < pixels.Length; i += 4) {
+            pixels[i] = 255;
+            pixels[i + 1] = 255;
+            pixels[i + 2] = 255;
+            pixels[i + 3] = 255;
+        }
+
+        BlitRows(top, topHeight, topStride, pixels, stride, offsetY: 0);
+        BlitRows(bottom, bottomHeight, bottomStride, pixels, stride, offsetY: topHeight + gap);
+        return pixels;
+    }
+
+    private static void BlitRows(byte[] source, int sourceHeight, int sourceStride, byte[] destination, int destinationStride, int offsetY) {
+        for (var y = 0; y < sourceHeight; y++) {
+            Buffer.BlockCopy(source, y * sourceStride, destination, (offsetY + y) * destinationStride, sourceStride);
+        }
     }
 }

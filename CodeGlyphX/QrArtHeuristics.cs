@@ -182,7 +182,7 @@ public static class QrArtHeuristics {
     }
 
     private static void EvaluatePaletteContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrPngForegroundPatternOptions? pattern, bool patternActive) {
-        var palettes = CollectPalettes(options.ForegroundPalette, options.ForegroundPaletteZones);
+        var palettes = CollectPalettes(options.Foreground, options.ForegroundPalette, options.ForegroundPaletteZones);
         var colors = patternActive ? AddPatternVariants(palettes, pattern!) : palettes;
         if (MinContrast(colors, backgrounds) < 4.5) {
             evaluation.Add(QrArtWarningKind.LowContrastPalette, "Palette includes low-contrast colors against the background.", 30);
@@ -269,24 +269,24 @@ public static class QrArtHeuristics {
         return list.ToArray();
     }
 
-    private static Rgba32[] CollectPalettes(QrPngPaletteOptions? basePalette, QrPngPaletteZoneOptions? zones) {
-        var count = 0;
+    private static Rgba32[] CollectPalettes(Rgba32 baseForeground, QrPngPaletteOptions? basePalette, QrPngPaletteZoneOptions? zones) {
+        var count = 1;
         if (basePalette is not null) count += basePalette.Colors.Length;
-        if (zones?.CenterPalette is not null) count += zones.CenterPalette.Colors.Length;
-        if (zones?.CornerPalette is not null) count += zones.CornerPalette.Colors.Length;
-        if (count == 0) return Array.Empty<Rgba32>();
+        if (zones?.CenterPalette is not null && zones.CenterSize > 0) count += zones.CenterPalette.Colors.Length;
+        if (zones?.CornerPalette is not null && zones.CornerSize > 0) count += zones.CornerPalette.Colors.Length;
 
         var colors = new Rgba32[count];
-        var offset = 0;
+        colors[0] = baseForeground;
+        var offset = 1;
         if (basePalette is not null) {
             Array.Copy(basePalette.Colors, 0, colors, offset, basePalette.Colors.Length);
             offset += basePalette.Colors.Length;
         }
-        if (zones?.CenterPalette is not null) {
+        if (zones?.CenterPalette is not null && zones.CenterSize > 0) {
             Array.Copy(zones.CenterPalette.Colors, 0, colors, offset, zones.CenterPalette.Colors.Length);
             offset += zones.CenterPalette.Colors.Length;
         }
-        if (zones?.CornerPalette is not null) {
+        if (zones?.CornerPalette is not null && zones.CornerSize > 0) {
             Array.Copy(zones.CornerPalette.Colors, 0, colors, offset, zones.CornerPalette.Colors.Length);
         }
         return colors;
