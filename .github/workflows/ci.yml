@@ -117,16 +117,17 @@ jobs:
     name: Website Build (PR)
     if: github.event_name == 'pull_request'
     permissions:
+      actions: read
       contents: read
       packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@a1a187ad5452f499bc974d32ccd3cd28cd11e868
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml@b96b20c4ed0a9f18b8d51d9f4c1caa3595ed417c
     with:
       website_root: Website
       pipeline_config: Website/pipeline.website-ci.json
       engine_mode: source
       runner_labels_json: ${{ github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]' }}
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: a1a187ad5452f499bc974d32ccd3cd28cd11e868
+      powerforge_ref: b96b20c4ed0a9f18b8d51d9f4c1caa3595ed417c
       report_artifact_name: powerforge-website-reports
 
   coverage:
