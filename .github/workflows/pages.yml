@@ -72,7 +72,7 @@ jobs:
       dotnet_version: 10.0.x
       report_artifact_name: powerforge-website-post-deploy-reports
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: a1a187ad5452f499bc974d32ccd3cd28cd11e868
+      powerforge_ref: b96b20c4ed0a9f18b8d51d9f4c1caa3595ed417c
       pipeline_mode: ci
       use_playwright_cache: false
     secrets:
