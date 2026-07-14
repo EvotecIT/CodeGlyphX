@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
@@ -115,6 +116,63 @@ public sealed class ImageReaderLimitsTests {
 
         Assert.False(success);
         Assert.Null(decoded);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void CodeGlyphPngTryApis_ReturnFalse_WhenOptionLimitRejectsImage(bool limitBytes) {
+        var png = QrCode.Render("CODEGLYPH-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var options = new CodeGlyphDecodeOptions {
+            Image = limitBytes
+                ? new ImageDecodeOptions { MaxBytes = png.Length - 1 }
+                : new ImageDecodeOptions { MaxPixels = 1 }
+        };
+        var path = Path.GetTempFileName();
+
+        try {
+            File.WriteAllBytes(path, png);
+
+            Assert.False(CodeGlyph.TryDecodePng(png, out var direct, options));
+            Assert.Null(direct);
+
+            Assert.False(CodeGlyph.TryDecodePng(png, out var diagnosed, out var diagnostics, options));
+            Assert.Null(diagnosed);
+            Assert.Equal(DecodeFailureReason.InvalidInput, diagnostics.FailureReason);
+
+            Assert.False(CodeGlyph.TryDecodeAllPng(png, out var allDirect, options));
+            Assert.Empty(allDirect);
+
+            using (var stream = new MemoryStream(png, writable: false)) {
+                Assert.False(CodeGlyph.TryDecodePng(stream, out var streamed, options));
+                Assert.Null(streamed);
+            }
+
+            using (var stream = new MemoryStream(png, writable: false)) {
+                Assert.False(CodeGlyph.TryDecodeAllPng(stream, out var allStreamed, options));
+                Assert.Empty(allStreamed);
+            }
+
+            Assert.False(CodeGlyph.TryDecodePngFile(path, out var fromFile, options));
+            Assert.Null(fromFile);
+            Assert.False(CodeGlyph.TryDecodeAllPngFile(path, out var allFromFile, options));
+            Assert.Empty(allFromFile);
+        } finally {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void CodeGlyphPngTryApis_ReturnFalse_ForInvalidPng() {
+        var invalidPng = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+
+        Assert.False(CodeGlyph.TryDecodePng(invalidPng, out var decoded));
+        Assert.Null(decoded);
+        Assert.False(CodeGlyph.TryDecodeAllPng(invalidPng, out var allDecoded));
+        Assert.Empty(allDecoded);
+        Assert.False(CodeGlyph.TryDecodePng(invalidPng, out var diagnosed, out var diagnostics, options: null));
+        Assert.Null(diagnosed);
+        Assert.Equal(DecodeFailureReason.InvalidInput, diagnostics.FailureReason);
     }
 
     [Fact]
