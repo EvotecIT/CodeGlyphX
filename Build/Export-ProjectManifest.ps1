@@ -26,6 +26,14 @@ function Resolve-Version {
         [Parameter(Mandatory)][string] $RepoPath
     )
 
+    $ProjectPath = Join-Path $RepoPath 'CodeGlyphX/CodeGlyphX.csproj'
+    if (Test-Path -LiteralPath $ProjectPath) {
+        $VersionPrefix = Select-String -Path $ProjectPath -Pattern '<VersionPrefix>([^<]+)</VersionPrefix>' -AllMatches | Select-Object -First 1
+        if ($VersionPrefix -and $VersionPrefix.Matches.Count -gt 0) {
+            return $VersionPrefix.Matches[0].Groups[1].Value
+        }
+    }
+
     $Tag = Get-GitValue -RepoPath $RepoPath -Arguments @('describe', '--tags', '--abbrev=0')
     if ($Tag) {
         $Normalized = [string]$Tag
@@ -33,14 +41,6 @@ function Resolve-Version {
         $Normalized = $Normalized -replace '^v', ''
         if ($Normalized) {
             return $Normalized
-        }
-    }
-
-    $ProjectPath = Join-Path $RepoPath 'CodeGlyphX/CodeGlyphX.csproj'
-    if (Test-Path -LiteralPath $ProjectPath) {
-        $VersionPrefix = Select-String -Path $ProjectPath -Pattern '<VersionPrefix>([^<]+)</VersionPrefix>' -AllMatches | Select-Object -First 1
-        if ($VersionPrefix -and $VersionPrefix.Matches.Count -gt 0) {
-            return $VersionPrefix.Matches[0].Groups[1].Value
         }
     }
 
@@ -59,19 +59,15 @@ if (-not (Test-Path -LiteralPath $OutputDirectory)) {
 }
 
 $Version = Resolve-Version -RepoPath $RepoRootResolved
-$Commit = Get-GitValue -RepoPath $RepoRootResolved -Arguments @('rev-parse', '--short', 'HEAD')
-$GeneratedAt = Get-GitValue -RepoPath $RepoRootResolved -Arguments @('show', '-s', '--format=%cI', 'HEAD')
-if (-not $GeneratedAt) {
-    $GeneratedAt = (Get-Date).ToUniversalTime().ToString('o')
-}
 
+# This manifest is committed and verified in pull requests, so it must contain
+# only deterministic project metadata. Build and deployment layers own runtime
+# provenance such as the generating commit and timestamp.
 $Manifest = [ordered]@{
     slug        = 'codeglyphx'
     name        = 'CodeGlyphX'
     mode        = 'hub-full'
     version     = $Version
-    generatedAt = [string]$GeneratedAt
-    commit      = [string]$Commit
     description = 'No-deps QR & barcode toolkit for .NET.'
     surfaces    = [ordered]@{
         docs          = $true
@@ -97,5 +93,4 @@ if ($PSCmdlet.ShouldProcess($OutputPathResolved, 'Write project-manifest.json'))
 [PSCustomObject]@{
     outputPath = $OutputPathResolved
     version    = $Version
-    commit     = $Commit
 }

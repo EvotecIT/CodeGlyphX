@@ -2,9 +2,7 @@
   "slug": "codeglyphx",
   "name": "CodeGlyphX",
   "mode": "hub-full",
-  "version": "1.2.0",
-  "generatedAt": "2026-03-01T08:09:33+01:00",
-  "commit": "ab4e3a3",
+  "version": "2.0.0",
   "description": "No-deps QR & barcode toolkit for .NET.",
   "surfaces": {
     "docs": true,

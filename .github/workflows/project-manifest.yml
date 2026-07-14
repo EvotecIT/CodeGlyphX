@@ -2,6 +2,14 @@ name: Project Manifest
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - "Build/Export-ProjectManifest.ps1"
+      - "CodeGlyphX/**/*.csproj"
+      - "WebsiteArtifacts/project-manifest.json"
   push:
     branches:
       - master
