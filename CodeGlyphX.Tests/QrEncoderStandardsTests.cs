@@ -47,6 +47,20 @@ public sealed class QrEncoderStandardsTests {
         Assert.Equal(text, decoded.Text);
     }
 
+    [Theory]
+    [InlineData("漢字")]
+    [InlineData("漢A字")]
+    public void EncodeText_OnlyAppliesTheByteFallbackToByteSegments(string text) {
+        var qr = QrCodeEncoder.EncodeText(text, new QrEncodingOptions {
+            TextEncoding = QrTextEncoding.Latin1,
+            EciMode = QrEciMode.Never,
+            OptimizeSegments = true
+        });
+
+        Assert.True(QrDecoder.TryDecode(qr.Modules, out var decoded));
+        Assert.Equal(text, decoded.Text);
+    }
+
     [Fact]
     public void EncodeGs1_RoundTripsSeparatorsAndLiteralPercent() {
         const string elementString = "010590123412345710ABC%123\u001D2112345";
@@ -105,7 +119,11 @@ public sealed class QrEncoderStandardsTests {
             new byte[] { 0x8E, 0x9A }
         };
 
-        var symbols = QrCodeEncoder.EncodeStructuredAppend(parts);
+        var symbols = QrCodeEncoder.EncodeStructuredAppend(parts, new QrEncodingOptions {
+            TextEncoding = QrTextEncoding.Latin1,
+            EciMode = QrEciMode.Never,
+            OptimizeSegments = true
+        });
 
         for (var i = 0; i < symbols.Length; i++) {
             Assert.True(QrDecoder.TryDecode(symbols[i].Modules, out var decoded));
@@ -144,6 +162,14 @@ public sealed class QrEncoderStandardsTests {
             Fnc1Mode = QrFnc1Mode.FirstPosition,
             Fnc1ApplicationIndicator = 1
         }));
+    }
+
+    [Fact]
+    public void EncodeText_RejectsMalformedUtf16InsteadOfReplacingIt() {
+        const string malformed = "\uD800";
+
+        Assert.False(QrEncoding.CanEncode(malformed, QrTextEncoding.Utf8));
+        Assert.Throws<ArgumentException>(() => QrCodeEncoder.EncodeText(malformed));
     }
 
     [Theory]

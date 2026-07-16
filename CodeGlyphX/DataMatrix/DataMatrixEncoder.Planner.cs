@@ -29,8 +29,6 @@ public static partial class DataMatrixEncoder {
 
     private static List<byte> EncodeOptimized(string text, bool isGs1, int positionOffset) {
         if (text.Length == 0) return new List<byte>();
-        if (ContainsOnly(text, 'A', 'Z')) return EncodeC40Text(text, isText: false, isGs1);
-        if (ContainsOnly(text, 'a', 'z')) return EncodeC40Text(text, isText: true, isGs1);
         if (ContainsOnly(text, '0', '9')) return EncodeAscii(EncodingUtils.Latin1.GetBytes(text), isGs1);
 
         var costs = new int[text.Length + 1];

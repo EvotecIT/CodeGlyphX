@@ -134,6 +134,21 @@ public class Gs1CatalogTests {
     }
 
     [Theory]
+    [InlineData("TQ==", true)]
+    [InlineData("TWE=", true)]
+    [InlineData("TWFu", true)]
+    [InlineData("TQ=", false)]
+    [InlineData("T===", false)]
+    [InlineData("TQ==A", false)]
+    public void Validate_Ai8030UsesFourCharacterBase64UrlPaddingQuanta(string value, bool expectedValid) {
+        var result = Gs1.Validate($"(01)09506000134352(21)ABC(8030){value}");
+        var hasPaddingIssue = result.Issues.Any(issue =>
+            issue.Ai == "8030" && issue.Code == Gs1ValidationIssueCode.InvalidData);
+
+        Assert.Equal(expectedValid, !hasPaddingIssue);
+    }
+
+    [Theory]
     [InlineData("(00)123456789012345675(7041)BX")]
     [InlineData("(8110)012345612345611110123")]
     [InlineData("(8112)001234561234560123456")]

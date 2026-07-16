@@ -112,8 +112,6 @@ public static class QrCodeEncoder {
         var parity = 0;
         for (var i = 0; i < parts.Count; i++) {
             if (parts[i] is null) throw new ArgumentException("Structured append parts cannot contain null values.", nameof(parts));
-            if (!QrEncoding.CanEncode(parts[i], effective.TextEncoding))
-                throw new ArgumentException($"Part {i + 1} cannot be encoded as {effective.TextEncoding}.", nameof(parts));
             parity = QrEncoder.UpdateStructuredAppendParity(parts[i], effective, parity);
         }
 

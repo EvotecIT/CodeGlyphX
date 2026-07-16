@@ -46,9 +46,6 @@ internal static partial class QrEncoder {
         ValidateFnc1(options.Fnc1Mode, options.Fnc1ApplicationIndicator);
         if (options.EciMode is < QrEciMode.Auto or > QrEciMode.Never) throw new ArgumentOutOfRangeException(nameof(options.EciMode));
         if (options.TextEncoding is < QrTextEncoding.Latin1 or > QrTextEncoding.ShiftJis) throw new ArgumentOutOfRangeException(nameof(options.TextEncoding));
-        if (!QrEncoding.CanEncode(text, options.TextEncoding))
-            throw new ArgumentException($"Text cannot be encoded as {options.TextEncoding}.", nameof(text));
-
         var eciAssignmentNumber = ResolveEciAssignment(text, options.TextEncoding, options.EciMode);
         QrSegmentPlan? plan = null;
         var planGroup = -1;
@@ -57,9 +54,13 @@ internal static partial class QrEncoder {
         for (var candidate = options.MinVersion; candidate <= options.MaxVersion; candidate++) {
             var group = candidate <= 9 ? 0 : candidate <= 26 ? 1 : 2;
             if (plan is null || group != planGroup) {
-                plan = options.OptimizeSegments
-                    ? QrSegmentPlanner.Plan(text, options.TextEncoding, candidate, options.Fnc1Mode, eciAssignmentNumber)
-                    : QrSegmentPlanner.CreateBytePlan(QrEncoding.Encode(text, options.TextEncoding), candidate, eciAssignmentNumber);
+                if (options.OptimizeSegments) {
+                    plan = QrSegmentPlanner.Plan(text, options.TextEncoding, candidate, options.Fnc1Mode, eciAssignmentNumber);
+                } else {
+                    if (!QrEncoding.CanEncode(text, options.TextEncoding))
+                        throw new ArgumentException($"Text cannot be encoded as {options.TextEncoding}.", nameof(text));
+                    plan = QrSegmentPlanner.CreateBytePlan(QrEncoding.Encode(text, options.TextEncoding), candidate, eciAssignmentNumber);
+                }
                 planGroup = group;
             }
 

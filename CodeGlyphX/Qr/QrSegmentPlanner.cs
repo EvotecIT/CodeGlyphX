@@ -21,8 +21,6 @@ internal static class QrSegmentPlanner {
 
     public static QrSegmentPlan Plan(string text, QrTextEncoding encoding, int version, QrFnc1Mode fnc1Mode, int? eciAssignmentNumber) {
         if (text is null) throw new ArgumentNullException(nameof(text));
-        if (!QrEncoding.CanEncode(text, encoding))
-            throw new ArgumentException($"Text cannot be encoded as {encoding}.", nameof(text));
 
         if (text.Length == 0) {
             var empty = QrSegment.CreateByte(Array.Empty<byte>());
@@ -32,12 +30,14 @@ internal static class QrSegmentPlanner {
         }
 
         if (!HasNonByteCandidate(text, fnc1Mode)) {
+            if (!QrEncoding.CanEncode(text, encoding))
+                throw new ArgumentException($"Text cannot be encoded as {encoding}.", nameof(text));
             return CreateBytePlan(QrEncoding.Encode(text, encoding), version, eciAssignmentNumber);
         }
 
         var boundaries = BuildTextBoundaries(text);
         var unitCount = boundaries.Length - 1;
-        var bytePrefix = BuildBytePrefix(text, boundaries, encoding);
+        BuildBytePrefixes(text, boundaries, encoding, out var bytePrefix, out var invalidBytePrefix);
         var stateCount = (unitCount + 1) * 2;
         var costs = new int[stateCount];
         var segmentCounts = new int[stateCount];
@@ -61,7 +61,7 @@ internal static class QrSegmentPlanner {
                 AddNumericTransitions(text, boundaries, version, position, byteState != 0, sourceIndex, costs, segmentCounts, previousPositions, previousByteStates, previousModes);
                 AddAlphanumericTransitions(text, boundaries, version, fnc1Mode, position, byteState != 0, sourceIndex, costs, segmentCounts, previousPositions, previousByteStates, previousModes);
                 AddKanjiTransitions(text, boundaries, version, position, byteState != 0, sourceIndex, costs, segmentCounts, previousPositions, previousByteStates, previousModes);
-                AddByteTransitions(bytePrefix, version, position, sourceIndex, costs, segmentCounts, previousPositions, previousByteStates, previousModes);
+                AddByteTransitions(bytePrefix, invalidBytePrefix, version, position, sourceIndex, costs, segmentCounts, previousPositions, previousByteStates, previousModes);
             }
         }
 
@@ -170,6 +170,7 @@ internal static class QrSegmentPlanner {
 
     private static void AddByteTransitions(
         int[] bytePrefix,
+        int[] invalidBytePrefix,
         int version,
         int start,
         int sourceIndex,
@@ -181,6 +182,7 @@ internal static class QrSegmentPlanner {
         var countBits = QrSegment.GetCharacterCountBitLength(QrSegmentMode.Byte, version);
         var maxCount = (1 << countBits) - 1;
         for (var end = start + 1; end < bytePrefix.Length; end++) {
+            if (invalidBytePrefix[end] != invalidBytePrefix[start]) break;
             var byteCount = bytePrefix[end] - bytePrefix[start];
             if (byteCount > maxCount) break;
             Relax(end, true, QrSegmentMode.Byte, start, (sourceIndex & 1) != 0,
@@ -259,12 +261,25 @@ internal static class QrSegmentPlanner {
         return boundaries.ToArray();
     }
 
-    private static int[] BuildBytePrefix(string text, int[] boundaries, QrTextEncoding encoding) {
-        var prefix = new int[boundaries.Length];
+    private static void BuildBytePrefixes(
+        string text,
+        int[] boundaries,
+        QrTextEncoding encoding,
+        out int[] bytePrefix,
+        out int[] invalidBytePrefix) {
+        bytePrefix = new int[boundaries.Length];
+        invalidBytePrefix = new int[boundaries.Length];
         for (var i = 0; i + 1 < boundaries.Length; i++) {
-            prefix[i + 1] = prefix[i] + QrEncoding.GetByteCount(text, boundaries[i], boundaries[i + 1] - boundaries[i], encoding);
+            var offset = boundaries[i];
+            var length = boundaries[i + 1] - offset;
+            bytePrefix[i + 1] = bytePrefix[i];
+            invalidBytePrefix[i + 1] = invalidBytePrefix[i];
+            if (!QrEncoding.CanEncode(text, offset, length, encoding)) {
+                invalidBytePrefix[i + 1]++;
+                continue;
+            }
+            bytePrefix[i + 1] += QrEncoding.GetByteCount(text, offset, length, encoding);
         }
-        return prefix;
     }
 
     private static bool IsSingleCharacter(string text, int[] boundaries, int unitIndex, out char value) {

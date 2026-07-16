@@ -353,6 +353,30 @@ public sealed class DataMatrixStandardsTests {
         Assert.Equal(payload, decoded);
     }
 
+    [Theory]
+    [InlineData("ABC")]
+    [InlineData("abc")]
+    public void AutoPlanner_PreservesAsciiForShortSingleCasePayloads(string payload) {
+        var matrix = DataMatrixEncoder.Encode(payload);
+
+        Assert.Equal(10, matrix.Width);
+        Assert.Equal(10, matrix.Height);
+        Assert.True(DataMatrixDecoder.TryDecode(matrix, out var decoded));
+        Assert.Equal(payload, decoded);
+    }
+
+    [Fact]
+    public void AutoPlanner_ShortUppercasePayloadFitsAnExactAsciiSizedSymbol() {
+        const string payload = "ABCDE";
+        var matrix = DataMatrixEncoder.Encode(payload, new DataMatrixEncodingOptions {
+            Rows = 12,
+            Columns = 12
+        });
+
+        Assert.True(DataMatrixDecoder.TryDecode(matrix, out var decoded));
+        Assert.Equal(payload, decoded);
+    }
+
     [Fact]
     public void AutoPlanner_RoundTripsUnicodeIslandBetweenCompactAsciiRuns() {
         const string payload = "AAAAAAAAAAAA😀BBBBBBBBBBBB12345678901234567890";

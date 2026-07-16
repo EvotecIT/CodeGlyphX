@@ -130,7 +130,7 @@ public static partial class Gs1Validator {
             return;
         }
         var padding = value.Length - firstPadding;
-        if (padding > 2 || value.Length % 3 != 0) {
+        if (padding > 2 || value.Length % 4 != 0) {
             issues.Add(new Gs1ValidationIssue(
                 Gs1ValidationIssueCode.InvalidData,
                 definition.Ai,
