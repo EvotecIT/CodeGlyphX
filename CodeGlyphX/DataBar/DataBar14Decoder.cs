@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace CodeGlyphX.DataBar;
 
 /// <summary>
-/// Decodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).
+/// Decodes GS1 DataBar-14 symbols (Truncated / Omnidirectional / Stacked / Stacked Omnidirectional).
 /// </summary>
 public static class DataBar14Decoder {
     /// <summary>
@@ -28,13 +28,37 @@ public static class DataBar14Decoder {
     }
 
     /// <summary>
-    /// Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a <see cref="BitMatrix">BitMatrix</see>.
+    /// Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a <see cref="Barcode1D">Barcode1D</see>.
     /// </summary>
-    public static bool TryDecodeOmni(BitMatrix modules, out string content) {
+    public static bool TryDecodeOmnidirectional(Barcode1D barcode, out string content) {
+        return TryDecodeTruncated(barcode, out content);
+    }
+
+    /// <summary>
+    /// Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a module array.
+    /// </summary>
+    public static bool TryDecodeOmnidirectional(bool[] modules, out string content) {
+        return TryDecodeTruncated(modules, out content);
+    }
+
+    /// <summary>
+    /// Attempts to decode a GS1 DataBar-14 Stacked Omnidirectional symbol from a <see cref="BitMatrix">BitMatrix</see>.
+    /// </summary>
+    public static bool TryDecodeStackedOmnidirectional(BitMatrix modules, out string content) {
         content = string.Empty;
         if (modules is null || modules.Width <= 0 || modules.Height != 5) return false;
         if (!TryExtractWidthsFromStacked(modules, topRow: 0, bottomRow: 4, out var widths)) return false;
         return TryDecodeFromWidths(widths, out content);
+    }
+
+    /// <summary>
+    /// Compatibility alias for <see cref="TryDecodeStackedOmnidirectional"/>.
+    /// </summary>
+    /// <remarks>
+    /// Earlier CodeGlyphX releases called the five-row Stacked Omnidirectional symbol "Omni".
+    /// </remarks>
+    public static bool TryDecodeOmni(BitMatrix modules, out string content) {
+        return TryDecodeStackedOmnidirectional(modules, out content);
     }
 
     /// <summary>

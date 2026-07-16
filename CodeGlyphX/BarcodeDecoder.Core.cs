@@ -169,6 +169,11 @@ public static partial class BarcodeDecoder {
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        if (TryDecodeGs1DataBarLimited(modules, out var dataBarLimited)) {
+            decoded = new BarcodeDecoded(BarcodeType.GS1DataBarLimited, dataBarLimited);
+            return true;
+        }
+        if (cancellationToken.IsCancellationRequested) return false;
         if (TryDecodeGs1DataBarExpanded(modules, out var dataBarExpanded)) {
             decoded = new BarcodeDecoded(BarcodeType.GS1DataBarExpanded, dataBarExpanded);
             return true;
@@ -307,6 +312,18 @@ public static partial class BarcodeDecoder {
             case BarcodeType.GS1DataBarTruncated:
                 if (TryDecodeGs1DataBarTruncated(modules, out var dataBarTruncated)) {
                     decoded = new BarcodeDecoded(BarcodeType.GS1DataBarTruncated, dataBarTruncated);
+                    return true;
+                }
+                return false;
+            case BarcodeType.GS1DataBarOmni:
+                if (TryDecodeGs1DataBarOmnidirectional(modules, out var dataBarOmnidirectional)) {
+                    decoded = new BarcodeDecoded(BarcodeType.GS1DataBarOmni, dataBarOmnidirectional);
+                    return true;
+                }
+                return false;
+            case BarcodeType.GS1DataBarLimited:
+                if (TryDecodeGs1DataBarLimited(modules, out var dataBarLimited)) {
+                    decoded = new BarcodeDecoded(BarcodeType.GS1DataBarLimited, dataBarLimited);
                     return true;
                 }
                 return false;

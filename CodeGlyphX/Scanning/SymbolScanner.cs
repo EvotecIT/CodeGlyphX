@@ -91,7 +91,7 @@ public static class SymbolScanner {
 
         ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanMicroQr(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
-        if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
+        if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanPdf417(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanLinear(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
@@ -159,6 +159,7 @@ public static class SymbolScanner {
         int width,
         int height,
         ImageRegion searchRegion,
+        ScanOptions options,
         ScanDeadline deadline,
         ISet<SymbolFormat> requested,
         List<DetectedSymbol> results,
@@ -166,6 +167,16 @@ public static class SymbolScanner {
         if (!requested.Contains(SymbolFormat.DataMatrix)) return;
         if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var text)) {
             Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix, new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, text), searchRegion));
+            return;
+        }
+        if (options.DirectPartMarking is null || deadline.ShouldStop) return;
+        var dpm = options.DirectPartMarking.Clone();
+        var variants = DirectPartMarkPreprocessor.CreateVariants(rgba, width, height, dpm, deadline.Token);
+        for (var i = 0; i < variants.Count && !deadline.ShouldStop; i++) {
+            if (!DataMatrixDecoder.TryDecode(variants[i], width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out text)) continue;
+            Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix,
+                new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, text), searchRegion, directPartMarkProfile: dpm.Profile));
+            return;
         }
     }
 
@@ -359,5 +370,6 @@ public static class SymbolScanner {
         if (options.TimeoutMilliseconds < 0) throw new ArgumentOutOfRangeException(nameof(options.TimeoutMilliseconds));
         if (options.MaxSymbols < 0) throw new ArgumentOutOfRangeException(nameof(options.MaxSymbols));
         if (!Enum.IsDefined(typeof(ScanProfile), options.Profile)) throw new ArgumentOutOfRangeException(nameof(options.Profile));
+        if (options.DirectPartMarking is not null) DirectPartMarkPreprocessor.Validate(options.DirectPartMarking);
     }
 }

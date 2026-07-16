@@ -5,13 +5,25 @@ using System.Numerics;
 namespace CodeGlyphX.DataBar;
 
 /// <summary>
-/// Encodes GS1 DataBar-14 symbols (Truncated / Omni / Stacked).
+/// Encodes GS1 DataBar-14 symbols (Truncated / Omnidirectional / Stacked / Stacked Omnidirectional).
 /// </summary>
 public static class DataBar14Encoder {
     /// <summary>
     /// Encodes a GS1 DataBar-14 Truncated symbol into a <see cref="Barcode1D">Barcode1D</see>.
     /// </summary>
     public static Barcode1D EncodeTruncated(string content) {
+        return EncodeLinear(content);
+    }
+
+    /// <summary>
+    /// Encodes a GS1 DataBar-14 Omnidirectional symbol into a <see cref="Barcode1D">Barcode1D</see>.
+    /// The module sequence is identical to Truncated; the physical bar-height requirement distinguishes the symbols.
+    /// </summary>
+    public static Barcode1D EncodeOmnidirectional(string content) {
+        return EncodeLinear(content);
+    }
+
+    private static Barcode1D EncodeLinear(string content) {
         var widths = BuildTotalWidths(content, out _);
         var segments = new List<BarSegment>(widths.Length);
         var isBar = false;
@@ -23,11 +35,21 @@ public static class DataBar14Encoder {
     }
 
     /// <summary>
-    /// Encodes a GS1 DataBar-14 Omnidirectional symbol into a <see cref="BitMatrix">BitMatrix</see>.
+    /// Encodes a GS1 DataBar-14 Stacked Omnidirectional symbol into a <see cref="BitMatrix">BitMatrix</see>.
     /// </summary>
-    public static BitMatrix EncodeOmni(string content) {
+    public static BitMatrix EncodeStackedOmnidirectional(string content) {
         var widths = BuildTotalWidths(content, out _);
-        return BuildOmniMatrix(widths);
+        return BuildStackedOmnidirectionalMatrix(widths);
+    }
+
+    /// <summary>
+    /// Compatibility alias for <see cref="EncodeStackedOmnidirectional"/>.
+    /// </summary>
+    /// <remarks>
+    /// Earlier CodeGlyphX releases called the five-row Stacked Omnidirectional symbol "Omni".
+    /// </remarks>
+    public static BitMatrix EncodeOmni(string content) {
+        return EncodeStackedOmnidirectional(content);
     }
 
     /// <summary>
@@ -122,7 +144,7 @@ public static class DataBar14Encoder {
         return BuildMatrix(grid);
     }
 
-    private static BitMatrix BuildOmniMatrix(int[] totalWidths) {
+    private static BitMatrix BuildStackedOmnidirectionalMatrix(int[] totalWidths) {
         var grid = new bool[5][];
         for (var i = 0; i < grid.Length; i++) grid[i] = new bool[50];
 

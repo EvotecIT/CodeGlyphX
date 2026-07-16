@@ -34,6 +34,10 @@ public sealed class DetectedSymbol {
     public int? PageIndex { get; }
     /// <summary>Gets the AIM symbology identifier when known.</summary>
     public string? SymbologyIdentifier { get; }
+    /// <summary>Gets the direct-part-mark preprocessing profile used for this result, or null for ordinary image decoding.</summary>
+    public DirectPartMarkProfile? DirectPartMarkProfile { get; }
+    /// <summary>Gets whether direct-part-mark preprocessing was required.</summary>
+    public bool WasDirectPartMarkPreprocessed => DirectPartMarkProfile.HasValue;
     /// <summary>Gets the compatibility result produced by the existing decoding facade.</summary>
     public CodeGlyphDecoded LegacyResult { get; }
 
@@ -47,7 +51,8 @@ public sealed class DetectedSymbol {
         bool? isMirrored = null,
         int? frameIndex = null,
         int? pageIndex = null,
-        string? symbologyIdentifier = null) {
+        string? symbologyIdentifier = null,
+        DirectPartMarkProfile? directPartMarkProfile = null) {
         if (confidence.HasValue && (confidence.Value < 0d || confidence.Value > 1d || double.IsNaN(confidence.Value))) {
             throw new ArgumentOutOfRangeException(nameof(confidence));
         }
@@ -64,6 +69,7 @@ public sealed class DetectedSymbol {
         FrameIndex = frameIndex;
         PageIndex = pageIndex;
         SymbologyIdentifier = symbologyIdentifier;
+        DirectPartMarkProfile = directPartMarkProfile;
     }
 
     private static SymbolPayloadProfile ResolvePayloadProfile(CodeGlyphDecoded decoded) {
@@ -72,10 +78,14 @@ public sealed class DetectedSymbol {
             decoded.Barcode?.Type == BarcodeType.GS1DataBarOmni ||
             decoded.Barcode?.Type == BarcodeType.GS1DataBarStacked ||
             decoded.Barcode?.Type == BarcodeType.GS1DataBarExpanded ||
-            decoded.Barcode?.Type == BarcodeType.GS1DataBarExpandedStacked) {
+            decoded.Barcode?.Type == BarcodeType.GS1DataBarExpandedStacked ||
+            decoded.Barcode?.Type == BarcodeType.GS1DataBarLimited ||
+            decoded.Barcode?.Type == BarcodeType.GS1DataBarStackedOmni) {
             return SymbolPayloadProfile.Gs1;
         }
         if (decoded.Qr?.Fnc1Mode != QrFnc1Mode.None) return SymbolPayloadProfile.Gs1;
+        if (decoded.DotCode?.HasFnc1 == true) return SymbolPayloadProfile.Gs1;
+        if (decoded.Gs1Composite is not null) return SymbolPayloadProfile.Gs1;
         return SymbolPayloadProfile.None;
     }
 }

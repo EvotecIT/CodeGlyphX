@@ -4,10 +4,10 @@
     <TargetFrameworks Condition="'$(PublishAot)' == 'true'">net8.0;net10.0</TargetFrameworks>
     <Title>CodeGlyphX</Title>
     <PackageId>CodeGlyphX</PackageId>
-    <Description>Pure-managed QR, barcode, matrix-code, payload, image, and document rendering toolkit for .NET.</Description>
+    <Description>Pure-managed QR, retail barcode, industrial symbol, payload, image, and document rendering toolkit for .NET.</Description>
     <Authors>Przemyslaw Klys</Authors>
     <Company>Evotec</Company>
-    <PackageTags>qr;barcode;datamatrix;pdf417;aztec;otp;pure-managed</PackageTags>
+    <PackageTags>qr;rmqr;barcode;datamatrix;pdf417;aztec;maxicode;dotcode;hanxin;gs1;databar;dpm;otp;pure-managed</PackageTags>
     <PackageProjectUrl>https://github.com/EvotecIT/CodeGlyphX</PackageProjectUrl>
     <RepositoryUrl>https://github.com/EvotecIT/CodeGlyphX</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

@@ -21,6 +21,26 @@ The roadmap lists unresolved product work only. Completed implementation history
 - [ ] Expand JPEG, GIF, TIFF, BMP, ICO, WebP, and Netpbm corpus coverage around malformed and boundary inputs.
 - [ ] Add new formats only with a clear support matrix, bounded decode behavior, and reference-backed tests.
 
+## Industrial and logistics follow-ups
+
+- [ ] Add image recognition for rMQR, MaxiCode, DotCode, Han Xin, DataBar Limited/stacked variants, and GS1 Composite only with real labels, device captures, geometry, and latency budgets.
+- [ ] Extend GS1 Composite beyond its GS1-128 carrier to EAN/UPC and DataBar carriers, then add optimized date and AI 90 compression methods where they materially improve capacity.
+- [ ] Add native Han Xin GB18030 region compaction and interoperability vectors instead of relying on UTF-8 ECI binary encoding for Chinese text.
+
+## Output and print readiness
+
+- [ ] Add printer-native ZPL, EPL, CPCL, ESC/POS, and PCL output through shared symbol-layout primitives, with device-backed golden fixtures.
+- [ ] Build symbol preflight and print-quality analysis around measurable ISO/IEC 15415, ISO/IEC 15416, and ISO/IEC 29158 criteria without presenting heuristics as certified grading.
+
+## Live capture and image formats
+
+- [ ] Add a bounded live-frame pipeline with tracking, duplicate suppression, backpressure, cancellation, and thin platform camera adapters.
+- [ ] Add optional HEIC/HEIF, AVIF, and JPEG XL codecs behind explicit packages or adapters so the dependency-free core remains pure managed.
+
+## Additional symbologies
+
+- [ ] Add niche or regional formats only when a real consumer, public specification, independent encoder/decoder, and representative fixture corpus establish a maintainable contract.
+
 ## Performance
 
 - [ ] Reduce decode-loop allocations only where BenchmarkDotNet and scenario-pack evidence shows a material win.
@@ -31,7 +51,6 @@ The roadmap lists unresolved product work only. Completed implementation history
 
 - [ ] Keep the website playground and generated API reference on the same public package/API shape as the README examples.
 - [ ] Add integration recipes only when their code is compiled or exercised by an owned example.
-- [ ] Add symbologies such as MaxiCode, rMQR, DotCode, or Han Xin only with conformance vectors and decode/encode scope stated up front.
 
 ## Non-goals
 

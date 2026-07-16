@@ -898,6 +898,14 @@ public static partial class BarcodeDecoder {
         return DataBar14Decoder.TryDecodeTruncated(modules, out text);
     }
 
+    private static bool TryDecodeGs1DataBarOmnidirectional(bool[] modules, out string text) {
+        return DataBar14Decoder.TryDecodeOmnidirectional(modules, out text);
+    }
+
+    private static bool TryDecodeGs1DataBarLimited(bool[] modules, out string text) {
+        return DataBarLimitedDecoder.TryDecode(modules, out text);
+    }
+
     private static bool TryDecodeGs1DataBarExpanded(bool[] modules, out string text) {
         return DataBarExpandedDecoder.TryDecodeExpanded(modules, out text);
     }

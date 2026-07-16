@@ -1,11 +1,13 @@
 using System;
 
-namespace CodeGlyphX.Aztec.Internal;
+namespace CodeGlyphX.Internal.ReedSolomon;
 
 internal sealed class GenericGf {
     public static readonly GenericGf AztecParam = new(0x13, 16, 1);
     public static readonly GenericGf AztecData6 = new(0x43, 64, 1);
+    public static readonly GenericGf MaxiCode = AztecData6;
     public static readonly GenericGf AztecData8 = new(0x12d, 256, 1);
+    public static readonly GenericGf HanXinData8 = new(0x163, 256, 1);
     public static readonly GenericGf AztecData10 = new(0x409, 1024, 1);
     public static readonly GenericGf AztecData12 = new(0x1069, 4096, 1);
 

@@ -1,4 +1,4 @@
-using CodeGlyphX.Aztec.Internal;
+using CodeGlyphX.Internal.ReedSolomon;
 using Xunit;
 
 namespace CodeGlyphX.Tests;

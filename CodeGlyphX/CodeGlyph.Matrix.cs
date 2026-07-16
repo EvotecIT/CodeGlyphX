@@ -18,6 +18,12 @@ public static partial class CodeGlyph {
     private delegate bool MatrixBarcodeDecoder(BitMatrix modules, out BarcodeDecoded decoded);
 
     private static readonly MatrixSymbolDecoder[] MatrixSymbolDecoders = {
+        TryDecodeGs1Composite,
+        TryDecodeRmQr,
+        TryDecodeMaxiCode,
+        TryDecodeDotCode,
+        TryDecodeHanXin,
+        TryDecodeMicroQr,
         TryDecodeQr,
         TryDecodeAztec,
         TryDecodeDataMatrix,
@@ -27,6 +33,7 @@ public static partial class CodeGlyph {
 
     private static readonly MatrixBarcodeDecoder[] MatrixBarcodeDecoders = {
         TryDecodeDataBarOmni,
+        TryDecodeDataBarStackedOmnidirectional,
         TryDecodeDataBarStacked,
         TryDecodeExpandedStacked,
         TryDecodeKix,
@@ -71,7 +78,12 @@ public static partial class CodeGlyph {
             BarcodeType.DataMatrix => TryDecodeDataMatrix(modules, out decoded),
             BarcodeType.PDF417 => TryDecodePdf417(modules, out decoded),
             BarcodeType.MicroPDF417 => TryDecodeMicroPdf417(modules, out decoded),
+            BarcodeType.MaxiCode => TryDecodeMaxiCode(modules, out decoded),
+            BarcodeType.DotCode => TryDecodeDotCode(modules, out decoded),
+            BarcodeType.HanXin => TryDecodeHanXin(modules, out decoded),
+            BarcodeType.GS1Composite => TryDecodeGs1Composite(modules, out decoded),
             BarcodeType.GS1DataBarOmni => TryDecodeExpectedBarcode(TryDecodeDataBarOmni, modules, out decoded),
+            BarcodeType.GS1DataBarStackedOmni => TryDecodeExpectedBarcode(TryDecodeDataBarStackedOmnidirectional, modules, out decoded),
             BarcodeType.GS1DataBarStacked => TryDecodeExpectedBarcode(TryDecodeDataBarStacked, modules, out decoded),
             BarcodeType.GS1DataBarExpandedStacked => TryDecodeExpectedBarcode(TryDecodeExpandedStacked, modules, out decoded),
             BarcodeType.KixCode => TryDecodeExpectedBarcode(TryDecodeKix, modules, out decoded),
@@ -116,6 +128,48 @@ public static partial class CodeGlyph {
         return true;
     }
 
+    private static bool TryDecodeMicroQr(BitMatrix modules, out CodeGlyphDecoded decoded) {
+        decoded = null!;
+        if (!MicroQrDecoder.TryDecode(modules, out var microQr)) return false;
+        decoded = new CodeGlyphDecoded(microQr);
+        return true;
+    }
+
+    private static bool TryDecodeRmQr(BitMatrix modules, out CodeGlyphDecoded decoded) {
+        decoded = null!;
+        if (!RmQrDecoder.TryDecode(modules, out var rmQr)) return false;
+        decoded = new CodeGlyphDecoded(rmQr);
+        return true;
+    }
+
+    private static bool TryDecodeMaxiCode(BitMatrix modules, out CodeGlyphDecoded decoded) {
+        decoded = null!;
+        if (!MaxiCodeDecoder.TryDecodeDetailed(modules, out var maxiCode)) return false;
+        decoded = new CodeGlyphDecoded(maxiCode);
+        return true;
+    }
+
+    private static bool TryDecodeDotCode(BitMatrix modules, out CodeGlyphDecoded decoded) {
+        decoded = null!;
+        if (!DotCodeDecoder.TryDecodeDetailed(modules, out var dotCode)) return false;
+        decoded = new CodeGlyphDecoded(dotCode);
+        return true;
+    }
+
+    private static bool TryDecodeHanXin(BitMatrix modules, out CodeGlyphDecoded decoded) {
+        decoded = null!;
+        if (!HanXinDecoder.TryDecodeDetailed(modules, out var hanXin)) return false;
+        decoded = new CodeGlyphDecoded(hanXin);
+        return true;
+    }
+
+    private static bool TryDecodeGs1Composite(BitMatrix modules, out CodeGlyphDecoded decoded) {
+        decoded = null!;
+        if (!Gs1CompositeDecoder.TryDecode(modules, out var composite)) return false;
+        decoded = new CodeGlyphDecoded(composite);
+        return true;
+    }
+
     private static bool TryDecodeAztec(BitMatrix modules, out CodeGlyphDecoded decoded) {
         decoded = null!;
         if (!AztecDecoder.TryDecode(modules, out var aztec)) return false;
@@ -146,8 +200,18 @@ public static partial class CodeGlyph {
 
     private static bool TryDecodeDataBarOmni(BitMatrix modules, out BarcodeDecoded decoded) {
         decoded = null!;
-        if (!DataBar14Decoder.TryDecodeOmni(modules, out var omni)) return false;
+        if (modules.Height != 1 || modules.Width <= 0) return false;
+        var row = new bool[modules.Width];
+        for (var x = 0; x < modules.Width; x++) row[x] = modules[x, 0];
+        if (!DataBar14Decoder.TryDecodeOmnidirectional(row, out var omni)) return false;
         decoded = new BarcodeDecoded(BarcodeType.GS1DataBarOmni, omni);
+        return true;
+    }
+
+    private static bool TryDecodeDataBarStackedOmnidirectional(BitMatrix modules, out BarcodeDecoded decoded) {
+        decoded = null!;
+        if (!DataBar14Decoder.TryDecodeStackedOmnidirectional(modules, out var stackedOmni)) return false;
+        decoded = new BarcodeDecoded(BarcodeType.GS1DataBarStackedOmni, stackedOmni);
         return true;
     }
 

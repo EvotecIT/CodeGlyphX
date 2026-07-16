@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CodeGlyphX.Aztec.Internal;
+namespace CodeGlyphX.Internal.ReedSolomon;
 
 internal sealed class ReedSolomonEncoder {
     private readonly GenericGf _field;

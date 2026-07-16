@@ -25,4 +25,4 @@ if (capability.CanScanImages)
 }
 ```
 
-The directional columns distinguish encoding from decoding. For example, the current QR implementation decodes structured-append metadata but does not yet encode structured-append sequences.
+The directional columns distinguish encoding from decoding, so callers can check the exact operation they need instead of treating a format name as a blanket support claim.

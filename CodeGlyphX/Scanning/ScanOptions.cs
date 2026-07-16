@@ -36,6 +36,9 @@ public sealed class ScanOptions {
     /// <summary>Gets or sets advanced linear-barcode recognition options.</summary>
     public BarcodeDecodeOptions? Barcode { get; set; }
 
+    /// <summary>Gets or sets opt-in direct-part-mark preprocessing for Data Matrix images.</summary>
+    public DirectPartMarkOptions? DirectPartMarking { get; set; }
+
     /// <summary>Gets or sets compressed-image decode limits and codec options.</summary>
     public ImageDecodeOptions? Image { get; set; }
 
@@ -54,7 +57,11 @@ public sealed class ScanOptions {
 
     /// <summary>Creates robust scan options.</summary>
     public static ScanOptions Robust(int timeoutMilliseconds = 1500) {
-        return new ScanOptions { Profile = ScanProfile.Robust, TimeoutMilliseconds = Normalize(timeoutMilliseconds) };
+        return new ScanOptions {
+            Profile = ScanProfile.Robust,
+            TimeoutMilliseconds = Normalize(timeoutMilliseconds),
+            DirectPartMarking = DirectPartMarkOptions.Auto()
+        };
     }
 
     /// <summary>Creates bounded options suitable for screenshot and UI scanning.</summary>
