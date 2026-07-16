@@ -94,6 +94,32 @@ public sealed class DataBarVariantsTests {
     }
 
     [Fact]
+    public void Omnidirectional_UnifiedImageScanner_IsReachableThroughCapabilityCatalog() {
+        const string value = "1234567890123";
+        var barcode = DataBar14Encoder.EncodeOmnidirectional(value);
+        var pixels = Rendering.Png.BarcodePngRenderer.RenderPixels(
+            barcode,
+            new Rendering.Png.BarcodePngRenderOptions { ModuleSize = 4, QuietZone = 10, HeightModules = 40 },
+            out var width,
+            out var height,
+            out _);
+
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { SymbolFormat.Gs1DataBarOmnidirectional },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        var capability = SymbolCapabilities.Get(SymbolFormat.Gs1DataBarOmnidirectional);
+        Assert.True(capability.CanScanImages);
+        Assert.True(capability.CanScanMultiple);
+        Assert.Empty(result.UnsupportedFormats);
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(SymbolFormat.Gs1DataBarOmnidirectional, symbol.Format);
+        Assert.Equal(value, symbol.Text);
+    }
+
+    [Fact]
     public void StackedOmnidirectional_HasAccurateFirstClassTypeAndCompatibilityAlias() {
         const string value = "1234567890123";
         var modules = MatrixBarcodeEncoder.Encode(BarcodeType.GS1DataBarStackedOmni, value);

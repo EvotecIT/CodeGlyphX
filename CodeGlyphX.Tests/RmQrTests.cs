@@ -180,6 +180,16 @@ public sealed class RmQrTests {
         Assert.True(capability.Has(SymbolCapabilityFlags.Gs1Decode));
     }
 
+    [Theory]
+    [InlineData(RmQrEncodingMode.Auto)]
+    [InlineData(RmQrEncodingMode.Byte)]
+    public void Utf8ByteMode_RejectsMalformedUtf16InsteadOfReplacingIt(RmQrEncodingMode mode) {
+        Assert.Throws<ArgumentException>(() => RmQrCodeEncoder.EncodeText("\uD800", new RmQrEncodingOptions {
+            Mode = mode,
+            TextEncoding = QrTextEncoding.Utf8
+        }));
+    }
+
     private static bool CanEncodeAtVersion(string value, int version) {
         try {
             RmQrCodeEncoder.EncodeAlphanumeric(value, minimumVersion: version, maximumVersion: version);

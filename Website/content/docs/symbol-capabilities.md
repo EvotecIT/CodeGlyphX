@@ -42,7 +42,7 @@ CodeGlyphX currently describes 46 physical symbol formats through `SymbolCapabil
 | Australia Post | Postal | Yes | Yes | No | No | No | No | No | No |
 | Japan Post | Postal | Yes | Yes | No | No | No | No | No | No |
 | GS1 DataBar Truncated | Linear | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
-| GS1 DataBar Omnidirectional | Linear | Yes | Yes | No | No | Encode + decode | No | No | No |
+| GS1 DataBar Omnidirectional | Linear | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
 | GS1 DataBar Stacked | Stacked | Yes | Yes | No | No | Encode + decode | No | No | No |
 | GS1 DataBar Expanded | Linear | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
 | GS1 DataBar Expanded Stacked | Stacked | Yes | Yes | No | No | Encode + decode | No | No | No |
