@@ -145,7 +145,7 @@ public static partial class DataMatrixDecoder {
         PixelSpan data,
         ref int index,
         StringBuilder sb,
-        Encoding? encoding) {
+        int? eciAssignmentNumber) {
         if (index >= data.Length) return;
 
         var lenCodeword = Unrandomize255(data[index], index + 1);
@@ -171,16 +171,19 @@ public static partial class DataMatrixDecoder {
 
             if (count == 0) return;
 
-            sb.Append(DecodeBase256Bytes(rented, count, encoding));
+            sb.Append(DecodeBase256Bytes(rented, count, eciAssignmentNumber));
         } finally {
             ArrayPool<byte>.Shared.Return(rented);
         }
     }
 
-    private static string DecodeBase256Bytes(byte[] bytes, int count, Encoding? encoding) {
+    private static string DecodeBase256Bytes(byte[] bytes, int count, int? eciAssignmentNumber) {
         if (count == 0) return string.Empty;
         try {
-            if (encoding is not null) return encoding.GetString(bytes, 0, count);
+            if (eciAssignmentNumber is { } assignmentNumber
+                && DataMatrixEciEncoding.TryDecode(bytes, count, assignmentNumber, out var decoded)) {
+                return decoded;
+            }
             return EncodingUtils.Utf8Strict.GetString(bytes, 0, count);
         } catch (DecoderFallbackException) {
             return EncodingUtils.Latin1.GetString(bytes, 0, count);

@@ -215,7 +215,7 @@ public sealed class DataMatrixStandardsTests {
             Rows = 14,
             Columns = 14
         };
-        var matrix = DataMatrixEncoder.Encode("A", options);
+        var matrix = DataMatrixEncoder.EncodeBytes(new byte[] { (byte)'A' }, options);
 
         Assert.True(DataMatrixDecoder.TryDecodeDetailed(matrix, out var decoded));
         Assert.Equal("A", decoded.Text);
@@ -236,9 +236,67 @@ public sealed class DataMatrixStandardsTests {
         Assert.Equal(new[] { 26 }, decoded.EciAssignments);
     }
 
+    [Theory]
+    [InlineData("é", 3, "E9")]
+    [InlineData("Ą", 4, "A1")]
+    [InlineData("Ą", 6, "A1")]
+    [InlineData("Ё", 7, "A1")]
+    [InlineData("Α", 9, "C1")]
+    [InlineData("Ą", 12, "A1")]
+    [InlineData("€", 15, "A4")]
+    [InlineData("漢", 20, "8ABF")]
+    [InlineData("é", 25, "00E9")]
+    [InlineData("é", 26, "C3A9")]
+    [InlineData("ASCII", 27, "4153434949")]
+    public void Eci_StringPayload_UsesTheDeclaredCharacterEncoding(string text, int assignmentNumber, string expectedHex) {
+        var options = new DataMatrixEncodingOptions {
+            EciAssignmentNumber = assignmentNumber
+        };
+        var fromText = DataMatrixEncoder.Encode(text, options);
+        var fromBytes = DataMatrixEncoder.EncodeBytes(Convert.FromHexString(expectedHex), options);
+
+        Assert.Equal(ComputeModuleHash(fromBytes), ComputeModuleHash(fromText));
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(fromText, out var decoded));
+        Assert.Equal(text, decoded.Text);
+        Assert.Equal(new[] { assignmentNumber }, decoded.EciAssignments);
+    }
+
+    [Fact]
+    public void Eci_StringPayload_RejectsUnsupportedOrIncompatibleRequests() {
+        Assert.Throws<ArgumentException>(() => DataMatrixEncoder.Encode("A", new DataMatrixEncodingOptions {
+            EciAssignmentNumber = 999999
+        }));
+        Assert.Throws<ArgumentException>(() => DataMatrixEncoder.Encode("é", new DataMatrixEncodingOptions {
+            EciAssignmentNumber = 27
+        }));
+        Assert.Throws<ArgumentException>(() => DataMatrixEncoder.Encode("\uD800", new DataMatrixEncodingOptions {
+            EciAssignmentNumber = 26
+        }));
+        Assert.Throws<ArgumentException>(() => DataMatrixEncoder.Encode("A", new DataMatrixEncodingOptions {
+            Mode = DataMatrixEncodingMode.Ascii,
+            EciAssignmentNumber = 26
+        }));
+        Assert.Throws<ArgumentException>(() => DataMatrixEncoder.Encode("01ABC", new DataMatrixEncodingOptions {
+            IsGs1 = true,
+            EciAssignmentNumber = 26
+        }));
+    }
+
+    [Fact]
+    public void Eci_EmptyString_DoesNotEmitAnAmbiguousZeroLengthBase256Segment() {
+        var matrix = DataMatrixEncoder.Encode(string.Empty, new DataMatrixEncodingOptions {
+            EciAssignmentNumber = 26
+        });
+
+        Assert.DoesNotContain((byte)231, ReadRawCodewords(matrix).Take(4));
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(matrix, out var decoded));
+        Assert.Equal(string.Empty, decoded.Text);
+        Assert.Equal(new[] { 26 }, decoded.EciAssignments);
+    }
+
     [Fact]
     public void Eci_AsciiFixture_MatchesIndependentBwippOutput() {
-        var matrix = DataMatrixEncoder.Encode("A", new DataMatrixEncodingOptions {
+        var matrix = DataMatrixEncoder.EncodeBytes(new byte[] { (byte)'A' }, new DataMatrixEncodingOptions {
             Mode = DataMatrixEncodingMode.Ascii,
             EciAssignmentNumber = 26,
             Rows = 14,
@@ -381,11 +439,11 @@ public sealed class DataMatrixStandardsTests {
     public void AutoPlanner_RoundTripsUnicodeIslandBetweenCompactAsciiRuns() {
         const string payload = "AAAAAAAAAAAA😀BBBBBBBBBBBB12345678901234567890";
 
-        var matrix = DataMatrixEncoder.Encode(payload, new DataMatrixEncodingOptions { EciAssignmentNumber = 26 });
+        var matrix = DataMatrixEncoder.Encode(payload);
 
         Assert.True(DataMatrixDecoder.TryDecodeDetailed(matrix, out var decoded));
         Assert.Equal(payload, decoded.Text);
-        Assert.Equal(new[] { 26 }, decoded.EciAssignments);
+        Assert.Empty(decoded.EciAssignments);
     }
 
     [Fact]

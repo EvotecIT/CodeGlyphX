@@ -38,6 +38,22 @@ public static partial class DataMatrixEncoder {
         }
         var controlCodewords = BuildControlCodewords(options);
 
+        if (options.EciAssignmentNumber is { } eciAssignmentNumber) {
+            if (text.Length == 0) {
+                return EncodeCodewords(controlCodewords, options);
+            }
+            if (options.IsGs1) {
+                throw new ArgumentException("GS1 Data Matrix string payloads cannot declare an ECI. Use the GS1 character set without ECI.", nameof(options));
+            }
+            if (mode is not DataMatrixEncodingMode.Auto and not DataMatrixEncodingMode.Base256) {
+                throw new ArgumentException("Data Matrix string payloads with ECI require Auto or Base256 encodation. Use EncodeBytes for custom byte-level ECI payloads.", nameof(options));
+            }
+
+            var eciBytes = DataMatrixEciEncoding.Encode(text, eciAssignmentNumber);
+            var payload = EncodeBase256(eciBytes, controlCodewords.Count);
+            return EncodeCodewords(PrependControlCodewords(controlCodewords, payload), options);
+        }
+
         if (mode == DataMatrixEncodingMode.Auto) {
             var optimized = EncodeOptimized(text, options.IsGs1, controlCodewords.Count);
             return EncodeCodewords(PrependControlCodewords(controlCodewords, optimized), options);

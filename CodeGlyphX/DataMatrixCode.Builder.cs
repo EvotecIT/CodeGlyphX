@@ -93,7 +93,8 @@ public sealed class DataMatrixBuilder {
     }
 
     /// <summary>
-    /// Emits an ECI assignment before the data payload.
+    /// Emits an ECI assignment before the data payload. String payloads require Auto or Base256 encodation
+    /// and a character set supported by the library; use the byte encoder for custom assignments.
     /// </summary>
     public DataMatrixBuilder WithEci(int assignmentNumber) {
         _encodingOptions.EciAssignmentNumber = assignmentNumber;

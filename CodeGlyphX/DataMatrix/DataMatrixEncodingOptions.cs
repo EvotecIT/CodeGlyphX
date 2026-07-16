@@ -19,7 +19,10 @@ public sealed class DataMatrixEncodingOptions {
     /// <summary>Gets or sets whether FNC1 in first position identifies a GS1 Data Matrix payload.</summary>
     public bool IsGs1 { get; set; }
 
-    /// <summary>Gets or sets an optional ECI assignment number (0..999999).</summary>
+    /// <summary>
+    /// Gets or sets an optional ECI assignment number (0..999999). String payloads support the library's
+    /// known ECI character sets with Auto or Base256 encodation; use EncodeBytes for custom assignments.
+    /// </summary>
     public int? EciAssignmentNumber { get; set; }
 
     /// <summary>Gets or sets whether the Reader Programming codeword is emitted.</summary>

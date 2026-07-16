@@ -250,13 +250,13 @@ public static partial class DataMatrixDecoder {
         var index = 0;
         var upperShift = false;
         string? macroTrailer = null;
-        Encoding? base256Encoding = null;
+        int? base256EciAssignment = null;
 
         while (index < data.Length) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) break;
             switch (mode) {
                 case DataMatrixEncodation.Ascii:
-                    mode = DecodeAsciiSegment(data, ref index, sb, ref upperShift, ref macroTrailer, ref base256Encoding, state);
+                    mode = DecodeAsciiSegment(data, ref index, sb, ref upperShift, ref macroTrailer, ref base256EciAssignment, state);
                     break;
                 case DataMatrixEncodation.C40:
                     mode = DecodeC40TextSegment(data, ref index, sb, isText: false, ref upperShift);
@@ -271,7 +271,7 @@ public static partial class DataMatrixDecoder {
                     mode = DecodeEdifactSegment(data, ref index, sb, ref upperShift);
                     break;
                 case DataMatrixEncodation.Base256:
-                    DecodeBase256Segment(data, ref index, sb, base256Encoding);
+                    DecodeBase256Segment(data, ref index, sb, base256EciAssignment);
                     mode = DataMatrixEncodation.Ascii;
                     break;
                 default:
@@ -290,7 +290,7 @@ public static partial class DataMatrixDecoder {
         StringBuilder sb,
         ref bool upperShift,
         ref string? macroTrailer,
-        ref Encoding? base256Encoding,
+        ref int? base256EciAssignment,
         DataMatrixDecodeState state) {
         if (index >= data.Length) return DataMatrixEncodation.Ascii;
 
@@ -378,7 +378,7 @@ public static partial class DataMatrixDecoder {
                 state.CanBeGs1Header = false;
                 if (TryReadEciAssignment(data, ref index, out var assignmentNumber)) {
                     state.EciAssignments.Add(assignmentNumber);
-                    base256Encoding = GetEciEncoding(assignmentNumber);
+                    base256EciAssignment = assignmentNumber;
                 }
                 return DataMatrixEncodation.Ascii;
             default:
@@ -438,16 +438,6 @@ public static partial class DataMatrixDecoder {
         if (TryDecodeDetailedCore(Rotate180(modules), cancellationToken, out decoded)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
         return TryDecodeDetailedCore(Rotate270(modules), cancellationToken, out decoded);
-    }
-
-    private static Encoding? GetEciEncoding(int assignmentNumber) {
-        return assignmentNumber switch {
-            3 => EncodingUtils.Latin1,
-            25 => Encoding.BigEndianUnicode,
-            26 => EncodingUtils.Utf8Strict,
-            27 => Encoding.ASCII,
-            _ => null
-        };
     }
 
     private static DataMatrixEncodation DecodeC40TextSegment(
