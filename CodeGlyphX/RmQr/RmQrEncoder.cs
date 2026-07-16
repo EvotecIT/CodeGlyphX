@@ -11,14 +11,15 @@ internal static class RmQrEncoder {
     internal static RmQrCode EncodeText(string text, RmQrEncodingOptions options) {
         ValidateOptions(options);
         var mode = ResolveMode(text, options);
-        if (mode == RmQrMode.Byte && !QrEncoding.CanEncode(text, options.TextEncoding)) {
-            throw new ArgumentException($"Text cannot be represented by {options.TextEncoding}.", nameof(text));
+        var textEncoding = ResolveTextEncoding(options, mode);
+        if (mode == RmQrMode.Byte && !QrEncoding.CanEncode(text, textEncoding)) {
+            throw new ArgumentException($"Text cannot be represented by {textEncoding}.", nameof(text));
         }
         var segment = mode switch {
             RmQrMode.Numeric => RmQrSegment.CreateNumeric(text),
             RmQrMode.Alphanumeric => RmQrSegment.CreateAlphanumeric(text),
             RmQrMode.Kanji => RmQrSegment.CreateKanji(text),
-            _ => RmQrSegment.CreateBytes(QrEncoding.Encode(text, options.TextEncoding))
+            _ => RmQrSegment.CreateBytes(QrEncoding.Encode(text, textEncoding))
         };
         var eci = ResolveEci(text, options, mode);
         return Encode(segment, options, eci);
@@ -149,6 +150,13 @@ internal static class RmQrEncoder {
         if (mode != RmQrMode.Byte || options.TextEncoding == QrTextEncoding.Latin1) return null;
         if (IsAscii(text)) return null;
         return QrEncoding.TryGetEciAssignment(options.TextEncoding, out var assignment) ? assignment : null;
+    }
+
+    private static QrTextEncoding ResolveTextEncoding(RmQrEncodingOptions options, RmQrMode mode) {
+        if (mode != RmQrMode.Byte || !options.EciAssignmentNumber.HasValue) return options.TextEncoding;
+        if (QrEncoding.TryGetTextEncoding(options.EciAssignmentNumber.Value, out var encoding)) return encoding;
+        throw new InvalidOperationException(
+            $"ECI {options.EciAssignmentNumber.Value} has no known rMQR text encoding. Encode bytes directly for custom ECI assignments.");
     }
 
     private static bool IsAscii(string text) {

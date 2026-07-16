@@ -27,6 +27,50 @@ internal static class EncodingUtils {
         }
     }
 
+    /// <summary>
+    /// Resolves the byte encoding and ECI declaration as one contract so an explicit ECI can never describe
+    /// different bytes from the ones emitted by a text encoder.
+    /// </summary>
+    internal static Encoding ResolveTextEncoding(
+        string text,
+        Encoding? requestedEncoding,
+        int? requestedEci,
+        string formatName,
+        out int? eci) {
+        if (text is null) throw new ArgumentNullException(nameof(text));
+        eci = requestedEci;
+
+        if (requestedEncoding is not null) {
+            if (TryGetEciAssignment(requestedEncoding, out var inferredEci)) {
+                if (eci.HasValue && eci.Value != inferredEci) {
+                    throw new InvalidOperationException(
+                        $"The selected {formatName} text encoding uses ECI {inferredEci}, but ECI {eci.Value} was requested.");
+                }
+                eci ??= inferredEci;
+            } else if (!eci.HasValue) {
+                throw new InvalidOperationException(
+                    $"The selected {formatName} text encoding has no known ECI assignment. Set EciAssignmentNumber explicitly.");
+            } else if (TryGetEncoding(eci.Value, out var mappedEncoding) && mappedEncoding.CodePage != requestedEncoding.CodePage) {
+                throw new InvalidOperationException(
+                    $"ECI {eci.Value} identifies {mappedEncoding.WebName}, not the selected {requestedEncoding.WebName} encoding.");
+            }
+            return requestedEncoding;
+        }
+
+        if (eci.HasValue) {
+            if (TryGetEncoding(eci.Value, out var mappedEncoding)) return mappedEncoding;
+            throw new InvalidOperationException(
+                $"ECI {eci.Value} has no known {formatName} text encoding. Set TextEncoding explicitly or encode bytes directly.");
+        }
+
+        for (var i = 0; i < text.Length; i++) {
+            if (text[i] <= 0xFF) continue;
+            eci = 26;
+            return Utf8Strict;
+        }
+        return Latin1;
+    }
+
     internal static bool TryGetEciAssignment(Encoding encoding, out int assignment) {
         switch (encoding.CodePage) {
             case 28591: assignment = 3; return true;

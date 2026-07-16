@@ -181,21 +181,8 @@ internal static class RmQrPayloadParser {
         return false;
     }
 
-    private static bool TryMapEci(int assignment, out QrTextEncoding encoding) {
-        switch (assignment) {
-            case 3: encoding = QrTextEncoding.Latin1; return true;
-            case 4: encoding = QrTextEncoding.Iso8859_2; return true;
-            case 6: encoding = QrTextEncoding.Iso8859_4; return true;
-            case 7: encoding = QrTextEncoding.Iso8859_5; return true;
-            case 9: encoding = QrTextEncoding.Iso8859_7; return true;
-            case 12: encoding = QrTextEncoding.Iso8859_10; return true;
-            case 15: encoding = QrTextEncoding.Iso8859_15; return true;
-            case 20: encoding = QrTextEncoding.ShiftJis; return true;
-            case 26: encoding = QrTextEncoding.Utf8; return true;
-            case 27: encoding = QrTextEncoding.Ascii; return true;
-            default: encoding = QrTextEncoding.Latin1; return false;
-        }
-    }
+    private static bool TryMapEci(int assignment, out QrTextEncoding encoding) =>
+        QrEncoding.TryGetTextEncoding(assignment, out encoding);
 
     private static void AppendAscii(List<byte> bytes, StringBuilder text, char value) {
         bytes.Add((byte)value);

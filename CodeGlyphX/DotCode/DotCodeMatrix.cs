@@ -92,6 +92,16 @@ internal static class DotCodeMatrix {
         }
     }
 
+    internal static bool CornersAreLit(BitMatrix matrix) {
+        var width = matrix.Width;
+        var height = matrix.Height;
+        return (width & 1) != 0
+            ? matrix[0, 0] && matrix[width - 1, 0] && matrix[0, height - 2] &&
+              matrix[width - 1, height - 2] && matrix[1, height - 1] && matrix[width - 2, height - 1]
+            : matrix[0, 0] && matrix[width - 2, 0] && matrix[width - 1, 1] &&
+              matrix[width - 1, height - 2] && matrix[0, height - 1] && matrix[width - 2, height - 1];
+    }
+
     internal static int Score(BitMatrix matrix) {
         var width = matrix.Width;
         var height = matrix.Height;

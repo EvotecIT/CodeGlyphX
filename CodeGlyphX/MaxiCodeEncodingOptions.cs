@@ -14,7 +14,7 @@ public sealed class MaxiCodeEncodingOptions {
     public int CountryCode { get; set; }
     /// <summary>Gets or sets the three-digit service class used by Modes 2 and 3.</summary>
     public int ServiceClass { get; set; }
-    /// <summary>Gets or sets an optional ECI assignment number from 0 through 999999.</summary>
+    /// <summary>Gets or sets an optional ECI assignment number from 0 through 999999. With no <see cref="TextEncoding"/>, a known ECI selects its matching encoding.</summary>
     public int? EciAssignmentNumber { get; set; }
     /// <summary>Gets or sets the payload encoding. A matching known ECI is inferred; unknown encodings require <see cref="EciAssignmentNumber"/>. Text that cannot be represented is rejected.</summary>
     public Encoding? TextEncoding { get; set; }

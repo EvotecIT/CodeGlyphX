@@ -10,11 +10,12 @@ public sealed class RmQrEncodingOptions {
     /// <summary>Gets or sets the high-level data mode.</summary>
     public RmQrEncodingMode Mode { get; set; } = RmQrEncodingMode.Auto;
 
-    /// <summary>Gets or sets the text encoding used by byte mode.</summary>
+    /// <summary>Gets or sets the text encoding used by byte mode when <see cref="EciAssignmentNumber"/> is null.</summary>
     public QrTextEncoding TextEncoding { get; set; } = QrTextEncoding.Latin1;
 
     /// <summary>
-    /// Gets or sets the ECI assignment number. When null, non-Latin-1 byte encodings emit their standard ECI assignment.
+    /// Gets or sets the ECI assignment number. For text in byte mode, a known explicit ECI selects its matching byte encoding.
+    /// When null, non-Latin-1 byte encodings emit their standard ECI assignment.
     /// </summary>
     public int? EciAssignmentNumber { get; set; }
 

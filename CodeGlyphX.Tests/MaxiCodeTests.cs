@@ -102,6 +102,27 @@ public sealed class MaxiCodeTests {
     }
 
     [Fact]
+    public void ExplicitEci_SelectsItsMatchingTextEncoding() {
+        var symbol = MaxiCodeEncoder.EncodeText("é", new MaxiCodeEncodingOptions { EciAssignmentNumber = 26 });
+
+        Assert.True(MaxiCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("é", decoded.Text);
+        Assert.Equal(new[] { 26 }, decoded.EciAssignments);
+        Assert.Equal(Encoding.UTF8.GetBytes("é"), decoded.Bytes);
+    }
+
+    [Fact]
+    public void ConflictingEncodingAndEci_AreRejected() {
+        Assert.Throws<InvalidOperationException>(() => MaxiCodeEncoder.EncodeText("é", new MaxiCodeEncodingOptions {
+            TextEncoding = Encoding.Latin1,
+            EciAssignmentNumber = 26
+        }));
+        Assert.Throws<InvalidOperationException>(() => MaxiCodeEncoder.EncodeText("A", new MaxiCodeEncodingOptions {
+            EciAssignmentNumber = 899
+        }));
+    }
+
+    [Fact]
     public void ExplicitLossyEncoding_IsRejected() {
         Assert.Throws<ArgumentException>(() => MaxiCodeEncoder.EncodeText("Ł", new MaxiCodeEncodingOptions {
             TextEncoding = Encoding.Latin1

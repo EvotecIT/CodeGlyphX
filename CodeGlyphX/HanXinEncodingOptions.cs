@@ -12,7 +12,7 @@ public sealed class HanXinEncodingOptions {
     public int ErrorCorrectionLevel { get; set; } = 1;
     /// <summary>Gets or sets an exact data mask from 0 through 3, or null to minimize the standard penalty score.</summary>
     public int? Mask { get; set; }
-    /// <summary>Gets or sets an optional ECI assignment from 0 through 999999.</summary>
+    /// <summary>Gets or sets an optional ECI assignment from 0 through 999999. In binary mode with no <see cref="TextEncoding"/>, a known ECI selects its matching encoding.</summary>
     public int? EciAssignmentNumber { get; set; }
     /// <summary>Gets or sets the text encoding. A matching known ECI is inferred; unknown encodings require <see cref="EciAssignmentNumber"/>. Text that cannot be represented is rejected.</summary>
     public Encoding? TextEncoding { get; set; }

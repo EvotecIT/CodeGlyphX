@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using CodeGlyphX;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Qr;
 
@@ -360,20 +361,9 @@ internal static class QrPayloadParser {
                 if (mode == 0b0111) {
                     if (!TryReadEciAssignmentNumber(ReadBits, out var assignmentNumber)) return false;
 
-                    // Minimal set for OTP / URL QR use cases.
-                    var newEncoding = assignmentNumber switch {
-                        3 => QrTextEncoding.Latin1,      // ISO-8859-1
-                        4 => QrTextEncoding.Iso8859_2,   // ISO-8859-2
-                        6 => QrTextEncoding.Iso8859_4,   // ISO-8859-4
-                        7 => QrTextEncoding.Iso8859_5,   // ISO-8859-5
-                        9 => QrTextEncoding.Iso8859_7,   // ISO-8859-7
-                        12 => QrTextEncoding.Iso8859_10, // ISO-8859-10
-                        15 => QrTextEncoding.Iso8859_15, // ISO-8859-15
-                        20 => QrTextEncoding.ShiftJis,   // Shift-JIS
-                        26 => QrTextEncoding.Utf8,       // UTF-8
-                        27 => QrTextEncoding.Ascii,      // US-ASCII
-                        _ => encoding,
-                    };
+                    var newEncoding = QrEncoding.TryGetTextEncoding(assignmentNumber, out var mappedEncoding)
+                        ? mappedEncoding
+                        : encoding;
 
                     if (newEncoding != encoding) {
                         FlushSegment(ref segmentBuilder, encoding, ref segmentStart, ref segmentLength, count);

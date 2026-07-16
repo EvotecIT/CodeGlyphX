@@ -204,31 +204,11 @@ internal static class MaxiCodeHighLevelEncoder {
     }
 
     private static void ResolveEncoding(string text, MaxiCodeEncodingOptions options, out Encoding encoding, out int? eciAssignment) {
-        eciAssignment = options.EciAssignmentNumber;
-        if (options.TextEncoding is not null) {
-            encoding = options.TextEncoding;
-            if (!eciAssignment.HasValue) {
-                if (!EncodingUtils.TryGetEciAssignment(encoding, out var inferredAssignment)) {
-                    throw new InvalidOperationException("The selected MaxiCode text encoding has no known ECI assignment. Set EciAssignmentNumber explicitly.");
-                }
-                eciAssignment = inferredAssignment;
-            }
-            return;
-        }
-        if (eciAssignment == 26) { encoding = EncodingUtils.Utf8Strict; return; }
-        if (eciAssignment == 27) { encoding = Encoding.ASCII; return; }
-        if (eciAssignment is null or 3) {
-            var latin1 = true;
-            for (var i = 0; i < text.Length; i++) {
-                if (text[i] <= 0xFF) continue;
-                latin1 = false;
-                break;
-            }
-            if (latin1) { encoding = EncodingUtils.Latin1; return; }
-            encoding = EncodingUtils.Utf8Strict;
-            eciAssignment = 26;
-            return;
-        }
-        encoding = EncodingUtils.Latin1;
+        encoding = EncodingUtils.ResolveTextEncoding(
+            text,
+            options.TextEncoding,
+            options.EciAssignmentNumber,
+            "MaxiCode",
+            out eciAssignment);
     }
 }

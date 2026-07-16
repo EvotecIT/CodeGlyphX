@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using CodeGlyphX.DotCode;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -67,6 +68,50 @@ public sealed class DotCodeTests {
         Assert.True(DotCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
         Assert.Equal("Łódź", decoded.Text);
         Assert.Equal(new[] { 26 }, decoded.EciAssignments);
+    }
+
+    [Fact]
+    public void ExplicitEci_SelectsItsMatchingTextEncoding() {
+        var symbol = DotCodeEncoder.EncodeText("é", new DotCodeEncodingOptions { EciAssignmentNumber = 26 });
+
+        Assert.True(DotCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("é", decoded.Text);
+        Assert.Equal(new[] { 26 }, decoded.EciAssignments);
+        Assert.Equal(Encoding.UTF8.GetBytes("é"), decoded.Bytes);
+    }
+
+    [Fact]
+    public void ConflictingEncodingAndEci_AreRejected() {
+        Assert.Throws<InvalidOperationException>(() => DotCodeEncoder.EncodeText("é", new DotCodeEncodingOptions {
+            TextEncoding = Encoding.Latin1,
+            EciAssignmentNumber = 26
+        }));
+        Assert.Throws<InvalidOperationException>(() => DotCodeEncoder.EncodeText("A", new DotCodeEncodingOptions {
+            EciAssignmentNumber = 899
+        }));
+    }
+
+    [Theory]
+    [InlineData(4)]
+    [InlineData(5)]
+    [InlineData(6)]
+    [InlineData(7)]
+    public void ForcedCornerMasks_RoundTripSerializedTail(int mask) {
+        const string value = "FORCED-CORNERS-123456789";
+        var symbol = DotCodeEncoder.EncodeText(value, new DotCodeEncodingOptions { Mask = mask });
+        var unforced = DotCodeEncoder.EncodeText(value, new DotCodeEncodingOptions { Mask = mask - 4 });
+        var serializedBits = 2 + 9 * (symbol.DataCodewordCount + symbol.ErrorCorrectionCodewordCount);
+        var trailingPaddingBits = symbol.Modules.Width * symbol.Modules.Height / 2 - serializedBits;
+        var unforcedStream = DotCodeMatrix.Unfold(unforced.Modules);
+        var overwrittenStart = unforcedStream.Length - 6;
+        var changedSerializedBit = false;
+        for (var bit = overwrittenStart; bit < serializedBits; bit++) changedSerializedBit |= !unforcedStream[bit];
+
+        Assert.Equal(mask, symbol.Mask);
+        Assert.InRange(trailingPaddingBits, 0, 5);
+        Assert.True(changedSerializedBit, "The fixture must prove that forced corners replace at least one zero serialized bit.");
+        Assert.True(DotCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal(value, decoded.Text);
     }
 
     [Fact]

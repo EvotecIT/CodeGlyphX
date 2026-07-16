@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text;
 using CodeGlyphX.RmQr;
 using Xunit;
 
@@ -69,6 +70,29 @@ public sealed class RmQrTests {
         var kanji = RmQrCodeEncoder.EncodeKanji("漢字", minimumVersion: 20, maximumVersion: 20);
         Assert.True(RmQrDecoder.TryDecode(kanji.Modules, out var kanjiDecoded));
         Assert.Equal("漢字", kanjiDecoded.Text);
+    }
+
+    [Fact]
+    public void ExplicitEci_SelectsItsMatchingTextEncoding() {
+        var code = RmQrCodeEncoder.EncodeText("é", new RmQrEncodingOptions {
+            Mode = RmQrEncodingMode.Byte,
+            EciAssignmentNumber = 26,
+            MinimumVersion = 20,
+            MaximumVersion = 20
+        });
+
+        Assert.True(RmQrDecoder.TryDecode(code.Modules, out var decoded));
+        Assert.Equal("é", decoded.Text);
+        Assert.Equal(26, decoded.EciAssignmentNumber);
+        Assert.Equal(Encoding.UTF8.GetBytes("é"), decoded.Bytes);
+    }
+
+    [Fact]
+    public void UnknownTextEci_IsRejectedBeforeEncoding() {
+        Assert.Throws<InvalidOperationException>(() => RmQrCodeEncoder.EncodeText("A", new RmQrEncodingOptions {
+            Mode = RmQrEncodingMode.Byte,
+            EciAssignmentNumber = 899
+        }));
     }
 
     [Fact]

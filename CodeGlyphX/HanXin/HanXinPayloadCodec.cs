@@ -62,18 +62,7 @@ internal static class HanXinPayloadCodec {
         var eci = options.EciAssignmentNumber;
         byte[] bytes;
         if (mode == HanXinEncodingMode.Binary) {
-            var encoding = options.TextEncoding;
-            if (encoding is null) {
-                var latin1 = true;
-                for (var i = 0; i < text.Length; i++) if (text[i] > 255) { latin1 = false; break; }
-                encoding = latin1 ? EncodingUtils.Latin1 : EncodingUtils.Utf8Strict;
-                if (!latin1 && !eci.HasValue) eci = 26;
-            } else if (!eci.HasValue) {
-                if (!EncodingUtils.TryGetEciAssignment(encoding, out var inferredAssignment)) {
-                    throw new InvalidOperationException("The selected Han Xin text encoding has no known ECI assignment. Set EciAssignmentNumber explicitly.");
-                }
-                eci = inferredAssignment;
-            }
+            var encoding = EncodingUtils.ResolveTextEncoding(text, options.TextEncoding, eci, "Han Xin", out eci);
             bytes = EncodingUtils.GetBytesStrict(encoding, text, nameof(text));
         } else {
             if (mode == HanXinEncodingMode.Text && !CanEncodeText(text)) {

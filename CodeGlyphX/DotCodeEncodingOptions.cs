@@ -12,7 +12,7 @@ public sealed class DotCodeEncodingOptions {
     public bool IsGs1 { get; set; }
     /// <summary>Gets or sets whether to emit the reader-initialization (FNC3) control.</summary>
     public bool ReaderInitialization { get; set; }
-    /// <summary>Gets or sets an optional ECI assignment from 0 through 811799.</summary>
+    /// <summary>Gets or sets an optional ECI assignment from 0 through 811799. With no <see cref="TextEncoding"/>, a known ECI selects its matching encoding.</summary>
     public int? EciAssignmentNumber { get; set; }
     /// <summary>Gets or sets the text encoding. A matching known ECI is inferred; unknown encodings require <see cref="EciAssignmentNumber"/>. Text that cannot be represented is rejected.</summary>
     public Encoding? TextEncoding { get; set; }

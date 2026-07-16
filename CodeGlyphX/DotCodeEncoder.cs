@@ -19,19 +19,12 @@ public static class DotCodeEncoder {
         options = options.Clone();
         if (options.IsGs1) text = Gs1.ElementString(text);
 
-        var encoding = options.TextEncoding;
-        var eci = options.EciAssignmentNumber;
-        if (encoding is null) {
-            var latin1 = true;
-            for (var i = 0; i < text.Length; i++) if (text[i] > 255) { latin1 = false; break; }
-            encoding = latin1 ? EncodingUtils.Latin1 : EncodingUtils.Utf8Strict;
-            if (!latin1 && !eci.HasValue) eci = 26;
-        } else if (!eci.HasValue) {
-            if (!EncodingUtils.TryGetEciAssignment(encoding, out var inferredAssignment)) {
-                throw new InvalidOperationException("The selected DotCode text encoding has no known ECI assignment. Set EciAssignmentNumber explicitly.");
-            }
-            eci = inferredAssignment;
-        }
+        var encoding = EncodingUtils.ResolveTextEncoding(
+            text,
+            options.TextEncoding,
+            options.EciAssignmentNumber,
+            "DotCode",
+            out var eci);
         return EncodeBytesCore(EncodingUtils.GetBytesStrict(encoding, text, nameof(text)), options, eci ?? 0);
     }
 
