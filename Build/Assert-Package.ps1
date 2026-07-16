@@ -55,6 +55,7 @@ $expectedLibraryEntries = @(
     'CodeGlyphX.nuspec'
     'README.md'
     'LICENSE'
+    'THIRD-PARTY-NOTICES.md'
     'codeglyphx-qr-icon.png'
 ) + $libraryEntries
 Assert-ZipEntries -Path $package[0].FullName -ExpectedEntries $expectedLibraryEntries

@@ -134,6 +134,40 @@ if (DataMatrixDecoder.TryDecodeDetailed(gs1, out DataMatrixDecoded decoded)) {
 
 `TryDecodeDetailed` is available for module matrices and pixel buffers; `DataMatrixCode.TryDecodePngDetailed` preserves the same control metadata when decoding PNG input. Plain `TryDecode` continues to return only the reconstructed text.
 
+## Official GS1 Application Identifier catalog
+
+`Gs1ApplicationIdentifierCatalog` is generated from the GS1 Barcode Syntax Dictionary release 2026-01-27. It expands all assigned ranges into 541 directly addressable AIs and exposes titles, data components, separator rules, association/exclusion rules, and GS1 Digital Link metadata.
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Gs1Data;
+
+Gs1ApplicationIdentifier lot =
+    Gs1ApplicationIdentifierCatalog.Get("10");
+
+Console.WriteLine($"{lot.Title}: {lot.Format}");
+Console.WriteLine($"Dictionary: {Gs1ApplicationIdentifierCatalog.Release}");
+```
+
+Use `Gs1.Validate` when conformance matters. It accepts bracketed syntax and raw element strings, returns every parsed element and actionable issue in one pass, and applies all semantic rules referenced by this dictionary release—including check digits, dates and times, code lists, IBAN, AI associations, and coupon formats.
+
+```csharp
+const string message =
+    "(01)09506000134352(10)ABC123(17)240101";
+
+Gs1ValidationResult validation = Gs1.Validate(message);
+if (!validation.IsValid) {
+    foreach (Gs1ValidationIssue issue in validation.Issues) {
+        Console.WriteLine(issue);
+    }
+}
+
+string elementString = Gs1Validator.ToElementString(message);
+BitMatrix dataMatrix = DataMatrixCode.EncodeGs1(elementString);
+```
+
+`Gs1.ElementString` remains the compatibility-oriented separator builder used by existing encoders: it accepts expert-defined and legacy fields. `Gs1.Validate`, `Gs1.TryValidate`, and `Gs1Validator.ToElementString` are the strict entry points for standards-sensitive workflows.
+
 ## Decode an image
 
 ```csharp
@@ -246,4 +280,4 @@ dotnet run --project CodeGlyphX.Examples -c Release
 
 ## License
 
-CodeGlyphX is licensed under the [Apache License 2.0](LICENSE).
+CodeGlyphX is licensed under the [Apache License 2.0](LICENSE). See [third-party notices](THIRD-PARTY-NOTICES.md) for incorporated standards resources.
