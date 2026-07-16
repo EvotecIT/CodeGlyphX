@@ -44,6 +44,9 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
       - name: Apply managed Cloudflare cache policy
         uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-cache-policy@74e782630c3766a5e73b2f796e64213f43ddc466
         with:
