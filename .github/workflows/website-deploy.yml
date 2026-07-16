@@ -28,7 +28,7 @@ jobs:
       actions: write
       contents: read
       packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@52642e72bd740b6ec7a5ea482d26c02adef65b0f
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@1f634b17e21f935ab6b8c052322497d814ce6c8c
     with:
       website_root: Website
       pipeline_config: Website/pipeline.json
@@ -37,7 +37,7 @@ jobs:
       runner_labels_json: '["ubuntu-latest"]'
       timeout_minutes: 60
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: 52642e72bd740b6ec7a5ea482d26c02adef65b0f
+      powerforge_ref: 1f634b17e21f935ab6b8c052322497d814ce6c8c
       report_artifact_name: codeglyphx-website-deploy-reports
       site_artifact_name: powerforge-site-codeglyphx.com
       site_artifact_retention_days: 7
@@ -58,7 +58,7 @@ jobs:
           ref: ${{ needs.build.outputs.source_sha }}
 
       - name: Apply managed Cloudflare cache policy
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-cache-policy@52642e72bd740b6ec7a5ea482d26c02adef65b0f
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-cache-policy@1f634b17e21f935ab6b8c052322497d814ce6c8c
         with:
           site-config: Website/site.json
           zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
@@ -76,7 +76,7 @@ jobs:
       contents: read
     steps:
       - name: Deploy validated website artifact
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-linux-site-deploy@52642e72bd740b6ec7a5ea482d26c02adef65b0f
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-linux-site-deploy@1f634b17e21f935ab6b8c052322497d814ce6c8c
         with:
           artifact-name: powerforge-site-codeglyphx.com
           deployment-site: codeglyphx.com
@@ -88,6 +88,8 @@ jobs:
           deployment-ssh-known-hosts: ${{ secrets.DEPLOYMENT_SSH_KNOWN_HOSTS }}
           deployment-cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           cloudflare-zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          deployment-public-url: https://codeglyphx.com
+          deployment-smoke-paths: "/ /docs/ /api/ /playground/ /sitemap.xml"
           source-repository: ${{ github.repository }}
           source-sha: ${{ needs.build.outputs.source_sha }}
           engine-mode: ${{ needs.build.outputs.engine_mode }}

@@ -3,6 +3,9 @@
 ###############################################################################
 * text=auto
 
+# Files installed on Linux hosts must keep Unix line endings on every checkout.
+deploy/linux/* text eol=lf
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #
