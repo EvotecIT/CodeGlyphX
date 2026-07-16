@@ -61,7 +61,7 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Gs1DataBarExpandedStacked, "GS1 DataBar Expanded Stacked", SymbolFamily.Stacked, BarcodeType.GS1DataBarExpandedStacked,
             Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Gs1DataBarLimited, "GS1 DataBar Limited", SymbolFamily.Linear, BarcodeType.GS1DataBarLimited,
-            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+            ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Gs1DataBarStackedOmnidirectional, "GS1 DataBar Stacked Omnidirectional", SymbolFamily.Stacked, BarcodeType.GS1DataBarStackedOmni,
             Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.MaxiCode, "MaxiCode", SymbolFamily.Matrix, BarcodeType.MaxiCode,
