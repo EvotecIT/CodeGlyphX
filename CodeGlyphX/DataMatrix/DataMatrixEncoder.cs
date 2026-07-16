@@ -434,7 +434,7 @@ public static partial class DataMatrixEncoder {
         for (var i = 0; i < text.Length; i++) {
             var c = text[i];
             var values = new List<int>(3);
-            if (!TryEncodeC40Char(c, isText, values)) {
+            if (!TryEncodeC40Char(c, isText, isGs1, values)) {
                 throw new ArgumentException("Text contains characters not supported by C40/Text encoding.", nameof(text));
             }
             sequences.Add((c, values.ToArray()));
@@ -571,7 +571,13 @@ public static partial class DataMatrixEncoder {
         return false;
     }
 
-    private static bool TryEncodeC40Char(char c, bool isText, List<int> values) {
+    private static bool TryEncodeC40Char(char c, bool isText, bool encodeFnc1, List<int> values) {
+        if (encodeFnc1 && c == Gs1.GroupSeparator) {
+            values.Add(1);
+            values.Add(27);
+            return true;
+        }
+
         if (c <= 0x1F) {
             values.Add(0);
             values.Add(c);
@@ -605,16 +611,10 @@ public static partial class DataMatrixEncoder {
             return true;
         }
 
-        if (c == Gs1.GroupSeparator) {
-            values.Add(1);
-            values.Add(27);
-            return true;
-        }
-
         if (c is >= (char)128 and <= (char)255) {
             values.Add(1);
             values.Add(30); // upper shift
-            return TryEncodeC40Char((char)(c - 128), isText, values);
+            return TryEncodeC40Char((char)(c - 128), isText, false, values);
         }
 
         var shift3Set = isText ? TEXT_SHIFT3_SET_CHARS : C40_SHIFT3_SET_CHARS;

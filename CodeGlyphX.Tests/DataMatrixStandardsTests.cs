@@ -164,6 +164,32 @@ public sealed class DataMatrixStandardsTests {
     }
 
     [Theory]
+    [InlineData(DataMatrixEncodingMode.C40, 'A', 230)]
+    [InlineData(DataMatrixEncodingMode.Text, 'a', 239)]
+    [InlineData(DataMatrixEncodingMode.Auto, 'A', 230)]
+    [InlineData(DataMatrixEncodingMode.Auto, 'a', 239)]
+    public void Gs1_C40TextSeparators_UseTheStandardShift2Fnc1Value(
+        DataMatrixEncodingMode mode,
+        char compactCharacter,
+        int latch) {
+        var payload = new string(compactCharacter, 10) + Gs1.GroupSeparator;
+        var matrix = DataMatrixEncoder.EncodeGs1(payload, new DataMatrixEncodingOptions {
+            Mode = mode,
+            Rows = 16,
+            Columns = 16
+        });
+
+        var codewords = ReadRawCodewords(matrix);
+        // ISO/IEC 16022 C40/Text FNC1 is Shift 2 followed by value 27; the last packed pair is 87,196.
+        Assert.Equal(
+            new byte[] { 232, (byte)latch, 89, 191, 89, 191, 89, 191, 87, 196, 254 },
+            codewords.Take(11));
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(matrix, out var decoded));
+        Assert.True(decoded.IsGs1);
+        Assert.Equal(payload, decoded.Text);
+    }
+
+    [Theory]
     [InlineData(126, "15ab41a02f81f88fb3ed13adffe43ed3ef753bcab34a47874d5ea55a64017ec8")]
     [InlineData(127, "267411b814ad1236c294d420104afe3ff8b5f977d572b4f9f83917f61e4a84ac")]
     [InlineData(16382, "cc6e06bd2059b2fdda7d64e5d9be1a4b1f2727452488586b0ad579d4560f012e")]
@@ -414,5 +440,23 @@ public sealed class DataMatrixStandardsTests {
         return BitConverter.ToString(sha256.ComputeHash(Encoding.ASCII.GetBytes(modules.ToString())))
             .Replace("-", string.Empty)
             .ToLowerInvariant();
+    }
+
+    private static byte[] ReadRawCodewords(BitMatrix matrix) {
+        Assert.True(DataMatrixSymbolInfo.TryGetForSize(matrix.Height, matrix.Width, out var symbol));
+        var dataRegion = new BitMatrix(symbol.DataRegionCols, symbol.DataRegionRows);
+        for (var regionRow = 0; regionRow < symbol.RegionRows; regionRow++) {
+            for (var regionColumn = 0; regionColumn < symbol.RegionCols; regionColumn++) {
+                var sourceRow = regionRow * symbol.RegionTotalRows;
+                var sourceColumn = regionColumn * symbol.RegionTotalCols;
+                for (var y = 0; y < symbol.RegionDataRows; y++) {
+                    for (var x = 0; x < symbol.RegionDataCols; x++) {
+                        dataRegion[regionColumn * symbol.RegionDataCols + x, regionRow * symbol.RegionDataRows + y] =
+                            matrix[sourceColumn + 1 + x, sourceRow + 1 + y];
+                    }
+                }
+            }
+        }
+        return DataMatrixPlacement.ReadCodewords(dataRegion, symbol.CodewordCount);
     }
 }

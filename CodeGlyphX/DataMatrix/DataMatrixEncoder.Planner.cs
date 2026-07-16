@@ -37,8 +37,8 @@ public static partial class DataMatrixEncoder {
         var previous = new int[text.Length + 1];
         var modes = new PlannedEncodation[text.Length + 1];
         for (var i = 1; i < costs.Length; i++) costs[i] = int.MaxValue;
-        var c40ValueCounts = BuildC40ValueCounts(text, isText: false);
-        var textValueCounts = BuildC40ValueCounts(text, isText: true);
+        var c40ValueCounts = BuildC40ValueCounts(text, isText: false, isGs1);
+        var textValueCounts = BuildC40ValueCounts(text, isText: true, isGs1);
         var x12Characters = BuildX12Characters(text);
         var edifactCharacters = BuildEdifactCharacters(text);
         BuildUtf8CharacterWidths(text, out var utf8ByteCounts, out var utf16Widths);
@@ -178,12 +178,12 @@ public static partial class DataMatrixEncoder {
         }
     }
 
-    private static int[] BuildC40ValueCounts(string text, bool isText) {
+    private static int[] BuildC40ValueCounts(string text, bool isText, bool isGs1) {
         var counts = new int[text.Length];
         var values = new List<int>(4);
         for (var i = 0; i < text.Length; i++) {
             values.Clear();
-            counts[i] = TryEncodeC40Char(text[i], isText, values) ? values.Count : -1;
+            counts[i] = TryEncodeC40Char(text[i], isText, isGs1, values) ? values.Count : -1;
         }
         return counts;
     }
