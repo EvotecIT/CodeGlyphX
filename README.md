@@ -210,7 +210,7 @@ Gs1CompositeSymbol composite = Gs1CompositeEncoder.Encode(
 
 The GS1 Composite implementation currently pairs a GS1-128 carrier with CC-A, CC-B, or CC-C and uses the standards-defined general-field method. EAN/UPC/DataBar carriers and the optimized date/AI 90 methods are future work. Han Xin text outside its native compact modes is encoded as binary data with UTF-8 ECI; native GB18030 region compaction is not yet implemented.
 
-These industrial formats currently support encoding and decoding of sampled modules. They are not presented as image/camera recognition formats in `SymbolCapabilities`. Direct-part-mark preprocessing is opt-in for formats the image scanner already recognizes:
+rMQR, MaxiCode, DotCode, Han Xin, and GS1 Composite currently support encoding and decoding of sampled modules. GS1 DataBar Limited and Omnidirectional also participate in the unified linear image scanner; the stacked DataBar variants remain module-only. `SymbolCapabilities` reports these boundaries directly. Direct-part-mark preprocessing is opt-in for formats the image scanner already recognizes:
 
 ```csharp
 ScanResult scan = SymbolScanner.Scan(image, new ScanOptions

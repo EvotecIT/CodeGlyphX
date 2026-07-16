@@ -23,7 +23,7 @@ The roadmap lists unresolved product work only. Completed implementation history
 
 ## Industrial and logistics follow-ups
 
-- [ ] Add image recognition for rMQR, MaxiCode, DotCode, Han Xin, DataBar Limited/stacked variants, and GS1 Composite only with real labels, device captures, geometry, and latency budgets.
+- [ ] Add image recognition for rMQR, MaxiCode, DotCode, Han Xin, the remaining DataBar stacked variants, and GS1 Composite only with real labels, device captures, geometry, and latency budgets.
 - [ ] Extend GS1 Composite beyond its GS1-128 carrier to EAN/UPC and DataBar carriers, then add optimized date and AI 90 compression methods where they materially improve capacity.
 - [ ] Add native Han Xin GB18030 region compaction and interoperability vectors instead of relying on UTF-8 ECI binary encoding for Chinese text.
 
