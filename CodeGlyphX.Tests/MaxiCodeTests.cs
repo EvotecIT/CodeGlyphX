@@ -112,6 +112,15 @@ public sealed class MaxiCodeTests {
     }
 
     [Fact]
+    public void Windows1250Eci_RoundTripsCodePageText() {
+        var symbol = MaxiCodeEncoder.EncodeText("Łódź", new MaxiCodeEncodingOptions { EciAssignmentNumber = 21 });
+
+        Assert.True(MaxiCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("Łódź", decoded.Text);
+        Assert.Equal(new[] { 21 }, decoded.EciAssignments);
+    }
+
+    [Fact]
     public void ConflictingEncodingAndEci_AreRejected() {
         Assert.Throws<InvalidOperationException>(() => MaxiCodeEncoder.EncodeText("é", new MaxiCodeEncodingOptions {
             TextEncoding = Encoding.Latin1,

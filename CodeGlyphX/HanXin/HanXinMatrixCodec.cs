@@ -232,6 +232,8 @@ internal static class HanXinMatrixCodec {
         eccLevel = mask = 0;
         var bits = new bool[28];
         for (var i = 0; i < 9; i++) { bits[i] = matrix[i, 8]; bits[i + 8] = matrix[8, 8 - i]; bits[i + 17] = matrix[matrix.Width - 9, i]; }
+        bits[26] = matrix[matrix.Width - 8, 8];
+        bits[27] = matrix[matrix.Width - 7, 8];
         var words = new int[7];
         for (var i = 0; i < 28; i++) if (bits[i]) words[i >> 2] |= 1 << (3 - (i & 3));
         try { new ReedSolomonDecoder(GenericGf.AztecParam).Decode(words, 4); }

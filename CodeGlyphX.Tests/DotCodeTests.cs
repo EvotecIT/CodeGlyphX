@@ -81,6 +81,15 @@ public sealed class DotCodeTests {
     }
 
     [Fact]
+    public void ShiftJisEci_RoundTripsCodePageText() {
+        var symbol = DotCodeEncoder.EncodeText("漢字", new DotCodeEncodingOptions { EciAssignmentNumber = 20 });
+
+        Assert.True(DotCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("漢字", decoded.Text);
+        Assert.Equal(new[] { 20 }, decoded.EciAssignments);
+    }
+
+    [Fact]
     public void ConflictingEncodingAndEci_AreRejected() {
         Assert.Throws<InvalidOperationException>(() => DotCodeEncoder.EncodeText("é", new DotCodeEncodingOptions {
             TextEncoding = Encoding.Latin1,

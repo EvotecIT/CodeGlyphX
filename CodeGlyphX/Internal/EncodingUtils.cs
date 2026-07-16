@@ -91,15 +91,15 @@ internal static class EncodingUtils {
         try {
             switch (assignment) {
                 case 3: encoding = Latin1; return true;
-                case 20: encoding = Encoding.GetEncoding(932); return true;
-                case 21: encoding = Encoding.GetEncoding(1250); return true;
-                case 22: encoding = Encoding.GetEncoding(1251); return true;
-                case 23: encoding = Encoding.GetEncoding(1252); return true;
+                case 20: return TryGetCodePageEncoding(932, out encoding);
+                case 21: return TryGetCodePageEncoding(1250, out encoding);
+                case 22: return TryGetCodePageEncoding(1251, out encoding);
+                case 23: return TryGetCodePageEncoding(1252, out encoding);
                 case 25: encoding = Encoding.BigEndianUnicode; return true;
                 case 26: encoding = Utf8Strict; return true;
                 case 27: encoding = Encoding.ASCII; return true;
-                case 29: encoding = Encoding.GetEncoding("GB2312"); return true;
-                case 32: encoding = Encoding.GetEncoding(54936); return true;
+                case 29: return TryGetCodePageEncoding(936, out encoding);
+                case 32: return TryGetCodePageEncoding(54936, out encoding);
                 default: encoding = Latin1; return false;
             }
         } catch (ArgumentException) {
@@ -109,5 +109,15 @@ internal static class EncodingUtils {
             encoding = Latin1;
             return false;
         }
+    }
+
+    private static bool TryGetCodePageEncoding(int codePage, out Encoding encoding) {
+        var mappedEncoding = CodePagesEncodingProvider.Instance.GetEncoding(codePage);
+        if (mappedEncoding is not null) {
+            encoding = mappedEncoding;
+            return true;
+        }
+        encoding = Latin1;
+        return false;
     }
 }

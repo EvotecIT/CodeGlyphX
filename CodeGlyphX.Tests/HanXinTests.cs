@@ -120,6 +120,39 @@ public sealed class HanXinTests {
     }
 
     [Fact]
+    public void Gb2312Eci_RoundTripsCodePageText() {
+        var symbol = HanXinEncoder.EncodeText("汉字", new HanXinEncodingOptions {
+            Mode = HanXinEncodingMode.Binary,
+            EciAssignmentNumber = 29
+        });
+
+        Assert.True(HanXinDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("汉字", decoded.Text);
+        Assert.Equal(new[] { 29 }, decoded.EciAssignments);
+    }
+
+    [Fact]
+    public void FunctionInfo_CorrectsTwoDamagedCodewords() {
+        var symbol = HanXinEncoder.EncodeText("1234567890", new HanXinEncodingOptions {
+            Mode = HanXinEncodingMode.Numeric,
+            Version = 1,
+            ErrorCorrectionLevel = 1,
+            Mask = 1
+        });
+        var damaged = symbol.Modules.Clone();
+        Assert.True(symbol.Modules[symbol.Modules.Width - 8, 8]);
+        Assert.True(symbol.Modules[symbol.Modules.Width - 7, 8]);
+        damaged[0, 8] = !damaged[0, 8];
+        damaged[4, 8] = !damaged[4, 8];
+
+        Assert.True(HanXinDecoder.TryDecodeDetailed(damaged, out var decoded));
+        Assert.Equal("1234567890", decoded.Text);
+        Assert.Equal(1, decoded.Version);
+        Assert.Equal(1, decoded.ErrorCorrectionLevel);
+        Assert.Equal(1, decoded.Mask);
+    }
+
+    [Fact]
     public void ConflictingEncodingAndEci_AreRejected() {
         Assert.Throws<InvalidOperationException>(() => HanXinEncoder.EncodeText("é", new HanXinEncodingOptions {
             Mode = HanXinEncodingMode.Binary,
