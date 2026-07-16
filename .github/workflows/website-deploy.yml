@@ -5,7 +5,14 @@ on:
     branches: [master]
     paths:
       - "Website/**"
+      - "CodeGlyphX/**"
+      - "CodeGlyphX.Playground/**"
+      - "CodeGlyphX.Website/**"
+      - "Directory.Build.props"
+      - "NuGet.config"
       - ".github/workflows/website-deploy.yml"
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
