@@ -58,8 +58,11 @@ internal static class DataBar14ImageClassifier {
         if (longSpan < 32 || candidate.Scanline.Modules.Length < 32) return false;
 
         var runs = new List<int>(longSpan / 2);
-        var shortStart = vertical ? region.X : region.Y;
-        var shortEnd = vertical ? right : bottom;
+        // A tile can contain the complete encoded scanline while clipping the physical bar height.
+        // Follow the connected bars in the original frame so tile overlap cannot turn one Omni
+        // result into an additional false Truncated identity.
+        var shortStart = 0;
+        var shortEnd = vertical ? width : height;
         for (var position = first; position <= last; position++) {
             if ((position & 127) == 0 && cancellationToken.IsCancellationRequested) return false;
             if (!IsDark(rgba, width, vertical, scanPosition, position, threshold)) continue;

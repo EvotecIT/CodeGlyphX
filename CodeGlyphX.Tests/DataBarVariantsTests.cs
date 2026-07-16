@@ -194,6 +194,27 @@ public sealed class DataBarVariantsTests {
     }
 
     [Fact]
+    public void TileScan_DoesNotDuplicateClippedOmnidirectionalAsTruncated() {
+        const string value = "1234567890123";
+        var omni = RenderDataBarFrame(DataBar14Encoder.EncodeOmnidirectional(value), heightModules: 40, moduleSize: 1);
+        var frame = PlaceOnCanvas(omni, width: 300, height: 100, targetX: 20, targetY: 25);
+
+        var result = SymbolScanner.Scan(frame, new ScanOptions {
+            Formats = new[] {
+                SymbolFormat.Gs1DataBarTruncated,
+                SymbolFormat.Gs1DataBarOmnidirectional
+            },
+            Barcode = new BarcodeDecodeOptions { EnableTileScan = true, TileGrid = 2 },
+            TimeoutMilliseconds = TestBudget.Adjust(10000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(SymbolFormat.Gs1DataBarOmnidirectional, symbol.Format);
+        Assert.Equal(value, symbol.Text);
+    }
+
+    [Fact]
     public void Truncated_MixedFormatImageScan_PreservesExplicitIdentity() {
         const string value = "1234567890123";
         var barcode = DataBar14Encoder.EncodeTruncated(value);
@@ -273,15 +294,28 @@ public sealed class DataBarVariantsTests {
             pixels[i + 2] = 255;
             pixels[i + 3] = 255;
         }
-        CopyFrame(truncated, truncatedY, pixels, stride);
-        CopyFrame(omni, omniY, pixels, stride);
+        CopyFrame(truncated, 0, truncatedY, pixels, stride);
+        CopyFrame(omni, 0, omniY, pixels, stride);
         return ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32);
     }
 
-    private static void CopyFrame(ImageFrame source, int targetY, byte[] target, int targetStride) {
+    private static ImageFrame PlaceOnCanvas(ImageFrame source, int width, int height, int targetX, int targetY) {
+        var stride = width * 4;
+        var pixels = new byte[stride * height];
+        for (var i = 0; i < pixels.Length; i += 4) {
+            pixels[i] = 255;
+            pixels[i + 1] = 255;
+            pixels[i + 2] = 255;
+            pixels[i + 3] = 255;
+        }
+        CopyFrame(source, targetX, targetY, pixels, stride);
+        return ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32);
+    }
+
+    private static void CopyFrame(ImageFrame source, int targetX, int targetY, byte[] target, int targetStride) {
         var sourcePixels = source.Pixels.ToArray();
         for (var y = 0; y < source.Height; y++) {
-            Buffer.BlockCopy(sourcePixels, y * source.Stride, target, (targetY + y) * targetStride, source.Stride);
+            Buffer.BlockCopy(sourcePixels, y * source.Stride, target, (targetY + y) * targetStride + targetX * 4, source.Stride);
         }
     }
 
