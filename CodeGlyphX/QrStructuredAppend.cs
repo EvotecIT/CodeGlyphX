@@ -22,7 +22,7 @@ public readonly struct QrStructuredAppend {
     /// <summary>
     /// Returns true when the values are within the QR structured-append range.
     /// </summary>
-    public bool IsValid => Index >= 1 && Index <= 16 && Total >= 1 && Total <= 16;
+    public bool IsValid => Index >= 1 && Index <= 16 && Total >= 1 && Total <= 16 && Index <= Total && Parity >= 0 && Parity <= 255;
 
     /// <summary>
     /// Creates structured append metadata.

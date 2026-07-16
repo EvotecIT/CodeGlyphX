@@ -77,6 +77,25 @@ QR.Save("https://codeglyphx.com", "styled.png", options);
 
 `QrEasy.EvaluateScanHeuristics` reports static contrast, quiet-zone, module-scale, and related concerns before rendering. It does not decode the output or guarantee scanner interoperability; validate final artifacts on the real devices and applications you support.
 
+## Standards-aware QR encoding
+
+`QrCodeEncoder.EncodeText` selects the smallest combination of numeric, alphanumeric, byte, and Kanji segments. UTF-8 ECI is emitted automatically when non-ASCII byte data needs it; `QrEncodingOptions` can force or suppress ECI and segment optimization.
+
+```csharp
+QrCode unicode = QrCodeEncoder.EncodeText("Zażółć gęślą jaźń 😀");
+
+QrCode gs1 = QrCodeEncoder.EncodeGs1(
+    "010590123412345710ABC123\u001D2112345");
+
+QrCode[] sequence = QrCodeEncoder.EncodeStructuredAppend(new[] {
+    "ORDER-2026-",
+    "LINE-0001",
+    "LOT-ABC123"
+});
+```
+
+Use `\u001D` between variable-length GS1 element strings. Structured append accepts two through sixteen explicit text or binary parts, computes the shared XOR parity, and exposes one-based `QrStructuredAppend` metadata after decoding. FNC1 second position and its 8-bit application indicator are available through `QrEncodingOptions` for industry-specific applications.
+
 ## Decode an image
 
 ```csharp

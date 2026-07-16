@@ -76,6 +76,40 @@ internal static class QrEncoding {
         }
     }
 
+    public static int GetByteCount(string text, int offset, int length, QrTextEncoding encoding) {
+        if (text is null) throw new ArgumentNullException(nameof(text));
+        if (offset < 0 || offset > text.Length) throw new ArgumentOutOfRangeException(nameof(offset));
+        if (length < 0 || offset + length > text.Length) throw new ArgumentOutOfRangeException(nameof(length));
+
+        if (encoding == QrTextEncoding.Utf8) {
+            var count = 0;
+            var end = offset + length;
+            for (var i = offset; i < end; i++) {
+                var c = text[i];
+                if (c <= 0x7F) count++;
+                else if (c <= 0x7FF) count += 2;
+                else if (char.IsHighSurrogate(c) && i + 1 < end && char.IsLowSurrogate(text[i + 1])) {
+                    count += 4;
+                    i++;
+                } else count += 3;
+            }
+            return count;
+        }
+
+        if (encoding == QrTextEncoding.ShiftJis) {
+            var count = 0;
+            var end = offset + length;
+            for (var i = offset; i < end; i++) {
+                var c = text[i];
+                count += c <= 0x7F || c is >= '\uFF61' and <= '\uFF9F' ? 1 : 2;
+            }
+            return count;
+        }
+
+        // All other supported encodings are single-byte encodings. CanEncode validates the characters.
+        return length;
+    }
+
     public static string Decode(QrTextEncoding encoding, byte[] bytes) {
         if (bytes is null) throw new ArgumentNullException(nameof(bytes));
         return Decode(encoding, bytes, 0, bytes.Length);

@@ -85,10 +85,15 @@ internal static class QrPayloadParser {
     }
 
     public static bool TryParse(byte[] dataCodewords, int version, Func<bool>? shouldStop, out byte[] payload, out QrPayloadSegment[] segments, out QrStructuredAppend? structuredAppend, out QrFnc1Mode fnc1Mode) {
+        return TryParse(dataCodewords, version, shouldStop, out payload, out segments, out structuredAppend, out fnc1Mode, out _);
+    }
+
+    public static bool TryParse(byte[] dataCodewords, int version, Func<bool>? shouldStop, out byte[] payload, out QrPayloadSegment[] segments, out QrStructuredAppend? structuredAppend, out QrFnc1Mode fnc1Mode, out int? fnc1ApplicationIndicator) {
         payload = null!;
         segments = null!;
         structuredAppend = null;
         fnc1Mode = QrFnc1Mode.None;
+        fnc1ApplicationIndicator = null;
 
         if (dataCodewords is null) return false;
         if (version is < 1 or > 40) return false;
@@ -182,8 +187,11 @@ internal static class QrPayloadParser {
                 }
 
                 if (mode == 0b1001) {
-                    // FNC1 (second position)
+                    // FNC1 (second position) followed by the 8-bit application indicator.
+                    var applicationIndicator = ReadBits(8);
+                    if (applicationIndicator < 0) return false;
                     fnc1Mode = QrFnc1Mode.SecondPosition;
+                    fnc1ApplicationIndicator = applicationIndicator;
                     continue;
                 }
 
@@ -235,9 +243,12 @@ internal static class QrPayloadParser {
                     var parity = ReadBits(8);
                     if (sequence < 0 || parity < 0) return false;
 
-                    var index = (sequence >> 4) & 0x0F;
-                    var total = sequence & 0x0F;
-                    structuredAppend = new QrStructuredAppend(index, total, parity);
+                    // Both fields are zero-based in the QR bit stream and one-based in the public API.
+                    var index = ((sequence >> 4) & 0x0F) + 1;
+                    var total = (sequence & 0x0F) + 1;
+                    var metadata = new QrStructuredAppend(index, total, parity);
+                    if (!metadata.IsValid) return false;
+                    structuredAppend = metadata;
                     continue;
                 }
 

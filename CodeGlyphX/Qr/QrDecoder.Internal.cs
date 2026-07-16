@@ -185,7 +185,7 @@ public static partial class QrDecoder {
                 }
                 continue;
             }
-            if (!QrPayloadParser.TryParse(dataCodewords, version, shouldStop, out var payload, out var segments, out var structuredAppend, out var fnc1Mode)) {
+            if (!QrPayloadParser.TryParse(dataCodewords, version, shouldStop, out var payload, out var segments, out var structuredAppend, out var fnc1Mode, out var fnc1ApplicationIndicator)) {
                 sawPayloadFailure = true;
                 failureEcc = candidate.ErrorCorrectionLevel;
                 failureMask = candidate.Mask;
@@ -197,7 +197,7 @@ public static partial class QrDecoder {
             }
 
             var text = DecodeSegments(segments);
-            result = new QrDecoded(version, candidate.ErrorCorrectionLevel, candidate.Mask, payload, text, structuredAppend, fnc1Mode);
+            result = new QrDecoded(version, candidate.ErrorCorrectionLevel, candidate.Mask, payload, text, structuredAppend, fnc1Mode, fnc1ApplicationIndicator);
             diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.None, version, candidate.ErrorCorrectionLevel, candidate.Mask, formatBestDistance);
             return true;
         }

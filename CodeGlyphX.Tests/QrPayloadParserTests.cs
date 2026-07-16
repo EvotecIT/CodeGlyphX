@@ -197,7 +197,7 @@ public sealed class QrPayloadParserTests {
 
     [Fact]
     public void Parse_StructuredAppend_Metadata() {
-        // STRUCTURED APPEND (0011) + seq(0x24 = index 2, total 4) + parity(0xAA)
+        // STRUCTURED APPEND (0011) + seq(0x13 = one-based index 2, total 4) + parity(0xAA)
         // + BYTE mode ("ok") + terminator
         var data = new byte[6];
         var bitPos = 0;
@@ -213,7 +213,7 @@ public sealed class QrPayloadParserTests {
         }
 
         WriteBits(0b0011, 4); // structured append
-        WriteBits(0x24, 8);   // index 2, total 4
+        WriteBits(0x13, 8);   // zero-based index 1, total-minus-one 3
         WriteBits(0xAA, 8);   // parity
         WriteBits(0b0100, 4); // BYTE mode
         WriteBits(2, 8);      // count
@@ -229,5 +229,20 @@ public sealed class QrPayloadParserTests {
         Assert.Equal(4, structuredAppend.Value.Total);
         Assert.Equal(0xAA, structuredAppend.Value.Parity);
         Assert.Equal(QrFnc1Mode.None, fnc1Mode);
+    }
+
+    [Fact]
+    public void Parse_StructuredAppend_RejectsIndexBeyondTotal() {
+        // Index nibble 15 means one-based symbol 16; total-minus-one 0 means a one-symbol sequence.
+        var data = new byte[] { 0x3F, 0x00, 0x00 };
+
+        Assert.False(QrPayloadParser.TryParse(
+            data,
+            version: 1,
+            shouldStop: null,
+            out _,
+            out _,
+            out _,
+            out _));
     }
 }

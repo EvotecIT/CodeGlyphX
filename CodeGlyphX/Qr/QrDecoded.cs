@@ -42,11 +42,16 @@ public sealed class QrDecoded {
     public QrFnc1Mode Fnc1Mode { get; }
 
     /// <summary>
+    /// Gets the 8-bit application indicator when FNC1 is used in second position.
+    /// </summary>
+    public int? Fnc1ApplicationIndicator { get; }
+
+    /// <summary>
     /// Gets the parsed payload when recognized (URL, WiFi, contact, etc.).
     /// </summary>
     public Payloads.QrParsedPayload Parsed { get; }
 
-    internal QrDecoded(int version, QrErrorCorrectionLevel ecc, int mask, byte[] bytes, string text, QrStructuredAppend? structuredAppend, QrFnc1Mode fnc1Mode) {
+    internal QrDecoded(int version, QrErrorCorrectionLevel ecc, int mask, byte[] bytes, string text, QrStructuredAppend? structuredAppend, QrFnc1Mode fnc1Mode, int? fnc1ApplicationIndicator) {
         Version = version;
         ErrorCorrectionLevel = ecc;
         Mask = mask;
@@ -54,6 +59,7 @@ public sealed class QrDecoded {
         Text = text ?? throw new ArgumentNullException(nameof(text));
         StructuredAppend = structuredAppend;
         Fnc1Mode = fnc1Mode;
+        Fnc1ApplicationIndicator = fnc1ApplicationIndicator;
         if (!Payloads.QrPayloadParser.TryParse(text, out var parsed)) {
             parsed = new Payloads.QrParsedPayload(Payloads.QrPayloadType.Text, text, text);
         }
