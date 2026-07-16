@@ -36,6 +36,7 @@ Code 128, GS1-128, Code 39/93/11, Codabar, MSI, Plessey, Telepen, Pharmacode, Co
 - **Styling & presets** - Module shapes, palettes, logos, and the style board gallery. [Styling options](/docs/qr/#styling-options)
 - **Payload helpers** - WiFi, vCards, OTP, SEPA, and more. [Payload helpers](/docs/payloads/)
 - **Image decoding** - Decode from images and screenshots. [Image decoding](/docs/decoding/)
+- **Capability matrix** - Compare encoding, module decoding, image scanning, multi-result, and payload support for every format. [Symbol capabilities](/docs/symbol-capabilities/)
 - **Output formats** - PNG, SVG, PDF, EPS, HTML, and more. [Output formats](/docs/renderers/)
 - **API Reference** - Full type and method documentation. [API reference](/api/)
 - **FAQ** - Common questions and troubleshooting. [FAQ](/faq/)

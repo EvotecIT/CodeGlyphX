@@ -9,7 +9,7 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, linear barcodes, Data Ma
 
 ## What it covers
 
-- QR and Micro QR encoding/decoding, including QR ECI, Kanji, FNC1/GS1, and structured append
+- QR and Micro QR encoding/decoding, including QR ECI and Kanji encoding plus FNC1/GS1 and structured-append decoding
 - Common 1D symbologies including Code 128/GS1-128, Code 39/93/11, EAN/UPC, ITF, Codabar, MSI, Plessey, postal, and GS1 DataBar variants
 - Data Matrix, PDF417/MicroPDF417, and Aztec encoding/decoding
 - QR payload builders for Wi-Fi, contacts, calendar events, OTP, payments, social profiles, and app links
@@ -89,6 +89,39 @@ if (QrImageDecoder.TryDecodeImage(
     Console.WriteLine(result.Text);
 }
 ```
+
+Use `SymbolScanner` when the application needs one coherent result model across QR, barcodes, Data Matrix, PDF417, and Aztec:
+
+```csharp
+var scan = SymbolScanner.Scan(image, ScanOptions.Screen(
+    timeoutMilliseconds: 500,
+    maxDimension: 1600));
+
+foreach (var symbol in scan.Symbols)
+{
+    Console.WriteLine($"{symbol.Format}: {symbol.Text}");
+}
+```
+
+`ScanOptions.TimeoutMilliseconds` is a total wall-clock deadline covering compressed-image decoding, pixel conversion, and recognition. Decoder cancellation remains cooperative, so it is not a hard real-time guarantee. Use `ScanOptions.Formats` and `ScanOptions.Region` to avoid work the application does not need.
+
+Raw camera or interop buffers can be passed without an image-codec dependency:
+
+```csharp
+var frame = new ImageFrame(
+    pixels,
+    width,
+    height,
+    stride,
+    PixelFormat.Gray8);
+
+ScanResult scan = SymbolScanner.Scan(frame, new ScanOptions
+{
+    Formats = new[] { SymbolFormat.QrCode, SymbolFormat.DataMatrix }
+});
+```
+
+`ImageFrame` accepts RGBA/BGRA, RGB/BGR24, ARGB/ABGR, Gray8/Gray16, and RGB565 buffers, including padded stride and bottom-up row order. The generated [symbol capability table](https://codeglyphx.com/docs/symbol-capabilities/) distinguishes encoding, module decoding, and image recognition for every format.
 
 For untrusted raster inputs, set explicit resource limits:
 
