@@ -35,7 +35,7 @@ The roadmap lists unresolved product work only. Completed implementation history
 ## Live capture and image formats
 
 - [ ] Add a bounded live-frame pipeline with tracking, duplicate suppression, backpressure, cancellation, and thin platform camera adapters.
-- [ ] Add optional HEIC/HEIF, AVIF, and JPEG XL codecs behind explicit packages or adapters so the dependency-free core remains pure managed.
+- [ ] Add optional HEIC/HEIF, AVIF, JPEG 2000, and JPEG XL codecs behind explicit packages or adapters so the dependency-free core remains pure managed.
 
 ## Additional symbologies
 
