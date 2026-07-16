@@ -46,7 +46,7 @@ CodeGlyphX currently describes 46 physical symbol formats through `SymbolCapabil
 | GS1 DataBar Stacked | Stacked | Yes | Yes | No | No | Encode + decode | No | No | No |
 | GS1 DataBar Expanded | Linear | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
 | GS1 DataBar Expanded Stacked | Stacked | Yes | Yes | No | No | Encode + decode | No | No | No |
-| GS1 DataBar Limited | Linear | Yes | Yes | No | No | Encode + decode | No | No | No |
+| GS1 DataBar Limited | Linear | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
 | GS1 DataBar Stacked Omnidirectional | Stacked | Yes | Yes | No | No | Encode + decode | No | No | No |
 | MaxiCode | Matrix | Yes | Yes | No | No | No | Encode + decode | Encode + decode | No |
 | DotCode | Matrix | Yes | Yes | No | No | Encode + decode | Encode + decode | Encode + decode | No |
