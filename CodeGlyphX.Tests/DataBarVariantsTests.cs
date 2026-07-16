@@ -172,7 +172,10 @@ public sealed class DataBarVariantsTests {
         var truncated = RenderDataBarFrame(DataBar14Encoder.EncodeTruncated(value), heightModules: 13, moduleSize: 2);
         var omni = RenderDataBarFrame(DataBar14Encoder.EncodeOmnidirectional(value), heightModules: 40, moduleSize: 2);
         var frame = StackForIndependentScanlines(truncated, truncatedY: 20, omni, omniY: 50);
-        var options = new ScanOptions { TimeoutMilliseconds = TestBudget.Adjust(10000) };
+        // The default path intentionally probes every image-capable format, so keep this
+        // correctness contract independent of coverage instrumentation speed.
+        var timeoutMilliseconds = explicitFormats ? 10000 : 30000;
+        var options = new ScanOptions { TimeoutMilliseconds = TestBudget.Adjust(timeoutMilliseconds) };
         if (explicitFormats) {
             options.Formats = new[] {
                 SymbolFormat.Gs1DataBarTruncated,
