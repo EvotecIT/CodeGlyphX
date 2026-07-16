@@ -31,6 +31,21 @@ public static class Gs1 {
         return result.Elements;
     }
 
+    /// <summary>Parses and validates an uncompressed GS1 Digital Link URI Syntax 1.6.0 value.</summary>
+    public static Gs1DigitalLinkValidationResult ValidateDigitalLink(string uri, Gs1ValidationOptions? options = null) {
+        return Gs1DigitalLink.Validate(uri, options);
+    }
+
+    /// <summary>Parses a valid uncompressed GS1 Digital Link URI Syntax 1.6.0 value.</summary>
+    public static Gs1DigitalLinkUri ParseDigitalLink(string uri, Gs1ValidationOptions? options = null) {
+        return Gs1DigitalLink.Parse(uri, options);
+    }
+
+    /// <summary>Builds a canonical GS1 Digital Link URI on https://id.gs1.org.</summary>
+    public static Gs1DigitalLinkUri DigitalLink(IReadOnlyList<Gs1Element> elements, string? primaryIdentifierAi = null) {
+        return Gs1DigitalLink.BuildCanonical(elements, primaryIdentifierAi);
+    }
+
     /// <summary>
     /// Builds a machine-readable element string from bracketed syntax such as
     /// <c>(01)09506000134352(10)ABC(17)240101</c>. FNC1 separators are inserted from catalog metadata.

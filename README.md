@@ -168,6 +168,26 @@ BitMatrix dataMatrix = DataMatrixCode.EncodeGs1(elementString);
 
 `Gs1.ElementString` remains the compatibility-oriented separator builder used by existing encoders: it accepts expert-defined and legacy fields. `Gs1.Validate`, `Gs1.TryValidate`, and `Gs1Validator.ToElementString` are the strict entry points for standards-sensitive workflows.
 
+The same catalog and semantic validator power the uncompressed GS1 Digital Link URI Syntax 1.6.0 engine. It parses custom or reference URI stems, keeps key qualifiers in the standards-defined path order, validates GS1 query attributes, retains non-GS1 extension parameters, and produces a canonical `https://id.gs1.org` URI.
+
+```csharp
+Gs1DigitalLinkUri parsed = Gs1DigitalLink.Parse(
+    "https://brand.example/01/09520123456788/10/ABC1/21/12345?17=180426");
+
+Console.WriteLine(parsed.PrimaryIdentifier); // (01)09520123456788
+Console.WriteLine(parsed.CanonicalUri);
+Console.WriteLine(parsed.ToElementString());
+
+Gs1DigitalLinkUri canonical = Gs1DigitalLink.BuildCanonical(new[] {
+    Gs1Element.Create("01", "09520123456788"),
+    Gs1Element.Create("10", "ABC1"),
+    Gs1Element.Create("21", "12345"),
+    Gs1Element.Create("17", "180426")
+});
+```
+
+URI compression and online resolver behavior are separate GS1 standards; this API deliberately implements the uncompressed URI syntax without network access.
+
 ## Decode an image
 
 ```csharp

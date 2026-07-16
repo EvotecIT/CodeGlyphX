@@ -69,5 +69,12 @@ internal static class FlagshipApiExample {
             microScan.Symbols[0].Geometry is null) {
             throw new System.InvalidOperationException("The unified Micro QR scanner NativeAOT smoke test failed.");
         }
+
+        var digitalLink = Gs1DigitalLink.Parse(
+            "https://brand.example/01/09520123456788/10/ABC1/21/12345?17=180426");
+        if (digitalLink.PrimaryIdentifier.Ai != "01" ||
+            digitalLink.CanonicalUri != "https://id.gs1.org/01/09520123456788/10/ABC1/21/12345?17=180426") {
+            throw new System.InvalidOperationException("The GS1 Digital Link NativeAOT smoke test failed.");
+        }
     }
 }
