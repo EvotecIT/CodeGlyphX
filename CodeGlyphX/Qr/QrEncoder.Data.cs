@@ -4,15 +4,48 @@ using CodeGlyphX.Internal;
 namespace CodeGlyphX.Qr;
 
 internal static partial class QrEncoder {
+    private sealed class TextEncodingPlan {
+        internal QrSegment[] Segments { get; }
+        internal int Version { get; }
+        internal int? EciAssignmentNumber { get; }
+
+        internal TextEncodingPlan(QrSegment[] segments, int version, int? eciAssignmentNumber) {
+            Segments = segments;
+            Version = version;
+            EciAssignmentNumber = eciAssignmentNumber;
+        }
+    }
+
     public static CodeGlyphX.QrCode EncodeText(string text, QrEncodingOptions options, QrStructuredAppend? structuredAppend = null) {
+        if (structuredAppend is not null && !structuredAppend.Value.IsValid)
+            throw new ArgumentOutOfRangeException(nameof(structuredAppend));
+        var encodingPlan = CreateTextEncodingPlan(text, options, structuredAppend is not null);
+        return EncodeSegments(
+            encodingPlan.Segments,
+            encodingPlan.Version,
+            options.ErrorCorrectionLevel,
+            options.ForceMask,
+            encodingPlan.EciAssignmentNumber,
+            structuredAppend,
+            options.Fnc1Mode,
+            options.Fnc1ApplicationIndicator);
+    }
+
+    internal static int UpdateStructuredAppendParity(string text, QrEncodingOptions options, int parity) {
+        var encodingPlan = CreateTextEncodingPlan(text, options, includeStructuredAppend: true);
+        for (var i = 0; i < encodingPlan.Segments.Length; i++) {
+            parity = encodingPlan.Segments[i].UpdateStructuredAppendParity(parity);
+        }
+        return parity;
+    }
+
+    private static TextEncodingPlan CreateTextEncodingPlan(string text, QrEncodingOptions options, bool includeStructuredAppend) {
         if (text is null) throw new ArgumentNullException(nameof(text));
         if (options is null) throw new ArgumentNullException(nameof(options));
         ValidateCommonOptions(options.ErrorCorrectionLevel, options.MinVersion, options.MaxVersion, options.ForceMask);
         ValidateFnc1(options.Fnc1Mode, options.Fnc1ApplicationIndicator);
         if (options.EciMode is < QrEciMode.Auto or > QrEciMode.Never) throw new ArgumentOutOfRangeException(nameof(options.EciMode));
         if (options.TextEncoding is < QrTextEncoding.Latin1 or > QrTextEncoding.ShiftJis) throw new ArgumentOutOfRangeException(nameof(options.TextEncoding));
-        if (structuredAppend is not null && !structuredAppend.Value.IsValid)
-            throw new ArgumentOutOfRangeException(nameof(structuredAppend));
         if (!QrEncoding.CanEncode(text, options.TextEncoding))
             throw new ArgumentException($"Text cannot be encoded as {options.TextEncoding}.", nameof(text));
 
@@ -31,7 +64,7 @@ internal static partial class QrEncoder {
             }
 
             var requiredBits = plan.TotalBitLength
-                + GetStructuredAppendBitLength(structuredAppend)
+                + (includeStructuredAppend ? 20 : 0)
                 + GetFnc1BitLength(options.Fnc1Mode);
             if (requiredBits <= QrTables.GetNumDataCodewords(candidate, options.ErrorCorrectionLevel) * 8) {
                 version = candidate;
@@ -42,15 +75,7 @@ internal static partial class QrEncoder {
         if (version == 0)
             throw new ArgumentException($"Data too long for QR version range {options.MinVersion}..{options.MaxVersion} at ECC {options.ErrorCorrectionLevel}.", nameof(text));
 
-        return EncodeSegments(
-            plan!.Segments,
-            version,
-            options.ErrorCorrectionLevel,
-            options.ForceMask,
-            plan.HasByteSegment ? eciAssignmentNumber : null,
-            structuredAppend,
-            options.Fnc1Mode,
-            options.Fnc1ApplicationIndicator);
+        return new TextEncodingPlan(plan!.Segments, version, plan.HasByteSegment ? eciAssignmentNumber : null);
     }
 
     public static CodeGlyphX.QrCode EncodeByteMode(byte[] data, QrErrorCorrectionLevel ecc, int minVersion, int maxVersion, int? forceMask, int? eciAssignmentNumber = null, QrStructuredAppend? structuredAppend = null) {

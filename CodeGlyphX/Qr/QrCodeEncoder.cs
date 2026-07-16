@@ -99,7 +99,8 @@ public static class QrCodeEncoder {
     /// </summary>
     /// <remarks>
     /// All symbols receive the standard zero-based sequence indicator on the wire and the XOR parity
-    /// of the complete byte payload. Supplying parts explicitly keeps application record boundaries intact.
+    /// of the complete source bytes represented by the selected segments, including Shift-JIS bytes for Kanji mode.
+    /// Supplying parts explicitly keeps application record boundaries intact.
     /// </remarks>
     /// <param name="parts">Ordered payload parts (2..16).</param>
     /// <param name="options">Optional encoding options shared by every symbol.</param>
@@ -108,14 +109,12 @@ public static class QrCodeEncoder {
         if (parts.Count is < 2 or > 16) throw new ArgumentOutOfRangeException(nameof(parts), "Structured append requires two through sixteen parts.");
         var effective = options?.Clone() ?? new QrEncodingOptions();
 
-        var encodedParts = new byte[parts.Count][];
         var parity = 0;
         for (var i = 0; i < parts.Count; i++) {
             if (parts[i] is null) throw new ArgumentException("Structured append parts cannot contain null values.", nameof(parts));
             if (!QrEncoding.CanEncode(parts[i], effective.TextEncoding))
                 throw new ArgumentException($"Part {i + 1} cannot be encoded as {effective.TextEncoding}.", nameof(parts));
-            encodedParts[i] = QrEncoding.Encode(parts[i], effective.TextEncoding);
-            for (var j = 0; j < encodedParts[i].Length; j++) parity ^= encodedParts[i][j];
+            parity = QrEncoder.UpdateStructuredAppendParity(parts[i], effective, parity);
         }
 
         var result = new QrCode[parts.Count];

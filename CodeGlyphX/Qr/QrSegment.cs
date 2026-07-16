@@ -15,16 +15,18 @@ internal sealed class QrSegment {
     private readonly string? _text;
     private readonly byte[]? _bytes;
     private readonly ushort[]? _kanjiValues;
+    private readonly string? _sourceText;
 
     public QrSegmentMode Mode { get; }
     public int CharacterCount { get; }
 
-    private QrSegment(QrSegmentMode mode, int characterCount, string? text, byte[]? bytes, ushort[]? kanjiValues) {
+    private QrSegment(QrSegmentMode mode, int characterCount, string? text, byte[]? bytes, ushort[]? kanjiValues, string? sourceText) {
         Mode = mode;
         CharacterCount = characterCount;
         _text = text;
         _bytes = bytes;
         _kanjiValues = kanjiValues;
+        _sourceText = sourceText;
     }
 
     public static QrSegment CreateNumeric(string text) {
@@ -32,21 +34,21 @@ internal sealed class QrSegment {
         for (var i = 0; i < text.Length; i++) {
             if (text[i] is < '0' or > '9') throw new ArgumentException("Numeric QR segments accept digits only.", nameof(text));
         }
-        return new QrSegment(QrSegmentMode.Numeric, text.Length, text, null, null);
+        return new QrSegment(QrSegmentMode.Numeric, text.Length, text, null, null, text);
     }
 
-    public static QrSegment CreateAlphanumeric(string encodedText) {
+    public static QrSegment CreateAlphanumeric(string encodedText, string? sourceText = null) {
         if (encodedText is null) throw new ArgumentNullException(nameof(encodedText));
         for (var i = 0; i < encodedText.Length; i++) {
             if (AlphanumericTable.IndexOf(encodedText[i]) < 0)
                 throw new ArgumentException("Alphanumeric QR segment contains an unsupported character.", nameof(encodedText));
         }
-        return new QrSegment(QrSegmentMode.Alphanumeric, encodedText.Length, encodedText, null, null);
+        return new QrSegment(QrSegmentMode.Alphanumeric, encodedText.Length, encodedText, null, null, sourceText ?? encodedText);
     }
 
     public static QrSegment CreateByte(byte[] bytes) {
         if (bytes is null) throw new ArgumentNullException(nameof(bytes));
-        return new QrSegment(QrSegmentMode.Byte, bytes.Length, null, bytes, null);
+        return new QrSegment(QrSegmentMode.Byte, bytes.Length, null, bytes, null, null);
     }
 
     public static QrSegment CreateKanji(string text) {
@@ -56,7 +58,7 @@ internal sealed class QrSegment {
             if (!QrKanjiTable.TryGetValue(text[i], out values[i]))
                 throw new ArgumentException("Text contains characters not encodable in QR Kanji mode.", nameof(text));
         }
-        return new QrSegment(QrSegmentMode.Kanji, values.Length, null, null, values);
+        return new QrSegment(QrSegmentMode.Kanji, values.Length, null, null, values, text);
     }
 
     public int GetTotalBitLength(int version) {
@@ -83,6 +85,20 @@ internal sealed class QrSegment {
             default:
                 throw new InvalidOperationException("Unsupported QR segment mode.");
         }
+    }
+
+    public int UpdateStructuredAppendParity(int parity) {
+        if (Mode == QrSegmentMode.Byte) {
+            for (var i = 0; i < _bytes!.Length; i++) parity ^= _bytes[i];
+            return parity;
+        }
+        if (Mode == QrSegmentMode.Kanji) {
+            var shiftJis = QrShiftJis.Encode(_sourceText!);
+            for (var i = 0; i < shiftJis.Length; i++) parity ^= shiftJis[i];
+            return parity;
+        }
+        for (var i = 0; i < _sourceText!.Length; i++) parity ^= (byte)_sourceText[i];
+        return parity;
     }
 
     public static int GetDataBitLength(QrSegmentMode mode, int characterCount) {

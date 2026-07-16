@@ -33,6 +33,9 @@ public static partial class DataMatrixEncoder {
             return Encode(macroBody, macroOptions);
         }
         var mode = options.Mode;
+        if (text.Length == 0 && mode is DataMatrixEncodingMode.C40 or DataMatrixEncodingMode.Text or DataMatrixEncodingMode.X12 or DataMatrixEncodingMode.Edifact) {
+            mode = DataMatrixEncodingMode.Ascii;
+        }
         var controlCodewords = BuildControlCodewords(options);
 
         if (mode == DataMatrixEncodingMode.Auto) {
@@ -427,7 +430,7 @@ public static partial class DataMatrixEncoder {
     }
 
     private static List<byte> EncodeC40Text(string text, bool isText, bool isGs1 = false) {
-        if (text.Length == 0) return new List<byte> { 254 };
+        if (text.Length == 0) return new List<byte>();
         var sequences = new List<(char Ch, int[] Values)>(text.Length);
         var totalValues = 0;
 
@@ -479,7 +482,7 @@ public static partial class DataMatrixEncoder {
     }
 
     private static List<byte> EncodeX12(string text, bool isGs1 = false) {
-        if (text.Length == 0) return new List<byte> { 254 };
+        if (text.Length == 0) return new List<byte>();
         var values = new List<int>(text.Length);
         for (var i = 0; i < text.Length; i++) {
             if (!TryEncodeX12Char(text[i], out var value)) {
@@ -516,6 +519,7 @@ public static partial class DataMatrixEncoder {
     }
 
     private static List<byte> EncodeEdifact(string text) {
+        if (text.Length == 0) return new List<byte>();
         var values = new List<int>(text.Length + 4);
         for (var i = 0; i < text.Length; i++) {
             var c = text[i];

@@ -236,7 +236,7 @@ internal static class QrSegmentPlanner {
             var mode = previousModes[stateIndex];
             result.Add(mode switch {
                 QrSegmentMode.Numeric => QrSegment.CreateNumeric(part),
-                QrSegmentMode.Alphanumeric => QrSegment.CreateAlphanumeric(TransformAlphanumeric(part, fnc1Mode)),
+                QrSegmentMode.Alphanumeric => QrSegment.CreateAlphanumeric(TransformAlphanumeric(part, fnc1Mode), part),
                 QrSegmentMode.Byte => QrSegment.CreateByte(QrEncoding.Encode(part, encoding)),
                 QrSegmentMode.Kanji => QrSegment.CreateKanji(part),
                 _ => throw new InvalidOperationException("Unsupported QR segment mode.")

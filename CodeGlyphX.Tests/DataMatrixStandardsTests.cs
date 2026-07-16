@@ -190,6 +190,19 @@ public sealed class DataMatrixStandardsTests {
     }
 
     [Theory]
+    [InlineData(DataMatrixEncodingMode.C40)]
+    [InlineData(DataMatrixEncodingMode.Text)]
+    [InlineData(DataMatrixEncodingMode.X12)]
+    [InlineData(DataMatrixEncodingMode.Edifact)]
+    public void EmptyForcedCompaction_FallsBackToAsciiPadding(DataMatrixEncodingMode mode) {
+        var matrix = DataMatrixEncoder.Encode(string.Empty, mode);
+
+        Assert.Equal(129, ReadRawCodewords(matrix)[0]);
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(matrix, out var decoded));
+        Assert.Equal(string.Empty, decoded.Text);
+    }
+
+    [Theory]
     [InlineData(126, "15ab41a02f81f88fb3ed13adffe43ed3ef753bcab34a47874d5ea55a64017ec8")]
     [InlineData(127, "267411b814ad1236c294d420104afe3ff8b5f977d572b4f9f83917f61e4a84ac")]
     [InlineData(16382, "cc6e06bd2059b2fdda7d64e5d9be1a4b1f2727452488586b0ad579d4560f012e")]

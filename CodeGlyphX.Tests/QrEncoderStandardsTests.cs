@@ -98,6 +98,24 @@ public sealed class QrEncoderStandardsTests {
     }
 
     [Fact]
+    public void EncodeStructuredAppend_OptimizedKanjiUsesShiftJisParityBytes() {
+        var parts = new[] { "漢", "字" };
+        var expectedBytes = new[] {
+            new byte[] { 0x8A, 0xBF },
+            new byte[] { 0x8E, 0x9A }
+        };
+
+        var symbols = QrCodeEncoder.EncodeStructuredAppend(parts);
+
+        for (var i = 0; i < symbols.Length; i++) {
+            Assert.True(QrDecoder.TryDecode(symbols[i].Modules, out var decoded));
+            Assert.Equal(parts[i], decoded.Text);
+            Assert.Equal(expectedBytes[i], decoded.Bytes);
+            Assert.Equal(0x21, decoded.StructuredAppend!.Value.Parity);
+        }
+    }
+
+    [Fact]
     public void EncodeStructuredAppend_BinaryParts_RoundTripWithoutTextConversion() {
         var parts = new[] {
             new byte[] { 0x00, 0x80, 0xFF },
