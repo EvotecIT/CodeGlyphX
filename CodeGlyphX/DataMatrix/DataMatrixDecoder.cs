@@ -57,6 +57,55 @@ public static partial class DataMatrixDecoder {
     }
 
     /// <summary>
+    /// Attempts to decode a Data Matrix symbol and preserve GS1, structured-append, Macro, Reader Programming, and ECI metadata.
+    /// </summary>
+    public static bool TryDecodeDetailed(BitMatrix modules, out DataMatrixDecoded decoded) {
+        return TryDecodeDetailed(modules, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol with cancellation and preserve control metadata.
+    /// </summary>
+    public static bool TryDecodeDetailed(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded) {
+        if (modules is null) throw new ArgumentNullException(nameof(modules));
+        if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
+        if (TryDecodeDetailedCore(modules, cancellationToken, out decoded)) return true;
+        if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
+        return TryDecodeDetailedCore(MirrorX(modules), cancellationToken, out decoded);
+    }
+
+#if NET8_0_OR_GREATER
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from pixels and preserve control metadata.
+    /// </summary>
+    public static bool TryDecodeDetailed(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, out DataMatrixDecoded decoded) {
+        return TryDecodePixelsDetailed(pixels, width, height, stride, format, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from pixels with cancellation and preserve control metadata.
+    /// </summary>
+    public static bool TryDecodeDetailed(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out DataMatrixDecoded decoded) {
+        return TryDecodePixelsDetailed(pixels, width, height, stride, format, cancellationToken, out decoded);
+    }
+#endif
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from pixels and preserve control metadata.
+    /// </summary>
+    public static bool TryDecodeDetailed(byte[] pixels, int width, int height, int stride, PixelFormat format, out DataMatrixDecoded decoded) {
+        return TryDecodeDetailed(pixels, width, height, stride, format, CancellationToken.None, out decoded);
+    }
+
+    /// <summary>
+    /// Attempts to decode a Data Matrix symbol from pixels with cancellation and preserve control metadata.
+    /// </summary>
+    public static bool TryDecodeDetailed(byte[] pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out DataMatrixDecoded decoded) {
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        return TryDecodePixelsDetailed(pixels, width, height, stride, format, cancellationToken, out decoded);
+    }
+
+    /// <summary>
     /// Attempts to decode a Data Matrix symbol from a module matrix, with diagnostics.
     /// </summary>
     public static bool TryDecode(BitMatrix modules, out string value, out DataMatrixDecodeDiagnostics diagnostics) {

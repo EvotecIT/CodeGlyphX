@@ -9,56 +9,77 @@ namespace CodeGlyphX.DataMatrix;
 /// <summary>
 /// Encodes Data Matrix (ECC200) symbols.
 /// </summary>
-public static class DataMatrixEncoder {
+public static partial class DataMatrixEncoder {
     /// <summary>
     /// Encodes a string into a Data Matrix symbol.
     /// </summary>
     public static BitMatrix Encode(string text, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto) {
+        return Encode(text, new DataMatrixEncodingOptions { Mode = mode });
+    }
+
+    /// <summary>
+    /// Encodes a string into a Data Matrix symbol with explicit encodation and symbol-selection options.
+    /// </summary>
+    public static BitMatrix Encode(string text, DataMatrixEncodingOptions options) {
         if (text is null) throw new ArgumentNullException(nameof(text));
+        ValidateOptions(options);
+        if (options.Macro == DataMatrixMacro.None
+            && !options.IsGs1
+            && !options.ReaderProgramming
+            && options.StructuredAppend is null
+            && TryExtractMacroEnvelope(text, out var macroBody, out var detectedMacro)) {
+            var macroOptions = options.Clone();
+            macroOptions.Macro = detectedMacro;
+            return Encode(macroBody, macroOptions);
+        }
+        var mode = options.Mode;
+        var controlCodewords = BuildControlCodewords(options);
 
         if (mode == DataMatrixEncodingMode.Auto) {
-            if (!CanEncodeLatin1(text)) {
-                mode = DataMatrixEncodingMode.Base256;
-            } else {
-                var bestCodewords = EncodeAscii(EncodingUtils.Latin1.GetBytes(text));
+            var optimized = EncodeOptimized(text, options.IsGs1, controlCodewords.Count);
+            return EncodeCodewords(PrependControlCodewords(controlCodewords, optimized), options);
+        }
 
-                TryUpdateBest(text, DataMatrixEncodingMode.C40, ref bestCodewords);
-                TryUpdateBest(text, DataMatrixEncodingMode.Text, ref bestCodewords);
-                TryUpdateBest(text, DataMatrixEncodingMode.X12, ref bestCodewords);
-                TryUpdateBest(text, DataMatrixEncodingMode.Edifact, ref bestCodewords);
-
-                return EncodeCodewords(bestCodewords);
-            }
+        if (options.IsGs1 && mode == DataMatrixEncodingMode.Base256) {
+            throw new ArgumentException("GS1 separators cannot be represented by a single Base256 segment. Use Auto, ASCII, C40, or Text encodation.", nameof(options));
         }
 
         if (mode == DataMatrixEncodingMode.Ascii) {
             if (!CanEncodeLatin1(text)) throw new ArgumentException("Text contains characters outside Latin-1.", nameof(text));
             var bytes = EncodingUtils.Latin1.GetBytes(text);
-            return EncodeCodewords(EncodeAscii(bytes));
+            return EncodeCodewords(PrependControlCodewords(controlCodewords, EncodeAscii(bytes, options.IsGs1)), options);
         }
 
         if (mode == DataMatrixEncodingMode.Base256) {
             var utf8 = Encoding.UTF8.GetBytes(text);
-            return EncodeCodewords(EncodeBase256(utf8));
+            return EncodeCodewords(PrependControlCodewords(controlCodewords, EncodeBase256(utf8, controlCodewords.Count)), options);
         }
 
         var codewords = mode switch {
-            DataMatrixEncodingMode.C40 => EncodeC40Text(text, isText: false),
-            DataMatrixEncodingMode.Text => EncodeC40Text(text, isText: true),
-            DataMatrixEncodingMode.X12 => EncodeX12(text),
+            DataMatrixEncodingMode.C40 => EncodeC40Text(text, isText: false, options.IsGs1),
+            DataMatrixEncodingMode.Text => EncodeC40Text(text, isText: true, options.IsGs1),
+            DataMatrixEncodingMode.X12 => EncodeX12(text, options.IsGs1),
             DataMatrixEncodingMode.Edifact => EncodeEdifact(text),
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unsupported Data Matrix encoding mode.")
         };
 
-        return EncodeCodewords(codewords);
+        return EncodeCodewords(PrependControlCodewords(controlCodewords, codewords), options);
     }
 
     /// <summary>
     /// Encodes raw bytes into a Data Matrix symbol.
     /// </summary>
     public static BitMatrix EncodeBytes(byte[] data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto) {
+        return EncodeBytes(data, new DataMatrixEncodingOptions { Mode = mode });
+    }
+
+    /// <summary>
+    /// Encodes raw bytes into a Data Matrix symbol with explicit encodation and symbol-selection options.
+    /// </summary>
+    public static BitMatrix EncodeBytes(byte[] data, DataMatrixEncodingOptions options) {
         if (data is null) throw new ArgumentNullException(nameof(data));
-        return EncodeBytesCore(data, mode);
+        ValidateOptions(options);
+        return EncodeBytesCore(data, options);
     }
 
 #if NET8_0_OR_GREATER
@@ -66,66 +87,105 @@ public static class DataMatrixEncoder {
     /// Encodes raw bytes into a Data Matrix symbol.
     /// </summary>
     public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto) {
-        return EncodeBytesCore(data, mode);
+        return EncodeBytes(data, new DataMatrixEncodingOptions { Mode = mode });
+    }
+
+    /// <summary>
+    /// Encodes raw bytes into a Data Matrix symbol with explicit encodation and symbol-selection options.
+    /// </summary>
+    public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, DataMatrixEncodingOptions options) {
+        ValidateOptions(options);
+        return EncodeBytesCore(data, options);
     }
 #endif
 
 #if NET8_0_OR_GREATER
-    private static BitMatrix EncodeBytesCore(ReadOnlySpan<byte> data, DataMatrixEncodingMode mode) {
+    private static BitMatrix EncodeBytesCore(ReadOnlySpan<byte> data, DataMatrixEncodingOptions options) {
+        var mode = options.Mode;
         if (mode == DataMatrixEncodingMode.Auto) {
             mode = DataMatrixEncodingMode.Base256;
         }
+        if (options.IsGs1 && mode == DataMatrixEncodingMode.Base256) {
+            throw new ArgumentException("GS1 byte payloads require ASCII encodation so group separators can be emitted as FNC1.", nameof(options));
+        }
+        var controlCodewords = BuildControlCodewords(options);
 
         var codewords = mode switch {
-            DataMatrixEncodingMode.Ascii => EncodeAscii(data),
-            DataMatrixEncodingMode.Base256 => EncodeBase256(data),
+            DataMatrixEncodingMode.Ascii => EncodeAscii(data, options.IsGs1),
+            DataMatrixEncodingMode.Base256 => EncodeBase256(data, controlCodewords.Count),
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unsupported Data Matrix encoding mode for bytes.")
         };
 
-        return EncodeCodewords(codewords);
+        return EncodeCodewords(PrependControlCodewords(controlCodewords, codewords), options);
     }
 #else
-    private static BitMatrix EncodeBytesCore(byte[] data, DataMatrixEncodingMode mode) {
+    private static BitMatrix EncodeBytesCore(byte[] data, DataMatrixEncodingOptions options) {
+        var mode = options.Mode;
         if (mode == DataMatrixEncodingMode.Auto) {
             mode = DataMatrixEncodingMode.Base256;
         }
+        if (options.IsGs1 && mode == DataMatrixEncodingMode.Base256) {
+            throw new ArgumentException("GS1 byte payloads require ASCII encodation so group separators can be emitted as FNC1.", nameof(options));
+        }
+        var controlCodewords = BuildControlCodewords(options);
 
         var codewords = mode switch {
-            DataMatrixEncodingMode.Ascii => EncodeAscii(data),
-            DataMatrixEncodingMode.Base256 => EncodeBase256(data),
+            DataMatrixEncodingMode.Ascii => EncodeAscii(data, options.IsGs1),
+            DataMatrixEncodingMode.Base256 => EncodeBase256(data, controlCodewords.Count),
             _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unsupported Data Matrix encoding mode for bytes.")
         };
 
-        return EncodeCodewords(codewords);
+        return EncodeCodewords(PrependControlCodewords(controlCodewords, codewords), options);
     }
 #endif
 
-    private static void TryUpdateBest(string text, DataMatrixEncodingMode mode, ref List<byte> bestCodewords) {
-        if (!TryEncodeTextMode(text, mode, out var codewords)) return;
-        if (codewords.Count < bestCodewords.Count) {
-            bestCodewords = codewords;
+    private static List<byte> BuildControlCodewords(DataMatrixEncodingOptions options) {
+        var codewords = new List<byte>(8);
+        if (options.StructuredAppend is { } structuredAppend) {
+            codewords.Add(233);
+            codewords.Add((byte)((17 - structuredAppend.Total) | ((structuredAppend.Index - 1) << 4)));
+            codewords.Add((byte)structuredAppend.FileId1);
+            codewords.Add((byte)structuredAppend.FileId2);
+        }
+        if (options.IsGs1) codewords.Add(232);
+        if (options.ReaderProgramming) codewords.Add(234);
+        if (options.Macro == DataMatrixMacro.Macro05) codewords.Add(236);
+        if (options.Macro == DataMatrixMacro.Macro06) codewords.Add(237);
+        if (options.EciAssignmentNumber is { } eciAssignmentNumber) {
+            codewords.Add(241);
+            AppendEciAssignment(codewords, eciAssignmentNumber);
+        }
+        return codewords;
+    }
+
+    private static List<byte> PrependControlCodewords(List<byte> controls, List<byte> payload) {
+        controls.AddRange(payload);
+        return controls;
+    }
+
+    private static void AppendEciAssignment(List<byte> codewords, int assignmentNumber) {
+        if (assignmentNumber <= 126) {
+            codewords.Add((byte)(assignmentNumber + 1));
+        } else if (assignmentNumber <= 16382) {
+            var value = assignmentNumber - 127;
+            codewords.Add((byte)(value / 254 + 128));
+            codewords.Add((byte)(value % 254 + 1));
+        } else {
+            var value = assignmentNumber - 16383;
+            codewords.Add((byte)(value / 64516 + 192));
+            codewords.Add((byte)((value / 254) % 254 + 1));
+            codewords.Add((byte)(value % 254 + 1));
         }
     }
 
-    private static bool TryEncodeTextMode(string text, DataMatrixEncodingMode mode, out List<byte> codewords) {
-        try {
-            codewords = mode switch {
-                DataMatrixEncodingMode.C40 => EncodeC40Text(text, isText: false),
-                DataMatrixEncodingMode.Text => EncodeC40Text(text, isText: true),
-                DataMatrixEncodingMode.X12 => EncodeX12(text),
-                DataMatrixEncodingMode.Edifact => EncodeEdifact(text),
-                _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unsupported Data Matrix encoding mode.")
-            };
-            return true;
-        } catch (ArgumentException) {
-            codewords = null!;
-            return false;
-        }
-    }
-
-    private static BitMatrix EncodeCodewords(List<byte> codewords) {
-        if (!DataMatrixSymbolInfo.TryGetForData(codewords.Count, out var symbol)) {
-            throw new ArgumentException("Data too long for supported Data Matrix symbols.", nameof(codewords));
+    private static BitMatrix EncodeCodewords(List<byte> codewords, DataMatrixEncodingOptions options) {
+        if (!DataMatrixSymbolInfo.TryGetForData(codewords.Count, options.Shape, options.Rows, options.Columns, out var symbol)) {
+            if (options.Rows is not null) {
+                throw new ArgumentException(
+                    $"The requested {options.Rows}x{options.Columns} Data Matrix symbol is unsupported or too small for {codewords.Count} data codewords.",
+                    nameof(options));
+            }
+            throw new ArgumentException($"Data is too long for the selected Data Matrix {options.Shape} symbol family.", nameof(codewords));
         }
 
         PadCodewords(codewords, symbol.DataCodewords);
@@ -135,12 +195,49 @@ public static class DataMatrixEncoder {
         return BuildSymbol(dataRegion, symbol);
     }
 
+    private static void ValidateOptions(DataMatrixEncodingOptions options) {
+        if (options is null) throw new ArgumentNullException(nameof(options));
+        if (options.Mode < DataMatrixEncodingMode.Auto || options.Mode > DataMatrixEncodingMode.Base256) {
+            throw new ArgumentOutOfRangeException(nameof(options), options.Mode, "Unsupported Data Matrix encoding mode.");
+        }
+        if (options.Shape < DataMatrixShape.Square || options.Shape > DataMatrixShape.Any) {
+            throw new ArgumentOutOfRangeException(nameof(options), options.Shape, "Unsupported Data Matrix symbol shape.");
+        }
+        if (options.Rows.HasValue != options.Columns.HasValue) {
+            throw new ArgumentException("Rows and Columns must be specified together.", nameof(options));
+        }
+        if ((options.Rows is not null && options.Rows <= 0) || (options.Columns is not null && options.Columns <= 0)) {
+            throw new ArgumentOutOfRangeException(nameof(options), "Rows and Columns must be positive.");
+        }
+        if (options.EciAssignmentNumber is < 0 or > 999999) {
+            throw new ArgumentOutOfRangeException(nameof(options), options.EciAssignmentNumber, "ECI assignment numbers must be between 0 and 999999.");
+        }
+        if (options.Macro < DataMatrixMacro.None || options.Macro > DataMatrixMacro.Macro06) {
+            throw new ArgumentOutOfRangeException(nameof(options), options.Macro, "Unsupported Data Matrix Macro mode.");
+        }
+        if (options.StructuredAppend is { } structuredAppend && !structuredAppend.IsValid) {
+            throw new ArgumentException("Structured append requires index 1..total, total 2..16, and file identifiers 1..254.", nameof(options));
+        }
+        if (options.ReaderProgramming && options.IsGs1) {
+            throw new ArgumentException("Reader Programming and GS1 FNC1 cannot be combined.", nameof(options));
+        }
+        if (options.ReaderProgramming && options.StructuredAppend is not null) {
+            throw new ArgumentException("Reader Programming and structured append cannot be combined.", nameof(options));
+        }
+        if (options.Macro != DataMatrixMacro.None
+            && (options.IsGs1 || options.ReaderProgramming || options.StructuredAppend is not null)) {
+            throw new ArgumentException("Macro 05/06 must be the first codeword and cannot be combined with GS1, Reader Programming, or structured append.", nameof(options));
+        }
+    }
+
 #if NET8_0_OR_GREATER
-    private static List<byte> EncodeAscii(ReadOnlySpan<byte> data) {
+    private static List<byte> EncodeAscii(ReadOnlySpan<byte> data, bool isGs1 = false) {
         var codewords = new List<byte>(data.Length + 8);
         for (var i = 0; i < data.Length; i++) {
             var b = data[i];
-            if (i + 1 < data.Length && IsDigit(b) && IsDigit(data[i + 1])) {
+            if (isGs1 && b == (byte)Gs1.GroupSeparator) {
+                codewords.Add(232);
+            } else if (i + 1 < data.Length && IsDigit(b) && IsDigit(data[i + 1])) {
                 var val = (b - (byte)'0') * 10 + (data[i + 1] - (byte)'0');
                 codewords.Add((byte)(130 + val));
                 i++;
@@ -154,7 +251,7 @@ public static class DataMatrixEncoder {
         return codewords;
     }
 
-    private static List<byte> EncodeBase256(ReadOnlySpan<byte> data) {
+    private static List<byte> EncodeBase256(ReadOnlySpan<byte> data, int positionOffset = 0) {
         var codewords = new List<byte>(data.Length + 4) { 231 };
         if (data.Length <= 249) {
             codewords.Add((byte)data.Length);
@@ -172,18 +269,20 @@ public static class DataMatrixEncoder {
 
         // Randomize length + data codewords (skip 231 switch).
         for (var i = 1; i < codewords.Count; i++) {
-            var position = i + 1; // 1-based position in codeword stream
+            var position = positionOffset + i + 1; // 1-based position in the complete codeword stream
             codewords[i] = Randomize255(codewords[i], position);
         }
 
         return codewords;
     }
 #else
-    private static List<byte> EncodeAscii(byte[] data) {
+    private static List<byte> EncodeAscii(byte[] data, bool isGs1 = false) {
         var codewords = new List<byte>(data.Length + 8);
         for (var i = 0; i < data.Length; i++) {
             var b = data[i];
-            if (i + 1 < data.Length && IsDigit(b) && IsDigit(data[i + 1])) {
+            if (isGs1 && b == (byte)Gs1.GroupSeparator) {
+                codewords.Add(232);
+            } else if (i + 1 < data.Length && IsDigit(b) && IsDigit(data[i + 1])) {
                 var val = (b - (byte)'0') * 10 + (data[i + 1] - (byte)'0');
                 codewords.Add((byte)(130 + val));
                 i++;
@@ -197,7 +296,7 @@ public static class DataMatrixEncoder {
         return codewords;
     }
 
-    private static List<byte> EncodeBase256(byte[] data) {
+    private static List<byte> EncodeBase256(byte[] data, int positionOffset = 0) {
         var codewords = new List<byte>(data.Length + 4) { 231 };
         if (data.Length <= 249) {
             codewords.Add((byte)data.Length);
@@ -215,7 +314,7 @@ public static class DataMatrixEncoder {
 
         // Randomize length + data codewords (skip 231 switch).
         for (var i = 1; i < codewords.Count; i++) {
-            var position = i + 1; // 1-based position in codeword stream
+            var position = positionOffset + i + 1; // 1-based position in the complete codeword stream
             codewords[i] = Randomize255(codewords[i], position);
         }
 
@@ -327,7 +426,7 @@ public static class DataMatrixEncoder {
         return true;
     }
 
-    private static List<byte> EncodeC40Text(string text, bool isText) {
+    private static List<byte> EncodeC40Text(string text, bool isText, bool isGs1 = false) {
         if (text.Length == 0) return new List<byte> { 254 };
         var sequences = new List<(char Ch, int[] Values)>(text.Length);
         var totalValues = 0;
@@ -351,7 +450,7 @@ public static class DataMatrixEncoder {
         }
 
         if (sequences.Count == 0) {
-            return EncodeAscii(EncodingUtils.Latin1.GetBytes(text));
+            return EncodeAscii(EncodingUtils.Latin1.GetBytes(text), isGs1);
         }
 
         var output = new List<byte>(2 + (totalValues / 3) * 2 + 4) {
@@ -373,13 +472,13 @@ public static class DataMatrixEncoder {
 
         if (tailChars.Count > 0) {
             var tailText = new string(tailChars.ToArray());
-            output.AddRange(EncodeAscii(EncodingUtils.Latin1.GetBytes(tailText)));
+            output.AddRange(EncodeAscii(EncodingUtils.Latin1.GetBytes(tailText), isGs1));
         }
 
         return output;
     }
 
-    private static List<byte> EncodeX12(string text) {
+    private static List<byte> EncodeX12(string text, bool isGs1 = false) {
         if (text.Length == 0) return new List<byte> { 254 };
         var values = new List<int>(text.Length);
         for (var i = 0; i < text.Length; i++) {
@@ -396,7 +495,7 @@ public static class DataMatrixEncoder {
         }
 
         if (values.Count == 0) {
-            return EncodeAscii(EncodingUtils.Latin1.GetBytes(text));
+            return EncodeAscii(EncodingUtils.Latin1.GetBytes(text), isGs1);
         }
 
         var output = new List<byte>(2 + (values.Count / 3) * 2 + 4) { 238 };
@@ -410,7 +509,7 @@ public static class DataMatrixEncoder {
 
         if (tailChars.Count > 0) {
             var tailText = new string(tailChars.ToArray());
-            output.AddRange(EncodeAscii(EncodingUtils.Latin1.GetBytes(tailText)));
+            output.AddRange(EncodeAscii(EncodingUtils.Latin1.GetBytes(tailText), isGs1));
         }
 
         return output;
@@ -420,10 +519,10 @@ public static class DataMatrixEncoder {
         var values = new List<int>(text.Length + 4);
         for (var i = 0; i < text.Length; i++) {
             var c = text[i];
-            if (c is < ' ' or > '_') {
+            if (c is < ' ' or > '^') {
                 throw new ArgumentException("Text contains characters not supported by EDIFACT encoding.", nameof(text));
             }
-            values.Add(c - 32);
+            values.Add(c >= '@' ? c - 64 : c);
         }
 
         values.Add(31); // unlatch

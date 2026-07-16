@@ -133,7 +133,7 @@ public static partial class DataMatrixDecoder {
                 if (value == 0x1F) {
                     return DataMatrixEncodation.Ascii;
                 }
-                AppendChar(sb, (char)(value + 32), ref upperShift);
+                AppendChar(sb, (char)(value < 0x20 ? value + 64 : value), ref upperShift);
             }
         }
 

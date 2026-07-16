@@ -11,7 +11,7 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, linear barcodes, Data Ma
 
 - QR and Micro QR encoding/decoding, including QR ECI and Kanji encoding plus FNC1/GS1 and structured-append decoding
 - Common 1D symbologies including Code 128/GS1-128, Code 39/93/11, EAN/UPC, ITF, Codabar, MSI, Plessey, postal, and GS1 DataBar variants
-- Data Matrix, PDF417/MicroPDF417, and Aztec encoding/decoding
+- Data Matrix ECC 200 and DMRE encoding/decoding, plus PDF417/MicroPDF417 and Aztec
 - QR payload builders for Wi-Fi, contacts, calendar events, OTP, payments, social profiles, and app links
 - PNG, JPEG, WebP, GIF, TIFF, BMP, Netpbm, TGA, ICO, XBM, XPM, SVG/SVGZ, HTML, PDF, EPS, and ASCII output
 - Managed raster decoding with explicit byte, pixel, dimension, animation, cancellation, and recognition-budget controls
@@ -95,6 +95,44 @@ QrCode[] sequence = QrCodeEncoder.EncodeStructuredAppend(new[] {
 ```
 
 Use `\u001D` between variable-length GS1 element strings. Structured append accepts two through sixteen explicit text or binary parts, computes the shared XOR parity, and exposes one-based `QrStructuredAppend` metadata after decoding. FNC1 second position and its 8-bit application indicator are available through `QrEncodingOptions` for industry-specific applications.
+
+## Standards-aware Data Matrix encoding
+
+The historical square ECC 200 default remains unchanged. `DataMatrixEncodingOptions` can instead select the six original rectangular models, any of the eighteen ISO/IEC 21471 DMRE models, the smallest symbol across all families, or an exact supported size. Automatic encodation plans mixed ASCII, C40, Text, X12, EDIFACT, and Base256 runs rather than forcing the entire payload into one mode.
+
+```csharp
+using CodeGlyphX.DataMatrix;
+
+BitMatrix compact = DataMatrixCode.Encode(
+    "HELLO-UPPERCASE-lowercase-1234567890",
+    new DataMatrixEncodingOptions { Shape = DataMatrixShape.Any });
+
+BitMatrix dmre = DataMatrixCode.Encode(
+    "LOT-2026-0042",
+    new DataMatrixEncodingOptions { Shape = DataMatrixShape.Dmre });
+
+BitMatrix exact = DataMatrixCode.Encode(
+    "A",
+    new DataMatrixEncodingOptions { Rows = 12, Columns = 88 });
+```
+
+GS1/FNC1, ECI, Macro 05/06, Reader Programming, and Data Matrix structured append are first-class controls. A structured-append file identifier consists of two values in the standard 1..254 range.
+
+```csharp
+string elementString = "0109501101020917\u001D10LOT42";
+BitMatrix gs1 = DataMatrixCode.EncodeGs1(elementString);
+
+BitMatrix[] sequence = DataMatrixCode.EncodeStructuredAppend(
+    new[] { "ORDER-2026", "LINE-0001", "LOT-ABC123" },
+    fileId1: 7,
+    fileId2: 9);
+
+if (DataMatrixDecoder.TryDecodeDetailed(gs1, out DataMatrixDecoded decoded)) {
+    Console.WriteLine($"GS1: {decoded.IsGs1}; model: {decoded.Rows}x{decoded.Columns}");
+}
+```
+
+`TryDecodeDetailed` is available for module matrices and pixel buffers; `DataMatrixCode.TryDecodePngDetailed` preserves the same control metadata when decoding PNG input. Plain `TryDecode` continues to return only the reconstructed text.
 
 ## Decode an image
 

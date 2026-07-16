@@ -58,7 +58,7 @@ public class DataMatrixDecoderTests {
 
     [Fact]
     public void DataMatrix_Decode_Edifact_Basic() {
-        var codewords = EncodeEdifact(240, 33, 34, 35, 31); // ABC + unlatch
+        var codewords = EncodeEdifact(240, 1, 2, 3, 31); // ABC + unlatch
         var text = DataMatrixDecoder.DecodeDataCodewords(codewords);
         Assert.Equal("ABC", text);
     }

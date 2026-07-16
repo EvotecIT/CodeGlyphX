@@ -37,5 +37,14 @@ public static partial class DataMatrixCode {
         return OutputWriter.Write(path, output);
     }
 
+    /// <summary>
+    /// Saves Data Matrix to a file for byte payloads using explicit encoding options.
+    /// </summary>
+    public static string Save(ReadOnlySpan<byte> data, string path, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, RenderExtras? extras = null) {
+        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
+        var output = Render(data, format, encodingOptions, options, extras);
+        return OutputWriter.Write(path, output);
+    }
+
 }
 #endif

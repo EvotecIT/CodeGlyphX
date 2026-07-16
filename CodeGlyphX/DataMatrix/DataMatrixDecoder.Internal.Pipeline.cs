@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using CodeGlyphX.Internal;
@@ -14,6 +15,15 @@ using PixelSpan = byte[];
 namespace CodeGlyphX.DataMatrix;
 
 public static partial class DataMatrixDecoder {
+    private sealed class DataMatrixDecodeState {
+        public bool CanBeGs1Header { get; set; } = true;
+        public bool IsGs1 { get; set; }
+        public DataMatrixStructuredAppend? StructuredAppend { get; set; }
+        public bool ReaderProgramming { get; set; }
+        public DataMatrixMacro Macro { get; set; }
+        public List<int> EciAssignments { get; } = new List<int>();
+    }
+
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) {
@@ -90,6 +100,31 @@ public static partial class DataMatrixDecoder {
         return true;
     }
 
+    private static bool TryDecodeDetailedCore(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded) {
+        decoded = null!;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        if (!DataMatrixSymbolInfo.TryGetForSize(modules.Height, modules.Width, out var symbol)) return false;
+
+        var dataRegion = ExtractDataRegion(modules, symbol, cancellationToken);
+        if (dataRegion is null) return false;
+        var codewords = DataMatrixPlacement.ReadCodewords(dataRegion, symbol.CodewordCount, cancellationToken);
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        var state = new DataMatrixDecodeState();
+        if (!TryDecodeCodewords(codewords, symbol, cancellationToken, out var value, state)) return false;
+
+        decoded = new DataMatrixDecoded(
+            value,
+            state.IsGs1,
+            state.StructuredAppend,
+            state.ReaderProgramming,
+            state.Macro,
+            state.EciAssignments.ToArray(),
+            symbol.SymbolRows,
+            symbol.SymbolCols,
+            symbol.IsDmre);
+        return true;
+    }
+
     private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, DataMatrixDecodeDiagnostics diagnostics, out string value) {
         diagnostics.AttemptCount++;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
@@ -145,7 +180,12 @@ public static partial class DataMatrixDecoder {
         return dataRegion;
     }
 
-    private static bool TryDecodeCodewords(byte[] codewords, DataMatrixSymbolInfo symbol, CancellationToken cancellationToken, out string value) {
+    private static bool TryDecodeCodewords(
+        byte[] codewords,
+        DataMatrixSymbolInfo symbol,
+        CancellationToken cancellationToken,
+        out string value,
+        DataMatrixDecodeState? decodeState = null) {
         var blocks = symbol.BlockCount;
         var maxDataBlock = 0;
         for (var i = 0; i < blocks; i++) {
@@ -189,7 +229,7 @@ public static partial class DataMatrixDecoder {
             dataOffset += dataBlocks[b].Length;
         }
 
-        value = DecodeData(data, cancellationToken);
+        value = DecodeData(data, cancellationToken, decodeState ?? new DataMatrixDecodeState());
         if (DecodeBudget.ShouldAbort(cancellationToken)) return Fail(out value);
         return true;
     }
@@ -201,10 +241,10 @@ public static partial class DataMatrixDecoder {
 
     internal static string DecodeDataCodewords(byte[] dataCodewords) {
         if (dataCodewords is null) throw new ArgumentNullException(nameof(dataCodewords));
-        return DecodeData(dataCodewords, CancellationToken.None);
+        return DecodeData(dataCodewords, CancellationToken.None, new DataMatrixDecodeState());
     }
 
-    private static string DecodeData(PixelSpan data, CancellationToken cancellationToken) {
+    private static string DecodeData(PixelSpan data, CancellationToken cancellationToken, DataMatrixDecodeState state) {
         var sb = new StringBuilder(data.Length);
         var mode = DataMatrixEncodation.Ascii;
         var index = 0;
@@ -216,7 +256,7 @@ public static partial class DataMatrixDecoder {
             if (DecodeBudget.ShouldAbort(cancellationToken)) break;
             switch (mode) {
                 case DataMatrixEncodation.Ascii:
-                    mode = DecodeAsciiSegment(data, ref index, sb, ref upperShift, ref macroTrailer, ref base256Encoding);
+                    mode = DecodeAsciiSegment(data, ref index, sb, ref upperShift, ref macroTrailer, ref base256Encoding, state);
                     break;
                 case DataMatrixEncodation.C40:
                     mode = DecodeC40TextSegment(data, ref index, sb, isText: false, ref upperShift);
@@ -250,7 +290,8 @@ public static partial class DataMatrixDecoder {
         StringBuilder sb,
         ref bool upperShift,
         ref string? macroTrailer,
-        ref Encoding? base256Encoding) {
+        ref Encoding? base256Encoding,
+        DataMatrixDecodeState state) {
         if (index >= data.Length) return DataMatrixEncodation.Ascii;
 
         var cw = data[index++];
@@ -261,11 +302,13 @@ public static partial class DataMatrixDecoder {
         }
 
         if (cw <= 128) {
+            state.CanBeGs1Header = false;
             AppendChar(sb, (char)(cw - 1), ref upperShift);
             return DataMatrixEncodation.Ascii;
         }
 
         if (cw <= 229) {
+            state.CanBeGs1Header = false;
             var val = cw - 130;
             AppendChar(sb, (char)('0' + (val / 10)), ref upperShift);
             AppendChar(sb, (char)('0' + (val % 10)), ref upperShift);
@@ -274,43 +317,137 @@ public static partial class DataMatrixDecoder {
 
         switch (cw) {
             case 230:
+                state.CanBeGs1Header = false;
                 return DataMatrixEncodation.C40;
             case 231:
+                state.CanBeGs1Header = false;
                 return DataMatrixEncodation.Base256;
             case 232:
-                sb.Append(Gs1.GroupSeparator);
+                if (state.CanBeGs1Header) {
+                    state.IsGs1 = true;
+                    state.CanBeGs1Header = false;
+                } else {
+                    sb.Append(Gs1.GroupSeparator);
+                }
                 return DataMatrixEncodation.Ascii;
             case 233:
-                if (index + 1 < data.Length) index += 2;
+                if (index + 2 < data.Length) {
+                    var sequence = data[index++];
+                    var fileId1 = data[index++];
+                    var fileId2 = data[index++];
+                    var metadata = new DataMatrixStructuredAppend(
+                        (sequence >> 4) + 1,
+                        17 - (sequence & 0x0F),
+                        fileId1,
+                        fileId2);
+                    if (metadata.IsValid) state.StructuredAppend = metadata;
+                } else {
+                    index = data.Length;
+                }
                 return DataMatrixEncodation.Ascii;
             case 234:
+                state.ReaderProgramming = true;
+                state.CanBeGs1Header = false;
                 return DataMatrixEncodation.Ascii;
             case 235:
+                state.CanBeGs1Header = false;
                 upperShift = true;
                 return DataMatrixEncodation.Ascii;
             case 236:
+                state.Macro = DataMatrixMacro.Macro05;
+                state.CanBeGs1Header = false;
                 sb.Append("[)>\u001E05\u001D");
                 macroTrailer ??= "\u001E\u0004";
                 return DataMatrixEncodation.Ascii;
             case 237:
+                state.Macro = DataMatrixMacro.Macro06;
+                state.CanBeGs1Header = false;
                 sb.Append("[)>\u001E06\u001D");
                 macroTrailer ??= "\u001E\u0004";
                 return DataMatrixEncodation.Ascii;
             case 238:
+                state.CanBeGs1Header = false;
                 return DataMatrixEncodation.X12;
             case 239:
+                state.CanBeGs1Header = false;
                 return DataMatrixEncodation.Text;
             case 240:
+                state.CanBeGs1Header = false;
                 return DataMatrixEncodation.Edifact;
             case 241:
-                if (index < data.Length) {
-                    // Best-effort ECI: skip one codeword for now.
-                    index++;
+                state.CanBeGs1Header = false;
+                if (TryReadEciAssignment(data, ref index, out var assignmentNumber)) {
+                    state.EciAssignments.Add(assignmentNumber);
+                    base256Encoding = GetEciEncoding(assignmentNumber);
                 }
                 return DataMatrixEncodation.Ascii;
             default:
                 return DataMatrixEncodation.Ascii;
         }
+    }
+
+    private static bool TryReadEciAssignment(PixelSpan data, ref int index, out int assignmentNumber) {
+        assignmentNumber = 0;
+        if (index >= data.Length) return false;
+        var first = data[index++];
+        if (first is >= 1 and <= 127) {
+            assignmentNumber = first - 1;
+            return true;
+        }
+        if (first is >= 128 and <= 191) {
+            if (index >= data.Length) return false;
+            var second = data[index++];
+            if (second is < 1 or > 254) return false;
+            assignmentNumber = (first - 128) * 254 + second - 1 + 127;
+            return true;
+        }
+        if (first is >= 192 and <= 254) {
+            if (index + 1 >= data.Length) return false;
+            var second = data[index++];
+            var third = data[index++];
+            if (second is < 1 or > 254 || third is < 1 or > 254) return false;
+            assignmentNumber = (first - 192) * 64516 + (second - 1) * 254 + third - 1 + 16383;
+            return assignmentNumber <= 999999;
+        }
+        return false;
+    }
+
+    private static bool TryDecodePixelsDetailed(
+        PixelSpan pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        CancellationToken cancellationToken,
+        out DataMatrixDecoded decoded) {
+        decoded = null!;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        if (!TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) return false;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded)) return true;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        return TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded);
+    }
+
+    private static bool TryDecodeDetailedWithRotations(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded) {
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryDecodeDetailedCore(modules, cancellationToken, out decoded)) return true;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryDecodeDetailedCore(Rotate90(modules), cancellationToken, out decoded)) return true;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        if (TryDecodeDetailedCore(Rotate180(modules), cancellationToken, out decoded)) return true;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+        return TryDecodeDetailedCore(Rotate270(modules), cancellationToken, out decoded);
+    }
+
+    private static Encoding? GetEciEncoding(int assignmentNumber) {
+        return assignmentNumber switch {
+            3 => EncodingUtils.Latin1,
+            25 => Encoding.BigEndianUnicode,
+            26 => EncodingUtils.Utf8Strict,
+            27 => Encoding.ASCII,
+            _ => null
+        };
     }
 
     private static DataMatrixEncodation DecodeC40TextSegment(

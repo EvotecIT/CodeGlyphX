@@ -180,9 +180,9 @@ public sealed class Barcode2DTests {
 
     [Fact]
     public void DataMatrix_RoundTrip_Edifact() {
-        var matrix = DataMatrix.DataMatrixEncoder.Encode("ABC_", DataMatrix.DataMatrixEncodingMode.Edifact);
+        var matrix = DataMatrix.DataMatrixEncoder.Encode("ABC^", DataMatrix.DataMatrixEncodingMode.Edifact);
         Assert.True(DataMatrix.DataMatrixDecoder.TryDecode(matrix, out var text));
-        Assert.Equal("ABC_", text);
+        Assert.Equal("ABC^", text);
     }
 
     [Fact]
