@@ -135,20 +135,24 @@ internal static class HanXinPayloadCodec {
         var reader = new Reader(dataCodewords);
         var payload = new PayloadBuilder();
         var assignments = new List<int>();
-        while (reader.Remaining >= 4) {
-            if (!reader.TryRead(4, out var mode)) return false;
-            if (mode == 0) break;
-            if (mode == 8) {
-                if (!ReadEci(ref reader, out var eci)) return false;
-                assignments.Add(eci); payload.Eci(eci); continue;
+        try {
+            while (reader.Remaining >= 4) {
+                if (!reader.TryRead(4, out var mode)) return false;
+                if (mode == 0) break;
+                if (mode == 8) {
+                    if (!ReadEci(ref reader, out var eci)) return false;
+                    assignments.Add(eci); payload.Eci(eci); continue;
+                }
+                if (mode == 1) { if (!DecodeNumeric(ref reader, payload)) return false; continue; }
+                if (mode == 2) { if (!DecodeText(ref reader, payload)) return false; continue; }
+                if (mode == 3) { if (!DecodeBinary(ref reader, payload)) return false; continue; }
+                return false;
             }
-            if (mode == 1) { if (!DecodeNumeric(ref reader, payload)) return false; continue; }
-            if (mode == 2) { if (!DecodeText(ref reader, payload)) return false; continue; }
-            if (mode == 3) { if (!DecodeBinary(ref reader, payload)) return false; continue; }
+            decoded = new Decoded(payload.Text, payload.Bytes, assignments.ToArray());
+            return decoded.Bytes.Length > 0;
+        } catch (DecoderFallbackException) {
             return false;
         }
-        decoded = new Decoded(payload.Text, payload.Bytes, assignments.ToArray());
-        return decoded.Bytes.Length > 0;
     }
 
     private static bool ReadEci(ref Reader reader, out int eci) {

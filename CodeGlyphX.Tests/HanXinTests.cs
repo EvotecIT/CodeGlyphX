@@ -147,6 +147,18 @@ public sealed class HanXinTests {
     }
 
     [Fact]
+    public void MalformedUtf8EciPayload_IsRejectedWithoutThrowing() {
+        var symbol = HanXinEncoder.EncodeBytes(new byte[] { 0xFF }, new HanXinEncodingOptions {
+            Mode = HanXinEncodingMode.Binary,
+            EciAssignmentNumber = 26
+        });
+
+        Assert.False(HanXinDecoder.TryDecodeDetailed(symbol.Modules, out _));
+        Assert.False(HanXinDecoder.TryDecode(symbol.Modules, out var text));
+        Assert.Empty(text);
+    }
+
+    [Fact]
     public void FunctionInfo_CorrectsTwoDamagedCodewords() {
         var symbol = HanXinEncoder.EncodeText("1234567890", new HanXinEncodingOptions {
             Mode = HanXinEncodingMode.Numeric,
