@@ -62,6 +62,20 @@ public sealed class SymbolScannerContractTests {
     }
 
     [Fact]
+    public void ScanOptions_ScreenCoordinatesTotalRecognitionAndImageBudgets() {
+        var options = ScanOptions.Screen(timeoutMilliseconds: 420, maxDimension: 1024);
+
+        Assert.Equal(ScanProfile.Screen, options.Profile);
+        Assert.Equal(420, options.TimeoutMilliseconds);
+        Assert.NotNull(options.Qr);
+        Assert.Equal(420, options.Qr!.BudgetMilliseconds);
+        Assert.Equal(1024, options.Qr.MaxDimension);
+        Assert.NotNull(options.Image);
+        Assert.Equal(420, options.Image!.RecognitionBudgetMilliseconds);
+        Assert.Equal(1024, options.Image.MaxDimension);
+    }
+
+    [Fact]
     public void Scan_DecodesQrFromGray8StrideAndRegionOfInterest() {
         var qr = QrEasy.RenderPixels("GRAY-ROI", out var qrWidth, out var qrHeight, out var qrStride);
         const int offsetX = 11;
@@ -149,6 +163,44 @@ public sealed class SymbolScannerContractTests {
         var symbol = Assert.Single(result.Symbols);
         Assert.Equal(SymbolFormat.Code128, symbol.Format);
         Assert.Equal("BOTTOM-UP-BGR", symbol.Text);
+    }
+
+    [Theory]
+    [InlineData(SymbolFormat.DataMatrix, "SCANNER-DATA-MATRIX")]
+    [InlineData(SymbolFormat.Aztec, "SCANNER-AZTEC")]
+    [InlineData(SymbolFormat.Pdf417, "SCANNER-PDF417")]
+    public void Scan_DecodesEverySupportedMatrixRouteFromGeneratedPixels(SymbolFormat format, string payload) {
+        BitMatrix matrix;
+        switch (format) {
+            case SymbolFormat.DataMatrix:
+                matrix = DataMatrix.DataMatrixEncoder.Encode(payload);
+                break;
+            case SymbolFormat.Aztec:
+                matrix = AztecCode.Encode(payload);
+                break;
+            case SymbolFormat.Pdf417:
+                matrix = Pdf417.Pdf417Encoder.Encode(payload);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(format));
+        }
+
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            matrix,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 4, QuietZone = 3 },
+            out var width,
+            out var height,
+            out _);
+
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { format },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(format, symbol.Format);
+        Assert.Equal(payload, symbol.Text);
     }
 
     [Fact]
