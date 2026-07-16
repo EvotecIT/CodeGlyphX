@@ -1,4 +1,5 @@
 using Xunit;
+using CodeGlyphX.Code128;
 using CodeGlyphX.Gs1Composite;
 
 namespace CodeGlyphX.Tests;
@@ -167,6 +168,30 @@ public sealed class Gs1CompositeTests {
     }
 
     [Fact]
+    public void Decoder_RejectsBrokenSeparatorAndUnlinkedGs1_128Carrier() {
+        const string linearText = "(01)09506000134352";
+        var symbol = Gs1CompositeEncoder.Encode(linearText, "(21)ABC123");
+
+        var brokenSeparator = symbol.Modules.Clone();
+        brokenSeparator[0, brokenSeparator.Height - 2] = !brokenSeparator[0, brokenSeparator.Height - 2];
+        Assert.False(Gs1CompositeDecoder.TryDecode(brokenSeparator, out _));
+
+        var unlinked = symbol.Modules.Clone();
+        var separatorRow = unlinked.Height - 2;
+        var linearRow = unlinked.Height - 1;
+        for (var x = 0; x < unlinked.Width; x++) {
+            unlinked[x, separatorRow] = false;
+            unlinked[x, linearRow] = false;
+        }
+        var unlinkedModules = ToModules(Code128Encoder.EncodeGs1(Gs1.ElementString(linearText)));
+        for (var x = 0; x < unlinkedModules.Length; x++) {
+            unlinked[x, separatorRow] = !unlinkedModules[x];
+            unlinked[x, linearRow] = unlinkedModules[x];
+        }
+        Assert.False(Gs1CompositeDecoder.TryDecode(unlinked, out _));
+    }
+
+    [Fact]
     public void NonAsciiDigits_AreRejectedInsteadOfMisencoded() {
         Assert.Throws<System.ArgumentException>(() =>
             Gs1CompositeEncoder.Encode("(01)09506000134352", "(91)\u0661\u0662\u0663"));
@@ -180,5 +205,15 @@ public sealed class Gs1CompositeTests {
             rows[y] = new string(values);
         }
         return rows;
+    }
+
+    private static bool[] ToModules(Barcode1D barcode) {
+        var modules = new bool[barcode.TotalModules];
+        var position = 0;
+        for (var i = 0; i < barcode.Segments.Count; i++) {
+            var segment = barcode.Segments[i];
+            for (var j = 0; j < segment.Modules; j++) modules[position++] = segment.IsBar;
+        }
+        return modules;
     }
 }

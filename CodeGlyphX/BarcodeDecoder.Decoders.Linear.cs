@@ -519,8 +519,19 @@ public static partial class BarcodeDecoder {
     }
 
     private static bool TryDecodeCode128(bool[] modules, out string text, out bool isGs1) {
+        return TryDecodeCode128(modules, out text, out isGs1, out _);
+    }
+
+    internal static bool TryDecodeGs1CompositeCarrier(bool[] modules, out string text, out int compositeLinkage) {
+        return TryDecodeCode128(modules, out text, out var isGs1, out compositeLinkage)
+            && isGs1
+            && compositeLinkage != 0;
+    }
+
+    private static bool TryDecodeCode128(bool[] modules, out string text, out bool isGs1, out int compositeLinkage) {
         text = string.Empty;
         isGs1 = false;
+        compositeLinkage = 0;
         if (modules.Length < 24) return false;
 
         var runs = GetRuns(modules);
@@ -559,6 +570,7 @@ public static partial class BarcodeDecoder {
         var gs1StartConsumed = false;
         for (var i = 1; i < codes.Count - 1; i++) {
             var code = codes[i];
+            if (i == codes.Count - 2) compositeLinkage = ResolveCompositeLinkage(set, code);
             if (code == Code128Tables.Fnc1) {
                 isGs1 = true;
                 if (!gs1StartConsumed) {
@@ -622,6 +634,17 @@ public static partial class BarcodeDecoder {
 
         text = sb.ToString();
         return true;
+    }
+
+    private static int ResolveCompositeLinkage(char set, int code) {
+        if (set == 'C') {
+            if (code == Code128Tables.CodeA) return 1;
+            if (code == Code128Tables.CodeB) return 2;
+            return 0;
+        }
+        if (code == Code128Tables.CodeC) return 1;
+        if (code == Code128Tables.CodeA) return 2;
+        return 0;
     }
 
     private static bool TryDecodeItf14(bool[] modules, out string text) {

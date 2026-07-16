@@ -11,11 +11,27 @@ public static class Gs1CompositeDecoder {
         if (modules is null || modules.Height < 5) return false;
         var componentRows = modules.Height - 2;
         if (!TryCrop(modules, 0, componentRows, out var component)) return false;
-        if (!TryCropRow(modules, modules.Height - 1, out var linearModules)) return false;
-        if (!BarcodeDecoder.TryDecode(linearModules, BarcodeType.GS1_128, out var linear)) return false;
         if (!CompositeComponentCodec.TryDecode(component, out var bits, out var type)) return false;
+        if (!ValidateSeparatorRow(modules, modules.Height - 2, modules.Height - 1)) return false;
+        if (!TryCropRow(modules, modules.Height - 1, out var linearModules)) return false;
+        if (!BarcodeDecoder.TryDecodeGs1CompositeCarrier(linearModules, out var linearText, out var linkage)) return false;
+        var expectedLinkage = type == Gs1CompositeComponent.CcC ? 2 : 1;
+        if (linkage != expectedLinkage) return false;
         if (!CompositeBitStreamCodec.TryDecode(bits, out var compositeText)) return false;
-        decoded = new Gs1CompositeDecoded(linear.Text, compositeText, type);
+        decoded = new Gs1CompositeDecoded(linearText, compositeText, type);
+        return true;
+    }
+
+    private static bool ValidateSeparatorRow(BitMatrix source, int separatorRow, int linearRow) {
+        var left = 0;
+        while (left < source.Width && !source[left, linearRow]) left++;
+        var right = source.Width - 1;
+        while (right >= left && !source[right, linearRow]) right--;
+        if (right < left) return false;
+        for (var x = 0; x < source.Width; x++) {
+            var expected = x >= left && x <= right && !source[x, linearRow];
+            if (source[x, separatorRow] != expected) return false;
+        }
         return true;
     }
 

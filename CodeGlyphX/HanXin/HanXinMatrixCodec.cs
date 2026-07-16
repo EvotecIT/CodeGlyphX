@@ -230,10 +230,33 @@ internal static class HanXinMatrixCodec {
 
     private static bool TryReadFunctionInfo(BitMatrix matrix, int expectedVersion, out int eccLevel, out int mask) {
         eccLevel = mask = 0;
-        var bits = new bool[28];
-        for (var i = 0; i < 9; i++) { bits[i] = matrix[i, 8]; bits[i + 8] = matrix[8, 8 - i]; bits[i + 17] = matrix[matrix.Width - 9, i]; }
-        bits[26] = matrix[matrix.Width - 8, 8];
-        bits[27] = matrix[matrix.Width - 7, 8];
+        var primary = new bool[28];
+        var secondary = new bool[28];
+        var size = matrix.Width;
+        for (var i = 0; i < 9; i++) {
+            primary[i] = matrix[i, 8];
+            primary[i + 8] = matrix[8, 8 - i];
+            primary[i + 17] = matrix[size - 9, i];
+            secondary[i] = matrix[size - i - 1, size - 9];
+            secondary[i + 8] = matrix[size - 9, size - 9 + i];
+            secondary[i + 17] = matrix[8, size - 1 - i];
+        }
+        primary[26] = matrix[size - 8, 8];
+        primary[27] = matrix[size - 7, 8];
+        secondary[26] = matrix[7, size - 9];
+        secondary[27] = matrix[6, size - 9];
+
+        var primaryValid = TryDecodeFunctionInfo(primary, expectedVersion, out var primaryEcc, out var primaryMask);
+        var secondaryValid = TryDecodeFunctionInfo(secondary, expectedVersion, out var secondaryEcc, out var secondaryMask);
+        if (!primaryValid && !secondaryValid) return false;
+        if (primaryValid && secondaryValid && (primaryEcc != secondaryEcc || primaryMask != secondaryMask)) return false;
+        eccLevel = primaryValid ? primaryEcc : secondaryEcc;
+        mask = primaryValid ? primaryMask : secondaryMask;
+        return true;
+    }
+
+    private static bool TryDecodeFunctionInfo(bool[] bits, int expectedVersion, out int eccLevel, out int mask) {
+        eccLevel = mask = 0;
         var words = new int[7];
         for (var i = 0; i < 28; i++) if (bits[i]) words[i >> 2] |= 1 << (3 - (i & 3));
         try { new ReedSolomonDecoder(GenericGf.AztecParam).Decode(words, 4); }

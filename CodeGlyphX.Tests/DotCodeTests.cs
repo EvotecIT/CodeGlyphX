@@ -90,6 +90,20 @@ public sealed class DotCodeTests {
     }
 
     [Fact]
+    public void EciZero_RoundTripsCp437Text() {
+        var cp437 = CodePagesEncodingProvider.Instance.GetEncoding(437)!;
+        var symbol = DotCodeEncoder.EncodeText("é", new DotCodeEncodingOptions {
+            TextEncoding = cp437,
+            EciAssignmentNumber = 0
+        });
+
+        Assert.True(DotCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("é", decoded.Text);
+        Assert.Equal(new[] { 0 }, decoded.EciAssignments);
+        Assert.Equal(cp437.GetBytes("é"), decoded.Bytes);
+    }
+
+    [Fact]
     public void ConflictingEncodingAndEci_AreRejected() {
         Assert.Throws<InvalidOperationException>(() => DotCodeEncoder.EncodeText("é", new DotCodeEncodingOptions {
             TextEncoding = Encoding.Latin1,

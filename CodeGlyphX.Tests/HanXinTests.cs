@@ -132,6 +132,21 @@ public sealed class HanXinTests {
     }
 
     [Fact]
+    public void EciZero_RoundTripsCp437Text() {
+        var cp437 = CodePagesEncodingProvider.Instance.GetEncoding(437)!;
+        var symbol = HanXinEncoder.EncodeText("é", new HanXinEncodingOptions {
+            Mode = HanXinEncodingMode.Binary,
+            TextEncoding = cp437,
+            EciAssignmentNumber = 0
+        });
+
+        Assert.True(HanXinDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("é", decoded.Text);
+        Assert.Equal(new[] { 0 }, decoded.EciAssignments);
+        Assert.Equal(cp437.GetBytes("é"), decoded.Bytes);
+    }
+
+    [Fact]
     public void FunctionInfo_CorrectsTwoDamagedCodewords() {
         var symbol = HanXinEncoder.EncodeText("1234567890", new HanXinEncodingOptions {
             Mode = HanXinEncodingMode.Numeric,
@@ -144,6 +159,26 @@ public sealed class HanXinTests {
         Assert.True(symbol.Modules[symbol.Modules.Width - 7, 8]);
         damaged[0, 8] = !damaged[0, 8];
         damaged[4, 8] = !damaged[4, 8];
+
+        Assert.True(HanXinDecoder.TryDecodeDetailed(damaged, out var decoded));
+        Assert.Equal("1234567890", decoded.Text);
+        Assert.Equal(1, decoded.Version);
+        Assert.Equal(1, decoded.ErrorCorrectionLevel);
+        Assert.Equal(1, decoded.Mask);
+    }
+
+    [Fact]
+    public void FunctionInfo_UsesUndamagedRedundantCopy() {
+        var symbol = HanXinEncoder.EncodeText("1234567890", new HanXinEncodingOptions {
+            Mode = HanXinEncodingMode.Numeric,
+            Version = 1,
+            ErrorCorrectionLevel = 1,
+            Mask = 1
+        });
+        var damaged = symbol.Modules.Clone();
+        damaged[0, 8] = !damaged[0, 8];
+        damaged[4, 8] = !damaged[4, 8];
+        damaged[8, 8] = !damaged[8, 8];
 
         Assert.True(HanXinDecoder.TryDecodeDetailed(damaged, out var decoded));
         Assert.Equal("1234567890", decoded.Text);

@@ -35,7 +35,7 @@ internal static class DotCodeHighLevelEncoder {
         }
     }
 
-    internal static Result Encode(byte[] source, DotCodeEncodingOptions options, int eci) {
+    internal static Result Encode(byte[] source, DotCodeEncodingOptions options, int? eci) {
         if (source is null) throw new ArgumentNullException(nameof(source));
         if (source.Length == 0) throw new ArgumentException("DotCode requires a non-empty payload.", nameof(source));
 
@@ -47,7 +47,7 @@ internal static class DotCodeHighLevelEncoder {
 
         if (options.ReaderInitialization) {
             output.Add(109);
-        } else if (!options.IsGs1 && eci == 0 && IsTwoDigits(source, 0)) {
+        } else if (!options.IsGs1 && !eci.HasValue && IsTwoDigits(source, 0)) {
             output.Add(107);
         } else if (IsLeadSpecial(source[0])) {
             output.Add(101);
@@ -159,18 +159,19 @@ internal static class DotCodeHighLevelEncoder {
         return new Result(output, mode == 'X', mode);
     }
 
-    private static void AppendEci(List<int> output, BinaryBuffer binary, char mode, int eci) {
-        if (eci <= 0) return;
+    private static void AppendEci(List<int> output, BinaryBuffer binary, char mode, int? eci) {
+        if (!eci.HasValue) return;
+        var assignment = eci.Value;
         if (mode == 'X') {
-            if (eci <= 0xFF) { binary.Append(output, 256); binary.Append(output, eci); }
-            else if (eci <= 0xFFFF) { binary.Append(output, 257); binary.Append(output, eci >> 8); binary.Append(output, eci & 0xFF); }
-            else { binary.Append(output, 258); binary.Append(output, eci >> 16); binary.Append(output, (eci >> 8) & 0xFF); binary.Append(output, eci & 0xFF); }
+            if (assignment <= 0xFF) { binary.Append(output, 256); binary.Append(output, assignment); }
+            else if (assignment <= 0xFFFF) { binary.Append(output, 257); binary.Append(output, assignment >> 8); binary.Append(output, assignment & 0xFF); }
+            else { binary.Append(output, 258); binary.Append(output, assignment >> 16); binary.Append(output, (assignment >> 8) & 0xFF); binary.Append(output, assignment & 0xFF); }
             return;
         }
         output.Add(108);
-        if (eci <= 39) output.Add(eci);
+        if (assignment <= 39) output.Add(assignment);
         else {
-            var value = eci - 40;
+            var value = assignment - 40;
             output.Add(value / 12769 + 40);
             output.Add(value % 12769 / 113);
             output.Add(value % 113);

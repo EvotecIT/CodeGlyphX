@@ -73,6 +73,7 @@ internal static class EncodingUtils {
 
     internal static bool TryGetEciAssignment(Encoding encoding, out int assignment) {
         switch (encoding.CodePage) {
+            case 437: assignment = 0; return true;
             case 28591: assignment = 3; return true;
             case 932: assignment = 20; return true;
             case 1250: assignment = 21; return true;
@@ -90,6 +91,7 @@ internal static class EncodingUtils {
     internal static bool TryGetEncoding(int assignment, out Encoding encoding) {
         try {
             switch (assignment) {
+                case 0: return TryGetCodePageEncoding(437, out encoding);
                 case 3: encoding = Latin1; return true;
                 case 20: return TryGetCodePageEncoding(932, out encoding);
                 case 21: return TryGetCodePageEncoding(1250, out encoding);

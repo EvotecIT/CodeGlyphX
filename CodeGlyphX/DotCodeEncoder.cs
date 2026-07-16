@@ -25,13 +25,13 @@ public static class DotCodeEncoder {
             options.EciAssignmentNumber,
             "DotCode",
             out var eci);
-        return EncodeBytesCore(EncodingUtils.GetBytesStrict(encoding, text, nameof(text)), options, eci ?? 0);
+        return EncodeBytesCore(EncodingUtils.GetBytesStrict(encoding, text, nameof(text)), options, eci);
     }
 
     /// <summary>Encodes an arbitrary byte payload.</summary>
     public static DotCodeSymbol EncodeBytes(byte[] data, DotCodeEncodingOptions? options = null) {
         if (data is null) throw new ArgumentNullException(nameof(data));
-        return EncodeBytesCore((byte[])data.Clone(), (options ?? new DotCodeEncodingOptions()).Clone(), options?.EciAssignmentNumber ?? 0);
+        return EncodeBytesCore((byte[])data.Clone(), (options ?? new DotCodeEncodingOptions()).Clone(), options?.EciAssignmentNumber);
     }
 
     /// <summary>Encodes and validates a GS1 AI string.</summary>
@@ -42,7 +42,7 @@ public static class DotCodeEncoder {
         return EncodeText(aiText, effective);
     }
 
-    private static DotCodeSymbol EncodeBytesCore(byte[] data, DotCodeEncodingOptions options, int eci) {
+    private static DotCodeSymbol EncodeBytesCore(byte[] data, DotCodeEncodingOptions options, int? eci) {
         Validate(options, eci);
         var highLevel = DotCodeHighLevelEncoder.Encode(data, options, eci);
         var structuredAppend = BuildStructuredAppend(options, highLevel.FinalMode);
@@ -157,7 +157,7 @@ public static class DotCodeEncoder {
         }
     }
 
-    private static void Validate(DotCodeEncodingOptions options, int eci) {
+    private static void Validate(DotCodeEncodingOptions options, int? eci) {
         if (options.Width is < 5 or > 200) throw new ArgumentOutOfRangeException(nameof(options), options.Width, "DotCode width must be between 5 and 200 modules.");
         if (options.Mask is < 0 or > 7) throw new ArgumentOutOfRangeException(nameof(options), options.Mask, "DotCode mask must be between 0 and 7.");
         if (eci is < 0 or > 811799) throw new ArgumentOutOfRangeException(nameof(options), eci, "DotCode ECI assignments must be between 0 and 811799.");

@@ -307,8 +307,8 @@ See [SECURITY.md](SECURITY.md) for reporting and [FUZZING.md](FUZZING.md) for th
 | --- | --- | --- |
 | `net8.0` | Current applications, full QR pixel pipeline, trimming/NativeAOT | None |
 | `net10.0` | Current applications, full QR pixel pipeline, trimming/NativeAOT | None |
-| `netstandard2.0` | Legacy-compatible libraries | `System.Memory` |
-| `net472` | .NET Framework applications | `System.Memory` |
+| `netstandard2.0` | Legacy-compatible libraries | `System.Memory`, `System.Text.Encoding.CodePages` |
+| `net472` | .NET Framework applications | `System.Memory`, `System.Text.Encoding.CodePages` |
 
 The package is pure managed on every target. QR image decoding on `netstandard2.0` and `net472` uses a less capable fallback intended for clean/generated images; use `net8.0` or newer for screenshots, stylized codes, and the full pixel pipeline.
 

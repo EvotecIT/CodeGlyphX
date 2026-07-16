@@ -70,13 +70,13 @@ internal static class HanXinPayloadCodec {
             }
             bytes = EncodingUtils.Latin1.GetBytes(text);
         }
-        return Encode(bytes, mode, eci ?? 0, out bitLength);
+        return Encode(bytes, mode, eci, out bitLength);
     }
 
     internal static byte[] EncodeBytes(byte[] bytes, HanXinEncodingOptions options, out int bitLength) =>
-        Encode(bytes, HanXinEncodingMode.Binary, options.EciAssignmentNumber ?? 0, out bitLength);
+        Encode(bytes, HanXinEncodingMode.Binary, options.EciAssignmentNumber, out bitLength);
 
-    private static byte[] Encode(byte[] data, HanXinEncodingMode mode, int eci, out int bitLength) {
+    private static byte[] Encode(byte[] data, HanXinEncodingMode mode, int? eci, out int bitLength) {
         if (data.Length == 0) throw new ArgumentException("Han Xin Code requires a non-empty payload.", nameof(data));
         if (eci is < 0 or > 999999) throw new ArgumentOutOfRangeException(nameof(eci));
         var bits = new Bits();
@@ -88,12 +88,13 @@ internal static class HanXinPayloadCodec {
         return bits.ToBytes();
     }
 
-    private static void AppendEci(Bits bits, int eci) {
-        if (eci == 0) return;
+    private static void AppendEci(Bits bits, int? eci) {
+        if (!eci.HasValue) return;
+        var assignment = eci.Value;
         bits.Append(8, 4);
-        if (eci <= 127) bits.Append(eci, 8);
-        else if (eci <= 16383) { bits.Append(2, 2); bits.Append(eci, 14); }
-        else { bits.Append(6, 3); bits.Append(eci, 21); }
+        if (assignment <= 127) bits.Append(assignment, 8);
+        else if (assignment <= 16383) { bits.Append(2, 2); bits.Append(assignment, 14); }
+        else { bits.Append(6, 3); bits.Append(assignment, 21); }
     }
 
     private static void EncodeNumeric(Bits bits, byte[] data) {

@@ -129,15 +129,37 @@ public sealed class DataBarVariantsTests {
         Assert.Equal(value, symbol.Text);
     }
 
-    [Fact]
-    public void Omnidirectional_DefaultUnifiedImageScan_UsesCanonicalIdentity() {
+    [Theory]
+    [InlineData(13, SymbolFormat.Gs1DataBarTruncated)]
+    [InlineData(40, SymbolFormat.Gs1DataBarOmnidirectional)]
+    public void DefaultUnifiedImageScan_UsesPhysicalDataBar14Identity(int heightModules, SymbolFormat expectedFormat) {
         const string value = "1234567890123";
 
-        var result = SymbolScanner.Scan(RenderOmnidirectionalFrame(value));
+        var result = SymbolScanner.Scan(RenderDataBarFrame(DataBar14Encoder.EncodeTruncated(value), heightModules));
 
         Assert.Equal(ScanStatus.Success, result.Status);
         var symbol = Assert.Single(result.Symbols);
-        Assert.Equal(SymbolFormat.Gs1DataBarOmnidirectional, symbol.Format);
+        Assert.Equal(expectedFormat, symbol.Format);
+        Assert.Equal(value, symbol.Text);
+    }
+
+    [Theory]
+    [InlineData(13, SymbolFormat.Gs1DataBarTruncated)]
+    [InlineData(40, SymbolFormat.Gs1DataBarOmnidirectional)]
+    public void ExplicitMixedDataBar14ImageScan_UsesPhysicalIdentity(int heightModules, SymbolFormat expectedFormat) {
+        const string value = "1234567890123";
+        var result = SymbolScanner.Scan(RenderDataBarFrame(DataBar14Encoder.EncodeTruncated(value), heightModules), new ScanOptions {
+            Formats = new[] {
+                SymbolFormat.Gs1DataBarTruncated,
+                SymbolFormat.Gs1DataBarOmnidirectional,
+                SymbolFormat.Code128
+            },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(expectedFormat, symbol.Format);
         Assert.Equal(value, symbol.Text);
     }
 

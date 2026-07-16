@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using CodeGlyphX.Aztec;
 using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Pdf417;
@@ -233,21 +234,31 @@ public static class SymbolScanner {
         var barcodeOptions = CloneBarcodeOptions(options.Barcode);
         if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expected, barcodeOptions, deadline.Token)) return;
         for (var i = 0; i < decoded.Length; i++) {
-            var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes);
+            var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes, rgba, width, height, deadline.Token);
             if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
             Add(results, seen, new DetectedSymbol(format, new CodeGlyphDecoded(hit), searchRegion));
             if (ReachedMaximum(options, results)) return;
         }
     }
 
-    private static BarcodeDecoded ResolveRequestedLinearIdentity(BarcodeDecoded decoded, List<BarcodeType> expectedTypes) {
+    private static BarcodeDecoded ResolveRequestedLinearIdentity(
+        BarcodeDecoded decoded,
+        List<BarcodeType> expectedTypes,
+        byte[] rgba,
+        int width,
+        int height,
+        CancellationToken cancellationToken) {
         // DataBar Omnidirectional and Truncated have the same horizontal module sequence; only bar height
-        // distinguishes them, and the scanline decoder does not retain height. It returns Truncated in
-        // automatic mode, so prefer the canonical Omnidirectional identity when that format was requested.
-        // A caller that needs the Truncated identity can restrict Formats to Truncated and its peers.
+        // distinguishes them. An Omni-only request supplies the caller's physical identity. When both are
+        // requested, use the standards-defined 33X Omnidirectional height boundary and otherwise preserve
+        // the scanline decoder's conservative Truncated identity.
         if (decoded.Type == BarcodeType.GS1DataBarTruncated
             && expectedTypes.Contains(BarcodeType.GS1DataBarOmni)) {
-            return new BarcodeDecoded(BarcodeType.GS1DataBarOmni, decoded.Text);
+            if (!expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)
+                || DataBar14ImageClassifier.TryIsOmnidirectional(rgba, width, height, cancellationToken, out var isOmnidirectional)
+                && isOmnidirectional) {
+                return new BarcodeDecoded(BarcodeType.GS1DataBarOmni, decoded.Text);
+            }
         }
         return decoded;
     }
