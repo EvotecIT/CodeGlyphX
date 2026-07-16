@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Capture and publish encrypted recovery state
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-server-backup@1f634b17e21f935ab6b8c052322497d814ce6c8c
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-server-backup@3b895c68d3125fab4146e2ded3a30852de789393
         with:
           manifest-path: deploy/linux/codeglyphx.serverrecovery.json
           capture-user: powerforge-codeglyphx-backup
