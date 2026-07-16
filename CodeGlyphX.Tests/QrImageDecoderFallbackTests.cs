@@ -57,6 +57,23 @@ public sealed class QrImageDecoderFallbackTests {
     }
 
     [Fact]
+    public void Fallback_BudgetedTileScan_PreservesFullImageResult() {
+        var png = RenderPng(moduleSize: 14, quietZone: 6);
+
+        WithForcedFallback(() => {
+            var ok = QrImageDecoder.TryDecodeAllImage(png, imageOptions: null, new QrPixelDecodeOptions {
+                EnableTileScan = true,
+                TileGrid = 2,
+                MaxDimension = 1200,
+                BudgetMilliseconds = 1000
+            }, out var decoded);
+
+            Assert.True(ok);
+            Assert.Contains(decoded, result => result.Text == Payload);
+        });
+    }
+
+    [Fact]
     public void Fallback_Helper_Preprocessing_Branches_Work() {
         var buildGray = GetPrivateMethod("BuildGrayscale");
         var buildChannel = GetPrivateMethod("BuildChannelGrayscale");

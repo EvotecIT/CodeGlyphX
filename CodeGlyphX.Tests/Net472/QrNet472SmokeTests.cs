@@ -146,7 +146,7 @@ public sealed class QrNet472SmokeTests {
     }
 
     [Fact]
-    public void Net472_QrImageDecoder_TileScan_Succeeds_On_Single() {
+    public void Net472_QrImageDecoder_BudgetedTileScan_PreservesFullImageResult() {
         var qr = QrCodeEncoder.EncodeText(Payload);
         var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
             ModuleSize = 14,
@@ -156,12 +156,17 @@ public sealed class QrNet472SmokeTests {
         var opts = new QrPixelDecodeOptions {
             EnableTileScan = true,
             TileGrid = 2,
-            MaxDimension = 1200
+            MaxDimension = 1200,
+            BudgetMilliseconds = 3000
         };
 
+        var stopwatch = Stopwatch.StartNew();
         var ok = QrImageDecoder.TryDecodeAllImage(png, imageOptions: null, opts, out var decoded);
+        stopwatch.Stop();
+
         Assert.True(ok);
         Assert.Contains(decoded, d => d.Text == Payload);
+        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(15), $"Budgeted tile scan took {stopwatch.Elapsed}.");
     }
 
     [Fact]

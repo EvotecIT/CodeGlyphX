@@ -818,15 +818,25 @@ public static partial class QrImageDecoder {
 
     private static bool TryDecodeAllFallbackCore(QrFallbackFrame frame, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
         decoded = Array.Empty<QrDecoded>();
-        if (options?.EnableTileScan == true
-            && TryDecodeAllTilesFallback(frame.Pixels, frame.Width, frame.Height, frame.Stride, frame.Format, options, cancellationToken, out decoded)) {
-            return decoded.Length > 0;
+        var results = new List<QrDecoded>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        // Decode the complete frame first. A tile boundary can cut through a large symbol and
+        // produce expensive false candidates, while the complete frame may decode immediately.
+        if (TryDecodeFallbackCore(frame, options, cancellationToken, out var fullFrame, out _)) {
+            AddFallbackResult(results, seen, fullFrame);
         }
-        if (!TryDecodeFallbackCore(frame, options, cancellationToken, out var single, out _)) {
-            return false;
+
+        if (options?.EnableTileScan == true && !cancellationToken.IsCancellationRequested) {
+            if (TryDecodeAllTilesFallback(frame.Pixels, frame.Width, frame.Height, frame.Stride, frame.Format, options, cancellationToken, out var tileResults)) {
+                for (var i = 0; i < tileResults.Length; i++) {
+                    AddFallbackResult(results, seen, tileResults[i]);
+                }
+            }
         }
-        decoded = new[] { single };
-        return true;
+
+        decoded = results.ToArray();
+        return decoded.Length > 0;
     }
 
     private static bool TryDecodeAllTilesFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
@@ -867,8 +877,8 @@ public static partial class QrImageDecoder {
 
             for (var tx = 0; tx < tileGrid; tx++) {
                 if (cancellationToken.IsCancellationRequested) {
-                    decoded = Array.Empty<QrDecoded>();
-                    return false;
+                    decoded = list.ToArray();
+                    return decoded.Length > 0;
                 }
 
                 var baseX0 = tx * tileWidth;
@@ -884,14 +894,20 @@ public static partial class QrImageDecoder {
                     continue;
                 }
 
-                var text = result.Text;
-                if (string.IsNullOrEmpty(text) || !seen.Add(text)) continue;
+                var key = Convert.ToBase64String(result.Bytes);
+                if (!seen.Add(key)) continue;
                 list.Add(result);
             }
         }
 
         decoded = list.ToArray();
         return decoded.Length > 0;
+    }
+
+    private static void AddFallbackResult(List<QrDecoded> results, HashSet<string> seen, QrDecoded result) {
+        var key = Convert.ToBase64String(result.Bytes);
+        if (!seen.Add(key)) return;
+        results.Add(result);
     }
 
     private static byte[] CropRgba(byte[] rgba, int width, int height, int stride, int x, int y, int cropWidth, int cropHeight) {
