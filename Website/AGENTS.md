@@ -31,18 +31,14 @@ If you don't have the engine repo next to this repo, set:
     - `navContextPath: "/"` (keeps API header nav consistent with non-API pages)
 - Theme: `themes/codeglyphx/theme.manifest.json`
 
-## Deploy + Cloudflare Cache
+## Deploy + Recovery
 
-- GitHub Pages deploy workflow: `../.github/workflows/pages.yml`
-- Cloudflare secrets used by deploy:
-  - `CLOUDFLARE_API_TOKEN`
-  - `CLOUDFLARE_ZONE_ID_CODEGLYPHX`
-- Post-deploy cache commands are standardized and route-driven from site config:
-  - `pwsh ./scripts/Set-CloudflareCacheRules.ps1`
-  - `cloudflare purge --site-config "Website/site.json"`
-  - `cloudflare verify --site-config "Website/site.json" --warmup 2`
-- Canonical cache-rule guidance lives in:
-  - `<Evotec repo root>/PSPublishModule/Docs/PowerForge.Web.Cloudflare.md`
+- Production deploy workflow: `../.github/workflows/website-deploy.yml`
+- Encrypted recovery workflow: `../.github/workflows/server-backup.yml`
+- Host recovery manifest: `../deploy/linux/codeglyphx.serverrecovery.json`
+- The protected `production` environment owns host coordinates, deployment identities, the exact Cloudflare zone id, and backup credentials.
+- Shared PowerForge actions own checkout, artifact packaging, cache policy, promotion, purge, provenance checks, rollback, and backup publication. Do not add repo-local deployment or Cloudflare scripts.
+- Canonical deployment and cache guidance lives in `<Evotec repo root>/PSPublishModule/Docs` and `Deployment/Linux`.
 
 ## Theme Best Practices (Nav Stability)
 

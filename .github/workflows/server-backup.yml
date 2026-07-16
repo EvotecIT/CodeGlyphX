@@ -1,0 +1,32 @@
+name: Capture Server Recovery
+
+on:
+  schedule:
+    - cron: "29 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeglyphx-server-recovery-backup-production
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Capture and publish encrypted recovery state
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-server-backup@870eb98104b4cbf191956a28acfe877adde1da75
+        with:
+          manifest-path: deploy/linux/codeglyphx.serverrecovery.json
+          capture-user: powerforge-codeglyphx-backup
+          server-ssh-private-key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          server-ssh-known-hosts: ${{ secrets.SERVER_SSH_KNOWN_HOSTS }}
+          backup-repository-ssh-private-key: ${{ secrets.BACKUP_REPOSITORY_SSH_PRIVATE_KEY }}
+          backup-repository-ssh-known-hosts: ${{ secrets.BACKUP_REPOSITORY_SSH_KNOWN_HOSTS }}

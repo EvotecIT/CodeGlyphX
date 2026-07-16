@@ -1,0 +1,88 @@
+name: Deploy Website
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "Website/**"
+      - ".github/workflows/website-deploy.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: codeglyphx-website-production
+  cancel-in-progress: false
+
+jobs:
+  build:
+    permissions:
+      actions: write
+      contents: read
+      packages: read
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@870eb98104b4cbf191956a28acfe877adde1da75
+    with:
+      website_root: Website
+      pipeline_config: Website/pipeline.json
+      engine_mode: source
+      runner_labels_json: '["ubuntu-latest"]'
+      timeout_minutes: 60
+      powerforge_repository: EvotecIT/PSPublishModule
+      powerforge_ref: 870eb98104b4cbf191956a28acfe877adde1da75
+      report_artifact_name: codeglyphx-website-deploy-reports
+      site_artifact_name: powerforge-site-codeglyphx.com
+      site_artifact_retention_days: 7
+    secrets:
+      indexnow_key: ${{ secrets.INDEXNOW_KEY }}
+
+  cache-policy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Apply managed Cloudflare cache policy
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-cache-policy@74e782630c3766a5e73b2f796e64213f43ddc466
+        with:
+          site-config: Website/site.json
+          zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+  deploy:
+    needs: [build, cache-policy]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: https://codeglyphx.com
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Deploy validated website artifact
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-linux-site-deploy@870eb98104b4cbf191956a28acfe877adde1da75
+        with:
+          artifact-name: powerforge-site-codeglyphx.com
+          deployment-site: codeglyphx.com
+          deployment-host: ${{ vars.POWERFORGE_WEBSITE_DEPLOY_HOST }}
+          deployment-port: ${{ vars.POWERFORGE_WEBSITE_DEPLOY_PORT }}
+          deployment-user: ${{ vars.POWERFORGE_WEBSITE_DEPLOY_USER }}
+          deployment-cloudflare-zone: codeglyphx.com
+          deployment-ssh-private-key: ${{ secrets.DEPLOYMENT_SSH_PRIVATE_KEY }}
+          deployment-ssh-known-hosts: ${{ secrets.DEPLOYMENT_SSH_KNOWN_HOSTS }}
+          deployment-cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          cloudflare-zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          source-repository: ${{ github.repository }}
+          source-sha: ${{ github.sha }}
+          engine-mode: ${{ needs.build.outputs.engine_mode }}
+          engine-repository: ${{ needs.build.outputs.engine_repository }}
+          engine-ref: ${{ needs.build.outputs.engine_ref }}
+          engine-sha: ${{ needs.build.outputs.engine_sha }}
+          engine-asset: ${{ needs.build.outputs.engine_asset }}
+          engine-asset-sha256: ${{ needs.build.outputs.engine_asset_sha256 }}
