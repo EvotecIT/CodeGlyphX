@@ -164,10 +164,18 @@ public sealed class DataBarVariantsTests {
         Assert.Equal(value, symbol.Text);
     }
 
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void MultiSymbolImageScan_ClassifiesEachDataBar14CandidateIndependently(bool explicitFormats) {
+    [Fact]
+    [Trait("Category", "CorpusTiming")]
+    public void DefaultMultiSymbolImageScan_ClassifiesEachDataBar14CandidateIndependently() {
+        AssertMultiSymbolImageScanClassifiesEachDataBar14CandidateIndependently(explicitFormats: false);
+    }
+
+    [Fact]
+    public void ExplicitMultiSymbolImageScan_ClassifiesEachDataBar14CandidateIndependently() {
+        AssertMultiSymbolImageScanClassifiesEachDataBar14CandidateIndependently(explicitFormats: true);
+    }
+
+    private static void AssertMultiSymbolImageScanClassifiesEachDataBar14CandidateIndependently(bool explicitFormats) {
         const string value = "1234567890123";
         var truncated = RenderDataBarFrame(DataBar14Encoder.EncodeTruncated(value), heightModules: 13, moduleSize: 2);
         var omni = RenderDataBarFrame(DataBar14Encoder.EncodeOmnidirectional(value), heightModules: 40, moduleSize: 2);
