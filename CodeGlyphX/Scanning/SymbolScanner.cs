@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using CodeGlyphX.Aztec;
 using CodeGlyphX.DataMatrix;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
 
@@ -232,9 +233,64 @@ public static class SymbolScanner {
 
         BarcodeType? expected = expectedTypes.Count == 1 ? expectedTypes[0] : (BarcodeType?)null;
         var barcodeOptions = CloneBarcodeOptions(options.Barcode);
+        if (expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)
+            && expectedTypes.Contains(BarcodeType.GS1DataBarOmni)) {
+            ScanLocatedLinear(
+                rgba,
+                width,
+                height,
+                searchRegion,
+                options,
+                deadline,
+                requested,
+                expectedTypes,
+                expected,
+                barcodeOptions,
+                results,
+                seen);
+            return;
+        }
+
         if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expected, barcodeOptions, deadline.Token)) return;
         for (var i = 0; i < decoded.Length; i++) {
-            var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes, rgba, width, height, deadline.Token);
+            var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes, rgba, width, height, candidate: null, cancellationToken: deadline.Token);
+            if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
+            Add(results, seen, new DetectedSymbol(format, new CodeGlyphDecoded(hit), searchRegion));
+            if (ReachedMaximum(options, results)) return;
+        }
+    }
+
+    private static void ScanLocatedLinear(
+        byte[] rgba,
+        int width,
+        int height,
+        ImageRegion searchRegion,
+        ScanOptions options,
+        ScanDeadline deadline,
+        ISet<SymbolFormat> requested,
+        List<BarcodeType> expectedTypes,
+        BarcodeType? expected,
+        BarcodeDecodeOptions? barcodeOptions,
+        List<DetectedSymbol> results,
+        HashSet<string>? seen) {
+        if (!BarcodeDecoder.TryDecodeAllLocated(
+                rgba,
+                width,
+                height,
+                width * 4,
+                PixelFormat.Rgba32,
+                out var decoded,
+                expected,
+                barcodeOptions,
+                deadline.Token)) return;
+
+        // BarcodeDecoder's public multi-result contract deduplicates by physical type and payload. Preserve
+        // that behavior after classifying each located DataBar candidate independently.
+        var decodedSeen = new HashSet<string>(StringComparer.Ordinal);
+        for (var i = 0; i < decoded.Length; i++) {
+            var hit = ResolveRequestedLinearIdentity(decoded[i].Decoded, expectedTypes, rgba, width, height, decoded[i], deadline.Token);
+            var key = hit.Type + "\u001f" + hit.Text;
+            if (!decodedSeen.Add(key)) continue;
             if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
             Add(results, seen, new DetectedSymbol(format, new CodeGlyphDecoded(hit), searchRegion));
             if (ReachedMaximum(options, results)) return;
@@ -247,6 +303,7 @@ public static class SymbolScanner {
         byte[] rgba,
         int width,
         int height,
+        BarcodeImageCandidate? candidate,
         CancellationToken cancellationToken) {
         // DataBar Omnidirectional and Truncated have the same horizontal module sequence; only bar height
         // distinguishes them. An Omni-only request supplies the caller's physical identity. When both are
@@ -255,7 +312,8 @@ public static class SymbolScanner {
         if (decoded.Type == BarcodeType.GS1DataBarTruncated
             && expectedTypes.Contains(BarcodeType.GS1DataBarOmni)) {
             if (!expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)
-                || DataBar14ImageClassifier.TryIsOmnidirectional(rgba, width, height, cancellationToken, out var isOmnidirectional)
+                || candidate is not null
+                && DataBar14ImageClassifier.TryIsOmnidirectional(rgba, width, height, candidate, cancellationToken, out var isOmnidirectional)
                 && isOmnidirectional) {
                 return new BarcodeDecoded(BarcodeType.GS1DataBarOmni, decoded.Text);
             }

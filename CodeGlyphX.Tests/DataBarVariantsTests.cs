@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using CodeGlyphX.DataBar;
 using Xunit;
@@ -163,6 +164,35 @@ public sealed class DataBarVariantsTests {
         Assert.Equal(value, symbol.Text);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void MultiSymbolImageScan_ClassifiesEachDataBar14CandidateIndependently(bool explicitFormats) {
+        const string value = "1234567890123";
+        var truncated = RenderDataBarFrame(DataBar14Encoder.EncodeTruncated(value), heightModules: 13, moduleSize: 2);
+        var omni = RenderDataBarFrame(DataBar14Encoder.EncodeOmnidirectional(value), heightModules: 40, moduleSize: 2);
+        var frame = StackForIndependentScanlines(truncated, truncatedY: 20, omni, omniY: 50);
+        var options = new ScanOptions { TimeoutMilliseconds = TestBudget.Adjust(10000) };
+        if (explicitFormats) {
+            options.Formats = new[] {
+                SymbolFormat.Gs1DataBarTruncated,
+                SymbolFormat.Gs1DataBarOmnidirectional,
+                SymbolFormat.Code128
+            };
+        }
+
+        var result = SymbolScanner.Scan(frame, options);
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var dataBarSymbols = result.Symbols
+            .Where(symbol => symbol.Format == SymbolFormat.Gs1DataBarTruncated
+                             || symbol.Format == SymbolFormat.Gs1DataBarOmnidirectional)
+            .ToArray();
+        Assert.Equal(2, dataBarSymbols.Length);
+        Assert.Contains(dataBarSymbols, symbol => symbol.Format == SymbolFormat.Gs1DataBarTruncated && symbol.Text == value);
+        Assert.Contains(dataBarSymbols, symbol => symbol.Format == SymbolFormat.Gs1DataBarOmnidirectional && symbol.Text == value);
+    }
+
     [Fact]
     public void Truncated_MixedFormatImageScan_PreservesExplicitIdentity() {
         const string value = "1234567890123";
@@ -222,14 +252,37 @@ public sealed class DataBarVariantsTests {
         return RenderDataBarFrame(DataBar14Encoder.EncodeOmnidirectional(value), heightModules: 40);
     }
 
-    private static ImageFrame RenderDataBarFrame(Barcode1D barcode, int heightModules) {
+    private static ImageFrame RenderDataBarFrame(Barcode1D barcode, int heightModules, int moduleSize = 4) {
         var pixels = Rendering.Png.BarcodePngRenderer.RenderPixels(
             barcode,
-            new Rendering.Png.BarcodePngRenderOptions { ModuleSize = 4, QuietZone = 10, HeightModules = heightModules },
+            new Rendering.Png.BarcodePngRenderOptions { ModuleSize = moduleSize, QuietZone = 10, HeightModules = heightModules },
             out var width,
             out var height,
             out _);
         return ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32);
+    }
+
+    private static ImageFrame StackForIndependentScanlines(ImageFrame truncated, int truncatedY, ImageFrame omni, int omniY) {
+        var width = Math.Max(truncated.Width, omni.Width);
+        var height = Math.Max(truncatedY + truncated.Height, omniY + omni.Height);
+        var stride = width * 4;
+        var pixels = new byte[stride * height];
+        for (var i = 0; i < pixels.Length; i += 4) {
+            pixels[i] = 255;
+            pixels[i + 1] = 255;
+            pixels[i + 2] = 255;
+            pixels[i + 3] = 255;
+        }
+        CopyFrame(truncated, truncatedY, pixels, stride);
+        CopyFrame(omni, omniY, pixels, stride);
+        return ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32);
+    }
+
+    private static void CopyFrame(ImageFrame source, int targetY, byte[] target, int targetStride) {
+        var sourcePixels = source.Pixels.ToArray();
+        for (var y = 0; y < source.Height; y++) {
+            Buffer.BlockCopy(sourcePixels, y * source.Stride, target, (targetY + y) * targetStride, source.Stride);
+        }
     }
 
     private static bool[] ToModules(string modules) {
