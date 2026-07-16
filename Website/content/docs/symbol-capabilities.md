@@ -11,7 +11,7 @@ CodeGlyphX currently describes 39 physical symbol formats through `SymbolCapabil
 
 | Format | Family | Encode | Module decode | Image scan | Multiple | GS1 | ECI | Structured append | Geometry |
 | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- | ---: |
-| QR Code | Matrix | Yes | Yes | Yes | Yes | Decode | Encode + decode | Decode | No |
+| QR Code | Matrix | Yes | Yes | Yes | Yes | Encode + decode | Encode + decode | Encode + decode | No |
 | Micro QR Code | Matrix | Yes | Yes | Yes | No | No | No | No | Yes |
 | Aztec Code | Matrix | Yes | Yes | Yes | No | No | No | No | No |
 | Code 128 | Linear | Yes | Yes | Yes | Yes | No | No | No | No |
@@ -47,7 +47,7 @@ CodeGlyphX currently describes 39 physical symbol formats through `SymbolCapabil
 | GS1 DataBar Expanded Stacked | Stacked | Yes | Yes | No | No | Encode + decode | No | No | No |
 | USPS Intelligent Mail | Postal | Yes | Yes | No | No | No | No | No | No |
 | KIX Code | Postal | Yes | Yes | No | No | No | No | No | No |
-| Data Matrix | Matrix | Yes | Yes | Yes | No | No | No | No | No |
+| Data Matrix | Matrix | Yes | Yes | Yes | No | Encode + decode | Encode + decode | Encode + decode | No |
 | PDF417 | Stacked | Yes | Yes | Yes | No | No | No | No | No |
 | MicroPDF417 | Stacked | Yes | Yes | No | No | No | No | No | No |
 

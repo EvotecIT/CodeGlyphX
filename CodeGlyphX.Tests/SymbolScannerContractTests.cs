@@ -21,7 +21,7 @@ public sealed class SymbolScannerContractTests {
     }
 
     [Fact]
-    public void CapabilityCatalog_AdvertisesMicroQrImageSupportAndDistinguishesModuleOnlyFormats() {
+    public void CapabilityCatalog_AdvertisesStandardsAndDistinguishesImageSupport() {
         var qr = SymbolCapabilities.Get(SymbolFormat.QrCode);
         var microQr = SymbolCapabilities.Get(SymbolFormat.MicroQrCode);
         var dataMatrix = SymbolCapabilities.Get(SymbolFormat.DataMatrix);
@@ -32,8 +32,11 @@ public sealed class SymbolScannerContractTests {
         Assert.True(qr.CanScanImages);
         Assert.True(qr.CanScanMultiple);
         Assert.True(qr.Has(SymbolCapabilityFlags.EciEncode));
+        Assert.True(qr.Has(SymbolCapabilityFlags.EciDecode));
+        Assert.True(qr.Has(SymbolCapabilityFlags.Gs1Encode));
+        Assert.True(qr.Has(SymbolCapabilityFlags.Gs1Decode));
+        Assert.True(qr.Has(SymbolCapabilityFlags.StructuredAppendEncode));
         Assert.True(qr.Has(SymbolCapabilityFlags.StructuredAppendDecode));
-        Assert.False(qr.Has(SymbolCapabilityFlags.StructuredAppendEncode));
 
         Assert.True(microQr.CanEncode);
         Assert.True(microQr.CanDecodeModules);
@@ -41,6 +44,12 @@ public sealed class SymbolScannerContractTests {
         Assert.True(microQr.ReportsGeometry);
         Assert.True(dataMatrix.CanScanImages);
         Assert.False(dataMatrix.CanScanMultiple);
+        Assert.True(dataMatrix.Has(SymbolCapabilityFlags.EciEncode));
+        Assert.True(dataMatrix.Has(SymbolCapabilityFlags.EciDecode));
+        Assert.True(dataMatrix.Has(SymbolCapabilityFlags.Gs1Encode));
+        Assert.True(dataMatrix.Has(SymbolCapabilityFlags.Gs1Decode));
+        Assert.True(dataMatrix.Has(SymbolCapabilityFlags.StructuredAppendEncode));
+        Assert.True(dataMatrix.Has(SymbolCapabilityFlags.StructuredAppendDecode));
         Assert.False(microPdf417.CanScanImages);
     }
 

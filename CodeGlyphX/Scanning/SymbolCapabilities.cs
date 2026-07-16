@@ -15,7 +15,8 @@ public static class SymbolCapabilities {
     private static readonly SymbolCapability[] Items = {
         Entry(SymbolFormat.QrCode, "QR Code", SymbolFamily.Matrix,
             ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
-            SymbolCapabilityFlags.Gs1Decode | SymbolCapabilityFlags.StructuredAppendDecode),
+            SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
+            SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
         Entry(SymbolFormat.MicroQrCode, "Micro QR Code", SymbolFamily.Matrix,
             Image | SymbolCapabilityFlags.ReportsGeometry),
         Entry(SymbolFormat.Aztec, "Aztec Code", SymbolFamily.Matrix, Image),
@@ -58,7 +59,10 @@ public static class SymbolCapabilities {
             Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.UspsIntelligentMail, "USPS Intelligent Mail", SymbolFamily.Postal, BarcodeType.UspsImb, Standard),
         Legacy(SymbolFormat.KixCode, "KIX Code", SymbolFamily.Postal, BarcodeType.KixCode, Standard),
-        Legacy(SymbolFormat.DataMatrix, "Data Matrix", SymbolFamily.Matrix, BarcodeType.DataMatrix, Image),
+        Legacy(SymbolFormat.DataMatrix, "Data Matrix", SymbolFamily.Matrix, BarcodeType.DataMatrix,
+            Image | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
+            SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
+            SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
         Legacy(SymbolFormat.Pdf417, "PDF417", SymbolFamily.Stacked, BarcodeType.PDF417, Image),
         Legacy(SymbolFormat.MicroPdf417, "MicroPDF417", SymbolFamily.Stacked, BarcodeType.MicroPDF417, Standard)
     };
