@@ -52,13 +52,7 @@ internal static class HanXinPayloadCodec {
         internal void Eci(int assignment) { Flush(); _encoding = MapEncoding(assignment) ?? _encoding; }
         private void Flush() { if (_pending.Count == 0) return; _text.Append(_encoding.GetString(_pending.ToArray())); _pending.Clear(); }
         private static Encoding? MapEncoding(int eci) {
-            try {
-                return eci switch {
-                    3 => EncodingUtils.Latin1, 20 => Encoding.GetEncoding(932), 21 => Encoding.GetEncoding(1250),
-                    22 => Encoding.GetEncoding(1251), 23 => Encoding.GetEncoding(1252), 26 => Encoding.UTF8,
-                    29 => Encoding.GetEncoding("GB2312"), 32 => Encoding.GetEncoding(54936), _ => null
-                };
-            } catch (ArgumentException) { return null; }
+            return EncodingUtils.TryGetEncoding(eci, out var encoding) ? encoding : null;
         }
     }
 
@@ -74,7 +68,12 @@ internal static class HanXinPayloadCodec {
                 for (var i = 0; i < text.Length; i++) if (text[i] > 255) { latin1 = false; break; }
                 encoding = latin1 ? EncodingUtils.Latin1 : Encoding.UTF8;
                 if (!latin1 && !eci.HasValue) eci = 26;
-            } else if (!eci.HasValue) eci = EncodingToEci(encoding);
+            } else if (!eci.HasValue) {
+                if (!EncodingUtils.TryGetEciAssignment(encoding, out var inferredAssignment)) {
+                    throw new InvalidOperationException("The selected Han Xin text encoding has no known ECI assignment. Set EciAssignmentNumber explicitly.");
+                }
+                eci = inferredAssignment;
+            }
             bytes = encoding.GetBytes(text);
         } else {
             bytes = EncodingUtils.Latin1.GetBytes(text);
@@ -219,5 +218,4 @@ internal static class HanXinPayloadCodec {
     private static int Text2(byte value) => value <= 27 ? value : value is >= 32 and <= 47 ? value - 32 + 28 : value is >= 58 and <= 64 ? value - 58 + 44 : value is >= 91 and <= 96 ? value - 91 + 51 : value is >= 123 and <= 127 ? value - 123 + 57 : -1;
     private static int DecodeText1(int value) => value <= 9 ? value + '0' : value <= 35 ? value - 10 + 'A' : value <= 61 ? value - 36 + 'a' : -1;
     private static int DecodeText2(int value) => value <= 27 ? value : value <= 43 ? value - 28 + 32 : value <= 50 ? value - 44 + 58 : value <= 56 ? value - 51 + 91 : value <= 61 ? value - 57 + 123 : -1;
-    private static int? EncodingToEci(Encoding encoding) => encoding.CodePage == 65001 ? 26 : encoding.CodePage == 28591 ? 3 : encoding.CodePage == 932 ? 20 : encoding.CodePage == 1250 ? 21 : encoding.CodePage == 1251 ? 22 : encoding.CodePage == 1252 ? 23 : null;
 }

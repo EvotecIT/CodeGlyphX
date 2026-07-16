@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -58,6 +59,17 @@ public sealed class DotCodeTests {
     }
 
     [Fact]
+    public void ExplicitUtf8Encoding_InfersEciAndRoundTrips() {
+        var symbol = DotCodeEncoder.EncodeText("Łódź", new DotCodeEncodingOptions {
+            TextEncoding = Encoding.UTF8
+        });
+
+        Assert.True(DotCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("Łódź", decoded.Text);
+        Assert.Equal(new[] { 26 }, decoded.EciAssignments);
+    }
+
+    [Fact]
     public void Decoder_CorrectsSeveralDamagedDots() {
         var symbol = DotCodeEncoder.EncodeText("DOTCODE-DAMAGE-123456789", new DotCodeEncodingOptions { Width = 35, Mask = 2 });
         var damaged = symbol.Modules.Clone();
@@ -73,6 +85,7 @@ public sealed class DotCodeTests {
     public void InvalidOptionsAndEmptyGrid_AreRejected() {
         Assert.Throws<ArgumentOutOfRangeException>(() => DotCodeEncoder.EncodeText("A", new DotCodeEncodingOptions { Width = 4 }));
         Assert.Throws<ArgumentOutOfRangeException>(() => DotCodeEncoder.EncodeText("A", new DotCodeEncodingOptions { Mask = 8 }));
+        Assert.Throws<InvalidOperationException>(() => DotCodeEncoder.EncodeText("A", new DotCodeEncodingOptions { TextEncoding = Encoding.Unicode }));
         Assert.False(DotCodeDecoder.TryDecodeDetailed(new BitMatrix(13, 10), out _));
     }
 

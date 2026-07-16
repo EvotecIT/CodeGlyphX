@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -71,9 +72,24 @@ public sealed class HanXinTests {
     }
 
     [Fact]
+    public void ExplicitUtf8Encoding_InfersEciAndRoundTrips() {
+        var symbol = HanXinEncoder.EncodeText("汉字 / Łódź", new HanXinEncodingOptions {
+            TextEncoding = Encoding.UTF8
+        });
+
+        Assert.True(HanXinDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("汉字 / Łódź", decoded.Text);
+        Assert.Equal(new[] { 26 }, decoded.EciAssignments);
+    }
+
+    [Fact]
     public void InvalidOptionsAndEmptyMatrix_AreRejected() {
         Assert.Throws<ArgumentOutOfRangeException>(() => HanXinEncoder.EncodeText("A", new HanXinEncodingOptions { Version = 85 }));
         Assert.Throws<ArgumentOutOfRangeException>(() => HanXinEncoder.EncodeText("A", new HanXinEncodingOptions { Mask = 4 }));
+        Assert.Throws<InvalidOperationException>(() => HanXinEncoder.EncodeText("Ł", new HanXinEncodingOptions {
+            Mode = HanXinEncodingMode.Binary,
+            TextEncoding = Encoding.Unicode
+        }));
         Assert.False(HanXinDecoder.TryDecodeDetailed(new BitMatrix(23, 23), out _));
     }
 

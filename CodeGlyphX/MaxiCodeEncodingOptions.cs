@@ -16,7 +16,7 @@ public sealed class MaxiCodeEncodingOptions {
     public int ServiceClass { get; set; }
     /// <summary>Gets or sets an optional ECI assignment number from 0 through 999999.</summary>
     public int? EciAssignmentNumber { get; set; }
-    /// <summary>Gets or sets the payload encoding. UTF-8 with ECI 26 is selected automatically for non-Latin-1 text.</summary>
+    /// <summary>Gets or sets the payload encoding. A matching known ECI is inferred; unknown encodings require <see cref="EciAssignmentNumber"/>.</summary>
     public Encoding? TextEncoding { get; set; }
     /// <summary>Gets or sets the one-based structured-append symbol index.</summary>
     public int? StructuredAppendIndex { get; set; }

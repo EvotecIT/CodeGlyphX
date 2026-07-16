@@ -27,7 +27,10 @@ public static class DotCodeEncoder {
             encoding = latin1 ? EncodingUtils.Latin1 : Encoding.UTF8;
             if (!latin1 && !eci.HasValue) eci = 26;
         } else if (!eci.HasValue) {
-            eci = EncodingToEci(encoding);
+            if (!EncodingUtils.TryGetEciAssignment(encoding, out var inferredAssignment)) {
+                throw new InvalidOperationException("The selected DotCode text encoding has no known ECI assignment. Set EciAssignmentNumber explicitly.");
+            }
+            eci = inferredAssignment;
         }
         return EncodeBytesCore(encoding.GetBytes(text), options, eci ?? 0);
     }
@@ -173,13 +176,4 @@ public static class DotCodeEncoder {
         }
     }
 
-    private static int? EncodingToEci(Encoding encoding) {
-        if (encoding.CodePage == Encoding.UTF8.CodePage) return 26;
-        if (encoding.CodePage == 28591) return 3;
-        if (encoding.CodePage == 932) return 20;
-        if (encoding.CodePage == 1250) return 21;
-        if (encoding.CodePage == 1251) return 22;
-        if (encoding.CodePage == 1252) return 23;
-        return null;
-    }
 }

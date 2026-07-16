@@ -207,6 +207,12 @@ internal static class MaxiCodeHighLevelEncoder {
         eciAssignment = options.EciAssignmentNumber;
         if (options.TextEncoding is not null) {
             encoding = options.TextEncoding;
+            if (!eciAssignment.HasValue) {
+                if (!EncodingUtils.TryGetEciAssignment(encoding, out var inferredAssignment)) {
+                    throw new InvalidOperationException("The selected MaxiCode text encoding has no known ECI assignment. Set EciAssignmentNumber explicitly.");
+                }
+                eciAssignment = inferredAssignment;
+            }
             return;
         }
         if (eciAssignment == 26) { encoding = EncodingUtils.Utf8Strict; return; }

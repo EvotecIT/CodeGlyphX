@@ -50,17 +50,7 @@ internal static class DotCodeHighLevelDecoder {
         }
 
         private static Encoding? MapEncoding(int eci) {
-            try {
-                return eci switch {
-                    3 => EncodingUtils.Latin1,
-                    20 => Encoding.GetEncoding(932),
-                    21 => Encoding.GetEncoding(1250),
-                    22 => Encoding.GetEncoding(1251),
-                    23 => Encoding.GetEncoding(1252),
-                    26 => Encoding.UTF8,
-                    _ => null
-                };
-            } catch (ArgumentException) { return null; }
+            return EncodingUtils.TryGetEncoding(eci, out var encoding) ? encoding : null;
         }
     }
 

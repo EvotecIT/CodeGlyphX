@@ -134,13 +134,7 @@ internal static class MaxiCodeHighLevelDecoder {
     }
 
     private static bool TryGetEncoding(int assignment, out Encoding encoding) {
-        switch (assignment) {
-            case 3: encoding = EncodingUtils.Latin1; return true;
-            case 25: encoding = Encoding.BigEndianUnicode; return true;
-            case 26: encoding = EncodingUtils.Utf8Strict; return true;
-            case 27: encoding = Encoding.ASCII; return true;
-            default: encoding = EncodingUtils.Latin1; return false;
-        }
+        return EncodingUtils.TryGetEncoding(assignment, out encoding);
     }
 
     private static bool IsLock(int state, int symbol) =>

@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -90,6 +91,17 @@ public sealed class MaxiCodeTests {
     }
 
     [Fact]
+    public void ExplicitUtf8Encoding_InfersEciAndRoundTrips() {
+        var symbol = MaxiCodeEncoder.EncodeText("Łódź", new MaxiCodeEncodingOptions {
+            TextEncoding = Encoding.UTF8
+        });
+
+        Assert.True(MaxiCodeDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal("Łódź", decoded.Text);
+        Assert.Equal(new[] { 26 }, decoded.EciAssignments);
+    }
+
+    [Fact]
     public void Decoder_CorrectsPrimaryAndSecondaryModuleDamage() {
         var symbol = MaxiCodeEncoder.EncodeText("DAMAGE-CORRECTION-123456789");
         var damaged = Clone(symbol.Modules);
@@ -113,6 +125,9 @@ public sealed class MaxiCodeTests {
         Assert.Throws<InvalidOperationException>(() => MaxiCodeEncoder.EncodeText("X", new MaxiCodeEncodingOptions {
             StructuredAppendIndex = 2,
             StructuredAppendCount = 1
+        }));
+        Assert.Throws<InvalidOperationException>(() => MaxiCodeEncoder.EncodeText("X", new MaxiCodeEncodingOptions {
+            TextEncoding = Encoding.Unicode
         }));
         Assert.False(MaxiCodeDecoder.TryDecodeDetailed(new BitMatrix(30, 33), out _));
     }
