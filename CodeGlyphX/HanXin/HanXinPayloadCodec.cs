@@ -76,6 +76,9 @@ internal static class HanXinPayloadCodec {
             }
             bytes = encoding.GetBytes(text);
         } else {
+            if (mode == HanXinEncodingMode.Text && !CanEncodeText(text)) {
+                throw new ArgumentException("Text Han Xin mode accepts only characters from the Han Xin text-compaction repertoire.", nameof(text));
+            }
             bytes = EncodingUtils.Latin1.GetBytes(text);
         }
         return Encode(bytes, mode, eci ?? 0, out bitLength);
@@ -208,9 +211,23 @@ internal static class HanXinPayloadCodec {
     private static HanXinEncodingMode ResolveMode(string text, HanXinEncodingOptions options) {
         if (options.Mode != HanXinEncodingMode.Auto) return options.Mode;
         var numeric = text.Length > 0;
-        var ascii = text.Length > 0;
-        for (var i = 0; i < text.Length; i++) { numeric &= text[i] is >= '0' and <= '9'; ascii &= text[i] <= 127; }
-        return numeric ? HanXinEncodingMode.Numeric : ascii ? HanXinEncodingMode.Text : HanXinEncodingMode.Binary;
+        var textCompaction = text.Length > 0;
+        for (var i = 0; i < text.Length; i++) {
+            numeric &= text[i] is >= '0' and <= '9';
+            textCompaction &= IsTextCharacter(text[i]);
+        }
+        return numeric ? HanXinEncodingMode.Numeric : textCompaction ? HanXinEncodingMode.Text : HanXinEncodingMode.Binary;
+    }
+
+    private static bool CanEncodeText(string text) {
+        for (var i = 0; i < text.Length; i++) if (!IsTextCharacter(text[i])) return false;
+        return text.Length > 0;
+    }
+
+    private static bool IsTextCharacter(char value) {
+        if (value > 127) return false;
+        var ascii = (byte)value;
+        return IsText1(ascii) || Text2(ascii) >= 0;
     }
 
     private static bool IsText1(byte value) => value is >= (byte)'0' and <= (byte)'9' || value is >= (byte)'A' and <= (byte)'Z' || value is >= (byte)'a' and <= (byte)'z';

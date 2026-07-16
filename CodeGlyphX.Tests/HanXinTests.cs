@@ -45,6 +45,30 @@ public sealed class HanXinTests {
         Assert.Equal(value, decoded.Text);
     }
 
+    [Theory]
+    [InlineData("Ł")]
+    [InlineData("\u001C")]
+    [InlineData("\u001D")]
+    [InlineData("\u001E")]
+    [InlineData("\u001F")]
+    public void ExplicitTextMode_RejectsCharactersOutsideTextCompaction(string value) {
+        Assert.Throws<ArgumentException>(() => HanXinEncoder.EncodeText(value, new HanXinEncodingOptions {
+            Mode = HanXinEncodingMode.Text
+        }));
+    }
+
+    [Theory]
+    [InlineData("A\u001CB")]
+    [InlineData("A\u001DB")]
+    [InlineData("A\u001EB")]
+    [InlineData("A\u001FB")]
+    public void AutomaticMode_RoutesUnsupportedAsciiControlsToBinary(string value) {
+        var symbol = HanXinEncoder.EncodeText(value);
+
+        Assert.True(HanXinDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Equal(value, decoded.Text);
+    }
+
     [Fact]
     public void AllVersionsAndEccLevels_RoundTrip() {
         for (var version = 1; version <= 84; version++) {
