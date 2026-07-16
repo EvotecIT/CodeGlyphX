@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   website-maintenance:
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-maintenance.yml@1f634b17e21f935ab6b8c052322497d814ce6c8c
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-maintenance.yml@3b895c68d3125fab4146e2ded3a30852de789393
     with:
       website_root: Website
       pipeline_config: Website/pipeline.maintenance.json
