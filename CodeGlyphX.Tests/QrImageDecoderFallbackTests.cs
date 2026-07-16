@@ -57,6 +57,7 @@ public sealed class QrImageDecoderFallbackTests {
     }
 
     [Fact]
+    [Trait("Category", "CorpusTiming")]
     public void Fallback_BudgetedTileScan_PreservesFullImageResult() {
         var png = RenderPng(moduleSize: 14, quietZone: 6);
 
