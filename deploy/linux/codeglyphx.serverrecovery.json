@@ -24,7 +24,7 @@
       "url": "https://github.com/EvotecIT/PSPublishModule.git",
       "path": "/srv/evotec/PSPublishModule",
       "branch": "main",
-      "ref": "870eb98104b4cbf191956a28acfe877adde1da75",
+      "ref": "1f634b17e21f935ab6b8c052322497d814ce6c8c",
       "required": true
     }
   ],
@@ -115,6 +115,14 @@
       "owner": "root",
       "group": "root",
       "mode": "755"
+    },
+    {
+      "id": "static-pending-state",
+      "path": "/var/lib/powerforge/site-pending",
+      "kind": "directory",
+      "owner": "root",
+      "group": "root",
+      "mode": "700"
     },
     {
       "id": "backup-user-home",
@@ -214,6 +222,13 @@
         "target": "/etc/systemd/system/powerforge-cloudflare-origin-sync.service",
         "enabled": false,
         "required": true
+      },
+      {
+        "name": "powerforge-site-reconcile.service",
+        "source": "/srv/evotec/PSPublishModule/Deployment/Linux/systemd/powerforge-site-reconcile.service",
+        "target": "/etc/systemd/system/powerforge-site-reconcile.service",
+        "enabled": false,
+        "required": true
       }
     ],
     "timers": [
@@ -221,6 +236,13 @@
         "name": "powerforge-cloudflare-origin-sync.timer",
         "source": "/srv/evotec/PSPublishModule/Deployment/Linux/systemd/powerforge-cloudflare-origin-sync.timer",
         "target": "/etc/systemd/system/powerforge-cloudflare-origin-sync.timer",
+        "enabled": true,
+        "required": true
+      },
+      {
+        "name": "powerforge-site-reconcile.timer",
+        "source": "/srv/evotec/PSPublishModule/Deployment/Linux/systemd/powerforge-site-reconcile.timer",
+        "target": "/etc/systemd/system/powerforge-site-reconcile.timer",
         "enabled": true,
         "required": true
       }
@@ -266,6 +288,14 @@
       },
       {
         "target": "/etc/systemd/system/powerforge-cloudflare-origin-sync.timer",
+        "required": true
+      },
+      {
+        "target": "/etc/systemd/system/powerforge-site-reconcile.service",
+        "required": true
+      },
+      {
+        "target": "/etc/systemd/system/powerforge-site-reconcile.timer",
         "required": true
       },
       {
@@ -346,12 +376,12 @@
         "command": "install -d -o powerforge-codeglyphx-backup -g powerforge-codeglyphx-backup -m 0700 /var/lib/powerforge-codeglyphx-backup/.ssh && install -o powerforge-codeglyphx-backup -g powerforge-codeglyphx-backup -m 0600 /srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-backup-authorized_keys /var/lib/powerforge-codeglyphx-backup/.ssh/authorized_keys"
       },
       {
-        "id": "install-static-promoter",
-        "command": "install -o root -g root -m 0755 /srv/evotec/PSPublishModule/Deployment/Linux/powerforge-site-deploy.sh /usr/local/sbin/powerforge-site-deploy"
+        "id": "install-static-deployment-runtime",
+        "command": "install -o root -g root -m 0755 /srv/evotec/PSPublishModule/Deployment/Linux/powerforge-site-deploy.sh /usr/local/sbin/powerforge-site-deploy && install -o root -g root -m 0755 /srv/evotec/PSPublishModule/Deployment/Linux/powerforge-site-reconcile.sh /usr/local/sbin/powerforge-site-reconcile"
       },
       {
         "id": "install-cloudflare-origin-sync",
-        "command": "install -o root -g root -m 0755 /srv/evotec/PSPublishModule/Deployment/Linux/powerforge-cloudflare-origin-sync.sh /usr/local/sbin/powerforge-cloudflare-origin-sync && install -o root -g root -m 0644 /srv/evotec/PSPublishModule/Deployment/Linux/systemd/powerforge-cloudflare-origin-sync.service /etc/systemd/system/powerforge-cloudflare-origin-sync.service && install -o root -g root -m 0644 /srv/evotec/PSPublishModule/Deployment/Linux/systemd/powerforge-cloudflare-origin-sync.timer /etc/systemd/system/powerforge-cloudflare-origin-sync.timer"
+        "command": "install -o root -g root -m 0755 /srv/evotec/PSPublishModule/Deployment/Linux/powerforge-cloudflare-origin-sync.sh /usr/local/sbin/powerforge-cloudflare-origin-sync"
       },
       {
         "id": "install-powerforge-config",
@@ -385,6 +415,11 @@
         "required": true
       },
       {
+        "id": "enable-static-deployment-reconciler",
+        "command": "sudo -n systemctl enable --now powerforge-site-reconcile.timer",
+        "required": true
+      },
+      {
         "id": "enable-apache-site",
         "command": "sudo -n a2ensite codeglyphx-com.conf codeglyphx-com-le-ssl.conf && sudo -n apachectl configtest && sudo -n systemctl reload apache2",
         "required": true
@@ -401,6 +436,11 @@
       {
         "id": "cloudflare-origin-trust",
         "command": "test -s /var/lib/powerforge/cloudflare-origin/cidrs.txt && grep -Fq 'RemoteIPHeader CF-Connecting-IP' /etc/apache2/conf-enabled/powerforge-cloudflare-origin.conf && grep -Fq 'RemoteIPTrustedProxy ' /etc/apache2/conf-enabled/powerforge-cloudflare-origin.conf && systemctl is-enabled --quiet powerforge-cloudflare-origin-sync.timer",
+        "required": true
+      },
+      {
+        "id": "static-deployment-reconciler",
+        "command": "test -x /usr/local/sbin/powerforge-site-reconcile && systemctl is-enabled --quiet powerforge-site-reconcile.timer && systemctl is-active --quiet powerforge-site-reconcile.timer",
         "required": true
       },
       {
@@ -453,6 +493,7 @@
     "CodeGlyphX is a public repository and fresh recovery uses anonymous HTTPS clones; no repository private key is required.",
     "Deployment and encrypted recovery capture use separate least-privilege SSH accounts and protected-environment private keys.",
     "Cloudflare cache purge credentials are transferred only for one deployment and are not persistent host recovery state.",
+    "Deferred deployment state is root-only, short-lived, and intentionally excluded from recovery capture.",
     "Recovery rebuilds the excluded static release artifact through the protected deployment workflow before post-deploy verification checks exact provenance.",
     "Generated website output and timestamped releases are rebuildable and intentionally excluded from backup state."
   ]
