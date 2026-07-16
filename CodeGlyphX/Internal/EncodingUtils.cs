@@ -1,9 +1,21 @@
+using System;
 using System.Text;
 
 namespace CodeGlyphX.Internal;
 
 internal static class EncodingUtils {
     internal static Encoding Utf8Strict { get; } = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
+
+    /// <summary>Encodes text without permitting replacement fallbacks that would change the caller's payload.</summary>
+    internal static byte[] GetBytesStrict(Encoding encoding, string text, string parameterName) {
+        var strict = (Encoding)encoding.Clone();
+        strict.EncoderFallback = EncoderFallback.ExceptionFallback;
+        try {
+            return strict.GetBytes(text);
+        } catch (EncoderFallbackException exception) {
+            throw new ArgumentException($"Text cannot be represented by {encoding.WebName}.", parameterName, exception);
+        }
+    }
 
     internal static Encoding Latin1 {
         get {

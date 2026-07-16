@@ -107,6 +107,13 @@ public sealed class HanXinTests {
     }
 
     [Fact]
+    public void ExplicitLossyEncoding_IsRejected() {
+        Assert.Throws<ArgumentException>(() => HanXinEncoder.EncodeText("Ł", new HanXinEncodingOptions {
+            TextEncoding = Encoding.Latin1
+        }));
+    }
+
+    [Fact]
     public void InvalidOptionsAndEmptyMatrix_AreRejected() {
         Assert.Throws<ArgumentOutOfRangeException>(() => HanXinEncoder.EncodeText("A", new HanXinEncodingOptions { Version = 85 }));
         Assert.Throws<ArgumentOutOfRangeException>(() => HanXinEncoder.EncodeText("A", new HanXinEncodingOptions { Mask = 4 }));

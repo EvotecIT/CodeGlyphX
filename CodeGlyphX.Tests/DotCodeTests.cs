@@ -70,6 +70,13 @@ public sealed class DotCodeTests {
     }
 
     [Fact]
+    public void ExplicitLossyEncoding_IsRejected() {
+        Assert.Throws<ArgumentException>(() => DotCodeEncoder.EncodeText("Ł", new DotCodeEncodingOptions {
+            TextEncoding = Encoding.Latin1
+        }));
+    }
+
+    [Fact]
     public void Decoder_CorrectsSeveralDamagedDots() {
         var symbol = DotCodeEncoder.EncodeText("DOTCODE-DAMAGE-123456789", new DotCodeEncodingOptions { Width = 35, Mask = 2 });
         var damaged = symbol.Modules.Clone();

@@ -14,7 +14,7 @@ public sealed class HanXinEncodingOptions {
     public int? Mask { get; set; }
     /// <summary>Gets or sets an optional ECI assignment from 0 through 999999.</summary>
     public int? EciAssignmentNumber { get; set; }
-    /// <summary>Gets or sets the text encoding. A matching known ECI is inferred; unknown encodings require <see cref="EciAssignmentNumber"/>.</summary>
+    /// <summary>Gets or sets the text encoding. A matching known ECI is inferred; unknown encodings require <see cref="EciAssignmentNumber"/>. Text that cannot be represented is rejected.</summary>
     public Encoding? TextEncoding { get; set; }
 
     internal HanXinEncodingOptions Clone() => new() {

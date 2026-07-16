@@ -66,7 +66,7 @@ internal static class HanXinPayloadCodec {
             if (encoding is null) {
                 var latin1 = true;
                 for (var i = 0; i < text.Length; i++) if (text[i] > 255) { latin1 = false; break; }
-                encoding = latin1 ? EncodingUtils.Latin1 : Encoding.UTF8;
+                encoding = latin1 ? EncodingUtils.Latin1 : EncodingUtils.Utf8Strict;
                 if (!latin1 && !eci.HasValue) eci = 26;
             } else if (!eci.HasValue) {
                 if (!EncodingUtils.TryGetEciAssignment(encoding, out var inferredAssignment)) {
@@ -74,7 +74,7 @@ internal static class HanXinPayloadCodec {
                 }
                 eci = inferredAssignment;
             }
-            bytes = encoding.GetBytes(text);
+            bytes = EncodingUtils.GetBytesStrict(encoding, text, nameof(text));
         } else {
             if (mode == HanXinEncodingMode.Text && !CanEncodeText(text)) {
                 throw new ArgumentException("Text Han Xin mode accepts only characters from the Han Xin text-compaction repertoire.", nameof(text));

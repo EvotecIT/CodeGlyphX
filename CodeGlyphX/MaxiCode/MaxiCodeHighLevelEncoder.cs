@@ -30,7 +30,7 @@ internal static class MaxiCodeHighLevelEncoder {
     internal static byte[] EncodeText(string text, MaxiCodeMode mode, MaxiCodeEncodingOptions options, int capacity) {
         if (text is null) throw new ArgumentNullException(nameof(text));
         ResolveEncoding(text, options, out var encoding, out var eciAssignment);
-        var payload = encoding.GetBytes(text);
+        var payload = EncodingUtils.GetBytesStrict(encoding, text, nameof(text));
         return EncodeBytes(payload, mode, options, capacity, eciAssignment);
     }
 

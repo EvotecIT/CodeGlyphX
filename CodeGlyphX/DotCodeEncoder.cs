@@ -24,7 +24,7 @@ public static class DotCodeEncoder {
         if (encoding is null) {
             var latin1 = true;
             for (var i = 0; i < text.Length; i++) if (text[i] > 255) { latin1 = false; break; }
-            encoding = latin1 ? EncodingUtils.Latin1 : Encoding.UTF8;
+            encoding = latin1 ? EncodingUtils.Latin1 : EncodingUtils.Utf8Strict;
             if (!latin1 && !eci.HasValue) eci = 26;
         } else if (!eci.HasValue) {
             if (!EncodingUtils.TryGetEciAssignment(encoding, out var inferredAssignment)) {
@@ -32,7 +32,7 @@ public static class DotCodeEncoder {
             }
             eci = inferredAssignment;
         }
-        return EncodeBytesCore(encoding.GetBytes(text), options, eci ?? 0);
+        return EncodeBytesCore(EncodingUtils.GetBytesStrict(encoding, text, nameof(text)), options, eci ?? 0);
     }
 
     /// <summary>Encodes an arbitrary byte payload.</summary>

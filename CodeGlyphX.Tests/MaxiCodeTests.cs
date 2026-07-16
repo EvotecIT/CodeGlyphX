@@ -102,6 +102,13 @@ public sealed class MaxiCodeTests {
     }
 
     [Fact]
+    public void ExplicitLossyEncoding_IsRejected() {
+        Assert.Throws<ArgumentException>(() => MaxiCodeEncoder.EncodeText("Ł", new MaxiCodeEncodingOptions {
+            TextEncoding = Encoding.Latin1
+        }));
+    }
+
+    [Fact]
     public void Decoder_CorrectsPrimaryAndSecondaryModuleDamage() {
         var symbol = MaxiCodeEncoder.EncodeText("DAMAGE-CORRECTION-123456789");
         var damaged = Clone(symbol.Modules);
