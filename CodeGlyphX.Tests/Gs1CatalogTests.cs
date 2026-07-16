@@ -110,6 +110,20 @@ public class Gs1CatalogTests {
         Assert.Contains(missing.Issues, issue => issue.Code == Gs1ValidationIssueCode.DataTooLong);
     }
 
+    [Theory]
+    [InlineData("10LOT\u001D")]
+    [InlineData("(10)LOT\u001D")]
+    [InlineData("0109506000134352\u001D")]
+    [InlineData("(01)09506000134352\u001D")]
+    public void Validate_RejectsTrailingFnc1Separators(string input) {
+        var result = Gs1.Validate(input);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Issues, issue =>
+            issue.Code == Gs1ValidationIssueCode.MalformedInput
+            && issue.Position == input.Length - 1);
+    }
+
     [Fact]
     public void Validate_AppliesOfficialCodeListsAndIbanChecksum() {
         var valid = Gs1.Validate("(415)1234567890128(8020)REF42(8007)PL10105000997603123456789123");

@@ -112,6 +112,10 @@ public static partial class Gs1Validator {
                 dataEnd--;
             }
 
+            if (hadSeparator && next < 0) {
+                ReportTrailingSeparator(ai, dataEnd, issues);
+            }
+
             for (var i = dataStart; i < dataEnd; i++) {
                 if (!IsSeparator(input[i])) continue;
                 issues.Add(new Gs1ValidationIssue(
@@ -192,12 +196,18 @@ public static partial class Gs1Validator {
                             "A predefined-length GS1 element must not be followed by FNC1."));
                     }
                     offset++;
+                    if (offset == input.Length) {
+                        ReportTrailingSeparator(definition.Ai, offset - 1, issues);
+                    }
                 }
             } else {
                 var separator = input.IndexOf(global::CodeGlyphX.Gs1.GroupSeparator, dataStart);
                 var dataEnd = separator < 0 ? input.Length : separator;
                 data = input.Substring(dataStart, dataEnd - dataStart);
                 offset = separator < 0 ? input.Length : separator + 1;
+                if (separator >= 0 && offset == input.Length) {
+                    ReportTrailingSeparator(definition.Ai, separator, issues);
+                }
             }
 
             parsed.Add(new ParsedElement(
@@ -205,6 +215,17 @@ public static partial class Gs1Validator {
                 definition,
                 dataStart));
         }
+    }
+
+    private static void ReportTrailingSeparator(
+        string? ai,
+        int position,
+        List<Gs1ValidationIssue> issues) {
+        issues.Add(new Gs1ValidationIssue(
+            Gs1ValidationIssueCode.MalformedInput,
+            ai,
+            position,
+            "FNC1 separator must be followed by another GS1 element."));
     }
 
     private static bool ValidateAiToken(string ai, int position, List<Gs1ValidationIssue> issues) {
