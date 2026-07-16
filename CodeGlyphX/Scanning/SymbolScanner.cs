@@ -90,6 +90,7 @@ public static class SymbolScanner {
         var requestedSet = new HashSet<SymbolFormat>(requested);
 
         ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
+        if (!ShouldStop(options, deadline, results)) ScanMicroQr(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanPdf417(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
@@ -103,6 +104,35 @@ public static class SymbolScanner {
         }
         if (deadline.ShouldStop) return Cancelled(deadline, unsupported);
         return Result(ScanStatus.NoSymbolFound, deadline, results, unsupported);
+    }
+
+    private static void ScanMicroQr(
+        byte[] rgba,
+        int width,
+        int height,
+        ImageRegion searchRegion,
+        ScanDeadline deadline,
+        ISet<SymbolFormat> requested,
+        List<DetectedSymbol> results,
+        HashSet<string>? seen) {
+        if (!requested.Contains(SymbolFormat.MicroQrCode)) return;
+        if (!MicroQrDecoder.TryDecode(
+                rgba,
+                width,
+                height,
+                width * 4,
+                PixelFormat.Rgba32,
+                deadline.Token,
+                out var decoded,
+                out var info)) return;
+
+        Add(results, seen, new DetectedSymbol(
+            SymbolFormat.MicroQrCode,
+            new CodeGlyphDecoded(decoded),
+            searchRegion,
+            TranslateGeometry(info.Geometry, searchRegion.X, searchRegion.Y),
+            isInverted: info.IsInverted,
+            isMirrored: info.IsMirrored));
     }
 
     private static void ScanQr(
@@ -269,6 +299,19 @@ public static class SymbolScanner {
     private static void Add(List<DetectedSymbol> results, HashSet<string>? seen, DetectedSymbol symbol) {
         if (seen is not null && !seen.Add(CreateKey(symbol))) return;
         results.Add(symbol);
+    }
+
+    private static SymbolGeometry TranslateGeometry(SymbolGeometry geometry, int offsetX, int offsetY) {
+        if (offsetX == 0 && offsetY == 0) return geometry;
+        return new SymbolGeometry(
+            TranslatePoint(geometry.TopLeft, offsetX, offsetY),
+            TranslatePoint(geometry.TopRight, offsetX, offsetY),
+            TranslatePoint(geometry.BottomRight, offsetX, offsetY),
+            TranslatePoint(geometry.BottomLeft, offsetX, offsetY));
+    }
+
+    private static SymbolPoint TranslatePoint(SymbolPoint point, int offsetX, int offsetY) {
+        return new SymbolPoint(point.X + offsetX, point.Y + offsetY);
     }
 
     private static string CreateKey(DetectedSymbol symbol) {

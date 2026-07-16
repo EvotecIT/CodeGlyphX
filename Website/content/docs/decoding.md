@@ -10,7 +10,7 @@ layout: docs
 
 # Image Decoding
 
-Use `QrImageDecoder` when only QR is expected. Use `SymbolScanner` for a unified result model across QR, linear barcodes, Data Matrix, PDF417, and Aztec. The [capability matrix](/docs/symbol-capabilities/) distinguishes pixel recognition from module-only decoding for every format.
+Use `QrImageDecoder` when only QR is expected, or `MicroQrDecoder` for direct Micro QR recognition. Use `SymbolScanner` for a unified result model across QR, Micro QR, linear barcodes, Data Matrix, PDF417, and Aztec. The [capability matrix](/docs/symbol-capabilities/) distinguishes pixel recognition from module-only decoding for every format.
 
 ## QR-only decoding
 
@@ -35,7 +35,7 @@ if (QrImageDecoder.TryDecodeImage(image, imageOptions, qrOptions, out var decode
 
 ```csharp
 var options = new ScanOptions {
-    Formats = new[] { SymbolFormat.QrCode, SymbolFormat.DataMatrix, SymbolFormat.Code128 },
+    Formats = new[] { SymbolFormat.QrCode, SymbolFormat.MicroQrCode, SymbolFormat.DataMatrix, SymbolFormat.Code128 },
     TimeoutMilliseconds = 750,
     Qr = QrPixelDecodeOptions.Screen(budgetMilliseconds: 500, maxDimension: 1600),
     Image = ImageDecodeOptions.Strict(

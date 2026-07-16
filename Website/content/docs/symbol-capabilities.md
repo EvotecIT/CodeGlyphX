@@ -12,7 +12,7 @@ CodeGlyphX currently describes 39 physical symbol formats through `SymbolCapabil
 | Format | Family | Encode | Module decode | Image scan | Multiple | GS1 | ECI | Structured append | Geometry |
 | --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- | ---: |
 | QR Code | Matrix | Yes | Yes | Yes | Yes | Decode | Encode + decode | Decode | No |
-| Micro QR Code | Matrix | Yes | Yes | No | No | No | No | No | No |
+| Micro QR Code | Matrix | Yes | Yes | Yes | No | No | No | No | Yes |
 | Aztec Code | Matrix | Yes | Yes | Yes | No | No | No | No | No |
 | Code 128 | Linear | Yes | Yes | Yes | Yes | No | No | No | No |
 | GS1-128 | Linear | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |

@@ -21,10 +21,11 @@ public sealed class SymbolScannerContractTests {
     }
 
     [Fact]
-    public void CapabilityCatalog_DistinguishesImageAndModuleOnlySupport() {
+    public void CapabilityCatalog_AdvertisesMicroQrImageSupportAndDistinguishesModuleOnlyFormats() {
         var qr = SymbolCapabilities.Get(SymbolFormat.QrCode);
         var microQr = SymbolCapabilities.Get(SymbolFormat.MicroQrCode);
         var dataMatrix = SymbolCapabilities.Get(SymbolFormat.DataMatrix);
+        var microPdf417 = SymbolCapabilities.Get(SymbolFormat.MicroPdf417);
 
         Assert.True(qr.CanEncode);
         Assert.True(qr.CanDecodeModules);
@@ -36,9 +37,11 @@ public sealed class SymbolScannerContractTests {
 
         Assert.True(microQr.CanEncode);
         Assert.True(microQr.CanDecodeModules);
-        Assert.False(microQr.CanScanImages);
+        Assert.True(microQr.CanScanImages);
+        Assert.True(microQr.ReportsGeometry);
         Assert.True(dataMatrix.CanScanImages);
         Assert.False(dataMatrix.CanScanMultiple);
+        Assert.False(microPdf417.CanScanImages);
     }
 
     [Fact]
@@ -238,23 +241,23 @@ public sealed class SymbolScannerContractTests {
     public void Scan_ReportsModuleOnlyFormatsWithoutHidingSupportedResults() {
         var png = QrCode.Render("SUPPORTED-PLUS-UNSUPPORTED", OutputFormat.Png).Data;
         var result = SymbolScanner.Scan(png, new ScanOptions {
-            Formats = new[] { SymbolFormat.QrCode, SymbolFormat.MicroQrCode },
+            Formats = new[] { SymbolFormat.QrCode, SymbolFormat.MicroPdf417 },
             TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
 
         Assert.Equal(ScanStatus.Success, result.Status);
         Assert.Equal("SUPPORTED-PLUS-UNSUPPORTED", Assert.Single(result.Symbols).Text);
-        Assert.Equal(SymbolFormat.MicroQrCode, Assert.Single(result.UnsupportedFormats));
+        Assert.Equal(SymbolFormat.MicroPdf417, Assert.Single(result.UnsupportedFormats));
     }
 
     [Fact]
     public void Scan_ReturnsUnsupportedWhenNoRequestedFormatCanScanImages() {
         var frame = ImageFrame.Packed(new byte[16], 2, 2, PixelFormat.Rgba32);
-        var result = SymbolScanner.Scan(frame, new ScanOptions { Formats = new[] { SymbolFormat.MicroQrCode } });
+        var result = SymbolScanner.Scan(frame, new ScanOptions { Formats = new[] { SymbolFormat.MicroPdf417 } });
 
         Assert.Equal(ScanStatus.UnsupportedFormats, result.Status);
         Assert.Empty(result.Symbols);
-        Assert.Equal(SymbolFormat.MicroQrCode, Assert.Single(result.UnsupportedFormats));
+        Assert.Equal(SymbolFormat.MicroPdf417, Assert.Single(result.UnsupportedFormats));
     }
 
     [Fact]

@@ -175,35 +175,24 @@ internal static class MicroQrEncoder {
     }
 
     private static void AppendPaddingMicro(MicroQrBitBuffer buffer, int version, QrErrorCorrectionLevel ecc) {
-        var bits = buffer.LengthBits;
         var maxBits = MicroQrTables.GetDataLengthBits(version, ecc);
-        var maxWords = maxBits / 8;
-        if (maxBits < bits) throw new ArgumentException("Input exceeds Micro QR capacity.");
-        if (maxBits == bits) return;
+        if (buffer.LengthBits > maxBits) throw new ArgumentException("Input exceeds Micro QR capacity.");
 
-        var termBits = MicroQrTables.GetTerminatorBits(version);
-        if (maxBits - bits <= termBits) {
-            buffer.AppendBits(0, maxBits - bits);
-            return;
+        var remaining = maxBits - buffer.LengthBits;
+        var terminator = Math.Min(remaining, MicroQrTables.GetTerminatorBits(version));
+        if (terminator > 0) buffer.AppendBits(0, terminator);
+
+        var alignment = (8 - (buffer.LengthBits & 7)) & 7;
+        if (alignment > maxBits - buffer.LengthBits) alignment = maxBits - buffer.LengthBits;
+        if (alignment > 0) buffer.AppendBits(0, alignment);
+
+        var padIndex = 0;
+        while (maxBits - buffer.LengthBits >= 8) {
+            buffer.AppendBits((padIndex++ & 1) == 0 ? 0xEC : 0x11, 8);
         }
 
-        bits += termBits;
-        var words = (bits + 7) / 8;
-        if (maxBits - words * 8 > 0) {
-            termBits += words * 8 - bits;
-            if (words == maxWords) termBits += maxBits - words * 8;
-        } else {
-            termBits += words * 8 - bits;
-        }
-        if (termBits > 0) buffer.AppendBits(0, termBits);
-
-        var padLen = maxWords - words;
-        for (var i = 0; i < padLen; i++) {
-            buffer.AppendBits((i & 1) == 1 ? 0x11 : 0xEC, 8);
-        }
-
-        termBits = maxBits - maxWords * 8;
-        if (termBits > 0) buffer.AppendBits(0, termBits);
+        remaining = maxBits - buffer.LengthBits;
+        if (remaining > 0) buffer.AppendBits(0, remaining);
     }
 
     private static void DrawFunctionPatterns(int version, BitMatrix modules, BitMatrix isFunction) {

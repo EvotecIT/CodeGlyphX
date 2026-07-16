@@ -4,7 +4,7 @@ using CodeGlyphX.Pdf417;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Result of decoding a QR or barcode symbol.
+/// Result of decoding a supported matrix or linear symbol.
 /// </summary>
 public sealed class CodeGlyphDecoded {
     /// <summary>
@@ -16,6 +16,11 @@ public sealed class CodeGlyphDecoded {
     /// Gets the decoded QR result when <see cref="Kind"/> is <see cref="CodeGlyphKind.Qr"/>.
     /// </summary>
     public QrDecoded? Qr { get; }
+
+    /// <summary>
+    /// Gets the decoded Micro QR result when <see cref="Kind"/> is <see cref="CodeGlyphKind.MicroQr"/>.
+    /// </summary>
+    public MicroQrDecoded? MicroQr { get; }
 
     /// <summary>
     /// Gets the decoded barcode result when <see cref="Kind"/> is <see cref="CodeGlyphKind.Barcode1D"/>.
@@ -48,18 +53,23 @@ public sealed class CodeGlyphDecoded {
     public string? AztecText { get; }
 
     /// <summary>
-    /// Gets the decoded text (QR/Barcode/DataMatrix/PDF417/Aztec).
+    /// Gets the decoded text (QR/Micro QR/Barcode/DataMatrix/PDF417/Aztec).
     /// </summary>
-    public string Text => Qr?.Text ?? Barcode?.Text ?? DataMatrixText ?? Pdf417Text ?? AztecText ?? string.Empty;
+    public string Text => Qr?.Text ?? MicroQr?.Text ?? Barcode?.Text ?? DataMatrixText ?? Pdf417Text ?? AztecText ?? string.Empty;
 
     /// <summary>
-    /// Gets the decoded payload bytes for QR codes.
+    /// Gets the decoded payload bytes for QR and Micro QR codes.
     /// </summary>
-    public byte[]? Bytes => Qr?.Bytes;
+    public byte[]? Bytes => Qr?.Bytes ?? MicroQr?.Bytes;
 
     internal CodeGlyphDecoded(QrDecoded qr) {
         Qr = qr ?? throw new ArgumentNullException(nameof(qr));
         Kind = CodeGlyphKind.Qr;
+    }
+
+    internal CodeGlyphDecoded(MicroQrDecoded microQr) {
+        MicroQr = microQr ?? throw new ArgumentNullException(nameof(microQr));
+        Kind = CodeGlyphKind.MicroQr;
     }
 
     internal CodeGlyphDecoded(BarcodeDecoded barcode) {

@@ -51,8 +51,23 @@ internal static class FlagshipApiExample {
         }
 
         var micro = MicroQrCodeEncoder.EncodeAlphanumeric("ABC123", QrErrorCorrectionLevel.L);
-        OutputWriter.Write(
-            Path.Combine(outputDir, "microqr.png"),
-            MatrixBarcode.Render(micro.Modules, OutputFormat.Png));
+        var microImage = MatrixBarcode.Render(micro.Modules, OutputFormat.Png);
+        OutputWriter.Write(Path.Combine(outputDir, "microqr.png"), microImage);
+
+        if (!MicroQrDecoder.TryDecodeImage(microImage.Data, out var microDecoded, out var microInfo) ||
+            microDecoded.Text != "ABC123" ||
+            microInfo.Geometry.Bounds.Width <= 0) {
+            throw new System.InvalidOperationException("The Micro QR image decoder NativeAOT smoke test failed.");
+        }
+
+        var microScan = SymbolScanner.Scan(microImage.Data, new ScanOptions {
+            Formats = new[] { SymbolFormat.MicroQrCode },
+            TimeoutMilliseconds = 5000
+        });
+        if (!microScan.IsSuccess || microScan.Symbols.Count != 1 ||
+            microScan.Symbols[0].LegacyResult.Kind != CodeGlyphKind.MicroQr ||
+            microScan.Symbols[0].Geometry is null) {
+            throw new System.InvalidOperationException("The unified Micro QR scanner NativeAOT smoke test failed.");
+        }
     }
 }

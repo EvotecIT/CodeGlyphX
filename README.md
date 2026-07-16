@@ -9,7 +9,7 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, linear barcodes, Data Ma
 
 ## What it covers
 
-- QR and Micro QR encoding/decoding, including QR ECI and Kanji encoding plus FNC1/GS1 and structured-append decoding
+- QR and Micro QR encoding, module decoding, and image recognition, including QR ECI, Kanji, FNC1/GS1, and structured append
 - Common 1D symbologies including Code 128/GS1-128, Code 39/93/11, EAN/UPC, ITF, Codabar, MSI, Plessey, postal, and GS1 DataBar variants
 - Data Matrix ECC 200 and DMRE encoding/decoding, plus PDF417/MicroPDF417 and Aztec
 - QR payload builders for Wi-Fi, contacts, calendar events, OTP, payments, social profiles, and app links
@@ -181,7 +181,7 @@ if (QrImageDecoder.TryDecodeImage(
 }
 ```
 
-Use `SymbolScanner` when the application needs one coherent result model across QR, barcodes, Data Matrix, PDF417, and Aztec:
+Use `SymbolScanner` when the application needs one coherent result model across QR, Micro QR, barcodes, Data Matrix, PDF417, and Aztec:
 
 ```csharp
 var scan = SymbolScanner.Scan(image, ScanOptions.Screen(
@@ -195,6 +195,17 @@ foreach (var symbol in scan.Symbols)
 ```
 
 `ScanOptions.TimeoutMilliseconds` is a total wall-clock deadline covering compressed-image decoding, pixel conversion, and recognition. Decoder cancellation remains cooperative, so it is not a hard real-time guarantee. Use `ScanOptions.Formats` and `ScanOptions.Region` to avoid work the application does not need.
+
+Micro QR can also be recognized directly from RGBA/BGRA pixels or an encoded image. The detailed overload reports the detected quadrilateral, rotation, polarity, and mirroring state:
+
+```csharp
+if (MicroQrDecoder.TryDecodeImage(
+        image,
+        out MicroQrDecoded micro,
+        out MicroQrPixelDecodeInfo recognition)) {
+    Console.WriteLine($"{micro.Text} at {recognition.Geometry.Bounds}");
+}
+```
 
 Raw camera or interop buffers can be passed without an image-codec dependency:
 

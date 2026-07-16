@@ -16,7 +16,8 @@ public static class SymbolCapabilities {
         Entry(SymbolFormat.QrCode, "QR Code", SymbolFamily.Matrix,
             ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Decode | SymbolCapabilityFlags.StructuredAppendDecode),
-        Entry(SymbolFormat.MicroQrCode, "Micro QR Code", SymbolFamily.Matrix, Standard),
+        Entry(SymbolFormat.MicroQrCode, "Micro QR Code", SymbolFamily.Matrix,
+            Image | SymbolCapabilityFlags.ReportsGeometry),
         Entry(SymbolFormat.Aztec, "Aztec Code", SymbolFamily.Matrix, Image),
         Legacy(SymbolFormat.Code128, "Code 128", SymbolFamily.Linear, BarcodeType.Code128, ImageMulti),
         Legacy(SymbolFormat.Gs1Code128, "GS1-128", SymbolFamily.Linear, BarcodeType.GS1_128,
