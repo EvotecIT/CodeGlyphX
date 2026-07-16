@@ -6,6 +6,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class DataBarVariantsTests {
     public static IEnumerable<object[]> ZintLimitedVectors() {
         yield return Vector("1234567890123", "0100110011110010100010011101011010101100100101001010100101000001110001110100000");
@@ -96,15 +97,8 @@ public sealed class DataBarVariantsTests {
     [Fact]
     public void Omnidirectional_UnifiedImageScanner_IsReachableThroughCapabilityCatalog() {
         const string value = "1234567890123";
-        var barcode = DataBar14Encoder.EncodeOmnidirectional(value);
-        var pixels = Rendering.Png.BarcodePngRenderer.RenderPixels(
-            barcode,
-            new Rendering.Png.BarcodePngRenderOptions { ModuleSize = 4, QuietZone = 10, HeightModules = 40 },
-            out var width,
-            out var height,
-            out _);
 
-        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+        var result = SymbolScanner.Scan(RenderOmnidirectionalFrame(value), new ScanOptions {
             Formats = new[] { SymbolFormat.Gs1DataBarOmnidirectional },
             TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
@@ -116,6 +110,50 @@ public sealed class DataBarVariantsTests {
         Assert.Equal(ScanStatus.Success, result.Status);
         var symbol = Assert.Single(result.Symbols);
         Assert.Equal(SymbolFormat.Gs1DataBarOmnidirectional, symbol.Format);
+        Assert.Equal(value, symbol.Text);
+    }
+
+    [Fact]
+    public void Omnidirectional_UnifiedImageScanner_IsDispatchedWithOtherLinearFormats() {
+        const string value = "1234567890123";
+        var frame = RenderOmnidirectionalFrame(value);
+
+        var result = SymbolScanner.Scan(frame, new ScanOptions {
+            Formats = new[] { SymbolFormat.Gs1DataBarOmnidirectional, SymbolFormat.Code128 },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(SymbolFormat.Gs1DataBarOmnidirectional, symbol.Format);
+        Assert.Equal(value, symbol.Text);
+    }
+
+    [Fact]
+    public void Omnidirectional_DefaultUnifiedImageScan_UsesCanonicalIdentity() {
+        const string value = "1234567890123";
+
+        var result = SymbolScanner.Scan(RenderOmnidirectionalFrame(value));
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(SymbolFormat.Gs1DataBarOmnidirectional, symbol.Format);
+        Assert.Equal(value, symbol.Text);
+    }
+
+    [Fact]
+    public void Truncated_MixedFormatImageScan_PreservesExplicitIdentity() {
+        const string value = "1234567890123";
+        var barcode = DataBar14Encoder.EncodeTruncated(value);
+
+        var result = SymbolScanner.Scan(RenderDataBarFrame(barcode, heightModules: 13), new ScanOptions {
+            Formats = new[] { SymbolFormat.Gs1DataBarTruncated, SymbolFormat.Code128 },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(SymbolFormat.Gs1DataBarTruncated, symbol.Format);
         Assert.Equal(value, symbol.Text);
     }
 
@@ -157,6 +195,20 @@ public sealed class DataBarVariantsTests {
     }
 
     private static bool[] ExpandModules(Barcode1D barcode) => ToModules(ToModuleString(barcode));
+
+    private static ImageFrame RenderOmnidirectionalFrame(string value) {
+        return RenderDataBarFrame(DataBar14Encoder.EncodeOmnidirectional(value), heightModules: 40);
+    }
+
+    private static ImageFrame RenderDataBarFrame(Barcode1D barcode, int heightModules) {
+        var pixels = Rendering.Png.BarcodePngRenderer.RenderPixels(
+            barcode,
+            new Rendering.Png.BarcodePngRenderOptions { ModuleSize = 4, QuietZone = 10, HeightModules = heightModules },
+            out var width,
+            out var height,
+            out _);
+        return ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32);
+    }
 
     private static bool[] ToModules(string modules) {
         var result = new bool[modules.Length];

@@ -233,10 +233,23 @@ public static class SymbolScanner {
         var barcodeOptions = CloneBarcodeOptions(options.Barcode);
         if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expected, barcodeOptions, deadline.Token)) return;
         for (var i = 0; i < decoded.Length; i++) {
-            if (!SymbolCapabilities.TryFromLegacy(decoded[i].Type, out var format) || !requested.Contains(format)) continue;
-            Add(results, seen, new DetectedSymbol(format, new CodeGlyphDecoded(decoded[i]), searchRegion));
+            var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes);
+            if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
+            Add(results, seen, new DetectedSymbol(format, new CodeGlyphDecoded(hit), searchRegion));
             if (ReachedMaximum(options, results)) return;
         }
+    }
+
+    private static BarcodeDecoded ResolveRequestedLinearIdentity(BarcodeDecoded decoded, List<BarcodeType> expectedTypes) {
+        // DataBar Omnidirectional and Truncated have the same horizontal module sequence; only bar height
+        // distinguishes them, and the scanline decoder does not retain height. It returns Truncated in
+        // automatic mode, so prefer the canonical Omnidirectional identity when that format was requested.
+        // A caller that needs the Truncated identity can restrict Formats to Truncated and its peers.
+        if (decoded.Type == BarcodeType.GS1DataBarTruncated
+            && expectedTypes.Contains(BarcodeType.GS1DataBarOmni)) {
+            return new BarcodeDecoded(BarcodeType.GS1DataBarOmni, decoded.Text);
+        }
+        return decoded;
     }
 
     private static QrPixelDecodeOptions ResolveQrOptions(ScanOptions options, ScanDeadline deadline) {
