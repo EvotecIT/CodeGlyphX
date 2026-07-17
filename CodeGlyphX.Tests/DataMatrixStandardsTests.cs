@@ -306,6 +306,20 @@ public sealed class DataMatrixStandardsTests {
         Assert.Equal("3147ed8cd1c668edf6de0c6505bdb76f4a1219b416c426cff4bacd21d6bf9138", ComputeModuleHash(matrix));
     }
 
+    [Theory]
+    [InlineData(26, "C3A9", "é")]
+    [InlineData(25, "00E9", "é")]
+    public void Eci_AsciiBytePayload_UsesTheDeclaredCharacterEncoding(int assignmentNumber, string bytesHex, string expected) {
+        var matrix = DataMatrixEncoder.EncodeBytes(Convert.FromHexString(bytesHex), new DataMatrixEncodingOptions {
+            Mode = DataMatrixEncodingMode.Ascii,
+            EciAssignmentNumber = assignmentNumber
+        });
+
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(matrix, out var decoded));
+        Assert.Equal(expected, decoded.Text);
+        Assert.Equal(new[] { assignmentNumber }, decoded.EciAssignments);
+    }
+
     [Fact]
     public void Macro05_CompressesEnvelopeAndRoundTripsMetadata() {
         var matrix = DataMatrixEncoder.EncodeMacro05("ABC", new DataMatrixEncodingOptions {

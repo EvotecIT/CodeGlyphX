@@ -250,13 +250,14 @@ public static partial class DataMatrixDecoder {
         var index = 0;
         var upperShift = false;
         string? macroTrailer = null;
-        int? base256EciAssignment = null;
+        int? activeEciAssignment = null;
+        var asciiEciBytes = new List<byte>();
 
         while (index < data.Length) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) break;
             switch (mode) {
                 case DataMatrixEncodation.Ascii:
-                    mode = DecodeAsciiSegment(data, ref index, sb, ref upperShift, ref macroTrailer, ref base256EciAssignment, state);
+                    mode = DecodeAsciiSegment(data, ref index, sb, asciiEciBytes, ref upperShift, ref macroTrailer, ref activeEciAssignment, state);
                     break;
                 case DataMatrixEncodation.C40:
                     mode = DecodeC40TextSegment(data, ref index, sb, isText: false, ref upperShift);
@@ -271,7 +272,8 @@ public static partial class DataMatrixDecoder {
                     mode = DecodeEdifactSegment(data, ref index, sb, ref upperShift);
                     break;
                 case DataMatrixEncodation.Base256:
-                    DecodeBase256Segment(data, ref index, sb, base256EciAssignment);
+                    FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
+                    DecodeBase256Segment(data, ref index, sb, activeEciAssignment);
                     mode = DataMatrixEncodation.Ascii;
                     break;
                 default:
@@ -280,6 +282,7 @@ public static partial class DataMatrixDecoder {
             }
         }
 
+        FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
         if (!string.IsNullOrEmpty(macroTrailer)) sb.Append(macroTrailer);
         return sb.ToString();
     }
@@ -288,9 +291,10 @@ public static partial class DataMatrixDecoder {
         PixelSpan data,
         ref int index,
         StringBuilder sb,
+        List<byte> asciiEciBytes,
         ref bool upperShift,
         ref string? macroTrailer,
-        ref int? base256EciAssignment,
+        ref int? activeEciAssignment,
         DataMatrixDecodeState state) {
         if (index >= data.Length) return DataMatrixEncodation.Ascii;
 
@@ -303,26 +307,29 @@ public static partial class DataMatrixDecoder {
 
         if (cw <= 128) {
             state.CanBeGs1Header = false;
-            AppendChar(sb, (char)(cw - 1), ref upperShift);
+            AppendAsciiByte(sb, asciiEciBytes, (byte)(cw - 1), ref upperShift, activeEciAssignment);
             return DataMatrixEncodation.Ascii;
         }
 
         if (cw <= 229) {
             state.CanBeGs1Header = false;
             var val = cw - 130;
-            AppendChar(sb, (char)('0' + (val / 10)), ref upperShift);
-            AppendChar(sb, (char)('0' + (val % 10)), ref upperShift);
+            AppendAsciiByte(sb, asciiEciBytes, (byte)('0' + (val / 10)), ref upperShift, activeEciAssignment);
+            AppendAsciiByte(sb, asciiEciBytes, (byte)('0' + (val % 10)), ref upperShift, activeEciAssignment);
             return DataMatrixEncodation.Ascii;
         }
 
         switch (cw) {
             case 230:
                 state.CanBeGs1Header = false;
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 return DataMatrixEncodation.C40;
             case 231:
                 state.CanBeGs1Header = false;
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 return DataMatrixEncodation.Base256;
             case 232:
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 if (state.CanBeGs1Header) {
                     state.IsGs1 = true;
                     state.CanBeGs1Header = false;
@@ -331,6 +338,7 @@ public static partial class DataMatrixDecoder {
                 }
                 return DataMatrixEncodation.Ascii;
             case 233:
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 if (index + 2 < data.Length) {
                     var sequence = data[index++];
                     var fileId1 = data[index++];
@@ -346,6 +354,7 @@ public static partial class DataMatrixDecoder {
                 }
                 return DataMatrixEncodation.Ascii;
             case 234:
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 state.ReaderProgramming = true;
                 state.CanBeGs1Header = false;
                 return DataMatrixEncodation.Ascii;
@@ -354,12 +363,14 @@ public static partial class DataMatrixDecoder {
                 upperShift = true;
                 return DataMatrixEncodation.Ascii;
             case 236:
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 state.Macro = DataMatrixMacro.Macro05;
                 state.CanBeGs1Header = false;
                 sb.Append("[)>\u001E05\u001D");
                 macroTrailer ??= "\u001E\u0004";
                 return DataMatrixEncodation.Ascii;
             case 237:
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 state.Macro = DataMatrixMacro.Macro06;
                 state.CanBeGs1Header = false;
                 sb.Append("[)>\u001E06\u001D");
@@ -367,23 +378,52 @@ public static partial class DataMatrixDecoder {
                 return DataMatrixEncodation.Ascii;
             case 238:
                 state.CanBeGs1Header = false;
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 return DataMatrixEncodation.X12;
             case 239:
                 state.CanBeGs1Header = false;
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 return DataMatrixEncodation.Text;
             case 240:
                 state.CanBeGs1Header = false;
+                FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                 return DataMatrixEncodation.Edifact;
             case 241:
                 state.CanBeGs1Header = false;
                 if (TryReadEciAssignment(data, ref index, out var assignmentNumber)) {
+                    FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                     state.EciAssignments.Add(assignmentNumber);
-                    base256EciAssignment = assignmentNumber;
+                    activeEciAssignment = assignmentNumber;
                 }
                 return DataMatrixEncodation.Ascii;
             default:
                 return DataMatrixEncodation.Ascii;
         }
+    }
+
+    private static void AppendAsciiByte(
+        StringBuilder sb,
+        List<byte> asciiEciBytes,
+        byte value,
+        ref bool upperShift,
+        int? activeEciAssignment) {
+        var resolved = (int)value;
+        if (upperShift) {
+            resolved += 128;
+            upperShift = false;
+        }
+        if (activeEciAssignment.HasValue) {
+            asciiEciBytes.Add((byte)resolved);
+        } else {
+            sb.Append((char)resolved);
+        }
+    }
+
+    private static void FlushAsciiEciBytes(StringBuilder sb, List<byte> asciiEciBytes, int? activeEciAssignment) {
+        if (asciiEciBytes.Count == 0) return;
+        var bytes = asciiEciBytes.ToArray();
+        sb.Append(DecodeBase256Bytes(bytes, bytes.Length, activeEciAssignment));
+        asciiEciBytes.Clear();
     }
 
     private static bool TryReadEciAssignment(PixelSpan data, ref int index, out int assignmentNumber) {

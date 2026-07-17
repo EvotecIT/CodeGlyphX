@@ -19,7 +19,7 @@ internal static class Gs1DigitalLinkCodec {
             return Result(null, null, issues);
         }
 
-        var escapedPath = uri.GetComponents(UriComponents.Path, UriFormat.UriEscaped);
+        var escapedPath = GetRawEscapedPath(input);
         if (escapedPath.Length == 0 || escapedPath.EndsWith("/", StringComparison.Ordinal)) {
             issues.Add(Issue(
                 global::CodeGlyphX.Gs1DigitalLinkIssueCode.InvalidPath,
@@ -76,6 +76,7 @@ internal static class Gs1DigitalLinkCodec {
             canonical: true);
         var value = new global::CodeGlyphX.Gs1DigitalLinkUri(
             uri,
+            input,
             stem,
             pathElements[0],
             qualifiers.ToArray(),
@@ -170,6 +171,20 @@ internal static class Gs1DigitalLinkCodec {
             return false;
         }
         return true;
+    }
+
+    private static string GetRawEscapedPath(string input) {
+        var authorityStart = input.IndexOf("://", StringComparison.Ordinal);
+        if (authorityStart < 0) return string.Empty;
+        var pathStart = input.IndexOf('/', authorityStart + 3);
+        if (pathStart < 0) return string.Empty;
+        var queryStart = input.IndexOf('?', authorityStart + 3);
+        var fragmentStart = input.IndexOf('#', authorityStart + 3);
+        if ((queryStart >= 0 && queryStart < pathStart) || (fragmentStart >= 0 && fragmentStart < pathStart)) return string.Empty;
+        var pathEnd = input.Length;
+        if (queryStart >= 0 && queryStart < pathEnd) pathEnd = queryStart;
+        if (fragmentStart >= 0 && fragmentStart < pathEnd) pathEnd = fragmentStart;
+        return input.Substring(pathStart + 1, pathEnd - pathStart - 1);
     }
 
     private static int FindPrimaryIndex(string[] segments) {
@@ -534,7 +549,13 @@ internal static class Gs1DigitalLinkCodec {
     }
 
     private static void AppendPathElement(StringBuilder builder, global::CodeGlyphX.Gs1Element element) {
-        builder.Append('/').Append(element.Ai).Append('/').Append(Escape(element.Data));
+        builder.Append('/').Append(element.Ai).Append('/').Append(EscapePathValue(element.Data));
+    }
+
+    private static string EscapePathValue(string value) {
+        if (string.Equals(value, ".", StringComparison.Ordinal)) return "%2E";
+        if (string.Equals(value, "..", StringComparison.Ordinal)) return "%2E%2E";
+        return Escape(value);
     }
 
     private static string Escape(string value) {
