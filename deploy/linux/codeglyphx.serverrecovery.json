@@ -1,11 +1,10 @@
 {
-  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/6817f0bf4b08110004ac6df06decae2999337d65/Schemas/powerforge.web.serverrecovery.schema.json",
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/71fdfa7e1b767aff6c505ee7dbcb01b3dfc4b51b/Schemas/powerforge.web.serverrecovery.schema.json",
   "schemaVersion": 2,
   "name": "codeglyphx-production-ovh",
   "description": "Recovery manifest for the CodeGlyphX static website.",
   "target": {
     "sshAlias": "evotec-ovh",
-    "host": "141.94.123.4",
     "user": "ubuntu",
     "sshPort": 22222,
     "os": "ubuntu-24.04",
@@ -26,7 +25,7 @@
       "url": "https://github.com/EvotecIT/PSPublishModule.git",
       "path": "/srv/evotec/PSPublishModule",
       "branch": "main",
-      "ref": "6817f0bf4b08110004ac6df06decae2999337d65",
+      "ref": "71fdfa7e1b767aff6c505ee7dbcb01b3dfc4b51b",
       "required": true
     }
   ],
