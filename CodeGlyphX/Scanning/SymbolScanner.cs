@@ -39,7 +39,7 @@ public static class SymbolScanner {
                     return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), new List<SymbolFormat>(), "The encoded image could not be decoded.");
                 }
                 if (deadline.ShouldStop) return Cancelled(deadline, new List<SymbolFormat>());
-                if (RequiresSourceRegionPreparation(options)) {
+                if (RequiresSourceCoordinatePreparation(options)) {
                     return ScanEncodedRegion(rgba, width, height, options, deadline);
                 }
                 return ScanFrame(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options, deadline);
@@ -281,21 +281,32 @@ public static class SymbolScanner {
         };
     }
 
-    private static bool RequiresSourceRegionPreparation(ScanOptions options) {
-        return options.Region.HasValue && options.Image is not null && options.Image.MaxDimension > 0;
+    private static bool RequiresSourceCoordinatePreparation(ScanOptions options) {
+        return options.Image is not null && options.Image.MaxDimension > 0;
     }
 
     private static ScanResult ScanEncodedRegion(byte[] rgba, int width, int height, ScanOptions options, ScanDeadline deadline) {
-        var sourceRegion = options.Region!.Value.ClipTo(width, height);
+        ImageRegion? sourceRegion = options.Region.HasValue
+            ? options.Region.Value.ClipTo(width, height)
+            : new ImageRegion(0, 0, width, height);
         if (!sourceRegion.HasValue) {
             return ScanFrame(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options, deadline);
         }
 
-        var prepared = ImageFrameConverter.ToRgba32(
-            ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32),
-            sourceRegion.Value,
-            out var preparedWidth,
-            out var preparedHeight);
+        byte[] prepared;
+        int preparedWidth;
+        int preparedHeight;
+        if (sourceRegion.Value.X == 0 && sourceRegion.Value.Y == 0 && sourceRegion.Value.Width == width && sourceRegion.Value.Height == height) {
+            prepared = rgba;
+            preparedWidth = width;
+            preparedHeight = height;
+        } else {
+            prepared = ImageFrameConverter.ToRgba32(
+                ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32),
+                sourceRegion.Value,
+                out preparedWidth,
+                out preparedHeight);
+        }
         if (!ImageDecodeHelper.TryDownscale(
                 ref prepared,
                 ref preparedWidth,
@@ -329,10 +340,10 @@ public static class SymbolScanner {
 
     private static ImageDecodeOptions? ResolveSourceImageDecodeOptions(ScanOptions options) {
         var source = options.Image;
-        if (!options.Region.HasValue || source is null || source.MaxDimension <= 0) return source;
+        if (source is null || source.MaxDimension <= 0) return source;
 
-        // Decode at source dimensions so the ROI can be cropped in its documented coordinate space.
-        // ScanEncodedRegion applies MaxDimension to that crop before recognition.
+        // Decode at source dimensions so reported regions and geometry remain in the encoded image's
+        // coordinate space. ScanEncodedRegion applies MaxDimension immediately before recognition.
         return new ImageDecodeOptions {
             MaxDimension = 0,
             MaxPixels = source.MaxPixels,
