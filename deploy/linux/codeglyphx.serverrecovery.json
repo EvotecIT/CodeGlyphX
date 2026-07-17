@@ -1,6 +1,6 @@
 {
-  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/main/Schemas/powerforge.web.serverrecovery.schema.json",
-  "schemaVersion": 1,
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/6817f0bf4b08110004ac6df06decae2999337d65/Schemas/powerforge.web.serverrecovery.schema.json",
+  "schemaVersion": 2,
   "name": "codeglyphx-production-ovh",
   "description": "Recovery manifest for the CodeGlyphX static website.",
   "target": {
@@ -17,6 +17,8 @@
       "url": "https://github.com/EvotecIT/CodeGlyphX.git",
       "path": "/srv/evotec/CodeGlyphX",
       "branch": "master",
+      "ref": "b7b717fec0052b16bacff015e33c6945617ed8d5",
+      "refCaptureCommandId": "static-source-ref",
       "required": true
     },
     {
@@ -24,7 +26,7 @@
       "url": "https://github.com/EvotecIT/PSPublishModule.git",
       "path": "/srv/evotec/PSPublishModule",
       "branch": "main",
-      "ref": "1f634b17e21f935ab6b8c052322497d814ce6c8c",
+      "ref": "6817f0bf4b08110004ac6df06decae2999337d65",
       "required": true
     }
   ],
@@ -103,6 +105,7 @@
     {
       "id": "deployment-user-authorized-keys",
       "path": "/home/powerforge-codeglyphx/.ssh/authorized_keys",
+      "source": "/srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-authorized_keys",
       "kind": "file",
       "owner": "powerforge-codeglyphx",
       "group": "powerforge-codeglyphx",
@@ -143,10 +146,72 @@
     {
       "id": "backup-user-authorized-keys",
       "path": "/var/lib/powerforge-codeglyphx-backup/.ssh/authorized_keys",
+      "source": "/srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-backup-authorized_keys",
       "kind": "file",
       "owner": "powerforge-codeglyphx-backup",
       "group": "powerforge-codeglyphx-backup",
       "mode": "600"
+    },
+    {
+      "id": "static-deployment-runtime",
+      "path": "/usr/local/sbin/powerforge-site-deploy",
+      "source": "/srv/evotec/PSPublishModule/Deployment/Linux/powerforge-site-deploy.sh",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
+    },
+    {
+      "id": "static-reconcile-runtime",
+      "path": "/usr/local/sbin/powerforge-site-reconcile",
+      "source": "/srv/evotec/PSPublishModule/Deployment/Linux/powerforge-site-reconcile.sh",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
+    },
+    {
+      "id": "encrypted-capture-runtime",
+      "path": "/usr/local/sbin/powerforge-server-encrypted-capture",
+      "source": "/srv/evotec/PSPublishModule/Deployment/Linux/powerforge-server-encrypted-capture.sh",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
+    },
+    {
+      "id": "apache-site-enable-runtime",
+      "path": "/usr/local/sbin/powerforge-apache-site-enable",
+      "source": "/srv/evotec/PSPublishModule/Deployment/Linux/powerforge-apache-site-enable.sh",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
+    },
+    {
+      "id": "cloudflare-origin-sync-runtime",
+      "path": "/usr/local/sbin/powerforge-cloudflare-origin-sync",
+      "source": "/srv/evotec/PSPublishModule/Deployment/Linux/powerforge-cloudflare-origin-sync.sh",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
+    },
+    {
+      "id": "powerforge-config-root",
+      "path": "/etc/powerforge",
+      "kind": "directory",
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
+    },
+    {
+      "id": "powerforge-site-config-directory",
+      "path": "/etc/powerforge/sites",
+      "kind": "directory",
+      "owner": "root",
+      "group": "root",
+      "mode": "750"
     },
     {
       "id": "cloudflare-origin-apache-config",
@@ -159,10 +224,31 @@
     {
       "id": "static-deploy-config",
       "path": "/etc/powerforge/sites/codeglyphx.com.env",
+      "source": "/srv/evotec/CodeGlyphX/deploy/linux/codeglyphx.com.env",
       "kind": "file",
       "owner": "root",
       "group": "root",
       "mode": "640"
+    },
+    {
+      "id": "deployment-sudoers",
+      "path": "/etc/sudoers.d/powerforge-codeglyphx",
+      "source": "/srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx.sudoers",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "440",
+      "validation": "sudoers"
+    },
+    {
+      "id": "backup-sudoers",
+      "path": "/etc/sudoers.d/powerforge-codeglyphx-backup",
+      "source": "/srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-backup.sudoers",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "440",
+      "validation": "sudoers"
     }
   ],
   "apache": {
@@ -186,8 +272,7 @@
         "required": true
       }
     ],
-    "validateCommand": "sudo -n apachectl configtest",
-    "reloadCommand": "sudo -n systemctl reload apache2"
+    "validateCommand": "sudo -n apachectl configtest"
   },
   "firewall": {
     "provider": "ufw",
@@ -255,6 +340,7 @@
       "requiredFor": [
         "certificate-continuity"
       ],
+      "requiredDuringBootstrap": false,
       "capture": "encrypted",
       "restoreMode": "directory"
     },
@@ -264,6 +350,7 @@
       "requiredFor": [
         "certificate-renewal"
       ],
+      "requiredDuringBootstrap": false,
       "capture": "encrypted",
       "restoreMode": "directory"
     }
@@ -356,6 +443,11 @@
         "id": "release-link",
         "command": "readlink -f /var/www/codeglyphx/com/current",
         "required": true
+      },
+      {
+        "id": "static-source-ref",
+        "command": "jq -er '.sourceSha | select(type == \"string\" and test(\"^([0-9a-fA-F]{40}|[0-9a-fA-F]{64})$\"))' /var/www/codeglyphx/com/current/_powerforge/deployment.json",
+        "required": true
       }
     ],
     "exclude": [
@@ -365,63 +457,31 @@
       "/srv/evotec/CodeGlyphX/Website/_temp"
     ]
   },
-  "bootstrap": {
-    "commands": [
-      {
-        "id": "install-deployment-ssh-identity",
-        "command": "install -d -o powerforge-codeglyphx -g powerforge-codeglyphx -m 0700 /home/powerforge-codeglyphx/.ssh && install -o powerforge-codeglyphx -g powerforge-codeglyphx -m 0600 /srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-authorized_keys /home/powerforge-codeglyphx/.ssh/authorized_keys"
-      },
-      {
-        "id": "install-backup-ssh-identity",
-        "command": "install -d -o powerforge-codeglyphx-backup -g powerforge-codeglyphx-backup -m 0700 /var/lib/powerforge-codeglyphx-backup/.ssh && install -o powerforge-codeglyphx-backup -g powerforge-codeglyphx-backup -m 0600 /srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-backup-authorized_keys /var/lib/powerforge-codeglyphx-backup/.ssh/authorized_keys"
-      },
-      {
-        "id": "install-static-deployment-runtime",
-        "command": "install -o root -g root -m 0755 /srv/evotec/PSPublishModule/Deployment/Linux/powerforge-site-deploy.sh /usr/local/sbin/powerforge-site-deploy && install -o root -g root -m 0755 /srv/evotec/PSPublishModule/Deployment/Linux/powerforge-site-reconcile.sh /usr/local/sbin/powerforge-site-reconcile"
-      },
-      {
-        "id": "install-cloudflare-origin-sync",
-        "command": "install -o root -g root -m 0755 /srv/evotec/PSPublishModule/Deployment/Linux/powerforge-cloudflare-origin-sync.sh /usr/local/sbin/powerforge-cloudflare-origin-sync"
-      },
-      {
-        "id": "install-powerforge-config",
-        "command": "install -d -o root -g root -m 0750 /etc/powerforge/sites && install -o root -g root -m 0640 /srv/evotec/CodeGlyphX/deploy/linux/codeglyphx.com.env /etc/powerforge/sites/codeglyphx.com.env"
-      },
-      {
-        "id": "install-deployment-sudoers",
-        "command": "install -o root -g root -m 0440 /srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx.sudoers /etc/sudoers.d/powerforge-codeglyphx && visudo -cf /etc/sudoers.d/powerforge-codeglyphx"
-      },
-      {
-        "id": "install-backup-sudoers",
-        "command": "install -o root -g root -m 0440 /srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-backup.sudoers /etc/sudoers.d/powerforge-codeglyphx-backup && visudo -cf /etc/sudoers.d/powerforge-codeglyphx-backup"
-      }
-    ]
-  },
   "deploy": {
     "commands": [
       {
         "id": "reload-systemd",
-        "command": "sudo -n systemctl daemon-reload",
+        "command": "systemctl daemon-reload",
         "required": true
       },
       {
         "id": "sync-cloudflare-origin",
-        "command": "sudo -n /usr/local/sbin/powerforge-cloudflare-origin-sync",
+        "command": "/usr/local/sbin/powerforge-cloudflare-origin-sync",
         "required": true
       },
       {
         "id": "enable-cloudflare-origin-sync",
-        "command": "sudo -n systemctl enable --now powerforge-cloudflare-origin-sync.timer",
+        "command": "systemctl enable --now powerforge-cloudflare-origin-sync.timer",
         "required": true
       },
       {
         "id": "enable-static-deployment-reconciler",
-        "command": "sudo -n systemctl enable --now powerforge-site-reconcile.timer",
+        "command": "systemctl enable --now powerforge-site-reconcile.timer",
         "required": true
       },
       {
         "id": "enable-apache-site",
-        "command": "sudo -n a2ensite codeglyphx-com.conf codeglyphx-com-le-ssl.conf && sudo -n apachectl configtest && sudo -n systemctl reload apache2",
+        "command": "/usr/local/sbin/powerforge-apache-site-enable --http-site codeglyphx-com.conf --https-site codeglyphx-com-le-ssl.conf --certificate-name codeglyphx.com",
         "required": true
       }
     ]
@@ -486,7 +546,7 @@
     "recipient": "age1v4aw3yj7l4u9t5436ppy8hgem46lfy7wte9ww9ehfkhcwzldx4psd94wk6",
     "recipientEnv": "POWERFORGE_BACKUP_AGE_RECIPIENT",
     "retention": {
-      "keepLatest": 24
+      "keepLatestInTree": 24
     }
   },
   "notes": [
