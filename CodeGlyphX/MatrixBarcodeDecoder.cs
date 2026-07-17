@@ -30,6 +30,10 @@ public static class MatrixBarcodeDecoder {
             return TryDecodeExpected(expectedType.Value, modules, out decoded);
         }
 
+        if (Gs1CompositeDecoder.TryDecode(modules, out var composite)) {
+            decoded = new BarcodeDecoded(BarcodeType.GS1Composite, composite.CompositeText);
+            return true;
+        }
         if (DataMatrixDecoder.TryDecode(modules, out var dataMatrix)) {
             decoded = new BarcodeDecoded(BarcodeType.DataMatrix, dataMatrix);
             return true;
@@ -42,8 +46,24 @@ public static class MatrixBarcodeDecoder {
             decoded = new BarcodeDecoded(BarcodeType.MicroPDF417, microPdf417);
             return true;
         }
-        if (DataBar14Decoder.TryDecodeOmni(modules, out var omni)) {
+        if (TryDecodeDataBarOmnidirectional(modules, out var omni)) {
             decoded = new BarcodeDecoded(BarcodeType.GS1DataBarOmni, omni);
+            return true;
+        }
+        if (MaxiCodeDecoder.TryDecode(modules, out var maxiCode)) {
+            decoded = new BarcodeDecoded(BarcodeType.MaxiCode, maxiCode);
+            return true;
+        }
+        if (DotCodeDecoder.TryDecode(modules, out var dotCode)) {
+            decoded = new BarcodeDecoded(BarcodeType.DotCode, dotCode);
+            return true;
+        }
+        if (HanXinDecoder.TryDecode(modules, out var hanXin)) {
+            decoded = new BarcodeDecoded(BarcodeType.HanXin, hanXin);
+            return true;
+        }
+        if (DataBar14Decoder.TryDecodeStackedOmnidirectional(modules, out var stackedOmni)) {
+            decoded = new BarcodeDecoded(BarcodeType.GS1DataBarStackedOmni, stackedOmni);
             return true;
         }
         if (DataBar14Decoder.TryDecodeStacked(modules, out var stacked)) {
@@ -105,20 +125,31 @@ public static class MatrixBarcodeDecoder {
             BarcodeType.AustraliaPost => AustraliaPostDecoder.TryDecode(modules, out text),
             BarcodeType.JapanPost => JapanPostDecoder.TryDecode(modules, out text),
             BarcodeType.UspsImb => UspsImbDecoder.TryDecode(modules, out text),
-            BarcodeType.GS1DataBarOmni => DataBar14Decoder.TryDecodeOmni(modules, out text),
+            BarcodeType.GS1DataBarOmni => TryDecodeDataBarOmnidirectional(modules, out text),
             BarcodeType.GS1DataBarStacked => DataBar14Decoder.TryDecodeStacked(modules, out text),
+            BarcodeType.GS1DataBarStackedOmni => DataBar14Decoder.TryDecodeStackedOmnidirectional(modules, out text),
             BarcodeType.GS1DataBarExpandedStacked => DataBarExpandedDecoder.TryDecodeExpandedStacked(modules, out text),
             BarcodeType.DataMatrix => DataMatrixDecoder.TryDecode(modules, out text),
             BarcodeType.PDF417 => Pdf417Decoder.TryDecode(modules, out text),
             BarcodeType.MicroPDF417 => MicroPdf417Decoder.TryDecode(modules, out text),
+            BarcodeType.MaxiCode => MaxiCodeDecoder.TryDecode(modules, out text),
+            BarcodeType.DotCode => DotCodeDecoder.TryDecode(modules, out text),
+            BarcodeType.HanXin => HanXinDecoder.TryDecode(modules, out text),
+            BarcodeType.GS1Composite => TryDecodeGs1CompositeText(modules, out text),
             _ => throw new NotSupportedException($"BarcodeType.{type} is not supported by MatrixBarcodeDecoder.")
         };
     }
 
     /// <summary>
-    /// Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a <see cref="BitMatrix"/>.
+    /// Attempts to decode a GS1 DataBar-14 Omnidirectional symbol from a one-row <see cref="BitMatrix"/>.
     /// </summary>
-    public static bool TryDecodeGs1DataBarOmni(BitMatrix modules, out string text) => DataBar14Decoder.TryDecodeOmni(modules, out text);
+    public static bool TryDecodeGs1DataBarOmni(BitMatrix modules, out string text) => TryDecodeDataBarOmnidirectional(modules, out text);
+
+    /// <summary>
+    /// Attempts to decode a GS1 DataBar-14 Stacked Omnidirectional symbol from a <see cref="BitMatrix"/>.
+    /// </summary>
+    public static bool TryDecodeGs1DataBarStackedOmnidirectional(BitMatrix modules, out string text) =>
+        DataBar14Decoder.TryDecodeStackedOmnidirectional(modules, out text);
 
     /// <summary>
     /// Attempts to decode a GS1 DataBar-14 Stacked symbol from a <see cref="BitMatrix"/>.
@@ -145,6 +176,19 @@ public static class MatrixBarcodeDecoder {
     /// </summary>
     public static bool TryDecodeMicroPdf417(BitMatrix modules, out string text) => MicroPdf417Decoder.TryDecode(modules, out text);
 
+    /// <summary>Attempts to decode a MaxiCode sampled module grid.</summary>
+    public static bool TryDecodeMaxiCode(BitMatrix modules, out string text) => MaxiCodeDecoder.TryDecode(modules, out text);
+
+    /// <summary>Attempts to decode an exact sampled AIM DotCode grid.</summary>
+    public static bool TryDecodeDotCode(BitMatrix modules, out string text) => DotCodeDecoder.TryDecode(modules, out text);
+
+    /// <summary>Attempts to decode an exact sampled Han Xin Code grid.</summary>
+    public static bool TryDecodeHanXin(BitMatrix modules, out string text) => HanXinDecoder.TryDecode(modules, out text);
+
+    /// <summary>Attempts to decode both GS1 messages from a Composite symbol.</summary>
+    public static bool TryDecodeGs1Composite(BitMatrix modules, out Gs1CompositeDecoded decoded) =>
+        Gs1CompositeDecoder.TryDecode(modules, out decoded);
+
     private static bool TryDecodeExpected(BarcodeType type, BitMatrix modules, out BarcodeDecoded decoded) {
         decoded = null!;
         switch (type) {
@@ -167,8 +211,38 @@ public static class MatrixBarcodeDecoder {
                 }
                 return false;
             case BarcodeType.GS1DataBarOmni:
-                if (DataBar14Decoder.TryDecodeOmni(modules, out var omni)) {
+                if (TryDecodeDataBarOmnidirectional(modules, out var omni)) {
                     decoded = new BarcodeDecoded(BarcodeType.GS1DataBarOmni, omni);
+                    return true;
+                }
+                return false;
+            case BarcodeType.MaxiCode:
+                if (MaxiCodeDecoder.TryDecode(modules, out var maxiCode)) {
+                    decoded = new BarcodeDecoded(BarcodeType.MaxiCode, maxiCode);
+                    return true;
+                }
+                return false;
+            case BarcodeType.DotCode:
+                if (DotCodeDecoder.TryDecode(modules, out var dotCode)) {
+                    decoded = new BarcodeDecoded(BarcodeType.DotCode, dotCode);
+                    return true;
+                }
+                return false;
+            case BarcodeType.HanXin:
+                if (HanXinDecoder.TryDecode(modules, out var hanXin)) {
+                    decoded = new BarcodeDecoded(BarcodeType.HanXin, hanXin);
+                    return true;
+                }
+                return false;
+            case BarcodeType.GS1Composite:
+                if (Gs1CompositeDecoder.TryDecode(modules, out var composite)) {
+                    decoded = new BarcodeDecoded(BarcodeType.GS1Composite, composite.CompositeText);
+                    return true;
+                }
+                return false;
+            case BarcodeType.GS1DataBarStackedOmni:
+                if (DataBar14Decoder.TryDecodeStackedOmnidirectional(modules, out var stackedOmni)) {
+                    decoded = new BarcodeDecoded(BarcodeType.GS1DataBarStackedOmni, stackedOmni);
                     return true;
                 }
                 return false;
@@ -235,5 +309,20 @@ public static class MatrixBarcodeDecoder {
             default:
                 return false;
         }
+    }
+
+    private static bool TryDecodeDataBarOmnidirectional(BitMatrix modules, out string text) {
+        text = string.Empty;
+        if (modules is null || modules.Height != 1 || modules.Width <= 0) return false;
+        var row = new bool[modules.Width];
+        for (var x = 0; x < modules.Width; x++) row[x] = modules[x, 0];
+        return DataBar14Decoder.TryDecodeOmnidirectional(row, out text);
+    }
+
+    private static bool TryDecodeGs1CompositeText(BitMatrix modules, out string text) {
+        text = string.Empty;
+        if (!Gs1CompositeDecoder.TryDecode(modules, out var decoded)) return false;
+        text = decoded.CompositeText;
+        return true;
     }
 }

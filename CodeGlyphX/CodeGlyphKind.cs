@@ -15,5 +15,15 @@ public enum CodeGlyphKind {
     /// <summary>Aztec.</summary>
     Aztec,
     /// <summary>Micro QR code.</summary>
-    MicroQr
+    MicroQr,
+    /// <summary>Rectangular Micro QR code.</summary>
+    RmQr,
+    /// <summary>MaxiCode.</summary>
+    MaxiCode,
+    /// <summary>AIM DotCode.</summary>
+    DotCode,
+    /// <summary>Han Xin Code.</summary>
+    HanXin,
+    /// <summary>GS1 Composite symbol.</summary>
+    Gs1Composite
 }

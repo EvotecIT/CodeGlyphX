@@ -15,6 +15,11 @@ internal static class Code128Encoder {
         return EncodeFromCodes(codes);
     }
 
+    internal static Barcode1D EncodeGs1Composite(string elementString, bool ccC) {
+        var codes = EncodeCodeValues(elementString, gs1: true, compositeLinkage: ccC ? 2 : 1);
+        return EncodeFromCodes(codes);
+    }
+
     private static Barcode1D EncodeFromCodes(int[] codes) {
 
         var segments = new List<BarSegment>(codes.Length * 6);
@@ -33,7 +38,7 @@ internal static class Code128Encoder {
         return new Barcode1D(segments);
     }
 
-    internal static int[] EncodeCodeValues(string value, bool gs1 = false) {
+    internal static int[] EncodeCodeValues(string value, bool gs1 = false, int compositeLinkage = 0) {
         if (value is null) throw new ArgumentNullException(nameof(value));
         if (value.Length == 0) throw new ArgumentException("Value cannot be empty.", nameof(value));
         if (gs1 && value[0] == Gs1.GroupSeparator) throw new ArgumentException("GS1 element string cannot start with a group separator.");
@@ -124,6 +129,16 @@ internal static class Code128Encoder {
             }
             EmitCodeBChar(value[i], codes);
             i++;
+        }
+
+        if (compositeLinkage != 0) {
+            if (!gs1) throw new ArgumentException("Composite linkage is only valid for GS1-128.", nameof(compositeLinkage));
+            if (compositeLinkage is < 1 or > 2) throw new ArgumentOutOfRangeException(nameof(compositeLinkage));
+            // ISO/IEC 24723 section 7.4: the linkage flag is an extra code-set
+            // character immediately before the symbol check character.
+            codes.Add(compositeLinkage == 1
+                ? set == 'C' ? Code128Tables.CodeA : Code128Tables.CodeC
+                : set == 'C' ? Code128Tables.CodeB : Code128Tables.CodeA);
         }
 
         // Checksum

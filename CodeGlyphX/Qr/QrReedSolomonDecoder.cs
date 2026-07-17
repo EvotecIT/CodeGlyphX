@@ -147,7 +147,11 @@ internal static class QrReedSolomonDecoder {
                 var denominator = EvaluatePoly(sigmaDeriv, sigmaDeriv.Length, xiInv);
                 if (denominator == 0) return false;
 
-                var magnitude = QrReedSolomon.Multiply(numerator, QrReedSolomon.Inverse(denominator));
+                // QR generators start at alpha^0. Forney therefore needs the
+                // X_i^(1-b) factor (b = 0), unlike Data Matrix's alpha^1 field.
+                var magnitude = QrReedSolomon.Multiply(
+                    xi,
+                    QrReedSolomon.Multiply(numerator, QrReedSolomon.Inverse(denominator)));
                 var position = codewordCount - 1 - QrReedSolomon.LogOf(xi);
                 if ((uint)position >= (uint)codewordCount) return false;
                 codewords[position] ^= magnitude;
@@ -303,7 +307,11 @@ internal static class QrReedSolomonDecoder {
                 var denominator = EvaluatePoly(sigmaDeriv, sigmaDeriv.Length, xiInv);
                 if (denominator == 0) return false;
 
-                var magnitude = QrReedSolomon.Multiply(numerator, QrReedSolomon.Inverse(denominator));
+                // QR generators start at alpha^0. Forney therefore needs the
+                // X_i^(1-b) factor (b = 0), unlike Data Matrix's alpha^1 field.
+                var magnitude = QrReedSolomon.Multiply(
+                    xi,
+                    QrReedSolomon.Multiply(numerator, QrReedSolomon.Inverse(denominator)));
                 var position = codewordCount - 1 - QrReedSolomon.LogOf(xi);
                 if ((uint)position >= (uint)codewordCount) return false;
                 codewords[position] ^= magnitude;

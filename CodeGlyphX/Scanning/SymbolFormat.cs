@@ -81,5 +81,19 @@ public enum SymbolFormat {
     /// <summary>PDF417.</summary>
     Pdf417,
     /// <summary>MicroPDF417.</summary>
-    MicroPdf417
+    MicroPdf417,
+    /// <summary>Rectangular Micro QR Code (rMQR).</summary>
+    RmQrCode,
+    /// <summary>GS1 DataBar Limited.</summary>
+    Gs1DataBarLimited,
+    /// <summary>GS1 DataBar Stacked Omnidirectional.</summary>
+    Gs1DataBarStackedOmnidirectional,
+    /// <summary>MaxiCode.</summary>
+    MaxiCode,
+    /// <summary>AIM DotCode.</summary>
+    DotCode,
+    /// <summary>Han Xin Code.</summary>
+    HanXin,
+    /// <summary>GS1 Composite with a GS1-128 linear component.</summary>
+    Gs1Composite
 }

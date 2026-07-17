@@ -27,12 +27,16 @@ public static class MatrixBarcodeEncoder {
             BarcodeType.AustraliaPost => AustraliaPostEncoder.Encode(value),
             BarcodeType.JapanPost => JapanPostEncoder.Encode(value),
             BarcodeType.UspsImb => UspsImbEncoder.Encode(value),
-            BarcodeType.GS1DataBarOmni => DataBar14Encoder.EncodeOmni(value),
+            BarcodeType.GS1DataBarOmni => ToSingleRowMatrix(DataBar14Encoder.EncodeOmnidirectional(value)),
             BarcodeType.GS1DataBarStacked => DataBar14Encoder.EncodeStacked(value),
+            BarcodeType.GS1DataBarStackedOmni => DataBar14Encoder.EncodeStackedOmnidirectional(value),
             BarcodeType.GS1DataBarExpandedStacked => DataBarExpandedEncoder.EncodeExpandedStacked(value),
             BarcodeType.DataMatrix => DataMatrix.DataMatrixEncoder.Encode(value),
             BarcodeType.PDF417 => Pdf417.Pdf417Encoder.Encode(value),
             BarcodeType.MicroPDF417 => Pdf417.MicroPdf417Encoder.Encode(value),
+            BarcodeType.MaxiCode => MaxiCodeEncoder.EncodeText(value).Modules,
+            BarcodeType.DotCode => DotCodeEncoder.EncodeText(value).Modules,
+            BarcodeType.HanXin => HanXinEncoder.EncodeText(value).Modules,
             _ => throw new NotSupportedException($"BarcodeType.{type} is not supported by MatrixBarcodeEncoder.")
         };
     }
@@ -78,9 +82,14 @@ public static class MatrixBarcodeEncoder {
     public static BitMatrix EncodeUspsImb(string value) => UspsImbEncoder.Encode(value);
 
     /// <summary>
-    /// Encodes a GS1 DataBar-14 Omnidirectional symbol into a <see cref="BitMatrix"/>.
+    /// Encodes a GS1 DataBar-14 Omnidirectional symbol as a one-row <see cref="BitMatrix"/>.
     /// </summary>
-    public static BitMatrix EncodeGs1DataBarOmni(string value) => DataBar14Encoder.EncodeOmni(value);
+    public static BitMatrix EncodeGs1DataBarOmni(string value) => ToSingleRowMatrix(DataBar14Encoder.EncodeOmnidirectional(value));
+
+    /// <summary>
+    /// Encodes a GS1 DataBar-14 Stacked Omnidirectional symbol into a <see cref="BitMatrix"/>.
+    /// </summary>
+    public static BitMatrix EncodeGs1DataBarStackedOmnidirectional(string value) => DataBar14Encoder.EncodeStackedOmnidirectional(value);
 
     /// <summary>
     /// Encodes a GS1 DataBar-14 Stacked symbol into a <see cref="BitMatrix"/>.
@@ -106,4 +115,36 @@ public static class MatrixBarcodeEncoder {
     /// Encodes a MicroPDF417 symbol into a <see cref="BitMatrix"/>.
     /// </summary>
     public static BitMatrix EncodeMicroPdf417(string value) => Pdf417.MicroPdf417Encoder.Encode(value);
+
+    /// <summary>
+    /// Encodes a MaxiCode symbol into its fixed sampled module grid.
+    /// </summary>
+    public static BitMatrix EncodeMaxiCode(string value, MaxiCodeEncodingOptions? options = null) =>
+        MaxiCodeEncoder.EncodeText(value, options ?? new MaxiCodeEncodingOptions()).Modules;
+
+    /// <summary>Encodes an AIM DotCode symbol.</summary>
+    public static BitMatrix EncodeDotCode(string value, DotCodeEncodingOptions? options = null) =>
+        DotCodeEncoder.EncodeText(value, options ?? new DotCodeEncodingOptions()).Modules;
+
+    /// <summary>Encodes a Han Xin Code symbol.</summary>
+    public static BitMatrix EncodeHanXin(string value, HanXinEncodingOptions? options = null) =>
+        HanXinEncoder.EncodeText(value, options ?? new HanXinEncodingOptions()).Modules;
+
+    /// <summary>Encodes a standards-linked GS1-128 Composite symbol.</summary>
+    public static BitMatrix EncodeGs1Composite(string linearText, string compositeText,
+        Gs1CompositeEncodingOptions? options = null) =>
+        Gs1CompositeEncoder.Encode(linearText, compositeText, options).Modules;
+
+    private static BitMatrix ToSingleRowMatrix(Barcode1D barcode) {
+        var matrix = new BitMatrix(barcode.TotalModules, 1);
+        var x = 0;
+        for (var i = 0; i < barcode.Segments.Count; i++) {
+            var segment = barcode.Segments[i];
+            if (segment.IsBar) {
+                for (var j = 0; j < segment.Modules; j++) matrix[x + j, 0] = true;
+            }
+            x += segment.Modules;
+        }
+        return matrix;
+    }
 }

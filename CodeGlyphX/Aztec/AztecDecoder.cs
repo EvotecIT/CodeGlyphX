@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using CodeGlyphX;
-using CodeGlyphX.Aztec.Internal;
+using CodeGlyphX.Internal.ReedSolomon;
 using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Aztec;

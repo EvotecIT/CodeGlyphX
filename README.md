@@ -1,6 +1,6 @@
 # CodeGlyphX
 
-CodeGlyphX is a pure-managed .NET toolkit for QR codes, linear barcodes, Data Matrix, PDF417, Aztec, structured QR payloads, and image rendering/decoding. It does not require native graphics libraries such as System.Drawing, SkiaSharp, or ImageSharp.
+CodeGlyphX is a pure-managed .NET toolkit for QR codes, industrial and retail barcodes, matrix symbols, structured payloads, and image rendering/decoding. It does not require native graphics libraries such as System.Drawing, SkiaSharp, or ImageSharp.
 
 [![NuGet](https://img.shields.io/nuget/v/CodeGlyphX)](https://www.nuget.org/packages/CodeGlyphX)
 [![CI](https://github.com/EvotecIT/CodeGlyphX/actions/workflows/ci.yml/badge.svg)](https://github.com/EvotecIT/CodeGlyphX/actions/workflows/ci.yml)
@@ -9,12 +9,13 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, linear barcodes, Data Ma
 
 ## What it covers
 
-- QR and Micro QR encoding, module decoding, and image recognition, including QR ECI, Kanji, FNC1/GS1, and structured append
+- QR, Micro QR, and rectangular Micro QR encoding and module decoding, including ECI, Kanji, FNC1/GS1, and structured append where the format supports it
 - Common 1D symbologies including Code 128/GS1-128, Code 39/93/11, EAN/UPC, ITF, Codabar, MSI, Plessey, postal, and GS1 DataBar variants
+- Industrial and logistics formats including MaxiCode, DotCode, Han Xin Code, GS1 DataBar Limited/Stacked Omnidirectional, and GS1-128 Composite CC-A/CC-B/CC-C
 - Data Matrix ECC 200 and DMRE encoding/decoding, plus PDF417/MicroPDF417 and Aztec
 - QR payload builders for Wi-Fi, contacts, calendar events, OTP, payments, social profiles, and app links
 - PNG, JPEG, WebP, GIF, TIFF, BMP, Netpbm, TGA, ICO, XBM, XPM, SVG/SVGZ, HTML, PDF, EPS, and ASCII output
-- Managed raster decoding with explicit byte, pixel, dimension, animation, cancellation, and recognition-budget controls
+- Managed raster decoding with explicit byte, pixel, dimension, animation, cancellation, and recognition-budget controls, plus opt-in laser-etch and dot-peen preprocessing
 - WPF controls and example applications
 
 The exact behavior and known codec limits are documented under [image decoding](https://codeglyphx.com/docs/decoding/) and [output formats](https://codeglyphx.com/docs/renderers/).
@@ -188,6 +189,39 @@ Gs1DigitalLinkUri canonical = Gs1DigitalLink.BuildCanonical(new[] {
 
 URI compression and online resolver behavior are separate GS1 standards; this API deliberately implements the uncompressed URI syntax without network access.
 
+## Industrial and logistics symbols
+
+The industrial codecs expose detailed symbols and decoded metadata while still participating in the unified module-matrix facades:
+
+```csharp
+RmQrCode rackLabel = RmQrCodeEncoder.EncodeText("RACK-A17-BIN-04");
+MaxiCodeSymbol shipment = MaxiCodeEncoder.EncodeText("SHIPMENT-2026-0042");
+DotCodeSymbol trace = DotCodeEncoder.EncodeGs1("(01)09506000134352(21)ABC123");
+HanXinSymbol hanXin = HanXinEncoder.EncodeText("物流-2026-0042");
+
+Barcode1D limited = BarcodeEncoder.Encode(
+    BarcodeType.GS1DataBarLimited,
+    "1234567890123");
+
+Gs1CompositeSymbol composite = Gs1CompositeEncoder.Encode(
+    linearText: "(01)09506000134352",
+    compositeText: "(21)ABC123");
+```
+
+The GS1 Composite implementation currently pairs a GS1-128 carrier with CC-A, CC-B, or CC-C and uses the standards-defined general-field method. EAN/UPC/DataBar carriers and the optimized date/AI 90 methods are future work. Han Xin text outside its native compact modes is encoded as binary data with UTF-8 ECI; native GB18030 region compaction is not yet implemented.
+
+rMQR, MaxiCode, DotCode, Han Xin, and GS1 Composite currently support encoding and decoding of sampled modules. GS1 DataBar Limited and Omnidirectional also participate in the unified linear image scanner; the stacked DataBar variants remain module-only. `SymbolCapabilities` reports these boundaries directly. Direct-part-mark preprocessing is opt-in for formats the image scanner already recognizes:
+
+```csharp
+ScanResult scan = SymbolScanner.Scan(image, new ScanOptions
+{
+    Formats = new[] { SymbolFormat.DataMatrix },
+    DirectPartMarking = DirectPartMarkOptions.LaserEtch()
+});
+```
+
+The DPM profiles improve local contrast or reconnect dot-peen marks before recognition. They do not grade print quality, certify ISO/IEC 29158 compliance, or replace validation with the actual marking process and scanners used in production.
+
 ## Decode an image
 
 ```csharp
@@ -273,8 +307,8 @@ See [SECURITY.md](SECURITY.md) for reporting and [FUZZING.md](FUZZING.md) for th
 | --- | --- | --- |
 | `net8.0` | Current applications, full QR pixel pipeline, trimming/NativeAOT | None |
 | `net10.0` | Current applications, full QR pixel pipeline, trimming/NativeAOT | None |
-| `netstandard2.0` | Legacy-compatible libraries | `System.Memory` |
-| `net472` | .NET Framework applications | `System.Memory` |
+| `netstandard2.0` | Legacy-compatible libraries | `System.Memory`, `System.Text.Encoding.CodePages` |
+| `net472` | .NET Framework applications | `System.Memory`, `System.Text.Encoding.CodePages` |
 
 The package is pure managed on every target. QR image decoding on `netstandard2.0` and `net472` uses a less capable fallback intended for clean/generated images; use `net8.0` or newer for screenshots, stylized codes, and the full pixel pipeline.
 

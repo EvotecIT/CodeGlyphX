@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using CodeGlyphX.Aztec;
 using CodeGlyphX.DataMatrix;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
 
@@ -96,7 +98,7 @@ public static class SymbolScanner {
 
         ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanMicroQr(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
-        if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
+        if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanPdf417(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanLinear(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
@@ -164,6 +166,7 @@ public static class SymbolScanner {
         int width,
         int height,
         ImageRegion searchRegion,
+        ScanOptions options,
         ScanDeadline deadline,
         ISet<SymbolFormat> requested,
         List<DetectedSymbol> results,
@@ -171,6 +174,16 @@ public static class SymbolScanner {
         if (!requested.Contains(SymbolFormat.DataMatrix)) return;
         if (DataMatrixDecoder.TryDecodeDetailed(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var decoded)) {
             Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix, new CodeGlyphDecoded(decoded), searchRegion));
+            return;
+        }
+        if (options.DirectPartMarking is null || deadline.ShouldStop) return;
+        var dpm = options.DirectPartMarking.Clone();
+        var variants = DirectPartMarkPreprocessor.CreateVariants(rgba, width, height, dpm, deadline.Token);
+        for (var i = 0; i < variants.Count && !deadline.ShouldStop; i++) {
+            if (!DataMatrixDecoder.TryDecodeDetailed(variants[i], width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out decoded)) continue;
+            Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix,
+                new CodeGlyphDecoded(decoded), searchRegion, directPartMarkProfile: dpm.Profile));
+            return;
         }
     }
 
@@ -224,14 +237,33 @@ public static class SymbolScanner {
         if (expectedTypes.Count == 0) return;
 
         var barcodeOptions = CloneBarcodeOptions(options.Barcode);
-        if (expectedTypes.Count == 1 || RequestsEveryImageScannableLinearFormat(requested)) {
-            var expected = expectedTypes.Count == 1 ? expectedTypes[0] : (BarcodeType?)null;
-            AddLinearResults(rgba, width, height, searchRegion, options, deadline, requested, results, seen, expected, barcodeOptions);
-            return;
+        var classifyDataBarHeight = expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)
+            && expectedTypes.Contains(BarcodeType.GS1DataBarOmni);
+
+        if (classifyDataBarHeight) {
+            var expected = RequestsEveryImageScannableLinearFormat(requested)
+                ? (BarcodeType?)null
+                : BarcodeType.GS1DataBarTruncated;
+            ScanLocatedLinear(
+                rgba,
+                width,
+                height,
+                searchRegion,
+                options,
+                deadline,
+                requested,
+                expectedTypes,
+                expected,
+                barcodeOptions,
+                results,
+                seen);
+            if (!expected.HasValue || ShouldStop(options, deadline, results)) return;
         }
 
         for (var i = 0; i < expectedTypes.Count && !ShouldStop(options, deadline, results); i++) {
-            AddLinearResults(rgba, width, height, searchRegion, options, deadline, requested, results, seen, expectedTypes[i], barcodeOptions);
+            var expected = expectedTypes[i];
+            if (classifyDataBarHeight && (expected == BarcodeType.GS1DataBarTruncated || expected == BarcodeType.GS1DataBarOmni)) continue;
+            AddLinearResults(rgba, width, height, searchRegion, options, deadline, requested, expectedTypes, results, seen, expected, barcodeOptions);
         }
     }
 
@@ -243,16 +275,79 @@ public static class SymbolScanner {
         ScanOptions options,
         ScanDeadline deadline,
         ISet<SymbolFormat> requested,
+        List<BarcodeType> expectedTypes,
         List<DetectedSymbol> results,
         HashSet<string>? seen,
-        BarcodeType? expectedType,
+        BarcodeType expectedType,
         BarcodeDecodeOptions? barcodeOptions) {
         if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expectedType, barcodeOptions, deadline.Token)) return;
         for (var i = 0; i < decoded.Length; i++) {
-            if (!SymbolCapabilities.TryFromLegacy(decoded[i].Type, out var format) || !requested.Contains(format)) continue;
-            Add(results, seen, new DetectedSymbol(format, new CodeGlyphDecoded(decoded[i]), searchRegion));
+            var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes, rgba, width, height, candidate: null, cancellationToken: deadline.Token);
+            if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
+            Add(results, seen, new DetectedSymbol(format, new CodeGlyphDecoded(hit), searchRegion));
             if (ReachedMaximum(options, results)) return;
         }
+    }
+
+    private static void ScanLocatedLinear(
+        byte[] rgba,
+        int width,
+        int height,
+        ImageRegion searchRegion,
+        ScanOptions options,
+        ScanDeadline deadline,
+        ISet<SymbolFormat> requested,
+        List<BarcodeType> expectedTypes,
+        BarcodeType? expected,
+        BarcodeDecodeOptions? barcodeOptions,
+        List<DetectedSymbol> results,
+        HashSet<string>? seen) {
+        if (!BarcodeDecoder.TryDecodeAllLocated(
+                rgba,
+                width,
+                height,
+                width * 4,
+                PixelFormat.Rgba32,
+                out var decoded,
+                expected,
+                barcodeOptions,
+                deadline.Token)) return;
+
+        // BarcodeDecoder's public multi-result contract deduplicates by physical type and payload. Preserve
+        // that behavior after classifying each located DataBar candidate independently.
+        var decodedSeen = new HashSet<string>(StringComparer.Ordinal);
+        for (var i = 0; i < decoded.Length; i++) {
+            var hit = ResolveRequestedLinearIdentity(decoded[i].Decoded, expectedTypes, rgba, width, height, decoded[i], deadline.Token);
+            var key = hit.Type + "\u001f" + hit.Text;
+            if (!decodedSeen.Add(key)) continue;
+            if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
+            Add(results, seen, new DetectedSymbol(format, new CodeGlyphDecoded(hit), searchRegion));
+            if (ReachedMaximum(options, results)) return;
+        }
+    }
+
+    private static BarcodeDecoded ResolveRequestedLinearIdentity(
+        BarcodeDecoded decoded,
+        List<BarcodeType> expectedTypes,
+        byte[] rgba,
+        int width,
+        int height,
+        BarcodeImageCandidate? candidate,
+        CancellationToken cancellationToken) {
+        // DataBar Omnidirectional and Truncated have the same horizontal module sequence; only bar height
+        // distinguishes them. An Omni-only request supplies the caller's physical identity. When both are
+        // requested, use the standards-defined 33X Omnidirectional height boundary and otherwise preserve
+        // the scanline decoder's conservative Truncated identity.
+        if (decoded.Type == BarcodeType.GS1DataBarTruncated
+            && expectedTypes.Contains(BarcodeType.GS1DataBarOmni)) {
+            if (!expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)
+                || candidate is not null
+                && DataBar14ImageClassifier.TryIsOmnidirectional(rgba, width, height, candidate, cancellationToken, out var isOmnidirectional)
+                && isOmnidirectional) {
+                return new BarcodeDecoded(BarcodeType.GS1DataBarOmni, decoded.Text);
+            }
+        }
+        return decoded;
     }
 
     private static bool RequestsEveryImageScannableLinearFormat(ISet<SymbolFormat> requested) {
@@ -364,6 +459,7 @@ public static class SymbolScanner {
             Qr = source.Qr,
             Barcode = source.Barcode,
             Image = source.Image,
+            DirectPartMarking = source.DirectPartMarking,
             CancellationToken = source.CancellationToken
         };
     }
@@ -472,5 +568,6 @@ public static class SymbolScanner {
         if (options.TimeoutMilliseconds < 0) throw new ArgumentOutOfRangeException(nameof(options.TimeoutMilliseconds));
         if (options.MaxSymbols < 0) throw new ArgumentOutOfRangeException(nameof(options.MaxSymbols));
         if (!Enum.IsDefined(typeof(ScanProfile), options.Profile)) throw new ArgumentOutOfRangeException(nameof(options.Profile));
+        if (options.DirectPartMarking is not null) DirectPartMarkPreprocessor.Validate(options.DirectPartMarking);
     }
 }

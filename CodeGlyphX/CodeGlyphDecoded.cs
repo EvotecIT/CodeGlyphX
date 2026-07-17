@@ -24,6 +24,25 @@ public sealed class CodeGlyphDecoded {
     public MicroQrDecoded? MicroQr { get; }
 
     /// <summary>
+    /// Gets the decoded rMQR result when <see cref="Kind"/> is <see cref="CodeGlyphKind.RmQr"/>.
+    /// </summary>
+    public RmQrDecoded? RmQr { get; }
+
+    /// <summary>
+    /// Gets the decoded MaxiCode result when <see cref="Kind"/> is <see cref="CodeGlyphKind.MaxiCode"/>.
+    /// </summary>
+    public MaxiCodeDecoded? MaxiCode { get; }
+
+    /// <summary>Gets the decoded DotCode result when <see cref="Kind"/> is <see cref="CodeGlyphKind.DotCode"/>.</summary>
+    public DotCodeDecoded? DotCode { get; }
+
+    /// <summary>Gets the decoded Han Xin result when <see cref="Kind"/> is <see cref="CodeGlyphKind.HanXin"/>.</summary>
+    public HanXinDecoded? HanXin { get; }
+
+    /// <summary>Gets the decoded GS1 Composite result when <see cref="Kind"/> is <see cref="CodeGlyphKind.Gs1Composite"/>.</summary>
+    public Gs1CompositeDecoded? Gs1Composite { get; }
+
+    /// <summary>
     /// Gets the decoded barcode result when <see cref="Kind"/> is <see cref="CodeGlyphKind.Barcode1D"/>.
     /// </summary>
     public BarcodeDecoded? Barcode { get; }
@@ -61,12 +80,12 @@ public sealed class CodeGlyphDecoded {
     /// <summary>
     /// Gets the decoded text (QR/Micro QR/Barcode/DataMatrix/PDF417/Aztec).
     /// </summary>
-    public string Text => Qr?.Text ?? MicroQr?.Text ?? Barcode?.Text ?? DataMatrix?.Text ?? DataMatrixText ?? Pdf417Text ?? AztecText ?? string.Empty;
+    public string Text => Qr?.Text ?? MicroQr?.Text ?? RmQr?.Text ?? MaxiCode?.Text ?? DotCode?.Text ?? HanXin?.Text ?? Gs1Composite?.Text ?? Barcode?.Text ?? DataMatrix?.Text ?? DataMatrixText ?? Pdf417Text ?? AztecText ?? string.Empty;
 
     /// <summary>
     /// Gets the decoded payload bytes for QR and Micro QR codes.
     /// </summary>
-    public byte[]? Bytes => Qr?.Bytes ?? MicroQr?.Bytes;
+    public byte[]? Bytes => Qr?.Bytes ?? MicroQr?.Bytes ?? RmQr?.Bytes ?? MaxiCode?.Bytes ?? DotCode?.Bytes ?? HanXin?.Bytes;
 
     internal CodeGlyphDecoded(QrDecoded qr) {
         Qr = qr ?? throw new ArgumentNullException(nameof(qr));
@@ -76,6 +95,31 @@ public sealed class CodeGlyphDecoded {
     internal CodeGlyphDecoded(MicroQrDecoded microQr) {
         MicroQr = microQr ?? throw new ArgumentNullException(nameof(microQr));
         Kind = CodeGlyphKind.MicroQr;
+    }
+
+    internal CodeGlyphDecoded(RmQrDecoded rmQr) {
+        RmQr = rmQr ?? throw new ArgumentNullException(nameof(rmQr));
+        Kind = CodeGlyphKind.RmQr;
+    }
+
+    internal CodeGlyphDecoded(MaxiCodeDecoded maxiCode) {
+        MaxiCode = maxiCode ?? throw new ArgumentNullException(nameof(maxiCode));
+        Kind = CodeGlyphKind.MaxiCode;
+    }
+
+    internal CodeGlyphDecoded(DotCodeDecoded dotCode) {
+        DotCode = dotCode ?? throw new ArgumentNullException(nameof(dotCode));
+        Kind = CodeGlyphKind.DotCode;
+    }
+
+    internal CodeGlyphDecoded(HanXinDecoded hanXin) {
+        HanXin = hanXin ?? throw new ArgumentNullException(nameof(hanXin));
+        Kind = CodeGlyphKind.HanXin;
+    }
+
+    internal CodeGlyphDecoded(Gs1CompositeDecoded composite) {
+        Gs1Composite = composite ?? throw new ArgumentNullException(nameof(composite));
+        Kind = CodeGlyphKind.Gs1Composite;
     }
 
     internal CodeGlyphDecoded(BarcodeDecoded barcode) {

@@ -76,5 +76,35 @@ internal static class FlagshipApiExample {
             digitalLink.CanonicalUri != "https://id.gs1.org/01/09520123456788/10/ABC1/21/12345?17=180426") {
             throw new System.InvalidOperationException("The GS1 Digital Link NativeAOT smoke test failed.");
         }
+
+        const string industrialPayload = "LOT-2026-0042";
+        var rmQr = RmQrCodeEncoder.EncodeText(industrialPayload);
+        var maxiCode = MaxiCodeEncoder.EncodeText(industrialPayload);
+        var dotCode = DotCodeEncoder.EncodeText(industrialPayload);
+        var hanXin = HanXinEncoder.EncodeText(industrialPayload);
+        var composite = Gs1CompositeEncoder.Encode("(01)09506000134352", "(21)ABC123");
+        var dataBar = BarcodeEncoder.Encode(BarcodeType.GS1DataBarLimited, "1234567890123");
+        var dataBarModules = ExpandModules(dataBar);
+
+        if (!RmQrDecoder.TryDecode(rmQr.Modules, out var rmQrDecoded) || rmQrDecoded.Text != industrialPayload ||
+            !MaxiCodeDecoder.TryDecode(maxiCode.Modules, out var maxiCodeDecoded) || maxiCodeDecoded != industrialPayload ||
+            !DotCodeDecoder.TryDecode(dotCode.Modules, out var dotCodeDecoded) || dotCodeDecoded != industrialPayload ||
+            !HanXinDecoder.TryDecode(hanXin.Modules, out var hanXinDecoded) || hanXinDecoded != industrialPayload ||
+            !Gs1CompositeDecoder.TryDecode(composite.Modules, out var compositeDecoded) ||
+            compositeDecoded.CompositeText != Gs1.ElementString("(21)ABC123") ||
+            !BarcodeDecoder.TryDecode(dataBarModules, BarcodeType.GS1DataBarLimited, out var dataBarDecoded) ||
+            dataBarDecoded.Text != "1234567890123") {
+            throw new System.InvalidOperationException("The industrial/logistics NativeAOT smoke test failed.");
+        }
+    }
+
+    private static bool[] ExpandModules(Barcode1D barcode) {
+        var modules = new bool[barcode.TotalModules];
+        var offset = 0;
+        foreach (var segment in barcode.Segments) {
+            if (segment.IsBar) System.Array.Fill(modules, true, offset, segment.Modules);
+            offset += segment.Modules;
+        }
+        return modules;
     }
 }

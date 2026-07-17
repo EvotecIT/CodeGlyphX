@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeGlyphX.Aztec.Internal;
+namespace CodeGlyphX.Internal.ReedSolomon;
 
 internal sealed class GenericGfPoly {
     private readonly GenericGf _field;

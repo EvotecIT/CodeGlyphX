@@ -109,7 +109,7 @@ public static partial class BarcodeDecoder {
         }
 
         if (options?.EnableTileScan == true && !DecodeBudget.ShouldAbort(cancellationToken)) {
-            ScanTiles(pixels, width, height, stride, cancellationToken, options, (tile, tw, th, tstride) => {
+            ScanTiles(pixels, width, height, stride, cancellationToken, options, (tile, tw, th, tstride, _, _) => {
                 if (TryDecode(tile, tw, th, tstride, format, expectedType, options, cancellationToken, out var hit)) {
                     AddUnique(list, seen, hit);
                 }
@@ -118,6 +118,46 @@ public static partial class BarcodeDecoder {
         }
 
         if (list.Count == 0) return false;
+        decoded = list.ToArray();
+        return true;
+    }
+
+    internal static bool TryDecodeAllLocated(
+        byte[] pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        out BarcodeImageCandidate[] decoded,
+        BarcodeType? expectedType = null,
+        BarcodeDecodeOptions? options = null,
+        CancellationToken cancellationToken = default) {
+        decoded = Array.Empty<BarcodeImageCandidate>();
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+
+        var list = new List<BarcodeImageCandidate>(8);
+        DecodeLocatedRegion(
+            pixels,
+            width,
+            height,
+            stride,
+            format,
+            expectedType,
+            options,
+            cancellationToken,
+            originX: 0,
+            originY: 0,
+            list);
+
+        if (options?.EnableTileScan == true && !DecodeBudget.ShouldAbort(cancellationToken)) {
+            ScanTiles(pixels, width, height, stride, cancellationToken, options, (tile, tw, th, tstride, x, y) => {
+                DecodeLocatedRegion(tile, tw, th, tstride, format, expectedType, options, cancellationToken, x, y, list);
+                return false;
+            });
+        }
+
+        if (DecodeBudget.ShouldAbort(cancellationToken) || list.Count == 0) return false;
         decoded = list.ToArray();
         return true;
     }
@@ -260,7 +300,37 @@ public static partial class BarcodeDecoder {
         if (seen.Add(key)) list.Add(decoded);
     }
 
-    private static void ScanTiles(byte[] rgba, int width, int height, int stride, CancellationToken token, BarcodeDecodeOptions? options, Func<byte[], int, int, int, bool> onTile) {
+    private static void DecodeLocatedRegion(
+        byte[] pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        BarcodeType? expectedType,
+        BarcodeDecodeOptions? options,
+        CancellationToken cancellationToken,
+        int originX,
+        int originY,
+        List<BarcodeImageCandidate> decoded) {
+        if (!BarcodeScanline.TryGetLocatedModuleCandidates(
+                pixels,
+                width,
+                height,
+                stride,
+                format,
+                cancellationToken,
+                out var candidates)) return;
+
+        var region = new ImageRegion(originX, originY, width, height);
+        for (var i = 0; i < candidates.Length; i++) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return;
+            if (TryDecodeWithTransforms(candidates[i].Modules, expectedType, options, cancellationToken, out var hit)) {
+                decoded.Add(new BarcodeImageCandidate(hit, candidates[i], region));
+            }
+        }
+    }
+
+    private static void ScanTiles(byte[] rgba, int width, int height, int stride, CancellationToken token, BarcodeDecodeOptions? options, Func<byte[], int, int, int, int, int, bool> onTile) {
         if (width <= 0 || height <= 0 || stride < width * 4) return;
         var grid = options?.TileGrid > 1 ? options.TileGrid : (Math.Max(width, height) >= 720 ? 3 : 2);
         var pad = Math.Max(8, Math.Min(width, height) / 40);
@@ -291,7 +361,7 @@ public static partial class BarcodeDecoder {
                     Buffer.BlockCopy(rgba, (y0 + y) * stride + x0 * 4, tile, y * tileStride, tileStride);
                 }
 
-                if (onTile(tile, tw, th, tileStride)) return;
+                if (onTile(tile, tw, th, tileStride, x0, y0)) return;
             }
         }
     }

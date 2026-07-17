@@ -11,6 +11,18 @@ using PixelSpan = byte[];
 
 namespace CodeGlyphX.Internal;
 
+internal readonly struct BarcodeScanlineCandidate {
+    internal bool[] Modules { get; }
+    internal int Position { get; }
+    internal bool IsVertical { get; }
+
+    internal BarcodeScanlineCandidate(bool[] modules, int position, bool isVertical) {
+        Modules = modules ?? throw new ArgumentNullException(nameof(modules));
+        Position = position;
+        IsVertical = isVertical;
+    }
+}
+
 internal static class BarcodeScanline {
     public static bool TryGetModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out bool[] modules) {
         return TryGetModules(pixels, width, height, stride, format, CancellationToken.None, out modules);
@@ -91,6 +103,35 @@ internal static class BarcodeScanline {
 
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
         if (list.Count == 0) return false;
+        candidates = list.ToArray();
+        return true;
+    }
+
+    internal static bool TryGetLocatedModuleCandidates(
+        PixelSpan pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        CancellationToken cancellationToken,
+        out BarcodeScanlineCandidate[] candidates) {
+        candidates = Array.Empty<BarcodeScanlineCandidate>();
+#if !NET8_0_OR_GREATER
+        if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+#else
+        if (pixels.IsEmpty) return false;
+#endif
+        if (width <= 0 || height <= 0 || stride < width * 4 || DecodeBudget.ShouldAbort(cancellationToken)) return false;
+
+        var list = new List<BarcodeScanlineCandidate>(8);
+        CollectLocatedHorizontal(pixels, width, height, stride, format, height / 2, cancellationToken, list);
+        CollectLocatedHorizontal(pixels, width, height, stride, format, height / 3, cancellationToken, list);
+        CollectLocatedHorizontal(pixels, width, height, stride, format, (height * 2) / 3, cancellationToken, list);
+        CollectLocatedVertical(pixels, width, height, stride, format, width / 2, cancellationToken, list);
+        CollectLocatedVertical(pixels, width, height, stride, format, width / 3, cancellationToken, list);
+        CollectLocatedVertical(pixels, width, height, stride, format, (width * 2) / 3, cancellationToken, list);
+
+        if (DecodeBudget.ShouldAbort(cancellationToken) || list.Count == 0) return false;
         candidates = list.ToArray();
         return true;
     }
@@ -373,5 +414,48 @@ internal static class BarcodeScanline {
             if (equal) return;
         }
         candidates.Add(modules);
+    }
+
+    private static void CollectLocatedHorizontal(
+        PixelSpan pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        int y,
+        CancellationToken cancellationToken,
+        List<BarcodeScanlineCandidate> candidates) {
+        var modules = new List<bool[]>(3);
+        TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, y, cancellationToken, modules);
+        for (var i = 0; i < modules.Count; i++) AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(modules[i], y, isVertical: false));
+    }
+
+    private static void CollectLocatedVertical(
+        PixelSpan pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat format,
+        int x,
+        CancellationToken cancellationToken,
+        List<BarcodeScanlineCandidate> candidates) {
+        var modules = new List<bool[]>(3);
+        TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x, cancellationToken, modules);
+        for (var i = 0; i < modules.Count; i++) AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(modules[i], x, isVertical: true));
+    }
+
+    private static void AddUniqueLocatedCandidate(List<BarcodeScanlineCandidate> candidates, BarcodeScanlineCandidate candidate) {
+        for (var i = 0; i < candidates.Count; i++) {
+            var existing = candidates[i];
+            if (existing.Position != candidate.Position || existing.IsVertical != candidate.IsVertical) continue;
+            if (ModulesEqual(existing.Modules, candidate.Modules)) return;
+        }
+        candidates.Add(candidate);
+    }
+
+    private static bool ModulesEqual(bool[] left, bool[] right) {
+        if (left.Length != right.Length) return false;
+        for (var i = 0; i < left.Length; i++) if (left[i] != right[i]) return false;
+        return true;
     }
 }

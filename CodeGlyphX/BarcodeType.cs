@@ -148,4 +148,28 @@ public enum BarcodeType {
     /// MicroPDF417 (matrix-symbol pipeline).
     /// </summary>
     MicroPDF417,
+    /// <summary>
+    /// GS1 DataBar Limited.
+    /// </summary>
+    GS1DataBarLimited,
+    /// <summary>
+    /// GS1 DataBar Stacked Omnidirectional.
+    /// </summary>
+    GS1DataBarStackedOmni,
+    /// <summary>
+    /// MaxiCode.
+    /// </summary>
+    MaxiCode,
+    /// <summary>
+    /// AIM DotCode.
+    /// </summary>
+    DotCode,
+    /// <summary>
+    /// Han Xin Code.
+    /// </summary>
+    HanXin,
+    /// <summary>
+    /// GS1 Composite with a standards-linked GS1-128 carrier.
+    /// </summary>
+    GS1Composite,
 }

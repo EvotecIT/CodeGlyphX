@@ -35,7 +35,9 @@ public sealed class SymbolGeometry {
         Bounds = new SymbolBounds(minX, minY, maxX - minX, maxY - minY);
 
         var angle = Math.Atan2(topRight.Y - topLeft.Y, topRight.X - topLeft.X) * 180d / Math.PI;
-        RotationDegrees = angle < 0 ? angle + 360d : angle;
+        // Stabilize values that are mathematically integral but land one ULP below a boundary
+        // after image-space affine transforms (for example 14.999999999999998 for 15 degrees).
+        RotationDegrees = Math.Round(angle < 0 ? angle + 360d : angle, 12, MidpointRounding.AwayFromZero);
     }
 
     /// <summary>

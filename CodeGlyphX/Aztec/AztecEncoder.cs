@@ -1,5 +1,5 @@
 using System;
-using CodeGlyphX.Aztec.Internal;
+using CodeGlyphX.Internal.ReedSolomon;
 using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Aztec;
