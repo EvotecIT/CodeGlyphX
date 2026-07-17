@@ -18,13 +18,11 @@ jobs:
     timeout-minutes: 30
     environment: production
     steps:
-      - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-
       - name: Capture and publish encrypted recovery state
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-server-backup@3b895c68d3125fab4146e2ded3a30852de789393
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-server-backup@71fdfa7e1b767aff6c505ee7dbcb01b3dfc4b51b
         with:
           manifest-path: deploy/linux/codeglyphx.serverrecovery.json
+          server-host: ${{ secrets.DEPLOYMENT_HOST }}
           capture-user: powerforge-codeglyphx-backup
           server-ssh-private-key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
           server-ssh-known-hosts: ${{ secrets.SERVER_SSH_KNOWN_HOSTS }}
