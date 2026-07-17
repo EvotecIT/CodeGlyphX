@@ -19,7 +19,7 @@ public static partial class Gs1Validator {
                 null,
                 0,
                 "GS1 input cannot be empty."));
-        } else if (input.IndexOf('(') >= 0) {
+        } else if (input[0] == '(') {
             ParseBracketed(input, effectiveOptions, parsed, issues);
         } else {
             ParseElementString(input, effectiveOptions, parsed, issues);

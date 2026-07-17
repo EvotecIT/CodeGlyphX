@@ -36,10 +36,14 @@ public static class SymbolScanner {
         using (var deadline = new ScanDeadline(options.CancellationToken, options.TimeoutMilliseconds)) {
             if (deadline.ShouldStop) return Cancelled(deadline, new List<SymbolFormat>());
             try {
-                if (!ImageReader.TryDecodeRgba32(encodedImage, options.Image, out var rgba, out var width, out var height)) {
+                var imageOptions = ResolveSourceImageDecodeOptions(options);
+                if (!ImageReader.TryDecodeRgba32(encodedImage, imageOptions, out var rgba, out var width, out var height)) {
                     return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), new List<SymbolFormat>(), "The encoded image could not be decoded.");
                 }
                 if (deadline.ShouldStop) return Cancelled(deadline, new List<SymbolFormat>());
+                if (RequiresSourceCoordinatePreparation(options)) {
+                    return ScanEncodedRegion(rgba, width, height, options, deadline);
+                }
                 return ScanFrame(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options, deadline);
             } catch (ArgumentException ex) {
                 return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), new List<SymbolFormat>(), ex.Message);
@@ -69,7 +73,7 @@ public static class SymbolScanner {
         return result.IsSuccess;
     }
 
-    private static ScanResult ScanFrame(ImageFrame frame, ScanOptions options, ScanDeadline deadline) {
+    private static ScanResult ScanFrame(ImageFrame frame, ScanOptions options, ScanDeadline deadline, ImageRegion? reportedRegion = null) {
         var unsupported = new List<SymbolFormat>();
         var requested = ResolveRequestedFormats(options.Formats, unsupported);
         if (requested.Count == 0) {
@@ -81,10 +85,11 @@ public static class SymbolScanner {
         if (options.Region.HasValue && !region.HasValue) {
             return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), unsupported, "The scan region does not overlap the image.");
         }
-        var searchRegion = region ?? fullRegion;
+        var frameRegion = region ?? fullRegion;
+        var searchRegion = reportedRegion ?? frameRegion;
 
         if (deadline.ShouldStop) return Cancelled(deadline, unsupported);
-        var rgba = ImageFrameConverter.ToRgba32(frame, searchRegion, out var width, out var height);
+        var rgba = ImageFrameConverter.ToRgba32(frame, frameRegion, out var width, out var height);
         if (deadline.ShouldStop) return Cancelled(deadline, unsupported);
 
         var results = new List<DetectedSymbol>();
@@ -132,7 +137,7 @@ public static class SymbolScanner {
             SymbolFormat.MicroQrCode,
             new CodeGlyphDecoded(decoded),
             searchRegion,
-            TranslateGeometry(info.Geometry, searchRegion.X, searchRegion.Y),
+            MapGeometryToSource(info.Geometry, searchRegion, width, height),
             isInverted: info.IsInverted,
             isMirrored: info.IsMirrored));
     }
@@ -167,17 +172,17 @@ public static class SymbolScanner {
         List<DetectedSymbol> results,
         HashSet<string>? seen) {
         if (!requested.Contains(SymbolFormat.DataMatrix)) return;
-        if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var text)) {
-            Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix, new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, text), searchRegion));
+        if (DataMatrixDecoder.TryDecodeDetailed(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var decoded)) {
+            Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix, new CodeGlyphDecoded(decoded), searchRegion));
             return;
         }
         if (options.DirectPartMarking is null || deadline.ShouldStop) return;
         var dpm = options.DirectPartMarking.Clone();
         var variants = DirectPartMarkPreprocessor.CreateVariants(rgba, width, height, dpm, deadline.Token);
         for (var i = 0; i < variants.Count && !deadline.ShouldStop; i++) {
-            if (!DataMatrixDecoder.TryDecode(variants[i], width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out text)) continue;
+            if (!DataMatrixDecoder.TryDecodeDetailed(variants[i], width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out decoded)) continue;
             Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix,
-                new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, text), searchRegion, directPartMarkProfile: dpm.Profile));
+                new CodeGlyphDecoded(decoded), searchRegion, directPartMarkProfile: dpm.Profile));
             return;
         }
     }
@@ -231,10 +236,14 @@ public static class SymbolScanner {
         }
         if (expectedTypes.Count == 0) return;
 
-        BarcodeType? expected = expectedTypes.Count == 1 ? expectedTypes[0] : (BarcodeType?)null;
         var barcodeOptions = CloneBarcodeOptions(options.Barcode);
-        if (expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)
-            && expectedTypes.Contains(BarcodeType.GS1DataBarOmni)) {
+        var classifyDataBarHeight = expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)
+            && expectedTypes.Contains(BarcodeType.GS1DataBarOmni);
+
+        if (classifyDataBarHeight) {
+            var expected = RequestsEveryImageScannableLinearFormat(requested)
+                ? (BarcodeType?)null
+                : BarcodeType.GS1DataBarTruncated;
             ScanLocatedLinear(
                 rgba,
                 width,
@@ -248,10 +257,30 @@ public static class SymbolScanner {
                 barcodeOptions,
                 results,
                 seen);
-            return;
+            if (!expected.HasValue || ShouldStop(options, deadline, results)) return;
         }
 
-        if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expected, barcodeOptions, deadline.Token)) return;
+        for (var i = 0; i < expectedTypes.Count && !ShouldStop(options, deadline, results); i++) {
+            var expected = expectedTypes[i];
+            if (classifyDataBarHeight && (expected == BarcodeType.GS1DataBarTruncated || expected == BarcodeType.GS1DataBarOmni)) continue;
+            AddLinearResults(rgba, width, height, searchRegion, options, deadline, requested, expectedTypes, results, seen, expected, barcodeOptions);
+        }
+    }
+
+    private static void AddLinearResults(
+        byte[] rgba,
+        int width,
+        int height,
+        ImageRegion searchRegion,
+        ScanOptions options,
+        ScanDeadline deadline,
+        ISet<SymbolFormat> requested,
+        List<BarcodeType> expectedTypes,
+        List<DetectedSymbol> results,
+        HashSet<string>? seen,
+        BarcodeType expectedType,
+        BarcodeDecodeOptions? barcodeOptions) {
+        if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expectedType, barcodeOptions, deadline.Token)) return;
         for (var i = 0; i < decoded.Length; i++) {
             var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes, rgba, width, height, candidate: null, cancellationToken: deadline.Token);
             if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
@@ -321,6 +350,15 @@ public static class SymbolScanner {
         return decoded;
     }
 
+    private static bool RequestsEveryImageScannableLinearFormat(ISet<SymbolFormat> requested) {
+        for (var i = 0; i < SymbolCapabilities.ImageScannableFormats.Count; i++) {
+            var format = SymbolCapabilities.ImageScannableFormats[i];
+            var capability = SymbolCapabilities.Get(format);
+            if (capability.Family == SymbolFamily.Linear && capability.LegacyBarcodeType.HasValue && !requested.Contains(format)) return false;
+        }
+        return true;
+    }
+
     private static QrPixelDecodeOptions ResolveQrOptions(ScanOptions options, ScanDeadline deadline) {
         var source = options.Qr ?? CreateQrProfile(options.Profile, options.TimeoutMilliseconds);
         var result = new QrPixelDecodeOptions {
@@ -368,6 +406,82 @@ public static class SymbolScanner {
         };
     }
 
+    private static bool RequiresSourceCoordinatePreparation(ScanOptions options) {
+        return options.Image is not null && options.Image.MaxDimension > 0;
+    }
+
+    private static ScanResult ScanEncodedRegion(byte[] rgba, int width, int height, ScanOptions options, ScanDeadline deadline) {
+        ImageRegion? sourceRegion = options.Region.HasValue
+            ? options.Region.Value.ClipTo(width, height)
+            : new ImageRegion(0, 0, width, height);
+        if (!sourceRegion.HasValue) {
+            return ScanFrame(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options, deadline);
+        }
+
+        byte[] prepared;
+        int preparedWidth;
+        int preparedHeight;
+        if (sourceRegion.Value.X == 0 && sourceRegion.Value.Y == 0 && sourceRegion.Value.Width == width && sourceRegion.Value.Height == height) {
+            prepared = rgba;
+            preparedWidth = width;
+            preparedHeight = height;
+        } else {
+            prepared = ImageFrameConverter.ToRgba32(
+                ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32),
+                sourceRegion.Value,
+                out preparedWidth,
+                out preparedHeight);
+        }
+        if (!ImageDecodeHelper.TryDownscale(
+                ref prepared,
+                ref preparedWidth,
+                ref preparedHeight,
+                options.Image,
+                deadline.Token)) {
+            return ScanFrame(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options, deadline);
+        }
+
+        return ScanFrame(
+            ImageFrame.Packed(prepared, preparedWidth, preparedHeight, PixelFormat.Rgba32),
+            CloneForPreparedRegion(options),
+            deadline,
+            sourceRegion.Value);
+    }
+
+    private static ScanOptions CloneForPreparedRegion(ScanOptions source) {
+        return new ScanOptions {
+            Formats = source.Formats,
+            Region = null,
+            TimeoutMilliseconds = source.TimeoutMilliseconds,
+            MaxSymbols = source.MaxSymbols,
+            Deduplicate = source.Deduplicate,
+            Profile = source.Profile,
+            Qr = source.Qr,
+            Barcode = source.Barcode,
+            Image = source.Image,
+            DirectPartMarking = source.DirectPartMarking,
+            CancellationToken = source.CancellationToken
+        };
+    }
+
+    private static ImageDecodeOptions? ResolveSourceImageDecodeOptions(ScanOptions options) {
+        var source = options.Image;
+        if (source is null || source.MaxDimension <= 0) return source;
+
+        // Decode at source dimensions so reported regions and geometry remain in the encoded image's
+        // coordinate space. ScanEncodedRegion applies MaxDimension immediately before recognition.
+        return new ImageDecodeOptions {
+            MaxDimension = 0,
+            MaxPixels = source.MaxPixels,
+            MaxBytes = source.MaxBytes,
+            RecognitionBudgetMilliseconds = source.RecognitionBudgetMilliseconds,
+            MaxAnimationFrames = source.MaxAnimationFrames,
+            MaxAnimationDurationMs = source.MaxAnimationDurationMs,
+            MaxAnimationFramePixels = source.MaxAnimationFramePixels,
+            JpegOptions = source.JpegOptions
+        };
+    }
+
     private static List<SymbolFormat> ResolveRequestedFormats(SymbolFormat[]? formats, List<SymbolFormat> unsupported) {
         var requested = new List<SymbolFormat>();
         var seen = new HashSet<SymbolFormat>();
@@ -394,17 +508,19 @@ public static class SymbolScanner {
         results.Add(symbol);
     }
 
-    private static SymbolGeometry TranslateGeometry(SymbolGeometry geometry, int offsetX, int offsetY) {
-        if (offsetX == 0 && offsetY == 0) return geometry;
+    private static SymbolGeometry MapGeometryToSource(SymbolGeometry geometry, ImageRegion sourceRegion, int decodedWidth, int decodedHeight) {
+        if (sourceRegion.X == 0 && sourceRegion.Y == 0 && sourceRegion.Width == decodedWidth && sourceRegion.Height == decodedHeight) return geometry;
         return new SymbolGeometry(
-            TranslatePoint(geometry.TopLeft, offsetX, offsetY),
-            TranslatePoint(geometry.TopRight, offsetX, offsetY),
-            TranslatePoint(geometry.BottomRight, offsetX, offsetY),
-            TranslatePoint(geometry.BottomLeft, offsetX, offsetY));
+            MapPointToSource(geometry.TopLeft, sourceRegion, decodedWidth, decodedHeight),
+            MapPointToSource(geometry.TopRight, sourceRegion, decodedWidth, decodedHeight),
+            MapPointToSource(geometry.BottomRight, sourceRegion, decodedWidth, decodedHeight),
+            MapPointToSource(geometry.BottomLeft, sourceRegion, decodedWidth, decodedHeight));
     }
 
-    private static SymbolPoint TranslatePoint(SymbolPoint point, int offsetX, int offsetY) {
-        return new SymbolPoint(point.X + offsetX, point.Y + offsetY);
+    private static SymbolPoint MapPointToSource(SymbolPoint point, ImageRegion sourceRegion, int decodedWidth, int decodedHeight) {
+        return new SymbolPoint(
+            sourceRegion.X + point.X * sourceRegion.Width / decodedWidth,
+            sourceRegion.Y + point.Y * sourceRegion.Height / decodedHeight);
     }
 
     private static string CreateKey(DetectedSymbol symbol) {

@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Pdf417;
 
 namespace CodeGlyphX;
@@ -47,6 +48,11 @@ public sealed class CodeGlyphDecoded {
     public BarcodeDecoded? Barcode { get; }
 
     /// <summary>
+    /// Gets the detailed Data Matrix result when <see cref="Kind"/> is <see cref="CodeGlyphKind.DataMatrix"/>.
+    /// </summary>
+    public DataMatrixDecoded? DataMatrix { get; }
+
+    /// <summary>
     /// Gets the decoded Data Matrix text when <see cref="Kind"/> is <see cref="CodeGlyphKind.DataMatrix"/>.
     /// </summary>
     public string? DataMatrixText { get; }
@@ -74,7 +80,7 @@ public sealed class CodeGlyphDecoded {
     /// <summary>
     /// Gets the decoded text (QR/Micro QR/Barcode/DataMatrix/PDF417/Aztec).
     /// </summary>
-    public string Text => Qr?.Text ?? MicroQr?.Text ?? RmQr?.Text ?? MaxiCode?.Text ?? DotCode?.Text ?? HanXin?.Text ?? Gs1Composite?.Text ?? Barcode?.Text ?? DataMatrixText ?? Pdf417Text ?? AztecText ?? string.Empty;
+    public string Text => Qr?.Text ?? MicroQr?.Text ?? RmQr?.Text ?? MaxiCode?.Text ?? DotCode?.Text ?? HanXin?.Text ?? Gs1Composite?.Text ?? Barcode?.Text ?? DataMatrix?.Text ?? DataMatrixText ?? Pdf417Text ?? AztecText ?? string.Empty;
 
     /// <summary>
     /// Gets the decoded payload bytes for QR and Micro QR codes.
@@ -119,6 +125,12 @@ public sealed class CodeGlyphDecoded {
     internal CodeGlyphDecoded(BarcodeDecoded barcode) {
         Barcode = barcode ?? throw new ArgumentNullException(nameof(barcode));
         Kind = CodeGlyphKind.Barcode1D;
+    }
+
+    internal CodeGlyphDecoded(DataMatrixDecoded dataMatrix) {
+        DataMatrix = dataMatrix ?? throw new ArgumentNullException(nameof(dataMatrix));
+        DataMatrixText = dataMatrix.Text;
+        Kind = CodeGlyphKind.DataMatrix;
     }
 
     internal CodeGlyphDecoded(Pdf417Decoded pdf417) {

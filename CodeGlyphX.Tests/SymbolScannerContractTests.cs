@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -177,6 +178,106 @@ public sealed class SymbolScannerContractTests {
         Assert.Equal("BOTTOM-UP-BGR", symbol.Text);
     }
 
+    [Fact]
+    public void Scan_DecodesRequestedEanWhenUnrequestedUpcWouldWinAutoDetection() {
+        var barcode = BarcodeEncoder.Encode(BarcodeType.EAN, "012345678901");
+        var pixels = Rendering.Png.BarcodePngRenderer.RenderPixels(
+            barcode,
+            new Rendering.Png.BarcodePngRenderOptions { ModuleSize = 3, QuietZone = 10, HeightModules = 40 },
+            out var width,
+            out var height,
+            out _);
+
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { SymbolFormat.Ean, SymbolFormat.Code128 },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(SymbolFormat.Ean, symbol.Format);
+        Assert.Equal("0123456789012", symbol.Text);
+    }
+
+    [Fact]
+    public void Scan_UsesSourceCoordinatesForEncodedImageRegionWhenOutputIsDownscaled() {
+        var qr = QrEasy.RenderPixels("ENCODED-SOURCE-ROI", out var qrWidth, out var qrHeight, out var qrStride);
+        const int offsetX = 550;
+        const int offsetY = 30;
+        var width = offsetX + qrWidth + 50;
+        var height = offsetY + qrHeight + 30;
+        var canvas = CreateWhiteRgba(width, height);
+        Blit(qr, qrWidth, qrHeight, qrStride, canvas, width * 4, offsetX, offsetY);
+        var encoded = EncodePng(canvas, width, height, width * 4);
+        var region = new ImageRegion(offsetX, offsetY, qrWidth, qrHeight);
+        var options = ScanOptions.Screen(TestBudget.Adjust(5000), maxDimension: 500);
+        options.Formats = new[] { SymbolFormat.QrCode };
+        options.Region = region;
+
+        var result = SymbolScanner.Scan(encoded, options);
+
+        Assert.True(result.Status == ScanStatus.Success, $"{result.Status}: {result.Failure}");
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal("ENCODED-SOURCE-ROI", symbol.Text);
+        Assert.Equal(region, symbol.SearchRegion);
+        Assert.Equal(500, options.Image!.MaxDimension);
+    }
+
+    [Fact]
+    public void Scan_ReportsOriginalEncodedDimensionsAfterFullFrameDownscaling() {
+        var qr = QrEasy.RenderPixels("ENCODED-FULL-SOURCE", out var width, out var height, out var stride);
+        var encoded = EncodePng(qr, width, height, stride);
+
+        var result = SymbolScanner.Scan(encoded, new ScanOptions {
+            Formats = new[] { SymbolFormat.QrCode },
+            Image = new ImageDecodeOptions { MaxDimension = Math.Max(width, height) / 2 },
+            Qr = QrPixelDecodeOptions.Robust(),
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal("ENCODED-FULL-SOURCE", symbol.Text);
+        Assert.Equal(new ImageRegion(0, 0, width, height), symbol.SearchRegion);
+    }
+
+    [Fact]
+    public void Scan_AppliesImageMaxDimensionToEncodedRegionBeforeRecognition() {
+        var qr = QrEasy.RenderPixels("ENCODED-ROI-LIMIT", out var qrWidth, out var qrHeight, out var qrStride);
+        const int offsetX = 40;
+        const int offsetY = 30;
+        var width = offsetX + qrWidth + 40;
+        var height = offsetY + qrHeight + 30;
+        var canvas = CreateWhiteRgba(width, height);
+        Blit(qr, qrWidth, qrHeight, qrStride, canvas, width * 4, offsetX, offsetY);
+        var encoded = EncodePng(canvas, width, height, width * 4);
+
+        var result = SymbolScanner.Scan(encoded, new ScanOptions {
+            Formats = new[] { SymbolFormat.QrCode },
+            Region = new ImageRegion(offsetX, offsetY, qrWidth, qrHeight),
+            Image = new ImageDecodeOptions { MaxDimension = 8 },
+            Qr = QrPixelDecodeOptions.Robust(),
+            TimeoutMilliseconds = 0
+        });
+
+        Assert.Equal(ScanStatus.NoSymbolFound, result.Status);
+        Assert.Empty(result.Symbols);
+    }
+
+    [Fact]
+    public void Scan_ReportsUnsupportedFormatsBeforeInvalidPreparedRegion() {
+        var encoded = EncodePng(CreateWhiteRgba(20, 20), 20, 20, 20 * 4);
+
+        var result = SymbolScanner.Scan(encoded, new ScanOptions {
+            Formats = new[] { SymbolFormat.MicroPdf417 },
+            Region = new ImageRegion(30, 30, 10, 10),
+            Image = new ImageDecodeOptions { MaxDimension = 10 }
+        });
+
+        Assert.Equal(ScanStatus.UnsupportedFormats, result.Status);
+        Assert.Equal(SymbolFormat.MicroPdf417, Assert.Single(result.UnsupportedFormats));
+    }
+
     [Theory]
     [InlineData(SymbolFormat.DataMatrix, "SCANNER-DATA-MATRIX")]
     [InlineData(SymbolFormat.Aztec, "SCANNER-AZTEC")]
@@ -213,6 +314,93 @@ public sealed class SymbolScannerContractTests {
         var symbol = Assert.Single(result.Symbols);
         Assert.Equal(format, symbol.Format);
         Assert.Equal(payload, symbol.Text);
+    }
+
+    [Fact]
+    public void Scan_PreservesDetailedGs1DataMatrixResult() {
+        const string elementString = "010950600013435210LOT42";
+        var matrix = DataMatrix.DataMatrixEncoder.EncodeGs1(elementString);
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            matrix,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 5, QuietZone = 3 },
+            out var width,
+            out var height,
+            out _);
+
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { SymbolFormat.DataMatrix },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(SymbolPayloadProfile.Gs1, symbol.PayloadProfile);
+        var decoded = Assert.IsType<DataMatrix.DataMatrixDecoded>(symbol.LegacyResult.DataMatrix);
+        Assert.True(decoded.IsGs1);
+        Assert.Equal(elementString, decoded.Text);
+        Assert.Equal(decoded.Text, symbol.LegacyResult.DataMatrixText);
+        Assert.Equal(matrix.Height, decoded.Rows);
+        Assert.Equal(matrix.Width, decoded.Columns);
+    }
+
+    [Fact]
+    public void Scan_MapsDownscaledMicroQrGeometryBackToEncodedSourceCoordinates() {
+        var code = MicroQrCodeEncoder.EncodeAlphanumeric("ROI-MICRO", minVersion: 4, maxVersion: 4);
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            code.Modules,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 8, QuietZone = 2 },
+            out var symbolWidth,
+            out var symbolHeight,
+            out var symbolStride);
+        const int offsetX = 40;
+        const int offsetY = 28;
+        var width = offsetX + symbolWidth + 32;
+        var height = offsetY + symbolHeight + 24;
+        var canvas = CreateWhiteRgba(width, height);
+        Blit(pixels, symbolWidth, symbolHeight, symbolStride, canvas, width * 4, offsetX, offsetY);
+        var encoded = EncodePng(canvas, width, height, width * 4);
+        var region = new ImageRegion(offsetX, offsetY, symbolWidth, symbolHeight);
+
+        var result = SymbolScanner.Scan(encoded, new ScanOptions {
+            Formats = new[] { SymbolFormat.MicroQrCode },
+            Region = region,
+            Image = new ImageDecodeOptions { MaxDimension = symbolWidth / 2 },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal("ROI-MICRO", symbol.Text);
+        Assert.Equal(region, symbol.SearchRegion);
+        Assert.NotNull(symbol.Geometry);
+        Assert.InRange(symbol.Geometry!.Bounds.X, offsetX + 14, offsetX + 18);
+        Assert.InRange(symbol.Geometry.Bounds.Y, offsetY + 14, offsetY + 18);
+    }
+
+    [Fact]
+    public void Scan_MapsFullFrameMicroQrGeometryBackToEncodedSourceCoordinates() {
+        var code = MicroQrCodeEncoder.EncodeAlphanumeric("FULL-MICRO", minVersion: 4, maxVersion: 4);
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            code.Modules,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 8, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+        var encoded = EncodePng(pixels, width, height, stride);
+
+        var result = SymbolScanner.Scan(encoded, new ScanOptions {
+            Formats = new[] { SymbolFormat.MicroQrCode },
+            Image = new ImageDecodeOptions { MaxDimension = width / 2 },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal("FULL-MICRO", symbol.Text);
+        Assert.Equal(new ImageRegion(0, 0, width, height), symbol.SearchRegion);
+        Assert.NotNull(symbol.Geometry);
+        Assert.InRange(symbol.Geometry!.Bounds.X, 14, 18);
+        Assert.InRange(symbol.Geometry.Bounds.Y, 14, 18);
     }
 
     [Fact]
@@ -373,5 +561,17 @@ public sealed class SymbolScannerContractTests {
         for (var y = 0; y < height; y++) {
             Buffer.BlockCopy(source, y * sourceStride, destination, (offsetY + y) * destinationStride + offsetX * 4, width * 4);
         }
+    }
+
+    private static byte[] EncodePng(byte[] rgba, int width, int height, int stride) {
+        var rowBytes = width * 4;
+        var rowLength = rowBytes + 1;
+        var scanlines = new byte[height * rowLength];
+        for (var y = 0; y < height; y++) {
+            var rowStart = y * rowLength;
+            scanlines[rowStart] = 0;
+            Buffer.BlockCopy(rgba, y * stride, scanlines, rowStart + 1, rowBytes);
+        }
+        return PngWriter.WriteRgba8(width, height, scanlines, scanlines.Length);
     }
 }
