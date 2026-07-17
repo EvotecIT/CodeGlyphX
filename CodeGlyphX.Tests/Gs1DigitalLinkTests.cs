@@ -65,6 +65,18 @@ public sealed class Gs1DigitalLinkTests {
     }
 
     [Fact]
+    public void Parse_UsesOriginalUriSpellingWhenDeterminingCanonicality() {
+        const string input = "HTTPS://ID.GS1.ORG/01/09520123456788";
+
+        var result = Gs1DigitalLink.Parse(input);
+
+        Assert.Equal(input, result.OriginalUri);
+        Assert.Equal(input, result.ToString());
+        Assert.Equal("https://id.gs1.org/01/09520123456788", result.CanonicalUri);
+        Assert.False(result.IsCanonical);
+    }
+
+    [Fact]
     public void BuildCanonical_PlacesQualifiersInPathAndSortsAttributesLexically() {
         var result = Gs1DigitalLink.BuildCanonical(new[] {
             Gs1Element.Create("3922", "0299"),
@@ -127,6 +139,23 @@ public sealed class Gs1DigitalLinkTests {
             "https://id.gs1.org/415/9520123456788/8020/REF-123",
             result.Uri.AbsoluteUri);
         Assert.Equal("8020", Assert.Single(result.KeyQualifiers).Ai);
+    }
+
+    [Theory]
+    [InlineData(".", "%2E")]
+    [InlineData("..", "%2E%2E")]
+    public void Build_DotOnlyPathValuesRemainGs1Data(string value, string escapedValue) {
+        var result = Gs1DigitalLink.BuildCanonical(new[] {
+            Gs1Element.Create("01", "09520123456788"),
+            Gs1Element.Create("10", value)
+        });
+
+        var expected = "https://id.gs1.org/01/09520123456788/10/" + escapedValue;
+        Assert.Equal(expected, result.CanonicalUri);
+        Assert.Equal(expected, result.OriginalUri);
+        Assert.Equal(value, Assert.Single(result.KeyQualifiers).Data);
+        Assert.Equal("010952012345678810" + value, result.ToElementString());
+        Assert.True(result.IsCanonical);
     }
 
     [Fact]

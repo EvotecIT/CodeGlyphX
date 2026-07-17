@@ -15,6 +15,9 @@ public sealed class Gs1DigitalLinkUri {
     /// <summary>Gets the parsed Web URI.</summary>
     public Uri Uri { get; }
 
+    /// <summary>Gets the original validated URI spelling before <see cref="System.Uri"/> normalization.</summary>
+    public string OriginalUri { get; }
+
     /// <summary>Gets the scheme, authority, and optional custom path preceding the GS1 path.</summary>
     public string UriStem { get; }
 
@@ -44,6 +47,7 @@ public sealed class Gs1DigitalLinkUri {
 
     internal Gs1DigitalLinkUri(
         Uri uri,
+        string originalUri,
         string uriStem,
         Gs1Element primaryIdentifier,
         Gs1Element[] keyQualifiers,
@@ -53,6 +57,7 @@ public sealed class Gs1DigitalLinkUri {
         string? fragment,
         string canonicalUri) {
         Uri = uri ?? throw new ArgumentNullException(nameof(uri));
+        OriginalUri = originalUri ?? throw new ArgumentNullException(nameof(originalUri));
         UriStem = uriStem ?? throw new ArgumentNullException(nameof(uriStem));
         PrimaryIdentifier = primaryIdentifier;
         _keyQualifiers = Array.AsReadOnly(keyQualifiers ?? throw new ArgumentNullException(nameof(keyQualifiers)));
@@ -62,12 +67,12 @@ public sealed class Gs1DigitalLinkUri {
             new Dictionary<string, string>(extensionParameters ?? throw new ArgumentNullException(nameof(extensionParameters)), StringComparer.Ordinal));
         Fragment = fragment;
         CanonicalUri = canonicalUri ?? throw new ArgumentNullException(nameof(canonicalUri));
-        IsCanonical = string.Equals(Uri.AbsoluteUri, CanonicalUri, StringComparison.Ordinal);
+        IsCanonical = string.Equals(OriginalUri, CanonicalUri, StringComparison.Ordinal);
     }
 
     /// <summary>Builds the equivalent GS1 element string.</summary>
     public string ToElementString() => Gs1Validator.ToElementString(_elements);
 
     /// <inheritdoc />
-    public override string ToString() => Uri.AbsoluteUri;
+    public override string ToString() => OriginalUri;
 }

@@ -105,11 +105,20 @@ public static partial class Gs1Validator {
             var dataStart = close + 1;
             var next = input.IndexOf('(', dataStart);
             var dataEnd = next < 0 ? input.Length : next;
-            var hadSeparator = false;
+            var separatorCount = 0;
 
             while (dataEnd > dataStart && IsSeparator(input[dataEnd - 1])) {
-                hadSeparator = true;
+                separatorCount++;
                 dataEnd--;
+            }
+
+            var hadSeparator = separatorCount > 0;
+            if (separatorCount > 1) {
+                issues.Add(new Gs1ValidationIssue(
+                    Gs1ValidationIssueCode.MalformedInput,
+                    ai,
+                    dataEnd + 1,
+                    "Only one FNC1 separator may occur between GS1 elements."));
             }
 
             if (hadSeparator && next < 0) {

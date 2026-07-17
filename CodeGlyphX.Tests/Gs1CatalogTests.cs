@@ -93,6 +93,16 @@ public class Gs1CatalogTests {
         Assert.Equal("A(B", result.Elements[1].Data);
     }
 
+    [Fact]
+    public void Validate_RejectsRepeatedFnc1SeparatorsInBracketedInput() {
+        var input = "(01)09506000134352(10)LOT" + Gs1.GroupSeparator + Gs1.GroupSeparator + "(21)SERIAL";
+
+        var result = Gs1.Validate(input);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Issues, issue => issue.Code == Gs1ValidationIssueCode.MalformedInput);
+    }
+
     [Theory]
     [InlineData("(01)09506000134353", Gs1ValidationIssueCode.InvalidData)]
     [InlineData("(01)09506000134352(17)241332", Gs1ValidationIssueCode.InvalidData)]
