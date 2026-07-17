@@ -1,4 +1,5 @@
 using CodeGlyphX.DataMatrix;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -35,6 +36,27 @@ public sealed class DirectPartMarkTests {
     }
 
     [Fact]
+    public void EncodedImagePreparation_PreservesDirectPartMarkingAndDetailedDataMatrixResult() {
+        const string elementString = "010950600013435210DPM42";
+        var frame = RenderLowContrast(DataMatrixEncoder.EncodeGs1(elementString), scale: 6, quiet: 4);
+        var encoded = EncodePng(frame.Pixels.ToArray(), frame.Width, frame.Height, frame.Stride);
+
+        var result = SymbolScanner.Scan(encoded, new ScanOptions {
+            Formats = new[] { SymbolFormat.DataMatrix },
+            DirectPartMarking = DirectPartMarkOptions.LaserEtch(),
+            Image = new ImageDecodeOptions { MaxDimension = System.Math.Max(frame.Width, frame.Height) }
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(elementString, symbol.Text);
+        Assert.True(symbol.WasDirectPartMarkPreprocessed);
+        Assert.Equal(DirectPartMarkProfile.LaserEtch, symbol.DirectPartMarkProfile);
+        Assert.Equal(SymbolPayloadProfile.Gs1, symbol.PayloadProfile);
+        Assert.True(Assert.IsType<DataMatrixDecoded>(symbol.LegacyResult.DataMatrix).IsGs1);
+    }
+
+    [Fact]
     public void InvalidDirectPartMarkOptions_AreRejectedBeforeScanning() {
         var frame = ImageFrame.Packed(new byte[] { 255, 255, 255, 255 }, 1, 1, PixelFormat.Rgba32);
         Assert.Throws<System.ArgumentOutOfRangeException>(() => SymbolScanner.Scan(frame, new ScanOptions {
@@ -59,5 +81,17 @@ public sealed class DirectPartMarkTests {
             }
         }
         return ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32);
+    }
+
+    private static byte[] EncodePng(byte[] rgba, int width, int height, int stride) {
+        var rowBytes = width * 4;
+        var rowLength = rowBytes + 1;
+        var scanlines = new byte[height * rowLength];
+        for (var y = 0; y < height; y++) {
+            var rowStart = y * rowLength;
+            scanlines[rowStart] = 0;
+            System.Buffer.BlockCopy(rgba, y * stride, scanlines, rowStart + 1, rowBytes);
+        }
+        return PngWriter.WriteRgba8(width, height, scanlines, scanlines.Length);
     }
 }
