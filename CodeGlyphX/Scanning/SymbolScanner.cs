@@ -34,10 +34,14 @@ public static class SymbolScanner {
         using (var deadline = new ScanDeadline(options.CancellationToken, options.TimeoutMilliseconds)) {
             if (deadline.ShouldStop) return Cancelled(deadline, new List<SymbolFormat>());
             try {
-                if (!ImageReader.TryDecodeRgba32(encodedImage, options.Image, out var rgba, out var width, out var height)) {
+                var imageOptions = ResolveSourceImageDecodeOptions(options);
+                if (!ImageReader.TryDecodeRgba32(encodedImage, imageOptions, out var rgba, out var width, out var height)) {
                     return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), new List<SymbolFormat>(), "The encoded image could not be decoded.");
                 }
                 if (deadline.ShouldStop) return Cancelled(deadline, new List<SymbolFormat>());
+                if (RequiresSourceRegionPreparation(options)) {
+                    return ScanEncodedRegion(rgba, width, height, options, deadline);
+                }
                 return ScanFrame(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options, deadline);
             } catch (ArgumentException ex) {
                 return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), new List<SymbolFormat>(), ex.Message);
@@ -67,7 +71,7 @@ public static class SymbolScanner {
         return result.IsSuccess;
     }
 
-    private static ScanResult ScanFrame(ImageFrame frame, ScanOptions options, ScanDeadline deadline) {
+    private static ScanResult ScanFrame(ImageFrame frame, ScanOptions options, ScanDeadline deadline, ImageRegion? reportedRegion = null) {
         var unsupported = new List<SymbolFormat>();
         var requested = ResolveRequestedFormats(options.Formats, unsupported);
         if (requested.Count == 0) {
@@ -79,10 +83,11 @@ public static class SymbolScanner {
         if (options.Region.HasValue && !region.HasValue) {
             return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), unsupported, "The scan region does not overlap the image.");
         }
-        var searchRegion = region ?? fullRegion;
+        var frameRegion = region ?? fullRegion;
+        var searchRegion = reportedRegion ?? frameRegion;
 
         if (deadline.ShouldStop) return Cancelled(deadline, unsupported);
-        var rgba = ImageFrameConverter.ToRgba32(frame, searchRegion, out var width, out var height);
+        var rgba = ImageFrameConverter.ToRgba32(frame, frameRegion, out var width, out var height);
         if (deadline.ShouldStop) return Cancelled(deadline, unsupported);
 
         var results = new List<DetectedSymbol>();
@@ -188,14 +193,45 @@ public static class SymbolScanner {
         }
         if (expectedTypes.Count == 0) return;
 
-        BarcodeType? expected = expectedTypes.Count == 1 ? expectedTypes[0] : (BarcodeType?)null;
         var barcodeOptions = CloneBarcodeOptions(options.Barcode);
-        if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expected, barcodeOptions, deadline.Token)) return;
+        if (expectedTypes.Count == 1 || RequestsEveryImageScannableLinearFormat(requested)) {
+            var expected = expectedTypes.Count == 1 ? expectedTypes[0] : (BarcodeType?)null;
+            AddLinearResults(rgba, width, height, searchRegion, options, deadline, requested, results, seen, expected, barcodeOptions);
+            return;
+        }
+
+        for (var i = 0; i < expectedTypes.Count && !ShouldStop(options, deadline, results); i++) {
+            AddLinearResults(rgba, width, height, searchRegion, options, deadline, requested, results, seen, expectedTypes[i], barcodeOptions);
+        }
+    }
+
+    private static void AddLinearResults(
+        byte[] rgba,
+        int width,
+        int height,
+        ImageRegion searchRegion,
+        ScanOptions options,
+        ScanDeadline deadline,
+        ISet<SymbolFormat> requested,
+        List<DetectedSymbol> results,
+        HashSet<string>? seen,
+        BarcodeType? expectedType,
+        BarcodeDecodeOptions? barcodeOptions) {
+        if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expectedType, barcodeOptions, deadline.Token)) return;
         for (var i = 0; i < decoded.Length; i++) {
             if (!SymbolCapabilities.TryFromLegacy(decoded[i].Type, out var format) || !requested.Contains(format)) continue;
             Add(results, seen, new DetectedSymbol(format, new CodeGlyphDecoded(decoded[i]), searchRegion));
             if (ReachedMaximum(options, results)) return;
         }
+    }
+
+    private static bool RequestsEveryImageScannableLinearFormat(ISet<SymbolFormat> requested) {
+        for (var i = 0; i < SymbolCapabilities.ImageScannableFormats.Count; i++) {
+            var format = SymbolCapabilities.ImageScannableFormats[i];
+            var capability = SymbolCapabilities.Get(format);
+            if (capability.Family == SymbolFamily.Linear && capability.LegacyBarcodeType.HasValue && !requested.Contains(format)) return false;
+        }
+        return true;
     }
 
     private static QrPixelDecodeOptions ResolveQrOptions(ScanOptions options, ScanDeadline deadline) {
@@ -242,6 +278,70 @@ public static class SymbolScanner {
             PlesseyChecksum = source.PlesseyChecksum,
             EnableTileScan = source.EnableTileScan,
             TileGrid = source.TileGrid
+        };
+    }
+
+    private static bool RequiresSourceRegionPreparation(ScanOptions options) {
+        return options.Region.HasValue && options.Image is not null && options.Image.MaxDimension > 0;
+    }
+
+    private static ScanResult ScanEncodedRegion(byte[] rgba, int width, int height, ScanOptions options, ScanDeadline deadline) {
+        var sourceRegion = options.Region!.Value.ClipTo(width, height);
+        if (!sourceRegion.HasValue) {
+            return ScanFrame(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options, deadline);
+        }
+
+        var prepared = ImageFrameConverter.ToRgba32(
+            ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32),
+            sourceRegion.Value,
+            out var preparedWidth,
+            out var preparedHeight);
+        if (!ImageDecodeHelper.TryDownscale(
+                ref prepared,
+                ref preparedWidth,
+                ref preparedHeight,
+                options.Image,
+                deadline.Token)) {
+            return ScanFrame(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options, deadline);
+        }
+
+        return ScanFrame(
+            ImageFrame.Packed(prepared, preparedWidth, preparedHeight, PixelFormat.Rgba32),
+            CloneForPreparedRegion(options),
+            deadline,
+            sourceRegion.Value);
+    }
+
+    private static ScanOptions CloneForPreparedRegion(ScanOptions source) {
+        return new ScanOptions {
+            Formats = source.Formats,
+            Region = null,
+            TimeoutMilliseconds = source.TimeoutMilliseconds,
+            MaxSymbols = source.MaxSymbols,
+            Deduplicate = source.Deduplicate,
+            Profile = source.Profile,
+            Qr = source.Qr,
+            Barcode = source.Barcode,
+            Image = source.Image,
+            CancellationToken = source.CancellationToken
+        };
+    }
+
+    private static ImageDecodeOptions? ResolveSourceImageDecodeOptions(ScanOptions options) {
+        var source = options.Image;
+        if (!options.Region.HasValue || source is null || source.MaxDimension <= 0) return source;
+
+        // Decode at source dimensions so the ROI can be cropped in its documented coordinate space.
+        // ScanEncodedRegion applies MaxDimension to that crop before recognition.
+        return new ImageDecodeOptions {
+            MaxDimension = 0,
+            MaxPixels = source.MaxPixels,
+            MaxBytes = source.MaxBytes,
+            RecognitionBudgetMilliseconds = source.RecognitionBudgetMilliseconds,
+            MaxAnimationFrames = source.MaxAnimationFrames,
+            MaxAnimationDurationMs = source.MaxAnimationDurationMs,
+            MaxAnimationFramePixels = source.MaxAnimationFramePixels,
+            JpegOptions = source.JpegOptions
         };
     }
 
