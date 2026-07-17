@@ -227,7 +227,7 @@ public sealed class SymbolScannerContractTests {
             Region = new ImageRegion(offsetX, offsetY, qrWidth, qrHeight),
             Image = new ImageDecodeOptions { MaxDimension = 8 },
             Qr = QrPixelDecodeOptions.Robust(),
-            TimeoutMilliseconds = TestBudget.Adjust(5000)
+            TimeoutMilliseconds = 0
         });
 
         Assert.Equal(ScanStatus.NoSymbolFound, result.Status);
