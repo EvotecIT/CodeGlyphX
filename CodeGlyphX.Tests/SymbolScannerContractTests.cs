@@ -239,7 +239,7 @@ public sealed class SymbolScannerContractTests {
             Region = new ImageRegion(offsetX, offsetY, qrWidth, qrHeight),
             Image = new ImageDecodeOptions { MaxDimension = 8 },
             Qr = QrPixelDecodeOptions.Robust(),
-            TimeoutMilliseconds = TestBudget.Adjust(5000)
+            TimeoutMilliseconds = 0
         });
 
         Assert.Equal(ScanStatus.NoSymbolFound, result.Status);
@@ -251,13 +251,13 @@ public sealed class SymbolScannerContractTests {
         var encoded = EncodePng(CreateWhiteRgba(20, 20), 20, 20, 20 * 4);
 
         var result = SymbolScanner.Scan(encoded, new ScanOptions {
-            Formats = new[] { SymbolFormat.MicroQrCode },
+            Formats = new[] { SymbolFormat.MicroPdf417 },
             Region = new ImageRegion(30, 30, 10, 10),
             Image = new ImageDecodeOptions { MaxDimension = 10 }
         });
 
         Assert.Equal(ScanStatus.UnsupportedFormats, result.Status);
-        Assert.Equal(SymbolFormat.MicroQrCode, Assert.Single(result.UnsupportedFormats));
+        Assert.Equal(SymbolFormat.MicroPdf417, Assert.Single(result.UnsupportedFormats));
     }
 
     [Theory]
@@ -296,6 +296,67 @@ public sealed class SymbolScannerContractTests {
         var symbol = Assert.Single(result.Symbols);
         Assert.Equal(format, symbol.Format);
         Assert.Equal(payload, symbol.Text);
+    }
+
+    [Fact]
+    public void Scan_PreservesDetailedGs1DataMatrixResult() {
+        const string elementString = "010950600013435210LOT42";
+        var matrix = DataMatrix.DataMatrixEncoder.EncodeGs1(elementString);
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            matrix,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 5, QuietZone = 3 },
+            out var width,
+            out var height,
+            out _);
+
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { SymbolFormat.DataMatrix },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(SymbolPayloadProfile.Gs1, symbol.PayloadProfile);
+        var decoded = Assert.IsType<DataMatrix.DataMatrixDecoded>(symbol.LegacyResult.DataMatrix);
+        Assert.True(decoded.IsGs1);
+        Assert.Equal(elementString, decoded.Text);
+        Assert.Equal(decoded.Text, symbol.LegacyResult.DataMatrixText);
+        Assert.Equal(matrix.Height, decoded.Rows);
+        Assert.Equal(matrix.Width, decoded.Columns);
+    }
+
+    [Fact]
+    public void Scan_MapsDownscaledMicroQrGeometryBackToEncodedSourceCoordinates() {
+        var code = MicroQrCodeEncoder.EncodeAlphanumeric("ROI-MICRO", minVersion: 4, maxVersion: 4);
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            code.Modules,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 8, QuietZone = 2 },
+            out var symbolWidth,
+            out var symbolHeight,
+            out var symbolStride);
+        const int offsetX = 40;
+        const int offsetY = 28;
+        var width = offsetX + symbolWidth + 32;
+        var height = offsetY + symbolHeight + 24;
+        var canvas = CreateWhiteRgba(width, height);
+        Blit(pixels, symbolWidth, symbolHeight, symbolStride, canvas, width * 4, offsetX, offsetY);
+        var encoded = EncodePng(canvas, width, height, width * 4);
+        var region = new ImageRegion(offsetX, offsetY, symbolWidth, symbolHeight);
+
+        var result = SymbolScanner.Scan(encoded, new ScanOptions {
+            Formats = new[] { SymbolFormat.MicroQrCode },
+            Region = region,
+            Image = new ImageDecodeOptions { MaxDimension = symbolWidth / 2 },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal("ROI-MICRO", symbol.Text);
+        Assert.Equal(region, symbol.SearchRegion);
+        Assert.NotNull(symbol.Geometry);
+        Assert.InRange(symbol.Geometry!.Bounds.X, offsetX + 14, offsetX + 18);
+        Assert.InRange(symbol.Geometry.Bounds.Y, offsetY + 14, offsetY + 18);
     }
 
     [Fact]

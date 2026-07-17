@@ -80,6 +80,19 @@ public class Gs1CatalogTests {
         Assert.Equal(result.Elements.Select(x => (x.Ai, x.Data)), decoded.Elements.Select(x => (x.Ai, x.Data)));
     }
 
+    [Fact]
+    public void Validate_TreatsParenthesesInsideRawDataAsData() {
+        const string raw = "010950600013435210A(B";
+
+        var result = Gs1.Validate(raw);
+
+        Assert.True(result.IsValid, string.Join(Environment.NewLine, result.Issues));
+        Assert.Equal(2, result.Elements.Count);
+        Assert.Equal("01", result.Elements[0].Ai);
+        Assert.Equal("10", result.Elements[1].Ai);
+        Assert.Equal("A(B", result.Elements[1].Data);
+    }
+
     [Theory]
     [InlineData("(01)09506000134353", Gs1ValidationIssueCode.InvalidData)]
     [InlineData("(01)09506000134352(17)241332", Gs1ValidationIssueCode.InvalidData)]

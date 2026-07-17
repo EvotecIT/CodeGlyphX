@@ -135,7 +135,7 @@ public static class SymbolScanner {
             SymbolFormat.MicroQrCode,
             new CodeGlyphDecoded(decoded),
             searchRegion,
-            TranslateGeometry(info.Geometry, searchRegion.X, searchRegion.Y),
+            MapGeometryToSource(info.Geometry, searchRegion, width, height),
             isInverted: info.IsInverted,
             isMirrored: info.IsMirrored));
     }
@@ -169,8 +169,8 @@ public static class SymbolScanner {
         List<DetectedSymbol> results,
         HashSet<string>? seen) {
         if (!requested.Contains(SymbolFormat.DataMatrix)) return;
-        if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var text)) {
-            Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix, new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, text), searchRegion));
+        if (DataMatrixDecoder.TryDecodeDetailed(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var decoded)) {
+            Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix, new CodeGlyphDecoded(decoded), searchRegion));
         }
     }
 
@@ -401,17 +401,19 @@ public static class SymbolScanner {
         results.Add(symbol);
     }
 
-    private static SymbolGeometry TranslateGeometry(SymbolGeometry geometry, int offsetX, int offsetY) {
-        if (offsetX == 0 && offsetY == 0) return geometry;
+    private static SymbolGeometry MapGeometryToSource(SymbolGeometry geometry, ImageRegion sourceRegion, int decodedWidth, int decodedHeight) {
+        if (sourceRegion.X == 0 && sourceRegion.Y == 0 && sourceRegion.Width == decodedWidth && sourceRegion.Height == decodedHeight) return geometry;
         return new SymbolGeometry(
-            TranslatePoint(geometry.TopLeft, offsetX, offsetY),
-            TranslatePoint(geometry.TopRight, offsetX, offsetY),
-            TranslatePoint(geometry.BottomRight, offsetX, offsetY),
-            TranslatePoint(geometry.BottomLeft, offsetX, offsetY));
+            MapPointToSource(geometry.TopLeft, sourceRegion, decodedWidth, decodedHeight),
+            MapPointToSource(geometry.TopRight, sourceRegion, decodedWidth, decodedHeight),
+            MapPointToSource(geometry.BottomRight, sourceRegion, decodedWidth, decodedHeight),
+            MapPointToSource(geometry.BottomLeft, sourceRegion, decodedWidth, decodedHeight));
     }
 
-    private static SymbolPoint TranslatePoint(SymbolPoint point, int offsetX, int offsetY) {
-        return new SymbolPoint(point.X + offsetX, point.Y + offsetY);
+    private static SymbolPoint MapPointToSource(SymbolPoint point, ImageRegion sourceRegion, int decodedWidth, int decodedHeight) {
+        return new SymbolPoint(
+            sourceRegion.X + point.X * sourceRegion.Width / decodedWidth,
+            sourceRegion.Y + point.Y * sourceRegion.Height / decodedHeight);
     }
 
     private static string CreateKey(DetectedSymbol symbol) {
