@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using CodeGlyphX;
+using CodeGlyphX.CatalogGenerator;
 
 var arguments = GeneratorArguments.Parse(args);
 var repositoryRoot = Path.GetFullPath(arguments.RepositoryRoot);
@@ -81,6 +82,8 @@ static void WriteOrCheck(string path, string expected, bool check, ICollection<s
     File.WriteAllText(path, expected, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
 }
 
+namespace CodeGlyphX.CatalogGenerator {
+
 internal sealed class GeneratorArguments {
     internal string RepositoryRoot { get; private set; } = Environment.CurrentDirectory;
     internal bool Check { get; private set; }
@@ -154,4 +157,6 @@ internal static class CapabilityText {
         if (canDecode) return "Decode";
         return "No";
     }
+}
+
 }
