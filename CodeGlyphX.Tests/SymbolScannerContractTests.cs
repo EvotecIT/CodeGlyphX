@@ -224,6 +224,24 @@ public sealed class SymbolScannerContractTests {
     }
 
     [Fact]
+    public void Scan_ReportsOriginalEncodedDimensionsAfterFullFrameDownscaling() {
+        var qr = QrEasy.RenderPixels("ENCODED-FULL-SOURCE", out var width, out var height, out var stride);
+        var encoded = EncodePng(qr, width, height, stride);
+
+        var result = SymbolScanner.Scan(encoded, new ScanOptions {
+            Formats = new[] { SymbolFormat.QrCode },
+            Image = new ImageDecodeOptions { MaxDimension = Math.Max(width, height) / 2 },
+            Qr = QrPixelDecodeOptions.Robust(),
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal("ENCODED-FULL-SOURCE", symbol.Text);
+        Assert.Equal(new ImageRegion(0, 0, width, height), symbol.SearchRegion);
+    }
+
+    [Fact]
     public void Scan_AppliesImageMaxDimensionToEncodedRegionBeforeRecognition() {
         var qr = QrEasy.RenderPixels("ENCODED-ROI-LIMIT", out var qrWidth, out var qrHeight, out var qrStride);
         const int offsetX = 40;
