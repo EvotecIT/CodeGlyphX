@@ -1,5 +1,5 @@
 Cmnd_Alias CODEGLYPHX_BACKUP_PLAIN = /usr/bin/tar -czf - /etc/apache2/sites-available/codeglyphx-com.conf /etc/apache2/sites-available/codeglyphx-com-le-ssl.conf /etc/apache2/conf-available/powerforge-cloudflare-origin.conf /etc/systemd/system/powerforge-cloudflare-origin-sync.service /etc/systemd/system/powerforge-cloudflare-origin-sync.timer /etc/systemd/system/powerforge-site-reconcile.service /etc/systemd/system/powerforge-site-reconcile.timer /etc/powerforge/sites/codeglyphx.com.env /etc/sudoers.d/powerforge-codeglyphx /etc/sudoers.d/powerforge-codeglyphx-backup /etc/letsencrypt/renewal/codeglyphx.com.conf /etc/letsencrypt/options-ssl-apache.conf
-Cmnd_Alias CODEGLYPHX_BACKUP_ENCRYPTED = /usr/bin/tar -czf - /etc/letsencrypt/accounts /etc/letsencrypt/archive/codeglyphx.com /etc/letsencrypt/live/codeglyphx.com
+Cmnd_Alias CODEGLYPHX_BACKUP_ENCRYPTED = /usr/local/sbin/powerforge-server-encrypted-capture --recipient age1v4aw3yj7l4u9t5436ppy8hgem46lfy7wte9ww9ehfkhcwzldx4psd94wk6 -- /etc/letsencrypt/accounts /etc/letsencrypt/archive/codeglyphx.com /etc/letsencrypt/live/codeglyphx.com
 Cmnd_Alias CODEGLYPHX_BACKUP_INSPECT = /usr/sbin/apachectl -S
 
 powerforge-codeglyphx-backup ALL=(root) NOPASSWD: CODEGLYPHX_BACKUP_PLAIN, CODEGLYPHX_BACKUP_ENCRYPTED, CODEGLYPHX_BACKUP_INSPECT
