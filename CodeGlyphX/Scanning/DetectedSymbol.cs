@@ -76,6 +76,7 @@ public sealed class DetectedSymbol {
             return SymbolPayloadProfile.Gs1;
         }
         if (decoded.Qr?.Fnc1Mode != QrFnc1Mode.None) return SymbolPayloadProfile.Gs1;
+        if (decoded.DataMatrix?.IsGs1 == true) return SymbolPayloadProfile.Gs1;
         return SymbolPayloadProfile.None;
     }
 }

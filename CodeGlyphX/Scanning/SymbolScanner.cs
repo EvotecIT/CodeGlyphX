@@ -95,6 +95,7 @@ public static class SymbolScanner {
         var requestedSet = new HashSet<SymbolFormat>(requested);
 
         ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
+        if (!ShouldStop(options, deadline, results)) ScanMicroQr(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
         if (!ShouldStop(options, deadline, results)) ScanPdf417(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
@@ -108,6 +109,35 @@ public static class SymbolScanner {
         }
         if (deadline.ShouldStop) return Cancelled(deadline, unsupported);
         return Result(ScanStatus.NoSymbolFound, deadline, results, unsupported);
+    }
+
+    private static void ScanMicroQr(
+        byte[] rgba,
+        int width,
+        int height,
+        ImageRegion searchRegion,
+        ScanDeadline deadline,
+        ISet<SymbolFormat> requested,
+        List<DetectedSymbol> results,
+        HashSet<string>? seen) {
+        if (!requested.Contains(SymbolFormat.MicroQrCode)) return;
+        if (!MicroQrDecoder.TryDecode(
+                rgba,
+                width,
+                height,
+                width * 4,
+                PixelFormat.Rgba32,
+                deadline.Token,
+                out var decoded,
+                out var info)) return;
+
+        Add(results, seen, new DetectedSymbol(
+            SymbolFormat.MicroQrCode,
+            new CodeGlyphDecoded(decoded),
+            searchRegion,
+            MapGeometryToSource(info.Geometry, searchRegion, width, height),
+            isInverted: info.IsInverted,
+            isMirrored: info.IsMirrored));
     }
 
     private static void ScanQr(
@@ -139,8 +169,8 @@ public static class SymbolScanner {
         List<DetectedSymbol> results,
         HashSet<string>? seen) {
         if (!requested.Contains(SymbolFormat.DataMatrix)) return;
-        if (DataMatrixDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var text)) {
-            Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix, new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, text), searchRegion));
+        if (DataMatrixDecoder.TryDecodeDetailed(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var decoded)) {
+            Add(results, seen, new DetectedSymbol(SymbolFormat.DataMatrix, new CodeGlyphDecoded(decoded), searchRegion));
         }
     }
 
@@ -380,6 +410,21 @@ public static class SymbolScanner {
     private static void Add(List<DetectedSymbol> results, HashSet<string>? seen, DetectedSymbol symbol) {
         if (seen is not null && !seen.Add(CreateKey(symbol))) return;
         results.Add(symbol);
+    }
+
+    private static SymbolGeometry MapGeometryToSource(SymbolGeometry geometry, ImageRegion sourceRegion, int decodedWidth, int decodedHeight) {
+        if (sourceRegion.X == 0 && sourceRegion.Y == 0 && sourceRegion.Width == decodedWidth && sourceRegion.Height == decodedHeight) return geometry;
+        return new SymbolGeometry(
+            MapPointToSource(geometry.TopLeft, sourceRegion, decodedWidth, decodedHeight),
+            MapPointToSource(geometry.TopRight, sourceRegion, decodedWidth, decodedHeight),
+            MapPointToSource(geometry.BottomRight, sourceRegion, decodedWidth, decodedHeight),
+            MapPointToSource(geometry.BottomLeft, sourceRegion, decodedWidth, decodedHeight));
+    }
+
+    private static SymbolPoint MapPointToSource(SymbolPoint point, ImageRegion sourceRegion, int decodedWidth, int decodedHeight) {
+        return new SymbolPoint(
+            sourceRegion.X + point.X * sourceRegion.Width / decodedWidth,
+            sourceRegion.Y + point.Y * sourceRegion.Height / decodedHeight);
     }
 
     private static string CreateKey(DetectedSymbol symbol) {

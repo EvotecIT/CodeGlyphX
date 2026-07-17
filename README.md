@@ -9,9 +9,9 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, linear barcodes, Data Ma
 
 ## What it covers
 
-- QR and Micro QR encoding/decoding, including QR ECI and Kanji encoding plus FNC1/GS1 and structured-append decoding
+- QR and Micro QR encoding, module decoding, and image recognition, including QR ECI, Kanji, FNC1/GS1, and structured append
 - Common 1D symbologies including Code 128/GS1-128, Code 39/93/11, EAN/UPC, ITF, Codabar, MSI, Plessey, postal, and GS1 DataBar variants
-- Data Matrix, PDF417/MicroPDF417, and Aztec encoding/decoding
+- Data Matrix ECC 200 and DMRE encoding/decoding, plus PDF417/MicroPDF417 and Aztec
 - QR payload builders for Wi-Fi, contacts, calendar events, OTP, payments, social profiles, and app links
 - PNG, JPEG, WebP, GIF, TIFF, BMP, Netpbm, TGA, ICO, XBM, XPM, SVG/SVGZ, HTML, PDF, EPS, and ASCII output
 - Managed raster decoding with explicit byte, pixel, dimension, animation, cancellation, and recognition-budget controls
@@ -77,6 +77,117 @@ QR.Save("https://codeglyphx.com", "styled.png", options);
 
 `QrEasy.EvaluateScanHeuristics` reports static contrast, quiet-zone, module-scale, and related concerns before rendering. It does not decode the output or guarantee scanner interoperability; validate final artifacts on the real devices and applications you support.
 
+## Standards-aware QR encoding
+
+`QrCodeEncoder.EncodeText` selects the smallest combination of numeric, alphanumeric, byte, and Kanji segments. UTF-8 ECI is emitted automatically when non-ASCII byte data needs it; `QrEncodingOptions` can force or suppress ECI and segment optimization.
+
+```csharp
+QrCode unicode = QrCodeEncoder.EncodeText("Zażółć gęślą jaźń 😀");
+
+QrCode gs1 = QrCodeEncoder.EncodeGs1(
+    "010590123412345710ABC123\u001D2112345");
+
+QrCode[] sequence = QrCodeEncoder.EncodeStructuredAppend(new[] {
+    "ORDER-2026-",
+    "LINE-0001",
+    "LOT-ABC123"
+});
+```
+
+Use `\u001D` between variable-length GS1 element strings. Structured append accepts two through sixteen explicit text or binary parts, computes the shared XOR parity, and exposes one-based `QrStructuredAppend` metadata after decoding. FNC1 second position and its 8-bit application indicator are available through `QrEncodingOptions` for industry-specific applications.
+
+## Standards-aware Data Matrix encoding
+
+The historical square ECC 200 default remains unchanged. `DataMatrixEncodingOptions` can instead select the six original rectangular models, any of the eighteen ISO/IEC 21471 DMRE models, the smallest symbol across all families, or an exact supported size. Automatic encodation plans mixed ASCII, C40, Text, X12, EDIFACT, and Base256 runs rather than forcing the entire payload into one mode.
+
+```csharp
+using CodeGlyphX.DataMatrix;
+
+BitMatrix compact = DataMatrixCode.Encode(
+    "HELLO-UPPERCASE-lowercase-1234567890",
+    new DataMatrixEncodingOptions { Shape = DataMatrixShape.Any });
+
+BitMatrix dmre = DataMatrixCode.Encode(
+    "LOT-2026-0042",
+    new DataMatrixEncodingOptions { Shape = DataMatrixShape.Dmre });
+
+BitMatrix exact = DataMatrixCode.Encode(
+    "A",
+    new DataMatrixEncodingOptions { Rows = 12, Columns = 88 });
+```
+
+GS1/FNC1, ECI, Macro 05/06, Reader Programming, and Data Matrix structured append are first-class controls. A structured-append file identifier consists of two values in the standard 1..254 range.
+
+```csharp
+string elementString = "0109501101020917\u001D10LOT42";
+BitMatrix gs1 = DataMatrixCode.EncodeGs1(elementString);
+
+BitMatrix[] sequence = DataMatrixCode.EncodeStructuredAppend(
+    new[] { "ORDER-2026", "LINE-0001", "LOT-ABC123" },
+    fileId1: 7,
+    fileId2: 9);
+
+if (DataMatrixDecoder.TryDecodeDetailed(gs1, out DataMatrixDecoded decoded)) {
+    Console.WriteLine($"GS1: {decoded.IsGs1}; model: {decoded.Rows}x{decoded.Columns}");
+}
+```
+
+`TryDecodeDetailed` is available for module matrices and pixel buffers; `DataMatrixCode.TryDecodePngDetailed` preserves the same control metadata when decoding PNG input. Plain `TryDecode` continues to return only the reconstructed text.
+
+## Official GS1 Application Identifier catalog
+
+`Gs1ApplicationIdentifierCatalog` is generated from the GS1 Barcode Syntax Dictionary release 2026-01-27. It expands all assigned ranges into 541 directly addressable AIs and exposes titles, data components, separator rules, association/exclusion rules, and GS1 Digital Link metadata.
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Gs1Data;
+
+Gs1ApplicationIdentifier lot =
+    Gs1ApplicationIdentifierCatalog.Get("10");
+
+Console.WriteLine($"{lot.Title}: {lot.Format}");
+Console.WriteLine($"Dictionary: {Gs1ApplicationIdentifierCatalog.Release}");
+```
+
+Use `Gs1.Validate` when conformance matters. It accepts bracketed syntax and raw element strings, returns every parsed element and actionable issue in one pass, and applies all semantic rules referenced by this dictionary release—including check digits, dates and times, code lists, IBAN, AI associations, and coupon formats.
+
+```csharp
+const string message =
+    "(01)09506000134352(10)ABC123(17)240101";
+
+Gs1ValidationResult validation = Gs1.Validate(message);
+if (!validation.IsValid) {
+    foreach (Gs1ValidationIssue issue in validation.Issues) {
+        Console.WriteLine(issue);
+    }
+}
+
+string elementString = Gs1Validator.ToElementString(message);
+BitMatrix dataMatrix = DataMatrixCode.EncodeGs1(elementString);
+```
+
+`Gs1.ElementString` remains the compatibility-oriented separator builder used by existing encoders: it accepts expert-defined and legacy fields. `Gs1.Validate`, `Gs1.TryValidate`, and `Gs1Validator.ToElementString` are the strict entry points for standards-sensitive workflows.
+
+The same catalog and semantic validator power the uncompressed GS1 Digital Link URI Syntax 1.6.0 engine. It parses custom or reference URI stems, keeps key qualifiers in the standards-defined path order, validates GS1 query attributes, retains non-GS1 extension parameters, and produces a canonical `https://id.gs1.org` URI.
+
+```csharp
+Gs1DigitalLinkUri parsed = Gs1DigitalLink.Parse(
+    "https://brand.example/01/09520123456788/10/ABC1/21/12345?17=180426");
+
+Console.WriteLine(parsed.PrimaryIdentifier); // (01)09520123456788
+Console.WriteLine(parsed.CanonicalUri);
+Console.WriteLine(parsed.ToElementString());
+
+Gs1DigitalLinkUri canonical = Gs1DigitalLink.BuildCanonical(new[] {
+    Gs1Element.Create("01", "09520123456788"),
+    Gs1Element.Create("10", "ABC1"),
+    Gs1Element.Create("21", "12345"),
+    Gs1Element.Create("17", "180426")
+});
+```
+
+URI compression and online resolver behavior are separate GS1 standards; this API deliberately implements the uncompressed URI syntax without network access.
+
 ## Decode an image
 
 ```csharp
@@ -90,7 +201,7 @@ if (QrImageDecoder.TryDecodeImage(
 }
 ```
 
-Use `SymbolScanner` when the application needs one coherent result model across QR, barcodes, Data Matrix, PDF417, and Aztec:
+Use `SymbolScanner` when the application needs one coherent result model across QR, Micro QR, barcodes, Data Matrix, PDF417, and Aztec:
 
 ```csharp
 var scan = SymbolScanner.Scan(image, ScanOptions.Screen(
@@ -104,6 +215,17 @@ foreach (var symbol in scan.Symbols)
 ```
 
 `ScanOptions.TimeoutMilliseconds` is a total wall-clock deadline covering compressed-image decoding, pixel conversion, and recognition. Decoder cancellation remains cooperative, so it is not a hard real-time guarantee. Use `ScanOptions.Formats` and `ScanOptions.Region` to avoid work the application does not need.
+
+Micro QR can also be recognized directly from RGBA/BGRA pixels or an encoded image. The detailed overload reports the detected quadrilateral, rotation, polarity, and mirroring state:
+
+```csharp
+if (MicroQrDecoder.TryDecodeImage(
+        image,
+        out MicroQrDecoded micro,
+        out MicroQrPixelDecodeInfo recognition)) {
+    Console.WriteLine($"{micro.Text} at {recognition.Geometry.Bounds}");
+}
+```
 
 Raw camera or interop buffers can be passed without an image-codec dependency:
 
@@ -189,4 +311,4 @@ dotnet run --project CodeGlyphX.Examples -c Release
 
 ## License
 
-CodeGlyphX is licensed under the [Apache License 2.0](LICENSE).
+CodeGlyphX is licensed under the [Apache License 2.0](LICENSE). See [third-party notices](THIRD-PARTY-NOTICES.md) for incorporated standards resources.

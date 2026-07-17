@@ -5,6 +5,8 @@ using System.Text;
 namespace CodeGlyphX.Internal;
 
 internal static class QrEncoding {
+    private static readonly UTF8Encoding StrictUtf8 = new UTF8Encoding(false, true);
+
     public static bool TryGetEciAssignment(QrTextEncoding encoding, out int assignmentNumber) {
         assignmentNumber = encoding switch {
             QrTextEncoding.Latin1 => 3,
@@ -27,7 +29,7 @@ internal static class QrEncoding {
         if (text is null) throw new ArgumentNullException(nameof(text));
 
         return encoding switch {
-            QrTextEncoding.Utf8 => Encoding.UTF8.GetBytes(text),
+            QrTextEncoding.Utf8 => StrictUtf8.GetBytes(text),
             QrTextEncoding.Ascii => Encoding.ASCII.GetBytes(text),
             QrTextEncoding.Latin1 => EncodeLatin1(text),
             QrTextEncoding.Iso8859_2 => EncodeSingleByte(text, ISO8859_2_MAP),
@@ -44,36 +46,93 @@ internal static class QrEncoding {
     public static bool CanEncode(string text, QrTextEncoding encoding) {
         if (text is null) return false;
 
+        return CanEncode(text, 0, text.Length, encoding);
+    }
+
+    public static bool CanEncode(string text, int offset, int length, QrTextEncoding encoding) {
+        if (text is null) return false;
+        if (offset < 0 || offset > text.Length) throw new ArgumentOutOfRangeException(nameof(offset));
+        if (length < 0 || offset + length > text.Length) throw new ArgumentOutOfRangeException(nameof(length));
+
+        var end = offset + length;
+
         switch (encoding) {
             case QrTextEncoding.Utf8:
+                for (var i = offset; i < end; i++) {
+                    if (char.IsHighSurrogate(text[i])) {
+                        if (i + 1 >= end || !char.IsLowSurrogate(text[i + 1])) return false;
+                        i++;
+                    } else if (char.IsLowSurrogate(text[i])) {
+                        return false;
+                    }
+                }
                 return true;
             case QrTextEncoding.Ascii:
-                for (var i = 0; i < text.Length; i++) {
+                for (var i = offset; i < end; i++) {
                     if (text[i] > 0x7F) return false;
                 }
                 return true;
             case QrTextEncoding.Latin1:
-                for (var i = 0; i < text.Length; i++) {
+                for (var i = offset; i < end; i++) {
                     if (text[i] > 0xFF) return false;
                 }
                 return true;
             case QrTextEncoding.Iso8859_2:
-                return CanEncodeWithMap(text, ISO8859_2_MAP);
+                return CanEncodeWithMap(text, offset, end, ISO8859_2_MAP);
             case QrTextEncoding.Iso8859_4:
-                return CanEncodeWithMap(text, ISO8859_4_MAP);
+                return CanEncodeWithMap(text, offset, end, ISO8859_4_MAP);
             case QrTextEncoding.Iso8859_5:
-                return CanEncodeWithMap(text, ISO8859_5_MAP);
+                return CanEncodeWithMap(text, offset, end, ISO8859_5_MAP);
             case QrTextEncoding.Iso8859_7:
-                return CanEncodeWithMap(text, ISO8859_7_MAP);
+                return CanEncodeWithMap(text, offset, end, ISO8859_7_MAP);
             case QrTextEncoding.Iso8859_10:
-                return CanEncodeWithMap(text, ISO8859_10_MAP);
+                return CanEncodeWithMap(text, offset, end, ISO8859_10_MAP);
             case QrTextEncoding.Iso8859_15:
-                return CanEncodeWithMap(text, ISO8859_15_MAP);
+                return CanEncodeWithMap(text, offset, end, ISO8859_15_MAP);
             case QrTextEncoding.ShiftJis:
-                return QrShiftJis.CanEncode(text);
+                for (var i = offset; i < end; i++) {
+                    var c = text[i];
+                    if (c <= 0x7F || c is >= '\uFF61' and <= '\uFF9F' || QrKanjiTable.TryGetValue(c, out _)) continue;
+                    return false;
+                }
+                return true;
             default:
                 return false;
         }
+    }
+
+    public static int GetByteCount(string text, int offset, int length, QrTextEncoding encoding) {
+        if (text is null) throw new ArgumentNullException(nameof(text));
+        if (offset < 0 || offset > text.Length) throw new ArgumentOutOfRangeException(nameof(offset));
+        if (length < 0 || offset + length > text.Length) throw new ArgumentOutOfRangeException(nameof(length));
+
+        if (encoding == QrTextEncoding.Utf8) {
+            var count = 0;
+            var end = offset + length;
+            for (var i = offset; i < end; i++) {
+                var c = text[i];
+                if (c <= 0x7F) count++;
+                else if (c <= 0x7FF) count += 2;
+                else if (char.IsHighSurrogate(c) && i + 1 < end && char.IsLowSurrogate(text[i + 1])) {
+                    count += 4;
+                    i++;
+                } else count += 3;
+            }
+            return count;
+        }
+
+        if (encoding == QrTextEncoding.ShiftJis) {
+            var count = 0;
+            var end = offset + length;
+            for (var i = offset; i < end; i++) {
+                var c = text[i];
+                count += c <= 0x7F || c is >= '\uFF61' and <= '\uFF9F' ? 1 : 2;
+            }
+            return count;
+        }
+
+        // All other supported encodings are single-byte encodings. CanEncode validates the characters.
+        return length;
     }
 
     public static string Decode(QrTextEncoding encoding, byte[] bytes) {
@@ -121,8 +180,8 @@ internal static class QrEncoding {
         return bytes;
     }
 
-    private static bool CanEncodeWithMap(string text, Dictionary<char, byte> map) {
-        for (var i = 0; i < text.Length; i++) {
+    private static bool CanEncodeWithMap(string text, int offset, int end, Dictionary<char, byte> map) {
+        for (var i = offset; i < end; i++) {
             if (!map.ContainsKey(text[i])) return false;
         }
         return true;

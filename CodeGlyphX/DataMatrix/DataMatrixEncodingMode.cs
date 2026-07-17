@@ -14,7 +14,7 @@ public enum DataMatrixEncodingMode {
     Text,
     /// <summary>X12 encodation (ANSI X12 subset).</summary>
     X12,
-    /// <summary>EDIFACT encodation (ASCII 32-95).</summary>
+    /// <summary>EDIFACT encodation (ASCII 32-94).</summary>
     Edifact,
     /// <summary>Base256 encodation (for binary or UTF-8 data).</summary>
     Base256

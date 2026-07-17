@@ -7,7 +7,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// Decodes Micro QR codes from a module grid.
 /// </summary>
-public static class MicroQrDecoder {
+public static partial class MicroQrDecoder {
     /// <summary>
     /// Attempts to decode a Micro QR code from an exact module grid (no quiet zone).
     /// </summary>

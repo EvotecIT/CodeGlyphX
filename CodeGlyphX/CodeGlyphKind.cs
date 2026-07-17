@@ -13,5 +13,7 @@ public enum CodeGlyphKind {
     /// <summary>PDF417.</summary>
     Pdf417,
     /// <summary>Aztec.</summary>
-    Aztec
+    Aztec,
+    /// <summary>Micro QR code.</summary>
+    MicroQr
 }

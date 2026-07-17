@@ -155,6 +155,9 @@ internal static class DataMatrixPlacement {
             col += cols;
             row += 4 - ((cols + 4) % 8);
         }
+        if (row >= rows) {
+            row -= rows;
+        }
     }
 
     private static void Utah(CodewordSpan codewords, ref int codewordIndex, int rows, int cols, BitMatrix matrix, bool[] assigned, int row, int col) {
