@@ -378,6 +378,32 @@ public sealed class SymbolScannerContractTests {
     }
 
     [Fact]
+    public void Scan_MapsFullFrameMicroQrGeometryBackToEncodedSourceCoordinates() {
+        var code = MicroQrCodeEncoder.EncodeAlphanumeric("FULL-MICRO", minVersion: 4, maxVersion: 4);
+        var pixels = Rendering.Png.MatrixPngRenderer.RenderPixels(
+            code.Modules,
+            new Rendering.Png.MatrixPngRenderOptions { ModuleSize = 8, QuietZone = 2 },
+            out var width,
+            out var height,
+            out var stride);
+        var encoded = EncodePng(pixels, width, height, stride);
+
+        var result = SymbolScanner.Scan(encoded, new ScanOptions {
+            Formats = new[] { SymbolFormat.MicroQrCode },
+            Image = new ImageDecodeOptions { MaxDimension = width / 2 },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.Equal(ScanStatus.Success, result.Status);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal("FULL-MICRO", symbol.Text);
+        Assert.Equal(new ImageRegion(0, 0, width, height), symbol.SearchRegion);
+        Assert.NotNull(symbol.Geometry);
+        Assert.InRange(symbol.Geometry!.Bounds.X, 14, 18);
+        Assert.InRange(symbol.Geometry.Bounds.Y, 14, 18);
+    }
+
+    [Fact]
     public void Scan_ReturnsMultipleQrCodesFromOneFrame() {
         var left = QrEasy.RenderPixels("SCANNER-LEFT", out var leftWidth, out var leftHeight, out var leftStride);
         var right = QrEasy.RenderPixels("SCANNER-RIGHT", out var rightWidth, out var rightHeight, out var rightStride);
