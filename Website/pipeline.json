@@ -30,9 +30,48 @@
       ]
     },
     {
+      "task": "exec",
+      "id": "generate-symbol-capabilities",
+      "dependsOn": "build-release-hub",
+      "skipModes": ["ci"],
+      "command": "dotnet",
+      "argsList": [
+        "run",
+        "--project",
+        "../CodeGlyphX.CatalogGenerator/CodeGlyphX.CatalogGenerator.csproj",
+        "--configuration",
+        "Release",
+        "--",
+        "--repository-root",
+        ".."
+      ],
+      "workingDirectory": ".",
+      "timeoutSeconds": 180
+    },
+    {
+      "task": "exec",
+      "id": "verify-symbol-capabilities",
+      "dependsOn": "build-release-hub",
+      "modes": ["ci"],
+      "command": "dotnet",
+      "argsList": [
+        "run",
+        "--project",
+        "../CodeGlyphX.CatalogGenerator/CodeGlyphX.CatalogGenerator.csproj",
+        "--configuration",
+        "Release",
+        "--",
+        "--repository-root",
+        "..",
+        "--check"
+      ],
+      "workingDirectory": ".",
+      "timeoutSeconds": 180
+    },
+    {
       "task": "build",
       "id": "build-site",
-      "dependsOn": "build-release-hub",
+      "dependsOn": ["generate-symbol-capabilities", "verify-symbol-capabilities"],
       "config": "./site.json",
       "out": "./_site",
       "clean": true

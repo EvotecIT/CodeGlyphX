@@ -36,6 +36,20 @@ internal static class FlagshipApiExample {
             .Render(OutputFormat.Png);
         OutputWriter.Write(Path.Combine(outputDir, "styled.png"), styled);
 
+        var scannerImage = QrCode.Render("SCANNER-AOT", OutputFormat.Png).Data;
+        var scan = SymbolScanner.Scan(scannerImage, new ScanOptions {
+            Formats = new[] { SymbolFormat.QrCode },
+            TimeoutMilliseconds = 15000,
+            Qr = new QrPixelDecodeOptions {
+                Profile = QrDecodeProfile.Fast,
+                MaxScale = 1,
+                DisableTransforms = true
+            }
+        });
+        if (!scan.IsSuccess || scan.Symbols.Count != 1 || scan.Symbols[0].Text != "SCANNER-AOT") {
+            throw new System.InvalidOperationException("The unified scanner NativeAOT smoke test failed.");
+        }
+
         var micro = MicroQrCodeEncoder.EncodeAlphanumeric("ABC123", QrErrorCorrectionLevel.L);
         OutputWriter.Write(
             Path.Combine(outputDir, "microqr.png"),

@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Playground", "Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.Fuzz", "CodeGlyphX.Fuzz\CodeGlyphX.Fuzz.csproj", "{5F95770E-DFC2-499A-8409-C20571D11916}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGlyphX.CatalogGenerator", "CodeGlyphX.CatalogGenerator\CodeGlyphX.CatalogGenerator.csproj", "{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,18 @@ Global
 		{5F95770E-DFC2-499A-8409-C20571D11916}.Release|x64.Build.0 = Release|Any CPU
 		{5F95770E-DFC2-499A-8409-C20571D11916}.Release|x86.ActiveCfg = Release|Any CPU
 		{5F95770E-DFC2-499A-8409-C20571D11916}.Release|x86.Build.0 = Release|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Debug|x64.Build.0 = Debug|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Debug|x86.Build.0 = Debug|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Release|x64.ActiveCfg = Release|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Release|x64.Build.0 = Release|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Release|x86.ActiveCfg = Release|Any CPU
+		{9BA0EC3C-B5E7-4140-B8DB-4620FBD2851B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,7 +10,7 @@ layout: docs
 
 # Image Decoding
 
-Use `QrImageDecoder` when only QR is expected. Use `CodeGlyph` for unified QR, linear-barcode, Data Matrix, PDF417, and Aztec recognition.
+Use `QrImageDecoder` when only QR is expected. Use `SymbolScanner` for a unified result model across QR, linear barcodes, Data Matrix, PDF417, and Aztec. The [capability matrix](/docs/symbol-capabilities/) distinguishes pixel recognition from module-only decoding for every format.
 
 ## QR-only decoding
 
@@ -34,25 +34,41 @@ if (QrImageDecoder.TryDecodeImage(image, imageOptions, qrOptions, out var decode
 ## Unified decoding
 
 ```csharp
-var options = new CodeGlyphDecodeOptions {
+var options = new ScanOptions {
+    Formats = new[] { SymbolFormat.QrCode, SymbolFormat.DataMatrix, SymbolFormat.Code128 },
+    TimeoutMilliseconds = 750,
     Qr = QrPixelDecodeOptions.Screen(budgetMilliseconds: 500, maxDimension: 1600),
     Image = ImageDecodeOptions.Strict(
         maxBytes: 8 * 1024 * 1024,
         maxPixels: 8_000_000,
         maxDimension: 1600)
-        .WithRecognitionBudget(500)
 };
 
-if (CodeGlyph.TryDecodeImage(image, out var decoded, options)) {
-    Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
+var scan = SymbolScanner.Scan(image, options);
+foreach (var symbol in scan.Symbols) {
+    Console.WriteLine($"{symbol.Format}: {symbol.Text}");
 }
 ```
 
-Stream input uses the same contract:
+`TimeoutMilliseconds` covers compressed-image decoding, pixel conversion, and the complete recognition sequence. Cancellation and decoder budgets remain cooperative rather than hard real-time limits. Requested module-only formats are returned in `ScanResult.UnsupportedFormats` instead of being advertised as image-scannable.
+
+Raw camera and interop buffers use the same scanner without a compressed-image codec:
+
+```csharp
+var frame = new ImageFrame(pixels, width, height, stride, PixelFormat.Gray8);
+var scan = SymbolScanner.Scan(frame, new ScanOptions {
+    Formats = new[] { SymbolFormat.QrCode, SymbolFormat.DataMatrix },
+    Region = new ImageRegion(0, 0, width, height)
+});
+```
+
+## Legacy facade and stream input
+
+`CodeGlyph` remains available for compatibility and for stream-based input:
 
 ```csharp
 using var stream = File.OpenRead("barcode.png");
-if (CodeGlyph.TryDecodeImage(stream, out var decoded, options)) {
+if (CodeGlyph.TryDecodeImage(stream, out var decoded)) {
     Console.WriteLine(decoded.Text);
 }
 ```
@@ -60,10 +76,14 @@ if (CodeGlyph.TryDecodeImage(stream, out var decoded, options)) {
 ## Multiple results
 
 ```csharp
-if (CodeGlyph.TryDecodeAllImage(image, out var results, options)) {
-    foreach (var result in results) {
-        Console.WriteLine($"{result.Kind}: {result.Text}");
-    }
+var scan = SymbolScanner.Scan(image, new ScanOptions {
+    Formats = new[] { SymbolFormat.QrCode },
+    MaxSymbols = 16,
+    Qr = QrPixelDecodeOptions.Robust().WithTileScan(enabled: true, tileGrid: 3)
+});
+
+foreach (var symbol in scan.Symbols) {
+    Console.WriteLine($"{symbol.Format}: {symbol.Text}");
 }
 ```
 
@@ -99,7 +119,7 @@ pwsh Build/Download-ExternalSamples.ps1
 ## Diagnostics
 
 ```csharp
-if (!CodeGlyph.TryDecodeImage(image, out var decoded, out var diagnostics, options)) {
+if (!CodeGlyph.TryDecodeImage(image, out var decoded, out var diagnostics, options: null)) {
     Console.WriteLine(diagnostics.FailureReason);
     Console.WriteLine(diagnostics.Failure);
 }
