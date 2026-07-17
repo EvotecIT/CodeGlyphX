@@ -148,10 +148,59 @@ public static partial class MicroQrDecoder {
         decoded = null!;
         info = null!;
         if (cancellationToken.IsCancellationRequested) return false;
-        if (!ImageReader.TryDecodeRgba32(encodedImage, options, out var rgba, out var width, out var height)) return false;
+        if (!ImageReader.TryDecodeRgba32(encodedImage, ResolveSourceImageDecodeOptions(options), out var rgba, out var width, out var height)) return false;
         if (cancellationToken.IsCancellationRequested) return false;
+        var sourceWidth = width;
+        var sourceHeight = height;
+        if (!ImageDecodeHelper.TryDownscale(ref rgba, ref width, ref height, options, cancellationToken)) return false;
         using (ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out var recognitionToken)) {
-            return MicroQrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, recognitionToken, out decoded, out info);
+            if (!MicroQrPixelDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, recognitionToken, out decoded, out var decodedInfo)) return false;
+            info = MapInfoToSource(decodedInfo, sourceWidth, sourceHeight, width, height);
+            return true;
         }
+    }
+
+    private static ImageDecodeOptions? ResolveSourceImageDecodeOptions(ImageDecodeOptions? options) {
+        if (options is null || options.MaxDimension <= 0) return options;
+        return new ImageDecodeOptions {
+            MaxDimension = 0,
+            MaxPixels = options.MaxPixels,
+            MaxBytes = options.MaxBytes,
+            RecognitionBudgetMilliseconds = options.RecognitionBudgetMilliseconds,
+            MaxAnimationFrames = options.MaxAnimationFrames,
+            MaxAnimationDurationMs = options.MaxAnimationDurationMs,
+            MaxAnimationFramePixels = options.MaxAnimationFramePixels,
+            JpegOptions = options.JpegOptions
+        };
+    }
+
+    private static MicroQrPixelDecodeInfo MapInfoToSource(
+        MicroQrPixelDecodeInfo info,
+        int sourceWidth,
+        int sourceHeight,
+        int decodedWidth,
+        int decodedHeight) {
+        if (sourceWidth == decodedWidth && sourceHeight == decodedHeight) return info;
+        var geometry = info.Geometry;
+        return new MicroQrPixelDecodeInfo(
+            new SymbolGeometry(
+                MapPointToSource(geometry.TopLeft, sourceWidth, sourceHeight, decodedWidth, decodedHeight),
+                MapPointToSource(geometry.TopRight, sourceWidth, sourceHeight, decodedWidth, decodedHeight),
+                MapPointToSource(geometry.BottomRight, sourceWidth, sourceHeight, decodedWidth, decodedHeight),
+                MapPointToSource(geometry.BottomLeft, sourceWidth, sourceHeight, decodedWidth, decodedHeight)),
+            info.IsInverted,
+            info.IsMirrored,
+            info.Threshold);
+    }
+
+    private static SymbolPoint MapPointToSource(
+        SymbolPoint point,
+        int sourceWidth,
+        int sourceHeight,
+        int decodedWidth,
+        int decodedHeight) {
+        return new SymbolPoint(
+            point.X * sourceWidth / decodedWidth,
+            point.Y * sourceHeight / decodedHeight);
     }
 }
