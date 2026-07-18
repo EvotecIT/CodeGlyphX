@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/71fdfa7e1b767aff6c505ee7dbcb01b3dfc4b51b/Schemas/powerforge.web.serverrecovery.schema.json",
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/161a22a7a91b6f05b7bf9268287ff69f44ea204a/Schemas/powerforge.web.serverrecovery.schema.json",
   "schemaVersion": 2,
   "name": "codeglyphx-production-ovh",
   "description": "Recovery manifest for the CodeGlyphX static website.",
@@ -21,11 +21,19 @@
       "required": true
     },
     {
+      "role": "recovery-configuration",
+      "url": "https://github.com/EvotecIT/CodeGlyphX.git",
+      "path": "/srv/evotec/CodeGlyphXRecovery",
+      "branch": "master",
+      "ref": "0410ddab72d4cf346b725402d59f57d200b4be62",
+      "required": true
+    },
+    {
       "role": "deployment-engine",
       "url": "https://github.com/EvotecIT/PSPublishModule.git",
       "path": "/srv/evotec/PSPublishModule",
       "branch": "main",
-      "ref": "71fdfa7e1b767aff6c505ee7dbcb01b3dfc4b51b",
+      "ref": "161a22a7a91b6f05b7bf9268287ff69f44ea204a",
       "required": true
     }
   ],
@@ -242,7 +250,7 @@
     {
       "id": "backup-sudoers",
       "path": "/etc/sudoers.d/powerforge-codeglyphx-backup",
-      "source": "/srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-backup.sudoers",
+      "source": "/srv/evotec/CodeGlyphXRecovery/deploy/linux/powerforge-codeglyphx-backup.sudoers",
       "kind": "file",
       "owner": "root",
       "group": "root",
