@@ -95,7 +95,7 @@ public sealed class BarcodeDecoderTests {
 
     [Fact]
     public void Decode_Code39_FromPixels() {
-        var barcode = BarcodeEncoder.EncodeCode39("ABC123", includeChecksum: true, fullAsciiMode: false);
+        var barcode = BarcodeEncoder.EncodeCode39("HELLO-123", includeChecksum: true, fullAsciiMode: false);
         var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
             ModuleSize = 3,
             QuietZone = 10,
@@ -107,7 +107,7 @@ public sealed class BarcodeDecoderTests {
         };
         Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, options, out var decoded));
         Assert.Equal(BarcodeType.Code39, decoded.Type);
-        Assert.Equal("ABC123", decoded.Text);
+        Assert.Equal("HELLO-123", decoded.Text);
     }
 
     [Fact]
