@@ -1,54 +1,56 @@
+using System;
 using System.Collections.Generic;
 
 namespace CodeGlyphX.Code39;
 
 internal static class Code39Tables {
-    public static readonly IReadOnlyDictionary<char, (int value, bool[] data)> EncodingTable = new Dictionary<char, (int, bool[])> {
-        { '0', (0, new[] { true, false, true, false, false, true, true, false, true, true, false, true }) },
-        { '1', (1, new[] { true, true, false, true, false, false, true, false, true, false, true, true }) },
-        { '2', (2, new[] { true, false, true, true, false, false, true, false, true, false, true, true }) },
-        { '3', (3, new[] { true, true, false, true, true, false, false, true, false, true, false, true }) },
-        { '4', (4, new[] { true, false, true, false, false, true, true, false, true, false, true, true }) },
-        { '5', (5, new[] { true, true, false, true, false, false, true, true, false, true, false, true }) },
-        { '6', (6, new[] { true, false, true, true, false, false, true, true, false, true, false, true }) },
-        { '7', (7, new[] { true, false, true, false, false, true, false, true, true, false, true, true }) },
-        { '8', (8, new[] { true, true, false, true, false, false, true, false, true, true, false, true }) },
-        { '9', (9, new[] { true, false, true, true, false, false, true, false, true, true, false, true }) },
-        { 'A', (10, new[] { true, true, false, true, false, true, false, false, true, false, true, true }) },
-        { 'B', (11, new[] { true, false, true, true, false, true, false, false, true, false, true, true }) },
-        { 'C', (12, new[] { true, true, false, true, true, false, true, false, false, true, false, true }) },
-        { 'D', (13, new[] { true, false, true, false, true, true, false, false, true, false, true, true }) },
-        { 'E', (14, new[] { true, true, false, true, false, true, true, false, false, true, false, true }) },
-        { 'F', (15, new[] { true, false, true, true, false, true, true, false, false, true, false, true }) },
-        { 'G', (16, new[] { true, false, true, false, true, false, false, true, true, false, true, true }) },
-        { 'H', (17, new[] { true, true, false, true, false, true, false, false, true, true, false, true }) },
-        { 'I', (18, new[] { true, false, true, true, false, true, false, false, true, true, false, true }) },
-        { 'J', (19, new[] { true, false, true, false, true, true, false, false, true, true, false, true }) },
-        { 'K', (20, new[] { true, true, false, true, false, true, false, true, false, false, true, true }) },
-        { 'L', (21, new[] { true, false, true, true, false, true, false, true, false, false, true, true }) },
-        { 'M', (22, new[] { true, true, false, true, true, false, true, false, true, false, false, true }) },
-        { 'N', (23, new[] { true, false, true, false, true, true, false, true, false, false, true, true }) },
-        { 'O', (24, new[] { true, true, false, true, false, true, true, false, true, false, false, true }) },
-        { 'P', (25, new[] { true, false, true, true, false, true, true, false, true, false, false, true }) },
-        { 'Q', (26, new[] { true, false, true, false, true, true, false, true, true, false, false, true }) },
-        { 'R', (27, new[] { true, true, false, true, false, true, false, true, true, false, false, true }) },
-        { 'S', (28, new[] { true, false, true, true, false, true, false, true, true, false, false, true }) },
-        { 'T', (29, new[] { true, false, true, false, true, true, false, true, true, false, false, true }) },
-        { 'U', (30, new[] { true, true, false, false, true, false, true, false, true, false, true, true }) },
-        { 'V', (31, new[] { true, false, true, false, true, false, true, false, true, false, true, true }) },
-        { 'W', (32, new[] { true, true, false, false, true, false, true, true, false, true, false, true }) },
-        { 'X', (33, new[] { true, false, true, false, true, false, true, true, false, true, false, true }) },
-        { 'Y', (34, new[] { true, false, true, false, true, false, false, true, true, false, true, true }) },
-        { 'Z', (35, new[] { true, true, false, false, true, false, true, false, true, true, false, true }) },
-        { '-', (36, new[] { true, false, false, true, false, true, false, true, false, true, true, true }) },
-        { '.', (37, new[] { true, true, false, true, false, true, false, true, false, true, false, true }) },
-        { ' ', (38, new[] { true, false, false, true, false, true, false, true, true, false, true, true }) },
-        { '$', (39, new[] { true, false, false, false, true, false, false, true, false, true, true, true }) },
-        { '/', (40, new[] { true, false, false, false, true, false, true, false, false, true, true, true }) },
-        { '+', (41, new[] { true, false, false, true, false, false, false, true, false, true, true, true }) },
-        { '%', (42, new[] { true, false, true, false, false, true, false, false, true, false, false, true }) },
-        { '*', (-1, new[] { true, false, false, true, false, true, true, false, true, true, false, true }) }
+    private const string Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%";
+    private const int AsteriskWidePattern = 0x094;
+
+    // The nine low bits describe the alternating bars and spaces. A set bit is
+    // wide (two modules); an unset bit is narrow (one module).
+    private static readonly int[] WidePatterns = {
+        0x034, 0x121, 0x061, 0x160, 0x031, 0x130, 0x070, 0x025, 0x124, 0x064,
+        0x109, 0x049, 0x148, 0x019, 0x118, 0x058, 0x00D, 0x10C, 0x04C, 0x01C,
+        0x103, 0x043, 0x142, 0x013, 0x112, 0x052, 0x007, 0x106, 0x046, 0x016,
+        0x181, 0x0C1, 0x1C0, 0x091, 0x190, 0x0D0, 0x085, 0x184, 0x0C4, 0x0A8,
+        0x0A2, 0x08A, 0x02A
     };
+
+    public static readonly IReadOnlyDictionary<char, (int value, bool[] data)> EncodingTable = CreateEncodingTable();
+
+    private static IReadOnlyDictionary<char, (int value, bool[] data)> CreateEncodingTable() {
+        var table = new Dictionary<char, (int value, bool[] data)>(Alphabet.Length + 1);
+        for (var i = 0; i < Alphabet.Length; i++) {
+            table.Add(Alphabet[i], (i, ExpandWidePattern(WidePatterns[i])));
+        }
+        table.Add('*', (-1, ExpandWidePattern(AsteriskWidePattern)));
+        return table;
+    }
+
+    private static bool[] ExpandWidePattern(int pattern) {
+        var wideElements = 0;
+        for (var mask = 1 << 8; mask != 0; mask >>= 1) {
+            if ((pattern & mask) != 0) wideElements++;
+        }
+        if (wideElements != 3 || (pattern & ~0x1FF) != 0) {
+            throw new InvalidOperationException("A Code 39 pattern must contain nine elements with exactly three wide elements.");
+        }
+
+        var modules = new bool[12];
+        var offset = 0;
+        var isBar = true;
+
+        for (var mask = 1 << 8; mask != 0; mask >>= 1) {
+            var width = (pattern & mask) != 0 ? 2 : 1;
+            for (var i = 0; i < width; i++) {
+                modules[offset++] = isBar;
+            }
+            isBar = !isBar;
+        }
+
+        return modules;
+    }
 
     public static readonly IReadOnlyDictionary<char, string> ExtendedTable = new Dictionary<char, string> {
         { '\u0000', "%U" },
