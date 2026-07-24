@@ -1,8 +1,11 @@
 {
-  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/161a22a7a91b6f05b7bf9268287ff69f44ea204a/Schemas/powerforge.web.serverrecovery.schema.json",
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/da070b9e11e9ba1c77a76cca4b9d8878c90aa087/Schemas/powerforge.web.serverrecovery.schema.json",
   "schemaVersion": 2,
   "name": "codeglyphx-production-ovh",
   "description": "Recovery manifest for the CodeGlyphX static website.",
+  "operationLocks": [
+    "/var/lock/powerforge-site-codeglyphx.com.lock"
+  ],
   "target": {
     "sshAlias": "evotec-ovh",
     "user": "ubuntu",
@@ -16,7 +19,7 @@
       "url": "https://github.com/EvotecIT/CodeGlyphX.git",
       "path": "/srv/evotec/CodeGlyphX",
       "branch": "master",
-      "ref": "b7b717fec0052b16bacff015e33c6945617ed8d5",
+      "ref": "204c56b27e3071645e4dfa188d5c939a801c1758",
       "refCaptureCommandId": "static-source-ref",
       "required": true
     },
@@ -25,7 +28,7 @@
       "url": "https://github.com/EvotecIT/CodeGlyphX.git",
       "path": "/srv/evotec/CodeGlyphXRecovery",
       "branch": "master",
-      "ref": "0410ddab72d4cf346b725402d59f57d200b4be62",
+      "ref": "204c56b27e3071645e4dfa188d5c939a801c1758",
       "required": true
     },
     {
@@ -33,7 +36,7 @@
       "url": "https://github.com/EvotecIT/PSPublishModule.git",
       "path": "/srv/evotec/PSPublishModule",
       "branch": "main",
-      "ref": "161a22a7a91b6f05b7bf9268287ff69f44ea204a",
+      "ref": "da070b9e11e9ba1c77a76cca4b9d8878c90aa087",
       "required": true
     }
   ],
@@ -138,26 +141,26 @@
       "id": "backup-user-home",
       "path": "/var/lib/powerforge-codeglyphx-backup",
       "kind": "directory",
-      "owner": "powerforge-codeglyphx-backup",
-      "group": "powerforge-codeglyphx-backup",
-      "mode": "700"
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
     },
     {
       "id": "backup-user-ssh",
       "path": "/var/lib/powerforge-codeglyphx-backup/.ssh",
       "kind": "directory",
-      "owner": "powerforge-codeglyphx-backup",
-      "group": "powerforge-codeglyphx-backup",
-      "mode": "700"
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
     },
     {
       "id": "backup-user-authorized-keys",
       "path": "/var/lib/powerforge-codeglyphx-backup/.ssh/authorized_keys",
       "source": "/srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-backup-authorized_keys",
       "kind": "file",
-      "owner": "powerforge-codeglyphx-backup",
-      "group": "powerforge-codeglyphx-backup",
-      "mode": "600"
+      "owner": "root",
+      "group": "root",
+      "mode": "644"
     },
     {
       "id": "static-deployment-runtime",
@@ -353,7 +356,7 @@
     },
     {
       "id": "letsencrypt-acme-account",
-      "path": "/etc/letsencrypt/accounts",
+      "path": "/etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/9067e851806bacd4017e95999736a02c",
       "requiredFor": [
         "certificate-renewal"
       ],
@@ -414,8 +417,8 @@
       }
     ],
     "encryptedFiles": [
-      {
-        "target": "/etc/letsencrypt/accounts",
+    {
+      "target": "/etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/9067e851806bacd4017e95999736a02c",
         "required": true,
         "sensitive": true
       },
