@@ -3,6 +3,9 @@
   "schemaVersion": 2,
   "name": "codeglyphx-production-ovh",
   "description": "Recovery manifest for the CodeGlyphX static website.",
+  "operationLocks": [
+    "/var/lock/powerforge-site-codeglyphx.com.lock"
+  ],
   "target": {
     "sshAlias": "evotec-ovh",
     "user": "ubuntu",
@@ -353,7 +356,7 @@
     },
     {
       "id": "letsencrypt-acme-account",
-      "path": "/etc/letsencrypt/accounts",
+      "path": "/etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/9067e851806bacd4017e95999736a02c",
       "requiredFor": [
         "certificate-renewal"
       ],
@@ -414,8 +417,8 @@
       }
     ],
     "encryptedFiles": [
-      {
-        "target": "/etc/letsencrypt/accounts",
+    {
+      "target": "/etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/9067e851806bacd4017e95999736a02c",
         "required": true,
         "sensitive": true
       },
