@@ -76,7 +76,7 @@ jobs:
       contents: read
     steps:
       - name: Deploy validated website artifact
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-linux-site-deploy@1f634b17e21f935ab6b8c052322497d814ce6c8c
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-linux-site-deploy@da070b9e11e9ba1c77a76cca4b9d8878c90aa087
         with:
           artifact-name: powerforge-site-codeglyphx.com
           deployment-site: codeglyphx.com
