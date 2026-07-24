@@ -16,6 +16,9 @@ jobs:
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
     timeout-minutes: 20
+    env:
+      # The default all-format DataBar corpus scan needs a larger budget on Linux runners.
+      CODEGLYPHX_TEST_BUDGET_MULTIPLIER: ${{ runner.os == 'Linux' && '4' || '1' }}
     strategy:
       fail-fast: false
       matrix:
