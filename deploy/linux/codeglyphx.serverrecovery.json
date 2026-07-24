@@ -138,26 +138,26 @@
       "id": "backup-user-home",
       "path": "/var/lib/powerforge-codeglyphx-backup",
       "kind": "directory",
-      "owner": "powerforge-codeglyphx-backup",
-      "group": "powerforge-codeglyphx-backup",
-      "mode": "700"
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
     },
     {
       "id": "backup-user-ssh",
       "path": "/var/lib/powerforge-codeglyphx-backup/.ssh",
       "kind": "directory",
-      "owner": "powerforge-codeglyphx-backup",
-      "group": "powerforge-codeglyphx-backup",
-      "mode": "700"
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
     },
     {
       "id": "backup-user-authorized-keys",
       "path": "/var/lib/powerforge-codeglyphx-backup/.ssh/authorized_keys",
       "source": "/srv/evotec/CodeGlyphX/deploy/linux/powerforge-codeglyphx-backup-authorized_keys",
       "kind": "file",
-      "owner": "powerforge-codeglyphx-backup",
-      "group": "powerforge-codeglyphx-backup",
-      "mode": "600"
+      "owner": "root",
+      "group": "root",
+      "mode": "644"
     },
     {
       "id": "static-deployment-runtime",
