@@ -520,7 +520,7 @@
       },
       {
         "id": "backup-account",
-        "command": "id -u powerforge-codeglyphx-backup >/dev/null && sudo -n test -s /var/lib/powerforge-codeglyphx-backup/.ssh/authorized_keys && test \"$(sudo -n stat -c '%U:%G %a' /var/lib/powerforge-codeglyphx-backup/.ssh/authorized_keys)\" = 'powerforge-codeglyphx-backup:powerforge-codeglyphx-backup 600' && sudo -n visudo -cf /etc/sudoers.d/powerforge-codeglyphx-backup",
+        "command": "id -u powerforge-codeglyphx-backup >/dev/null && sudo -n test -s /var/lib/powerforge-codeglyphx-backup/.ssh/authorized_keys && test \"$(sudo -n stat -c '%U:%G %a' /var/lib/powerforge-codeglyphx-backup/.ssh/authorized_keys)\" = 'root:root 644' && sudo -n visudo -cf /etc/sudoers.d/powerforge-codeglyphx-backup",
         "required": true
       },
       {
