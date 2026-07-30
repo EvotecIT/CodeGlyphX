@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/c6451c9d264a81c7f179b38f6e4d2b62f0784037/Schemas/powerforge.web.serverrecovery.schema.json",
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/2dd1c901e40f22186593e7919652a899b19c11fd/Schemas/powerforge.web.serverrecovery.schema.json",
   "schemaVersion": 2,
   "name": "codeglyphx-production-ovh",
   "description": "Recovery manifest for the CodeGlyphX static website.",
@@ -36,7 +36,7 @@
       "url": "https://github.com/EvotecIT/PSPublishModule.git",
       "path": "/srv/evotec/PSPublishModule",
       "branch": "main",
-      "ref": "c6451c9d264a81c7f179b38f6e4d2b62f0784037",
+      "ref": "2dd1c901e40f22186593e7919652a899b19c11fd",
       "required": true
     }
   ],
