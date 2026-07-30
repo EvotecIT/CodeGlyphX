@@ -28,7 +28,7 @@ jobs:
       actions: write
       contents: read
       packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@c6451c9d264a81c7f179b38f6e4d2b62f0784037
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@2dd1c901e40f22186593e7919652a899b19c11fd
     with:
       website_root: Website
       pipeline_config: Website/pipeline.json
