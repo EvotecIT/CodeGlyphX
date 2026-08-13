@@ -72,6 +72,7 @@
     "Robots": true,
     "SecurityHeaders": {
       "Enabled": true,
+      "Hsts": true,
       "ContentSecurityPolicyValue": "default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
     },
     "ContentSignals": {
@@ -135,6 +136,12 @@
     "OpenApi": { "Enabled": false },
     "WebMcp": false,
     "MarkdownNegotiation": true
+  },
+  "Cloudflare": {
+    "Cache": {
+      "EdgeTtlSeconds": 604800
+    },
+    "PurgeMode": "hostname"
   },
   "EditLinks": {
     "Enabled": true,
