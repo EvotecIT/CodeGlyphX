@@ -28,7 +28,7 @@ jobs:
       actions: write
       contents: read
       packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@2dd1c901e40f22186593e7919652a899b19c11fd
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@683531aed9652851a03b1301624b9c769ce62d52
     with:
       website_root: Website
       pipeline_config: Website/pipeline.json
@@ -37,7 +37,7 @@ jobs:
       runner_labels_json: '["ubuntu-latest"]'
       timeout_minutes: 60
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: c6451c9d264a81c7f179b38f6e4d2b62f0784037
+      powerforge_ref: 683531aed9652851a03b1301624b9c769ce62d52
       report_artifact_name: codeglyphx-website-deploy-reports
       site_artifact_name: powerforge-site-codeglyphx.com
       site_artifact_retention_days: 7
@@ -58,7 +58,7 @@ jobs:
           ref: ${{ needs.build.outputs.source_sha }}
 
       - name: Apply managed Cloudflare cache policy
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-cache-policy@2dd1c901e40f22186593e7919652a899b19c11fd
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-cache-policy@683531aed9652851a03b1301624b9c769ce62d52
         with:
           site-config: Website/site.json
           zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
@@ -76,7 +76,7 @@ jobs:
       contents: read
     steps:
       - name: Deploy validated website artifact
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-linux-site-deploy@2dd1c901e40f22186593e7919652a899b19c11fd
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-linux-site-deploy@683531aed9652851a03b1301624b9c769ce62d52
         with:
           artifact-name: powerforge-site-codeglyphx.com
           deployment-site: codeglyphx.com
