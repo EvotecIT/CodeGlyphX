@@ -44,7 +44,7 @@ jobs:
     secrets:
       indexnow_key: ${{ secrets.INDEXNOW_KEY }}
 
-  cache-policy:
+  site-policy:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -57,15 +57,15 @@ jobs:
         with:
           ref: ${{ needs.build.outputs.source_sha }}
 
-      - name: Apply managed Cloudflare cache policy
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-cache-policy@683531aed9652851a03b1301624b9c769ce62d52
+      - name: Apply managed Cloudflare site policy
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-site-policy@683531aed9652851a03b1301624b9c769ce62d52
         with:
           site-config: Website/site.json
           zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
           api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
   deploy:
-    needs: [build, cache-policy]
+    needs: [build, site-policy]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:
@@ -98,3 +98,25 @@ jobs:
           engine-sha: ${{ needs.build.outputs.engine_sha }}
           engine-asset: ${{ needs.build.outputs.engine_asset }}
           engine-asset-sha256: ${{ needs.build.outputs.engine_asset_sha256 }}
+
+  post-deploy:
+    needs: [build, deploy]
+    permissions:
+      actions: write
+      contents: read
+      packages: read
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@683531aed9652851a03b1301624b9c769ce62d52
+    with:
+      website_root: Website
+      pipeline_config: Website/pipeline.cloudflare.json
+      source_ref: ${{ needs.build.outputs.source_sha }}
+      engine_mode: source
+      runner_labels_json: '["ubuntu-latest"]'
+      timeout_minutes: 30
+      powerforge_repository: EvotecIT/PSPublishModule
+      powerforge_ref: 683531aed9652851a03b1301624b9c769ce62d52
+      report_artifact_name: codeglyphx-cloudflare-post-deploy-reports
+      use_playwright_cache: false
+    secrets:
+      cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX }}
