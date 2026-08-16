@@ -28,7 +28,7 @@ jobs:
       actions: write
       contents: read
       packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@f2c4e9b4fc5bd624dcee64b2d766b471c4676387
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@7ed77bb8e6728e362bc906eb4fbf1585dcd47693
     with:
       website_root: Website
       pipeline_config: Website/pipeline.json
@@ -37,7 +37,7 @@ jobs:
       runner_labels_json: '["ubuntu-latest"]'
       timeout_minutes: 60
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: f2c4e9b4fc5bd624dcee64b2d766b471c4676387
+      powerforge_ref: 7ed77bb8e6728e362bc906eb4fbf1585dcd47693
       report_artifact_name: codeglyphx-website-deploy-reports
       site_artifact_name: powerforge-site-codeglyphx.com
       site_artifact_retention_days: 7
@@ -105,7 +105,7 @@ jobs:
       actions: write
       contents: read
       packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@f2c4e9b4fc5bd624dcee64b2d766b471c4676387
+    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@7ed77bb8e6728e362bc906eb4fbf1585dcd47693
     with:
       website_root: Website
       pipeline_config: Website/pipeline.cloudflare.json
@@ -114,7 +114,7 @@ jobs:
       runner_labels_json: '["ubuntu-latest"]'
       timeout_minutes: 30
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: f2c4e9b4fc5bd624dcee64b2d766b471c4676387
+      powerforge_ref: 7ed77bb8e6728e362bc906eb4fbf1585dcd47693
       report_artifact_name: codeglyphx-cloudflare-post-deploy-reports
       use_playwright_cache: false
     secrets:
