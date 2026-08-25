@@ -1,0 +1,262 @@
+{
+  "title": "CodeGlyphX Releases",
+  "generatedAtUtc": "2026-08-25T07:46:38.4927403Z",
+  "source": "github",
+  "repo": "EvotecIT/CodeGlyphX",
+  "latest": {
+    "stableTag": "CodeGlyphX-v2.1.0"
+  },
+  "products": [
+    {
+      "id": "codeglyphx",
+      "name": "CodeGlyphX",
+      "order": 10
+    }
+  ],
+  "releases": [
+    {
+      "id": "codeglyphx-v2-1-0",
+      "tag": "CodeGlyphX-v2.1.0",
+      "title": "CodeGlyphX-v2.1.0",
+      "url": "https://github.com/EvotecIT/CodeGlyphX/releases/tag/CodeGlyphX-v2.1.0",
+      "publishedAt": "2026-07-22T08:58:37+00:00",
+      "createdAt": "2026-07-22T08:58:14+00:00",
+      "isPrerelease": false,
+      "isDraft": false,
+      "isLatestStable": true,
+      "isLatestPrerelease": false,
+      "body_md": "## What\u0027s Changed\n* Harden CodeGlyphX server recovery by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/182\n* Authorize hardened CodeGlyphX backup capture by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/183\n* Pin CodeGlyphX recovery to current PowerForge by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/184\n* fix: repin website workflows to secure PowerForge by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/185\n* Fix Code 39 standard character patterns by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/187\n\n\n**Full Changelog**: https://github.com/EvotecIT/CodeGlyphX/compare/CodeGlyphX-v2.0.0...CodeGlyphX-v2.1.0",
+      "assets": [
+        {
+          "id": "codeglyphx-2-1-0-zip",
+          "name": "CodeGlyphX.2.1.0.zip",
+          "downloadUrl": "https://github.com/EvotecIT/CodeGlyphX/releases/download/CodeGlyphX-v2.1.0/CodeGlyphX.2.1.0.zip",
+          "size": 5661810,
+          "contentType": "application/octet-stream",
+          "product": "codeglyphx",
+          "channel": "stable",
+          "platform": "any",
+          "arch": "any",
+          "kind": "zip"
+        }
+      ]
+    },
+    {
+      "id": "codeglyphx-v2-0-0",
+      "tag": "CodeGlyphX-v2.0.0",
+      "title": "CodeGlyphX-v2.0.0",
+      "url": "https://github.com/EvotecIT/CodeGlyphX/releases/tag/CodeGlyphX-v2.0.0",
+      "publishedAt": "2026-07-17T08:46:22+00:00",
+      "createdAt": "2026-07-17T08:45:57+00:00",
+      "isPrerelease": false,
+      "isDraft": false,
+      "isLatestStable": false,
+      "isLatestPrerelease": false,
+      "body_md": "## What\u0027s Changed\n* Prepare CodeGlyphX 2.0 release contracts by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/163\n* Make project manifest checks deterministic by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/168\n* Bump EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml from a1a187ad5452f499bc974d32ccd3cd28cd11e868 to b96b20c4ed0a9f18b8d51d9f4c1caa3595ed417c by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/164\n* Bump EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml from a1a187ad5452f499bc974d32ccd3cd28cd11e868 to b96b20c4ed0a9f18b8d51d9f4c1caa3595ed417c by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/165\n* Bump EvotecIT/PSPublishModule/.github/workflows/powerforge-website-maintenance.yml from a1a187ad5452f499bc974d32ccd3cd28cd11e868 to b96b20c4ed0a9f18b8d51d9f4c1caa3595ed417c by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/167\n* Bump EvotecIT/PSPublishModule/.github/workflows/powerforge-website-deploy.yml from a1a187ad5452f499bc974d32ccd3cd28cd11e868 to b96b20c4ed0a9f18b8d51d9f4c1caa3595ed417c by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/166\n* Reimplement GS1 DataBar Expanded and improve SVG interoperability by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/169\n* Migrate codeglyphx.com to PowerForge Linux deployment by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/171\n* Refresh generated website inputs automatically by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/172\n* Adopt deferred public verification for website deploys by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/179\n* Bump actions/setup-dotnet from 5.4.0 to 6.0.0 by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/173\n* Bump EvotecIT/PSPublishModule/.github/workflows/powerforge-website-maintenance.yml from 1f634b17e21f935ab6b8c052322497d814ce6c8c to 3b895c68d3125fab4146e2ded3a30852de789393 by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/174\n* Bump EvotecIT/PSPublishModule/.github/workflows/powerforge-website-ci.yml from 1f634b17e21f935ab6b8c052322497d814ce6c8c to 3b895c68d3125fab4146e2ded3a30852de789393 by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/175\n* Bump EvotecIT/PSPublishModule/.github/actions/powerforge-server-backup from 1f634b17e21f935ab6b8c052322497d814ce6c8c to 3b895c68d3125fab4146e2ded3a30852de789393 by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/176\n* Bump the nuget-minor-patch group with 4 updates by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/177\n* Bump Microsoft.SourceLink.GitHub from 8.0.0 to 10.0.301 by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/178\n* Add a unified symbol scanner contract by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/170\n* Complete QR, Data Matrix, Micro QR, and GS1 standards support by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/180\n* Add industrial and logistics barcode support by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/181\n\n\n**Full Changelog**: https://github.com/EvotecIT/CodeGlyphX/compare/CodeGlyphX-v1.6.0...CodeGlyphX-v2.0.0",
+      "assets": [
+        {
+          "id": "codeglyphx-2-0-0-zip",
+          "name": "CodeGlyphX.2.0.0.zip",
+          "downloadUrl": "https://github.com/EvotecIT/CodeGlyphX/releases/download/CodeGlyphX-v2.0.0/CodeGlyphX.2.0.0.zip",
+          "size": 5667997,
+          "contentType": "application/octet-stream",
+          "product": "codeglyphx",
+          "channel": "stable",
+          "platform": "any",
+          "arch": "any",
+          "kind": "zip"
+        }
+      ]
+    },
+    {
+      "id": "codeglyphx-v1-6-0",
+      "tag": "CodeGlyphX-v1.6.0",
+      "title": "CodeGlyphX-v1.6.0",
+      "url": "https://github.com/EvotecIT/CodeGlyphX/releases/tag/CodeGlyphX-v1.6.0",
+      "publishedAt": "2026-06-29T14:01:30+00:00",
+      "createdAt": "2026-06-29T13:55:53+00:00",
+      "isPrerelease": false,
+      "isDraft": false,
+      "isLatestStable": false,
+      "isLatestPrerelease": false,
+      "body_md": "## What\u0027s Changed\n* Fix website CSS flash during load by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/147\n* Bypass website deploy SEO guardrail by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/148\n* Skip cache-status verification after Pages deploy by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/149\n* Enable Cloudflare cache rules for website deploy by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/150\n* Improve Cloudflare cache rule error details by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/151\n* Log Cloudflare cache rule API failures by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/152\n* Run Cloudflare cache setup directly by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/153\n* Include Cloudflare cache API failure details by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/154\n* Fix Cloudflare cache rules payload by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/155\n* Pin PowerForge workflows to current PSPublishModule by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/156\n* Enable NuGet Dependabot version updates by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/157\n* Bump the nuget-minor-patch group with 6 updates by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/158\n* Bump coverlet.collector from 6.0.4 to 10.0.1 by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/159\n* Bump the nuget-minor-patch group with 1 update by @dependabot[bot] in https://github.com/EvotecIT/CodeGlyphX/pull/160\n* Repin PowerForge website workflows by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/161\n* feat(qr): promote Swiss QR public enums by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/162\n\n## New Contributors\n* @dependabot[bot] made their first contribution in https://github.com/EvotecIT/CodeGlyphX/pull/158\n\n**Full Changelog**: https://github.com/EvotecIT/CodeGlyphX/compare/CodeGlyphX-v1.5.0...CodeGlyphX-v1.6.0",
+      "assets": [
+        {
+          "id": "codeglyphx-1-6-0-zip",
+          "name": "CodeGlyphX.1.6.0.zip",
+          "downloadUrl": "https://github.com/EvotecIT/CodeGlyphX/releases/download/CodeGlyphX-v1.6.0/CodeGlyphX.1.6.0.zip",
+          "size": 4497237,
+          "contentType": "application/octet-stream",
+          "product": "codeglyphx",
+          "channel": "stable",
+          "platform": "any",
+          "arch": "any",
+          "kind": "zip"
+        }
+      ]
+    },
+    {
+      "id": "codeglyphx-v1-5-0",
+      "tag": "CodeGlyphX-v1.5.0",
+      "title": "CodeGlyphX-v1.5.0",
+      "url": "https://github.com/EvotecIT/CodeGlyphX/releases/tag/CodeGlyphX-v1.5.0",
+      "publishedAt": "2026-05-13T16:37:52+00:00",
+      "createdAt": "2026-05-13T16:30:11+00:00",
+      "isPrerelease": false,
+      "isDraft": false,
+      "isLatestStable": false,
+      "isLatestPrerelease": false,
+      "body_md": "## What\u0027s Changed\n* Refresh website workflows to latest PowerForge by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/140\n* Retarget website workflows to latest PowerForgeWeb preview by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/141\n* Enable agent readiness for CodeGlyphX website by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/142\n* Pin website workflows to merged PowerForge engine by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/143\n* Fix DataMatrix generation by @wetgi in https://github.com/EvotecIT/CodeGlyphX/pull/145\n* Add matrix barcode render helpers by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/146\n\n## New Contributors\n* @wetgi made their first contribution in https://github.com/EvotecIT/CodeGlyphX/pull/145\n\n**Full Changelog**: https://github.com/EvotecIT/CodeGlyphX/compare/CodeGlyphX-v1.4.0...CodeGlyphX-v1.5.0",
+      "assets": [
+        {
+          "id": "codeglyphx-1-5-0-zip",
+          "name": "CodeGlyphX.1.5.0.zip",
+          "downloadUrl": "https://github.com/EvotecIT/CodeGlyphX/releases/download/CodeGlyphX-v1.5.0/CodeGlyphX.1.5.0.zip",
+          "size": 4493380,
+          "contentType": "application/octet-stream",
+          "product": "codeglyphx",
+          "channel": "stable",
+          "platform": "any",
+          "arch": "any",
+          "kind": "zip"
+        }
+      ]
+    },
+    {
+      "id": "codeglyphx-v1-4-0",
+      "tag": "CodeGlyphX-v1.4.0",
+      "title": "CodeGlyphX-v1.4.0",
+      "url": "https://github.com/EvotecIT/CodeGlyphX/releases/tag/CodeGlyphX-v1.4.0",
+      "publishedAt": "2026-04-01T21:01:19+00:00",
+      "createdAt": "2026-04-01T19:35:08+00:00",
+      "isPrerelease": false,
+      "isDraft": false,
+      "isLatestStable": false,
+      "isLatestPrerelease": false,
+      "body_md": "## What\u0027s Changed\n* [codex] Improve net472 QR image decode parity by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/139\n\n\n**Full Changelog**: https://github.com/EvotecIT/CodeGlyphX/compare/CodeGlyphX-v1.3.0...CodeGlyphX-v1.4.0",
+      "assets": [
+        {
+          "id": "codeglyphx-1-4-0-zip",
+          "name": "CodeGlyphX.1.4.0.zip",
+          "downloadUrl": "https://github.com/EvotecIT/CodeGlyphX/releases/download/CodeGlyphX-v1.4.0/CodeGlyphX.1.4.0.zip",
+          "size": 4488741,
+          "contentType": "application/octet-stream",
+          "product": "codeglyphx",
+          "channel": "stable",
+          "platform": "any",
+          "arch": "any",
+          "kind": "zip"
+        }
+      ]
+    },
+    {
+      "id": "codeglyphx-v1-3-0",
+      "tag": "CodeGlyphX-v1.3.0",
+      "title": "CodeGlyphX-v1.3.0",
+      "url": "https://github.com/EvotecIT/CodeGlyphX/releases/tag/CodeGlyphX-v1.3.0",
+      "publishedAt": "2026-04-01T16:19:50+00:00",
+      "createdAt": "2026-04-01T13:43:14+00:00",
+      "isPrerelease": false,
+      "isDraft": false,
+      "isLatestStable": false,
+      "isLatestPrerelease": false,
+      "body_md": "## What\u0027s Changed\n* feat(website): gate llms behind xref merge verify by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/97\n* feat(website): wire search \u002B json-driven sitemap outputs by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/99\n* chore(website): extract CI toggle and resilient local build step by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/100\n* fix(website pipeline): prevent playground overlay from being overwritten by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/101\n* harden(website): make API CSS contracts explicit (app.css \u002B api.css) by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/102\n* fix(build): auto-discover POWERFORGE_ROOT and worktree layouts by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/103\n* feat(website): theme-aware colorful Mermaid diagram support by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/105\n* ci: prefer self-hosted runners for private repos by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/106\n* CI: prefer private runners \u002B harden playground startup reliability by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/107\n* Website: fix API CSS contract selectors for syntax signature scrollbars by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/108\n* chore(site): add generated social cards and cache/hash policy by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/109\n* ci(website): purge \u002B verify Cloudflare cache after deploy by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/110\n* fix(ci): cloudflare job gating without secrets in job-level if by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/111\n* Use site-config Cloudflare profile in Pages deploy by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/112\n* Refresh Website AGENTS guide for Cloudflare cache workflow by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/113\n* Website: pin sitemap indexing-safe defaults by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/114\n* Website: make build.ps1 portable (PowerForge root discovery) by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/104\n* Remove generated nav export file to satisfy nav-lint by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/115\n* chore(ci): centralize PowerForge ref pin in workflows by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/116\n* Website: add optional IndexNow step \u002B pin PowerForge SHA by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/117\n* Workflow: checkout repo before Cloudflare purge/verify by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/118\n* Website: omit legacy API doc alias pages by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/119\n* Polish website audit contract and unblock CI doctor gate by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/120\n* ci(website): roll forward default PowerForge pin by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/121\n* chore(website): refresh audit baseline after CI validation by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/122\n* Website: add release-driven downloads pages and homepage matrices by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/123\n* Polish release download badges and thumbnails by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/124\n* Deploy: allow dynamic release-hub doctor warnings without blocking publish by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/125\n* Polish nav placement and release page readability by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/126\n* Linkify plain URLs in release note cards by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/127\n* Redesign footer navigation to scale for long menus by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/128\n* Refine footer information architecture and link rendering by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/129\n* Polish home/download/changelog release UX by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/130\n* Add richer Organization structured-data profile by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/132\n* Improve website caching and limit deploy triggers by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/131\n* Update PowerForge pins for Scriban audit fix by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/133\n* Update website workflow PowerForge pin by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/134\n* Unify PowerForge website workflows by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/136\n* Refresh PowerForge workflow pins by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/137\n* [codex] Fix transparent QR alpha compositing by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/138\n\n\n**Full Changelog**: https://github.com/EvotecIT/CodeGlyphX/compare/CodeGlyphX-v1.2.0...CodeGlyphX-v1.3.0",
+      "assets": [
+        {
+          "id": "codeglyphx-1-3-0-zip",
+          "name": "CodeGlyphX.1.3.0.zip",
+          "downloadUrl": "https://github.com/EvotecIT/CodeGlyphX/releases/download/CodeGlyphX-v1.3.0/CodeGlyphX.1.3.0.zip",
+          "size": 4478456,
+          "contentType": "application/octet-stream",
+          "product": "codeglyphx",
+          "channel": "stable",
+          "platform": "any",
+          "arch": "any",
+          "kind": "zip"
+        }
+      ]
+    },
+    {
+      "id": "codeglyphx-v1-2-0",
+      "tag": "CodeGlyphX-v1.2.0",
+      "title": "CodeGlyphX-v1.2.0",
+      "url": "https://github.com/EvotecIT/CodeGlyphX/releases/tag/CodeGlyphX-v1.2.0",
+      "publishedAt": "2026-02-11T18:29:32+00:00",
+      "createdAt": "2026-02-11T18:28:46+00:00",
+      "isPrerelease": false,
+      "isDraft": false,
+      "isLatestStable": false,
+      "isLatestPrerelease": false,
+      "body_md": "## What\u0027s Changed\n* Improve console ASCII QR rendering by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/61\n* feat: add gif/tiff encode support by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/60\n* feat: expand no-deps format support by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/66\n* feat: expand psd decode support by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/62\n* feat: expand managed jpeg encode/decode support by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/63\n* Security hardening: decode caps, safe presets, tests, and CodeQL by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/68\n* Security polish: guard messages \u002B fuzz harness by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/69\n* Bench: QR decode scenario packs and examples by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/70\n* build: add net472 reference assemblies for non-windows by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/71\n* Quick wins: examples, benchmark metadata, stress pack by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/72\n* Replace CodeGlyphX website with PowerForge.Web by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/73\n* Cleanup Blazor site to playground-only by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/74\n* Unify navigation and 404 behavior with pipeline audit guardrails by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/75\n* Ensure 404 page always gets global assets and enforce CI check by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/76\n* Enforce nav audit coverage across API/docs output by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/77\n* Enable required-route and optimize-report pipeline checks by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/78\n* Website: enforce /docs/ in required routes audit by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/79\n* chore(web): enable image optimize stage settings by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/80\n* chore(website): enable image pipeline v2 defaults by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/81\n* fix(website): correct docs edit links, API source links, and UI polish by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/82\n* Fix API edit links to use repository-relative source paths by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/83\n* Migrate docs pages from raw HTML to Markdown by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/85\n* Docs: add markdown-native styling safety net by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/84\n* Use doctor stage for final website validation by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/86\n* Website: use PowerForge pipeline --fast for -Serve by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/87\n* Assets: fix corrupted decoding sample PNG by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/88\n* Website: dev pipeline mode \u002B task filters by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/89\n* Website: serve defaults skip optimize/audit in dev by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/90\n* Website: pipeline dev mode skips optimize/doctor by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/91\n* Website: add -Watch to build script by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/92\n* Website: use pf nav helpers \u002B apidocs nav context by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/93\n* Migrate Build scripts to project.build.json pipeline by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/95\n* Standardize build scripts to single Build-Project entrypoint by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/96\n\n\n**Full Changelog**: https://github.com/EvotecIT/CodeGlyphX/compare/v1.1.0...CodeGlyphX-v1.2.0",
+      "assets": [
+        {
+          "id": "codeglyphx-1-2-0-zip",
+          "name": "CodeGlyphX.1.2.0.zip",
+          "downloadUrl": "https://github.com/EvotecIT/CodeGlyphX/releases/download/CodeGlyphX-v1.2.0/CodeGlyphX.1.2.0.zip",
+          "size": 4478965,
+          "contentType": "application/octet-stream",
+          "product": "codeglyphx",
+          "channel": "stable",
+          "platform": "any",
+          "arch": "any",
+          "kind": "zip"
+        }
+      ]
+    },
+    {
+      "id": "v1-1-0",
+      "tag": "v1.1.0",
+      "title": "v1.1.0",
+      "url": "https://github.com/EvotecIT/CodeGlyphX/releases/tag/v1.1.0",
+      "publishedAt": "2026-01-30T08:59:10+00:00",
+      "createdAt": "2026-01-30T08:55:52+00:00",
+      "isPrerelease": false,
+      "isDraft": false,
+      "isLatestStable": false,
+      "isLatestPrerelease": false,
+      "body_md": "## What\u0027s Changed\n* chore(website): \uD83D\uDE80 update website improvement plan for performance and\u2026 by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/14\n* chore(benchmark): \uD83D\uDCCA update benchmark results for Windows and Linux by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/15\n* chore(pages): \u2728 Add .nojekyll file and update carousel data generation by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/16\n* chore: \uD83D\uDD27 update project configuration by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/17\n* perf: QR sampling and finder detection optimizations by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/18\n* Roadmap: add QR styling \u0026 presets track by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/19\n* Fix website nav consistency and checks by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/20\n* Unify website navigation across static \u002B Blazor by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/21\n* art by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/22\n* Fix playground dropzone and preview UX by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/24\n* Fix playground sticky preview by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/25\n* Fix sticky preview override by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/26\n* Playground preview as fixed sidebar by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/27\n* Reduce style board image size for web by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/28\n* Optimize style board assets and docs by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/29\n* Align styling links and expand barcode docs by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/30\n* Add VB.NET examples and Prism VB grammar to playground by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/31\n* qr decode art by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/23\n* Protect functional patterns and quiet zone in QR art rendering by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/32\n* Tune aggressive QR finder scan and add hard-art diagnostics by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/33\n* Add high-level QR art API with theme, intensity, and safety by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/37\n* Add ConnectedSquircle modules and QR art presets by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/34\n* Add QR decode scenario packs and pass-rate reporting by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/36\n* Add art auto-tune guardrails and connected module mapping by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/38\n* Include art pack in quick pack-runner defaults by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/40\n* Document net472 parity and fallbacks by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/39\n* Add QR-safe canvas frames (card/sticker) by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/41\n* fix: harden canvas badge sizing and tails by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/44\n* Add canvas bands and edge patterns for QR art by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/42\n* fix: restore connected shapes and stabilize tests by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/45\n* Add WebP detection \u002B native fallback decode (managed work in progress) by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/35\n* wip(web): claude website updates by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/43\n* Add lossy WebP animation encode (managed VP8) by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/46\n* Add lossy WebP renderers by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/47\n* Document WebP renderers by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/49\n* Add WebP end-to-end output \u002B docs by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/50\n* style: \uD83C\uDFA8 Update CSS styles and navigation links by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/48\n* Fix Aztec .webp save routing by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/51\n* Add WebP follow-up coverage and quality clamping by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/52\n* Refactor partial file layout (move-only) by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/54\n* Deduplicate WebP quality clamping by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/55\n* Deduplicate save-by-extension logic by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/56\n* Deduplicate Aztec and macro save-by-extension by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/57\n* Refactor legacy format helpers to render pipeline by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/58\n* Fix docs benchmarks link and add OS selector by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/53\n* SEO/benchmarks fixes and lazy-load WASM stability by @PrzemyslawKlys in https://github.com/EvotecIT/CodeGlyphX/pull/59\n\n\n**Full Changelog**: https://github.com/EvotecIT/CodeGlyphX/compare/v1.0.0...v1.1.0",
+      "assets": [
+        {
+          "id": "codeglyphx-1-1-0-zip",
+          "name": "CodeGlyphX.1.1.0.zip",
+          "downloadUrl": "https://github.com/EvotecIT/CodeGlyphX/releases/download/v1.1.0/CodeGlyphX.1.1.0.zip",
+          "size": 3970645,
+          "contentType": "application/octet-stream",
+          "product": "codeglyphx",
+          "channel": "stable",
+          "platform": "any",
+          "arch": "any",
+          "kind": "zip"
+        }
+      ]
+    },
+    {
+      "id": "v1-0-0",
+      "tag": "v1.0.0",
+      "title": "v1.0.0",
+      "url": "https://github.com/EvotecIT/CodeGlyphX/releases/tag/v1.0.0",
+      "publishedAt": "2026-01-20T12:20:05+00:00",
+      "createdAt": "2026-01-20T12:19:27+00:00",
+      "isPrerelease": false,
+      "isDraft": false,
+      "isLatestStable": false,
+      "isLatestPrerelease": false,
+      "body_md": "First release",
+      "assets": [
+        {
+          "id": "codeglyphx-1-0-0-zip",
+          "name": "CodeGlyphX.1.0.0.zip",
+          "downloadUrl": "https://github.com/EvotecIT/CodeGlyphX/releases/download/v1.0.0/CodeGlyphX.1.0.0.zip",
+          "size": 2313578,
+          "contentType": "application/octet-stream",
+          "product": "codeglyphx",
+          "channel": "stable",
+          "platform": "any",
+          "arch": "any",
+          "kind": "zip"
+        }
+      ]
+    }
+  ],
+  "warnings": []
+}
