@@ -19,7 +19,7 @@ jobs:
     environment: production
     steps:
       - name: Capture and publish encrypted recovery state
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-server-backup@2dd1c901e40f22186593e7919652a899b19c11fd
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-server-backup@f9afb61e17c34efd80b44e5c0d89e12624e5d582
         with:
           manifest-path: deploy/linux/codeglyphx.serverrecovery.json
           server-host: ${{ secrets.DEPLOYMENT_HOST }}
