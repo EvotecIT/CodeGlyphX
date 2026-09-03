@@ -120,7 +120,16 @@
     "A2AAgentCard": { "Enabled": false },
     "McpServerCard": { "Enabled": false },
     "OpenApi": { "Enabled": false },
-    "WebMcp": false,
+    "WebMcp": true,
+    "WebMcpTools": [
+      {
+        "Name": "search_site",
+        "Route": "/search/",
+        "Description": "Search CodeGlyphX documentation, API references, examples, and product pages.",
+        "Kind": "site-search",
+        "ReadOnly": true
+      }
+    ],
     "MarkdownNegotiation": false
   },
   "Cloudflare": {
