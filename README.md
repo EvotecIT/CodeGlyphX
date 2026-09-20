@@ -193,7 +193,7 @@ var checks = QrArt.ValidateImage(illustrated.Image.ToPng(), payload);
 
 `ExploreLayouts` screens the configured layout plus four crop, placement and zoom variations. Each result records its selected `Layout`. Search remains bounded and may return failed decode checks; it does not find every possible layout or identify subjects automatically. Framing preserves the entire QR and quiet-zone rectangle, but changes the surrounding image, so validate the framed export as shown above.
 
-SVG exports are self-contained **hybrid images**: framing is vector geometry and the QR artwork is an embedded PNG. Increasing SVG display size does not add detail to that raster; choose `ModuleSize` for the intended print size. Small or heavily reduced artistic exports may not decode. The browser studio exposes the same families, layout search and PNG/SVG downloads, and validates the final framed pixels. Run `CODEGLYPHX_ILLUSTRATED=1` with the examples project to generate all three compositions.
+SVG exports are self-contained **hybrid images**: framing is vector geometry and the QR artwork is an embedded PNG. Increasing SVG display size does not add detail to that raster; choose `ModuleSize` for the intended print size. Small or heavily reduced artistic exports may not decode. The browser studio exposes the same families, layout search and PNG/SVG downloads, and validates the final framed pixels. Its framed cards rank by those final scan results, then by the explicitly labeled unframed artwork fidelity; the score does not measure the decorative frame. Run `CODEGLYPHX_ILLUSTRATED=1` with the examples project to generate all three compositions.
 
 ## Standards-aware QR encoding
 

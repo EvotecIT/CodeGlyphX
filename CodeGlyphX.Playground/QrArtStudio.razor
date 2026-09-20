@@ -46,14 +46,14 @@
                 </div><figcaption>Source artwork · focal region shown on the original image</figcaption></figure>
             }
             @if (_result is not null) {
-                <p>@_result.EvaluatedCandidates combinations compared · @_result.ValidatedCandidates alternatives decoded. Scan results rank first, then image fidelity.</p>
+                <p>@_result.EvaluatedCandidates combinations compared · @_result.ValidatedCandidates alternatives decoded. Scan results rank first, then @(_cards.Any(card => card.SvgUri is not null) ? "unframed artwork fidelity" : "image fidelity").</p>
                 <div class="art-candidates">
                     @foreach (var item in _cards) {
                         <article class="art-candidate">
                             <img src="@item.Uri" alt="@($"QR artwork using mask {item.Candidate.Code.Mask}")" />
                             <h3>Mask @item.Candidate.Code.Mask · version @item.Candidate.Code.Version · @item.Candidate.Code.ErrorCorrectionLevel</h3>
                             <p>Crop @item.Candidate.Layout.ImageX.ToString("F2"), @item.Candidate.Layout.ImageY.ToString("F2") · zoom @item.Candidate.Layout.Zoom.ToString("F2")</p>
-                            <p>Image fidelity: @item.Candidate.Fidelity.ToString("F1") / 100</p>
+                            <p>@(item.SvgUri is not null ? "Unframed artwork fidelity" : "Image fidelity"): @item.Candidate.Fidelity.ToString("F1") / 100</p>
                             <p class="@(item.Validation.AllPassed ? "art-pass" : "art-error")">@CheckSummary(item.Validation)</p>
                             <details><summary>Scan check details</summary><ul>@foreach (var check in item.Validation.Checks) { <li>@check.Name: @(check.Passed ? "Passed" : "Not recovered")</li> }</ul></details>
                             <a href="@item.Uri" download="qr-art.png">Download PNG</a>
