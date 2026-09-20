@@ -68,12 +68,12 @@ internal static class DataMatrixEciEncoding {
             7 => QrTextEncoding.Iso8859_5,
             9 => QrTextEncoding.Iso8859_7,
             12 => QrTextEncoding.Iso8859_10,
-            15 => QrTextEncoding.Iso8859_15,
+            17 => QrTextEncoding.Iso8859_15,
             20 => QrTextEncoding.ShiftJis,
             26 => QrTextEncoding.Utf8,
             27 => QrTextEncoding.Ascii,
             _ => default
         };
-        return assignmentNumber is 3 or 4 or 6 or 7 or 9 or 12 or 15 or 20 or 26 or 27;
+        return assignmentNumber is 3 or 4 or 6 or 7 or 9 or 12 or 17 or 20 or 26 or 27;
     }
 }

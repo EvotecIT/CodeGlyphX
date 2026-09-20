@@ -2,6 +2,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("GlobalState")]
 public sealed class QrImageDecodeParitySharedTests {
     [Theory]
     [Trait("Category", "QrParity")]

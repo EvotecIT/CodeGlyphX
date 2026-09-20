@@ -545,7 +545,9 @@ internal static partial class QrPixelDecoder {
                     }
                 }
 
-                if (options?.StylizedSampling == true && list.Count == 0 && grid >= 4 && Math.Min(width, height) >= 600) {
+                // Fine grids can split a medium-size symbol across every tile. Try a coarse
+                // grid first for aggressive screenshot searches, not only stylized symbols.
+                if ((options?.AggressiveSampling == true || options?.StylizedSampling == true) && list.Count == 0 && grid >= 4 && Math.Min(width, height) >= 600) {
                     ScanGrid(pixels, 2);
                 }
                 ScanGrid(pixels, grid);

@@ -45,7 +45,6 @@ public static partial class AztecCode {
     /// Encodes binary payload as Aztec.
     /// </summary>
     public static BitMatrix Encode(ReadOnlySpan<byte> data, AztecEncodeOptions? options = null) {
-        if (data.Length == 0) return AztecEncoder.Encode(Array.Empty<byte>(), options?.ErrorCorrectionPercent ?? 33, 0).Matrix;
         var bytes = data.ToArray();
         var eccPercent = options?.ErrorCorrectionPercent ?? 33;
         var userSpecifiedLayers = 0;
@@ -53,7 +52,7 @@ public static partial class AztecCode {
             var compact = options.Compact ?? layers <= 4;
             userSpecifiedLayers = compact ? -layers : layers;
         }
-        return AztecEncoder.Encode(bytes, eccPercent, userSpecifiedLayers).Matrix;
+        return AztecEncoder.Encode(bytes, eccPercent, userSpecifiedLayers, options?.EciAssignmentNumber).Matrix;
     }
 
     /// <summary>

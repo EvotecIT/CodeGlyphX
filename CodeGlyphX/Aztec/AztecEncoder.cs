@@ -12,7 +12,8 @@ internal static class AztecEncoder {
     public static BitMatrix Encode(string text, AztecEncodeOptions? options = null) {
         if (text is null) throw new ArgumentNullException(nameof(text));
 
-        var bytes = EncodingUtils.Utf8Strict.GetBytes(text);
+        var encoding = EncodingUtils.ResolveTextEncoding(text, options?.TextEncoding, options?.EciAssignmentNumber, "Aztec", out var eci);
+        var bytes = EncodingUtils.GetBytesStrict(encoding, text, nameof(text));
         var eccPercent = options?.ErrorCorrectionPercent ?? DefaultEcPercent;
         var userSpecifiedLayers = 0;
         if (options?.Layers is int layers && layers > 0) {
@@ -20,12 +21,22 @@ internal static class AztecEncoder {
             userSpecifiedLayers = compact ? -layers : layers;
         }
 
-        var symbol = Encode(bytes, eccPercent, userSpecifiedLayers);
+        var symbol = Encode(bytes, eccPercent, userSpecifiedLayers, eci);
         return symbol.Matrix;
     }
 
-    internal static AztecSymbol Encode(byte[] data, int eccPercent, int userSpecifiedLayers) {
-        var bits = new AztecHighLevelEncoder(data).Encode();
+    internal static AztecSymbol Encode(byte[] data, int eccPercent, int userSpecifiedLayers, int? eci = null) {
+        if (eci is < 0 or > 999999) throw new ArgumentOutOfRangeException(nameof(eci));
+        var bits = new AztecBitBuffer();
+        if (eci.HasValue) {
+            // Shift from UPPER to PUNCT, FLG(n), followed by the decimal ECI digits.
+            bits.AppendBits(0, 5);
+            bits.AppendBits(0, 5);
+            var digits = eci.Value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            bits.AppendBits(digits.Length, 3);
+            foreach (var digit in digits) bits.AppendBits(digit - '0' + 2, 4);
+        }
+        bits.Append(new AztecHighLevelEncoder(data).Encode());
         var eccBits = bits.Size * eccPercent / 100 + 11;
         var totalSizeBits = bits.Size + eccBits;
 
@@ -127,6 +138,17 @@ internal static class AztecEncoder {
 
         DrawModeMessage(matrix, compact, matrixSize, modeMessage);
         DrawBullsEye(matrix, matrixSize / 2, compact ? 5 : 7);
+        if (!compact) {
+            var center = matrixSize / 2;
+            for (int i = 0, offset = 0; i < baseMatrixSize / 2; i += 15, offset += 16) {
+                for (var k = center & 1; k < matrixSize; k += 2) {
+                    matrix.Set(center - offset, k, true);
+                    matrix.Set(center + offset, k, true);
+                    matrix.Set(k, center - offset, true);
+                    matrix.Set(k, center + offset, true);
+                }
+            }
+        }
 
         return new AztecSymbol(compact, matrixSize, layers, messageSizeInWords, matrix);
     }

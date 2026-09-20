@@ -179,8 +179,8 @@ public static partial class CodeGlyph {
 
     private static bool TryDecodeDataMatrix(BitMatrix modules, out CodeGlyphDecoded decoded) {
         decoded = null!;
-        if (!DataMatrixDecoder.TryDecode(modules, out var dataMatrix)) return false;
-        decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
+        if (!DataMatrixDecoder.TryDecodeDetailed(modules, out var dataMatrix)) return false;
+        decoded = new CodeGlyphDecoded(dataMatrix);
         return true;
     }
 

@@ -566,9 +566,9 @@ public static partial class CodeGlyph {
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
-            var dataMatrix = string.Empty;
-            if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, token, out dataMatrix))) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
+            DataMatrixDecoded dataMatrix = null!;
+            if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, token, out dataMatrix))) {
+                decoded = new CodeGlyphDecoded(dataMatrix);
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
@@ -591,9 +591,9 @@ public static partial class CodeGlyph {
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
-        var dataMatrixDecoded = string.Empty;
-        if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, token, out dataMatrixDecoded))) {
-            decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixDecoded);
+        DataMatrixDecoded dataMatrixDecoded = null!;
+        if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, token, out dataMatrixDecoded))) {
+            decoded = new CodeGlyphDecoded(dataMatrixDecoded);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
@@ -665,12 +665,12 @@ public static partial class CodeGlyph {
 
             if (IsCancelled(cancellationToken, diagnostics)) return false;
             var dmDiag = new DataMatrixDecodeDiagnostics();
-            var dataMatrix = string.Empty;
-            if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, token, out dataMatrix, out dmDiag))) {
+            DataMatrixDecoded dataMatrix = null!;
+            if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, token, out dataMatrix, out dmDiag))) {
                 diagnostics.DataMatrix = dmDiag;
                 diagnostics.Success = true;
                 diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
+                decoded = new CodeGlyphDecoded(dataMatrix);
                 return true;
             }
             diagnostics.DataMatrix = dmDiag;
@@ -714,12 +714,12 @@ public static partial class CodeGlyph {
 
         if (IsCancelled(cancellationToken, diagnostics)) return false;
         var dmDiag0 = new DataMatrixDecodeDiagnostics();
-        var dataMatrixDecoded = string.Empty;
-        if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, token, out dataMatrixDecoded, out dmDiag0))) {
+        DataMatrixDecoded dataMatrixDecoded = null!;
+        if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, token, out dataMatrixDecoded, out dmDiag0))) {
             diagnostics.DataMatrix = dmDiag0;
             diagnostics.Success = true;
             diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-            decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixDecoded);
+            decoded = new CodeGlyphDecoded(dataMatrixDecoded);
             return true;
         }
         diagnostics.DataMatrix = dmDiag0;
@@ -800,9 +800,9 @@ public static partial class CodeGlyph {
         }
 
         if (cancellationToken.IsCancellationRequested) return false;
-        var dataMatrix = string.Empty;
-        if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, token, out dataMatrix))) {
-            list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
+        DataMatrixDecoded dataMatrix = null!;
+        if (TryWithImageBudget(imageOptions, cancellationToken, token => DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, token, out dataMatrix))) {
+            list.Add(new CodeGlyphDecoded(dataMatrix));
         }
 
         if (cancellationToken.IsCancellationRequested) return false;

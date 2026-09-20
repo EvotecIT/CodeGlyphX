@@ -36,8 +36,8 @@ public static partial class CodeGlyph {
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPref)) {
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixPref);
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPref)) {
+                    decoded = new CodeGlyphDecoded(dataMatrixPref);
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
@@ -64,14 +64,14 @@ public static partial class CodeGlyph {
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr)) {
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixPrefQr);
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr)) {
+                    decoded = new CodeGlyphDecoded(dataMatrixPrefQr);
                     return true;
                 }
             } else {
                 if (cancellationToken.IsCancellationRequested) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm)) {
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixPrefDm);
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm)) {
+                    decoded = new CodeGlyphDecoded(dataMatrixPrefDm);
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
@@ -105,8 +105,8 @@ public static partial class CodeGlyph {
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNon)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixNon);
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNon)) {
+                decoded = new CodeGlyphDecoded(dataMatrixNon);
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
@@ -134,14 +134,14 @@ public static partial class CodeGlyph {
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixNonQr);
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr)) {
+                decoded = new CodeGlyphDecoded(dataMatrixNonQr);
                 return true;
             }
         } else {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixNonDm);
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm)) {
+                decoded = new CodeGlyphDecoded(dataMatrixNonDm);
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
@@ -202,11 +202,11 @@ public static partial class CodeGlyph {
                 diagnostics.Pdf417 = pdfDiag;
 
                 if (IsCancelled(cancellationToken, diagnostics)) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
                     diagnostics.DataMatrix = dmDiag;
                     diagnostics.Success = true;
                     diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
+                    decoded = new CodeGlyphDecoded(dataMatrix);
                     return true;
                 }
                 diagnostics.DataMatrix = dmDiag;
@@ -257,21 +257,21 @@ public static partial class CodeGlyph {
                 diagnostics.Aztec = aztecDiagPrefQr;
 
                 if (IsCancelled(cancellationToken, diagnostics)) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr, out var dmDiagPrefQr)) {
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr, out var dmDiagPrefQr)) {
                     diagnostics.DataMatrix = dmDiagPrefQr;
                     diagnostics.Success = true;
                     diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixPrefQr);
+                    decoded = new CodeGlyphDecoded(dataMatrixPrefQr);
                     return true;
                 }
                 diagnostics.DataMatrix = dmDiagPrefQr;
             } else {
                 if (IsCancelled(cancellationToken, diagnostics)) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm, out var dmDiagPrefDm)) {
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm, out var dmDiagPrefDm)) {
                     diagnostics.DataMatrix = dmDiagPrefDm;
                     diagnostics.Success = true;
                     diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixPrefDm);
+                    decoded = new CodeGlyphDecoded(dataMatrixPrefDm);
                     return true;
                 }
                 diagnostics.DataMatrix = dmDiagPrefDm;
@@ -333,11 +333,11 @@ public static partial class CodeGlyph {
             diagnostics.Barcode = barcodeDiagA;
 
             if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded, out var dmDiagA)) {
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded, out var dmDiagA)) {
                 diagnostics.DataMatrix = dmDiagA;
                 diagnostics.Success = true;
                 diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixDecoded);
+                decoded = new CodeGlyphDecoded(dataMatrixDecoded);
                 return true;
             }
             diagnostics.DataMatrix = dmDiagA;
@@ -388,21 +388,21 @@ public static partial class CodeGlyph {
             diagnostics.Aztec = aztecDiagNonQr0;
 
             if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr0, out var dmDiagNonQr0)) {
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr0, out var dmDiagNonQr0)) {
                 diagnostics.DataMatrix = dmDiagNonQr0;
                 diagnostics.Success = true;
                 diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixNonQr0);
+                decoded = new CodeGlyphDecoded(dataMatrixNonQr0);
                 return true;
             }
             diagnostics.DataMatrix = dmDiagNonQr0;
         } else {
             if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm0, out var dmDiagNonDm0)) {
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm0, out var dmDiagNonDm0)) {
                 diagnostics.DataMatrix = dmDiagNonDm0;
                 diagnostics.Success = true;
                 diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixNonDm0);
+                decoded = new CodeGlyphDecoded(dataMatrixNonDm0);
                 return true;
             }
             diagnostics.DataMatrix = dmDiagNonDm0;
@@ -493,8 +493,8 @@ public static partial class CodeGlyph {
 
         if (!preferQr || !foundQr) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix)) {
-                list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrix)) {
+                list.Add(new CodeGlyphDecoded(dataMatrix));
             }
 
             if (cancellationToken.IsCancellationRequested) return false;
@@ -586,8 +586,8 @@ public static partial class CodeGlyph {
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix)) {
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrix)) {
+                    decoded = new CodeGlyphDecoded(dataMatrix);
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
@@ -614,14 +614,14 @@ public static partial class CodeGlyph {
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr)) {
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixPrefQr);
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr)) {
+                    decoded = new CodeGlyphDecoded(dataMatrixPrefQr);
                     return true;
                 }
             } else {
                 if (cancellationToken.IsCancellationRequested) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm)) {
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixPrefDm);
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm)) {
+                    decoded = new CodeGlyphDecoded(dataMatrixPrefDm);
                     return true;
                 }
                 if (cancellationToken.IsCancellationRequested) return false;
@@ -655,8 +655,8 @@ public static partial class CodeGlyph {
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixDecoded);
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded)) {
+                decoded = new CodeGlyphDecoded(dataMatrixDecoded);
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
@@ -684,14 +684,14 @@ public static partial class CodeGlyph {
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixNonQr);
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr)) {
+                decoded = new CodeGlyphDecoded(dataMatrixNonQr);
                 return true;
             }
         } else {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm)) {
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixNonDm);
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm)) {
+                decoded = new CodeGlyphDecoded(dataMatrixNonDm);
                 return true;
             }
             if (cancellationToken.IsCancellationRequested) return false;
@@ -751,11 +751,11 @@ public static partial class CodeGlyph {
                 diagnostics.Pdf417 = pdfDiag;
 
                 if (IsCancelled(cancellationToken, diagnostics)) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrix, out var dmDiag)) {
                     diagnostics.DataMatrix = dmDiag;
                     diagnostics.Success = true;
                     diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix);
+                    decoded = new CodeGlyphDecoded(dataMatrix);
                     return true;
                 }
                 diagnostics.DataMatrix = dmDiag;
@@ -806,21 +806,21 @@ public static partial class CodeGlyph {
                 diagnostics.Aztec = aztecDiagPrefQr;
 
                 if (IsCancelled(cancellationToken, diagnostics)) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr, out var dmDiagPrefQr)) {
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefQr, out var dmDiagPrefQr)) {
                     diagnostics.DataMatrix = dmDiagPrefQr;
                     diagnostics.Success = true;
                     diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixPrefQr);
+                    decoded = new CodeGlyphDecoded(dataMatrixPrefQr);
                     return true;
                 }
                 diagnostics.DataMatrix = dmDiagPrefQr;
             } else {
                 if (IsCancelled(cancellationToken, diagnostics)) return false;
-                if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm, out var dmDiagPrefDm)) {
+                if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixPrefDm, out var dmDiagPrefDm)) {
                     diagnostics.DataMatrix = dmDiagPrefDm;
                     diagnostics.Success = true;
                     diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                    decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixPrefDm);
+                    decoded = new CodeGlyphDecoded(dataMatrixPrefDm);
                     return true;
                 }
                 diagnostics.DataMatrix = dmDiagPrefDm;
@@ -882,11 +882,11 @@ public static partial class CodeGlyph {
             diagnostics.Barcode = barcodeDiagA;
 
             if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded, out var dmDiagA)) {
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixDecoded, out var dmDiagA)) {
                 diagnostics.DataMatrix = dmDiagA;
                 diagnostics.Success = true;
                 diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixDecoded);
+                decoded = new CodeGlyphDecoded(dataMatrixDecoded);
                 return true;
             }
             diagnostics.DataMatrix = dmDiagA;
@@ -937,21 +937,21 @@ public static partial class CodeGlyph {
             diagnostics.Aztec = aztecDiagNonQr0;
 
             if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr0, out var dmDiagNonQr0)) {
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonQr0, out var dmDiagNonQr0)) {
                 diagnostics.DataMatrix = dmDiagNonQr0;
                 diagnostics.Success = true;
                 diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixNonQr0);
+                decoded = new CodeGlyphDecoded(dataMatrixNonQr0);
                 return true;
             }
             diagnostics.DataMatrix = dmDiagNonQr0;
         } else {
             if (IsCancelled(cancellationToken, diagnostics)) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm0, out var dmDiagNonDm0)) {
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrixNonDm0, out var dmDiagNonDm0)) {
                 diagnostics.DataMatrix = dmDiagNonDm0;
                 diagnostics.Success = true;
                 diagnostics.SuccessKind = CodeGlyphKind.DataMatrix;
-                decoded = new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrixNonDm0);
+                decoded = new CodeGlyphDecoded(dataMatrixNonDm0);
                 return true;
             }
             diagnostics.DataMatrix = dmDiagNonDm0;
@@ -1041,8 +1041,8 @@ public static partial class CodeGlyph {
 
         if (!preferQr || !foundQr) {
             if (cancellationToken.IsCancellationRequested) return false;
-            if (DataMatrixDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var dataMatrix)) {
-                list.Add(new CodeGlyphDecoded(CodeGlyphKind.DataMatrix, dataMatrix));
+            if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrix)) {
+                list.Add(new CodeGlyphDecoded(dataMatrix));
             }
 
             if (cancellationToken.IsCancellationRequested) return false;

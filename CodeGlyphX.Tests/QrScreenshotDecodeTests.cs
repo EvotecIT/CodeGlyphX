@@ -5,6 +5,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class QrScreenshotDecodeTests {
     [Theory]
     [InlineData("qr-screenshot-1.png")]

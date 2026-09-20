@@ -22,7 +22,7 @@ public static class SymbolCapabilities {
         Entry(SymbolFormat.RmQrCode, "Rectangular Micro QR Code", SymbolFamily.Matrix,
             Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
-        Entry(SymbolFormat.Aztec, "Aztec Code", SymbolFamily.Matrix, Image),
+        Entry(SymbolFormat.Aztec, "Aztec Code", SymbolFamily.Matrix, Image | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
         Legacy(SymbolFormat.Code128, "Code 128", SymbolFamily.Linear, BarcodeType.Code128, ImageMulti),
         Legacy(SymbolFormat.Gs1Code128, "GS1-128", SymbolFamily.Linear, BarcodeType.GS1_128,
             ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
