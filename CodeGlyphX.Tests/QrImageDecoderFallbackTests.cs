@@ -77,6 +77,27 @@ public sealed class QrImageDecoderFallbackTests {
     }
 
     [Fact]
+    [Trait("Category", "CorpusTiming")]
+    public void Fallback_ImageRecognitionBudgetReturnsFalseWithoutThrowing() {
+        // A large blank raster makes preprocessing exceed the tiny recognition budget.
+        var png = QrPngRenderer.Render(QrCodeEncoder.EncodeText(Payload).Modules,
+            new QrPngRenderOptions { ModuleSize = 100, Foreground = new Rgba32(255, 255, 255), Background = new Rgba32(255, 255, 255) });
+        var imageOptions = new ImageDecodeOptions { RecognitionBudgetMilliseconds = 1 };
+        var options = new QrPixelDecodeOptions { MaxDimension = 0 };
+        WithForcedFallback(() => {
+            Assert.False(QrImageDecoder.TryDecodeImage(png, imageOptions, options, out var single));
+            Assert.Null(single);
+            Assert.False(QrImageDecoder.TryDecodeAllImage(png, imageOptions, options, out var all));
+            Assert.Empty(all);
+        });
+
+        // Modern forced fallback uses the single-symbol route; exercise the legacy all-symbol boundary too.
+        var arguments = new object?[] { png, imageOptions, options, CancellationToken.None, null };
+        Assert.False((bool)GetPrivateMethod("TryDecodeAllImageFallback").Invoke(null, arguments)!);
+        Assert.Empty((QrDecoded[])arguments[4]!);
+    }
+
+    [Fact]
     public void Fallback_Helper_Preprocessing_Branches_Work() {
         var buildGray = GetPrivateMethod("BuildGrayscale");
         var buildChannel = GetPrivateMethod("BuildChannelGrayscale");

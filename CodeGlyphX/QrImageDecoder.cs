@@ -733,7 +733,13 @@ public static partial class QrImageDecoder {
 
         var mergedOptions = MergeDecodeOptions(imageOptions, options);
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, GetBudgetMs(imageOptions, mergedOptions), out var token);
-        return TryDecodeFallbackCore(new QrFallbackFrame(rgba, width, height, width * 4, PixelFormat.Rgba32), mergedOptions, token, out decoded, out info);
+        try {
+            return TryDecodeFallbackCore(new QrFallbackFrame(rgba, width, height, width * 4, PixelFormat.Rgba32), mergedOptions, token, out decoded, out info);
+        } catch (OperationCanceledException) when (token.IsCancellationRequested) {
+            decoded = null!;
+            info = default;
+            return false;
+        }
     }
 
     private static bool TryDecodeAllImageFallback(byte[] image, ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
@@ -745,7 +751,12 @@ public static partial class QrImageDecoder {
         var mergedOptions = MergeDecodeOptions(imageOptions, options);
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, GetBudgetMs(imageOptions, mergedOptions), out var token);
         var stride = width * 4;
-        return TryDecodeAllFallbackCore(new QrFallbackFrame(rgba, width, height, stride, PixelFormat.Rgba32), mergedOptions, token, out decoded);
+        try {
+            return TryDecodeAllFallbackCore(new QrFallbackFrame(rgba, width, height, stride, PixelFormat.Rgba32), mergedOptions, token, out decoded);
+        } catch (OperationCanceledException) when (token.IsCancellationRequested) {
+            decoded = Array.Empty<QrDecoded>();
+            return false;
+        }
     }
 
     private static QrPixelDecodeOptions? MergeDecodeOptions(ImageDecodeOptions? imageOptions, QrPixelDecodeOptions? options) {
