@@ -6,6 +6,7 @@ namespace CodeGlyphX.Rendering.Art;
 /// <summary>An opaque square image produced by <see cref="QrImageComposer"/>.</summary>
 public sealed class QrImageComposition {
     private readonly byte[] _pixels;
+    internal ReadOnlySpan<byte> PixelSpan => _pixels;
 
     /// <summary>Width and height in pixels, including the quiet zone.</summary>
     public int Size { get; }
@@ -29,13 +30,7 @@ public sealed class QrImageComposition {
     public byte[] GetPixels() => (byte[])_pixels.Clone();
 
     /// <summary>Encodes the composed pixels as a lossless PNG.</summary>
-    public byte[] ToPng() {
-        var stride = Size * 4;
-        var length = RenderGuards.EnsureOutputBytes((long)(stride + 1) * Size, "QR composition exceeds PNG output limits.");
-        var scanlines = new byte[length];
-        for (var y = 0; y < Size; y++) Buffer.BlockCopy(_pixels, y * stride, scanlines, y * (stride + 1) + 1, stride);
-        return PngWriter.WriteRgba8(Size, Size, scanlines, length, compressionLevel: 6);
-    }
+    public byte[] ToPng() => PngImageEncoder.EncodeRgba32(_pixels, Size, Size);
 
     /// <summary>Saves the composed PNG and returns its path.</summary>
     public string SavePng(string path) => RenderIO.WriteBinary(path, ToPng());

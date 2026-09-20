@@ -11,6 +11,22 @@ namespace CodeGlyphX.Tests;
 [Collection("GlobalState")]
 public sealed class ImageReaderLimitsTests {
     [Fact]
+    public void DeliveryJpegProbeHonorsPerCallPixelLimit() {
+        var png = QrCode.Render("DELIVERY-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6 }).Data;
+        var previous = ImageReader.MaxPixels;
+        try {
+            ImageReader.MaxPixels = 1;
+            var report = QrArt.ValidateDelivery(png, "DELIVERY-LIMIT",
+                new CodeGlyphX.Rendering.Art.QrImageDeliveryOptions { DecodeBudgetMilliseconds = 1 },
+                new ImageDecodeOptions { MaxPixels = 1_000_000 });
+            Assert.Equal(7, report.Checks.Count);
+            Assert.Contains(report.Checks, check => check.Name == "JPEG");
+        } finally {
+            ImageReader.MaxPixels = previous;
+        }
+    }
+
+    [Fact]
     public void TryDecodeRgba32_Respects_Global_MaxPixels() {
         var png = QrCode.Render("LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
         var previous = ImageReader.MaxPixels;

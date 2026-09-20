@@ -1,5 +1,7 @@
 using System;
 using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Art;
 using CodeGlyphX.Rendering.Png;
@@ -24,7 +26,12 @@ public static partial class QrArt {
         if (imageOptions is not null && imageOptions.MaxDimension != 0)
             throw new ArgumentException("Validation must preserve exported dimensions; MaxDimension must be zero.", nameof(imageOptions));
         cancellationToken.ThrowIfCancellationRequested();
-        var pixels = ImageReader.DecodeRgba32(image, imageOptions, out var width, out var height);
+        var pixels = DecodeValidationPixels(image, imageOptions, cancellationToken, out var width, out var height);
+        return ValidatePixels(pixels, width, height, expectedPayload, budgetMilliseconds, cancellationToken);
+    }
+
+    private static byte[] DecodeValidationPixels(byte[] image, ImageDecodeOptions? imageOptions, CancellationToken cancellationToken, out int width, out int height) {
+        var pixels = ImageReader.DecodeRgba32(image, imageOptions, out width, out height);
         // Validate what a reader sees on white, including alpha in externally supplied exports.
         for (var i = 0; i < pixels.Length; i += 4) {
             if ((i & 65535) == 0) cancellationToken.ThrowIfCancellationRequested();
@@ -32,16 +39,25 @@ public static partial class QrArt {
             for (var c = 0; c < 3; c++) pixels[i + c] = (byte)((pixels[i + c] * alpha + 255 * (255 - alpha) + 127) / 255);
             pixels[i + 3] = 255;
         }
+        return pixels;
+    }
+
+    private static QrImageValidationReport ValidatePixels(byte[] pixels, int width, int height, string expectedPayload,
+        int budgetMilliseconds, CancellationToken cancellationToken) {
+        return new QrImageValidationReport(EnumerateValidationChecks(pixels, width, height, expectedPayload, budgetMilliseconds, cancellationToken).ToArray());
+    }
+
+    private static IEnumerable<QrImageValidationCheck> EnumerateValidationChecks(byte[] pixels, int width, int height, string expectedPayload,
+        int budgetMilliseconds, CancellationToken cancellationToken) {
         var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Balanced, BudgetMilliseconds = budgetMilliseconds };
-        var original = Check("Original", pixels, width, height);
+        yield return Check("Original", pixels, width, height);
         var halfWidth = Math.Max(1, width / 2);
         var halfHeight = Math.Max(1, height / 2);
         cancellationToken.ThrowIfCancellationRequested();
         var half = ImageScaler.ResizeToFitBox(pixels, width, height, width * 4, halfWidth, halfHeight, Rgba32.White, false, cancellationToken);
-        var halfCheck = Check("HalfSize", half, halfWidth, halfHeight);
+        yield return Check("HalfSize", half, halfWidth, halfHeight);
         var blurred = Blur(pixels, width, height, cancellationToken);
-        var blurCheck = Check("BoxBlur", blurred, width, height);
-        return new QrImageValidationReport(new[] { original, halfCheck, blurCheck });
+        yield return Check("BoxBlur", blurred, width, height);
 
         QrImageValidationCheck Check(string name, byte[] data, int w, int h) {
             cancellationToken.ThrowIfCancellationRequested();

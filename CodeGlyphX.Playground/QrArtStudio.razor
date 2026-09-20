@@ -1,0 +1,68 @@
+@using CodeGlyphX.Rendering.Art
+@implements IDisposable
+
+<section class="art-studio" aria-labelledby="art-title">
+    <header><p class="art-eyebrow">IMAGE + CODE</p><h2 id="art-title">QR art studio</h2>
+        <p>Keep your image recognizable. Explore local, deterministic styles and compare measured alternatives.</p></header>
+    <div class="art-workspace">
+        <div class="art-controls">
+            <fieldset disabled="@(_busy || _loading)">
+                <legend>Artwork and subject</legend>
+                <label>Image <InputFile OnChange="LoadImage" accept="image/*" /></label>
+                <p class="art-hint">Uploads stay in this browser. Default photo: NASA / Apollo 17.</p>
+                <label>QR text <textarea @bind="_payload" rows="2" maxlength="1000"></textarea></label>
+                <label>Treatment <select @bind="_style">@foreach (var style in Enum.GetValues<QrImageArtStyle>()) { <option value="@style">@StyleName(style)</option> }</select></label>
+                <label><input type="checkbox" @bind="_protect" /> Preserve a subject region</label>
+                @if (_protect) {
+                    <label>Subject horizontal position <input type="range" min="0" max="1" step="0.01" @bind="_subjectX" /></label>
+                    <label>Subject vertical position <input type="range" min="0" max="1" step="0.01" @bind="_subjectY" /></label>
+                    <label>Subject radius <input type="range" min="0.05" max="0.7" step="0.01" @bind="_radius" /></label>
+                    <label>Protection mask (optional) <InputFile OnChange="LoadMask" accept="image/*" /></label>
+                    <p class="art-hint">White protects detail; black permits decoration. The mask follows the source image crop.</p>
+                    @if (_mask is not null) { <button type="button" @onclick="ClearMask">Clear mask</button> }
+                }
+                <label>Image horizontal crop <input type="range" min="0" max="1" step="0.01" @bind="_cropX" /></label>
+                <label>Image vertical crop <input type="range" min="0" max="1" step="0.01" @bind="_cropY" /></label>
+                <label>Image zoom <input type="range" min="1" max="3" step="0.05" @bind="_zoom" /></label>
+                <label>QR horizontal placement <input type="range" min="0" max="1" step="0.01" @bind="_qrX" /></label>
+                <label>QR vertical placement <input type="range" min="0" max="1" step="0.01" @bind="_qrY" /></label>
+            </fieldset>
+            <div class="art-actions"><button type="button" class="art-primary" disabled="@(_busy || _loading || _source is null)" @onclick="Compare">Compare alternatives</button>
+                @if (_busy) { <button type="button" @onclick="Cancel">Cancel</button> }</div>
+            <p role="status" aria-live="polite">@_status</p>
+            @if (_error is not null) { <p role="alert" class="art-error">@_error</p> }
+        </div>
+        <div class="art-results">
+            @if (_sourceUri is not null) {
+                <figure class="art-source"><div class="art-source-frame"><img src="@_sourceUri" alt="Source artwork" />
+                    @if (_protect && _mask is null) { <span class="art-focal" style="@FocalStyle" aria-hidden="true"></span> }
+                </div><figcaption>Source artwork · focal region shown on the original image</figcaption></figure>
+            }
+            @if (_result is not null) {
+                <p>@_result.EvaluatedCandidates combinations compared · @_result.ValidatedCandidates alternatives decoded. Scan results rank first, then image fidelity.</p>
+                <div class="art-candidates">
+                    @foreach (var item in _cards) {
+                        <article class="art-candidate">
+                            <img src="@item.Uri" alt="@($"QR artwork using mask {item.Candidate.Code.Mask}")" />
+                            <h3>Mask @item.Candidate.Code.Mask · version @item.Candidate.Code.Version · @item.Candidate.Code.ErrorCorrectionLevel</h3>
+                            <p>Image fidelity: @item.Candidate.Fidelity.ToString("F1") / 100</p>
+                            <p class="@(item.Candidate.Validation.AllPassed ? "art-pass" : "art-error")">@CheckSummary(item.Candidate.Validation)</p>
+                            <details><summary>Scan check details</summary><ul>@foreach (var check in item.Candidate.Validation.Checks) { <li>@check.Name: @(check.Passed ? "Passed" : "Not recovered")</li> }</ul></details>
+                            <a href="@item.Uri" download="qr-art.png">Download PNG</a>
+                            <button type="button" disabled="@(_busy || _loading)" @onclick="() => CheckDelivery(item)">Check delivery</button>
+                            @if (item.Delivery is not null) {
+                                <ul>@foreach (var check in item.Delivery.Checks) { <li>@check.Name · @check.Width × @check.Height: @(check.Passed ? "Passed" : "Not recovered")</li> }</ul>
+                            }
+                        </article>
+                    }
+                </div>
+                <fieldset disabled="@(_busy || _loading)" class="art-delivery"><legend>Delivery simulations</legend>
+                    <label>Screen size (px) <input type="number" min="32" max="2048" @bind="_screenSize" /></label>
+                    <label>Print width (mm) <input type="number" min="5" max="100" @bind="_printMm" /></label>
+                    <label>Print resolution (DPI) <input type="number" min="72" max="300" @bind="_dpi" /></label>
+                </fieldset>
+                <p class="art-hint">Checks cover the original, half-size, blur, screen size, print raster, JPEG and perspective. A failed check may indicate insufficient contrast, size or decode time. Test the final printed asset with real phones before distribution.</p>
+            } else { <p class="art-empty">Choose an image and compare alternatives. Functional QR patterns and the quiet zone remain protected.</p> }
+        </div>
+    </div>
+</section>

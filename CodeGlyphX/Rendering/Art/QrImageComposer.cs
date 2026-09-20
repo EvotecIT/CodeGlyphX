@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using CodeGlyphX.Qr;
 
 namespace CodeGlyphX.Rendering.Art;
@@ -9,7 +10,12 @@ public static partial class QrImageComposer {
     /// Composes tightly packed RGBA pixels with an encoded QR. Source alpha is flattened onto white
     /// before interpolation. The source buffer and module matrix are not modified or retained.
     /// </summary>
-    public static QrImageComposition Render(QrCode qr, byte[] rgba, int width, int height, QrImageCompositionOptions? options = null) {
+    public static QrImageComposition Render(QrCode qr, byte[] rgba, int width, int height, QrImageCompositionOptions? options = null) =>
+        Render(qr, rgba, width, height, options, CancellationToken.None);
+
+    /// <summary>Composes artwork while observing cancellation during image analysis and rasterization.</summary>
+    public static QrImageComposition Render(QrCode qr, byte[] rgba, int width, int height, QrImageCompositionOptions? options, CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
         if (qr is null) throw new ArgumentNullException(nameof(qr));
         if (rgba is null) throw new ArgumentNullException(nameof(rgba));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
@@ -37,11 +43,13 @@ public static partial class QrImageComposer {
         var imageOriginX = hasCanvas ? 0 : qrOffsetX + border;
         var imageOriginY = hasCanvas ? 0 : qrOffsetY + border;
         var art = options.Art is null ? null : new ArtGeometry(qr.Modules, functions, moduleSize, options.Art,
-            image, qrOffsetX + border - imageOriginX, qrOffsetY + border - imageOriginY);
+            image, qrOffsetX + border - imageOriginX, qrOffsetY + border - imageOriginY, cancellationToken);
         var centerSize = options.Style == QrImageCompositionStyle.ImageOverlay ? options.CenterSize : 0.35;
         var centerMargin = (int)Math.Floor(moduleSize * (1 - centerSize) / 2);
         for (var y = 0; y < side; y++) {
+            cancellationToken.ThrowIfCancellationRequested();
             for (var x = 0; x < side; x++) {
+                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
                 var index = (y * side + x) * 4;
                 pixels[index + 3] = 255;
                 var px = x - qrOffsetX - border;

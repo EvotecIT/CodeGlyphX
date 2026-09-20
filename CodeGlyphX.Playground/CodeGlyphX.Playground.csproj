@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="..\Assets\Art\apollo17-earth.jpg" LogicalName="CodeGlyphX.Playground.Art.Earth.jpg" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
     <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
   </ItemGroup>
