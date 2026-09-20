@@ -1,10 +1,11 @@
 using System;
+using System.Threading;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Rendering;
 
 internal static class ImageScaler {
-    public static byte[] ResizeToFitNearest(ReadOnlySpan<byte> rgba, int srcWidth, int srcHeight, int srcStride, int dstWidth, int dstHeight, Rgba32 background, bool preserveAspectRatio) {
+    public static byte[] ResizeToFitNearest(ReadOnlySpan<byte> rgba, int srcWidth, int srcHeight, int srcStride, int dstWidth, int dstHeight, Rgba32 background, bool preserveAspectRatio, CancellationToken cancellationToken = default) {
         if (srcWidth <= 0) throw new ArgumentOutOfRangeException(nameof(srcWidth));
         if (srcHeight <= 0) throw new ArgumentOutOfRangeException(nameof(srcHeight));
         if (dstWidth <= 0) throw new ArgumentOutOfRangeException(nameof(dstWidth));
@@ -12,8 +13,9 @@ internal static class ImageScaler {
         if (srcStride < srcWidth * 4) throw new ArgumentOutOfRangeException(nameof(srcStride));
         if (rgba.Length < (srcHeight - 1) * srcStride + srcWidth * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
+        cancellationToken.ThrowIfCancellationRequested();
         var dest = new byte[dstWidth * dstHeight * 4];
-        Fill(dest, dstWidth, dstHeight, background);
+        Fill(dest, dstWidth, dstHeight, background, cancellationToken);
 
         var targetWidth = dstWidth;
         var targetHeight = dstHeight;
@@ -29,11 +31,13 @@ internal static class ImageScaler {
         if (offsetY < 0) offsetY = 0;
 
         for (var y = 0; y < targetHeight; y++) {
+            cancellationToken.ThrowIfCancellationRequested();
             var srcY = (int)((y + 0.5) * srcHeight / targetHeight);
             if (srcY >= srcHeight) srcY = srcHeight - 1;
             var srcRow = srcY * srcStride;
             var dstRow = (y + offsetY) * dstWidth * 4;
             for (var x = 0; x < targetWidth; x++) {
+                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
                 var srcX = (int)((x + 0.5) * srcWidth / targetWidth);
                 if (srcX >= srcWidth) srcX = srcWidth - 1;
                 var srcIndex = srcRow + srcX * 4;
@@ -48,7 +52,7 @@ internal static class ImageScaler {
         return dest;
     }
 
-    public static byte[] ResizeToFitBox(ReadOnlySpan<byte> rgba, int srcWidth, int srcHeight, int srcStride, int dstWidth, int dstHeight, Rgba32 background, bool preserveAspectRatio) {
+    public static byte[] ResizeToFitBox(ReadOnlySpan<byte> rgba, int srcWidth, int srcHeight, int srcStride, int dstWidth, int dstHeight, Rgba32 background, bool preserveAspectRatio, CancellationToken cancellationToken = default) {
         if (srcWidth <= 0) throw new ArgumentOutOfRangeException(nameof(srcWidth));
         if (srcHeight <= 0) throw new ArgumentOutOfRangeException(nameof(srcHeight));
         if (dstWidth <= 0) throw new ArgumentOutOfRangeException(nameof(dstWidth));
@@ -56,8 +60,9 @@ internal static class ImageScaler {
         if (srcStride < srcWidth * 4) throw new ArgumentOutOfRangeException(nameof(srcStride));
         if (rgba.Length < (srcHeight - 1) * srcStride + srcWidth * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
+        cancellationToken.ThrowIfCancellationRequested();
         var dest = new byte[dstWidth * dstHeight * 4];
-        Fill(dest, dstWidth, dstHeight, background);
+        Fill(dest, dstWidth, dstHeight, background, cancellationToken);
 
         var targetWidth = dstWidth;
         var targetHeight = dstHeight;
@@ -76,6 +81,7 @@ internal static class ImageScaler {
         var scaleY = srcHeight / (double)targetHeight;
 
         for (var y = 0; y < targetHeight; y++) {
+            cancellationToken.ThrowIfCancellationRequested();
             var srcY0 = (int)Math.Floor(y * scaleY);
             var srcY1 = (int)Math.Floor((y + 1) * scaleY);
             if (srcY1 <= srcY0) srcY1 = srcY0 + 1;
@@ -83,20 +89,23 @@ internal static class ImageScaler {
 
             var dstRow = (y + offsetY) * dstWidth * 4;
             for (var x = 0; x < targetWidth; x++) {
+                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
                 var srcX0 = (int)Math.Floor(x * scaleX);
                 var srcX1 = (int)Math.Floor((x + 1) * scaleX);
                 if (srcX1 <= srcX0) srcX1 = srcX0 + 1;
                 if (srcX1 > srcWidth) srcX1 = srcWidth;
 
-                var sumR = 0;
-                var sumG = 0;
-                var sumB = 0;
-                var sumA = 0;
+                long sumR = 0;
+                long sumG = 0;
+                long sumB = 0;
+                long sumA = 0;
                 var count = 0;
 
                 for (var sy = srcY0; sy < srcY1; sy++) {
+                    cancellationToken.ThrowIfCancellationRequested();
                     var srcRow = sy * srcStride + srcX0 * 4;
                     for (var sx = srcX0; sx < srcX1; sx++) {
+                        if ((sx & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
                         sumR += rgba[srcRow + 0];
                         sumG += rgba[srcRow + 1];
                         sumB += rgba[srcRow + 2];
@@ -118,10 +127,12 @@ internal static class ImageScaler {
         return dest;
     }
 
-    private static void Fill(byte[] dest, int width, int height, Rgba32 background) {
+    private static void Fill(byte[] dest, int width, int height, Rgba32 background, CancellationToken cancellationToken) {
         for (var y = 0; y < height; y++) {
+            cancellationToken.ThrowIfCancellationRequested();
             var row = y * width * 4;
             for (var x = 0; x < width; x++) {
+                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
                 var p = row + x * 4;
                 dest[p + 0] = background.R;
                 dest[p + 1] = background.G;
