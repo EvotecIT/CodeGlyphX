@@ -14,7 +14,7 @@ CodeGlyphX currently describes 46 physical symbol formats through `SymbolCapabil
 | QR Code | Matrix | Yes | Yes | Yes | Yes | Encode + decode | Encode + decode | Encode + decode | No |
 | Micro QR Code | Matrix | Yes | Yes | Yes | No | No | No | No | Yes |
 | Rectangular Micro QR Code | Matrix | Yes | Yes | No | No | Encode + decode | Encode + decode | No | No |
-| Aztec Code | Matrix | Yes | Yes | Yes | No | No | No | No | No |
+| Aztec Code | Matrix | Yes | Yes | Yes | No | No | Encode + decode | No | No |
 | Code 128 | Linear | Yes | Yes | Yes | Yes | No | No | No | No |
 | GS1-128 | Linear | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
 | Code 39 | Linear | Yes | Yes | Yes | Yes | No | No | No | No |
