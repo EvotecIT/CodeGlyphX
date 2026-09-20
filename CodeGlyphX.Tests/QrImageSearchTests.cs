@@ -29,6 +29,12 @@ public sealed class QrImageSearchTests {
             Assert.All(c.Validation.Checks, check => Assert.Equal(payload, check.DecodedText));
         });
         Assert.True(result.Candidates[0].Fidelity >= result.Candidates[1].Fidelity);
+        options.Results = 1;
+        var single = QrArt.SearchImage(payload, source, options);
+        Assert.Equal(2, single.ValidatedCandidates);
+        var winner = Assert.Single(single.Candidates);
+        Assert.Equal(result.Candidates[0].Code.Mask, winner.Code.Mask);
+        Assert.Equal(result.Candidates[0].Image.GetPixels(), winner.Image.GetPixels());
     }
 
     [Fact]

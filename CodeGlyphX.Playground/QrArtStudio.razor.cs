@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace CodeGlyphX.Playground;
 
-public partial class QrArtStudio {
+public partial class QrArtStudio : IDisposable {
     private byte[]? _source;
     private string? _sourceUri, _error;
     private string _payload = "https://example.com/art", _status = "Loading sample artwork…";
@@ -18,13 +18,17 @@ public partial class QrArtStudio {
     private QrImageSearchResult? _result;
     private List<ArtCard> _cards = new();
     private CancellationTokenSource? _cancel;
+    private readonly CancellationTokenSource _lifetime = new();
     private static ImageDecodeOptions InputLimits() => new() { MaxBytes = 10 * 1024 * 1024, MaxPixels = 4_000_000 };
     private string FocalStyle => FormattableString.Invariant($"left:{_subjectX * 100}%;top:{_subjectY * 100}%;width:{2 * _radius * Math.Min(_sourceWidth, _sourceHeight) / _sourceWidth * 100}%;height:{2 * _radius * Math.Min(_sourceWidth, _sourceHeight) / _sourceHeight * 100}%");
 
     protected override async Task OnInitializedAsync() {
         try {
-            var image = await Http.GetByteArrayAsync("_content/CodeGlyphX.Playground/art/apollo17-earth.jpg");
-            if (!_disposed && _source is null) SetSource(image);
+            using var stream = typeof(QrArtStudio).Assembly.GetManifestResourceStream("CodeGlyphX.Playground.Art.Earth.jpg");
+            if (stream is null) throw new InvalidOperationException("Sample artwork is unavailable.");
+            using var memory = new MemoryStream();
+            await stream.CopyToAsync(memory, _lifetime.Token);
+            if (!_disposed && _source is null) SetSource(memory.ToArray());
         } catch (Exception) { if (!_disposed) _status = "Upload an image to begin."; }
     }
     private void SetSource(byte[] image) {
@@ -37,7 +41,7 @@ public partial class QrArtStudio {
     private async Task LoadImage(InputFileChangeEventArgs args) {
         if (_busy || _loading) return;
         _loading = true;
-        try { using var stream = args.File.OpenReadStream(10 * 1024 * 1024); using var memory = new MemoryStream(); await stream.CopyToAsync(memory); if (!_disposed) SetSource(memory.ToArray()); }
+        try { using var stream = OpenUpload(args.File); using var memory = new MemoryStream(); await stream.CopyToAsync(memory, _lifetime.Token); if (!_disposed) SetSource(memory.ToArray()); }
         catch (Exception ex) { if (!_disposed) _error = ex.Message; }
         finally { _loading = false; }
     }
@@ -45,7 +49,7 @@ public partial class QrArtStudio {
         if (_busy || _loading) return;
         _loading = true;
         try {
-            using var stream = args.File.OpenReadStream(10 * 1024 * 1024); using var memory = new MemoryStream(); await stream.CopyToAsync(memory);
+            using var stream = OpenUpload(args.File); using var memory = new MemoryStream(); await stream.CopyToAsync(memory, _lifetime.Token);
             if (_disposed) return;
             var pixels = ImageReader.DecodeRgba32(memory.ToArray(), InputLimits(), out var width, out var height);
             var gray = new byte[width * height];
@@ -54,6 +58,10 @@ public partial class QrArtStudio {
         } catch (Exception ex) { if (!_disposed) _error = ex.Message; }
         finally { _loading = false; }
     }
+    // The intentional 10 MiB encoded limit is paired with a 4 MP decoded limit.
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "S5693:Make sure that this file upload is safe", Justification = "The stream enforces a fixed 10 MiB limit; decoding additionally enforces 4 million pixels.")]
+    private Stream OpenUpload(IBrowserFile file) => file.OpenReadStream(10 * 1024 * 1024, _lifetime.Token);
+
     private void ClearMask() => _mask = null;
     private async Task Compare() {
         if (_source is null || _busy || _loading) return;
@@ -99,7 +107,10 @@ public partial class QrArtStudio {
         finally { _busy = false; _cancel.Dispose(); _cancel = null; }
     }
     private void Cancel() => _cancel?.Cancel();
-    public void Dispose() { _disposed = true; _cancel?.Cancel(); }
+    public void Dispose() {
+        if (_disposed) return;
+        _disposed = true; _cancel?.Cancel(); _lifetime.Cancel(); _lifetime.Dispose();
+    }
     private static string StyleName(QrImageArtStyle style) => style == QrImageArtStyle.ModuleShape ? "Rounded modules" : style.ToString();
     private static string CheckSummary(QrImageValidationReport report) => $"{report.Checks.Count(c => c.Passed)} / {report.Checks.Count} scan checks passed";
     private sealed class ArtCard(QrImageCandidate candidate, string uri, string payload) {

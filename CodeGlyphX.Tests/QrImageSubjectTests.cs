@@ -36,7 +36,8 @@ public sealed class QrImageSubjectTests {
             }
         }
         Assert.True(afterError < beforeError * 0.8);
-        Assert.True(QrArt.ValidateImage(protectedImage.ToPng(), payload, 3000).AllPassed);
+        var report = QrArt.ValidateImage(protectedImage.ToPng(), payload, TestBudget.Adjust(3000));
+        Assert.All(report.Checks, check => Assert.True(check.Passed, check.Name));
     }
 
     [Fact]

@@ -58,13 +58,17 @@ public static partial class QrArt {
             var ecc = b.Code.ErrorCorrectionLevel.CompareTo(a.Code.ErrorCorrectionLevel);
             return ecc != 0 ? ecc : a.Code.Mask.CompareTo(b.Code.Mask);
         });
-        var measured = new List<QrImageCandidate>();
+        var measured = new List<(QrCode Code, double Fidelity, QrImageValidationReport Validation)>();
         for (var i = 0; i < Math.Min(options.ValidationCandidates, candidates.Count); i++) {
             cancellationToken.ThrowIfCancellationRequested();
             var candidate = candidates[i];
             var rendered = QrImageComposer.Render(candidate.Code, source, width, height, options.Composition, cancellationToken);
-            var report = ValidateImage(rendered.ToPng(), payload, options.DecodeBudgetMilliseconds, cancellationToken: cancellationToken);
-            measured.Add(new QrImageCandidate(candidate.Code, rendered, MeasureFidelity(rendered, source, width, height, options.Composition, cancellationToken), report));
+            var checks = new List<QrImageValidationCheck>();
+            foreach (var check in EnumerateValidationChecks(rendered.GetPixels(), rendered.Size, rendered.Size, payload, options.DecodeBudgetMilliseconds, cancellationToken)) {
+                checks.Add(check);
+                if (yieldBetweenCandidates) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+            }
+            measured.Add((candidate.Code, MeasureFidelity(rendered, source, width, height, options.Composition, cancellationToken), new QrImageValidationReport(checks.ToArray())));
             if (yieldBetweenCandidates) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
         }
         measured.Sort((a, b) => {
@@ -79,7 +83,14 @@ public static partial class QrArt {
         });
         var validated = measured.Count;
         if (measured.Count > options.Results) measured.RemoveRange(options.Results, measured.Count - options.Results);
-        return new QrImageSearchResult(candidates.Count, validated, measured.ToArray());
+        var results = new QrImageCandidate[measured.Count];
+        for (var i = 0; i < results.Length; i++) {
+            cancellationToken.ThrowIfCancellationRequested();
+            var winner = measured[i];
+            results[i] = new QrImageCandidate(winner.Code, QrImageComposer.Render(winner.Code, source, width, height, options.Composition, cancellationToken), winner.Fidelity, winner.Validation);
+            if (yieldBetweenCandidates) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+        }
+        return new QrImageSearchResult(candidates.Count, validated, results);
     }
 
     private static int Passed(QrImageValidationReport report) {

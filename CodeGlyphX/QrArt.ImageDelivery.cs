@@ -35,8 +35,11 @@ public static partial class QrArt {
             throw new ArgumentException("Delivery validation must preserve original dimensions.", nameof(imageOptions));
         cancellationToken.ThrowIfCancellationRequested();
         var pixels = DecodeValidationPixels(image, imageOptions, cancellationToken, out var width, out var height);
-        var checks = new List<QrImageValidationCheck>(ValidatePixels(pixels, width, height, expectedPayload, options.DecodeBudgetMilliseconds, cancellationToken).Checks);
-        if (yieldBetweenChecks) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+        var checks = new List<QrImageValidationCheck>();
+        foreach (var check in EnumerateValidationChecks(pixels, width, height, expectedPayload, options.DecodeBudgetMilliseconds, cancellationToken)) {
+            checks.Add(check);
+            if (yieldBetweenChecks) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+        }
         ResizeCheck("ScreenSize", options.ScreenSize);
         if (yieldBetweenChecks) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
         var printSize = Math.Max(1, (int)Math.Round(options.PrintMillimeters / 25.4 * options.PrintDpi));
@@ -45,7 +48,7 @@ public static partial class QrArt {
         cancellationToken.ThrowIfCancellationRequested();
         var jpeg = JpegWriter.WriteRgba(width, height, pixels, width * 4, options.JpegQuality);
         cancellationToken.ThrowIfCancellationRequested();
-        var jpegPixels = ImageReader.DecodeRgba32(jpeg, out var jpegWidth, out var jpegHeight);
+        var jpegPixels = ImageReader.DecodeRgba32(jpeg, imageOptions, out var jpegWidth, out var jpegHeight);
         Check("JPEG", jpegPixels, jpegWidth, jpegHeight);
         if (yieldBetweenChecks) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
         var perspective = WarpDeliveryImage(pixels, width, height, options.PerspectiveInset, cancellationToken);

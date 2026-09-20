@@ -1,5 +1,7 @@
 using System;
 using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Art;
 using CodeGlyphX.Rendering.Png;
@@ -42,16 +44,20 @@ public static partial class QrArt {
 
     private static QrImageValidationReport ValidatePixels(byte[] pixels, int width, int height, string expectedPayload,
         int budgetMilliseconds, CancellationToken cancellationToken) {
+        return new QrImageValidationReport(EnumerateValidationChecks(pixels, width, height, expectedPayload, budgetMilliseconds, cancellationToken).ToArray());
+    }
+
+    private static IEnumerable<QrImageValidationCheck> EnumerateValidationChecks(byte[] pixels, int width, int height, string expectedPayload,
+        int budgetMilliseconds, CancellationToken cancellationToken) {
         var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Balanced, BudgetMilliseconds = budgetMilliseconds };
-        var original = Check("Original", pixels, width, height);
+        yield return Check("Original", pixels, width, height);
         var halfWidth = Math.Max(1, width / 2);
         var halfHeight = Math.Max(1, height / 2);
         cancellationToken.ThrowIfCancellationRequested();
         var half = ImageScaler.ResizeToFitBox(pixels, width, height, width * 4, halfWidth, halfHeight, Rgba32.White, false, cancellationToken);
-        var halfCheck = Check("HalfSize", half, halfWidth, halfHeight);
+        yield return Check("HalfSize", half, halfWidth, halfHeight);
         var blurred = Blur(pixels, width, height, cancellationToken);
-        var blurCheck = Check("BoxBlur", blurred, width, height);
-        return new QrImageValidationReport(new[] { original, halfCheck, blurCheck });
+        yield return Check("BoxBlur", blurred, width, height);
 
         QrImageValidationCheck Check(string name, byte[] data, int w, int h) {
             cancellationToken.ThrowIfCancellationRequested();
