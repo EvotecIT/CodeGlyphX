@@ -8,6 +8,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class QrImageCompositionTests {
     private const string Payload = "https://example.com/art";
 

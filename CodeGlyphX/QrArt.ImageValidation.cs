@@ -36,7 +36,7 @@ public static partial class QrArt {
         var halfWidth = Math.Max(1, width / 2);
         var halfHeight = Math.Max(1, height / 2);
         cancellationToken.ThrowIfCancellationRequested();
-        var half = ImageScaler.ResizeToFitBox(pixels, width, height, width * 4, halfWidth, halfHeight, Rgba32.White, false);
+        var half = ImageScaler.ResizeToFitBox(pixels, width, height, width * 4, halfWidth, halfHeight, Rgba32.White, false, cancellationToken);
         var halfCheck = Check("HalfSize", half, halfWidth, halfHeight);
         var blurred = Blur(pixels, width, height, cancellationToken);
         var blurCheck = Check("BoxBlur", blurred, width, height);
