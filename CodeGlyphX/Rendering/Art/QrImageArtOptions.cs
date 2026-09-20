@@ -11,6 +11,9 @@ public sealed class QrImageArtOptions {
     /// <summary>Artistic treatment. ModuleShape preserves the configured Shape; other values use their own geometry.</summary>
     public QrImageArtStyle Style { get; set; }
 
+    /// <summary>Finder geometry. Other functional modules and the quiet zone remain unchanged.</summary>
+    public QrImageFinderStyle Finders { get; set; }
+
     /// <summary>Nominal silhouette width relative to a module (0.65..1).</summary>
     public double Scale { get; set; } = 0.85;
 
@@ -32,6 +35,7 @@ public sealed class QrImageArtOptions {
 
     internal void Validate() {
         Subject?.Validate();
+        if (!Enum.IsDefined(typeof(QrImageFinderStyle), Finders)) throw new ArgumentOutOfRangeException(nameof(Finders));
         if (!Enum.IsDefined(typeof(QrImageArtStyle), Style)) throw new ArgumentOutOfRangeException(nameof(Style));
         if (FunctionalBackground.A != 255 || 0.299 * FunctionalBackground.R + 0.587 * FunctionalBackground.G + 0.114 * FunctionalBackground.B < 220)
             throw new ArgumentException("Functional background must be opaque and light (luminance at least 220).", nameof(FunctionalBackground));

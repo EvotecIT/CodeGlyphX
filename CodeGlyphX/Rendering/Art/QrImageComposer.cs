@@ -44,6 +44,8 @@ public static partial class QrImageComposer {
         var imageOriginY = hasCanvas ? 0 : qrOffsetY + border;
         var art = options.Art is null ? null : new ArtGeometry(qr.Modules, functions, moduleSize, options.Art,
             image, qrOffsetX + border - imageOriginX, qrOffsetY + border - imageOriginY, cancellationToken);
+        var finders = options.Art is not null && options.Art.Finders != QrImageFinderStyle.Square && options.Strength > 0
+            ? new FinderGeometry(moduleSize, options.Art) : null;
         var centerSize = options.Style == QrImageCompositionStyle.ImageOverlay ? options.CenterSize : 0.35;
         var centerMargin = (int)Math.Floor(moduleSize * (1 - centerSize) / 2);
         for (var y = 0; y < side; y++) {
@@ -68,6 +70,7 @@ public static partial class QrImageComposer {
                     }
                     continue;
                 }
+                if (finders is not null && finders.TryPaint(pixels, index, px, py, qr.Size)) continue;
                 var mx = px / moduleSize;
                 var my = py / moduleSize;
                 var dark = qr.Modules[mx, my];

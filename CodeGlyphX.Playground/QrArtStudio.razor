@@ -12,6 +12,13 @@
                 <p class="art-hint">Uploads stay in this browser. Default photo: NASA / Apollo 17.</p>
                 <label>QR text <textarea @bind="_payload" rows="2" maxlength="1000"></textarea></label>
                 <label>Treatment <select @bind="_style">@foreach (var style in Enum.GetValues<QrImageArtStyle>()) { <option value="@style">@StyleName(style)</option> }</select></label>
+                <label>Finder frames <select @bind="_finders">@foreach (var finder in Enum.GetValues<QrImageFinderStyle>()) { <option value="@finder">@finder</option> }</select></label>
+                <label><input type="checkbox" @bind="_frameEnabled" @bind:after="ApplyIllustration" /> Illustrated composition</label>
+                @if (_frameEnabled) {
+                    <label>Composition family <select @bind="_frameStyle" @bind:after="ApplyIllustration">@foreach (var frame in Enum.GetValues<QrIllustratedStyle>()) { <option value="@frame">@FamilyName(frame)</option> }</select></label>
+                    <p class="art-hint">SVG exports keep the frame as vectors and embed the QR artwork at its rendered resolution.</p>
+                }
+                <label><input type="checkbox" @bind="_exploreLayouts" /> Compare crop, placement and scale variations</label>
                 <label><input type="checkbox" @bind="_protect" /> Preserve a subject region</label>
                 @if (_protect) {
                     <label>Subject horizontal position <input type="range" min="0" max="1" step="0.01" @bind="_subjectX" /></label>
@@ -45,10 +52,12 @@
                         <article class="art-candidate">
                             <img src="@item.Uri" alt="@($"QR artwork using mask {item.Candidate.Code.Mask}")" />
                             <h3>Mask @item.Candidate.Code.Mask · version @item.Candidate.Code.Version · @item.Candidate.Code.ErrorCorrectionLevel</h3>
+                            <p>Crop @item.Candidate.Layout.ImageX.ToString("F2"), @item.Candidate.Layout.ImageY.ToString("F2") · zoom @item.Candidate.Layout.Zoom.ToString("F2")</p>
                             <p>Image fidelity: @item.Candidate.Fidelity.ToString("F1") / 100</p>
-                            <p class="@(item.Candidate.Validation.AllPassed ? "art-pass" : "art-error")">@CheckSummary(item.Candidate.Validation)</p>
-                            <details><summary>Scan check details</summary><ul>@foreach (var check in item.Candidate.Validation.Checks) { <li>@check.Name: @(check.Passed ? "Passed" : "Not recovered")</li> }</ul></details>
+                            <p class="@(item.Validation.AllPassed ? "art-pass" : "art-error")">@CheckSummary(item.Validation)</p>
+                            <details><summary>Scan check details</summary><ul>@foreach (var check in item.Validation.Checks) { <li>@check.Name: @(check.Passed ? "Passed" : "Not recovered")</li> }</ul></details>
                             <a href="@item.Uri" download="qr-art.png">Download PNG</a>
+                            @if (item.SvgUri is not null) { <a href="@item.SvgUri" download="qr-illustrated.svg">Download SVG</a> }
                             <button type="button" disabled="@(_busy || _loading)" @onclick="() => CheckDelivery(item)">Check delivery</button>
                             @if (item.Delivery is not null) {
                                 <ul>@foreach (var check in item.Delivery.Checks) { <li>@check.Name · @check.Width × @check.Height: @(check.Passed ? "Passed" : "Not recovered")</li> }</ul>
