@@ -3610,7 +3610,8 @@ public static partial class QrPngRenderer {
         return dx2 * dx2 + dy2 * dy2 <= 1.0;
     }
 
-    private static bool[] BuildModuleMask(
+    /// <summary>Shared raster geometry for PNG styling and image-composition silhouettes.</summary>
+    internal static bool[] BuildModuleMask(
         int moduleSize,
         QrPngModuleShape shape,
         double scale,

@@ -10,9 +10,19 @@ public sealed class QrImageComposition {
     /// <summary>Width and height in pixels, including the quiet zone.</summary>
     public int Size { get; }
 
-    internal QrImageComposition(byte[] pixels, int size) {
+    /// <summary>Left edge of the QR including its quiet zone, in canvas pixels.</summary>
+    public int QrOffsetX { get; }
+    /// <summary>Top edge of the QR including its quiet zone, in canvas pixels.</summary>
+    public int QrOffsetY { get; }
+    /// <summary>QR width/height including its quiet zone, in pixels.</summary>
+    public int QrSize { get; }
+
+    internal QrImageComposition(byte[] pixels, int size, int qrOffsetX, int qrOffsetY, int qrSize) {
         _pixels = pixels;
         Size = size;
+        QrOffsetX = qrOffsetX;
+        QrOffsetY = qrOffsetY;
+        QrSize = qrSize;
     }
 
     /// <summary>Returns an independent copy of the tightly packed RGBA pixels.</summary>

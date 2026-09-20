@@ -81,7 +81,7 @@ QR.Save("https://codeglyphx.com", "styled.png", options);
 
 ### Compose QR artwork from an image
 
-Use a photo or illustration to color the QR data area. Composition runs locally, preserves the image's proportions, flattens transparency onto white, and keeps finder, timing, alignment, format, and version modules intact. The quiet zone stays white.
+Use a photo or illustration to color the QR data area. Composition runs locally, preserves the image's proportions, flattens transparency onto white, and keeps finder, timing, alignment, format, and version modules intact. The quiet zone stays white by default.
 
 ```csharp
 using CodeGlyphX;
@@ -101,7 +101,7 @@ var report = QrArt.ValidateImage(png, payload);
 if (report.AllPassed) File.WriteAllBytes("artistic-qr.png", png);
 ```
 
-`ColorModules` (the default) adapts the luminance of every image pixel to its QR module, with small contrasting centers for local-threshold readers. `ImageOverlay` reveals more image detail around contrasting square module centers; `CenterSize` controls their width. `Strength` ranges from 0 (plain black/white) to 1 (most image color). `Cover` crops centrally; `Contain` fits the whole image on white. Composition uses high error correction. For an existing QR or raw RGBA artwork, use `QrImageComposer.Render(qr, rgba, width, height, options)`.
+`ColorModules` (the default) adapts the luminance of every image pixel to its QR module, with small contrasting centers for local-threshold readers. `ImageOverlay` reveals more image detail around contrasting square module centers; `CenterSize` controls their width when `Art` is not set. `Strength` ranges from 0 (plain black/white) to 1 (most image color). `Cover` crops centrally; `Contain` fits the whole image on white. Composition uses high error correction. For an existing QR or raw RGBA artwork, use `QrImageComposer.Render(qr, rgba, width, height, options)`.
 
 `ValidateImage` reads the exported image and attempts to recover the exact expected text from the original, a half-size copy, and a lightly blurred copy. Its report records each result, including failed or budget-limited attempts. It uses CodeGlyphX's decoder; legacy targets have limited image recognition. A passing report does not certify other readers or printed output. Check the actual delivery size, compression, and target devices before distributing artwork.
 
@@ -110,6 +110,40 @@ The [image-composition example](CodeGlyphX.Examples/QrImageCompositionExample.cs
 | Botanical | Sunset | Waves |
 | --- | --- | --- |
 | ![Botanical QR artwork](Assets/Examples/qr-image-botanical.png) | ![Sunset QR artwork](Assets/Examples/qr-image-sunset.png) | ![Wave QR artwork](Assets/Examples/qr-image-waves.png) |
+
+
+For rounded, connected, or organic image-aware shapes, set `Art`. This replaces the square treatment selected by `Style`/`CenterSize`. Decorative shapes adapt to local image edges while small scan anchors stay fixed at module centers. `Canvas` extends the same image around the QR, preserving a uniform light quiet zone. Dark ink and light paper colors can be chosen within enforced luminance bounds.
+
+```csharp
+using CodeGlyphX.Rendering.Png;
+
+var expressive = QrArt.Compose(payload, File.ReadAllBytes("illustration.png"),
+    new QrImageCompositionOptions {
+        ModuleSize = 16,
+        ImagePositionX = 0.7, // Align the crop toward the image's right edge.
+        ImageZoom = 1.15,
+        Art = new QrImageArtOptions {
+            Shape = QrPngModuleShape.ConnectedRounded,
+            DetailProtection = 0.8
+        },
+        Canvas = new QrImageCanvasOptions {
+            PaddingModules = 10,
+            PositionX = 0.25,
+            PositionY = 0.8
+        }
+    });
+expressive.SavePng("expressive-qr.png");
+```
+
+`ImagePositionX/Y` control image alignment; `Canvas.PositionX/Y` place the QR within the canvas. `ImageZoom` magnifies after fitting. With a canvas, the image fits the whole canvas rather than just the QR data area. `QrOffsetX`, `QrOffsetY`, and `QrSize` on the result locate the QR including its quiet zone. Validate the complete exported canvas at its delivery size.
+
+The [expressive-art example](CodeGlyphX.Examples/QrExpressiveArtExample.cs) produces six designs and baseline comparisons. The Earth photograph is credited to [NASA](Assets/Art/README.md); the other illustrations are drawn locally by the example.
+
+| Botanical | Citrus | Landscape |
+| --- | --- | --- |
+| ![Botanical composition](Assets/Examples/qr-expressive-botanical.png) | ![Citrus composition](Assets/Examples/qr-expressive-citrus.png) | ![Landscape composition](Assets/Examples/qr-expressive-landscape.png) |
+| Waves | Geometric | Earth photograph |
+| ![Waves composition](Assets/Examples/qr-expressive-waves.png) | ![Geometric composition](Assets/Examples/qr-expressive-geometric.png) | ![Earth composition](Assets/Examples/qr-expressive-earth.png) |
 
 
 ## Standards-aware QR encoding

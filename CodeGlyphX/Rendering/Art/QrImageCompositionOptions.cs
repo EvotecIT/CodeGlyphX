@@ -10,23 +10,23 @@ public enum QrImageCompositionStyle {
     ImageOverlay
 }
 
-/// <summary>How a source image fits the square QR area, excluding the quiet zone.</summary>
+/// <summary>How a source image fits its square composition area.</summary>
 public enum QrImageFit {
-    /// <summary>Fill the QR area, cropping equally on opposite sides.</summary>
+    /// <summary>Fill the area, cropping according to image alignment.</summary>
     Cover,
-    /// <summary>Show the whole image, centered on white.</summary>
+    /// <summary>Fit the whole image on white before optional zoom and alignment.</summary>
     Contain
 }
 
 /// <summary>
-/// Deterministic image composition settings. Functional modules remain solid black/white,
-/// and the quiet zone remains white. These constraints do not guarantee camera readability.
+/// Deterministic image composition settings. Functional modules retain solid, high-contrast geometry,
+/// and the quiet zone remains uniformly light (white by default). These constraints do not guarantee camera readability.
 /// </summary>
 public sealed class QrImageCompositionOptions {
     /// <summary>Pixels per module (6..64); defaults to 12.</summary>
     public int ModuleSize { get; set; } = 12;
 
-    /// <summary>White border in modules (4..16).</summary>
+    /// <summary>Uniform light border in modules (4..16), white by default.</summary>
     public int QuietZone { get; set; } = 4;
 
     /// <summary>Image treatment; defaults to full-module color adaptation.</summary>
@@ -43,11 +43,31 @@ public sealed class QrImageCompositionOptions {
 
     /// <summary>
     /// Width of the protected square center relative to a data module (0.5..1).
-    /// Used only by overlay mode; rounded up to a centered whole-pixel footprint.
+    /// Used only by overlay mode when Art is null; rounded up to a centered whole-pixel footprint.
     /// </summary>
     public double CenterSize { get; set; } = 0.6;
 
+    /// <summary>Horizontal image alignment in its crop/fit area (0 = left, 1 = right).</summary>
+    public double ImagePositionX { get; set; } = 0.5;
+
+    /// <summary>Vertical image alignment in its crop/fit area (0 = top, 1 = bottom).</summary>
+    public double ImagePositionY { get; set; } = 0.5;
+
+    /// <summary>Magnification after aspect-preserving fit (1..4). Position controls the resulting crop.</summary>
+    public double ImageZoom { get; set; } = 1;
+
+    /// <summary>Optional image-aware silhouettes, replacing the square treatment selected by Style.</summary>
+    public QrImageArtOptions? Art { get; set; }
+
+    /// <summary>Optional canvas. The image is fitted across the entire canvas for continuity around the QR.</summary>
+    public QrImageCanvasOptions? Canvas { get; set; }
+
     internal void Validate() {
+        Art?.Validate();
+        Canvas?.Validate();
+        QrImageCanvasOptions.ValidatePosition(ImagePositionX, nameof(ImagePositionX));
+        QrImageCanvasOptions.ValidatePosition(ImagePositionY, nameof(ImagePositionY));
+        if (double.IsNaN(ImageZoom) || ImageZoom < 1 || ImageZoom > 4) throw new ArgumentOutOfRangeException(nameof(ImageZoom));
         if (ModuleSize is < 6 or > 64) throw new ArgumentOutOfRangeException(nameof(ModuleSize));
         if (QuietZone is < 4 or > 16) throw new ArgumentOutOfRangeException(nameof(QuietZone));
         if (Style != QrImageCompositionStyle.ColorModules && Style != QrImageCompositionStyle.ImageOverlay)
