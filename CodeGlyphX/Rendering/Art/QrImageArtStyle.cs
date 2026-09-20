@@ -13,5 +13,9 @@ public enum QrImageArtStyle {
     /// <summary>Faceted tiles with varied orientation and beveled edges.</summary>
     Mosaic,
     /// <summary>Leaf silhouettes and fine stems, oriented by image detail.</summary>
-    Botanical
+    Botanical,
+    /// <summary>Continuous curved ribbons joining adjacent modules of equal polarity.</summary>
+    Ribbons,
+    /// <summary>Interlaced narrow strands joining adjacent modules of equal polarity.</summary>
+    Weave
 }

@@ -9,6 +9,9 @@ public partial class QrArtStudio : IDisposable {
     private byte[]? _source;
     private string? _sourceUri, _error;
     private string _payload = "https://example.com/art", _status = "Loading sample artwork…";
+    private bool _exploreLayouts, _frameEnabled;
+    private QrIllustratedStyle _frameStyle = QrIllustratedStyle.BotanicalBadge;
+    private QrImageFinderStyle _finders;
     private QrImageArtStyle _style = QrImageArtStyle.Botanical;
     private bool _busy, _loading, _protect = true, _disposed;
     private double _subjectX = 0.5, _subjectY = 0.5, _radius = 0.25, _cropX = 0.5, _cropY = 0.5, _zoom = 1, _qrX = 0.5, _qrY = 0.5;
@@ -69,12 +72,12 @@ public partial class QrArtStudio : IDisposable {
         _cancel = new CancellationTokenSource();
         try {
             var options = new QrImageSearchOptions {
-                AdditionalVersions = 1, ValidationCandidates = 3, Results = 3, DecodeBudgetMilliseconds = 2000,
+                ExploreLayouts = _exploreLayouts, AdditionalVersions = 1, ValidationCandidates = 3, Results = 3, DecodeBudgetMilliseconds = 2000,
                 Composition = new QrImageCompositionOptions {
-                    ModuleSize = 12, Strength = 0.95, ImagePositionX = _cropX, ImagePositionY = _cropY, ImageZoom = _zoom,
-                    Canvas = new QrImageCanvasOptions { PaddingModules = 8, PositionX = _qrX, PositionY = _qrY },
+                    ModuleSize = _frameEnabled ? 16 : 12, Strength = 0.95, ImagePositionX = _cropX, ImagePositionY = _cropY, ImageZoom = _zoom,
+                    Canvas = new QrImageCanvasOptions { PaddingModules = _frameEnabled ? 12 : 8, PositionX = _qrX, PositionY = _qrY },
                     Art = new QrImageArtOptions {
-                        Style = _style, FunctionalForeground = new Rgba32(20, 35, 40), FunctionalBackground = new Rgba32(245, 240, 225),
+                        Style = _style, Finders = _finders, FunctionalForeground = new Rgba32(20, 35, 40), FunctionalBackground = new Rgba32(245, 240, 225),
                         Subject = _protect ? new QrImageSubjectOptions { X = _subjectX, Y = _subjectY, Radius = _radius, Mask = _mask } : null
                     }
                 }
@@ -86,8 +89,18 @@ public partial class QrArtStudio : IDisposable {
             });
             var result = await QrArt.SearchImageAsync(_payload, _source, options, InputLimits(), _cancel.Token, progress);
             if (_disposed) return;
+            var cards = new List<ArtCard>();
+            foreach (var candidate in result.Candidates) {
+                var illustration = _frameEnabled ? QrIllustratedComposer.Frame(candidate.Image, _frameStyle, _cancel.Token) : null;
+                var image = illustration?.Image ?? candidate.Image;
+                var png = image.ToPng();
+                var validation = illustration is null ? candidate.Validation : await QrArt.ValidateImageAsync(png, _payload, 2000, cancellationToken: _cancel.Token);
+                cards.Add(new ArtCard(candidate, image, "data:image/png;base64," + Convert.ToBase64String(png), _payload, validation,
+                    illustration is null ? null : "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(illustration.ToSvg()))));
+            }
+            if (_disposed) return;
             _result = result;
-            _cards = result.Candidates.Select(c => new ArtCard(c, "data:image/png;base64," + Convert.ToBase64String(c.Image.ToPng()), _payload)).ToList();
+            _cards = cards.OrderByDescending(c => c.Validation.Checks.Count(check => check.Passed)).ThenByDescending(c => c.Candidate.Fidelity).ToList();
             _status = "Comparison complete. Download an alternative or check its delivery settings.";
         } catch (OperationCanceledException) { _status = "Comparison cancelled."; }
         catch (Exception ex) { _error = ex.Message; _status = "Comparison could not finish."; }
@@ -99,12 +112,21 @@ public partial class QrArtStudio : IDisposable {
         _cancel = new CancellationTokenSource();
         try {
             await Task.Delay(1, _cancel.Token);
-            card.Delivery = await QrArt.ValidateDeliveryAsync(card.Candidate.Image.ToPng(), card.Payload,
+            card.Delivery = await QrArt.ValidateDeliveryAsync(card.Image.ToPng(), card.Payload,
                 new QrImageDeliveryOptions { ScreenSize = _screenSize, PrintMillimeters = _printMm, PrintDpi = _dpi, DecodeBudgetMilliseconds = 2000 }, cancellationToken: _cancel.Token);
             _status = "Delivery checks complete.";
         } catch (OperationCanceledException) { _status = "Delivery checks cancelled."; }
         catch (Exception ex) { _error = ex.Message; }
         finally { _busy = false; _cancel.Dispose(); _cancel = null; }
+    }
+    private static string FamilyName(QrIllustratedStyle style) => style switch {
+        QrIllustratedStyle.EngravedPortrait => "Engraved portrait",
+        QrIllustratedStyle.BotanicalBadge => "Botanical badge",
+        _ => "Geometric poster"
+    };
+    private void ApplyIllustration() {
+        var preset = QrIllustratedComposer.CreateOptions(_frameStyle);
+        _style = preset.Art!.Style; _finders = preset.Art.Finders;
     }
     private void Cancel() => _cancel?.Cancel();
     public void Dispose() {
@@ -113,7 +135,10 @@ public partial class QrArtStudio : IDisposable {
     }
     private static string StyleName(QrImageArtStyle style) => style == QrImageArtStyle.ModuleShape ? "Rounded modules" : style.ToString();
     private static string CheckSummary(QrImageValidationReport report) => $"{report.Checks.Count(c => c.Passed)} / {report.Checks.Count} scan checks passed";
-    private sealed class ArtCard(QrImageCandidate candidate, string uri, string payload) {
+    private sealed class ArtCard(QrImageCandidate candidate, QrImageComposition image, string uri, string payload, QrImageValidationReport validation, string? svgUri) {
+        internal QrImageComposition Image { get; } = image;
+        internal QrImageValidationReport Validation { get; } = validation;
+        internal string? SvgUri { get; } = svgUri;
         internal string Payload { get; } = payload;
         internal QrImageCandidate Candidate { get; } = candidate;
         internal string Uri { get; } = uri;

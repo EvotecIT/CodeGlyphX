@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Art;
 using CodeGlyphX.Rendering.Png;
@@ -28,6 +29,25 @@ public static partial class QrArt {
         cancellationToken.ThrowIfCancellationRequested();
         var pixels = DecodeValidationPixels(image, imageOptions, cancellationToken, out var width, out var height);
         return ValidatePixels(pixels, width, height, expectedPayload, budgetMilliseconds, cancellationToken);
+    }
+
+    /// <summary>Validates original, half-size and blurred pixels, yielding between recognition checks for browser hosts.
+    /// Image codecs are synchronous; imageOptions controls their input limits.</summary>
+    public static async Task<QrImageValidationReport> ValidateImageAsync(byte[] image, string expectedPayload,
+        int budgetMilliseconds = 1000, ImageDecodeOptions? imageOptions = null, CancellationToken cancellationToken = default) {
+        if (image is null) throw new ArgumentNullException(nameof(image));
+        if (expectedPayload is null) throw new ArgumentNullException(nameof(expectedPayload));
+        if (budgetMilliseconds <= 0) throw new ArgumentOutOfRangeException(nameof(budgetMilliseconds));
+        if (imageOptions is not null && imageOptions.MaxDimension != 0)
+            throw new ArgumentException("Validation must preserve exported dimensions; MaxDimension must be zero.", nameof(imageOptions));
+        cancellationToken.ThrowIfCancellationRequested();
+        var pixels = DecodeValidationPixels(image, imageOptions, cancellationToken, out var width, out var height);
+        var checks = new List<QrImageValidationCheck>();
+        foreach (var check in EnumerateValidationChecks(pixels, width, height, expectedPayload, budgetMilliseconds, cancellationToken)) {
+            checks.Add(check);
+            await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+        }
+        return new QrImageValidationReport(checks.ToArray());
     }
 
     private static byte[] DecodeValidationPixels(byte[] image, ImageDecodeOptions? imageOptions, CancellationToken cancellationToken, out int width, out int height) {

@@ -84,7 +84,8 @@ public static partial class QrImageComposer {
         }
 
         private void ApplyTreatment(ref double r, ref double g, ref double b, CellGeometry cell, int mx, int my, int px, int py) {
-            if (_style == QrImageArtStyle.ModuleShape || _style == QrImageArtStyle.Botanical) return;
+            if (_style == QrImageArtStyle.ModuleShape || _style == QrImageArtStyle.Botanical
+                || _style == QrImageArtStyle.Ribbons || _style == QrImageArtStyle.Weave) return;
             var luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
             double nr = r, ng = g, nb = b;
             if (_style == QrImageArtStyle.Mosaic) {
@@ -120,6 +121,8 @@ public static partial class QrImageComposer {
         }
 
         private bool Inside(CellGeometry cell, int mx, int my, double u, double v, bool dark) {
+            if (_style == QrImageArtStyle.Ribbons || _style == QrImageArtStyle.Weave)
+                return InsideFlow(mx, my, u, v, dark);
             if (_connected) {
                 const double halfBridge = 0.22;
                 if (Math.Abs(v - 0.5) <= halfBridge &&
@@ -156,6 +159,23 @@ public static partial class QrImageComposer {
                 default:
                     return false;
             }
+        }
+
+        private bool InsideFlow(int mx, int my, double u, double v, bool dark) {
+            var x = u - 0.5;
+            var y = v - 0.5;
+            var woven = _style == QrImageArtStyle.Weave;
+            var width = woven ? 0.085 : 0.16;
+            // Every strand meets its neighbor at the edge midpoint. Curvature vanishes at both ends.
+            var horizontal = SameData(mx + (x < 0 ? -1 : 1), my, dark);
+            var vertical = SameData(mx, my + (y < 0 ? -1 : 1), dark);
+            var bendX = 0.10 * Math.Sin(Math.Abs(x) * Math.PI * 2);
+            var bendY = 0.10 * Math.Sin(Math.Abs(y) * Math.PI * 2);
+            var across = horizontal && Math.Abs(y - bendX) < width;
+            var down = vertical && Math.Abs(x + bendY) < width;
+            if (woven && horizontal && vertical && Math.Abs(x) < 0.2 && Math.Abs(y) < 0.2)
+                return (mx + my) % 2 == 0 ? across : down;
+            return across || down || x * x + y * y < width * width;
         }
 
         private bool SameData(int x, int y, bool dark) =>

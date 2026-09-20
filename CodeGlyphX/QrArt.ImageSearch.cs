@@ -31,9 +31,9 @@ public static partial class QrArt {
         options.Validate();
         cancellationToken.ThrowIfCancellationRequested();
         var source = ImageReader.DecodeRgba32(image, imageOptions, out var width, out var height);
-        var candidates = new List<(QrCode Code, double Score)>();
+        var candidates = new List<(QrCode Code, double Score, QrImageCompositionOptions Composition)>();
         // Screen at six pixels per module; only the shortlisted exports need full-resolution rasterization.
-        var screening = options.Composition.WithModuleSize(6);
+        var layouts = BuildImageLayouts(options);
         var levels = options.IncludeQuartileErrorCorrection
             ? new[] { QrErrorCorrectionLevel.H, QrErrorCorrectionLevel.Q } : new[] { QrErrorCorrectionLevel.H };
         foreach (var ecc in levels) {
@@ -43,13 +43,18 @@ public static partial class QrArt {
                 for (var mask = 0; mask < 8; mask++) {
                     cancellationToken.ThrowIfCancellationRequested();
                     var code = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = ecc, RespectPayloadDefaults = false, MinVersion = version, MaxVersion = version, ForceMask = mask });
-                    var rendered = QrImageComposer.Render(code, source, width, height, screening, cancellationToken);
-                    candidates.Add((code, MeasureFidelity(rendered, source, width, height, screening, cancellationToken)));
-                    progress?.Report(candidates.Count);
-                    if (yieldBetweenCandidates) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+                    foreach (var layout in layouts) {
+                        if (!CanRenderLayout(code, layout)) continue;
+                        var screening = layout.WithModuleSize(6);
+                        var rendered = QrImageComposer.Render(code, source, width, height, screening, cancellationToken);
+                        candidates.Add((code, MeasureFidelity(rendered, source, width, height, screening, cancellationToken), layout));
+                        progress?.Report(candidates.Count);
+                        if (yieldBetweenCandidates) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
+                    }
                 }
             }
         }
+        if (candidates.Count == 0) throw new ArgumentException("No candidate fits the configured rendering limits.", nameof(options));
         candidates.Sort((a, b) => {
             var score = b.Score.CompareTo(a.Score);
             if (score != 0) return score;
@@ -58,17 +63,17 @@ public static partial class QrArt {
             var ecc = b.Code.ErrorCorrectionLevel.CompareTo(a.Code.ErrorCorrectionLevel);
             return ecc != 0 ? ecc : a.Code.Mask.CompareTo(b.Code.Mask);
         });
-        var measured = new List<(QrCode Code, double Fidelity, QrImageValidationReport Validation)>();
+        var measured = new List<(QrCode Code, double Fidelity, QrImageValidationReport Validation, QrImageCompositionOptions Composition)>();
         for (var i = 0; i < Math.Min(options.ValidationCandidates, candidates.Count); i++) {
             cancellationToken.ThrowIfCancellationRequested();
             var candidate = candidates[i];
-            var rendered = QrImageComposer.Render(candidate.Code, source, width, height, options.Composition, cancellationToken);
+            var rendered = QrImageComposer.Render(candidate.Code, source, width, height, candidate.Composition, cancellationToken);
             var checks = new List<QrImageValidationCheck>();
             foreach (var check in EnumerateValidationChecks(rendered.GetPixels(), rendered.Size, rendered.Size, payload, options.DecodeBudgetMilliseconds, cancellationToken)) {
                 checks.Add(check);
                 if (yieldBetweenCandidates) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
             }
-            measured.Add((candidate.Code, MeasureFidelity(rendered, source, width, height, options.Composition, cancellationToken), new QrImageValidationReport(checks.ToArray())));
+            measured.Add((candidate.Code, MeasureFidelity(rendered, source, width, height, candidate.Composition, cancellationToken), new QrImageValidationReport(checks.ToArray()), candidate.Composition));
             if (yieldBetweenCandidates) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
         }
         measured.Sort((a, b) => {
@@ -87,7 +92,7 @@ public static partial class QrArt {
         for (var i = 0; i < results.Length; i++) {
             cancellationToken.ThrowIfCancellationRequested();
             var winner = measured[i];
-            results[i] = new QrImageCandidate(winner.Code, QrImageComposer.Render(winner.Code, source, width, height, options.Composition, cancellationToken), winner.Fidelity, winner.Validation);
+            results[i] = new QrImageCandidate(winner.Code, QrImageComposer.Render(winner.Code, source, width, height, winner.Composition, cancellationToken), winner.Fidelity, winner.Validation, winner.Composition);
             if (yieldBetweenCandidates) await Task.Delay(1, cancellationToken).ConfigureAwait(false);
         }
         return new QrImageSearchResult(candidates.Count, validated, results);
