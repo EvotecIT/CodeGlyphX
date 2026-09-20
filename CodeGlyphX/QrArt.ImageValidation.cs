@@ -51,10 +51,12 @@ public static partial class QrArt {
     }
 
     private static byte[] Blur(byte[] pixels, int width, int height, CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
         var result = new byte[pixels.Length];
         for (var y = 0; y < height; y++) {
             cancellationToken.ThrowIfCancellationRequested();
             for (var x = 0; x < width; x++) {
+                if ((x & 1023) == 0) cancellationToken.ThrowIfCancellationRequested();
                 var target = (y * width + x) * 4;
                 for (var c = 0; c < 3; c++) {
                     var sum = 0;
