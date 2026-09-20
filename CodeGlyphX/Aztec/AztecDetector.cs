@@ -55,44 +55,21 @@ internal sealed class AztecDetector {
         var size = _matrix.Width;
         if (size != _matrix.Height) return false;
 
-        var compact = false;
-        var layers = 0;
-
-        for (var l = 1; l <= MaxCompactLayers; l++) {
-            var candidate = 11 + l * 4;
-            if (candidate == size) {
-                compact = true;
-                layers = l;
-                break;
+        // Compact and full symbols share sizes 19, 23 and 27. Validate both candidates.
+        for (var kind = 0; kind < 2; kind++) {
+            var compact = kind == 0;
+            for (var layers = 1; layers <= (compact ? MaxCompactLayers : MaxLayers); layers++) {
+                var baseSize = 14 + layers * 4;
+                var candidateSize = compact ? 11 + layers * 4 : baseSize + 1 + 2 * ((baseSize / 2 - 1) / 15);
+                if (candidateSize != size || !HasBullseye(compact)) continue;
+                if (!TryReadModeMessage(size, compact, out var modeBits)) continue;
+                if (!TryDecodeParameters(modeBits, compact, out var nbLayers, out var nbDataBlocks)) continue;
+                if (nbLayers != layers) continue;
+                result = new AztecDetectorResult(_matrix, compact, nbDataBlocks, nbLayers);
+                return true;
             }
         }
-
-        if (layers == 0) {
-            for (var l = 1; l <= MaxLayers; l++) {
-                var baseSize = 14 + l * 4;
-                var matrixSize = baseSize + 1 + 2 * ((baseSize / 2 - 1) / 15);
-                if (matrixSize == size) {
-                    compact = false;
-                    layers = l;
-                    break;
-                }
-            }
-        }
-
-        if (layers == 0) return false;
-
-        if (!HasBullseye(compact)) return false;
-
-        if (!TryReadModeMessage(size, compact, out var modeBits)) return false;
-        if (!TryDecodeParameters(modeBits, compact, out var nbLayers, out var nbDataBlocks)) return false;
-
-        if (nbLayers != layers) {
-            // Size and mode disagree; reject for now.
-            return false;
-        }
-
-        result = new AztecDetectorResult(_matrix, compact, nbDataBlocks, nbLayers);
-        return true;
+        return false;
     }
 
     private bool TryGetBullsEyeCorners(int centerX, int centerY, out AztecPoint[] corners) {

@@ -47,7 +47,6 @@ internal static class Code128Encoder {
 
         var digitRun0 = CountConsecutiveDigits(value, 0);
         var startSet = value[0] < 32 ? 'A' : (digitRun0 >= 4 && (digitRun0 % 2 == 0)) ? 'C' : 'B';
-        var inCodeC = startSet == 'C';
         var set = startSet;
         codes.Add(startSet == 'A' ? Code128Tables.StartA : startSet == 'C' ? Code128Tables.StartC : Code128Tables.StartB);
         if (gs1) codes.Add(Code128Tables.Fnc1);
@@ -152,23 +151,15 @@ internal static class Code128Encoder {
     }
 
     private static void EmitCodeBChar(char ch, List<int> codes) {
-        if (ch == Gs1.GroupSeparator) {
-            codes.Add(Code128Tables.Fnc1);
-            return;
-        }
-        if (ch is < (char)32 or > (char)126)
-            throw new ArgumentException($"Code 128 (Set B/C) supports ASCII 32..126 for now. Bad char: U+{(int)ch:X4}");
+        if (ch is < (char)32 or > (char)127)
+            throw new ArgumentException($"Code 128 (Set B/C) supports ASCII 32..127 for now. Bad char: U+{(int)ch:X4}");
         codes.Add(ch - 32);
     }
 
     private static void EmitCodeAChar(char ch, List<int> codes) {
-        if (ch == Gs1.GroupSeparator) {
-            codes.Add(Code128Tables.Fnc1);
-            return;
-        }
         if (ch > 95)
             throw new ArgumentException($"Code 128 (Set A) supports ASCII 0..95 for now. Bad char: U+{(int)ch:X4}");
-        codes.Add(ch);
+        codes.Add(ch < 32 ? ch + 64 : ch - 32);
     }
 
     private static int CountConsecutiveDigits(string value, int startIndex) {

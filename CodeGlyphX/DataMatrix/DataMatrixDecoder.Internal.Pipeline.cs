@@ -100,7 +100,8 @@ public static partial class DataMatrixDecoder {
         return true;
     }
 
-    private static bool TryDecodeDetailedCore(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded) {
+    private static bool TryDecodeDetailedCore(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
+        if (diagnostics is not null) diagnostics.AttemptCount++;
         decoded = null!;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
         if (!DataMatrixSymbolInfo.TryGetForSize(modules.Height, modules.Width, out var symbol)) return false;
@@ -459,25 +460,26 @@ public static partial class DataMatrixDecoder {
         int stride,
         PixelFormat format,
         CancellationToken cancellationToken,
-        out DataMatrixDecoded decoded) {
+        out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
         decoded = null!;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
         if (!TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) return false;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded)) return true;
+        if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        return TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded);
+        if (diagnostics is not null) diagnostics.MirroredTried = true;
+        return TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded, diagnostics);
     }
 
-    private static bool TryDecodeDetailedWithRotations(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded) {
+    private static bool TryDecodeDetailedWithRotations(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecodeDetailedCore(modules, cancellationToken, out decoded)) return true;
+        if (TryDecodeDetailedCore(modules, cancellationToken, out decoded, diagnostics)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecodeDetailedCore(Rotate90(modules), cancellationToken, out decoded)) return true;
+        if (TryDecodeDetailedCore(Rotate90(modules), cancellationToken, out decoded, diagnostics)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecodeDetailedCore(Rotate180(modules), cancellationToken, out decoded)) return true;
+        if (TryDecodeDetailedCore(Rotate180(modules), cancellationToken, out decoded, diagnostics)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        return TryDecodeDetailedCore(Rotate270(modules), cancellationToken, out decoded);
+        return TryDecodeDetailedCore(Rotate270(modules), cancellationToken, out decoded, diagnostics);
     }
 
     private static DataMatrixEncodation DecodeC40TextSegment(

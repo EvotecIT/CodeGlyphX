@@ -174,6 +174,7 @@ internal static class AztecDecoder {
             }
         }
 
+        Array.Resize(ref correctedBits, correctedBitsOffset);
         return correctedBits;
     }
 
@@ -216,11 +217,11 @@ internal static class AztecDecoder {
         return rawBits;
     }
 
-    private static string GetEncodedData(bool[] correctedBits) {
+    internal static string GetEncodedData(bool[] correctedBits) {
         var endIndex = correctedBits.Length;
         var latchTable = Table.Upper;
         var shiftTable = Table.Upper;
-        var result = new StringBuilder((correctedBits.Length - 5) / 4);
+        var result = new StringBuilder(correctedBits.Length / 4);
         var binaryBuffer = new List<byte>();
         var encoding = EncodingUtils.Latin1;
 
@@ -271,7 +272,7 @@ internal static class AztecDecoder {
                         case 7:
                             throw new InvalidOperationException("Reserved FLG(7) encountered.");
                         default:
-                            if (endIndex - index < 4 * n) break;
+                            if (endIndex - index < 4 * n) throw new InvalidOperationException("Truncated ECI assignment.");
                             var eci = 0;
                             while (n-- > 0) {
                                 var nextDigit = ReadCode(correctedBits, index, 4);
@@ -281,9 +282,11 @@ internal static class AztecDecoder {
                                 }
                                 eci = eci * 10 + (nextDigit - 2);
                             }
-                            _ = eci;
-                            // Keep Latin1 for now; ECI mapping can be added later.
-                            encoding = EncodingUtils.Latin1;
+                            if (!EncodingUtils.TryGetEncoding(eci, out encoding)) {
+                                throw new InvalidOperationException("Unsupported ECI assignment.");
+                            }
+                            encoding = (Encoding)encoding.Clone();
+                            encoding.DecoderFallback = DecoderFallback.ExceptionFallback;
                             break;
                     }
 
@@ -295,11 +298,8 @@ internal static class AztecDecoder {
                         latchTable = shiftTable;
                     }
                 } else {
-                    if (binaryBuffer.Count > 0) {
-                        result.Append(encoding.GetString(binaryBuffer.ToArray()));
-                        binaryBuffer.Clear();
-                    }
-                    result.Append(str);
+                    // Table characters are bytes in the active ECI too (e.g. UTF-16BE).
+                    foreach (var character in str) binaryBuffer.Add((byte)character);
                     if (shiftTable != latchTable) {
                         shiftTable = latchTable;
                     }

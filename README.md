@@ -135,6 +135,10 @@ if (DataMatrixDecoder.TryDecodeDetailed(gs1, out DataMatrixDecoded decoded)) {
 
 `TryDecodeDetailed` is available for module matrices and pixel buffers; `DataMatrixCode.TryDecodePngDetailed` preserves the same control metadata when decoding PNG input. Plain `TryDecode` continues to return only the reconstructed text.
 
+## Aztec text encoding
+
+`AztecCode.Encode(string)` uses Latin-1 when the text fits, otherwise UTF-8 with ECI 26. Set `AztecEncodeOptions.TextEncoding` or `EciAssignmentNumber` for another supported character set. For byte input, `EciAssignmentNumber` describes the bytes supplied by the caller. Unsupported ECI assignments are rejected during text decoding rather than silently interpreted as Latin-1.
+
 ## Official GS1 Application Identifier catalog
 
 `Gs1ApplicationIdentifierCatalog` is generated from the GS1 Barcode Syntax Dictionary release 2026-01-27. It expands all assigned ranges into 541 directly addressable AIs and exposes titles, data components, separator rules, association/exclusion rules, and GS1 Digital Link metadata.

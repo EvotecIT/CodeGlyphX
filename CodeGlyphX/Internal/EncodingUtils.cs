@@ -42,7 +42,8 @@ internal static class EncodingUtils {
 
         if (requestedEncoding is not null) {
             if (TryGetEciAssignment(requestedEncoding, out var inferredEci)) {
-                if (eci.HasValue && eci.Value != inferredEci) {
+                if (eci.HasValue && eci.Value != inferredEci
+                    && (!TryGetEncoding(eci.Value, out var aliasEncoding) || aliasEncoding.CodePage != requestedEncoding.CodePage)) {
                     throw new InvalidOperationException(
                         $"The selected {formatName} text encoding uses ECI {inferredEci}, but ECI {eci.Value} was requested.");
                 }
@@ -75,14 +76,31 @@ internal static class EncodingUtils {
         switch (encoding.CodePage) {
             case 437: assignment = 0; return true;
             case 28591: assignment = 3; return true;
+            case 28592: assignment = 4; return true;
+            case 28593: assignment = 5; return true;
+            case 28594: assignment = 6; return true;
+            case 28595: assignment = 7; return true;
+            case 28596: assignment = 8; return true;
+            case 28597: assignment = 9; return true;
+            case 28598: assignment = 10; return true;
+            case 28599: assignment = 11; return true;
+            case 28600: assignment = 12; return true;
+            case 28601: assignment = 13; return true;
+            case 28603: assignment = 15; return true;
+            case 28604: assignment = 16; return true;
+            case 28605: assignment = 17; return true;
+            case 28606: assignment = 18; return true;
             case 932: assignment = 20; return true;
             case 1250: assignment = 21; return true;
             case 1251: assignment = 22; return true;
             case 1252: assignment = 23; return true;
+            case 1256: assignment = 24; return true;
             case 1201: assignment = 25; return true;
             case 65001: assignment = 26; return true;
             case 20127: assignment = 27; return true;
+            case 950: assignment = 28; return true;
             case 936: assignment = 29; return true;
+            case 51949: assignment = 30; return true;
             case 54936: assignment = 32; return true;
             default: assignment = 0; return false;
         }
@@ -91,16 +109,36 @@ internal static class EncodingUtils {
     internal static bool TryGetEncoding(int assignment, out Encoding encoding) {
         try {
             switch (assignment) {
-                case 0: return TryGetCodePageEncoding(437, out encoding);
+                case 0:
+                case 2: return TryGetCodePageEncoding(437, out encoding);
+                case 1:
                 case 3: encoding = Latin1; return true;
+                case 4: return TryGetCodePageEncoding(28592, out encoding);
+                case 5: return TryGetCodePageEncoding(28593, out encoding);
+                case 6: return TryGetCodePageEncoding(28594, out encoding);
+                case 7: return TryGetCodePageEncoding(28595, out encoding);
+                case 8: return TryGetCodePageEncoding(28596, out encoding);
+                case 9: return TryGetCodePageEncoding(28597, out encoding);
+                case 10: return TryGetCodePageEncoding(28598, out encoding);
+                case 11: return TryGetCodePageEncoding(28599, out encoding);
+                case 12: return TryGetCodePageEncoding(28600, out encoding);
+                case 13: return TryGetCodePageEncoding(28601, out encoding);
+                case 15: return TryGetCodePageEncoding(28603, out encoding);
+                case 16: return TryGetCodePageEncoding(28604, out encoding);
+                case 17: return TryGetCodePageEncoding(28605, out encoding);
+                case 18: return TryGetCodePageEncoding(28606, out encoding);
                 case 20: return TryGetCodePageEncoding(932, out encoding);
                 case 21: return TryGetCodePageEncoding(1250, out encoding);
                 case 22: return TryGetCodePageEncoding(1251, out encoding);
                 case 23: return TryGetCodePageEncoding(1252, out encoding);
+                case 24: return TryGetCodePageEncoding(1256, out encoding);
                 case 25: encoding = Encoding.BigEndianUnicode; return true;
                 case 26: encoding = Utf8Strict; return true;
+                case 170:
                 case 27: encoding = Encoding.ASCII; return true;
+                case 28: return TryGetCodePageEncoding(950, out encoding);
                 case 29: return TryGetCodePageEncoding(936, out encoding);
+                case 30: return TryGetCodePageEncoding(51949, out encoding);
                 case 32: return TryGetCodePageEncoding(54936, out encoding);
                 default: encoding = Latin1; return false;
             }

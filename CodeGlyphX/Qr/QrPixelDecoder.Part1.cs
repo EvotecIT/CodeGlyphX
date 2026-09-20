@@ -14,41 +14,6 @@ using CodeGlyphX.Internal;
 namespace CodeGlyphX.Qr;
 
 internal static partial class QrPixelDecoder {
-    private readonly struct DecodeBudget {
-        public bool Enabled { get; }
-        public long Deadline { get; }
-        public int BudgetMilliseconds { get; }
-        private readonly CancellationToken _cancellationToken;
-        private readonly bool _hasCancellation;
-
-        public DecodeBudget(int budgetMilliseconds, CancellationToken cancellationToken) {
-            BudgetMilliseconds = budgetMilliseconds;
-            _cancellationToken = cancellationToken;
-            _hasCancellation = cancellationToken.CanBeCanceled;
-            if (budgetMilliseconds > 0) {
-                Enabled = true;
-                Deadline = Stopwatch.GetTimestamp() + (long)(budgetMilliseconds * (Stopwatch.Frequency / 1000.0));
-            } else {
-                Enabled = false;
-                Deadline = 0;
-            }
-        }
-
-        public bool IsExpired => (_hasCancellation && _cancellationToken.IsCancellationRequested) ||
-                                 (Enabled && Stopwatch.GetTimestamp() > Deadline);
-
-        public bool IsCancelled => _hasCancellation && _cancellationToken.IsCancellationRequested;
-        public bool CanCancel => _hasCancellation;
-
-        public bool IsNearDeadline(int milliseconds) {
-            if (_hasCancellation && _cancellationToken.IsCancellationRequested) return true;
-            if (!Enabled) return false;
-            var remaining = Deadline - Stopwatch.GetTimestamp();
-            if (remaining <= 0) return true;
-            return remaining <= (long)(milliseconds * (Stopwatch.Frequency / 1000.0));
-        }
-    }
-
     private static int GetBudgetThresholdLimit(DecodeBudget budget) {
         if (!budget.Enabled) return int.MaxValue;
         if (budget.BudgetMilliseconds <= 400) return 1;
@@ -277,6 +242,20 @@ internal static partial class QrPixelDecoder {
         CancellationToken cancellationToken,
         out QrDecoded result,
         out QrPixelDecodeDiagnostics diagnostics) {
+        return TryDecodeCore(pixels, width, height, stride, fmt, options, accept, cancellationToken, out result, out diagnostics, parentBudget: null);
+    }
+
+    private static bool TryDecodeCore(
+        ReadOnlySpan<byte> pixels,
+        int width,
+        int height,
+        int stride,
+        PixelFormat fmt,
+        QrPixelDecodeOptions? options,
+        Func<QrDecoded, bool>? accept,
+        CancellationToken cancellationToken,
+        out QrDecoded result,
+        out QrPixelDecodeDiagnostics diagnostics, DecodeBudget? parentBudget) {
         result = null!;
         diagnostics = default;
 
@@ -298,7 +277,7 @@ internal static partial class QrPixelDecoder {
         var settings = GetProfileSettings(profile, Math.Min(width, height));
         settings = ApplyOverrides(settings, options, scaleStart);
         var budgetMilliseconds = options?.BudgetMilliseconds ?? 0;
-        var budget = new DecodeBudget(budgetMilliseconds, cancellationToken);
+        var budget = new DecodeBudget(budgetMilliseconds, cancellationToken, parentBudget);
 
         if (budget.IsExpired) {
             var failure = budget.IsCancelled ? global::CodeGlyphX.QrDecodeFailure.Cancelled : global::CodeGlyphX.QrDecodeFailure.Payload;
@@ -376,7 +355,7 @@ internal static partial class QrPixelDecoder {
         return TryDecodeAll(pixels, width, height, stride, fmt, options, accept, cancellationToken, allowTileScan: true, out results);
     }
 
-    private static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, Func<QrDecoded, bool>? accept, CancellationToken cancellationToken, bool allowTileScan, out QrDecoded[] results) {
+    private static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, Func<QrDecoded, bool>? accept, CancellationToken cancellationToken, bool allowTileScan, out QrDecoded[] results, DecodeBudget? parentBudget = null) {
         results = Array.Empty<QrDecoded>();
 
         if (width <= 0 || height <= 0) return false;
@@ -401,7 +380,7 @@ internal static partial class QrPixelDecoder {
                 baseBudgetMs = Math.Max(400, budgetMilliseconds - tileBudgetMs);
             }
         }
-        var budget = new DecodeBudget(baseBudgetMs, cancellationToken);
+        var budget = new DecodeBudget(baseBudgetMs, cancellationToken, parentBudget);
         if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
         DecodeBudget tileBudget = default;
         var useTileBudget = enableTileScan && budgetMilliseconds > 0;
@@ -505,13 +484,13 @@ internal static partial class QrPixelDecoder {
                     }
                 }
 
-                void ScanGrid(ReadOnlySpan<byte> pixelSpan, int gridToScan) {
+                void ScanGrid(ReadOnlySpan<byte> pixelSpan, int gridToScan, DecodeBudget scanBudget) {
                     if (gridToScan < 2) return;
                     var tileW = width / gridToScan;
                     var tileH = height / gridToScan;
                     for (var ty = 0; ty < gridToScan; ty++) {
                         for (var tx = 0; tx < gridToScan; tx++) {
-                            if (tileBudget.IsExpired) break;
+                            if (scanBudget.IsExpired) break;
                             var x0 = tx * tileW;
                             var y0 = ty * tileH;
                             var x1 = (tx == gridToScan - 1) ? width : (tx + 1) * tileW;
@@ -530,25 +509,35 @@ internal static partial class QrPixelDecoder {
                             var requiredLen = (long)(th - 1) * stride + tw * 4L;
                             if (startIndex < 0 || requiredLen <= 0) continue;
                             if (startIndex + requiredLen > pixelSpan.Length) continue;
-                            if (tileBudget.IsNearDeadline(120)) break;
+                            if (scanBudget.IsNearDeadline(120)) break;
 
                             var tileSpan = pixelSpan.Slice((int)startIndex, (int)requiredLen);
-                            if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
+                            if (TryDecodeCore(tileSpan, tw, th, stride, fmt, tileOptions, null, cancellationToken, out var decodedSingle, out _, scanBudget)) {
                                 AddResult(list, seen, decodedSingle, accept);
-                            } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+                            } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList, scanBudget) && decodedList.Length > 0) {
                                 for (var i = 0; i < decodedList.Length; i++) {
                                     AddResult(list, seen, decodedList[i], accept);
                                 }
                             }
                         }
-                        if (tileBudget.IsExpired) break;
+                        if (scanBudget.IsExpired) break;
                     }
                 }
 
-                if (options?.StylizedSampling == true && list.Count == 0 && grid >= 4 && Math.Min(width, height) >= 600) {
-                    ScanGrid(pixels, 2);
+                // Fine grids can split a medium-size symbol across every tile. Try a coarse
+                // grid first for aggressive screenshot searches, not only stylized symbols.
+                if ((options?.AggressiveSampling == true || options?.StylizedSampling == true) && list.Count == 0 && grid >= 4 && Math.Min(width, height) >= 600) {
+                    if (tileBudgetMs > 0) {
+                        // Coarse attempts are optional: reserve at least three quarters of the
+                        // tile allowance for the requested grid. Both single and multi-decode
+                        // calls share this deadline, rather than restarting it for each attempt.
+                        var coarseBudgetMs = tileBudgetMs / 4;
+                        ScanGrid(pixels, 2, new DecodeBudget(coarseBudgetMs, cancellationToken, tileBudget));
+                    } else {
+                        ScanGrid(pixels, 2, tileBudget);
+                    }
                 }
-                ScanGrid(pixels, grid);
+                ScanGrid(pixels, grid, tileBudget);
 
                 if (options?.AggressiveSampling == true && !tileBudget.IsExpired && grid < maxGrid) {
                     var hadResults = list.Count > 0;
@@ -581,9 +570,9 @@ internal static partial class QrPixelDecoder {
                                 if (tileBudget.IsNearDeadline(120)) break;
 
                                 var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                                if (TryDecode(tileSpan, tw, th, stride, fmt, tileOptions, cancellationToken, out var decodedSingle, out _)) {
+                                if (TryDecodeCore(tileSpan, tw, th, stride, fmt, tileOptions, null, cancellationToken, out var decodedSingle, out _, tileBudget)) {
                                     AddResult(list, seen, decodedSingle, accept);
-                                } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+                                } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList, tileBudget) && decodedList.Length > 0) {
                                     for (var i = 0; i < decodedList.Length; i++) {
                                         AddResult(list, seen, decodedList[i], accept);
                                     }
@@ -727,7 +716,7 @@ internal static partial class QrPixelDecoder {
                     if (startIndex + requiredLen > pixels.Length) continue;
 
                     var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-                    if (TryDecode(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, out var decoded, out _)) {
+                    if (TryDecodeCore(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, out var decoded, out _, budget)) {
                         AddResult(results, seen, decoded, accept);
                         return;
                     }
@@ -873,7 +862,7 @@ internal static partial class QrPixelDecoder {
             if (startIndex + requiredLen > pixels.Length) continue;
 
             var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, out var decodedList, budget) && decodedList.Length > 0) {
                 AddResult(results, seen, decodedList[0], accept);
                 return;
             }
@@ -1006,7 +995,7 @@ internal static partial class QrPixelDecoder {
             if (startIndex + requiredLen > pixels.Length) continue;
 
             var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, out var decodedList) && decodedList.Length > 0) {
+            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, out var decodedList, budget) && decodedList.Length > 0) {
                 AddResult(results, seen, decodedList[0], accept);
                 return;
             }

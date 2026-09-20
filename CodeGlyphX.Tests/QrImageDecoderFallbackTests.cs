@@ -6,6 +6,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("GlobalState")]
 public sealed class QrImageDecoderFallbackTests {
     private const string Payload = "LEGACY-FALLBACK-ROUNDTRIP";
 

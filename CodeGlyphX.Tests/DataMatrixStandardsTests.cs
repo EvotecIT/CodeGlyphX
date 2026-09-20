@@ -243,7 +243,7 @@ public sealed class DataMatrixStandardsTests {
     [InlineData("Ё", 7, "A1")]
     [InlineData("Α", 9, "C1")]
     [InlineData("Ą", 12, "A1")]
-    [InlineData("€", 15, "A4")]
+    [InlineData("€", 17, "A4")]
     [InlineData("漢", 20, "8ABF")]
     [InlineData("é", 25, "00E9")]
     [InlineData("é", 26, "C3A9")]

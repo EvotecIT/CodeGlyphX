@@ -10,6 +10,7 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 [Trait("Category", "CorpusTiming")]
+[Collection("ImageScannerSerial")]
 public sealed class QrDecodingSamplesTests {
     [Theory]
     [InlineData("Assets/DecodingSamples/qr-clean-large.png", 1)]
