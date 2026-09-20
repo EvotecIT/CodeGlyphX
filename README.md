@@ -147,6 +147,8 @@ The [expressive-art example](CodeGlyphX.Examples/QrExpressiveArtExample.cs) prod
 
 ### Protect a subject and compare artistic alternatives
 
+![Engraving, halftone, contour, mosaic and botanical QR treatments](Assets/Examples/qr-art-studio-styles.png)
+
 Set `Art.Style` to `Engraving`, `Halftone`, `Contours`, `Mosaic`, or `Botanical`. Print treatments use the functional ink/paper colors; protected regions retain more of the supplied image. `Art.Subject` selects a focal circle in source-image coordinates, or accepts a copied grayscale `QrImageProtectionMask` where white protects detail. The region follows crop and zoom. It does not identify faces or objects automatically.
 
 ```csharp

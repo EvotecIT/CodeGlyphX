@@ -30,7 +30,7 @@ public partial class QrArtStudio {
     private void SetSource(byte[] image) {
         var pixels = ImageReader.DecodeRgba32(image, InputLimits(), out var width, out var height);
         var png = PngImageEncoder.EncodeRgba32(pixels, width, height);
-        _sourceWidth = width; _sourceHeight = height; _source = png;
+        _sourceWidth = width; _sourceHeight = height; _source = image;
         _sourceUri = "data:image/png;base64," + Convert.ToBase64String(png);
         _result = null; _cards.Clear(); _mask = null; _error = null; _status = "Ready to compare.";
     }
