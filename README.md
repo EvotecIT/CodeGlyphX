@@ -78,6 +78,40 @@ QR.Save("https://codeglyphx.com", "styled.png", options);
 
 `QrEasy.EvaluateScanHeuristics` reports static contrast, quiet-zone, module-scale, and related concerns before rendering. It does not decode the output or guarantee scanner interoperability; validate final artifacts on the real devices and applications you support.
 
+
+### Compose QR artwork from an image
+
+Use a photo or illustration to color the QR data area. Composition runs locally, preserves the image's proportions, flattens transparency onto white, and keeps finder, timing, alignment, format, and version modules intact. The quiet zone stays white.
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering.Art;
+using System.IO;
+
+const string payload = "https://example.com/art";
+var artwork = QrArt.Compose(payload, File.ReadAllBytes("illustration.png"),
+    new QrImageCompositionOptions {
+        Style = QrImageCompositionStyle.ImageOverlay,
+        Fit = QrImageFit.Cover,
+        ModuleSize = 16,
+        Strength = 0.75
+    });
+byte[] png = artwork.ToPng();
+var report = QrArt.ValidateImage(png, payload);
+if (report.AllPassed) File.WriteAllBytes("artistic-qr.png", png);
+```
+
+`ColorModules` (the default) adapts the luminance of every image pixel to its QR module, with small contrasting centers for local-threshold readers. `ImageOverlay` reveals more image detail around contrasting square module centers; `CenterSize` controls their width. `Strength` ranges from 0 (plain black/white) to 1 (most image color). `Cover` crops centrally; `Contain` fits the whole image on white. Composition uses high error correction. For an existing QR or raw RGBA artwork, use `QrImageComposer.Render(qr, rgba, width, height, options)`.
+
+`ValidateImage` reads the exported image and attempts to recover the exact expected text from the original, a half-size copy, and a lightly blurred copy. Its report records each result, including failed or budget-limited attempts. It uses CodeGlyphX's decoder; legacy targets have limited image recognition. A passing report does not certify other readers or printed output. Check the actual delivery size, compression, and target devices before distributing artwork.
+
+The [image-composition example](CodeGlyphX.Examples/QrImageCompositionExample.cs) generates these illustrations and both treatments without an external service:
+
+| Botanical | Sunset | Waves |
+| --- | --- | --- |
+| ![Botanical QR artwork](Assets/Examples/qr-image-botanical.png) | ![Sunset QR artwork](Assets/Examples/qr-image-sunset.png) | ![Wave QR artwork](Assets/Examples/qr-image-waves.png) |
+
+
 ## Standards-aware QR encoding
 
 `QrCodeEncoder.EncodeText` selects the smallest combination of numeric, alphanumeric, byte, and Kanji segments. UTF-8 ECI is emitted automatically when non-ASCII byte data needs it; `QrEncodingOptions` can force or suppress ECI and segment optimization.

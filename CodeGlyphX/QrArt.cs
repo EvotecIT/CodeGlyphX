@@ -5,7 +5,7 @@ namespace CodeGlyphX;
 /// <summary>
 /// High-level QR art helpers.
 /// </summary>
-public static class QrArt {
+public static partial class QrArt {
     /// <summary>
     /// Creates a single art configuration using a theme, variant, and intensity.
     /// </summary>

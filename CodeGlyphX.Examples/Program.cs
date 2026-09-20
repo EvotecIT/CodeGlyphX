@@ -18,6 +18,7 @@ internal static class Program {
     }
 
     private static bool TryRunRequestedExample(ExampleRunner runner) {
+        if (RunWhenEnabled(runner, "CODEGLYPHX_IMAGE_COMPOSITION", "QR (image composition)", QrImageCompositionExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_CI_SMOKE", "Public API smoke", FlagshipApiExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_DIAG_QR", "QR (diagnostics)", QrDiagnosticsExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_DECODE_HARD_ART", "QR (hard art diagnostics)", QrHardArtDiagnosticsExample.Run)) return true;
@@ -38,6 +39,7 @@ internal static class Program {
         runner.Run("QR (payloads)", QrPayloadsExample.Run);
         runner.Run("QR (styling)", QrFancyExample.Run);
         runner.Run("QR (art themes)", QrArtThemesExample.Run);
+        runner.Run("QR (image composition)", QrImageCompositionExample.Run);
         runner.Run("QR (connected)", QrConnectedExample.Run);
         runner.Run("QR (glow eyes)", QrGlowExample.Run);
         runner.Run("QR (style board)", QrStyleBoardExample.Run);
