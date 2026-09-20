@@ -9,6 +9,10 @@ internal static class QrArtIllustrations {
             var u = x / (double)size;
             var v = y / (double)size;
             var color = scene switch {
+                "portrait" => Portrait(u, v),
+                "flower" => Flower(u, v),
+                "architecture" => Architecture(u, v),
+                "logo" => Logo(u, v),
                 "botanical" => Botanical(u, v),
                 "citrus" => Citrus(u, v),
                 "landscape" => Landscape(u, v),
@@ -22,6 +26,49 @@ internal static class QrArtIllustrations {
             pixels[p + 3] = 255;
         }
         return pixels;
+    }
+
+    private static (byte R, byte G, byte B) Portrait(double x, double y) {
+        (byte, byte, byte) color = (224, 210, 185);
+        if (Math.Pow((x - .5) / .37, 2) + Math.Pow((y - 1) / .42, 2) < 1) color = (39, 91, 103);
+        if (Math.Pow((x - .5) / .24, 2) + Math.Pow((y - .42) / .32, 2) < 1) color = (78, 48, 41);
+        if (Math.Pow((x - .5) / .19, 2) + Math.Pow((y - .45) / .25, 2) < 1) color = (211, 153, 113);
+        if (Math.Pow((x - .42) / .035, 2) + Math.Pow((y - .43) / .014, 2) < 1 || Math.Pow((x - .58) / .035, 2) + Math.Pow((y - .43) / .014, 2) < 1) color = (43, 39, 35);
+        if (y > .46 && y < .55 && Math.Abs(x - .51) < .009) color = (148, 92, 67);
+        if (Math.Abs(y - (.59 + .08 * Math.Pow((x - .5) / .08, 2))) < .008 && Math.Abs(x - .5) < .08) color = (135, 59, 54);
+        return color;
+    }
+
+    private static (byte R, byte G, byte B) Flower(double x, double y) {
+        (byte, byte, byte) color = (236, 226, 206);
+        if (y > .45 && Math.Abs(x - .5 - .03 * Math.Sin(y * 8)) < .01) color = (49, 105, 66);
+        if (Math.Pow((x - .61) / .14, 2) + Math.Pow((y - .72) / .06, 2) < 1) color = (91, 137, 73);
+        var dx = x - .5; var dy = y - .38;
+        var angle = Math.Atan2(dy, dx); var radius = Math.Sqrt(dx * dx + dy * dy);
+        if (radius < .22 + .055 * Math.Cos(angle * 9)) color = (196, 71, 79);
+        if (radius < .15 + .035 * Math.Cos(angle * 9 + 1)) color = (229, 118, 112);
+        if (radius < .075) color = (211, 151, 48);
+        return color;
+    }
+
+    private static (byte R, byte G, byte B) Architecture(double x, double y) {
+        (byte, byte, byte) color = (177, 210, 212);
+        if (y > .86) color = (180, 164, 144);
+        if (x > .16 && x < .84 && y > .28 && y < .86) {
+            color = (221, 189, 142);
+            if (Math.Abs((y - .28) % .16) < .014) color = (167, 126, 88);
+            if ((x - .16) % .17 > .045 && (x - .16) % .17 < .125 && (y - .28) % .16 > .04 && (y - .28) % .16 < .125) color = (42, 74, 87);
+        }
+        if (y > .12 + Math.Abs(x - .5) * .48 && y < .28 && Math.Abs(x - .5) < .36) color = (111, 72, 62);
+        return color;
+    }
+
+    private static (byte R, byte G, byte B) Logo(double x, double y) {
+        var dx = x - .5; var dy = y - .5;
+        var radius = Math.Sqrt(dx * dx + dy * dy);
+        if (radius > .32) return (244, 228, 190);
+        if (Math.Abs(dx) + Math.Abs(dy) < .27 && Math.Abs(dx) + Math.Abs(dy) > .15) return (244, 228, 190);
+        return (29, 88, 88);
     }
 
     private static (byte R, byte G, byte B) Botanical(double x, double y) {

@@ -18,6 +18,7 @@ internal static class Program {
     }
 
     private static bool TryRunRequestedExample(ExampleRunner runner) {
+        if (RunWhenEnabled(runner, "CODEGLYPHX_ART_STUDIO", "QR (art studio)", QrArtStudioExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_EXPRESSIVE_ART", "QR (expressive art)", QrExpressiveArtExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_IMAGE_COMPOSITION", "QR (image composition)", QrImageCompositionExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_CI_SMOKE", "Public API smoke", FlagshipApiExample.Run)) return true;

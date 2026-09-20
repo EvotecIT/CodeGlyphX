@@ -24,7 +24,12 @@ public static partial class QrArt {
         if (imageOptions is not null && imageOptions.MaxDimension != 0)
             throw new ArgumentException("Validation must preserve exported dimensions; MaxDimension must be zero.", nameof(imageOptions));
         cancellationToken.ThrowIfCancellationRequested();
-        var pixels = ImageReader.DecodeRgba32(image, imageOptions, out var width, out var height);
+        var pixels = DecodeValidationPixels(image, imageOptions, cancellationToken, out var width, out var height);
+        return ValidatePixels(pixels, width, height, expectedPayload, budgetMilliseconds, cancellationToken);
+    }
+
+    private static byte[] DecodeValidationPixels(byte[] image, ImageDecodeOptions? imageOptions, CancellationToken cancellationToken, out int width, out int height) {
+        var pixels = ImageReader.DecodeRgba32(image, imageOptions, out width, out height);
         // Validate what a reader sees on white, including alpha in externally supplied exports.
         for (var i = 0; i < pixels.Length; i += 4) {
             if ((i & 65535) == 0) cancellationToken.ThrowIfCancellationRequested();
@@ -32,6 +37,11 @@ public static partial class QrArt {
             for (var c = 0; c < 3; c++) pixels[i + c] = (byte)((pixels[i + c] * alpha + 255 * (255 - alpha) + 127) / 255);
             pixels[i + 3] = 255;
         }
+        return pixels;
+    }
+
+    private static QrImageValidationReport ValidatePixels(byte[] pixels, int width, int height, string expectedPayload,
+        int budgetMilliseconds, CancellationToken cancellationToken) {
         var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Balanced, BudgetMilliseconds = budgetMilliseconds };
         var original = Check("Original", pixels, width, height);
         var halfWidth = Math.Max(1, width / 2);

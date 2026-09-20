@@ -22,6 +22,9 @@ internal sealed class QrImageSampler {
         _offsetY = (areaSize - height * _scale) * options.ImagePositionY;
     }
 
+    internal double Protection(double px, double py, QrImageSubjectOptions? subject) => subject?.Sample(
+        (px + 0.5 - _offsetX) / _scale / _width, (py + 0.5 - _offsetY) / _scale / _height, _width, _height) ?? 0;
+
     internal void Sample(double px, double py, out double r, out double g, out double b) {
         var x = (px + 0.5 - _offsetX) / _scale - 0.5;
         var y = (py + 0.5 - _offsetY) / _scale - 0.5;

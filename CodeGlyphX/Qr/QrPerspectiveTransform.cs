@@ -1,4 +1,3 @@
-#if NET8_0_OR_GREATER
 using System;
 using System.Runtime.CompilerServices;
 
@@ -157,4 +156,3 @@ internal readonly struct QrPerspectiveTransform {
             a13, a23, 1);
     }
 }
-#endif

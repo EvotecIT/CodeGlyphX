@@ -8,6 +8,9 @@ public sealed class QrImageArtOptions {
     /// <summary>Module silhouette, using the same geometry as the QR PNG renderer.</summary>
     public QrPngModuleShape Shape { get; set; } = QrPngModuleShape.Rounded;
 
+    /// <summary>Artistic treatment. ModuleShape preserves the configured Shape; other values use their own geometry.</summary>
+    public QrImageArtStyle Style { get; set; }
+
     /// <summary>Nominal silhouette width relative to a module (0.65..1).</summary>
     public double Scale { get; set; } = 0.85;
 
@@ -24,7 +27,12 @@ public sealed class QrImageArtOptions {
     /// <summary>Opaque light color for functional modules and the quiet zone; luminance must be at least 220/255.</summary>
     public Rgba32 FunctionalBackground { get; set; } = Rgba32.White;
 
+    /// <summary>Optional source-aligned subject protection, reducing decoration while retaining fixed scan anchors.</summary>
+    public QrImageSubjectOptions? Subject { get; set; }
+
     internal void Validate() {
+        Subject?.Validate();
+        if (!Enum.IsDefined(typeof(QrImageArtStyle), Style)) throw new ArgumentOutOfRangeException(nameof(Style));
         if (FunctionalBackground.A != 255 || 0.299 * FunctionalBackground.R + 0.587 * FunctionalBackground.G + 0.114 * FunctionalBackground.B < 220)
             throw new ArgumentException("Functional background must be opaque and light (luminance at least 220).", nameof(FunctionalBackground));
         if (FunctionalForeground.A != 255 || 0.299 * FunctionalForeground.R + 0.587 * FunctionalForeground.G + 0.114 * FunctionalForeground.B > 48)

@@ -145,6 +145,33 @@ The [expressive-art example](CodeGlyphX.Examples/QrExpressiveArtExample.cs) prod
 | Waves | Geometric | Earth photograph |
 | ![Waves composition](Assets/Examples/qr-expressive-waves.png) | ![Geometric composition](Assets/Examples/qr-expressive-geometric.png) | ![Earth composition](Assets/Examples/qr-expressive-earth.png) |
 
+### Protect a subject and compare artistic alternatives
+
+Set `Art.Style` to `Engraving`, `Halftone`, `Contours`, `Mosaic`, or `Botanical`. Print treatments use the functional ink/paper colors; protected regions retain more of the supplied image. `Art.Subject` selects a focal circle in source-image coordinates, or accepts a copied grayscale `QrImageProtectionMask` where white protects detail. The region follows crop and zoom. It does not identify faces or objects automatically.
+
+```csharp
+var alternatives = QrArt.SearchImage(payload, File.ReadAllBytes("portrait.png"),
+    new QrImageSearchOptions {
+        Composition = new QrImageCompositionOptions {
+            Art = new QrImageArtOptions {
+                Style = QrImageArtStyle.Engraving,
+                Subject = new QrImageSubjectOptions { X = 0.5, Y = 0.4, Radius = 0.25 }
+            }
+        }
+    });
+var selected = alternatives.Candidates[0];
+selected.Image.SavePng("portrait-qr.png");
+var delivery = QrArt.ValidateDelivery(selected.Image.ToPng(), payload,
+    new QrImageDeliveryOptions { PrintMillimeters = 40, PrintDpi = 150 });
+```
+
+Search screens all eight masks at six pixels per module for each selected version and H/Q error-correction level. It renders the strongest visual candidates at the requested output size, measures their fidelity again, and checks the original, half-size and blurred exports. Results rank by passed checks, then fidelity. `EvaluatedCandidates` and `ValidatedCandidates` distinguish visual screening from actual decode attempts. A high fidelity score measures resemblance to the source, not scan reliability; inspect each candidate's `Validation` before selecting it.
+
+`ValidateDelivery` also checks screen resizing, a requested print raster size, JPEG compression, and a perspective warp. These are observed software results: perspective recovery varies with symbol geometry, and a failed check can reflect either the artwork or decoder limitations. Raster codecs are synchronous; cancellation applies between codec operations and throughout cooperative rendering/recognition. Physical printing and phone-camera checks remain necessary. `SearchImageAsync` and `ValidateDeliveryAsync` yield between work units for browser hosts; search progress reports screened combinations.
+
+The browser playground includes image/mask uploads, focal/crop/placement controls, ranked PNG downloads and delivery reports. Processing stays in the browser. Run the [art-studio example](CodeGlyphX.Examples/QrArtStudioExample.cs) with `CODEGLYPHX_ART_STUDIO=1` to generate portrait, flower, architecture and logo illustrations with protected/unprotected comparisons across all five styles.
+
+
 
 ## Standards-aware QR encoding
 

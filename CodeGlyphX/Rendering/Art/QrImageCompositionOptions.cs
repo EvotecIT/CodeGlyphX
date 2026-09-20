@@ -62,6 +62,12 @@ public sealed class QrImageCompositionOptions {
     /// <summary>Optional canvas. The image is fitted across the entire canvas for continuity around the QR.</summary>
     public QrImageCanvasOptions? Canvas { get; set; }
 
+    internal QrImageCompositionOptions WithModuleSize(int moduleSize) => new QrImageCompositionOptions {
+        ModuleSize = moduleSize, QuietZone = QuietZone, Style = Style, Fit = Fit, Strength = Strength,
+        CenterSize = CenterSize, ImagePositionX = ImagePositionX, ImagePositionY = ImagePositionY,
+        ImageZoom = ImageZoom, Art = Art, Canvas = Canvas
+    };
+
     internal void Validate() {
         Art?.Validate();
         Canvas?.Validate();
