@@ -10,7 +10,8 @@ public static partial class QrArt {
     /// <summary>
     /// Decodes an exported image, a box-filtered half-size copy, and a 3x3 box-blurred copy.
     /// Compares recovered text with the expected payload using ordinal equality. Each recognition
-    /// attempt has its own cooperative budget; raster decoding is governed by imageOptions.
+    /// attempt has its own cooperative budget. Cancellation is observed during recognition and pixel
+    /// preprocessing, but does not interrupt synchronous image codecs; raster decoding is bounded by imageOptions.
     /// This uses CodeGlyphX's decoder, not independent camera certification. Legacy runtimes use
     /// the limited managed fallback. MaxDimension must remain zero so the original is tested at its
     /// exported dimensions. Test actual printed/resized/compressed delivery assets as well.

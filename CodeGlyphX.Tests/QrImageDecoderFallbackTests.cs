@@ -2,6 +2,7 @@ using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Png;
 using System;
 using System.Reflection;
+using System.Threading;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -87,13 +88,13 @@ public sealed class QrImageDecoderFallbackTests {
             0, 110, 100, 255
         };
 
-        var gray = (byte[])buildGray.Invoke(null, new object[] { rgba, 2, 1, 8 })!;
+        var gray = (byte[])buildGray.Invoke(null, new object[] { rgba, 2, 1, 8, CancellationToken.None })!;
         Assert.Equal(2, gray.Length);
 
-        var red = (byte[])buildChannel.Invoke(null, new object[] { rgba, 2, 1, 8, 0 })!;
-        var green = (byte[])buildChannel.Invoke(null, new object[] { rgba, 2, 1, 8, 1 })!;
-        var blue = (byte[])buildChannel.Invoke(null, new object[] { rgba, 2, 1, 8, 2 })!;
-        var chroma = (byte[])buildChannel.Invoke(null, new object[] { rgba, 2, 1, 8, 3 })!;
+        var red = (byte[])buildChannel.Invoke(null, new object[] { rgba, 2, 1, 8, 0, CancellationToken.None })!;
+        var green = (byte[])buildChannel.Invoke(null, new object[] { rgba, 2, 1, 8, 1, CancellationToken.None })!;
+        var blue = (byte[])buildChannel.Invoke(null, new object[] { rgba, 2, 1, 8, 2, CancellationToken.None })!;
+        var chroma = (byte[])buildChannel.Invoke(null, new object[] { rgba, 2, 1, 8, 3, CancellationToken.None })!;
 
         Assert.Equal(255, red[0]);
         Assert.Equal(127, green[0]);
@@ -103,17 +104,17 @@ public sealed class QrImageDecoderFallbackTests {
         Assert.True(green[0] > green[1]);
         Assert.True(blue[1] < blue[0]);
 
-        var noStretchArgs = new object?[] { new byte[] { 42, 42, 42 }, null };
+        var noStretchArgs = new object?[] { new byte[] { 42, 42, 42 }, null, CancellationToken.None };
         var noStretch = (bool)tryContrastStretch.Invoke(null, noStretchArgs)!;
         Assert.False(noStretch);
         Assert.Empty((byte[])noStretchArgs[1]!);
 
-        var stretchArgs = new object?[] { new byte[] { 10, 200 }, null };
+        var stretchArgs = new object?[] { new byte[] { 10, 200 }, null, CancellationToken.None };
         var stretched = (bool)tryContrastStretch.Invoke(null, stretchArgs)!;
         Assert.True(stretched);
         Assert.Equal(new byte[] { 0, 255 }, (byte[])stretchArgs[1]!);
 
-        var smallNormalizeArgs = new object?[] { new byte[] { 1, 2, 3, 4 }, 2, 2, null };
+        var smallNormalizeArgs = new object?[] { new byte[] { 1, 2, 3, 4 }, 2, 2, null, CancellationToken.None };
         var smallNormalize = (bool)tryLocalNormalize.Invoke(null, smallNormalizeArgs)!;
         Assert.False(smallNormalize);
         Assert.Empty((byte[])smallNormalizeArgs[3]!);
@@ -123,10 +124,31 @@ public sealed class QrImageDecoderFallbackTests {
             gradient[i] = (byte)(i % 251);
         }
 
-        var normalizeArgs = new object?[] { gradient, 21, 21, null };
+        var normalizeArgs = new object?[] { gradient, 21, 21, null, CancellationToken.None };
         var normalized = (bool)tryLocalNormalize.Invoke(null, normalizeArgs)!;
         Assert.True(normalized);
         Assert.Equal(gradient.Length, ((byte[])normalizeArgs[3]!).Length);
+    }
+
+    [Fact]
+    public void Fallback_PreprocessingRejectsCancellationBeforeReadingPixels() {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var token = cancellation.Token;
+        var cases = new (string Name, object?[] Arguments)[] {
+            ("BuildGrayscale", new object?[] { Array.Empty<byte>(), 1000000, 1, 4000000, token }),
+            ("BuildChannelGrayscale", new object?[] { Array.Empty<byte>(), 1000000, 1, 4000000, 0, token }),
+            ("ConvertBgraToRgba", new object?[] { Array.Empty<byte>(), 1000000, 1, 4000000, token }),
+            ("InvertGrayscale", new object?[] { Array.Empty<byte>(), token }),
+            ("ComputeGrayStats", new object?[] { Array.Empty<byte>(), (byte)0, (byte)0, 0, (byte)0, token }),
+            ("TryContrastStretch", new object?[] { Array.Empty<byte>(), null, token }),
+            ("TryLocalNormalize", new object?[] { Array.Empty<byte>(), 1000000, 100, null, token }),
+            ("TryFindDarkBounds", new object?[] { Array.Empty<byte>(), 1000000, 1, (byte)128, 0, 0, 0, 0, token })
+        };
+        foreach (var item in cases) {
+            var exception = Assert.Throws<TargetInvocationException>(() => GetPrivateMethod(item.Name).Invoke(null, item.Arguments));
+            Assert.IsType<OperationCanceledException>(exception.InnerException);
+        }
     }
 
     private static byte[] RenderPng(int moduleSize, int quietZone) {
