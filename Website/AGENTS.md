@@ -36,7 +36,6 @@ If you don't have the engine repo next to this repo, set:
 - Production pull timer: `../deploy/linux/systemd/codeglyphx-site-pull.timer`
 - Host pull configuration: `../deploy/linux/codeglyphx.site-pull.env.example`
 - Build and Cloudflare policy workflow: `../.github/workflows/website-deploy.yml`
-- Live Cloudflare verification workflow: `../.github/workflows/website-live-verify.yml`
 - Encrypted recovery workflow: `../.github/workflows/server-backup.yml`
 - Host recovery manifest: `../deploy/linux/codeglyphx.serverrecovery.json`
 - The OVH host fetches `master` over HTTPS, builds with the pinned PowerForge revision, and promotes the site through the shared `powerforge-site-deploy` runtime. The root-owned host configuration holds the Cloudflare purge token; encrypted recovery capture includes it.

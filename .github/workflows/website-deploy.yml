@@ -61,5 +61,6 @@ jobs:
         uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-site-policy@9f2d36a18c8334d9a27587f04b38ad0dc9bd515d
         with:
           site-config: Website/site.json
+          checkout-caller: "false"
           zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
           api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}

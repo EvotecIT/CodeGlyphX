@@ -172,6 +172,15 @@
       "mode": "755"
     },
     {
+      "id": "site-sdk-install-runtime",
+      "path": "/usr/local/sbin/powerforge-site-sdk-install",
+      "source": "/srv/evotec/PSPublishModule/Deployment/Linux/powerforge-site-sdk-install.sh",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
+    },
+    {
       "id": "static-reconcile-runtime",
       "path": "/usr/local/sbin/powerforge-site-reconcile",
       "source": "/srv/evotec/PSPublishModule/Deployment/Linux/powerforge-site-reconcile.sh",
@@ -531,6 +540,11 @@
         "required": true
       },
       {
+        "id": "install-site-sdk",
+        "command": "/usr/local/sbin/powerforge-site-sdk-install codeglyphx.com",
+        "required": true
+      },
+      {
         "id": "sync-cloudflare-origin",
         "command": "/usr/local/sbin/powerforge-cloudflare-origin-sync",
         "required": true
@@ -546,13 +560,18 @@
         "required": true
       },
       {
-        "id": "enable-static-site-pull",
-        "command": "systemctl enable --now codeglyphx-site-pull.timer",
+        "id": "enable-apache-site",
+        "command": "/usr/local/sbin/powerforge-apache-site-enable --http-site codeglyphx-com.conf --https-site codeglyphx-com-le-ssl.conf --certificate-name codeglyphx.com",
         "required": true
       },
       {
-        "id": "enable-apache-site",
-        "command": "/usr/local/sbin/powerforge-apache-site-enable --http-site codeglyphx-com.conf --https-site codeglyphx-com-le-ssl.conf --certificate-name codeglyphx.com",
+        "id": "deploy-static-site",
+        "command": "systemctl start codeglyphx-site-pull.service",
+        "required": true
+      },
+      {
+        "id": "enable-static-site-pull",
+        "command": "systemctl enable --now codeglyphx-site-pull.timer",
         "required": true
       }
     ]
@@ -576,7 +595,7 @@
       },
       {
         "id": "static-site-pull",
-        "command": "test -x /usr/local/sbin/powerforge-site-pull-deploy && test -s /etc/powerforge/site-pull/codeglyphx.com.env && test -s /etc/powerforge/secrets/codeglyphx-cloudflare-purge.token && test \"$(stat -c '%U:%G %a' /etc/powerforge/secrets/codeglyphx-cloudflare-purge.token)\" = 'root:root 600' && systemctl is-enabled --quiet codeglyphx-site-pull.timer && systemctl is-active --quiet codeglyphx-site-pull.timer",
+        "command": "test -x /usr/local/sbin/powerforge-site-pull-deploy && test -x /usr/local/sbin/powerforge-site-sdk-install && test -x /opt/powerforge-dotnet/dotnet && test -s /etc/powerforge/site-pull/codeglyphx.com.env && test -s /etc/powerforge/secrets/codeglyphx-cloudflare-purge.token && test \"$(stat -c '%U:%G %a' /etc/powerforge/secrets/codeglyphx-cloudflare-purge.token)\" = 'root:root 600' && systemctl is-enabled --quiet codeglyphx-site-pull.timer && systemctl is-active --quiet codeglyphx-site-pull.timer",
         "required": true
       },
       {
@@ -630,7 +649,7 @@
     "The host fetches reviewed CodeGlyphX source over HTTPS and builds with a pinned PowerForge revision; encrypted recovery capture retains a separate fixed-egress SSH account and off-host write credential.",
     "The Cloudflare cache purge token is root-only host state and is included only in encrypted recovery capture.",
     "Deferred deployment state is root-only, short-lived, and intentionally excluded from recovery capture.",
-    "Recovery rebuilds the excluded static release artifact through the host site-pull timer before post-deploy verification checks exact provenance.",
+    "Recovery starts and waits for the host site-pull service to rebuild the excluded static release before enabling the recurring timer and checking provenance.",
     "Generated website output and timestamped releases are rebuildable and intentionally excluded from backup state."
   ]
 }
