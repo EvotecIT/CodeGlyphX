@@ -1,0 +1,20 @@
+[Unit]
+Description=Pull, build, and promote CodeGlyphX website
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=powerforge-codeglyphx
+Group=powerforge-codeglyphx
+WorkingDirectory=/home/powerforge-codeglyphx
+ExecStart=/usr/local/sbin/powerforge-site-pull-deploy codeglyphx.com
+TimeoutStartSec=120min
+UMask=0077
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target

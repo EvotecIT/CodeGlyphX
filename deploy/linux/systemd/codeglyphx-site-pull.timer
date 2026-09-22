@@ -1,0 +1,11 @@
+[Unit]
+Description=Check CodeGlyphX source for a new website release
+
+[Timer]
+OnBootSec=10min
+OnUnitInactiveSec=15min
+RandomizedDelaySec=2min
+Unit=codeglyphx-site-pull.service
+
+[Install]
+WantedBy=timers.target
