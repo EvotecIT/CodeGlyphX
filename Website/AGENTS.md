@@ -33,11 +33,14 @@ If you don't have the engine repo next to this repo, set:
 
 ## Deploy + Recovery
 
-- Production deploy workflow: `../.github/workflows/website-deploy.yml`
+- Production pull timer: `../deploy/linux/systemd/codeglyphx-site-pull.timer`
+- Host pull configuration: `../deploy/linux/codeglyphx.site-pull.env.example`
+- Build and Cloudflare policy workflow: `../.github/workflows/website-deploy.yml`
 - Encrypted recovery workflow: `../.github/workflows/server-backup.yml`
 - Host recovery manifest: `../deploy/linux/codeglyphx.serverrecovery.json`
-- The protected `production` environment owns host coordinates, deployment identities, the exact Cloudflare zone id, and backup credentials.
-- Shared PowerForge actions own checkout, artifact packaging, cache policy, promotion, purge, provenance checks, rollback, and backup publication. Do not add repo-local deployment or Cloudflare scripts.
+- The OVH host fetches `master` over HTTPS, checks public GitHub release changes, builds with the pinned PowerForge revision, and promotes the site through the shared `powerforge-site-deploy` runtime. The root-owned host configuration holds the Cloudflare purge token; encrypted recovery capture includes it.
+- The protected `production` environment retains Cloudflare policy credentials and backup credentials. The backup job runs from the fixed-egress self-hosted runner and keeps its repository write key off OVH.
+- Shared PowerForge actions and runtimes own cache policy, promotion, purge, provenance checks, rollback, and backup publication. Do not add repo-local deployment or Cloudflare scripts.
 - Canonical deployment and cache guidance lives in `<Evotec repo root>/PSPublishModule/Docs` and `Deployment/Linux`.
 
 ## Theme Best Practices (Nav Stability)

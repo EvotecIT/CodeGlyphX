@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Validate recovery manifest and generated plans
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-server-recovery-validate@2dd1c901e40f22186593e7919652a899b19c11fd
+        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-server-recovery-validate@355dea1d16e5ed01cae1d72b3b4f59385113a4cd
         with:
           manifest-path: deploy/linux/codeglyphx.serverrecovery.json
           capture-user: powerforge-codeglyphx-backup

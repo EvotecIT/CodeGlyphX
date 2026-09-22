@@ -1,4 +1,4 @@
-name: Deploy Website
+name: Validate Website and Apply Cloudflare Policy
 
 on:
   push:
@@ -61,62 +61,6 @@ jobs:
         uses: EvotecIT/PSPublishModule/.github/actions/powerforge-cloudflare-site-policy@9f2d36a18c8334d9a27587f04b38ad0dc9bd515d
         with:
           site-config: Website/site.json
+          checkout-caller: "false"
           zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
           api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
-  deploy:
-    needs: [build, site-policy]
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    environment:
-      name: production
-      url: https://codeglyphx.com
-    permissions:
-      actions: read
-      contents: read
-    steps:
-      - name: Deploy validated website artifact
-        uses: EvotecIT/PSPublishModule/.github/actions/powerforge-linux-site-deploy@9f2d36a18c8334d9a27587f04b38ad0dc9bd515d
-        with:
-          artifact-name: powerforge-site-codeglyphx.com
-          deployment-site: codeglyphx.com
-          deployment-host: ${{ vars.POWERFORGE_WEBSITE_DEPLOY_HOST }}
-          deployment-port: ${{ vars.POWERFORGE_WEBSITE_DEPLOY_PORT }}
-          deployment-user: ${{ vars.POWERFORGE_WEBSITE_DEPLOY_USER }}
-          deployment-cloudflare-zone: codeglyphx.com
-          deployment-ssh-private-key: ${{ secrets.DEPLOYMENT_SSH_PRIVATE_KEY }}
-          deployment-ssh-known-hosts: ${{ secrets.DEPLOYMENT_SSH_KNOWN_HOSTS }}
-          deployment-cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          cloudflare-zone-id: ${{ vars.CLOUDFLARE_ZONE_ID }}
-          deployment-public-url: https://codeglyphx.com
-          deployment-smoke-paths: "/ /docs/ /api/ /playground/ /sitemap.xml"
-          source-repository: ${{ github.repository }}
-          source-sha: ${{ needs.build.outputs.source_sha }}
-          engine-mode: ${{ needs.build.outputs.engine_mode }}
-          engine-repository: ${{ needs.build.outputs.engine_repository }}
-          engine-ref: ${{ needs.build.outputs.engine_ref }}
-          engine-sha: ${{ needs.build.outputs.engine_sha }}
-          engine-asset: ${{ needs.build.outputs.engine_asset }}
-          engine-asset-sha256: ${{ needs.build.outputs.engine_asset_sha256 }}
-
-  post-deploy:
-    needs: [build, deploy]
-    permissions:
-      actions: write
-      contents: read
-      packages: read
-    uses: EvotecIT/PSPublishModule/.github/workflows/powerforge-website-run.yml@9f2d36a18c8334d9a27587f04b38ad0dc9bd515d
-    with:
-      website_root: Website
-      pipeline_config: Website/pipeline.cloudflare.json
-      source_ref: ${{ needs.build.outputs.source_sha }}
-      engine_mode: source
-      runner_labels_json: '["ubuntu-latest"]'
-      timeout_minutes: 30
-      powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: 9f2d36a18c8334d9a27587f04b38ad0dc9bd515d
-      report_artifact_name: codeglyphx-cloudflare-post-deploy-reports
-      use_playwright_cache: false
-    secrets:
-      cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      cloudflare_zone_id: ${{ secrets.CLOUDFLARE_ZONE_ID_CODEGLYPHX }}
