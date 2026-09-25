@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/355dea1d16e5ed01cae1d72b3b4f59385113a4cd/Schemas/powerforge.web.serverrecovery.schema.json",
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/c916910229fbf0f5958e66bac7cdeff3a87f5c04/Schemas/powerforge.web.serverrecovery.schema.json",
   "schemaVersion": 2,
   "name": "codeglyphx-production-ovh",
   "description": "Recovery manifest for the CodeGlyphX static website.",
@@ -19,7 +19,7 @@
       "url": "https://github.com/EvotecIT/CodeGlyphX.git",
       "path": "/srv/evotec/CodeGlyphX",
       "branch": "master",
-      "ref": "10556b1412e6e5b078cc5e6e91e3dec277daff86",
+      "ref": "a80b98d0655823c204f692f31eae6165cd898fc0",
       "refCaptureCommandId": "static-source-ref",
       "required": true
     },
@@ -28,7 +28,7 @@
       "url": "https://github.com/EvotecIT/CodeGlyphX.git",
       "path": "/srv/evotec/CodeGlyphXRecovery",
       "branch": "master",
-      "ref": "10556b1412e6e5b078cc5e6e91e3dec277daff86",
+      "ref": "a80b98d0655823c204f692f31eae6165cd898fc0",
       "required": true
     },
     {
@@ -37,6 +37,14 @@
       "path": "/srv/evotec/PSPublishModule",
       "branch": "main",
       "ref": "355dea1d16e5ed01cae1d72b3b4f59385113a4cd",
+      "required": true
+    },
+    {
+      "role": "backup-publisher-engine",
+      "url": "https://github.com/EvotecIT/PSPublishModule.git",
+      "path": "/srv/evotec/PSPublishModuleBackupPublisher",
+      "branch": "main",
+      "ref": "1ad0a021cc4fa694b7011eb8fb0af5bd8426f75e",
       "required": true
     }
   ],
@@ -54,6 +62,13 @@
       "createHome": true,
       "home": "/var/lib/powerforge-codeglyphx-backup",
       "shell": "/bin/bash"
+    },
+    {
+      "name": "powerforge-codeglyphx-publisher",
+      "system": true,
+      "createHome": true,
+      "home": "/var/lib/powerforge-codeglyphx-publisher",
+      "shell": "/usr/sbin/nologin"
     }
   ],
   "packages": {
@@ -192,7 +207,7 @@
     {
       "id": "encrypted-capture-runtime",
       "path": "/usr/local/sbin/powerforge-server-encrypted-capture",
-      "source": "/srv/evotec/PSPublishModule/Deployment/Linux/powerforge-server-encrypted-capture.sh",
+      "source": "/srv/evotec/PSPublishModuleBackupPublisher/Deployment/Linux/powerforge-server-encrypted-capture.sh",
       "kind": "file",
       "owner": "root",
       "group": "root",
@@ -293,6 +308,62 @@
       "group": "root",
       "mode": "440",
       "validation": "sudoers"
+    },
+    {
+      "id": "backup-publisher-home",
+      "path": "/var/lib/powerforge-codeglyphx-publisher",
+      "kind": "directory",
+      "owner": "powerforge-codeglyphx-publisher",
+      "group": "powerforge-codeglyphx-publisher",
+      "mode": "700"
+    },
+    {
+      "id": "backup-publisher-ssh",
+      "path": "/var/lib/powerforge-codeglyphx-publisher/.ssh",
+      "kind": "directory",
+      "owner": "powerforge-codeglyphx-publisher",
+      "group": "powerforge-codeglyphx-publisher",
+      "mode": "700"
+    },
+    {
+      "id": "backup-publisher-work",
+      "path": "/var/lib/powerforge-codeglyphx-publisher/work",
+      "kind": "directory",
+      "owner": "powerforge-codeglyphx-publisher",
+      "group": "powerforge-codeglyphx-publisher",
+      "mode": "700"
+    },
+    {
+      "id": "backup-publisher-key",
+      "path": "/var/lib/powerforge-codeglyphx-publisher/.ssh/backup_ed25519",
+      "kind": "file",
+      "owner": "powerforge-codeglyphx-publisher",
+      "group": "powerforge-codeglyphx-publisher",
+      "mode": "600"
+    },
+    {
+      "id": "backup-publisher-config-root",
+      "path": "/etc/powerforge/server-backup",
+      "kind": "directory",
+      "owner": "root",
+      "group": "root",
+      "mode": "755"
+    },
+    {
+      "id": "backup-publisher-known-hosts",
+      "path": "/etc/powerforge/server-backup/github_known_hosts",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "644"
+    },
+    {
+      "id": "backup-publisher-env",
+      "path": "/etc/powerforge/server-backup/codeglyphx.env",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "644"
     }
   ],
   "apache": {
@@ -411,6 +482,18 @@
       "requiredDuringBootstrap": false,
       "capture": "encrypted",
       "restoreMode": "directory"
+    },
+    {
+      "id": "host-backup-publisher-key",
+      "path": "/var/lib/powerforge-codeglyphx-publisher/.ssh/backup_ed25519",
+      "requiredFor": [
+        "host-backup-publisher"
+      ],
+      "capture": "encrypted",
+      "restoreMode": "file",
+      "owner": "powerforge-codeglyphx-publisher",
+      "group": "powerforge-codeglyphx-publisher",
+      "mode": "600"
     }
   ],
   "capture": {
@@ -474,6 +557,14 @@
       {
         "target": "/etc/letsencrypt/options-ssl-apache.conf",
         "required": true
+      },
+      {
+        "target": "/etc/powerforge/server-backup/codeglyphx.env",
+        "required": true
+      },
+      {
+        "target": "/etc/powerforge/server-backup/github_known_hosts",
+        "required": true
       }
     ],
     "encryptedFiles": [
@@ -482,8 +573,8 @@
         "required": true,
         "sensitive": true
       },
-    {
-      "target": "/etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/9067e851806bacd4017e95999736a02c",
+      {
+        "target": "/etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/9067e851806bacd4017e95999736a02c",
         "required": true,
         "sensitive": true
       },
@@ -494,6 +585,11 @@
       },
       {
         "target": "/etc/letsencrypt/live/codeglyphx.com",
+        "required": true,
+        "sensitive": true
+      },
+      {
+        "target": "/var/lib/powerforge-codeglyphx-publisher/.ssh/backup_ed25519",
         "required": true,
         "sensitive": true
       }
@@ -609,6 +705,11 @@
         "required": true
       },
       {
+        "id": "publisher-account",
+        "command": "id -u powerforge-codeglyphx-publisher >/dev/null && test \"$(getent passwd powerforge-codeglyphx-publisher | cut -d: -f6-7)\" = '/var/lib/powerforge-codeglyphx-publisher:/usr/sbin/nologin'  && test \"$(sudo -n passwd -S powerforge-codeglyphx-publisher | awk '{print $2}')\" = 'L'  && test \"$(sudo -n stat -c '%U:%G %a' /var/lib/powerforge-codeglyphx-publisher)\" = 'powerforge-codeglyphx-publisher:powerforge-codeglyphx-publisher 700'  && test \"$(sudo -n stat -c '%U:%G %a' /var/lib/powerforge-codeglyphx-publisher/.ssh)\" = 'powerforge-codeglyphx-publisher:powerforge-codeglyphx-publisher 700'  && test \"$(sudo -n stat -c '%U:%G %a' /var/lib/powerforge-codeglyphx-publisher/.ssh/backup_ed25519)\" = 'powerforge-codeglyphx-publisher:powerforge-codeglyphx-publisher 600'  && sudo -n test ! -e /var/lib/powerforge-codeglyphx-publisher/.ssh/authorized_keys && test \"$(sudo -n stat -c '%U:%G %a' /etc/powerforge/server-backup/codeglyphx.env)\" = 'root:root 644'  && test \"$(sudo -n stat -c '%U:%G %a' /etc/powerforge/server-backup/github_known_hosts)\" = 'root:root 644'  && sudo -n -u powerforge-codeglyphx-publisher test -r /etc/powerforge/server-backup/codeglyphx.env && sudo -n -u powerforge-codeglyphx-publisher test -r /etc/powerforge/server-backup/github_known_hosts && sudo -n visudo -cf /etc/sudoers.d/powerforge-codeglyphx-backup && sudo -n -u powerforge-codeglyphx-publisher sudo -n -l /usr/bin/tar -czf - /etc/apache2/sites-available/codeglyphx-com.conf /etc/apache2/sites-available/codeglyphx-com-le-ssl.conf /etc/apache2/conf-available/powerforge-cloudflare-origin.conf /etc/systemd/system/powerforge-cloudflare-origin-sync.service /etc/systemd/system/powerforge-cloudflare-origin-sync.timer /etc/systemd/system/powerforge-site-reconcile.service /etc/systemd/system/powerforge-site-reconcile.timer /etc/systemd/system/codeglyphx-site-pull.service /etc/systemd/system/codeglyphx-site-pull.timer /etc/powerforge/sites/codeglyphx.com.env /etc/powerforge/site-pull/codeglyphx.com.env /etc/sudoers.d/powerforge-codeglyphx /etc/sudoers.d/powerforge-codeglyphx-backup /etc/letsencrypt/renewal/codeglyphx.com.conf /etc/letsencrypt/options-ssl-apache.conf /etc/powerforge/server-backup/codeglyphx.env /etc/powerforge/server-backup/github_known_hosts >/dev/null && sudo -n -u powerforge-codeglyphx-publisher sudo -n -l /usr/local/sbin/powerforge-server-encrypted-capture --recipient age1v4aw3yj7l4u9t5436ppy8hgem46lfy7wte9ww9ehfkhcwzldx4psd94wk6 -- /etc/powerforge/secrets/codeglyphx-cloudflare-purge.token /etc/letsencrypt/accounts/acme-v02.api.letsencrypt.org/directory/9067e851806bacd4017e95999736a02c /etc/letsencrypt/archive/codeglyphx.com /etc/letsencrypt/live/codeglyphx.com /var/lib/powerforge-codeglyphx-publisher/.ssh/backup_ed25519 >/dev/null && ! sudo -n -u powerforge-codeglyphx-publisher sudo -n -l /bin/bash >/dev/null 2>&1",
+        "required": true
+      },
+      {
         "id": "repository-identity",
         "command": "git ls-remote https://github.com/EvotecIT/CodeGlyphX.git HEAD >/dev/null",
         "required": true
@@ -650,6 +751,7 @@
     "The Cloudflare cache purge token is root-only host state and is included only in encrypted recovery capture.",
     "Deferred deployment state is root-only, short-lived, and intentionally excluded from recovery capture.",
     "Recovery starts and waits for the host site-pull service to rebuild the excluded static release before enabling the recurring timer and checking provenance.",
-    "Generated website output and timestamped releases are rebuildable and intentionally excluded from backup state."
+    "Generated website output and timestamped releases are rebuildable and intentionally excluded from backup state.",
+    "The codeglyphx host backup publisher uses a locked nologin account, a separate write deploy key, and reviewed PSPublishModule runtime 1ad0a021cc4fa694b7011eb8fb0af5bd8426f75e. Restore its encrypted key and plain environment/known-hosts files, install the exact shared systemd template units from that pinned checkout, rebuild and hash the runtime, run -ValidateOnly, then enable the timer only after the protected offsite branch accepts a normal deploy-key push."
   ]
 }
