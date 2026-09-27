@@ -42,4 +42,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.webp" />
+    <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.rgba" />
+    <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.webp" />
+    <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.rgba" />
+  </ItemGroup>
 </Project>

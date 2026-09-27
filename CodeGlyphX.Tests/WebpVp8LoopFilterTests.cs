@@ -99,4 +99,29 @@ public sealed class WebpVp8LoopFilterTests
 
         Assert.True(changed, "Expected loop filter to modify edge pixels near the 8x8 boundary.");
     }
+    [Theory]
+    [InlineData(10, -20, 20, 0, false, 10)]
+    [InlineData(50, 20, 10, 0, false, 63)]
+    [InlineData(0, -20, 30, 0, true, 10)]
+    [InlineData(60, 0, 0, 20, false, 63)]
+    public void CombinedFilterDeltasMatchEquivalentBoundedLevel(
+        int level, int segmentDelta, int referenceDelta, int modeDelta, bool absolute, int expectedLevel) {
+        byte[] Filter(int baseLevel, bool segmented, bool useDeltas) {
+            var yPlane = new byte[256];
+            for (int y = 0; y < 16; y++) for (int x = 0; x < 16; x++)
+                yPlane[y * 16 + x] = (byte)(x < 8 ? 100 : expectedLevel == 63 ? 185 : 120);
+            var chroma = new byte[64];
+            Array.Fill(chroma, (byte)128);
+            var macroblock = new WebpVp8MacroblockHeaderScaffold(0, 0, 0, 0, false, 4, 0, true, new int[16]);
+            var filter = new WebpVp8LoopFilter(0, baseLevel, 0, useDeltas, false,
+                new[] { referenceDelta, 0, 0, 0 }, new bool[4], new[] { modeDelta, 0, 0, 0 }, new bool[4]);
+            var segments = new WebpVp8Segmentation(segmented, false, false, absolute,
+                new int[4], new[] { segmentDelta, 0, 0, 0 }, new int[3]);
+            WebpVp8Decoder.ApplyLoopFilterForTest(filter, segments, new[] { macroblock }, new[] { true },
+                16, 16, yPlane, (byte[])chroma.Clone(), chroma, 8, 8, true);
+            return yPlane;
+        }
+        Assert.Equal(Filter(expectedLevel, false, false), Filter(level, true, true));
+    }
+
 }

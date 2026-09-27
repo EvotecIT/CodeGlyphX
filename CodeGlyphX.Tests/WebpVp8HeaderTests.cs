@@ -9,13 +9,13 @@ namespace CodeGlyphX.Tests;
 public sealed class WebpVp8HeaderTests {
     [Fact]
     public void Vp8_KeyframeHeader_ParsesDimensions() {
-        var payload = WebpVp8TestHelper.BuildKeyframePayload(width: 5, height: 3, boolData: Array.Empty<byte>());
+        var payload = WebpVp8TestHelper.BuildKeyframePayload(width: 5, height: 3, boolData: new byte[] { 0 });
 
         Assert.True(WebpVp8Decoder.TryReadHeader(payload, out var header));
         Assert.Equal(5, header.Width);
         Assert.Equal(3, header.Height);
         Assert.True(header.ShowFrame);
-        Assert.Equal(7, header.PartitionSize);
+        Assert.Equal(1, header.PartitionSize);
         Assert.Equal(0, header.HorizontalScale);
         Assert.Equal(0, header.VerticalScale);
         Assert.Equal(80, header.BitsConsumed);
@@ -23,7 +23,7 @@ public sealed class WebpVp8HeaderTests {
 
     [Fact]
     public void Vp8_NonKeyframe_IsRejected() {
-        var payload = WebpVp8TestHelper.BuildKeyframePayload(width: 5, height: 3, boolData: Array.Empty<byte>());
+        var payload = WebpVp8TestHelper.BuildKeyframePayload(width: 5, height: 3, boolData: new byte[] { 0 });
 
         // Flip the frame-type bit (bit 0) to mark as an interframe.
         payload[0] = (byte)(payload[0] | 0x01);
@@ -36,9 +36,7 @@ public sealed class WebpVp8HeaderTests {
         var payload = WebpVp8TestHelper.BuildKeyframePayload(width: 5, height: 3, boolData: new byte[] { 0xAA, 0xBB });
 
         Assert.True(WebpVp8Decoder.TryGetFirstPartition(payload, out var firstPartition));
-        Assert.Equal(9, firstPartition.Length);
-        Assert.Equal(0x9D, firstPartition[0]);
-        Assert.Equal(0x2A, firstPartition[2]);
+        Assert.Equal(new byte[] { 0xAA, 0xBB }, firstPartition.ToArray());
     }
 
     [Fact]

@@ -14,6 +14,8 @@ internal sealed class WebpVp8BoolDecoder
     private int _value;
     private int _count;
     private readonly bool _valid;
+    private bool _paddingRead;
+    private bool _exhausted;
 
     public WebpVp8BoolDecoder(ReadOnlySpan<byte> data)
     {
@@ -37,7 +39,7 @@ internal sealed class WebpVp8BoolDecoder
     {
         bit = false;
 
-        if (!_valid)
+        if (!_valid || _exhausted)
         {
             return false;
         }
@@ -126,6 +128,11 @@ internal sealed class WebpVp8BoolDecoder
     {
         if (_offset >= _data.Length)
         {
+            // The arithmetic value includes one byte of lookahead. Allow one
+            // zero byte to finish consuming the final real byte, but never let
+            // an exhausted partition manufacture an unlimited stream of bits.
+            if (_paddingRead) _exhausted = true;
+            _paddingRead = true;
             return 0;
         }
 

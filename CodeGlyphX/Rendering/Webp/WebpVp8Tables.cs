@@ -1,6 +1,17 @@
 namespace CodeGlyphX.Rendering.Webp;
 
 internal static class WebpVp8Tables {
+    // Coefficient probability plane order from RFC 6386 section 13.
+    internal const int LumaAc = 0;
+    internal const int LumaSecondOrder = 1;
+    internal const int Chroma = 2;
+    internal const int LumaWithDc = 3;
+    internal static readonly byte[][] CoefficientCategoryProbabilities = {
+        new byte[] { 159 }, new byte[] { 165, 145 }, new byte[] { 173, 148, 140 },
+        new byte[] { 176, 155, 140, 135 }, new byte[] { 180, 157, 141, 134, 130 },
+        new byte[] { 254, 254, 243, 230, 196, 177, 153, 140, 133, 130, 129 }
+    };
+
     internal static readonly byte[] KeyframeYModeProbs = { 145, 156, 163, 128 };
     internal static readonly byte[] KeyframeUvModeProbs = { 142, 114, 183 };
 
@@ -26,8 +37,8 @@ internal static class WebpVp8Tables {
         -2, 6,
         8, 12,
         -3, 10,
-        -4, -5,
-        -6, 14,
+        -5, -6,
+        -4, 14,
         -7, 16,
         -8, -9,
     };
