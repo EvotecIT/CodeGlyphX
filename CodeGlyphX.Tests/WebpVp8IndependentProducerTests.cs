@@ -42,6 +42,30 @@ public sealed class WebpVp8IndependentProducerTests {
         Assert.True(maximumError <= 3, $"Maximum channel error {maximumError} exceeds 3.");
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DecodeRejectsExhaustedArithmeticPartitions(bool tokenPartition) {
+        byte[] encoded;
+        if (tokenPartition) {
+            encoded = ReadFixture("independent-vp8-pattern.webp");
+            int controlLength = (encoded[20] | encoded[21] << 8 | encoded[22] << 16) >> 5;
+            int payloadLength = 10 + controlLength + 2;
+            Array.Resize(ref encoded, 20 + payloadLength + (payloadLength & 1));
+            Array.Clear(encoded, 30 + controlLength, encoded.Length - 30 - controlLength);
+            WriteLength(encoded, 16, payloadLength);
+            WriteLength(encoded, 4, encoded.Length - 8);
+        } else {
+            encoded = new byte[] {82,73,70,70,26,0,0,0,87,69,66,80,86,80,56,32,
+                14,0,0,0,80,0,0,157,1,42,16,0,16,0,0,0,0,0};
+        }
+        Assert.Throws<FormatException>(() => WebpReader.DecodeRgba32(encoded, out _, out _));
+    }
+
+    private static void WriteLength(byte[] bytes, int offset, int value) {
+        for (int index = 0; index < 4; index++) bytes[offset + index] = (byte)(value >> (8 * index));
+    }
+
     private static byte[] ReadFixture(string name) {
         using Stream input = typeof(WebpVp8IndependentProducerTests).Assembly.GetManifestResourceStream(
             "CodeGlyphX.Tests.Fixtures.Webp." + name)!;
