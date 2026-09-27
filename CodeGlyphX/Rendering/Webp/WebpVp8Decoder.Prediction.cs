@@ -10,7 +10,7 @@ internal static partial class WebpVp8Decoder {
             coefficients = (int[])coefficients.Clone();
             coefficients[0] = dcValue;
         }
-        int[] residual = InverseTransform4x4(coefficients);
+        int[] residual = WebpVp8Transform.InverseTransform4x4(coefficients);
         for (int row = 0; row < 4 && y + row < height; row++) {
             for (int col = 0; col < 4 && x + col < width; col++) {
                 int index = (y + row) * width + x + col;

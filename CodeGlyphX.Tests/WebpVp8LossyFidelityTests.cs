@@ -5,6 +5,18 @@ namespace CodeGlyphX.Tests;
 
 [Collection("WebpTests")]
 public sealed class WebpVp8LossyFidelityTests {
+    [Fact]
+    public void VerticalLeftPredictionMatchesReferenceExceptionalSamples() {
+        var plane = new byte[16 * 16];
+        byte[] top = { 10, 20, 70, 80, 90, 150, 170, 190 };
+        Array.Copy(top, 0, plane, 3 * 16 + 4, top.Length);
+        Span<byte> predicted = stackalloc byte[16];
+        WebpVp8Prediction.PredictSubblock(plane, 16, 16, 4, 4, 7, predicted);
+        // libwebp VL4_C uses three-tap E/F/G and F/G/H at (3,2)/(3,3).
+        byte[] expected = { 15, 45, 75, 85, 30, 60, 80, 103, 45, 75, 85, 140, 60, 80, 103, 170 };
+        Assert.Equal(expected, predicted.ToArray());
+    }
+
     [Theory]
     [InlineData(255, 0, 0)]
     [InlineData(0, 255, 0)]

@@ -27,8 +27,6 @@ internal static partial class WebpVp8Encoder {
     private const int CoeffPrevContexts = 3;
     private const int CoeffEntropyNodes = 11;
     private const int CoefficientsPerBlock = 16;
-    private const int IdctCospi8Sqrt2Minus1 = 20091;
-    private const int IdctSinpi8Sqrt2 = 35468;
     private const int MaxCoefficientMagnitude = 2047;
 
     private static readonly int[] CoeffBandTable =
@@ -424,6 +422,8 @@ internal static partial class WebpVp8Encoder {
             }
         } else {
             WriteKeyframeYMode(headerWriter, YModeBPred);
+            // RFC 6386 §13.3: Y2 context comes from the most recent block
+            // in this row/column that has Y2, skipping B_PRED macroblocks.
             y2NzCurrent[mbX] = y2NzAbove[mbX];
 
             if (skipCoefficients && bPredModes != null) {
@@ -667,7 +667,7 @@ internal static partial class WebpVp8Encoder {
                 dequantCoeffs[i] = yQuant[offset + i] * dequant.Y1Ac;
             }
 
-            var residualDecoded = InverseTransform4x4(dequantCoeffs);
+            var residualDecoded = WebpVp8Transform.InverseTransform4x4(dequantCoeffs);
             UpdateReconstruction(reconY, width, height, dstX, dstY, predicted, residualDecoded);
         }
 
@@ -736,7 +736,7 @@ internal static partial class WebpVp8Encoder {
             y2Dequant[i] = y2Quant[i] * dequantFactor;
         }
 
-        var dcOverride = InverseWalshTransform4x4(y2Dequant);
+        var dcOverride = WebpVp8Transform.InverseWalshTransform4x4(y2Dequant);
         for (var blockIndex = 0; blockIndex < MacroblockSubBlockCount; blockIndex++) {
             var subX = blockIndex & 3;
             var subY = blockIndex >> 2;
@@ -752,7 +752,7 @@ internal static partial class WebpVp8Encoder {
                 dequantCoeffs[i] = yQuant[offset + i] * dequant.Y1Ac;
             }
 
-            var residualDecoded = InverseTransform4x4(dequantCoeffs);
+            var residualDecoded = WebpVp8Transform.InverseTransform4x4(dequantCoeffs);
             UpdateReconstruction(reconY, width, height, dstX, dstY, predicted, residualDecoded);
         }
     }
@@ -803,7 +803,7 @@ internal static partial class WebpVp8Encoder {
             dequantCoeffs[i] = coefficients[i] * dequant;
         }
 
-        var residualDecoded = InverseTransform4x4(dequantCoeffs);
+        var residualDecoded = WebpVp8Transform.InverseTransform4x4(dequantCoeffs);
         UpdateReconstruction(recon, planeWidth, planeHeight, dstX, dstY, predicted, residualDecoded);
 
         return hasNonZero;

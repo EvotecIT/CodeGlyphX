@@ -24,8 +24,6 @@ internal static partial class WebpVp8Decoder {
     private const int CoeffTokenCount = 12;
     private const int BlockScaffoldBlocksPerPartition = 4;
     private const int BlockScaffoldMaxTokensPerBlock = CoefficientsPerBlock;
-    private const int IdctCospi8Sqrt2Minus1 = 20091;
-    private const int IdctSinpi8Sqrt2 = 35468;
     private const int Intra16x16ModeCount = 4;
     private const int IntraUvModeCount = 4;
     private const int Intra4x4ModeCount = 10;
@@ -1263,11 +1261,13 @@ internal static partial class WebpVp8Decoder {
             y2Left = y2NonZero ? (byte)1 : (byte)0;
             y2NzCurrent[mbX] = y2Left;
             if (y2NonZero) {
-                y2Dc = InverseWalshTransform4x4(y2Coeffs);
+                y2Dc = WebpVp8Transform.InverseWalshTransform4x4(y2Coeffs);
             }
 
             hasCoefficients |= y2NonZero;
         } else {
+            // RFC 6386 §13.3: Y2 context comes from the most recent block
+            // in this row/column that has Y2, skipping B_PRED macroblocks.
             y2NzCurrent[mbX] = y2NzAbove[mbX];
         }
 
@@ -2351,7 +2351,7 @@ internal static partial class WebpVp8Decoder {
             dequantizedCoefficients[i] = result.DequantAc[i - 1];
         }
 
-        var residual = InverseTransform4x4(dequantizedCoefficients);
+        var residual = WebpVp8Transform.InverseTransform4x4(dequantizedCoefficients);
         var baseSample = 128;
         for (var i = 0; i < samples.Length; i++) {
             samples[i] = ClampToByte(baseSample + residual[i]);
@@ -2359,103 +2359,6 @@ internal static partial class WebpVp8Decoder {
 
         var acInfluence = residual.Length > 1 ? residual[1] : 0;
         return new WebpVp8BlockPixelScaffold(BlockSize, BlockSize, samples, (byte)baseSample, acInfluence);
-    }
-
-    private static int[] InverseTransform4x4(int[] input) {
-        var output = new int[CoefficientsPerBlock];
-        var temp = new int[CoefficientsPerBlock];
-
-        for (var i = 0; i < BlockSize; i++) {
-            var ip0 = input[i];
-            var ip4 = input[i + 4];
-            var ip8 = input[i + 8];
-            var ip12 = input[i + 12];
-
-            var a1 = ip0 + ip8;
-            var b1 = ip0 - ip8;
-            var temp1 = (ip4 * IdctSinpi8Sqrt2) >> 16;
-            var temp2 = ip12 + ((ip12 * IdctCospi8Sqrt2Minus1) >> 16);
-            var c1 = temp1 - temp2;
-            temp1 = ip4 + ((ip4 * IdctCospi8Sqrt2Minus1) >> 16);
-            temp2 = (ip12 * IdctSinpi8Sqrt2) >> 16;
-            var d1 = temp1 + temp2;
-
-            temp[i] = a1 + d1;
-            temp[i + 12] = a1 - d1;
-            temp[i + 4] = b1 + c1;
-            temp[i + 8] = b1 - c1;
-        }
-
-        for (var i = 0; i < BlockSize; i++) {
-            var baseIndex = i * BlockSize;
-            var t0 = temp[baseIndex];
-            var t1 = temp[baseIndex + 1];
-            var t2 = temp[baseIndex + 2];
-            var t3 = temp[baseIndex + 3];
-
-            var a1 = t0 + t2;
-            var b1 = t0 - t2;
-            var temp1 = (t1 * IdctSinpi8Sqrt2) >> 16;
-            var temp2 = t3 + ((t3 * IdctCospi8Sqrt2Minus1) >> 16);
-            var c1 = temp1 - temp2;
-            temp1 = t1 + ((t1 * IdctCospi8Sqrt2Minus1) >> 16);
-            temp2 = (t3 * IdctSinpi8Sqrt2) >> 16;
-            var d1 = temp1 + temp2;
-
-            output[baseIndex] = (a1 + d1 + 4) >> 3;
-            output[baseIndex + 3] = (a1 - d1 + 4) >> 3;
-            output[baseIndex + 1] = (b1 + c1 + 4) >> 3;
-            output[baseIndex + 2] = (b1 - c1 + 4) >> 3;
-        }
-
-        return output;
-    }
-
-    private static int[] InverseWalshTransform4x4(int[] input) {
-        var temp = new int[CoefficientsPerBlock];
-        var output = new int[CoefficientsPerBlock];
-
-        for (var i = 0; i < BlockSize; i++) {
-            var ip0 = input[i];
-            var ip4 = input[i + 4];
-            var ip8 = input[i + 8];
-            var ip12 = input[i + 12];
-
-            var a1 = ip0 + ip12;
-            var b1 = ip4 + ip8;
-            var c1 = ip4 - ip8;
-            var d1 = ip0 - ip12;
-
-            temp[i] = a1 + b1;
-            temp[i + 4] = c1 + d1;
-            temp[i + 8] = a1 - b1;
-            temp[i + 12] = d1 - c1;
-        }
-
-        for (var i = 0; i < BlockSize; i++) {
-            var baseIndex = i * BlockSize;
-            var t0 = temp[baseIndex];
-            var t1 = temp[baseIndex + 1];
-            var t2 = temp[baseIndex + 2];
-            var t3 = temp[baseIndex + 3];
-
-            var a1 = t0 + t3;
-            var b1 = t1 + t2;
-            var c1 = t1 - t2;
-            var d1 = t0 - t3;
-
-            var a2 = a1 + b1;
-            var b2 = c1 + d1;
-            var c2 = a1 - b1;
-            var d2 = d1 - c1;
-
-            output[baseIndex] = (a2 + 3) >> 3;
-            output[baseIndex + 1] = (b2 + 3) >> 3;
-            output[baseIndex + 2] = (c2 + 3) >> 3;
-            output[baseIndex + 3] = (d2 + 3) >> 3;
-        }
-
-        return output;
     }
 
     private static byte ClampToByte(int value) {
@@ -2537,7 +2440,7 @@ internal static partial class WebpVp8Decoder {
             coefficients[i] = block.Result.DequantAc[i - 1];
         }
 
-        return InverseTransform4x4(coefficients);
+        return WebpVp8Transform.InverseTransform4x4(coefficients);
     }
 
     private static void ApplyPredictionBlock(
@@ -2635,7 +2538,7 @@ internal static partial class WebpVp8Decoder {
         }
 
         if (count < dcCoefficients.Length) return Array.Empty<int>();
-        return InverseTransform4x4(dcCoefficients);
+        return WebpVp8Transform.InverseTransform4x4(dcCoefficients);
     }
 
     private static byte PredictDownRight(ReadOnlySpan<byte> top, ReadOnlySpan<byte> left, byte topLeft, int x, int y) {
