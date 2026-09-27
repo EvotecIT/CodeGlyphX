@@ -6,6 +6,6 @@ layout: playground
 meta.eyebrow: Playground
 ---
 
-This is where the interactive playground will live.
+Generate and decode QR codes and barcodes in your browser. The playground runs the CodeGlyphX library through WebAssembly, so nothing you enter leaves your device.
 
 {{< app src="/playground/" label="Launch Playground" title="CodeGlyphX Playground" >}}

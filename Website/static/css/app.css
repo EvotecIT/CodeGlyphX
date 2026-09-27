@@ -657,10 +657,20 @@ body:has(.page-playground) {
     animation-delay: -4s;
 }
 
-.code-preview-item svg {
+.code-preview-item svg,
+.code-preview-item img {
     width: 100%;
     height: 100%;
     color: #1a1a1a;
+}
+
+.code-preview-item {
+    margin: 0;
+}
+
+.code-preview-item img {
+    object-fit: contain;
+    image-rendering: pixelated;
 }
 
 .barcode-preview {
