@@ -80,6 +80,13 @@ internal static partial class WebpVp8Encoder {
             return false;
         }
 
+        // VP8 dimensions occupy 14 bits. Let the public writer use its VP8L fallback
+        // for larger valid WebP images instead of truncating their frame header.
+        if (width > 0x3FFF || height > 0x3FFF) {
+            reason = "VP8 width and height must not exceed 16383.";
+            return false;
+        }
+
         if (quality is < 0 or > 100) {
             reason = "Quality must be in the 0-100 range.";
             return false;

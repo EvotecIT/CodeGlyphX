@@ -1741,8 +1741,6 @@ internal static partial class WebpVp8Decoder {
             filterLevel = segmentation.AbsoluteDeltas ? delta : filterLevel + delta;
         }
 
-        filterLevel = ClampQIndex(filterLevel);
-
         if (loopFilter.DeltaEnabled) {
             var refDelta = loopFilter.RefDeltas.Length > 0 ? loopFilter.RefDeltas[0] : 0;
             filterLevel += refDelta;
@@ -1751,7 +1749,8 @@ internal static partial class WebpVp8Decoder {
             }
         }
 
-        filterLevel = ClampQIndex(filterLevel);
+        // Combine all signed deltas before applying the VP8 six-bit filter bound.
+        filterLevel = Math.Max(0, Math.Min(63, filterLevel));
         if (filterLevel == 0) return false;
 
         interiorLimit = filterLevel;

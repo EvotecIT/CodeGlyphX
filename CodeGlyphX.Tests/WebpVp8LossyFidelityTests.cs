@@ -45,4 +45,40 @@ public sealed class WebpVp8LossyFidelityTests {
         double mean = (double)error / (width * height * 3);
         Assert.True(mean <= 3, $"Mean RGB error {mean:F4} exceeds 3 at quality 80.");
     }
+    [Theory]
+    [InlineData(16384, 1)]
+    [InlineData(1, 16384)]
+    public void LossyWriterPreservesDimensionsBeyondVp8Limit(int width, int height) {
+        var source = new byte[width * height * 4];
+        for (int i = 0; i < source.Length; i += 4) {
+            source[i] = 255; source[i + 3] = 255;
+        }
+        byte[] encoded = WebpWriter.WriteRgba32Lossy(width, height, source, width * 4, 80);
+        byte[] decoded = WebpReader.DecodeRgba32(encoded, out int actualWidth, out int actualHeight);
+        Assert.Equal(width, actualWidth); Assert.Equal(height, actualHeight);
+        Assert.Equal(source.Length, decoded.Length);
+        for (int i = 0; i < decoded.Length; i += 4) {
+            Assert.InRange(decoded[i], 240, 255);
+            Assert.Equal(255, decoded[i + 3]);
+        }
+    }
+
+    [Fact]
+    public void LossyAnimationPreservesOversizedFrameAndAlpha() {
+        const int width = 16384;
+        var source = new byte[width * 4];
+        for (int i = 0; i < source.Length; i += 4) {
+            source[i] = 255; source[i + 3] = 180;
+        }
+        var frame = new WebpAnimationFrame(source, width, 1, width * 4, durationMs: 100, blend: false);
+        byte[] encoded = WebpWriter.WriteAnimationRgba32Lossy(width, 1, new[] { frame }, default, 80);
+        byte[] decoded = WebpReader.DecodeRgba32(encoded, out int actualWidth, out int actualHeight);
+        Assert.Equal(width, actualWidth); Assert.Equal(1, actualHeight);
+        Assert.Equal(source.Length, decoded.Length);
+        for (int i = 0; i < decoded.Length; i += 4) {
+            Assert.InRange(decoded[i], 240, 255);
+            Assert.Equal(180, decoded[i + 3]);
+        }
+    }
+
 }
