@@ -404,7 +404,7 @@
     "defaultOutgoing": "allow",
     "sshPorts": [],
     "webOriginPolicy": "cloudflare-only",
-    "syncCommand": "ufw allow from 185.242.254.62/32 to any port 22222 proto tcp comment 'Evotec home operator and Synology' && ufw --force delete allow 22222/tcp && /usr/local/sbin/powerforge-cloudflare-origin-sync"
+    "syncCommand": "ufw allow from 185.242.254.62/32 to any port 22222 proto tcp comment 'Evotec home operator and Synology' && ufw --force delete allow 22222/tcp && /usr/local/sbin/powerforge-cloudflare-origin-sync || exit 1"
   },
   "certificates": [
     {
