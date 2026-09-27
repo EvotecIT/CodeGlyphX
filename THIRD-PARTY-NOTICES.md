@@ -46,3 +46,11 @@ The MaxiCode module mapping and decoder and the GS1 DataBar Limited reference ch
 - Source commit: `179be6ac9c1b2a75ff0017a237c6546fea3c7d12`
 - Source: <https://github.com/zxing-cpp/zxing-cpp>
 - License: Apache License 2.0
+
+## WebM VP8 transform reference
+
+The managed VP8 encoder's forward transform follows the WebM Project's libvpx integer transform and its rounding rules. Decoder prediction and entropy behavior were checked against RFC 6386 and libwebp. CodeGlyphX has no runtime dependency on these reference implementations.
+
+- Copyright (c) 2010, The WebM Project authors. All rights reserved.
+- Source: <https://github.com/webmproject/libvpx/blob/main/vp8/encoder/dct.c>
+- License: BSD 3-Clause; see [the retained license](Licenses/libvpx-LICENSE.txt) and [additional patent grant](Licenses/libvpx-PATENTS.txt).

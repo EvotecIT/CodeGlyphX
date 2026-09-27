@@ -29,8 +29,8 @@ internal static class WebpVp8TestHelper
     public static byte[] BuildKeyframePayload(int width, int height, byte[] boolData)
     {
         const int keyframeHeaderSize = 7;
-        var partitionSize = keyframeHeaderSize + boolData.Length;
-        var payloadLength = 3 + partitionSize;
+        var partitionSize = boolData.Length;
+        var payloadLength = 3 + keyframeHeaderSize + partitionSize;
         var payload = new byte[payloadLength];
 
         var frameTag = (partitionSize << 5) | (1 << 4);

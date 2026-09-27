@@ -37,6 +37,8 @@
     <None Include="..\\README.md" Pack="true" PackagePath="/" />
     <None Include="..\\LICENSE" Pack="true" PackagePath="/" />
     <None Include="..\\THIRD-PARTY-NOTICES.md" Pack="true" PackagePath="/" />
+    <None Include="../Licenses/libvpx-LICENSE.txt" Pack="true" PackagePath="Licenses/" />
+    <None Include="../Licenses/libvpx-PATENTS.txt" Pack="true" PackagePath="Licenses/" />
     <None Include="..\\Assets\\Logo\\codeglyphx-qr-icon.png" Pack="true" PackagePath="/" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' Or '$(TargetFramework)' == 'netstandard2.0' ">

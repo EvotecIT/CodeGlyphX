@@ -29,8 +29,8 @@ public sealed class WebpVp8PartitionLayoutTests
         var success = WebpVp8Decoder.TryReadPartitionLayout(payload, out var layout);
 
         Assert.True(success);
-        Assert.Equal(3, layout.FirstPartitionOffset);
-        Assert.Equal(7 + boolData.Length, layout.FirstPartitionSize);
+        Assert.Equal(10, layout.FirstPartitionOffset);
+        Assert.Equal(boolData.Length, layout.FirstPartitionSize);
         Assert.Equal(3 * (dctCount - 1), layout.SizeTableBytes);
         Assert.Equal(layout.FirstPartitionOffset + layout.FirstPartitionSize, layout.SizeTableOffset);
         Assert.Equal(layout.SizeTableOffset + layout.SizeTableBytes, layout.DctDataOffset);
