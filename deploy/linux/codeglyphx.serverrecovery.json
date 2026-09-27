@@ -28,7 +28,7 @@
       "url": "https://github.com/EvotecIT/CodeGlyphX.git",
       "path": "/srv/evotec/CodeGlyphXRecovery",
       "branch": "master",
-      "ref": "d7f6ab4fb3d2ff9b900924a1aa6a11227119832b",
+      "ref": "162de5b8c93f638a50d344cc7b06bcd4494b7a5c",
       "required": true
     },
     {
@@ -402,11 +402,9 @@
     "provider": "ufw",
     "defaultIncoming": "deny",
     "defaultOutgoing": "allow",
-    "sshPorts": [
-      22222
-    ],
+    "sshPorts": [],
     "webOriginPolicy": "cloudflare-only",
-    "syncCommand": "/usr/local/sbin/powerforge-cloudflare-origin-sync"
+    "syncCommand": "ufw allow from 185.242.254.62/32 to any port 22222 proto tcp comment 'Evotec home operator and Synology' && ufw --force delete allow 22222/tcp && /usr/local/sbin/powerforge-cloudflare-origin-sync || exit 1"
   },
   "certificates": [
     {
