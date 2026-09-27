@@ -7,7 +7,7 @@
   {{ description_meta_html }}
   {{ canonical_html }}
   {{ head_html }}
-  <script>(function(){const t=localStorage.getItem('theme')||'auto';document.documentElement.dataset.theme=t;})();</script>
+  <script>(function(){let t='auto';try{t=localStorage.getItem('theme')||'auto';}catch(e){}document.documentElement.dataset.theme=t;})();</script>
   {{ assets.preloads_html }}
   {{ assets.critical_css_html }}
   {{ include "theme-tokens" }}

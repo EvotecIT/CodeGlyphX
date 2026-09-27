@@ -16,7 +16,7 @@ meta.extra_scripts_file: index.scripts.html
             <span>Open Source &bull; Apache 2.0 License</span>
         </div>
 
-        <h1>Generate QR Codes &amp; Barcodes<br/>Without Native Graphics Dependencies</h1>
+        <h1>QR codes and barcodes <br/>in pure .NET</h1>
 
         <p class="hero-tagline">
             CodeGlyphX is a pure-managed .NET library for encoding and decoding
@@ -40,12 +40,6 @@ meta.extra_scripts_file: index.scripts.html
             {{< release-button placement="home.hero_download" product="codeglyphx" >}}
         </div>
 
-        <div class="hero-secondary-links" aria-label="Release resources">
-            <a href="/downloads/">Downloads</a>
-            <a href="/changelog/">Changelog</a>
-            <a href="/docs/installation/">Install Guide</a>
-        </div>
-
         <div class="install-command">
             <code>dotnet add package CodeGlyphX</code>
             <button class="copy-btn" type="button" data-copy="dotnet add package CodeGlyphX" title="Copy install command">
@@ -65,55 +59,16 @@ meta.extra_scripts_file: index.scripts.html
             </a>
         </div>
 
-        <div class="hero-code-preview">
-            <div class="code-preview-item qr-preview" title="QR Code">
-                <svg viewBox="0 0 21 21" fill="currentColor">
-                    <!-- Top-left finder: 7x7 with hollow center -->
-                    <path d="M0,0h7v7h-7zM1,1v5h5v-5zM2,2h3v3h-3z"/>
-                    <!-- Top-right finder -->
-                    <path d="M14,0h7v7h-7zM15,1v5h5v-5zM16,2h3v3h-3z"/>
-                    <!-- Bottom-left finder -->
-                    <path d="M0,14h7v7h-7zM1,15v5h5v-5zM2,16h3v3h-3z"/>
-                    <!-- Timing patterns -->
-                    <rect x="8" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="12" y="6" width="1" height="1"/>
-                    <rect x="6" y="8" width="1" height="1"/><rect x="6" y="10" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/>
-                    <!-- Data area -->
-                    <rect x="8" y="8" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/>
-                    <rect x="9" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/>
-                    <rect x="8" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="12" y="10" width="1" height="1"/>
-                    <rect x="9" y="11" width="1" height="1"/><rect x="11" y="11" width="1" height="1"/>
-                    <rect x="8" y="12" width="1" height="1"/><rect x="10" y="12" width="1" height="1"/><rect x="12" y="12" width="1" height="1"/>
-                    <rect x="14" y="8" width="1" height="1"/><rect x="16" y="9" width="1" height="1"/><rect x="18" y="8" width="1" height="1"/><rect x="15" y="10" width="1" height="1"/><rect x="17" y="11" width="1" height="1"/><rect x="19" y="10" width="1" height="1"/>
-                    <rect x="8" y="14" width="1" height="1"/><rect x="10" y="15" width="1" height="1"/><rect x="12" y="14" width="1" height="1"/><rect x="9" y="16" width="1" height="1"/><rect x="11" y="17" width="1" height="1"/>
-                    <rect x="14" y="14" width="1" height="1"/><rect x="16" y="15" width="1" height="1"/><rect x="18" y="14" width="1" height="1"/><rect x="15" y="16" width="1" height="1"/><rect x="17" y="17" width="1" height="1"/><rect x="19" y="16" width="1" height="1"/><rect x="20" y="18" width="1" height="1"/>
-                </svg>
-            </div>
-            <div class="code-preview-item barcode-preview" title="Code 128">
-                <svg viewBox="0 0 67 40" fill="currentColor">
-                    <rect x="0" y="0" width="2" height="40"/><rect x="3" y="0" width="1" height="40"/><rect x="5" y="0" width="2" height="40"/><rect x="9" y="0" width="1" height="40"/><rect x="11" y="0" width="3" height="40"/><rect x="15" y="0" width="1" height="40"/><rect x="18" y="0" width="1" height="40"/><rect x="20" y="0" width="2" height="40"/><rect x="24" y="0" width="1" height="1"/><rect x="26" y="0" width="3" height="40"/><rect x="31" y="0" width="1" height="40"/><rect x="33" y="0" width="2" height="40"/><rect x="37" y="0" width="1" height="40"/><rect x="39" y="0" width="1" height="40"/><rect x="42" y="0" width="2" height="40"/><rect x="45" y="0" width="1" height="40"/><rect x="48" y="0" width="3" height="40"/><rect x="52" y="0" width="1" height="40"/><rect x="55" y="0" width="2" height="40"/><rect x="58" y="0" width="1" height="40"/><rect x="61" y="0" width="1" height="40"/><rect x="63" y="0" width="2" height="40"/><rect x="66" y="0" width="1" height="40"/>
-                </svg>
-            </div>
-            <div class="code-preview-item matrix-preview" title="Data Matrix">
-                <svg viewBox="0 0 14 14" fill="currentColor">
-                    <!-- L-finder: solid left column and top row -->
-                    <rect x="0" y="0" width="14" height="1"/><rect x="0" y="1" width="1" height="13"/>
-                    <!-- Clock track: alternating on right and bottom -->
-                    <rect x="13" y="1" width="1" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="13" y="5" width="1" height="1"/><rect x="13" y="7" width="1" height="1"/><rect x="13" y="9" width="1" height="1"/><rect x="13" y="11" width="1" height="1"/><rect x="13" y="13" width="1" height="1"/>
-                    <rect x="2" y="13" width="1" height="1"/><rect x="4" y="13" width="1" height="1"/><rect x="6" y="13" width="1" height="1"/><rect x="8" y="13" width="1" height="1"/><rect x="10" y="13" width="1" height="1"/><rect x="12" y="13" width="1" height="1"/>
-                    <!-- Dense data fill -->
-                    <rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="10" y="2" width="1" height="1"/><rect x="11" y="2" width="1" height="1"/>
-                    <rect x="2" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="9" y="3" width="1" height="1"/><rect x="11" y="3" width="1" height="1"/>
-                    <rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="9" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="12" y="4" width="1" height="1"/>
-                    <rect x="2" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="11" y="5" width="1" height="1"/>
-                    <rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="9" y="6" width="1" height="1"/><rect x="11" y="6" width="1" height="1"/><rect x="12" y="6" width="1" height="1"/>
-                    <rect x="2" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="10" y="7" width="1" height="1"/>
-                    <rect x="3" y="8" width="1" height="1"/><rect x="5" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="11" y="8" width="1" height="1"/><rect x="12" y="8" width="1" height="1"/>
-                    <rect x="2" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="6" y="9" width="1" height="1"/><rect x="7" y="9" width="1" height="1"/><rect x="9" y="9" width="1" height="1"/><rect x="11" y="9" width="1" height="1"/>
-                    <rect x="3" y="10" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="7" y="10" width="1" height="1"/><rect x="8" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/><rect x="12" y="10" width="1" height="1"/>
-                    <rect x="2" y="11" width="1" height="1"/><rect x="5" y="11" width="1" height="1"/><rect x="6" y="11" width="1" height="1"/><rect x="8" y="11" width="1" height="1"/><rect x="9" y="11" width="1" height="1"/><rect x="11" y="11" width="1" height="1"/>
-                    <rect x="3" y="12" width="1" height="1"/><rect x="4" y="12" width="1" height="1"/><rect x="6" y="12" width="1" height="1"/><rect x="7" y="12" width="1" height="1"/><rect x="9" y="12" width="1" height="1"/><rect x="10" y="12" width="1" height="1"/><rect x="11" y="12" width="1" height="1"/>
-                </svg>
-            </div>
+        <div class="hero-code-preview" aria-label="Generated with CodeGlyphX">
+            <figure class="code-preview-item qr-preview" title="QR Code">
+                <img src="/images/hero/qr.svg" width="80" height="80" alt="QR code for https://codeglyphx.com generated by CodeGlyphX" />
+            </figure>
+            <figure class="code-preview-item barcode-preview" title="Code 128">
+                <img src="/images/hero/code128.svg" width="160" height="80" alt="Code 128 barcode for CODEGLYPHX-2026 generated by CodeGlyphX" />
+            </figure>
+            <figure class="code-preview-item matrix-preview" title="Data Matrix">
+                <img src="/images/hero/datamatrix.svg" width="80" height="80" alt="Data Matrix code for LOT-2026-0042 generated by CodeGlyphX" />
+            </figure>
         </div>
     </div>
 </div>
