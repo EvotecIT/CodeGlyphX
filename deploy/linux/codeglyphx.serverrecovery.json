@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/c916910229fbf0f5958e66bac7cdeff3a87f5c04/Schemas/powerforge.web.serverrecovery.schema.json",
+  "$schema": "https://raw.githubusercontent.com/EvotecIT/PSPublishModule/363fea2324c5be9f674e415938b9956ae3c26d21/Schemas/powerforge.web.serverrecovery.schema.json",
   "schemaVersion": 2,
   "name": "codeglyphx-production-ovh",
   "description": "Recovery manifest for the CodeGlyphX static website.",
@@ -44,7 +44,7 @@
       "url": "https://github.com/EvotecIT/PSPublishModule.git",
       "path": "/srv/evotec/PSPublishModuleBackupPublisher",
       "branch": "main",
-      "ref": "1ad0a021cc4fa694b7011eb8fb0af5bd8426f75e",
+      "ref": "363fea2324c5be9f674e415938b9956ae3c26d21",
       "required": true
     }
   ],
@@ -158,6 +158,15 @@
       "owner": "root",
       "group": "root",
       "mode": "755"
+    },
+    {
+      "id": "backup-user-startup",
+      "path": "/var/lib/powerforge-codeglyphx-backup/.bashrc",
+      "source": "/srv/evotec/CodeGlyphXRecovery/deploy/linux/powerforge-codeglyphx-backup.bashrc",
+      "kind": "file",
+      "owner": "root",
+      "group": "root",
+      "mode": "644"
     },
     {
       "id": "backup-user-authorized-keys",
@@ -752,6 +761,6 @@
     "Deferred deployment state is root-only, short-lived, and intentionally excluded from recovery capture.",
     "Recovery starts and waits for the host site-pull service to rebuild the excluded static release before enabling the recurring timer and checking provenance.",
     "Generated website output and timestamped releases are rebuildable and intentionally excluded from backup state.",
-    "The codeglyphx host backup publisher uses a locked nologin account, a separate write deploy key, and reviewed PSPublishModule runtime 1ad0a021cc4fa694b7011eb8fb0af5bd8426f75e. Restore its encrypted key and plain environment/known-hosts files, install the exact shared systemd template units from that pinned checkout, rebuild and hash the runtime, run -ValidateOnly, then enable the timer only after the protected offsite branch accepts a normal deploy-key push."
+    "The codeglyphx host backup publisher uses a locked nologin account, a separate write deploy key, and reviewed PSPublishModule runtime 363fea2324c5be9f674e415938b9956ae3c26d21. Restore its encrypted key and plain environment/known-hosts files, install the exact shared systemd template units from that pinned checkout, rebuild and hash the runtime, run -ValidateOnly, then enable the timer only after the protected offsite branch accepts a normal deploy-key push."
   ]
 }
