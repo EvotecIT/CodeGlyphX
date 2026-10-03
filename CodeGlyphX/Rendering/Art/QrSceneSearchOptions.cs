@@ -4,7 +4,7 @@ namespace CodeGlyphX.Rendering.Art;
 
 /// <summary>A bounded search which changes only QR scale and optionally its data-module shape.</summary>
 public sealed class QrSceneSearchOptions {
-    /// <summary>Maximum candidate renders and complete delivery reports (1..6).</summary>
+    /// <summary>Maximum candidate settings considered (1..6), including rejected settings.</summary>
     public int MaxCandidates { get; set; } = 6;
     /// <summary>Largest QR scale to try, including its quiet zone (0.25..0.8). It cannot shrink the requested QR.</summary>
     public double MaxQrScale { get; set; } = 0.8;
@@ -42,11 +42,11 @@ public sealed class QrSceneCandidate {
 public sealed class QrSceneSearchResult {
     /// <summary>Best observed candidate. Equal scores retain the earliest, least changed design.</summary>
     public QrSceneCandidate Best { get; }
-    /// <summary>Candidate settings considered, including placements rejected before rendering.</summary>
+    /// <summary>Candidate settings considered, including settings rejected before rendering.</summary>
     public int AttemptedCandidates { get; }
     /// <summary>Number of PNGs rendered and validated. Search stops once every check passes.</summary>
     public int ValidatedCandidates { get; }
-    /// <summary>Placements rejected because the enlarged QR or its quiet zone could not fit.</summary>
-    public int RejectedPlacements => AttemptedCandidates - ValidatedCandidates;
+    /// <summary>Settings rejected because the QR had too few pixels per module or its quiet zone could not fit.</summary>
+    public int RejectedCandidates => AttemptedCandidates - ValidatedCandidates;
     internal QrSceneSearchResult(QrSceneCandidate best, int attempted, int validated) { Best = best; AttemptedCandidates = attempted; ValidatedCandidates = validated; }
 }

@@ -18,9 +18,8 @@ public sealed partial class QrSceneComposition {
         var dimension = widthMillimeters == 0 ? size.ToString(CultureInfo.InvariantCulture) : Number(widthMillimeters) + "mm";
         var output = new StringBuilder(32768);
         output.Append("<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"").Append(dimension).Append("\" height=\"").Append(dimension)
-            .Append("\" viewBox=\"0 0 ").Append(size).Append(' ').Append(size).Append("\" role=\"img\" aria-label=\"Illustrated QR scene\">")
-            .Append("<defs><clipPath id=\"scene-canvas\"><rect width=\"").Append(size).Append("\" height=\"").Append(size).Append("\"/></clipPath></defs>")
-            .Append("<g clip-path=\"url(#scene-canvas)\"><rect width=\"").Append(size).Append("\" height=\"").Append(size).Append("\" fill=\"").Append(Color(_design.Paper)).Append("\"/>");
+            .Append("\" viewBox=\"0 0 ").Append(size).Append(' ').Append(size).Append("\" overflow=\"hidden\" role=\"img\" aria-label=\"Illustrated QR scene\">")
+            .Append("<g><rect width=\"").Append(size).Append("\" height=\"").Append(size).Append("\" fill=\"").Append(Color(_design.Paper)).Append("\"/>");
         foreach (var shape in Geometry.Shapes) {
             output.Append("<polygon fill=\"").Append(Color(shape.Color)).Append("\" points=\"");
             for (var i = 0; i < shape.Points.Length; i += 2) output.Append(Number(shape.Points[i] * size)).Append(',').Append(Number(shape.Points[i + 1] * size)).Append(' ');

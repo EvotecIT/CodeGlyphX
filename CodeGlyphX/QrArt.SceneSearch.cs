@@ -9,7 +9,9 @@ namespace CodeGlyphX;
 public static partial class QrArt {
     /// <summary>Chooses a scene using actual PNG delivery reports, with a bounded sequence of larger QR
     /// placements and optional square modules. Illustrations, payload, seed and other layers are retained.
-    /// A best candidate with failed checks is returned honestly; this does not certify phones or printers.</summary>
+    /// A best candidate with failed checks is returned honestly; this does not certify phones or printers.
+    /// Candidates with too few pixels per module or a clipped quiet zone are skipped. If no candidate can
+    /// render within the configured limit, an <see cref="ArgumentException"/> is thrown.</summary>
     public static QrSceneSearchResult SearchScene(string payload, QrSceneOptions? design = null, QrSceneSearchOptions? options = null, CancellationToken cancellationToken = default) =>
         SearchSceneCoreAsync(payload, design, options, cancellationToken, false).GetAwaiter().GetResult();
 
@@ -36,8 +38,9 @@ public static partial class QrArt {
                 candidateDesign.Qr.Scale = original.Qr.Scale + (settings.MaxQrScale - original.Qr.Scale) * scaleIndex / 2;
                 if (shapeIndex == 1) candidateDesign.ModuleShape = QrPngModuleShape.Square;
                 attempted++; token.ThrowIfCancellationRequested();
-                var qrSize = (int)Math.Floor(candidateDesign.Size * candidateDesign.Qr.Scale / (code.Size + 8)) * (code.Size + 8);
-                if (scaleIndex > 0 && !TryGetScenePlacement(candidateDesign, qrSize, out _, out _)) continue;
+                var moduleSize = GetSceneModuleSize(candidateDesign, code);
+                var qrSize = moduleSize * (code.Size + 8);
+                if (moduleSize < SceneMinimumModuleSize || !TryGetScenePlacement(candidateDesign, qrSize, out _, out _)) continue;
                 var scene = ComposeSceneCore(payload, code, candidateDesign, token);
                 var png = scene.ToPng();
                 var report = yieldBetweenChecks
@@ -49,6 +52,7 @@ public static partial class QrArt {
                 if (best.Validation.AllPassed) return new QrSceneSearchResult(best, attempted, validated);
             }
         }
-        return new QrSceneSearchResult(best!, attempted, validated);
+        if (best is null) throw new ArgumentException("No QR candidate fits the canvas with at least two pixels per module. Increase scene size, adjust QR placement, or allow more candidates.", nameof(design));
+        return new QrSceneSearchResult(best, attempted, validated);
     }
 }

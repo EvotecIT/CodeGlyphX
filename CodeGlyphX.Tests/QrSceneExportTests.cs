@@ -99,12 +99,39 @@ public sealed class QrSceneExportTests {
     public async Task DeliverySearchIsBoundedAndRetainsHonestFailedChecks() {
         var design = QrScenePresets.Create(QrSceneStyle.TropicalGarden, 600); design.Qr.Scale = .4; design.Qr.X = .25;
         var result = await QrArt.SearchSceneAsync(Payload, design, new QrSceneSearchOptions { MaxCandidates = 3, Delivery = new() { ScreenSize = 32, PrintMillimeters = 10, PrintDpi = 72, DecodeBudgetMilliseconds = 1000 } });
-        Assert.Equal(3, result.AttemptedCandidates); Assert.True(result.RejectedPlacements > 0); Assert.True(result.ValidatedCandidates >= 1);
+        Assert.Equal(3, result.AttemptedCandidates); Assert.True(result.RejectedCandidates > 0); Assert.True(result.ValidatedCandidates >= 1);
         Assert.False(result.Best.Validation.AllPassed); Assert.Contains(result.Best.Validation.Checks, c => c.Name == "ScreenSize" && !c.Passed);
         Assert.Equal(Payload, result.Best.Scene.Payload); Assert.Equal(design.Seed, result.Best.Scene.Design.Seed);
         Assert.Equal(.4, design.Qr.Scale); Assert.Equal(7, result.Best.Validation.Checks.Count);
         Assert.Throws<ArgumentOutOfRangeException>(() => QrArt.SearchScene(Payload, design, new() { MaxCandidates = 7 }));
         Assert.Throws<OperationCanceledException>(() => QrArt.SearchScene(Payload, design, cancellationToken: new CancellationToken(true)));
+    }
+
+    [Fact]
+    public async Task DeliverySearchSkipsAnUnrenderableOriginalAndFailsClearlyWhenLimited() {
+        var design = QrScenePresets.Create(QrSceneStyle.RetroArcade, 600); design.Qr.Scale = .25;
+        Assert.Equal(600, QrArt.ComposeScene(Payload, design).Image.Size);
+        design.Size = 256;
+        var delivery = new QrImageDeliveryOptions { ScreenSize = 256, PrintMillimeters = 43.4, PrintDpi = 150, PerspectiveInset = 0, DecodeBudgetMilliseconds = 1000 };
+        var result = await QrArt.SearchSceneAsync(Payload, design, new() { MaxCandidates = 2, Delivery = delivery });
+        Assert.Equal(256, result.Best.Scene.Image.Size); Assert.True(result.Best.Scene.Design.Qr.Scale > .25);
+        Assert.True(result.RejectedCandidates >= 1); Assert.True(result.ValidatedCandidates >= 1);
+        Assert.Equal(Payload, result.Best.Scene.Payload); Assert.Equal(.25, design.Qr.Scale);
+        var error = Assert.Throws<ArgumentException>(() => QrArt.SearchScene(Payload, design, new() { MaxCandidates = 1, Delivery = delivery }));
+        Assert.Contains("No QR candidate fits", error.Message);
+        design.Qr.X = 0;
+        Assert.Throws<ArgumentException>(() => QrArt.SearchScene(Payload, design, new() { Delivery = delivery }));
+    }
+
+    [Fact]
+    public void SceneSvgClipsAtItsOwnViewportWithoutHostFragmentReferences() {
+        foreach (var size in new[] { 600, 1200 }) {
+            var scene = QrArt.ComposeScene(Payload, QrScenePresets.Create(QrSceneStyle.TropicalGarden, size));
+            var root = XElement.Parse(scene.ToSvg());
+            Assert.Equal($"0 0 {size} {size}", (string?)root.Attribute("viewBox"));
+            Assert.Equal("hidden", (string?)root.Attribute("overflow"));
+            Assert.Empty(root.DescendantsAndSelf().Attributes("clip-path"));
+        }
     }
 
     [Fact]

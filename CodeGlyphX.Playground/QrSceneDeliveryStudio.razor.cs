@@ -34,15 +34,19 @@ public partial class QrSceneDeliveryStudio : IAsyncDisposable {
             var settings = Settings;
             var delivery = new QrImageDeliveryOptions { ScreenSize = int.Parse(_screenText, CultureInfo.InvariantCulture), PrintMillimeters = settings.WidthMillimeters, PrintDpi = settings.Dpi, DecodeBudgetMilliseconds = 2000 };
             await Task.Delay(1, _cancel.Token);
-            var export = Scene.Export(settings, _cancel.Token);
+            QrSceneExport export;
             QrImageValidationReport report;
             var selection = "";
             if (search) {
-                var result = await QrArt.SearchSceneAsync(export.Scene.Payload, export.Scene.Design, new QrSceneSearchOptions { Delivery = delivery }, _cancel.Token);
+                var design = Scene.Design; design.Size = settings.PixelSize;
+                var result = await QrArt.SearchSceneAsync(Scene.Payload, design, new QrSceneSearchOptions { Delivery = delivery }, _cancel.Token);
                 export = result.Best.Scene.Export(settings, _cancel.Token);
                 report = await QrArt.ValidateDeliveryAsync(export.ToPng(), export.Scene.Payload, delivery, cancellationToken: _cancel.Token);
-                selection = $" Compared {result.ValidatedCandidates} candidates; {result.RejectedPlacements} placements did not fit. Selected QR scale {export.Scene.Design.Qr.Scale:0.##} / {export.Scene.Design.ModuleShape}.";
-            } else report = await QrArt.ValidateDeliveryAsync(export.ToPng(), export.Scene.Payload, delivery, cancellationToken: _cancel.Token);
+                selection = $" Compared {result.ValidatedCandidates} candidates; {result.RejectedCandidates} candidates had too few pixels per module or did not fit. Selected QR scale {export.Scene.Design.Qr.Scale:0.##} / {export.Scene.Design.ModuleShape}.";
+            } else {
+                export = Scene.Export(settings, _cancel.Token);
+                report = await QrArt.ValidateDeliveryAsync(export.ToPng(), export.Scene.Payload, delivery, cancellationToken: _cancel.Token);
+            }
             _cancel.Token.ThrowIfCancellationRequested();
             var pngBytes = export.ToPng();
             var png = BinaryUri("image/png", pngBytes);

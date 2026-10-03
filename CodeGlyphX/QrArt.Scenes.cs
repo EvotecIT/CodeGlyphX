@@ -19,8 +19,8 @@ public static partial class QrArt {
     }
 
     private static QrSceneComposition ComposeSceneCore(string payload, QrCode code, QrSceneOptions design, CancellationToken token) {
-        var moduleSize = (int)Math.Floor(design.Size * design.Qr.Scale / (code.Size + 8));
-        if (moduleSize < 2) throw new ArgumentException("Increase scene size or QR scale: at least two pixels per module are required.", nameof(design));
+        var moduleSize = GetSceneModuleSize(design, code);
+        if (moduleSize < SceneMinimumModuleSize) throw new ArgumentException("Increase scene size or QR scale: at least two pixels per module are required.", nameof(design));
         var qrSize = moduleSize * (code.Size + 8);
         if (!TryGetScenePlacement(design, qrSize, out var x, out var y))
             throw new ArgumentException("The QR and its full quiet zone must fit inside the canvas.", nameof(design));
@@ -48,6 +48,8 @@ public static partial class QrArt {
             new QrImageComposition(pixels, design.Size, x, y, qrSize));
     }
 
+    private const int SceneMinimumModuleSize = 2;
+    private static int GetSceneModuleSize(QrSceneOptions design, QrCode code) => (int)Math.Floor(design.Size * design.Qr.Scale / (code.Size + 8));
     private static bool TryGetScenePlacement(QrSceneOptions design, int qrSize, out int x, out int y) {
         x = (int)Math.Round(design.Qr.X * design.Size - qrSize / 2.0);
         y = (int)Math.Round(design.Qr.Y * design.Size - qrSize / 2.0);
