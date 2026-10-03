@@ -12,7 +12,7 @@ internal static class QrSceneGalleryExample {
         var sheet = new byte[sheetSize * sheetHeight * 4];
         for (var p = 0; p < sheet.Length; p += 4) { sheet[p] = 236; sheet[p + 1] = 237; sheet[p + 2] = 244; sheet[p + 3] = 255; }
         var index = 0;
-        foreach (QrSceneStyle style in Enum.GetValues(typeof(QrSceneStyle))) {
+        foreach (var style in Enum.GetValues<QrSceneStyle>()) {
             var options = QrScenePresets.Create(style);
             var result = QrArt.ComposeScene(payload, options);
             var name = "scene-" + style.ToString().ToLowerInvariant();
