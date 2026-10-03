@@ -134,6 +134,13 @@ internal static partial class WebpVp8Decoder {
         rgba = Array.Empty<byte>();
         stats = default;
 
+        if (!DecodeGuards.TryEnsurePixelCount(header.Width, header.Height, out var pixels) ||
+            !DecodeGuards.TryEnsureByteCount((long)pixels * 4, out _)) return false;
+
+        var width = GetMacroblockDimension(header.Width) * MacroblockSize;
+        var height = GetMacroblockDimension(header.Height) * MacroblockSize;
+        if (!DecodeGuards.TryEnsureByteCount((long)width * height, out var planeBytes)) return false;
+
         if (!TryGetBoolCodedData(payload, out var boolData)) return false;
         var headerDecoder = new WebpVp8BoolDecoder(boolData);
         if (!TryReadFrameHeader(headerDecoder, out var frameHeader)) return false;
@@ -155,9 +162,7 @@ internal static partial class WebpVp8Decoder {
             offset += size;
         }
 
-        var width = GetMacroblockDimension(header.Width) * MacroblockSize;
-        var height = GetMacroblockDimension(header.Height) * MacroblockSize;
-        var yPlane = new byte[checked(width * height)];
+        var yPlane = new byte[planeBytes];
         var chromaWidth = (width + 1) >> 1;
         var chromaHeight = (height + 1) >> 1;
         var uPlane = new byte[checked(chromaWidth * chromaHeight)];
@@ -1152,7 +1157,8 @@ internal static partial class WebpVp8Decoder {
         var macroblockHeight = MacroblockSize;
         if (macroblockWidth <= 0 || macroblockHeight <= 0) return false;
 
-        var pixelBytes = checked(header.Width * header.Height * 4);
+        if (!DecodeGuards.TryEnsurePixelCount(header.Width, header.Height, out var pixels) ||
+            !DecodeGuards.TryEnsureByteCount((long)pixels * 4, out var pixelBytes)) return false;
         var output = new byte[pixelBytes];
 
         var tileCols = (header.Width + macroblockWidth - 1) / macroblockWidth;
@@ -1565,7 +1571,7 @@ internal static partial class WebpVp8Decoder {
         byte[] vPlane,
         int chromaWidth,
         int chromaHeight) {
-        var rgba = new byte[checked(width * height * 4)];
+        var rgba = DecodeGuards.AllocateRgba32(width, height, "VP8 image exceeds decode limits.");
 
         for (var y = 0; y < height; y++) {
             for (var x = 0; x < width; x++) {
@@ -2749,7 +2755,7 @@ internal static partial class WebpVp8Decoder {
         var height = macroblock.Height;
         if (width <= 0 || height <= 0) return Array.Empty<byte>();
 
-        var rgba = new byte[width * height * 4];
+        var rgba = DecodeGuards.AllocateRgba32(width, height, "VP8 image exceeds decode limits.");
 
         for (var y = 0; y < height; y++) {
             var chromaY = y >> 1;
@@ -2779,7 +2785,7 @@ internal static partial class WebpVp8Decoder {
         if (targetWidth <= 0 || targetHeight <= 0) return Array.Empty<byte>();
         if (width == targetWidth && height == targetHeight) return (byte[])rgba.Clone();
 
-        var output = new byte[targetWidth * targetHeight * 4];
+        var output = DecodeGuards.AllocateRgba32(targetWidth, targetHeight, "VP8 image exceeds decode limits.");
 
         for (var y = 0; y < targetHeight; y++) {
             var srcY = (y * height) / targetHeight;
@@ -2809,7 +2815,7 @@ internal static partial class WebpVp8Decoder {
         if (targetWidth <= 0 || targetHeight <= 0) return Array.Empty<byte>();
         if (width == targetWidth && height == targetHeight) return (byte[])plane.Clone();
 
-        var output = new byte[targetWidth * targetHeight];
+        var output = DecodeGuards.AllocatePixelBuffer(targetWidth, targetHeight, "VP8 image exceeds decode limits.");
 
         for (var y = 0; y < targetHeight; y++) {
             var srcY = (y * height) / targetHeight;

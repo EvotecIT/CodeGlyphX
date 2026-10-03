@@ -46,6 +46,12 @@ public sealed partial class ImageDecodeOptions {
         return this;
     }
 
+    /// <summary>Sets the decoded/intermediate buffer and retained animation pixel byte limit.</summary>
+    public ImageDecodeOptions WithMaxDecodedBytes(long maxBytes) {
+        MaxDecodedBytes = maxBytes;
+        return this;
+    }
+
     /// <summary>
     /// Sets the maximum animation frame count allowed for decoding.
     /// </summary>

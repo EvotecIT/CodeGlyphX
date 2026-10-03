@@ -41,6 +41,9 @@ public static partial class ImageReader {
     /// </summary>
     public const int DefaultMaxImageBytes = 128 * 1024 * 1024;
 
+    /// <summary>Default byte limit for decoded/intermediate buffers and retained animation pixels.</summary>
+    public const long DefaultMaxDecodedBytes = 256L * 1024 * 1024;
+
     /// <summary>
     /// Default maximum animation frame count allowed for managed decodes.
     /// </summary>
@@ -67,6 +70,14 @@ public static partial class ImageReader {
     public static int MaxImageBytes { get; set; } = DefaultMaxImageBytes;
 
     /// <summary>
+    /// Maximum bytes in an individual decoded pixel or raster working buffer, and in retained
+    /// animation frame pixels. This does not cap total process memory or cumulative allocations.
+    /// Encoded input copies and codec metadata are not included.
+    /// Set to zero to disable.
+    /// </summary>
+    public static long MaxDecodedBytes { get; set; } = DefaultMaxDecodedBytes;
+
+    /// <summary>
     /// Maximum animation frame count allowed for managed decodes. Set to 0 to disable.
     /// </summary>
     public static int MaxAnimationFrames { get; set; } = DefaultMaxAnimationFrames;
@@ -91,6 +102,7 @@ public static partial class ImageReader {
     internal static long EffectiveMaxAnimationFramePixels => AnimationLimitOverrides.Value?.MaxFramePixels ?? MaxAnimationFramePixels;
     internal static int EffectiveMaxImageBytes => DecodeLimitOverrides.Value?.ByteLimit ?? MaxImageBytes;
     internal static long EffectiveMaxPixels => DecodeLimitOverrides.Value?.PixelLimit ?? MaxPixels;
+    internal static long EffectiveMaxDecodedBytes => DecodeLimitOverrides.Value?.DecodedByteLimit ?? MaxDecodedBytes;
 
     internal static void ReportLimitViolation(ImageDecodeLimitViolation violation) {
         var handler = LimitViolation;
@@ -424,10 +436,11 @@ public static partial class ImageReader {
         if (options is null) return null;
         var maxBytes = ResolveMaxBytes(options);
         var maxPixels = ResolveMaxPixels(options);
-        if (maxBytes == MaxImageBytes && maxPixels == MaxPixels) return null;
+        var maxDecodedBytes = ResolveMaxLong(options.MaxDecodedBytes, MaxDecodedBytes);
+        if (maxBytes == MaxImageBytes && maxPixels == MaxPixels && maxDecodedBytes == MaxDecodedBytes) return null;
 
         var previous = DecodeLimitOverrides.Value;
-        DecodeLimitOverrides.Value = new DecodeLimitOverride(maxBytes, maxPixels);
+        DecodeLimitOverrides.Value = new DecodeLimitOverride(maxBytes, maxPixels, maxDecodedBytes);
         return new DecodeLimitScope(previous);
     }
 
@@ -449,10 +462,12 @@ public static partial class ImageReader {
     private sealed class DecodeLimitOverride {
         public readonly int ByteLimit;
         public readonly long PixelLimit;
+        public readonly long DecodedByteLimit;
 
-        public DecodeLimitOverride(int maxBytes, long maxPixels) {
+        public DecodeLimitOverride(int maxBytes, long maxPixels, long maxDecodedBytes) {
             ByteLimit = maxBytes;
             PixelLimit = maxPixels;
+            DecodedByteLimit = maxDecodedBytes;
         }
     }
 

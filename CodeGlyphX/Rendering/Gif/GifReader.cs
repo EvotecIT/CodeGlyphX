@@ -267,6 +267,7 @@ public static class GifReader {
         options = new GifAnimationOptions(loopCount: 0, backgroundRgba: (uint)(bgR | (bgG << 8) | (bgB << 16) | (bgA << 24)));
 
         var frames = new System.Collections.Generic.List<GifAnimationFrame>();
+        long retainedBytes = 0;
         var maxFrames = ImageReader.EffectiveMaxAnimationFrames;
         var maxDurationMs = ImageReader.EffectiveMaxAnimationDurationMs;
         var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
@@ -369,6 +370,8 @@ public static class GifReader {
 
             var durationMs = delay;
             if (!composite) {
+                retainedBytes += (long)imgW * imgH * 4;
+                DecodeGuards.EnsureDecodedBytes(retainedBytes, GifFrameLimitMessage);
                 var frameRgba = DecodeGuards.AllocateRgba32(imgW, imgH, GifFrameLimitMessage);
                 if (!interlaced) {
                     DecodeFrame(pixels, imgW, imgH, colorTable, hasTransparency, transparentIndex, frameRgba);
@@ -379,6 +382,8 @@ public static class GifReader {
                 frames.Add(new GifAnimationFrame(frameRgba, imgW, imgH, imgW * 4, durationMs, left, top, disposal));
             } else {
                 if (canvas is null) throw new FormatException("GIF canvas buffer is missing.");
+                retainedBytes += canvas.Length;
+                DecodeGuards.EnsureDecodedBytes(retainedBytes, GifFrameLimitMessage);
                 byte[]? restore = null;
                 if (disposal == GifDisposalMethod.RestorePrevious) {
                     restore = new byte[canvas.Length];

@@ -29,6 +29,14 @@ public sealed partial class ImageDecodeOptions {
     public int? MaxBytes { get; set; }
 
     /// <summary>
+    /// Maximum bytes in an individual decoded pixel or raster working buffer, and in retained
+    /// animation frame pixels. This is not a cap on total process memory or cumulative allocations.
+    /// Encoded input copies and codec metadata are not included.
+    /// Null inherits <see cref="Rendering.ImageReader.MaxDecodedBytes"/>; zero disables this limit.
+    /// </summary>
+    public long? MaxDecodedBytes { get; set; }
+
+    /// <summary>
     /// Cooperative time budget, in milliseconds, for barcode and matrix recognition after raster
     /// decoding. Image codecs do not use this value. Multi-format <see cref="CodeGlyph"/> entry points
     /// apply the budget to each candidate decoder rather than to the complete candidate sequence.
@@ -70,7 +78,10 @@ public sealed partial class ImageDecodeOptions {
     }
 
     /// <summary>
-    /// Guarded preset for untrusted images (caps bytes, pixels, and animation limits).
+    /// Guarded preset for untrusted images (caps input bytes, decoded bytes, pixels, and animation limits).
+    /// The decoded byte limit is 16 bytes per permitted pixel, capped at 256 MiB; when the pixel
+    /// limit is disabled it is 256 MiB. Override <see cref="MaxDecodedBytes"/> for larger legal
+    /// codec buffers, such as padded TIFF tiles.
     /// </summary>
     public static ImageDecodeOptions Guarded(
         int maxBytes = 64 * 1024 * 1024,
@@ -84,6 +95,9 @@ public sealed partial class ImageDecodeOptions {
         return new ImageDecodeOptions {
             MaxBytes = maxBytes < 0 ? 0 : maxBytes,
             MaxPixels = resolvedMaxPixels,
+            MaxDecodedBytes = resolvedMaxPixels > 0
+                ? System.Math.Min(resolvedMaxPixels, Rendering.ImageReader.DefaultMaxDecodedBytes / 16) * 16
+                : Rendering.ImageReader.DefaultMaxDecodedBytes,
             MaxAnimationFrames = maxAnimationFrames < 0 ? 0 : maxAnimationFrames,
             MaxAnimationDurationMs = maxAnimationDurationMs < 0 ? 0 : maxAnimationDurationMs,
             MaxAnimationFramePixels = resolvedMaxAnimationFramePixels,

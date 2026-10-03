@@ -9,7 +9,7 @@ namespace CodeGlyphX.Rendering.Pdf;
     /// <summary>
     /// Minimal PDF image decoder (image-only PDFs with embedded JPEG/Flate XObjects).
     /// </summary>
-public static class PdfReader {
+public static partial class PdfReader {
     private static readonly byte[] PdfSignature = { (byte)'%', (byte)'P', (byte)'D', (byte)'F', (byte)'-' };
     private static readonly byte[] SubtypeToken = { (byte)'/', (byte)'S', (byte)'u', (byte)'b', (byte)'t', (byte)'y', (byte)'p', (byte)'e' };
     private static readonly byte[] ImageToken = { (byte)'/', (byte)'I', (byte)'m', (byte)'a', (byte)'g', (byte)'e' };
@@ -384,9 +384,22 @@ public static class PdfReader {
     }
 
     private static bool TryDecodeWithFilters(PdfImageInfo info, ReadOnlySpan<byte> stream, out byte[] rgba, out int width, out int height) {
+        try {
+            return TryDecodeWithFiltersCore(info, stream, out rgba, out width, out height);
+        } catch (Exception ex) when (ex is FormatException || ex is InvalidDataException || ex is OverflowException) {
+            rgba = Array.Empty<byte>();
+            width = height = 0;
+            return false;
+        }
+    }
+
+    private static bool TryDecodeWithFiltersCore(PdfImageInfo info, ReadOnlySpan<byte> stream, out byte[] rgba, out int width, out int height) {
         rgba = Array.Empty<byte>();
         width = 0;
         height = 0;
+
+        if (!DecodeGuards.TryEnsurePixelCount(info.Width, info.Height, out var pixelCount) ||
+            !DecodeGuards.TryEnsureByteCount((long)pixelCount * 4, out _)) return false;
 
         if (info.Filters is null || info.Filters.Length == 0) {
             if (TryDecodeRaster(info, stream, applyPredictor: info.Predictor > 1, out rgba, out width, out height)) {
@@ -403,18 +416,19 @@ public static class PdfReader {
         var data = stream.ToArray();
         for (var i = 0; i < info.Filters.Length; i++) {
             var filter = info.Filters[i];
+            var limit = GetFilterOutputLimit(info, i == info.Filters.Length - 1);
             if (IsFilter(filter, "ASCIIHexDecode", "AHx")) {
-                if (!TryDecodeAsciiHex(data, out var decoded)) return false;
+                if (!TryDecodeAsciiHex(data, limit, out var decoded)) return false;
                 data = decoded;
                 continue;
             }
             if (IsFilter(filter, "ASCII85Decode", "A85")) {
-                if (!TryDecodeAscii85(data, out var decoded)) return false;
+                if (!TryDecodeAscii85(data, limit, out var decoded)) return false;
                 data = decoded;
                 continue;
             }
             if (IsFilter(filter, "RunLengthDecode", "RL")) {
-                if (!TryDecodeRunLength(data, out var decoded)) return false;
+                if (!TryDecodeRunLength(data, limit, out var decoded)) return false;
                 data = decoded;
                 continue;
             }
@@ -425,7 +439,7 @@ public static class PdfReader {
             }
             if (IsFilter(filter, "FlateDecode", "Fl")) {
                 try {
-                    data = DecompressFlateAll(data);
+                    data = DecompressFlateAll(data, limit);
                 } catch (FormatException) {
                     return false;
                 }
@@ -449,6 +463,7 @@ public static class PdfReader {
         if (info.SoftMaskObj <= 0) return;
         if (!TryResolveIndirectStream(data, info.SoftMaskObj, info.SoftMaskGen, out var dict, out var stream)) return;
         if (!TryParseImageInfo(data, dict, out var maskInfo)) return;
+        if (maskInfo.Width != width || maskInfo.Height != height) return;
         if (!TryDecodeWithFilters(maskInfo, stream, out var maskRgba, out var maskWidth, out var maskHeight)) return;
         if (maskWidth != width || maskHeight != height) return;
 
@@ -465,6 +480,7 @@ public static class PdfReader {
         if (info.MaskObj <= 0) return;
         if (!TryResolveIndirectStream(data, info.MaskObj, info.MaskGen, out var dict, out var stream)) return;
         if (!TryParseImageInfo(data, dict, out var maskInfo)) return;
+        if (maskInfo.Width != width || maskInfo.Height != height) return;
         if (!TryDecodeWithFilters(maskInfo, stream, out var maskRgba, out var maskWidth, out var maskHeight)) return;
         if (maskWidth != width || maskHeight != height) return;
 
@@ -483,7 +499,9 @@ public static class PdfReader {
         height = 0;
 
         if (info.Width <= 0 || info.Height <= 0) return false;
-        if (!DecodeGuards.TryEnsurePixelCount(info.Width, info.Height, out _)) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(info.Width, info.Height, out var pixelCount) ||
+            !DecodeGuards.TryEnsureByteCount((long)pixelCount * 4, out _) ||
+            !DecodeGuards.TryEnsureDecodedBytes(data.Length)) return false;
 
         var bits = info.BitsPerComponent;
         var colors = info.Colors;
@@ -558,7 +576,7 @@ public static class PdfReader {
                 ApplyDecodeArray(expanded, 1, info.Decode);
             }
             var maskPixelCount = info.Width * info.Height;
-            rgba = new byte[maskPixelCount * 4];
+            rgba = DecodeGuards.AllocateRgba32(info.Width, info.Height, PdfImageLimitMessage);
             for (var i = 0; i < maskPixelCount; i++) {
                 var dst = i * 4;
                 var alpha = expanded[i];
@@ -602,7 +620,7 @@ public static class PdfReader {
         }
 
         var totalPixels = info.Width * info.Height;
-        rgba = new byte[totalPixels * 4];
+        rgba = DecodeGuards.AllocateRgba32(info.Width, info.Height, PdfImageLimitMessage);
         if (colors == 3) {
             for (var i = 0; i < totalPixels; i++) {
                 var src = i * 3;
@@ -668,7 +686,7 @@ public static class PdfReader {
             }
 
             var pixelCount = DecodeGuards.EnsurePixelCount(width, height, PdfImageLimitMessage);
-            alpha = new byte[pixelCount];
+            alpha = DecodeGuards.AllocatePixelBuffer(width, height, PdfImageLimitMessage);
             for (var i = 0; i < pixelCount; i++) {
                 var baseIndex = i * colors;
                 var match = true;
@@ -700,7 +718,7 @@ public static class PdfReader {
         }
 
         var count = DecodeGuards.EnsurePixelCount(width, height, PdfImageLimitMessage);
-        alpha = new byte[count];
+        alpha = DecodeGuards.AllocatePixelBuffer(width, height, PdfImageLimitMessage);
         for (var i = 0; i < count; i++) {
             var baseIndex = i * colors;
             var match = true;
@@ -1909,7 +1927,7 @@ public static class PdfReader {
         }
     }
 
-    private static byte[] DecompressFlateAll(ReadOnlySpan<byte> src) {
+    private static byte[] DecompressFlateAll(ReadOnlySpan<byte> src, int limit) {
         using var input = new MemoryStream(src.ToArray(), writable: false);
 #if NET8_0_OR_GREATER
         Stream stream = LooksLikeZlib(src)
@@ -1925,9 +1943,12 @@ public static class PdfReader {
         }
 #endif
         using (stream) {
-            using var ms = new MemoryStream();
-            stream.CopyTo(ms);
-            return ms.ToArray();
+            try {
+                return RenderIO.ReadBinary(stream, limit);
+            } catch (FormatException) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxDecodedBytes, limit, (long)limit + 1, ImageFormat.Pdf));
+                throw;
+            }
         }
     }
 
@@ -2024,7 +2045,7 @@ public static class PdfReader {
         var expected = checked((rowSize + 1) * height);
         if (data.Length != expected) return false;
 
-        var decoded = new byte[rowSize * height];
+        var decoded = new byte[DecodeGuards.EnsureByteCount((long)rowSize * height, PdfImageLimitMessage)];
         var bytesPerPixel = colors * 2;
         for (var y = 0; y < height; y++) {
             var srcRow = y * (rowSize + 1);
@@ -2151,7 +2172,7 @@ public static class PdfReader {
             var samplesPerRow16 = checked(width * colors);
             var rowBytes16 = checked(samplesPerRow16 * 2);
             if ((long)rowBytes16 * height > data.Length) return false;
-            expanded = new byte[samplesPerRow16 * height];
+            expanded = new byte[DecodeGuards.EnsureByteCount((long)samplesPerRow16 * height, PdfImageLimitMessage)];
             var srcIndex = 0;
             for (var i = 0; i < expanded.Length; i++) {
                 var value = (data[srcIndex] << 8) | data[srcIndex + 1];
@@ -2166,7 +2187,7 @@ public static class PdfReader {
         var rowBytes = (int)((rowBits + 7) / 8);
         if ((long)rowBytes * height > data.Length) return false;
 
-        expanded = new byte[samplesPerRow * height];
+        expanded = new byte[DecodeGuards.EnsureByteCount((long)samplesPerRow * height, PdfImageLimitMessage)];
         var mask = (1 << bitsPerComponent) - 1;
         for (var y = 0; y < height; y++) {
             var rowStart = y * samplesPerRow;
@@ -2284,283 +2305,6 @@ public static class PdfReader {
 
     private static int ClampIndex(byte index, int max) {
         return index > max ? max : index;
-    }
-
-    private static bool TryDecodeAscii85(ReadOnlySpan<byte> src, out byte[] decoded) {
-        decoded = Array.Empty<byte>();
-        using var ms = new MemoryStream();
-        uint tuple = 0;
-        var count = 0;
-        for (var i = 0; i < src.Length; i++) {
-            var b = src[i];
-            if (b == (byte)'~') {
-                if (i + 1 < src.Length && src[i + 1] == (byte)'>') {
-                    i++;
-                    break;
-                }
-            }
-            if (b == (byte)'z') {
-                if (count != 0) return false;
-                ms.WriteByte(0);
-                ms.WriteByte(0);
-                ms.WriteByte(0);
-                ms.WriteByte(0);
-                continue;
-            }
-            if (b <= 32) continue;
-            if (b < (byte)'!' || b > (byte)'u') return false;
-            tuple = tuple * 85 + (uint)(b - (byte)'!');
-            count++;
-            if (count == 5) {
-                WriteTuple(ms, tuple);
-                tuple = 0;
-                count = 0;
-            }
-        }
-
-        if (count > 0) {
-            for (var i = count; i < 5; i++) {
-                tuple = tuple * 85 + 84;
-            }
-            var buffer = new byte[4];
-            buffer[0] = (byte)(tuple >> 24);
-            buffer[1] = (byte)(tuple >> 16);
-            buffer[2] = (byte)(tuple >> 8);
-            buffer[3] = (byte)tuple;
-            ms.Write(buffer, 0, count - 1);
-        }
-
-        decoded = ms.ToArray();
-        return true;
-    }
-
-    private static bool TryDecodeAsciiHex(ReadOnlySpan<byte> src, out byte[] decoded) {
-        decoded = Array.Empty<byte>();
-        var buffer = new System.Collections.Generic.List<byte>();
-        var highNibble = -1;
-        for (var i = 0; i < src.Length; i++) {
-            var b = src[i];
-            if (b == (byte)'>') {
-                if (highNibble >= 0) {
-                    buffer.Add((byte)(highNibble << 4));
-                }
-                decoded = buffer.ToArray();
-                return true;
-            }
-            if (b <= 32) continue;
-            var nibble = HexToNibble(b);
-            if (nibble < 0) return false;
-            if (highNibble < 0) {
-                highNibble = nibble;
-            } else {
-                buffer.Add((byte)((highNibble << 4) | nibble));
-                highNibble = -1;
-            }
-        }
-        if (highNibble >= 0) {
-            buffer.Add((byte)(highNibble << 4));
-        }
-        decoded = buffer.ToArray();
-        return true;
-    }
-
-    private static bool TryDecodeLzw(PdfImageInfo info, ReadOnlySpan<byte> src, out byte[] decoded) {
-        decoded = Array.Empty<byte>();
-        if (!TryGetExpectedDecodedLength(info, out var expected)) return false;
-        try {
-            if (info.LzwEarlyChange == 0 || info.LzwEarlyChange == 1) {
-                decoded = DecompressLzw(src, expected, info.LzwEarlyChange);
-            } else {
-                decoded = DecompressLzwCompat(src, expected);
-            }
-            return true;
-        } catch (FormatException) {
-            if (info.LzwEarlyChange == 0 || info.LzwEarlyChange == 1) {
-                try {
-                    decoded = DecompressLzwCompat(src, expected);
-                    return true;
-                } catch (FormatException) {
-                    return false;
-                }
-            }
-            return false;
-        }
-    }
-
-    private static bool TryGetExpectedDecodedLength(PdfImageInfo info, out int expected) {
-        expected = 0;
-        if (info.Width <= 0 || info.Height <= 0) return false;
-
-        var colors = info.Colors;
-        if (info.ColorSpaceKind == PdfColorSpaceKind.Indexed) {
-            colors = 1;
-        } else if (colors <= 0) {
-            colors = info.ColorSpaceKind switch {
-                PdfColorSpaceKind.DeviceGray => 1,
-                PdfColorSpaceKind.DeviceRGB => 3,
-                PdfColorSpaceKind.DeviceCMYK => 4,
-                _ => 0
-            };
-        }
-        if (colors <= 0) return false;
-
-        var bits = info.BitsPerComponent;
-        if (bits <= 0) return false;
-
-        try {
-            if (bits == 8) {
-                var rowSize = checked(info.Width * colors);
-                expected = info.Predictor >= 10
-                    ? checked((rowSize + 1) * info.Height)
-                    : checked(rowSize * info.Height);
-                return true;
-            }
-            var rowBits = checked(info.Width * colors * bits);
-            var rowBytes = (rowBits + 7) / 8;
-            expected = info.Predictor >= 10
-                ? checked((rowBytes + 1) * info.Height)
-                : checked(rowBytes * info.Height);
-            return true;
-        } catch (OverflowException) {
-            expected = 0;
-            return false;
-        }
-    }
-
-    private static byte[] DecompressLzwCompat(ReadOnlySpan<byte> src, int expected) {
-        FormatException? last = null;
-        var attempts = new[] { 1, 0 };
-        foreach (var earlyChange in attempts) {
-            try {
-                return DecompressLzw(src, expected, earlyChange);
-            } catch (FormatException ex) {
-                last = ex;
-            }
-        }
-        throw last ?? new FormatException("Invalid PDF LZW data.");
-    }
-
-    private static byte[] DecompressLzw(ReadOnlySpan<byte> src, int expected, int earlyChange) {
-        if (expected <= 0) throw new FormatException("Invalid PDF LZW output size.");
-        var prefix = new short[4096];
-        var suffix = new byte[4096];
-        var stack = new byte[4096];
-        var output = new byte[expected];
-
-        for (var i = 0; i < 256; i++) {
-            prefix[i] = -1;
-            suffix[i] = (byte)i;
-        }
-
-        var bitPos = 0;
-        var codeSize = 9;
-        const int clear = 256;
-        const int eoi = 257;
-        var nextCode = 258;
-        var oldCode = -1;
-        var outIndex = 0;
-        byte firstChar = 0;
-
-        while (true) {
-            var code = ReadBitsMsb(src, ref bitPos, codeSize);
-            if (code < 0) break;
-            if (code == clear) {
-                codeSize = 9;
-                nextCode = 258;
-                oldCode = -1;
-                continue;
-            }
-            if (code == eoi) break;
-
-            var inCode = code;
-            var stackTop = 0;
-            if (code >= nextCode) {
-                if (oldCode < 0) throw new FormatException("Invalid PDF LZW stream.");
-                if (stackTop >= stack.Length) throw new FormatException("Invalid PDF LZW stack overflow.");
-                stack[stackTop++] = firstChar;
-                code = oldCode;
-            }
-
-            while (code >= 256) {
-                if ((uint)code >= 4096) throw new FormatException("Invalid PDF LZW code.");
-                if (stackTop >= stack.Length) throw new FormatException("Invalid PDF LZW stack overflow.");
-                stack[stackTop++] = suffix[code];
-                code = prefix[code];
-            }
-
-            firstChar = (byte)code;
-            if (stackTop >= stack.Length) throw new FormatException("Invalid PDF LZW stack overflow.");
-            stack[stackTop++] = firstChar;
-
-            while (stackTop > 0) {
-                if (outIndex >= output.Length) throw new FormatException("PDF LZW output too large.");
-                output[outIndex++] = stack[--stackTop];
-            }
-
-            if (oldCode >= 0) {
-                if (nextCode < 4096) {
-                    prefix[nextCode] = (short)oldCode;
-                    suffix[nextCode] = firstChar;
-                    nextCode++;
-                    if (nextCode == (1 << codeSize) - earlyChange && codeSize < 12) {
-                        codeSize++;
-                    }
-                }
-            }
-            oldCode = inCode;
-        }
-
-        if (outIndex != output.Length) throw new FormatException("PDF LZW output truncated.");
-        return output;
-    }
-
-    private static int ReadBitsMsb(ReadOnlySpan<byte> data, ref int bitPos, int bitCount) {
-        var totalBits = data.Length * 8;
-        if (bitPos + bitCount > totalBits) return -1;
-        var value = 0;
-        for (var i = 0; i < bitCount; i++) {
-            var bitIndex = bitPos + i;
-            var byteIndex = bitIndex >> 3;
-            var shift = 7 - (bitIndex & 7);
-            var bit = (data[byteIndex] >> shift) & 1;
-            value = (value << 1) | bit;
-        }
-        bitPos += bitCount;
-        return value;
-    }
-
-    private static void WriteTuple(Stream stream, uint tuple) {
-        stream.WriteByte((byte)(tuple >> 24));
-        stream.WriteByte((byte)(tuple >> 16));
-        stream.WriteByte((byte)(tuple >> 8));
-        stream.WriteByte((byte)tuple);
-    }
-
-    private static bool TryDecodeRunLength(ReadOnlySpan<byte> src, out byte[] decoded) {
-        decoded = Array.Empty<byte>();
-        using var ms = new MemoryStream();
-        var i = 0;
-        while (i < src.Length) {
-            var b = src[i++];
-            if (b == 128) break;
-            if (b <= 127) {
-                var count = b + 1;
-                if (i + count > src.Length) return false;
-                var chunk = new byte[count];
-                src.Slice(i, count).CopyTo(chunk);
-                ms.Write(chunk, 0, chunk.Length);
-                i += count;
-            } else {
-                var count = 257 - b;
-                if (i >= src.Length) return false;
-                var value = src[i++];
-                for (var j = 0; j < count; j++) {
-                    ms.WriteByte(value);
-                }
-            }
-        }
-        decoded = ms.ToArray();
-        return true;
     }
 
     private readonly struct PdfImageInfo {

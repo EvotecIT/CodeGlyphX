@@ -208,10 +208,11 @@ public static class RenderIO {
         }
 
         using var ms = new MemoryStream();
-        var buffer = new byte[81920];
+        var buffer = new byte[(int)Math.Min(81920, (long)maxBytes + 1)];
         long total = 0;
         while (true) {
-            var read = stream.Read(buffer, 0, buffer.Length);
+            var count = (int)Math.Min(buffer.Length, (long)maxBytes - total + 1);
+            var read = stream.Read(buffer, 0, count);
             if (read <= 0) break;
             total += read;
             if (total > maxBytes) throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, total, maxBytes));
@@ -253,10 +254,11 @@ public static class RenderIO {
         }
 
         using var ms = new MemoryStream();
-        var buffer = new byte[81920];
+        var buffer = new byte[(int)Math.Min(81920, (long)maxBytes + 1)];
         long total = 0;
         while (true) {
-            var read = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false);
+            var count = (int)Math.Min(buffer.Length, (long)maxBytes - total + 1);
+            var read = await stream.ReadAsync(buffer, 0, count, cancellationToken).ConfigureAwait(false);
             if (read <= 0) break;
             total += read;
             if (total > maxBytes) throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, total, maxBytes));

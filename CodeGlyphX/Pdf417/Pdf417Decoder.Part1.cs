@@ -158,7 +158,9 @@ public static partial class Pdf417Decoder {
 
     private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         diagnostics.AttemptCount++;
-        return TryDecodeCore(modules, cancellationToken, out value);
+        var success = TryDecodeCore(modules, cancellationToken, out value, out var macro);
+        if (success) diagnostics.Macro = macro;
+        return success;
     }
 
     private static bool FailDecode(out string value) {

@@ -154,6 +154,13 @@ public static class SymbolScanner {
         HashSet<string>? seen) {
         if (!requested.Contains(SymbolFormat.QrCode)) return;
         var qrOptions = ResolveQrOptions(options, deadline);
+        if (options.MaxSymbols == 1) {
+            if (QrImageDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, qrOptions, deadline.Token, out var single)) {
+                Add(results, seen, new DetectedSymbol(SymbolFormat.QrCode, new CodeGlyphDecoded(single), searchRegion));
+                return;
+            }
+            if (deadline.ShouldStop) return;
+        }
         if (!QrImageDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, qrOptions, deadline.Token, out var decoded)) return;
         for (var i = 0; i < decoded.Length; i++) {
             Add(results, seen, new DetectedSymbol(SymbolFormat.QrCode, new CodeGlyphDecoded(decoded[i]), searchRegion));
@@ -478,6 +485,7 @@ public static class SymbolScanner {
             MaxAnimationFrames = source.MaxAnimationFrames,
             MaxAnimationDurationMs = source.MaxAnimationDurationMs,
             MaxAnimationFramePixels = source.MaxAnimationFramePixels,
+            MaxDecodedBytes = source.MaxDecodedBytes,
             JpegOptions = source.JpegOptions
         };
     }

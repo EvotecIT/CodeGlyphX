@@ -83,6 +83,9 @@ internal static class WebpVp8lDecoder {
         width = header.Width;
         height = header.Height;
 
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var pixels) ||
+            !DecodeGuards.TryEnsureByteCount((long)pixels * 4, out _)) return false;
+
         if (!TryReadTransforms(ref reader, width, height, depth: 0, out var transforms, out var dataWidth, out var dataHeight)) return false;
         if (!TryDecodeImageCore(ref reader, dataWidth, dataHeight, depth: 0, out var transformed)) return false;
         if (!ApplyTransforms(ref transformed, width, height, dataWidth, dataHeight, transforms)) return false;
@@ -93,7 +96,8 @@ internal static class WebpVp8lDecoder {
 
     internal static bool TryDecodeImageStream(ReadOnlySpan<byte> payload, int width, int height, out int[] argb) {
         argb = Array.Empty<int>();
-        if (width <= 0 || height <= 0) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var pixels) ||
+            !DecodeGuards.TryEnsureInt32Count(pixels, out _)) return false;
 
         var reader = new WebpBitReader(payload);
         if (!TryReadTransforms(ref reader, width, height, depth: 0, out var transforms, out var dataWidth, out var dataHeight)) return false;
@@ -118,6 +122,12 @@ internal static class WebpVp8lDecoder {
 
         width = header.Width;
         height = header.Height;
+
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var pixels) ||
+            !DecodeGuards.TryEnsureByteCount((long)pixels * 4, out _)) {
+            reason = "VP8L image exceeds decode limits.";
+            return false;
+        }
 
         if (!TryReadTransformsWithReason(ref reader, width, height, depth: 0, out var transforms, out var dataWidth, out var dataHeight, out var transformsReason)) {
             reason = transformsReason;
@@ -931,7 +941,8 @@ internal static class WebpVp8lDecoder {
         transformed = Array.Empty<int>();
         if (groups is null || groups.Length == 0) return false;
 
-        var pixelCount = checked(width * height);
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var pixelCount) ||
+            !DecodeGuards.TryEnsureInt32Count(pixelCount, out _)) return false;
         var buffer = new int[pixelCount];
         var pos = 0;
         while (pos < pixelCount) {
@@ -1107,7 +1118,8 @@ internal static class WebpVp8lDecoder {
 
         var widthBefore = transform.WidthBefore;
         var widthBits = transform.WidthBits;
-        var pixelCount = checked(widthBefore * currentHeight);
+        if (!DecodeGuards.TryEnsurePixelCount(widthBefore, currentHeight, out var pixelCount) ||
+            !DecodeGuards.TryEnsureInt32Count(pixelCount, out _)) return false;
         var output = new int[pixelCount];
 
         if (widthBits == 0) {
@@ -1254,7 +1266,7 @@ internal static class WebpVp8lDecoder {
     private static int Abs(int value) => value < 0 ? -value : value;
 
     private static byte[] ConvertToRgba(int[] transformed) {
-        var rgba = new byte[checked(transformed.Length * 4)];
+        var rgba = new byte[DecodeGuards.EnsureByteCount((long)transformed.Length * 4, "VP8L image exceeds decode limits.")];
         var offset = 0;
         for (var i = 0; i < transformed.Length; i++) {
             var argb = transformed[i];

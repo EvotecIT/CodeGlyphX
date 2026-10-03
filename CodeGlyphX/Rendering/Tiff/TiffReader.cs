@@ -8,7 +8,7 @@ namespace CodeGlyphX.Rendering.Tiff;
 /// <summary>
 /// Minimal TIFF decoder for baseline images (strips/tiles).
 /// </summary>
-public static class TiffReader {
+public static partial class TiffReader {
     private const ushort Magic = 42;
     private const ushort TagImageWidth = 256;
     private const ushort TagImageLength = 257;
@@ -389,6 +389,8 @@ public static class TiffReader {
             for (var s = 0; s < stripsPerPlane && row < height; s++) {
                 var rowsInStrip = Math.Min(rowsPerStrip, height - row);
                 var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * planeRowBytes, TiffStripLimitMessage);
+
+                DecodeGuards.EnsureDecodedBytes((long)expected * samplesPerPixel, TiffStripLimitMessage);
 
                 var planes = new byte[samplesPerPixel][];
                 for (var p = 0; p < samplesPerPixel; p++) {
@@ -785,111 +787,8 @@ public static class TiffReader {
         throw last ?? new FormatException("Invalid TIFF LZW data.");
     }
 
-    private static byte[] DecompressLzw(ReadOnlySpan<byte> src, int expected, int earlyChange, bool msb) {
-        if (expected <= 0) throw new FormatException("Invalid TIFF LZW output size.");
-        var prefix = new short[4096];
-        var suffix = new byte[4096];
-        var stack = new byte[4096];
-        var output = new byte[expected];
-
-        for (var i = 0; i < 256; i++) {
-            prefix[i] = -1;
-            suffix[i] = (byte)i;
-        }
-
-        var bitPos = 0;
-        var codeSize = 9;
-        var clear = 256;
-        var eoi = 257;
-        var nextCode = 258;
-        var oldCode = -1;
-        var outIndex = 0;
-        byte firstChar = 0;
-
-        while (true) {
-            var code = msb ? ReadBitsMsb(src, ref bitPos, codeSize) : ReadBitsLsb(src, ref bitPos, codeSize);
-            if (code < 0) break;
-            if (code == clear) {
-                codeSize = 9;
-                nextCode = 258;
-                oldCode = -1;
-                continue;
-            }
-            if (code == eoi) {
-                break;
-            }
-
-            var inCode = code;
-            var stackTop = 0;
-            if (code >= nextCode) {
-                if (oldCode < 0) throw new FormatException("Invalid TIFF LZW stream.");
-                if (stackTop >= stack.Length) throw new FormatException("Invalid TIFF LZW stack overflow.");
-                stack[stackTop++] = firstChar;
-                code = oldCode;
-            }
-
-            while (code >= 256) {
-                if ((uint)code >= 4096) throw new FormatException("Invalid TIFF LZW code.");
-                if (stackTop >= stack.Length) throw new FormatException("Invalid TIFF LZW stack overflow.");
-                stack[stackTop++] = suffix[code];
-                code = prefix[code];
-            }
-
-            firstChar = (byte)code;
-            if (stackTop >= stack.Length) throw new FormatException("Invalid TIFF LZW stack overflow.");
-            stack[stackTop++] = firstChar;
-
-            while (stackTop > 0) {
-                if (outIndex >= output.Length) throw new FormatException("TIFF LZW output too large.");
-                output[outIndex++] = stack[--stackTop];
-            }
-
-            if (oldCode >= 0) {
-                if (nextCode < 4096) {
-                    prefix[nextCode] = (short)oldCode;
-                    suffix[nextCode] = firstChar;
-                    nextCode++;
-                    if (nextCode == (1 << codeSize) - earlyChange && codeSize < 12) {
-                        codeSize++;
-                    }
-                }
-            }
-            oldCode = inCode;
-        }
-
-        if (outIndex != output.Length) throw new FormatException("TIFF LZW output truncated.");
-        return output;
-    }
-
-    private static int ReadBitsMsb(ReadOnlySpan<byte> data, ref int bitPos, int bitCount) {
-        var totalBits = data.Length * 8;
-        if (bitPos + bitCount > totalBits) return -1;
-        var value = 0;
-        for (var i = 0; i < bitCount; i++) {
-            var bitIndex = bitPos + i;
-            var byteIndex = bitIndex >> 3;
-            var shift = 7 - (bitIndex & 7);
-            var bit = (data[byteIndex] >> shift) & 1;
-            value = (value << 1) | bit;
-        }
-        bitPos += bitCount;
-        return value;
-    }
-
-    private static int ReadBitsLsb(ReadOnlySpan<byte> data, ref int bitPos, int bitCount) {
-        var totalBits = data.Length * 8;
-        if (bitPos + bitCount > totalBits) return -1;
-        var value = 0;
-        for (var i = 0; i < bitCount; i++) {
-            var bitIndex = bitPos + i;
-            var byteIndex = bitIndex >> 3;
-            var shift = bitIndex & 7;
-            var bit = (data[byteIndex] >> shift) & 1;
-            value |= bit << i;
-        }
-        bitPos += bitCount;
-        return value;
-    }
+    private static byte[] DecompressLzw(ReadOnlySpan<byte> src, int expected, int earlyChange, bool msb) =>
+        RasterLzwDecoder.Decode(src, expected, earlyChange, msb);
 
     private static void ApplyPredictor(Span<byte> data, int bytesPerRow, int samplesPerPixel, int bytesPerSample, bool little) {
         if (samplesPerPixel <= 0) return;
@@ -917,45 +816,6 @@ public static class TiffReader {
 
     private static byte Scale16To8(ushort value) {
         return (byte)((value * 255 + 32767) / 65535);
-    }
-
-    private static byte[] DecompressDeflate(ReadOnlySpan<byte> src, int expected) {
-        using var input = new MemoryStream(src.ToArray(), writable: false);
-#if NET8_0_OR_GREATER
-        Stream stream = LooksLikeZlib(src)
-            ? new ZLibStream(input, CompressionMode.Decompress, leaveOpen: true)
-            : new DeflateStream(input, CompressionMode.Decompress, leaveOpen: true);
-#else
-        Stream stream;
-        if (LooksLikeZlib(src)) {
-            if (src.Length < 6) throw new FormatException("Invalid TIFF deflate stream.");
-            stream = new DeflateStream(new MemoryStream(src.Slice(2, src.Length - 6).ToArray(), writable: false), CompressionMode.Decompress, leaveOpen: true);
-        } else {
-            stream = new DeflateStream(input, CompressionMode.Decompress, leaveOpen: true);
-        }
-#endif
-        using (stream) {
-            var buffer = new byte[expected];
-            ReadExact(stream, buffer);
-            return buffer;
-        }
-    }
-
-    private static bool LooksLikeZlib(ReadOnlySpan<byte> data) {
-        if (data.Length < 2) return false;
-        var cmf = data[0];
-        var flg = data[1];
-        if ((cmf & 0x0F) != 8) return false;
-        return ((cmf << 8) + flg) % 31 == 0;
-    }
-
-    private static void ReadExact(Stream stream, byte[] buffer) {
-        var offset = 0;
-        while (offset < buffer.Length) {
-            var read = stream.Read(buffer, offset, buffer.Length - offset);
-            if (read <= 0) throw new FormatException("Truncated TIFF data.");
-            offset += read;
-        }
     }
 
     private static bool TryGetValueSpan(ReadOnlySpan<byte> data, int entryOffset, bool little, ushort type, uint count, out ReadOnlySpan<byte> valueSpan) {
