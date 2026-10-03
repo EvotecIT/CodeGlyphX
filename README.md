@@ -272,6 +272,64 @@ var checks = QrArt.ValidateImage(artwork.ToPng(), "https://example.com/art");
 
 The [procedural-art example](CodeGlyphX.Examples/QrProceduralArtExample.cs) produces the six gallery designs and their PNG exports. Run it with `CODEGLYPHX_PROCEDURAL_ART=1`; `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Each export checks the exact URL at its original size, half size and after light blur. These examples use 18 pixels per module, leaving nine after the half-size check. Busy art can lose readability at smaller sizes: validate the actual export and target devices before distributing it. Rendering is available on all supported targets; these scan checks use the modern .NET decoder, since the legacy image recognizer has limited art support. The gallery is a visual overview; use the individual exports for scanning.
 
+### Illustrated scenes and editable recipes
+
+![Six illustrated QR scenes: tropical garden, electric city, music festival, ocean reef, cosmic orbit and retro arcade](Assets/Examples/qr-scene-gallery.png)
+
+`QrArt.ComposeScene` draws complete posters from seeded geometry. Each scene has five editable layers: backdrop, illustrations, QR, caption and an optional logo. Move, scale, rotate or hide decorative layers; QR rotation uses quarter turns. The QR renders above the artwork with protected functional patterns and a complete four-module quiet zone. Placement that clips the QR is rejected.
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering.Art;
+
+var design = QrScenePresets.Create(QrSceneStyle.OceanReef, size: 1200);
+design.Seed = 2026;
+design.Caption = "DIVE INTO COLOR";
+design.Motifs.RotationDegrees = 10;
+var scene = QrArt.ComposeScene("https://example.com/scenes", design);
+scene.SavePng("ocean-qr.png");
+scene.ToRecipe().Save("ocean-design.cgxart");
+
+var recipe = QrSceneRecipe.FromXml(File.ReadAllText("ocean-design.cgxart"));
+QrArt.ComposeScene(recipe.Payload, recipe.Design).SavePng("ocean-reopened.png");
+```
+
+The browser art studio's **Illustrated scene** source offers six presets, palette and layer controls, logo upload, undo/reset, and recipe save/load. Downloaded results retain the payload and design used to render them. Editing controls does not change a completed export.
+
+Recipes are versioned local XML documents capped at 2 MiB of text. They copy settings and any embedded logo, preserve UTF-8 payloads including control characters, and reject DTDs, external resources and unknown fields. Logo input is limited to 1 MiB and one million decoded pixels. Captions use the portable outlined font: Latin letters, digits, spaces and `-./:()+?`; lowercase letters render as capitals. Paper and QR ink must meet the documented light/dark luminance limits.
+
+Run the [scene-gallery example](CodeGlyphX.Examples/QrSceneGalleryExample.cs) with `CODEGLYPHX_SCENE_GALLERY=1` to export all six scenes, thumbnails and recipes. `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Check the actual PNG with `QrArt.ValidateImage` and qualify delivery sizes and target devices before distribution; these software checks do not certify physical printing or phone cameras.
+
+### Scene exports and delivery sizes
+
+Finished scenes export illustration polygons and caption outlines to SVG. QR contours follow the canonical PNG renderer's pixel reference grid, including connected modules and protected functional patterns. They remain vector paths at any zoom; fine contour steps reflect the selected reference resolution. Uploaded logos are normalized to bounded embedded PNGs. SVGs contain no external image or font references.
+
+```csharp
+var print = scene.Export(new QrSceneExportOptions {
+    WidthMillimeters = 100,
+    Dpi = 300,
+    PngCompressionLevel = 6
+});
+File.WriteAllBytes("scene-print.png", print.ToPng());
+File.WriteAllText("scene-vector.svg", print.ToSvg());
+File.WriteAllBytes("scene-print.pdf", print.ToPdf());
+print.Scene.ToRecipe().Save("scene-print.cgxart");
+
+var delivery = new QrImageDeliveryOptions { ScreenSize = 320, PrintMillimeters = 100, PrintDpi = 300 };
+var report = QrArt.ValidateDelivery(print.ToPng(), print.Scene.Payload, delivery);
+var selected = QrArt.SearchScene(print.Scene.Payload, print.Scene.Design,
+    new QrSceneSearchOptions { MaxCandidates = 6, Delivery = delivery });
+// selected.Best.Validation retains failed checks when no candidate passes them all.
+```
+
+Physical width (10–200 mm) and resolution (72–600 DPI) must produce a rounded 256–4096 pixel canvas. The export renders a fresh QR grid at that size. PNG records DPI as nearest-integer pixels per meter; physical size therefore has normal pixel and metadata rounding. Compression changes file size while preserving decoded pixels. PDF embeds the finished RGB artwork on a page of the stated physical dimensions; it is a raster PDF.
+
+Delivery selection encodes the payload once and tries the original QR, two larger placements, and optional square data modules, stopping at the configured candidate limit or a complete pass. Equal scores keep the earlier design. Candidates with too few pixels per module or a clipped quiet zone are rejected; enlargement can recover a design that cannot initially render on a smaller grid. If no candidate can render within the limit, search throws an `ArgumentException`. The payload, illustrations, palette and seed are retained. The browser's **Print and delivery** panel offers these controls, a preview of the selected export, and downloads tied to the completed payload. Its report includes the exact PNG hash.
+
+The delivery report checks the original, half-size, blur, requested screen width, print raster size, JPEG compression and perspective against the exact payload. It reports observed successes and failures within a recognition budget. It does not certify SVG/PDF viewer behavior, phones, cameras, paper, ink or printers. Qualify those final files independently at their actual delivery size. Use the [physical qualification sheet](docs/qr-scene-qualification.md) to record that evidence.
+
+Run the [scene-delivery example](CodeGlyphX.Examples/QrSceneDeliveryExample.cs) with `CODEGLYPHX_SCENE_DELIVERY=1` to export all six presets as physically sized PNG, SVG and PDF, with matching recipes and delivery observations.
+
 ## Standards-aware QR encoding
 
 `QrCodeEncoder.EncodeText` selects the smallest combination of numeric, alphanumeric, byte, and Kanji segments. UTF-8 ECI is emitted automatically when non-ASCII byte data needs it; `QrEncodingOptions` can force or suppress ECI and segment optimization.

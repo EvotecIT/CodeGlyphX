@@ -1,0 +1,39 @@
+@using CodeGlyphX.Rendering.Art
+@using System.Globalization
+@implements IAsyncDisposable
+
+<section class="scene-delivery" aria-label="Print and delivery">
+    <h4>Print and delivery</h4>
+    <p>Prepare this completed scene at a physical size. The QR gets a fresh pixel grid; the full quiet zone stays protected.</p>
+    <fieldset disabled="@_busy">
+        <div class="delivery-fields">
+            <label>Artwork width (mm)<input type="number" min="10" max="200" step="0.1" value="@_widthText" @oninput="e => _widthText = e.Value?.ToString() ?? string.Empty" aria-invalid="@(SettingsValid ? "false" : "true")" /></label>
+            <label>Resolution (DPI)<input type="number" min="72" max="600" value="@_dpiText" @oninput="e => _dpiText = e.Value?.ToString() ?? string.Empty" aria-invalid="@(SettingsValid ? "false" : "true")" /></label>
+            <label>PNG compression<select @bind="_compression"><option value="0">Stored · largest file</option><option value="1">Fast</option><option value="6">Balanced</option><option value="9">Smallest</option></select></label>
+            <label>Screen width (px)<input type="number" min="32" max="2048" value="@_screenText" @oninput="e => _screenText = e.Value?.ToString() ?? string.Empty" aria-invalid="@(ScreenValid ? "false" : "true")" /></label>
+        </div>
+        @if (SettingsValid) { <p>@Settings.PixelSize × @Settings.PixelSize px · @Settings.WidthMillimeters.ToString("0.#", CultureInfo.InvariantCulture) mm</p> }
+        else { <p role="alert">Use 10–200 mm and 72–600 DPI producing 256–4096 pixels.</p> }
+        @if (!ScreenValid) { <p role="alert">Screen width must be a whole number from 32 to 2048 pixels.</p> }
+        <button type="button" disabled="@(!SettingsValid || !ScreenValid)" @onclick="Prepare">Prepare print exports</button>
+        <button type="button" disabled="@(!SettingsValid || !ScreenValid)" @onclick="Search">Find a stronger QR</button>
+    </fieldset>
+    @if (_busy) { <button type="button" @onclick="Cancel">Cancel delivery check</button> }
+    <p role="status" aria-live="polite">@_status</p>
+    @if (_error is not null) { <p role="alert">@_error</p> }
+    @if (_export is not null)
+    {
+        <figure class="delivery-preview"><img src="@_pngUri" alt="Prepared print export, including the selected QR placement" /><figcaption>Prepared export preview</figcaption></figure>
+        <p class="delivery-retained">These files encode <code>@_export.Scene.Payload</code> at @_export.WidthMillimeters mm / @_export.Dpi DPI / @_export.Scene.Image.Size px. Later edits keep these files until you prepare them again.</p>
+        <div class="delivery-downloads">
+            <a href="@_pngUri" download="qr-scene-print.png">Print PNG</a>
+            <a href="@_svgUri" download="qr-scene-vector.svg">Vector SVG</a>
+            <a href="@_pdfUri" download="qr-scene-print.pdf">Print PDF</a>
+            <a href="@_recipeUri" download="qr-scene-print.cgxart">Export recipe</a>
+            <a href="@_reportUri" download="qr-scene-delivery.txt">Delivery report</a>
+        </div>
+        @if (_report is not null) { <ul>@foreach (var check in _report.Checks) { <li class="@(check.Passed ? "delivery-pass" : "delivery-fail")">@(check.Passed ? "Pass" : "Fail") · @check.Name · @check.Width × @check.Height px</li> }</ul> }
+        <p>SVG illustrations and captions are editable paths; QR contours match the PNG reference grid. An uploaded logo stays an embedded image. PDF embeds the finished raster artwork on a page of the stated size.</p>
+        <p>Checks include the exact PNG, half-size, blur, screen width, print resolution, JPEG at quality 70 and 10% perspective. Failed checks remain visible. Test the downloaded files on real phones and at actual print size before distributing them.</p>
+    }
+</section>

@@ -1,5 +1,6 @@
 .art-studio { margin-top: 3rem; border: 1px solid #aec0ba; border-radius: 22px; background: #f5f2e9; color: #203c39; padding: clamp(1rem, 3vw, 2.5rem); }
 .art-studio header { max-width: 720px; margin-bottom: 2rem; }
+.art-source-choice { max-width: 300px; }
 .art-studio h2 { font-size: clamp(2rem, 4vw, 3rem); color: #203c39; margin: .25rem 0 .75rem; }
 .art-eyebrow { letter-spacing: .16em; font-weight: 700; font-size: .75rem; }
 .art-workspace { display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); gap: 2rem; }

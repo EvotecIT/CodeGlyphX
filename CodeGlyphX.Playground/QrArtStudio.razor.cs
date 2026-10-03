@@ -61,6 +61,7 @@ public partial class QrArtStudio : IDisposable {
     }
     private void ChangeSource() {
         _result = null; _cards.Clear(); _mask = null;
+        if (_sourceKind == "scene") { _error = null; return; }
         if (_procedural) { SetPatternSource(); if (!_frameEnabled) ApplyPatternTreatment(); }
         else if (_imageSource is not null) { SetSource(_imageSource); if (!_frameEnabled) _style = QrImageArtStyle.Botanical; }
         else { _source = null; _sourceUri = null; _status = "Upload an image to begin."; }
