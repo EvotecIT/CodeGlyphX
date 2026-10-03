@@ -43,9 +43,11 @@ public static class SvgQrRenderer {
                           Math.Abs(opts.ModuleScale - 1.0) > 0.0001 ||
                           opts.ModuleCornerRadiusPx != 0;
 
-        var fgGradId = opts.ForegroundGradient is not null ? "fg" : null;
-        var eyeOuterIds = opts.Eyes?.OuterGradient is not null ? new[] { "eye-outer-0", "eye-outer-1", "eye-outer-2" } : null;
-        var eyeInnerIds = opts.Eyes?.InnerGradient is not null ? new[] { "eye-inner-0", "eye-inner-1", "eye-inner-2" } : null;
+        // Fragment IDs share the host document's namespace when exports are embedded inline.
+        var gradientPrefix = "cgx-" + Guid.NewGuid().ToString("N") + "-";
+        var fgGradId = opts.ForegroundGradient is not null ? gradientPrefix + "fg" : null;
+        var eyeOuterIds = opts.Eyes?.OuterGradient is not null ? new[] { gradientPrefix + "eye-outer-0", gradientPrefix + "eye-outer-1", gradientPrefix + "eye-outer-2" } : null;
+        var eyeInnerIds = opts.Eyes?.InnerGradient is not null ? new[] { gradientPrefix + "eye-inner-0", gradientPrefix + "eye-inner-1", gradientPrefix + "eye-inner-2" } : null;
 
         if (fgGradId is not null || eyeOuterIds is not null || eyeInnerIds is not null) {
             sb.Append("<defs>");

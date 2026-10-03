@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Xml.Linq;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Svg;
 using Xunit;
@@ -19,6 +21,25 @@ public sealed class SvgQrRendererTests {
 
         Assert.Contains("<path", svg, StringComparison.OrdinalIgnoreCase);
         Assert.Equal(1, CountSubstring(svg, "<rect"));
+    }
+
+    [Fact]
+    public void InlineExportsKeepAllGradientReferencesWithinTheirOwnDefinitions() {
+        var qr = QrCodeEncoder.EncodeText("SVG-GRADIENT");
+        var gradient = new QrPngGradientOptions { StartColor = new(20, 100, 30), EndColor = new(100, 20, 100) };
+        var options = new QrSvgRenderOptions { ForegroundGradient = gradient, Eyes = new() { OuterGradient = gradient, InnerGradient = gradient } };
+        var first = XElement.Parse(SvgQrRenderer.Render(qr.Modules, options));
+        gradient.StartColor = new(150, 20, 30);
+        var second = XElement.Parse(SvgQrRenderer.Render(qr.Modules, options));
+        var firstIds = first.Descendants().Attributes("id").Select(a => a.Value).ToArray();
+        var secondIds = second.Descendants().Attributes("id").Select(a => a.Value).ToArray();
+        Assert.Equal(7, firstIds.Length); Assert.Equal(7, secondIds.Length);
+        Assert.Empty(firstIds.Intersect(secondIds));
+        foreach (var root in new[] { first, second }) {
+            var ids = root.Descendants().Attributes("id").Select(a => a.Value).ToArray();
+            foreach (var fill in root.Descendants().Attributes("fill").Where(a => a.Value.StartsWith("url(#", StringComparison.Ordinal)))
+                Assert.Contains(fill.Value.Substring(5, fill.Value.Length - 6), ids);
+        }
     }
 
     private static int CountSubstring(string input, string token) {

@@ -143,13 +143,14 @@ public static class QrIllustratedComposer {
         string N(double number) => number.ToString("0.###", CultureInfo.InvariantCulture);
         string Color(Rgba32 c) => "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
         var size = image.Size;
+        var clipId = "cgx-frame-" + Guid.NewGuid().ToString("N");
         var clip = $"M0 0H{size}V{size}H0Z M{image.QrOffsetX} {image.QrOffsetY}v{image.QrSize}h{image.QrSize}v-{image.QrSize}Z";
         var svg = new XElement(ns + "svg", new XAttribute("viewBox", $"0 0 {size} {size}"), new XAttribute("width", size), new XAttribute("height", size),
             new XElement(ns + "title", "Illustrated QR composition"),
-            new XElement(ns + "defs", new XElement(ns + "clipPath", new XAttribute("id", "frame"),
+            new XElement(ns + "defs", new XElement(ns + "clipPath", new XAttribute("id", clipId),
                 new XElement(ns + "path", new XAttribute("d", clip), new XAttribute("clip-rule", "evenodd")))),
             new XElement(ns + "image", new XAttribute("width", size), new XAttribute("height", size), new XAttribute("href", "data:image/png;base64," + Convert.ToBase64String(image.ToPng()))));
-        var group = new XElement(ns + "g", new XAttribute("clip-path", "url(#frame)"),
+        var group = new XElement(ns + "g", new XAttribute("clip-path", "url(#" + clipId + ")"),
             new XElement(ns + "rect", new XAttribute("width", size), new XAttribute("height", size), new XAttribute("fill", Color(paper)), new XAttribute("fill-opacity", "0.88")));
         foreach (var line in lines) {
             var points = new string[line.Points.Length / 2];

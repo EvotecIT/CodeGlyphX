@@ -35,6 +35,20 @@ public sealed class QrIllustratedCompositionTests {
     }
 
     [Fact]
+    public void InlineFramesKeepTheirOwnQuietZoneClipAcrossDifferentSizes() {
+        var qr = QR.Encode("INLINE-FRAME");
+        XElement Frame(int moduleSize) => XElement.Parse(QrIllustratedComposer.Render(qr, new byte[] { 170, 150, 90, 255 }, 1, 1,
+            QrIllustratedStyle.BotanicalBadge, QrIllustratedComposer.CreateOptions(QrIllustratedStyle.BotanicalBadge, moduleSize)).ToSvg());
+        var first = Frame(8); var second = Frame(16); var ns = first.Name.Namespace;
+        var firstClip = first.Descendants(ns + "clipPath").Single(); var secondClip = second.Descendants(ns + "clipPath").Single();
+        Assert.NotEqual((string?)firstClip.Attribute("id"), (string?)secondClip.Attribute("id"));
+        foreach (var root in new[] { first, second }) {
+            var clip = root.Descendants(ns + "clipPath").Single();
+            Assert.Equal("url(#" + (string?)clip.Attribute("id") + ")", (string?)root.Element(ns + "g")!.Attribute("clip-path"));
+        }
+    }
+
+    [Fact]
     public void LayoutExplorationMeasuresEveryMaskWithoutMutatingOptions() {
         var source = CodeGlyphX.Rendering.Png.PngImageEncoder.EncodeRgba32(new byte[] { 180, 170, 130, 255 }, 1, 1);
         var options = new QrImageSearchOptions {

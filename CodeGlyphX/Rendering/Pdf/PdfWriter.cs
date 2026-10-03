@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Globalization;
 using System.Text;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
@@ -25,16 +26,30 @@ public static class PdfWriter {
     /// Writes a single-page PDF containing the supplied RGBA image.
     /// </summary>
     public static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan<byte> rgba, int stride, Rgba32? background = null) {
+        WriteRgba32(stream, width, height, rgba, stride, width, height, background);
+    }
+
+    /// <summary>Writes the supplied image on a page with explicit dimensions in PDF points (1/72 inch).</summary>
+    public static byte[] WriteRgba32(int width, int height, ReadOnlySpan<byte> rgba, int stride, double pageWidthPoints, double pageHeightPoints, Rgba32? background = null) {
+        using var ms = new MemoryStream();
+        WriteRgba32(ms, width, height, rgba, stride, pageWidthPoints, pageHeightPoints, background);
+        return ms.ToArray();
+    }
+
+    /// <summary>Writes the supplied image on a page with explicit dimensions in PDF points (1/72 inch).</summary>
+    public static void WriteRgba32(Stream stream, int width, int height, ReadOnlySpan<byte> rgba, int stride, double pageWidthPoints, double pageHeightPoints, Rgba32? background = null) {
+        ValidatePageDimension(pageWidthPoints, nameof(pageWidthPoints));
+        ValidatePageDimension(pageHeightPoints, nameof(pageHeightPoints));
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         _ = RenderGuards.EnsureOutputPixels(width, height, PdfOutputLimitMessage);
         var rgbLength = RenderGuards.EnsureOutputBytes((long)width * height * 3, PdfOutputLimitMessage);
         if (stride < width * 4) throw new ArgumentOutOfRangeException(nameof(stride));
-        if (rgba.Length < (height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
+        if (rgba.Length < (long)(height - 1) * stride + width * 4) throw new ArgumentException("RGBA buffer is too small.", nameof(rgba));
 
         var rgb = ToRgb(width, height, rgba, stride, background ?? Rgba32.White, rgbLength);
-        WriteRgb24(stream, width, height, rgb);
+        WriteRgb24Core(stream, width, height, rgb, pageWidthPoints, pageHeightPoints);
     }
 
     /// <summary>
@@ -50,6 +65,14 @@ public static class PdfWriter {
     /// Writes a single-page PDF containing the supplied RGB image.
     /// </summary>
     public static void WriteRgb24(Stream stream, int width, int height, byte[] rgb) {
+        WriteRgb24Core(stream, width, height, rgb, width, height);
+    }
+
+    private static void WriteRgb24Core(Stream stream, int width, int height, byte[] rgb, double pageWidthPoints, double pageHeightPoints) {
+        ValidatePageDimension(pageWidthPoints, nameof(pageWidthPoints));
+        ValidatePageDimension(pageHeightPoints, nameof(pageHeightPoints));
+        var pageWidth = pageWidthPoints.ToString("0.######", CultureInfo.InvariantCulture);
+        var pageHeight = pageHeightPoints.ToString("0.######", CultureInfo.InvariantCulture);
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
@@ -78,13 +101,13 @@ public static class PdfWriter {
 
         offsets[3] = stream.Position;
         writer.WriteLine("3 0 obj");
-        writer.WriteLine($"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {width} {height}]");
+        writer.WriteLine($"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 {pageWidth} {pageHeight}]");
         writer.WriteLine("   /Resources << /XObject << /Im0 5 0 R >> >>");
         writer.WriteLine("   /Contents 4 0 R >>");
         writer.WriteLine("endobj");
         writer.Flush();
 
-        var content = $"q\n{width} 0 0 {height} 0 0 cm\n/Im0 Do\nQ\n";
+        var content = $"q\n{pageWidth} 0 0 {pageHeight} 0 0 cm\n/Im0 Do\nQ\n";
         var contentBytes = Encoding.ASCII.GetBytes(content);
 
         offsets[4] = stream.Position;
@@ -124,6 +147,10 @@ public static class PdfWriter {
         writer.WriteLine(xrefStart);
         writer.WriteLine("%%EOF");
         writer.Flush();
+    }
+
+    private static void ValidatePageDimension(double value, string name) {
+        if (double.IsNaN(value) || double.IsInfinity(value) || value <= 0) throw new ArgumentOutOfRangeException(name);
     }
 
     private static byte[] ToRgb(int width, int height, ReadOnlySpan<byte> rgba, int stride, Rgba32 background, int rgbLength) {
