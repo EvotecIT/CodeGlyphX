@@ -43,6 +43,6 @@ public sealed class Gs1DigitalLinkIssue {
         Message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
-    /// <inheritdoc />
+    /// <summary>Returns the issue message, prefixed by the affected URI component when present.</summary>
     public override string ToString() => Component is null ? Message : $"{Component}: {Message}";
 }

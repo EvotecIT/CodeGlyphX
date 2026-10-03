@@ -36,7 +36,7 @@ public readonly struct QrStructuredAppend {
         Parity = parity;
     }
 
-    /// <inheritdoc />
+    /// <summary>Returns the symbol index, total, and parity, or an invalid-sequence description.</summary>
     public override string ToString() {
         return IsValid ? $"{Index}/{Total} p{Parity}" : $"invalid ({Index}/{Total} p{Parity})";
     }

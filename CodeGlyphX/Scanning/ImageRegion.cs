@@ -60,7 +60,7 @@ public readonly struct ImageRegion : IEquatable<ImageRegion> {
             return (hash * 397) ^ Height;
         }
     }
-    /// <inheritdoc />
+    /// <summary>Returns the region origin and dimensions.</summary>
     public override string ToString() => $"{X},{Y} {Width}x{Height}";
     /// <summary>Compares two regions.</summary>
     public static bool operator ==(ImageRegion left, ImageRegion right) => left.Equals(right);
