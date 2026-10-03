@@ -272,6 +272,34 @@ var checks = QrArt.ValidateImage(artwork.ToPng(), "https://example.com/art");
 
 The [procedural-art example](CodeGlyphX.Examples/QrProceduralArtExample.cs) produces the six gallery designs and their PNG exports. Run it with `CODEGLYPHX_PROCEDURAL_ART=1`; `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Each export checks the exact URL at its original size, half size and after light blur. These examples use 18 pixels per module, leaving nine after the half-size check. Busy art can lose readability at smaller sizes: validate the actual export and target devices before distributing it. Rendering is available on all supported targets; these scan checks use the modern .NET decoder, since the legacy image recognizer has limited art support. The gallery is a visual overview; use the individual exports for scanning.
 
+### Illustrated scenes and editable recipes
+
+![Six illustrated QR scenes: tropical garden, electric city, music festival, ocean reef, cosmic orbit and retro arcade](Assets/Examples/qr-scene-gallery.png)
+
+`QrArt.ComposeScene` draws complete posters from seeded geometry. Each scene has five editable layers: backdrop, illustrations, QR, caption and an optional logo. Move, scale, rotate or hide decorative layers; QR rotation uses quarter turns. The QR renders above the artwork with protected functional patterns and a complete four-module quiet zone. Placement that clips the QR is rejected.
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering.Art;
+
+var design = QrScenePresets.Create(QrSceneStyle.OceanReef, size: 1200);
+design.Seed = 2026;
+design.Caption = "DIVE INTO COLOR";
+design.Motifs.RotationDegrees = 10;
+var scene = QrArt.ComposeScene("https://example.com/scenes", design);
+scene.SavePng("ocean-qr.png");
+scene.ToRecipe().Save("ocean-design.cgxart");
+
+var recipe = QrSceneRecipe.FromXml(File.ReadAllText("ocean-design.cgxart"));
+QrArt.ComposeScene(recipe.Payload, recipe.Design).SavePng("ocean-reopened.png");
+```
+
+The browser art studio's **Illustrated scene** source offers six presets, palette and layer controls, logo upload, undo/reset, and recipe save/load. Downloaded results retain the payload and design used to render them. Editing controls does not change a completed export.
+
+Recipes are versioned local XML documents capped at 2 MiB of text. They copy settings and any embedded logo, preserve UTF-8 payloads including control characters, and reject DTDs, external resources and unknown fields. Logo input is limited to 1 MiB and one million decoded pixels. Captions use the portable outlined font: Latin letters, digits, spaces and `-./:()+?`; lowercase letters render as capitals. Paper and QR ink must meet the documented light/dark luminance limits.
+
+Run the [scene-gallery example](CodeGlyphX.Examples/QrSceneGalleryExample.cs) with `CODEGLYPHX_SCENE_GALLERY=1` to export all six scenes, thumbnails and recipes. `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Check the actual PNG with `QrArt.ValidateImage` and qualify delivery sizes and target devices before distribution; these software checks do not certify physical printing or phone cameras.
+
 ## Standards-aware QR encoding
 
 `QrCodeEncoder.EncodeText` selects the smallest combination of numeric, alphanumeric, byte, and Kanji segments. UTF-8 ECI is emitted automatically when non-ASCII byte data needs it; `QrEncodingOptions` can force or suppress ECI and segment optimization.

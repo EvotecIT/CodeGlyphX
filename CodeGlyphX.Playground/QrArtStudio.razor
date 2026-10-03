@@ -3,14 +3,20 @@
 
 <section class="art-studio" aria-labelledby="art-title">
     <header><p class="art-eyebrow">COLOR + GEOMETRY + CODE</p><h2 id="art-title">QR art studio</h2>
-        <p>Create a colorful pattern or bring your own image. Shape the artwork, compare alternatives and check the final export. Everything runs locally in your browser.</p></header>
+        <p>Design an illustrated scene, create a colorful pattern or bring your own image. Everything runs locally in your browser.</p></header>
+    <label class="art-source-choice">Artwork source <select @bind="_sourceKind" @bind:after="ChangeSource" disabled="@(_busy || _loading)">
+        <option value="scene">Illustrated scene</option><option value="pattern">Procedural pattern</option><option value="image">Uploaded image</option>
+    </select></label>
+    @if (_sourceKind == "scene")
+    {
+        <QrSceneStudio />
+    }
+    else
+    {
     <div class="art-workspace">
         <div class="art-controls">
             <fieldset disabled="@(_busy || _loading)">
                 <legend>Artwork and color</legend>
-                <label>Artwork source <select @bind="_sourceKind" @bind:after="ChangeSource">
-                    <option value="pattern">Procedural pattern</option><option value="image">Uploaded image</option>
-                </select></label>
                 @if (_procedural)
                 {
                     <QrPatternControls Settings="_patternSettings" SettingsChanged="ChangePattern" />
@@ -120,4 +126,5 @@
             }
         </div>
     </div>
+    }
 </section>
