@@ -167,9 +167,11 @@ public static partial class QrImageComposer {
 
         private bool InsideCircuit(int mx, int my, double u, double v, bool dark) {
             var x = u - 0.5; var y = v - 0.5;
-            var node = x * x + y * y < 0.045;
-            var horizontal = Math.Abs(y) < 0.12 && SameData(mx + (x < 0 ? -1 : 1), my, dark);
-            var vertical = Math.Abs(x) < 0.12 && SameData(mx, my + (y < 0 ? -1 : 1), dark);
+            var width = 0.12 * _nominalScale;
+            var node = x * x + y * y < 0.045 * _nominalScale * _nominalScale;
+            // Scale thickness, keeping every connection aligned with its neighbor's edge midpoint.
+            var horizontal = Math.Abs(y) < width && SameData(mx + (x < 0 ? -1 : 1), my, dark);
+            var vertical = Math.Abs(x) < width && SameData(mx, my + (y < 0 ? -1 : 1), dark);
             return node || horizontal || vertical;
         }
 

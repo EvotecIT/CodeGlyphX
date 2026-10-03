@@ -47,6 +47,21 @@ public sealed class QrProceduralArtTests {
     }
 
     [Fact]
+    public void CircuitScaleChangesStrokeWidthWithoutChangingProtectedStructure() {
+        var pattern = new QrArtPatternOptions { Pattern = QrArtPattern.Circuit };
+        var options = new QrImageCompositionOptions {
+            ModuleSize = 18, Strength = 1,
+            Art = new QrImageArtOptions { Style = QrImageArtStyle.Circuit, Scale = 0.65 }
+        };
+        var thin = QrArt.ComposePattern(Payload, pattern, options);
+        options.Art.Scale = 1;
+        var thick = QrArt.ComposePattern(Payload, pattern, options);
+        Assert.NotEqual(thin.GetPixels(), thick.GetPixels());
+        AssertProtectedStructure(thin);
+        AssertProtectedStructure(thick);
+    }
+
+    [Fact]
     public void PatternRejectsUnrenderableInputsAndHonorsCancellation() {
         Assert.Throws<ArgumentOutOfRangeException>(() => QrArt.ComposePattern(Payload, new QrArtPatternOptions { Scale = double.NaN }));
         Assert.Throws<ArgumentOutOfRangeException>(() => QrArt.ComposePattern(Payload, new QrArtPatternOptions { RotationDegrees = double.PositiveInfinity }));
