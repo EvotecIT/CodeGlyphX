@@ -2,21 +2,36 @@
 @implements IDisposable
 
 <section class="art-studio" aria-labelledby="art-title">
-    <header><p class="art-eyebrow">IMAGE + CODE</p><h2 id="art-title">QR art studio</h2>
-        <p>Keep your image recognizable. Explore local, deterministic styles and compare measured alternatives.</p></header>
+    <header><p class="art-eyebrow">COLOR + GEOMETRY + CODE</p><h2 id="art-title">QR art studio</h2>
+        <p>Create a colorful pattern or bring your own image. Shape the artwork, compare alternatives and check the final export. Everything runs locally in your browser.</p></header>
     <div class="art-workspace">
         <div class="art-controls">
             <fieldset disabled="@(_busy || _loading)">
-                <legend>Artwork and subject</legend>
-                <label>Image <InputFile OnChange="LoadImage" accept="image/*" /></label>
-                <p class="art-hint">Uploads stay in this browser. Default photo: NASA / Apollo 17.</p>
+                <legend>Artwork and color</legend>
+                <label>Artwork source <select @bind="_sourceKind" @bind:after="ChangeSource">
+                    <option value="pattern">Procedural pattern</option><option value="image">Uploaded image</option>
+                </select></label>
+                @if (_procedural)
+                {
+                    <QrPatternControls Settings="_patternSettings" SettingsChanged="ChangePattern" />
+                }
+                else
+                {
+                    <label>Image <InputFile OnChange="LoadImage" accept="image/*" /></label>
+                    <p class="art-hint">Uploads stay in this browser. Default photo: NASA / Apollo 17.</p>
+                }
                 <label>QR text <textarea @bind="_payload" rows="2" maxlength="1000"></textarea></label>
+                <details class="art-layout"><summary>QR treatment and frame</summary>
                 <label>Treatment <select @bind="_style">
                     @foreach (var style in Enum.GetValues<QrImageArtStyle>())
                     {
                         <option value="@style">@StyleName(style)</option>
                     }
                 </select></label>
+                <label>Color strength · @_strength.ToString("F2") <input type="range" min="0" max="1" step="0.01" @bind="_strength" /></label>
+                <label>Module scale · @_artScale.ToString("F2") <input type="range" min="0.65" max="1" step="0.05" @bind="_artScale" /></label>
+                <label>Detail protection · @_detail.ToString("F2") <input type="range" min="0" max="1" step="0.05" @bind="_detail" /></label>
+                <label>Export pixels per module <input type="number" min="6" max="64" @bind="_moduleSize" /></label>
                 <label>Finder frames <select @bind="_finders">
                     @foreach (var finder in Enum.GetValues<QrImageFinderStyle>())
                     {
@@ -35,24 +50,30 @@
                     <p class="art-hint">SVG exports keep the frame as vectors and embed the QR artwork at its rendered resolution.</p>
                 }
                 <label><input type="checkbox" @bind="_exploreLayouts" /> Compare crop, placement and scale variations</label>
-                <label><input type="checkbox" @bind="_protect" /> Preserve a subject region</label>
-                @if (_protect)
+                @if (!_procedural)
                 {
-                    <label>Subject horizontal position <input type="range" min="0" max="1" step="0.01" @bind="_subjectX" /></label>
-                    <label>Subject vertical position <input type="range" min="0" max="1" step="0.01" @bind="_subjectY" /></label>
-                    <label>Subject radius <input type="range" min="0.05" max="0.7" step="0.01" @bind="_radius" /></label>
-                    <label>Protection mask (optional) <InputFile OnChange="LoadMask" accept="image/*" /></label>
-                    <p class="art-hint">White protects detail; black permits decoration. The mask follows the source image crop.</p>
-                    @if (_mask is not null)
+                    <label><input type="checkbox" @bind="_protect" /> Preserve a subject region</label>
+                    @if (_protect)
                     {
-                        <button type="button" @onclick="ClearMask">Clear mask</button>
+                        <label>Subject horizontal position <input type="range" min="0" max="1" step="0.01" @bind="_subjectX" /></label>
+                        <label>Subject vertical position <input type="range" min="0" max="1" step="0.01" @bind="_subjectY" /></label>
+                        <label>Subject radius <input type="range" min="0.05" max="0.7" step="0.01" @bind="_radius" /></label>
+                        <label>Protection mask (optional) <InputFile OnChange="LoadMask" accept="image/*" /></label>
+                        <p class="art-hint">White protects detail; black permits decoration. The mask follows the source image crop.</p>
+                        @if (_mask is not null)
+                        {
+                            <button type="button" @onclick="ClearMask">Clear mask</button>
+                        }
                     }
                 }
+                <details class="art-layout"><summary>Crop and placement</summary>
                 <label>Image horizontal crop <input type="range" min="0" max="1" step="0.01" @bind="_cropX" /></label>
                 <label>Image vertical crop <input type="range" min="0" max="1" step="0.01" @bind="_cropY" /></label>
                 <label>Image zoom <input type="range" min="1" max="3" step="0.05" @bind="_zoom" /></label>
                 <label>QR horizontal placement <input type="range" min="0" max="1" step="0.01" @bind="_qrX" /></label>
                 <label>QR vertical placement <input type="range" min="0" max="1" step="0.01" @bind="_qrY" /></label>
+                </details>
+                </details>
             </fieldset>
             <div class="art-actions"><button type="button" class="art-primary" disabled="@(_busy || _loading || _source is null)" @onclick="Compare">Compare alternatives</button>
                 @if (_busy)
@@ -70,46 +91,20 @@
             @if (_sourceUri is not null)
             {
                 <figure class="art-source"><div class="art-source-frame"><img src="@_sourceUri" alt="Source artwork" />
-                    @if (_protect && _mask is null)
+                    @if (!_procedural && _protect && _mask is null)
                     {
                         <span class="art-focal" style="@FocalStyle" aria-hidden="true"></span>
                     }
-                </div><figcaption>Source artwork · focal region shown on the original image</figcaption></figure>
+                </div><figcaption>@(_procedural ? $"{QrPatternControls.Name(_patternSettings.Pattern)} · seed {_patternSettings.Seed}" : "Source artwork · focal region shown on the original image")</figcaption></figure>
             }
             @if (_result is not null)
             {
-                <p>@_result.EvaluatedCandidates combinations compared · @_result.ValidatedCandidates alternatives decoded. Scan results rank first, then @(_cards.Any(card => card.SvgUri is not null) ? "unframed artwork fidelity" : "image fidelity").</p>
+                <p class="art-result-label">Last comparison: @_resultDescription. Editing controls leaves these exports available until the next comparison.</p>
+                <p>@_result.EvaluatedCandidates combinations compared · @_result.ValidatedCandidates alternatives decoded. Scan results rank first, then @(_cards.Any(card => card.SvgUri is not null) ? "unframed artwork fidelity" : "source fidelity").</p>
                 <div class="art-candidates">
                     @foreach (var item in _cards)
                     {
-                        <article class="art-candidate">
-                            <img src="@item.Uri" alt="@($"QR artwork using mask {item.Candidate.Code.Mask}")" />
-                            <h3>Mask @item.Candidate.Code.Mask · version @item.Candidate.Code.Version · @item.Candidate.Code.ErrorCorrectionLevel</h3>
-                            <p>Crop @item.Candidate.Layout.ImageX.ToString("F2"), @item.Candidate.Layout.ImageY.ToString("F2") · zoom @item.Candidate.Layout.Zoom.ToString("F2")</p>
-                            <p>@(item.SvgUri is not null ? "Unframed artwork fidelity" : "Image fidelity"): @item.Candidate.Fidelity.ToString("F1") / 100</p>
-                            <p class="@(item.Validation.AllPassed ? "art-pass" : "art-error")">@CheckSummary(item.Validation)</p>
-                            <details><summary>Scan check details</summary><ul>
-                                @foreach (var check in item.Validation.Checks)
-                                {
-                                    <li>@check.Name: @(check.Passed ? "Passed" : "Not recovered")</li>
-                                }
-                            </ul></details>
-                            <a href="@item.Uri" download="qr-art.png">Download PNG</a>
-                            @if (item.SvgUri is not null)
-                            {
-                                <a href="@item.SvgUri" download="qr-illustrated.svg">Download SVG</a>
-                            }
-                            <button type="button" disabled="@(_busy || _loading)" @onclick="() => CheckDelivery(item)">Check delivery</button>
-                            @if (item.Delivery is not null)
-                            {
-                                <ul>
-                                    @foreach (var check in item.Delivery.Checks)
-                                    {
-                                        <li>@check.Name · @check.Width × @check.Height: @(check.Passed ? "Passed" : "Not recovered")</li>
-                                    }
-                                </ul>
-                            }
-                        </article>
+                        <QrArtCandidateCard @key="item" Card="item" Busy="@(_busy || _loading)" OnDeliveryCheck="CheckDelivery" />
                     }
                 </div>
                 <fieldset disabled="@(_busy || _loading)" class="art-delivery"><legend>Delivery simulations</legend>
@@ -121,7 +116,7 @@
             }
             else
             {
-                <p class="art-empty">Choose an image and compare alternatives. Functional QR patterns and the quiet zone remain protected.</p>
+                <p class="art-empty">Choose a pattern or image and compare alternatives. Functional QR patterns and the quiet zone remain protected.</p>
             }
         </div>
     </div>

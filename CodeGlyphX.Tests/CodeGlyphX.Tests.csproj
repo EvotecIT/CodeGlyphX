@@ -24,6 +24,9 @@
     <Compile Include="GlobalStateCollection.cs" />
     <Compile Include="QrImageDecodeParityData.cs" />
     <Compile Include="QrImageDecodeParitySharedTests.cs" />
+    <Compile Include="QrProceduralArtTests.cs" />
+    <Compile Include="QrPatternWorkflowTests.cs" />
+    <Compile Include="ImageScannerSerialCollection.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">

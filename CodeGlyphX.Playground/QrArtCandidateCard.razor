@@ -1,0 +1,34 @@
+<article class="art-candidate">
+    <img src="@Card.Uri" alt="@($"QR artwork using mask {Card.Candidate.Code.Mask}")" />
+    <h3>Mask @Card.Candidate.Code.Mask · version @Card.Candidate.Code.Version · @Card.Candidate.Code.ErrorCorrectionLevel</h3>
+    <p>Crop @Card.Candidate.Layout.ImageX.ToString("F2"), @Card.Candidate.Layout.ImageY.ToString("F2") · zoom @Card.Candidate.Layout.Zoom.ToString("F2")</p>
+    <p>@(Card.SvgUri is not null ? "Unframed artwork fidelity" : "Source fidelity"): @Card.Candidate.Fidelity.ToString("F1") / 100</p>
+    <p class="@(Card.Validation.AllPassed ? "art-pass" : "art-error")">@Card.Validation.Checks.Count(c => c.Passed) / @Card.Validation.Checks.Count scan checks passed</p>
+    <details><summary>Scan check details</summary><ul>
+        @foreach (var check in Card.Validation.Checks)
+        {
+            <li>@check.Name: @(check.Passed ? "Passed" : "Not recovered")</li>
+        }
+    </ul></details>
+    <a href="@Card.Uri" download="qr-art.png">Download PNG</a>
+    @if (Card.SvgUri is not null)
+    {
+        <a href="@Card.SvgUri" download="qr-illustrated.svg">Download SVG</a>
+    }
+    <button type="button" disabled="@Busy" @onclick="() => OnDeliveryCheck.InvokeAsync(Card)">Check delivery</button>
+    @if (Card.Delivery is not null)
+    {
+        <ul>
+            @foreach (var check in Card.Delivery.Checks)
+            {
+                <li>@check.Name · @check.Width × @check.Height: @(check.Passed ? "Passed" : "Not recovered")</li>
+            }
+        </ul>
+    }
+</article>
+
+@code {
+    [Parameter, EditorRequired] public QrArtStudioCard Card { get; set; } = null!;
+    [Parameter] public bool Busy { get; set; }
+    [Parameter] public EventCallback<QrArtStudioCard> OnDeliveryCheck { get; set; }
+}

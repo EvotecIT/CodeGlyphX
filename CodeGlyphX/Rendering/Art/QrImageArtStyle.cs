@@ -17,5 +17,9 @@ public enum QrImageArtStyle {
     /// <summary>Continuous curved ribbons joining adjacent modules of equal polarity.</summary>
     Ribbons,
     /// <summary>Interlaced narrow strands joining adjacent modules of equal polarity.</summary>
-    Weave
+    Weave,
+    /// <summary>Right-angle connections and circular junctions between matching data modules.</summary>
+    Circuit,
+    /// <summary>Diagonal cross stitches with fixed module-center contrast.</summary>
+    CrossStitch
 }
