@@ -71,6 +71,7 @@
                     <ul class="scene-checks">@foreach (var check in _validation.Checks) { <li class="@(check.Passed ? "pass" : "fail")">@(check.Passed ? "Pass" : "Fail") · @check.Name</li> }</ul>
                 }
                 <p class="scene-hint">Software checks recover the exact text from the original, half-size and blurred PNG. Check delivery sizes and real phones before distribution.</p>
+                <QrSceneDeliveryStudio @key="_result" Scene="_result" />
             }
             else { <div class="scene-empty">Choose a scene and render it. Edit colors, move layers, then save a recipe to reopen the design.</div> }
         </div>

@@ -30,6 +30,7 @@
     <Compile Include="QrProceduralArtTests.cs" />
     <Compile Include="QrPatternWorkflowTests.cs" />
     <Compile Include="QrSceneTests.cs" />
+    <Compile Include="QrSceneExportTests.cs" />
     <Compile Include="ImageScannerSerialCollection.cs" />
   </ItemGroup>
 

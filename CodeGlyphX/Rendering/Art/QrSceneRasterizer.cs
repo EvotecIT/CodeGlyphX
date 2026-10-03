@@ -16,11 +16,17 @@ internal static class QrSceneRasterizer {
         var crossings = new List<double>(); var coverage = new double[size];
         foreach (var shape in geometry.Shapes) {
             token.ThrowIfCancellationRequested();
-            var points = shape.Points; var minY = 1.0; var maxY = 0.0;
-            for (var i = 1; i < points.Length; i += 2) { minY = Math.Min(minY, points[i]); maxY = Math.Max(maxY, points[i]); }
+            var points = shape.Points; var minY = 1.0; var maxY = 0.0; var minX = 1.0; var maxX = 0.0;
+            for (var i = 0; i < points.Length; i += 2) {
+                minX = Math.Min(minX, points[i]); maxX = Math.Max(maxX, points[i]);
+                minY = Math.Min(minY, points[i + 1]); maxY = Math.Max(maxY, points[i + 1]);
+            }
+            var startX = (int)Math.Min(size, Math.Max(0, Math.Floor(minX * size)));
+            var endX = (int)Math.Max(0, Math.Min(size, Math.Ceiling(maxX * size)));
+            if (endX <= startX) continue;
             var startY = (int)Math.Max(0, Math.Floor(minY * size)); var endY = (int)Math.Min(size, Math.Ceiling(maxY * size));
             for (var y = startY; y < endY; y++) {
-                token.ThrowIfCancellationRequested(); Array.Clear(coverage, 0, size);
+                token.ThrowIfCancellationRequested(); Array.Clear(coverage, startX, endX - startX);
                 for (var sample = 0; sample < 2; sample++) {
                     var py = (y + .25 + sample * .5) / size; crossings.Clear();
                     for (var i = 0; i < points.Length; i += 2) {
@@ -36,7 +42,7 @@ internal static class QrSceneRasterizer {
                         }
                     }
                 }
-                for (var x = 0; x < size; x++) {
+                for (var x = startX; x < endX; x++) {
                     var a = Math.Min(1, coverage[x]); if (a == 0) continue;
                     var p = (y * size + x) * 4;
                     pixels[p] = Blend(pixels[p], shape.Color.R, a); pixels[p + 1] = Blend(pixels[p + 1], shape.Color.G, a); pixels[p + 2] = Blend(pixels[p + 2], shape.Color.B, a);

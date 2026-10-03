@@ -31,11 +31,11 @@ internal static class PngWriter {
         return ms.ToArray();
     }
 
-    public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
+    public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel, int dpi = 0) {
         var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
         var idatLength = normalizedLevel <= 0 ? GetZlibStoredLength(length) : Math.Max(length, 0);
         using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
-        WriteRgba8(ms, width, height, scanlinesWithFilter, length, normalizedLevel);
+        WriteRgba8(ms, width, height, scanlinesWithFilter, length, normalizedLevel, dpi);
         return ms.ToArray();
     }
 
@@ -47,7 +47,7 @@ internal static class PngWriter {
         WriteRgba8(stream, width, height, scanlinesWithFilter, length, compressionLevel: 0);
     }
 
-    public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
+    public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel, int dpi = 0) {
         if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
         if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
         _ = RenderGuards.EnsureOutputPixels(width, height, PngOutputLimitMessage);
@@ -62,6 +62,13 @@ internal static class PngWriter {
 
         stream.Write(Signature, 0, Signature.Length);
         WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 8, colorType: 6));
+        if (dpi > 0) {
+            var physical = new byte[9];
+            var ppm = (uint)Math.Round(dpi / 0.0254);
+            for (var i = 0; i < 4; i++) physical[i] = physical[i + 4] = (byte)(ppm >> (24 - i * 8));
+            physical[8] = 1;
+            WriteChunk(stream, "pHYs", physical);
+        }
 
         var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
         if (normalizedLevel <= 0) {
