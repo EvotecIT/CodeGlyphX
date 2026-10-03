@@ -4,6 +4,7 @@
 {
     <div class="card">
         <h2>Preview</h2>
+
         <p>Loading...</p>
     </div>
 }
@@ -11,6 +12,10 @@ else
 {
     <div class="card playground-preview-card">
         <h2>@(Host.SelectedMode == "Decode" ? "Decode Result" : "Preview")</h2>
+        @if (Host.IsPreviewUpdating)
+        {
+            <p role="status" aria-live="polite">Updating preview…</p>
+        }
         @{
             var isEmpty = Host.SelectedMode == "Decode"
                 ? string.IsNullOrEmpty(Host.DecodeImageDataUri)
@@ -41,7 +46,7 @@ else
             }
         </div>
 
-        @if (Host.SelectedMode == "Generate" && !string.IsNullOrEmpty(Host.ImageDataUri))
+        @if (Host.SelectedMode == "Generate" && !Host.IsPreviewUpdating && !string.IsNullOrEmpty(Host.ImageDataUri))
         {
             <div class="download-buttons">
                 <a href="@Host.ImageDataUri" download="@Host.GetDownloadFilename("png")" class="btn btn-secondary">
