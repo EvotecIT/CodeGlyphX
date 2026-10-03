@@ -85,7 +85,8 @@ public static partial class QrImageComposer {
 
         private void ApplyTreatment(ref double r, ref double g, ref double b, CellGeometry cell, int mx, int my, int px, int py) {
             if (_style == QrImageArtStyle.ModuleShape || _style == QrImageArtStyle.Botanical
-                || _style == QrImageArtStyle.Ribbons || _style == QrImageArtStyle.Weave) return;
+                || _style == QrImageArtStyle.Ribbons || _style == QrImageArtStyle.Weave
+                || _style == QrImageArtStyle.Circuit || _style == QrImageArtStyle.CrossStitch) return;
             var luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
             double nr = r, ng = g, nb = b;
             if (_style == QrImageArtStyle.Mosaic) {
@@ -121,6 +122,7 @@ public static partial class QrImageComposer {
         }
 
         private bool Inside(CellGeometry cell, int mx, int my, double u, double v, bool dark) {
+            if (_style == QrImageArtStyle.Circuit) return InsideCircuit(mx, my, u, v, dark);
             if (_style == QrImageArtStyle.Ribbons || _style == QrImageArtStyle.Weave)
                 return InsideFlow(mx, my, u, v, dark);
             if (_connected) {
@@ -156,9 +158,19 @@ public static partial class QrImageComposer {
                 case QrImageArtStyle.Botanical:
                     return (radius < 0.53 && Math.Abs(y) < 0.32 * (1 - Math.Abs(x) / 0.53))
                         || (Math.Abs(y) < 0.035 && Math.Abs(x) < 0.55);
+                case QrImageArtStyle.CrossStitch:
+                    return Math.Abs(x) < 0.5 && Math.Abs(y) < 0.5 && Math.Abs(Math.Abs(x) - Math.Abs(y)) < 0.13;
                 default:
                     return false;
             }
+        }
+
+        private bool InsideCircuit(int mx, int my, double u, double v, bool dark) {
+            var x = u - 0.5; var y = v - 0.5;
+            var node = x * x + y * y < 0.045;
+            var horizontal = Math.Abs(y) < 0.12 && SameData(mx + (x < 0 ? -1 : 1), my, dark);
+            var vertical = Math.Abs(x) < 0.12 && SameData(mx, my + (y < 0 ? -1 : 1), dark);
+            return node || horizontal || vertical;
         }
 
         private bool InsideFlow(int mx, int my, double u, double v, bool dark) {

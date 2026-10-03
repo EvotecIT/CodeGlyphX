@@ -13,10 +13,26 @@ public static partial class QrImageComposer {
             _size = 7 * moduleSize;
             _ink = options.FunctionalForeground;
             _paper = options.FunctionalBackground;
-            var shape = options.Finders == QrImageFinderStyle.Rounded ? QrPngModuleShape.Rounded : QrPngModuleShape.Squircle;
+            var shape = options.Finders switch {
+                QrImageFinderStyle.Rounded => QrPngModuleShape.Rounded,
+                QrImageFinderStyle.Circular => QrPngModuleShape.Circle,
+                QrImageFinderStyle.Chamfered => QrPngModuleShape.Square,
+                _ => QrPngModuleShape.Squircle
+            };
             _outer = QrPngRenderer.BuildModuleMask(_size, shape, 1, moduleSize * 2);
             _hole = QrPngRenderer.BuildModuleMask(5 * moduleSize, shape, 1, moduleSize);
             _dot = QrPngRenderer.BuildModuleMask(3 * moduleSize, shape, 1, moduleSize);
+            if (options.Finders == QrImageFinderStyle.Chamfered) {
+                ClipCorners(_outer, _size, moduleSize);
+                ClipCorners(_hole, 5 * moduleSize, moduleSize);
+                ClipCorners(_dot, 3 * moduleSize, moduleSize / 2);
+            }
+        }
+
+        private static void ClipCorners(bool[] mask, int size, int cut) {
+            for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) {
+                if (System.Math.Min(x, size - 1 - x) + System.Math.Min(y, size - 1 - y) < cut) mask[y * size + x] = false;
+            }
         }
 
         internal bool TryPaint(byte[] pixels, int index, int x, int y, int qrSize) {
