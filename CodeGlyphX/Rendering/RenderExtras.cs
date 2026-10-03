@@ -17,8 +17,11 @@ public sealed class RenderExtras {
 
     internal int ResolvePngCompression(int fallback) {
         if (!PngCompressionLevel.HasValue) return fallback;
-        var level = PngCompressionLevel.Value;
-        if (level < 0 || level > 9) throw new System.ArgumentOutOfRangeException(nameof(PngCompressionLevel), "PNG compression must be between zero and nine.");
+        return ValidateCompressionLevel(PngCompressionLevel.Value);
+    }
+
+    private static int ValidateCompressionLevel(int level) {
+        if (level < 0 || level > 9) throw new System.ArgumentOutOfRangeException(nameof(level), level, "PNG compression must be between zero and nine.");
         return level;
     }
 

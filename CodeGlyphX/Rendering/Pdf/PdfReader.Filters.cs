@@ -28,12 +28,7 @@ public static partial class PdfReader {
         var count = 0;
         for (var i = 0; i < src.Length; i++) {
             var b = src[i];
-            if (b == (byte)'~') {
-                if (i + 1 < src.Length && src[i + 1] == (byte)'>') {
-                    i++;
-                    break;
-                }
-            }
+            if (b == (byte)'~' && i + 1 < src.Length && src[i + 1] == (byte)'>') break;
             if (b == (byte)'z') {
                 if (count != 0) return false;
                 EnsureFilterOutputSize(ms.Length + 4, limit);
@@ -143,7 +138,6 @@ public static partial class PdfReader {
                 _ => 4
             };
         }
-        if (colors <= 0) return false;
 
         var bits = info.BitsPerComponent;
         if (bits != 1 && bits != 2 && bits != 4 && bits != 8 && bits != 16) return false;
@@ -183,94 +177,8 @@ public static partial class PdfReader {
         throw last ?? new FormatException("Invalid PDF LZW data.");
     }
 
-    private static byte[] DecompressLzw(ReadOnlySpan<byte> src, int expected, int earlyChange) {
-        DecodeGuards.EnsureByteCount(expected, "PDF LZW output exceeds size limits.");
-        var prefix = new short[4096];
-        var suffix = new byte[4096];
-        var stack = new byte[4096];
-        var output = new byte[expected];
-
-        for (var i = 0; i < 256; i++) {
-            prefix[i] = -1;
-            suffix[i] = (byte)i;
-        }
-
-        var bitPos = 0;
-        var codeSize = 9;
-        const int clear = 256;
-        const int eoi = 257;
-        var nextCode = 258;
-        var oldCode = -1;
-        var outIndex = 0;
-        byte firstChar = 0;
-
-        while (true) {
-            var code = ReadBitsMsb(src, ref bitPos, codeSize);
-            if (code < 0) break;
-            if (code == clear) {
-                codeSize = 9;
-                nextCode = 258;
-                oldCode = -1;
-                continue;
-            }
-            if (code == eoi) break;
-
-            var inCode = code;
-            var stackTop = 0;
-            if (code >= nextCode) {
-                if (oldCode < 0) throw new FormatException("Invalid PDF LZW stream.");
-                if (stackTop >= stack.Length) throw new FormatException("Invalid PDF LZW stack overflow.");
-                stack[stackTop++] = firstChar;
-                code = oldCode;
-            }
-
-            while (code >= 256) {
-                if ((uint)code >= 4096) throw new FormatException("Invalid PDF LZW code.");
-                if (stackTop >= stack.Length) throw new FormatException("Invalid PDF LZW stack overflow.");
-                stack[stackTop++] = suffix[code];
-                code = prefix[code];
-            }
-
-            firstChar = (byte)code;
-            if (stackTop >= stack.Length) throw new FormatException("Invalid PDF LZW stack overflow.");
-            stack[stackTop++] = firstChar;
-
-            while (stackTop > 0) {
-                if (outIndex >= output.Length) throw new FormatException("PDF LZW output too large.");
-                output[outIndex++] = stack[--stackTop];
-            }
-
-            if (oldCode >= 0) {
-                if (nextCode < 4096) {
-                    prefix[nextCode] = (short)oldCode;
-                    suffix[nextCode] = firstChar;
-                    nextCode++;
-                    if (nextCode == (1 << codeSize) - earlyChange && codeSize < 12) {
-                        codeSize++;
-                    }
-                }
-            }
-            oldCode = inCode;
-        }
-
-        if (outIndex != output.Length) throw new FormatException("PDF LZW output truncated.");
-        return output;
-    }
-
-    private static int ReadBitsMsb(ReadOnlySpan<byte> data, ref int bitPos, int bitCount) {
-        var totalBits = data.Length * 8;
-        if (bitPos + bitCount > totalBits) return -1;
-        var value = 0;
-        for (var i = 0; i < bitCount; i++) {
-            var bitIndex = bitPos + i;
-            var byteIndex = bitIndex >> 3;
-            var shift = 7 - (bitIndex & 7);
-            var bit = (data[byteIndex] >> shift) & 1;
-            value = (value << 1) | bit;
-        }
-        bitPos += bitCount;
-        return value;
-    }
+    private static byte[] DecompressLzw(ReadOnlySpan<byte> src, int expected, int earlyChange) =>
+        RasterLzwDecoder.Decode(src, expected, earlyChange, msb: true);
 
     private static void WriteTuple(Stream stream, uint tuple) {
         stream.WriteByte((byte)(tuple >> 24));

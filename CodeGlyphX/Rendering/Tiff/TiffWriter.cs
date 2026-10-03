@@ -1775,7 +1775,8 @@ public static class TiffWriter {
             writer.Write(prefix, codeSize);
             if (nextCode < maxCode) {
                 dict[key] = nextCode++;
-                if (nextCode == (1 << codeSize) - earlyChange && codeSize < 12) {
+                // The encoder inserts an entry one emitted code ahead of the decoder.
+                if (nextCode == (1 << codeSize) && codeSize < 12) {
                     codeSize++;
                 }
             } else {
@@ -1788,6 +1789,8 @@ public static class TiffWriter {
         }
 
         writer.Write(prefix, codeSize);
+        // The final phrase lets the decoder catch up before reading the end marker.
+        if (nextCode == (1 << codeSize) - earlyChange && codeSize < 12) codeSize++;
         writer.Write(eoi, codeSize);
         return writer.ToArray();
     }

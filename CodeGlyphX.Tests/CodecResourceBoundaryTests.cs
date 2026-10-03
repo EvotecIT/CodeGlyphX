@@ -8,6 +8,7 @@ using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Gif;
 using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Tiff;
 using CodeGlyphX.Rendering.Webp;
 using Xunit;
 
@@ -217,6 +218,42 @@ public sealed class CodecResourceBoundaryTests {
         ImageReader.LimitViolation += Handler;
         try { action(); } finally { ImageReader.LimitViolation -= Handler; }
         return violations;
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void SharedRasterLzwPreservesBitOrdersAndRejectsUndefinedCodes(bool msb) {
+        Assert.Equal(new byte[] { 193, 199 }, RasterLzwDecoder.Decode(PackLzwCodes(msb, 256, 193, 199, 257), 2, 1, msb));
+        Assert.Throws<FormatException>(() => RasterLzwDecoder.Decode(PackLzwCodes(msb, 256, 193, 511, 257), 2, 1, msb));
+    }
+
+    [Fact]
+    public void TiffLzwSingleStripPreservesPixelsAcrossDictionaryGrowthAndReset() {
+        const int side = 64;
+        var pixels = new byte[side * side * 4];
+        uint state = 37;
+        for (var i = 0; i < pixels.Length; i++) {
+            state = unchecked(state * 1664525 + 1013904223);
+            pixels[i] = i % 4 == 3 ? (byte)255 : (byte)(state >> 24);
+        }
+        using var stream = new MemoryStream();
+        TiffWriter.WriteRgba32(stream, side, side, pixels, side * 4, rowsPerStrip: side, compression: TiffCompression.Lzw, usePredictor: false);
+        Assert.True(ImageReader.TryDecodeRgba32(stream.ToArray(), out var decoded, out var width, out var height));
+        Assert.Equal(side, width); Assert.Equal(side, height);
+        Assert.Equal(pixels, decoded);
+    }
+
+    private static byte[] PackLzwCodes(bool msb, params int[] codes) {
+        var bytes = new byte[(codes.Length * 9 + 7) / 8];
+        for (var c = 0; c < codes.Length; c++) {
+            for (var bit = 0; bit < 9; bit++) {
+                var position = c * 9 + bit;
+                var value = (codes[c] >> (msb ? 8 - bit : bit)) & 1;
+                bytes[position / 8] |= (byte)(value << (msb ? 7 - position % 8 : position % 8));
+            }
+        }
+        return bytes;
     }
 
     private static byte[] BuildPdf(byte[] data, string? filter, int width = 1, int height = 1, int bits = 8) {
