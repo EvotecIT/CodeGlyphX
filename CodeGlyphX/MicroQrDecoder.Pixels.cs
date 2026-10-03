@@ -170,6 +170,7 @@ public static partial class MicroQrDecoder {
             MaxAnimationFrames = options.MaxAnimationFrames,
             MaxAnimationDurationMs = options.MaxAnimationDurationMs,
             MaxAnimationFramePixels = options.MaxAnimationFramePixels,
+            MaxDecodedBytes = options.MaxDecodedBytes,
             JpegOptions = options.JpegOptions
         };
     }

@@ -29,6 +29,7 @@ internal static class MatrixOutputRenderer {
         if (format == OutputFormat.Unknown) throw new ArgumentOutOfRangeException(nameof(format));
 
         var png = MatrixRenderOptionsBuilder.BuildPng(options);
+        if (format == OutputFormat.Png && extras is not null) png.PngCompressionLevel = extras.ResolvePngCompression(png.PngCompressionLevel);
         return format switch {
             OutputFormat.Png => Binary(format, MatrixPngRenderer.Render(modules, png)),
             OutputFormat.Svg => Text(format, MatrixSvgRenderer.Render(modules, MatrixRenderOptionsBuilder.BuildSvg(options))),

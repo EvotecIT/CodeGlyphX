@@ -78,6 +78,32 @@ QR.Save("https://codeglyphx.com", "styled.png", options);
 
 `QrEasy.EvaluateScanHeuristics` reports static contrast, quiet-zone, module-scale, and related concerns before rendering. It does not decode the output or guarantee scanner interoperability; validate final artifacts on the real devices and applications you support.
 
+### Colorful QR gallery
+
+![Prism, candy, neon, aurora, tropical and solar QR designs](Assets/Examples/qr-colorful-gallery.png)
+
+The [colorful-gallery example](CodeGlyphX.Examples/QrColorfulGalleryExample.cs) renders six designs: three combine module palettes, rounded finder patterns, gradients and confetti; three weave locally drawn illustrations into the QR data area. The designs use high error correction and preserve the functional patterns and a light quiet zone.
+
+Run the gallery from the repository root with PowerShell:
+
+```powershell
+$env:CODEGLYPHX_COLORFUL_GALLERY = '1'
+$env:CODEGLYPHX_OUTPUT_DIR = Join-Path (Get-Location) 'artifacts/colorful'
+dotnet run --project CodeGlyphX.Examples -c Release
+Remove-Item Env:CODEGLYPHX_COLORFUL_GALLERY, Env:CODEGLYPHX_OUTPUT_DIR
+```
+
+The output directory contains six full-size PNGs, a contact sheet and `validation.tsv`. Each export must recover `https://codeglyphx.com` from its original pixels, a half-size copy and a lightly blurred copy before the example completes. These CodeGlyphX decoder checks cover the exported files; test the intended delivery size and target readers before distributing a design. The contact sheet is a preview, and its thumbnails are not the validated exports.
+
+The generic render API accepts PNG compression without changing styling or decoded pixels:
+
+```csharp
+var png = QrCode.Render("https://example.com", OutputFormat.Png,
+    new QrEasyOptions { ModuleSize = 16 },
+    new RenderExtras { PngCompressionLevel = 6 });
+```
+
+`PngCompressionLevel` also applies to generic matrix and linear-barcode rendering. Use `0` for stored data or `1` through `9` for compression. Leaving it unset preserves each renderer's existing default.
 
 ### Compose QR artwork from an image
 
@@ -416,9 +442,13 @@ byte[] rgba = ImageReader.DecodeRgba32(image, limits, out int width, out int hei
 Limit semantics are deliberate:
 
 - `MaxBytes` and `MaxPixels`: `null` uses the corresponding `ImageReader` global; `0` disables that per-call limit.
+- `MaxDecodedBytes`: caps each decoded pixel or raster working buffer and the total retained animation frame pixels. The global default is 256 MiB. Encoded input copies, codec metadata, total process memory and cumulative allocations are outside this limit. `null` inherits the global; `0` disables it.
+- `Guarded` and `Strict` derive a decoded byte limit of 16 bytes per permitted pixel, capped at 256 MiB. Set `MaxDecodedBytes` explicitly when a legal codec buffer, such as a padded TIFF tile, needs more room. PDF filters also reject output larger than the declared raster requires.
 - `MaxDimension`: codecs validate the original dimensions first, then the single-image RGBA result is resized. It is not a codec-memory limit.
 - `RecognitionBudgetMilliseconds`: applies to barcode/matrix recognition after raster decoding. It does not time-box the image codec. Multi-format `CodeGlyph` entry points give each candidate decoder this budget; it is not a wall-clock limit for the complete candidate sequence.
 - `ImageReader.LimitViolation`: reports guard failures for telemetry.
+
+Legacy `CodeGlyph` single-result convenience calls try QR before other formats and use an 800 ms QR budget when no QR options are supplied. `PreferBarcode` keeps barcode-first selection. Pass explicit `QrPixelDecodeOptions` to control the QR profile and budget, including `BudgetMilliseconds = 0` for an exhaustive search. Use `SymbolScanner` to select formats and apply a timeout to the complete scan.
 
 See [SECURITY.md](SECURITY.md) for reporting and [FUZZING.md](FUZZING.md) for the bounded decoder harness.
 

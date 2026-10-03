@@ -33,6 +33,7 @@ public static partial class QrEasy {
         switch (format) {
             case OutputFormat.Png: {
                 var render = BuildPngOptions(opts, qr);
+                if (extras is not null) render.PngCompressionLevel = extras.ResolvePngCompression(render.PngCompressionLevel);
                 return RenderedOutput.FromBinary(format, QrPngRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Svg: {

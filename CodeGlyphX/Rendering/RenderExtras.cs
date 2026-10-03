@@ -10,6 +10,19 @@ namespace CodeGlyphX.Rendering;
 /// </summary>
 public sealed class RenderExtras {
     /// <summary>
+    /// Optional PNG compression override: zero stores pixels without compression; 1-9 enable compression.
+    /// Null preserves the renderer's default. Applies to QR, matrix and linear PNG outputs.
+    /// </summary>
+    public int? PngCompressionLevel { get; set; }
+
+    internal int ResolvePngCompression(int fallback) {
+        if (!PngCompressionLevel.HasValue) return fallback;
+        var level = PngCompressionLevel.Value;
+        if (level < 0 || level > 9) throw new System.ArgumentOutOfRangeException(nameof(PngCompressionLevel), "PNG compression must be between zero and nine.");
+        return level;
+    }
+
+    /// <summary>
     /// Vector or raster output for PDF/EPS.
     /// </summary>
     public RenderMode VectorMode { get; set; } = RenderMode.Vector;

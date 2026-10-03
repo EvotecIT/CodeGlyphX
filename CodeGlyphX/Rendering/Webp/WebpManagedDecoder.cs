@@ -163,6 +163,7 @@ internal static class WebpManagedDecoder {
         var canvas = new byte[canvasBytes];
         FillBackground(canvas, backgroundBgra);
 
+        if (!DecodeGuards.TryEnsureDecodedBytes((long)canvasBytes * frameInfos.Count)) return false;
         var renderedFrames = new WebpAnimationFrame[frameInfos.Count];
         for (var i = 0; i < frameInfos.Count; i++) {
             var frame = frameInfos[i];
@@ -267,10 +268,20 @@ internal static class WebpManagedDecoder {
         var maxDurationMs = ImageReader.EffectiveMaxAnimationDurationMs;
         var maxFramePixels = ImageReader.EffectiveMaxAnimationFramePixels;
         var totalDuration = 0L;
+        long retainedBytes = 0;
 
         for (var i = 0; i < chunks.Length; i++) {
             if (chunks[i].FourCc != FourCcAnmf) continue;
             var payload = chunkSpan.Slice(chunks[i].DataOffset, chunks[i].Length);
+            if (payload.Length < 16) return false;
+            var frameWidth = ReadU24LE(payload, 6) + 1;
+            var frameHeight = ReadU24LE(payload, 9) + 1;
+            var nextRetainedBytes = retainedBytes + (long)frameWidth * frameHeight * 4;
+            if (!DecodeGuards.TryEnsureDecodedBytes(nextRetainedBytes)) return false;
+            if (maxFrames > 0 && frames.Count >= maxFrames) {
+                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFrames, maxFrames, frames.Count + 1, ImageFormat.Webp));
+                return false;
+            }
             if (!TryDecodeAnimationFrame(payload, out var frame)) return false;
 
             if (canvasWidth <= 0 || canvasHeight <= 0) {
@@ -281,10 +292,6 @@ internal static class WebpManagedDecoder {
             if (frame.X < 0 || frame.Y < 0) return false;
             if (frame.X + frame.Width > canvasWidth || frame.Y + frame.Height > canvasHeight) return false;
 
-            if (maxFrames > 0 && frames.Count >= maxFrames) {
-                ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFrames, maxFrames, frames.Count + 1, ImageFormat.Webp));
-                return false;
-            }
             var framePixels = (long)frame.Width * frame.Height;
             if (maxFramePixels > 0 && framePixels > maxFramePixels) {
                 ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFramePixels, maxFramePixels, framePixels, ImageFormat.Webp));
@@ -299,6 +306,7 @@ internal static class WebpManagedDecoder {
                 }
                 totalDuration = nextTotal;
             }
+            retainedBytes = nextRetainedBytes;
             frames.Add(frame);
         }
 
@@ -448,7 +456,8 @@ internal static class WebpManagedDecoder {
             ImageReader.ReportLimitViolation(new ImageDecodeLimitViolation(ImageDecodeLimitKind.MaxAnimationFramePixels, maxFramePixels, framePixels, ImageFormat.Webp));
             return false;
         }
-        if (!DecodeGuards.TryEnsurePixelCount(width, height, maxFramePixels, out _)) return false;
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, maxFramePixels, out var framePixelCount) ||
+            !DecodeGuards.TryEnsureByteCount((long)framePixelCount * 4, out _)) return false;
 
         var duration = ReadU24LE(payload, 12);
         if (duration <= 0) duration = 1;
@@ -461,6 +470,8 @@ internal static class WebpManagedDecoder {
         if (!TryEnumerateChunks(frameData, out var chunks)) return false;
 
         if (TryFindChunk(frameData, chunks, FourCcVp8L, out var vp8lPayload)) {
+            if (!WebpVp8lDecoder.TryReadHeader(vp8lPayload, out var frameHeader) ||
+                frameHeader.Width != width || frameHeader.Height != height) return false;
             if (!WebpVp8lDecoder.TryDecode(vp8lPayload, out var rgba, out var decodedWidth, out var decodedHeight)) return false;
             if (decodedWidth != width || decodedHeight != height) return false;
             frame = new WebpAnimationFrameInfo(x, y, width, height, duration, blend, disposeToBackground, rgba);
@@ -468,6 +479,8 @@ internal static class WebpManagedDecoder {
         }
 
         if (TryFindChunk(frameData, chunks, FourCcVp8, out var vp8Payload)) {
+            if (!WebpVp8Decoder.TryReadHeader(vp8Payload, out var frameHeader) ||
+                frameHeader.Width != width || frameHeader.Height != height) return false;
             if (WebpVp8Decoder.TryDecode(vp8Payload, out var rgba, out var decodedWidth, out var decodedHeight)) {
                 if (decodedWidth != width || decodedHeight != height) return false;
 
@@ -607,7 +620,8 @@ internal static class WebpManagedDecoder {
             reason = "Alpha dimensions are invalid.";
             return false;
         }
-        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var alphaPixels)) {
+        if (!DecodeGuards.TryEnsurePixelCount(width, height, out var alphaPixels) ||
+            !DecodeGuards.TryEnsureByteCount(alphaPixels, out _)) {
             reason = "Alpha dimensions exceed size limits.";
             return false;
         }

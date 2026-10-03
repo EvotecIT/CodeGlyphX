@@ -810,7 +810,7 @@ public static partial class JpegReader {
             BlocksPerRow = blocksPerRow;
             BlocksPerCol = blocksPerCol;
             Stride = DecodeGuards.EnsureByteCount((long)blocksPerRow * 8, JpegDimensionsLimitMessage);
-            var bufferLength = DecodeGuards.EnsureByteCount((long)Stride * blocksPerCol * 8, JpegDimensionsLimitMessage);
+            var bufferLength = DecodeGuards.EnsureInt32Count((long)Stride * blocksPerCol * 8, JpegDimensionsLimitMessage);
             Buffer = new int[bufferLength];
             BlockCoeffs = new int[64];
             BlockPixels = new int[64];
@@ -898,8 +898,8 @@ public static partial class JpegReader {
             BlocksPerRow = blocksPerRow;
             BlocksPerCol = blocksPerCol;
             Stride = DecodeGuards.EnsureByteCount((long)blocksPerRow * 8, JpegDimensionsLimitMessage);
-            var coeffLength = DecodeGuards.EnsureByteCount((long)BlocksPerRow * BlocksPerCol * 64, JpegDimensionsLimitMessage);
-            var bufferLength = DecodeGuards.EnsureByteCount((long)Stride * blocksPerCol * 8, JpegDimensionsLimitMessage);
+            var coeffLength = DecodeGuards.EnsureInt32Count((long)BlocksPerRow * BlocksPerCol * 64, JpegDimensionsLimitMessage);
+            var bufferLength = DecodeGuards.EnsureInt32Count((long)Stride * blocksPerCol * 8, JpegDimensionsLimitMessage);
             Coeffs = new int[coeffLength];
             Buffer = new int[bufferLength];
             BlockCoeffs = new int[64];

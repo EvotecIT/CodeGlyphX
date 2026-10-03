@@ -42,6 +42,7 @@ public static partial class Barcode {
         var opts = BuildPngOptions(options);
         switch (format) {
             case OutputFormat.Png:
+                if (extras is not null) opts.PngCompressionLevel = extras.ResolvePngCompression(opts.PngCompressionLevel);
                 return RenderedOutput.FromBinary(format, BarcodePngRenderer.Render(barcode, opts));
             case OutputFormat.Svg:
                 return RenderedOutput.FromText(format, SvgBarcodeRenderer.Render(barcode, BuildSvgOptions(options)));

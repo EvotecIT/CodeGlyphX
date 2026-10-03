@@ -46,13 +46,24 @@ public class SymbolScannerBenchmarks
             throw new InvalidOperationException("Direct QR decoder benchmark validation failed.");
         }
 
+        if (!QrImageDecoder.TryDecode(_rgba, _width, _height, _stride, PixelFormat.Rgba32, _qrOptions, out var single)
+            || single.Text != Payload) {
+            throw new InvalidOperationException("Single QR decoder benchmark validation failed.");
+        }
+
         var scanned = SymbolScanner.Scan(_frame, _scanOptions);
         if (!scanned.IsSuccess || scanned.Symbols.Count != 1 || scanned.Symbols[0].Text != Payload) {
             throw new InvalidOperationException("Unified scanner benchmark validation failed.");
         }
     }
 
-    [Benchmark(Baseline = true, Description = "Direct QR image decoder")]
+    [Benchmark(Baseline = true, Description = "Direct QR decoder (one result)")]
+    public bool DirectQrSingleDecoder()
+    {
+        return QrImageDecoder.TryDecode(_rgba, _width, _height, _stride, PixelFormat.Rgba32, _qrOptions, out _);
+    }
+
+    [Benchmark(Description = "Direct QR decoder (all results)")]
     public int DirectQrDecoder()
     {
         return QrImageDecoder.TryDecodeAll(_rgba, _width, _height, _stride, PixelFormat.Rgba32, _qrOptions, out var decoded)

@@ -16,9 +16,7 @@ public static partial class CodeGlyph {
     private static bool TryDecodeAllCore(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out CodeGlyphDecoded[] decoded, BarcodeType? expectedBarcode = null, bool includeBarcode = true, bool preferBarcode = false, QrPixelDecodeOptions? qrOptions = null, CancellationToken cancellationToken = default, BarcodeDecodeOptions? barcodeOptions = null) {
         decoded = Array.Empty<CodeGlyphDecoded>();
         if (cancellationToken.IsCancellationRequested) return false;
-        var squareish = IsSquareish(width, height);
         var qrOptionsLocal = ResolveMultiQrOptions(qrOptions);
-        var preferQr = squareish && LooksLikeQr(pixels, width, height, stride, format);
         var foundQr = false;
 
         var list = new System.Collections.Generic.List<CodeGlyphDecoded>(4);
@@ -32,24 +30,20 @@ public static partial class CodeGlyph {
             }
         }
 
-        if (squareish) {
-            if (cancellationToken.IsCancellationRequested) return false;
-            if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, qrOptionsLocal, cancellationToken)) {
-                for (var i = 0; i < qrResults.Length; i++) {
-                    list.Add(new CodeGlyphDecoded(qrResults[i]));
-                }
-                foundQr = qrResults.Length > 0;
+        if (cancellationToken.IsCancellationRequested) return false;
+        if (QrDecoder.TryDecodeAll(pixels, width, height, stride, format, out var qrResults, qrOptionsLocal, cancellationToken)) {
+            for (var i = 0; i < qrResults.Length; i++) {
+                list.Add(new CodeGlyphDecoded(qrResults[i]));
             }
-
-            if (!preferQr || !foundQr) {
-                if (cancellationToken.IsCancellationRequested) return false;
-                if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec)) {
-                    list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
-                }
-            }
+            foundQr = qrResults.Length > 0;
         }
 
-        if (!preferQr || !foundQr) {
+        if (!foundQr) {
+            if (cancellationToken.IsCancellationRequested) return false;
+            if (AztecDecoder.TryDecode(pixels, width, height, stride, format, cancellationToken, out var aztec)) {
+                list.Add(new CodeGlyphDecoded(CodeGlyphKind.Aztec, aztec));
+            }
+
             if (cancellationToken.IsCancellationRequested) return false;
             if (DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, format, cancellationToken, out var dataMatrix)) {
                 list.Add(new CodeGlyphDecoded(dataMatrix));

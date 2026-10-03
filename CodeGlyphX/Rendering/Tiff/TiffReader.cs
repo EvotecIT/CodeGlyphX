@@ -8,7 +8,7 @@ namespace CodeGlyphX.Rendering.Tiff;
 /// <summary>
 /// Minimal TIFF decoder for baseline images (strips/tiles).
 /// </summary>
-public static class TiffReader {
+public static partial class TiffReader {
     private const ushort Magic = 42;
     private const ushort TagImageWidth = 256;
     private const ushort TagImageLength = 257;
@@ -389,6 +389,8 @@ public static class TiffReader {
             for (var s = 0; s < stripsPerPlane && row < height; s++) {
                 var rowsInStrip = Math.Min(rowsPerStrip, height - row);
                 var expected = DecodeGuards.EnsureByteCount((long)rowsInStrip * planeRowBytes, TiffStripLimitMessage);
+
+                DecodeGuards.EnsureDecodedBytes((long)expected * samplesPerPixel, TiffStripLimitMessage);
 
                 var planes = new byte[samplesPerPixel][];
                 for (var p = 0; p < samplesPerPixel; p++) {
@@ -917,45 +919,6 @@ public static class TiffReader {
 
     private static byte Scale16To8(ushort value) {
         return (byte)((value * 255 + 32767) / 65535);
-    }
-
-    private static byte[] DecompressDeflate(ReadOnlySpan<byte> src, int expected) {
-        using var input = new MemoryStream(src.ToArray(), writable: false);
-#if NET8_0_OR_GREATER
-        Stream stream = LooksLikeZlib(src)
-            ? new ZLibStream(input, CompressionMode.Decompress, leaveOpen: true)
-            : new DeflateStream(input, CompressionMode.Decompress, leaveOpen: true);
-#else
-        Stream stream;
-        if (LooksLikeZlib(src)) {
-            if (src.Length < 6) throw new FormatException("Invalid TIFF deflate stream.");
-            stream = new DeflateStream(new MemoryStream(src.Slice(2, src.Length - 6).ToArray(), writable: false), CompressionMode.Decompress, leaveOpen: true);
-        } else {
-            stream = new DeflateStream(input, CompressionMode.Decompress, leaveOpen: true);
-        }
-#endif
-        using (stream) {
-            var buffer = new byte[expected];
-            ReadExact(stream, buffer);
-            return buffer;
-        }
-    }
-
-    private static bool LooksLikeZlib(ReadOnlySpan<byte> data) {
-        if (data.Length < 2) return false;
-        var cmf = data[0];
-        var flg = data[1];
-        if ((cmf & 0x0F) != 8) return false;
-        return ((cmf << 8) + flg) % 31 == 0;
-    }
-
-    private static void ReadExact(Stream stream, byte[] buffer) {
-        var offset = 0;
-        while (offset < buffer.Length) {
-            var read = stream.Read(buffer, offset, buffer.Length - offset);
-            if (read <= 0) throw new FormatException("Truncated TIFF data.");
-            offset += read;
-        }
     }
 
     private static bool TryGetValueSpan(ReadOnlySpan<byte> data, int entryOffset, bool little, ushort type, uint count, out ReadOnlySpan<byte> valueSpan) {

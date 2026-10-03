@@ -23,7 +23,9 @@ public enum ImageDecodeLimitKind {
     /// <summary>
     /// Animation frame exceeded pixel limit.
     /// </summary>
-    MaxAnimationFramePixels
+    MaxAnimationFramePixels,
+    /// <summary>Decoded pixel/codec working buffers or retained animation pixels exceeded their byte limit.</summary>
+    MaxDecodedBytes
 }
 
 /// <summary>
@@ -52,7 +54,7 @@ public readonly struct ImageDecodeLimitViolation {
     public ImageDecodeLimitKind Kind { get; }
 
     /// <summary>
-    /// The configured limit (0 when unknown).
+    /// The configured or codec-derived limit (0 when unknown).
     /// </summary>
     public long Limit { get; }
 

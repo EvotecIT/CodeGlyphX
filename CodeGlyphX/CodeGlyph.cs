@@ -32,13 +32,6 @@ public static partial class CodeGlyph {
         return TryDecodeAllCore(pixels, width, height, stride, format, out decoded, expectedBarcode, includeBarcode, preferBarcode, qrOptions, cancellationToken, barcodeOptions);
     }
 
-    private static bool IsSquareish(int width, int height) {
-        if (width <= 0 || height <= 0) return false;
-        var min = width < height ? width : height;
-        var max = width > height ? width : height;
-        return (double)max / min <= 1.35d;
-    }
-
     private static QrPixelDecodeOptions ResolveMultiQrOptions(QrPixelDecodeOptions? options) {
         return options ?? new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Balanced,
@@ -62,22 +55,6 @@ public static partial class CodeGlyph {
         diagnostics.Failure ??= message;
         diagnostics.FailureReason = reason;
     }
-
-    private static bool LooksLikeQr(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format) {
-#if NET8_0_OR_GREATER
-        if (LooksLikeQrAtScale(pixels, width, height, stride, format, scale: 2)) return true;
-        if (LooksLikeQrAtScale(pixels, width, height, stride, format, scale: 1)) return true;
-#endif
-        return false;
-    }
-
-#if NET8_0_OR_GREATER
-    private static bool LooksLikeQrAtScale(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat format, int scale) {
-        if (!CodeGlyphX.Qr.QrGrayImage.TryCreate(pixels, width, height, stride, format, scale, out var image)) return false;
-        if (CodeGlyphX.Qr.QrFinderPatternDetector.TryFind(image, invert: false, out _, out _, out _)) return true;
-        return CodeGlyphX.Qr.QrFinderPatternDetector.TryFind(image, invert: true, out _, out _, out _);
-    }
-#endif
 
 #if NET8_0_OR_GREATER
     /// <summary>

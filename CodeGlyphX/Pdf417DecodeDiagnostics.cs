@@ -4,6 +4,9 @@ namespace CodeGlyphX;
 /// Diagnostics for PDF417 decoding.
 /// </summary>
 public sealed class Pdf417DecodeDiagnostics : IDecodeDiagnostics {
+    // Retain metadata from the successful diagnostic attempt for the unified decoder.
+    internal Pdf417.Pdf417MacroMetadata? Macro { get; set; }
+
     /// <summary>
     /// Number of decode attempts.
     /// </summary>
