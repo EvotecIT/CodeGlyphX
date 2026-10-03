@@ -221,6 +221,57 @@ var checks = QrArt.ValidateImage(illustrated.Image.ToPng(), payload);
 
 SVG exports are self-contained **hybrid images**: framing is vector geometry and the QR artwork is an embedded PNG. Increasing SVG display size does not add detail to that raster; choose `ModuleSize` for the intended print size. Small or heavily reduced artistic exports may not decode. The browser studio exposes the same families, layout search and PNG/SVG downloads, and validates the final framed pixels. Its framed cards rank by those final scan results, then by the explicitly labeled unframed artwork fidelity; the score does not measure the decorative frame. Run `CODEGLYPHX_ILLUSTRATED=1` with the examples project to generate all three compositions.
 
+### Procedural art
+
+![Six locally drawn QR designs: marble, waves, sunburst, geometric tiles, botanical weave and circuits](Assets/Examples/qr-procedural-art-gallery.png)
+
+`QrArt.ComposePattern` creates artwork from geometry and a palette, with no source image, model, network request or graphics dependency. Choose `Marble`, `Waves`, `Sunburst`, `Geometric`, `Botanical` or `Circuit`; set the seed to reproduce the design. Pattern density, rotation, two to sixteen opaque palette colors, and the paper color are configurable. The paper color applies to the three tiled patterns.
+
+The browser art studio starts with six colorful presets. Edit the seed, density, rotation, four palette colors and paper color, then compare alternatives. Treatment, finder frames, color strength, module scale, detail protection and export resolution are adjustable. Switch to an uploaded image for focal-region and mask controls, or add an illustrated frame for PNG and hybrid SVG exports. Each result retains its original payload for later delivery checks.
+
+`QrArtPatternPresets` supplies editable palette and composition settings for each family. `QrArt.RenderPatternPng` renders the source artwork alone, so a preview and mask/layout search can use exactly the same pixels:
+
+```csharp
+var pattern = QrArtPatternPresets.CreatePatternOptions(QrArtPattern.Marble, seed: 2026);
+var composition = QrArtPatternPresets.CreateCompositionOptions(pattern.Pattern);
+var sourcePng = QrArt.RenderPatternPng(pattern);
+var alternatives = await QrArt.SearchImageAsync("https://example.com/art", sourcePng,
+    new QrImageSearchOptions { Composition = composition });
+var best = alternatives.Candidates[0];
+best.Image.SavePng("marble-qr.png");
+// Inspect best.Validation before distributing this export.
+```
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering.Art;
+using CodeGlyphX.Rendering.Png;
+
+var artwork = QrArt.ComposePattern("https://example.com/art",
+    new QrArtPatternOptions {
+        Pattern = QrArtPattern.Circuit,
+        Seed = 2026,
+        Scale = 1.2,
+        RotationDegrees = 15,
+        Colors = new[] { new Rgba32(20, 180, 200), new Rgba32(235, 40, 140) }
+    },
+    new QrImageCompositionOptions {
+        ModuleSize = 18,
+        Strength = 0.95,
+        Canvas = new QrImageCanvasOptions { PaddingModules = 8 },
+        Art = new QrImageArtOptions {
+            Style = QrImageArtStyle.Circuit,
+            Finders = QrImageFinderStyle.Chamfered
+        }
+    });
+artwork.SavePng("circuit-qr.png");
+var checks = QrArt.ValidateImage(artwork.ToPng(), "https://example.com/art");
+```
+
+`Circuit` joins matching neighboring data modules with angular traces and small junctions. `CrossStitch` draws diagonal thread pairs. Both work with uploaded images through the existing image composer as well as procedural patterns. `Art.Finders` also accepts `Circular` and `Chamfered`; the other functional patterns and uniform light quiet zone retain their protection. Existing enum values keep their numeric values.
+
+The [procedural-art example](CodeGlyphX.Examples/QrProceduralArtExample.cs) produces the six gallery designs and their PNG exports. Run it with `CODEGLYPHX_PROCEDURAL_ART=1`; `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Each export checks the exact URL at its original size, half size and after light blur. These examples use 18 pixels per module, leaving nine after the half-size check. Busy art can lose readability at smaller sizes: validate the actual export and target devices before distributing it. Rendering is available on all supported targets; these scan checks use the modern .NET decoder, since the legacy image recognizer has limited art support. The gallery is a visual overview; use the individual exports for scanning.
+
 ## Standards-aware QR encoding
 
 `QrCodeEncoder.EncodeText` selects the smallest combination of numeric, alphanumeric, byte, and Kanji segments. UTF-8 ECI is emitted automatically when non-ASCII byte data needs it; `QrEncodingOptions` can force or suppress ECI and segment optimization.

@@ -1,0 +1,76 @@
+@using CodeGlyphX.Rendering.Art
+@using System.Globalization
+
+<div class="pattern-controls">
+    <p class="pattern-label">Start with a color story</p>
+    <div class="pattern-presets">
+        @foreach (var pattern in Enum.GetValues<QrArtPattern>())
+        {
+            <button @key="pattern" type="button" class="pattern-preset" aria-pressed="@(Settings.Pattern == pattern ? "true" : "false")"
+                    @onclick="() => SelectPreset(pattern)">
+                <img src="@_previews[pattern]" alt="" /><span>@Name(pattern)</span>
+            </button>
+        }
+    </div>
+    <label>Seed <input type="number" min="-2147483648" max="2147483647" value="@Settings.Seed"
+                       aria-invalid="@(_invalidSeed ? "true" : "false")" @onchange="ChangeSeed" /></label>
+    @if (_invalidSeed)
+    {
+        <p class="pattern-error" role="alert">Enter a whole seed between -2147483648 and 2147483647. The active seed is still @Settings.Seed.</p>
+    }
+    <button type="button" @onclick="NewSeed">Next seed</button>
+    <label>Pattern density · @Settings.Density.ToString("F2", CultureInfo.InvariantCulture)
+        <input type="range" min="0.5" max="4" step="0.05" value="@Number(Settings.Density)" @onchange="ChangeDensity" /></label>
+    <label>Pattern rotation · @Settings.Rotation.ToString("F0", CultureInfo.InvariantCulture)°
+        <input type="range" min="0" max="360" step="1" value="@Number(Settings.Rotation)" @onchange="ChangeRotation" /></label>
+    <div class="pattern-palette">
+        <label>Color 1 <input type="color" value="@Settings.Color1" @onchange="e => ChangeColor(e, 1)" /></label>
+        <label>Color 2 <input type="color" value="@Settings.Color2" @onchange="e => ChangeColor(e, 2)" /></label>
+        <label>Color 3 <input type="color" value="@Settings.Color3" @onchange="e => ChangeColor(e, 3)" /></label>
+        <label>Color 4 <input type="color" value="@Settings.Color4" @onchange="e => ChangeColor(e, 4)" /></label>
+        @if (Settings.Pattern is QrArtPattern.Geometric or QrArtPattern.Botanical or QrArtPattern.Circuit)
+        {
+            <label>Paper <input type="color" value="@Settings.Paper" @onchange="e => ChangeColor(e, 5)" /></label>
+        }
+    </div>
+    <p class="pattern-hint">Drawn locally from geometry. The same seed, palette and settings reproduce the same source artwork.</p>
+</div>
+
+@code {
+    [Parameter, EditorRequired] public QrPatternSettings Settings { get; set; } = QrPatternSettings.FromPreset(QrArtPattern.Marble);
+    [Parameter] public EventCallback<QrPatternSettings> SettingsChanged { get; set; }
+    private readonly Dictionary<QrArtPattern, string> _previews = new();
+    private bool _invalidSeed;
+    protected override void OnInitialized() {
+        foreach (var pattern in Enum.GetValues<QrArtPattern>())
+            _previews[pattern] = "data:image/png;base64," + Convert.ToBase64String(QrArt.RenderPatternPng(QrArtPatternPresets.CreatePatternOptions(pattern, 2026), 96));
+    }
+    internal static string Name(QrArtPattern pattern) => pattern switch {
+        QrArtPattern.Marble => "Prismatic marble", QrArtPattern.Waves => "Tidal ribbons", QrArtPattern.Sunburst => "Sunburst stitch",
+        QrArtPattern.Geometric => "Confetti tiles", QrArtPattern.Botanical => "Botanical weave", _ => "Electric circuit"
+    };
+    private static string Number(double value) => value.ToString(CultureInfo.InvariantCulture);
+    private Task SelectPreset(QrArtPattern pattern) {
+        _invalidSeed = false;
+        return SettingsChanged.InvokeAsync(QrPatternSettings.FromPreset(pattern, Settings.Seed));
+    }
+    private Task NewSeed() {
+        _invalidSeed = false;
+        return SettingsChanged.InvokeAsync(Settings with { Seed = Settings.Seed == int.MaxValue ? int.MinValue : Settings.Seed + 1 });
+    }
+    private Task ChangeSeed(ChangeEventArgs e) {
+        _invalidSeed = !int.TryParse(e.Value?.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var seed);
+        return _invalidSeed ? Task.CompletedTask : SettingsChanged.InvokeAsync(Settings with { Seed = seed });
+    }
+    private Task ChangeDensity(ChangeEventArgs e) => double.TryParse(e.Value?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var value)
+        ? SettingsChanged.InvokeAsync(Settings with { Density = value }) : Task.CompletedTask;
+    private Task ChangeRotation(ChangeEventArgs e) => double.TryParse(e.Value?.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out var value)
+        ? SettingsChanged.InvokeAsync(Settings with { Rotation = value }) : Task.CompletedTask;
+    private Task ChangeColor(ChangeEventArgs e, int index) {
+        var color = e.Value?.ToString() ?? "#000000";
+        return SettingsChanged.InvokeAsync(index switch {
+            1 => Settings with { Color1 = color }, 2 => Settings with { Color2 = color }, 3 => Settings with { Color3 = color },
+            4 => Settings with { Color4 = color }, _ => Settings with { Paper = color }
+        });
+    }
+}

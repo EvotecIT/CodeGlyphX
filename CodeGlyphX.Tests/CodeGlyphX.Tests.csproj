@@ -27,6 +27,8 @@
     <Compile Include="CodecResourceBoundaryTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />
+    <Compile Include="QrProceduralArtTests.cs" />
+    <Compile Include="QrPatternWorkflowTests.cs" />
     <Compile Include="ImageScannerSerialCollection.cs" />
   </ItemGroup>
 
