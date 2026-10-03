@@ -33,7 +33,7 @@ public static partial class QrArt {
             if (shapeIndex == 1 && (!settings.AllowSquareFallback || original.ModuleShape == QrPngModuleShape.Square)) break;
             for (var scaleIndex = 0; scaleIndex < 3; scaleIndex++) {
                 if (attempted >= settings.MaxCandidates) break;
-                if (scaleIndex > 0 && settings.MaxQrScale == original.Qr.Scale) continue;
+                if (scaleIndex > 0 && settings.MaxQrScale <= original.Qr.Scale) continue;
                 var candidateDesign = original.Clone();
                 candidateDesign.Qr.Scale = original.Qr.Scale + (settings.MaxQrScale - original.Qr.Scale) * scaleIndex / 2;
                 if (shapeIndex == 1) candidateDesign.ModuleShape = QrPngModuleShape.Square;

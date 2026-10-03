@@ -7,7 +7,7 @@ namespace CodeGlyphX.Examples;
 internal static class QrSceneDeliveryExample {
     internal static void Run(string outputDir) {
         const string payload = "https://example.com/scenes";
-        foreach (QrSceneStyle style in Enum.GetValues(typeof(QrSceneStyle))) {
+        foreach (var style in Enum.GetValues<QrSceneStyle>()) {
             var scene = QrArt.ComposeScene(payload, QrScenePresets.Create(style));
             var export = scene.Export(new QrSceneExportOptions { WidthMillimeters = 100, Dpi = 300 });
             var prefix = Path.Combine(outputDir, "scene-print-" + style.ToString().ToLowerInvariant());
