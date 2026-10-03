@@ -11,33 +11,16 @@ internal static class QrProceduralArtExample {
         var directory = Path.Combine(outputDir, "qr-procedural-art");
         Directory.CreateDirectory(directory);
         var designs = new[] {
-            ("prismatic-marble", QrArtPattern.Marble, QrImageArtStyle.ModuleShape, QrImageFinderStyle.Rounded,
-                new[] { new Rgba32(247, 38, 138), new Rgba32(102, 46, 226), new Rgba32(0, 202, 210), new Rgba32(255, 189, 35) }),
-            ("tidal-ribbons", QrArtPattern.Waves, QrImageArtStyle.Ribbons, QrImageFinderStyle.Circular,
-                new[] { new Rgba32(16, 58, 190), new Rgba32(0, 174, 202), new Rgba32(19, 217, 164), new Rgba32(252, 218, 77) }),
-            ("sunburst-stitch", QrArtPattern.Sunburst, QrImageArtStyle.CrossStitch, QrImageFinderStyle.Chamfered,
-                new[] { new Rgba32(255, 193, 30), new Rgba32(255, 72, 69), new Rgba32(213, 25, 143), new Rgba32(85, 37, 172) }),
-            ("confetti-tiles", QrArtPattern.Geometric, QrImageArtStyle.ModuleShape, QrImageFinderStyle.Chamfered,
-                new[] { new Rgba32(243, 44, 106), new Rgba32(29, 163, 198), new Rgba32(253, 170, 22), new Rgba32(98, 51, 174) }),
-            ("botanical-weave", QrArtPattern.Botanical, QrImageArtStyle.Weave, QrImageFinderStyle.Circular,
-                new[] { new Rgba32(6, 123, 95), new Rgba32(39, 179, 118), new Rgba32(225, 66, 136), new Rgba32(252, 155, 39) }),
-            ("electric-circuit", QrArtPattern.Circuit, QrImageArtStyle.Circuit, QrImageFinderStyle.Rounded,
-                new[] { new Rgba32(37, 81, 198), new Rgba32(0, 163, 176), new Rgba32(237, 58, 146), new Rgba32(246, 164, 20) })
+            ("prismatic-marble", QrArtPattern.Marble), ("tidal-ribbons", QrArtPattern.Waves),
+            ("sunburst-stitch", QrArtPattern.Sunburst), ("confetti-tiles", QrArtPattern.Geometric),
+            ("botanical-weave", QrArtPattern.Botanical), ("electric-circuit", QrArtPattern.Circuit)
         };
         var images = new List<QrImageComposition>();
         for (var i = 0; i < designs.Length; i++) {
-            var (name, pattern, style, finders, palette) = designs[i];
+            var (name, pattern) = designs[i];
             var result = QrArt.ComposePattern(payload,
-                new QrArtPatternOptions { Pattern = pattern, Seed = 2026 + i, RotationDegrees = i * 17, Colors = palette },
-                new QrImageCompositionOptions {
-                    ModuleSize = 18, Strength = 0.96,
-                    Canvas = new QrImageCanvasOptions { PaddingModules = 8 },
-                    Art = new QrImageArtOptions {
-                        Style = style, Shape = QrPngModuleShape.ConnectedRounded, Scale = 0.95,
-                        DetailProtection = 0.3, Finders = finders,
-                        FunctionalForeground = new Rgba32(21, 26, 47), FunctionalBackground = new Rgba32(255, 249, 239)
-                    }
-                });
+                QrArtPatternPresets.CreatePatternOptions(pattern, seed: 2026 + i),
+                QrArtPatternPresets.CreateCompositionOptions(pattern));
             result.SavePng(Path.Combine(directory, name + ".png"));
             var report = QrArt.ValidateImage(result.ToPng(), payload, 3000);
             Console.WriteLine(name + ": " + string.Join(", ", report.Checks.Select(c => $"{c.Name}={c.Passed}")));

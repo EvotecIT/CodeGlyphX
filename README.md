@@ -201,6 +201,21 @@ SVG exports are self-contained **hybrid images**: framing is vector geometry and
 
 `QrArt.ComposePattern` creates artwork from geometry and a palette, with no source image, model, network request or graphics dependency. Choose `Marble`, `Waves`, `Sunburst`, `Geometric`, `Botanical` or `Circuit`; set the seed to reproduce the design. Pattern density, rotation, two to sixteen opaque palette colors, and the paper color are configurable. The paper color applies to the three tiled patterns.
 
+The browser art studio starts with six colorful presets. Edit the seed, density, rotation, four palette colors and paper color, then compare alternatives. Treatment, finder frames, color strength, module scale, detail protection and export resolution are adjustable. Switch to an uploaded image for focal-region and mask controls, or add an illustrated frame for PNG and hybrid SVG exports. Each result retains its original payload for later delivery checks.
+
+`QrArtPatternPresets` supplies editable palette and composition settings for each family. `QrArt.RenderPatternPng` renders the source artwork alone, so a preview and mask/layout search can use exactly the same pixels:
+
+```csharp
+var pattern = QrArtPatternPresets.CreatePatternOptions(QrArtPattern.Marble, seed: 2026);
+var composition = QrArtPatternPresets.CreateCompositionOptions(pattern.Pattern);
+var sourcePng = QrArt.RenderPatternPng(pattern);
+var alternatives = await QrArt.SearchImageAsync("https://example.com/art", sourcePng,
+    new QrImageSearchOptions { Composition = composition });
+var best = alternatives.Candidates[0];
+best.Image.SavePng("marble-qr.png");
+// Inspect best.Validation before distributing this export.
+```
+
 ```csharp
 using CodeGlyphX;
 using CodeGlyphX.Rendering.Art;
