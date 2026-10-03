@@ -52,11 +52,12 @@ public partial class Playground {
 
     internal void GenerateCode()
     {
-        if (SelectedMode != "Generate")
+        if (_previewDisposed || SelectedMode != "Generate")
         {
             return;
         }
 
+        CancelPreviewUpdate();
         ResetOutputs();
 
         try
@@ -388,8 +389,11 @@ public partial class Playground {
         {
             ErrorMessage = ex.Message;
         }
-
-        _exampleKey++;
-        StateHasChanged();
+        finally
+        {
+            // Empty QR, barcode and matrix payloads also clear the sibling preview.
+            _exampleKey++;
+            StateHasChanged();
+        }
     }
 }
