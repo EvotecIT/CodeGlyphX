@@ -34,7 +34,7 @@ public readonly struct DataMatrixStructuredAppend {
         FileId2 = fileId2;
     }
 
-    /// <inheritdoc />
+    /// <summary>Returns the symbol index, total, and file identifier, or an invalid-sequence description.</summary>
     public override string ToString() {
         return IsValid ? $"{Index}/{Total} id {FileId1:D3}{FileId2:D3}" : $"invalid ({Index}/{Total})";
     }

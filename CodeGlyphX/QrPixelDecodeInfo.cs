@@ -79,7 +79,7 @@ public readonly struct QrPixelDecodeInfo {
     }
 #endif
 
-    /// <inheritdoc />
+    /// <summary>Returns the pixel-decoding settings, candidate counts, and module-decoding result.</summary>
     public override string ToString() {
         var inv = Invert ? "inv" : "norm";
         var dim = Dimension > 0 ? $" dim{Dimension}" : string.Empty;

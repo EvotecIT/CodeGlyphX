@@ -23,6 +23,6 @@ public sealed class Gs1ValidationIssue {
         Message = message ?? throw new ArgumentNullException(nameof(message));
     }
 
-    /// <inheritdoc />
+    /// <summary>Returns the validation message, prefixed by the application identifier when present.</summary>
     public override string ToString() => Ai is null ? Message : $"AI ({Ai}): {Message}";
 }

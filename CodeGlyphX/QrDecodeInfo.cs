@@ -117,6 +117,6 @@ public readonly struct QrDecodeInfo {
         };
     }
 
-    /// <inheritdoc />
+    /// <summary>Returns the diagnostic message.</summary>
     public override string ToString() => Message;
 }

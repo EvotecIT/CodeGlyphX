@@ -29,7 +29,7 @@ public readonly struct SymbolPoint : IEquatable<SymbolPoint> {
             return (X.GetHashCode() * 397) ^ Y.GetHashCode();
         }
     }
-    /// <inheritdoc />
+    /// <summary>Returns the point coordinates, with up to three decimal places.</summary>
     public override string ToString() => $"{X:0.###},{Y:0.###}";
     /// <summary>Compares two points.</summary>
     public static bool operator ==(SymbolPoint left, SymbolPoint right) => left.Equals(right);

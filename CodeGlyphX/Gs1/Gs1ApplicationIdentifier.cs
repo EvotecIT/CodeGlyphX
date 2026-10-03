@@ -89,6 +89,6 @@ public sealed class Gs1ApplicationIdentifier {
         DigitalLinkPrimaryKeyQualifiers = digitalLinkQualifiers;
     }
 
-    /// <inheritdoc />
+    /// <summary>Returns the parenthesized application identifier followed by its title.</summary>
     public override string ToString() => $"({Ai}) {Title}";
 }

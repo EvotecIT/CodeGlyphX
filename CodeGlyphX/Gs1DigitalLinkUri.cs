@@ -73,6 +73,6 @@ public sealed class Gs1DigitalLinkUri {
     /// <summary>Builds the equivalent GS1 element string.</summary>
     public string ToElementString() => Gs1Validator.ToElementString(_elements);
 
-    /// <inheritdoc />
+    /// <summary>Returns the original Digital Link URI.</summary>
     public override string ToString() => OriginalUri;
 }
