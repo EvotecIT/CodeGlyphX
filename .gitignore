@@ -399,6 +399,7 @@ CodeGlyphX.Website/wwwroot/api/
 
 # External image samples (downloaded at test time)
 CodeGlyphX.Tests/Fixtures/ImageSamples/*.png
+!CodeGlyphX.Tests/Fixtures/ImageSamples/pngsuite-*.png
 CodeGlyphX.Tests/Fixtures/ImageSamples/*.tif
 CodeGlyphX.Tests/Fixtures/ImageSamples/*.tiff
 CodeGlyphX.Tests/Fixtures/ImageSamples/*.jpg
