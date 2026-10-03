@@ -35,6 +35,7 @@ public sealed class PlaygroundLivePreviewTests {
         var xml = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(svg.Split(',')[1]));
         Assert.Contains("#112244", xml, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("#EEFFFF", xml, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(renderer.Elements(), e => e.Tag == "pre" && e.Text.Contains("Foreground = new Rgba32(17, 34, 68)", StringComparison.Ordinal));
         Assert.Empty(renderer.Errors);
     }
 
@@ -50,6 +51,18 @@ public sealed class PlaygroundLivePreviewTests {
         await renderer.Change("oninput", e => e.Tag == tag && e.Events.ContainsKey("oninput"), "");
         Assert.Null(renderer.PreviewUri());
         Assert.DoesNotContain(renderer.Elements(), e => e.Attributes.ContainsKey("download"));
+        Assert.Empty(renderer.Errors);
+    }
+
+    [Fact]
+    public async Task LowContrastPalettePreservesChosenColorsAndReportsRisk() {
+        await using var renderer = new PlaygroundRenderer();
+        await renderer.Start();
+        await renderer.Check("Enable palette colors");
+        await renderer.Change("oninput", e => e.Tag == "input" && e.Attribute("type") == "color" && e.Attribute("value") == "#00ffd5", "#ffeecc");
+        var pixels = ImageReader.DecodeRgba32(renderer.Png(), out _, out _);
+        Assert.Contains(Enumerable.Range(0, pixels.Length / 4), p => pixels[p * 4] == 255 && pixels[p * 4 + 1] == 238 && pixels[p * 4 + 2] == 204);
+        Assert.Contains(renderer.Elements(), e => e.Tag == "li" && e.Text.Contains("contrast", StringComparison.OrdinalIgnoreCase));
         Assert.Empty(renderer.Errors);
     }
 
@@ -107,6 +120,10 @@ public sealed class PlaygroundLivePreviewTests {
             var element = Elements().First(e => e.Tag == "button" && e.Text.Trim() == text);
             return DispatchEventAsync(element.Events["onclick"], null, new MouseEventArgs());
         });
+        public Task Check(string text) => Dispatcher.InvokeAsync(() => {
+            var element = Elements().SkipWhile(e => e.Tag != "label" || !e.Text.Contains(text, StringComparison.Ordinal)).Skip(1).First(e => e.Tag == "input");
+            return DispatchEventAsync(element.Events["onchange"], new EventFieldInfo { ComponentId = element.ComponentId, FieldValue = true }, new ChangeEventArgs { Value = true });
+        });
         public string? PreviewUri() => Elements().FirstOrDefault(e => e.Attribute("alt") == "Generated code")?.Attribute("src");
         public byte[] Png() => Convert.FromBase64String(PreviewUri()!.Split(',')[1]);
         public IReadOnlyList<Element> Elements() {
@@ -126,7 +143,7 @@ public sealed class PlaygroundLivePreviewTests {
                     element.Attributes[attribute.AttributeName] = attribute.AttributeValue;
                     if (attribute.AttributeEventHandlerId != 0) element.Events[attribute.AttributeName] = attribute.AttributeEventHandlerId;
                 }
-                element.Text = string.Concat(tree.Array.Skip(i + 1).Take(frame.ElementSubtreeLength - 1).Where(f => f.FrameType == RenderTreeFrameType.Text).Select(f => f.TextContent));
+                element.Text = string.Concat(tree.Array.Skip(i + 1).Take(frame.ElementSubtreeLength - 1).Where(f => f.FrameType is RenderTreeFrameType.Text or RenderTreeFrameType.Markup).Select(f => f.FrameType == RenderTreeFrameType.Text ? f.TextContent : f.MarkupContent));
                 result.Add(element);
             }
         }

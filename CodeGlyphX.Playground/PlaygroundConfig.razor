@@ -203,6 +203,7 @@ else
                             <input type="color" aria-label="Foreground color" @bind="Host.ForegroundColor" @bind:event="oninput" @bind:after="Host.QueueGenerateAsync" />
                             <input type="color" aria-label="Background color" @bind="Host.BackgroundColor" @bind:event="oninput" @bind:after="Host.QueueGenerateAsync" />
                         </div>
+                        <small class="form-hint">Preview colors and styles follow your settings. Check the scan heuristics for contrast and readability.</small>
                     </div>
 
                     <div class="form-group">

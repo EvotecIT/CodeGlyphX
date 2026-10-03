@@ -225,12 +225,19 @@ public partial class Playground {
         if (SelectedCategory == "QR")
         {
             var escapedContent = EscapeString(Content);
-            if (ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000" || TargetSizePx > 0 || BackgroundSupersample > 1)
+            if (ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000" || BackgroundColor != "#FFFFFF" || TargetSizePx > 0 || BackgroundSupersample > 1)
             {
                 var sb = new System.Text.StringBuilder();
                 sb.Append("using CodeGlyphX;").Append(nl).Append(nl);
+                sb.Append("using CodeGlyphX.Rendering;").Append(nl);
+                sb.Append("using CodeGlyphX.Rendering.Png;").Append(nl).Append(nl);
                 sb.Append("var options = new QrEasyOptions").Append(nl);
                 sb.Append("{").Append(nl);
+                sb.Append("    ArtGuardrailsEnabled = false,").Append(nl);
+                var foreground = ParseColor(ForegroundColor);
+                var background = ParseColor(BackgroundColor);
+                sb.Append("    Foreground = new Rgba32(").Append(foreground.R).Append(", ").Append(foreground.G).Append(", ").Append(foreground.B).Append("),").Append(nl);
+                sb.Append("    Background = new Rgba32(").Append(background.R).Append(", ").Append(background.G).Append(", ").Append(background.B).Append("),").Append(nl);
                 sb.Append("    ErrorCorrectionLevel = QrErrorCorrectionLevel.").Append(ErrorCorrection).Append(",").Append(nl);
                 if (TargetSizePx > 0)
                 {
@@ -367,10 +374,15 @@ public partial class Playground {
         if (SelectedCategory == "QR")
         {
             var escapedContent = EscapeStringVb(Content);
-            if (ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000" || TargetSizePx > 0 || BackgroundSupersample > 1)
+            if (ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000" || BackgroundColor != "#FFFFFF" || TargetSizePx > 0 || BackgroundSupersample > 1)
             {
+                var foreground = ParseColor(ForegroundColor);
+                var background = ParseColor(BackgroundColor);
                 var lines = new System.Collections.Generic.List<string>
                 {
+                    "    .ArtGuardrailsEnabled = False",
+                    "    .Foreground = New Rgba32(" + foreground.R + ", " + foreground.G + ", " + foreground.B + ")",
+                    "    .Background = New Rgba32(" + background.R + ", " + background.G + ", " + background.B + ")",
                     "    .ErrorCorrectionLevel = QrErrorCorrectionLevel." + ErrorCorrection
                 };
                 if (TargetSizePx > 0)
@@ -405,6 +417,7 @@ public partial class Playground {
 
                 var sb = new System.Text.StringBuilder();
                 sb.Append("Imports CodeGlyphX").Append(nl);
+                sb.Append("Imports CodeGlyphX.Rendering").Append(nl);
                 sb.Append("Imports CodeGlyphX.Rendering.Png").Append(nl).Append(nl);
                 sb.Append("Dim options = New QrEasyOptions With {").Append(nl);
                 sb.Append(string.Join("," + nl, lines)).Append(nl);

@@ -80,6 +80,8 @@ public partial class Playground {
 
                 var options = new QrEasyOptions
                 {
+                    // The editor renders explicit choices; its scan report provides feedback.
+                    ArtGuardrailsEnabled = false,
                     ErrorCorrectionLevel = qrEcc,
                     Foreground = ParseColor(ForegroundColor),
                     Background = ParseColor(BackgroundColor),
