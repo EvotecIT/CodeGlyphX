@@ -7,8 +7,8 @@
 .delivery-fields input, .delivery-fields select { width: 100%; min-width: 0; padding: .5rem; color: var(--text); background: var(--bg-card); border: 1px solid var(--border); border-radius: .4rem; }
 .scene-delivery button, .delivery-downloads a { display: inline-block; padding: .5rem .75rem; margin: .3rem .4rem .3rem 0; border: 1px solid var(--border); border-radius: .4rem; color: var(--text); background: var(--bg-card); font-size: .85rem; cursor: pointer; text-decoration: none; }
 .scene-delivery button:disabled { opacity: .5; cursor: default; }
-.scene-delivery [role=alert], .delivery-fail { color: #ef4444; }
-.delivery-pass { color: #22c55e; }
+.scene-delivery [role=alert], .delivery-fail { color: var(--error); }
+.delivery-pass { color: var(--success); }
 .scene-delivery ul { margin: .75rem 0; padding-left: 1rem; font-size: .85rem; }
 .delivery-retained { overflow-wrap: anywhere; }
 .delivery-preview { margin: .75rem 0; }

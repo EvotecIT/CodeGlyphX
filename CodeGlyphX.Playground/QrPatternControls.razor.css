@@ -11,5 +11,5 @@
 .pattern-palette { display: flex; flex-wrap: wrap; gap: .65rem; }
 .pattern-palette input { display: block; width: 40px; height: 35px; padding: 2px; margin-top: .4rem; border: 1px solid var(--border); background: var(--bg-card); border-radius: 5px; }
 .pattern-hint { font-size: .8rem; color: var(--text-muted); line-height: 1.5; }
-.pattern-error { color: #ef4444; font-size: .8rem; line-height: 1.5; }
+.pattern-error { color: var(--error); font-size: .8rem; line-height: 1.5; }
 :focus-visible { outline: 3px solid #d18b24; outline-offset: 3px; }

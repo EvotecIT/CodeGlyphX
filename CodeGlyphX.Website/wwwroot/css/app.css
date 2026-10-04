@@ -73,6 +73,8 @@
     --secondary: #06b6d4;
     --accent: #f472b6;
     --success: #10b981;
+    --warning: #fbbf24;
+    --error: #f87171;
 
     /* Backgrounds */
     --bg-dark: #0a0a0f;
@@ -113,6 +115,8 @@
     --secondary: #0e7490;
     --accent: #db2777;
     --success: #047857;
+    --warning: #92400e;
+    --error: #b91c1c;
 
     /* Backgrounds */
     --bg-dark: #f8fafc;
@@ -152,6 +156,8 @@
         --secondary: #0e7490;
         --accent: #db2777;
         --success: #047857;
+        --warning: #92400e;
+        --error: #b91c1c;
 
         /* Backgrounds */
         --bg-dark: #f8fafc;

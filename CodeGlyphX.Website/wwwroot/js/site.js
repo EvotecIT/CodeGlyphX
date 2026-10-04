@@ -1,6 +1,6 @@
 // Theme management functions for Blazor interop
 function getTheme() {
-    return localStorage.getItem('theme') || 'dark';
+    return localStorage.getItem('theme') || 'auto';
 }
 
 function setTheme(theme) {

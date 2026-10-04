@@ -124,7 +124,7 @@ public partial class QrSceneStudio : IAsyncDisposable {
     }
     // Encoded stream limits are paired with core recipe and decoded-image limits.
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "S5693:Make sure that this file upload is safe", Justification = "Upload sizes are fixed by the two callers; parsing and image decoding enforce independent limits.")]
-    private Stream OpenUpload(IBrowserFile file, long limit, CancellationToken cancellationToken) => file.OpenReadStream(limit, cancellationToken);
+    private static Stream OpenUpload(IBrowserFile file, long limit, CancellationToken cancellationToken) => file.OpenReadStream(limit, cancellationToken);
 
     private async Task Render() {
         if (_busy || !SeedValid || Host is null || !Host.IsArtwork || string.IsNullOrWhiteSpace(_payload)) return;

@@ -6,5 +6,5 @@
 .art-candidate button, .art-candidate a { display: inline-block; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 7px; padding: .55rem .75rem; margin: .25rem .3rem .25rem 0; font-size: .85rem; cursor: pointer; }
 .art-candidate button:disabled { opacity: .55; cursor: wait; }
 .art-candidate :focus-visible { outline: 3px solid #d18b24; outline-offset: 3px; }
-.art-pass { color: #196339; }
-.art-error { color: #ef4444; }
+.art-pass { color: var(--success); }
+.art-error { color: var(--error); }

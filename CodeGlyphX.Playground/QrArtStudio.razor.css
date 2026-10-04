@@ -23,7 +23,7 @@
 .art-result-label { padding: .75rem 1rem; background: var(--bg-card); border-radius: 10px; font-size: .85rem; }
 .art-layout { margin-top: 1rem; }
 .art-layout summary { margin-bottom: 1rem; cursor: pointer; font-weight: 600; }
-.art-error { color: #ef4444; }
+.art-error { color: var(--error); }
 .art-empty { padding: 2rem; border: 1px dashed var(--border); border-radius: 10px; }
 .art-delivery { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1.5rem !important; }
 .art-delivery label { flex: 1; min-width: 100px; }

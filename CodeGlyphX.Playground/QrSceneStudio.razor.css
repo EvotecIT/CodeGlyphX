@@ -17,7 +17,7 @@ details { margin: 1rem 0; }
 summary { cursor: pointer; font-weight: 700; margin-bottom: 1rem; }
 ::deep input[type=file] { max-width: 100%; font-size: .8rem; }
 .scene-hint, figcaption { font-size: .8rem; line-height: 1.5; color: var(--text-muted); }
-.scene-error, .fail { color: #ef4444; }
+.scene-error, .fail { color: var(--error); }
 figure { margin: 0; }
 figure img { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 30px var(--text)20; }
 figcaption { margin: .75rem 0; }

@@ -175,7 +175,11 @@ public partial class QrArtStudio : IDisposable {
         _ => "Geometric poster"
     };
     private async Task ApplyIllustration() {
-        if (!_frameEnabled) { if (_procedural) ApplyPatternTreatment(); await Edited(); return; }
+        if (!_frameEnabled) {
+            if (_procedural) ApplyPatternTreatment();
+            await Edited();
+            return;
+        }
         var preset = QrIllustratedComposer.CreateOptions(_frameStyle);
         _style = preset.Art!.Style; _finders = preset.Art.Finders;
         await Edited();
