@@ -252,34 +252,34 @@ public partial class Playground {
         DecodeQualityPreset = "Custom";
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        GenerateCode();
+        await GenerateCode();
     }
 
-    internal void OnCategoryChanged()
+    internal async Task OnCategoryChanged()
     {
         ResetOutputs();
         if (SelectedMode == "Generate")
         {
-            GenerateCode();
+            await GenerateCode();
         }
         _exampleKey++;
         StateHasChanged();
     }
 
-    internal void OnSpecialPayloadTypeChanged()
+    internal async Task OnSpecialPayloadTypeChanged()
     {
         ResetOutputs();
         if (SelectedMode == "Generate")
         {
-            GenerateCode();
+            await GenerateCode();
         }
         _exampleKey++;
         StateHasChanged();
     }
 
-    internal void OnBarcodeTypeChanged()
+    internal async Task OnBarcodeTypeChanged()
     {
         ResetOutputs();
 
@@ -350,26 +350,26 @@ public partial class Playground {
 
         if (SelectedMode == "Generate")
         {
-            GenerateCode();
+            await GenerateCode();
         }
 
         _exampleKey++;
         StateHasChanged();
     }
 
-    internal void OnModeChanged()
+    internal async Task OnModeChanged()
     {
         CancelPreviewUpdate();
         ResetOutputs();
         if (SelectedMode == "Generate")
         {
-            GenerateCode();
+            await GenerateCode();
         }
         _exampleKey++;
         StateHasChanged();
     }
 
-    internal void OnOutputSizePresetChanged()
+    internal async Task OnOutputSizePresetChanged()
     {
         TargetSizePx = OutputSizePreset switch
         {
@@ -384,13 +384,13 @@ public partial class Playground {
         ResetOutputs();
         if (SelectedMode == "Generate")
         {
-            GenerateCode();
+            await GenerateCode();
         }
         _exampleKey++;
         StateHasChanged();
     }
 
-    internal void ApplyPreset(string preset)
+    internal async Task ApplyPreset(string preset)
     {
         SelectedMode = "Generate";
 
@@ -421,13 +421,13 @@ public partial class Playground {
                 SelectedCategory = "Barcode";
                 SelectedBarcodeType = "EAN";
                 BarcodeContent = "5901234123457";
-                OnBarcodeTypeChanged();
+                await OnBarcodeTypeChanged();
                 break;
             case "BarcodeCode128":
                 SelectedCategory = "Barcode";
                 SelectedBarcodeType = "Code128";
                 BarcodeContent = "CODE128-1234";
-                OnBarcodeTypeChanged();
+                await OnBarcodeTypeChanged();
                 break;
             case "MatrixPdf417":
                 SelectedCategory = "Matrix";
@@ -451,7 +451,7 @@ public partial class Playground {
                 break;
         }
 
-        GenerateCode();
+        await GenerateCode();
         _exampleKey++;
         StateHasChanged();
     }

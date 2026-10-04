@@ -1,0 +1,24 @@
+@using CodeGlyphX.Rendering.Art
+
+<section class="artwork-details" aria-label="Current artwork">
+    <p><strong>@Artwork.Description</strong></p>
+    <details><summary>Encoded data</summary><code>@Artwork.Payload</code></details>
+    @if (Artwork.RecipeUri is not null) {
+        <a class="btn btn-secondary" href="@Artwork.RecipeUri" download="qr-scene.cgxart">Download this design’s recipe</a>
+    }
+    @if (Artwork.Validation is { } validation) {
+        <p>@validation.Checks.Count(check => check.Passed) / @validation.Checks.Count scan checks passed</p>
+        <details><summary>Scan check details</summary><ul>
+            @foreach (var check in validation.Checks) { <li>@check.Name: @(check.Passed ? "Passed" : "Not recovered")</li> }
+        </ul></details>
+    }
+    else { <p class="form-hint">This preview has not been scan checked. Compare artwork alternatives or check a scene before distribution.</p> }
+    @if (Artwork.Scene is { } scene) {
+        <details><summary>Print and delivery</summary><QrSceneDeliveryStudio @key="scene" Scene="scene" /></details>
+    }
+    <p class="form-hint">Software checks do not replace testing the final size with real phones and printers.</p>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public PlaygroundArtwork Artwork { get; set; } = null!;
+}

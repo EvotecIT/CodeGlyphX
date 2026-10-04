@@ -12,10 +12,14 @@ else
 {
     <div class="card playground-preview-card">
         <h2>@(Host.SelectedMode == "Decode" ? "Decode Result" : "Preview")</h2>
+        @if (Host.IsArtwork && Host.Artwork is null && !Host.IsPreviewUpdating) {
+            <p class="form-hint">Choose artwork settings to create your QR design.</p>
+        }
         @if (Host.IsPreviewUpdating)
         {
             <p role="status" aria-live="polite">Updating preview…</p>
         }
+
         @{
             var isEmpty = Host.SelectedMode == "Decode"
                 ? string.IsNullOrEmpty(Host.DecodeImageDataUri)
@@ -61,7 +65,11 @@ else
             </div>
         }
 
-        @if (Host.SelectedMode == "Generate" && Host.SelectedCategory == "QR" && Host.HeuristicReport is not null && !string.IsNullOrEmpty(Host.ImageDataUri))
+        @if (Host.Artwork is { } artwork && !Host.IsPreviewUpdating) {
+            <PlaygroundArtworkDetails Artwork="artwork" />
+        }
+
+        @if (Host.SelectedMode == "Generate" && Host.IsQr && Host.HeuristicReport is not null && !string.IsNullOrEmpty(Host.ImageDataUri))
         {
             <div style="margin-top: 1.25rem; border: 1px solid rgba(148,163,184,0.25); border-radius: 12px; padding: 0.85rem;">
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;">

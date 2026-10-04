@@ -8,19 +8,22 @@ public partial class Playground : IDisposable {
     private CancellationTokenSource? _previewUpdate;
     private bool _previewDisposed;
 
-    internal bool IsPreviewUpdating => _previewUpdate is not null;
+    internal bool IsPreviewUpdating => _previewUpdate is not null || (IsArtwork && ArtEditor?.Busy == true);
 
     // Coalesce typing and color-picker drags before doing synchronous image rendering.
     internal async Task QueueGenerateAsync() {
         if (_previewDisposed || SelectedMode != "Generate") return;
 
         CancelPreviewUpdate();
+        if (IsArtwork) {
+            ResetOutputs();
+        }
         var update = new CancellationTokenSource();
         _previewUpdate = update;
         StateHasChanged();
         try {
             await Task.Delay(150, update.Token);
-            if (!_previewDisposed && ReferenceEquals(_previewUpdate, update)) GenerateCode();
+            if (!_previewDisposed && ReferenceEquals(_previewUpdate, update)) await GenerateCode();
         }
         catch (OperationCanceledException) when (update.IsCancellationRequested) {
             // A newer edit, explicit generation or navigation superseded this update.
@@ -48,5 +51,6 @@ public partial class Playground : IDisposable {
         if (!disposing || _previewDisposed) return;
         _previewDisposed = true;
         CancelPreviewUpdate();
+        InvalidateArtwork();
     }
 }

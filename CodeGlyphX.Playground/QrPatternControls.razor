@@ -13,24 +13,24 @@
         }
     </div>
     <label>Seed <input type="number" min="-2147483648" max="2147483647" value="@Settings.Seed"
-                       aria-invalid="@(_invalidSeed ? "true" : "false")" @onchange="ChangeSeed" /></label>
+                       aria-invalid="@(_invalidSeed ? "true" : "false")" @oninput="ChangeSeed" /></label>
     @if (_invalidSeed)
     {
         <p class="pattern-error" role="alert">Enter a whole seed between -2147483648 and 2147483647. The active seed is still @Settings.Seed.</p>
     }
     <button type="button" @onclick="NewSeed">Next seed</button>
     <label>Pattern density · @Settings.Density.ToString("F2", CultureInfo.InvariantCulture)
-        <input type="range" min="0.5" max="4" step="0.05" value="@Number(Settings.Density)" @onchange="ChangeDensity" /></label>
+        <input type="range" min="0.5" max="4" step="0.05" value="@Number(Settings.Density)" @oninput="ChangeDensity" /></label>
     <label>Pattern rotation · @Settings.Rotation.ToString("F0", CultureInfo.InvariantCulture)°
-        <input type="range" min="0" max="360" step="1" value="@Number(Settings.Rotation)" @onchange="ChangeRotation" /></label>
+        <input type="range" min="0" max="360" step="1" value="@Number(Settings.Rotation)" @oninput="ChangeRotation" /></label>
     <div class="pattern-palette">
-        <label>Color 1 <input type="color" value="@Settings.Color1" @onchange="e => ChangeColor(e, 1)" /></label>
-        <label>Color 2 <input type="color" value="@Settings.Color2" @onchange="e => ChangeColor(e, 2)" /></label>
-        <label>Color 3 <input type="color" value="@Settings.Color3" @onchange="e => ChangeColor(e, 3)" /></label>
-        <label>Color 4 <input type="color" value="@Settings.Color4" @onchange="e => ChangeColor(e, 4)" /></label>
+        <label>Color 1 <input type="color" value="@Settings.Color1" @oninput="e => ChangeColor(e, 1)" /></label>
+        <label>Color 2 <input type="color" value="@Settings.Color2" @oninput="e => ChangeColor(e, 2)" /></label>
+        <label>Color 3 <input type="color" value="@Settings.Color3" @oninput="e => ChangeColor(e, 3)" /></label>
+        <label>Color 4 <input type="color" value="@Settings.Color4" @oninput="e => ChangeColor(e, 4)" /></label>
         @if (Settings.Pattern is QrArtPattern.Geometric or QrArtPattern.Botanical or QrArtPattern.Circuit)
         {
-            <label>Paper <input type="color" value="@Settings.Paper" @onchange="e => ChangeColor(e, 5)" /></label>
+            <label>Paper <input type="color" value="@Settings.Paper" @oninput="e => ChangeColor(e, 5)" /></label>
         }
     </div>
     <p class="pattern-hint">Drawn locally from geometry. The same seed, palette and settings reproduce the same source artwork.</p>

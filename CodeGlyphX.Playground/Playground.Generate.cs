@@ -50,7 +50,7 @@ public partial class Playground {
         };
     }
 
-    internal void GenerateCode()
+    internal async Task GenerateCode()
     {
         if (_previewDisposed || SelectedMode != "Generate")
         {
@@ -59,15 +59,25 @@ public partial class Playground {
 
         CancelPreviewUpdate();
         ResetOutputs();
+        if (!ArtworkAvailable) QrDesign = "Styled";
 
         try
         {
             byte[] pngBytes = Array.Empty<byte>();
             string? svg = null;
 
-            if (SelectedCategory == "QR")
+            if (IsArtwork) {
+                var payload = CurrentQrPayload();
+                if (!string.IsNullOrWhiteSpace(payload) && ArtEditor is not null)
+                    await ArtEditor.RenderPreviewAsync(payload, ArtRevision);
+                return;
+            }
+
+            if (IsQr)
             {
-                if (string.IsNullOrWhiteSpace(Content))
+                var payloadData = SelectedCategory == "SpecialQR" ? GetSpecialPayloadData() : new QrPayloadData(Content);
+                var qrPayload = payloadData?.Text;
+                if (payloadData is null || string.IsNullOrWhiteSpace(qrPayload))
                     return;
 
                 var qrEcc = ErrorCorrection switch
@@ -82,7 +92,7 @@ public partial class Playground {
                 {
                     // The editor renders explicit choices; its scan report provides feedback.
                     ArtGuardrailsEnabled = false,
-                    ErrorCorrectionLevel = qrEcc,
+                    ErrorCorrectionLevel = SelectedCategory == "SpecialQR" ? payloadData.ErrorCorrectionLevel : qrEcc,
                     Foreground = ParseColor(ForegroundColor),
                     Background = ParseColor(BackgroundColor),
                     ModuleShape = ParseModuleShape(ModuleShape),
@@ -248,18 +258,9 @@ public partial class Playground {
                     };
                 }
 
-                HeuristicReport = QrEasy.EvaluateScanHeuristics(Content, options);
-                pngBytes = QrCode.Render(Content, OutputFormat.Png, options).Data;
-                svg = QrCode.Render(Content, OutputFormat.Svg, options).GetText();
-            }
-            else if (SelectedCategory == "SpecialQR")
-            {
-                var payloadData = GetSpecialPayloadData();
-                if (payloadData == null || string.IsNullOrWhiteSpace(payloadData.Text))
-                    return;
-
-                pngBytes = QrCode.Render(payloadData, OutputFormat.Png).Data;
-                svg = QrCode.Render(payloadData, OutputFormat.Svg).GetText();
+                HeuristicReport = QrEasy.EvaluateScanHeuristics(qrPayload, options);
+                pngBytes = QrCode.Render(payloadData, OutputFormat.Png, options).Data;
+                svg = QrCode.Render(payloadData, OutputFormat.Svg, options).GetText();
             }
             else if (SelectedCategory == "Barcode")
             {

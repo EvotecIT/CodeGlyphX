@@ -392,6 +392,7 @@ public partial class Playground {
 
     internal void ResetOutputs()
     {
+        InvalidateArtwork();
         ErrorMessage = null;
         ImageDataUri = null;
         SvgDataUri = null;

@@ -10,11 +10,7 @@
             <li>@check.Name: @(check.Passed ? "Passed" : "Not recovered")</li>
         }
     </ul></details>
-    <a href="@Card.Uri" download="qr-art.png">Download PNG</a>
-    @if (Card.SvgUri is not null)
-    {
-        <a href="@Card.SvgUri" download="qr-illustrated.svg">Download SVG</a>
-    }
+    <button type="button" aria-pressed="@(Selected ? "true" : "false")" disabled="@Busy" @onclick="() => OnSelect.InvokeAsync(Card)">@(Selected ? "Selected design" : "Use this design")</button>
     <button type="button" disabled="@Busy" @onclick="() => OnDeliveryCheck.InvokeAsync(Card)">Check delivery</button>
     @if (Card.Delivery is not null)
     {
@@ -29,6 +25,8 @@
 
 @code {
     [Parameter, EditorRequired] public QrArtStudioCard Card { get; set; } = null!;
+    [Parameter] public bool Selected { get; set; }
+    [Parameter] public EventCallback<QrArtStudioCard> OnSelect { get; set; }
     [Parameter] public bool Busy { get; set; }
     [Parameter] public EventCallback<QrArtStudioCard> OnDeliveryCheck { get; set; }
 }
