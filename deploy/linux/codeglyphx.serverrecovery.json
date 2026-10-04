@@ -28,7 +28,7 @@
       "url": "https://github.com/EvotecIT/CodeGlyphX.git",
       "path": "/srv/evotec/CodeGlyphXRecovery",
       "branch": "master",
-      "ref": "162de5b8c93f638a50d344cc7b06bcd4494b7a5c",
+      "ref": "7e9fbdc7362fd609caba7e17161977e39a855a14",
       "required": true
     },
     {
@@ -292,7 +292,7 @@
     {
       "id": "static-pull-config",
       "path": "/etc/powerforge/site-pull/codeglyphx.com.env",
-      "source": "/srv/evotec/CodeGlyphX/deploy/linux/codeglyphx.site-pull.env.example",
+      "source": "/srv/evotec/CodeGlyphXRecovery/deploy/linux/codeglyphx.site-pull.env.example",
       "kind": "file",
       "owner": "root",
       "group": "root",
