@@ -119,6 +119,6 @@ public readonly struct Gs1Element {
     /// <summary>Creates an expert-specified variable-length element without catalog lookup.</summary>
     public static Gs1Element Variable(string ai, string data) => new(ai, data, isVariableLength: true);
 
-    /// <inheritdoc />
+    /// <summary>Returns the parenthesized application identifier followed by its data.</summary>
     public override string ToString() => $"({Ai}){Data}";
 }

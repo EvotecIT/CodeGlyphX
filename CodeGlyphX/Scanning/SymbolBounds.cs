@@ -40,7 +40,7 @@ public readonly struct SymbolBounds : IEquatable<SymbolBounds> {
             return (hash * 397) ^ Height.GetHashCode();
         }
     }
-    /// <inheritdoc />
+    /// <summary>Returns the bounds origin and dimensions, with up to three decimal places.</summary>
     public override string ToString() => $"{X:0.###},{Y:0.###} {Width:0.###}x{Height:0.###}";
     /// <summary>Compares two bounds.</summary>
     public static bool operator ==(SymbolBounds left, SymbolBounds right) => left.Equals(right);
