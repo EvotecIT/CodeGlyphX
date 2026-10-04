@@ -23,7 +23,7 @@
       </div>
     </div>
   </div>
-  <div id="blazor-error-ui">
+  <div id="blazor-error-ui" role="alert">
     <span>Something went wrong.</span>
     <a href="" class="reload">Reload</a>
     <a class="dismiss">×</a>
@@ -120,6 +120,34 @@
       };
     })();
   </script>
-  <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
+  <script src="_framework/blazor.webassembly#[.{fingerprint}].js" autostart="false"></script>
+  <script>
+    (function () {
+      function showStartupFailure() {
+        const loading = document.querySelector('.loading-content');
+        if (!loading) return;
+        loading.querySelector('.loading-spinner')?.setAttribute('hidden', '');
+        const message = loading.querySelector('p');
+        if (message) message.textContent = 'The playground could not start. Reload to try again.';
+        const errorUi = document.getElementById('blazor-error-ui');
+        if (errorUi) errorUi.style.display = 'block';
+      }
+
+      // A platform-load failure can reject inside Blazor's startup executor while
+      // the returned startup promise remains pending. Keep this limited to that failure.
+      function onStartupRejection(event) {
+        if (event.reason?.message?.startsWith('Failed to start platform.')) showStartupFailure();
+      }
+      window.addEventListener('unhandledrejection', onStartupRejection);
+
+      if (window.Blazor) {
+        window.Blazor.start()
+          .then(() => window.removeEventListener('unhandledrejection', onStartupRejection))
+          .catch(showStartupFailure);
+      } else {
+        showStartupFailure();
+      }
+    })();
+  </script>
 </body>
 </html>

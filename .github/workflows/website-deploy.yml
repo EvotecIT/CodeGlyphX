@@ -37,7 +37,7 @@ jobs:
       runner_labels_json: '["ubuntu-latest"]'
       timeout_minutes: 60
       powerforge_repository: EvotecIT/PSPublishModule
-      powerforge_ref: c97e6855ca9eaa53c2411ac11d8cf2a91dbb7182
+      powerforge_ref: c1867d71ec39854e9ba0e5530f5da678e936aa90
       report_artifact_name: codeglyphx-website-deploy-reports
       site_artifact_name: powerforge-site-codeglyphx.com
       site_artifact_retention_days: 7
