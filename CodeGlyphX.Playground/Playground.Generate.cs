@@ -52,11 +52,12 @@ public partial class Playground {
 
     internal void GenerateCode()
     {
-        if (SelectedMode != "Generate")
+        if (_previewDisposed || SelectedMode != "Generate")
         {
             return;
         }
 
+        CancelPreviewUpdate();
         ResetOutputs();
 
         try
@@ -79,6 +80,8 @@ public partial class Playground {
 
                 var options = new QrEasyOptions
                 {
+                    // The editor renders explicit choices; its scan report provides feedback.
+                    ArtGuardrailsEnabled = false,
                     ErrorCorrectionLevel = qrEcc,
                     Foreground = ParseColor(ForegroundColor),
                     Background = ParseColor(BackgroundColor),
@@ -388,8 +391,11 @@ public partial class Playground {
         {
             ErrorMessage = ex.Message;
         }
-
-        _exampleKey++;
-        StateHasChanged();
+        finally
+        {
+            // Empty QR, barcode and matrix payloads also clear the sibling preview.
+            _exampleKey++;
+            StateHasChanged();
+        }
     }
 }

@@ -359,6 +359,7 @@ public partial class Playground {
 
     internal void OnModeChanged()
     {
+        CancelPreviewUpdate();
         ResetOutputs();
         if (SelectedMode == "Generate")
         {
