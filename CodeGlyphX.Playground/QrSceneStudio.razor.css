@@ -1,29 +1,29 @@
-.scene-presets { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin: 1.5rem 0; }
+.scene-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin: 1.5rem 0; }
 .scene-presets button { display: flex; flex-direction: row; align-items: center; gap: .7rem; padding: .6rem; text-align: left; font-weight: 700; margin: 0; }
-.scene-presets button.selected { box-shadow: 0 0 0 3px #298476; }
-.scene-swatch { width: 68px; height: 68px; object-fit: contain; border-radius: 5px; flex-shrink: 0; }
-.scene-workspace { display: grid; grid-template-columns: minmax(230px, 300px) minmax(0, 1fr); gap: 2rem; align-items: start; }
+.scene-presets button.selected { box-shadow: 0 0 0 3px var(--primary); }
+.scene-swatch { width: 48px; height: 48px; object-fit: contain; border-radius: 5px; flex-shrink: 0; }
+.scene-workspace { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; align-items: start; }
 fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 legend { font-weight: 700; margin-bottom: 1rem; }
 label { display: block; margin-bottom: 1rem; font-size: .85rem; font-weight: 600; }
-input[type=text], input[type=number], textarea, select { display: block; width: 100%; box-sizing: border-box; margin-top: .4rem; padding: .55rem; border: 1px solid #8daba2; border-radius: 7px; background: #fffdf8; color: #203c39; }
-.scene-colors { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .5rem; margin-top: 1rem; }
-input[type=color] { display: block; width: 100%; height: 35px; margin-top: .4rem; padding: 2px; border: 1px solid #8daba2; border-radius: 5px; }
-button, .scene-button { display: inline-block; border: 1px solid #476e61; background: #fffdf8; color: #174d40; border-radius: 7px; padding: .6rem .75rem; margin: .25rem .3rem .25rem 0; font-size: .85rem; cursor: pointer; text-decoration: none; }
+input[type=text], input[type=number], textarea, select { display: block; width: 100%; box-sizing: border-box; margin-top: .4rem; padding: .55rem; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-card); color: var(--text); }
+.scene-colors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; margin-top: 1rem; }
+input[type=color] { display: block; width: 100%; height: 35px; margin-top: .4rem; padding: 2px; border: 1px solid var(--border); border-radius: 5px; }
+button, .scene-button { display: inline-block; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 7px; padding: .6rem .75rem; margin: .25rem .3rem .25rem 0; font-size: .85rem; cursor: pointer; text-decoration: none; }
 button:disabled { opacity: .55; cursor: default; }
-.scene-primary { background: #235c50; color: white; }
+.scene-primary { background: var(--primary); color: white; }
 :focus-visible { outline: 3px solid #d18b24; outline-offset: 3px; }
 details { margin: 1rem 0; }
 summary { cursor: pointer; font-weight: 700; margin-bottom: 1rem; }
 ::deep input[type=file] { max-width: 100%; font-size: .8rem; }
-.scene-hint, figcaption { font-size: .8rem; line-height: 1.5; color: #49665e; }
-.scene-error, .fail { color: #9b2630; }
+.scene-hint, figcaption { font-size: .8rem; line-height: 1.5; color: var(--text-muted); }
+.scene-error, .fail { color: var(--error); }
 figure { margin: 0; }
-figure img { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 30px #203c3920; }
+figure img { display: block; width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 30px var(--text)20; }
 figcaption { margin: .75rem 0; }
 .scene-result { position: sticky; top: 1rem; min-width: 0; }
-.scene-retained { background: #ede3f7; border-radius: 8px; padding: .8rem; font-size: .85rem; overflow-wrap: anywhere; }
-.scene-empty { border: 1px dashed #8daba2; border-radius: 12px; padding: 2rem; line-height: 1.6; }
+.scene-retained { background: var(--bg-elevated); border-radius: 8px; padding: .8rem; font-size: .85rem; overflow-wrap: anywhere; }
+.scene-empty { border: 1px dashed var(--border); border-radius: 12px; padding: 2rem; line-height: 1.6; }
 .scene-checks { padding-left: 1.2rem; font-size: .85rem; }
-.pass { color: #235c50; }
+.pass { color: var(--primary); }
 @media (max-width: 760px) { .scene-workspace { grid-template-columns: 1fr; } .scene-result { position: static; grid-row: 1; } .scene-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); } .scene-presets button { flex-direction: column; align-items: stretch; gap: .4rem; } .scene-swatch { width: 100%; height: 80px; } }

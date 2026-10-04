@@ -29,7 +29,7 @@
                     }
                 </div>
                 <div class="nav-actions">
-                    <button @onclick="CycleTheme" class="nav-icon theme-cycle-btn" title="@GetThemeTitle()">
+                    <button @onclick="CycleTheme" class="nav-icon theme-cycle-btn" title="@GetThemeTitle()" aria-label="@GetThemeTitle()">
                         @if (CurrentTheme == "light")
                         {
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
@@ -147,7 +147,7 @@
 </div>
 
 @code {
-    private string CurrentTheme { get; set; } = "dark";
+    private string CurrentTheme { get; set; } = "auto";
     private bool _navOpen = false;
     private bool IsPlayground
     {
@@ -220,7 +220,7 @@
     {
         if (firstRender)
         {
-            CurrentTheme = await JS.InvokeAsync<string>("getTheme") ?? "dark";
+            CurrentTheme = await JS.InvokeAsync<string>("getTheme") ?? "auto";
             StateHasChanged();
         }
     }

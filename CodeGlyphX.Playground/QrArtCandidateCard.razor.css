@@ -1,10 +1,10 @@
-.art-candidate { background: #fffdf8; border: 1px solid #d0d9ce; border-radius: 12px; padding: .8rem; min-width: 0; }
+.art-candidate { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: .8rem; min-width: 0; }
 .art-candidate img { width: 100%; height: auto; border-radius: 5px; }
-.art-candidate h3 { font-size: .9rem; margin-top: .75rem; color: #203c39; }
+.art-candidate h3 { font-size: .9rem; margin-top: .75rem; color: var(--text); }
 .art-candidate p, .art-candidate li { font-size: .8rem; }
 .art-candidate ul { padding-left: 1rem; }
-.art-candidate button, .art-candidate a { display: inline-block; border: 1px solid #476e61; background: #fffdf8; color: #174d40; border-radius: 7px; padding: .55rem .75rem; margin: .25rem .3rem .25rem 0; font-size: .85rem; cursor: pointer; }
+.art-candidate button, .art-candidate a { display: inline-block; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 7px; padding: .55rem .75rem; margin: .25rem .3rem .25rem 0; font-size: .85rem; cursor: pointer; }
 .art-candidate button:disabled { opacity: .55; cursor: wait; }
 .art-candidate :focus-visible { outline: 3px solid #d18b24; outline-offset: 3px; }
-.art-pass { color: #196339; }
-.art-error { color: #9b2630; }
+.art-pass { color: var(--success); }
+.art-error { color: var(--error); }

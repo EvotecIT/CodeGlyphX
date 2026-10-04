@@ -1,4 +1,4 @@
-.scene-layer { border-top: 1px solid #b9ccc4; padding: .8rem 0; }
+.scene-layer { border-top: 1px solid var(--border); padding: .8rem 0; }
 summary { cursor: pointer; font-weight: 700; margin-bottom: .8rem; }
 label { display: block; margin: .8rem 0; font-size: .85rem; }
-input[type=range] { display: block; width: 100%; margin-top: .4rem; accent-color: #23614f; }
+input[type=range] { display: block; width: 100%; margin-top: .4rem; accent-color: var(--primary); }

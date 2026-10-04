@@ -6,10 +6,10 @@
     {
         <label><input type="checkbox" @bind="_local.Visible" @bind:after="Notify" /> Show @Name.ToLowerInvariant()</label>
     }
-    <label>Horizontal center · @_local.X.ToString("P0") <input type="range" min="0" max="1" step="0.01" @bind="_local.X" @bind:after="Notify" /></label>
-    <label>Vertical center · @_local.Y.ToString("P0") <input type="range" min="0" max="1" step="0.01" @bind="_local.Y" @bind:after="Notify" /></label>
-    <label>Scale · @_local.Scale.ToString("F2") <input type="range" min="@(IsQr ? "0.25" : "0.05")" max="@(IsQr ? "0.8" : "2")" step="0.01" @bind="_local.Scale" @bind:after="Notify" /></label>
-    <label>Rotation · @_local.RotationDegrees.ToString("F0")° <input type="range" min="0" max="@(IsQr ? 270 : 360)" step="@(IsQr ? 90 : 5)" @bind="_local.RotationDegrees" @bind:after="Notify" /></label>
+    <label>Horizontal center · @_local.X.ToString("P0") <input type="range" min="0" max="1" step="0.01" @bind="_local.X" @bind:event="oninput" @bind:after="Notify" /></label>
+    <label>Vertical center · @_local.Y.ToString("P0") <input type="range" min="0" max="1" step="0.01" @bind="_local.Y" @bind:event="oninput" @bind:after="Notify" /></label>
+    <label>Scale · @_local.Scale.ToString("F2") <input type="range" min="@(IsQr ? "0.25" : "0.05")" max="@(IsQr ? "0.8" : "2")" step="0.01" @bind="_local.Scale" @bind:event="oninput" @bind:after="Notify" /></label>
+    <label>Rotation · @_local.RotationDegrees.ToString("F0")° <input type="range" min="0" max="@(IsQr ? 270 : 360)" step="@(IsQr ? 90 : 5)" @bind="_local.RotationDegrees" @bind:event="oninput" @bind:after="Notify" /></label>
 </details>
 
 @code {

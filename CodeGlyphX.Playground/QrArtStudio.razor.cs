@@ -8,8 +8,8 @@ namespace CodeGlyphX.Playground;
 public partial class QrArtStudio : IDisposable {
     private byte[]? _source, _imageSource;
     private string? _sourceUri, _error;
-    private string _payload = "https://example.com/art", _status = "Loading sample artwork…";
-    private bool _exploreLayouts, _frameEnabled;
+    private string _status = "Loading sample artwork…";
+    private bool _exploreLayouts, _frameEnabled, _patternDirty;
     private string _sourceKind = "pattern";
     private bool _procedural => _sourceKind == "pattern";
     private QrPatternSettings _patternSettings = QrPatternSettings.FromPreset(QrArtPattern.Marble);
@@ -49,22 +49,25 @@ public partial class QrArtStudio : IDisposable {
         var image = QrArt.RenderPatternPng(_patternSettings.ToOptions(), cancellationToken: _lifetime.Token);
         _source = image; _sourceWidth = 512; _sourceHeight = 512;
         _sourceUri = "data:image/png;base64," + Convert.ToBase64String(image);
+        _patternDirty = false;
         _error = null; _status = "Ready to compare.";
     }
-    private void ChangePattern(QrPatternSettings settings) {
+    private async Task ChangePattern(QrPatternSettings settings) {
         var previous = _patternSettings;
         try {
             _patternSettings = settings;
-            SetPatternSource();
+            _patternDirty = true;
             if (previous.Pattern != settings.Pattern && !_frameEnabled) ApplyPatternTreatment();
+            await Edited();
         } catch (Exception ex) { _patternSettings = previous; _error = ex.Message; }
     }
-    private void ChangeSource() {
+    private async Task ChangeSource() {
         _result = null; _cards.Clear(); _mask = null;
-        if (_sourceKind == "scene") { _error = null; return; }
+        if (_sourceKind == "scene") { _error = null; await Edited(); return; }
         if (_procedural) { SetPatternSource(); if (!_frameEnabled) ApplyPatternTreatment(); }
         else if (_imageSource is not null) { SetSource(_imageSource); if (!_frameEnabled) _style = QrImageArtStyle.Botanical; }
         else { _source = null; _sourceUri = null; _status = "Upload an image to begin."; }
+        await Edited();
     }
     private void ApplyPatternTreatment() {
         var art = QrArtPatternPresets.CreateCompositionOptions(_patternSettings.Pattern).Art!;
@@ -82,7 +85,7 @@ public partial class QrArtStudio : IDisposable {
         _loading = true;
         try {
             using var stream = OpenUpload(args.File); using var memory = new MemoryStream(); await stream.CopyToAsync(memory, _lifetime.Token);
-            if (!_disposed) { var image = memory.ToArray(); SetSource(image); _imageSource = image; }
+            if (!_disposed) { var image = memory.ToArray(); SetSource(image); _imageSource = image; await Edited(); }
         }
         catch (Exception ex) { if (!_disposed) _error = ex.Message; }
         finally { _loading = false; }
@@ -96,7 +99,7 @@ public partial class QrArtStudio : IDisposable {
             var pixels = ImageReader.DecodeRgba32(memory.ToArray(), InputLimits(), out var width, out var height);
             var gray = new byte[width * height];
             for (var i = 0; i < gray.Length; i++) { var p = i * 4; gray[i] = (byte)Math.Round((0.299 * pixels[p] + 0.587 * pixels[p + 1] + 0.114 * pixels[p + 2]) * pixels[p + 3] / 255); }
-            _mask = new QrImageProtectionMask(gray, width, height); _error = null;
+            _mask = new QrImageProtectionMask(gray, width, height); _error = null; await Edited();
         } catch (Exception ex) { if (!_disposed) _error = ex.Message; }
         finally { _loading = false; }
     }
@@ -104,30 +107,27 @@ public partial class QrArtStudio : IDisposable {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "S5693:Make sure that this file upload is safe", Justification = "The stream enforces a fixed 10 MiB limit; decoding additionally enforces 4 million pixels.")]
     private Stream OpenUpload(IBrowserFile file) => file.OpenReadStream(10 * 1024 * 1024, _lifetime.Token);
 
-    private void ClearMask() => _mask = null;
+    private async Task ClearMask() { _mask = null; await Edited(); }
     private async Task Compare() {
-        if (_source is null || _busy || _loading) return;
+        if (_source is null || _busy || _loading || Host is null || !Host.IsArtwork) return;
         if (_moduleSize < 6 || _moduleSize > 64) {
             _error = "Export pixels per module must be between 6 and 64.";
             _status = "Adjust the export size and compare again.";
             return;
         }
+        Host.InvalidateArtwork();
+        var revision = Host.ArtRevision;
         _busy = true; _error = null; _status = "Comparing masks and encoding settings…";
         _cancel = CancellationTokenSource.CreateLinkedTokenSource(_lifetime.Token);
-        var payload = _payload;
+        Host.ArtworkWorkChanged();
         var description = _procedural ? $"{QrPatternControls.Name(_patternSettings.Pattern)}, seed {_patternSettings.Seed}" : "uploaded image";
         try {
+            var payload = Host.CurrentQrPayload();
+            if (string.IsNullOrWhiteSpace(payload)) return;
+            if (_procedural && _patternDirty) SetPatternSource();
             var options = new QrImageSearchOptions {
                 ExploreLayouts = _exploreLayouts, AdditionalVersions = 1, ValidationCandidates = 3, Results = 3, DecodeBudgetMilliseconds = 2000,
-                Composition = new QrImageCompositionOptions {
-                    ModuleSize = _moduleSize, Strength = _strength, ImagePositionX = _cropX, ImagePositionY = _cropY, ImageZoom = _zoom,
-                    Canvas = new QrImageCanvasOptions { PaddingModules = _frameEnabled ? 12 : 8, PositionX = _qrX, PositionY = _qrY },
-                    Art = new QrImageArtOptions {
-                        Style = _style, Finders = _finders, Shape = QrPngModuleShape.ConnectedRounded, Scale = _artScale, DetailProtection = _detail,
-                        FunctionalForeground = new Rgba32(21, 26, 47), FunctionalBackground = new Rgba32(255, 249, 239),
-                        Subject = !_procedural && _protect ? new QrImageSubjectOptions { X = _subjectX, Y = _subjectY, Radius = _radius, Mask = _mask } : null
-                    }
-                }
+                Composition = CompositionOptions()
             };
             var progress = new Progress<int>(count => {
                 if (_disposed || !_busy) return;
@@ -135,7 +135,7 @@ public partial class QrArtStudio : IDisposable {
                 StateHasChanged();
             });
             var result = await QrArt.SearchImageAsync(payload, _source, options, InputLimits(), _cancel.Token, progress);
-            if (_disposed) return;
+            if (_disposed || revision != Host.ArtRevision) return;
             var cards = new List<QrArtStudioCard>();
             foreach (var candidate in result.Candidates) {
                 var illustration = _frameEnabled ? QrIllustratedComposer.Frame(candidate.Image, _frameStyle, _cancel.Token) : null;
@@ -145,19 +145,21 @@ public partial class QrArtStudio : IDisposable {
                 cards.Add(new QrArtStudioCard(candidate, image, "data:image/png;base64," + Convert.ToBase64String(png), payload, validation,
                     illustration is null ? null : "data:image/svg+xml;base64," + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(illustration.ToSvg()))));
             }
-            if (_disposed) return;
+            if (_disposed || revision != Host.ArtRevision) return;
             _result = result;
             _resultDescription = description;
             _cards = cards.OrderByDescending(c => c.Validation.Checks.Count(check => check.Passed)).ThenByDescending(c => c.Candidate.Fidelity).ToList();
-            _status = "Comparison complete. Download an alternative or check its delivery settings.";
+            _status = "Comparison complete. Choose an alternative for the main preview.";
+            if (_cards.Count > 0) SelectCompleted(_cards[0], revision);
         } catch (OperationCanceledException) { _status = "Comparison cancelled."; }
         catch (Exception ex) { _error = ex.Message; _status = "Comparison could not finish."; }
-        finally { _busy = false; _cancel.Dispose(); _cancel = null; }
+        finally { _busy = false; _cancel.Dispose(); _cancel = null; if (!_disposed) Host?.ArtworkWorkChanged(); }
     }
     private async Task CheckDelivery(QrArtStudioCard card) {
         if (_busy || _loading) return;
         _busy = true; _error = null; _status = "Checking delivery simulations…";
         _cancel = CancellationTokenSource.CreateLinkedTokenSource(_lifetime.Token);
+        Host?.ArtworkWorkChanged();
         try {
             await Task.Delay(1, _cancel.Token);
             card.Delivery = await QrArt.ValidateDeliveryAsync(card.Image.ToPng(), card.Payload,
@@ -165,21 +167,31 @@ public partial class QrArtStudio : IDisposable {
             _status = "Delivery checks complete.";
         } catch (OperationCanceledException) { _status = "Delivery checks cancelled."; }
         catch (Exception ex) { _error = ex.Message; }
-        finally { _busy = false; _cancel.Dispose(); _cancel = null; }
+        finally { _busy = false; _cancel.Dispose(); _cancel = null; if (!_disposed) Host?.ArtworkWorkChanged(); }
     }
     private static string FamilyName(QrIllustratedStyle style) => style switch {
         QrIllustratedStyle.EngravedPortrait => "Engraved portrait",
         QrIllustratedStyle.BotanicalBadge => "Botanical badge",
         _ => "Geometric poster"
     };
-    private void ApplyIllustration() {
-        if (!_frameEnabled) { if (_procedural) ApplyPatternTreatment(); return; }
+    private async Task ApplyIllustration() {
+        if (!_frameEnabled) {
+            if (_procedural) ApplyPatternTreatment();
+            await Edited();
+            return;
+        }
         var preset = QrIllustratedComposer.CreateOptions(_frameStyle);
         _style = preset.Art!.Style; _finders = preset.Art.Finders;
+        await Edited();
     }
     private void Cancel() => _cancel?.Cancel();
     public void Dispose() {
-        if (_disposed) return;
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+    /// <summary>Cancel outstanding artwork work when the configurator leaves the page.</summary>
+    protected virtual void Dispose(bool disposing) {
+        if (!disposing || _disposed) return;
         _disposed = true; _cancel?.Cancel(); _lifetime.Cancel(); _lifetime.Dispose();
     }
     private static string StyleName(QrImageArtStyle style) => style switch {
