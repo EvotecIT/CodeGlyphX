@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CodeGlyphX.Rendering;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -124,6 +125,23 @@ public sealed partial class PlaygroundLivePreviewTests {
             var element = Elements().SkipWhile(e => e.Tag != "label" || !e.Text.Contains(text, StringComparison.Ordinal)).Skip(1).First(e => e.Tag == "input");
             return DispatchEventAsync(element.Events["onchange"], new EventFieldInfo { ComponentId = element.ComponentId, FieldValue = true }, new ChangeEventArgs { Value = true });
         });
+        public Task Upload(string label, IBrowserFile file) => Dispatcher.InvokeAsync(() =>
+            FindUpload(_root, label)!.OnChange.InvokeAsync(new InputFileChangeEventArgs(new[] { file })));
+        private InputFile? FindUpload(int componentId, string label) {
+            var tree = GetCurrentRenderTreeFrames(componentId);
+            for (var i = 0; i < tree.Count; i++) {
+                var frame = tree.Array[i];
+                if (frame.FrameType == RenderTreeFrameType.Element && frame.ElementName == "label") {
+                    var children = tree.Array.Skip(i + 1).Take(frame.ElementSubtreeLength - 1).ToArray();
+                    if (children.Any(child => child.FrameType == RenderTreeFrameType.Text && child.TextContent.Trim() == label)) {
+                        var upload = children.FirstOrDefault(child => child.FrameType == RenderTreeFrameType.Component && child.Component is InputFile).Component as InputFile;
+                        if (upload is not null) return upload;
+                    }
+                }
+                if (frame.FrameType == RenderTreeFrameType.Component && FindUpload(frame.ComponentId, label) is { } nested) return nested;
+            }
+            return null;
+        }
         public string? PreviewUri() => Elements().FirstOrDefault(e => e.Attribute("alt") == "Generated code")?.Attribute("src");
         public byte[] Png() => Convert.FromBase64String(PreviewUri()!.Split(',')[1]);
         public IReadOnlyList<Element> Elements() {

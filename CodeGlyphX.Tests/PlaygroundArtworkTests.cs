@@ -138,8 +138,9 @@ public sealed partial class PlaygroundLivePreviewTests {
         await renderer.Change("oninput", e => e.Tag == "textarea" && e.Attributes.ContainsKey("placeholder"), new string('x', 5000));
         Assert.Null(renderer.PreviewUri());
         Assert.Empty(renderer.Errors);
-        await renderer.Change("oninput", e => e.Tag == "textarea" && e.Attributes.ContainsKey("placeholder"), "RECOVERED");
+        await renderer.Upload("Open scene recipe", new SceneBrowserFile(new QrSceneRecipe("RECOVERED", QrScenePresets.Create(QrSceneStyle.TropicalGarden)).ToXml()));
         Assert.NotNull(renderer.PreviewUri());
+        Assert.Contains(renderer.Elements(), e => e.Tag == "textarea" && e.Attribute("value") == "RECOVERED");
         Assert.Empty(renderer.Errors);
     }
 

@@ -13,7 +13,7 @@ public partial class QrSceneStudio : IAsyncDisposable {
     private string _seedText = "17", _status = "Ready to render.";
     private string? _error;
     private bool _busy, _disposed;
-    private readonly List<QrSceneRecipe> _history = new();
+    private readonly List<QrSceneOptions> _history = new();
     private readonly CancellationTokenSource _lifetime = new();
     private CancellationTokenSource? _cancel;
     private bool SeedValid => int.TryParse(_seedText, NumberStyles.Integer, CultureInfo.InvariantCulture, out _);
@@ -28,7 +28,7 @@ public partial class QrSceneStudio : IAsyncDisposable {
     }
 
     private void Remember() {
-        _history.Add(new QrSceneRecipe(_payload, _design));
+        _history.Add(_design.Clone());
         if (_history.Count > 20) _history.RemoveAt(0);
     }
     private async Task Edit(Action<QrSceneOptions> change) {
@@ -68,7 +68,7 @@ public partial class QrSceneStudio : IAsyncDisposable {
     private async Task Undo() {
         if (_busy || _history.Count == 0) return;
         var previous = _history[^1]; _history.RemoveAt(_history.Count - 1);
-        _design = previous.Design; _seedText = _design.Seed.ToString(CultureInfo.InvariantCulture); _error = null;
+        _design = previous; _seedText = _design.Seed.ToString(CultureInfo.InvariantCulture); _error = null;
         await Edited();
     }
     private async Task Reset() {
@@ -81,26 +81,38 @@ public partial class QrSceneStudio : IAsyncDisposable {
         Host?.UseScenePayload(recipe.Payload); _design = recipe.Design; _seedText = _design.Seed.ToString(CultureInfo.InvariantCulture); _error = null;
     }
     private async Task LoadRecipe(InputFileChangeEventArgs args) {
-        if (_busy) return;
+        if (_busy || Host is null || !Host.IsArtwork) return;
+        var revision = Host.ArtRevision;
+        using var upload = CancellationTokenSource.CreateLinkedTokenSource(_lifetime.Token);
+        _cancel = upload;
         _busy = true; _error = null;
+        Host.ArtworkWorkChanged();
         var loaded = false;
         try {
-            using var stream = OpenUpload(args.File, QrSceneRecipe.MaxCharacters * 4);
+            using var stream = OpenUpload(args.File, QrSceneRecipe.MaxCharacters * 4, upload.Token);
             using var reader = new StreamReader(stream, new UTF8Encoding(false, true), true);
-            var xml = await reader.ReadToEndAsync(_lifetime.Token);
+            var xml = await reader.ReadToEndAsync(upload.Token);
+            if (!RecipeContextMatches(revision)) return;
             var recipe = QrSceneRecipe.FromXml(xml);
-            if (_disposed) return;
+            var design = recipe.Design;
+            // The core renderer validates QR capacity and visible logo pixels before shared state changes.
+            _ = QrArt.ComposeScene(recipe.Payload, design, upload.Token);
+            if (design.LogoImage is { } logo && !design.Logo.Visible)
+                _ = ImageReader.DecodeRgba32(logo, new ImageDecodeOptions { MaxBytes = 1024 * 1024, MaxPixels = 1_000_000, MaxDecodedBytes = 16_000_000 }, out _, out _);
+            if (!RecipeContextMatches(revision)) return;
             Remember(); ApplyRecipe(recipe); loaded = true; _status = "Recipe opened.";
-        } catch (Exception ex) { if (!_disposed) _error = ex.Message; }
-        finally { _busy = false; }
+        } catch (OperationCanceledException) { if (RecipeContextMatches(revision)) _status = "Recipe open cancelled."; }
+        catch (Exception ex) { if (RecipeContextMatches(revision)) _error = ex.Message; }
+        finally { _busy = false; _cancel = null; if (!_disposed) Host?.ArtworkWorkChanged(); }
         if (!_disposed && loaded) await Edited();
     }
+    private bool RecipeContextMatches(int revision) => !_disposed && Host?.IsArtwork == true && revision == Host.ArtRevision;
     private async Task LoadLogo(InputFileChangeEventArgs args) {
         if (_busy) return;
         _busy = true; _error = null;
         var loaded = false;
         try {
-            using var stream = OpenUpload(args.File, 1024 * 1024); using var memory = new MemoryStream();
+            using var stream = OpenUpload(args.File, 1024 * 1024, _lifetime.Token); using var memory = new MemoryStream();
             await stream.CopyToAsync(memory, _lifetime.Token);
             var logo = memory.ToArray();
             _ = ImageReader.DecodeRgba32(logo, new ImageDecodeOptions { MaxBytes = 1024 * 1024, MaxPixels = 1_000_000, MaxDecodedBytes = 16_000_000 }, out _, out _);
@@ -112,7 +124,7 @@ public partial class QrSceneStudio : IAsyncDisposable {
     }
     // Encoded stream limits are paired with core recipe and decoded-image limits.
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "S5693:Make sure that this file upload is safe", Justification = "Upload sizes are fixed by the two callers; parsing and image decoding enforce independent limits.")]
-    private Stream OpenUpload(IBrowserFile file, long limit) => file.OpenReadStream(limit, _lifetime.Token);
+    private Stream OpenUpload(IBrowserFile file, long limit, CancellationToken cancellationToken) => file.OpenReadStream(limit, cancellationToken);
 
     private async Task Render() {
         if (_busy || !SeedValid || Host is null || !Host.IsArtwork || string.IsNullOrWhiteSpace(_payload)) return;
