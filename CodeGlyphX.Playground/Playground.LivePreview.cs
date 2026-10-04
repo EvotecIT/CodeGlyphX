@@ -39,6 +39,13 @@ public partial class Playground : IDisposable {
 
     /// <summary>Cancel queued preview work when the playground leaves the page.</summary>
     public void Dispose() {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>Release queued preview work when disposing managed resources.</summary>
+    protected virtual void Dispose(bool disposing) {
+        if (!disposing || _previewDisposed) return;
         _previewDisposed = true;
         CancelPreviewUpdate();
     }

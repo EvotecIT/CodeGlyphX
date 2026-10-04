@@ -15,7 +15,8 @@ jobs:
     name: Build & Test (${{ matrix.os }})
     # Prefer private/self-hosted runners for private repos to reduce hosted spend.
     runs-on: ${{ fromJSON(github.event.repository.private && matrix.selfHostedRunner || format('["{0}"]', matrix.os)) }}
-    timeout-minutes: 20
+    # Linux runs both full corpora sequentially; allow build and shutdown headroom.
+    timeout-minutes: ${{ matrix.os == 'ubuntu-latest' && 30 || 20 }}
     env:
       # The default all-format DataBar corpus scan needs a larger budget on Linux runners.
       CODEGLYPHX_TEST_BUDGET_MULTIPLIER: ${{ matrix.testBudgetMultiplier }}
