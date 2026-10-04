@@ -159,31 +159,9 @@
       "clean": false
     },
     {
-      "task": "overlay",
-      "id": "overlay-playground",
-      "dependsOn": "publish-playground",
-      "source": "./_temp/playground/wwwroot",
-      "destination": "./_site/playground",
-      "clean": true,
-      "include": "**/*, *"
-    },
-    {
-      "task": "verify",
-      "id": "verify-ci-final",
-      "dependsOn": "overlay-playground",
-      "modes": ["ci"],
-      "config": "./site.json",
-      "baseline": "./.powerforge/verify-baseline.json",
-      "failOnNewWarnings": true,
-      "failOnNavLint": true,
-      "failOnThemeContract": true,
-      "warningPreviewCount": 10,
-      "errorPreviewCount": 10
-    },
-    {
       "task": "ecosystem-stats",
       "id": "build-llms-publication-catalog",
-      "dependsOn": "verify-ci-final",
+      "dependsOn": "build-site-xref-refresh",
       "skipModes": ["dev"],
       "out": "./_temp/llms-publication-catalog.json",
       "publishPath": "",
@@ -270,9 +248,31 @@
       "reportPath": "./_reports/optimize-report.json"
     },
     {
+      "task": "overlay",
+      "id": "overlay-playground",
+      "dependsOn": ["publish-playground", "optimize-site"],
+      "source": "./_temp/playground/wwwroot",
+      "destination": "./_site/playground",
+      "clean": true,
+      "include": "**/*, *"
+    },
+    {
+      "task": "verify",
+      "id": "verify-ci-final",
+      "dependsOn": "overlay-playground",
+      "modes": ["ci"],
+      "config": "./site.json",
+      "baseline": "./.powerforge/verify-baseline.json",
+      "failOnNewWarnings": true,
+      "failOnNavLint": true,
+      "failOnThemeContract": true,
+      "warningPreviewCount": 10,
+      "errorPreviewCount": 10
+    },
+    {
       "task": "agent-ready",
       "id": "agent-ready",
-      "dependsOn": "optimize-site",
+      "dependsOn": ["overlay-playground", "verify-ci-final"],
       "skipModes": ["dev"],
       "operation": "prepare",
       "config": "./site.json",
