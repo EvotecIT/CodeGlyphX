@@ -1,15 +1,15 @@
 .pattern-label { font-size: .85rem; font-weight: 700; }
 .pattern-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
-.pattern-preset { border: 1px solid #a798c8; border-radius: 10px; background: #fffdf8; color: #203c39; padding: .35rem; cursor: pointer; text-align: left; }
+.pattern-preset { border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); color: var(--text); padding: .35rem; cursor: pointer; text-align: left; }
 .pattern-preset img { width: 100%; height: 65px; object-fit: cover; border-radius: 6px; }
 .pattern-preset span { display: block; font-size: .75rem; padding: .35rem .1rem; }
-.pattern-preset[aria-pressed=true] { border: 2px solid #6d38b5; box-shadow: 0 0 0 2px #e3d5f5; }
+.pattern-preset[aria-pressed=true] { border: 2px solid var(--primary); box-shadow: 0 0 0 2px var(--border); }
 .pattern-controls label { display: block; margin-top: 1rem; font-size: .85rem; font-weight: 600; }
-.pattern-controls input[type=number] { width: 100%; box-sizing: border-box; padding: .55rem; border: 1px solid #8daba2; border-radius: 7px; margin-top: .4rem; }
-.pattern-controls input[type=range] { display: block; width: 100%; accent-color: #6d38b5; }
-.pattern-controls > button { border: 1px solid #476e61; background: #fffdf8; color: #174d40; border-radius: 7px; padding: .55rem .75rem; margin-top: .5rem; cursor: pointer; }
+.pattern-controls input[type=number] { width: 100%; box-sizing: border-box; padding: .55rem; border: 1px solid var(--border); border-radius: 7px; margin-top: .4rem; }
+.pattern-controls input[type=range] { display: block; width: 100%; accent-color: var(--primary); }
+.pattern-controls > button { border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 7px; padding: .55rem .75rem; margin-top: .5rem; cursor: pointer; }
 .pattern-palette { display: flex; flex-wrap: wrap; gap: .65rem; }
-.pattern-palette input { display: block; width: 40px; height: 35px; padding: 2px; margin-top: .4rem; border: 1px solid #a798c8; background: #fffdf8; border-radius: 5px; }
-.pattern-hint { font-size: .8rem; color: #49665e; line-height: 1.5; }
-.pattern-error { color: #9b2630; font-size: .8rem; line-height: 1.5; }
+.pattern-palette input { display: block; width: 40px; height: 35px; padding: 2px; margin-top: .4rem; border: 1px solid var(--border); background: var(--bg-card); border-radius: 5px; }
+.pattern-hint { font-size: .8rem; color: var(--text-muted); line-height: 1.5; }
+.pattern-error { color: #ef4444; font-size: .8rem; line-height: 1.5; }
 :focus-visible { outline: 3px solid #d18b24; outline-offset: 3px; }

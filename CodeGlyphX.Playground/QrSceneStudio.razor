@@ -12,7 +12,7 @@
         }
     </div>
     <div class="scene-actions">
-        <button type="button" class="scene-primary" disabled="@(_busy || !SeedValid)" @onclick="Render">Render scene</button>
+        <button type="button" class="scene-primary" disabled="@(_busy || !SeedValid)" @onclick="Render">Check scene</button>
         <button type="button" disabled="@(_busy || _history.Count == 0)" @onclick="Undo">Undo</button>
         <button type="button" disabled="@_busy" @onclick="Reset">Reset scene</button>
         @if (_busy) { <button type="button" @onclick="Cancel">Cancel</button> }
@@ -23,8 +23,7 @@
         <div class="scene-controls">
             <fieldset disabled="@_busy">
                 <legend>Design your scene</legend>
-                <label>QR text <textarea rows="2" maxlength="4096" value="@_payload" @onchange="ChangePayload"></textarea></label>
-                <label>Caption <input type="text" maxlength="48" value="@_design.Caption" @onchange="ChangeCaption" /></label>
+                <label>Caption <input type="text" maxlength="48" value="@_design.Caption" @oninput="ChangeCaption" /></label>
                 <p class="scene-hint">Caption font: A–Z, digits and -./:()+?. Lowercase letters render as capitals.</p>
                 <label>Seed <input type="number" min="-2147483648" max="2147483647" value="@_seedText" aria-invalid="@(SeedValid ? "false" : "true")" @oninput="ChangeSeed" /></label>
                 @if (!SeedValid) { <p role="alert" class="scene-error">Use a whole number from −2147483648 to 2147483647. Applied seed: @_design.Seed.</p> }
@@ -33,10 +32,10 @@
                     @for (var i = 0; i < 4; i++)
                     {
                         var index = i;
-                        <label>Accent @(i + 1) <input type="color" value="@Color(_design.Colors[i])" @onchange="e => ChangeColor(index, e)" /></label>
+                        <label>Accent @(i + 1) <input type="color" value="@Color(_design.Colors[i])" @oninput="e => ChangeColor(index, e)" /></label>
                     }
-                    <label>Paper <input type="color" value="@Color(_design.Paper)" @onchange="ChangePaper" /></label>
-                    <label>QR ink <input type="color" value="@Color(_design.Ink)" @onchange="ChangeInk" /></label>
+                    <label>Paper <input type="color" value="@Color(_design.Paper)" @oninput="ChangePaper" /></label>
+                    <label>QR ink <input type="color" value="@Color(_design.Ink)" @oninput="ChangeInk" /></label>
                 </div>
                 <label>QR module shape <select value="@_design.ModuleShape" @onchange="ChangeShape">
                     @foreach (var shape in Enum.GetValues<QrPngModuleShape>()) { <option value="@shape">@shape</option> }
@@ -55,25 +54,10 @@
                     @if (_design.LogoImage is not null) { <button type="button" @onclick="ClearLogo">Clear logo</button> }
                     <QrSceneLayerControls Name="Logo" Settings="_design.Logo" SettingsChanged="ChangeLogo" />
                     <label>Open scene recipe <InputFile OnChange="LoadRecipe" accept=".cgxart,.xml" /></label>
-                    <a class="scene-button" href="@RecipeUri" download="scene-design.cgxart">Save editable recipe</a>
+                    @if (RecipeUri is { } recipeUri) { <a class="scene-button" href="@recipeUri" download="scene-design.cgxart">Save editable recipe</a> }
                 </details>
             </fieldset>
         </div>
-        <div class="scene-result">
-            @if (_result is not null)
-            {
-                <figure><img src="@_pngUri" alt="@Name(_result.Design.Style) illustrated QR scene" /><figcaption>@Name(_result.Design.Style) · seed @_result.Design.Seed · @_result.Image.Size × @_result.Image.Size px</figcaption></figure>
-                <p class="scene-retained">This export encodes <code>@_result.Payload</code>. Editing controls keeps this result until you render again.</p>
-                <a class="scene-button" href="@_pngUri" download="qr-scene.png">Download PNG</a>
-                <a class="scene-button" href="@ResultRecipeUri" download="qr-scene.cgxart">Download this result’s recipe</a>
-                @if (_validation is not null)
-                {
-                    <ul class="scene-checks">@foreach (var check in _validation.Checks) { <li class="@(check.Passed ? "pass" : "fail")">@(check.Passed ? "Pass" : "Fail") · @check.Name</li> }</ul>
-                }
-                <p class="scene-hint">Software checks recover the exact text from the original, half-size and blurred PNG. Check delivery sizes and real phones before distribution.</p>
-                <QrSceneDeliveryStudio @key="_result" Scene="_result" />
-            }
-            else { <div class="scene-empty">Choose a scene and render it. Edit colors, move layers, then save a recipe to reopen the design.</div> }
-        </div>
+
     </div>
 </div>

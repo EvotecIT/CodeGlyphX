@@ -16,7 +16,7 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 [Collection("ImageScannerSerial")]
-public sealed class PlaygroundLivePreviewTests {
+public sealed partial class PlaygroundLivePreviewTests {
     [Fact]
     public async Task InputEventsUpdatePayloadColorsAndDownloadArtifacts() {
         await using var renderer = new PlaygroundRenderer();

@@ -1,15 +1,13 @@
 @using CodeGlyphX.Rendering.Art
 @implements IDisposable
 
-<section class="art-studio" aria-labelledby="art-title">
-    <header><p class="art-eyebrow">COLOR + GEOMETRY + CODE</p><h2 id="art-title">QR art studio</h2>
-        <p>Design an illustrated scene, create a colorful pattern or bring your own image. Everything runs locally in your browser.</p></header>
+<section class="art-studio" aria-label="Artwork settings">
     <label class="art-source-choice">Artwork source <select @bind="_sourceKind" @bind:after="ChangeSource" disabled="@(_busy || _loading)">
         <option value="scene">Illustrated scene</option><option value="pattern">Procedural pattern</option><option value="image">Uploaded image</option>
     </select></label>
     @if (_sourceKind == "scene")
     {
-        <QrSceneStudio />
+        <QrSceneStudio @ref="_scene" />
     }
     else
     {
@@ -26,19 +24,18 @@
                     <label>Image <InputFile OnChange="LoadImage" accept="image/*" /></label>
                     <p class="art-hint">Uploads stay in this browser. Default photo: NASA / Apollo 17.</p>
                 }
-                <label>QR text <textarea @bind="_payload" rows="2" maxlength="1000"></textarea></label>
                 <details class="art-layout"><summary>QR treatment and frame</summary>
-                <label>Treatment <select @bind="_style">
+                <label>Treatment <select @bind="_style" @bind:after="Edited">
                     @foreach (var style in Enum.GetValues<QrImageArtStyle>())
                     {
                         <option value="@style">@StyleName(style)</option>
                     }
                 </select></label>
-                <label>Color strength · @_strength.ToString("F2") <input type="range" min="0" max="1" step="0.01" @bind="_strength" /></label>
-                <label>Module scale · @_artScale.ToString("F2") <input type="range" min="0.65" max="1" step="0.05" @bind="_artScale" /></label>
-                <label>Detail protection · @_detail.ToString("F2") <input type="range" min="0" max="1" step="0.05" @bind="_detail" /></label>
-                <label>Export pixels per module <input type="number" min="6" max="64" @bind="_moduleSize" /></label>
-                <label>Finder frames <select @bind="_finders">
+                <label>Color strength · @_strength.ToString("F2") <input type="range" min="0" max="1" step="0.01" @bind="_strength" @bind:event="oninput" @bind:after="Edited" /></label>
+                <label>Module scale · @_artScale.ToString("F2") <input type="range" min="0.65" max="1" step="0.05" @bind="_artScale" @bind:event="oninput" @bind:after="Edited" /></label>
+                <label>Detail protection · @_detail.ToString("F2") <input type="range" min="0" max="1" step="0.05" @bind="_detail" @bind:event="oninput" @bind:after="Edited" /></label>
+                <label>Export pixels per module <input type="number" min="6" max="64" @bind="_moduleSize" @bind:after="Edited" /></label>
+                <label>Finder frames <select @bind="_finders" @bind:after="Edited">
                     @foreach (var finder in Enum.GetValues<QrImageFinderStyle>())
                     {
                         <option value="@finder">@finder</option>
@@ -55,15 +52,15 @@
                     </select></label>
                     <p class="art-hint">SVG exports keep the frame as vectors and embed the QR artwork at its rendered resolution.</p>
                 }
-                <label><input type="checkbox" @bind="_exploreLayouts" /> Compare crop, placement and scale variations</label>
+                <label><input type="checkbox" @bind="_exploreLayouts" @bind:after="Edited" /> Compare crop, placement and scale variations</label>
                 @if (!_procedural)
                 {
-                    <label><input type="checkbox" @bind="_protect" /> Preserve a subject region</label>
+                    <label><input type="checkbox" @bind="_protect" @bind:after="Edited" /> Preserve a subject region</label>
                     @if (_protect)
                     {
-                        <label>Subject horizontal position <input type="range" min="0" max="1" step="0.01" @bind="_subjectX" /></label>
-                        <label>Subject vertical position <input type="range" min="0" max="1" step="0.01" @bind="_subjectY" /></label>
-                        <label>Subject radius <input type="range" min="0.05" max="0.7" step="0.01" @bind="_radius" /></label>
+                        <label>Subject horizontal position <input type="range" min="0" max="1" step="0.01" @bind="_subjectX" @bind:event="oninput" @bind:after="Edited" /></label>
+                        <label>Subject vertical position <input type="range" min="0" max="1" step="0.01" @bind="_subjectY" @bind:event="oninput" @bind:after="Edited" /></label>
+                        <label>Subject radius <input type="range" min="0.05" max="0.7" step="0.01" @bind="_radius" @bind:event="oninput" @bind:after="Edited" /></label>
                         <label>Protection mask (optional) <InputFile OnChange="LoadMask" accept="image/*" /></label>
                         <p class="art-hint">White protects detail; black permits decoration. The mask follows the source image crop.</p>
                         @if (_mask is not null)
@@ -73,11 +70,11 @@
                     }
                 }
                 <details class="art-layout"><summary>Crop and placement</summary>
-                <label>Image horizontal crop <input type="range" min="0" max="1" step="0.01" @bind="_cropX" /></label>
-                <label>Image vertical crop <input type="range" min="0" max="1" step="0.01" @bind="_cropY" /></label>
-                <label>Image zoom <input type="range" min="1" max="3" step="0.05" @bind="_zoom" /></label>
-                <label>QR horizontal placement <input type="range" min="0" max="1" step="0.01" @bind="_qrX" /></label>
-                <label>QR vertical placement <input type="range" min="0" max="1" step="0.01" @bind="_qrY" /></label>
+                <label>Image horizontal crop <input type="range" min="0" max="1" step="0.01" @bind="_cropX" @bind:event="oninput" @bind:after="Edited" /></label>
+                <label>Image vertical crop <input type="range" min="0" max="1" step="0.01" @bind="_cropY" @bind:event="oninput" @bind:after="Edited" /></label>
+                <label>Image zoom <input type="range" min="1" max="3" step="0.05" @bind="_zoom" @bind:event="oninput" @bind:after="Edited" /></label>
+                <label>QR horizontal placement <input type="range" min="0" max="1" step="0.01" @bind="_qrX" @bind:event="oninput" @bind:after="Edited" /></label>
+                <label>QR vertical placement <input type="range" min="0" max="1" step="0.01" @bind="_qrY" @bind:event="oninput" @bind:after="Edited" /></label>
                 </details>
                 </details>
             </fieldset>
@@ -105,12 +102,12 @@
             }
             @if (_result is not null)
             {
-                <p class="art-result-label">Last comparison: @_resultDescription. Editing controls leaves these exports available until the next comparison.</p>
+                <p class="art-result-label">Alternatives for the current data: @_resultDescription.</p>
                 <p>@_result.EvaluatedCandidates combinations compared · @_result.ValidatedCandidates alternatives decoded. Scan results rank first, then @(_cards.Any(card => card.SvgUri is not null) ? "unframed artwork fidelity" : "source fidelity").</p>
                 <div class="art-candidates">
                     @foreach (var item in _cards)
                     {
-                        <QrArtCandidateCard @key="item" Card="item" Busy="@(_busy || _loading)" OnDeliveryCheck="CheckDelivery" />
+                        <QrArtCandidateCard @key="item" Card="item" Busy="@(_busy || _loading)" OnDeliveryCheck="CheckDelivery" OnSelect="Select" Selected="@(Host?.ImageDataUri == item.Uri)" />
                     }
                 </div>
                 <fieldset disabled="@(_busy || _loading)" class="art-delivery"><legend>Delivery simulations</legend>
@@ -122,7 +119,7 @@
             }
             else
             {
-                <p class="art-empty">Choose a pattern or image and compare alternatives. Functional QR patterns and the quiet zone remain protected.</p>
+                <p class="art-empty">The main preview updates as you edit. Compare alternatives to check different QR masks. Functional QR patterns and the quiet zone remain protected.</p>
             }
         </div>
     </div>

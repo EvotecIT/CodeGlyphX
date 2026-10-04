@@ -2036,7 +2036,7 @@ code.signature:focus-within .copy-btn {
 .playground {
     max-width: 1100px;
     margin: 0 auto;
-    padding-top: 5rem;
+    padding-top: 2rem;
     overflow: visible; /* Ensure sticky works */
 }
 
@@ -4190,3 +4190,11 @@ section {
         padding: 5rem 1rem 3rem;
     }
 }
+
+/* One configurator: nested lazy host wrappers do not add a second header gap. */
+.playground > .playground { padding-top: 0; }
+.playground [hidden] { display: none !important; }
+.playground .artwork-details { margin-top: 1.25rem; overflow-wrap: anywhere; }
+.playground .artwork-details details { margin: .75rem 0; }
+.playground .output-preview img { max-height: 420px; object-fit: contain; }
+@media (max-height: 600px) { .playground-preview-column { position: static; } }
