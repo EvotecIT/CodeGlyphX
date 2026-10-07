@@ -144,7 +144,8 @@ public static class RenderIO {
         if (info.Exists && info.Length > maxBytes) {
             throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, info.Length, maxBytes));
         }
-        return File.ReadAllBytes(path);
+        using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
+        return ReadBinary(fs, maxBytes);
     }
 
     /// <summary>
@@ -317,14 +318,12 @@ public static class RenderIO {
     public static bool TryReadBinary(string path, int maxBytes, out byte[] data) {
         data = Array.Empty<byte>();
         if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return false;
-        if (maxBytes <= 0) {
-            data = File.ReadAllBytes(path);
+        try {
+            data = ReadBinary(path, maxBytes);
             return true;
+        } catch (FormatException) {
+            return false;
         }
-        var info = new FileInfo(path);
-        if (info.Exists && info.Length > maxBytes) return false;
-        data = File.ReadAllBytes(path);
-        return true;
     }
 
     /// <summary>
