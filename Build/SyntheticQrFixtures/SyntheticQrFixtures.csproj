@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../CodeGlyphX/CodeGlyphX.csproj" />
+    <Compile Include="../../CodeGlyphX.Tests/Fixtures/SyntheticQrFixtureData.cs" Link="SyntheticQrFixtureData.cs" />
+  </ItemGroup>
+</Project>

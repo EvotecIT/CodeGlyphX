@@ -3,7 +3,7 @@
   "RootPath": "..",
   "ExpectedVersion": null,
   "ExpectedVersionMap": {
-    "CodeGlyphX": "2.X.0"
+    "CodeGlyphX": "3.X.0"
   },
   "ExpectedVersionMapAsInclude": true,
   "ExpectedVersionMapUseWildcards": false,

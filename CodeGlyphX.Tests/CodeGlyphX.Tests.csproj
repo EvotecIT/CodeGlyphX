@@ -43,6 +43,7 @@
     <Compile Include="QrApiTests.cs" />
     <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
+    <Compile Include="DataMatrixValidationTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />
     <Compile Include="QrProceduralArtTests.cs" />
     <Compile Include="QrPatternWorkflowTests.cs" />
@@ -70,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
+    <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
     <EmbeddedResource Include="Fixtures/Linear/excel-asset-register.png" />
     <EmbeddedResource Include="Fixtures/Linear/native-svg-asset.png" />
     <EmbeddedResource Include="Fixtures/Linear/word-asset-page.png" />
