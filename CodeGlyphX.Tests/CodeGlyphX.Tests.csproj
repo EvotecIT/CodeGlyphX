@@ -32,6 +32,7 @@
     <Compile Include="CodecResourceBoundaryTests.cs" />
     <Compile Include="StreamContractTests.cs" />
     <Compile Include="ValueContractTests.cs" />
+    <Compile Include="RenderedOutputOwnershipTests.cs" />
     <Compile Include="QrEasyTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />

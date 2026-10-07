@@ -9,6 +9,24 @@ namespace CodeGlyphX.Rendering;
 /// Optional render extras for format-specific output.
 /// </summary>
 public sealed class RenderExtras {
+    /// <summary>JPEG quality (1..100), used when <see cref="JpegOptions"/> is not supplied.</summary>
+    public int JpegQuality { get; set; } = 85;
+
+    /// <summary>Optional JPEG encoding settings.</summary>
+    public Jpeg.JpegEncodeOptions? JpegOptions { get; set; }
+
+    /// <summary>WebP quality (0..100). A value of 100 selects lossless VP8L.</summary>
+    public int WebpQuality { get; set; } = 100;
+
+    /// <summary>ICO output sizes (1..256). Null uses common icon sizes.</summary>
+    public int[]? IcoSizes { get; set; }
+
+    /// <summary>Whether ICO output preserves the aspect ratio and pads to a square.</summary>
+    public bool IcoPreserveAspectRatio { get; set; } = true;
+
+    /// <summary>Whether HTML output uses email-safe tables.</summary>
+    public bool HtmlEmailSafeTable { get; set; }
+
     /// <summary>
     /// Optional PNG compression override: zero stores pixels without compression; 1-9 enable compression.
     /// Null preserves the renderer's default. Applies to QR, matrix and linear PNG outputs.

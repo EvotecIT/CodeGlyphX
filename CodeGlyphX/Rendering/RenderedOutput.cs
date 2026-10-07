@@ -7,7 +7,8 @@ namespace CodeGlyphX.Rendering;
 /// Represents rendered output (text or binary).
 /// </summary>
 public sealed class RenderedOutput {
-    private string? _text;
+    private readonly string? _text;
+    private readonly byte[] _data;
 
     /// <summary>
     /// Output format.
@@ -25,14 +26,17 @@ public sealed class RenderedOutput {
     public string MimeType { get; }
 
     /// <summary>
-    /// Output bytes.
+    /// Gets a read-only view of the output bytes owned by this result.
+    /// Use <see cref="ToArray"/> when an independent mutable array is required.
     /// </summary>
-    public byte[] Data { get; }
+    public ReadOnlyMemory<byte> Data => _data;
+
+    internal byte[] OwnedBytes => _data;
 
     private RenderedOutput(OutputFormat format, OutputKind kind, byte[] data, string? text) {
         Format = format;
         Kind = kind;
-        Data = data ?? throw new ArgumentNullException(nameof(data));
+        _data = data ?? throw new ArgumentNullException(nameof(data));
         _text = text;
         MimeType = OutputFormatInfo.GetMimeType(format);
     }
@@ -41,7 +45,8 @@ public sealed class RenderedOutput {
     /// Creates a binary output.
     /// </summary>
     public static RenderedOutput FromBinary(OutputFormat format, byte[] data) {
-        return new RenderedOutput(format, OutputKind.Binary, data, text: null);
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return new RenderedOutput(format, OutputKind.Binary, (byte[])data.Clone(), text: null);
     }
 
     /// <summary>
@@ -56,15 +61,17 @@ public sealed class RenderedOutput {
     /// <summary>
     /// Returns the text representation when this is a text output.
     /// </summary>
-    public string GetText(Encoding? encoding = null) {
+    public string GetText() {
         if (Kind != OutputKind.Text) {
             throw new InvalidOperationException("Output is binary.");
         }
-        if (_text is not null) return _text;
-        var enc = encoding ?? Encoding.UTF8;
-        _text = enc.GetString(Data);
-        return _text;
+        return _text!;
     }
+
+    /// <summary>
+    /// Copies the output bytes to an independently owned mutable array.
+    /// </summary>
+    public byte[] ToArray() => (byte[])_data.Clone();
 
     /// <summary>
     /// Returns true when this output is textual.
