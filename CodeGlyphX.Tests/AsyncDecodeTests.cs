@@ -3,11 +3,62 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
 
 public sealed class AsyncDecodeTests {
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task Scanner_AsyncTransportsPreserveRecognitionOutcome(bool containsSymbol) {
+        var png = containsSymbol ? QR.Render("ASYNC", OutputFormat.Png).ToArray()
+            : MatrixPngRenderer.Render(new BitMatrix(1, 1), new MatrixPngRenderOptions { ModuleSize = 1, QuietZone = 0 });
+        var options = new ScanOptions {
+            Formats = new[] { SymbolFormat.QrCode }, MaxSymbols = 1, TimeoutMilliseconds = 5000,
+            Qr = QrPixelDecodeOptions.Fast()
+        };
+        using var stream = new MemoryStream(png);
+        var streamed = await SymbolScanner.ScanAsync(stream, options);
+        Assert.Equal(stream.Length, stream.Position);
+        Assert.True(stream.CanRead);
+        AssertTransportOutcome(streamed, containsSymbol);
+
+        var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".png");
+        try {
+            await File.WriteAllBytesAsync(path, png);
+            AssertTransportOutcome(await SymbolScanner.ScanFileAsync(path, options), containsSymbol);
+        } finally {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public async Task Scanner_AsyncTransportsRejectPayloadAbovePerCallByteLimit() {
+        var png = QR.Render("ASYNC", OutputFormat.Png).ToArray();
+        var options = new ScanOptions { Image = new ImageDecodeOptions { MaxBytes = png.Length - 1 } };
+        using var stream = new MemoryStream(png);
+        Assert.Equal(ScanStatus.InvalidImage, (await SymbolScanner.ScanAsync(stream, options)).Status);
+        Assert.Equal(0, stream.Position);
+        Assert.True(stream.CanRead);
+
+        var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".png");
+        try {
+            await File.WriteAllBytesAsync(path, png);
+            Assert.Equal(ScanStatus.InvalidImage, (await SymbolScanner.ScanFileAsync(path, options)).Status);
+        } finally {
+            File.Delete(path);
+        }
+    }
+
+    private static void AssertTransportOutcome(ScanResult result, bool containsSymbol) {
+        Assert.Equal(containsSymbol ? ScanStatus.Success : ScanStatus.NoSymbolFound, result.Status);
+        Assert.Equal(containsSymbol ? ScanCompletionReason.SymbolLimitReached : ScanCompletionReason.Completed, result.CompletionReason);
+        if (containsSymbol) Assert.Equal("ASYNC", Assert.Single(result.Symbols).Text);
+        else Assert.Empty(result.Symbols);
+    }
+
     [Fact]
     public async Task Scanner_SyncAndAsyncConsumeTheRemainingStream() {
         var png = QR.Render("ASYNC", OutputFormat.Png).Data.ToArray();
