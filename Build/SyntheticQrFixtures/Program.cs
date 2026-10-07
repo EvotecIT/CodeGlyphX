@@ -66,7 +66,6 @@ void WriteFixture(string fileName, string payload, bool noisy) {
     }
 
     var png = PngImageEncoder.EncodeRgba32(canvas, width, height);
-    File.WriteAllBytes(Path.Combine(args[0], fileName), png);
     // Verify the real PNG through the public scanner without printing its payload.
     var result = SymbolScanner.Scan(png, new ScanOptions {
         Formats = new[] { SymbolFormat.QrCode },
@@ -77,6 +76,7 @@ void WriteFixture(string fileName, string payload, bool noisy) {
     if (result.Symbols.Count != 1 || result.Symbols[0].Text != payload) {
         throw new InvalidOperationException($"Synthetic fixture did not decode: {fileName}");
     }
+    File.WriteAllBytes(Path.Combine(args[0], fileName), png);
     Console.WriteLine($"{fileName}: {width}x{height}, QR version {code.Version}, mask {code.Mask}, " +
         $"symbol {size}px, public scan matched, SHA256 {Convert.ToHexString(SHA256.HashData(png))}");
 }
