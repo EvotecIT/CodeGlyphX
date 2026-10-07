@@ -133,7 +133,7 @@ public sealed class CodecResourceBoundaryTests {
 
     [Fact]
     public void DecodedLimitSupportsInheritanceAndExplicitDisable() {
-        var png = QR.Render("DECODED-LIMIT", OutputFormat.Png).Data;
+        var png = QR.Render("DECODED-LIMIT", OutputFormat.Png).ToArray();
         var previous = ImageReader.MaxDecodedBytes;
         try {
             ImageReader.MaxDecodedBytes = 4;

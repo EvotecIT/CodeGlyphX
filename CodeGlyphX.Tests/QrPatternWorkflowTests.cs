@@ -29,8 +29,8 @@ public sealed class QrPatternWorkflowTests {
     public void PresetsReturnIndependentEditablePalettesAndGeometry() {
         foreach (QrArtPattern pattern in Enum.GetValues(typeof(QrArtPattern))) {
             var original = QrArtPatternPresets.CreatePatternOptions(pattern, 17);
-            var expected = (Rendering.Png.Rgba32[])original.Colors.Clone();
-            original.Colors[0] = Rendering.Png.Rgba32.Black;
+            var expected = (Rendering.Rgba32[])original.Colors.Clone();
+            original.Colors[0] = Rendering.Rgba32.Black;
             var fresh = QrArtPatternPresets.CreatePatternOptions(pattern, 17);
             Assert.Equal(expected, fresh.Colors);
             Assert.Equal(17, fresh.Seed);

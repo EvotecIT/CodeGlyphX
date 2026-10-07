@@ -34,6 +34,7 @@
     <Compile Include="ValueContractTests.cs" />
     <Compile Include="RenderedOutputOwnershipTests.cs" />
     <Compile Include="IndependentPngPixelTests.cs" />
+    <Compile Include="PngMalformedInputTests.cs" />
     <Compile Include="QrDecodeInfoTests.cs" />
     <Compile Include="QrApiTests.cs" />
     <Compile Include="EncodedSymbolContractTests.cs" />

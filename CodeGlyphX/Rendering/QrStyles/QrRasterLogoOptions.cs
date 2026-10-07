@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Rendering.Png;
 using System.IO;
 using CodeGlyphX;
 

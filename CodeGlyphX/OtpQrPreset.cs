@@ -13,16 +13,16 @@ public static class OtpQrPreset {
     public static Rendering.Png.QrPngRenderOptions CreatePngRenderOptions(
         int moduleSize = 6,
         int quietZone = 4,
-        Rendering.Png.Rgba32? foreground = null,
-        Rendering.Png.Rgba32? background = null) {
+        Rendering.Rgba32? foreground = null,
+        Rendering.Rgba32? background = null) {
         if (moduleSize <= 0) throw new ArgumentOutOfRangeException(nameof(moduleSize));
         if (quietZone < 0) throw new ArgumentOutOfRangeException(nameof(quietZone));
 
         return new Rendering.Png.QrPngRenderOptions {
             ModuleSize = moduleSize,
             QuietZone = quietZone,
-            Foreground = foreground ?? Rendering.Png.Rgba32.Black,
-            Background = background ?? Rendering.Png.Rgba32.White,
+            Foreground = foreground ?? Rendering.Rgba32.Black,
+            Background = background ?? Rendering.Rgba32.White,
         };
     }
 

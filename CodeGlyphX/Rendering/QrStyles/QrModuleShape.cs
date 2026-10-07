@@ -1,7 +1,7 @@
 namespace CodeGlyphX.Rendering;
 
 /// <summary>
-/// Module shape used by <see cref="QrPngRenderer"/>.
+/// QR module shape shared by supported raster and vector renderers.
 /// </summary>
 public enum QrModuleShape {
     /// <summary>
