@@ -33,6 +33,7 @@
     <Compile Include="StreamContractTests.cs" />
     <Compile Include="ValueContractTests.cs" />
     <Compile Include="RenderedOutputOwnershipTests.cs" />
+    <Compile Include="IndependentPngPixelTests.cs" />
     <Compile Include="QrEasyTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />
@@ -61,6 +62,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.webp" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.rgba" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.webp" />
