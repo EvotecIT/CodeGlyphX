@@ -159,9 +159,9 @@ public static class MatrixBarcodeEncoder {
         for (var i = 0; i < barcode.Segments.Count; i++) {
             var segment = barcode.Segments[i];
             if (segment.IsBar) {
-                for (var j = 0; j < segment.Modules.Clone(); j++) matrix[x + j, 0] = true;
+                for (var j = 0; j < segment.Modules; j++) matrix[x + j, 0] = true;
             }
-            x += segment.Modules.Clone();
+            x += segment.Modules;
         }
         return matrix;
     }

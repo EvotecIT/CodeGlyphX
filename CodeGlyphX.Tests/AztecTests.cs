@@ -16,14 +16,14 @@ public sealed class AztecTests {
     [InlineData("Aztec 12345")]
     [InlineData("otpauth://totp/Example?secret=JBSWY3DPEHPK3PXP")]
     public void Aztec_Roundtrip(string text) {
-        var matrix = AztecCode.Encode(text);
+        var matrix = AztecCode.Encode(text).Modules;
         Assert.True(AztecCode.TryDecode(matrix, out var decoded));
         Assert.Equal(text, decoded);
     }
 
     [Fact]
     public void Aztec_Decode_RotatedPixels() {
-        var matrix = AztecCode.Encode("AZTEC-ROTATE");
+        var matrix = AztecCode.Encode("AZTEC-ROTATE").Modules;
         var pixels = MatrixPngRenderer.RenderPixels(matrix, new MatrixPngRenderOptions {
             ModuleSize = 3,
             QuietZone = 2
@@ -36,7 +36,7 @@ public sealed class AztecTests {
 
     [Fact]
     public void Aztec_Image_RoundTrip() {
-        var png = AztecCode.Render("AZTEC-IMG", OutputFormat.Png).Data;
+        var png = AztecCode.Render("AZTEC-IMG", OutputFormat.Png).ToArray();
         Assert.True(AztecCode.TryDecodeImage(png, out var text));
         Assert.Equal("AZTEC-IMG", text);
     }
@@ -65,7 +65,7 @@ public sealed class AztecTests {
 
     [Fact]
     public void Aztec_Decode_Cancelled_ReturnsFalse() {
-        var matrix = AztecCode.Encode("AZTEC-CANCEL");
+        var matrix = AztecCode.Encode("AZTEC-CANCEL").Modules;
         var pixels = MatrixPngRenderer.RenderPixels(matrix, new MatrixPngRenderOptions {
             ModuleSize = 3,
             QuietZone = 2

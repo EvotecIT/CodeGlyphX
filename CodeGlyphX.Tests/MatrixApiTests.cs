@@ -37,14 +37,14 @@ public sealed class MatrixApiTests {
 
     [Fact]
     public void DataMatrixCode_Png_RoundTrip() {
-        var png = DataMatrixCode.Render("DM-HELLO", OutputFormat.Png).Data;
+        var png = DataMatrixCode.Render("DM-HELLO", OutputFormat.Png).ToArray();
         Assert.True(DataMatrixCode.TryDecodePng(png, out var text));
         Assert.Equal("DM-HELLO", text);
     }
 
     [Fact]
     public void DataMatrixCode_Image_RoundTrip() {
-        var png = DataMatrixCode.Render("DM-IMG", OutputFormat.Png).Data;
+        var png = DataMatrixCode.Render("DM-IMG", OutputFormat.Png).ToArray();
         Assert.True(DataMatrixCode.TryDecodeImage(png, out var text));
         Assert.Equal("DM-IMG", text);
     }
@@ -52,7 +52,7 @@ public sealed class MatrixApiTests {
     [Fact]
     public void Pdf417Code_Png_RoundTrip() {
         var options = new Pdf417EncodeOptions { ErrorCorrectionLevel = 2 };
-        var png = Pdf417Code.Render("PDF-HELLO", OutputFormat.Png, options).Data;
+        var png = Pdf417Code.Render("PDF-HELLO", OutputFormat.Png, options).ToArray();
         Assert.True(Pdf417Code.TryDecodePng(png, out string text));
         Assert.Equal("PDF-HELLO", text);
     }
@@ -60,7 +60,7 @@ public sealed class MatrixApiTests {
     [Fact]
     public void Pdf417Code_Image_RoundTrip() {
         var options = new Pdf417EncodeOptions { ErrorCorrectionLevel = 2 };
-        var png = Pdf417Code.Render("PDF-IMG", OutputFormat.Png, options).Data;
+        var png = Pdf417Code.Render("PDF-IMG", OutputFormat.Png, options).ToArray();
         Assert.True(Pdf417Code.TryDecodeImage(png, out string text));
         Assert.Equal("PDF-IMG", text);
     }
@@ -73,7 +73,7 @@ public sealed class MatrixApiTests {
             IsLastSegment = true,
             FileName = "macro.txt"
         };
-        var png = Pdf417Code.RenderMacro("PDF-MACRO", macro, OutputFormat.Png).Data;
+        var png = Pdf417Code.RenderMacro("PDF-MACRO", macro, OutputFormat.Png).ToArray();
 
         Assert.True(Pdf417Code.TryDecodePng(png, out Pdf417Decoded decoded));
         Assert.Equal("PDF-MACRO", decoded.Text);
@@ -87,7 +87,7 @@ public sealed class MatrixApiTests {
     public void MatrixBarcode_Save_DataMatrix_ByExtension() {
         var path = Path.Combine(Path.GetTempPath(), "codeglyphx-matrix-barcode-" + Guid.NewGuid().ToString("N") + ".png");
         try {
-            MatrixBarcode.Save(BarcodeType.DataMatrix, "DM-FACADE", path);
+            MatrixBarcode.Save(SymbolFormat.DataMatrix, "DM-FACADE", path);
 
             Assert.True(File.Exists(path));
             Assert.True(DataMatrixCode.TryDecodePngFile(path, out var text));
@@ -101,7 +101,7 @@ public sealed class MatrixApiTests {
 
     [Fact]
     public void MatrixBarcode_Render_Pdf417_AsSvg() {
-        var output = MatrixBarcode.Render(BarcodeType.PDF417, "PDF-FACADE", OutputFormat.Svg);
+        var output = MatrixBarcode.Render(SymbolFormat.Pdf417, "PDF-FACADE", OutputFormat.Svg);
 
         Assert.Equal(OutputKind.Text, output.Kind);
         Assert.Contains("<svg", output.GetText(), StringComparison.OrdinalIgnoreCase);
@@ -112,7 +112,9 @@ public sealed class MatrixApiTests {
     public void MatrixBarcode_Render_AllSupportedFormats_ProducesExpectedKind(OutputFormat format, OutputKind kind) {
         var options = new MatrixOptions {
             ModuleSize = 2,
-            QuietZone = 1,
+            QuietZone = 1
+        };
+        var outputOptions = new OutputOptions {
             JpegQuality = 75,
             WebpQuality = 80,
             IcoSizes = new[] { 16 },
@@ -120,11 +122,11 @@ public sealed class MatrixApiTests {
             HtmlEmailSafeTable = true
         };
 
-        var output = MatrixBarcode.Render(BarcodeType.DataMatrix, "DM-FORMATS", format, options);
+        var output = MatrixBarcode.Render(SymbolFormat.DataMatrix, "DM-FORMATS", format, options, outputOptions);
 
         Assert.Equal(format, output.Format);
         Assert.Equal(kind, output.Kind);
-        Assert.NotEmpty(output.Data);
+        Assert.False(output.Data.IsEmpty);
     }
 
     [Theory]
@@ -134,13 +136,14 @@ public sealed class MatrixApiTests {
     public void DataMatrixCode_Render_UsesSharedMatrixOptions(OutputFormat format, OutputKind kind) {
         var output = DataMatrixCode.Render("DM-OPTIONS", format, options: new MatrixOptions {
             ModuleSize = 2,
-            QuietZone = 1,
+            QuietZone = 1
+        }, extras: new OutputOptions {
             IcoSizes = new[] { 16 },
             HtmlEmailSafeTable = true
         });
 
         Assert.Equal(kind, output.Kind);
-        Assert.NotEmpty(output.Data);
+        Assert.False(output.Data.IsEmpty);
     }
 
     [Theory]
@@ -150,19 +153,20 @@ public sealed class MatrixApiTests {
     public void Pdf417Code_Render_UsesSharedMatrixOptions(OutputFormat format, OutputKind kind) {
         var output = Pdf417Code.Render("PDF-OPTIONS", format, renderOptions: new MatrixOptions {
             ModuleSize = 2,
-            QuietZone = 1,
+            QuietZone = 1
+        }, extras: new OutputOptions {
             IcoSizes = new[] { 16 },
             HtmlEmailSafeTable = true
         });
 
         Assert.Equal(kind, output.Kind);
-        Assert.NotEmpty(output.Data);
+        Assert.False(output.Data.IsEmpty);
     }
 
     [Fact]
     public void MatrixBarcode_Render_AsAscii_HonorsMatrixQuietZone() {
-        var modules = MatrixBarcode.Encode(BarcodeType.DataMatrix, "DM-ASCII");
-        var output = MatrixBarcode.Render(modules, OutputFormat.Ascii, new MatrixOptions { QuietZone = 0 });
+        var modules = MatrixBarcode.Encode(SymbolFormat.DataMatrix, "DM-ASCII");
+        var output = modules.Render(OutputFormat.Ascii, new MatrixOptions { QuietZone = 0 });
         var lines = SplitLines(output.GetText());
 
         Assert.Equal(OutputKind.Text, output.Kind);
@@ -182,7 +186,7 @@ public sealed class MatrixApiTests {
 
     [Fact]
     public void MatrixBarcode_Render_AsAscii_PreservesExplicitAsciiOptions() {
-        var modules = MatrixBarcode.Encode(BarcodeType.DataMatrix, "DM-ASCII-EXTRAS");
+        var modules = MatrixBarcode.Encode(SymbolFormat.DataMatrix, "DM-ASCII-EXTRAS");
         var extras = new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
@@ -192,7 +196,7 @@ public sealed class MatrixApiTests {
             }
         };
 
-        var output = MatrixBarcode.Render(modules, OutputFormat.Ascii, new MatrixOptions { QuietZone = 0 }, extras);
+        var output = modules.Render(OutputFormat.Ascii, new MatrixOptions { QuietZone = 0 }, extras);
         var lines = SplitLines(output.GetText());
 
         Assert.Equal(modules.Height + 2, lines.Length);
@@ -203,7 +207,7 @@ public sealed class MatrixApiTests {
     [Fact]
     public void MatrixBarcode_Render_Html_WrapsTitle() {
         var output = MatrixBarcode.Render(
-            BarcodeType.DataMatrix,
+            SymbolFormat.DataMatrix,
             "DM-HTML",
             OutputFormat.Html,
             extras: new OutputOptions { HtmlTitle = "Matrix title" });
@@ -216,7 +220,7 @@ public sealed class MatrixApiTests {
     public void MatrixBarcode_Save_Stream_WritesTextFormat() {
         using var stream = new MemoryStream();
 
-        MatrixBarcode.Save(BarcodeType.PDF417, "PDF-STREAM", stream, OutputFormat.Svg);
+        MatrixBarcode.Save(SymbolFormat.Pdf417, "PDF-STREAM", stream, OutputFormat.Svg);
 
         Assert.True(stream.Length > 0);
     }
@@ -228,9 +232,9 @@ public sealed class MatrixApiTests {
 
     [Fact]
     public void MatrixBarcode_Render_RejectsUnknownFormat() {
-        var modules = MatrixBarcode.Encode(BarcodeType.DataMatrix, "DM-UNKNOWN");
+        var modules = MatrixBarcode.Encode(SymbolFormat.DataMatrix, "DM-UNKNOWN");
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => MatrixBarcode.Render(modules, OutputFormat.Unknown));
+        Assert.Throws<ArgumentOutOfRangeException>(() => modules.Render(OutputFormat.Unknown));
     }
 
     private static string[] SplitLines(string text) {

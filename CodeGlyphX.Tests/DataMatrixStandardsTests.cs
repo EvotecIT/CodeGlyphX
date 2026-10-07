@@ -136,7 +136,7 @@ public sealed class DataMatrixStandardsTests {
             payload,
             Rendering.OutputFormat.Png,
             encoding,
-            new MatrixOptions { ModuleSize = 5, QuietZone = 2 }).Data;
+            new MatrixOptions { ModuleSize = 5, QuietZone = 2 }).ToArray();
 
         Assert.True(DataMatrixCode.TryDecodePngDetailed(png, out var decoded));
         Assert.Equal(payload, decoded.Text);
