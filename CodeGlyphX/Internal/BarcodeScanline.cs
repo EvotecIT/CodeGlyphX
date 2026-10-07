@@ -249,7 +249,12 @@ internal static class BarcodeScanline {
     }
 
     private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int threshold, CancellationToken cancellationToken, out bool[] modules) {
+        return TryDecodeRuns(luminance, threshold, cancellationToken, out modules, out _);
+    }
+
+    private static bool TryDecodeRuns(ReadOnlySpan<byte> luminance, int threshold, CancellationToken cancellationToken, out bool[] modules, out bool[] minimumRunModules) {
         modules = Array.Empty<bool>();
+        minimumRunModules = Array.Empty<bool>();
         if (luminance.Length == 0) return false;
 
         var runs = ArrayPool<int>.Shared.Rent(luminance.Length);
@@ -287,33 +292,77 @@ internal static class BarcodeScanline {
                 if (runs[i] < minRun) minRun = runs[i];
             }
             if (minRun <= 0) return false;
-
-            var totalModules = 0;
-            for (var i = start; i <= end; i++) {
-                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                var modulesCount = (int)Math.Round(runs[i] / (double)minRun);
-                if (modulesCount < 1) modulesCount = 1;
-                totalModules += modulesCount;
-            }
-            if (totalModules <= 0) return false;
-
-            modules = new bool[totalModules];
-            var offset = 0;
-            for (var i = start; i <= end; i++) {
-                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                var modulesCount = (int)Math.Round(runs[i] / (double)minRun);
-                if (modulesCount < 1) modulesCount = 1;
-                var isBar = runBars[i];
-                for (var m = 0; m < modulesCount; m++) {
-                    modules[offset++] = isBar;
-                }
-            }
-
+            var modulePitch = EstimateModulePitch(runs, start, end, minRun, cancellationToken);
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (!TrySampleRuns(runs, runBars, start, end, modulePitch, cancellationToken, out modules)) return false;
+            // Narrow-run distributions can be ambiguous. Keep the established
+            // sampling as a bounded alternative; format/checksum validation still
+            // decides whether either candidate represents a barcode.
+            if (modulePitch != minRun && !TrySampleRuns(runs, runBars, start, end, minRun, cancellationToken, out minimumRunModules)) return false;
             return true;
         } finally {
             ArrayPool<int>.Shared.Return(runs);
             ArrayPool<bool>.Shared.Return(runBars);
         }
+    }
+
+    private static bool TrySampleRuns(int[] runs, bool[] runBars, int start, int end, double pitch, CancellationToken cancellationToken, out bool[] modules) {
+        modules = Array.Empty<bool>();
+        var totalModules = 0;
+        for (var i = start; i <= end; i++) {
+            if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            totalModules += Math.Max(1, (int)Math.Round(runs[i] / pitch));
+        }
+        if (totalModules <= 0) return false;
+
+        modules = new bool[totalModules];
+        var offset = 0;
+        for (var i = start; i <= end; i++) {
+            if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            var count = Math.Max(1, (int)Math.Round(runs[i] / pitch));
+            for (var m = 0; m < count; m++) modules[offset++] = runBars[i];
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// Estimates a fractional module pitch from pixel-rounded runs. The shortest
+    /// observed run need not be the exact width of one module.
+    /// </summary>
+    private static double EstimateModulePitch(int[] runs, int start, int end, int minRun, CancellationToken cancellationToken) {
+        // At one pixel, a two-pixel run may be either one rounded module or two
+        // real modules. Retain the existing sampling instead of guessing.
+        if (minRun < 2) return minRun;
+
+        double narrowTotal = 0;
+        var narrowCount = 0;
+        for (var i = start; i <= end; i++) {
+            if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return minRun;
+            // A fractional narrow run is sampled at two adjacent integer widths.
+            // Avoid pulling wider elements into that initial cluster.
+            if (runs[i] <= minRun + 1.0) {
+                narrowTotal += runs[i];
+                narrowCount++;
+            }
+        }
+
+        var pitch = narrowTotal / narrowCount;
+        // Refine using every run so that a biased distribution of rounded narrow
+        // runs does not distort wider elements. Work remains bounded and linear.
+        for (var pass = 0; pass < 4; pass++) {
+            double weightedWidths = 0;
+            double squaredModules = 0;
+            for (var i = start; i <= end; i++) {
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return minRun;
+                var count = Math.Max(1, Math.Round(runs[i] / pitch));
+                weightedWidths += runs[i] * count;
+                squaredModules += count * count;
+            }
+            var refined = Math.Max(minRun, Math.Min(minRun + 1.0, weightedWidths / squaredModules));
+            if (Math.Abs(refined - pitch) < 0.0001) break;
+            pitch = refined;
+        }
+        return pitch;
     }
 
     private static void TryCollectCandidatesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, CancellationToken cancellationToken, List<bool[]> candidates) {
@@ -397,7 +446,8 @@ internal static class BarcodeScanline {
         var thresholds = new[] { (min + max) / 2, min + range / 3, min + (range * 2) / 3 };
         for (var i = 0; i < thresholds.Length; i++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) return;
-            if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out var modules)) {
+            if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out var modules, out var minimumRunModules)) {
+                AddUniqueCandidate(candidates, minimumRunModules);
                 AddUniqueCandidate(candidates, modules);
             }
         }
