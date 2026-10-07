@@ -27,12 +27,16 @@ public static partial class DataMatrixDecoder {
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-            if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-            var mirror = MirrorX(modules);
-            if (TryDecodeWithRotations(mirror, cancellationToken, out value)) return true;
+        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) {
+            // Two grid candidates at most: the original integer estimate and a
+            // clock-derived alternative. Each must pass framing, ECC, and payload validation.
+            for (var attempt = 0; attempt < 2; attempt++) {
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
+                if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
+                if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
+                if (TryDecodeWithRotations(MirrorX(modules), cancellationToken, out value)) return true;
+            }
         }
         value = string.Empty;
         return false;
@@ -40,17 +44,28 @@ public static partial class DataMatrixDecoder {
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, DataMatrixDecodeDiagnostics diagnostics) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-            if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-            diagnostics.MirroredTried = true;
-            var mirror = MirrorX(modules);
-            if (TryDecodeWithRotations(mirror, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
+        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) {
+            for (var attempt = 0; attempt < 2; attempt++) {
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+                if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
+                if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) {
+                    diagnostics.Success = true;
+                    diagnostics.Failure = null;
+                    return true;
+                }
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+                diagnostics.MirroredTried = true;
+                if (TryDecodeWithRotations(MirrorX(modules), cancellationToken, diagnostics, out value)) {
+                    diagnostics.Success = true;
+                    diagnostics.Failure = null;
+                    return true;
+                }
+            }
         } else {
             diagnostics.Failure ??= "Failed to extract Data Matrix modules.";
         }
         value = string.Empty;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) diagnostics.Failure = "Cancelled.";
         diagnostics.Failure ??= "No Data Matrix decoded.";
         return false;
     }
@@ -476,12 +491,17 @@ public static partial class DataMatrixDecoder {
         out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
         decoded = null!;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        if (!TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) return false;
-        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics)) return true;
-        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (diagnostics is not null) diagnostics.MirroredTried = true;
-        return TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded, diagnostics);
+        if (!TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) return false;
+        for (var attempt = 0; attempt < 2; attempt++) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
+            if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics)) return true;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+            if (diagnostics is not null) diagnostics.MirroredTried = true;
+            if (TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded, diagnostics)) return true;
+        }
+        decoded = null!;
+        return false;
     }
 
     private static bool TryDecodeDetailedWithRotations(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {

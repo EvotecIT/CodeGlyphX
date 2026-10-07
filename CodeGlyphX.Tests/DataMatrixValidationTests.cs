@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using CodeGlyphX.DataMatrix;
+using CodeGlyphX.Rendering.Png;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
@@ -90,6 +91,93 @@ public sealed class DataMatrixValidationTests {
         AssertRejected(CreateTenByTen(231, 46, 193)); // Declares two bytes but only one remains.
     }
 
+    [Theory]
+    [InlineData(DataMatrixEncodingMode.Auto)]
+    [InlineData(DataMatrixEncodingMode.Base256)]
+    [InlineData(DataMatrixEncodingMode.Ascii)]
+    public void EmptyBytePayload_RemainsEmptyAcrossModuleAndImageEntryPoints(DataMatrixEncodingMode mode) {
+        AssertEmptyPayload(DataMatrixCode.EncodeBytes(Array.Empty<byte>(), mode).Modules);
+    }
+
+    [Fact]
+    public void EmptyStringPayload_InBase256_RemainsEmpty() {
+        AssertEmptyPayload(DataMatrixCode.Encode(string.Empty, DataMatrixEncodingMode.Base256).Modules);
+    }
+
+    [Theory]
+    [InlineData(DataMatrixEncodingMode.Auto)]
+    [InlineData(DataMatrixEncodingMode.Base256)]
+    public void EmptyBinarySegment_PreservesControlMetadata(DataMatrixEncodingMode mode) {
+        var symbol = DataMatrixCode.EncodeBytes(Array.Empty<byte>(), new DataMatrixEncodingOptions {
+            Mode = mode, ReaderProgramming = true, EciAssignmentNumber = 26
+        });
+
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(symbol.Modules, out var decoded));
+        Assert.Empty(decoded.Text);
+        Assert.True(decoded.ReaderProgramming);
+        Assert.Equal(26, Assert.Single(decoded.EciAssignments));
+        var pixels = MatrixPngRenderer.RenderPixels(symbol.Modules,
+            new MatrixPngRenderOptions { ModuleSize = 4, QuietZone = 2 }, out var width, out var height, out var stride);
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, PixelFormat.Rgba32, out decoded));
+        Assert.Empty(decoded.Text);
+        Assert.True(decoded.ReaderProgramming);
+        Assert.Equal(26, Assert.Single(decoded.EciAssignments));
+    }
+
+    [Fact]
+    public void DamagedClockTracks_RetainTheValidOriginalPixelGrid() {
+        var modules = DataMatrixEncoder.Encode("ORDER-1042", new DataMatrixEncodingOptions { Rows = 14, Columns = 14 });
+        modules[7, 0] = !modules[7, 0];
+        modules[13, 7] = !modules[13, 7];
+
+        Assert.True(DataMatrixDecoder.TryDecode(modules, out var text));
+        Assert.Equal("ORDER-1042", text);
+        AssertPixelPayload(modules, 4, text);
+        AssertPngPayload(MatrixPngRenderer.Render(modules, new MatrixPngRenderOptions { ModuleSize = 4, QuietZone = 2 }), text);
+    }
+
+    [Fact]
+    public void OnePixelModules_DoNotInferAnInteriorDataGrid() {
+        foreach (var size in new[] { 12, 14, 16, 18, 20, 22, 24, 26 }) {
+            foreach (var text in new[] { "A", "AB", "ABC", "42", "TEST", "abc", "0", "Z", "1", "X", "Hi", "12" }) {
+                var modules = DataMatrixEncoder.Encode(text, new DataMatrixEncodingOptions { Rows = size, Columns = size });
+                AssertPixelPayload(modules, 1, text);
+            }
+        }
+    }
+
+    [Fact]
+    public void FractionalPitch_CanRecoverWhenTheIntegerEstimateIsAnotherSupportedSize() {
+        var modules = DataMatrixEncoder.Encode("PART-0042", new DataMatrixEncodingOptions { Rows = 16, Columns = 16 });
+        // The 72-pixel bounds contain 16 modules at pitch 4.5. A shortest run
+        // of four pixels estimates 18 modules, which is also a supported size.
+        const double pitch = 4.5;
+        const int quietZone = 2;
+        var width = (int)((modules.Width + quietZone * 2) * pitch);
+        var height = (int)((modules.Height + quietZone * 2) * pitch);
+        var pixels = new byte[width * height * 4];
+        for (var y = 0; y < height; y++) {
+            for (var x = 0; x < width; x++) {
+                var col = (int)Math.Floor((x + 0.5) / pitch) - quietZone;
+                var row = (int)Math.Floor((y + 0.5) / pitch) - quietZone;
+                var dark = col >= 0 && col < modules.Width && row >= 0 && row < modules.Height && modules[col, row];
+                var value = dark ? (byte)0 : (byte)255;
+                var p = (y * width + x) * 4;
+                pixels[p] = pixels[p + 1] = pixels[p + 2] = value;
+                pixels[p + 3] = 255;
+            }
+        }
+
+        var decoded = AssertPixelPayload(pixels, width, height, width * 4, "PART-0042");
+        Assert.Equal(16, decoded.Rows);
+        Assert.Equal(16, decoded.Columns);
+        var scan = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { SymbolFormat.DataMatrix }, TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+        Assert.Equal(ScanCompletionReason.Completed, scan.CompletionReason);
+        Assert.Equal("PART-0042", Assert.Single(scan.Symbols).Text);
+    }
+
     [Fact]
     public void SpreadsheetGridAndMissingImagePlaceholders_DoNotProduceTileHits() {
         var png = ReadFixture("data-matrix-spreadsheet-placeholders.png");
@@ -107,18 +195,50 @@ public sealed class DataMatrixValidationTests {
     [InlineData("data-matrix-fractional-small.png")]
     [InlineData("data-matrix-fractional-transparent-edge.png")]
     public void FractionalModulePitch_WithPaddedCanvas_DecodesThroughImageAndScanner(string fixture) {
-        var png = ReadFixture(fixture);
+        AssertPngPayload(ReadFixture(fixture), "ORDER-1042");
+    }
+
+    private static void AssertPngPayload(byte[] png, string expected) {
         Assert.True(DataMatrixCode.TryDecodePng(png, out var text, out var diagnostics), diagnostics.Failure);
-        Assert.Equal("ORDER-1042", text);
+        Assert.Equal(expected, text);
         Assert.True(diagnostics.Success);
+        Assert.Null(diagnostics.Failure);
 
         var result = SymbolScanner.Scan(png, new ScanOptions {
             Formats = new[] { SymbolFormat.DataMatrix },
             TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
         Assert.Equal(ScanStatus.Success, result.Status);
-        Assert.Equal("ORDER-1042", Assert.Single(result.Symbols).Text);
+        Assert.Equal(expected, Assert.Single(result.Symbols).Text);
         Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
+    }
+
+    private static void AssertEmptyPayload(BitMatrix modules) {
+        Assert.True(DataMatrixDecoder.TryDecode(modules, out var text));
+        Assert.Empty(text);
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(modules, out var decoded));
+        Assert.Empty(decoded.Text);
+        AssertPixelPayload(modules, 4, string.Empty);
+        AssertPngPayload(MatrixPngRenderer.Render(modules, new MatrixPngRenderOptions { ModuleSize = 4, QuietZone = 2 }), string.Empty);
+    }
+
+    private static void AssertPixelPayload(BitMatrix modules, int moduleSize, string expected) {
+        var pixels = MatrixPngRenderer.RenderPixels(modules,
+            new MatrixPngRenderOptions { ModuleSize = moduleSize, QuietZone = 2 }, out var width, out var height, out var stride);
+        AssertPixelPayload(pixels, width, height, stride, expected);
+    }
+
+    private static DataMatrixDecoded AssertPixelPayload(byte[] pixels, int width, int height, int stride, string expected) {
+        Assert.True(DataMatrixDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var text),
+            $"Failed to decode {width}x{height} pixels as '{expected}'.");
+        Assert.Equal(expected, text);
+        Assert.True(DataMatrixDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out text, out var diagnostics), diagnostics.Failure);
+        Assert.Equal(expected, text);
+        Assert.True(diagnostics.Success);
+        Assert.Null(diagnostics.Failure);
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
+        Assert.Equal(expected, decoded.Text);
+        return decoded;
     }
 
     private static void AssertRejected(BitMatrix modules) {

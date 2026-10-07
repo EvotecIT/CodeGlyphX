@@ -227,8 +227,9 @@ public static partial class DataMatrixDecoder {
         return value;
     }
 
-    private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BitMatrix modules) {
+    private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BitMatrix modules, out ImageSamplingGrid sampling) {
         modules = null!;
+        sampling = default;
         if (width <= 0 || height <= 0 || stride <= 0) return false;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
@@ -246,26 +247,10 @@ public static partial class DataMatrixDecoder {
 
         var cols = (int)Math.Round((double)box.Width / moduleSize);
         var rows = (int)Math.Round((double)box.Height / moduleSize);
-        TryResolveTimingGrid(pixels, width, height, stride, format, box, invert, moduleSize, cancellationToken, ref cols, ref rows);
         if (cols <= 0 || rows <= 0) return false;
 
-        modules = new BitMatrix(cols, rows);
-        var pitchX = (double)box.Width / cols;
-        var pitchY = (double)box.Height / rows;
-        for (var y = 0; y < rows; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-            var sy = (int)Math.Floor(box.Top + ((y + 0.5) * pitchY));
-            sy = Clamp(sy, 0, height - 1);
-            for (var x = 0; x < cols; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                var sx = (int)Math.Floor(box.Left + ((x + 0.5) * pitchX));
-                sx = Clamp(sx, 0, width - 1);
-                var dark = IsDark(pixels, width, height, stride, format, sx, sy);
-                modules[x, y] = invert ? !dark : dark;
-            }
-        }
-
-        return true;
+        sampling = new ImageSamplingGrid(box, invert, moduleSize, cols, rows);
+        return TrySampleGrid(pixels, width, height, stride, format, box, invert, cols, rows, cancellationToken, out modules);
     }
 
     private static bool TryEstimateModuleSize(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert, CancellationToken cancellationToken, out int moduleSize) {
