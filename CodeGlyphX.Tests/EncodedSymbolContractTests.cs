@@ -65,7 +65,7 @@ public sealed class EncodedSymbolContractTests {
         Assert.NotEqual(options.ErrorCorrectionLevel, symbol.ErrorCorrectionLevel);
         Assert.Equal(120, symbol.Width);
         Assert.True(symbol.Modules.IsReadOnly);
-        Assert.True(Pdf417Decoder.TryDecode(symbol.Modules, out var decoded));
+        Assert.True(Pdf417Decoder.TryDecode(symbol.Modules, out string decoded));
         Assert.Equal("ABC", decoded);
     }
 
@@ -151,7 +151,7 @@ public sealed class EncodedSymbolContractTests {
         Assert.Equal("ABC", dmText);
         var pdfSymbol = pdf417.Encode();
         Assert.Equal(1, pdfSymbol.ErrorCorrectionLevel);
-        Assert.True(Pdf417Decoder.TryDecode(pdfSymbol.Modules, out var pdfText));
+        Assert.True(Pdf417Decoder.TryDecode(pdfSymbol.Modules, out string pdfText));
         Assert.Equal("ABC", pdfText);
     }
 }
