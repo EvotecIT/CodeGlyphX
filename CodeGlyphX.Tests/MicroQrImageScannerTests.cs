@@ -193,7 +193,7 @@ public sealed class MicroQrImageScannerTests {
 
     [Fact]
     public void Decoder_RejectsModel2QrWithoutExhaustiveMicroQrSearch() {
-        var png = QR.Render("MODEL2-NOT-MICRO", OutputFormat.Png).Data;
+        var png = QR.Render("MODEL2-NOT-MICRO", OutputFormat.Png).Data.ToArray();
         var stopwatch = Stopwatch.StartNew();
 
         Assert.False(MicroQrDecoder.TryDecodeImage(png, out _, out _));

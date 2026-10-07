@@ -92,7 +92,7 @@ public sealed class DataBarVariantsTests {
 
         Assert.Equal(ToModuleString(truncated), ToModuleString(omni));
         Assert.True(BarcodeDecoder.TryDecode(modules, BarcodeType.GS1DataBarOmni, out var decoded));
-        Assert.Equal(SymbolFormat.Gs1DataBarOmnidirectional, decoded.Format);
+        Assert.Equal(BarcodeType.GS1DataBarOmni, decoded.Type);
         Assert.Equal(value, decoded.Text);
     }
 

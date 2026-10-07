@@ -403,26 +403,30 @@ public static partial class ImageReader {
     }
 
     private static int ResolveMaxBytes(ImageDecodeOptions? options)
-        => ResolveMaxInt(options?.MaxBytes, MaxImageBytes);
+        => ResolveMaxInt(options?.MaxBytes, MaxImageBytes, nameof(ImageDecodeOptions.MaxBytes));
 
     private static long ResolveMaxPixels(ImageDecodeOptions? options)
-        => ResolveMaxLong(options?.MaxPixels, MaxPixels);
+        => ResolveMaxLong(options?.MaxPixels, MaxPixels, nameof(ImageDecodeOptions.MaxPixels));
 
     private static int ResolveMaxAnimationFrames(ImageDecodeOptions? options)
-        => ResolveMaxInt(options?.MaxAnimationFrames, MaxAnimationFrames);
+        => ResolveMaxInt(options?.MaxAnimationFrames, MaxAnimationFrames, nameof(ImageDecodeOptions.MaxAnimationFrames));
 
     private static int ResolveMaxAnimationDurationMs(ImageDecodeOptions? options)
-        => ResolveMaxInt(options?.MaxAnimationDurationMs, MaxAnimationDurationMs);
+        => ResolveMaxInt(options?.MaxAnimationDurationMs, MaxAnimationDurationMs, nameof(ImageDecodeOptions.MaxAnimationDurationMs));
 
     private static long ResolveMaxAnimationFramePixels(ImageDecodeOptions? options)
-        => ResolveMaxLong(options?.MaxAnimationFramePixels, MaxAnimationFramePixels);
+        => ResolveMaxLong(options?.MaxAnimationFramePixels, MaxAnimationFramePixels, nameof(ImageDecodeOptions.MaxAnimationFramePixels));
 
-    private static int ResolveMaxInt(int? value, int fallback) {
-        return value.HasValue ? Math.Max(0, value.Value) : fallback;
+    private static int ResolveMaxInt(int? value, int fallback, string parameterName) {
+        var resolved = value ?? fallback;
+        if (resolved < 0) throw new ArgumentOutOfRangeException(parameterName, resolved, "Limit values must be nonnegative; use zero to disable a limit.");
+        return resolved;
     }
 
-    private static long ResolveMaxLong(long? value, long fallback) {
-        return value.HasValue ? Math.Max(0, value.Value) : fallback;
+    private static long ResolveMaxLong(long? value, long fallback, string parameterName) {
+        var resolved = value ?? fallback;
+        if (resolved < 0) throw new ArgumentOutOfRangeException(parameterName, resolved, "Limit values must be nonnegative; use zero to disable a limit.");
+        return resolved;
     }
 
     private static void ApplyOutputDimension(ImageDecodeOptions? options, ref byte[] rgba, ref int width, ref int height) {
@@ -433,10 +437,9 @@ public static partial class ImageReader {
     }
 
     private static IDisposable? ApplyDecodeLimits(ImageDecodeOptions? options) {
-        if (options is null) return null;
         var maxBytes = ResolveMaxBytes(options);
         var maxPixels = ResolveMaxPixels(options);
-        var maxDecodedBytes = ResolveMaxLong(options.MaxDecodedBytes, MaxDecodedBytes);
+        var maxDecodedBytes = ResolveMaxLong(options?.MaxDecodedBytes, MaxDecodedBytes, nameof(ImageDecodeOptions.MaxDecodedBytes));
         if (maxBytes == MaxImageBytes && maxPixels == MaxPixels && maxDecodedBytes == MaxDecodedBytes) return null;
 
         var previous = DecodeLimitOverrides.Value;
@@ -472,7 +475,6 @@ public static partial class ImageReader {
     }
 
     private static IDisposable? ApplyAnimationLimits(ImageDecodeOptions? options) {
-        if (options is null) return null;
         var maxFrames = ResolveMaxAnimationFrames(options);
         var maxDuration = ResolveMaxAnimationDurationMs(options);
         var maxFramePixels = ResolveMaxAnimationFramePixels(options);

@@ -1,3 +1,4 @@
+using System;
 using CodeGlyphX.Rendering.Jpeg;
 
 namespace CodeGlyphX;
@@ -5,8 +6,18 @@ namespace CodeGlyphX;
 /// <summary>
 /// Options for decoding from image sources (non-QR).
 /// Use <see cref="Guarded"/>/<see cref="Strict"/> or set explicit limits for untrusted inputs.
+/// Limit values must be nonnegative; zero explicitly disables a limit and nullable limits inherit when null.
 /// </summary>
 public sealed partial class ImageDecodeOptions {
+    private int _maxDimension;
+    private long? _maxPixels;
+    private int? _maxBytes;
+    private long? _maxDecodedBytes;
+    private int _recognitionBudgetMilliseconds;
+    private int? _maxAnimationFrames;
+    private int? _maxAnimationDurationMs;
+    private long? _maxAnimationFramePixels;
+
     /// <summary>
     /// Maximum output dimension, in pixels, for single-image decoding and symbol recognition.
     /// Raster codecs validate the original image against <see cref="MaxPixels"/> first, then resize
@@ -14,19 +25,37 @@ public sealed partial class ImageDecodeOptions {
     /// at the original resolution. This setting does not reduce codec memory use. Set to 0 to keep
     /// the original dimensions.
     /// </summary>
-    public int MaxDimension { get; set; } = 0;
+    public int MaxDimension {
+        get => _maxDimension;
+        set {
+            ValidateNonNegative(value, nameof(MaxDimension));
+            _maxDimension = value;
+        }
+    }
 
     /// <summary>
     /// Maximum pixel count allowed for decoding (width * height).
     /// <see langword="null"/> uses <see cref="Rendering.ImageReader.MaxPixels"/>; 0 disables this limit.
     /// </summary>
-    public long? MaxPixels { get; set; }
+    public long? MaxPixels {
+        get => _maxPixels;
+        set {
+            ValidateNonNegative(value, nameof(MaxPixels));
+            _maxPixels = value;
+        }
+    }
 
     /// <summary>
     /// Maximum input size in bytes for decoding.
     /// <see langword="null"/> uses <see cref="Rendering.ImageReader.MaxImageBytes"/>; 0 disables this limit.
     /// </summary>
-    public int? MaxBytes { get; set; }
+    public int? MaxBytes {
+        get => _maxBytes;
+        set {
+            ValidateNonNegative(value, nameof(MaxBytes));
+            _maxBytes = value;
+        }
+    }
 
     /// <summary>
     /// Maximum bytes in an individual decoded pixel or raster working buffer, and in retained
@@ -34,33 +63,63 @@ public sealed partial class ImageDecodeOptions {
     /// Encoded input copies and codec metadata are not included.
     /// Null inherits <see cref="Rendering.ImageReader.MaxDecodedBytes"/>; zero disables this limit.
     /// </summary>
-    public long? MaxDecodedBytes { get; set; }
+    public long? MaxDecodedBytes {
+        get => _maxDecodedBytes;
+        set {
+            ValidateNonNegative(value, nameof(MaxDecodedBytes));
+            _maxDecodedBytes = value;
+        }
+    }
 
     /// <summary>
     /// Cooperative time budget, in milliseconds, for barcode and matrix recognition after raster
-    /// decoding. Image codecs do not use this value. Multi-format <see cref="CodeGlyph"/> entry points
-    /// apply the budget to each candidate decoder rather than to the complete candidate sequence.
+    /// decoding. Image codecs do not use this value. <see cref="SymbolScanner"/> additionally applies
+    /// <see cref="ScanOptions.TimeoutMilliseconds"/> to the complete read, decode, and recognition operation.
     /// Set to 0 to disable the recognition budget.
     /// </summary>
-    public int RecognitionBudgetMilliseconds { get; set; }
+    public int RecognitionBudgetMilliseconds {
+        get => _recognitionBudgetMilliseconds;
+        set {
+            ValidateNonNegative(value, nameof(RecognitionBudgetMilliseconds));
+            _recognitionBudgetMilliseconds = value;
+        }
+    }
 
     /// <summary>
     /// Maximum animation frame count allowed for decoding.
     /// <see langword="null"/> uses <see cref="Rendering.ImageReader.MaxAnimationFrames"/>; 0 disables this limit.
     /// </summary>
-    public int? MaxAnimationFrames { get; set; }
+    public int? MaxAnimationFrames {
+        get => _maxAnimationFrames;
+        set {
+            ValidateNonNegative(value, nameof(MaxAnimationFrames));
+            _maxAnimationFrames = value;
+        }
+    }
 
     /// <summary>
     /// Maximum total animation duration, in milliseconds, allowed for decoding.
     /// <see langword="null"/> uses <see cref="Rendering.ImageReader.MaxAnimationDurationMs"/>; 0 disables this limit.
     /// </summary>
-    public int? MaxAnimationDurationMs { get; set; }
+    public int? MaxAnimationDurationMs {
+        get => _maxAnimationDurationMs;
+        set {
+            ValidateNonNegative(value, nameof(MaxAnimationDurationMs));
+            _maxAnimationDurationMs = value;
+        }
+    }
 
     /// <summary>
     /// Maximum pixel count allowed per animation frame.
     /// <see langword="null"/> uses <see cref="Rendering.ImageReader.MaxAnimationFramePixels"/>; 0 disables this limit.
     /// </summary>
-    public long? MaxAnimationFramePixels { get; set; }
+    public long? MaxAnimationFramePixels {
+        get => _maxAnimationFramePixels;
+        set {
+            ValidateNonNegative(value, nameof(MaxAnimationFramePixels));
+            _maxAnimationFramePixels = value;
+        }
+    }
 
     /// <summary>
     /// Optional JPEG decoding options (chroma upsampling, truncated handling).
@@ -71,9 +130,11 @@ public sealed partial class ImageDecodeOptions {
     /// Screen preset (budgeted decode for UI capture scenarios).
     /// </summary>
     public static ImageDecodeOptions Screen(int recognitionBudgetMilliseconds = 300, int maxDimension = 1200) {
+        ValidateNonNegative(recognitionBudgetMilliseconds, nameof(recognitionBudgetMilliseconds));
+        ValidateNonNegative(maxDimension, nameof(maxDimension));
         return new ImageDecodeOptions {
-            RecognitionBudgetMilliseconds = recognitionBudgetMilliseconds < 0 ? 0 : recognitionBudgetMilliseconds,
-            MaxDimension = maxDimension < 0 ? 0 : maxDimension
+            RecognitionBudgetMilliseconds = recognitionBudgetMilliseconds,
+            MaxDimension = maxDimension
         };
     }
 
@@ -90,18 +151,22 @@ public sealed partial class ImageDecodeOptions {
         int maxAnimationDurationMs = 60_000,
         long maxAnimationFramePixels = 20_000_000,
         int maxDimension = 0) {
-        var resolvedMaxPixels = maxPixels < 0 ? 0 : maxPixels;
-        var resolvedMaxAnimationFramePixels = maxAnimationFramePixels < 0 ? 0 : maxAnimationFramePixels;
+        ValidateNonNegative(maxBytes, nameof(maxBytes));
+        ValidateNonNegative(maxPixels, nameof(maxPixels));
+        ValidateNonNegative(maxAnimationFrames, nameof(maxAnimationFrames));
+        ValidateNonNegative(maxAnimationDurationMs, nameof(maxAnimationDurationMs));
+        ValidateNonNegative(maxAnimationFramePixels, nameof(maxAnimationFramePixels));
+        ValidateNonNegative(maxDimension, nameof(maxDimension));
         return new ImageDecodeOptions {
-            MaxBytes = maxBytes < 0 ? 0 : maxBytes,
-            MaxPixels = resolvedMaxPixels,
-            MaxDecodedBytes = resolvedMaxPixels > 0
-                ? System.Math.Min(resolvedMaxPixels, Rendering.ImageReader.DefaultMaxDecodedBytes / 16) * 16
+            MaxBytes = maxBytes,
+            MaxPixels = maxPixels,
+            MaxDecodedBytes = maxPixels > 0
+                ? System.Math.Min(maxPixels, Rendering.ImageReader.DefaultMaxDecodedBytes / 16) * 16
                 : Rendering.ImageReader.DefaultMaxDecodedBytes,
-            MaxAnimationFrames = maxAnimationFrames < 0 ? 0 : maxAnimationFrames,
-            MaxAnimationDurationMs = maxAnimationDurationMs < 0 ? 0 : maxAnimationDurationMs,
-            MaxAnimationFramePixels = resolvedMaxAnimationFramePixels,
-            MaxDimension = maxDimension < 0 ? 0 : maxDimension
+            MaxAnimationFrames = maxAnimationFrames,
+            MaxAnimationDurationMs = maxAnimationDurationMs,
+            MaxAnimationFramePixels = maxAnimationFramePixels,
+            MaxDimension = maxDimension
         };
     }
 
@@ -116,5 +181,9 @@ public sealed partial class ImageDecodeOptions {
         long maxAnimationFramePixels = 8_000_000,
         int maxDimension = 0) {
         return Guarded(maxBytes, maxPixels, maxAnimationFrames, maxAnimationDurationMs, maxAnimationFramePixels, maxDimension);
+    }
+
+    private static void ValidateNonNegative(long? value, string parameterName) {
+        if (value < 0) throw new ArgumentOutOfRangeException(parameterName, value, "Limit values must be nonnegative; use zero to disable a limit.");
     }
 }

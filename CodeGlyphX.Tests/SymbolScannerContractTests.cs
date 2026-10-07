@@ -435,7 +435,7 @@ public sealed class SymbolScannerContractTests {
 
     [Fact]
     public void Scan_ReportsModuleOnlyFormatsWithoutHidingSupportedResults() {
-        var png = QR.Render("SUPPORTED-PLUS-UNSUPPORTED", OutputFormat.Png).Data;
+        var png = QR.Render("SUPPORTED-PLUS-UNSUPPORTED", OutputFormat.Png).Data.ToArray();
         var result = SymbolScanner.Scan(png, new ScanOptions {
             Formats = new[] { SymbolFormat.QrCode, SymbolFormat.MicroPdf417 },
             TimeoutMilliseconds = TestBudget.Adjust(5000)

@@ -15,7 +15,7 @@ public sealed class ScanSelectionRegressionTests {
     [InlineData(300, 900)]
     public void OffCenterQrInRectangularFrameIsRecognized(int width, int height) {
         const string value = "https://example.com/wide";
-        var png = QR.Render(value, OutputFormat.Png, new QrRenderOptions { ModuleSize = 6 }).Data;
+        var png = QR.Render(value, OutputFormat.Png, new QrRenderOptions { ModuleSize = 6 }).Data.ToArray();
         var qr = ImageReader.DecodeRgba32(png, out var qrWidth, out var qrHeight);
         var pixels = WhiteFrame(width, height);
         Place(qr, qrWidth, qrHeight, pixels, width, 35, 35);

@@ -24,7 +24,7 @@ public sealed class DecodedMetadataRegressionTests {
             _ => null
         };
         var png = modules is null
-            ? Barcode.Render(SymbolFormat.Code128, "HELLO", OutputFormat.Png).Data
+            ? Barcode.Render(SymbolFormat.Code128, "HELLO", OutputFormat.Png).Data.ToArray()
             : MatrixPngRenderer.Render(modules, new MatrixPngRenderOptions { ModuleSize = 5 });
         var result = SymbolScanner.Scan(png, new ScanOptions { Formats = new[] { format }, TimeoutMilliseconds = TestBudget.Adjust(5000) });
         Assert.Equal(ScanStatus.Success, result.Status);

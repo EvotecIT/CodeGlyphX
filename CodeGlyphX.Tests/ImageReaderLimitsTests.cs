@@ -10,9 +10,25 @@ namespace CodeGlyphX.Tests;
 
 [Collection("GlobalState")]
 public sealed class ImageReaderLimitsTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void NegativeInheritedGuardIsRejectedWithOrWithoutPerCallOptions(bool supplyOptions) {
+        var png = QR.Render("INVALID-GUARD", OutputFormat.Png).Data.ToArray();
+        var previous = ImageReader.MaxDecodedBytes;
+        try {
+            ImageReader.MaxDecodedBytes = -1;
+            var options = supplyOptions ? new ImageDecodeOptions() : null;
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageReader.DecodeRgba32(png, options, out _, out _));
+        } finally {
+            ImageReader.MaxDecodedBytes = previous;
+        }
+    }
+
     [Fact]
     public void DeliveryJpegProbeHonorsPerCallPixelLimit() {
-        var png = QR.Render("DELIVERY-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6 }).Data;
+        var png = QR.Render("DELIVERY-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6 }).Data.ToArray();
         var previous = ImageReader.MaxPixels;
         try {
             ImageReader.MaxPixels = 1;
@@ -28,7 +44,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void TryDecodeRgba32_Respects_Global_MaxPixels() {
-        var png = QR.Render("LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var previous = ImageReader.MaxPixels;
         try {
             ImageReader.MaxPixels = 1;
@@ -40,14 +56,14 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void TryDecodeRgba32_Respects_Option_MaxBytes() {
-        var png = QR.Render("LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var options = new ImageDecodeOptions { MaxBytes = png.Length - 1 };
         Assert.False(ImageReader.TryDecodeRgba32(png, options, out _, out _, out _));
     }
 
     [Fact]
     public void DecodeRgba32_Resizes_Output_To_MaxDimension() {
-        var png = QR.Render("RESIZE", OutputFormat.Png, new QrRenderOptions { ModuleSize = 12, QuietZone = 4 }).Data;
+        var png = QR.Render("RESIZE", OutputFormat.Png, new QrRenderOptions { ModuleSize = 12, QuietZone = 4 }).Data.ToArray();
         var options = new ImageDecodeOptions { MaxDimension = 32 };
 
         var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
@@ -59,7 +75,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void Option_Zero_Disables_Global_MaxPixels() {
-        var png = QR.Render("UNLIMITED", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("UNLIMITED", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var previous = ImageReader.MaxPixels;
         try {
             ImageReader.MaxPixels = 1;
@@ -72,7 +88,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void Scanner_Option_Zero_Disables_Global_MaxBytes() {
-        var png = QR.Render("UNLIMITED-BYTES", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("UNLIMITED-BYTES", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var previous = ImageReader.MaxImageBytes;
         try {
             ImageReader.MaxImageBytes = 1;
@@ -140,7 +156,7 @@ public sealed class ImageReaderLimitsTests {
     [InlineData(true)]
     [InlineData(false)]
     public void ScannerTransports_ReturnInvalidImage_WhenOptionLimitRejectsImage(bool limitBytes) {
-        var png = QR.Render("CODEGLYPH-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("CODEGLYPH-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var options = new ScanOptions {
                 Formats = new[] { SymbolFormat.QrCode }, MaxSymbols = 1,
             Image = limitBytes
@@ -175,7 +191,7 @@ public sealed class ImageReaderLimitsTests {
     [InlineData(true)]
     [InlineData(false)]
     public void SymbolPngTryApis_ReturnFalse_WhenOptionLimitRejectsImage(bool limitBytes) {
-        var png = QR.Render("SYMBOL-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("SYMBOL-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var options = limitBytes
             ? new ImageDecodeOptions { MaxBytes = png.Length - 1 }
             : new ImageDecodeOptions { MaxPixels = 1 };
@@ -219,7 +235,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void QrPngFileAndStreamTryApis_ApplyMaxBytesBeforeBuffering() {
-        var png = QR.Render("QR-TRANSPORT-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("QR-TRANSPORT-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var options = new ImageDecodeOptions { MaxBytes = png.Length - 1 };
         var path = Path.GetTempFileName();
 
@@ -251,7 +267,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void QrPngFileAndStreamTryApis_ApplyGlobalMaxBytesBeforeBuffering() {
-        var png = QR.Render("QR-GLOBAL-TRANSPORT-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("QR-GLOBAL-TRANSPORT-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var path = Path.GetTempFileName();
         var previous = ImageReader.MaxImageBytes;
 
@@ -302,7 +318,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void LimitViolation_Fires_OnMaxPixels() {
-        var png = QR.Render("LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var options = new ImageDecodeOptions { MaxPixels = 1 };
         ImageDecodeLimitViolation? violation = null;
         void Handler(ImageDecodeLimitViolation v) => violation = v;
