@@ -324,6 +324,7 @@ public static partial class SymbolScanner {
         if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expectedType, barcodeOptions, deadline.Token)) return;
         for (var i = 0; i < decoded.Length; i++) {
             var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes, rgba, width, height, candidate: null, cancellationToken: deadline.Token);
+            if (hit is null) continue;
             if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
             Add(results, seen, SymbolResultFactory.From(hit, searchRegion));
             if (ReachedMaximum(options, results)) return;
@@ -360,6 +361,7 @@ public static partial class SymbolScanner {
         for (var i = 0; i < decoded.Length; i++) {
             if (IsBoundaryClippedPharmacode(decoded[i], rgba, width, height, deadline.Token)) continue;
             var hit = ResolveRequestedLinearIdentity(decoded[i].Decoded, expectedTypes, rgba, width, height, decoded[i], deadline.Token);
+            if (hit is null) continue;
             var key = hit.Type + "\u001f" + hit.Text;
             if (!decodedSeen.Add(key)) continue;
             if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
@@ -405,7 +407,7 @@ public static partial class SymbolScanner {
         return first - start < quietPixels || end - last - 1 < quietPixels;
     }
 
-    private static BarcodeDecoded ResolveRequestedLinearIdentity(
+    private static BarcodeDecoded? ResolveRequestedLinearIdentity(
         BarcodeDecoded decoded,
         List<BarcodeType> expectedTypes,
         byte[] rgba,
@@ -415,16 +417,16 @@ public static partial class SymbolScanner {
         CancellationToken cancellationToken) {
         // DataBar Omnidirectional and Truncated have the same horizontal module sequence; only bar height
         // distinguishes them. An Omni-only request supplies the caller's physical identity. When both are
-        // requested, use the standards-defined 33X Omnidirectional height boundary and otherwise preserve
-        // the scanline decoder's conservative Truncated identity.
+        // requested, use the standards-defined 33X Omnidirectional height boundary. A provisional
+        // scanline identity is ambiguous when cancellation prevents that physical measurement.
         if (decoded.Type == BarcodeType.GS1DataBarTruncated
             && expectedTypes.Contains(BarcodeType.GS1DataBarOmni)) {
-            if (!expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)
-                || candidate is not null
-                && DataBar14ImageClassifier.TryIsOmnidirectional(rgba, width, height, candidate, cancellationToken, out var isOmnidirectional)
-                && isOmnidirectional) {
+            if (!expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)) {
                 return new BarcodeDecoded(BarcodeType.GS1DataBarOmni, decoded.Text);
             }
+            if (candidate is null || !DataBar14ImageClassifier.TryIsOmnidirectional(
+                    rgba, width, height, candidate, cancellationToken, out var isOmnidirectional)) return null;
+            if (isOmnidirectional) return new BarcodeDecoded(BarcodeType.GS1DataBarOmni, decoded.Text);
         }
         return decoded;
     }

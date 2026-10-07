@@ -29,7 +29,7 @@ internal static class DataBar14ImageClassifier {
         var minimum = 255;
         var maximum = 0;
         for (var y = region.Y; y < bottom; y++) {
-            if ((y & 31) == 0 && cancellationToken.IsCancellationRequested) return false;
+            if ((y & 31) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
             for (var x = region.X; x < right; x++) {
                 var luminance = GetLuminance(rgba, width, x, y);
                 if (luminance < minimum) minimum = luminance;
@@ -64,7 +64,7 @@ internal static class DataBar14ImageClassifier {
         var shortStart = 0;
         var shortEnd = vertical ? width : height;
         for (var position = first; position <= last; position++) {
-            if ((position & 127) == 0 && cancellationToken.IsCancellationRequested) return false;
+            if ((position & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
             if (!IsDark(rgba, width, vertical, scanPosition, position, threshold)) continue;
 
             var before = scanPosition;

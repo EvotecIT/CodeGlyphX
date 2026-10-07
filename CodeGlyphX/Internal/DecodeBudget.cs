@@ -34,6 +34,8 @@ internal static class DecodeBudget {
         var prev = CurrentState.Value;
         var ticksPerMs = Stopwatch.Frequency / 1000.0;
         var deadline = Stopwatch.GetTimestamp() + (long)(maxMilliseconds * ticksPerMs);
+        // Specialist or nested attempt budgets may shorten the enclosing scan, never restart it.
+        if (prev.Enabled && prev.DeadlineTicks < deadline) deadline = prev.DeadlineTicks;
         CurrentState.Value = new DecodeBudgetState(deadline, enabled: true);
         return new Scope(prev);
     }

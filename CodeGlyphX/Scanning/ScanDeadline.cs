@@ -1,12 +1,14 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX;
 
 internal sealed class ScanDeadline : IDisposable {
     private readonly CancellationToken _callerToken;
     private readonly CancellationTokenSource? _source;
+    private readonly IDisposable? _decoderScope;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
     internal int TimeoutMilliseconds { get; }
@@ -23,13 +25,16 @@ internal sealed class ScanDeadline : IDisposable {
                 : new CancellationTokenSource();
             _source.CancelAfter(timeoutMilliseconds);
         }
+        // WASM timer callbacks cannot run while recognition blocks its thread. Native decoder
+        // loops also observe this monotonic scope, with nested attempts preserving the earliest limit.
+        _decoderScope = DecodeBudget.Begin(timeoutMilliseconds);
     }
 
-    internal bool ShouldStop => Token.IsCancellationRequested ||
+    internal bool ShouldStop => DecodeBudget.ShouldAbort(Token) ||
         (TimeoutMilliseconds > 0 && _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds);
     internal bool CallerCancelled => _callerToken.IsCancellationRequested;
-    internal bool DeadlineExceeded => TimeoutMilliseconds > 0 && !CallerCancelled &&
-        (_source?.IsCancellationRequested == true || _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds);
+    internal bool DeadlineExceeded => !CallerCancelled && (DecodeBudget.IsExpired ||
+        TimeoutMilliseconds > 0 && (_source?.IsCancellationRequested == true || _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds));
 
     internal int RemainingMilliseconds {
         get {
@@ -52,6 +57,7 @@ internal sealed class ScanDeadline : IDisposable {
     }
 
     public void Dispose() {
+        _decoderScope?.Dispose();
         _stopwatch.Stop();
         _source?.Dispose();
     }

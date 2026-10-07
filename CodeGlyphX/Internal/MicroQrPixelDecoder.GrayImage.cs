@@ -52,7 +52,7 @@ internal static partial class MicroQrPixelDecoder {
             byte min = 255;
             byte max = 0;
             for (var y = 0; y < height; y++) {
-                if ((y & 31) == 0 && cancellationToken.IsCancellationRequested) return false;
+                if ((y & 31) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 var sourceRow = y * stride;
                 var targetRow = y * width;
                 for (var x = 0; x < width; x++) {
