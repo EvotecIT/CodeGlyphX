@@ -40,15 +40,16 @@ public sealed class StreamContractTests {
     [InlineData(2)]
     [InlineData(3)]
     [InlineData(4)]
-    public async Task LimitedReadersConsumeAtMostOneByteBeyondLimit(int streamKind) {
+    public async Task LimitedReadersRejectKnownOversizeBeforeReadingAndBoundUnknownLengths(int streamKind) {
         var input = new byte[16];
         using var syncStream = CreateStream(input, streamKind);
+        var expectedRemaining = syncStream.CanSeek ? input.Length : input.Length - 4;
         Assert.Throws<FormatException>(() => RenderIO.ReadBinary(syncStream, 3));
-        Assert.Equal(12, RenderIO.ReadBinary(syncStream).Length);
+        Assert.Equal(expectedRemaining, RenderIO.ReadBinary(syncStream).Length);
 
         using var asyncStream = CreateStream(input, streamKind);
         await Assert.ThrowsAsync<FormatException>(() => RenderIO.ReadBinaryAsync(asyncStream, 3));
-        Assert.Equal(12, (await RenderIO.ReadBinaryAsync(asyncStream)).Length);
+        Assert.Equal(expectedRemaining, (await RenderIO.ReadBinaryAsync(asyncStream)).Length);
     }
 
     [Theory]
