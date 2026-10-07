@@ -396,9 +396,6 @@ public static partial class CodeGlyph {
     /// </summary>
     public static DecodeResult<CodeGlyphDecoded> DecodeImageResult(Stream stream, CodeGlyphDecodeOptions? options = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeImageResult(buffer.AsSpan(), options);
-        }
         if (!TryReadBinary(stream, options?.Image, out var data)) {
             return new DecodeResult<CodeGlyphDecoded>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
         }
