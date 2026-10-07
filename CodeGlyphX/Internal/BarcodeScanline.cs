@@ -278,7 +278,8 @@ internal static class BarcodeScanline {
             // Narrow-run distributions can be ambiguous. Keep the established
             // sampling as a bounded alternative; format/checksum validation still
             // decides whether either candidate represents a barcode.
-            if (modulePitch != minRun) {
+            // The estimator returns a finite pitch at or above minRun.
+            if (modulePitch > minRun) {
                 if (!TrySampleRuns(runs, runBars, start, end, minRun, cancellationToken, out minimumRunModules, out minimumRunFitError)) return false;
             } else {
                 minimumRunModules = modules;
