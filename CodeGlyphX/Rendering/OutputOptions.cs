@@ -6,7 +6,8 @@ using CodeGlyphX.Rendering.Webp;
 namespace CodeGlyphX.Rendering;
 
 /// <summary>
-/// Optional render extras for format-specific output.
+/// Format-specific encoding, text, and animation settings for rendered output.
+/// Symbol encoding and visual layout are configured separately.
 /// </summary>
 public sealed class OutputOptions {
     /// <summary>JPEG quality (1..100), used when <see cref="JpegOptions"/> is not supplied.</summary>
@@ -16,7 +17,12 @@ public sealed class OutputOptions {
     public Jpeg.JpegEncodeOptions? JpegOptions { get; set; }
 
     /// <summary>WebP quality (0..100). A value of 100 selects lossless VP8L.</summary>
-    public int WebpQuality { get; set; } = 100;
+    public int WebpQuality {
+        get => _webpQuality;
+        set => _webpQuality = WebpQualityClamp.Clamp(value);
+    }
+
+    private int _webpQuality = 100;
 
     /// <summary>ICO output sizes (1..256). Null uses common icon sizes.</summary>
     public int[]? IcoSizes { get; set; }

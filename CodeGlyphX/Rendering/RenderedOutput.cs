@@ -50,7 +50,8 @@ public sealed class RenderedOutput {
     }
 
     /// <summary>
-    /// Creates a text output (UTF-8 bytes).
+    /// Creates a text output using UTF-8 unless an encoding is supplied.
+    /// The original text remains available through <see cref="GetText"/>.
     /// </summary>
     public static RenderedOutput FromText(OutputFormat format, string text, Encoding? encoding = null) {
         var enc = encoding ?? Encoding.UTF8;
