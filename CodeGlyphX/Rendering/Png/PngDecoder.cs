@@ -134,9 +134,8 @@ internal static class PngDecoder {
         var expected = interlace == 0
             ? DecodeGuards.EnsureByteCount((long)height * (rowBytes + 1), PngDimensionsLimitMessage)
             : GetAdam7ExpectedSize(width, height, bitDepth, channels);
-        var scanlines = ArrayPool<byte>.Shared.Rent(expected);
-
         if (idatCount == 0 || idatTotal == 0) throw new FormatException("Missing IDAT.");
+        var scanlines = ArrayPool<byte>.Shared.Rent(expected);
 
         byte[]? idatBuffer = null;
         Stream? idatStream = null;
@@ -163,11 +162,11 @@ internal static class PngDecoder {
                 using (var z = CreateZLibStream(idatStream)) {
                     ReadExact(z, scanlines, expected);
                 }
-            } catch (InvalidDataException) {
+            } catch (InvalidDataException ex) {
                 // Some PNGs in the wild (and a few of our stylized samples) decode fine with raw DEFLATE but fail
                 // strict zlib checksum validation. Fall back to a raw-DEFLATE stream when available.
                 if (!TryReadDeflateFallback(idatStream, scanlines, expected)) {
-                    throw;
+                    throw new FormatException("Invalid PNG compressed data.", ex);
                 }
             }
 
@@ -206,7 +205,7 @@ internal static class PngDecoder {
             using var deflate = new DeflateStream(new MemoryStream(data, 2, data.Length - 6, writable: false), CompressionMode.Decompress, leaveOpen: false);
             ReadExact(deflate, scanlines, expected);
             return true;
-        } catch {
+        } catch (Exception ex) when (ex is InvalidDataException || ex is FormatException) {
             return false;
         }
     }

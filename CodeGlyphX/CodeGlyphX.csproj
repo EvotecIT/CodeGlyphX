@@ -21,6 +21,9 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>2.1.0</PackageValidationBaselineVersion>
+    <ApiCompatEnableRuleCannotChangeParameterName>true</ApiCompatEnableRuleCannotChangeParameterName>
+    <ApiCompatPermitUnnecessarySuppressions>false</ApiCompatPermitUnnecessarySuppressions>
     <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' And ('$(TargetFramework)' == 'net8.0' Or '$(TargetFramework)' == 'net10.0') ">
@@ -46,6 +49,7 @@
     <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.12" />
   </ItemGroup>
   <ItemGroup>
+    <ApiCompatSuppressionFile Include="CompatibilitySuppressions.xml" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="all" />
   </ItemGroup>
 </Project>

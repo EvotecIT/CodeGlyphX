@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0;net472</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <CodeGlyphXPackageVersion Condition="'$(CodeGlyphXPackageVersion)' == ''">3.0.0</CodeGlyphXPackageVersion>
+    <AutoGenerateBindingRedirects Condition="'$(TargetFramework)' == 'net472'">true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType Condition="'$(TargetFramework)' == 'net472'">true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CodeGlyphX" Version="$(CodeGlyphXPackageVersion)" />
+  </ItemGroup>
+</Project>

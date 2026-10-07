@@ -67,32 +67,33 @@ public sealed class StreamContractTests {
         Assert.False(QrImageDecoder.DecodeImageResult(stream).IsSuccess);
     }
 
-#if NET8_0_OR_GREATER
     [Theory]
     [InlineData(0)]
     [InlineData(1)]
     [InlineData(2)]
     [InlineData(3)]
     [InlineData(4)]
-    public async Task UnifiedQrDecodeAdaptersReadFromCurrentPosition(int streamKind) {
+    public async Task UnifiedScannerReadsFromCurrentPosition(int streamKind) {
         var png = CreateQrPng();
+        var options = new ScanOptions {
+            Formats = new[] { SymbolFormat.QrCode },
+            TimeoutMilliseconds = 5000,
+            Image = new ImageDecodeOptions { MaxBytes = png.Length }
+        };
         using (var stream = CreateStream(png, streamKind)) {
-            var result = CodeGlyph.DecodeImageResult(stream, new CodeGlyphDecodeOptions {
-                Image = new ImageDecodeOptions { MaxBytes = png.Length }
-            });
-            Assert.True(result.IsSuccess, result.Message);
-            Assert.Equal(Payload, result.Value!.Text);
+            var result = SymbolScanner.Scan(stream, options);
+            Assert.True(result.IsSuccess, result.Failure);
+            Assert.Equal(Payload, Assert.Single(result.Symbols).Text);
             AssertConsumed(stream);
-            Assert.False(CodeGlyph.DecodeImageResult(stream).IsSuccess);
+            Assert.False(SymbolScanner.Scan(stream, options).IsSuccess);
         }
         using (var stream = CreateStream(png, streamKind)) {
-            var result = await CodeGlyph.TryDecodeImageAsync(stream);
-            Assert.NotNull(result);
-            Assert.Equal(Payload, result!.Text);
+            var result = await SymbolScanner.ScanAsync(stream, options);
+            Assert.True(result.IsSuccess, result.Failure);
+            Assert.Equal(Payload, Assert.Single(result.Symbols).Text);
             AssertConsumed(stream);
         }
     }
-#endif
 
     [Fact]
     public void BoundedFileReadersEnforceSharedReadContract() {
@@ -116,25 +117,25 @@ public sealed class StreamContractTests {
     [InlineData(1)]
     [InlineData(2)]
     public void SpecialistResultsReadFromCurrentPosition(int streamKind) {
-        using (var stream = CreateStream(Barcode.Render(BarcodeType.Code128, Payload, OutputFormat.Png).Data, streamKind)) {
-            var result = Barcode.DecodeImageResult(stream, BarcodeType.Code128);
+        using (var stream = CreateStream(Barcode.Render(SymbolFormat.Code128, Payload, OutputFormat.Png).ToArray(), streamKind)) {
+            var result = Barcode.DecodeImageResult(stream, SymbolFormat.Code128);
             Assert.True(result.IsSuccess, result.Message);
             Assert.Equal(Payload, result.Value!.Text);
             AssertConsumed(stream);
         }
-        using (var stream = CreateStream(DataMatrixCode.Render(Payload, OutputFormat.Png).Data, streamKind)) {
+        using (var stream = CreateStream(DataMatrixCode.Render(Payload, OutputFormat.Png).ToArray(), streamKind)) {
             var result = DataMatrixCode.DecodeImageResult(stream);
             Assert.True(result.IsSuccess, result.Message);
             Assert.Equal(Payload, result.Value);
             AssertConsumed(stream);
         }
-        using (var stream = CreateStream(Pdf417Code.Render(Payload, OutputFormat.Png).Data, streamKind)) {
+        using (var stream = CreateStream(Pdf417Code.Render(Payload, OutputFormat.Png).ToArray(), streamKind)) {
             var result = Pdf417Code.DecodeImageResult(stream);
             Assert.True(result.IsSuccess, result.Message);
             Assert.Equal(Payload, result.Value);
             AssertConsumed(stream);
         }
-        using (var stream = CreateStream(AztecCode.Render(Payload, OutputFormat.Png).Data, streamKind)) {
+        using (var stream = CreateStream(AztecCode.Render(Payload, OutputFormat.Png).ToArray(), streamKind)) {
             var result = AztecCode.DecodeImageResult(stream);
             Assert.True(result.IsSuccess, result.Message);
             Assert.Equal(Payload, result.Value);
@@ -200,28 +201,42 @@ public sealed class StreamContractTests {
     [InlineData(2)]
     [InlineData(3)]
     [InlineData(4)]
-    public async Task CancelledAsyncDecodeTasksDoNotReadOrReturnRecognitionFailure(int streamKind) {
+    public async Task CancelledScannerReturnsStructuredCancellationWithoutReading(int streamKind) {
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
-        var options = new CodeGlyphDecodeOptions { CancellationToken = cancellation.Token };
-        Func<Stream, Task>[] operations = {
-            stream => CodeGlyph.TryDecodePngAsync(stream, cancellationToken: cancellation.Token),
-            stream => CodeGlyph.TryDecodeAllPngAsync(stream, cancellationToken: cancellation.Token),
-            stream => CodeGlyph.TryDecodeImageAsync(stream, cancellationToken: cancellation.Token),
-            stream => CodeGlyph.TryDecodeAllImageAsync(stream, cancellationToken: cancellation.Token),
-            stream => CodeGlyph.TryDecodeImageAsync(stream, options),
-            stream => CodeGlyph.TryDecodeAllImageAsync(stream, options),
-            stream => CodeGlyph.DecodePngAsync(stream, cancellationToken: cancellation.Token),
-            stream => CodeGlyph.DecodeImageAsync(stream, cancellationToken: cancellation.Token)
+        var options = new ScanOptions { CancellationToken = cancellation.Token };
+        Func<Stream, Task<ScanResult>>[] operations = {
+            stream => SymbolScanner.ScanAsync(stream, cancellationToken: cancellation.Token),
+            stream => SymbolScanner.ScanAsync(stream, options)
         };
         var png = CreateQrPng();
         foreach (var operation in operations) {
             using var stream = CreateStream(png, streamKind);
-            var task = operation(stream);
-            await Assert.ThrowsAnyAsync<OperationCanceledException>(() => task);
-            Assert.True(task.IsCanceled);
+            var result = await operation(stream);
+            Assert.Equal(ScanStatus.Cancelled, result.Status);
+            Assert.Equal(ScanCompletionReason.Cancelled, result.CompletionReason);
             Assert.Equal(png, RenderIO.ReadBinary(stream));
         }
+        using var syncStream = CreateStream(png, streamKind);
+        Assert.Equal(ScanStatus.Cancelled, SymbolScanner.Scan(syncStream, options).Status);
+        Assert.Equal(png, RenderIO.ReadBinary(syncStream));
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    public async Task ExpertAsyncReadersReturnCancelledTasksWithoutReading(int streamKind) {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var png = CreateQrPng();
+        using var stream = CreateStream(png, streamKind);
+        var task = RenderIO.ReadBinaryAsync(stream, png.Length, cancellation.Token);
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => task);
+        Assert.True(task.IsCanceled);
+        Assert.Equal(png, RenderIO.ReadBinary(stream));
     }
 
     [Theory]
@@ -237,16 +252,26 @@ public sealed class StreamContractTests {
     }
 
     [Fact]
-    public async Task FileAsyncDecodeTasksPreserveCancellation() {
+    public async Task ScannerPreservesCancellationRaisedDuringRead() {
+        using var cancellation = new CancellationTokenSource();
+        using var stream = new CancellingStream(cancellation);
+        var result = await SymbolScanner.ScanAsync(stream, cancellationToken: cancellation.Token);
+        Assert.Equal(ScanStatus.Cancelled, result.Status);
+        Assert.Equal(ScanCompletionReason.Cancelled, result.CompletionReason);
+        Assert.Equal(1, stream.ReadCount);
+    }
+
+    [Fact]
+    public async Task ExpertFileAsyncReadersPreserveTaskCancellation() {
         using var cancellation = new CancellationTokenSource();
         cancellation.Cancel();
         // Cancellation is checked before opening even a nonexistent file.
         var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".png");
         Func<Task>[] operations = {
-            () => CodeGlyph.TryDecodePngFileAsync(path, cancellationToken: cancellation.Token),
-            () => CodeGlyph.TryDecodeAllPngFileAsync(path, cancellationToken: cancellation.Token),
-            () => CodeGlyph.TryDecodeImageFileAsync(path, cancellationToken: cancellation.Token),
-            () => CodeGlyph.TryDecodeAllImageFileAsync(path, cancellationToken: cancellation.Token)
+            () => RenderIO.ReadBinaryAsync(path, cancellation.Token),
+            () => RenderIO.ReadBinaryAsync(path, maxBytes: 1024, cancellation.Token),
+            () => RenderIO.TryReadBinaryAsync(path, maxBytes: 0, cancellation.Token),
+            () => RenderIO.TryReadBinaryAsync(path, maxBytes: 1024, cancellation.Token)
         };
         foreach (var operation in operations) {
             var task = operation();

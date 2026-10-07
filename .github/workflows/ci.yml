@@ -111,6 +111,18 @@ jobs:
         shell: pwsh
         run: ./Build/Assert-Package.ps1 -PackageDirectory artifacts/packages
 
+      - name: Restore isolated package consumer
+        run: dotnet restore Build/PackageConsumer/PackageConsumer.csproj --configfile Build/PackageConsumer/NuGet.config --packages artifacts/package-consumer-cache --nologo
+
+      - name: Compile package consumer for supported runtimes
+        run: dotnet build Build/PackageConsumer/PackageConsumer.csproj -c Release --no-restore --nologo
+
+      - name: Run package consumer (net8.0)
+        run: dotnet run --project Build/PackageConsumer/PackageConsumer.csproj -c Release -f net8.0 --no-restore --no-build
+
+      - name: Run package consumer (net10.0)
+        run: dotnet run --project Build/PackageConsumer/PackageConsumer.csproj -c Release -f net10.0 --no-restore --no-build
+
       - name: Publish NativeAOT consumer
         run: dotnet publish CodeGlyphX.Examples/CodeGlyphX.Examples.csproj -c Release -f net8.0 -r linux-x64 -p:PublishAot=true --self-contained true -o artifacts/aot-smoke --nologo
 
