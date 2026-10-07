@@ -125,10 +125,10 @@ public sealed class BarcodeBuilder {
     }
 
     /// <summary>
-    /// Sets JPEG encoding options.
+    /// Copies JPEG encoding options and metadata payloads into this builder.
     /// </summary>
     public BarcodeBuilder WithJpegOptions(JpegEncodeOptions options) {
-        OutputOptions.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
+        OutputOptions.JpegOptions = (options ?? throw new ArgumentNullException(nameof(options))).Clone();
         return this;
     }
 

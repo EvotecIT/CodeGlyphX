@@ -218,6 +218,47 @@ public class RenderOutputTests {
         Assert.Equal(OutputFormat.Svgz, OutputFormatInfo.FromPath("code.svg.gz"));
     }
 
+    [Theory]
+    [InlineData("Barcode")]
+    [InlineData("DataMatrix")]
+    [InlineData("Pdf417")]
+    public void BuilderJpegOptions_SnapshotCallerOwnedOptionsAndMetadata(string builderType) {
+        var options = new JpegEncodeOptions {
+            Quality = 90,
+            Metadata = new JpegMetadata(new byte[] { 1 }, new byte[] { 2 }, new byte[] { 3 })
+        };
+        var outputOptions = builderType switch {
+            "Barcode" => Barcode.Create(SymbolFormat.Code128, "JPEG").WithJpegOptions(options).OutputOptions,
+            "DataMatrix" => DataMatrixCode.Create("JPEG").WithJpegOptions(options).OutputOptions,
+            "Pdf417" => Pdf417Code.Create("JPEG").WithJpegOptions(options).OutputOptions,
+            _ => throw new ArgumentOutOfRangeException(nameof(builderType))
+        };
+
+        options.Quality = 10;
+        options.Metadata.Exif![0] = 9;
+        options.Metadata.Xmp![0] = 9;
+        options.Metadata.Icc![0] = 9;
+
+        Assert.Equal(90, outputOptions.JpegOptions!.Quality);
+        Assert.Equal(new byte[] { 1 }, outputOptions.JpegOptions.Metadata.Exif);
+        Assert.Equal(new byte[] { 2 }, outputOptions.JpegOptions.Metadata.Xmp);
+        Assert.Equal(new byte[] { 3 }, outputOptions.JpegOptions.Metadata.Icc);
+    }
+
+    [Fact]
+    public void Pdf417Builder_TextEncodingSnapshotsCallerFallback() {
+        var encoding = (Encoding)Encoding.ASCII.Clone();
+        encoding.EncoderFallback = new EncoderReplacementFallback("X");
+        var builder = Pdf417Code.Create("caf\u00e9")
+            .WithCompaction(Pdf417Compaction.Byte)
+            .WithTextEncoding(encoding);
+
+        encoding.EncoderFallback = new EncoderReplacementFallback("Y");
+
+        Assert.True(Pdf417Decoder.TryDecode(builder.Encode().Modules, out string decoded));
+        Assert.Equal("cafX", decoded);
+    }
+
     [Fact]
     public void OutputFormatInfoDetectsGifAndTiff() {
         Assert.Equal(OutputFormat.Gif, OutputFormatInfo.FromPath("code.gif"));

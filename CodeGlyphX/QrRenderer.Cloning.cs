@@ -43,7 +43,7 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrGradientOptions? CloneGradient(QrGradientOptions? gradient) {
+    internal static QrGradientOptions? CloneGradient(QrGradientOptions? gradient) {
         if (gradient is null) return null;
         return new QrGradientOptions {
             Type = gradient.Type,
@@ -84,7 +84,7 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrModuleScaleMapOptions? CloneScaleMap(QrModuleScaleMapOptions? map) {
+    internal static QrModuleScaleMapOptions? CloneScaleMap(QrModuleScaleMapOptions? map) {
         if (map is null) return null;
         return new QrModuleScaleMapOptions {
             Mode = map.Mode,
@@ -96,7 +96,7 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrModuleShapeMapOptions? CloneShapeMap(QrModuleShapeMapOptions? map) {
+    internal static QrModuleShapeMapOptions? CloneShapeMap(QrModuleShapeMapOptions? map) {
         if (map is null) return null;
         return new QrModuleShapeMapOptions {
             Mode = map.Mode,
@@ -112,7 +112,7 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrModuleJitterOptions? CloneJitter(QrModuleJitterOptions? jitter) {
+    internal static QrModuleJitterOptions? CloneJitter(QrModuleJitterOptions? jitter) {
         if (jitter is null) return null;
         return new QrModuleJitterOptions {
             MaxOffsetPx = jitter.MaxOffsetPx,
@@ -124,7 +124,7 @@ internal static partial class QrRenderer {
     }
 
 
-    private static QrPaletteOptions? ClonePalette(QrPaletteOptions? palette) {
+    internal static QrPaletteOptions? ClonePalette(QrPaletteOptions? palette) {
         if (palette is null) return null;
         var colors = palette.Colors;
         var colorsCopy = colors is null ? null : (Rgba32[])colors.Clone();
@@ -137,7 +137,7 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPaletteZoneOptions? ClonePaletteZones(QrPaletteZoneOptions? zones) {
+    internal static QrPaletteZoneOptions? ClonePaletteZones(QrPaletteZoneOptions? zones) {
         if (zones is null) return null;
         return new QrPaletteZoneOptions {
             CenterPalette = ClonePalette(zones.CenterPalette),
@@ -147,7 +147,7 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrEyeOptions? CloneEyes(QrEyeOptions? eyes) {
+    internal static QrEyeOptions? CloneEyes(QrEyeOptions? eyes) {
         if (eyes is null) return null;
         return new QrEyeOptions {
             UseFrame = eyes.UseFrame,
@@ -216,7 +216,7 @@ internal static partial class QrRenderer {
         return copy;
     }
 
-    private static QrCanvasOptions? CloneCanvas(QrCanvasOptions? canvas) {
+    internal static QrCanvasOptions? CloneCanvas(QrCanvasOptions? canvas) {
         if (canvas is null) return null;
         return new QrCanvasOptions {
             PaddingPx = canvas.PaddingPx,

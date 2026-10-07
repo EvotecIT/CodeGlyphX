@@ -103,6 +103,78 @@ public sealed class QrApiTests {
     }
 
     [Fact]
+    public void BuilderStyleSetters_SnapshotCallerOwnedOptionsAndNestedArrays() {
+        var scaleMap = new QrModuleScaleMapOptions { MinScale = 0.8 };
+        var shapeMap = new QrModuleShapeMapOptions { SecondaryChance = 0.2 };
+        var jitter = new QrModuleJitterOptions { MaxOffsetPx = 1 };
+        var foreground = new QrGradientOptions { StartColor = Rgba32.Black };
+        var background = new QrGradientOptions { StartColor = Rgba32.White };
+        var palette = new QrPaletteOptions { Colors = new[] { Rgba32.Black } };
+        var canvas = new QrCanvasOptions {
+            BackgroundGradient = new QrGradientOptions { StartColor = Rgba32.White },
+            Splash = new QrCanvasSplashOptions { Count = 2, Colors = new[] { Rgba32.Black } }
+        };
+        var zones = new QrPaletteZoneOptions {
+            CenterPalette = new QrPaletteOptions { Colors = new[] { Rgba32.Black } },
+            CornerPalette = new QrPaletteOptions { Colors = new[] { Rgba32.White } }
+        };
+        var eyes = new QrEyeOptions {
+            OuterColors = new[] { Rgba32.Black },
+            InnerColors = new[] { Rgba32.White },
+            OuterGradient = new QrGradientOptions { StartColor = Rgba32.Black },
+            InnerGradient = new QrGradientOptions { StartColor = Rgba32.White },
+            OuterGradients = new[] { new QrGradientOptions { StartColor = Rgba32.Black } },
+            InnerGradients = new[] { new QrGradientOptions { StartColor = Rgba32.White } }
+        };
+        var builder = QR.Create("STYLE-OWNERSHIP")
+            .WithModuleScaleMap(scaleMap)
+            .WithModuleShapeMap(shapeMap)
+            .WithModuleJitter(jitter)
+            .WithForegroundGradient(foreground)
+            .WithBackgroundGradient(background)
+            .WithForegroundPalette(palette)
+            .WithCanvas(canvas)
+            .WithForegroundPaletteZones(zones)
+            .WithEyes(eyes);
+
+        scaleMap.MinScale = 0.9;
+        shapeMap.SecondaryChance = 0.7;
+        jitter.MaxOffsetPx = 3;
+        foreground.StartColor = Rgba32.White;
+        background.StartColor = Rgba32.Black;
+        palette.Colors[0] = Rgba32.White;
+        canvas.BackgroundGradient.StartColor = Rgba32.Black;
+        canvas.Splash.Count = 9;
+        canvas.Splash.Colors![0] = Rgba32.White;
+        zones.CenterPalette.Colors[0] = Rgba32.White;
+        zones.CornerPalette.Colors[0] = Rgba32.Black;
+        eyes.OuterColors[0] = Rgba32.White;
+        eyes.InnerColors[0] = Rgba32.Black;
+        eyes.OuterGradient.StartColor = Rgba32.White;
+        eyes.InnerGradient.StartColor = Rgba32.Black;
+        eyes.OuterGradients[0].StartColor = Rgba32.White;
+        eyes.InnerGradients[0].StartColor = Rgba32.Black;
+
+        Assert.Equal(0.8, builder.Rendering.ModuleScaleMap!.MinScale);
+        Assert.Equal(0.2, builder.Rendering.ModuleShapeMap!.SecondaryChance);
+        Assert.Equal(1, builder.Rendering.ModuleJitter!.MaxOffsetPx);
+        Assert.Equal(Rgba32.Black, builder.Rendering.ForegroundGradient!.StartColor);
+        Assert.Equal(Rgba32.White, builder.Rendering.BackgroundGradient!.StartColor);
+        Assert.Equal(Rgba32.Black, builder.Rendering.ForegroundPalette!.Colors[0]);
+        Assert.Equal(Rgba32.White, builder.Rendering.Canvas!.BackgroundGradient!.StartColor);
+        Assert.Equal(2, builder.Rendering.Canvas.Splash!.Count);
+        Assert.Equal(Rgba32.Black, builder.Rendering.Canvas.Splash.Colors![0]);
+        Assert.Equal(Rgba32.Black, builder.Rendering.ForegroundPaletteZones!.CenterPalette!.Colors[0]);
+        Assert.Equal(Rgba32.White, builder.Rendering.ForegroundPaletteZones.CornerPalette!.Colors[0]);
+        Assert.Equal(Rgba32.Black, builder.Rendering.Eyes!.OuterColors![0]);
+        Assert.Equal(Rgba32.White, builder.Rendering.Eyes.InnerColors![0]);
+        Assert.Equal(Rgba32.Black, builder.Rendering.Eyes.OuterGradient!.StartColor);
+        Assert.Equal(Rgba32.White, builder.Rendering.Eyes.InnerGradient!.StartColor);
+        Assert.Equal(Rgba32.Black, builder.Rendering.Eyes.OuterGradients![0].StartColor);
+        Assert.Equal(Rgba32.White, builder.Rendering.Eyes.InnerGradients![0].StartColor);
+    }
+
+    [Fact]
     public void OtpBuilder_UsesExplicitWorkflowDefaultsAndCopiesOptions() {
         var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.Q };
         var rendering = new QrRenderOptions { ModuleSize = 5 };

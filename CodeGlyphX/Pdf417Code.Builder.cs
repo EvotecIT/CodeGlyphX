@@ -107,10 +107,10 @@ public sealed class Pdf417Builder {
     }
 
     /// <summary>
-    /// Sets JPEG encoding options.
+    /// Copies JPEG encoding options and metadata payloads into this builder.
     /// </summary>
     public Pdf417Builder WithJpegOptions(JpegEncodeOptions options) {
-        OutputOptions.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
+        OutputOptions.JpegOptions = (options ?? throw new ArgumentNullException(nameof(options))).Clone();
         return this;
     }
 
@@ -155,10 +155,10 @@ public sealed class Pdf417Builder {
     }
 
     /// <summary>
-    /// Sets text encoding for byte compaction.
+    /// Copies the text encoding used for byte compaction into this builder.
     /// </summary>
     public Pdf417Builder WithTextEncoding(Encoding encoding) {
-        _encodeOptions.TextEncoding = encoding;
+        _encodeOptions.TextEncoding = (Encoding)(encoding ?? throw new ArgumentNullException(nameof(encoding))).Clone();
         return this;
     }
 

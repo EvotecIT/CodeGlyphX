@@ -33,4 +33,14 @@ public sealed class JpegEncodeOptions {
     /// Writes a JFIF APP0 header when true.
     /// </summary>
     public bool WriteJfifHeader { get; set; } = true;
+
+    /// <summary>Copies encoding settings and metadata payloads for independent ownership.</summary>
+    internal JpegEncodeOptions Clone() {
+        var copy = (JpegEncodeOptions)MemberwiseClone();
+        copy.Metadata = new JpegMetadata(
+            Metadata.Exif is null ? null : (byte[])Metadata.Exif.Clone(),
+            Metadata.Xmp is null ? null : (byte[])Metadata.Xmp.Clone(),
+            Metadata.Icc is null ? null : (byte[])Metadata.Icc.Clone());
+        return copy;
+    }
 }

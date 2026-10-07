@@ -117,26 +117,26 @@ public sealed class QrBuilder {
     }
 
     /// <summary>
-    /// Sets module scale map.
+    /// Copies the module scale map into this builder.
     /// </summary>
     public QrBuilder WithModuleScaleMap(QrModuleScaleMapOptions? map) {
-        Rendering.ModuleScaleMap = map;
+        Rendering.ModuleScaleMap = QrRenderer.CloneScaleMap(map);
         return this;
     }
 
     /// <summary>
-    /// Sets module shape map.
+    /// Copies the module shape map into this builder.
     /// </summary>
     public QrBuilder WithModuleShapeMap(QrModuleShapeMapOptions? map) {
-        Rendering.ModuleShapeMap = map;
+        Rendering.ModuleShapeMap = QrRenderer.CloneShapeMap(map);
         return this;
     }
 
     /// <summary>
-    /// Sets per-module jitter options.
+    /// Copies the per-module jitter options into this builder.
     /// </summary>
     public QrBuilder WithModuleJitter(QrModuleJitterOptions? jitter) {
-        Rendering.ModuleJitter = jitter;
+        Rendering.ModuleJitter = QrRenderer.CloneJitter(jitter);
         return this;
     }
 
@@ -149,50 +149,50 @@ public sealed class QrBuilder {
     }
 
     /// <summary>
-    /// Sets the foreground gradient.
+    /// Copies the foreground gradient into this builder.
     /// </summary>
     public QrBuilder WithForegroundGradient(QrGradientOptions? gradient) {
-        Rendering.ForegroundGradient = gradient;
+        Rendering.ForegroundGradient = QrRenderer.CloneGradient(gradient);
         return this;
     }
 
     /// <summary>
-    /// Sets the background gradient.
+    /// Copies the background gradient into this builder.
     /// </summary>
     public QrBuilder WithBackgroundGradient(QrGradientOptions? gradient) {
-        Rendering.BackgroundGradient = gradient;
+        Rendering.BackgroundGradient = QrRenderer.CloneGradient(gradient);
         return this;
     }
 
     /// <summary>
-    /// Sets the foreground palette.
+    /// Copies the foreground palette and its colors into this builder.
     /// </summary>
     public QrBuilder WithForegroundPalette(QrPaletteOptions? palette) {
-        Rendering.ForegroundPalette = palette;
+        Rendering.ForegroundPalette = QrRenderer.ClonePalette(palette);
         return this;
     }
 
     /// <summary>
-    /// Sets the canvas options.
+    /// Copies the canvas options, including nested styles and color arrays, into this builder.
     /// </summary>
     public QrBuilder WithCanvas(QrCanvasOptions? canvas) {
-        Rendering.Canvas = canvas;
+        Rendering.Canvas = QrRenderer.CloneCanvas(canvas);
         return this;
     }
 
     /// <summary>
-    /// Sets palette overrides for specific zones.
+    /// Copies the zone palette overrides and their colors into this builder.
     /// </summary>
     public QrBuilder WithForegroundPaletteZones(QrPaletteZoneOptions? zones) {
-        Rendering.ForegroundPaletteZones = zones;
+        Rendering.ForegroundPaletteZones = QrRenderer.ClonePaletteZones(zones);
         return this;
     }
 
     /// <summary>
-    /// Sets eye (finder) styling.
+    /// Copies the eye (finder) styling, including nested gradients and color arrays, into this builder.
     /// </summary>
     public QrBuilder WithEyes(QrEyeOptions? eyes) {
-        Rendering.Eyes = eyes;
+        Rendering.Eyes = QrRenderer.CloneEyes(eyes);
         return this;
     }
 
