@@ -429,7 +429,12 @@ internal static class BarcodeScanline {
     private static void TryCollectCandidates(ReadOnlySpan<byte> luminance, int min, int max, CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, int position, bool isVertical) {
         if (max - min < 8) return;
         var range = max - min;
-        var thresholds = new[] { (min + max) / 2, min + range / 3, min + (range * 2) / 3 };
+        var midpoint = (min + max) / 2;
+        // An odd intensity sum has two neighboring integer cutoffs. Retain both:
+        // resampling can place opposite edges at those adjacent gray values.
+        var thresholds = ((min + max) & 1) == 0
+            ? new[] { midpoint, min + range / 3, min + (range * 2) / 3 }
+            : new[] { midpoint, midpoint + 1, min + range / 3, min + (range * 2) / 3 };
         for (var i = 0; i < thresholds.Length; i++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) return;
             if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out var modules, out var minimumRunModules, out var fitError, out var minimumRunFitError)) {
