@@ -1,6 +1,5 @@
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
-using CodeGlyphX.Rendering;
 using System.IO;
 using Xunit;
 
