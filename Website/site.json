@@ -254,7 +254,7 @@
         "Items": [
           { "Title": "Evotec Services", "Url": "https://evotec.xyz", "External": true },
           { "Title": "Blog", "Url": "https://evotec.xyz/blog/", "External": true },
-          { "Title": "CodeGlyphX on evotec.xyz", "Url": "https://evotec.xyz/projects/codeglyphx/", "External": true }
+          { "Title": "CodeGlyphX on evotec.xyz", "Url": "https://evotec.xyz/products/codeglyphx/", "External": true }
         ]
       }
     ],
