@@ -10,7 +10,8 @@ public static partial class SymbolScanner {
         List<DetectedSymbol> results, HashSet<string>? seen) {
         if (!requested.Contains(SymbolFormat.DataMatrix) && !requested.Contains(SymbolFormat.Aztec) &&
             !requested.Contains(SymbolFormat.Pdf417)) return;
-        var grid = options.TileGrid == 0 ? (Math.Max(width, height) >= 720 ? 3 : 2) : options.TileGrid;
+        var grid = ResolveMatrixTileGrid(options, width, height);
+        var remainingAttempts = grid * grid * CountMatrixFamilies(requested);
         var padding = Math.Max(8, Math.Min(width, height) / 40);
         for (var ty = 0; ty < grid; ty++) {
             for (var tx = 0; tx < grid; tx++) {
@@ -32,10 +33,36 @@ public static partial class SymbolScanner {
                 var right = sourceRegion.X + (int)(((long)x1 * sourceRegion.Width + width - 1) / width);
                 var bottom = sourceRegion.Y + (int)(((long)y1 * sourceRegion.Height + height - 1) / height);
                 var region = new ImageRegion(sx, sy, right - sx, bottom - sy);
-                ScanDataMatrix(tile, tileWidth, tileHeight, region, options, deadline, requested, results, seen);
-                if (!ShouldStop(options, deadline, results)) ScanPdf417(tile, tileWidth, tileHeight, region, deadline, requested, results, seen);
-                if (!ShouldStop(options, deadline, results)) ScanAztec(tile, tileWidth, tileHeight, region, deadline, requested, results, seen);
+                ScanDataMatrix(tile, tileWidth, tileHeight, region, options, deadline, requested, results, seen, ref remainingAttempts);
+                if (!ShouldStop(options, deadline, results)) ScanPdf417(tile, tileWidth, tileHeight, region, options, deadline, requested, results, seen, ref remainingAttempts);
+                if (!ShouldStop(options, deadline, results)) ScanAztec(tile, tileWidth, tileHeight, region, options, deadline, requested, results, seen, ref remainingAttempts);
             }
         }
     }
+
+    private static int CountInitialAttempts(ISet<SymbolFormat> requested, ScanOptions options, int width, int height) {
+        var matrixFamilies = CountMatrixFamilies(requested);
+        var count = matrixFamilies;
+        if (requested.Contains(SymbolFormat.QrCode)) count++;
+        if (requested.Contains(SymbolFormat.MicroQrCode)) count++;
+        foreach (var format in requested) {
+            if (SymbolCapabilities.Get(format).Family != SymbolFamily.Linear) continue;
+            count++;
+            break;
+        }
+        if (options.EnableTileScan && matrixFamilies > 0) {
+            // Reserve time for each tile, without multiplying the initial penalty by its decoder count.
+            var grid = ResolveMatrixTileGrid(options, width, height);
+            count += grid * grid;
+        }
+        return count;
+    }
+
+    private static int CountMatrixFamilies(ISet<SymbolFormat> requested) =>
+        (requested.Contains(SymbolFormat.DataMatrix) ? 1 : 0) +
+        (requested.Contains(SymbolFormat.Pdf417) ? 1 : 0) +
+        (requested.Contains(SymbolFormat.Aztec) ? 1 : 0);
+
+    private static int ResolveMatrixTileGrid(ScanOptions options, int width, int height) =>
+        options.TileGrid == 0 ? (Math.Max(width, height) >= 720 ? 3 : 2) : options.TileGrid;
 }

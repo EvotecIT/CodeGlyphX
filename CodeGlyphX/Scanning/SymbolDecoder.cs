@@ -11,7 +11,8 @@ public static class SymbolDecoder {
         SymbolFormat.Gs1Composite, SymbolFormat.RmQrCode, SymbolFormat.MaxiCode, SymbolFormat.DotCode,
         SymbolFormat.HanXin, SymbolFormat.MicroQrCode, SymbolFormat.QrCode, SymbolFormat.Aztec,
         SymbolFormat.DataMatrix, SymbolFormat.Pdf417, SymbolFormat.MicroPdf417,
-        SymbolFormat.Gs1DataBarOmnidirectional
+        SymbolFormat.Gs1DataBarOmnidirectional, SymbolFormat.Gs1DataBarStackedOmnidirectional,
+        SymbolFormat.Gs1DataBarStacked, SymbolFormat.Gs1DataBarExpandedStacked
     };
 
     /// <summary>Attempts to decode a sampled grid, optionally restricted to one physical format.</summary>

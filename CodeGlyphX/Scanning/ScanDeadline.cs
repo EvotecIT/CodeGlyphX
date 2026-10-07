@@ -40,6 +40,17 @@ internal sealed class ScanDeadline : IDisposable {
         }
     }
 
+    // A local attempt may yield to later candidates without cancelling the complete scan.
+    // Linking to this token keeps every attempt within the original caller/deadline boundary.
+    internal ScanDeadline CreateAttempt(int remainingAttempts, int recognitionBudgetMilliseconds = 0) {
+        var milliseconds = TimeoutMilliseconds > 0
+            ? Math.Max(1, RemainingMilliseconds / Math.Max(1, remainingAttempts))
+            : 0;
+        if (recognitionBudgetMilliseconds > 0 && (milliseconds == 0 || recognitionBudgetMilliseconds < milliseconds))
+            milliseconds = recognitionBudgetMilliseconds;
+        return new ScanDeadline(Token, milliseconds);
+    }
+
     public void Dispose() {
         _stopwatch.Stop();
         _source?.Dispose();

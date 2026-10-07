@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -7,6 +8,55 @@ namespace CodeGlyphX.Tests;
 
 [Collection("ImageScannerSerial")]
 public sealed class SymbolScannerTileTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void RealPharmacodeBesideDataBarSurvivesTileBoundaryRejection(bool explicitFormats) {
+        var render = new BarcodePngRenderOptions { ModuleSize = 4, QuietZone = 10, HeightModules = 40 };
+        var dataBar = BarcodePngRenderer.RenderPixels(DataBar.DataBar14Encoder.EncodeOmnidirectional("1234567890123"),
+            render, out var dw, out var dh, out _);
+        var pharmacode = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(BarcodeType.Pharmacode, "91"),
+            render, out var pw, out var ph, out _);
+        const int border = 24;
+        var width = Math.Max(dw, pw) + border * 2;
+        var height = dh + ph + border * 3;
+        var canvas = Enumerable.Repeat((byte)255, width * height * 4).ToArray();
+        for (var y = 0; y < dh; y++) Array.Copy(dataBar, y * dw * 4, canvas, ((y + border) * width + border) * 4, dw * 4);
+        for (var y = 0; y < ph; y++) Array.Copy(pharmacode, y * pw * 4, canvas, ((y + dh + border * 2) * width + border) * 4, pw * 4);
+        var formats = explicitFormats
+            ? new[] { SymbolFormat.Gs1DataBarOmnidirectional, SymbolFormat.Pharmacode }
+            : SymbolCapabilities.ImageScannableFormats
+                .Where(format => SymbolCapabilities.Get(format).Family == SymbolFamily.Linear).ToArray();
+
+        var result = SymbolScanner.Scan(ImageFrame.Packed(canvas, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = formats, EnableTileScan = true, TileGrid = 2, TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
+
+        Assert.True(result.Symbols.Count == 2, string.Join(", ", result.Symbols.Select(symbol => symbol.Format + ": " + symbol.Text)));
+        Assert.Contains(result.Symbols, symbol => symbol.Format == SymbolFormat.Gs1DataBarOmnidirectional && symbol.Text == "1234567890123");
+        Assert.Contains(result.Symbols, symbol => symbol.Format == SymbolFormat.Pharmacode && symbol.Text == "91");
+    }
+
+    [Theory]
+    [InlineData(SymbolFormat.Aztec, SymbolFormat.Pdf417)]
+    [InlineData(SymbolFormat.QrCode, SymbolFormat.Code128)]
+    public void UnsuccessfulEarlierFamilyLeavesTimeForAnotherRequestedFormat(SymbolFormat earlier, SymbolFormat actual) {
+        const string payload = "LATER-REQUESTED-FORMAT";
+        var png = actual == SymbolFormat.Pdf417
+            ? Pdf417Code.Render(payload, OutputFormat.Png).Data.ToArray()
+            : Barcode.Render(actual, payload, OutputFormat.Png).Data.ToArray();
+        var result = SymbolScanner.Scan(png, new ScanOptions {
+            Formats = new[] { earlier, actual }, MaxSymbols = 1, EnableTileScan = false,
+            Qr = QrPixelDecodeOptions.Stylized(), TimeoutMilliseconds = TestBudget.Adjust(2000)
+        });
+
+        Assert.True(result.IsSuccess, result.Failure);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(actual, symbol.Format);
+        Assert.Equal(payload, symbol.Text);
+        Assert.Equal(ScanCompletionReason.SymbolLimitReached, result.CompletionReason);
+    }
+
     [Fact]
     public void FindingQrDoesNotExcludeOtherRequestedMatrixFamilies() {
         var qr = QrCodeEncoder.EncodeText("MIXED-QR").Modules;

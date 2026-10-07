@@ -98,13 +98,14 @@ public static partial class SymbolScanner {
         var results = new List<DetectedSymbol>();
         var seen = options.Deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
         var requestedSet = new HashSet<SymbolFormat>(requested);
+        var remainingAttempts = CountInitialAttempts(requestedSet, options, width, height);
 
-        ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
-        if (!ShouldStop(options, deadline, results)) ScanMicroQr(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
-        if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
-        if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
-        if (!ShouldStop(options, deadline, results)) ScanPdf417(rgba, width, height, searchRegion, deadline, requestedSet, results, seen);
-        if (!ShouldStop(options, deadline, results)) ScanLinear(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
+        ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        if (!ShouldStop(options, deadline, results)) ScanMicroQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        if (!ShouldStop(options, deadline, results)) ScanPdf417(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        if (!ShouldStop(options, deadline, results)) ScanLinear(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
 
         if (!ShouldStop(options, deadline, results) && options.EnableTileScan) {
             ScanMatrixTiles(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
@@ -127,11 +128,15 @@ public static partial class SymbolScanner {
         int width,
         int height,
         ImageRegion searchRegion,
+        ScanOptions options,
         ScanDeadline deadline,
         ISet<SymbolFormat> requested,
         List<DetectedSymbol> results,
-        HashSet<string>? seen) {
+        HashSet<string>? seen,
+        ref int remainingAttempts) {
         if (!requested.Contains(SymbolFormat.MicroQrCode)) return;
+        using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
+        deadline = attempt;
         if (!MicroQrDecoder.TryDecode(
                 rgba,
                 width,
@@ -155,8 +160,11 @@ public static partial class SymbolScanner {
         ScanDeadline deadline,
         ISet<SymbolFormat> requested,
         List<DetectedSymbol> results,
-        HashSet<string>? seen) {
+        HashSet<string>? seen,
+        ref int remainingAttempts) {
         if (!requested.Contains(SymbolFormat.QrCode)) return;
+        using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
+        deadline = attempt;
         var qrOptions = ResolveQrOptions(options, deadline);
         if (options.MaxSymbols == 1) {
             if (QrImageDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, qrOptions, deadline.Token, out var single)) {
@@ -181,8 +189,11 @@ public static partial class SymbolScanner {
         ScanDeadline deadline,
         ISet<SymbolFormat> requested,
         List<DetectedSymbol> results,
-        HashSet<string>? seen) {
+        HashSet<string>? seen,
+        ref int remainingAttempts) {
         if (!requested.Contains(SymbolFormat.DataMatrix)) return;
+        using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
+        deadline = attempt;
         if (DataMatrixDecoder.TryDecodeDetailed(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var decoded)) {
             Add(results, seen, SymbolResultFactory.From(decoded, searchRegion));
             return;
@@ -202,11 +213,15 @@ public static partial class SymbolScanner {
         int width,
         int height,
         ImageRegion searchRegion,
+        ScanOptions options,
         ScanDeadline deadline,
         ISet<SymbolFormat> requested,
         List<DetectedSymbol> results,
-        HashSet<string>? seen) {
+        HashSet<string>? seen,
+        ref int remainingAttempts) {
         if (!requested.Contains(SymbolFormat.Aztec)) return;
+        using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
+        deadline = attempt;
         if (AztecDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var text)) {
             Add(results, seen, new DetectedSymbol(SymbolFormat.Aztec, text, searchRegion: searchRegion));
         }
@@ -217,11 +232,15 @@ public static partial class SymbolScanner {
         int width,
         int height,
         ImageRegion searchRegion,
+        ScanOptions options,
         ScanDeadline deadline,
         ISet<SymbolFormat> requested,
         List<DetectedSymbol> results,
-        HashSet<string>? seen) {
+        HashSet<string>? seen,
+        ref int remainingAttempts) {
         if (!requested.Contains(SymbolFormat.Pdf417)) return;
+        using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
+        deadline = attempt;
         if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out Pdf417Decoded decoded)) {
             Add(results, seen, SymbolResultFactory.From(decoded, searchRegion));
         }
@@ -236,7 +255,8 @@ public static partial class SymbolScanner {
         ScanDeadline deadline,
         ISet<SymbolFormat> requested,
         List<DetectedSymbol> results,
-        HashSet<string>? seen) {
+        HashSet<string>? seen,
+        ref int remainingAttempts) {
         var expectedTypes = new List<BarcodeType>();
         foreach (var format in requested) {
             var capability = SymbolCapabilities.Get(format);
@@ -245,12 +265,15 @@ public static partial class SymbolScanner {
             }
         }
         if (expectedTypes.Count == 0) return;
+        using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
+        deadline = attempt;
 
         var barcodeOptions = CloneBarcodeOptions(options.Barcode) ?? new BarcodeDecodeOptions { EnableTileScan = options.EnableTileScan, TileGrid = options.TileGrid };
         var classifyDataBarHeight = expectedTypes.Contains(BarcodeType.GS1DataBarTruncated)
             && expectedTypes.Contains(BarcodeType.GS1DataBarOmni);
 
         if (classifyDataBarHeight) {
+            using var locatedAttempt = deadline.CreateAttempt(expectedTypes.Count);
             var expected = RequestsEveryImageScannableLinearFormat(requested)
                 ? (BarcodeType?)null
                 : BarcodeType.GS1DataBarTruncated;
@@ -260,7 +283,7 @@ public static partial class SymbolScanner {
                 height,
                 searchRegion,
                 options,
-                deadline,
+                locatedAttempt,
                 requested,
                 expectedTypes,
                 expected,
@@ -273,7 +296,8 @@ public static partial class SymbolScanner {
         for (var i = 0; i < expectedTypes.Count && !ShouldStop(options, deadline, results); i++) {
             var expected = expectedTypes[i];
             if (classifyDataBarHeight && (expected == BarcodeType.GS1DataBarTruncated || expected == BarcodeType.GS1DataBarOmni)) continue;
-            AddLinearResults(rgba, width, height, searchRegion, options, deadline, requested, expectedTypes, results, seen, expected, barcodeOptions);
+            using var typeAttempt = deadline.CreateAttempt(expectedTypes.Count - i);
+            AddLinearResults(rgba, width, height, searchRegion, options, typeAttempt, requested, expectedTypes, results, seen, expected, barcodeOptions);
         }
     }
 
@@ -290,6 +314,11 @@ public static partial class SymbolScanner {
         HashSet<string>? seen,
         BarcodeType expectedType,
         BarcodeDecodeOptions? barcodeOptions) {
+        if (expectedType == BarcodeType.Pharmacode) {
+            ScanLocatedLinear(rgba, width, height, searchRegion, options, deadline, requested, expectedTypes,
+                expectedType, barcodeOptions, results, seen);
+            return;
+        }
         if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expectedType, barcodeOptions, deadline.Token)) return;
         for (var i = 0; i < decoded.Length; i++) {
             var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes, rgba, width, height, candidate: null, cancellationToken: deadline.Token);
@@ -327,6 +356,7 @@ public static partial class SymbolScanner {
         // that behavior after classifying each located DataBar candidate independently.
         var decodedSeen = new HashSet<string>(StringComparer.Ordinal);
         for (var i = 0; i < decoded.Length; i++) {
+            if (IsBoundaryClippedPharmacode(decoded[i], rgba, width, height, deadline.Token)) continue;
             var hit = ResolveRequestedLinearIdentity(decoded[i].Decoded, expectedTypes, rgba, width, height, decoded[i], deadline.Token);
             var key = hit.Type + "\u001f" + hit.Text;
             if (!decodedSeen.Add(key)) continue;
@@ -334,6 +364,43 @@ public static partial class SymbolScanner {
             Add(results, seen, SymbolResultFactory.From(hit, searchRegion));
             if (ReachedMaximum(options, results)) return;
         }
+    }
+
+    private static bool IsBoundaryClippedPharmacode(BarcodeImageCandidate candidate, byte[] rgba,
+        int width, int height, CancellationToken cancellationToken) {
+        if (candidate.Decoded.Type != BarcodeType.Pharmacode) return false;
+        var region = candidate.SearchRegion;
+        if (region.X == 0 && region.Y == 0 && region.Width == width && region.Height == height) return false;
+
+        // Pharmacode has no checksum or start/stop pattern. A tile boundary through a bar can
+        // turn part of a different barcode into a valid number. Require background at both ends
+        // of this actual sampled scanline, wider than Pharmacode's single-module internal spaces.
+        var vertical = candidate.Scanline.IsVertical;
+        var position = vertical ? region.X + candidate.Scanline.Position : region.Y + candidate.Scanline.Position;
+        var start = vertical ? region.Y : region.X;
+        var end = vertical ? region.Bottom : region.Right;
+        int Luminance(int at) {
+            var x = vertical ? position : at;
+            var y = vertical ? at : position;
+            var offset = (y * width + x) * 4;
+            return (rgba[offset] * 54 + rgba[offset + 1] * 183 + rgba[offset + 2] * 19) >> 8;
+        }
+        var minimum = 255;
+        var maximum = 0;
+        for (var at = start; at < end; at++) {
+            if ((at & 127) == 0 && cancellationToken.IsCancellationRequested) return true;
+            var luminance = Luminance(at);
+            minimum = Math.Min(minimum, luminance);
+            maximum = Math.Max(maximum, luminance);
+        }
+        var threshold = (minimum + maximum) / 2;
+        if (minimum >= maximum) return true;
+        var first = start;
+        while (first < end && Luminance(first) >= threshold) first++;
+        var last = end - 1;
+        while (last > first && Luminance(last) >= threshold) last--;
+        var quietPixels = Math.Max(2, 2 * (last - first + 1) / candidate.Scanline.Modules.Length);
+        return first - start < quietPixels || end - last - 1 < quietPixels;
     }
 
     private static BarcodeDecoded ResolveRequestedLinearIdentity(
