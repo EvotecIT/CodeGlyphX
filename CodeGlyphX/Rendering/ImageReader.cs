@@ -197,8 +197,7 @@ public static partial class ImageReader {
     /// Decodes an image to an RGBA buffer (auto-detected).
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, out int width, out int height) {
-        EnsureWithinLimits(data, options: null, pageIndex: 0);
-        return DecodeRgba32Core(data, null, out width, out height);
+        return DecodeRgba32(data, options: null, out width, out height);
     }
 
     /// <summary>
@@ -287,6 +286,7 @@ public static partial class ImageReader {
     /// </summary>
     public static byte[] DecodeRgba32(ReadOnlySpan<byte> data, int pageIndex, out int width, out int height) {
         if (pageIndex < 0) throw new ArgumentOutOfRangeException(nameof(pageIndex));
+        using var limitScope = ApplyDecodeLimits(options: null);
         EnsureWithinLimits(data, options: null, pageIndex);
         if (pageIndex == 0) return DecodeRgba32(data, out width, out height);
         if (data.Length < 2) throw new FormatException("Unknown image format.");
@@ -346,8 +346,7 @@ public static partial class ImageReader {
     /// Decodes an image to an RGBA buffer (auto-detected), returning the first composited animation frame when available.
     /// </summary>
     public static byte[] DecodeRgba32Composite(ReadOnlySpan<byte> data, out int width, out int height) {
-        EnsureWithinLimits(data, options: null, pageIndex: 0);
-        return DecodeRgba32CompositeCore(data, null, out width, out height);
+        return DecodeRgba32Composite(data, options: null, out width, out height);
     }
 
     /// <summary>

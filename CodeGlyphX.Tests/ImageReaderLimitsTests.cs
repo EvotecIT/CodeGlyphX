@@ -21,6 +21,9 @@ public sealed class ImageReaderLimitsTests {
             var options = supplyOptions ? new ImageDecodeOptions() : null;
 
             Assert.Throws<ArgumentOutOfRangeException>(() => ImageReader.DecodeRgba32(png, options, out _, out _));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageReader.DecodeRgba32Composite(png, options, out _, out _));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageReader.DecodeRgba32(png, out _, out _));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageReader.DecodeRgba32Composite(png, out _, out _));
         } finally {
             ImageReader.MaxDecodedBytes = previous;
         }

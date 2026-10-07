@@ -20,7 +20,7 @@ internal static class PngDecoder {
 
     public static byte[] DecodeRgba32(byte[] png, int offset, int length, out int width, out int height) {
         if (png is null) throw new ArgumentNullException(nameof(png));
-        if (offset < 0 || length < 0 || offset + length > png.Length) throw new ArgumentOutOfRangeException(nameof(length));
+        if (offset < 0 || length < 0 || offset > png.Length - length) throw new ArgumentOutOfRangeException(nameof(length));
         if (length < Signature.Length) throw new FormatException("Invalid PNG signature.");
         DecodeGuards.EnsurePayloadWithinLimits(length, PngPayloadLimitMessage);
 
@@ -46,15 +46,16 @@ internal static class PngDecoder {
         var localOffset = Signature.Length;
         var end = length;
 
-        while (localOffset + 8 <= end) {
+        while (localOffset <= end - 8) {
             var len = ReadUInt32BE(png, offset + localOffset);
             if (len > int.MaxValue) throw new FormatException("Invalid PNG chunk length.");
             var chunkLength = (int)len;
             localOffset += 4;
-            if (localOffset + 4 > end) throw new FormatException("Invalid PNG chunk.");
             var typeOffset = offset + localOffset;
             localOffset += 4;
-            if (localOffset + chunkLength + 4 > end) throw new FormatException("Invalid PNG chunk length.");
+            // Check the payload and CRC against remaining bytes before advancing the offset.
+            // Adding an untrusted chunk length can wrap even when it fits in an Int32.
+            if (chunkLength > end - localOffset - 4) throw new FormatException("Invalid PNG chunk length.");
             var dataOffset = offset + localOffset;
             localOffset += chunkLength;
             localOffset += 4; // CRC
