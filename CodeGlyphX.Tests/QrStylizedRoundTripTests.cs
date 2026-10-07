@@ -9,8 +9,7 @@ public sealed class QrStylizedRoundTripTests {
     [Fact]
     public void QrDecode_ArtFeatures_RoundTrip_Smoke() {
         const string payload = "https://example.com/art-smoke";
-        var options = new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+        var options = new QrRenderOptions {
             TargetSizePx = 1000,
             TargetSizeIncludesQuietZone = true,
             ModuleSize = 10,
@@ -18,13 +17,13 @@ public sealed class QrStylizedRoundTripTests {
             Foreground = new Rgba32(30, 60, 120),
             Background = new Rgba32(255, 255, 255),
             BackgroundSupersample = 2,
-            ModuleShape = QrPngModuleShape.ConnectedRounded,
+            ModuleShape = QrModuleShape.ConnectedRounded,
             ModuleScale = 0.95,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.Glow,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle,
+                FrameStyle = QrEyeFrameStyle.Glow,
+                OuterShape = QrModuleShape.Rounded,
+                InnerShape = QrModuleShape.Circle,
                 OuterColor = new Rgba32(30, 60, 120),
                 InnerColor = new Rgba32(60, 140, 255),
                 OuterCornerRadiusPx = 6,
@@ -34,8 +33,8 @@ public sealed class QrStylizedRoundTripTests {
             },
         };
 
-        var png = QrCode.Render(payload, OutputFormat.Png, options).Data;
-        Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
+        var png = QR.Render(payload, OutputFormat.Png, options, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).Data;
+        Assert.True(ImageReader.TryDecodeRgba32(png.Span, out var rgba, out var width, out var height));
 
         var decodeOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,

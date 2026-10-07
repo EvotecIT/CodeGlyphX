@@ -38,7 +38,7 @@ public class DataMatrixCompareBenchmarks
     public void Setup()
     {
 #if COMPARE_ZXING
-        var modules = DataMatrixCode.Encode(MediumText);
+        var modules = DataMatrixCode.Encode(MediumText).Modules;
         _widthPx = CompareBenchmarkHelpers.MatrixWidthPx(modules, _options);
         _heightPx = CompareBenchmarkHelpers.MatrixHeightPx(modules, _options);
         var zxingOptions = new DatamatrixEncodingOptions
@@ -63,7 +63,7 @@ public class DataMatrixCompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX Data Matrix PNG (medium)")]
     public byte[] CodeGlyphX_DataMatrix_Png()
     {
-        return DataMatrixCode.Render(MediumText, OutputFormat.Png, options: _options).Data;
+        return DataMatrixCode.Render(MediumText, OutputFormat.Png, options: _options).ToArray();
     }
 
 #if COMPARE_ZXING

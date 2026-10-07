@@ -31,7 +31,10 @@ internal static partial class QrStyleBoardExample {
                 options.LogoPng = preset.LogoPng;
             }
 
-            QR.Save(preset.Payload, path, options);
+            QR.Save(preset.Payload, path, options, new QrEncodingOptions {
+                ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+                MinVersion = options.LogoPng is null ? 1 : 4
+            });
 
             manifestEntries.Add(new StyleBoardEntry(preset.Name, fileName, preset.Payload));
         }
@@ -48,33 +51,33 @@ internal static partial class QrStyleBoardExample {
         return new List<StylePreset> {
             new("Neon Dot", StyleDocs("neon-dot"), () => BaseSticker(
                 fg: R(0, 255, 213),
-                palette: Palette(QrPngPaletteMode.Random, 14001, R(0, 255, 213), R(255, 59, 255), R(255, 214, 0)),
-                shape: QrPngModuleShape.Dot,
-                eyes: Eye(QrPngEyeFrameStyle.Target, R(0, 255, 213), R(255, 59, 255)),
+                palette: Palette(QrPaletteMode.Random, 14001, R(0, 255, 213), R(255, 59, 255), R(255, 214, 0)),
+                shape: QrModuleShape.Dot,
+                eyes: Eye(QrEyeFrameStyle.Target, R(0, 255, 213), R(255, 59, 255)),
                 canvas: CanvasGradient(R(18, 18, 28), R(48, 23, 72)))),
 
             new("Neon Glow", StyleDocs("neon-glow"), () => BaseSticker(
                 fg: R(0, 255, 240),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(0, 255, 240), R(0, 170, 255), R(255, 92, 255)),
-                shape: QrPngModuleShape.Dot,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(0, 255, 240), R(0, 170, 255), R(255, 92, 255)),
+                shape: QrModuleShape.Dot,
                 eyes: EyeGlow(R(0, 255, 240), R(255, 92, 255), R(0, 200, 255, 200)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.82, 1.0),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.82, 1.0),
                 canvas: CanvasGradient(R(8, 10, 28), R(28, 18, 64)))),
 
             new("Liquid Glass", StyleDocs("liquid-glass"), () => BaseSticker(
                 fg: R(120, 210, 255),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(120, 210, 255), R(160, 160, 255), R(210, 170, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(120, 210, 255), R(160, 160, 255), R(210, 170, 255)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeGlow(R(120, 210, 255), R(210, 170, 255), R(120, 210, 255, 190)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.86, 1.0),
                 canvas: CanvasGradient(R(14, 18, 46), R(32, 26, 82)))),
 
             new("Card Frame", StyleDocs("card-frame"), () => BaseSticker(
                 fg: R(24, 48, 120),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(24, 48, 120), R(52, 102, 220), R(110, 180, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
-                eyes: Eye(QrPngEyeFrameStyle.Badge, R(24, 48, 120), R(110, 180, 255)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 26026),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(24, 48, 120), R(52, 102, 220), R(110, 180, 255)),
+                shape: QrModuleShape.ConnectedRounded,
+                eyes: Eye(QrEyeFrameStyle.Badge, R(24, 48, 120), R(110, 180, 255)),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.9, 1.0, 26026),
                 canvas: CanvasCardFrame(
                     start: R(245, 248, 255),
                     end: R(224, 235, 255),
@@ -83,10 +86,10 @@ internal static partial class QrStyleBoardExample {
 
             new("Sticker Frame", StyleDocs("sticker-frame"), () => BaseSticker(
                 fg: R(18, 36, 66),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(18, 36, 66), R(0, 150, 136), R(255, 111, 97)),
-                shape: QrPngModuleShape.ConnectedSquircle,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(18, 36, 66), R(0, 150, 136), R(255, 111, 97)),
+                shape: QrModuleShape.ConnectedSquircle,
                 eyes: EyeGlow(R(18, 36, 66), R(0, 150, 136), R(255, 111, 97, 180)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 27027),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.9, 1.0, 27027),
                 canvas: CanvasStickerFrame(
                     background: R(250, 252, 255),
                     frameColor: R(18, 36, 66, 220),
@@ -94,32 +97,32 @@ internal static partial class QrStyleBoardExample {
 
             new("Top Badge", StyleDocs("top-badge"), () => BaseSticker(
                 fg: R(32, 48, 96),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(32, 48, 96), R(74, 112, 210), R(140, 210, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
-                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(32, 48, 96), R(140, 210, 255)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 28028),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(32, 48, 96), R(74, 112, 210), R(140, 210, 255)),
+                shape: QrModuleShape.ConnectedRounded,
+                eyes: Eye(QrEyeFrameStyle.DoubleRing, R(32, 48, 96), R(140, 210, 255)),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.9, 1.0, 28028),
                 canvas: CanvasBadge(
                     background: R(246, 249, 255),
                     badgeColor: R(32, 80, 200, 220),
-                    position: QrPngCanvasBadgePosition.Top))),
+                    position: QrCanvasBadgePosition.Top))),
 
             new("Ribbon Tab", StyleDocs("ribbon-tab"), () => BaseSticker(
                 fg: R(20, 38, 80),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(20, 38, 80), R(0, 150, 136), R(255, 127, 80)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(20, 38, 80), R(0, 150, 136), R(255, 127, 80)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeGlow(R(20, 38, 80), R(0, 150, 136), R(255, 127, 80, 180)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 29029),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.9, 1.0, 29029),
                 canvas: CanvasRibbon(
                     background: R(250, 252, 255),
                     ribbonColor: R(0, 150, 136, 220),
-                    position: QrPngCanvasBadgePosition.Bottom))),
+                    position: QrCanvasBadgePosition.Bottom))),
 
             new("Gradient Frame", StyleDocs("gradient-frame"), () => BaseSticker(
                 fg: R(24, 40, 100),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(24, 40, 100), R(64, 120, 220), R(150, 210, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
-                eyes: Eye(QrPngEyeFrameStyle.Target, R(24, 40, 100), R(150, 210, 255)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 30030),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(24, 40, 100), R(64, 120, 220), R(150, 210, 255)),
+                shape: QrModuleShape.ConnectedRounded,
+                eyes: Eye(QrEyeFrameStyle.Target, R(24, 40, 100), R(150, 210, 255)),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.9, 1.0, 30030),
                 canvas: CanvasGradientFrame(
                     bgStart: R(246, 249, 255),
                     bgEnd: R(220, 235, 255),
@@ -128,20 +131,20 @@ internal static partial class QrStyleBoardExample {
 
             new("Stitched Frame", StyleDocs("stitched-frame"), () => BaseSticker(
                 fg: R(28, 28, 48),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(28, 28, 48), R(96, 130, 210), R(255, 189, 89)),
-                shape: QrPngModuleShape.ConnectedRounded,
-                eyes: Eye(QrPngEyeFrameStyle.Single, R(28, 28, 48), R(255, 189, 89)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 31031),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(28, 28, 48), R(96, 130, 210), R(255, 189, 89)),
+                shape: QrModuleShape.ConnectedRounded,
+                eyes: Eye(QrEyeFrameStyle.Single, R(28, 28, 48), R(255, 189, 89)),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.9, 1.0, 31031),
                 canvas: CanvasStitchedFrame(
                     background: R(252, 250, 245),
                     stitchColor: R(28, 28, 48, 190)))),
 
             new("Quiet Band", StyleDocs("quiet-band"), () => BaseSticker(
                 fg: R(16, 30, 62),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(16, 30, 62), R(60, 120, 200), R(150, 210, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(16, 30, 62), R(60, 120, 200), R(150, 210, 255)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeInsetRing(R(16, 30, 62), R(150, 210, 255)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 32032),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.9, 1.0, 32032),
                 canvas: CanvasBand(
                     background: R(248, 251, 255),
                     bandStart: R(60, 120, 200, 210),
@@ -152,129 +155,129 @@ internal static partial class QrStyleBoardExample {
                 return BaseSticker(
                     fg: warm.Foreground,
                     palette: warm.Palette,
-                    shape: QrPngModuleShape.ConnectedRounded,
+                    shape: QrModuleShape.ConnectedRounded,
                     eyes: QrEyePresets.MinimalRing(),
                     canvas: CanvasBadge(
                         background: warm.Background,
                         badgeColor: R(201, 86, 46, 210),
-                        position: QrPngCanvasBadgePosition.Top),
+                        position: QrCanvasBadgePosition.Top),
                     background: warm.Background);
             }),
 
             new("Eye Sparkle", StyleDocs("eye-sparkle"), () => BaseSticker(
                 fg: R(0, 240, 220),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(0, 240, 220), R(64, 180, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(0, 240, 220), R(64, 180, 255)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: QrEyePresets.NeonSparkle(),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0, 33033),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.9, 1.0, 33033),
                 canvas: CanvasGradient(R(10, 12, 22), R(30, 34, 64)),
                 background: R(10, 12, 22))),
 
             new("Candy Checker", StyleDocs("candy-checker"), () => BaseSticker(
                 fg: R(255, 107, 107),
-                palette: Palette(QrPngPaletteMode.Checker, 0, R(255, 107, 107), R(255, 217, 61)),
-                shape: QrPngModuleShape.Rounded,
-                eyes: Eye(QrPngEyeFrameStyle.Badge, R(255, 107, 107), R(255, 217, 61)),
-                canvas: CanvasPattern(R(255, 248, 240), Pattern(QrPngBackgroundPatternType.Dots, R(255, 107, 107, 28))))),
+                palette: Palette(QrPaletteMode.Checker, 0, R(255, 107, 107), R(255, 217, 61)),
+                shape: QrModuleShape.Rounded,
+                eyes: Eye(QrEyeFrameStyle.Badge, R(255, 107, 107), R(255, 217, 61)),
+                canvas: CanvasPattern(R(255, 248, 240), Pattern(QrBackgroundPatternType.Dots, R(255, 107, 107, 28))))),
 
             new("Pastel Rings", StyleDocs("pastel-rings"), () => BaseSticker(
                 fg: R(121, 134, 255),
-                palette: Palette(QrPngPaletteMode.Rings, 0, R(121, 134, 255), R(255, 174, 206), R(144, 226, 196)),
-                shape: QrPngModuleShape.Squircle,
-                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(121, 134, 255), R(255, 174, 206)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.65, 1.0),
-                canvas: CanvasPattern(R(245, 248, 255), Pattern(QrPngBackgroundPatternType.Checker, R(121, 134, 255, 20))))),
+                palette: Palette(QrPaletteMode.Rings, 0, R(121, 134, 255), R(255, 174, 206), R(144, 226, 196)),
+                shape: QrModuleShape.Squircle,
+                eyes: Eye(QrEyeFrameStyle.DoubleRing, R(121, 134, 255), R(255, 174, 206)),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.65, 1.0),
+                canvas: CanvasPattern(R(245, 248, 255), Pattern(QrBackgroundPatternType.Checker, R(121, 134, 255, 20))))),
 
             new("Inset Rings", StyleDocs("inset-rings"), () => BaseSticker(
                 fg: R(96, 120, 255),
-                palette: Palette(QrPngPaletteMode.Rings, 0, R(96, 120, 255), R(140, 110, 255), R(120, 210, 255)),
-                shape: QrPngModuleShape.Squircle,
+                palette: Palette(QrPaletteMode.Rings, 0, R(96, 120, 255), R(140, 110, 255), R(120, 210, 255)),
+                shape: QrModuleShape.Squircle,
                 eyes: EyeInsetRing(R(96, 120, 255), R(120, 210, 255)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.78, 1.0),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.78, 1.0),
                 canvas: CanvasGradient(R(18, 20, 60), R(36, 28, 96)))),
 
             new("Ocean Grid", StyleDocs("ocean-grid"), () => BaseSticker(
                 fg: R(0, 133, 255),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(0, 133, 255), R(0, 201, 255), R(0, 255, 196)),
-                shape: QrPngModuleShape.DotGrid,
-                eyes: Eye(QrPngEyeFrameStyle.Single, R(0, 133, 255), R(0, 201, 255)),
-                canvas: CanvasPattern(R(10, 24, 45), Pattern(QrPngBackgroundPatternType.Grid, R(0, 133, 255, 24))))),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(0, 133, 255), R(0, 201, 255), R(0, 255, 196)),
+                shape: QrModuleShape.DotGrid,
+                eyes: Eye(QrEyeFrameStyle.Single, R(0, 133, 255), R(0, 201, 255)),
+                canvas: CanvasPattern(R(10, 24, 45), Pattern(QrBackgroundPatternType.Grid, R(0, 133, 255, 24))))),
 
             new("Stripe Frame", StyleDocs("stripe-frame"), () => BaseSticker(
                 fg: R(24, 84, 220),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(24, 84, 220), R(40, 176, 255), R(120, 90, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(24, 84, 220), R(40, 176, 255), R(120, 90, 255)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeGlow(R(24, 84, 220), R(120, 90, 255), R(40, 176, 255, 170)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0, 2222),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.86, 1.0, 2222),
                 pattern: Speckle(R(255, 255, 255, 58), seed: 2323, sizePx: 7, thicknessPx: 2, variation: 0.82, density: 0.92),
                 canvas: CanvasPattern(
                     R(246, 248, 255),
-                    Pattern(QrPngBackgroundPatternType.DiagonalStripes, R(24, 84, 220, 24), sizePx: 16, thicknessPx: 2, moduleStep: 3)))),
+                    Pattern(QrBackgroundPatternType.DiagonalStripes, R(24, 84, 220, 24), sizePx: 16, thicknessPx: 2, moduleStep: 3)))),
 
             new("Crosshatch Pop", StyleDocs("crosshatch-pop"), () => BaseSticker(
                 fg: R(16, 22, 38),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(16, 22, 38), R(0, 173, 181), R(255, 93, 143)),
-                shape: QrPngModuleShape.Rounded,
-                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(16, 22, 38), R(0, 173, 181)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Rings, 0.72, 1.0, 2424),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(16, 22, 38), R(0, 173, 181), R(255, 93, 143)),
+                shape: QrModuleShape.Rounded,
+                eyes: Eye(QrEyeFrameStyle.DoubleRing, R(16, 22, 38), R(0, 173, 181)),
+                scaleMap: ScaleMap(QrModuleScaleMode.Rings, 0.72, 1.0, 2424),
                 canvas: CanvasPattern(
                     R(255, 255, 255),
-                    Pattern(QrPngBackgroundPatternType.Crosshatch, R(16, 22, 38, 18), sizePx: 18, thicknessPx: 2, moduleStep: 3)))),
+                    Pattern(QrBackgroundPatternType.Crosshatch, R(16, 22, 38, 18), sizePx: 18, thicknessPx: 2, moduleStep: 3)))),
 
             new("Mono Badge", StyleDocs("mono-badge"), () => BaseSticker(
                 fg: R(0, 0, 0),
                 palette: null,
-                shape: QrPngModuleShape.Square,
-                eyes: Eye(QrPngEyeFrameStyle.Badge, R(0, 0, 0), R(0, 0, 0)),
+                shape: QrModuleShape.Square,
+                eyes: Eye(QrEyeFrameStyle.Badge, R(0, 0, 0), R(0, 0, 0)),
                 canvas: CanvasBorder(R(255, 255, 255), R(0, 0, 0)))),
 
             new("Bracket Tech", StyleDocs("bracket-tech"), () => BaseSticker(
                 fg: R(24, 230, 145),
-                palette: Palette(QrPngPaletteMode.Random, 9001, R(24, 230, 145), R(52, 147, 255), R(255, 255, 255)),
-                shape: QrPngModuleShape.Diamond,
-                eyes: Eye(QrPngEyeFrameStyle.Bracket, R(24, 230, 145), R(52, 147, 255)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Rings, 0.7, 1.0),
+                palette: Palette(QrPaletteMode.Random, 9001, R(24, 230, 145), R(52, 147, 255), R(255, 255, 255)),
+                shape: QrModuleShape.Diamond,
+                eyes: Eye(QrEyeFrameStyle.Bracket, R(24, 230, 145), R(52, 147, 255)),
+                scaleMap: ScaleMap(QrModuleScaleMode.Rings, 0.7, 1.0),
                 canvas: CanvasGradient(R(7, 21, 28), R(9, 42, 54)))),
 
             new("Cut Corner Tech", StyleDocs("cut-corner-tech"), () => BaseSticker(
                 fg: R(80, 220, 255),
-                palette: Palette(QrPngPaletteMode.Random, 5120, R(80, 220, 255), R(100, 140, 255), R(220, 120, 255)),
-                shape: QrPngModuleShape.Rounded,
+                palette: Palette(QrPaletteMode.Random, 5120, R(80, 220, 255), R(100, 140, 255), R(220, 120, 255)),
+                shape: QrModuleShape.Rounded,
                 eyes: EyeCutCorner(R(80, 220, 255), R(220, 120, 255)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.78, 1.0),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.78, 1.0),
                 canvas: CanvasGradient(R(10, 18, 40), R(22, 38, 72)))),
 
             new("Sunset Sticker", StyleDocs("sunset-sticker"), () => BaseSticker(
                 fg: R(255, 93, 93),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(255, 93, 93), R(255, 180, 60), R(255, 76, 193)),
-                shape: QrPngModuleShape.Rounded,
-                eyes: Eye(QrPngEyeFrameStyle.Target, R(255, 93, 93), R(255, 180, 60)),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(255, 93, 93), R(255, 180, 60), R(255, 76, 193)),
+                shape: QrModuleShape.Rounded,
+                eyes: Eye(QrEyeFrameStyle.Target, R(255, 93, 93), R(255, 180, 60)),
                 canvas: CanvasGradient(R(35, 9, 25), R(83, 22, 52)),
                 logo: logoWarm), logoWarm),
 
             new("Aurora", StyleDocs("aurora"), () => BaseSticker(
                 fg: R(110, 255, 200),
-                palette: Palette(QrPngPaletteMode.Random, 4512, R(110, 255, 200), R(130, 195, 255), R(226, 170, 255)),
-                shape: QrPngModuleShape.Circle,
-                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(110, 255, 200), R(130, 195, 255)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Random, 0.6, 1.0, 9876),
-                canvas: CanvasPattern(R(15, 18, 34), Pattern(QrPngBackgroundPatternType.Dots, R(110, 255, 200, 22))))),
+                palette: Palette(QrPaletteMode.Random, 4512, R(110, 255, 200), R(130, 195, 255), R(226, 170, 255)),
+                shape: QrModuleShape.Circle,
+                eyes: Eye(QrEyeFrameStyle.DoubleRing, R(110, 255, 200), R(130, 195, 255)),
+                scaleMap: ScaleMap(QrModuleScaleMode.Random, 0.6, 1.0, 9876),
+                canvas: CanvasPattern(R(15, 18, 34), Pattern(QrBackgroundPatternType.Dots, R(110, 255, 200, 22))))),
 
             new("Speckle Splash", StyleDocs("speckle-splash"), () => BaseSticker(
                 fg: R(0, 160, 200),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(0, 160, 200), R(0, 210, 140), R(220, 120, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
-                eyes: new QrPngEyeOptions {
+                palette: Palette(QrPaletteMode.Cycle, 0, R(0, 160, 200), R(0, 210, 140), R(220, 120, 255)),
+                shape: QrModuleShape.ConnectedRounded,
+                eyes: new QrEyeOptions {
                     UseFrame = true,
-                    FrameStyle = QrPngEyeFrameStyle.Target,
-                    OuterShape = QrPngModuleShape.Rounded,
-                    InnerShape = QrPngModuleShape.Circle,
+                    FrameStyle = QrEyeFrameStyle.Target,
+                    OuterShape = QrModuleShape.Rounded,
+                    InnerShape = QrModuleShape.Circle,
                     OuterCornerRadiusPx = 7,
                     InnerCornerRadiusPx = 4,
                     OuterGradients = new[] {
-                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(0, 220, 255), EndColor = R(0, 120, 200) },
-                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(255, 120, 200), EndColor = R(210, 70, 160) },
-                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(0, 230, 150), EndColor = R(0, 150, 120) },
+                        new QrGradientOptions { Type = QrGradientType.Radial, StartColor = R(0, 220, 255), EndColor = R(0, 120, 200) },
+                        new QrGradientOptions { Type = QrGradientType.Radial, StartColor = R(255, 120, 200), EndColor = R(210, 70, 160) },
+                        new QrGradientOptions { Type = QrGradientType.Radial, StartColor = R(0, 230, 150), EndColor = R(0, 150, 120) },
                     },
                     InnerColors = new[] { R(255, 255, 255), R(255, 255, 255), R(255, 255, 255) },
                     SparkleCount = 18,
@@ -283,43 +286,43 @@ internal static partial class QrStyleBoardExample {
                     SparkleSeed = 1337,
                     SparkleColor = R(255, 255, 255, 180),
                 },
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.8, 1.0, 31415),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.8, 1.0, 31415),
                 pattern: Speckle(R(0, 80, 120, 96), seed: 4242, sizePx: 7, thicknessPx: 2, variation: 0.84, density: 0.94),
                 canvas: CanvasGradient(R(8, 20, 36), R(16, 44, 72)))),
 
             new("Bead Cluster", StyleDocs("bead-cluster"), () => BaseSticker(
                 fg: R(18, 32, 72),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(18, 32, 72), R(52, 130, 200), R(0, 180, 150)),
-                shape: QrPngModuleShape.Rounded,
-                eyes: Eye(QrPngEyeFrameStyle.Target, R(18, 32, 72), R(255, 255, 255)),
-                pattern: new QrPngForegroundPatternOptions {
-                    Type = QrPngForegroundPatternType.StippleDots,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(18, 32, 72), R(52, 130, 200), R(0, 180, 150)),
+                shape: QrModuleShape.Rounded,
+                eyes: Eye(QrEyeFrameStyle.Target, R(18, 32, 72), R(255, 255, 255)),
+                pattern: new QrForegroundPatternOptions {
+                    Type = QrForegroundPatternType.StippleDots,
                     SizePx = 5,
                     ThicknessPx = 2,
-                    BlendMode = QrPngForegroundPatternBlendMode.Mask,
+                    BlendMode = QrForegroundPatternBlendMode.Mask,
                     ApplyToModules = true,
                 },
                 canvas: CanvasGradient(R(238, 244, 255), R(214, 228, 248)))),
 
             new("Shape Blend", StyleDocs("shape-blend"), () => BaseSticker(
                 fg: R(30, 44, 84),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(30, 44, 84), R(64, 120, 190), R(120, 190, 255)),
-                shape: QrPngModuleShape.Squircle,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(30, 44, 84), R(64, 120, 190), R(120, 190, 255)),
+                shape: QrModuleShape.Squircle,
                 eyes: EyeGlow(R(30, 44, 84), R(120, 190, 255), R(64, 120, 190, 160)),
-                shapeMap: new QrPngModuleShapeMapOptions {
-                    Mode = QrPngModuleShapeMapMode.Radial,
-                    PrimaryShape = QrPngModuleShape.Dot,
-                    SecondaryShape = QrPngModuleShape.Squircle,
+                shapeMap: new QrModuleShapeMapOptions {
+                    Mode = QrModuleShapeMapMode.Radial,
+                    PrimaryShape = QrModuleShape.Dot,
+                    SecondaryShape = QrModuleShape.Squircle,
                     Split = 0.55,
                 },
                 canvas: CanvasGradient(R(244, 248, 255), R(220, 232, 248)))),
 
             new("Jittered Ink", StyleDocs("jittered-ink"), () => BaseSticker(
                 fg: R(24, 28, 40),
-                palette: Palette(QrPngPaletteMode.Random, 7071, R(24, 28, 40), R(60, 90, 140), R(220, 140, 90)),
-                shape: QrPngModuleShape.Blob,
+                palette: Palette(QrPaletteMode.Random, 7071, R(24, 28, 40), R(60, 90, 140), R(220, 140, 90)),
+                shape: QrModuleShape.Blob,
                 eyes: EyeInsetRing(R(24, 28, 40), R(220, 140, 90)),
-                jitter: new QrPngModuleJitterOptions {
+                jitter: new QrModuleJitterOptions {
                     MaxOffsetPx = 2,
                     Seed = 7071,
                     ClampToShape = true,
@@ -328,10 +331,10 @@ internal static partial class QrStyleBoardExample {
 
             new("Edge Drips", StyleDocs("edge-drips"), () => BaseSticker(
                 fg: R(22, 40, 92),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(22, 40, 92), R(24, 138, 216), R(0, 190, 150)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(22, 40, 92), R(24, 138, 216), R(0, 190, 150)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeGlow(R(22, 40, 92), R(255, 255, 255), R(40, 150, 230, 170)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0, 8088),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.86, 1.0, 8088),
                 pattern: Speckle(R(255, 255, 255, 54), seed: 8181, sizePx: 7, thicknessPx: 2, variation: 0.78, density: 0.88),
                 canvas: CanvasEdgeSplash(
                     R(236, 244, 255),
@@ -347,28 +350,28 @@ internal static partial class QrStyleBoardExample {
 
             new("Halftone Bloom", StyleDocs("halftone-bloom"), () => BaseSticker(
                 fg: R(92, 90, 255),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(92, 90, 255), R(190, 120, 255), R(120, 210, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(92, 90, 255), R(190, 120, 255), R(120, 210, 255)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeGlow(R(92, 90, 255), R(190, 120, 255), R(120, 210, 255, 170)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.82, 1.0, 2468),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.82, 1.0, 2468),
                 pattern: Halftone(R(255, 255, 255, 92), seed: 8080, sizePx: 10, thicknessPx: 3, variation: 0.96, density: 0.97),
                 canvas: CanvasGradient(R(18, 16, 60), R(46, 26, 98)))),
 
             new("Vignette Noir", StyleDocs("vignette-noir"), () => BaseSticker(
                 fg: R(28, 34, 54),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(28, 34, 54), R(60, 74, 108), R(120, 150, 220)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(28, 34, 54), R(60, 74, 108), R(120, 150, 220)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeGlow(R(28, 34, 54), R(120, 150, 220), R(40, 70, 120, 160)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.84, 1.0, 7341),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.84, 1.0, 7341),
                 pattern: Speckle(R(255, 255, 255, 64), seed: 6006, sizePx: 7, thicknessPx: 2, variation: 0.8, density: 0.9),
                 canvas: CanvasGradientVignette(R(242, 246, 255), R(210, 220, 244), R(8, 12, 26, 120), bandPx: 88, strength: 1.0))),
 
             new("Grain Paper", StyleDocs("grain-paper"), () => BaseSticker(
                 fg: R(52, 58, 74),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(52, 58, 74), R(92, 100, 128), R(160, 170, 210)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(52, 58, 74), R(92, 100, 128), R(160, 170, 210)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeGlow(R(52, 58, 74), R(160, 170, 210), R(80, 90, 130, 150)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0, 9191),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.86, 1.0, 9191),
                 pattern: Speckle(R(255, 255, 255, 58), seed: 7272, sizePx: 7, thicknessPx: 2, variation: 0.78, density: 0.9),
                 canvas: CanvasGradientTexture(
                     R(246, 244, 236),
@@ -383,19 +386,19 @@ internal static partial class QrStyleBoardExample {
 
             new("Eye Accents", StyleDocs("eye-accents"), () => BaseSticker(
                 fg: R(30, 190, 255),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(30, 190, 255), R(90, 240, 200), R(255, 130, 210)),
-                shape: QrPngModuleShape.ConnectedRounded,
-                eyes: new QrPngEyeOptions {
+                palette: Palette(QrPaletteMode.Cycle, 0, R(30, 190, 255), R(90, 240, 200), R(255, 130, 210)),
+                shape: QrModuleShape.ConnectedRounded,
+                eyes: new QrEyeOptions {
                     UseFrame = true,
-                    FrameStyle = QrPngEyeFrameStyle.Target,
-                    OuterShape = QrPngModuleShape.Rounded,
-                    InnerShape = QrPngModuleShape.Circle,
+                    FrameStyle = QrEyeFrameStyle.Target,
+                    OuterShape = QrModuleShape.Rounded,
+                    InnerShape = QrModuleShape.Circle,
                     OuterCornerRadiusPx = 7,
                     InnerCornerRadiusPx = 4,
                     OuterGradients = new[] {
-                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(30, 220, 255), EndColor = R(0, 140, 210) },
-                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(255, 150, 220), EndColor = R(210, 80, 160) },
-                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(90, 255, 210), EndColor = R(20, 180, 140) },
+                        new QrGradientOptions { Type = QrGradientType.Radial, StartColor = R(30, 220, 255), EndColor = R(0, 140, 210) },
+                        new QrGradientOptions { Type = QrGradientType.Radial, StartColor = R(255, 150, 220), EndColor = R(210, 80, 160) },
+                        new QrGradientOptions { Type = QrGradientType.Radial, StartColor = R(90, 255, 210), EndColor = R(20, 180, 140) },
                     },
                     InnerColors = new[] { R(255, 255, 255), R(255, 255, 255), R(255, 255, 255) },
                     AccentRingCount = 7,
@@ -410,25 +413,25 @@ internal static partial class QrStyleBoardExample {
                     SparkleSeed = 424242,
                     SparkleColor = R(255, 255, 255, 170),
                 },
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.82, 1.0, 1122),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.82, 1.0, 1122),
                 pattern: Speckle(R(0, 80, 120, 90), seed: 5151, sizePx: 7, thicknessPx: 2, variation: 0.82, density: 0.93),
                 canvas: CanvasGradient(R(10, 24, 44), R(22, 54, 86)))),
 
             new("Eye Rays", StyleDocs("eye-rays"), () => BaseSticker(
                 fg: R(40, 200, 255),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(40, 200, 255), R(120, 255, 210), R(255, 150, 220)),
-                shape: QrPngModuleShape.ConnectedRounded,
-                eyes: new QrPngEyeOptions {
+                palette: Palette(QrPaletteMode.Cycle, 0, R(40, 200, 255), R(120, 255, 210), R(255, 150, 220)),
+                shape: QrModuleShape.ConnectedRounded,
+                eyes: new QrEyeOptions {
                     UseFrame = true,
-                    FrameStyle = QrPngEyeFrameStyle.Target,
-                    OuterShape = QrPngModuleShape.Rounded,
-                    InnerShape = QrPngModuleShape.Circle,
+                    FrameStyle = QrEyeFrameStyle.Target,
+                    OuterShape = QrModuleShape.Rounded,
+                    InnerShape = QrModuleShape.Circle,
                     OuterCornerRadiusPx = 7,
                     InnerCornerRadiusPx = 4,
                     OuterGradients = new[] {
-                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(40, 230, 255), EndColor = R(0, 150, 210) },
-                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(255, 170, 230), EndColor = R(210, 90, 170) },
-                        new QrPngGradientOptions { Type = QrPngGradientType.Radial, StartColor = R(120, 255, 220), EndColor = R(30, 190, 150) },
+                        new QrGradientOptions { Type = QrGradientType.Radial, StartColor = R(40, 230, 255), EndColor = R(0, 150, 210) },
+                        new QrGradientOptions { Type = QrGradientType.Radial, StartColor = R(255, 170, 230), EndColor = R(210, 90, 170) },
+                        new QrGradientOptions { Type = QrGradientType.Radial, StartColor = R(120, 255, 220), EndColor = R(30, 190, 150) },
                     },
                     InnerColors = new[] { R(255, 255, 255), R(255, 255, 255), R(255, 255, 255) },
                     AccentRayCount = 12,
@@ -445,16 +448,16 @@ internal static partial class QrStyleBoardExample {
                     SparkleSeed = 30303,
                     SparkleColor = R(255, 255, 255, 175),
                 },
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.84, 1.0, 5533),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.84, 1.0, 5533),
                 pattern: Halftone(R(255, 255, 255, 86), seed: 1900, sizePx: 10, thicknessPx: 3, variation: 0.94, density: 0.96),
                 canvas: CanvasGradient(R(8, 22, 40), R(20, 56, 88)))),
 
             new("Eye Stripes", StyleDocs("eye-stripes"), () => BaseSticker(
                 fg: R(34, 96, 220),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(34, 96, 220), R(70, 182, 255), R(170, 120, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
+                palette: Palette(QrPaletteMode.Cycle, 0, R(34, 96, 220), R(70, 182, 255), R(170, 120, 255)),
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeAccentStripes(R(34, 96, 220), R(255, 255, 255), R(255, 255, 255, 152), seed: 60606),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.84, 1.0, 6060),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.84, 1.0, 6060),
                 pattern: Speckle(R(255, 255, 255, 58), seed: 6161, sizePx: 7, thicknessPx: 2, variation: 0.8, density: 0.9),
                 canvas: CanvasGradientTexture(
                     R(238, 244, 255),
@@ -469,78 +472,78 @@ internal static partial class QrStyleBoardExample {
 
             new("Mint Board", StyleDocs("mint-board"), () => BaseSticker(
                 fg: R(0, 156, 121),
-                palette: Palette(QrPngPaletteMode.Checker, 0, R(0, 156, 121), R(99, 224, 181)),
-                shape: QrPngModuleShape.Squircle,
-                eyes: Eye(QrPngEyeFrameStyle.Single, R(0, 156, 121), R(99, 224, 181)),
+                palette: Palette(QrPaletteMode.Checker, 0, R(0, 156, 121), R(99, 224, 181)),
+                shape: QrModuleShape.Squircle,
+                eyes: Eye(QrEyeFrameStyle.Single, R(0, 156, 121), R(99, 224, 181)),
                 canvas: CanvasBorder(R(238, 255, 248), R(0, 156, 121)))),
 
             new("Deep Space", StyleDocs("deep-space"), () => BaseSticker(
                 fg: R(165, 100, 255),
-                palette: Palette(QrPngPaletteMode.Rings, 0, R(165, 100, 255), R(255, 119, 198), R(124, 255, 232)),
-                shape: QrPngModuleShape.Dot,
-                eyes: Eye(QrPngEyeFrameStyle.Target, R(165, 100, 255), R(255, 119, 198)),
+                palette: Palette(QrPaletteMode.Rings, 0, R(165, 100, 255), R(255, 119, 198), R(124, 255, 232)),
+                shape: QrModuleShape.Dot,
+                eyes: Eye(QrEyeFrameStyle.Target, R(165, 100, 255), R(255, 119, 198)),
                 canvas: CanvasGradient(R(9, 9, 20), R(22, 12, 40)),
                 logo: logoCool), logoCool),
 
             new("Leaf Bloom", StyleDocs("leaf-bloom"), () => BaseSticker(
                 fg: R(64, 196, 155),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(64, 196, 155), R(140, 255, 214), R(255, 198, 125)),
-                shape: QrPngModuleShape.Leaf,
-                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(64, 196, 155), R(255, 198, 125)),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(64, 196, 155), R(140, 255, 214), R(255, 198, 125)),
+                shape: QrModuleShape.Leaf,
+                eyes: Eye(QrEyeFrameStyle.DoubleRing, R(64, 196, 155), R(255, 198, 125)),
                 canvas: CanvasGradient(R(8, 26, 22), R(12, 52, 44)))),
 
             new("Wave Pulse", StyleDocs("wave-pulse"), () => BaseSticker(
                 fg: R(88, 140, 255),
-                palette: Palette(QrPngPaletteMode.Random, 7421, R(88, 140, 255), R(46, 244, 255), R(255, 255, 255)),
-                shape: QrPngModuleShape.Wave,
-                eyes: Eye(QrPngEyeFrameStyle.Target, R(88, 140, 255), R(46, 244, 255)),
-                canvas: CanvasPattern(R(12, 16, 32), Pattern(QrPngBackgroundPatternType.Dots, R(88, 140, 255, 22))))),
+                palette: Palette(QrPaletteMode.Random, 7421, R(88, 140, 255), R(46, 244, 255), R(255, 255, 255)),
+                shape: QrModuleShape.Wave,
+                eyes: Eye(QrEyeFrameStyle.Target, R(88, 140, 255), R(46, 244, 255)),
+                canvas: CanvasPattern(R(12, 16, 32), Pattern(QrBackgroundPatternType.Dots, R(88, 140, 255, 22))))),
 
             new("Ink Blob", StyleDocs("ink-blob"), () => BaseSticker(
                 fg: R(30, 30, 30),
-                palette: Palette(QrPngPaletteMode.Random, 2024, R(30, 30, 30), R(80, 80, 80), R(200, 200, 200)),
-                shape: QrPngModuleShape.Blob,
-                eyes: Eye(QrPngEyeFrameStyle.Badge, R(30, 30, 30), R(80, 80, 80)),
+                palette: Palette(QrPaletteMode.Random, 2024, R(30, 30, 30), R(80, 80, 80), R(200, 200, 200)),
+                shape: QrModuleShape.Blob,
+                eyes: Eye(QrEyeFrameStyle.Badge, R(30, 30, 30), R(80, 80, 80)),
                 canvas: CanvasBorder(R(248, 248, 248), R(30, 30, 30)))),
 
             new("Soft Diamond", StyleDocs("soft-diamond"), () => BaseSticker(
                 fg: R(255, 128, 74),
-                palette: Palette(QrPngPaletteMode.Rings, 0, R(255, 128, 74), R(255, 214, 122), R(255, 94, 128)),
-                shape: QrPngModuleShape.SoftDiamond,
-                eyes: Eye(QrPngEyeFrameStyle.DoubleRing, R(255, 128, 74), R(255, 94, 128)),
+                palette: Palette(QrPaletteMode.Rings, 0, R(255, 128, 74), R(255, 214, 122), R(255, 94, 128)),
+                shape: QrModuleShape.SoftDiamond,
+                eyes: Eye(QrEyeFrameStyle.DoubleRing, R(255, 128, 74), R(255, 94, 128)),
                 canvas: CanvasGradient(R(40, 16, 10), R(72, 26, 14)))),
 
             new("Sticker Grid", StyleDocs("sticker-grid"), () => BaseSticker(
                 fg: R(30, 30, 30),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(30, 30, 30), R(80, 80, 80)),
-                shape: QrPngModuleShape.Square,
-                eyes: Eye(QrPngEyeFrameStyle.Badge, R(30, 30, 30), R(80, 80, 80)),
-                canvas: CanvasPattern(R(255, 255, 255), Pattern(QrPngBackgroundPatternType.Grid, R(30, 30, 30, 18))))),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(30, 30, 30), R(80, 80, 80)),
+                shape: QrModuleShape.Square,
+                eyes: Eye(QrEyeFrameStyle.Badge, R(30, 30, 30), R(80, 80, 80)),
+                canvas: CanvasPattern(R(255, 255, 255), Pattern(QrBackgroundPatternType.Grid, R(30, 30, 30, 18))))),
 
             new("Connected Melt", StyleDocs("connected-melt"), () => BaseSticker(
                 fg: R(88, 120, 255),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(88, 120, 255), R(120, 96, 255), R(88, 210, 255)),
-                shape: QrPngModuleShape.ConnectedRounded,
-                eyes: Eye(QrPngEyeFrameStyle.Target, R(88, 120, 255), R(88, 210, 255)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.86, 1.0),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(88, 120, 255), R(120, 96, 255), R(88, 210, 255)),
+                shape: QrModuleShape.ConnectedRounded,
+                eyes: Eye(QrEyeFrameStyle.Target, R(88, 120, 255), R(88, 210, 255)),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.86, 1.0),
                 canvas: CanvasGradient(R(14, 18, 42), R(28, 20, 76)))),
 
             new("Minimal Mono", StyleDocs("minimal-mono"), () => BaseSticker(
                 fg: R(18, 18, 18),
                 palette: null,
-                shape: QrPngModuleShape.ConnectedRounded,
+                shape: QrModuleShape.ConnectedRounded,
                 eyes: EyeGlow(R(18, 18, 18), R(18, 18, 18), R(120, 120, 120, 150)),
-                scaleMap: ScaleMap(QrPngModuleScaleMode.Radial, 0.9, 1.0),
+                scaleMap: ScaleMap(QrModuleScaleMode.Radial, 0.9, 1.0),
                 canvas: CanvasBorder(R(255, 255, 255), R(18, 18, 18)))),
 
             new("Center Pop", StyleDocs("center-pop"), () => BaseSticker(
                 fg: R(35, 54, 89),
-                palette: Palette(QrPngPaletteMode.Cycle, 0, R(35, 54, 89), R(60, 90, 140)),
+                palette: Palette(QrPaletteMode.Cycle, 0, R(35, 54, 89), R(60, 90, 140)),
                 zones: Zones(
-                    Palette(QrPngPaletteMode.Random, 130, R(255, 107, 107), R(255, 217, 61), R(110, 255, 200)), 9,
-                    Palette(QrPngPaletteMode.Checker, 0, R(35, 54, 89), R(255, 217, 61)), 5),
-                shape: QrPngModuleShape.Rounded,
-                eyes: Eye(QrPngEyeFrameStyle.Single, R(35, 54, 89), R(255, 217, 61)),
+                    Palette(QrPaletteMode.Random, 130, R(255, 107, 107), R(255, 217, 61), R(110, 255, 200)), 9,
+                    Palette(QrPaletteMode.Checker, 0, R(35, 54, 89), R(255, 217, 61)), 5),
+                shape: QrModuleShape.Rounded,
+                eyes: Eye(QrEyeFrameStyle.Single, R(35, 54, 89), R(255, 217, 61)),
                 canvas: CanvasBorder(R(250, 252, 255), R(35, 54, 89)), logo: logoWarm), logoWarm)
         };
     }
@@ -551,21 +554,20 @@ internal static partial class QrStyleBoardExample {
     [JsonSerializable(typeof(List<StyleBoardEntry>))]
     private sealed partial class StyleBoardJsonContext : JsonSerializerContext;
 
-    private static QrEasyOptions BaseSticker(
+    private static QrRenderOptions BaseSticker(
         Rgba32 fg,
-        QrPngPaletteOptions? palette,
-        QrPngModuleShape shape,
-        QrPngEyeOptions eyes,
-        QrPngCanvasOptions canvas,
-        QrPngModuleScaleMapOptions? scaleMap = null,
-        QrPngModuleShapeMapOptions? shapeMap = null,
-        QrPngModuleJitterOptions? jitter = null,
-        QrPngPaletteZoneOptions? zones = null,
-        QrPngForegroundPatternOptions? pattern = null,
+        QrPaletteOptions? palette,
+        QrModuleShape shape,
+        QrEyeOptions eyes,
+        QrCanvasOptions canvas,
+        QrModuleScaleMapOptions? scaleMap = null,
+        QrModuleShapeMapOptions? shapeMap = null,
+        QrModuleJitterOptions? jitter = null,
+        QrPaletteZoneOptions? zones = null,
+        QrForegroundPatternOptions? pattern = null,
         byte[]? logo = null,
         Rgba32? background = null) {
-        return new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+        return new QrRenderOptions {
             // Web-friendly size: keeps assets lightweight while remaining crisp in the grid.
             TargetSizePx = StyleBoardTargetSizePx,
             TargetSizeIncludesQuietZone = true,
@@ -590,12 +592,12 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngEyeOptions Eye(QrPngEyeFrameStyle style, Rgba32 outer, Rgba32 inner) {
-        return new QrPngEyeOptions {
+    private static QrEyeOptions Eye(QrEyeFrameStyle style, Rgba32 outer, Rgba32 inner) {
+        return new QrEyeOptions {
             UseFrame = true,
             FrameStyle = style,
-            OuterShape = QrPngModuleShape.Rounded,
-            InnerShape = QrPngModuleShape.Circle,
+            OuterShape = QrModuleShape.Rounded,
+            InnerShape = QrModuleShape.Circle,
             OuterColor = outer,
             InnerColor = inner,
             OuterCornerRadiusPx = 6,
@@ -603,16 +605,16 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngEyeOptions EyeGlow(Rgba32 outer, Rgba32 inner, Rgba32? glow = null) {
-        var eyes = Eye(QrPngEyeFrameStyle.Glow, outer, inner);
+    private static QrEyeOptions EyeGlow(Rgba32 outer, Rgba32 inner, Rgba32? glow = null) {
+        var eyes = Eye(QrEyeFrameStyle.Glow, outer, inner);
         eyes.GlowRadiusPx = 28;
         eyes.GlowAlpha = 125;
         eyes.GlowColor = glow ?? outer;
         return eyes;
     }
 
-    private static QrPngEyeOptions EyeAccentStripes(Rgba32 outer, Rgba32 inner, Rgba32 stripeColor, int seed) {
-        var eyes = Eye(QrPngEyeFrameStyle.Target, outer, inner);
+    private static QrEyeOptions EyeAccentStripes(Rgba32 outer, Rgba32 inner, Rgba32 stripeColor, int seed) {
+        var eyes = Eye(QrEyeFrameStyle.Target, outer, inner);
         eyes.OuterCornerRadiusPx = 7;
         eyes.InnerCornerRadiusPx = 4;
         eyes.AccentStripeCount = 26;
@@ -631,23 +633,23 @@ internal static partial class QrStyleBoardExample {
         return eyes;
     }
 
-    private static QrPngEyeOptions EyeInsetRing(Rgba32 outer, Rgba32 inner) {
-        var eyes = Eye(QrPngEyeFrameStyle.InsetRing, outer, inner);
+    private static QrEyeOptions EyeInsetRing(Rgba32 outer, Rgba32 inner) {
+        var eyes = Eye(QrEyeFrameStyle.InsetRing, outer, inner);
         eyes.InnerScale = 0.92;
         return eyes;
     }
 
-    private static QrPngEyeOptions EyeCutCorner(Rgba32 outer, Rgba32 inner) {
-        var eyes = Eye(QrPngEyeFrameStyle.CutCorner, outer, inner);
-        eyes.OuterShape = QrPngModuleShape.Square;
-        eyes.InnerShape = QrPngModuleShape.Rounded;
+    private static QrEyeOptions EyeCutCorner(Rgba32 outer, Rgba32 inner) {
+        var eyes = Eye(QrEyeFrameStyle.CutCorner, outer, inner);
+        eyes.OuterShape = QrModuleShape.Square;
+        eyes.InnerShape = QrModuleShape.Rounded;
         eyes.OuterCornerRadiusPx = 0;
         eyes.InnerCornerRadiusPx = 4;
         return eyes;
     }
 
-    private static QrPngPaletteOptions Palette(QrPngPaletteMode mode, int seed, params Rgba32[] colors) {
-        return new QrPngPaletteOptions {
+    private static QrPaletteOptions Palette(QrPaletteMode mode, int seed, params Rgba32[] colors) {
+        return new QrPaletteOptions {
             Mode = mode,
             Seed = seed,
             RingSize = 2,
@@ -656,8 +658,8 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngPaletteZoneOptions Zones(QrPngPaletteOptions? center, int centerSize, QrPngPaletteOptions? corners, int cornerSize) {
-        return new QrPngPaletteZoneOptions {
+    private static QrPaletteZoneOptions Zones(QrPaletteOptions? center, int centerSize, QrPaletteOptions? corners, int cornerSize) {
+        return new QrPaletteZoneOptions {
             CenterPalette = center,
             CenterSize = centerSize,
             CornerPalette = corners,
@@ -665,8 +667,8 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngModuleScaleMapOptions ScaleMap(QrPngModuleScaleMode mode, double min, double max, int seed = 12345) {
-        return new QrPngModuleScaleMapOptions {
+    private static QrModuleScaleMapOptions ScaleMap(QrModuleScaleMode mode, double min, double max, int seed = 12345) {
+        return new QrModuleScaleMapOptions {
             Mode = mode,
             MinScale = min,
             MaxScale = max,
@@ -675,9 +677,9 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngForegroundPatternOptions Speckle(Rgba32 color, int seed, int sizePx = 6, int thicknessPx = 1, double variation = 0.78, double density = 0.92, bool applyToEyes = false) {
-        return new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.SpeckleDots,
+    private static QrForegroundPatternOptions Speckle(Rgba32 color, int seed, int sizePx = 6, int thicknessPx = 1, double variation = 0.78, double density = 0.92, bool applyToEyes = false) {
+        return new QrForegroundPatternOptions {
+            Type = QrForegroundPatternType.SpeckleDots,
             Color = color,
             Seed = seed,
             Variation = variation,
@@ -689,9 +691,9 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngForegroundPatternOptions Halftone(Rgba32 color, int seed, int sizePx = 8, int thicknessPx = 2, double variation = 0.9, double density = 0.95, bool applyToEyes = false) {
-        return new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.HalftoneDots,
+    private static QrForegroundPatternOptions Halftone(Rgba32 color, int seed, int sizePx = 8, int thicknessPx = 2, double variation = 0.9, double density = 0.95, bool applyToEyes = false) {
+        return new QrForegroundPatternOptions {
+            Type = QrForegroundPatternType.HalftoneDots,
             Color = color,
             Seed = seed,
             Variation = variation,
@@ -703,14 +705,14 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngBackgroundPatternOptions Pattern(
-        QrPngBackgroundPatternType type,
+    private static QrBackgroundPatternOptions Pattern(
+        QrBackgroundPatternType type,
         Rgba32 color,
         int sizePx = 14,
         int thicknessPx = 1,
         bool snapToModuleSize = true,
         int moduleStep = 2) {
-        return new QrPngBackgroundPatternOptions {
+        return new QrBackgroundPatternOptions {
             Type = type,
             Color = color,
             SizePx = sizePx,
@@ -720,12 +722,12 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasGradient(Rgba32 start, Rgba32 end) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasGradient(Rgba32 start, Rgba32 end) {
+        return new QrCanvasOptions {
             PaddingPx = 24,
             CornerRadiusPx = 26,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.DiagonalDown,
                 StartColor = start,
                 EndColor = end,
             },
@@ -737,9 +739,9 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasGradientVignette(Rgba32 start, Rgba32 end, Rgba32 vignetteColor, int bandPx = 72, double strength = 1.0) {
+    private static QrCanvasOptions CanvasGradientVignette(Rgba32 start, Rgba32 end, Rgba32 vignetteColor, int bandPx = 72, double strength = 1.0) {
         var canvas = CanvasGradient(start, end);
-        canvas.Vignette = new QrPngCanvasVignetteOptions {
+        canvas.Vignette = new QrCanvasVignetteOptions {
             Color = vignetteColor,
             BandPx = bandPx,
             Strength = strength,
@@ -748,7 +750,7 @@ internal static partial class QrStyleBoardExample {
         return canvas;
     }
 
-    private static QrPngCanvasOptions CanvasGradientTexture(
+    private static QrCanvasOptions CanvasGradientTexture(
         Rgba32 start,
         Rgba32 end,
         Rgba32 grainColor,
@@ -759,7 +761,7 @@ internal static partial class QrStyleBoardExample {
         int vignetteBandPx = 84,
         double vignetteStrength = 1.0) {
         var canvas = CanvasGradient(start, end);
-        canvas.Grain = new QrPngCanvasGrainOptions {
+        canvas.Grain = new QrCanvasGrainOptions {
             Color = grainColor,
             Density = grainDensity,
             PixelSizePx = grainPixelSize,
@@ -768,7 +770,7 @@ internal static partial class QrStyleBoardExample {
             ProtectQrArea = true,
         };
         if (vignetteColor is not null) {
-            canvas.Vignette = new QrPngCanvasVignetteOptions {
+            canvas.Vignette = new QrCanvasVignetteOptions {
                 Color = vignetteColor.Value,
                 BandPx = vignetteBandPx,
                 Strength = vignetteStrength,
@@ -778,7 +780,7 @@ internal static partial class QrStyleBoardExample {
         return canvas;
     }
 
-    private static QrPngCanvasOptions CanvasEdgeSplash(
+    private static QrCanvasOptions CanvasEdgeSplash(
         Rgba32 start,
         Rgba32 end,
         int splashSeed,
@@ -795,13 +797,13 @@ internal static partial class QrStyleBoardExample {
             vignetteBandPx: 104,
             vignetteStrength: 1.0);
 
-        canvas.Splash = new QrPngCanvasSplashOptions {
+        canvas.Splash = new QrCanvasSplashOptions {
             Colors = splashColors,
             Count = 18,
             MinRadiusPx = 18,
             MaxRadiusPx = 56,
             SpreadPx = 28,
-            Placement = QrPngCanvasSplashPlacement.CanvasEdges,
+            Placement = QrCanvasSplashPlacement.CanvasEdges,
             EdgeBandPx = edgeBandPx,
             DripChance = 0.6,
             DripLengthPx = 48,
@@ -813,8 +815,8 @@ internal static partial class QrStyleBoardExample {
         return canvas;
     }
 
-    private static QrPngCanvasOptions CanvasPattern(Rgba32 background, QrPngBackgroundPatternOptions pattern) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasPattern(Rgba32 background, QrBackgroundPatternOptions pattern) {
+        return new QrCanvasOptions {
             PaddingPx = 22,
             CornerRadiusPx = 24,
             Background = background,
@@ -827,8 +829,8 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasBorder(Rgba32 background, Rgba32 border) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasBorder(Rgba32 background, Rgba32 border) {
+        return new QrCanvasOptions {
             PaddingPx = 20,
             CornerRadiusPx = 22,
             Background = background,
@@ -840,18 +842,18 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasCardFrame(Rgba32 start, Rgba32 end, Rgba32 frameColor, Rgba32 innerFrameColor) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasCardFrame(Rgba32 start, Rgba32 end, Rgba32 frameColor, Rgba32 innerFrameColor) {
+        return new QrCanvasOptions {
             PaddingPx = 44,
             CornerRadiusPx = 32,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.DiagonalDown,
                 StartColor = start,
                 EndColor = end,
             },
             BorderPx = 2,
             BorderColor = R(255, 255, 255, 36),
-            Frame = new QrPngCanvasFrameOptions {
+            Frame = new QrCanvasFrameOptions {
                 ThicknessPx = 16,
                 GapPx = 12,
                 RadiusPx = 28,
@@ -866,14 +868,14 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasStickerFrame(Rgba32 background, Rgba32 frameColor, Rgba32 accentColor) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasStickerFrame(Rgba32 background, Rgba32 frameColor, Rgba32 accentColor) {
+        return new QrCanvasOptions {
             PaddingPx = 42,
             CornerRadiusPx = 36,
             Background = background,
             BorderPx = 6,
             BorderColor = R(255, 255, 255),
-            Frame = new QrPngCanvasFrameOptions {
+            Frame = new QrCanvasFrameOptions {
                 ThicknessPx = 12,
                 GapPx = 10,
                 RadiusPx = 30,
@@ -888,27 +890,27 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasGradientFrame(Rgba32 bgStart, Rgba32 bgEnd, Rgba32 frameStart, Rgba32 frameEnd) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasGradientFrame(Rgba32 bgStart, Rgba32 bgEnd, Rgba32 frameStart, Rgba32 frameEnd) {
+        return new QrCanvasOptions {
             PaddingPx = 34,
             CornerRadiusPx = 30,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.DiagonalDown,
                 StartColor = bgStart,
                 EndColor = bgEnd,
             },
             BorderPx = 2,
             BorderColor = R(255, 255, 255, 36),
-            Frame = new QrPngCanvasFrameOptions {
+            Frame = new QrCanvasFrameOptions {
                 ThicknessPx = 14,
                 GapPx = 10,
                 RadiusPx = 26,
-                Gradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.DiagonalDown,
+                Gradient = new QrGradientOptions {
+                    Type = QrGradientType.DiagonalDown,
                     StartColor = frameStart,
                     EndColor = frameEnd,
                 },
-                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Dots, R(255, 255, 255, 160), thicknessPx: 2, spacingPx: 8, dashPx: 10),
+                EdgePattern = EdgePattern(QrCanvasEdgePatternType.Dots, R(255, 255, 255, 160), thicknessPx: 2, spacingPx: 8, dashPx: 10),
             },
             ShadowOffsetX = 7,
             ShadowOffsetY = 10,
@@ -916,19 +918,19 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasStitchedFrame(Rgba32 background, Rgba32 stitchColor) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasStitchedFrame(Rgba32 background, Rgba32 stitchColor) {
+        return new QrCanvasOptions {
             PaddingPx = 32,
             CornerRadiusPx = 26,
             Background = background,
             BorderPx = 2,
             BorderColor = R(0, 0, 0, 18),
-            Frame = new QrPngCanvasFrameOptions {
+            Frame = new QrCanvasFrameOptions {
                 ThicknessPx = 12,
                 GapPx = 10,
                 RadiusPx = 22,
                 Color = R(255, 255, 255),
-                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Stitches, stitchColor, thicknessPx: 2, spacingPx: 10, dashPx: 6, insetPx: 2),
+                EdgePattern = EdgePattern(QrCanvasEdgePatternType.Stitches, stitchColor, thicknessPx: 2, spacingPx: 10, dashPx: 6, insetPx: 2),
             },
             ShadowOffsetX = 6,
             ShadowOffsetY = 9,
@@ -936,25 +938,25 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasBand(Rgba32 background, Rgba32 bandStart, Rgba32 bandEnd) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasBand(Rgba32 background, Rgba32 bandStart, Rgba32 bandEnd) {
+        return new QrCanvasOptions {
             PaddingPx = 28,
             CornerRadiusPx = 24,
             Background = background,
             BorderPx = 2,
             BorderColor = R(0, 0, 0, 18),
-            Band = new QrPngCanvasBandOptions {
+            Band = new QrCanvasBandOptions {
                 BandPx = 12,
                 GapPx = 0,
                 RadiusPx = 20,
-                Gradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.Radial,
+                Gradient = new QrGradientOptions {
+                    Type = QrGradientType.Radial,
                     StartColor = bandStart,
                     EndColor = bandEnd,
                     CenterX = 0.3,
                     CenterY = 0.3,
                 },
-                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Dashes, R(255, 255, 255, 140), thicknessPx: 2, spacingPx: 10, dashPx: 8, insetPx: 1),
+                EdgePattern = EdgePattern(QrCanvasEdgePatternType.Dashes, R(255, 255, 255, 140), thicknessPx: 2, spacingPx: 10, dashPx: 8, insetPx: 1),
             },
             ShadowOffsetX = 6,
             ShadowOffsetY = 9,
@@ -962,14 +964,14 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasEdgePatternOptions EdgePattern(
-        QrPngCanvasEdgePatternType type,
+    private static QrCanvasEdgePatternOptions EdgePattern(
+        QrCanvasEdgePatternType type,
         Rgba32 color,
         int thicknessPx = 2,
         int spacingPx = 8,
         int dashPx = 10,
         int insetPx = 1) {
-        return new QrPngCanvasEdgePatternOptions {
+        return new QrCanvasEdgePatternOptions {
             Type = type,
             Color = color,
             ThicknessPx = thicknessPx,
@@ -979,22 +981,22 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasBadge(Rgba32 background, Rgba32 badgeColor, QrPngCanvasBadgePosition position) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasBadge(Rgba32 background, Rgba32 badgeColor, QrCanvasBadgePosition position) {
+        return new QrCanvasOptions {
             PaddingPx = 34,
             CornerRadiusPx = 28,
             Background = background,
             BorderPx = 2,
             BorderColor = R(0, 0, 0, 18),
-            Badge = new QrPngCanvasBadgeOptions {
-                Shape = QrPngCanvasBadgeShape.Badge,
+            Badge = new QrCanvasBadgeOptions {
+                Shape = QrCanvasBadgeShape.Badge,
                 Position = position,
                 WidthPx = 140,
                 HeightPx = 34,
                 GapPx = 10,
                 CornerRadiusPx = 16,
                 Color = badgeColor,
-                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Dots, R(255, 255, 255, 150), thicknessPx: 2, spacingPx: 10, dashPx: 8, insetPx: 2),
+                EdgePattern = EdgePattern(QrCanvasEdgePatternType.Dots, R(255, 255, 255, 150), thicknessPx: 2, spacingPx: 10, dashPx: 8, insetPx: 2),
             },
             ShadowOffsetX = 7,
             ShadowOffsetY = 10,
@@ -1002,15 +1004,15 @@ internal static partial class QrStyleBoardExample {
         };
     }
 
-    private static QrPngCanvasOptions CanvasRibbon(Rgba32 background, Rgba32 ribbonColor, QrPngCanvasBadgePosition position) {
-        return new QrPngCanvasOptions {
+    private static QrCanvasOptions CanvasRibbon(Rgba32 background, Rgba32 ribbonColor, QrCanvasBadgePosition position) {
+        return new QrCanvasOptions {
             PaddingPx = 36,
             CornerRadiusPx = 28,
             Background = background,
             BorderPx = 2,
             BorderColor = R(0, 0, 0, 18),
-            Badge = new QrPngCanvasBadgeOptions {
-                Shape = QrPngCanvasBadgeShape.Ribbon,
+            Badge = new QrCanvasBadgeOptions {
+                Shape = QrCanvasBadgeShape.Ribbon,
                 Position = position,
                 WidthPx = 150,
                 HeightPx = 30,
@@ -1018,7 +1020,7 @@ internal static partial class QrStyleBoardExample {
                 CornerRadiusPx = 8,
                 TailPx = 12,
                 Color = ribbonColor,
-                EdgePattern = EdgePattern(QrPngCanvasEdgePatternType.Dashes, R(255, 255, 255, 150), thicknessPx: 2, spacingPx: 10, dashPx: 8, insetPx: 2),
+                EdgePattern = EdgePattern(QrCanvasEdgePatternType.Dashes, R(255, 255, 255, 150), thicknessPx: 2, spacingPx: 10, dashPx: 8, insetPx: 2),
             },
             ShadowOffsetX = 7,
             ShadowOffsetY = 10,
@@ -1074,6 +1076,6 @@ internal static partial class QrStyleBoardExample {
     private sealed record StylePreset(
         string Name,
         string Payload,
-        Func<QrEasyOptions> CreateOptions,
+        Func<QrRenderOptions> CreateOptions,
         byte[]? LogoPng = null);
 }

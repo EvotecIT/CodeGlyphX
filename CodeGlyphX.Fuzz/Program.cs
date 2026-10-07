@@ -105,12 +105,14 @@ public static class Program {
         } catch (Exception ex) when (IsExpectedException(ex)) {
             LogExpectedException(ex);
         }
+        // The harness resource gate must also run after a decoder rejects malformed input,
+        // and its failure must not be swallowed as an expected decoder exception.
+        EnforceMemoryLimit(label);
     }
 
     private static void RunWithTimeout(string label, Action action) {
         if (TimeoutMs <= 0) {
             action();
-            EnforceMemoryLimit(label);
             return;
         }
 
@@ -120,7 +122,6 @@ public static class Program {
                 Environment.FailFast($"[Fuzz] Timeout after {TimeoutMs}ms in {label}.");
             }
             if (task.Exception is not null) throw task.Exception.GetBaseException();
-            EnforceMemoryLimit(label);
         } catch (AggregateException ex) {
             throw ex.GetBaseException();
         }

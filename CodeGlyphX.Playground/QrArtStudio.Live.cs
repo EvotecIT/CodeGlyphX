@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Art;
 using CodeGlyphX.Rendering.Png;
 using Microsoft.AspNetCore.Components;
@@ -47,7 +48,7 @@ public partial class QrArtStudio {
         ModuleSize = _moduleSize, Strength = _strength, ImagePositionX = _cropX, ImagePositionY = _cropY, ImageZoom = _zoom,
         Canvas = new QrImageCanvasOptions { PaddingModules = _frameEnabled ? 12 : 8, PositionX = _qrX, PositionY = _qrY },
         Art = new QrImageArtOptions {
-            Style = _style, Finders = _finders, Shape = QrPngModuleShape.ConnectedRounded, Scale = _artScale, DetailProtection = _detail,
+            Style = _style, Finders = _finders, Shape = QrModuleShape.ConnectedRounded, Scale = _artScale, DetailProtection = _detail,
             FunctionalForeground = new(21, 26, 47), FunctionalBackground = new(255, 249, 239),
             Subject = !_procedural && _protect ? new QrImageSubjectOptions { X = _subjectX, Y = _subjectY, Radius = _radius, Mask = _mask } : null
         }

@@ -13,7 +13,7 @@ public sealed class AztecConformanceTests {
     [InlineData("Zażółć gęślą jaźń")]
     [InlineData("😀 日本語")]
     public void UnicodeText_RoundTrips(string text) {
-        Assert.True(AztecCode.TryDecode(AztecCode.Encode(text), out var decoded));
+        Assert.True(AztecCode.TryDecode(AztecCode.Encode(text).Modules, out var decoded));
         Assert.Equal(text, decoded);
     }
 
@@ -26,7 +26,7 @@ public sealed class AztecConformanceTests {
     [InlineData(10)]
     [InlineData(32)]
     public void FullSymbols_HaveReferenceGrid_AndDecode(int layers) {
-        var modules = AztecCode.Encode("HELLO", new AztecEncodeOptions { Layers = layers, Compact = false });
+        var modules = AztecCode.Encode("HELLO", new AztecEncodeOptions { Layers = layers, Compact = false }).Modules;
         var center = modules.Width / 2;
         for (int offset = 0, raw = 0; raw < (14 + layers * 4) / 2; offset += 16, raw += 15) {
             for (var k = center & 1; k < modules.Width; k += 2) {
@@ -48,15 +48,15 @@ public sealed class AztecConformanceTests {
     public void Eci_TextAndBinaryPathsAgree(int eci, string text) {
         Assert.True(EncodingUtils.TryGetEncoding(eci, out var encoding));
         var options = new AztecEncodeOptions { EciAssignmentNumber = eci };
-        Assert.True(AztecCode.TryDecode(AztecCode.Encode(text, options), out var decoded));
+        Assert.True(AztecCode.TryDecode(AztecCode.Encode(text, options).Modules, out var decoded));
         Assert.Equal(text, decoded);
-        Assert.True(AztecCode.TryDecode(AztecCode.Encode(encoding.GetBytes(text), options), out decoded));
+        Assert.True(AztecCode.TryDecode(AztecCode.Encode(encoding.GetBytes(text), options).Modules, out decoded));
         Assert.Equal(text, decoded);
     }
 
     [Fact]
     public void ExplicitLatin1Alias_AgreesWithTextEncoding() {
-        var modules = AztecCode.Encode("é", new AztecEncodeOptions { TextEncoding = EncodingUtils.Latin1, EciAssignmentNumber = 1 });
+        var modules = AztecCode.Encode("é", new AztecEncodeOptions { TextEncoding = EncodingUtils.Latin1, EciAssignmentNumber = 1 }).Modules;
         Assert.True(AztecCode.TryDecode(modules, out var text));
         Assert.Equal("é", text);
         Assert.Throws<InvalidOperationException>(() => AztecCode.Encode("é", new AztecEncodeOptions { TextEncoding = Encoding.UTF8, EciAssignmentNumber = 3 }));
@@ -106,7 +106,7 @@ public sealed class AztecConformanceTests {
     [Fact]
     public void InvalidAndUnknownEci_AreNotSilentlyDecodedAsLatin1() {
         Assert.Throws<ArgumentOutOfRangeException>(() => AztecCode.Encode(new byte[] { 65 }, new AztecEncodeOptions { EciAssignmentNumber = 1000000 }));
-        var modules = AztecCode.Encode(new byte[] { 65 }, new AztecEncodeOptions { EciAssignmentNumber = 999999 });
+        var modules = AztecCode.Encode(new byte[] { 65 }, new AztecEncodeOptions { EciAssignmentNumber = 999999 }).Modules;
         Assert.False(AztecCode.TryDecode(modules, out _));
         Assert.Throws<InvalidOperationException>(() => AztecCode.Encode("é", new AztecEncodeOptions { TextEncoding = Encoding.UTF8, EciAssignmentNumber = 3 }));
     }

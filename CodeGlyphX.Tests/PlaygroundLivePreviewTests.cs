@@ -133,7 +133,9 @@ public sealed partial class PlaygroundLivePreviewTests {
                 var frame = tree.Array[i];
                 if (frame.FrameType == RenderTreeFrameType.Element && frame.ElementName == "label") {
                     var children = tree.Array.Skip(i + 1).Take(frame.ElementSubtreeLength - 1).ToArray();
-                    if (children.Any(child => child.FrameType == RenderTreeFrameType.Text && child.TextContent.Trim() == label)) {
+                    if (children.Any(child =>
+                        child.FrameType == RenderTreeFrameType.Text && child.TextContent.Trim() == label ||
+                        child.FrameType == RenderTreeFrameType.Markup && child.MarkupContent.Contains(label, StringComparison.Ordinal))) {
                         var upload = children.FirstOrDefault(child => child.FrameType == RenderTreeFrameType.Component && child.Component is InputFile).Component as InputFile;
                         if (upload is not null) return upload;
                     }

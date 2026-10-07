@@ -11,7 +11,7 @@ namespace CodeGlyphX.Tests;
 
 public sealed class ImageDecodeOptionsTests {
     [Fact]
-    public void CodeGlyph_Downscales_NonQr_ImageOptions() {
+    public void Scanner_DownscalesRawNonQrFramesBeforeRecognition() {
         var matrix = DataMatrixEncoder.Encode("DOWNSCALE");
         var pixels = MatrixPngRenderer.RenderPixels(
             matrix,
@@ -20,12 +20,15 @@ public sealed class ImageDecodeOptionsTests {
             out var height,
             out var stride);
 
-        var options = new CodeGlyphDecodeOptions {
+        var options = new ScanOptions {
+            Formats = new[] { SymbolFormat.DataMatrix }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(2000),
             Image = new ImageDecodeOptions { MaxDimension = 200, RecognitionBudgetMilliseconds = 200 },
             Qr = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast, BudgetMilliseconds = 200 }
         };
 
-        Assert.True(CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options));
+        var scan = SymbolScanner.Scan(new ImageFrame(pixels, width, height, stride, PixelFormat.Rgba32), options);
+        Assert.True(scan.IsSuccess, scan.Failure);
+        var decoded = Assert.Single(scan.Symbols);
         Assert.Equal("DOWNSCALE", decoded.Text);
     }
 
@@ -40,7 +43,7 @@ public sealed class ImageDecodeOptionsTests {
 
         var options = new ImageDecodeOptions { MaxDimension = 600 };
 
-        Assert.True(Barcode.TryDecodePng(png, BarcodeType.Code128, options, out var decoded));
+        Assert.True(Barcode.TryDecodePng(png, SymbolFormat.Code128, options, out var decoded));
         Assert.Equal("TEST-123", decoded.Text);
     }
 
@@ -53,10 +56,10 @@ public sealed class ImageDecodeOptionsTests {
             HeightModules = 40
         });
 
-        Assert.True(Barcode.TryDecodePng(png, BarcodeType.Code128, out _));
+        Assert.True(Barcode.TryDecodePng(png, SymbolFormat.Code128, out _));
         Assert.False(Barcode.TryDecodePng(
             png,
-            BarcodeType.Code128,
+            SymbolFormat.Code128,
             new ImageDecodeOptions { MaxDimension = 1 },
             out _));
     }
@@ -73,7 +76,7 @@ public sealed class ImageDecodeOptionsTests {
 
         var success = Barcode.TryDecodeImage(
             stream,
-            BarcodeType.Code128,
+            SymbolFormat.Code128,
             new ImageDecodeOptions { RecognitionBudgetMilliseconds = 1000 },
             out var decoded);
 
@@ -83,7 +86,7 @@ public sealed class ImageDecodeOptionsTests {
 
     [Fact]
     public void Qr_Downscales_WithImageOptions() {
-        var png = QrCode.Render("HELLO-WORLD", OutputFormat.Png, new QrEasyOptions { ModuleSize = 18, QuietZone = 4 }).Data;
+        var png = QR.Render("HELLO-WORLD", OutputFormat.Png, new QrRenderOptions { ModuleSize = 18, QuietZone = 4 }).Data.ToArray();
         var imageOptions = new ImageDecodeOptions { MaxDimension = 200 };
 
         Assert.True(QR.TryDecodePng(png, imageOptions, options: null, out var decoded));
@@ -93,7 +96,7 @@ public sealed class ImageDecodeOptionsTests {
     [Fact]
     public void Aztec_OptionAware_Image_Transports_RoundTrip_WithDiagnostics() {
         const string payload = "AZTEC-IMAGE-OPTIONS";
-        var png = AztecCode.Render(payload, OutputFormat.Png).Data;
+        var png = AztecCode.Render(payload, OutputFormat.Png).Data.ToArray();
         var options = new ImageDecodeOptions { RecognitionBudgetMilliseconds = TestBudget.Adjust(2000) };
 
         Assert.True(AztecCode.TryDecodeImage(png, options, CancellationToken.None, out var byteText));
@@ -118,7 +121,7 @@ public sealed class ImageDecodeOptionsTests {
     [Fact]
     public void DataMatrix_OptionAware_Image_Transports_RoundTrip_WithDiagnostics() {
         const string payload = "DATA-MATRIX-IMAGE-OPTIONS";
-        var png = DataMatrixCode.Render(payload, OutputFormat.Png).Data;
+        var png = DataMatrixCode.Render(payload, OutputFormat.Png).Data.ToArray();
         var options = new ImageDecodeOptions { RecognitionBudgetMilliseconds = TestBudget.Adjust(2000) };
 
         Assert.True(DataMatrixCode.TryDecodePng(png, options, CancellationToken.None, out var byteText));
@@ -143,7 +146,7 @@ public sealed class ImageDecodeOptionsTests {
     [Fact]
     public void Pdf417_OptionAware_Image_Transports_RoundTrip_WithDiagnostics() {
         const string payload = "PDF417-IMAGE-OPTIONS";
-        var png = Pdf417Code.Render(payload, OutputFormat.Png).Data;
+        var png = Pdf417Code.Render(payload, OutputFormat.Png).Data.ToArray();
         var options = new ImageDecodeOptions { RecognitionBudgetMilliseconds = TestBudget.Adjust(2000) };
 
         Assert.True(Pdf417Code.TryDecodePng(png, options, CancellationToken.None, out string byteText));
@@ -192,6 +195,55 @@ public sealed class ImageDecodeOptionsTests {
         var options = ImageDecodeOptions.Guarded(maxAnimationFramePixels: 0);
 
         Assert.Equal(0, options.MaxAnimationFramePixels);
+    }
+
+    [Fact]
+    public void NegativePresetLimitsAreRejectedRatherThanDisabled() {
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageDecodeOptions.Screen(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageDecodeOptions.Screen(maxDimension: -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageDecodeOptions.Guarded(maxBytes: -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageDecodeOptions.Guarded(maxPixels: -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageDecodeOptions.Guarded(maxAnimationFrames: -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageDecodeOptions.Guarded(maxAnimationDurationMs: -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageDecodeOptions.Guarded(maxAnimationFramePixels: -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => ImageDecodeOptions.Strict(maxDimension: -1));
+    }
+
+    [Fact]
+    public void AssignedLimitsRejectNegativesAndPreserveThePreviousGuard() {
+        var options = ImageDecodeOptions.Strict();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.MaxBytes = -1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.MaxPixels = -1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.MaxDecodedBytes = -1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.MaxAnimationFrames = -1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.MaxAnimationDurationMs = -1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.MaxAnimationFramePixels = -1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.MaxDimension = -1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.RecognitionBudgetMilliseconds = -1);
+        Assert.Equal(8 * 1024 * 1024, options.MaxBytes);
+    }
+
+    [Fact]
+    public void FluentLimitsRejectNegativesAndZeroExplicitlyResetsTheDimension() {
+        var options = ImageDecodeOptions.Screen();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.WithMaxBytes(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.WithMaxPixels(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.WithMaxDecodedBytes(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.WithMaxAnimationFrames(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.WithMaxAnimationDurationMs(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.WithMaxAnimationFramePixels(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.WithMaxDimension(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.WithRecognitionBudget(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => options.WithRecognitionBudget(100, -1));
+        Assert.Equal(300, options.RecognitionBudgetMilliseconds);
+
+        options.WithRecognitionBudget(0, 0).WithMaxBytes(0).WithMaxPixels(0);
+        Assert.Equal(0, options.MaxDimension);
+        Assert.Equal(0, options.RecognitionBudgetMilliseconds);
+        Assert.Equal(0, options.MaxBytes);
+        Assert.Equal(0, options.MaxPixels);
     }
 
     private sealed class DelayedReadStream : Stream {

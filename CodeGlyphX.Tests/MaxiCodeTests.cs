@@ -175,10 +175,10 @@ public sealed class MaxiCodeTests {
 
         Assert.True(MatrixBarcodeDecoder.TryDecode(BarcodeType.MaxiCode, modules, out var text));
         Assert.Equal("UNIFIED-MAXICODE", text);
-        Assert.True(CodeGlyph.TryDecode(modules, out var decoded, expectedBarcode: BarcodeType.MaxiCode));
-        Assert.Equal(CodeGlyphKind.MaxiCode, decoded.Kind);
+        Assert.True(SymbolDecoder.TryDecode(modules, out var decoded, format: SymbolFormat.MaxiCode));
+        Assert.Equal(SymbolFormat.MaxiCode, decoded.Format);
         Assert.Equal("UNIFIED-MAXICODE", decoded.Text);
-        Assert.NotNull(decoded.MaxiCode);
+        Assert.IsType<MaxiCodeSymbolMetadata>(decoded.Metadata);
 
         var capability = SymbolCapabilities.Get(SymbolFormat.MaxiCode);
         Assert.True(capability.CanEncode);

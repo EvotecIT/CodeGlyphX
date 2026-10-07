@@ -18,10 +18,10 @@ Code 128 is a high-density linear barcode supporting the full ASCII character se
 using CodeGlyphX;
 
 // Code 128
-Barcode.Save(BarcodeType.Code128, "PRODUCT-12345", "code128.png");
+Barcode.Save(SymbolFormat.Code128, "PRODUCT-12345", "code128.png");
 
 // GS1-128 with Application Identifiers
-Barcode.Save(BarcodeType.GS1_128, "(01)09501101530003(17)250101", "gs1.png");
+Barcode.Save(SymbolFormat.Gs1Code128, "(01)09501101530003(17)250101", "gs1.png");
 ```
 
 ## Character Sets

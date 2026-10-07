@@ -21,10 +21,14 @@ using CodeGlyphX;
 QR.Save("https://example.com", "qr.png");
 
 // With error correction level
-QR.Save("https://example.com", "qr.png", new QrEasyOptions {
+QR.Save("https://example.com", "qr.png", encodingOptions: new QrEncodingOptions {
     ErrorCorrectionLevel = QrErrorCorrectionLevel.H
 });
 ```
+
+Encoding controls belong to `QrEncodingOptions`; appearance belongs to `QrRenderOptions`. An encoded `QrCode` can be rendered repeatedly without changing its payload or version. See the [3.0 migration guide](/docs/migration-3/) for the option and result changes.
+
+SVG, SVGZ and HTML reject explicit raster-only effects with `NotSupportedException`. Use PNG or raster-mode PDF/EPS to preserve those effects.
 
 ## Error Correction Levels
 
@@ -39,17 +43,18 @@ QR.Save("https://example.com", "qr.png", new QrEasyOptions {
 
 ```csharp
 using CodeGlyphX;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
-var options = new QrEasyOptions
+var options = new QrRenderOptions
 {
-    ModuleShape = QrPngModuleShape.Rounded,
+    ModuleShape = QrModuleShape.Rounded,
     ModuleCornerRadiusPx = 3,
-    Eyes = new QrPngEyeOptions
+    Eyes = new QrEyeOptions
     {
         UseFrame = true,
-        OuterShape = QrPngModuleShape.Circle,
-        InnerShape = QrPngModuleShape.Circle,
+        OuterShape = QrModuleShape.Circle,
+        InnerShape = QrModuleShape.Circle,
         OuterColor = new Rgba32(220, 20, 60),
         InnerColor = new Rgba32(220, 20, 60)
     }
@@ -61,12 +66,13 @@ QR.Save("https://example.com", "styled-qr.png", options);
 For a high-level art theme, start with conservative guardrails and inspect the static report:
 
 ```csharp
-var options = new QrEasyOptions {
+var options = new QrRenderOptions {
     Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Conservative, intensity: 60)
 };
 
-var report = QrEasy.EvaluateScanHeuristics("https://example.com", options);
-QR.Save("https://example.com", "styled-qr.png", options);
+var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
+var report = QR.EvaluateScanHeuristics("https://example.com", options, encoding);
+QR.Save("https://example.com", "styled-qr.png", options, encoding);
 ```
 
 `PassesHeuristics` checks configuration properties such as contrast, quiet zone, module scale, functional-pattern protection, and logo coverage. It is not a decode test and cannot guarantee interoperability. Test the final artifact on every scanner, authenticator, camera, display, print process, and device class your product supports.
@@ -84,13 +90,13 @@ var logo = LogoBuilder.CreateCirclePng(
     out _,
     out _);
 
-var png = QR.Create("https://example.com")
+var png = QR.Create("https://example.com", encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H, MinVersion = 4 })
     .WithLogoPng(logo)
     .WithLogoScale(0.22)
     .WithLogoPaddingPx(6)
     .WithStyle(QrRenderStyle.Fancy)
     .Render(OutputFormat.Png)
-    .Data;
+    .ToArray();
 ```
 
 ### Style Board Presets (Homepage Gallery)
@@ -130,27 +136,26 @@ using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
-var options = new QrEasyOptions
+var options = new QrRenderOptions
 {
-    ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
     TargetSizePx = 384,
     TargetSizeIncludesQuietZone = true,
     ModuleSize = 10,
     QuietZone = 4,
     Foreground = new Rgba32(0, 255, 213),
-    ModuleShape = QrPngModuleShape.Dot,
-    Eyes = new QrPngEyeOptions
+    ModuleShape = QrModuleShape.Dot,
+    Eyes = new QrEyeOptions
     {
         UseFrame = true,
-        FrameStyle = QrPngEyeFrameStyle.Target,
-        OuterShape = QrPngModuleShape.Rounded,
-        InnerShape = QrPngModuleShape.Circle,
+        FrameStyle = QrEyeFrameStyle.Target,
+        OuterShape = QrModuleShape.Rounded,
+        InnerShape = QrModuleShape.Circle,
         OuterColor = new Rgba32(0, 255, 213),
         InnerColor = new Rgba32(255, 59, 255)
     },
-    ForegroundPalette = new QrPngPaletteOptions
+    ForegroundPalette = new QrPaletteOptions
     {
-        Mode = QrPngPaletteMode.Random,
+        Mode = QrPaletteMode.Random,
         Seed = 14001,
         RingSize = 2,
         Colors = new[]
@@ -160,13 +165,13 @@ var options = new QrEasyOptions
             new Rgba32(255, 214, 0)
         }
     },
-    Canvas = new QrPngCanvasOptions
+    Canvas = new QrCanvasOptions
     {
         PaddingPx = 24,
         CornerRadiusPx = 26,
-        BackgroundGradient = new QrPngGradientOptions
+        BackgroundGradient = new QrGradientOptions
         {
-            Type = QrPngGradientType.DiagonalDown,
+            Type = QrGradientType.DiagonalDown,
             StartColor = new Rgba32(18, 18, 28),
             EndColor = new Rgba32(48, 23, 72)
         },
@@ -178,5 +183,6 @@ var options = new QrEasyOptions
     }
 };
 
-QR.Save("https://codeglyphx.com/docs/qr?style=neon-dot#styling-options", "neon-dot.png", options);
+QR.Save("https://codeglyphx.com/docs/qr?style=neon-dot#styling-options", "neon-dot.png", options,
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
 ```

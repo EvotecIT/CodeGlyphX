@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX;
 using CodeGlyphX.Qr;
 using CodeGlyphX.Rendering.Png;

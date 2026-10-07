@@ -1,3 +1,4 @@
+@using CodeGlyphX.Rendering
 @using CodeGlyphX.Rendering.Art
 @using CodeGlyphX.Rendering.Png
 @implements IAsyncDisposable
@@ -38,7 +39,7 @@
                     <label>QR ink <input type="color" value="@Color(_design.Ink)" @oninput="ChangeInk" /></label>
                 </div>
                 <label>QR module shape <select value="@_design.ModuleShape" @onchange="ChangeShape">
-                    @foreach (var shape in Enum.GetValues<QrPngModuleShape>()) { <option value="@shape">@shape</option> }
+                    @foreach (var shape in Enum.GetValues<QrModuleShape>()) { <option value="@shape">@shape</option> }
                 </select></label>
                 <label>Export size (px) <select value="@_design.Size" @onchange="ChangeSize">
                     @foreach (var size in new[] { 600, 1200, 1800, 2400 }) { <option value="@size">@size × @size</option> }

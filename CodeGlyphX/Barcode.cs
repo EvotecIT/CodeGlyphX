@@ -27,26 +27,27 @@ namespace CodeGlyphX;
 /// Simple barcode helpers with fluent and static APIs.
 /// </summary>
 /// <remarks>
-/// Use <see cref="Save(CodeGlyphX.BarcodeType,string,string,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.RenderExtras)"/> to pick the output format by file extension.
+/// Use <see cref="Save(CodeGlyphX.SymbolFormat,string,string,CodeGlyphX.BarcodeOptions,CodeGlyphX.Rendering.OutputOptions)"/> to pick the output format by file extension.
 /// </remarks>
 /// <example>
 /// <code>
 /// using CodeGlyphX;
-/// Barcode.Save(BarcodeType.Code128, "PRODUCT-12345", "barcode.png");
+/// Barcode.Save(SymbolFormat.Code128, "PRODUCT-12345", "barcode.png");
 /// </code>
 /// </example>
 public static partial class Barcode {
     /// <summary>
     /// Starts a fluent barcode builder.
     /// </summary>
-    public static BarcodeBuilder Create(BarcodeType type, string content, BarcodeOptions? options = null) {
+    public static BarcodeBuilder Create(SymbolFormat type, string content, BarcodeOptions? options = null) {
         return new BarcodeBuilder(type, content, options);
     }
 
     /// <summary>
     /// Encodes a 1D barcode.
     /// </summary>
-    public static Barcode1D Encode(BarcodeType type, string content) {
-        return BarcodeEncoder.Encode(type, content);
+    public static Barcode1D Encode(SymbolFormat type, string content) {
+        var barcode = BarcodeEncoder.Encode(SymbolCapabilities.GetBarcodeType(type), content);
+        return new Barcode1D(barcode.Segments, type);
     }
 }

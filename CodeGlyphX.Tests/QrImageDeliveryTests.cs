@@ -32,7 +32,7 @@ public sealed class QrImageDeliveryTests {
     [InlineData(QrImageArtStyle.Botanical)]
     public void ArtisticTreatmentsDecodeAtTheirExportedSize(QrImageArtStyle style) {
         const string payload = "ARTISTIC-TREATMENT";
-        var code = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var code = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var result = QrImageComposer.Render(code, new byte[] { 180, 120, 65, 255 }, 1, 1,
             new QrImageCompositionOptions { Strength = 0.95, Art = new QrImageArtOptions { Style = style } });
         Assert.True(QrArt.ValidateImage(result.ToPng(), payload, 3000).AllPassed);

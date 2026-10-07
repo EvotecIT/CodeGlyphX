@@ -52,5 +52,6 @@ public partial class Playground : IDisposable {
         _previewDisposed = true;
         CancelPreviewUpdate();
         InvalidateArtwork();
+        _decodeCts?.Cancel();
     }
 }

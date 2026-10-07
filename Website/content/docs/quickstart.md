@@ -37,12 +37,12 @@ QR.Save("Hello, World!", "hello.pdf");  // PDF document
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 
-var svg = Barcode.Render(BarcodeType.Code128, "PRODUCT-12345", OutputFormat.Svg).GetText();
-var png = QrCode.Render("Hello, World!", OutputFormat.Png).Data;
+var svg = Barcode.Render(SymbolFormat.Code128, "PRODUCT-12345", OutputFormat.Svg).GetText();
+var png = QR.Render("Hello, World!", OutputFormat.Png).ToArray();
 
 // HTML title + raster PDF/EPS
-var extras = new RenderExtras { HtmlTitle = "My Code", VectorMode = RenderMode.Raster };
-QR.Save("Hello, World!", "hello.html", extras: extras);
+var outputOptions = new OutputOptions { HtmlTitle = "My Code", VectorMode = RenderMode.Raster };
+QR.Save("Hello, World!", "hello.html", outputOptions: outputOptions);
 ```
 
 ## 3. Generate Barcodes
@@ -51,10 +51,10 @@ QR.Save("Hello, World!", "hello.html", extras: extras);
 using CodeGlyphX;
 
 // Code 128 barcode
-Barcode.Save(BarcodeType.Code128, "PRODUCT-12345", "barcode.png");
+Barcode.Save(SymbolFormat.Code128, "PRODUCT-12345", "barcode.png");
 
 // EAN-13 (retail products)
-Barcode.Save(BarcodeType.EAN, "5901234123457", "ean.png");
+Barcode.Save(SymbolFormat.Ean, "5901234123457", "ean.png");
 ```
 
 ## 4. Decode Images

@@ -11,8 +11,8 @@ namespace CodeGlyphX.Tests;
 public sealed class QrMultiDecodeTests {
     [Fact]
     public void DecodeAll_FindsTwoQrCodes() {
-        var left = QrEasy.RenderPixels("LEFT-QR", out var w1, out var h1, out var s1);
-        var right = QrEasy.RenderPixels("RIGHT-QR", out var w2, out var h2, out var s2);
+        var left = QR.RenderPixels("LEFT-QR", out var w1, out var h1, out var s1);
+        var right = QR.RenderPixels("RIGHT-QR", out var w2, out var h2, out var s2);
 
         var pad = 12;
         var width = w1 + w2 + pad * 3;
@@ -38,10 +38,9 @@ public sealed class QrMultiDecodeTests {
     [Fact]
     public void DecodeAll_FindsEightQrCodes_FromCompositeImage() {
         var payloads = Enumerable.Range(1, 8).Select(i => $"QR-{i}").ToArray();
-        var renderOptions = new QrEasyOptions {
+        var renderOptions = new QrRenderOptions {
             ModuleSize = 20,
-            QuietZone = 4,
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H
+            QuietZone = 4
         };
         var grid = 4;
         var pad = 40;
@@ -69,10 +68,9 @@ public sealed class QrMultiDecodeTests {
     [Fact]
     public void DecodeAll_FindsEightQrCodes_FromCompositeJpeg() {
         var payloads = Enumerable.Range(1, 8).Select(i => $"QR-{i}").ToArray();
-        var renderOptions = new QrEasyOptions {
+        var renderOptions = new QrRenderOptions {
             ModuleSize = 16,
-            QuietZone = 4,
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H
+            QuietZone = 4
         };
         var grid = 4;
         var pad = 32;
@@ -100,10 +98,9 @@ public sealed class QrMultiDecodeTests {
     [Fact]
     public void DecodeAll_FindsEightQrCodes_FromScreenshotLikeJpeg() {
         var payloads = Enumerable.Range(1, 8).Select(i => $"SHOT-{i}").ToArray();
-        var renderOptions = new QrEasyOptions {
+        var renderOptions = new QrRenderOptions {
             ModuleSize = 14,
-            QuietZone = 4,
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H
+            QuietZone = 4
         };
 
         var grid = 4;
@@ -228,7 +225,7 @@ public sealed class QrMultiDecodeTests {
 
     private static byte[] BuildCompositeCanvas(
         string[] payloads,
-        QrEasyOptions renderOptions,
+        QrRenderOptions renderOptions,
         int grid,
         int pad,
         out int widthPx,
@@ -237,7 +234,7 @@ public sealed class QrMultiDecodeTests {
         var tiles = new List<(byte[] pixels, int width, int height, int stride)>(payloads.Length);
 
         for (var i = 0; i < payloads.Length; i++) {
-            var pixels = QrEasy.RenderPixels(payloads[i], out var tileW, out var tileH, out var tileStride, renderOptions);
+            var pixels = QR.RenderPixels(payloads[i], out var tileW, out var tileH, out var tileStride, renderOptions, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
             tiles.Add((pixels, tileW, tileH, tileStride));
         }
 

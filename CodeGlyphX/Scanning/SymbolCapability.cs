@@ -23,6 +23,14 @@ public sealed class SymbolCapability {
     public bool CanDecodeModules => Has(SymbolCapabilityFlags.DecodeModules);
     /// <summary>Gets whether image recognition is implemented.</summary>
     public bool CanScanImages => Has(SymbolCapabilityFlags.ScanImage);
+    /// <summary>Gets whether this format participates when no explicit scan formats are supplied.</summary>
+    /// <remarks>
+    /// Pharmacode and Patch Code patterns provide insufficient evidence for reliable unrestricted
+    /// recognition. Request them explicitly when the application knows they may be present.
+    /// Module-only formats never participate in default image scanning.
+    /// </remarks>
+    public bool IsDefaultScanFormat => CanScanImages && Format != SymbolFormat.Pharmacode &&
+        Format != SymbolFormat.PharmacodeTwoTrack && Format != SymbolFormat.PatchCode;
     /// <summary>Gets whether one image scan can return multiple instances.</summary>
     public bool CanScanMultiple => Has(SymbolCapabilityFlags.ScanMultiple);
     /// <summary>Gets whether image recognition reports symbol geometry.</summary>

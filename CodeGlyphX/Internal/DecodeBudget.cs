@@ -12,18 +12,16 @@ internal readonly struct DecodeBudgetState {
         DeadlineTicks = deadlineTicks;
         Enabled = enabled;
     }
+
+    public bool IsExpired => Enabled && Stopwatch.GetTimestamp() >= DeadlineTicks;
 }
 
 internal static class DecodeBudget {
     private static readonly AsyncLocal<DecodeBudgetState> CurrentState = new();
 
-    public static bool IsExpired {
-        get {
-            var state = CurrentState.Value;
-            if (!state.Enabled) return false;
-            return Stopwatch.GetTimestamp() >= state.DeadlineTicks;
-        }
-    }
+    public static bool IsExpired => CurrentState.Value.IsExpired;
+
+    internal static DecodeBudgetState Capture() => CurrentState.Value;
 
     public static bool ShouldAbort(CancellationToken token) {
         return token.IsCancellationRequested || IsExpired;
@@ -34,6 +32,8 @@ internal static class DecodeBudget {
         var prev = CurrentState.Value;
         var ticksPerMs = Stopwatch.Frequency / 1000.0;
         var deadline = Stopwatch.GetTimestamp() + (long)(maxMilliseconds * ticksPerMs);
+        // Specialist or nested attempt budgets may shorten the enclosing scan, never restart it.
+        if (prev.Enabled && prev.DeadlineTicks < deadline) deadline = prev.DeadlineTicks;
         CurrentState.Value = new DecodeBudgetState(deadline, enabled: true);
         return new Scope(prev);
     }

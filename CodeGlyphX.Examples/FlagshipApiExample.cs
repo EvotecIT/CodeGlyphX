@@ -19,7 +19,7 @@ internal static class FlagshipApiExample {
             organization: "CodeGlyphX");
 
         QR.Save(contact, Path.Combine(outputDir, "contact.png"));
-        Barcode.Save(BarcodeType.EAN, "5901234123457", Path.Combine(outputDir, "product.svg"));
+        Barcode.Save(SymbolFormat.Ean, "5901234123457", Path.Combine(outputDir, "product.svg"));
         DataMatrixCode.Save("LOT-2026-0042", Path.Combine(outputDir, "lot.png"), options: new MatrixOptions {
             ModuleSize = 6,
             QuietZone = 2
@@ -36,7 +36,7 @@ internal static class FlagshipApiExample {
             .Render(OutputFormat.Png);
         OutputWriter.Write(Path.Combine(outputDir, "styled.png"), styled);
 
-        var scannerImage = QrCode.Render("SCANNER-AOT", OutputFormat.Png).Data;
+        var scannerImage = QR.Render("SCANNER-AOT", OutputFormat.Png).ToArray();
         var scan = SymbolScanner.Scan(scannerImage, new ScanOptions {
             Formats = new[] { SymbolFormat.QrCode },
             TimeoutMilliseconds = 15000,
@@ -54,18 +54,18 @@ internal static class FlagshipApiExample {
         var microImage = MatrixBarcode.Render(micro.Modules, OutputFormat.Png);
         OutputWriter.Write(Path.Combine(outputDir, "microqr.png"), microImage);
 
-        if (!MicroQrDecoder.TryDecodeImage(microImage.Data, out var microDecoded, out var microInfo) ||
+        if (!MicroQrDecoder.TryDecodeImage(microImage.ToArray(), out var microDecoded, out var microInfo) ||
             microDecoded.Text != "ABC123" ||
             microInfo.Geometry.Bounds.Width <= 0) {
             throw new System.InvalidOperationException("The Micro QR image decoder NativeAOT smoke test failed.");
         }
 
-        var microScan = SymbolScanner.Scan(microImage.Data, new ScanOptions {
+        var microScan = SymbolScanner.Scan(microImage.ToArray(), new ScanOptions {
             Formats = new[] { SymbolFormat.MicroQrCode },
             TimeoutMilliseconds = 5000
         });
         if (!microScan.IsSuccess || microScan.Symbols.Count != 1 ||
-            microScan.Symbols[0].LegacyResult.Kind != CodeGlyphKind.MicroQr ||
+            microScan.Symbols[0].Format != SymbolFormat.MicroQrCode ||
             microScan.Symbols[0].Geometry is null) {
             throw new System.InvalidOperationException("The unified Micro QR scanner NativeAOT smoke test failed.");
         }

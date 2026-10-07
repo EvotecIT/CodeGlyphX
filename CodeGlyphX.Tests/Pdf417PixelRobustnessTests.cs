@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering.Png;

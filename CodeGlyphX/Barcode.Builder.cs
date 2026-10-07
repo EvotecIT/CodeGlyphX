@@ -23,10 +23,20 @@ using System.Threading;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Fluent barcode builder returned by <see cref="Barcode.Create(BarcodeType, string, BarcodeOptions?)"/>.
+/// Fluent barcode builder returned by <see cref="Barcode.Create(SymbolFormat, string, BarcodeOptions?)"/>.
 /// </summary>
 public sealed class BarcodeBuilder {
-    private readonly BarcodeType _type;
+    /// <summary>Gets the format-specific output settings configured for this builder.</summary>
+    public OutputOptions OutputOptions { get; } = new OutputOptions();
+
+    /// <summary>Configures format-specific output settings without changing symbol layout.</summary>
+    public BarcodeBuilder WithOutputOptions(Action<OutputOptions> configure) {
+        if (configure is null) throw new ArgumentNullException(nameof(configure));
+        configure(OutputOptions);
+        return this;
+    }
+
+    private readonly SymbolFormat _type;
     private readonly string _content;
 
     /// <summary>
@@ -34,10 +44,10 @@ public sealed class BarcodeBuilder {
     /// </summary>
     public BarcodeOptions Options { get; }
 
-    internal BarcodeBuilder(BarcodeType type, string content, BarcodeOptions? options) {
+    internal BarcodeBuilder(SymbolFormat type, string content, BarcodeOptions? options) {
         _type = type;
         _content = content ?? throw new ArgumentNullException(nameof(content));
-        Options = options ?? new BarcodeOptions();
+        Options = options?.Clone() ?? new BarcodeOptions();
     }
 
     /// <summary>
@@ -110,15 +120,15 @@ public sealed class BarcodeBuilder {
     /// Sets JPEG quality.
     /// </summary>
     public BarcodeBuilder WithJpegQuality(int quality) {
-        Options.JpegQuality = quality;
+        OutputOptions.JpegQuality = quality;
         return this;
     }
 
     /// <summary>
-    /// Sets JPEG encoding options.
+    /// Copies JPEG encoding options and metadata payloads into this builder.
     /// </summary>
     public BarcodeBuilder WithJpegOptions(JpegEncodeOptions options) {
-        Options.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
+        OutputOptions.JpegOptions = (options ?? throw new ArgumentNullException(nameof(options))).Clone();
         return this;
     }
 
@@ -166,7 +176,7 @@ public sealed class BarcodeBuilder {
     /// Sets ICO output sizes (in pixels).
     /// </summary>
     public BarcodeBuilder WithIcoSizes(params int[] sizes) {
-        Options.IcoSizes = sizes;
+        OutputOptions.IcoSizes = sizes is null ? throw new ArgumentNullException(nameof(sizes)) : (int[])sizes.Clone();
         return this;
     }
 
@@ -174,7 +184,7 @@ public sealed class BarcodeBuilder {
     /// Sets ICO aspect ratio preservation behavior.
     /// </summary>
     public BarcodeBuilder WithIcoPreserveAspectRatio(bool enabled = true) {
-        Options.IcoPreserveAspectRatio = enabled;
+        OutputOptions.IcoPreserveAspectRatio = enabled;
         return this;
     }
 
@@ -186,23 +196,23 @@ public sealed class BarcodeBuilder {
     /// <summary>
     /// Renders the configured barcode to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
-        return Barcode.Render(_type, _content, format, Options, extras);
+    public RenderedOutput Render(OutputFormat format, OutputOptions? outputOptions = null) {
+        return Barcode.Render(_type, _content, format, Options, outputOptions ?? OutputOptions);
     }
 
     /// <summary>
     /// Saves the configured barcode, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, RenderExtras? extras = null) {
+    public string Save(string path, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, Render(format, extras));
+        return OutputWriter.Write(path, Render(format, outputOptions));
     }
 
     /// <summary>
     /// Writes the configured barcode to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, Render(format, extras));
+        OutputWriter.Write(stream, Render(format, outputOptions));
     }
 }

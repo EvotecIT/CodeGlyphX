@@ -51,14 +51,15 @@ return 0;
 
 static string BuildCapabilityTable(IReadOnlyList<SymbolCapability> capabilities) {
     var builder = new StringBuilder();
-    builder.AppendLine("| Format | Family | Encode | Module decode | Image scan | Multiple | GS1 | ECI | Structured append | Geometry |");
-    builder.AppendLine("| --- | --- | ---: | ---: | ---: | ---: | --- | --- | --- | ---: |");
+    builder.AppendLine("| Format | Family | Encode | Module decode | Image scan | Default scan | Multiple | GS1 | ECI | Structured append | Geometry |");
+    builder.AppendLine("| --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | ---: |");
     foreach (var capability in capabilities) {
         builder.Append("| ").Append(capability.DisplayName)
             .Append(" | ").Append(capability.Family)
             .Append(" | ").Append(YesNo(capability.Has(SymbolCapabilityFlags.Encode)))
             .Append(" | ").Append(YesNo(capability.Has(SymbolCapabilityFlags.DecodeModules)))
             .Append(" | ").Append(YesNo(capability.Has(SymbolCapabilityFlags.ScanImage)))
+            .Append(" | ").Append(YesNo(capability.IsDefaultScanFormat))
             .Append(" | ").Append(YesNo(capability.Has(SymbolCapabilityFlags.ScanMultiple)))
             .Append(" | ").Append(CapabilityText.Direction(capability, SymbolCapabilityFlags.Gs1Encode, SymbolCapabilityFlags.Gs1Decode))
             .Append(" | ").Append(CapabilityText.Direction(capability, SymbolCapabilityFlags.EciEncode, SymbolCapabilityFlags.EciDecode))
@@ -119,6 +120,7 @@ internal sealed class CapabilityOutput {
     public bool Encode { get; set; }
     public bool ModuleDecode { get; set; }
     public bool ImageScan { get; set; }
+    public bool IsDefaultScanFormat { get; set; }
     public bool Multiple { get; set; }
     public bool Geometry { get; set; }
     public bool Gs1Encode { get; set; }
@@ -136,6 +138,7 @@ internal sealed class CapabilityOutput {
             Encode = capability.Has(SymbolCapabilityFlags.Encode),
             ModuleDecode = capability.Has(SymbolCapabilityFlags.DecodeModules),
             ImageScan = capability.Has(SymbolCapabilityFlags.ScanImage),
+            IsDefaultScanFormat = capability.IsDefaultScanFormat,
             Multiple = capability.Has(SymbolCapabilityFlags.ScanMultiple),
             Geometry = capability.Has(SymbolCapabilityFlags.ReportsGeometry),
             Gs1Encode = capability.Has(SymbolCapabilityFlags.Gs1Encode),

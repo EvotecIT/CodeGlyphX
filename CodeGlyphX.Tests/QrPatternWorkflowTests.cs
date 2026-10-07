@@ -17,7 +17,7 @@ public sealed class QrPatternWorkflowTests {
         var pixels = ImageReader.DecodeRgba32(png, out var width, out var height);
         Assert.Equal(512, width);
         Assert.Equal(512, height);
-        var code = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var code = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var fromSource = QrImageComposer.Render(code, pixels, width, height, composition);
         Assert.Equal(QrArt.ComposePattern(payload, pattern, composition).GetPixels(), fromSource.GetPixels());
         Assert.Equal(png, QrArt.RenderPatternPng(pattern));
@@ -29,8 +29,8 @@ public sealed class QrPatternWorkflowTests {
     public void PresetsReturnIndependentEditablePalettesAndGeometry() {
         foreach (QrArtPattern pattern in Enum.GetValues(typeof(QrArtPattern))) {
             var original = QrArtPatternPresets.CreatePatternOptions(pattern, 17);
-            var expected = (Rendering.Png.Rgba32[])original.Colors.Clone();
-            original.Colors[0] = Rendering.Png.Rgba32.Black;
+            var expected = (Rendering.Rgba32[])original.Colors.Clone();
+            original.Colors[0] = Rendering.Rgba32.Black;
             var fresh = QrArtPatternPresets.CreatePatternOptions(pattern, 17);
             Assert.Equal(expected, fresh.Colors);
             Assert.Equal(17, fresh.Seed);

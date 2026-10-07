@@ -9,6 +9,7 @@ using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
+using BackgroundPatternType = CodeGlyphX.Rendering.QrBackgroundPatternType;
 using CodeGlyphX.Rendering.Png;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -57,79 +58,79 @@ public partial class Playground {
         return new Rgba32(0, 0, 0);
     }
 
-    internal QrPngModuleShape ParseModuleShape(string shape)
+    internal QrModuleShape ParseModuleShape(string shape)
     {
         return shape switch
         {
-            "Dot" => QrPngModuleShape.Dot,
-            "DotGrid" => QrPngModuleShape.DotGrid,
-            "Diamond" => QrPngModuleShape.Diamond,
-            "SoftDiamond" => QrPngModuleShape.SoftDiamond,
-            "Squircle" => QrPngModuleShape.Squircle,
-            "Leaf" => QrPngModuleShape.Leaf,
-            "Wave" => QrPngModuleShape.Wave,
-            "Blob" => QrPngModuleShape.Blob,
-            "Circle" => QrPngModuleShape.Circle,
-            "Rounded" => QrPngModuleShape.Rounded,
-            _ => QrPngModuleShape.Square
+            "Dot" => QrModuleShape.Dot,
+            "DotGrid" => QrModuleShape.DotGrid,
+            "Diamond" => QrModuleShape.Diamond,
+            "SoftDiamond" => QrModuleShape.SoftDiamond,
+            "Squircle" => QrModuleShape.Squircle,
+            "Leaf" => QrModuleShape.Leaf,
+            "Wave" => QrModuleShape.Wave,
+            "Blob" => QrModuleShape.Blob,
+            "Circle" => QrModuleShape.Circle,
+            "Rounded" => QrModuleShape.Rounded,
+            _ => QrModuleShape.Square
         };
     }
 
-    internal static QrPngEyeFrameStyle ParseEyeFrameStyle(string style)
+    internal static QrEyeFrameStyle ParseEyeFrameStyle(string style)
     {
         return style switch
         {
-            "DoubleRing" => QrPngEyeFrameStyle.DoubleRing,
-            "Target" => QrPngEyeFrameStyle.Target,
-            "Bracket" => QrPngEyeFrameStyle.Bracket,
-            "Badge" => QrPngEyeFrameStyle.Badge,
-            _ => QrPngEyeFrameStyle.Single
+            "DoubleRing" => QrEyeFrameStyle.DoubleRing,
+            "Target" => QrEyeFrameStyle.Target,
+            "Bracket" => QrEyeFrameStyle.Bracket,
+            "Badge" => QrEyeFrameStyle.Badge,
+            _ => QrEyeFrameStyle.Single
         };
     }
 
-    internal static QrPngPaletteMode ParsePaletteMode(string mode)
+    internal static QrPaletteMode ParsePaletteMode(string mode)
     {
         return mode switch
         {
-            "Checker" => QrPngPaletteMode.Checker,
-            "Random" => QrPngPaletteMode.Random,
-            "Rings" => QrPngPaletteMode.Rings,
-            _ => QrPngPaletteMode.Cycle
+            "Checker" => QrPaletteMode.Checker,
+            "Random" => QrPaletteMode.Random,
+            "Rings" => QrPaletteMode.Rings,
+            _ => QrPaletteMode.Cycle
         };
     }
 
-    internal static QrPngModuleScaleMode ParseScaleMapMode(string mode)
+    internal static QrModuleScaleMode ParseScaleMapMode(string mode)
     {
         return mode switch
         {
-            "Radial" => QrPngModuleScaleMode.Radial,
-            "Random" => QrPngModuleScaleMode.Random,
-            "Checker" => QrPngModuleScaleMode.Checker,
-            _ => QrPngModuleScaleMode.Rings
+            "Radial" => QrModuleScaleMode.Radial,
+            "Random" => QrModuleScaleMode.Random,
+            "Checker" => QrModuleScaleMode.Checker,
+            _ => QrModuleScaleMode.Rings
         };
     }
 
-    internal static QrPngGradientType ParseGradientType(string mode)
+    internal static QrGradientType ParseGradientType(string mode)
     {
         return mode switch
         {
-            "Vertical" => QrPngGradientType.Vertical,
-            "DiagonalDown" => QrPngGradientType.DiagonalDown,
-            "DiagonalUp" => QrPngGradientType.DiagonalUp,
-            "Radial" => QrPngGradientType.Radial,
-            _ => QrPngGradientType.Horizontal
+            "Vertical" => QrGradientType.Vertical,
+            "DiagonalDown" => QrGradientType.DiagonalDown,
+            "DiagonalUp" => QrGradientType.DiagonalUp,
+            "Radial" => QrGradientType.Radial,
+            _ => QrGradientType.Horizontal
         };
     }
 
-    internal static QrPngBackgroundPatternType ParsePatternType(string mode)
+    internal static BackgroundPatternType ParsePatternType(string mode)
     {
         return mode switch
         {
-            "Grid" => QrPngBackgroundPatternType.Grid,
-            "Checker" => QrPngBackgroundPatternType.Checker,
-            "DiagonalStripes" => QrPngBackgroundPatternType.DiagonalStripes,
-            "Crosshatch" => QrPngBackgroundPatternType.Crosshatch,
-            _ => QrPngBackgroundPatternType.Dots
+            "Grid" => BackgroundPatternType.Grid,
+            "Checker" => BackgroundPatternType.Checker,
+            "DiagonalStripes" => BackgroundPatternType.DiagonalStripes,
+            "Crosshatch" => BackgroundPatternType.Crosshatch,
+            _ => BackgroundPatternType.Dots
         };
     }
 
@@ -189,9 +190,14 @@ public partial class Playground {
     {
         return SelectedBarcodeType switch
         {
-            "GS1128" => "GS1_128",
+            "GS1128" => "Gs1Code128",
+            "EAN" => "Ean",
+            "UPCA" => "UpcA",
+            "UPCE" => "UpcE",
+            "ITF14" => "Itf14",
+            "MSI" => "Msi",
             "Code32" => "Code32",
-            "ITF" => "ITF",
+            "ITF" => "Itf",
             "Telepen" => "Telepen",
             _ => SelectedBarcodeType
         };
@@ -206,39 +212,32 @@ public partial class Playground {
     {
         var nl = "\n";
 
-        if (SelectedMode == "Decode")
-        {
-            return "using CodeGlyphX;" + nl
-                + "using CodeGlyphX.Rendering;" + nl + nl
-                + "var bytes = File.ReadAllBytes(\"image.png\");" + nl
-                + "if (QrImageDecoder.TryDecodeImage(bytes, out var qr))" + nl
+        if (SelectedMode == "Decode") {
+            return "using CodeGlyphX;" + nl + nl
+                + "var scan = SymbolScanner.ScanFile(\"image.png\", ScanOptions.Balanced(2000));" + nl
+                + "foreach (var symbol in scan.Symbols)" + nl
                 + "{" + nl
-                + "    Console.WriteLine(qr.Text);" + nl
-                + "}" + nl + nl
-                + "if (ImageReader.TryDecodeRgba32(bytes, out var rgba, out var w, out var h) &&" + nl
-                + "    BarcodeDecoder.TryDecode(rgba, w, h, w * 4, PixelFormat.Rgba32, out var barcode))" + nl
-                + "{" + nl
-                + "    Console.WriteLine(barcode.Text);" + nl
-                + "}";
+                + "    Console.WriteLine($\"{symbol.Format}: {symbol.Text}\");" + nl
+                + "}" + nl
+                + "Console.WriteLine(scan.CompletionReason);";
         }
 
         if (SelectedCategory == "QR")
         {
             var escapedContent = EscapeString(Content);
-            if (ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000" || BackgroundColor != "#FFFFFF" || TargetSizePx > 0 || BackgroundSupersample > 1)
+            if (ErrorCorrection != "M" || ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000" || BackgroundColor != "#FFFFFF" || TargetSizePx > 0 || BackgroundSupersample > 1)
             {
                 var sb = new System.Text.StringBuilder();
                 sb.Append("using CodeGlyphX;").Append(nl).Append(nl);
                 sb.Append("using CodeGlyphX.Rendering;").Append(nl);
                 sb.Append("using CodeGlyphX.Rendering.Png;").Append(nl).Append(nl);
-                sb.Append("var options = new QrEasyOptions").Append(nl);
+                sb.Append("var options = new QrRenderOptions").Append(nl);
                 sb.Append("{").Append(nl);
                 sb.Append("    ArtGuardrailsEnabled = false,").Append(nl);
                 var foreground = ParseColor(ForegroundColor);
                 var background = ParseColor(BackgroundColor);
                 sb.Append("    Foreground = new Rgba32(").Append(foreground.R).Append(", ").Append(foreground.G).Append(", ").Append(foreground.B).Append("),").Append(nl);
                 sb.Append("    Background = new Rgba32(").Append(background.R).Append(", ").Append(background.G).Append(", ").Append(background.B).Append("),").Append(nl);
-                sb.Append("    ErrorCorrectionLevel = QrErrorCorrectionLevel.").Append(ErrorCorrection).Append(",").Append(nl);
                 if (TargetSizePx > 0)
                 {
                     sb.Append("    TargetSizePx = ").Append(TargetSizePx).Append(",").Append(nl);
@@ -253,19 +252,19 @@ public partial class Playground {
                 }
                 if (ModuleShape != "Square")
                 {
-                    sb.Append("    ModuleShape = QrPngModuleShape.").Append(ModuleShape).Append(",").Append(nl);
+                    sb.Append("    ModuleShape = QrModuleShape.").Append(ModuleShape).Append(",").Append(nl);
                 }
                 if (CustomEyes)
                 {
-                    sb.Append("    Eyes = new QrPngEyeOptions").Append(nl);
+                    sb.Append("    Eyes = new QrEyeOptions").Append(nl);
                     sb.Append("    {").Append(nl);
                     sb.Append("        UseFrame = true,").Append(nl);
-                    sb.Append("        OuterShape = QrPngModuleShape.").Append(EyeOuterShape).Append(",").Append(nl);
-                    sb.Append("        InnerShape = QrPngModuleShape.").Append(EyeInnerShape).Append(nl);
+                    sb.Append("        OuterShape = QrModuleShape.").Append(EyeOuterShape).Append(",").Append(nl);
+                    sb.Append("        InnerShape = QrModuleShape.").Append(EyeInnerShape).Append(nl);
                     sb.Append("    },").Append(nl);
                 }
                 sb.Append("};").Append(nl).Append(nl);
-                sb.Append("QR.Save(\"").Append(escapedContent).Append("\", \"qrcode.png\", options);");
+                sb.Append("QR.Save(\"").Append(escapedContent).Append("\", \"qrcode.png\", options, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.").Append(ErrorCorrection).Append(" });");
                 return sb.ToString();
             }
             return "using CodeGlyphX;" + nl + nl + "QR.Save(\"" + escapedContent + "\", \"qrcode.png\");";
@@ -330,7 +329,7 @@ public partial class Playground {
                 "Code39" or "Code93" => EscapeString(BarcodeContent.ToUpperInvariant()),
                 _ => EscapeString(BarcodeContent)
             };
-            return "using CodeGlyphX;" + nl + nl + "Barcode.Save(BarcodeType." + GetBarcodeTypeEnumName() + ", \"" + content + "\", \"barcode.png\");";
+            return "using CodeGlyphX;" + nl + nl + "Barcode.Save(SymbolFormat." + GetBarcodeTypeEnumName() + ", \"" + content + "\", \"barcode.png\");";
         }
         else if (SelectedCategory == "Matrix")
         {
@@ -350,31 +349,19 @@ public partial class Playground {
     {
         var nl = "\n";
 
-        if (SelectedMode == "Decode")
-        {
-            return "Imports CodeGlyphX" + nl
-                + "Imports CodeGlyphX.Rendering" + nl
-                + "Imports CodeGlyphX.Rendering.Png" + nl
-                + "Imports System.IO" + nl + nl
-                + "Dim bytes = File.ReadAllBytes(\"image.png\")" + nl
-                + "Dim qr As QrDecoded" + nl
-                + "If QrImageDecoder.TryDecodeImage(bytes, qr) Then" + nl
-                + "    Console.WriteLine(qr.Text)" + nl
-                + "End If" + nl + nl
-                + "Dim rgba As Rgba32" + nl
-                + "Dim w As Integer" + nl
-                + "Dim h As Integer" + nl
-                + "Dim barcode As BarcodeDecoded" + nl
-                + "If ImageReader.TryDecodeRgba32(bytes, rgba, w, h) AndAlso" + nl
-                + "    BarcodeDecoder.TryDecode(rgba, w, h, w * 4, PixelFormat.Rgba32, barcode) Then" + nl
-                + "    Console.WriteLine(barcode.Text)" + nl
-                + "End If";
+        if (SelectedMode == "Decode") {
+            return "Imports CodeGlyphX" + nl + nl
+                + "Dim scan = SymbolScanner.ScanFile(\"image.png\", ScanOptions.Balanced(2000))" + nl
+                + "For Each symbol In scan.Symbols" + nl
+                + "    Console.WriteLine($\"{symbol.Format}: {symbol.Text}\")" + nl
+                + "Next" + nl
+                + "Console.WriteLine(scan.CompletionReason)";
         }
 
         if (SelectedCategory == "QR")
         {
             var escapedContent = EscapeStringVb(Content);
-            if (ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000" || BackgroundColor != "#FFFFFF" || TargetSizePx > 0 || BackgroundSupersample > 1)
+            if (ErrorCorrection != "M" || ModuleShape != "Square" || CustomEyes || ForegroundColor != "#000000" || BackgroundColor != "#FFFFFF" || TargetSizePx > 0 || BackgroundSupersample > 1)
             {
                 var foreground = ParseColor(ForegroundColor);
                 var background = ParseColor(BackgroundColor);
@@ -382,8 +369,7 @@ public partial class Playground {
                 {
                     "    .ArtGuardrailsEnabled = False",
                     "    .Foreground = New Rgba32(" + foreground.R + ", " + foreground.G + ", " + foreground.B + ")",
-                    "    .Background = New Rgba32(" + background.R + ", " + background.G + ", " + background.B + ")",
-                    "    .ErrorCorrectionLevel = QrErrorCorrectionLevel." + ErrorCorrection
+                    "    .Background = New Rgba32(" + background.R + ", " + background.G + ", " + background.B + ")"
                 };
                 if (TargetSizePx > 0)
                 {
@@ -399,17 +385,17 @@ public partial class Playground {
                 }
                 if (ModuleShape != "Square")
                 {
-                    lines.Add("    .ModuleShape = QrPngModuleShape." + ModuleShape);
+                    lines.Add("    .ModuleShape = QrModuleShape." + ModuleShape);
                 }
                 if (CustomEyes)
                 {
                     var eyeLines = new System.Collections.Generic.List<string>
                     {
                         "        .UseFrame = True",
-                        "        .OuterShape = QrPngModuleShape." + EyeOuterShape,
-                        "        .InnerShape = QrPngModuleShape." + EyeInnerShape
+                        "        .OuterShape = QrModuleShape." + EyeOuterShape,
+                        "        .InnerShape = QrModuleShape." + EyeInnerShape
                     };
-                    var eyeBlock = "    .Eyes = New QrPngEyeOptions With {" + nl
+                    var eyeBlock = "    .Eyes = New QrEyeOptions With {" + nl
                         + string.Join("," + nl, eyeLines) + nl
                         + "    }";
                     lines.Add(eyeBlock);
@@ -419,10 +405,10 @@ public partial class Playground {
                 sb.Append("Imports CodeGlyphX").Append(nl);
                 sb.Append("Imports CodeGlyphX.Rendering").Append(nl);
                 sb.Append("Imports CodeGlyphX.Rendering.Png").Append(nl).Append(nl);
-                sb.Append("Dim options = New QrEasyOptions With {").Append(nl);
+                sb.Append("Dim options = New QrRenderOptions With {").Append(nl);
                 sb.Append(string.Join("," + nl, lines)).Append(nl);
                 sb.Append("}").Append(nl).Append(nl);
-                sb.Append("QR.Save(\"").Append(escapedContent).Append("\", \"qrcode.png\", options)");
+                sb.Append("QR.Save(\"").Append(escapedContent).Append("\", \"qrcode.png\", options, New QrEncodingOptions With {.ErrorCorrectionLevel = QrErrorCorrectionLevel.").Append(ErrorCorrection).Append("})");
                 return sb.ToString();
             }
             return "Imports CodeGlyphX" + nl + nl + "QR.Save(\"" + escapedContent + "\", \"qrcode.png\")";
@@ -487,7 +473,7 @@ public partial class Playground {
                 "Code39" or "Code93" => EscapeStringVb(BarcodeContent.ToUpperInvariant()),
                 _ => EscapeStringVb(BarcodeContent)
             };
-            return "Imports CodeGlyphX" + nl + nl + "Barcode.Save(BarcodeType." + GetBarcodeTypeEnumName() + ", \"" + content + "\", \"barcode.png\")";
+            return "Imports CodeGlyphX" + nl + nl + "Barcode.Save(SymbolFormat." + GetBarcodeTypeEnumName() + ", \"" + content + "\", \"barcode.png\")";
         }
         else if (SelectedCategory == "Matrix")
         {

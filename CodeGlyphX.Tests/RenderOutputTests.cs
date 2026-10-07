@@ -14,7 +14,7 @@ namespace CodeGlyphX.Tests;
 public class RenderOutputTests {
     [Fact]
     public void RenderBarcodeSvgReturnsText() {
-        var output = Barcode.Render(BarcodeType.Code128, "CODE128-12345", OutputFormat.Svg);
+        var output = Barcode.Render(SymbolFormat.Code128, "CODE128-12345", OutputFormat.Svg);
 
         Assert.Equal(OutputFormat.Svg, output.Format);
         Assert.True(output.IsText);
@@ -25,23 +25,23 @@ public class RenderOutputTests {
 
     [Fact]
     public void RenderQrPngReturnsBinary() {
-        var output = QrCode.Render("HELLO-QR", OutputFormat.Png);
+        var output = QR.Render("HELLO-QR", OutputFormat.Png);
 
         Assert.Equal(OutputFormat.Png, output.Format);
         Assert.False(output.IsText);
         Assert.True(output.Data.Length > 8);
 
         // PNG signature (89 50 4E 47 0D 0A 1A 0A)
-        Assert.Equal(0x89, output.Data[0]);
-        Assert.Equal(0x50, output.Data[1]);
-        Assert.Equal(0x4E, output.Data[2]);
-        Assert.Equal(0x47, output.Data[3]);
+        Assert.Equal(0x89, output.Data.Span[0]);
+        Assert.Equal(0x50, output.Data.Span[1]);
+        Assert.Equal(0x4E, output.Data.Span[2]);
+        Assert.Equal(0x47, output.Data.Span[3]);
     }
 
     [Fact]
     public void RenderHtmlHonorsTitleExtras() {
-        var extras = new RenderExtras { HtmlTitle = "Render Output Test" };
-        var output = Barcode.Render(BarcodeType.Code128, "CODE128-HTML", OutputFormat.Html, extras: extras);
+        var outputOptions = new OutputOptions { HtmlTitle = "Render Output Test" };
+        var output = Barcode.Render(SymbolFormat.Code128, "CODE128-HTML", OutputFormat.Html, outputOptions: outputOptions);
 
         var text = output.GetText();
         Assert.Contains("<title>Render Output Test</title>", text, StringComparison.OrdinalIgnoreCase);
@@ -49,7 +49,7 @@ public class RenderOutputTests {
 
     [Fact]
     public void BarcodeBuilder_Uses_Generic_Render_And_Save_Surface() {
-        var builder = Barcode.Create(BarcodeType.Code128, "BUILDER-123");
+        var builder = Barcode.Create(SymbolFormat.Code128, "BUILDER-123");
         var svg = builder.Render(OutputFormat.Svg);
 
         Assert.Equal(OutputFormat.Svg, svg.Format);
@@ -72,7 +72,7 @@ public class RenderOutputTests {
     [Fact]
     public void CreateFacades_Return_TopLevel_Builder_Types() {
         QrBuilder qr = QR.Create("TOP-LEVEL-QR");
-        BarcodeBuilder barcode = Barcode.Create(BarcodeType.Code128, "TOP-LEVEL-BARCODE");
+        BarcodeBuilder barcode = Barcode.Create(SymbolFormat.Code128, "TOP-LEVEL-BARCODE");
         DataMatrixBuilder dataMatrix = DataMatrixCode.Create("TOP-LEVEL-DATA-MATRIX");
         Pdf417Builder pdf417 = Pdf417Code.Create("TOP-LEVEL-PDF417");
 
@@ -100,63 +100,12 @@ public class RenderOutputTests {
     }
 
     [Fact]
-    public void QrBuilder_Configures_The_Public_Rendering_Surface() {
-        var logoPath = Path.Combine(Path.GetTempPath(), $"codeglyphx-logo-{Guid.NewGuid():N}.png");
-        File.WriteAllBytes(logoPath, new byte[] { 0x89, 0x50, 0x4E, 0x47 });
-
-        try {
-            var builder = QR.Create(new QrPayloadData("QR-OPTION-CONTRACT"))
-                .WithOptions(options => options.JpegQuality = 91)
-                .WithModuleSize(8)
-                .WithQuietZone(5)
-                .WithColors(Rgba32.Black, Rgba32.White)
-                .WithForeground(new Rgba32(1, 2, 3, 255))
-                .WithBackground(new Rgba32(250, 249, 248, 255))
-                .WithTransparentBackground()
-                .WithStyle(QrRenderStyle.Rounded)
-                .WithModuleShape(QrPngModuleShape.Squircle)
-                .WithModuleScale(0.8)
-                .WithModuleScaleMap(new QrPngModuleScaleMapOptions())
-                .WithModuleShapeMap(new QrPngModuleShapeMapOptions())
-                .WithModuleJitter(new QrPngModuleJitterOptions())
-                .WithModuleCornerRadiusPx(2)
-                .WithForegroundGradient(new QrPngGradientOptions())
-                .WithBackgroundGradient(new QrPngGradientOptions())
-                .WithForegroundPalette(new QrPngPaletteOptions())
-                .WithCanvas(new QrPngCanvasOptions())
-                .WithForegroundPaletteZones(new QrPngPaletteZoneOptions())
-                .WithEyes(new QrPngEyeOptions())
-                .WithTargetSize(320, includeQuietZone: false)
-                .WithFixedSize(300)
-                .WithLogoPng(new byte[] { 1, 2, 3 })
-                .WithLogoScale(0.2)
-                .WithLogoPaddingPx(3)
-                .WithLogoBackground()
-                .WithLogoBackgroundAutoBump(false)
-                .WithLogoBackgroundMinVersion(6)
-                .WithLogoBackgroundColor(Rgba32.White)
-                .WithLogoCornerRadiusPx(4)
-                .WithLogoFile(logoPath)
-                .WithErrorCorrection(QrErrorCorrectionLevel.H)
-                .WithIcoSizes(32, 64)
-                .WithIcoPreserveAspectRatio(false);
-
-            Assert.Equal(8, builder.Options.ModuleSize);
-            Assert.Equal(300, builder.Options.TargetSizePx);
-            Assert.Equal(new[] { 32, 64 }, builder.Options.IcoSizes);
-            Assert.Equal(new byte[] { 0x89, 0x50, 0x4E, 0x47 }, builder.Options.LogoPng);
-        } finally {
-            File.Delete(logoPath);
-        }
-    }
-
-    [Fact]
     public void DataMatrixBuilder_Uses_Generic_Render_And_Save_Surface() {
         var builder = DataMatrixCode.Create("DATA-MATRIX-BUILDER-CONTRACT")
             .WithModuleSize(5)
             .WithQuietZone(2)
             .WithColors(Rgba32.Black, Rgba32.White)
-            .WithOptions(options => options.HtmlEmailSafeTable = true);
+            .WithOutputOptions(options => options.HtmlEmailSafeTable = true);
 
         Assert.True(builder.Encode().Width > 0);
         Assert.Contains("<svg", builder.Render(OutputFormat.Svg).GetText(), StringComparison.OrdinalIgnoreCase);
@@ -238,7 +187,7 @@ public class RenderOutputTests {
     [Fact]
     public void BarcodeBuilder_Configures_The_Public_Rendering_Surface() {
         var jpeg = new JpegEncodeOptions { Quality = 90 };
-        var builder = Barcode.Create(BarcodeType.Code128, "BARCODE-OPTIONS")
+        var builder = Barcode.Create(SymbolFormat.Code128, "BARCODE-OPTIONS")
             .WithOptions(options => options.ModuleSize = 2)
             .WithModuleSize(3)
             .WithQuietZone(4)
@@ -259,7 +208,7 @@ public class RenderOutputTests {
 
         Assert.Equal(3, builder.Options.ModuleSize);
         Assert.Equal("Contract label", builder.Options.LabelText);
-        Assert.Equal(new[] { 32, 64 }, builder.Options.IcoSizes);
+        Assert.Equal(new[] { 32, 64 }, builder.OutputOptions.IcoSizes);
         Assert.True(builder.Encode().TotalModules > 0);
     }
 
@@ -267,6 +216,47 @@ public class RenderOutputTests {
     public void OutputFormatInfoDetectsSvgzAndSvgGz() {
         Assert.Equal(OutputFormat.Svgz, OutputFormatInfo.FromPath("code.svgz"));
         Assert.Equal(OutputFormat.Svgz, OutputFormatInfo.FromPath("code.svg.gz"));
+    }
+
+    [Theory]
+    [InlineData("Barcode")]
+    [InlineData("DataMatrix")]
+    [InlineData("Pdf417")]
+    public void BuilderJpegOptions_SnapshotCallerOwnedOptionsAndMetadata(string builderType) {
+        var options = new JpegEncodeOptions {
+            Quality = 90,
+            Metadata = new JpegMetadata(new byte[] { 1 }, new byte[] { 2 }, new byte[] { 3 })
+        };
+        var outputOptions = builderType switch {
+            "Barcode" => Barcode.Create(SymbolFormat.Code128, "JPEG").WithJpegOptions(options).OutputOptions,
+            "DataMatrix" => DataMatrixCode.Create("JPEG").WithJpegOptions(options).OutputOptions,
+            "Pdf417" => Pdf417Code.Create("JPEG").WithJpegOptions(options).OutputOptions,
+            _ => throw new ArgumentOutOfRangeException(nameof(builderType))
+        };
+
+        options.Quality = 10;
+        options.Metadata.Exif![0] = 9;
+        options.Metadata.Xmp![0] = 9;
+        options.Metadata.Icc![0] = 9;
+
+        Assert.Equal(90, outputOptions.JpegOptions!.Quality);
+        Assert.Equal(new byte[] { 1 }, outputOptions.JpegOptions.Metadata.Exif);
+        Assert.Equal(new byte[] { 2 }, outputOptions.JpegOptions.Metadata.Xmp);
+        Assert.Equal(new byte[] { 3 }, outputOptions.JpegOptions.Metadata.Icc);
+    }
+
+    [Fact]
+    public void Pdf417Builder_TextEncodingSnapshotsCallerFallback() {
+        var encoding = (Encoding)Encoding.ASCII.Clone();
+        encoding.EncoderFallback = new EncoderReplacementFallback("X");
+        var builder = Pdf417Code.Create("caf\u00e9")
+            .WithCompaction(Pdf417Compaction.Byte)
+            .WithTextEncoding(encoding);
+
+        encoding.EncoderFallback = new EncoderReplacementFallback("Y");
+
+        Assert.True(Pdf417Decoder.TryDecode(builder.Encode().Modules, out string decoded));
+        Assert.Equal("cafX", decoded);
     }
 
     [Fact]

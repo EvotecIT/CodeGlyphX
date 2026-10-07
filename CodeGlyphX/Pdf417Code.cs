@@ -52,21 +52,21 @@ public static partial class Pdf417Code {
     /// <summary>
     /// Encodes a text payload as PDF417.
     /// </summary>
-    public static BitMatrix Encode(string text, Pdf417EncodeOptions? options = null) {
-        return Pdf417Encoder.Encode(text, options);
+    public static Pdf417Symbol Encode(string text, Pdf417EncodeOptions? options = null) {
+        return Pdf417Encoder.EncodeSymbol(text, options);
     }
 
     /// <summary>
     /// Encodes a Macro PDF417 payload.
     /// </summary>
-    public static BitMatrix EncodeMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? options = null) {
-        return Pdf417Encoder.EncodeMacro(text, macro, options);
+    public static Pdf417Symbol EncodeMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? options = null) {
+        return Pdf417Encoder.EncodeMacroSymbol(text, macro, options);
     }
 
     /// <summary>
     /// Encodes a byte payload as PDF417.
     /// </summary>
-    public static BitMatrix EncodeBytes(byte[] data, Pdf417EncodeOptions? options = null) {
-        return Pdf417Encoder.EncodeBytes(data, options);
+    public static Pdf417Symbol EncodeBytes(byte[] data, Pdf417EncodeOptions? options = null) {
+        return Pdf417Encoder.EncodeBytesSymbol(data, options);
     }
 }

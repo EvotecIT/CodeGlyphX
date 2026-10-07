@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using System.Globalization;
 using System.IO;
@@ -66,7 +67,7 @@ public sealed class QrSceneRecipe {
             if (palette.Elements().Any(e => e.Name != "color") || palette.Elements().Count() != 4) throw new FormatException("Recipe palettes require four colors.");
             var design = new QrSceneOptions {
                 Style = EnumValue<QrSceneStyle>(Required(root, "style")), Size = Integer(Required(root, "size")), Seed = Integer(Required(root, "seed")),
-                ModuleShape = EnumValue<QrPngModuleShape>(Required(root, "shape")), Paper = ParseColor(Required(root, "paper")), Ink = ParseColor(Required(root, "ink")),
+                ModuleShape = EnumValue<QrModuleShape>(Required(root, "shape")), Paper = ParseColor(Required(root, "paper")), Ink = ParseColor(Required(root, "ink")),
                 Colors = palette.Elements().Select(ReadColor).ToArray(), Caption = Text(Element(root, "caption")),
                 Backdrop = ReadLayer(root, "backdrop"), Motifs = ReadLayer(root, "motifs"), Qr = ReadLayer(root, "qr"),
                 CaptionLayer = ReadLayer(root, "caption"), Logo = ReadLayer(root, "logo")

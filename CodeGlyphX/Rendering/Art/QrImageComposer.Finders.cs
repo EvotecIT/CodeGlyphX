@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Rendering.Art;
@@ -14,10 +15,10 @@ public static partial class QrImageComposer {
             _ink = options.FunctionalForeground;
             _paper = options.FunctionalBackground;
             var shape = options.Finders switch {
-                QrImageFinderStyle.Rounded => QrPngModuleShape.Rounded,
-                QrImageFinderStyle.Circular => QrPngModuleShape.Circle,
-                QrImageFinderStyle.Chamfered => QrPngModuleShape.Square,
-                _ => QrPngModuleShape.Squircle
+                QrImageFinderStyle.Rounded => QrModuleShape.Rounded,
+                QrImageFinderStyle.Circular => QrModuleShape.Circle,
+                QrImageFinderStyle.Chamfered => QrModuleShape.Square,
+                _ => QrModuleShape.Squircle
             };
             _outer = QrPngRenderer.BuildModuleMask(_size, shape, 1, moduleSize * 2);
             _hole = QrPngRenderer.BuildModuleMask(5 * moduleSize, shape, 1, moduleSize);

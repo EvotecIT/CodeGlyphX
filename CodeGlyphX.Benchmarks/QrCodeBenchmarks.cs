@@ -17,58 +17,58 @@ public class QrCodeBenchmarks
     private const string ShortText = "Hello, World!";
     private const string MediumText = "https://github.com/EvotecIT/CodeGlyphX";
     private const string LongText = "CodeGlyphX is a blazing-fast, zero-dependency .NET library for encoding and decoding QR codes, Data Matrix, PDF417, Aztec, and all major 1D barcode formats.";
-    private static readonly QrEasyOptions LogoOptions = CreateLogoOptions();
-    private static readonly QrEasyOptions FancyOptions = new() { Style = QrRenderStyle.Fancy };
+    private static readonly QrRenderOptions LogoOptions = CreateLogoOptions();
+    private static readonly QrRenderOptions FancyOptions = new() { Style = QrRenderStyle.Fancy };
 
     [Benchmark(Description = "QR PNG (short text)")]
     public byte[] QrPng_ShortText()
     {
-        return QrCode.Render(ShortText, OutputFormat.Png).Data;
+        return QR.Render(ShortText, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "QR PNG (medium text)")]
     public byte[] QrPng_MediumText()
     {
-        return QrCode.Render(MediumText, OutputFormat.Png).Data;
+        return QR.Render(MediumText, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "QR PNG (long text)")]
     public byte[] QrPng_LongText()
     {
-        return QrCode.Render(LongText, OutputFormat.Png).Data;
+        return QR.Render(LongText, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "QR SVG (medium text)")]
     public string QrSvg_MediumText()
     {
-        return QrCode.Render(MediumText, OutputFormat.Svg).GetText();
+        return QR.Render(MediumText, OutputFormat.Svg).GetText();
     }
 
     [Benchmark(Description = "QR PNG High Error Correction")]
     public byte[] QrPng_HighEC()
     {
-        return QrCode.Render(MediumText, OutputFormat.Png, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).Data;
+        return QR.Render(MediumText, OutputFormat.Png, encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
     }
 
     [Benchmark(Description = "QR PNG (medium text, logo)")]
     public byte[] QrPng_MediumText_Logo()
     {
-        return QrCode.Render(MediumText, OutputFormat.Png, LogoOptions).Data;
+        return QR.Render(MediumText, OutputFormat.Png, LogoOptions, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H, MinVersion = 4 }).ToArray();
     }
 
     [Benchmark(Description = "QR PNG (medium text, fancy)")]
     public byte[] QrPng_MediumText_Fancy()
     {
-        return QrCode.Render(MediumText, OutputFormat.Png, FancyOptions).Data;
+        return QR.Render(MediumText, OutputFormat.Png, FancyOptions).ToArray();
     }
 
     [Benchmark(Description = "QR HTML (medium text)")]
     public string QrHtml_MediumText()
     {
-        return QrCode.Render(MediumText, OutputFormat.Html).GetText();
+        return QR.Render(MediumText, OutputFormat.Html).GetText();
     }
 
-    private static QrEasyOptions CreateLogoOptions()
+    private static QrRenderOptions CreateLogoOptions()
     {
         var logo = LogoBuilder.CreateCirclePng(
             size: 96,

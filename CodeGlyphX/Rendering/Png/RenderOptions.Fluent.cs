@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 namespace CodeGlyphX.Rendering.Png;
 
 public sealed partial class QrPngRenderOptions {
@@ -36,7 +37,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets the background gradient.
     /// </summary>
-    public QrPngRenderOptions WithBackgroundGradient(QrPngGradientOptions? gradient) {
+    public QrPngRenderOptions WithBackgroundGradient(QrGradientOptions? gradient) {
         BackgroundGradient = gradient;
         return this;
     }
@@ -44,7 +45,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets the background pattern overlay.
     /// </summary>
-    public QrPngRenderOptions WithBackgroundPattern(QrPngBackgroundPatternOptions? pattern) {
+    public QrPngRenderOptions WithBackgroundPattern(QrBackgroundPatternOptions? pattern) {
         BackgroundPattern = pattern;
         return this;
     }
@@ -60,7 +61,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets the foreground gradient.
     /// </summary>
-    public QrPngRenderOptions WithForegroundGradient(QrPngGradientOptions? gradient) {
+    public QrPngRenderOptions WithForegroundGradient(QrGradientOptions? gradient) {
         ForegroundGradient = gradient;
         return this;
     }
@@ -68,7 +69,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets the foreground palette.
     /// </summary>
-    public QrPngRenderOptions WithForegroundPalette(QrPngPaletteOptions? palette) {
+    public QrPngRenderOptions WithForegroundPalette(QrPaletteOptions? palette) {
         ForegroundPalette = palette;
         return this;
     }
@@ -76,7 +77,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets the foreground pattern overlay.
     /// </summary>
-    public QrPngRenderOptions WithForegroundPattern(QrPngForegroundPatternOptions? pattern) {
+    public QrPngRenderOptions WithForegroundPattern(QrForegroundPatternOptions? pattern) {
         ForegroundPattern = pattern;
         return this;
     }
@@ -84,7 +85,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets palette overrides for specific zones.
     /// </summary>
-    public QrPngRenderOptions WithForegroundPaletteZones(QrPngPaletteZoneOptions? zones) {
+    public QrPngRenderOptions WithForegroundPaletteZones(QrPaletteZoneOptions? zones) {
         ForegroundPaletteZones = zones;
         return this;
     }
@@ -92,7 +93,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets custom eye (finder) options.
     /// </summary>
-    public QrPngRenderOptions WithEyes(QrPngEyeOptions? eyes) {
+    public QrPngRenderOptions WithEyes(QrEyeOptions? eyes) {
         Eyes = eyes;
         return this;
     }
@@ -100,7 +101,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets the module shape.
     /// </summary>
-    public QrPngRenderOptions WithModuleShape(QrPngModuleShape shape) {
+    public QrPngRenderOptions WithModuleShape(QrModuleShape shape) {
         ModuleShape = shape;
         return this;
     }
@@ -116,7 +117,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets per-module scale mapping options.
     /// </summary>
-    public QrPngRenderOptions WithModuleScaleMap(QrPngModuleScaleMapOptions? map) {
+    public QrPngRenderOptions WithModuleScaleMap(QrModuleScaleMapOptions? map) {
         ModuleScaleMap = map;
         return this;
     }
@@ -124,7 +125,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets per-module shape mapping options.
     /// </summary>
-    public QrPngRenderOptions WithModuleShapeMap(QrPngModuleShapeMapOptions? map) {
+    public QrPngRenderOptions WithModuleShapeMap(QrModuleShapeMapOptions? map) {
         ModuleShapeMap = map;
         return this;
     }
@@ -132,7 +133,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets per-module jitter options.
     /// </summary>
-    public QrPngRenderOptions WithModuleJitter(QrPngModuleJitterOptions? jitter) {
+    public QrPngRenderOptions WithModuleJitter(QrModuleJitterOptions? jitter) {
         ModuleJitter = jitter;
         return this;
     }
@@ -157,7 +158,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets the logo overlay options.
     /// </summary>
-    public QrPngRenderOptions WithLogo(QrPngLogoOptions? logo) {
+    public QrPngRenderOptions WithLogo(QrRasterLogoOptions? logo) {
         Logo = logo;
         return this;
     }
@@ -165,7 +166,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets the canvas options.
     /// </summary>
-    public QrPngRenderOptions WithCanvas(QrPngCanvasOptions? canvas) {
+    public QrPngRenderOptions WithCanvas(QrCanvasOptions? canvas) {
         Canvas = canvas;
         return this;
     }
@@ -173,7 +174,7 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Sets the debug overlay options.
     /// </summary>
-    public QrPngRenderOptions WithDebug(QrPngDebugOptions? debug) {
+    public QrPngRenderOptions WithDebug(QrRasterDebugOptions? debug) {
         Debug = debug;
         return this;
     }

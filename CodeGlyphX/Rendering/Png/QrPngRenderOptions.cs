@@ -39,12 +39,12 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Optional gradient for the background.
     /// </summary>
-    public QrPngGradientOptions? BackgroundGradient { get; set; }
+    public QrGradientOptions? BackgroundGradient { get; set; }
 
     /// <summary>
     /// Optional pattern overlay for the QR background area.
     /// </summary>
-    public QrPngBackgroundPatternOptions? BackgroundPattern { get; set; }
+    public QrBackgroundPatternOptions? BackgroundPattern { get; set; }
 
     /// <summary>
     /// Background supersample factor for gradients/patterns (1 = disabled, max 4).
@@ -54,32 +54,32 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Optional gradient for the foreground (dark) modules.
     /// </summary>
-    public QrPngGradientOptions? ForegroundGradient { get; set; }
+    public QrGradientOptions? ForegroundGradient { get; set; }
 
     /// <summary>
     /// Optional multi-color palette for foreground modules.
     /// </summary>
-    public QrPngPaletteOptions? ForegroundPalette { get; set; }
+    public QrPaletteOptions? ForegroundPalette { get; set; }
 
     /// <summary>
     /// Optional pattern overlay for foreground modules.
     /// </summary>
-    public QrPngForegroundPatternOptions? ForegroundPattern { get; set; }
+    public QrForegroundPatternOptions? ForegroundPattern { get; set; }
 
     /// <summary>
     /// Optional palette overrides for specific zones.
     /// </summary>
-    public QrPngPaletteZoneOptions? ForegroundPaletteZones { get; set; }
+    public QrPaletteZoneOptions? ForegroundPaletteZones { get; set; }
 
     /// <summary>
     /// Optional eye (finder) styling overrides.
     /// </summary>
-    public QrPngEyeOptions? Eyes { get; set; }
+    public QrEyeOptions? Eyes { get; set; }
 
     /// <summary>
     /// Gets or sets the module shape.
     /// </summary>
-    public QrPngModuleShape ModuleShape { get; set; } = QrPngModuleShape.Square;
+    public QrModuleShape ModuleShape { get; set; } = QrModuleShape.Square;
 
     /// <summary>
     /// Gets or sets the scale of the module inside its cell (0.1..1.0).
@@ -89,17 +89,17 @@ public sealed partial class QrPngRenderOptions {
     /// <summary>
     /// Optional per-module scale mapping.
     /// </summary>
-    public QrPngModuleScaleMapOptions? ModuleScaleMap { get; set; }
+    public QrModuleScaleMapOptions? ModuleScaleMap { get; set; }
 
     /// <summary>
     /// Optional per-module shape mapping.
     /// </summary>
-    public QrPngModuleShapeMapOptions? ModuleShapeMap { get; set; }
+    public QrModuleShapeMapOptions? ModuleShapeMap { get; set; }
 
     /// <summary>
     /// Optional per-module jitter (organic placement).
     /// </summary>
-    public QrPngModuleJitterOptions? ModuleJitter { get; set; }
+    public QrModuleJitterOptions? ModuleJitter { get; set; }
 
 
     /// <summary>
@@ -114,24 +114,24 @@ public sealed partial class QrPngRenderOptions {
     public bool ProtectQuietZone { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets the corner radius in pixels for <see cref="QrPngModuleShape.Rounded"/>.
+    /// Gets or sets the corner radius in pixels for <see cref="QrModuleShape.Rounded"/>.
     /// </summary>
     public int ModuleCornerRadiusPx { get; set; }
 
     /// <summary>
     /// Optional logo overlay (centered).
     /// </summary>
-    public QrPngLogoOptions? Logo { get; set; }
+    public QrRasterLogoOptions? Logo { get; set; }
 
     /// <summary>
     /// Optional canvas options for sticker-style output.
     /// </summary>
-    public QrPngCanvasOptions? Canvas { get; set; }
+    public QrCanvasOptions? Canvas { get; set; }
 
     /// <summary>
     /// Optional debug overlay options.
     /// </summary>
-    public QrPngDebugOptions? Debug { get; set; }
+    public QrRasterDebugOptions? Debug { get; set; }
 
     /// <summary>
     /// PNG compression level (0 = stored/uncompressed, 1-9 = compressed).

@@ -21,7 +21,7 @@ Use extension-based `Save` for files:
 using CodeGlyphX;
 
 QR.Save("https://example.com", "qr.png");
-Barcode.Save(BarcodeType.Code128, "PRODUCT-123", "barcode.svg");
+Barcode.Save(SymbolFormat.Code128, "PRODUCT-123", "barcode.svg");
 DataMatrixCode.Save("LOT-42", "lot.png");
 Pdf417Code.Save("DOCUMENT-42", "document.pdf");
 AztecCode.Save("TICKET-42", "ticket.svg");
@@ -32,11 +32,11 @@ Use an explicit `OutputFormat` for memory or stream output:
 ```csharp
 using CodeGlyphX.Rendering;
 
-byte[] png = QrCode.Render("Hello", OutputFormat.Png).Data;
-string svg = Barcode.Render(BarcodeType.Code128, "PRODUCT-123", OutputFormat.Svg).GetText();
+byte[] png = QR.Render("Hello", OutputFormat.Png).ToArray();
+string svg = Barcode.Render(SymbolFormat.Code128, "PRODUCT-123", OutputFormat.Svg).GetText();
 
 using var stream = File.Create("hello.pdf");
-OutputWriter.Write(stream, QrCode.Render("Hello", OutputFormat.Pdf));
+OutputWriter.Write(stream, QR.Render("Hello", OutputFormat.Pdf));
 ```
 
 Do not suggest removed per-format facade or builder methods such as `RenderPng`, `ToPng`, `.Png()`, or `SaveSvg`. Builders terminate with `Render(format)`, `Save(path)`, or `Save(stream, format)`.
@@ -44,18 +44,19 @@ Do not suggest removed per-format facade or builder methods such as `RenderPng`,
 ## Options
 
 ```csharp
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
-var options = new QrEasyOptions {
-    ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
-    ModuleShape = QrPngModuleShape.Rounded,
+var options = new QrRenderOptions {
+    ModuleShape = QrModuleShape.Rounded,
     Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Conservative, intensity: 60)
 };
 
-QR.Save("https://example.com", "styled.png", options);
+QR.Save("https://example.com", "styled.png", options,
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
 ```
 
-Use `QrEasy.EvaluateScanHeuristics` for static checks, but never describe its score as proof that output will scan. Validate final artifacts on target scanners and devices.
+Use `QR.EvaluateScanHeuristics` for static checks, but never describe its score as proof that output will scan. Validate final artifacts on target scanners and devices.
 
 ## Payloads
 
@@ -87,22 +88,23 @@ QR.Save(QrPayloads.Girocode(
 
 ## Decoding
 
-Use `QrImageDecoder` for QR-only input and `CodeGlyph` for unified recognition:
+Use `QrImageDecoder` for QR-only input and `SymbolScanner` for unified recognition:
 
 ```csharp
 byte[] image = File.ReadAllBytes("code.png");
-var options = new CodeGlyphDecodeOptions {
+var options = new ScanOptions {
+    TimeoutMilliseconds = 500,
     Qr = QrPixelDecodeOptions.Screen(budgetMilliseconds: 500, maxDimension: 1600),
     Image = ImageDecodeOptions.Strict(
         maxBytes: 8 * 1024 * 1024,
         maxPixels: 8_000_000,
         maxDimension: 1600)
-        .WithRecognitionBudget(500)
 };
-
-if (CodeGlyph.TryDecodeImage(image, out var decoded, options)) {
-    Console.WriteLine($"{decoded.Kind}: {decoded.Text}");
+var scan = SymbolScanner.Scan(image, options);
+foreach (var symbol in scan.Symbols) {
+    Console.WriteLine($"{symbol.Format}: {symbol.Text}");
 }
+Console.WriteLine(scan.CompletionReason);
 ```
 
 Decode limits:

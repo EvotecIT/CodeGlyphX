@@ -1,0 +1,50 @@
+name: Codec corpus replay
+
+on:
+  pull_request:
+    paths:
+      - 'CodeGlyphX/**'
+      - 'CodeGlyphX.Fuzz/**'
+      - 'CodeGlyphX.Tests/Fixtures/**'
+      - 'Build/Invoke-FuzzReplay.ps1'
+      - '.github/workflows/fuzz.yml'
+  schedule:
+    - cron: '19 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fuzz-replay:
+    runs-on: ${{ fromJSON(github.event.repository.private && '["self-hosted","linux"]' || '["ubuntu-latest"]') }}
+    timeout-minutes: 15
+    env:
+      CODEGLYPHX_FUZZ_TIMEOUT_MS: '2000'
+      CODEGLYPHX_FUZZ_MAX_MB: '256'
+      CODEGLYPHX_FUZZ_MAX_INPUT_MB: '8'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Build managed fuzz harness
+        run: dotnet build CodeGlyphX.Fuzz/CodeGlyphX.Fuzz.csproj -c Release --nologo
+
+      - name: Replay bounded codec corpus
+        shell: pwsh
+        run: ./Build/Invoke-FuzzReplay.ps1 -MaxCases 32
+
+      - name: Preserve failure inputs
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fuzz-replay-inputs
+          path: artifacts/fuzz-replay
+          retention-days: 7

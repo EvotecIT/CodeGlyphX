@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
@@ -29,7 +30,7 @@ public class SymbolScannerBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        _rgba = QrEasy.RenderPixels(Payload, out _width, out _height, out _stride, new QrEasyOptions {
+        _rgba = QR.RenderPixels(Payload, out _width, out _height, out _stride, new QrRenderOptions {
             ModuleSize = 6,
             QuietZone = 4
         });

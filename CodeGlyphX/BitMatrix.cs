@@ -18,6 +18,15 @@ public sealed class BitMatrix {
     /// </summary>
     public int Height { get; }
 
+    /// <summary>Gets whether the matrix has been frozen to prevent further changes.</summary>
+    public bool IsReadOnly { get; private set; }
+
+    /// <summary>Prevents further changes and returns this matrix. Use <see cref="Clone"/> to obtain an editable copy.</summary>
+    public BitMatrix Freeze() {
+        IsReadOnly = true;
+        return this;
+    }
+
     /// <summary>
     /// Creates a new <see cref="BitMatrix"/>.
     /// </summary>
@@ -63,6 +72,7 @@ public sealed class BitMatrix {
     /// Sets the value at (<paramref name="x"/>, <paramref name="y"/>).
     /// </summary>
     public void Set(int x, int y, bool value) {
+        EnsureWritable();
         if ((uint)x >= (uint)Width) throw new ArgumentOutOfRangeException(nameof(x));
         if ((uint)y >= (uint)Height) throw new ArgumentOutOfRangeException(nameof(y));
 
@@ -76,14 +86,18 @@ public sealed class BitMatrix {
     /// <summary>
     /// Clears all bits to <c>false</c>.
     /// </summary>
-    public void Clear() => Array.Clear(_words, 0, _words.Length);
+    public void Clear() {
+        EnsureWritable();
+        Array.Clear(_words, 0, _words.Length);
+    }
 
     /// <summary>
-    /// Creates a deep copy of this matrix.
+    /// Creates an editable deep copy of this matrix, including when this matrix is read-only.
     /// </summary>
     public BitMatrix Clone() => new(Width, Height, (uint[])_words.Clone());
 
     internal void CopyFrom(BitMatrix other) {
+        EnsureWritable();
         if (other is null) throw new ArgumentNullException(nameof(other));
         if (other.Width != Width || other.Height != Height) throw new ArgumentException("Matrix size mismatch.", nameof(other));
         Array.Copy(other._words, _words, _words.Length);
@@ -92,6 +106,7 @@ public sealed class BitMatrix {
     internal uint[] Words => _words;
 
     internal void Invert() {
+        EnsureWritable();
         var words = _words;
         for (var i = 0; i < words.Length; i++) {
             words[i] = ~words[i];
@@ -103,6 +118,10 @@ public sealed class BitMatrix {
 
         var mask = (1u << remainingBits) - 1u;
         words[words.Length - 1] &= mask;
+    }
+
+    private void EnsureWritable() {
+        if (IsReadOnly) throw new InvalidOperationException("The matrix is read-only. Clone it before making changes.");
     }
 
     /// <summary>

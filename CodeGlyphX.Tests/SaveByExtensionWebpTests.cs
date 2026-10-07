@@ -16,7 +16,7 @@ public sealed class SaveByExtensionWebpTests {
 
     [Fact]
     public void Barcode_Save_ByExtension_WritesWebp() {
-        AssertWebpSaved(path => Barcode.Save(BarcodeType.Code128, "CODE128-WEBP", path));
+        AssertWebpSaved(path => Barcode.Save(SymbolFormat.Code128, "CODE128-WEBP", path));
     }
 
     [Fact]

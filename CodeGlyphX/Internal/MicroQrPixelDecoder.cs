@@ -29,7 +29,7 @@ internal static partial class MicroQrPixelDecoder {
 
         var thresholds = BuildThresholds(image);
         for (var i = 0; i < thresholds.Length; i++) {
-            if (cancellationToken.IsCancellationRequested) return false;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
             var likelyInverted = IsBorderForeground(image, thresholds[i], inverted: false);
             for (var polarity = 0; polarity < 2; polarity++) {
                 var inverted = polarity == 0 ? likelyInverted : !likelyInverted;
@@ -63,7 +63,7 @@ internal static partial class MicroQrPixelDecoder {
         for (var d = 0; d < Dimensions.Length; d++) {
             var dimension = Dimensions[d];
             for (var angle = 0; angle < 360; angle += 90) {
-                if (cancellationToken.IsCancellationRequested) return false;
+                if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 if (TryDecodeBoundsHypothesis(image, threshold, inverted, bounds, dimension, angle, mirrored: false, out decoded, out info)) return true;
                 if (TryDecodeBoundsHypothesis(image, threshold, inverted, bounds, dimension, angle, mirrored: true, out decoded, out info)) return true;
             }
@@ -73,7 +73,7 @@ internal static partial class MicroQrPixelDecoder {
         // envelope for each angle avoids a separate deskew bitmap and preserves geometry.
         for (var angle = 1; angle < 360; angle++) {
             if ((angle % 90) == 0) continue;
-            if ((angle & 7) == 0 && cancellationToken.IsCancellationRequested) return false;
+            if ((angle & 7) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
             for (var d = 0; d < Dimensions.Length; d++) {
                 if (TryDecodeBoundsHypothesis(image, threshold, inverted, bounds, Dimensions[d], angle, mirrored: false, out decoded, out info)) return true;
                 if (TryDecodeBoundsHypothesis(image, threshold, inverted, bounds, Dimensions[d], angle, mirrored: true, out decoded, out info)) return true;
@@ -137,7 +137,7 @@ internal static partial class MicroQrPixelDecoder {
             usableCandidates++;
             var candidate = candidates[c];
             for (var angle = 0; angle < 360; angle += 5) {
-                if ((angle % 20) == 0 && cancellationToken.IsCancellationRequested) {
+                if ((angle % 20) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) {
                     model2Only = false;
                     return Fail(out decoded, out info);
                 }
@@ -402,7 +402,7 @@ internal static partial class MicroQrPixelDecoder {
         var candidates = new List<FinderCandidate>(8);
         var rowStep = Math.Max(1, image.Height / 512);
         for (var y = 0; y < image.Height; y += rowStep) {
-            if (cancellationToken.IsCancellationRequested) break;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) break;
             var counts = new int[5];
             var state = 0;
             for (var x = 0; x < image.Width; x++) {
@@ -526,7 +526,7 @@ internal static partial class MicroQrPixelDecoder {
         var right = -1;
         var bottom = -1;
         for (var y = 0; y < image.Height; y++) {
-            if ((y & 31) == 0 && cancellationToken.IsCancellationRequested) { bounds = default; return false; }
+            if ((y & 31) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) { bounds = default; return false; }
             for (var x = 0; x < image.Width; x++) {
                 if (!image.IsForeground(x, y, threshold, inverted)) continue;
                 if (x < left) left = x;

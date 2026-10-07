@@ -11,18 +11,18 @@ public static partial class DataMatrixCode {
     /// Saves Data Matrix to a file based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderExtras? extras = null) {
+    public static string Save(string text, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(text, format, mode, options, extras);
+        var output = Render(text, format, mode, options, outputOptions);
         return OutputWriter.Write(path, output);
     }
 
     /// <summary>
     /// Saves Data Matrix to a file using explicit encoding options and selecting the output format from the extension.
     /// </summary>
-    public static string Save(string text, string path, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, RenderExtras? extras = null) {
+    public static string Save(string text, string path, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(text, format, encodingOptions, options, extras);
+        var output = Render(text, format, encodingOptions, options, outputOptions);
         return OutputWriter.Write(path, output);
     }
 
@@ -30,10 +30,10 @@ public static partial class DataMatrixCode {
     /// Saves Data Matrix to a file for byte payloads based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderExtras? extras = null) {
+    public static string Save(byte[] data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(data, format, mode, options, extras);
+        var output = Render(data, format, mode, options, outputOptions);
         return OutputWriter.Write(path, output);
     }
 
@@ -41,10 +41,10 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Saves Data Matrix to a file for byte payloads using explicit encoding options.
     /// </summary>
-    public static string Save(byte[] data, string path, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, RenderExtras? extras = null) {
+    public static string Save(byte[] data, string path, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(data, format, encodingOptions, options, extras);
+        var output = Render(data, format, encodingOptions, options, outputOptions);
         return OutputWriter.Write(path, output);
     }
 

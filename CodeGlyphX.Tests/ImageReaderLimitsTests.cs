@@ -10,9 +10,28 @@ namespace CodeGlyphX.Tests;
 
 [Collection("GlobalState")]
 public sealed class ImageReaderLimitsTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void NegativeInheritedGuardIsRejectedWithOrWithoutPerCallOptions(bool supplyOptions) {
+        var png = QR.Render("INVALID-GUARD", OutputFormat.Png).Data.ToArray();
+        var previous = ImageReader.MaxDecodedBytes;
+        try {
+            ImageReader.MaxDecodedBytes = -1;
+            var options = supplyOptions ? new ImageDecodeOptions() : null;
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageReader.DecodeRgba32(png, options, out _, out _));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageReader.DecodeRgba32Composite(png, options, out _, out _));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageReader.DecodeRgba32(png, out _, out _));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ImageReader.DecodeRgba32Composite(png, out _, out _));
+        } finally {
+            ImageReader.MaxDecodedBytes = previous;
+        }
+    }
+
     [Fact]
     public void DeliveryJpegProbeHonorsPerCallPixelLimit() {
-        var png = QrCode.Render("DELIVERY-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6 }).Data;
+        var png = QR.Render("DELIVERY-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6 }).Data.ToArray();
         var previous = ImageReader.MaxPixels;
         try {
             ImageReader.MaxPixels = 1;
@@ -28,7 +47,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void TryDecodeRgba32_Respects_Global_MaxPixels() {
-        var png = QrCode.Render("LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var previous = ImageReader.MaxPixels;
         try {
             ImageReader.MaxPixels = 1;
@@ -40,14 +59,14 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void TryDecodeRgba32_Respects_Option_MaxBytes() {
-        var png = QrCode.Render("LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var options = new ImageDecodeOptions { MaxBytes = png.Length - 1 };
         Assert.False(ImageReader.TryDecodeRgba32(png, options, out _, out _, out _));
     }
 
     [Fact]
     public void DecodeRgba32_Resizes_Output_To_MaxDimension() {
-        var png = QrCode.Render("RESIZE", OutputFormat.Png, new QrEasyOptions { ModuleSize = 12, QuietZone = 4 }).Data;
+        var png = QR.Render("RESIZE", OutputFormat.Png, new QrRenderOptions { ModuleSize = 12, QuietZone = 4 }).Data.ToArray();
         var options = new ImageDecodeOptions { MaxDimension = 32 };
 
         var rgba = ImageReader.DecodeRgba32(png, options, out var width, out var height);
@@ -59,7 +78,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void Option_Zero_Disables_Global_MaxPixels() {
-        var png = QrCode.Render("UNLIMITED", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("UNLIMITED", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var previous = ImageReader.MaxPixels;
         try {
             ImageReader.MaxPixels = 1;
@@ -71,20 +90,21 @@ public sealed class ImageReaderLimitsTests {
     }
 
     [Fact]
-    public void DecodeResult_Option_Zero_Disables_Global_MaxBytes() {
-        var png = QrCode.Render("UNLIMITED-BYTES", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+    public void Scanner_Option_Zero_Disables_Global_MaxBytes() {
+        var png = QR.Render("UNLIMITED-BYTES", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var previous = ImageReader.MaxImageBytes;
         try {
             ImageReader.MaxImageBytes = 1;
-            var options = new CodeGlyphDecodeOptions {
+            var options = new ScanOptions {
+                Formats = new[] { SymbolFormat.QrCode }, MaxSymbols = 1,
                 Image = new ImageDecodeOptions { MaxBytes = 0 },
                 Qr = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast, BudgetMilliseconds = 1000 }
             };
 
-            var result = CodeGlyph.DecodeImageResult(png, options);
+            var result = SymbolScanner.Scan(png, options);
 
-            Assert.True(result.IsSuccess, result.Message);
-            Assert.Equal("UNLIMITED-BYTES", result.Value?.Text);
+            Assert.True(result.IsSuccess, result.Failure);
+            Assert.Equal("UNLIMITED-BYTES", Assert.Single(result.Symbols).Text);
         } finally {
             ImageReader.MaxImageBytes = previous;
         }
@@ -104,7 +124,7 @@ public sealed class ImageReaderLimitsTests {
 
             var success = Barcode.TryDecodePng(
                 png,
-                BarcodeType.Code128,
+                SymbolFormat.Code128,
                 new ImageDecodeOptions { MaxBytes = 0 },
                 out var decoded);
 
@@ -129,7 +149,7 @@ public sealed class ImageReaderLimitsTests {
             ? new ImageDecodeOptions { MaxBytes = png.Length - 1 }
             : new ImageDecodeOptions { MaxPixels = 1 };
 
-        var success = Barcode.TryDecodePng(png, BarcodeType.Code128, options, out var decoded);
+        var success = Barcode.TryDecodePng(png, SymbolFormat.Code128, options, out var decoded);
 
         Assert.False(success);
         Assert.Null(decoded);
@@ -138,9 +158,10 @@ public sealed class ImageReaderLimitsTests {
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public void CodeGlyphPngTryApis_ReturnFalse_WhenOptionLimitRejectsImage(bool limitBytes) {
-        var png = QrCode.Render("CODEGLYPH-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
-        var options = new CodeGlyphDecodeOptions {
+    public void ScannerTransports_ReturnInvalidImage_WhenOptionLimitRejectsImage(bool limitBytes) {
+        var png = QR.Render("CODEGLYPH-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
+        var options = new ScanOptions {
+                Formats = new[] { SymbolFormat.QrCode }, MaxSymbols = 1,
             Image = limitBytes
                 ? new ImageDecodeOptions { MaxBytes = png.Length - 1 }
                 : new ImageDecodeOptions { MaxPixels = 1 }
@@ -150,53 +171,30 @@ public sealed class ImageReaderLimitsTests {
         try {
             File.WriteAllBytes(path, png);
 
-            Assert.False(CodeGlyph.TryDecodePng(png, out var direct, options));
-            Assert.Null(direct);
-
-            Assert.False(CodeGlyph.TryDecodePng(png, out var diagnosed, out var diagnostics, options));
-            Assert.Null(diagnosed);
-            Assert.Equal(DecodeFailureReason.InvalidInput, diagnostics.FailureReason);
-
-            Assert.False(CodeGlyph.TryDecodeAllPng(png, out var allDirect, options));
-            Assert.Empty(allDirect);
-
+            Assert.Equal(ScanStatus.InvalidImage, SymbolScanner.Scan(png, options).Status);
             using (var stream = new MemoryStream(png, writable: false)) {
-                Assert.False(CodeGlyph.TryDecodePng(stream, out var streamed, options));
-                Assert.Null(streamed);
+                Assert.Equal(ScanStatus.InvalidImage, SymbolScanner.Scan(stream, options).Status);
             }
-
-            using (var stream = new MemoryStream(png, writable: false)) {
-                Assert.False(CodeGlyph.TryDecodeAllPng(stream, out var allStreamed, options));
-                Assert.Empty(allStreamed);
-            }
-
-            Assert.False(CodeGlyph.TryDecodePngFile(path, out var fromFile, options));
-            Assert.Null(fromFile);
-            Assert.False(CodeGlyph.TryDecodeAllPngFile(path, out var allFromFile, options));
-            Assert.Empty(allFromFile);
+            Assert.Equal(ScanStatus.InvalidImage, SymbolScanner.ScanFile(path, options).Status);
         } finally {
             File.Delete(path);
         }
     }
 
     [Fact]
-    public void CodeGlyphPngTryApis_ReturnFalse_ForInvalidPng() {
+    public void Scanner_ReturnsInvalidImage_ForMalformedPng() {
         var invalidPng = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
 
-        Assert.False(CodeGlyph.TryDecodePng(invalidPng, out var decoded));
-        Assert.Null(decoded);
-        Assert.False(CodeGlyph.TryDecodeAllPng(invalidPng, out var allDecoded));
-        Assert.Empty(allDecoded);
-        Assert.False(CodeGlyph.TryDecodePng(invalidPng, out var diagnosed, out var diagnostics, options: null));
-        Assert.Null(diagnosed);
-        Assert.Equal(DecodeFailureReason.InvalidInput, diagnostics.FailureReason);
+        var result = SymbolScanner.Scan(invalidPng);
+        Assert.Equal(ScanStatus.InvalidImage, result.Status);
+        Assert.Empty(result.Symbols);
     }
 
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
     public void SymbolPngTryApis_ReturnFalse_WhenOptionLimitRejectsImage(bool limitBytes) {
-        var png = QrCode.Render("SYMBOL-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("SYMBOL-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var options = limitBytes
             ? new ImageDecodeOptions { MaxBytes = png.Length - 1 }
             : new ImageDecodeOptions { MaxPixels = 1 };
@@ -240,7 +238,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void QrPngFileAndStreamTryApis_ApplyMaxBytesBeforeBuffering() {
-        var png = QrCode.Render("QR-TRANSPORT-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("QR-TRANSPORT-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var options = new ImageDecodeOptions { MaxBytes = png.Length - 1 };
         var path = Path.GetTempFileName();
 
@@ -272,7 +270,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void QrPngFileAndStreamTryApis_ApplyGlobalMaxBytesBeforeBuffering() {
-        var png = QrCode.Render("QR-GLOBAL-TRANSPORT-LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("QR-GLOBAL-TRANSPORT-LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var path = Path.GetTempFileName();
         var previous = ImageReader.MaxImageBytes;
 
@@ -305,8 +303,9 @@ public sealed class ImageReaderLimitsTests {
         }
 
         using (var stream = new MemoryStream(invalidImage, writable: false)) {
-            Assert.False(CodeGlyph.TryDecodeImage(stream, out var codeGlyph));
-            Assert.Null(codeGlyph);
+            var result = SymbolScanner.Scan(stream);
+            Assert.Equal(ScanStatus.InvalidImage, result.Status);
+            Assert.Empty(result.Symbols);
         }
 
         using (var stream = new MemoryStream(invalidImage, writable: false)) {
@@ -322,7 +321,7 @@ public sealed class ImageReaderLimitsTests {
 
     [Fact]
     public void LimitViolation_Fires_OnMaxPixels() {
-        var png = QrCode.Render("LIMIT", OutputFormat.Png, new QrEasyOptions { ModuleSize = 6, QuietZone = 2 }).Data;
+        var png = QR.Render("LIMIT", OutputFormat.Png, new QrRenderOptions { ModuleSize = 6, QuietZone = 2 }).Data.ToArray();
         var options = new ImageDecodeOptions { MaxPixels = 1 };
         ImageDecodeLimitViolation? violation = null;
         void Handler(ImageDecodeLimitViolation v) => violation = v;

@@ -15,11 +15,11 @@ public static class OutputWriter {
         if (output is null) throw new ArgumentNullException(nameof(output));
         if (output.IsText) {
             if (encoding is null) {
-                return RenderIO.WriteBinary(path, output.Data);
+                return RenderIO.WriteBinary(path, output.OwnedBytes);
             }
-            return RenderIO.WriteText(path, output.GetText(encoding), encoding);
+            return RenderIO.WriteText(path, output.GetText(), encoding);
         }
-        return RenderIO.WriteBinary(path, output.Data);
+        return RenderIO.WriteBinary(path, output.OwnedBytes);
     }
 
     /// <summary>
@@ -29,12 +29,12 @@ public static class OutputWriter {
         if (output is null) throw new ArgumentNullException(nameof(output));
         if (output.IsText) {
             if (encoding is null) {
-                RenderIO.WriteBinary(stream, output.Data);
+                RenderIO.WriteBinary(stream, output.OwnedBytes);
                 return;
             }
-            RenderIO.WriteText(stream, output.GetText(encoding), encoding);
+            RenderIO.WriteText(stream, output.GetText(), encoding);
             return;
         }
-        RenderIO.WriteBinary(stream, output.Data);
+        RenderIO.WriteBinary(stream, output.OwnedBytes);
     }
 }

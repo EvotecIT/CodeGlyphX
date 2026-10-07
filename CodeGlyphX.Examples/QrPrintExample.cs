@@ -8,7 +8,7 @@ internal static class QrPrintExample {
     public static void Run(string outputDir) {
         var payload = "https://example.com/print-ready";
 
-        var opts = new QrEasyOptions {
+        var opts = new QrRenderOptions {
             TargetSizePx = 4000,
             TargetSizeIncludesQuietZone = true,
             BackgroundSupersample = 2
@@ -20,7 +20,7 @@ internal static class QrPrintExample {
         QR.Save(payload, Path.Combine(outputDir, "qr-print-8k.png"), opts);
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-print-8k.pdf"),
-            QrCode.Render(payload, OutputFormat.Pdf, opts, new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Pdf, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster })
         );
     }
 }

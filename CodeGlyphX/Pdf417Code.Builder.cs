@@ -28,6 +28,16 @@ namespace CodeGlyphX;
 /// Fluent PDF417 builder returned by <see cref="Pdf417Code.Create(string, Pdf417EncodeOptions?, MatrixOptions?)"/>.
 /// </summary>
 public sealed class Pdf417Builder {
+    /// <summary>Gets the format-specific output settings configured for this builder.</summary>
+    public OutputOptions OutputOptions { get; } = new OutputOptions();
+
+    /// <summary>Configures format-specific output settings without changing symbol layout.</summary>
+    public Pdf417Builder WithOutputOptions(Action<OutputOptions> configure) {
+        if (configure is null) throw new ArgumentNullException(nameof(configure));
+        configure(OutputOptions);
+        return this;
+    }
+
     private readonly string? _text;
     private readonly byte[]? _bytes;
     private readonly Pdf417EncodeOptions _encodeOptions;
@@ -35,14 +45,14 @@ public sealed class Pdf417Builder {
 
     internal Pdf417Builder(string text, Pdf417EncodeOptions? encodeOptions, MatrixOptions? renderOptions) {
         _text = text ?? throw new ArgumentNullException(nameof(text));
-        _encodeOptions = encodeOptions ?? new Pdf417EncodeOptions();
-        _renderOptions = renderOptions ?? new MatrixOptions();
+        _encodeOptions = encodeOptions?.Clone() ?? new Pdf417EncodeOptions();
+        _renderOptions = renderOptions?.Clone() ?? new MatrixOptions();
     }
 
     internal Pdf417Builder(byte[] data, Pdf417EncodeOptions? encodeOptions, MatrixOptions? renderOptions) {
-        _bytes = data ?? throw new ArgumentNullException(nameof(data));
-        _encodeOptions = encodeOptions ?? new Pdf417EncodeOptions();
-        _renderOptions = renderOptions ?? new MatrixOptions();
+        _bytes = (byte[])(data ?? throw new ArgumentNullException(nameof(data))).Clone();
+        _encodeOptions = encodeOptions?.Clone() ?? new Pdf417EncodeOptions();
+        _renderOptions = renderOptions?.Clone() ?? new MatrixOptions();
     }
 
     /// <summary>
@@ -92,15 +102,15 @@ public sealed class Pdf417Builder {
     /// Sets JPEG quality (1..100).
     /// </summary>
     public Pdf417Builder WithJpegQuality(int quality) {
-        _renderOptions.JpegQuality = quality;
+        OutputOptions.JpegQuality = quality;
         return this;
     }
 
     /// <summary>
-    /// Sets JPEG encoding options.
+    /// Copies JPEG encoding options and metadata payloads into this builder.
     /// </summary>
     public Pdf417Builder WithJpegOptions(JpegEncodeOptions options) {
-        _renderOptions.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
+        OutputOptions.JpegOptions = (options ?? throw new ArgumentNullException(nameof(options))).Clone();
         return this;
     }
 
@@ -108,7 +118,7 @@ public sealed class Pdf417Builder {
     /// Enables HTML email-safe table rendering.
     /// </summary>
     public Pdf417Builder WithHtmlEmailSafeTable(bool enabled = true) {
-        _renderOptions.HtmlEmailSafeTable = enabled;
+        OutputOptions.HtmlEmailSafeTable = enabled;
         return this;
     }
 
@@ -116,7 +126,7 @@ public sealed class Pdf417Builder {
     /// Sets ICO output sizes (in pixels).
     /// </summary>
     public Pdf417Builder WithIcoSizes(params int[] sizes) {
-        _renderOptions.IcoSizes = sizes;
+        OutputOptions.IcoSizes = sizes is null ? throw new ArgumentNullException(nameof(sizes)) : (int[])sizes.Clone();
         return this;
     }
 
@@ -124,7 +134,7 @@ public sealed class Pdf417Builder {
     /// Sets ICO aspect ratio preservation behavior.
     /// </summary>
     public Pdf417Builder WithIcoPreserveAspectRatio(bool enabled = true) {
-        _renderOptions.IcoPreserveAspectRatio = enabled;
+        OutputOptions.IcoPreserveAspectRatio = enabled;
         return this;
     }
 
@@ -145,10 +155,10 @@ public sealed class Pdf417Builder {
     }
 
     /// <summary>
-    /// Sets text encoding for byte compaction.
+    /// Copies the text encoding used for byte compaction into this builder.
     /// </summary>
     public Pdf417Builder WithTextEncoding(Encoding encoding) {
-        _encodeOptions.TextEncoding = encoding;
+        _encodeOptions.TextEncoding = (Encoding)(encoding ?? throw new ArgumentNullException(nameof(encoding))).Clone();
         return this;
     }
 
@@ -187,34 +197,34 @@ public sealed class Pdf417Builder {
     }
 
     /// <summary>
-    /// Encodes the PDF417 as a module matrix.
+    /// Encodes the PDF417 and retains its selected dimensions and error correction.
     /// </summary>
-    public BitMatrix Encode() {
+    public Pdf417Symbol Encode() {
         return _text is not null ? Pdf417Code.Encode(_text, _encodeOptions) : Pdf417Code.EncodeBytes(_bytes!, _encodeOptions);
     }
 
     /// <summary>
     /// Renders the configured PDF417 code to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+    public RenderedOutput Render(OutputFormat format, OutputOptions? outputOptions = null) {
         return _text is not null
-            ? Pdf417Code.Render(_text, format, _encodeOptions, _renderOptions, extras)
-            : Pdf417Code.Render(_bytes!, format, _encodeOptions, _renderOptions, extras);
+            ? Pdf417Code.Render(_text, format, _encodeOptions, _renderOptions, outputOptions ?? OutputOptions)
+            : Pdf417Code.Render(_bytes!, format, _encodeOptions, _renderOptions, outputOptions ?? OutputOptions);
     }
 
     /// <summary>
     /// Saves the configured PDF417 code, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, RenderExtras? extras = null) {
+    public string Save(string path, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, Render(format, extras));
+        return OutputWriter.Write(path, Render(format, outputOptions));
     }
 
     /// <summary>
     /// Writes the configured PDF417 code to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, Render(format, extras));
+        OutputWriter.Write(stream, Render(format, outputOptions));
     }
 }

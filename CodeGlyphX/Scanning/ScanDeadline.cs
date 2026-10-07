@@ -1,12 +1,15 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX;
 
 internal sealed class ScanDeadline : IDisposable {
     private readonly CancellationToken _callerToken;
     private readonly CancellationTokenSource? _source;
+    private readonly IDisposable? _decoderScope;
+    private readonly DecodeBudgetState _recognitionDeadline;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
     internal int TimeoutMilliseconds { get; }
@@ -23,13 +26,19 @@ internal sealed class ScanDeadline : IDisposable {
                 : new CancellationTokenSource();
             _source.CancelAfter(timeoutMilliseconds);
         }
+        // WASM timer callbacks cannot run while recognition blocks its thread. Native decoder
+        // loops also observe this monotonic scope, with nested attempts preserving the earliest limit.
+        _decoderScope = DecodeBudget.Begin(timeoutMilliseconds);
+        // Capture the enclosing limit after clamping. Shorter descendant scopes must not
+        // make this instance expire while its own effective deadline still has time.
+        _recognitionDeadline = DecodeBudget.Capture();
     }
 
-    internal bool ShouldStop => Token.IsCancellationRequested ||
+    internal bool ShouldStop => Token.IsCancellationRequested || _recognitionDeadline.IsExpired ||
         (TimeoutMilliseconds > 0 && _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds);
     internal bool CallerCancelled => _callerToken.IsCancellationRequested;
-    internal bool DeadlineExceeded => TimeoutMilliseconds > 0 && !CallerCancelled &&
-        (_source?.IsCancellationRequested == true || _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds);
+    internal bool DeadlineExceeded => !CallerCancelled && (_recognitionDeadline.IsExpired ||
+        TimeoutMilliseconds > 0 && (_source?.IsCancellationRequested == true || _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds));
 
     internal int RemainingMilliseconds {
         get {
@@ -40,7 +49,19 @@ internal sealed class ScanDeadline : IDisposable {
         }
     }
 
+    // A local attempt may yield to later candidates without cancelling the complete scan.
+    // Linking to this token keeps every attempt within the original caller/deadline boundary.
+    internal ScanDeadline CreateAttempt(int remainingAttempts, int recognitionBudgetMilliseconds = 0) {
+        var milliseconds = TimeoutMilliseconds > 0
+            ? Math.Max(1, RemainingMilliseconds / Math.Max(1, remainingAttempts))
+            : 0;
+        if (recognitionBudgetMilliseconds > 0 && (milliseconds == 0 || recognitionBudgetMilliseconds < milliseconds))
+            milliseconds = recognitionBudgetMilliseconds;
+        return new ScanDeadline(Token, milliseconds);
+    }
+
     public void Dispose() {
+        _decoderScope?.Dispose();
         _stopwatch.Stop();
         _source?.Dispose();
     }

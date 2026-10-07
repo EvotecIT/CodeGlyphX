@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 namespace CodeGlyphX;
 
 /// <summary>

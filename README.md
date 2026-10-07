@@ -42,7 +42,7 @@ var contact = QrPayload.VCard(
     organization: "CodeGlyphX");
 
 QR.Save(contact, "contact.png");
-Barcode.Save(BarcodeType.EAN, "5901234123457", "product.svg");
+Barcode.Save(SymbolFormat.Ean, "5901234123457", "product.svg");
 DataMatrixCode.Save("LOT-2026-0042", "lot.png");
 Pdf417Code.Save("DOCUMENT-2026-0042", "document.pdf");
 AztecCode.Save("TICKET-2026-0042", "ticket.svg");
@@ -56,27 +56,40 @@ For in-memory output, use a generic renderer and an explicit format:
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 
-byte[] png = QrCode.Render("Hello", OutputFormat.Png).Data;
-string svg = Barcode.Render(BarcodeType.Code128, "PRODUCT-123", OutputFormat.Svg).GetText();
+byte[] png = QR.Render("Hello", OutputFormat.Png).ToArray();
+string svg = Barcode.Render(SymbolFormat.Code128, "PRODUCT-123", OutputFormat.Svg).GetText();
 
 using var stream = File.Create("hello.pdf");
-OutputWriter.Write(stream, QrCode.Render("Hello", OutputFormat.Pdf));
+OutputWriter.Write(stream, QR.Render("Hello", OutputFormat.Pdf));
 ```
+
+For 2.x consumers, see the [3.0 migration guide](https://codeglyphx.com/docs/migration-3/). Encoding settings are separate from appearance:
+
+```csharp
+var qr = QR.Encode("Hello", new QrEncodingOptions {
+    ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+    EciMode = QrEciMode.Auto
+});
+qr.Save("hello.png", new QrRenderOptions { ModuleSize = 6, QuietZone = 4 });
+```
+
+`RenderedOutput.Data` is read-only; use `ToArray()` when a mutable byte array is required. Encoded symbols retain their format metadata and their own module data. Rendering cannot change payload, version or error correction.
 
 ## QR styling
 
 ```csharp
-var options = new QrEasyOptions {
+var options = new QrRenderOptions {
     Art = QrArt.Theme(
         QrArtTheme.NeonGlow,
         QrArtVariant.Conservative,
         intensity: 60)
 };
 
-QR.Save("https://codeglyphx.com", "styled.png", options);
+QR.Save("https://codeglyphx.com", "styled.png", options,
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
 ```
 
-`QrEasy.EvaluateScanHeuristics` reports static contrast, quiet-zone, module-scale, and related concerns before rendering. It does not decode the output or guarantee scanner interoperability; validate final artifacts on the real devices and applications you support.
+`QR.EvaluateScanHeuristics` reports static contrast, quiet-zone, module-scale, and related concerns before rendering. It does not decode the output or guarantee scanner interoperability; validate final artifacts on the real devices and applications you support.
 
 ### Colorful QR gallery
 
@@ -98,9 +111,11 @@ The output directory contains six full-size PNGs, a contact sheet and `validatio
 The generic render API accepts PNG compression without changing styling or decoded pixels:
 
 ```csharp
-var png = QrCode.Render("https://example.com", OutputFormat.Png,
-    new QrEasyOptions { ModuleSize = 16 },
-    new RenderExtras { PngCompressionLevel = 6 });
+using CodeGlyphX.Rendering;
+
+var png = QR.Render("https://example.com", OutputFormat.Png,
+    new QrRenderOptions { ModuleSize = 16 },
+    outputOptions: new OutputOptions { PngCompressionLevel = 6 });
 ```
 
 `PngCompressionLevel` also applies to generic matrix and linear-barcode rendering. Use `0` for stored data or `1` through `9` for compression. Leaving it unset preserves each renderer's existing default.
@@ -141,6 +156,7 @@ The [image-composition example](CodeGlyphX.Examples/QrImageCompositionExample.cs
 For rounded, connected, or organic image-aware shapes, set `Art`. This replaces the square treatment selected by `Style`/`CenterSize`. Decorative shapes adapt to local image edges while small scan anchors stay fixed at module centers. `Canvas` extends the same image around the QR, preserving a uniform light quiet zone. Dark ink and light paper colors can be chosen within enforced luminance bounds.
 
 ```csharp
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 var expressive = QrArt.Compose(payload, File.ReadAllBytes("illustration.png"),
@@ -149,7 +165,7 @@ var expressive = QrArt.Compose(payload, File.ReadAllBytes("illustration.png"),
         ImagePositionX = 0.7, // Align the crop toward the image's right edge.
         ImageZoom = 1.15,
         Art = new QrImageArtOptions {
-            Shape = QrPngModuleShape.ConnectedRounded,
+            Shape = QrModuleShape.ConnectedRounded,
             DetailProtection = 0.8
         },
         Canvas = new QrImageCanvasOptions {
@@ -245,6 +261,7 @@ best.Image.SavePng("marble-qr.png");
 ```csharp
 using CodeGlyphX;
 using CodeGlyphX.Rendering.Art;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 var artwork = QrArt.ComposePattern("https://example.com/art",
@@ -356,15 +373,15 @@ The historical square ECC 200 default remains unchanged. `DataMatrixEncodingOpti
 ```csharp
 using CodeGlyphX.DataMatrix;
 
-BitMatrix compact = DataMatrixCode.Encode(
+var compact = DataMatrixCode.Encode(
     "HELLO-UPPERCASE-lowercase-1234567890",
     new DataMatrixEncodingOptions { Shape = DataMatrixShape.Any });
 
-BitMatrix dmre = DataMatrixCode.Encode(
+var dmre = DataMatrixCode.Encode(
     "LOT-2026-0042",
     new DataMatrixEncodingOptions { Shape = DataMatrixShape.Dmre });
 
-BitMatrix exact = DataMatrixCode.Encode(
+var exact = DataMatrixCode.Encode(
     "A",
     new DataMatrixEncodingOptions { Rows = 12, Columns = 88 });
 ```
@@ -373,14 +390,14 @@ GS1/FNC1, ECI, Macro 05/06, Reader Programming, and Data Matrix structured appen
 
 ```csharp
 string elementString = "0109501101020917\u001D10LOT42";
-BitMatrix gs1 = DataMatrixCode.EncodeGs1(elementString);
+var gs1 = DataMatrixCode.EncodeGs1(elementString);
 
-BitMatrix[] sequence = DataMatrixCode.EncodeStructuredAppend(
+var sequence = DataMatrixCode.EncodeStructuredAppend(
     new[] { "ORDER-2026", "LINE-0001", "LOT-ABC123" },
     fileId1: 7,
     fileId2: 9);
 
-if (DataMatrixDecoder.TryDecodeDetailed(gs1, out DataMatrixDecoded decoded)) {
+if (DataMatrixDecoder.TryDecodeDetailed(gs1.Modules, out DataMatrixDecoded decoded)) {
     Console.WriteLine($"GS1: {decoded.IsGs1}; model: {decoded.Rows}x{decoded.Columns}");
 }
 ```
@@ -420,7 +437,7 @@ if (!validation.IsValid) {
 }
 
 string elementString = Gs1Validator.ToElementString(message);
-BitMatrix dataMatrix = DataMatrixCode.EncodeGs1(elementString);
+var dataMatrix = DataMatrixCode.EncodeGs1(elementString);
 ```
 
 `Gs1.ElementString` remains the compatibility-oriented separator builder used by existing encoders: it accepts expert-defined and legacy fields. `Gs1.Validate`, `Gs1.TryValidate`, and `Gs1Validator.ToElementString` are the strict entry points for standards-sensitive workflows.
@@ -554,10 +571,10 @@ Limit semantics are deliberate:
 - `MaxDecodedBytes`: caps each decoded pixel or raster working buffer and the total retained animation frame pixels. The global default is 256 MiB. Encoded input copies, codec metadata, total process memory and cumulative allocations are outside this limit. `null` inherits the global; `0` disables it.
 - `Guarded` and `Strict` derive a decoded byte limit of 16 bytes per permitted pixel, capped at 256 MiB. Set `MaxDecodedBytes` explicitly when a legal codec buffer, such as a padded TIFF tile, needs more room. PDF filters also reject output larger than the declared raster requires.
 - `MaxDimension`: codecs validate the original dimensions first, then the single-image RGBA result is resized. It is not a codec-memory limit.
-- `RecognitionBudgetMilliseconds`: applies to barcode/matrix recognition after raster decoding. It does not time-box the image codec. Multi-format `CodeGlyph` entry points give each candidate decoder this budget; it is not a wall-clock limit for the complete candidate sequence.
+- `RecognitionBudgetMilliseconds`: applies to specialist barcode/matrix recognition after raster decoding. Use `ScanOptions.TimeoutMilliseconds` for one deadline across image decoding and all selected symbol families.
 - `ImageReader.LimitViolation`: reports guard failures for telemetry.
 
-Legacy `CodeGlyph` single-result convenience calls try QR before other formats and use an 800 ms QR budget when no QR options are supplied. `PreferBarcode` keeps barcode-first selection. Pass explicit `QrPixelDecodeOptions` to control the QR profile and budget, including `BudgetMilliseconds = 0` for an exhaustive search. Use `SymbolScanner` to select formats and apply a timeout to the complete scan.
+Use `SymbolScanner.Scan`, `ScanFile` or stream/file async variants to select formats and apply a timeout to the complete scan. `CompletionReason` distinguishes completion, a symbol limit, cancellation and a deadline while retaining partial results. Format-specific information is exposed through typed `Metadata`; `HasRawBytes` indicates whether exact decoded bytes are available.
 
 See [SECURITY.md](SECURITY.md) for reporting and [FUZZING.md](FUZZING.md) for the bounded decoder harness.
 

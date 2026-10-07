@@ -27,6 +27,16 @@ namespace CodeGlyphX;
 /// Fluent Data Matrix builder returned by <see cref="DataMatrixCode.Create(string, DataMatrixEncodingMode, MatrixOptions?)"/>.
 /// </summary>
 public sealed class DataMatrixBuilder {
+    /// <summary>Gets the format-specific output settings configured for this builder.</summary>
+    public OutputOptions OutputOptions { get; } = new OutputOptions();
+
+    /// <summary>Configures format-specific output settings without changing symbol layout.</summary>
+    public DataMatrixBuilder WithOutputOptions(Action<OutputOptions> configure) {
+        if (configure is null) throw new ArgumentNullException(nameof(configure));
+        configure(OutputOptions);
+        return this;
+    }
+
     private readonly string? _text;
     private readonly byte[]? _bytes;
     private readonly DataMatrixEncodingOptions _encodingOptions;
@@ -38,16 +48,16 @@ public sealed class DataMatrixBuilder {
     internal DataMatrixBuilder(string text, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options) {
         _text = text ?? throw new ArgumentNullException(nameof(text));
         _encodingOptions = CopyEncodingOptions(encodingOptions);
-        _options = options ?? new MatrixOptions();
+        _options = options?.Clone() ?? new MatrixOptions();
     }
 
     internal DataMatrixBuilder(byte[] data, DataMatrixEncodingMode mode, MatrixOptions? options)
         : this(data, new DataMatrixEncodingOptions { Mode = mode }, options) { }
 
     internal DataMatrixBuilder(byte[] data, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options) {
-        _bytes = data ?? throw new ArgumentNullException(nameof(data));
+        _bytes = (byte[])(data ?? throw new ArgumentNullException(nameof(data))).Clone();
         _encodingOptions = CopyEncodingOptions(encodingOptions);
-        _options = options ?? new MatrixOptions();
+        _options = options?.Clone() ?? new MatrixOptions();
     }
 
     /// <summary>
@@ -154,15 +164,15 @@ public sealed class DataMatrixBuilder {
     /// Sets JPEG quality (1..100).
     /// </summary>
     public DataMatrixBuilder WithJpegQuality(int quality) {
-        _options.JpegQuality = quality;
+        OutputOptions.JpegQuality = quality;
         return this;
     }
 
     /// <summary>
-    /// Sets JPEG encoding options.
+    /// Copies JPEG encoding options and metadata payloads into this builder.
     /// </summary>
     public DataMatrixBuilder WithJpegOptions(JpegEncodeOptions options) {
-        _options.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
+        OutputOptions.JpegOptions = (options ?? throw new ArgumentNullException(nameof(options))).Clone();
         return this;
     }
 
@@ -170,7 +180,7 @@ public sealed class DataMatrixBuilder {
     /// Enables HTML email-safe table rendering.
     /// </summary>
     public DataMatrixBuilder WithHtmlEmailSafeTable(bool enabled = true) {
-        _options.HtmlEmailSafeTable = enabled;
+        OutputOptions.HtmlEmailSafeTable = enabled;
         return this;
     }
 
@@ -178,7 +188,7 @@ public sealed class DataMatrixBuilder {
     /// Sets ICO output sizes (in pixels).
     /// </summary>
     public DataMatrixBuilder WithIcoSizes(params int[] sizes) {
-        _options.IcoSizes = sizes;
+        OutputOptions.IcoSizes = sizes is null ? throw new ArgumentNullException(nameof(sizes)) : (int[])sizes.Clone();
         return this;
     }
 
@@ -186,40 +196,40 @@ public sealed class DataMatrixBuilder {
     /// Sets ICO aspect ratio preservation behavior.
     /// </summary>
     public DataMatrixBuilder WithIcoPreserveAspectRatio(bool enabled = true) {
-        _options.IcoPreserveAspectRatio = enabled;
+        OutputOptions.IcoPreserveAspectRatio = enabled;
         return this;
     }
 
     /// <summary>
-    /// Encodes the Data Matrix as a module matrix.
+    /// Encodes the Data Matrix and retains its selected size and capacity.
     /// </summary>
-    public BitMatrix Encode() {
+    public DataMatrixSymbol Encode() {
         return _text is not null ? DataMatrixCode.Encode(_text, _encodingOptions) : DataMatrixCode.EncodeBytes(_bytes!, _encodingOptions);
     }
 
     /// <summary>
     /// Renders the configured Data Matrix to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+    public RenderedOutput Render(OutputFormat format, OutputOptions? outputOptions = null) {
         return _text is not null
-            ? DataMatrixCode.Render(_text, format, _encodingOptions, _options, extras)
-            : DataMatrixCode.Render(_bytes!, format, _encodingOptions, _options, extras);
+            ? DataMatrixCode.Render(_text, format, _encodingOptions, _options, outputOptions ?? OutputOptions)
+            : DataMatrixCode.Render(_bytes!, format, _encodingOptions, _options, outputOptions ?? OutputOptions);
     }
 
     /// <summary>
     /// Saves the configured Data Matrix, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, RenderExtras? extras = null) {
+    public string Save(string path, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, Render(format, extras));
+        return OutputWriter.Write(path, Render(format, outputOptions));
     }
 
     /// <summary>
     /// Writes the configured Data Matrix to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, Render(format, extras));
+        OutputWriter.Write(stream, Render(format, outputOptions));
     }
 
     private static DataMatrixEncodingOptions CopyEncodingOptions(DataMatrixEncodingOptions options) {

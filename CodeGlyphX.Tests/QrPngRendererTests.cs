@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Tests.TestHelpers;
@@ -23,7 +24,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Logo = new QrPngLogoOptions(logoRgba, 4, 4) {
+            Logo = new QrRasterLogoOptions(logoRgba, 4, 4) {
                 Scale = 0.3,
                 PaddingPx = 0,
                 DrawBackground = false,
@@ -52,7 +53,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ModuleShape = QrPngModuleShape.Circle,
+            ModuleShape = QrModuleShape.Circle,
             ModuleScale = 0.8,
         };
 
@@ -80,8 +81,8 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Background = Rgba32.White,
             Foreground = Rgba32.Black,
-            ForegroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Horizontal,
+            ForegroundGradient = new QrGradientOptions {
+                Type = QrGradientType.Horizontal,
                 StartColor = new Rgba32(255, 0, 0),
                 EndColor = new Rgba32(0, 0, 255),
             },
@@ -145,7 +146,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = new Rgba32(0, 0, 0, 128),
             Background = new Rgba32(255, 255, 255, 0),
-            ModuleShape = QrPngModuleShape.Circle,
+            ModuleShape = QrModuleShape.Circle,
             ModuleScale = 0.8,
         });
 
@@ -167,7 +168,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = new Rgba32(0, 0, 0, 0),
             Background = new Rgba32(12, 34, 56, 78),
-            ModuleShape = QrPngModuleShape.Circle,
+            ModuleShape = QrModuleShape.Circle,
             ModuleScale = 0.8,
         });
 
@@ -189,7 +190,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = new Rgba32(255, 255, 255, 0),
-            Logo = new QrPngLogoOptions(logoRgba, 1, 1) {
+            Logo = new QrRasterLogoOptions(logoRgba, 1, 1) {
                 Scale = 1.0,
                 PaddingPx = 0,
                 DrawBackground = false,
@@ -214,8 +215,8 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ForegroundPattern = new QrPngForegroundPatternOptions {
-                Type = QrPngForegroundPatternType.SpeckleDots,
+            ForegroundPattern = new QrForegroundPatternOptions {
+                Type = QrForegroundPatternType.SpeckleDots,
                 Color = new Rgba32(255, 255, 255, 110),
                 Seed = seed,
                 Variation = 0.9,
@@ -260,8 +261,8 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ForegroundPattern = new QrPngForegroundPatternOptions {
-                Type = QrPngForegroundPatternType.HalftoneDots,
+            ForegroundPattern = new QrForegroundPatternOptions {
+                Type = QrForegroundPatternType.HalftoneDots,
                 Color = new Rgba32(255, 255, 255, 140),
                 Seed = 2026,
                 Variation = 1.0,
@@ -312,8 +313,8 @@ public sealed class QrPngRendererTests {
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
             ProtectQuietZone = false,
-            BackgroundPattern = new QrPngBackgroundPatternOptions {
-                Type = QrPngBackgroundPatternType.Grid,
+            BackgroundPattern = new QrBackgroundPatternOptions {
+                Type = QrBackgroundPatternType.Grid,
                 SizePx = 4,
                 ThicknessPx = 2,
                 Color = Rgba32.Black,
@@ -345,8 +346,8 @@ public sealed class QrPngRendererTests {
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
             ProtectQuietZone = true,
-            BackgroundPattern = new QrPngBackgroundPatternOptions {
-                Type = QrPngBackgroundPatternType.Grid,
+            BackgroundPattern = new QrBackgroundPatternOptions {
+                Type = QrBackgroundPatternType.Grid,
                 SizePx = 4,
                 ThicknessPx = 2,
                 Color = Rgba32.Black,
@@ -377,7 +378,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ModuleShape = QrPngModuleShape.Rounded,
+            ModuleShape = QrModuleShape.Rounded,
             ModuleScale = 0.6,
         };
 
@@ -386,7 +387,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ModuleShape = QrPngModuleShape.ConnectedRounded,
+            ModuleShape = QrModuleShape.ConnectedRounded,
             ModuleScale = 0.6,
         };
 
@@ -422,7 +423,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ModuleShape = QrPngModuleShape.Squircle,
+            ModuleShape = QrModuleShape.Squircle,
             ModuleScale = 0.6,
         };
 
@@ -431,7 +432,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ModuleShape = QrPngModuleShape.ConnectedSquircle,
+            ModuleShape = QrModuleShape.ConnectedSquircle,
             ModuleScale = 0.6,
         };
 
@@ -465,8 +466,8 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Background = Rgba32.White,
             Foreground = Rgba32.Black,
-            ForegroundPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Checker,
+            ForegroundPalette = new QrPaletteOptions {
+                Mode = QrPaletteMode.Checker,
                 Colors = new[] {
                     new Rgba32(255, 0, 0),
                     new Rgba32(0, 0, 255),
@@ -503,7 +504,7 @@ public sealed class QrPngRendererTests {
         };
 
         var png = QrPngRenderer.Render(matrix, opts);
-        var logo = QrPngLogoOptions.FromPng(png);
+        var logo = QrRasterLogoOptions.FromPng(png);
 
         Assert.Equal(1, logo.Width);
         Assert.Equal(1, logo.Height);
@@ -522,7 +523,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 OuterColor = new Rgba32(0, 255, 0),
                 InnerColor = new Rgba32(0, 0, 255),
             },
@@ -556,7 +557,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 OuterColors = new[] {
                     new Rgba32(255, 0, 0),
                     new Rgba32(0, 255, 0),
@@ -590,8 +591,8 @@ public sealed class QrPngRendererTests {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
         var size = qr.Size;
 
-        static QrPngGradientOptions SolidGradient(byte r, byte g, byte b) => new() {
-            Type = QrPngGradientType.Horizontal,
+        static QrGradientOptions SolidGradient(byte r, byte g, byte b) => new() {
+            Type = QrGradientType.Horizontal,
             StartColor = new Rgba32(r, g, b),
             EndColor = new Rgba32(r, g, b),
         };
@@ -601,7 +602,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 OuterGradients = new[] {
                     SolidGradient(255, 0, 0),
                     SolidGradient(0, 255, 0),
@@ -639,7 +640,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
                 OuterColor = new Rgba32(255, 0, 0),
                 InnerColor = new Rgba32(0, 0, 255),
@@ -677,10 +678,10 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                OuterGradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.Horizontal,
+                OuterGradient = new QrGradientOptions {
+                    Type = QrGradientType.Horizontal,
                     StartColor = new Rgba32(255, 0, 0),
                     EndColor = new Rgba32(0, 255, 0),
                 },
@@ -708,9 +709,9 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Eyes = new QrPngEyeOptions {
-                OuterGradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.Horizontal,
+            Eyes = new QrEyeOptions {
+                OuterGradient = new QrGradientOptions {
+                    Type = QrGradientType.Horizontal,
                     StartColor = new Rgba32(255, 0, 0),
                     EndColor = new Rgba32(0, 255, 0),
                 },
@@ -734,20 +735,20 @@ public sealed class QrPngRendererTests {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
         var size = qr.Size;
 
-        var baseEyes = new QrPngEyeOptions {
+        var baseEyes = new QrEyeOptions {
             UseFrame = true,
-            FrameStyle = QrPngEyeFrameStyle.Single,
-            OuterShape = QrPngModuleShape.Rounded,
-            InnerShape = QrPngModuleShape.Circle,
+            FrameStyle = QrEyeFrameStyle.Single,
+            OuterShape = QrModuleShape.Rounded,
+            InnerShape = QrModuleShape.Circle,
             OuterColor = new Rgba32(0, 220, 255),
             InnerColor = new Rgba32(0, 220, 255),
             OuterCornerRadiusPx = 6,
             InnerCornerRadiusPx = 4,
         };
 
-        var glowEyes = new QrPngEyeOptions {
+        var glowEyes = new QrEyeOptions {
             UseFrame = true,
-            FrameStyle = QrPngEyeFrameStyle.Glow,
+            FrameStyle = QrEyeFrameStyle.Glow,
             OuterShape = baseEyes.OuterShape,
             InnerShape = baseEyes.InnerShape,
             OuterColor = baseEyes.OuterColor,
@@ -827,12 +828,12 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 0,
                 Background = Rgba32.White,
             },
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 SparkleCount = 20,
                 SparkleRadiusPx = 3,
                 SparkleSpreadPx = 28,
@@ -880,12 +881,12 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 0,
                 Background = Rgba32.White,
             },
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 AccentRingCount = 6,
                 AccentRingThicknessPx = 5,
                 AccentRingSpreadPx = 36,
@@ -934,12 +935,12 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 0,
                 Background = Rgba32.White,
             },
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 AccentRayCount = 10,
                 AccentRayLengthPx = 52,
                 AccentRayThicknessPx = 6,
@@ -990,11 +991,11 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 0,
                 Background = Rgba32.White,
-                Vignette = new QrPngCanvasVignetteOptions {
+                Vignette = new QrCanvasVignetteOptions {
                     Color = new Rgba32(0, 0, 0, 200),
                     BandPx = 64,
                     Strength = 1.0,
@@ -1042,11 +1043,11 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 0,
                 Background = Rgba32.White,
-                Grain = new QrPngCanvasGrainOptions {
+                Grain = new QrCanvasGrainOptions {
                     Color = new Rgba32(0, 0, 0, 140),
                     Density = 0.35,
                     PixelSizePx = 2,
@@ -1096,12 +1097,12 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 0,
                 Background = Rgba32.White,
-                Pattern = new QrPngBackgroundPatternOptions {
-                    Type = QrPngBackgroundPatternType.DiagonalStripes,
+                Pattern = new QrBackgroundPatternOptions {
+                    Type = QrBackgroundPatternType.DiagonalStripes,
                     Color = new Rgba32(0, 0, 0, 56),
                     SizePx = 16,
                     ThicknessPx = 2,
@@ -1150,17 +1151,17 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 0,
                 Background = Rgba32.White,
-                Splash = new QrPngCanvasSplashOptions {
+                Splash = new QrCanvasSplashOptions {
                     Color = new Rgba32(0, 0, 0, 128),
                     Count = 14,
                     MinRadiusPx = 16,
                     MaxRadiusPx = 46,
                     SpreadPx = 26,
-                    Placement = QrPngCanvasSplashPlacement.CanvasEdges,
+                    Placement = QrCanvasSplashPlacement.CanvasEdges,
                     EdgeBandPx = 104,
                     DripChance = 0.6,
                     DripLengthPx = 44,
@@ -1210,14 +1211,14 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 0,
                 Background = Rgba32.White,
             },
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.Single,
+                FrameStyle = QrEyeFrameStyle.Single,
                 OuterColor = new Rgba32(0, 0, 0),
                 InnerColor = new Rgba32(0, 0, 0),
                 AccentStripeCount = 26,
@@ -1272,11 +1273,11 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 0,
                 Background = Rgba32.White,
-                Halo = new QrPngCanvasHaloOptions {
+                Halo = new QrCanvasHaloOptions {
                     Color = new Rgba32(0, 0, 0, 200),
                     RadiusPx = haloRadius,
                     ProtectQrArea = true,
@@ -1328,11 +1329,11 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 24,
                 Background = Rgba32.White,
-                Frame = new QrPngCanvasFrameOptions {
+                Frame = new QrCanvasFrameOptions {
                     ThicknessPx = 14,
                     GapPx = 10,
                     RadiusPx = 24,
@@ -1383,11 +1384,11 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 18,
                 Background = Rgba32.White,
-                Frame = new QrPngCanvasFrameOptions {
+                Frame = new QrCanvasFrameOptions {
                     ThicknessPx = 40,
                     GapPx = 40,
                     RadiusPx = 18,
@@ -1437,13 +1438,13 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 20,
                 Background = Rgba32.White,
-                Badge = new QrPngCanvasBadgeOptions {
-                    Shape = QrPngCanvasBadgeShape.Badge,
-                    Position = QrPngCanvasBadgePosition.Top,
+                Badge = new QrCanvasBadgeOptions {
+                    Shape = QrCanvasBadgeShape.Badge,
+                    Position = QrCanvasBadgePosition.Top,
                     WidthPx = 120,
                     HeightPx = 30,
                     GapPx = 10,
@@ -1494,13 +1495,13 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 16,
                 Background = Rgba32.White,
-                Badge = new QrPngCanvasBadgeOptions {
-                    Shape = QrPngCanvasBadgeShape.Ribbon,
-                    Position = QrPngCanvasBadgePosition.Bottom,
+                Badge = new QrCanvasBadgeOptions {
+                    Shape = QrCanvasBadgeShape.Ribbon,
+                    Position = QrCanvasBadgePosition.Bottom,
                     WidthPx = 140,
                     HeightPx = 28,
                     GapPx = 20,
@@ -1552,11 +1553,11 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 20,
                 Background = Rgba32.White,
-                Band = new QrPngCanvasBandOptions {
+                Band = new QrCanvasBandOptions {
                     BandPx = 12,
                     GapPx = 0,
                     RadiusPx = 18,
@@ -1604,11 +1605,11 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 CornerRadiusPx = 16,
                 Background = Rgba32.White,
-                Band = new QrPngCanvasBandOptions {
+                Band = new QrCanvasBandOptions {
                     BandPx = 40,
                     GapPx = 12,
                     RadiusPx = 16,
@@ -1659,12 +1660,12 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 Background = Rgba32.White,
-                Badge = new QrPngCanvasBadgeOptions {
-                    Shape = QrPngCanvasBadgeShape.Badge,
-                    Position = QrPngCanvasBadgePosition.Top,
+                Badge = new QrCanvasBadgeOptions {
+                    Shape = QrCanvasBadgeShape.Badge,
+                    Position = QrCanvasBadgePosition.Top,
                     WidthPx = 0,
                     HeightPx = 24,
                     GapPx = 8,
@@ -1714,12 +1715,12 @@ public sealed class QrPngRendererTests {
             QuietZone = quietZone,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = padding,
                 Background = Rgba32.White,
-                Badge = new QrPngCanvasBadgeOptions {
-                    Shape = QrPngCanvasBadgeShape.Ribbon,
-                    Position = QrPngCanvasBadgePosition.Top,
+                Badge = new QrCanvasBadgeOptions {
+                    Shape = QrCanvasBadgeShape.Ribbon,
+                    Position = QrCanvasBadgePosition.Top,
                     WidthPx = 1,
                     HeightPx = 1,
                     GapPx = 6,
@@ -1775,11 +1776,11 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.InsetRing,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Rounded,
+                FrameStyle = QrEyeFrameStyle.InsetRing,
+                OuterShape = QrModuleShape.Rounded,
+                InnerShape = QrModuleShape.Rounded,
                 OuterColor = Rgba32.Black,
                 InnerColor = Rgba32.Black,
                 OuterCornerRadiusPx = 6,
@@ -1820,11 +1821,11 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.CutCorner,
-                OuterShape = QrPngModuleShape.Square,
-                InnerShape = QrPngModuleShape.Rounded,
+                FrameStyle = QrEyeFrameStyle.CutCorner,
+                OuterShape = QrModuleShape.Square,
+                InnerShape = QrModuleShape.Rounded,
                 OuterColor = Rgba32.Black,
                 InnerColor = Rgba32.Black,
                 OuterCornerRadiusPx = 0,
@@ -1859,8 +1860,8 @@ public sealed class QrPngRendererTests {
     public void Render_With_ScaleMap_ApplyToEyes_Affects_Eye_Modules() {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 
-        var scaleMap = new QrPngModuleScaleMapOptions {
-            Mode = QrPngModuleScaleMode.Checker,
+        var scaleMap = new QrModuleScaleMapOptions {
+            Mode = QrModuleScaleMode.Checker,
             MinScale = 0.4,
             MaxScale = 0.4,
             ApplyToEyes = false,
@@ -1920,11 +1921,11 @@ public sealed class QrPngRendererTests {
             QuietZone = 4,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ModuleShape = QrPngModuleShape.Circle,
+            ModuleShape = QrModuleShape.Circle,
             ModuleScale = 0.6,
             ProtectFunctionalPatterns = true,
-            ForegroundPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Random,
+            ForegroundPalette = new QrPaletteOptions {
+                Mode = QrPaletteMode.Random,
                 Seed = 42,
                 Colors = new[] {
                     new Rgba32(255, 0, 0),
@@ -1956,8 +1957,8 @@ public sealed class QrPngRendererTests {
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
             ProtectFunctionalPatterns = true,
-            ForegroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Horizontal,
+            ForegroundGradient = new QrGradientOptions {
+                Type = QrGradientType.Horizontal,
                 StartColor = new Rgba32(255, 0, 0),
                 EndColor = new Rgba32(0, 255, 0),
             },
@@ -1982,11 +1983,11 @@ public sealed class QrPngRendererTests {
     }
 
     [Theory]
-    [InlineData(QrPngModuleShape.Diamond)]
-    [InlineData(QrPngModuleShape.Squircle)]
-    [InlineData(QrPngModuleShape.Dot)]
-    [InlineData(QrPngModuleShape.DotGrid)]
-    public void Render_With_Fancy_Module_Shapes_Draws_Module(QrPngModuleShape shape) {
+    [InlineData(QrModuleShape.Diamond)]
+    [InlineData(QrModuleShape.Squircle)]
+    [InlineData(QrModuleShape.Dot)]
+    [InlineData(QrModuleShape.DotGrid)]
+    public void Render_With_Fancy_Module_Shapes_Draws_Module(QrModuleShape shape) {
         var qr = QrCodeEncoder.EncodeText("HELLO", QrErrorCorrectionLevel.H);
 
         var opts = new QrPngRenderOptions {
@@ -2039,11 +2040,11 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ForegroundPattern = new QrPngForegroundPatternOptions {
-                Type = QrPngForegroundPatternType.StippleDots,
+            ForegroundPattern = new QrForegroundPatternOptions {
+                Type = QrForegroundPatternType.StippleDots,
                 SizePx = 4,
                 ThicknessPx = 2,
-                BlendMode = QrPngForegroundPatternBlendMode.Mask,
+                BlendMode = QrForegroundPatternBlendMode.Mask,
                 ApplyToModules = true,
             },
         };
@@ -2084,8 +2085,8 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ModuleShape = QrPngModuleShape.Dot,
-            ModuleJitter = new QrPngModuleJitterOptions {
+            ModuleShape = QrModuleShape.Dot,
+            ModuleJitter = new QrModuleJitterOptions {
                 MaxOffsetPx = 3,
                 Seed = seed,
             },
@@ -2127,7 +2128,7 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ModuleShape = QrPngModuleShape.Square,
+            ModuleShape = QrModuleShape.Square,
         };
 
         var mapOpts = new QrPngRenderOptions {
@@ -2135,11 +2136,11 @@ public sealed class QrPngRendererTests {
             QuietZone = 0,
             Foreground = Rgba32.Black,
             Background = Rgba32.White,
-            ModuleShape = QrPngModuleShape.Square,
-            ModuleShapeMap = new QrPngModuleShapeMapOptions {
-                Mode = QrPngModuleShapeMapMode.Checker,
-                PrimaryShape = QrPngModuleShape.Square,
-                SecondaryShape = QrPngModuleShape.Dot,
+            ModuleShape = QrModuleShape.Square,
+            ModuleShapeMap = new QrModuleShapeMapOptions {
+                Mode = QrModuleShapeMapMode.Checker,
+                PrimaryShape = QrModuleShape.Square,
+                SecondaryShape = QrModuleShape.Dot,
             },
         };
 

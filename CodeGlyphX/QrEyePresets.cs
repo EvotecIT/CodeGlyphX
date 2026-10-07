@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX;
@@ -9,11 +10,11 @@ public static class QrEyePresets {
     /// <summary>
     /// Neon sparkle eyes for dark canvases.
     /// </summary>
-    public static QrPngEyeOptions NeonSparkle() => new() {
+    public static QrEyeOptions NeonSparkle() => new() {
         UseFrame = true,
-        FrameStyle = QrPngEyeFrameStyle.Target,
-        OuterShape = QrPngModuleShape.Rounded,
-        InnerShape = QrPngModuleShape.Circle,
+        FrameStyle = QrEyeFrameStyle.Target,
+        OuterShape = QrModuleShape.Rounded,
+        InnerShape = QrModuleShape.Circle,
         OuterColor = new Rgba32(0, 240, 220),
         InnerColor = new Rgba32(10, 12, 22),
         SparkleCount = 36,
@@ -25,11 +26,11 @@ public static class QrEyePresets {
     /// <summary>
     /// Sunburst rays around eyes with conservative spacing.
     /// </summary>
-    public static QrPngEyeOptions Sunburst() => new() {
+    public static QrEyeOptions Sunburst() => new() {
         UseFrame = true,
-        FrameStyle = QrPngEyeFrameStyle.Badge,
-        OuterShape = QrPngModuleShape.Rounded,
-        InnerShape = QrPngModuleShape.Rounded,
+        FrameStyle = QrEyeFrameStyle.Badge,
+        OuterShape = QrModuleShape.Rounded,
+        InnerShape = QrModuleShape.Rounded,
         OuterColor = new Rgba32(36, 24, 80),
         InnerColor = new Rgba32(252, 248, 242),
         AccentRayCount = 18,
@@ -43,11 +44,11 @@ public static class QrEyePresets {
     /// <summary>
     /// Minimal ring eyes with subtle accents.
     /// </summary>
-    public static QrPngEyeOptions MinimalRing() => new() {
+    public static QrEyeOptions MinimalRing() => new() {
         UseFrame = true,
-        FrameStyle = QrPngEyeFrameStyle.InsetRing,
-        OuterShape = QrPngModuleShape.Rounded,
-        InnerShape = QrPngModuleShape.Rounded,
+        FrameStyle = QrEyeFrameStyle.InsetRing,
+        OuterShape = QrModuleShape.Rounded,
+        InnerShape = QrModuleShape.Rounded,
         OuterColor = new Rgba32(24, 32, 64),
         InnerColor = new Rgba32(250, 250, 250),
         InnerScale = 0.9,
@@ -60,11 +61,11 @@ public static class QrEyePresets {
     /// <summary>
     /// Retro target eyes with stripes.
     /// </summary>
-    public static QrPngEyeOptions RetroTarget() => new() {
+    public static QrEyeOptions RetroTarget() => new() {
         UseFrame = true,
-        FrameStyle = QrPngEyeFrameStyle.Target,
-        OuterShape = QrPngModuleShape.Rounded,
-        InnerShape = QrPngModuleShape.Rounded,
+        FrameStyle = QrEyeFrameStyle.Target,
+        OuterShape = QrModuleShape.Rounded,
+        InnerShape = QrModuleShape.Rounded,
         OuterColor = new Rgba32(18, 36, 66),
         InnerColor = new Rgba32(255, 255, 255),
         AccentStripeCount = 16,

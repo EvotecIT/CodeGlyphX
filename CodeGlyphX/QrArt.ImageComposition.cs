@@ -15,7 +15,7 @@ public static partial class QrArt {
         if (image is null) throw new ArgumentNullException(nameof(image));
         options ??= new QrImageCompositionOptions();
         options.Validate();
-        var qr = QrCode.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var pixels = ImageReader.DecodeRgba32(image, imageOptions, out var width, out var height);
         return QrImageComposer.Render(qr, pixels, width, height, options);
     }

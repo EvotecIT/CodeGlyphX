@@ -20,8 +20,10 @@ public sealed class ScanResult {
     public string? Failure { get; }
     /// <summary>Gets whether the scan returned at least one symbol.</summary>
     public bool IsSuccess => Status == ScanStatus.Success;
-    /// <summary>Gets whether cancellation or the deadline stopped the scan after partial results were found.</summary>
-    public bool IsPartial { get; }
+    /// <summary>Gets why recognition stopped, including after successful partial results.</summary>
+    public ScanCompletionReason CompletionReason { get; }
+    /// <summary>Gets whether result capacity, cancellation, or the deadline prevented full recognition.</summary>
+    public bool IsPartial => CompletionReason != ScanCompletionReason.Completed;
 
     internal ScanResult(
         ScanStatus status,
@@ -29,12 +31,12 @@ public sealed class ScanResult {
         IList<SymbolFormat> unsupportedFormats,
         TimeSpan elapsed,
         string? failure = null,
-        bool isPartial = false) {
+        ScanCompletionReason completionReason = ScanCompletionReason.Completed) {
         Status = status;
-        Symbols = new ReadOnlyCollection<DetectedSymbol>(symbols ?? throw new ArgumentNullException(nameof(symbols)));
-        UnsupportedFormats = new ReadOnlyCollection<SymbolFormat>(unsupportedFormats ?? throw new ArgumentNullException(nameof(unsupportedFormats)));
+        Symbols = new ReadOnlyCollection<DetectedSymbol>(new List<DetectedSymbol>(symbols ?? throw new ArgumentNullException(nameof(symbols))));
+        UnsupportedFormats = new ReadOnlyCollection<SymbolFormat>(new List<SymbolFormat>(unsupportedFormats ?? throw new ArgumentNullException(nameof(unsupportedFormats))));
         Elapsed = elapsed;
         Failure = failure;
-        IsPartial = isPartial;
+        CompletionReason = completionReason;
     }
 }

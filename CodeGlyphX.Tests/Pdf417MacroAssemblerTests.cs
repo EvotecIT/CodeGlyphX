@@ -59,15 +59,15 @@ public sealed class Pdf417MacroAssemblerTests {
     }
 
     [Fact]
-    public void Pdf417MacroAssembler_AcceptsCodeGlyphDecodedSegments() {
+    public void Pdf417MacroAssembler_AcceptsDetectedSymbolSegments() {
         var macro0 = new Pdf417MacroOptions { FileId = "123123", SegmentIndex = 0 };
         var macro1 = new Pdf417MacroOptions { FileId = "123123", SegmentIndex = 1, IsLastSegment = true };
 
         var matrix0 = Pdf417Encoder.EncodeMacro("Part A ", macro0);
         var matrix1 = Pdf417Encoder.EncodeMacro("Part B", macro1);
 
-        Assert.True(CodeGlyph.TryDecode(matrix0, out var decoded0));
-        Assert.True(CodeGlyph.TryDecode(matrix1, out var decoded1));
+        Assert.True(SymbolDecoder.TryDecode(matrix0, out var decoded0));
+        Assert.True(SymbolDecoder.TryDecode(matrix1, out var decoded1));
 
         var assembler = new Pdf417MacroAssembler();
         Assert.True(assembler.TryAdd(decoded0));

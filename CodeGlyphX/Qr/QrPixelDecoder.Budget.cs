@@ -34,13 +34,15 @@ internal static partial class QrPixelDecoder {
         }
 
         public bool IsExpired => (_hasCancellation && _cancellationToken.IsCancellationRequested) ||
+                                 global::CodeGlyphX.Internal.DecodeBudget.IsExpired ||
                                  (Enabled && Stopwatch.GetTimestamp() > Deadline);
 
         public bool IsCancelled => _hasCancellation && _cancellationToken.IsCancellationRequested;
         public bool CanCancel => _hasCancellation;
 
         public bool IsNearDeadline(int milliseconds) {
-            if (_hasCancellation && _cancellationToken.IsCancellationRequested) return true;
+            if ((_hasCancellation && _cancellationToken.IsCancellationRequested) ||
+                global::CodeGlyphX.Internal.DecodeBudget.IsExpired) return true;
             if (!Enabled) return false;
             var remaining = Deadline - Stopwatch.GetTimestamp();
             if (remaining <= 0) return true;

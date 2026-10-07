@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using CodeGlyphX.Qr;
 using CodeGlyphX.Rendering.Art;
@@ -11,13 +12,13 @@ public sealed class QrExpressiveArtTests {
     private const string Payload = "https://example.com/art";
 
     [Theory]
-    [InlineData(QrPngModuleShape.Rounded)]
-    [InlineData(QrPngModuleShape.ConnectedRounded)]
-    [InlineData(QrPngModuleShape.ConnectedSquircle)]
-    [InlineData(QrPngModuleShape.Blob)]
-    [InlineData(QrPngModuleShape.Leaf)]
-    public void ShapedArtKeepsScanAnchorsAndDecodes(QrPngModuleShape shape) {
-        var qr = QR.Encode(Payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+    [InlineData(QrModuleShape.Rounded)]
+    [InlineData(QrModuleShape.ConnectedRounded)]
+    [InlineData(QrModuleShape.ConnectedSquircle)]
+    [InlineData(QrModuleShape.Blob)]
+    [InlineData(QrModuleShape.Leaf)]
+    public void ShapedArtKeepsScanAnchorsAndDecodes(QrModuleShape shape) {
+        var qr = QR.Encode(Payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var result = QrImageComposer.Render(qr, new byte[] { 215, 154, 73, 255 }, 1, 1,
             new QrImageCompositionOptions { Art = new QrImageArtOptions { Shape = shape }, Strength = 1 });
         var pixels = result.GetPixels();
@@ -40,7 +41,7 @@ public sealed class QrExpressiveArtTests {
         var qr = QR.Encode(Payload);
         var options = new QrImageCompositionOptions {
             ModuleSize = 8,
-            Art = new QrImageArtOptions { Shape = QrPngModuleShape.Blob, FunctionalForeground = new Rgba32(20, 30, 40), FunctionalBackground = new Rgba32(240, 230, 220) },
+            Art = new QrImageArtOptions { Shape = QrModuleShape.Blob, FunctionalForeground = new Rgba32(20, 30, 40), FunctionalBackground = new Rgba32(240, 230, 220) },
             Canvas = new QrImageCanvasOptions { PaddingModules = 8, PositionX = x, PositionY = y }
         };
         var result = QrImageComposer.Render(qr, new byte[] { 180, 60, 80, 255 }, 1, 1, options);
@@ -70,7 +71,7 @@ public sealed class QrExpressiveArtTests {
         for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) modules[x, y] = (x + y) % 2 == 0;
         var qr = new QrCode(version, QrErrorCorrectionLevel.H, 0, modules);
         var result = QrImageComposer.Render(qr, new byte[] { 190, 130, 210, 255 }, 1, 1,
-            new QrImageCompositionOptions { ModuleSize = 6, Art = new QrImageArtOptions { Shape = QrPngModuleShape.ConnectedRounded, Scale = 0.65, DetailProtection = 1 } });
+            new QrImageCompositionOptions { ModuleSize = 6, Art = new QrImageArtOptions { Shape = QrModuleShape.ConnectedRounded, Scale = 0.65, DetailProtection = 1 } });
         var pixels = result.GetPixels();
         var functions = QrStructureAnalysis.BuildFunctionMask(version, size);
         for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) {
@@ -95,7 +96,7 @@ public sealed class QrExpressiveArtTests {
             source[i + 3] = 255;
         }
         var qr = QR.Encode(Payload);
-        var options = new QrImageCompositionOptions { Art = new QrImageArtOptions { Shape = QrPngModuleShape.Leaf, DetailProtection = 1 } };
+        var options = new QrImageCompositionOptions { Art = new QrImageArtOptions { Shape = QrModuleShape.Leaf, DetailProtection = 1 } };
         var first = QrImageComposer.Render(qr, source, 23, 17, options).GetPixels();
         Assert.Equal(first, QrImageComposer.Render(qr, source, 23, 17, options).GetPixels());
         options.Art.DetailProtection = 0;

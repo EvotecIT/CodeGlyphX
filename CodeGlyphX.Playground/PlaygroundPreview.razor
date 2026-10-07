@@ -65,6 +65,10 @@ else
             </div>
         }
 
+        @if (!string.IsNullOrEmpty(Host.SvgUnavailableReason)) {
+            <p class="form-hint">@Host.SvgUnavailableReason</p>
+        }
+
         @if (Host.Artwork is { } artwork && !Host.IsPreviewUpdating) {
             <PlaygroundArtworkDetails Artwork="artwork" />
         }
@@ -102,11 +106,14 @@ else
         @if (Host.SelectedMode == "Decode")
         {
             <div style="margin-top: 1.5rem;">
+                @if (!string.IsNullOrEmpty(Host.DecodeStatus)) {
+                    <p role="status" aria-live="polite">@Host.DecodeStatus</p>
+                }
                 @if (!string.IsNullOrEmpty(Host.DecodeError))
                 {
                     <p style="color: #ef4444;">@Host.DecodeError</p>
                 }
-                else if (Host.DecodeResults.Count > 0)
+                @if (Host.DecodeResults.Count > 0)
                 {
                     <ul style="color: var(--text-muted); margin-left: 1.25rem;">
                         @foreach (var result in Host.DecodeResults)
@@ -115,7 +122,7 @@ else
                         }
                     </ul>
                 }
-                else if (!string.IsNullOrEmpty(Host.DecodeImageDataUri))
+                else if (string.IsNullOrEmpty(Host.DecodeError) && !string.IsNullOrEmpty(Host.DecodeImageDataUri))
                 {
                     <p style="color: var(--text-muted);">No codes detected.</p>
                 }

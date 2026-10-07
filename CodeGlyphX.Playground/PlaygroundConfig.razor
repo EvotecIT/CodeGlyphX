@@ -85,6 +85,11 @@ else
                     <label><input type="checkbox" @bind="Host.DecodeBarcode" /> 1D Barcodes</label>
                     <label><input type="checkbox" @bind="Host.DecodeMatrix" /> 2D Matrix</label>
                 </div>
+                <details style="margin-top:8px;">
+                    <summary>Advanced formats</summary>
+                    <label><input type="checkbox" @bind="Host.DecodeIncludeAmbiguousFormats" /> Include Pharmacode and PatchCode</label>
+                    <small class="form-hint">These formats can match unrelated patterns. Enable them only when you expect them in the image.</small>
+                </details>
                 @if (Host.IsDecoding)
                 {
                     <div class="form-row" style="margin-top:8px;">

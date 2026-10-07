@@ -113,8 +113,7 @@ public sealed class MicroQrImageScannerTests {
         var detected = Assert.Single(result.Symbols);
         Assert.Equal(SymbolFormat.MicroQrCode, detected.Format);
         Assert.Equal("ABC123", detected.Text);
-        Assert.Equal(CodeGlyphKind.MicroQr, detected.LegacyResult.Kind);
-        Assert.NotNull(detected.LegacyResult.MicroQr);
+        Assert.IsType<MicroQrSymbolMetadata>(detected.Metadata);
         Assert.True(detected.HasRawBytes);
         Assert.Equal(new byte[] { 65, 66, 67, 49, 50, 51 }, detected.RawBytes.ToArray());
         Assert.NotNull(detected.Geometry);
@@ -194,7 +193,7 @@ public sealed class MicroQrImageScannerTests {
 
     [Fact]
     public void Decoder_RejectsModel2QrWithoutExhaustiveMicroQrSearch() {
-        var png = QrCode.Render("MODEL2-NOT-MICRO", OutputFormat.Png).Data;
+        var png = QR.Render("MODEL2-NOT-MICRO", OutputFormat.Png).Data.ToArray();
         var stopwatch = Stopwatch.StartNew();
 
         Assert.False(MicroQrDecoder.TryDecodeImage(png, out _, out _));

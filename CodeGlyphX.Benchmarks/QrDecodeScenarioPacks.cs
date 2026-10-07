@@ -379,15 +379,14 @@ internal static class QrDecodeScenarioPacks {
         => QrDecodeSampleFactory.BuildLongPayloadGenerated(LongPayload);
 
     private static QrDecodeScenarioData BuildMultiQrScreenshotLike() {
-        var renderOptions = new QrEasyOptions {
+        var renderOptions = new QrRenderOptions {
             ModuleSize = 14,
-            QuietZone = 4,
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H
+            QuietZone = 4
         };
 
         var grid = 4;
         var pad = 28;
-        var canvas = QrDecodeImageOps.BuildCompositeGrid(MultiPayloads, renderOptions, grid, pad, out var widthPx, out var heightPx, out var stridePx);
+        var canvas = QrDecodeImageOps.BuildCompositeGrid(MultiPayloads, renderOptions, grid, pad, out var widthPx, out var heightPx, out var stridePx, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
 
         // Simulate UI capture/resampling + light blur/noise.
         var downW = Math.Max(1, (int)Math.Round(widthPx * 0.68, MidpointRounding.AwayFromZero));

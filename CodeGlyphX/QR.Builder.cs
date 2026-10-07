@@ -1,43 +1,45 @@
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
-using CodeGlyphX.Rendering.Ascii;
-using CodeGlyphX.Rendering.Bmp;
 using CodeGlyphX.Rendering.Png;
 using System;
 using System.IO;
-using System.Threading;
 
 namespace CodeGlyphX;
 
-/// <summary>
-/// Fluent QR builder returned by <see cref="QR.Create(string, QrEasyOptions?)"/>.
-/// </summary>
+/// <summary>Fluent QR builder that owns independent encoding and appearance settings.</summary>
 public sealed class QrBuilder {
     private readonly string _payload;
-    private readonly QrPayloadData? _payloadData;
 
-    /// <summary>
-    /// Rendering options used by this builder.
-    /// </summary>
-    public QrEasyOptions Options { get; }
+    /// <summary>Mutable encoding settings owned by this builder; incoming options are copied.</summary>
+    public QrEncodingOptions Encoding { get; }
 
-    internal QrBuilder(string payload, QrEasyOptions? options) {
+    /// <summary>Mutable appearance settings owned by this builder; incoming nested options are copied.</summary>
+    public QrRenderOptions Rendering { get; }
+
+    internal QrBuilder(string payload, QrRenderOptions? rendering, QrEncodingOptions? encoding) {
         _payload = payload ?? throw new ArgumentNullException(nameof(payload));
-        Options = options ?? new QrEasyOptions();
+        Encoding = QR.ResolveEncodingOptions(null, encoding);
+        Rendering = rendering is null ? new QrRenderOptions() : QrRenderer.CloneOptions(rendering);
     }
 
-    internal QrBuilder(QrPayloadData payload, QrEasyOptions? options) {
-        _payloadData = payload ?? throw new ArgumentNullException(nameof(payload));
+    internal QrBuilder(QrPayloadData payload, QrRenderOptions? rendering, QrEncodingOptions? encoding) {
+        if (payload is null) throw new ArgumentNullException(nameof(payload));
         _payload = payload.Text;
-        Options = options ?? new QrEasyOptions();
+        Encoding = QR.ResolveEncodingOptions(payload, encoding);
+        Rendering = rendering is null ? new QrRenderOptions() : QrRenderer.CloneOptions(rendering);
     }
 
-    /// <summary>
-    /// Updates rendering options.
-    /// </summary>
-    public QrBuilder WithOptions(Action<QrEasyOptions> configure) {
+    /// <summary>Updates the encoding settings owned by this builder.</summary>
+    public QrBuilder WithEncoding(Action<QrEncodingOptions> configure) {
         if (configure is null) throw new ArgumentNullException(nameof(configure));
-        configure(Options);
+        configure(Encoding);
+        return this;
+    }
+
+    /// <summary>Updates the appearance settings owned by this builder.</summary>
+    public QrBuilder WithRendering(Action<QrRenderOptions> configure) {
+        if (configure is null) throw new ArgumentNullException(nameof(configure));
+        configure(Rendering);
         return this;
     }
 
@@ -45,7 +47,7 @@ public sealed class QrBuilder {
     /// Sets the module size in pixels.
     /// </summary>
     public QrBuilder WithModuleSize(int moduleSize) {
-        Options.ModuleSize = moduleSize;
+        Rendering.ModuleSize = moduleSize;
         return this;
     }
 
@@ -53,7 +55,7 @@ public sealed class QrBuilder {
     /// Sets the quiet zone size in modules.
     /// </summary>
     public QrBuilder WithQuietZone(int quietZone) {
-        Options.QuietZone = quietZone;
+        Rendering.QuietZone = quietZone;
         return this;
     }
 
@@ -61,8 +63,8 @@ public sealed class QrBuilder {
     /// Sets foreground and background colors.
     /// </summary>
     public QrBuilder WithColors(Rgba32 foreground, Rgba32 background) {
-        Options.Foreground = foreground;
-        Options.Background = background;
+        Rendering.Foreground = foreground;
+        Rendering.Background = background;
         return this;
     }
 
@@ -70,7 +72,7 @@ public sealed class QrBuilder {
     /// Sets foreground color.
     /// </summary>
     public QrBuilder WithForeground(Rgba32 color) {
-        Options.Foreground = color;
+        Rendering.Foreground = color;
         return this;
     }
 
@@ -78,7 +80,7 @@ public sealed class QrBuilder {
     /// Sets background color.
     /// </summary>
     public QrBuilder WithBackground(Rgba32 color) {
-        Options.Background = color;
+        Rendering.Background = color;
         return this;
     }
 
@@ -86,7 +88,7 @@ public sealed class QrBuilder {
     /// Uses a transparent background (alpha = 0).
     /// </summary>
     public QrBuilder WithTransparentBackground() {
-        Options.Background = Rgba32.Transparent;
+        Rendering.Background = Rgba32.Transparent;
         return this;
     }
 
@@ -94,15 +96,15 @@ public sealed class QrBuilder {
     /// Sets the render style preset.
     /// </summary>
     public QrBuilder WithStyle(QrRenderStyle style) {
-        Options.Style = style;
+        Rendering.Style = style;
         return this;
     }
 
     /// <summary>
     /// Sets module shape override.
     /// </summary>
-    public QrBuilder WithModuleShape(QrPngModuleShape shape) {
-        Options.ModuleShape = shape;
+    public QrBuilder WithModuleShape(QrModuleShape shape) {
+        Rendering.ModuleShape = shape;
         return this;
     }
 
@@ -110,31 +112,31 @@ public sealed class QrBuilder {
     /// Sets module scale override (0.1..1.0).
     /// </summary>
     public QrBuilder WithModuleScale(double scale) {
-        Options.ModuleScale = scale;
+        Rendering.ModuleScale = scale;
         return this;
     }
 
     /// <summary>
-    /// Sets module scale map.
+    /// Copies the module scale map into this builder.
     /// </summary>
-    public QrBuilder WithModuleScaleMap(QrPngModuleScaleMapOptions? map) {
-        Options.ModuleScaleMap = map;
+    public QrBuilder WithModuleScaleMap(QrModuleScaleMapOptions? map) {
+        Rendering.ModuleScaleMap = QrRenderer.CloneScaleMap(map);
         return this;
     }
 
     /// <summary>
-    /// Sets module shape map.
+    /// Copies the module shape map into this builder.
     /// </summary>
-    public QrBuilder WithModuleShapeMap(QrPngModuleShapeMapOptions? map) {
-        Options.ModuleShapeMap = map;
+    public QrBuilder WithModuleShapeMap(QrModuleShapeMapOptions? map) {
+        Rendering.ModuleShapeMap = QrRenderer.CloneShapeMap(map);
         return this;
     }
 
     /// <summary>
-    /// Sets per-module jitter options.
+    /// Copies the per-module jitter options into this builder.
     /// </summary>
-    public QrBuilder WithModuleJitter(QrPngModuleJitterOptions? jitter) {
-        Options.ModuleJitter = jitter;
+    public QrBuilder WithModuleJitter(QrModuleJitterOptions? jitter) {
+        Rendering.ModuleJitter = QrRenderer.CloneJitter(jitter);
         return this;
     }
 
@@ -142,55 +144,55 @@ public sealed class QrBuilder {
     /// Sets module corner radius in pixels.
     /// </summary>
     public QrBuilder WithModuleCornerRadiusPx(int radiusPx) {
-        Options.ModuleCornerRadiusPx = radiusPx;
+        Rendering.ModuleCornerRadiusPx = radiusPx;
         return this;
     }
 
     /// <summary>
-    /// Sets the foreground gradient.
+    /// Copies the foreground gradient into this builder.
     /// </summary>
-    public QrBuilder WithForegroundGradient(QrPngGradientOptions? gradient) {
-        Options.ForegroundGradient = gradient;
+    public QrBuilder WithForegroundGradient(QrGradientOptions? gradient) {
+        Rendering.ForegroundGradient = QrRenderer.CloneGradient(gradient);
         return this;
     }
 
     /// <summary>
-    /// Sets the background gradient.
+    /// Copies the background gradient into this builder.
     /// </summary>
-    public QrBuilder WithBackgroundGradient(QrPngGradientOptions? gradient) {
-        Options.BackgroundGradient = gradient;
+    public QrBuilder WithBackgroundGradient(QrGradientOptions? gradient) {
+        Rendering.BackgroundGradient = QrRenderer.CloneGradient(gradient);
         return this;
     }
 
     /// <summary>
-    /// Sets the foreground palette.
+    /// Copies the foreground palette and its colors into this builder.
     /// </summary>
-    public QrBuilder WithForegroundPalette(QrPngPaletteOptions? palette) {
-        Options.ForegroundPalette = palette;
+    public QrBuilder WithForegroundPalette(QrPaletteOptions? palette) {
+        Rendering.ForegroundPalette = QrRenderer.ClonePalette(palette);
         return this;
     }
 
     /// <summary>
-    /// Sets the canvas options.
+    /// Copies the canvas options, including nested styles and color arrays, into this builder.
     /// </summary>
-    public QrBuilder WithCanvas(QrPngCanvasOptions? canvas) {
-        Options.Canvas = canvas;
+    public QrBuilder WithCanvas(QrCanvasOptions? canvas) {
+        Rendering.Canvas = QrRenderer.CloneCanvas(canvas);
         return this;
     }
 
     /// <summary>
-    /// Sets palette overrides for specific zones.
+    /// Copies the zone palette overrides and their colors into this builder.
     /// </summary>
-    public QrBuilder WithForegroundPaletteZones(QrPngPaletteZoneOptions? zones) {
-        Options.ForegroundPaletteZones = zones;
+    public QrBuilder WithForegroundPaletteZones(QrPaletteZoneOptions? zones) {
+        Rendering.ForegroundPaletteZones = QrRenderer.ClonePaletteZones(zones);
         return this;
     }
 
     /// <summary>
-    /// Sets eye (finder) styling.
+    /// Copies the eye (finder) styling, including nested gradients and color arrays, into this builder.
     /// </summary>
-    public QrBuilder WithEyes(QrPngEyeOptions? eyes) {
-        Options.Eyes = eyes;
+    public QrBuilder WithEyes(QrEyeOptions? eyes) {
+        Rendering.Eyes = QrRenderer.CloneEyes(eyes);
         return this;
     }
 
@@ -198,8 +200,8 @@ public sealed class QrBuilder {
     /// Sets a fixed target size (in pixels). Module size is adjusted to fit.
     /// </summary>
     public QrBuilder WithTargetSize(int sizePx, bool includeQuietZone = true) {
-        Options.TargetSizePx = sizePx;
-        Options.TargetSizeIncludesQuietZone = includeQuietZone;
+        Rendering.TargetSizePx = sizePx;
+        Rendering.TargetSizeIncludesQuietZone = includeQuietZone;
         return this;
     }
 
@@ -212,7 +214,7 @@ public sealed class QrBuilder {
     /// Sets an embedded logo from PNG bytes.
     /// </summary>
     public QrBuilder WithLogoPng(byte[] png) {
-        Options.LogoPng = png;
+        Rendering.LogoPng = png is null ? throw new ArgumentNullException(nameof(png)) : (byte[])png.Clone();
         return this;
     }
 
@@ -220,7 +222,7 @@ public sealed class QrBuilder {
     /// Sets the logo scale relative to the QR area (excluding quiet zone).
     /// </summary>
     public QrBuilder WithLogoScale(double scale) {
-        Options.LogoScale = scale;
+        Rendering.LogoScale = scale;
         return this;
     }
 
@@ -228,7 +230,7 @@ public sealed class QrBuilder {
     /// Sets the logo padding in pixels.
     /// </summary>
     public QrBuilder WithLogoPaddingPx(int paddingPx) {
-        Options.LogoPaddingPx = paddingPx;
+        Rendering.LogoPaddingPx = paddingPx;
         return this;
     }
 
@@ -236,23 +238,7 @@ public sealed class QrBuilder {
     /// Sets whether to draw a background plate behind the logo.
     /// </summary>
     public QrBuilder WithLogoBackground(bool enabled = true) {
-        Options.LogoDrawBackground = enabled;
-        return this;
-    }
-
-    /// <summary>
-    /// Enables/disables auto-bumping the minimum version for logo background plates.
-    /// </summary>
-    public QrBuilder WithLogoBackgroundAutoBump(bool enabled = true) {
-        Options.AutoBumpVersionForLogoBackground = enabled;
-        return this;
-    }
-
-    /// <summary>
-    /// Sets the minimum version used when a logo background plate is enabled.
-    /// </summary>
-    public QrBuilder WithLogoBackgroundMinVersion(int minVersion) {
-        Options.LogoBackgroundMinVersion = minVersion;
+        Rendering.LogoDrawBackground = enabled;
         return this;
     }
 
@@ -260,7 +246,7 @@ public sealed class QrBuilder {
     /// Sets the logo background color.
     /// </summary>
     public QrBuilder WithLogoBackgroundColor(Rgba32? color) {
-        Options.LogoBackground = color;
+        Rendering.LogoBackground = color;
         return this;
     }
 
@@ -268,7 +254,7 @@ public sealed class QrBuilder {
     /// Sets the logo background corner radius in pixels.
     /// </summary>
     public QrBuilder WithLogoCornerRadiusPx(int radiusPx) {
-        Options.LogoCornerRadiusPx = radiusPx;
+        Rendering.LogoCornerRadiusPx = radiusPx;
         return this;
     }
 
@@ -276,7 +262,7 @@ public sealed class QrBuilder {
     /// Sets an embedded logo from a PNG file.
     /// </summary>
     public QrBuilder WithLogoFile(string path) {
-        Options.LogoPng = RenderIO.ReadBinary(path);
+        Rendering.LogoPng = RenderIO.ReadBinary(path);
         return this;
     }
 
@@ -284,51 +270,35 @@ public sealed class QrBuilder {
     /// Sets error correction level.
     /// </summary>
     public QrBuilder WithErrorCorrection(QrErrorCorrectionLevel ecc) {
-        Options.ErrorCorrectionLevel = ecc;
-        return this;
-    }
-
-    /// <summary>
-    /// Sets ICO output sizes (in pixels).
-    /// </summary>
-    public QrBuilder WithIcoSizes(params int[] sizes) {
-        Options.IcoSizes = sizes;
-        return this;
-    }
-
-    /// <summary>
-    /// Sets ICO aspect ratio preservation behavior.
-    /// </summary>
-    public QrBuilder WithIcoPreserveAspectRatio(bool enabled = true) {
-        Options.IcoPreserveAspectRatio = enabled;
+        Encoding.ErrorCorrectionLevel = ecc;
         return this;
     }
 
     /// <summary>
     /// Encodes the QR code.
     /// </summary>
-    public QrCode Encode() => _payloadData is null ? QrEasy.Encode(_payload, Options) : QrEasy.Encode(_payloadData, Options);
+    public QrCode Encode() => QR.Encode(_payload, Encoding);
 
     /// <summary>
     /// Renders the configured QR code to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
-        return QrEasy.Render(Encode(), format, Options, extras);
+    public RenderedOutput Render(OutputFormat format, OutputOptions? outputOptions = null) {
+        return Encode().Render(format, Rendering, outputOptions);
     }
 
     /// <summary>
     /// Saves the configured QR code, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, RenderExtras? extras = null) {
+    public string Save(string path, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, Render(format, extras));
+        return OutputWriter.Write(path, Render(format, outputOptions));
     }
 
     /// <summary>
     /// Writes the configured QR code to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, Render(format, extras));
+        OutputWriter.Write(stream, Render(format, outputOptions));
     }
 }

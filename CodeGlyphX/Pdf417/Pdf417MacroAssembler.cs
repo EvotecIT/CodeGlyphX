@@ -101,13 +101,12 @@ public sealed class Pdf417MacroAssembler {
     }
 
     /// <summary>
-    /// Attempts to add a decoded Macro PDF417 segment from a <see cref="CodeGlyphDecoded"/> wrapper.
+    /// Attempts to add a decoded Macro PDF417 segment from a common symbol result.
     /// </summary>
-    public bool TryAdd(CodeGlyphDecoded decoded) {
+    public bool TryAdd(DetectedSymbol decoded) {
         if (decoded is null) throw new ArgumentNullException(nameof(decoded));
-        if (decoded.Kind != CodeGlyphKind.Pdf417) return false;
-        if (decoded.Pdf417 is null) return false;
-        return TryAdd(decoded.Pdf417);
+        if (decoded.Metadata is not Pdf417SymbolMetadata { Macro: not null } metadata) return false;
+        return TryAdd(decoded.Text, metadata.Macro);
     }
 
     /// <summary>
@@ -133,9 +132,9 @@ public sealed class Pdf417MacroAssembler {
     }
 
     /// <summary>
-    /// Adds a decoded Macro PDF417 segment from a <see cref="CodeGlyphDecoded"/> wrapper.
+    /// Adds a decoded Macro PDF417 segment from a common symbol result.
     /// </summary>
-    public void Add(CodeGlyphDecoded decoded) {
+    public void Add(DetectedSymbol decoded) {
         if (!TryAdd(decoded)) {
             throw new InvalidOperationException("Segment does not contain Macro PDF417 metadata or does not match the current file.");
         }

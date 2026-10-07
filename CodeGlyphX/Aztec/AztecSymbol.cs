@@ -1,17 +1,20 @@
-namespace CodeGlyphX.Aztec;
+namespace CodeGlyphX;
 
-internal sealed class AztecSymbol {
+/// <summary>An encoded Aztec symbol and its selected layer and data-codeword counts.</summary>
+public sealed class AztecSymbol : MatrixSymbol {
+    /// <summary>Gets whether the symbol uses the compact Aztec layout.</summary>
     public bool Compact { get; }
-    public int Size { get; }
+    /// <summary>Gets the square module grid size.</summary>
+    public int Size => Width;
+    /// <summary>Gets the selected number of layers.</summary>
     public int Layers { get; }
-    public int CodeWords { get; }
-    public BitMatrix Matrix { get; }
+    /// <summary>Gets the number of encoded data codewords.</summary>
+    public int DataCodewordCount { get; }
 
-    public AztecSymbol(bool compact, int size, int layers, int codeWords, BitMatrix matrix) {
+    internal AztecSymbol(bool compact, int size, int layers, int codeWords, BitMatrix matrix)
+        : base(SymbolFormat.Aztec, matrix) {
         Compact = compact;
-        Size = size;
         Layers = layers;
-        CodeWords = codeWords;
-        Matrix = matrix;
+        DataCodewordCount = codeWords;
     }
 }

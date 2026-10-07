@@ -38,7 +38,7 @@ public class AztecCompareBenchmarks
     public void Setup()
     {
 #if COMPARE_ZXING
-        var modules = AztecCode.Encode(MediumText);
+        var modules = AztecCode.Encode(MediumText).Modules;
         _widthPx = CompareBenchmarkHelpers.MatrixWidthPx(modules, _options);
         _heightPx = CompareBenchmarkHelpers.MatrixHeightPx(modules, _options);
         var zxingOptions = new AztecEncodingOptions
@@ -64,7 +64,7 @@ public class AztecCompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX Aztec PNG")]
     public byte[] CodeGlyphX_Aztec_Png()
     {
-        return AztecCode.Render(MediumText, OutputFormat.Png, renderOptions: _options).Data;
+        return AztecCode.Render(MediumText, OutputFormat.Png, renderOptions: _options).ToArray();
     }
 
 #if COMPARE_ZXING

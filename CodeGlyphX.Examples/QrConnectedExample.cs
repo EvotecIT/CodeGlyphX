@@ -10,22 +10,22 @@ internal static class QrConnectedExample {
     public static void Run(string outputDir) {
         var payload = QrPayload.Url("https://example.com/qr/connected");
 
-        var options = new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+        var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
+        var options = new QrRenderOptions {
             ModuleSize = 10,
             QuietZone = 4,
             Foreground = new Rgba32(88, 120, 255),
             Background = new Rgba32(250, 252, 255),
-            ModuleShape = QrPngModuleShape.ConnectedRounded,
+            ModuleShape = QrModuleShape.ConnectedRounded,
             ModuleScale = 0.9,
-            ModuleScaleMap = new QrPngModuleScaleMapOptions {
-                Mode = QrPngModuleScaleMode.Radial,
+            ModuleScaleMap = new QrModuleScaleMapOptions {
+                Mode = QrModuleScaleMode.Radial,
                 MinScale = 0.86,
                 MaxScale = 1.0,
                 RingSize = 2,
             },
-            ForegroundPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Cycle,
+            ForegroundPalette = new QrPaletteOptions {
+                Mode = QrPaletteMode.Cycle,
                 RingSize = 2,
                 ApplyToEyes = false,
                 Colors = new[] {
@@ -34,21 +34,21 @@ internal static class QrConnectedExample {
                     new Rgba32(88, 210, 255),
                 },
             },
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.Target,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle,
+                FrameStyle = QrEyeFrameStyle.Target,
+                OuterShape = QrModuleShape.Rounded,
+                InnerShape = QrModuleShape.Circle,
                 OuterColor = new Rgba32(88, 120, 255),
                 InnerColor = new Rgba32(88, 210, 255),
                 OuterCornerRadiusPx = 6,
                 InnerCornerRadiusPx = 4,
             },
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = 24,
                 CornerRadiusPx = 26,
-                BackgroundGradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.DiagonalDown,
+                BackgroundGradient = new QrGradientOptions {
+                    Type = QrGradientType.DiagonalDown,
                     StartColor = new Rgba32(14, 18, 42),
                     EndColor = new Rgba32(28, 20, 76),
                 },
@@ -60,14 +60,14 @@ internal static class QrConnectedExample {
             },
         };
 
-        QR.Save(payload, Path.Combine(outputDir, "qr-connected-rounded.png"), options);
+        QR.Save(payload, Path.Combine(outputDir, "qr-connected-rounded.png"), options, encoding);
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-connected-rounded.pdf"),
-            QrCode.Render(payload, OutputFormat.Pdf, options, new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Pdf, options, encoding, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster })
         );
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-connected-rounded.eps"),
-            QrCode.Render(payload, OutputFormat.Eps, options, new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Eps, options, encoding, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster })
         );
     }
 }

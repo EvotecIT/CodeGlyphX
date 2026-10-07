@@ -8,7 +8,7 @@ internal static class QrImageCompositionExample {
         const string payload = "https://example.com/art"; // NOSONAR - reserved example URI.
         var dir = Path.Combine(outputDir, "qr-image-composition");
         Directory.CreateDirectory(dir);
-        var qr = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         foreach (var scene in new[] { "sunset", "botanical", "waves" }) {
             var pixels = DrawIllustration(scene, 512);
             foreach (var style in new[] { QrImageCompositionStyle.ColorModules, QrImageCompositionStyle.ImageOverlay }) {

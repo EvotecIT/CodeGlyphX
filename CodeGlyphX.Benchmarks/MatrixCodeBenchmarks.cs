@@ -29,13 +29,13 @@ public class MatrixCodeBenchmarks
     [Benchmark(Description = "Data Matrix PNG (medium)")]
     public byte[] DataMatrix_Png_Medium()
     {
-        return DataMatrixCode.Render(_mediumBytes, OutputFormat.Png).Data;
+        return DataMatrixCode.Render(_mediumBytes, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "Data Matrix PNG (long)")]
     public byte[] DataMatrix_Png_Long()
     {
-        return DataMatrixCode.Render(_longBytes, OutputFormat.Png).Data;
+        return DataMatrixCode.Render(_longBytes, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "Data Matrix SVG")]
@@ -47,7 +47,7 @@ public class MatrixCodeBenchmarks
     [Benchmark(Description = "PDF417 PNG")]
     public byte[] Pdf417_Png()
     {
-        return Pdf417Code.Create(LongText).Render(OutputFormat.Png).Data;
+        return Pdf417Code.Create(LongText).Render(OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "PDF417 SVG")]
@@ -59,7 +59,7 @@ public class MatrixCodeBenchmarks
     [Benchmark(Description = "Aztec PNG")]
     public byte[] Aztec_Png()
     {
-        return AztecCode.Render(MediumText, OutputFormat.Png).Data;
+        return AztecCode.Render(MediumText, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "Aztec SVG")]

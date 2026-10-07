@@ -23,64 +23,64 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Renderers_Produce_Expected_Formats() {
         var payload = "https://example.com";
-        var png = QrCode.Render(payload, OutputFormat.Png).Data;
+        var png = QR.Render(payload, OutputFormat.Png).Data.Span;
         Assert.True(IsPng(png));
 
-        var svg = QrCode.Render(payload, OutputFormat.Svg).GetText();
+        var svg = QR.Render(payload, OutputFormat.Svg).GetText();
         Assert.Contains("<svg", svg, StringComparison.OrdinalIgnoreCase);
 
-        var html = QrCode.Render(payload, OutputFormat.Html).GetText();
+        var html = QR.Render(payload, OutputFormat.Html).GetText();
         Assert.Contains("<table", html, StringComparison.OrdinalIgnoreCase);
 
-        var bmp = QrCode.Render(payload, OutputFormat.Bmp).Data;
+        var bmp = QR.Render(payload, OutputFormat.Bmp).Data.Span;
         Assert.True(IsBmp(bmp));
 
-        var gif = QrCode.Render(payload, OutputFormat.Gif).Data;
+        var gif = QR.Render(payload, OutputFormat.Gif).Data.Span;
         Assert.True(IsGif(gif));
 
-        var tiff = QrCode.Render(payload, OutputFormat.Tiff).Data;
+        var tiff = QR.Render(payload, OutputFormat.Tiff).Data.Span;
         Assert.True(IsTiff(tiff));
 
-        var ppm = QrCode.Render(payload, OutputFormat.Ppm).Data;
+        var ppm = QR.Render(payload, OutputFormat.Ppm).Data.Span;
         Assert.True(IsPpm(ppm));
 
-        var pbm = QrCode.Render(payload, OutputFormat.Pbm).Data;
+        var pbm = QR.Render(payload, OutputFormat.Pbm).Data.Span;
         Assert.True(IsPbm(pbm));
 
-        var pgm = QrCode.Render(payload, OutputFormat.Pgm).Data;
+        var pgm = QR.Render(payload, OutputFormat.Pgm).Data.Span;
         Assert.True(IsPgm(pgm));
 
-        var pam = QrCode.Render(payload, OutputFormat.Pam).Data;
+        var pam = QR.Render(payload, OutputFormat.Pam).Data.Span;
         Assert.True(IsPam(pam));
 
-        var xbm = QrCode.Render(payload, OutputFormat.Xbm).GetText();
+        var xbm = QR.Render(payload, OutputFormat.Xbm).GetText();
         Assert.StartsWith("#define", xbm, StringComparison.Ordinal);
 
-        var xpm = QrCode.Render(payload, OutputFormat.Xpm).GetText();
+        var xpm = QR.Render(payload, OutputFormat.Xpm).GetText();
         Assert.Contains("XPM", xpm, StringComparison.Ordinal);
 
-        var tga = QrCode.Render(payload, OutputFormat.Tga).Data;
+        var tga = QR.Render(payload, OutputFormat.Tga).Data.Span;
         Assert.True(IsTga(tga));
 
-        var ico = QrCode.Render(payload, OutputFormat.Ico).Data;
+        var ico = QR.Render(payload, OutputFormat.Ico).Data.Span;
         Assert.True(IsIco(ico));
 
-        var svgz = QrCode.Render(payload, OutputFormat.Svgz).Data;
+        var svgz = QR.Render(payload, OutputFormat.Svgz).Data.Span;
         Assert.True(IsGzip(svgz));
 
-        var pdf = QrCode.Render(payload, OutputFormat.Pdf).Data;
+        var pdf = QR.Render(payload, OutputFormat.Pdf).Data.Span;
         Assert.True(IsPdf(pdf));
 
-        var eps = QrCode.Render(payload, OutputFormat.Eps).GetText();
+        var eps = QR.Render(payload, OutputFormat.Eps).GetText();
         Assert.True(IsEps(eps));
 
-        var pdfRaster = QrCode.Render(payload, OutputFormat.Pdf, extras: new RenderExtras { VectorMode = RenderMode.Raster }).Data;
+        var pdfRaster = QR.Render(payload, OutputFormat.Pdf, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster }).Data.Span;
         Assert.True(IsPdf(pdfRaster));
 
-        var epsRaster = QrCode.Render(payload, OutputFormat.Eps, extras: new RenderExtras { VectorMode = RenderMode.Raster }).GetText();
+        var epsRaster = QR.Render(payload, OutputFormat.Eps, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster }).GetText();
         Assert.True(IsEps(epsRaster));
 
-        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions { QuietZone = 1 }
         }).GetText();
         Assert.Contains("#", ascii, StringComparison.Ordinal);
@@ -96,7 +96,7 @@ public sealed class RendererFormatTests {
         };
 
         foreach (var art in arts) {
-            var png = QrCode.Render(payload, OutputFormat.Png, new QrEasyOptions { Art = art }).Data;
+            var png = QR.Render(payload, OutputFormat.Png, new QrRenderOptions { Art = art }).Data.Span;
             Assert.True(ImageReader.TryDetectFormat(png, out var format));
             Assert.Equal(ImageFormat.Png, format);
         }
@@ -105,7 +105,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_UnicodeBlocks_Uses_Block_Glyphs() {
         var payload = "https://example.com";
-        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 UseUnicodeBlocks = true
@@ -118,7 +118,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_AnsiColors_Emits_Escape_Codes() {
         var payload = "https://example.com";
-        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 UseUnicodeBlocks = true,
@@ -133,7 +133,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_ConsolePreset_Is_Scan_Friendly() {
         var payload = "https://example.com";
-        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = AsciiPresets.Console(scale: 3)
         }).GetText();
 
@@ -144,7 +144,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_ConsoleWrapper_Uses_Preset() {
         var payload = "https://example.com";
-        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = AsciiPresets.Console(scale: 3)
         }).GetText();
 
@@ -201,7 +201,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_Console_Extras_Use_HalfBlocks() {
         var payload = "https://example.com/console";
-        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             AsciiConsole = new AsciiConsoleOptions {
                 UseHalfBlocks = true,
                 UseAnsiColors = false,
@@ -263,7 +263,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void AsciiConsole_HalfBlock_FgOnly_Does_Not_Emit_Background_Color() {
         var payload = "https://example.com/console";
-        var ascii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             AsciiConsole = new AsciiConsoleOptions {
                 UseHalfBlocks = true,
                 HalfBlockUseBackground = false,
@@ -331,7 +331,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_Scale_Increases_Output_Size() {
         var payload = "https://example.com";
-        var baseAscii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+        var baseAscii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 ModuleWidth = 1,
@@ -339,7 +339,7 @@ public sealed class RendererFormatTests {
                 Scale = 1
             }
         }).GetText();
-        var scaledAscii = QrCode.Render(payload, OutputFormat.Ascii, extras: new RenderExtras {
+        var scaledAscii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 ModuleWidth = 1,
@@ -354,11 +354,9 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ico_Respects_MultiSize_Options() {
         var payload = "https://example.com";
-        var opts = new QrEasyOptions {
-            IcoSizes = new[] { 32, 64, 128 }
-        };
+        var outputOptions = new OutputOptions { IcoSizes = new[] { 32, 64, 128 } };
 
-        var ico = QrCode.Render(payload, OutputFormat.Ico, opts).Data;
+        var ico = QR.Render(payload, OutputFormat.Ico, outputOptions: outputOptions).Data.Span;
         Assert.True(IsIco(ico));
         Assert.Equal(3, GetIcoCount(ico));
     }
@@ -378,10 +376,10 @@ public sealed class RendererFormatTests {
         var bmp = BarcodeBmpRenderer.Render(barcode, new BarcodePngRenderOptions());
         Assert.True(IsBmp(bmp));
 
-        var gif = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Gif).Data;
+        var gif = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Gif).Data.Span;
         Assert.True(IsGif(gif));
 
-        var tiff = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Tiff).Data;
+        var tiff = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Tiff).Data.Span;
         Assert.True(IsTiff(tiff));
 
         var ppm = BarcodePpmRenderer.Render(barcode, new BarcodePngRenderOptions());
@@ -411,16 +409,16 @@ public sealed class RendererFormatTests {
         var svgz = BarcodeSvgzRenderer.Render(barcode, new BarcodeSvgRenderOptions());
         Assert.True(IsGzip(svgz));
 
-        var pdf = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Pdf).Data;
+        var pdf = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Pdf).Data.Span;
         Assert.True(IsPdf(pdf));
 
-        var eps = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Eps).GetText();
+        var eps = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Eps).GetText();
         Assert.True(IsEps(eps));
 
-        var pdfRaster = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Pdf, extras: new RenderExtras { VectorMode = RenderMode.Raster }).Data;
+        var pdfRaster = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Pdf, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster }).Data.Span;
         Assert.True(IsPdf(pdfRaster));
 
-        var epsRaster = Barcode.Render(BarcodeType.Code128, "CODEGLYPH-123", OutputFormat.Eps, extras: new RenderExtras { VectorMode = RenderMode.Raster }).GetText();
+        var epsRaster = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Eps, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster }).GetText();
         Assert.True(IsEps(epsRaster));
 
         var ascii = BarcodeAsciiRenderer.Render(barcode, new BarcodeAsciiRenderOptions { QuietZone = 1, Height = 2 });
@@ -429,36 +427,36 @@ public sealed class RendererFormatTests {
 
     [Fact]
     public void Qr_Vector_Pdf_Eps_Use_Curves_For_Rounded_Modules() {
-        var opts = new QrEasyOptions {
-            ModuleShape = QrPngModuleShape.Rounded,
+        var opts = new QrRenderOptions {
+            ModuleShape = QrModuleShape.Rounded,
             ModuleCornerRadiusPx = 2,
         };
 
-        var pdf = QrCode.Render("https://example.com", OutputFormat.Pdf, opts, new RenderExtras { VectorMode = RenderMode.Vector }).Data;
+        var pdf = QR.Render("https://example.com", OutputFormat.Pdf, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).Data.Span;
         var pdfText = Encoding.ASCII.GetString(pdf);
         Assert.Contains(" c\n", pdfText, StringComparison.Ordinal);
         Assert.DoesNotContain("/Subtype /Image", pdfText, StringComparison.Ordinal);
 
-        var eps = QrCode.Render("https://example.com", OutputFormat.Eps, opts, new RenderExtras { VectorMode = RenderMode.Vector }).GetText();
+        var eps = QR.Render("https://example.com", OutputFormat.Eps, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).GetText();
         Assert.Contains("curveto", eps, StringComparison.Ordinal);
         Assert.DoesNotContain("colorimage", eps, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public void Qr_Vector_Mode_Falls_Back_To_Raster_When_Gradient() {
-        var opts = new QrEasyOptions {
-            ForegroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Horizontal,
+        var opts = new QrRenderOptions {
+            ForegroundGradient = new QrGradientOptions {
+                Type = QrGradientType.Horizontal,
                 StartColor = new Rgba32(0, 0, 0),
                 EndColor = new Rgba32(255, 0, 0),
             },
         };
 
-        var pdf = QrCode.Render("https://example.com", OutputFormat.Pdf, opts, new RenderExtras { VectorMode = RenderMode.Vector }).Data;
+        var pdf = QR.Render("https://example.com", OutputFormat.Pdf, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).Data.Span;
         var pdfText = Encoding.ASCII.GetString(pdf);
         Assert.Contains("/Subtype /Image", pdfText, StringComparison.Ordinal);
 
-        var eps = QrCode.Render("https://example.com", OutputFormat.Eps, opts, new RenderExtras { VectorMode = RenderMode.Vector }).GetText();
+        var eps = QR.Render("https://example.com", OutputFormat.Eps, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).GetText();
         Assert.Contains("colorimage", eps, StringComparison.Ordinal);
     }
 
@@ -474,20 +472,20 @@ public sealed class RendererFormatTests {
             Background = Rgba32.White,
         });
 
-        var opts = new QrEasyOptions {
+        var opts = new QrRenderOptions {
             LogoPng = logoPng,
         };
 
-        var pdf = QrCode.Render("https://example.com", OutputFormat.Pdf, opts, new RenderExtras { VectorMode = RenderMode.Vector }).Data;
+        var pdf = QR.Render("https://example.com", OutputFormat.Pdf, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).Data.Span;
         var pdfText = Encoding.ASCII.GetString(pdf);
         Assert.Contains("/Subtype /Image", pdfText, StringComparison.Ordinal);
 
-        var eps = QrCode.Render("https://example.com", OutputFormat.Eps, opts, new RenderExtras { VectorMode = RenderMode.Vector }).GetText();
+        var eps = QR.Render("https://example.com", OutputFormat.Eps, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).GetText();
         Assert.Contains("colorimage", eps, StringComparison.Ordinal);
     }
 
-    private static bool IsPng(byte[] data) {
-        if (data is null || data.Length < 8) return false;
+    private static bool IsPng(ReadOnlySpan<byte> data) {
+        if (data.Length < 8) return false;
         return data[0] == 0x89 &&
                data[1] == 0x50 &&
                data[2] == 0x4E &&
@@ -498,13 +496,13 @@ public sealed class RendererFormatTests {
                data[7] == 0x0A;
     }
 
-    private static bool IsBmp(byte[] data) {
-        if (data is null || data.Length < 2) return false;
+    private static bool IsBmp(ReadOnlySpan<byte> data) {
+        if (data.Length < 2) return false;
         return data[0] == (byte)'B' && data[1] == (byte)'M';
     }
 
-    private static bool IsGif(byte[] data) {
-        if (data is null || data.Length < 6) return false;
+    private static bool IsGif(ReadOnlySpan<byte> data) {
+        if (data.Length < 6) return false;
         return data[0] == (byte)'G' &&
                data[1] == (byte)'I' &&
                data[2] == (byte)'F' &&
@@ -513,54 +511,54 @@ public sealed class RendererFormatTests {
                data[5] == (byte)'a';
     }
 
-    private static bool IsTiff(byte[] data) {
-        if (data is null || data.Length < 4) return false;
+    private static bool IsTiff(ReadOnlySpan<byte> data) {
+        if (data.Length < 4) return false;
         return (data[0] == (byte)'I' && data[1] == (byte)'I' && data[2] == 42 && data[3] == 0) ||
                (data[0] == (byte)'M' && data[1] == (byte)'M' && data[2] == 0 && data[3] == 42);
     }
 
-    private static bool IsPpm(byte[] data) {
-        if (data is null || data.Length < 2) return false;
+    private static bool IsPpm(ReadOnlySpan<byte> data) {
+        if (data.Length < 2) return false;
         return data[0] == (byte)'P' && data[1] == (byte)'6';
     }
 
-    private static bool IsPbm(byte[] data) {
-        if (data is null || data.Length < 2) return false;
+    private static bool IsPbm(ReadOnlySpan<byte> data) {
+        if (data.Length < 2) return false;
         return data[0] == (byte)'P' && data[1] == (byte)'4';
     }
 
-    private static bool IsPgm(byte[] data) {
-        if (data is null || data.Length < 2) return false;
+    private static bool IsPgm(ReadOnlySpan<byte> data) {
+        if (data.Length < 2) return false;
         return data[0] == (byte)'P' && data[1] == (byte)'5';
     }
 
-    private static bool IsPam(byte[] data) {
-        if (data is null || data.Length < 2) return false;
+    private static bool IsPam(ReadOnlySpan<byte> data) {
+        if (data.Length < 2) return false;
         return data[0] == (byte)'P' && data[1] == (byte)'7';
     }
 
-    private static bool IsTga(byte[] data) {
-        if (data is null || data.Length < 3) return false;
+    private static bool IsTga(ReadOnlySpan<byte> data) {
+        if (data.Length < 3) return false;
         return data[1] == 0 && data[2] == 2;
     }
 
-    private static bool IsIco(byte[] data) {
-        if (data is null || data.Length < 4) return false;
+    private static bool IsIco(ReadOnlySpan<byte> data) {
+        if (data.Length < 4) return false;
         return data[0] == 0 && data[1] == 0 && data[2] == 1 && data[3] == 0;
     }
 
-    private static int GetIcoCount(byte[] data) {
-        if (data is null || data.Length < 6) return 0;
+    private static int GetIcoCount(ReadOnlySpan<byte> data) {
+        if (data.Length < 6) return 0;
         return data[4] | (data[5] << 8);
     }
 
-    private static bool IsGzip(byte[] data) {
-        if (data is null || data.Length < 2) return false;
+    private static bool IsGzip(ReadOnlySpan<byte> data) {
+        if (data.Length < 2) return false;
         return data[0] == 0x1F && data[1] == 0x8B;
     }
 
-    private static bool IsPdf(byte[] data) {
-        if (data is null || data.Length < 5) return false;
+    private static bool IsPdf(ReadOnlySpan<byte> data) {
+        if (data.Length < 5) return false;
         return data[0] == (byte)'%' &&
                data[1] == (byte)'P' &&
                data[2] == (byte)'D' &&

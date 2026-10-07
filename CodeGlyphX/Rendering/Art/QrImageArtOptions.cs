@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using CodeGlyphX.Rendering.Png;
 
@@ -6,7 +7,7 @@ namespace CodeGlyphX.Rendering.Art;
 /// <summary>Image-aware module geometry. Small scan anchors remain fixed at cell centers.</summary>
 public sealed class QrImageArtOptions {
     /// <summary>Module silhouette, using the same geometry as the QR PNG renderer.</summary>
-    public QrPngModuleShape Shape { get; set; } = QrPngModuleShape.Rounded;
+    public QrModuleShape Shape { get; set; } = QrModuleShape.Rounded;
 
     /// <summary>Artistic treatment. ModuleShape preserves the configured Shape; other values use their own geometry.</summary>
     public QrImageArtStyle Style { get; set; }
@@ -41,7 +42,7 @@ public sealed class QrImageArtOptions {
             throw new ArgumentException("Functional background must be opaque and light (luminance at least 220).", nameof(FunctionalBackground));
         if (FunctionalForeground.A != 255 || 0.299 * FunctionalForeground.R + 0.587 * FunctionalForeground.G + 0.114 * FunctionalForeground.B > 48)
             throw new ArgumentException("Functional foreground must be opaque and dark (luminance at most 48).", nameof(FunctionalForeground));
-        if (!Enum.IsDefined(typeof(QrPngModuleShape), Shape)) throw new ArgumentOutOfRangeException(nameof(Shape));
+        if (!Enum.IsDefined(typeof(QrModuleShape), Shape)) throw new ArgumentOutOfRangeException(nameof(Shape));
         if (double.IsNaN(Scale) || Scale < 0.65 || Scale > 1) throw new ArgumentOutOfRangeException(nameof(Scale));
         if (double.IsNaN(DetailProtection) || DetailProtection < 0 || DetailProtection > 1) throw new ArgumentOutOfRangeException(nameof(DetailProtection));
     }

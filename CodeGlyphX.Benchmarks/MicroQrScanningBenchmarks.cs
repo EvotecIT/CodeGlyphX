@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
@@ -38,7 +39,7 @@ public class MicroQrScanningBenchmarks {
             out _microStride);
         _microFrame = ImageFrame.Packed(_microPixels, _microWidth, _microHeight, PixelFormat.Rgba32);
         _scanOptions = new ScanOptions { Formats = new[] { SymbolFormat.MicroQrCode }, MaxSymbols = 1 };
-        _model2Pixels = QrEasy.RenderPixels("MODEL2-REJECTION", out _model2Width, out _model2Height, out _model2Stride);
+        _model2Pixels = QR.RenderPixels("MODEL2-REJECTION", out _model2Width, out _model2Height, out _model2Stride);
 
         if (!MicroQrDecoder.TryDecode(
                 _microPixels, _microWidth, _microHeight, _microStride, PixelFormat.Rgba32, out var decoded) ||

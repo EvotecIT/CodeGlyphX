@@ -29,7 +29,7 @@ Install-Package CodeGlyphX
 Add the following to your `.csproj` file:
 
 ```xml
-<PackageReference Include="CodeGlyphX" Version="2.1.0" />
+<PackageReference Include="CodeGlyphX" Version="3.0.0" />
 ```
 
 ## Supported Frameworks

@@ -10,22 +10,36 @@ internal static class AztecEncoder {
     private const int MaxCompactLayers = 4;
 
     public static BitMatrix Encode(string text, AztecEncodeOptions? options = null) {
+        return EncodeSymbol(text, options).Modules.Clone();
+    }
+
+    public static AztecSymbol EncodeSymbol(string text, AztecEncodeOptions? options = null) {
         if (text is null) throw new ArgumentNullException(nameof(text));
 
         var encoding = EncodingUtils.ResolveTextEncoding(text, options?.TextEncoding, options?.EciAssignmentNumber, "Aztec", out var eci);
         var bytes = EncodingUtils.GetBytesStrict(encoding, text, nameof(text));
+        return EncodeSymbolCore(bytes, options, eci);
+    }
+
+    public static AztecSymbol EncodeSymbol(byte[] data, AztecEncodeOptions? options = null) {
+        if (data is null) throw new ArgumentNullException(nameof(data));
+        return EncodeSymbolCore(data, options, options?.EciAssignmentNumber);
+    }
+
+    private static AztecSymbol EncodeSymbolCore(byte[] data, AztecEncodeOptions? options, int? eci) {
         var eccPercent = options?.ErrorCorrectionPercent ?? DefaultEcPercent;
+        if (eccPercent < 0) throw new ArgumentOutOfRangeException(nameof(options), "Error correction percentage cannot be negative.");
+        if (options?.Layers is < 1 or > MaxLayers) throw new ArgumentOutOfRangeException(nameof(options), "Layer count must be between 1 and 32.");
         var userSpecifiedLayers = 0;
         if (options?.Layers is int layers && layers > 0) {
             var compact = options.Compact ?? layers <= MaxCompactLayers;
             userSpecifiedLayers = compact ? -layers : layers;
         }
 
-        var symbol = Encode(bytes, eccPercent, userSpecifiedLayers, eci);
-        return symbol.Matrix;
+        return Encode(data, eccPercent, userSpecifiedLayers, eci, options?.Compact);
     }
 
-    internal static AztecSymbol Encode(byte[] data, int eccPercent, int userSpecifiedLayers, int? eci = null) {
+    internal static AztecSymbol Encode(byte[] data, int eccPercent, int userSpecifiedLayers, int? eci = null, bool? compactPreference = null) {
         if (eci is < 0 or > 999999) throw new ArgumentOutOfRangeException(nameof(eci));
         var bits = new AztecBitBuffer();
         if (eci.HasValue) {
@@ -66,10 +80,10 @@ internal static class AztecEncoder {
             if (compact && stuffedBits.Size > wordSize * 64) throw new ArgumentException("Data too large for compact encoding.");
         } else {
             var found = false;
-            for (var i = 0; i <= MaxLayers; i++) {
-                compact = i <= 3;
-                layers = compact ? i + 1 : i;
-                if (layers < 1) continue;
+            for (var i = 0; i < MaxCompactLayers + MaxLayers; i++) {
+                compact = i < MaxCompactLayers;
+                layers = compact ? i + 1 : i - MaxCompactLayers + 1;
+                if (compactPreference.HasValue && compact != compactPreference.Value) continue;
 
                 totalBits = TotalBitsInLayer(layers, compact);
                 if (totalSizeBits > totalBits) continue;

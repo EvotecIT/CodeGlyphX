@@ -115,14 +115,14 @@ else
                 + "// ASP.NET Core Minimal API endpoint" + nl
                 + "app.MapGet(\"/qr\", () =>" + nl
                 + "{" + nl
-                + "    var png = QrCode.Render(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).Data;" + nl
+                + "    var png = QR.Render(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).ToArray();" + nl
                 + "    return Results.File(png, \"image/png\", \"qrcode.png\");" + nl
                 + "});" + nl + nl
                 + "// Or in a Controller" + nl
                 + "[HttpGet(\"qr/{text}\")]" + nl
                 + "public IActionResult GetQrCode(string text)" + nl
                 + "{" + nl
-                + "    var png = QrCode.Render(text, OutputFormat.Png).Data;" + nl
+                + "    var png = QR.Render(text, OutputFormat.Png).ToArray();" + nl
                 + "    return File(png, \"image/png\");" + nl
                 + "}";
         }
@@ -133,14 +133,14 @@ else
                 + "// ASP.NET Core Minimal API endpoint" + nl
                 + "app.MapGet(\"/barcode/{text}\", (string text) =>" + nl
                 + "{" + nl
-                + "    var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).Data;" + nl
+                + "    var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).ToArray();" + nl
                 + "    return Results.File(png, \"image/png\", \"barcode.png\");" + nl
                 + "});" + nl + nl
                 + "// Or in a Controller" + nl
                 + "[HttpGet(\"barcode/{text}\")]" + nl
                 + "public IActionResult GetBarcode(string text)" + nl
                 + "{" + nl
-                + "    var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).Data;" + nl
+                + "    var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).ToArray();" + nl
                 + "    return File(png, \"image/png\");" + nl
                 + "}";
         }
@@ -157,14 +157,14 @@ else
                 + "// ASP.NET Core Minimal API endpoint" + nl
                 + "app.MapGet(\"/matrix/{text}\", (string text) =>" + nl
                 + "{" + nl
-                + "    var png = " + method + ".Render(text, OutputFormat.Png).Data;" + nl
+                + "    var png = " + method + ".Render(text, OutputFormat.Png).ToArray();" + nl
                 + "    return Results.File(png, \"image/png\", \"matrix.png\");" + nl
                 + "});" + nl + nl
                 + "// Or in a Controller" + nl
                 + "[HttpGet(\"matrix/{text}\")]" + nl
                 + "public IActionResult GetMatrix(string text)" + nl
                 + "{" + nl
-                + "    var png = " + method + ".Render(text, OutputFormat.Png).Data;" + nl
+                + "    var png = " + method + ".Render(text, OutputFormat.Png).ToArray();" + nl
                 + "    return File(png, \"image/png\");" + nl
                 + "}";
         }
@@ -223,7 +223,7 @@ else
                 + "    private string _qrDataUri = \"\";" + nl + nl
                 + "    protected override void OnInitialized()" + nl
                 + "    {" + nl
-                + "        var png = QrCode.Render(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).Data;" + nl
+                + "        var png = QR.Render(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).ToArray();" + nl
                 + "        _qrDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
                 + "    }" + nl
                 + "}";
@@ -238,7 +238,7 @@ else
                 + "    private string _barcodeDataUri = \"\";" + nl + nl
                 + "    protected override void OnInitialized()" + nl
                 + "    {" + nl
-                + "        var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).Data;" + nl
+                + "        var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
                 + "        _barcodeDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
                 + "    }" + nl
                 + "}";
@@ -259,7 +259,7 @@ else
                 + "    private string _matrixDataUri = \"\";" + nl + nl
                 + "    protected override void OnInitialized()" + nl
                 + "    {" + nl
-                + "        var png = " + method + ".Render(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\", OutputFormat.Png).Data;" + nl
+                + "        var png = " + method + ".Render(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\", OutputFormat.Png).ToArray();" + nl
                 + "        _matrixDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
                 + "    }" + nl
                 + "}";
@@ -317,7 +317,7 @@ else
                 + "using CodeGlyphX;" + nl
                 + "using CodeGlyphX.Rendering;" + nl + nl
                 + "// In your ViewModel or code-behind:" + nl
-                + "var png = QrCode.Render(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).Data;" + nl
+                + "var png = QR.Render(\"" + EscapeForComment(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).ToArray();" + nl
                 + "QrImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
                 + "// XAML:" + nl
                 + "// <Image x:Name=\"QrImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
@@ -328,7 +328,7 @@ else
                 + "using CodeGlyphX;" + nl
                 + "using CodeGlyphX.Rendering;" + nl + nl
                 + "// In your ViewModel or code-behind:" + nl
-                + "var png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).Data;" + nl
+                + "var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
                 + "BarcodeImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
                 + "// XAML:" + nl
                 + "// <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";
@@ -345,7 +345,7 @@ else
                 + "using CodeGlyphX;" + nl
                 + "using CodeGlyphX.Rendering;" + nl + nl
                 + "// In your ViewModel or code-behind:" + nl
-                + "var png = " + method + ".Render(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\", OutputFormat.Png).Data;" + nl
+                + "var png = " + method + ".Render(\"" + EscapeForComment(Host?.MatrixContent ?? "Data") + "\", OutputFormat.Png).ToArray();" + nl
                 + "MatrixImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
                 + "// XAML:" + nl
                 + "// <Image x:Name=\"MatrixImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
@@ -367,7 +367,7 @@ else
                 + "    Inherits ControllerBase" + nl + nl
                 + "    <HttpGet(\"qr/{text}\")>" + nl
                 + "    Public Function GetQrCode(text As String) As IActionResult" + nl
-                + "        Dim png = QrCode.Render(text, OutputFormat.Png).Data" + nl
+                + "        Dim png = QR.Render(text, OutputFormat.Png).ToArray()" + nl
                 + "        Return File(png, \"image/png\", \"qrcode.png\")" + nl
                 + "    End Function" + nl
                 + "End Class";
@@ -382,7 +382,7 @@ else
                 + "    Inherits ControllerBase" + nl + nl
                 + "    <HttpGet(\"barcode/{text}\")>" + nl
                 + "    Public Function GetBarcode(text As String) As IActionResult" + nl
-                + "        Dim png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).Data" + nl
+                + "        Dim png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", text, OutputFormat.Png).ToArray()" + nl
                 + "        Return File(png, \"image/png\", \"barcode.png\")" + nl
                 + "    End Function" + nl
                 + "End Class";
@@ -403,7 +403,7 @@ else
                 + "    Inherits ControllerBase" + nl + nl
                 + "    <HttpGet(\"matrix/{text}\")>" + nl
                 + "    Public Function GetMatrix(text As String) As IActionResult" + nl
-                + "        Dim png = " + method + ".Render(text, OutputFormat.Png).Data" + nl
+                + "        Dim png = " + method + ".Render(text, OutputFormat.Png).ToArray()" + nl
                 + "        Return File(png, \"image/png\", \"matrix.png\")" + nl
                 + "    End Function" + nl
                 + "End Class";
@@ -422,7 +422,7 @@ else
                 + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = QrCode.Render(\"" + EscapeForVbString(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).Data" + nl
+                + "Dim png = QR.Render(\"" + EscapeForVbString(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).ToArray()" + nl
                 + "QrImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"QrImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
@@ -434,7 +434,7 @@ else
                 + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = Barcode.Render(BarcodeType." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).Data" + nl
+                + "Dim png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).ToArray()" + nl
                 + "BarcodeImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";
@@ -452,7 +452,7 @@ else
                 + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = " + method + ".Render(\"" + EscapeForVbString(Host?.MatrixContent ?? "Data") + "\", OutputFormat.Png).Data" + nl
+                + "Dim png = " + method + ".Render(\"" + EscapeForVbString(Host?.MatrixContent ?? "Data") + "\", OutputFormat.Png).ToArray()" + nl
                 + "MatrixImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"MatrixImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";

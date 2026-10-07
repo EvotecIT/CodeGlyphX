@@ -110,15 +110,13 @@ internal static class QrDecodeSampleFactory {
     }
 
     public static QrDecodeScenarioData BuildJpegCompressedGenerated(string payload = DefaultPayload, int quality = 60) {
-        return RenderQrImage(payload, OutputFormat.Jpeg, options => options.JpegQuality = quality);
+        return RenderQrImage(payload, OutputFormat.Jpeg, outputOptions: new OutputOptions { JpegQuality = quality });
     }
 
     public static QrDecodeScenarioData BuildJpegBlurGenerated(string payload = DefaultPayload, int quality = 35, int blurRadius = 1) {
-        return BuildWithTransform(
-            payload,
-            OutputFormat.Jpeg,
-            options => options.JpegQuality = quality,
-            data => QrDecodeImageOps.ApplyBoxBlur(data.Rgba, data.Width, data.Height, data.Stride, blurRadius));
+        var data = BuildJpegCompressedGenerated(payload, quality);
+        QrDecodeImageOps.ApplyBoxBlur(data.Rgba, data.Width, data.Height, data.Stride, blurRadius);
+        return data;
     }
 
     public static QrDecodeScenarioData BuildSaltPepperGenerated(string payload = DefaultPayload, double probability = 0.02, int seed = 1337) {
@@ -149,8 +147,7 @@ internal static class QrDecodeSampleFactory {
     public static QrDecodeScenarioData BuildNoQuietGenerated(string payload = DefaultPayload) {
         return RenderQrImage(payload, OutputFormat.Png, options => {
             options.QuietZone = 0;
-            options.ErrorCorrectionLevel = QrErrorCorrectionLevel.H;
-        });
+        }, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
     }
 
     public static QrDecodeScenarioData BuildFancyGenerated(string payload = DefaultPayload) {
@@ -159,29 +156,28 @@ internal static class QrDecodeSampleFactory {
 
     public static QrDecodeScenarioData BuildLongPayloadGenerated(string payload, int targetSizePx = 1400) {
         return RenderQrImage(payload, OutputFormat.Png, options => {
-            options.ErrorCorrectionLevel = QrErrorCorrectionLevel.M;
             options.TargetSizePx = targetSizePx;
             options.TargetSizeIncludesQuietZone = true;
             options.QuietZone = 4;
         });
     }
 
-    private static QrDecodeScenarioData BuildWithTransform(string payload, OutputFormat format, Action<QrEasyOptions>? configure, Action<QrDecodeScenarioData> transform) {
+    private static QrDecodeScenarioData BuildWithTransform(string payload, OutputFormat format, Action<QrRenderOptions>? configure, Action<QrDecodeScenarioData> transform) {
         var data = RenderQrImage(payload, format, configure);
         transform(data);
         return data;
     }
 
-    private static QrDecodeScenarioData BuildWithReplacement(string payload, OutputFormat format, Action<QrEasyOptions>? configure, Func<QrDecodeScenarioData, byte[]> transform) {
+    private static QrDecodeScenarioData BuildWithReplacement(string payload, OutputFormat format, Action<QrRenderOptions>? configure, Func<QrDecodeScenarioData, byte[]> transform) {
         var data = RenderQrImage(payload, format, configure);
         var pixels = transform(data);
         return new QrDecodeScenarioData(pixels, data.Width, data.Height);
     }
 
-    private static QrDecodeScenarioData RenderQrImage(string payload, OutputFormat format, Action<QrEasyOptions>? configure = null) {
-        var options = new QrEasyOptions { ModuleSize = 8 };
+    private static QrDecodeScenarioData RenderQrImage(string payload, OutputFormat format, Action<QrRenderOptions>? configure = null, QrEncodingOptions? encodingOptions = null, OutputOptions? outputOptions = null) {
+        var options = new QrRenderOptions { ModuleSize = 8 };
         configure?.Invoke(options);
-        var data = QrCode.Render(payload, format, options).Data;
+        var data = QR.Render(payload, format, options, encodingOptions, outputOptions).ToArray();
         if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) {
             throw new InvalidOperationException($"Failed to decode generated QR {format} sample.");
         }

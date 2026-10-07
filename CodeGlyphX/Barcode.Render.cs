@@ -27,45 +27,45 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(BarcodeType type, string content, OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) {
+    public static RenderedOutput Render(SymbolFormat type, string content, OutputFormat format, BarcodeOptions? options = null, OutputOptions? outputOptions = null) {
         var barcode = Encode(type, content);
-        return Render(barcode, format, options, extras);
+        return Render(barcode, format, options, outputOptions);
     }
 
     /// <summary>
     /// Renders a barcode to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(Barcode1D barcode, OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) {
+    public static RenderedOutput Render(Barcode1D barcode, OutputFormat format, BarcodeOptions? options = null, OutputOptions? outputOptions = null) {
         if (barcode is null) throw new ArgumentNullException(nameof(barcode));
         if (format == OutputFormat.Unknown) throw new ArgumentOutOfRangeException(nameof(format));
 
         var opts = BuildPngOptions(options);
         switch (format) {
             case OutputFormat.Png:
-                if (extras is not null) opts.PngCompressionLevel = extras.ResolvePngCompression(opts.PngCompressionLevel);
+                if (outputOptions is not null) opts.PngCompressionLevel = outputOptions.ResolvePngCompression(opts.PngCompressionLevel);
                 return RenderedOutput.FromBinary(format, BarcodePngRenderer.Render(barcode, opts));
             case OutputFormat.Svg:
                 return RenderedOutput.FromText(format, SvgBarcodeRenderer.Render(barcode, BuildSvgOptions(options)));
             case OutputFormat.Svgz:
                 return RenderedOutput.FromBinary(format, BarcodeSvgzRenderer.Render(barcode, BuildSvgOptions(options)));
             case OutputFormat.Html: {
-                var html = HtmlBarcodeRenderer.Render(barcode, BuildHtmlOptions(options));
-                var title = extras?.HtmlTitle;
+                var html = HtmlBarcodeRenderer.Render(barcode, BuildHtmlOptions(options, outputOptions));
+                var title = outputOptions?.HtmlTitle;
                 if (!string.IsNullOrEmpty(title)) {
                     html = html.WrapHtml(title);
                 }
                 return RenderedOutput.FromText(format, html);
             }
             case OutputFormat.Jpeg: {
-                var jpegOptions = options?.JpegOptions;
+                var jpegOptions = outputOptions?.JpegOptions;
                 var data = jpegOptions is null
-                    ? BarcodeJpegRenderer.Render(barcode, opts, options?.JpegQuality ?? 90)
+                    ? BarcodeJpegRenderer.Render(barcode, opts, outputOptions?.JpegQuality ?? 85)
                     : BarcodeJpegRenderer.Render(barcode, opts, jpegOptions);
                 return RenderedOutput.FromBinary(format, data);
             }
             case OutputFormat.Webp: {
-                var quality = options?.WebpQuality ?? 100;
-                if (RenderAnimationHelpers.TryRenderBarcodeWebp(extras, opts, quality, out var webp)) {
+                var quality = outputOptions?.WebpQuality ?? 100;
+                if (RenderAnimationHelpers.TryRenderBarcodeWebp(outputOptions, opts, quality, out var webp)) {
                     return RenderedOutput.FromBinary(format, webp);
                 }
                 return RenderedOutput.FromBinary(format, BarcodeWebpRenderer.Render(barcode, opts, quality));
@@ -73,13 +73,13 @@ public static partial class Barcode {
             case OutputFormat.Bmp:
                 return RenderedOutput.FromBinary(format, BarcodeBmpRenderer.Render(barcode, opts));
             case OutputFormat.Gif: {
-                if (RenderAnimationHelpers.TryRenderBarcodeGif(extras, opts, out var gif)) {
+                if (RenderAnimationHelpers.TryRenderBarcodeGif(outputOptions, opts, out var gif)) {
                     return RenderedOutput.FromBinary(format, gif);
                 }
                 return RenderedOutput.FromBinary(format, BarcodeGifRenderer.Render(barcode, opts));
             }
             case OutputFormat.Tiff:
-                return RenderedOutput.FromBinary(format, BarcodeTiffRenderer.Render(barcode, opts, extras?.TiffCompression ?? TiffCompressionMode.Auto));
+                return RenderedOutput.FromBinary(format, BarcodeTiffRenderer.Render(barcode, opts, outputOptions?.TiffCompression ?? TiffCompressionMode.Auto));
             case OutputFormat.Ppm:
                 return RenderedOutput.FromBinary(format, BarcodePpmRenderer.Render(barcode, opts));
             case OutputFormat.Pbm:
@@ -95,13 +95,13 @@ public static partial class Barcode {
             case OutputFormat.Tga:
                 return RenderedOutput.FromBinary(format, BarcodeTgaRenderer.Render(barcode, opts));
             case OutputFormat.Ico:
-                return RenderedOutput.FromBinary(format, BarcodeIcoRenderer.Render(barcode, opts, BuildIcoOptions(options)));
+                return RenderedOutput.FromBinary(format, BarcodeIcoRenderer.Render(barcode, opts, BuildIcoOptions(outputOptions)));
             case OutputFormat.Pdf:
-                return RenderedOutput.FromBinary(format, BarcodePdfRenderer.Render(barcode, opts, extras?.VectorMode ?? RenderMode.Vector));
+                return RenderedOutput.FromBinary(format, BarcodePdfRenderer.Render(barcode, opts, outputOptions?.VectorMode ?? RenderMode.Vector));
             case OutputFormat.Eps:
-                return RenderedOutput.FromText(format, BarcodeEpsRenderer.Render(barcode, opts, extras?.VectorMode ?? RenderMode.Vector));
+                return RenderedOutput.FromText(format, BarcodeEpsRenderer.Render(barcode, opts, outputOptions?.VectorMode ?? RenderMode.Vector));
             case OutputFormat.Ascii:
-                return RenderedOutput.FromText(format, BarcodeAsciiRenderer.Render(barcode, extras?.BarcodeAscii));
+                return RenderedOutput.FromText(format, BarcodeAsciiRenderer.Render(barcode, outputOptions?.BarcodeAscii));
             default:
                 throw new ArgumentOutOfRangeException(nameof(format), format, "Unsupported output format.");
         }

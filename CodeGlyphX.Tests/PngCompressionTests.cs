@@ -46,7 +46,7 @@ public sealed class PngCompressionTests {
 
     [Fact]
     public void QrRenderToStream_CompressedRowWriter_Decodes() {
-        var qr = QrEasy.Encode("PNG-ROW-WRITER").Modules;
+        var qr = QR.Encode("PNG-ROW-WRITER").Modules;
         var opts = new QrPngRenderOptions {
             ModuleSize = 8,
             QuietZone = 4,

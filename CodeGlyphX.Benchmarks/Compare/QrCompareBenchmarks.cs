@@ -27,7 +27,7 @@ namespace CodeGlyphX.Benchmarks;
 public class QrCompareBenchmarks
 {
     private const string MediumText = "https://github.com/EvotecIT/CodeGlyphX";
-    private readonly QrEasyOptions _options = new();
+    private readonly QrRenderOptions _options = new();
     private int _targetSizePx;
 
 #if COMPARE_ZXING
@@ -41,7 +41,7 @@ public class QrCompareBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        var qr = QrEasy.Encode(MediumText, _options);
+        var qr = QR.Encode(MediumText);
         _targetSizePx = (qr.Size + _options.QuietZone * 2) * _options.ModuleSize;
 
 #if COMPARE_ZXING
@@ -74,7 +74,7 @@ public class QrCompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX QR PNG (medium)")]
     public byte[] CodeGlyphX_QrPng()
     {
-        return QrCode.Render(MediumText, OutputFormat.Png, _options).Data;
+        return QR.Render(MediumText, OutputFormat.Png, _options).ToArray();
     }
 
 #if COMPARE_ZXING

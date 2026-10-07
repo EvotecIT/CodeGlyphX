@@ -8,6 +8,8 @@ layout: docs
 
 {{< edit-link >}}
 
+This guide documents the 1.x to 2.0 transition. For the current API, continue with the [3.0 migration guide](/docs/migration-3/).
+
 # Migrating to CodeGlyphX 2.0
 
 Version 2 deliberately removes obsolete aliases and behavior that reported success without producing a valid result. The smaller API has one rendering path per capability and explicit decode-limit semantics.

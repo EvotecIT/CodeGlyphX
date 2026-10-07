@@ -209,7 +209,7 @@ public static partial class QrPngRenderer {
         if (opts.Logo is not null) return false;
         if (opts.Canvas is not null) return false;
         if (opts.Debug is not null && opts.Debug.HasOverlay) return false;
-        if (opts.ModuleShape != QrPngModuleShape.Square) return false;
+        if (opts.ModuleShape != QrModuleShape.Square) return false;
         if (!IsUnitScale(opts.ModuleScale)) return false;
         if (opts.ModuleCornerRadiusPx != 0) return false;
         return true;

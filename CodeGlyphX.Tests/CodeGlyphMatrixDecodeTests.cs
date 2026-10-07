@@ -9,17 +9,17 @@ public sealed class CodeGlyphMatrixDecodeTests {
     public void Decode_Qr_FromModules() {
         var qr = QrCodeEncoder.EncodeText("MATRIX-QR");
 
-        Assert.True(CodeGlyph.TryDecode(qr.Modules, out var decoded));
-        Assert.Equal(CodeGlyphKind.Qr, decoded.Kind);
+        Assert.True(SymbolDecoder.TryDecode(qr.Modules, out var decoded));
+        Assert.Equal(SymbolFormat.QrCode, decoded.Format);
         Assert.Equal("MATRIX-QR", decoded.Text);
     }
 
     [Fact]
     public void Decode_DataMatrix_FromModules() {
-        var modules = DataMatrixCode.Encode("DM-MODULES");
+        var modules = DataMatrixCode.Encode("DM-MODULES").Modules;
 
-        Assert.True(CodeGlyph.TryDecode(modules, out var decoded));
-        Assert.Equal(CodeGlyphKind.DataMatrix, decoded.Kind);
+        Assert.True(SymbolDecoder.TryDecode(modules, out var decoded));
+        Assert.Equal(SymbolFormat.DataMatrix, decoded.Format);
         Assert.Equal("DM-MODULES", decoded.Text);
     }
 
@@ -28,8 +28,8 @@ public sealed class CodeGlyphMatrixDecodeTests {
         var value = "1234567890123";
         var modules = MatrixBarcodeEncoder.Encode(BarcodeType.GS1DataBarOmni, value);
 
-        Assert.True(CodeGlyph.TryDecode(modules, out var decoded, expectedBarcode: BarcodeType.GS1DataBarOmni));
-        Assert.Equal(CodeGlyphKind.Barcode1D, decoded.Kind);
+        Assert.True(SymbolDecoder.TryDecode(modules, out var decoded, format: SymbolFormat.Gs1DataBarOmnidirectional));
+        Assert.Equal(SymbolFormat.Gs1DataBarOmnidirectional, decoded.Format);
         Assert.Equal(value, decoded.Text);
     }
 
@@ -42,16 +42,17 @@ public sealed class CodeGlyphMatrixDecodeTests {
             FileName = "file.txt",
             Sender = "sender@example.com"
         };
-        var modules = Pdf417Code.EncodeMacro("MACRO-PDF417", macro);
+        var modules = Pdf417Code.EncodeMacro("MACRO-PDF417", macro).Modules;
 
-        Assert.True(CodeGlyph.TryDecode(modules, out var decoded));
-        Assert.Equal(CodeGlyphKind.Pdf417, decoded.Kind);
+        Assert.True(SymbolDecoder.TryDecode(modules, out var decoded));
+        Assert.Equal(SymbolFormat.Pdf417, decoded.Format);
         Assert.Equal("MACRO-PDF417", decoded.Text);
-        Assert.NotNull(decoded.Pdf417Macro);
-        Assert.Equal(0, decoded.Pdf417Macro!.SegmentIndex);
-        Assert.Equal("123", decoded.Pdf417Macro.FileId);
-        Assert.True(decoded.Pdf417Macro.IsLastSegment);
-        Assert.Equal("file.txt", decoded.Pdf417Macro.FileName);
-        Assert.Equal("sender@example.com", decoded.Pdf417Macro.Sender);
+        var metadata = Assert.IsType<Pdf417SymbolMetadata>(decoded.Metadata);
+        Assert.NotNull(metadata.Macro);
+        Assert.Equal(0, metadata.Macro!.SegmentIndex);
+        Assert.Equal("123", metadata.Macro.FileId);
+        Assert.True(metadata.Macro.IsLastSegment);
+        Assert.Equal("file.txt", metadata.Macro.FileName);
+        Assert.Equal("sender@example.com", metadata.Macro.Sender);
     }
 }

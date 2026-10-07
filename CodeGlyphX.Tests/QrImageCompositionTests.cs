@@ -17,7 +17,7 @@ public sealed class QrImageCompositionTests {
     [InlineData(QrImageCompositionStyle.ImageOverlay, 7, 1.0)]
     [InlineData(QrImageCompositionStyle.ImageOverlay, 12, 0.75)]
     public void ExportedCompositionDecodesAfterResizingAndBlur(QrImageCompositionStyle style, int moduleSize, double strength) {
-        var qr = QrCode.Encode(Payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(Payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var source = Artwork(73, 41);
         var original = (byte[])source.Clone();
         var result = QrImageComposer.Render(qr, source, 73, 41,
@@ -59,7 +59,7 @@ public sealed class QrImageCompositionTests {
 
     [Fact]
     public void ZeroStrengthMatchesPlainRendererAndCopiesPixels() {
-        var qr = QrCode.Encode(Payload);
+        var qr = QR.Encode(Payload);
         var result = QrImageComposer.Render(qr, Artwork(7, 9), 7, 9, new QrImageCompositionOptions { Strength = 0 });
         var expected = QrPngRenderer.RenderPixels(qr.Modules, new QrPngRenderOptions { ModuleSize = 12 }, out _, out _, out _);
         Assert.Equal(expected, result.GetPixels());
@@ -70,7 +70,7 @@ public sealed class QrImageCompositionTests {
 
     [Fact]
     public void SourceAlphaIsFlattenedBeforeInterpolation() {
-        var qr = QrCode.Encode(Payload);
+        var qr = QR.Encode(Payload);
         var transparent = new byte[] { 255, 0, 0, 0, 0, 255, 0, 0 };
         var white = Enumerable.Repeat((byte)255, 8).ToArray();
         Assert.Equal(QrImageComposer.Render(qr, white, 2, 1).GetPixels(),
@@ -79,7 +79,7 @@ public sealed class QrImageCompositionTests {
 
     [Fact]
     public void ContainPreservesLetterboxAndCoverFillsIt() {
-        var qr = QrCode.Encode(Payload);
+        var qr = QR.Encode(Payload);
         var red = new byte[] { 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255 };
         var contain = QrImageComposer.Render(qr, red, 4, 1, new QrImageCompositionOptions { Fit = QrImageFit.Contain });
         var cover = QrImageComposer.Render(qr, red, 4, 1);
@@ -109,13 +109,13 @@ public sealed class QrImageCompositionTests {
     [InlineData(-0.01)]
     [InlineData(1.01)]
     public void RejectsInvalidStrength(double strength) {
-        Assert.Throws<ArgumentOutOfRangeException>(() => QrImageComposer.Render(QrCode.Encode(Payload), new byte[4], 1, 1,
+        Assert.Throws<ArgumentOutOfRangeException>(() => QrImageComposer.Render(QR.Encode(Payload), new byte[4], 1, 1,
             new QrImageCompositionOptions { Strength = strength }));
     }
 
     [Fact]
     public void RejectsMalformedSourcesAndExcessiveOutputBeforeAllocation() {
-        var qr = QrCode.Encode(Payload);
+        var qr = QR.Encode(Payload);
         Assert.Throws<ArgumentException>(() => QrImageComposer.Render(qr, new byte[4], int.MaxValue, int.MaxValue));
         Assert.Throws<ArgumentException>(() => QrImageComposer.Render(qr, new byte[3], 1, 1));
         Assert.Throws<ArgumentOutOfRangeException>(() => QrImageComposer.Render(qr, new byte[4], 1, 1, new QrImageCompositionOptions { ModuleSize = 5 }));
@@ -130,7 +130,7 @@ public sealed class QrImageCompositionTests {
     [InlineData(QrImageCompositionStyle.ColorModules)]
     [InlineData(QrImageCompositionStyle.ImageOverlay)]
     public void FlatImageRegionsRetainStrongModuleCenters(QrImageCompositionStyle style) {
-        var qr = QrCode.Encode(Payload);
+        var qr = QR.Encode(Payload);
         var result = QrImageComposer.Render(qr, new byte[] { 128, 128, 128, 255 }, 1, 1,
             new QrImageCompositionOptions { ModuleSize = 8, Style = style, Strength = 1 });
         var pixels = result.GetPixels();
@@ -152,7 +152,7 @@ public sealed class QrImageCompositionTests {
     [Fact]
     public void UnicodeAndVersionInformationSurviveComposition() {
         const string payload = "Zażółć gęślą jaźń — 東京";
-        var qr = QrCode.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H, MinVersion = 7 });
+        var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H, MinVersion = 7 });
         var image = QrImageComposer.Render(qr, Artwork(23, 47), 23, 47, new QrImageCompositionOptions { Style = QrImageCompositionStyle.ImageOverlay });
         Assert.True(QrArt.ValidateImage(image.ToPng(), payload, 3000).AllPassed);
     }

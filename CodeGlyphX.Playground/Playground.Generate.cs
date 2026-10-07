@@ -88,11 +88,10 @@ public partial class Playground {
                     _ => QrErrorCorrectionLevel.M
                 };
 
-                var options = new QrEasyOptions
+                var options = new QrRenderOptions
                 {
                     // The editor renders explicit choices; its scan report provides feedback.
                     ArtGuardrailsEnabled = false,
-                    ErrorCorrectionLevel = SelectedCategory == "SpecialQR" ? payloadData.ErrorCorrectionLevel : qrEcc,
                     Foreground = ParseColor(ForegroundColor),
                     Background = ParseColor(BackgroundColor),
                     ModuleShape = ParseModuleShape(ModuleShape),
@@ -104,7 +103,7 @@ public partial class Playground {
 
                 if (UseForegroundGradient)
                 {
-                    options.ForegroundGradient = new QrPngGradientOptions
+                    options.ForegroundGradient = new QrGradientOptions
                     {
                         Type = ParseGradientType(ForegroundGradientType),
                         StartColor = ParseColor(ForegroundGradientStart),
@@ -114,7 +113,7 @@ public partial class Playground {
 
                 if (UseBackgroundGradient)
                 {
-                    options.BackgroundGradient = new QrPngGradientOptions
+                    options.BackgroundGradient = new QrGradientOptions
                     {
                         Type = ParseGradientType(BackgroundGradientType),
                         StartColor = ParseColor(BackgroundGradientStart),
@@ -126,7 +125,7 @@ public partial class Playground {
 
                 if (EnableQrBackgroundPattern)
                 {
-                    options.BackgroundPattern = new QrPngBackgroundPatternOptions
+                    options.BackgroundPattern = new QrBackgroundPatternOptions
                     {
                         Type = ParsePatternType(QrBackgroundPatternType),
                         Color = ApplyAlpha(ParseColor(QrBackgroundPatternColor), QrBackgroundPatternAlpha),
@@ -139,7 +138,7 @@ public partial class Playground {
 
                 if (EnablePalette)
                 {
-                    options.ForegroundPalette = new QrPngPaletteOptions
+                    options.ForegroundPalette = new QrPaletteOptions
                     {
                         Mode = ParsePaletteMode(PaletteMode),
                         Seed = PaletteSeed,
@@ -156,9 +155,9 @@ public partial class Playground {
 
                 if (EnableZonePalettes)
                 {
-                    options.ForegroundPaletteZones = new QrPngPaletteZoneOptions
+                    options.ForegroundPaletteZones = new QrPaletteZoneOptions
                     {
-                        CenterPalette = new QrPngPaletteOptions
+                        CenterPalette = new QrPaletteOptions
                         {
                             Mode = ParsePaletteMode(CenterPaletteMode),
                             Seed = CenterPaletteSeed,
@@ -172,7 +171,7 @@ public partial class Playground {
                             }
                         },
                         CenterSize = CenterZoneSize,
-                        CornerPalette = new QrPngPaletteOptions
+                        CornerPalette = new QrPaletteOptions
                         {
                             Mode = ParsePaletteMode(CornerPaletteMode),
                             Seed = CornerPaletteSeed,
@@ -190,7 +189,7 @@ public partial class Playground {
 
                 if (EnableScaleMap)
                 {
-                    options.ModuleScaleMap = new QrPngModuleScaleMapOptions
+                    options.ModuleScaleMap = new QrModuleScaleMapOptions
                     {
                         Mode = ParseScaleMapMode(ScaleMapMode),
                         MinScale = ScaleMapMin,
@@ -203,7 +202,7 @@ public partial class Playground {
 
                 if (CustomEyes)
                 {
-                    options.Eyes = new QrPngEyeOptions
+                    options.Eyes = new QrEyeOptions
                     {
                         UseFrame = true,
                         FrameStyle = ParseEyeFrameStyle(EyeFrameStyle),
@@ -216,13 +215,13 @@ public partial class Playground {
 
                 if (EnableCanvas)
                 {
-                    options.Canvas = new QrPngCanvasOptions
+                    options.Canvas = new QrCanvasOptions
                     {
                         PaddingPx = CanvasPaddingPx,
                         CornerRadiusPx = CanvasCornerRadiusPx,
                         Background = ParseColor(CanvasBackgroundColor),
                         BackgroundGradient = CanvasUseGradient
-                            ? new QrPngGradientOptions
+                            ? new QrGradientOptions
                             {
                                 Type = ParseGradientType(CanvasGradientType),
                                 StartColor = ParseColor(CanvasGradientStart),
@@ -230,7 +229,7 @@ public partial class Playground {
                             }
                             : null,
                         Pattern = CanvasUsePattern
-                            ? new QrPngBackgroundPatternOptions
+                            ? new QrBackgroundPatternOptions
                             {
                                 Type = ParsePatternType(CanvasPatternType),
                                 Color = ApplyAlpha(ParseColor(CanvasPatternColor), CanvasPatternAlpha),
@@ -248,7 +247,7 @@ public partial class Playground {
 
                 if (EnableDebugOverlay)
                 {
-                    options.Debug = new QrPngDebugOptions
+                    options.Debug = new QrRasterDebugOptions
                     {
                         ShowQuietZone = DebugShowQuietZone,
                         ShowQrBounds = DebugShowQrBounds,
@@ -258,9 +257,18 @@ public partial class Playground {
                     };
                 }
 
-                HeuristicReport = QrEasy.EvaluateScanHeuristics(qrPayload, options);
-                pngBytes = QrCode.Render(payloadData, OutputFormat.Png, options).Data;
-                svg = QrCode.Render(payloadData, OutputFormat.Svg, options).GetText();
+                var encoding = SelectedCategory == "SpecialQR"
+                    ? null
+                    : new QrEncodingOptions { ErrorCorrectionLevel = qrEcc };
+                var symbol = QR.Encode(payloadData, encoding);
+                HeuristicReport = symbol.EvaluateScanHeuristics(options);
+                pngBytes = symbol.Render(OutputFormat.Png, options).ToArray();
+                try {
+                    svg = symbol.Render(OutputFormat.Svg, options).GetText();
+                }
+                catch (NotSupportedException) {
+                    SvgUnavailableReason = "This design uses raster effects. Download PNG to preserve its appearance.";
+                }
             }
             else if (SelectedCategory == "Barcode")
             {
@@ -269,19 +277,19 @@ public partial class Playground {
 
                 var barcodeType = SelectedBarcodeType switch
                 {
-                    "Code128" => BarcodeType.Code128,
-                    "GS1128" => BarcodeType.GS1_128,
-                    "Code39" => BarcodeType.Code39,
-                    "Code93" => BarcodeType.Code93,
-                    "Code11" => BarcodeType.Code11,
-                    "Codabar" => BarcodeType.Codabar,
-                    "MSI" => BarcodeType.MSI,
-                    "Plessey" => BarcodeType.Plessey,
-                    "EAN" => BarcodeType.EAN,
-                    "UPCA" => BarcodeType.UPCA,
-                    "UPCE" => BarcodeType.UPCE,
-                    "ITF14" => BarcodeType.ITF14,
-                    _ => BarcodeType.Code128
+                    "Code128" => SymbolFormat.Code128,
+                    "GS1128" => SymbolFormat.Gs1Code128,
+                    "Code39" => SymbolFormat.Code39,
+                    "Code93" => SymbolFormat.Code93,
+                    "Code11" => SymbolFormat.Code11,
+                    "Codabar" => SymbolFormat.Codabar,
+                    "MSI" => SymbolFormat.Msi,
+                    "Plessey" => SymbolFormat.Plessey,
+                    "EAN" => SymbolFormat.Ean,
+                    "UPCA" => SymbolFormat.UpcA,
+                    "UPCE" => SymbolFormat.UpcE,
+                    "ITF14" => SymbolFormat.Itf14,
+                    _ => SymbolFormat.Code128
                 };
 
                 string content = BarcodeContent;
@@ -346,7 +354,7 @@ public partial class Playground {
                     content = NormalizeDigits(content);
                 }
 
-                pngBytes = Barcode.Render(barcodeType, content, OutputFormat.Png).Data;
+                pngBytes = Barcode.Render(barcodeType, content, OutputFormat.Png).ToArray();
                 svg = Barcode.Render(barcodeType, content, OutputFormat.Svg).GetText();
             }
             else if (SelectedCategory == "Matrix")
@@ -362,7 +370,7 @@ public partial class Playground {
                             ErrorCorrectionLevel = Pdf417EccLevel,
                             Compact = Pdf417Compact
                         };
-                        pngBytes = Pdf417Code.Render(MatrixContent, OutputFormat.Png, pdf417Options).Data;
+                        pngBytes = Pdf417Code.Render(MatrixContent, OutputFormat.Png, pdf417Options).ToArray();
                         svg = Pdf417Code.Render(MatrixContent, OutputFormat.Svg, pdf417Options).GetText();
                         break;
                     case "Aztec":
@@ -371,12 +379,12 @@ public partial class Playground {
                             ErrorCorrectionPercent = AztecAutoEcc ? null : AztecEccPercent,
                             Layers = AztecLayers > 0 ? AztecLayers : null
                         };
-                        pngBytes = AztecCode.Render(MatrixContent, OutputFormat.Png, aztecOptions).Data;
+                        pngBytes = AztecCode.Render(MatrixContent, OutputFormat.Png, aztecOptions).ToArray();
                         svg = AztecCode.Render(MatrixContent, OutputFormat.Svg, aztecOptions).GetText();
                         break;
                     default:
                         var dmMode = ParseDataMatrixMode(SelectedDataMatrixMode);
-                        pngBytes = DataMatrixCode.Render(MatrixContent, OutputFormat.Png, dmMode).Data;
+                        pngBytes = DataMatrixCode.Render(MatrixContent, OutputFormat.Png, dmMode).ToArray();
                         svg = DataMatrixCode.Render(MatrixContent, OutputFormat.Svg, dmMode).GetText();
                         break;
                 }

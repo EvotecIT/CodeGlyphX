@@ -27,12 +27,18 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Compile Include="Net472\**\*.cs" />
     <Compile Include="GlobalStateCollection.cs" />
+    <Compile Include="TestBudget.cs" />
     <Compile Include="QrImageDecodeParityData.cs" />
     <Compile Include="QrImageDecodeParitySharedTests.cs" />
     <Compile Include="CodecResourceBoundaryTests.cs" />
     <Compile Include="StreamContractTests.cs" />
     <Compile Include="ValueContractTests.cs" />
-    <Compile Include="QrEasyTests.cs" />
+    <Compile Include="RenderedOutputOwnershipTests.cs" />
+    <Compile Include="IndependentPngPixelTests.cs" />
+    <Compile Include="PngMalformedInputTests.cs" />
+    <Compile Include="QrDecodeInfoTests.cs" />
+    <Compile Include="QrApiTests.cs" />
+    <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />
     <Compile Include="QrProceduralArtTests.cs" />
@@ -60,6 +66,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.webp" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.rgba" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.webp" />

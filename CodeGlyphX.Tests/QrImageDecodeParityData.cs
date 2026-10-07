@@ -7,7 +7,7 @@ using CodeGlyphX.Rendering.Png;
 namespace CodeGlyphX.Tests;
 
 public sealed class QrImageDecodeParityCase {
-    public QrImageDecodeParityCase(string name, QrPayloadData payload, Rgba32 foreground, Rgba32 background, Action<QrEasyOptions>? configure = null) {
+    public QrImageDecodeParityCase(string name, QrPayloadData payload, Rgba32 foreground, Rgba32 background, Action<QrRenderOptions>? configure = null) {
         Name = name;
         Payload = payload;
         Foreground = foreground;
@@ -19,7 +19,7 @@ public sealed class QrImageDecodeParityCase {
     public QrPayloadData Payload { get; }
     public Rgba32 Foreground { get; }
     public Rgba32 Background { get; }
-    public Action<QrEasyOptions>? Configure { get; }
+    public Action<QrRenderOptions>? Configure { get; }
 
     public override string ToString() => Name;
 }
@@ -96,12 +96,12 @@ public static class QrImageDecodeParityData {
             QrPayloads.Url("https://example.com/qr-parity-gradient"),
             configure: options => {
                 options.Foreground = new Rgba32(12, 45, 110, 255);
-                options.ForegroundGradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.DiagonalDown,
+                options.ForegroundGradient = new QrGradientOptions {
+                    Type = QrGradientType.DiagonalDown,
                     StartColor = new Rgba32(206, 32, 255, 255),
                     EndColor = new Rgba32(0, 194, 255, 255)
                 };
-                options.ModuleShape = QrPngModuleShape.Rounded;
+                options.ModuleShape = QrModuleShape.Rounded;
                 options.ModuleScale = 0.94;
             });
 
@@ -109,8 +109,8 @@ public static class QrImageDecodeParityData {
             "email-background-pattern",
             QrPayloads.Email("design@example.com", "Gradient parity", "Background pattern parity"),
             configure: options => {
-                options.BackgroundPattern = new QrPngBackgroundPatternOptions {
-                    Type = QrPngBackgroundPatternType.Dots,
+                options.BackgroundPattern = new QrBackgroundPatternOptions {
+                    Type = QrBackgroundPatternType.Dots,
                     Color = new Rgba32(0, 122, 255, 28),
                     SizePx = 10,
                     ThicknessPx = 1,
@@ -122,7 +122,7 @@ public static class QrImageDecodeParityData {
     }
 
     public static byte[] RenderPng(QrImageDecodeParityCase testCase) {
-        var options = new QrEasyOptions {
+        var options = new QrRenderOptions {
             ModuleSize = 14,
             QuietZone = 6,
             Foreground = testCase.Foreground,
@@ -130,10 +130,10 @@ public static class QrImageDecodeParityData {
         };
         testCase.Configure?.Invoke(options);
 
-        return QrCode.Render(testCase.Payload, OutputFormat.Png, options).Data;
+        return QR.Render(testCase.Payload, OutputFormat.Png, options).ToArray();
     }
 
-    private static object[] Case(string name, QrPayloadData payload, Rgba32? foreground = null, Rgba32? background = null, Action<QrEasyOptions>? configure = null) {
+    private static object[] Case(string name, QrPayloadData payload, Rgba32? foreground = null, Rgba32? background = null, Action<QrRenderOptions>? configure = null) {
         return new object[] {
             new QrImageDecodeParityCase(
                 name,

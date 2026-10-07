@@ -22,7 +22,7 @@ public static class SymbolCapabilities {
         Entry(SymbolFormat.RmQrCode, "Rectangular Micro QR Code", SymbolFamily.Matrix,
             Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
-        Entry(SymbolFormat.Aztec, "Aztec Code", SymbolFamily.Matrix, Image | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
+        Entry(SymbolFormat.Aztec, "Aztec Code", SymbolFamily.Matrix, ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
         Legacy(SymbolFormat.Code128, "Code 128", SymbolFamily.Linear, BarcodeType.Code128, ImageMulti),
         Legacy(SymbolFormat.Gs1Code128, "GS1-128", SymbolFamily.Linear, BarcodeType.GS1_128,
             ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
@@ -78,10 +78,10 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.UspsIntelligentMail, "USPS Intelligent Mail", SymbolFamily.Postal, BarcodeType.UspsImb, Standard),
         Legacy(SymbolFormat.KixCode, "KIX Code", SymbolFamily.Postal, BarcodeType.KixCode, Standard),
         Legacy(SymbolFormat.DataMatrix, "Data Matrix", SymbolFamily.Matrix, BarcodeType.DataMatrix,
-            Image | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
+            ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
-        Legacy(SymbolFormat.Pdf417, "PDF417", SymbolFamily.Stacked, BarcodeType.PDF417, Image),
+        Legacy(SymbolFormat.Pdf417, "PDF417", SymbolFamily.Stacked, BarcodeType.PDF417, ImageMulti),
         Legacy(SymbolFormat.MicroPdf417, "MicroPDF417", SymbolFamily.Stacked, BarcodeType.MicroPDF417, Standard)
     };
 
@@ -116,6 +116,11 @@ public static class SymbolCapabilities {
         }
         format = default;
         return false;
+    }
+
+    internal static BarcodeType GetBarcodeType(SymbolFormat format) {
+        var capability = Get(format);
+        return capability.LegacyBarcodeType ?? throw new NotSupportedException($"{format} is not represented by the barcode encoder.");
     }
 
     private static SymbolCapability Entry(SymbolFormat format, string name, SymbolFamily family, SymbolCapabilityFlags operations) {

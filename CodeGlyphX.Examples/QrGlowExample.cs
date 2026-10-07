@@ -10,22 +10,22 @@ internal static class QrGlowExample {
     public static void Run(string outputDir) {
         var payload = QrPayload.Url("https://example.com/qr/glow");
 
-        var options = new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+        var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
+        var options = new QrRenderOptions {
             ModuleSize = 10,
             QuietZone = 4,
             Foreground = new Rgba32(0, 255, 240),
             Background = new Rgba32(255, 255, 255),
-            ModuleShape = QrPngModuleShape.Dot,
+            ModuleShape = QrModuleShape.Dot,
             ModuleScale = 0.9,
-            ModuleScaleMap = new QrPngModuleScaleMapOptions {
-                Mode = QrPngModuleScaleMode.Radial,
+            ModuleScaleMap = new QrModuleScaleMapOptions {
+                Mode = QrModuleScaleMode.Radial,
                 MinScale = 0.82,
                 MaxScale = 1.0,
                 RingSize = 2,
             },
-            ForegroundPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Cycle,
+            ForegroundPalette = new QrPaletteOptions {
+                Mode = QrPaletteMode.Cycle,
                 RingSize = 2,
                 ApplyToEyes = false,
                 Colors = new[] {
@@ -34,11 +34,11 @@ internal static class QrGlowExample {
                     new Rgba32(255, 92, 255),
                 },
             },
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.Glow,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle,
+                FrameStyle = QrEyeFrameStyle.Glow,
+                OuterShape = QrModuleShape.Rounded,
+                InnerShape = QrModuleShape.Circle,
                 OuterColor = new Rgba32(0, 255, 240),
                 InnerColor = new Rgba32(255, 92, 255),
                 OuterCornerRadiusPx = 6,
@@ -47,11 +47,11 @@ internal static class QrGlowExample {
                 GlowAlpha = 130,
                 GlowColor = new Rgba32(0, 200, 255, 200),
             },
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = 24,
                 CornerRadiusPx = 26,
-                BackgroundGradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.DiagonalDown,
+                BackgroundGradient = new QrGradientOptions {
+                    Type = QrGradientType.DiagonalDown,
                     StartColor = new Rgba32(8, 10, 28),
                     EndColor = new Rgba32(28, 18, 64),
                 },
@@ -63,14 +63,14 @@ internal static class QrGlowExample {
             },
         };
 
-        QR.Save(payload, Path.Combine(outputDir, "qr-glow.png"), options);
+        QR.Save(payload, Path.Combine(outputDir, "qr-glow.png"), options, encoding);
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-glow.pdf"),
-            QrCode.Render(payload, OutputFormat.Pdf, options, new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Pdf, options, encoding, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster })
         );
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-glow.eps"),
-            QrCode.Render(payload, OutputFormat.Eps, options, new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Eps, options, encoding, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster })
         );
     }
 }

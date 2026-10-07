@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -252,8 +253,8 @@ public sealed class DataBarVariantsTests {
         AssertMatrixEqual(compatibility, modules);
         Assert.True(MatrixBarcodeDecoder.TryDecode(BarcodeType.GS1DataBarStackedOmni, modules, out var decoded));
         Assert.Equal(value, decoded);
-        Assert.True(MatrixBarcodeDecoder.TryDecodeAny(modules, out var any));
-        Assert.Equal(BarcodeType.GS1DataBarStackedOmni, any.Type);
+        Assert.True(SymbolDecoder.TryDecode(modules, out var any));
+        Assert.Equal(SymbolFormat.Gs1DataBarStackedOmnidirectional, any.Format);
     }
 
     [Fact]

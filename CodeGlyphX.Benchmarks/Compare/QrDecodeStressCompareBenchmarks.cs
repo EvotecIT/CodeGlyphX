@@ -135,22 +135,23 @@ public class QrDecodeStressCompareBenchmarks
             out _,
             out _);
         var options = QrPresets.Logo(logo);
-        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
+        var png = QR.Render(SampleText, OutputFormat.Png, options,
+            new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H, MinVersion = 4 }).ToArray();
         DecodePng(png, out rgba, out width, out height);
     }
 #endif
 
     private static void BuildFancySample(out byte[] rgba, out int width, out int height)
     {
-        var options = new QrEasyOptions { Style = QrRenderStyle.Fancy };
-        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
+        var options = new QrRenderOptions { Style = QrRenderStyle.Fancy };
+        var png = QR.Render(SampleText, OutputFormat.Png, options).ToArray();
         DecodePng(png, out rgba, out width, out height);
     }
 
     private static void BuildResampledSample(out byte[] rgba, out int width, out int height)
     {
-        var options = new QrEasyOptions { ModuleSize = 8 };
-        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
+        var options = new QrRenderOptions { ModuleSize = 8 };
+        var png = QR.Render(SampleText, OutputFormat.Png, options).ToArray();
         DecodePng(png, out var baseRgba, out var baseWidth, out var baseHeight);
 
         var downW = Math.Max(1, (int)Math.Round(baseWidth * 0.62));
@@ -168,8 +169,8 @@ public class QrDecodeStressCompareBenchmarks
 
     private static void BuildNoQuietSample(out byte[] rgba, out int width, out int height)
     {
-        var options = new QrEasyOptions { QuietZone = 0, ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
-        var png = QrCode.Render(SampleText, OutputFormat.Png, options).Data;
+        var options = new QrRenderOptions { QuietZone = 0 };
+        var png = QR.Render(SampleText, OutputFormat.Png, options, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
         DecodePng(png, out rgba, out width, out height);
     }
 
