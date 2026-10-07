@@ -14,7 +14,8 @@ internal static class Program {
             ForceMask = 0
         });
         var appearance = new QrRenderOptions { ModuleSize = 14, QuietZone = 6 };
-        var output = qr.Render(format: OutputFormat.Png, renderOptions: appearance);
+        var outputOptions = new OutputOptions { PngCompressionLevel = 1 };
+        var output = qr.Render(format: OutputFormat.Png, renderOptions: appearance, outputOptions: outputOptions);
         ReadOnlyMemory<byte> bytes = output.Data;
         Require(bytes.Length > 0, "QR output is empty.");
         Require(QR.Render(payload, format: OutputFormat.Svg).GetText().Contains("<svg"), "Default rendering failed.");
@@ -30,7 +31,7 @@ internal static class Program {
 
         using var stream = new MemoryStream();
         stream.WriteByte(255);
-        qr.Save(stream, format: OutputFormat.Png, renderOptions: appearance);
+        qr.Save(stream, format: OutputFormat.Png, renderOptions: appearance, outputOptions: outputOptions);
         Require(stream.CanWrite, "Saving closed the caller's stream.");
         stream.Position = 1;
         var scan = await SymbolScanner.ScanAsync(stream, options: new ScanOptions {
