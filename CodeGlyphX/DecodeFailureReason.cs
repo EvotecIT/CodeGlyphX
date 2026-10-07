@@ -31,5 +31,9 @@ public enum DecodeFailureReason {
     /// <summary>
     /// An unexpected error occurred.
     /// </summary>
-    Error
+    Error,
+    /// <summary>
+    /// The result has not been initialized by a decode attempt.
+    /// </summary>
+    Uninitialized
 }

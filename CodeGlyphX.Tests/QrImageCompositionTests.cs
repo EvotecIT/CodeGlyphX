@@ -124,8 +124,6 @@ public sealed class QrImageCompositionTests {
         Assert.Throws<ArgumentOutOfRangeException>(() => QrImageComposer.Render(qr, new byte[4], 1, 1, new QrImageCompositionOptions { Fit = (QrImageFit)9 }));
         var huge = new QrCode(40, QrErrorCorrectionLevel.H, 0, new BitMatrix(177, 177));
         Assert.Throws<ArgumentException>(() => QrImageComposer.Render(huge, new byte[4], 1, 1, new QrImageCompositionOptions { ModuleSize = 64 }));
-        var inconsistent = new QrCode(40, QrErrorCorrectionLevel.H, 0, qr.Modules);
-        Assert.Throws<ArgumentException>(() => QrImageComposer.Render(inconsistent, new byte[4], 1, 1));
     }
 
     [Theory]

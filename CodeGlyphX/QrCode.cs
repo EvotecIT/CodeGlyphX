@@ -36,11 +36,19 @@ public sealed class QrCode {
     /// <summary>
     /// Creates a new <see cref="QrCode"/>.
     /// </summary>
+    /// <param name="version">QR version from 1 through 40.</param>
+    /// <param name="errorCorrectionLevel">The error correction level represented by the modules.</param>
+    /// <param name="mask">The selected mask pattern from 0 through 7.</param>
+    /// <param name="modules">A square matrix whose width and height equal <c>version * 4 + 17</c>.</param>
     public QrCode(int version, QrErrorCorrectionLevel errorCorrectionLevel, int mask, BitMatrix modules) {
         if (version is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(version));
+        if (errorCorrectionLevel is < QrErrorCorrectionLevel.L or > QrErrorCorrectionLevel.H) throw new ArgumentOutOfRangeException(nameof(errorCorrectionLevel));
         if (mask is < 0 or > 7) throw new ArgumentOutOfRangeException(nameof(mask));
         Modules = modules ?? throw new ArgumentNullException(nameof(modules));
-        if (modules.Width != modules.Height) throw new ArgumentException("Matrix must be square.", nameof(modules));
+        var size = version * 4 + 17;
+        if (modules.Width != size || modules.Height != size) {
+            throw new ArgumentException("Matrix width and height must equal version * 4 + 17.", nameof(modules));
+        }
 
         Version = version;
         ErrorCorrectionLevel = errorCorrectionLevel;
