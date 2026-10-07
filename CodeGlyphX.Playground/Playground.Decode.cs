@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Components.Forms;
 namespace CodeGlyphX.Playground;
 
 public partial class Playground {
+    private const int MaxDecodeImageBytes = 8 * 1024 * 1024;
+
     internal async Task OnDecodeFileChanged(InputFileChangeEventArgs args) {
         _decodeCts?.Cancel();
         _decodeCts = null;
@@ -32,7 +34,7 @@ public partial class Playground {
         _decodeCts = operation;
         IsDecoding = true;
         try {
-            using var stream = file.OpenReadStream(15 * 1024 * 1024, operation.Token);
+            using var stream = file.OpenReadStream(MaxDecodeImageBytes, operation.Token);
             using var buffer = new System.IO.MemoryStream();
             await stream.CopyToAsync(buffer, operation.Token);
             var data = buffer.ToArray();
@@ -60,12 +62,12 @@ public partial class Playground {
                 },
                 Barcode = new BarcodeDecodeOptions { EnableTileScan = !DecodeStopAfterFirst },
                 Image = ImageDecodeOptions.Strict(
-                    maxBytes: 15 * 1024 * 1024,
+                    maxBytes: MaxDecodeImageBytes,
                     maxPixels: 4096L * 4096,
                     maxDimension: DecodeDownscale ? DecodeMaxDimension : 0)
             };
             // Scheduling belongs to the UI; recognition, tiling and deadlines belong to the scanner.
-            var scan = await Task.Run(() => SymbolScanner.Scan(data, options));
+            var scan = await Task.Run(() => SymbolScanner.Scan(data, options), operation.Token);
             if (!ReferenceEquals(_decodeCts, operation)) return;
             foreach (var symbol in scan.Symbols) {
                 AddDecodeResult(SymbolCapabilities.Get(symbol.Format).DisplayName, symbol.Text);
@@ -90,7 +92,7 @@ public partial class Playground {
             if (ReferenceEquals(_decodeCts, operation)) DecodeStatus = "Decode cancelled.";
         }
         catch (System.IO.IOException) {
-            if (ReferenceEquals(_decodeCts, operation)) DecodeError = "The image could not be read. Upload a file smaller than 15 MB.";
+            if (ReferenceEquals(_decodeCts, operation)) DecodeError = "The image could not be read. Upload a file no larger than 8 MiB.";
         }
         finally {
             if (ReferenceEquals(_decodeCts, operation)) {

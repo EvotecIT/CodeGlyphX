@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 
+namespace CodeGlyphX.PackageConsumer;
+
 internal static class Program {
     private static async Task Main() {
         const string payload = "PACKAGE-CONTRACT";

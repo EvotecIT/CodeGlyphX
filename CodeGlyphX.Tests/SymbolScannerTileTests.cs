@@ -45,7 +45,7 @@ public sealed class SymbolScannerTileTests {
                 EnableTileScan = true, MaxDimension = 2048
             };
             options.Barcode = new BarcodeDecodeOptions { EnableTileScan = false };
-            options.Image = ImageDecodeOptions.Strict(maxBytes: 15 * 1024 * 1024,
+            options.Image = ImageDecodeOptions.Strict(maxBytes: 8 * 1024 * 1024,
                 maxPixels: 4096L * 4096, maxDimension: 2048);
         }
 

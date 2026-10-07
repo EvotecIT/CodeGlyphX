@@ -110,15 +110,13 @@ internal static class QrDecodeSampleFactory {
     }
 
     public static QrDecodeScenarioData BuildJpegCompressedGenerated(string payload = DefaultPayload, int quality = 60) {
-        return RenderQrImage(payload, OutputFormat.Jpeg, options => options.JpegQuality = quality);
+        return RenderQrImage(payload, OutputFormat.Jpeg, outputOptions: new OutputOptions { JpegQuality = quality });
     }
 
     public static QrDecodeScenarioData BuildJpegBlurGenerated(string payload = DefaultPayload, int quality = 35, int blurRadius = 1) {
-        return BuildWithTransform(
-            payload,
-            OutputFormat.Jpeg,
-            options => options.JpegQuality = quality,
-            data => QrDecodeImageOps.ApplyBoxBlur(data.Rgba, data.Width, data.Height, data.Stride, blurRadius));
+        var data = BuildJpegCompressedGenerated(payload, quality);
+        QrDecodeImageOps.ApplyBoxBlur(data.Rgba, data.Width, data.Height, data.Stride, blurRadius);
+        return data;
     }
 
     public static QrDecodeScenarioData BuildSaltPepperGenerated(string payload = DefaultPayload, double probability = 0.02, int seed = 1337) {
@@ -176,10 +174,10 @@ internal static class QrDecodeSampleFactory {
         return new QrDecodeScenarioData(pixels, data.Width, data.Height);
     }
 
-    private static QrDecodeScenarioData RenderQrImage(string payload, OutputFormat format, Action<QrRenderOptions>? configure = null, QrEncodingOptions? encodingOptions = null) {
+    private static QrDecodeScenarioData RenderQrImage(string payload, OutputFormat format, Action<QrRenderOptions>? configure = null, QrEncodingOptions? encodingOptions = null, OutputOptions? outputOptions = null) {
         var options = new QrRenderOptions { ModuleSize = 8 };
         configure?.Invoke(options);
-        var data = QR.Render(payload, format, options, encodingOptions).ToArray();
+        var data = QR.Render(payload, format, options, encodingOptions, outputOptions).ToArray();
         if (!ImageReader.TryDecodeRgba32(data, out var rgba, out var width, out var height)) {
             throw new InvalidOperationException($"Failed to decode generated QR {format} sample.");
         }

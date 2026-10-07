@@ -12,6 +12,18 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed partial class PlaygroundLivePreviewTests {
+    [Fact]
+    public async Task DecodeRejectsOversizedUploadsBeforeReadingContent() {
+        await using var renderer = new PlaygroundRenderer();
+        await renderer.Start();
+        await renderer.Change("onchange", e => e.Tag == "select" && e.Attribute("value") == "Generate", "Decode");
+        await renderer.Upload("Drop an image here", new OversizedImageFile());
+        Assert.Contains(renderer.Elements(), e => e.Tag == "p" && e.Text == "The image could not be read. Upload a file no larger than 8 MiB.");
+        Assert.DoesNotContain(renderer.Elements(), e => e.Tag == "img" && e.Attribute("alt") == "Uploaded code");
+        Assert.DoesNotContain(renderer.Elements(), e => e.Tag == "button" && e.Text.Trim() == "Cancel");
+        Assert.Empty(renderer.Errors);
+    }
+
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
@@ -56,6 +68,17 @@ public sealed partial class PlaygroundLivePreviewTests {
         Assert.Contains(renderer.Elements(), e => e.Tag == "p" && e.Attribute("role") == "alert");
         Assert.Equal(before, renderer.Elements().Single(e => e.Attribute("download") == "qrcode.png").Attribute("href"));
         Assert.Empty(renderer.Errors);
+    }
+
+    private sealed class OversizedImageFile : IBrowserFile {
+        public string Name => "oversized.png";
+        public DateTimeOffset LastModified => DateTimeOffset.UnixEpoch;
+        public long Size => 8 * 1024 * 1024 + 1;
+        public string ContentType => "image/png";
+        public Stream OpenReadStream(long maxAllowedSize = 512000, CancellationToken cancellationToken = default) {
+            if (Size > maxAllowedSize) throw new IOException("Browser file exceeds its stream limit.");
+            throw new InvalidOperationException("Oversized content must not be read.");
+        }
     }
 
     // A delayed browser stream models the real asynchronous InputFile boundary without a clock or product hook.

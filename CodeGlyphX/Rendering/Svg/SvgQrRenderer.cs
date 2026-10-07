@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
+using CodeGlyphX.Rendering.Vector;
 
 namespace CodeGlyphX.Rendering.Svg;
 
@@ -14,6 +15,7 @@ public static class SvgQrRenderer {
     /// <summary>
     /// Renders the QR module matrix to an SVG string.
     /// </summary>
+    /// <exception cref="NotSupportedException">The requested module or eye appearance cannot be preserved in SVG.</exception>
     public static string Render(BitMatrix modules, QrSvgRenderOptions opts) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (opts is null) throw new ArgumentNullException(nameof(opts));
@@ -23,6 +25,7 @@ public static class SvgQrRenderer {
         if (opts.ModuleScale is <= 0 or > 1.0) throw new ArgumentOutOfRangeException(nameof(opts.ModuleScale));
         opts.ForegroundGradient?.Validate();
         opts.Eyes?.Validate();
+        QrVectorStyleValidation.ValidateSvg(opts.ModuleShape, opts.Eyes);
 
         opts.DarkColor = RenderSanitizer.SafeCssColor(opts.DarkColor, RenderDefaults.QrForegroundCss);
         opts.LightColor = RenderSanitizer.SafeCssColor(opts.LightColor, RenderDefaults.QrBackgroundCss);
@@ -259,8 +262,6 @@ public static class SvgQrRenderer {
         if (scale <= 0) return;
         if (scale > 1.0) scale = 1.0;
 
-        if (shape == QrModuleShape.ConnectedRounded) shape = QrModuleShape.Rounded;
-        if (shape == QrModuleShape.ConnectedSquircle) shape = QrModuleShape.Squircle;
         if (shape == QrModuleShape.Dot) scale *= QrPngShapeDefaults.DotScale;
         if (shape == QrModuleShape.DotGrid) {
             AppendDotGrid(sb, cellX, cellY, cellSize, scale, fill);

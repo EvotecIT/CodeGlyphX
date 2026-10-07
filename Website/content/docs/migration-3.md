@@ -137,7 +137,7 @@ var matrix = MatrixBarcode.Encode(SymbolFormat.DataMatrix, "LOT-2026-0042");
 Console.WriteLine(matrix.Format);
 ```
 
-Specialist matrix encoders return symbols that retain their format metadata. `DataMatrixCode.Encode` (including GS1, Macro and structured-append helpers), `Pdf417Code.Encode`, `AztecCode.Encode`, `DotCodeCode.Encode` and `HanXinCode.Encode` return typed symbol objects; pass `symbol.Modules` to expert matrix decoders or generic square-module renderers. MaxiCode uses its dedicated renderer because its hexagonal geometry cannot be represented faithfully by square modules. Low-level barcode encoders and decoders still use `BarcodeType` where their format-specific contract requires it.
+Specialist matrix encoders return symbols that retain their format metadata. `DataMatrixCode.Encode` (including GS1, Macro and structured-append helpers), `Pdf417Code.Encode`, `AztecCode.Encode`, `DotCodeCode.Encode` and `HanXinCode.Encode` return typed symbol objects; pass `symbol.Modules` to expert matrix decoders or generic square-module renderers. `MaxiCodeCode.Encode` returns a `MaxiCodeSymbol` for encoding and sampled-module decoding. MaxiCode rendering is unavailable: its hexagonal modules and central bullseye cannot be represented faithfully by the generic square-module renderers, and `MatrixBarcode` rejects that format. Low-level barcode encoders and decoders still use `BarcodeType` where their format-specific contract requires it.
 
 ## Ownership, streams and cancellation
 

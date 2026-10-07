@@ -35,6 +35,7 @@ public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Gets or sets the module shape.
     /// </summary>
+    /// <remarks>Connected module shapes require raster output and are rejected by the SVG renderer.</remarks>
     public QrModuleShape ModuleShape { get; set; } = QrModuleShape.Square;
 
     /// <summary>
@@ -55,5 +56,6 @@ public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Optional eye (finder) styling overrides.
     /// </summary>
+    /// <remarks>Raster frame effects, per-eye arrays, accents and connected shapes are rejected rather than silently omitted.</remarks>
     public QrEyeOptions? Eyes { get; set; }
 }
