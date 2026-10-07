@@ -174,7 +174,13 @@ public static partial class QrEasy {
         if (opts.TextEncoding.HasValue) {
             return QrCodeEncoder.EncodeText(payload, opts.TextEncoding.Value, ecc, opts.MinVersion, opts.MaxVersion, opts.ForceMask, opts.IncludeEci);
         }
-        return QrCodeEncoder.EncodeText(payload, ecc, opts.MinVersion, opts.MaxVersion, opts.ForceMask);
+        return QrCodeEncoder.EncodeText(payload, new QrEncodingOptions {
+            ErrorCorrectionLevel = ecc,
+            MinVersion = opts.MinVersion,
+            MaxVersion = opts.MaxVersion,
+            ForceMask = opts.ForceMask,
+            EciMode = opts.IncludeEci ? QrEciMode.Auto : QrEciMode.Never
+        });
     }
 
     private static QrEasyOptions MergeOptions(QrPayloadData payload, QrEasyOptions? options) {
