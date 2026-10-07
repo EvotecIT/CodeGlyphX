@@ -40,13 +40,13 @@ public sealed class QrDecodingSamplesTests {
     }
 
     [Theory]
-    [InlineData("Assets/DecodingSamples/qr-clean-small.png", "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=jnll6mrqknd57pmn&issuer=Microsoft")]
+    [InlineData("Assets/DecodingSamples/qr-clean-small.png", SyntheticQrFixtureData.Clean)]
     [InlineData("Assets/DecodingSamples/qr-clean-large.png", "This is a quick test! 123#?")]
     [InlineData("Assets/DecodingSamples/qr-dot-aa.png", "DOT-AA")]
     [InlineData("Assets/DecodingSamples/qr-dot-aa-soft.png", "DOT-AA-SOFT")]
     [InlineData("Assets/DecodingSamples/qr-dot-antialiasing-twitter.png", "This is a quick test! 123#?")]
     [InlineData("Assets/DecodingSamples/qr-generator-ui.png", "https://qrstud.io/qrmnky")]
-    [InlineData("Assets/DecodingSamples/qr-noisy-ui.png", "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=pqhjwcgzncvzykhd&issuer=Microsoft")]
+    [InlineData("Assets/DecodingSamples/qr-noisy-ui.png", SyntheticQrFixtureData.Noisy)]
     [InlineData("Assets/DecodingSamples/qr-art-dots-variants.png", "http://jess3.com")]
     [InlineData("Assets/DecodingSamples/qr-art-jess3-characters-grid.png", "http://jess3.com")]
     [InlineData("Assets/DecodingSamples/qr-art-jess3-characters-splash.png", "http://jess3.com")]
@@ -166,7 +166,7 @@ public sealed class QrDecodingSamplesTests {
         };
 
         Assert.True(QrDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, options));
-        Assert.Contains("otpauth://", decoded.Text, StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(SyntheticQrFixtureData.Noisy, decoded.Text);
     }
 
     [Fact]
