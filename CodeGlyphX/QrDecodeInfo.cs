@@ -32,16 +32,20 @@ public enum QrDecodeFailureReason {
     /// Decoding was cancelled.
     /// </summary>
     Cancelled = 6,
+    /// <summary>No decoding attempt has initialized the diagnostics.</summary>
+    Uninitialized = 7,
 }
 
 /// <summary>
 /// Diagnostics returned by QR decoding attempts.
 /// </summary>
 public readonly struct QrDecodeInfo {
+    private readonly bool _initialized;
+    private readonly QrDecodeFailureReason _failure;
     /// <summary>
     /// Gets the failure reason.
     /// </summary>
-    public QrDecodeFailureReason Failure { get; }
+    public QrDecodeFailureReason Failure => _initialized ? _failure : QrDecodeFailureReason.Uninitialized;
 
     /// <summary>
     /// Gets the decoded QR version (1..40) when available.
@@ -79,6 +83,7 @@ public readonly struct QrDecodeInfo {
         QrDecodeFailureReason.ReedSolomon => $"reed-solomon failed (v{Version}, {ErrorCorrectionLevel}, m{Mask})",
         QrDecodeFailureReason.Payload => $"payload parse failed (v{Version}, {ErrorCorrectionLevel}, m{Mask})",
         QrDecodeFailureReason.Cancelled => "cancelled",
+        QrDecodeFailureReason.Uninitialized => "QR decode diagnostics are uninitialized",
         _ => "unknown failure"
     };
 
@@ -88,7 +93,10 @@ public readonly struct QrDecodeInfo {
         QrErrorCorrectionLevel errorCorrectionLevel,
         int mask,
         int formatBestDistance) {
-        Failure = failure;
+        _failure = failure == QrDecodeFailureReason.None && version is < 1 or > 40
+            ? QrDecodeFailureReason.Uninitialized
+            : failure;
+        _initialized = true;
         Version = version;
         ErrorCorrectionLevel = errorCorrectionLevel;
         Mask = mask;

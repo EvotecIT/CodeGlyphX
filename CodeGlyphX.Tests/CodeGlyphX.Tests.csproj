@@ -34,7 +34,9 @@
     <Compile Include="ValueContractTests.cs" />
     <Compile Include="RenderedOutputOwnershipTests.cs" />
     <Compile Include="IndependentPngPixelTests.cs" />
-    <Compile Include="QrEasyTests.cs" />
+    <Compile Include="QrDecodeInfoTests.cs" />
+    <Compile Include="QrApiTests.cs" />
+    <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />
     <Compile Include="QrProceduralArtTests.cs" />
