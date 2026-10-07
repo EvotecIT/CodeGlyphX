@@ -9,6 +9,8 @@ CodeGlyphX currently describes {{FORMAT_COUNT}} physical symbol formats through 
 
 “Module decode” means CodeGlyphX can decode an already sampled `BitMatrix` or module sequence. “Image scan” means `SymbolScanner` can recognize the format from pixels. A module-only format is not presented as camera/image recognition support.
 
+“Default scan” identifies formats selected when `ScanOptions.Formats` is null or empty. Pharmacode and PatchCode require explicit selection because their patterns can match unrelated content. Check `IsDefaultScanFormat` when building a format picker that follows the scanner defaults.
+
 {{CAPABILITY_TABLE}}
 
 ## Check a capability at runtime

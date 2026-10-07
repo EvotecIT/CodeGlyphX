@@ -108,6 +108,10 @@ Console.WriteLine(scan.CompletionReason);
 
 `Status == Success` means at least one symbol was decoded. `CompletionReason` records whether the requested scan completed, reached `MaxSymbols`, was cancelled or exceeded its deadline. Partial results stay available after cancellation or a deadline. `IsPartial` also reports when a symbol limit stopped the scan. `MaxSymbols = 1` requests the first match; it does not establish that the image contains only one symbol.
 
+The default total deadline is 500 ms, including when options are omitted or created with `new ScanOptions()`. Set `TimeoutMilliseconds = 0` explicitly for an unlimited total budget, or select a longer deadline for expensive scans. Deadlines remain cooperative.
+
+Null or empty `Formats` selects the catalogue's default image formats. Pharmacode and PatchCode require explicit selection because their simple patterns can match unrelated content. Use `SymbolCapability.IsDefaultScanFormat` when building a picker that follows this policy; `CanScanImages` also includes formats that require this opt-in. Pharmacode Two-Track remains module-only.
+
 Replace `CodeGlyphBudget` scopes with `ScanOptions.TimeoutMilliseconds` for one cooperative deadline across reading, image decoding and recognition. For specialist calls, use `ImageDecodeOptions.RecognitionBudgetMilliseconds` or `QrPixelDecodeOptions.BudgetMilliseconds`; these recognition budgets do not time the image codec.
 
 `RawBytes` are the bytes recovered by a decoder that exposes them. `HasRawBytes` distinguishes unavailable bytes from a decoded empty payload. Do not reconstruct original encoded bytes by applying UTF-8 to `Text`. Family-specific information belongs in typed metadata rather than a nullable union of unrelated decoder result types. Unpopulated `FrameIndex` and `PageIndex` properties are removed; a scan processes the image selected by the image reader, not every frame or page.

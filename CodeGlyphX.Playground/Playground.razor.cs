@@ -193,6 +193,7 @@ public partial class Playground {
     internal bool DecodeQr { get; set; } = true;
     internal bool DecodeBarcode { get; set; } = true;
     internal bool DecodeMatrix { get; set; } = true;
+    internal bool DecodeIncludeAmbiguousFormats { get; set; }
     internal bool DecodeDownscale { get; set; } = true;
     internal bool DecodeStopAfterFirst { get; set; } = true;
     internal string DecodeQualityPreset { get; set; } = "Balanced";

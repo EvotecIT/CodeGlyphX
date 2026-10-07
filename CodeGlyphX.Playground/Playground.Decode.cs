@@ -18,6 +18,7 @@ public partial class Playground {
 
         var formats = SymbolCapabilities.All
             .Where(capability => capability.CanScanImages &&
+                (DecodeIncludeAmbiguousFormats || capability.IsDefaultScanFormat) &&
                 (capability.Format is SymbolFormat.QrCode or SymbolFormat.MicroQrCode ? DecodeQr :
                  capability.Family == SymbolFamily.Linear ? DecodeBarcode : DecodeMatrix))
             .Select(capability => capability.Format)

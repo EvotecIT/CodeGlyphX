@@ -52,6 +52,19 @@ foreach (var symbol in scan.Symbols) {
 
 `TimeoutMilliseconds` covers compressed-image decoding, pixel conversion, and the complete recognition sequence. Cancellation and decoder budgets remain cooperative rather than hard real-time limits. Requested module-only formats are returned in `ScanResult.UnsupportedFormats` instead of being advertised as image-scannable.
 
+The default total deadline is 500 ms, whether options are omitted or created with `new ScanOptions()`. Set `TimeoutMilliseconds = 0` explicitly to disable the total deadline. Choose a longer deadline when scanning large images or requesting more recognition attempts.
+
+Null or empty `Formats` uses the catalogue's default image formats, exposed by `SymbolCapability.IsDefaultScanFormat`. Pharmacode and PatchCode are excluded from this automatic selection because their patterns can match unrelated content. Request them explicitly when expected:
+
+```csharp
+var pharmacodeScan = SymbolScanner.Scan(image, new ScanOptions {
+    Formats = new[] { SymbolFormat.Pharmacode },
+    TimeoutMilliseconds = 1000
+});
+```
+
+Pharmacode Two-Track supports module decoding only; explicitly requesting it from the image scanner reports it in `UnsupportedFormats`.
+
 Raw camera and interop buffers use the same scanner without a compressed-image codec:
 
 ```csharp
