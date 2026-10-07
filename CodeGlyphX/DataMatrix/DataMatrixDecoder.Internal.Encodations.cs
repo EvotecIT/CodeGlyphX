@@ -82,7 +82,7 @@ public static partial class DataMatrixDecoder {
             var cw2 = data[index + 1];
             index += 2;
 
-            ParseTwoBytes(cw1, cw2, out var c1, out var c2, out var c3);
+            if (!ParseTwoBytes(cw1, cw2, out var c1, out var c2, out var c3)) return DataMatrixEncodation.Invalid;
             DecodeX12Value(c1, sb, ref upperShift);
             DecodeX12Value(c2, sb, ref upperShift);
             DecodeX12Value(c3, sb, ref upperShift);
@@ -141,24 +141,28 @@ public static partial class DataMatrixDecoder {
         return DataMatrixEncodation.Ascii;
     }
 
-    private static void DecodeBase256Segment(
+    private static bool DecodeBase256Segment(
         PixelSpan data,
         ref int index,
         StringBuilder sb,
         int? eciAssignmentNumber) {
-        if (index >= data.Length) return;
+        if (index >= data.Length) return false;
 
         var lenCodeword = Unrandomize255(data[index], index + 1);
         index++;
         var length = lenCodeword;
         if (lenCodeword >= 250) {
-            if (index >= data.Length) return;
+            if (index >= data.Length) return false;
             var len2 = Unrandomize255(data[index], index + 1);
             index++;
             length = (lenCodeword - 249) * 250 + len2;
         }
 
-        if (length <= 0) return;
+        // A zero length field means that all remaining data codewords belong
+        // to this binary segment; zero-valued payload bytes remain valid.
+        if (length == 0) length = data.Length - index;
+        if (length > data.Length - index) return false;
+        if (length == 0) return true;
 
         var rented = ArrayPool<byte>.Shared.Rent(length);
         var count = 0;
@@ -169,9 +173,8 @@ public static partial class DataMatrixDecoder {
                 index++;
             }
 
-            if (count == 0) return;
-
             sb.Append(DecodeBase256Bytes(rented, count, eciAssignmentNumber));
+            return true;
         } finally {
             ArrayPool<byte>.Shared.Return(rented);
         }
@@ -198,12 +201,17 @@ public static partial class DataMatrixDecoder {
         sb.Append(value);
     }
 
-    private static void ParseTwoBytes(byte cw1, byte cw2, out int c1, out int c2, out int c3) {
+    private static bool ParseTwoBytes(byte cw1, byte cw2, out int c1, out int c2, out int c3) {
         var full = (cw1 << 8) + cw2 - 1;
+        if (full < 0 || full >= 64000) {
+            c1 = c2 = c3 = 0;
+            return false;
+        }
         c1 = full / 1600;
         var rem = full % 1600;
         c2 = rem / 40;
         c3 = rem % 40;
+        return true;
     }
 
     private static int Unrandomize255(byte value, int position) {
@@ -219,8 +227,9 @@ public static partial class DataMatrixDecoder {
         return value;
     }
 
-    private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BitMatrix modules) {
+    private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BitMatrix modules, out ImageSamplingGrid sampling) {
         modules = null!;
+        sampling = default;
         if (width <= 0 || height <= 0 || stride <= 0) return false;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
@@ -240,22 +249,8 @@ public static partial class DataMatrixDecoder {
         var rows = (int)Math.Round((double)box.Height / moduleSize);
         if (cols <= 0 || rows <= 0) return false;
 
-        modules = new BitMatrix(cols, rows);
-        var half = moduleSize / 2.0;
-        for (var y = 0; y < rows; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-            var sy = (int)Math.Round(box.Top + (y * moduleSize) + half);
-            sy = Clamp(sy, 0, height - 1);
-            for (var x = 0; x < cols; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                var sx = (int)Math.Round(box.Left + (x * moduleSize) + half);
-                sx = Clamp(sx, 0, width - 1);
-                var dark = IsDark(pixels, width, height, stride, format, sx, sy);
-                modules[x, y] = invert ? !dark : dark;
-            }
-        }
-
-        return true;
+        sampling = new ImageSamplingGrid(box, invert, moduleSize, cols, rows);
+        return TrySampleGrid(pixels, width, height, stride, format, box, invert, cols, rows, cancellationToken, out modules);
     }
 
     private static bool TryEstimateModuleSize(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, bool invert, CancellationToken cancellationToken, out int moduleSize) {
@@ -364,6 +359,8 @@ public static partial class DataMatrixDecoder {
         }
 
         var lum = (r * 77 + g * 150 + b * 29) >> 8;
+        var alpha = pixels[p + 3];
+        if (alpha < 255) lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
         return lum < 128;
     }
 

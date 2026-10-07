@@ -23,7 +23,8 @@ public static partial class DataMatrixDecoder {
         Text,
         X12,
         Edifact,
-        Base256
+        Base256,
+        Invalid
     }
 
     private static readonly char[] C40_SHIFT2_SET_CHARS = {

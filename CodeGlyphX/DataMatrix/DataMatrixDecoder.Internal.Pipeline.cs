@@ -16,6 +16,7 @@ namespace CodeGlyphX.DataMatrix;
 
 public static partial class DataMatrixDecoder {
     private sealed class DataMatrixDecodeState {
+        public bool IsValid { get; set; } = true;
         public bool CanBeGs1Header { get; set; } = true;
         public bool IsGs1 { get; set; }
         public DataMatrixStructuredAppend? StructuredAppend { get; set; }
@@ -26,12 +27,16 @@ public static partial class DataMatrixDecoder {
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-            if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-            var mirror = MirrorX(modules);
-            if (TryDecodeWithRotations(mirror, cancellationToken, out value)) return true;
+        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) {
+            // Two grid candidates at most: the original integer estimate and a
+            // clock-derived alternative. Each must pass framing, ECC, and payload validation.
+            for (var attempt = 0; attempt < 2; attempt++) {
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
+                if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
+                if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
+                if (TryDecodeWithRotations(MirrorX(modules), cancellationToken, out value)) return true;
+            }
         }
         value = string.Empty;
         return false;
@@ -39,17 +44,28 @@ public static partial class DataMatrixDecoder {
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, DataMatrixDecodeDiagnostics diagnostics) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-            if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-            diagnostics.MirroredTried = true;
-            var mirror = MirrorX(modules);
-            if (TryDecodeWithRotations(mirror, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
+        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) {
+            for (var attempt = 0; attempt < 2; attempt++) {
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+                if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
+                if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) {
+                    diagnostics.Success = true;
+                    diagnostics.Failure = null;
+                    return true;
+                }
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+                diagnostics.MirroredTried = true;
+                if (TryDecodeWithRotations(MirrorX(modules), cancellationToken, diagnostics, out value)) {
+                    diagnostics.Success = true;
+                    diagnostics.Failure = null;
+                    return true;
+                }
+            }
         } else {
             diagnostics.Failure ??= "Failed to extract Data Matrix modules.";
         }
         value = string.Empty;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) diagnostics.Failure = "Cancelled.";
         diagnostics.Failure ??= "No Data Matrix decoded.";
         return false;
     }
@@ -154,6 +170,7 @@ public static partial class DataMatrixDecoder {
     }
 
     private static BitMatrix? ExtractDataRegion(BitMatrix modules, DataMatrixSymbolInfo symbol, CancellationToken cancellationToken) {
+        if (!HasValidRegionBorders(modules, symbol, cancellationToken)) return null;
         var dataRegion = new BitMatrix(symbol.DataRegionCols, symbol.DataRegionRows);
         var regionRows = symbol.RegionRows;
         var regionCols = symbol.RegionCols;
@@ -230,8 +247,9 @@ public static partial class DataMatrixDecoder {
             dataOffset += dataBlocks[b].Length;
         }
 
-        value = DecodeData(data, cancellationToken, decodeState ?? new DataMatrixDecodeState());
-        if (DecodeBudget.ShouldAbort(cancellationToken)) return Fail(out value);
+        var state = decodeState ?? new DataMatrixDecodeState();
+        value = DecodeData(data, cancellationToken, state);
+        if (!state.IsValid || DecodeBudget.ShouldAbort(cancellationToken)) return Fail(out value);
         return true;
     }
 
@@ -254,7 +272,7 @@ public static partial class DataMatrixDecoder {
         int? activeEciAssignment = null;
         var asciiEciBytes = new List<byte>();
 
-        while (index < data.Length) {
+        while (index < data.Length && state.IsValid) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) break;
             switch (mode) {
                 case DataMatrixEncodation.Ascii:
@@ -274,15 +292,16 @@ public static partial class DataMatrixDecoder {
                     break;
                 case DataMatrixEncodation.Base256:
                     FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
-                    DecodeBase256Segment(data, ref index, sb, activeEciAssignment);
+                    if (!DecodeBase256Segment(data, ref index, sb, activeEciAssignment)) state.IsValid = false;
                     mode = DataMatrixEncodation.Ascii;
                     break;
                 default:
-                    index = data.Length;
+                    state.IsValid = false;
                     break;
             }
         }
 
+        if (upperShift || mode == DataMatrixEncodation.Base256 || mode == DataMatrixEncodation.Invalid) state.IsValid = false;
         FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
         if (!string.IsNullOrEmpty(macroTrailer)) sb.Append(macroTrailer);
         return sb.ToString();
@@ -300,6 +319,14 @@ public static partial class DataMatrixDecoder {
         if (index >= data.Length) return DataMatrixEncodation.Ascii;
 
         var cw = data[index++];
+
+        // Zero is never an ASCII codeword. Binary zero and 255 remain valid in
+        // Base256, and upper shift represents extended ASCII without this cast.
+        if (cw == 0 || (upperShift && cw > 128) ||
+            (cw >= 242 && (cw != 254 || index != data.Length))) {
+            state.IsValid = false;
+            return DataMatrixEncodation.Ascii;
+        }
 
         if (cw == 129) {
             index = data.Length;
@@ -350,8 +377,9 @@ public static partial class DataMatrixDecoder {
                         fileId1,
                         fileId2);
                     if (metadata.IsValid) state.StructuredAppend = metadata;
+                    else state.IsValid = false;
                 } else {
-                    index = data.Length;
+                    state.IsValid = false;
                 }
                 return DataMatrixEncodation.Ascii;
             case 234:
@@ -395,7 +423,7 @@ public static partial class DataMatrixDecoder {
                     FlushAsciiEciBytes(sb, asciiEciBytes, activeEciAssignment);
                     state.EciAssignments.Add(assignmentNumber);
                     activeEciAssignment = assignmentNumber;
-                }
+                } else state.IsValid = false;
                 return DataMatrixEncodation.Ascii;
             default:
                 return DataMatrixEncodation.Ascii;
@@ -463,12 +491,17 @@ public static partial class DataMatrixDecoder {
         out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
         decoded = null!;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        if (!TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules)) return false;
-        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics)) return true;
-        if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (diagnostics is not null) diagnostics.MirroredTried = true;
-        return TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded, diagnostics);
+        if (!TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) return false;
+        for (var attempt = 0; attempt < 2; attempt++) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
+            if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics)) return true;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+            if (diagnostics is not null) diagnostics.MirroredTried = true;
+            if (TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded, diagnostics)) return true;
+        }
+        decoded = null!;
+        return false;
     }
 
     private static bool TryDecodeDetailedWithRotations(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
@@ -505,7 +538,7 @@ public static partial class DataMatrixDecoder {
             var cw2 = data[index + 1];
             index += 2;
 
-            ParseTwoBytes(cw1, cw2, out var c1, out var c2, out var c3);
+            if (!ParseTwoBytes(cw1, cw2, out var c1, out var c2, out var c3)) return DataMatrixEncodation.Invalid;
             DecodeC40TextValue(c1, sb, isText, ref shift, ref upperShift);
             DecodeC40TextValue(c2, sb, isText, ref shift, ref upperShift);
             DecodeC40TextValue(c3, sb, isText, ref shift, ref upperShift);

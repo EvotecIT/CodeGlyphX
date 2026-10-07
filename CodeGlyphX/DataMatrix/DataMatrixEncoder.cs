@@ -271,6 +271,9 @@ public static partial class DataMatrixEncoder {
     }
 
     private static List<byte> EncodeBase256(ReadOnlySpan<byte> data, int positionOffset = 0) {
+        // A Base256 zero length field consumes the remaining symbol capacity;
+        // an empty payload must instead leave the encoder to add ASCII padding.
+        if (data.Length == 0) return new List<byte>();
         var codewords = new List<byte>(data.Length + 4) { 231 };
         if (data.Length <= 249) {
             codewords.Add((byte)data.Length);
@@ -316,6 +319,9 @@ public static partial class DataMatrixEncoder {
     }
 
     private static List<byte> EncodeBase256(byte[] data, int positionOffset = 0) {
+        // A Base256 zero length field consumes the remaining symbol capacity;
+        // an empty payload must instead leave the encoder to add ASCII padding.
+        if (data.Length == 0) return new List<byte>();
         var codewords = new List<byte>(data.Length + 4) { 231 };
         if (data.Length <= 249) {
             codewords.Add((byte)data.Length);
