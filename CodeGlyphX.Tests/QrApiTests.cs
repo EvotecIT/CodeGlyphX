@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
+using CodeGlyphX.Rendering.Ascii;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -112,6 +113,17 @@ public sealed class QrApiTests {
         Assert.Equal(QrErrorCorrectionLevel.Q, builder.Encode().ErrorCorrectionLevel);
         Assert.Equal(5, builder.Rendering.ModuleSize);
         Assert.Equal(QrErrorCorrectionLevel.H, Otp.Totp("Example", "user", "JBSWY3DPEHPK3PXP").Encode().ErrorCorrectionLevel);
+    }
+
+    [Fact]
+    public void Render_DoesNotMutateCallerOwnedAsciiLayout() {
+        var ascii = new MatrixAsciiRenderOptions { QuietZone = RenderDefaults.QrQuietZone };
+        var extras = new RenderExtras { MatrixAscii = ascii };
+
+        var text = QR.Render("ASCII", OutputFormat.Ascii, new QrRenderOptions { QuietZone = 6 }, extras: extras).GetText();
+
+        Assert.NotEmpty(text);
+        Assert.Equal(RenderDefaults.QrQuietZone, ascii.QuietZone);
     }
 
     private static void AssertSameModules(QrCode expected, QrCode actual) {

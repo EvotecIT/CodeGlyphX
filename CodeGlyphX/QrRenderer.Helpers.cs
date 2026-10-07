@@ -139,7 +139,7 @@ internal static partial class QrRenderer {
     }
 
     private static MatrixAsciiRenderOptions BuildAsciiOptions(MatrixAsciiRenderOptions? asciiOptions, QrRenderOptions opts) {
-        var resolved = asciiOptions ?? new MatrixAsciiRenderOptions();
+        var resolved = asciiOptions?.Clone() ?? new MatrixAsciiRenderOptions();
         if (asciiOptions is null || asciiOptions.QuietZone == RenderDefaults.QrQuietZone) {
             resolved.QuietZone = opts.QuietZone;
         }

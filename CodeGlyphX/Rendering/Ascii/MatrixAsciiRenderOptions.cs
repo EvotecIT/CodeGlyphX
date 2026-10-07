@@ -106,4 +106,6 @@ public sealed partial class MatrixAsciiRenderOptions {
     /// When true, also colorizes light modules; otherwise leaves them uncolored.
     /// </summary>
     public bool AnsiColorizeLight { get; set; }
+    // Renderers read nested color settings without modifying them; scalar layout overrides need their own copy.
+    internal MatrixAsciiRenderOptions Clone() => (MatrixAsciiRenderOptions)MemberwiseClone();
 }
