@@ -60,7 +60,7 @@ public partial class Playground {
                 Barcode = new BarcodeDecodeOptions { EnableTileScan = !DecodeStopAfterFirst },
                 Image = ImageDecodeOptions.Strict(
                     maxBytes: 15 * 1024 * 1024,
-                    maxPixels: 16_000_000,
+                    maxPixels: 4096L * 4096,
                     maxDimension: DecodeDownscale ? DecodeMaxDimension : 0)
             };
             // Scheduling belongs to the UI; recognition, tiling and deadlines belong to the scanner.

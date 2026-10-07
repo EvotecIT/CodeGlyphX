@@ -9,6 +9,7 @@ using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
+using BackgroundPatternType = CodeGlyphX.Rendering.QrBackgroundPatternType;
 using CodeGlyphX.Rendering.Png;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -121,15 +122,15 @@ public partial class Playground {
         };
     }
 
-    internal static QrBackgroundPatternType ParsePatternType(string mode)
+    internal static BackgroundPatternType ParsePatternType(string mode)
     {
         return mode switch
         {
-            "Grid" => QrBackgroundPatternType.Grid,
-            "Checker" => QrBackgroundPatternType.Checker,
-            "DiagonalStripes" => QrBackgroundPatternType.DiagonalStripes,
-            "Crosshatch" => QrBackgroundPatternType.Crosshatch,
-            _ => QrBackgroundPatternType.Dots
+            "Grid" => BackgroundPatternType.Grid,
+            "Checker" => BackgroundPatternType.Checker,
+            "DiagonalStripes" => BackgroundPatternType.DiagonalStripes,
+            "Crosshatch" => BackgroundPatternType.Crosshatch,
+            _ => BackgroundPatternType.Dots
         };
     }
 
