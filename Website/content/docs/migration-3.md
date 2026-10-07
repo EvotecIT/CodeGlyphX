@@ -105,9 +105,11 @@ foreach (var symbol in scan.Symbols) {
 Console.WriteLine(scan.CompletionReason);
 ```
 
-`Status == Success` means at least one symbol was decoded. `CompletionReason` records whether the requested scan completed, reached `MaxSymbols`, was cancelled or exceeded its deadline. Partial results stay available after cancellation or a deadline. `MaxSymbols = 1` requests the first match; it does not establish that the image contains only one symbol.
+`Status == Success` means at least one symbol was decoded. `CompletionReason` records whether the requested scan completed, reached `MaxSymbols`, was cancelled or exceeded its deadline. Partial results stay available after cancellation or a deadline. `IsPartial` also reports when a symbol limit stopped the scan. `MaxSymbols = 1` requests the first match; it does not establish that the image contains only one symbol.
 
 `RawBytes` are the bytes recovered by a decoder that exposes them. `HasRawBytes` distinguishes unavailable bytes from a decoded empty payload. Do not reconstruct original encoded bytes by applying UTF-8 to `Text`. Family-specific information belongs in typed metadata rather than a nullable union of unrelated decoder result types. Unpopulated `FrameIndex` and `PageIndex` properties are removed; a scan processes the image selected by the image reader, not every frame or page.
+
+Data Matrix, PDF417 and Aztec can return multiple results through bounded tile retries when `EnableTileScan` is enabled. This is not exhaustive recognition of arbitrary layouts.
 
 The capability catalogue distinguishes image recognition from module decoding. Unsupported requested image formats appear in `UnsupportedFormats`. For a symbol matrix already available in memory, use the separate module decoder:
 

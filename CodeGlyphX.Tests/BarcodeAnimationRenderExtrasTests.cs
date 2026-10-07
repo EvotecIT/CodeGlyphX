@@ -32,7 +32,7 @@ public sealed class BarcodeAnimationRenderExtrasTests {
         };
 
         var output = Barcode.Render(frame1, OutputFormat.Gif, options, extras);
-        var frames = GifReader.DecodeAnimationFrames(output.Data, out _, out _, out _);
+        var frames = GifReader.DecodeAnimationFrames(output.Data.Span, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);
         Assert.Equal(40, frames[0].DurationMs);
@@ -64,7 +64,7 @@ public sealed class BarcodeAnimationRenderExtrasTests {
         };
 
         var output = Barcode.Render(frame1, OutputFormat.Webp, options, extras);
-        var frames = WebpReader.DecodeAnimationFrames(output.Data, out _, out _, out _);
+        var frames = WebpReader.DecodeAnimationFrames(output.Data.Span, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);
         Assert.Equal(35, frames[0].DurationMs);

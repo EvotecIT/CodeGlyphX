@@ -34,10 +34,10 @@ public sealed class GenericPngCompressionTests {
         var extras = new OutputOptions { PngCompressionLevel = level };
         if (family == 1)
             return DataMatrixCode.Render("COMPRESS-MATRIX", OutputFormat.Png,
-                options: new MatrixOptions { ModuleSize = 8 }, extras: extras).Data;
+                options: new MatrixOptions { ModuleSize = 8 }, extras: extras).ToArray();
         if (family == 2)
-            return Barcode.Render(BarcodeType.Code128, "COMPRESS-BARCODE", OutputFormat.Png,
-                new BarcodeOptions { ModuleSize = 3, HeightModules = 40 }, extras).Data;
-        return QR.Render("COMPRESS-QR", OutputFormat.Png, new QrRenderOptions { ModuleSize = 8 }, extras: extras).Data;
+            return Barcode.Render(SymbolFormat.Code128, "COMPRESS-BARCODE", OutputFormat.Png,
+                new BarcodeOptions { ModuleSize = 3, HeightModules = 40 }, extras).ToArray();
+        return QR.Render("COMPRESS-QR", OutputFormat.Png, new QrRenderOptions { ModuleSize = 8 }, extras: extras).ToArray();
     }
 }

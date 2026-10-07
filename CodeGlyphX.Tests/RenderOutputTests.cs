@@ -14,7 +14,7 @@ namespace CodeGlyphX.Tests;
 public class RenderOutputTests {
     [Fact]
     public void RenderBarcodeSvgReturnsText() {
-        var output = Barcode.Render(BarcodeType.Code128, "CODE128-12345", OutputFormat.Svg);
+        var output = Barcode.Render(SymbolFormat.Code128, "CODE128-12345", OutputFormat.Svg);
 
         Assert.Equal(OutputFormat.Svg, output.Format);
         Assert.True(output.IsText);
@@ -32,16 +32,16 @@ public class RenderOutputTests {
         Assert.True(output.Data.Length > 8);
 
         // PNG signature (89 50 4E 47 0D 0A 1A 0A)
-        Assert.Equal(0x89, output.Data[0]);
-        Assert.Equal(0x50, output.Data[1]);
-        Assert.Equal(0x4E, output.Data[2]);
-        Assert.Equal(0x47, output.Data[3]);
+        Assert.Equal(0x89, output.Data.Span[0]);
+        Assert.Equal(0x50, output.Data.Span[1]);
+        Assert.Equal(0x4E, output.Data.Span[2]);
+        Assert.Equal(0x47, output.Data.Span[3]);
     }
 
     [Fact]
     public void RenderHtmlHonorsTitleExtras() {
         var extras = new OutputOptions { HtmlTitle = "Render Output Test" };
-        var output = Barcode.Render(BarcodeType.Code128, "CODE128-HTML", OutputFormat.Html, extras: extras);
+        var output = Barcode.Render(SymbolFormat.Code128, "CODE128-HTML", OutputFormat.Html, extras: extras);
 
         var text = output.GetText();
         Assert.Contains("<title>Render Output Test</title>", text, StringComparison.OrdinalIgnoreCase);
@@ -49,7 +49,7 @@ public class RenderOutputTests {
 
     [Fact]
     public void BarcodeBuilder_Uses_Generic_Render_And_Save_Surface() {
-        var builder = Barcode.Create(BarcodeType.Code128, "BUILDER-123");
+        var builder = Barcode.Create(SymbolFormat.Code128, "BUILDER-123");
         var svg = builder.Render(OutputFormat.Svg);
 
         Assert.Equal(OutputFormat.Svg, svg.Format);
@@ -72,7 +72,7 @@ public class RenderOutputTests {
     [Fact]
     public void CreateFacades_Return_TopLevel_Builder_Types() {
         QrBuilder qr = QR.Create("TOP-LEVEL-QR");
-        BarcodeBuilder barcode = Barcode.Create(BarcodeType.Code128, "TOP-LEVEL-BARCODE");
+        BarcodeBuilder barcode = Barcode.Create(SymbolFormat.Code128, "TOP-LEVEL-BARCODE");
         DataMatrixBuilder dataMatrix = DataMatrixCode.Create("TOP-LEVEL-DATA-MATRIX");
         Pdf417Builder pdf417 = Pdf417Code.Create("TOP-LEVEL-PDF417");
 
@@ -105,7 +105,7 @@ public class RenderOutputTests {
             .WithModuleSize(5)
             .WithQuietZone(2)
             .WithColors(Rgba32.Black, Rgba32.White)
-            .WithOptions(options => options.HtmlEmailSafeTable = true);
+            .WithOutputOptions(options => options.HtmlEmailSafeTable = true);
 
         Assert.True(builder.Encode().Width > 0);
         Assert.Contains("<svg", builder.Render(OutputFormat.Svg).GetText(), StringComparison.OrdinalIgnoreCase);
@@ -187,7 +187,7 @@ public class RenderOutputTests {
     [Fact]
     public void BarcodeBuilder_Configures_The_Public_Rendering_Surface() {
         var jpeg = new JpegEncodeOptions { Quality = 90 };
-        var builder = Barcode.Create(BarcodeType.Code128, "BARCODE-OPTIONS")
+        var builder = Barcode.Create(SymbolFormat.Code128, "BARCODE-OPTIONS")
             .WithOptions(options => options.ModuleSize = 2)
             .WithModuleSize(3)
             .WithQuietZone(4)
@@ -208,7 +208,7 @@ public class RenderOutputTests {
 
         Assert.Equal(3, builder.Options.ModuleSize);
         Assert.Equal("Contract label", builder.Options.LabelText);
-        Assert.Equal(new[] { 32, 64 }, builder.Options.IcoSizes);
+        Assert.Equal(new[] { 32, 64 }, builder.OutputOptions.IcoSizes);
         Assert.True(builder.Encode().TotalModules > 0);
     }
 

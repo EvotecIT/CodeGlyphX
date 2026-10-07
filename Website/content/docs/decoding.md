@@ -94,6 +94,8 @@ foreach (var symbol in scan.Symbols) {
 }
 ```
 
+`EnableTileScan` also enables bounded overlapping retries for Data Matrix, PDF417 and Aztec. These retries can find symbols in separate tiles; they do not guarantee exhaustive recognition of arbitrary layouts. `MaxSymbols` and the total deadline apply across all families and tiles.
+
 ## Supported raster inputs
 
 PNG, JPEG, WebP, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, and XPM are handled by the managed image reader. PSD and PDF have narrower documented decode paths.

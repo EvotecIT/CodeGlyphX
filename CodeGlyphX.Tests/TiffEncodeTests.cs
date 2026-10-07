@@ -9,16 +9,16 @@ public sealed class TiffEncodeTests {
         var payload = "https://example.com/tiff";
         var none = QR.Render(payload, OutputFormat.Tiff, extras: new OutputOptions {
             TiffCompression = TiffCompressionMode.None
-        }).Data;
+        }).ToArray();
         var packBits = QR.Render(payload, OutputFormat.Tiff, extras: new OutputOptions {
             TiffCompression = TiffCompressionMode.PackBits
-        }).Data;
+        }).ToArray();
         var deflate = QR.Render(payload, OutputFormat.Tiff, extras: new OutputOptions {
             TiffCompression = TiffCompressionMode.Deflate
-        }).Data;
+        }).ToArray();
         var auto = QR.Render(payload, OutputFormat.Tiff, extras: new OutputOptions {
             TiffCompression = TiffCompressionMode.Auto
-        }).Data;
+        }).ToArray();
 
         Assert.Equal(1, ReadCompression(none));
         Assert.Equal(32773, ReadCompression(packBits));

@@ -19,7 +19,7 @@ public sealed class RenderExtrasAnimationTests {
         };
 
         var output = QR.Render("test", OutputFormat.Gif, extras: extras);
-        var frames = GifReader.DecodeAnimationFrames(output.Data, out _, out _, out _);
+        var frames = GifReader.DecodeAnimationFrames(output.Data.Span, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);
     }
@@ -37,7 +37,7 @@ public sealed class RenderExtrasAnimationTests {
         };
 
         var output = QR.Render("test", OutputFormat.Webp, extras: extras);
-        var frames = WebpReader.DecodeAnimationFrames(output.Data, out _, out _, out _);
+        var frames = WebpReader.DecodeAnimationFrames(output.Data.Span, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);
     }
