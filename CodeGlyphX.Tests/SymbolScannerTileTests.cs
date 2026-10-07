@@ -107,6 +107,26 @@ public sealed class SymbolScannerTileTests {
         Assert.Equal(ScanCompletionReason.SymbolLimitReached, result.CompletionReason);
     }
 
+    [Theory]
+    [InlineData(SymbolFormat.Code128, "AFTER-DATABAR-128")]
+    [InlineData(SymbolFormat.Ean, "5901234123457")]
+    public void DataBarLocationAttemptLeavesOtherRequestedLinearFormatsReachable(SymbolFormat actual, string payload) {
+        var png = Barcode.Render(actual, payload, OutputFormat.Png, new BarcodeOptions {
+            ModuleSize = 4, QuietZone = 10, HeightModules = 40
+        }).ToArray();
+
+        var result = SymbolScanner.Scan(png, new ScanOptions {
+            Formats = new[] { SymbolFormat.Gs1DataBarTruncated, SymbolFormat.Gs1DataBarOmnidirectional, actual },
+            MaxSymbols = 1, EnableTileScan = false, TimeoutMilliseconds = TestBudget.Adjust(2000)
+        });
+
+        Assert.True(result.IsSuccess, result.Failure);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(actual, symbol.Format);
+        Assert.Equal(payload, symbol.Text);
+        Assert.Equal(ScanCompletionReason.SymbolLimitReached, result.CompletionReason);
+    }
+
     [Fact]
     public void FindingQrDoesNotExcludeOtherRequestedMatrixFamilies() {
         var qr = QrCodeEncoder.EncodeText("MIXED-QR").Modules;

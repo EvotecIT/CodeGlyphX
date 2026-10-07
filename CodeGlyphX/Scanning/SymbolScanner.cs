@@ -278,20 +278,21 @@ public static partial class SymbolScanner {
                 : BarcodeType.GS1DataBarTruncated;
             // The unrestricted pass already tries every linear type; only a typed pass
             // shares its family budget with the per-type attempts that follow it.
-            using var locatedAttempt = expected.HasValue ? deadline.CreateAttempt(expectedTypes.Count) : null;
-            ScanLocatedLinear(
-                rgba,
-                width,
-                height,
-                searchRegion,
-                options,
-                locatedAttempt ?? deadline,
-                requested,
-                expectedTypes,
-                expected,
-                barcodeOptions,
-                results,
-                seen);
+            using (var locatedAttempt = expected.HasValue ? deadline.CreateAttempt(expectedTypes.Count) : null) {
+                ScanLocatedLinear(
+                    rgba,
+                    width,
+                    height,
+                    searchRegion,
+                    options,
+                    locatedAttempt ?? deadline,
+                    requested,
+                    expectedTypes,
+                    expected,
+                    barcodeOptions,
+                    results,
+                    seen);
+            }
             if (!expected.HasValue || ShouldStop(options, deadline, results)) return;
         }
 

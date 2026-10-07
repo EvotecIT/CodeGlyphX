@@ -9,6 +9,7 @@ internal sealed class ScanDeadline : IDisposable {
     private readonly CancellationToken _callerToken;
     private readonly CancellationTokenSource? _source;
     private readonly IDisposable? _decoderScope;
+    private readonly DecodeBudgetState _recognitionDeadline;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
     internal int TimeoutMilliseconds { get; }
@@ -28,12 +29,15 @@ internal sealed class ScanDeadline : IDisposable {
         // WASM timer callbacks cannot run while recognition blocks its thread. Native decoder
         // loops also observe this monotonic scope, with nested attempts preserving the earliest limit.
         _decoderScope = DecodeBudget.Begin(timeoutMilliseconds);
+        // Capture the enclosing limit after clamping. Shorter descendant scopes must not
+        // make this instance expire while its own effective deadline still has time.
+        _recognitionDeadline = DecodeBudget.Capture();
     }
 
-    internal bool ShouldStop => DecodeBudget.ShouldAbort(Token) ||
+    internal bool ShouldStop => Token.IsCancellationRequested || _recognitionDeadline.IsExpired ||
         (TimeoutMilliseconds > 0 && _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds);
     internal bool CallerCancelled => _callerToken.IsCancellationRequested;
-    internal bool DeadlineExceeded => !CallerCancelled && (DecodeBudget.IsExpired ||
+    internal bool DeadlineExceeded => !CallerCancelled && (_recognitionDeadline.IsExpired ||
         TimeoutMilliseconds > 0 && (_source?.IsCancellationRequested == true || _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds));
 
     internal int RemainingMilliseconds {

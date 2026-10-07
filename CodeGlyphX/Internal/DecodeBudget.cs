@@ -12,18 +12,16 @@ internal readonly struct DecodeBudgetState {
         DeadlineTicks = deadlineTicks;
         Enabled = enabled;
     }
+
+    public bool IsExpired => Enabled && Stopwatch.GetTimestamp() >= DeadlineTicks;
 }
 
 internal static class DecodeBudget {
     private static readonly AsyncLocal<DecodeBudgetState> CurrentState = new();
 
-    public static bool IsExpired {
-        get {
-            var state = CurrentState.Value;
-            if (!state.Enabled) return false;
-            return Stopwatch.GetTimestamp() >= state.DeadlineTicks;
-        }
-    }
+    public static bool IsExpired => CurrentState.Value.IsExpired;
+
+    internal static DecodeBudgetState Capture() => CurrentState.Value;
 
     public static bool ShouldAbort(CancellationToken token) {
         return token.IsCancellationRequested || IsExpired;

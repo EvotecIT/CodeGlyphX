@@ -41,10 +41,26 @@ public sealed class ScanDeadlineTests {
         using (var attempt = deadline.CreateAttempt(1, recognitionBudgetMilliseconds: 1)) {
             Assert.True(SpinWait.SpinUntil(() => DecodeBudget.IsExpired, TimeSpan.FromSeconds(1)));
             Assert.True(attempt.ShouldStop);
+            // The scheduler may inspect the family before disposing its shorter attempt.
+            Assert.False(deadline.ShouldStop);
+            Assert.False(deadline.DeadlineExceeded);
         }
         Assert.False(DecodeBudget.IsExpired);
         Assert.False(deadline.ShouldStop);
         Assert.False(deadline.DeadlineExceeded);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(10000)]
+    public void ScannerDeadlineRetainsTheEnclosingRecognitionLimit(int timeoutMilliseconds) {
+        using var enclosing = DecodeBudget.Begin(1);
+        using var deadline = new ScanDeadline(CancellationToken.None, timeoutMilliseconds);
+        Assert.True(SpinWait.SpinUntil(() => DecodeBudget.IsExpired, TimeSpan.FromSeconds(1)));
+
+        Assert.True(deadline.ShouldStop);
+        Assert.True(deadline.DeadlineExceeded);
+        Assert.False(deadline.CallerCancelled);
     }
 
     [Fact]
