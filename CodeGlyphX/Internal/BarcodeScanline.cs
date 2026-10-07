@@ -123,6 +123,13 @@ internal static class BarcodeScanline {
         best = candidate;
     }
 
+    private static byte GetLuminance(byte red, byte green, byte blue, byte alpha) {
+        var luminance = (red * 54 + green * 183 + blue * 19) >> 8;
+        // Match the white background used by the other image decoders. RGB in
+        // transparent padding does not describe a visible foreground bar.
+        return (byte)((luminance * alpha + 255 * (255 - alpha) + 127) / 255);
+    }
+
     private static bool TryGetModulesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, CancellationToken cancellationToken, out bool[] modules) {
         modules = Array.Empty<bool>();
         if ((uint)y >= (uint)height) return false;
@@ -148,7 +155,7 @@ internal static class BarcodeScanline {
                     g = pixels[p + 1];
                     r = pixels[p + 2];
                 }
-                var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
+                var lum = GetLuminance(r, g, b, pixels[p + 3]);
                 luminance[x] = lum;
                 if (lum < min) min = lum;
                 if (lum > max) max = lum;
@@ -184,7 +191,7 @@ internal static class BarcodeScanline {
                     g = pixels[p + 1];
                     r = pixels[p + 2];
                 }
-                var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
+                var lum = GetLuminance(r, g, b, pixels[p + 3]);
                 luminance[y] = lum;
                 if (lum < min) min = lum;
                 if (lum > max) max = lum;
@@ -320,10 +327,6 @@ internal static class BarcodeScanline {
     /// observed run need not be the exact width of one module.
     /// </summary>
     private static double EstimateModulePitch(int[] runs, int start, int end, int minRun, CancellationToken cancellationToken) {
-        // At one pixel, a two-pixel run may be either one rounded module or two
-        // real modules. Retain the existing sampling instead of guessing.
-        if (minRun < 2) return minRun;
-
         double narrowTotal = 0;
         var narrowCount = 0;
         for (var i = start; i <= end; i++) {
@@ -379,7 +382,7 @@ internal static class BarcodeScanline {
                     g = pixels[p + 1];
                     r = pixels[p + 2];
                 }
-                var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
+                var lum = GetLuminance(r, g, b, pixels[p + 3]);
                 luminance[x] = lum;
                 if (lum < min) min = lum;
                 if (lum > max) max = lum;
@@ -414,7 +417,7 @@ internal static class BarcodeScanline {
                     g = pixels[p + 1];
                     r = pixels[p + 2];
                 }
-                var lum = (byte)((r * 54 + g * 183 + b * 19) >> 8);
+                var lum = GetLuminance(r, g, b, pixels[p + 3]);
                 luminance[y] = lum;
                 if (lum < min) min = lum;
                 if (lum > max) max = lum;
@@ -448,7 +451,14 @@ internal static class BarcodeScanline {
         for (var i = 0; i < candidates.Count; i++) {
             var existing = candidates[i];
             if (existing.Position != candidate.Position || existing.IsVertical != candidate.IsVertical) continue;
-            if (ModulesEqual(existing.Modules, candidate.Modules) && ModulesEqual(existing.AlternativeModules, candidate.AlternativeModules)) return;
+            if (ModulesEqual(existing.Modules, candidate.Modules) && ModulesEqual(existing.AlternativeModules, candidate.AlternativeModules)) {
+                // Repeated thresholds can preserve the modules while improving
+                // their pixel fit. Keep the best evidence for each interpretation.
+                candidates[i] = new BarcodeScanlineCandidate(existing.Modules, existing.Position, existing.IsVertical,
+                    existing.AlternativeModules, Math.Min(existing.FitError, candidate.FitError),
+                    Math.Min(existing.AlternativeFitError, candidate.AlternativeFitError));
+                return;
+            }
         }
         candidates.Add(candidate);
     }

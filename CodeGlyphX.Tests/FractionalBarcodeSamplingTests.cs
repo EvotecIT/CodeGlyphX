@@ -10,8 +10,10 @@ namespace CodeGlyphX.Tests;
 public sealed class FractionalBarcodeSamplingTests {
     [Theory]
     [InlineData(BarcodeType.Code128, "LOT-2026-1042", "LOT-2026-1042", 0.75)]
+    [InlineData(BarcodeType.Code128, "LOT-2026-1042", "LOT-2026-1042", 0.6)]
     [InlineData(BarcodeType.Code128, "LOT-2026-1042", "LOT-2026-1042", 1.25)]
     [InlineData(BarcodeType.Code93, "SHIP-1042", "SHIP-1042", 0.75)]
+    [InlineData(BarcodeType.Code93, "SHIP-1042", "SHIP-1042", 0.6)]
     [InlineData(BarcodeType.Code39, "SHIP-1042", "SHIP-1042", 0.85)]
     [InlineData(BarcodeType.EAN, "590123412345", "5901234123457", 0.75)]
     [InlineData(BarcodeType.ITF14, "1001234500001", "10012345000017", 1.25)]
@@ -139,9 +141,11 @@ public sealed class FractionalBarcodeSamplingTests {
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void Decode_FractionalCode128_StillRejectsInvalidChecksumAndMissingStop(bool missingStop) {
+    [InlineData(false, 0.75)]
+    [InlineData(true, 0.75)]
+    [InlineData(false, 0.6)]
+    [InlineData(true, 0.6)]
+    public void Decode_FractionalCode128_StillRejectsInvalidChecksumAndMissingStop(bool missingStop, double scale) {
         var barcode = BarcodeEncoder.Encode(BarcodeType.Code128, "GUARD-128");
         var segments = barcode.Segments.ToArray();
         // Code128's final six-run checksum precedes the seven-run stop. Replacing it
@@ -152,7 +156,7 @@ public sealed class FractionalBarcodeSamplingTests {
             Array.Copy(segments, 6, segments, segments.Length - 13, 6);
             barcode = new Barcode1D(segments);
         }
-        var pixels = Resize(barcode, 0.75, out var width, out var height);
+        var pixels = Resize(barcode, scale, out var width, out var height);
 
         Assert.False(BarcodeDecoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32, BarcodeType.Code128, out _));
         Assert.Empty(SymbolScanner.Scan(EncodePng(pixels, width, height), new ScanOptions {
