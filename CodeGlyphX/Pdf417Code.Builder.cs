@@ -29,10 +29,10 @@ namespace CodeGlyphX;
 /// </summary>
 public sealed class Pdf417Builder {
     /// <summary>Gets the format-specific output settings configured for this builder.</summary>
-    public RenderExtras OutputOptions { get; } = new RenderExtras();
+    public OutputOptions OutputOptions { get; } = new OutputOptions();
 
     /// <summary>Configures format-specific output settings without changing symbol layout.</summary>
-    public Pdf417Builder WithOutputOptions(Action<RenderExtras> configure) {
+    public Pdf417Builder WithOutputOptions(Action<OutputOptions> configure) {
         if (configure is null) throw new ArgumentNullException(nameof(configure));
         configure(OutputOptions);
         return this;
@@ -206,7 +206,7 @@ public sealed class Pdf417Builder {
     /// <summary>
     /// Renders the configured PDF417 code to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+    public RenderedOutput Render(OutputFormat format, OutputOptions? extras = null) {
         return _text is not null
             ? Pdf417Code.Render(_text, format, _encodeOptions, _renderOptions, extras ?? OutputOptions)
             : Pdf417Code.Render(_bytes!, format, _encodeOptions, _renderOptions, extras ?? OutputOptions);
@@ -215,7 +215,7 @@ public sealed class Pdf417Builder {
     /// <summary>
     /// Saves the configured PDF417 code, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, RenderExtras? extras = null) {
+    public string Save(string path, OutputOptions? extras = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
         return OutputWriter.Write(path, Render(format, extras));
     }
@@ -223,7 +223,7 @@ public sealed class Pdf417Builder {
     /// <summary>
     /// Writes the configured PDF417 code to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? extras = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         OutputWriter.Write(stream, Render(format, extras));
     }

@@ -27,7 +27,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(SymbolFormat type, string content, OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) {
+    public static RenderedOutput Render(SymbolFormat type, string content, OutputFormat format, BarcodeOptions? options = null, OutputOptions? extras = null) {
         var barcode = Encode(type, content);
         return Render(barcode, format, options, extras);
     }
@@ -35,7 +35,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(Barcode1D barcode, OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) {
+    public static RenderedOutput Render(Barcode1D barcode, OutputFormat format, BarcodeOptions? options = null, OutputOptions? extras = null) {
         if (barcode is null) throw new ArgumentNullException(nameof(barcode));
         if (format == OutputFormat.Unknown) throw new ArgumentOutOfRangeException(nameof(format));
 

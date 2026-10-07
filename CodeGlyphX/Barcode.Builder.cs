@@ -27,10 +27,10 @@ namespace CodeGlyphX;
 /// </summary>
 public sealed class BarcodeBuilder {
     /// <summary>Gets the format-specific output settings configured for this builder.</summary>
-    public RenderExtras OutputOptions { get; } = new RenderExtras();
+    public OutputOptions OutputOptions { get; } = new OutputOptions();
 
     /// <summary>Configures format-specific output settings without changing symbol layout.</summary>
-    public BarcodeBuilder WithOutputOptions(Action<RenderExtras> configure) {
+    public BarcodeBuilder WithOutputOptions(Action<OutputOptions> configure) {
         if (configure is null) throw new ArgumentNullException(nameof(configure));
         configure(OutputOptions);
         return this;
@@ -196,14 +196,14 @@ public sealed class BarcodeBuilder {
     /// <summary>
     /// Renders the configured barcode to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+    public RenderedOutput Render(OutputFormat format, OutputOptions? extras = null) {
         return Barcode.Render(_type, _content, format, Options, extras ?? OutputOptions);
     }
 
     /// <summary>
     /// Saves the configured barcode, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, RenderExtras? extras = null) {
+    public string Save(string path, OutputOptions? extras = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
         return OutputWriter.Write(path, Render(format, extras));
     }
@@ -211,7 +211,7 @@ public sealed class BarcodeBuilder {
     /// <summary>
     /// Writes the configured barcode to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? extras = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         OutputWriter.Write(stream, Render(format, extras));
     }

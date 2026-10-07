@@ -17,12 +17,12 @@ public sealed class QrWebsiteFlowRoundTripTests {
     public void RoundTrip_DocsStylingOptions() {
         const string payload = "https://example.com/website-styled";
         var options = new QrRenderOptions {
-            ModuleShape = QrPngModuleShape.Rounded,
+            ModuleShape = QrModuleShape.Rounded,
             ModuleCornerRadiusPx = 3,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                OuterShape = QrPngModuleShape.Circle,
-                InnerShape = QrPngModuleShape.Circle,
+                OuterShape = QrModuleShape.Circle,
+                InnerShape = QrModuleShape.Circle,
                 OuterColor = new Rgba32(220, 20, 60),
                 InnerColor = new Rgba32(220, 20, 60)
             }

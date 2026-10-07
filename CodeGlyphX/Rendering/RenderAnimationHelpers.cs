@@ -6,7 +6,7 @@ using CodeGlyphX.Rendering.Webp;
 namespace CodeGlyphX.Rendering;
 
 internal static class RenderAnimationHelpers {
-    internal static bool TryRenderMatrixWebp(RenderExtras? extras, MatrixPngRenderOptions pngOptions, int quality, out byte[] webp) {
+    internal static bool TryRenderMatrixWebp(OutputOptions? extras, MatrixPngRenderOptions pngOptions, int quality, out byte[] webp) {
         var frames = extras?.WebpFrames;
         if (frames is null || frames.Length == 0) {
             webp = Array.Empty<byte>();
@@ -24,7 +24,7 @@ internal static class RenderAnimationHelpers {
         return true;
     }
 
-    internal static bool TryRenderMatrixGif(RenderExtras? extras, MatrixPngRenderOptions pngOptions, out byte[] gif) {
+    internal static bool TryRenderMatrixGif(OutputOptions? extras, MatrixPngRenderOptions pngOptions, out byte[] gif) {
         var frames = extras?.GifFrames;
         if (frames is null || frames.Length == 0) {
             gif = Array.Empty<byte>();
@@ -42,7 +42,7 @@ internal static class RenderAnimationHelpers {
         return true;
     }
 
-    internal static bool TryRenderBarcodeWebp(RenderExtras? extras, BarcodePngRenderOptions pngOptions, int quality, out byte[] webp) {
+    internal static bool TryRenderBarcodeWebp(OutputOptions? extras, BarcodePngRenderOptions pngOptions, int quality, out byte[] webp) {
         var frames = extras?.BarcodeWebpFrames;
         if (frames is null || frames.Length == 0) {
             webp = Array.Empty<byte>();
@@ -60,7 +60,7 @@ internal static class RenderAnimationHelpers {
         return true;
     }
 
-    internal static bool TryRenderBarcodeGif(RenderExtras? extras, BarcodePngRenderOptions pngOptions, out byte[] gif) {
+    internal static bool TryRenderBarcodeGif(OutputOptions? extras, BarcodePngRenderOptions pngOptions, out byte[] gif) {
         var frames = extras?.BarcodeGifFrames;
         if (frames is null || frames.Length == 0) {
             gif = Array.Empty<byte>();
@@ -78,7 +78,7 @@ internal static class RenderAnimationHelpers {
         return true;
     }
 
-    internal static bool TryRenderQrWebp(RenderExtras? extras, QrPngRenderOptions pngOptions, int quality, out byte[] webp) {
+    internal static bool TryRenderQrWebp(OutputOptions? extras, QrPngRenderOptions pngOptions, int quality, out byte[] webp) {
         var frames = extras?.WebpFrames;
         if (frames is null || frames.Length == 0) {
             webp = Array.Empty<byte>();
@@ -96,7 +96,7 @@ internal static class RenderAnimationHelpers {
         return true;
     }
 
-    internal static bool TryRenderQrGif(RenderExtras? extras, QrPngRenderOptions pngOptions, out byte[] gif) {
+    internal static bool TryRenderQrGif(OutputOptions? extras, QrPngRenderOptions pngOptions, out byte[] gif) {
         var frames = extras?.GifFrames;
         if (frames is null || frames.Length == 0) {
             gif = Array.Empty<byte>();

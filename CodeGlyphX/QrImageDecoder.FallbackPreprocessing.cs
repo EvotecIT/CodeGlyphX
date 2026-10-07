@@ -17,7 +17,7 @@ public static partial class QrImageDecoder {
         var scale = maxDim / (double)currentMax;
         var dstWidth = Math.Max(1, (int)Math.Round(width * scale));
         var dstHeight = Math.Max(1, (int)Math.Round(height * scale));
-        var background = new CodeGlyphX.Rendering.Png.Rgba32(255, 255, 255, 255);
+        var background = new CodeGlyphX.Rendering.Rgba32(255, 255, 255, 255);
         rgba = ImageScaler.ResizeToFitNearest(rgba, width, height, stride, dstWidth, dstHeight, background, preserveAspectRatio: true, cancellationToken);
         width = dstWidth;
         height = dstHeight;

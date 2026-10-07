@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using CodeGlyphX.Rendering.Png;
 
@@ -95,22 +96,22 @@ internal static class QrVectorLayout {
         if (opts.Logo is not null) return true;
         if (opts.Canvas is not null) return true;
         if (opts.Debug is not null && opts.Debug.HasOverlay) return true;
-        if (opts.Eyes is not null && opts.Eyes.FrameStyle != QrPngEyeFrameStyle.Single) return true;
+        if (opts.Eyes is not null && opts.Eyes.FrameStyle != QrEyeFrameStyle.Single) return true;
         if (opts.Eyes is not null && (opts.Eyes.OuterGradient is not null || opts.Eyes.InnerGradient is not null)) return true;
         if (!IsVectorShapeSupported(opts.ModuleShape)) return true;
         if (opts.Eyes is not null && (!IsVectorShapeSupported(opts.Eyes.OuterShape) || !IsVectorShapeSupported(opts.Eyes.InnerShape))) return true;
         return false;
     }
 
-    private static void DrawModule(IQrVectorSink sink, int mx, int my, int moduleSize, int quietZone, QrPngModuleShape shape, double scale, int radius) {
+    private static void DrawModule(IQrVectorSink sink, int mx, int my, int moduleSize, int quietZone, QrModuleShape shape, double scale, int radius) {
         var scaled = Math.Max(1, (int)Math.Round(moduleSize * scale));
         var offset = (moduleSize - scaled) / 2;
         var x = (mx + quietZone) * moduleSize + offset;
         var y = (my + quietZone) * moduleSize + offset;
 
-        if (shape == QrPngModuleShape.Circle) {
+        if (shape == QrModuleShape.Circle) {
             sink.FillRoundedRect(x, y, scaled, scaled, scaled / 2);
-        } else if (shape == QrPngModuleShape.Rounded) {
+        } else if (shape == QrModuleShape.Rounded) {
             sink.FillRoundedRect(x, y, scaled, scaled, radius);
         } else {
             sink.FillRect(x, y, scaled, scaled);
@@ -144,7 +145,7 @@ internal static class QrVectorLayout {
         sink.SetFillColor(outerColor);
         DrawShape(sink, outerX, outerY, outerScaled, outerScaled, eye.OuterShape, eye.OuterCornerRadiusPx);
         sink.SetFillColor(background);
-        DrawShape(sink, innerX, innerY, innerScaled, innerScaled, QrPngModuleShape.Rounded, eye.InnerCornerRadiusPx);
+        DrawShape(sink, innerX, innerY, innerScaled, innerScaled, QrModuleShape.Rounded, eye.InnerCornerRadiusPx);
 
         if (dotScaled > 0) {
             sink.SetFillColor(innerColor);
@@ -152,10 +153,10 @@ internal static class QrVectorLayout {
         }
     }
 
-    private static void DrawShape(IQrVectorSink sink, int x, int y, int width, int height, QrPngModuleShape shape, int radius) {
-        if (shape == QrPngModuleShape.Circle) {
+    private static void DrawShape(IQrVectorSink sink, int x, int y, int width, int height, QrModuleShape shape, int radius) {
+        if (shape == QrModuleShape.Circle) {
             sink.FillRoundedRect(x, y, width, height, Math.Min(width, height) / 2);
-        } else if (shape == QrPngModuleShape.Rounded) {
+        } else if (shape == QrModuleShape.Rounded) {
             sink.FillRoundedRect(x, y, width, height, radius);
         } else {
             sink.FillRect(x, y, width, height);
@@ -168,10 +169,10 @@ internal static class QrVectorLayout {
         return Math.Max(1, (int)Math.Round(size * scale));
     }
 
-    private static bool IsVectorShapeSupported(QrPngModuleShape shape) {
-        return shape == QrPngModuleShape.Square ||
-               shape == QrPngModuleShape.Circle ||
-               shape == QrPngModuleShape.Rounded;
+    private static bool IsVectorShapeSupported(QrModuleShape shape) {
+        return shape == QrModuleShape.Square ||
+               shape == QrModuleShape.Circle ||
+               shape == QrModuleShape.Rounded;
     }
 
     private static bool IsInEye(int x, int y, int size) {

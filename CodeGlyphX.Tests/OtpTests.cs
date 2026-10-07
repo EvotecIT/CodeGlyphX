@@ -81,8 +81,8 @@ public sealed class OtpTests {
         var opts = OtpQrPreset.CreatePngRenderOptions(
             moduleSize: 2,
             quietZone: 2,
-            foreground: new CodeGlyphX.Rendering.Png.Rgba32(200, 200, 200),
-            background: new CodeGlyphX.Rendering.Png.Rgba32(255, 255, 255));
+            foreground: new CodeGlyphX.Rendering.Rgba32(200, 200, 200),
+            background: new CodeGlyphX.Rendering.Rgba32(255, 255, 255));
 
         var report = OtpQrHeuristics.Evaluate(qr, opts);
         Assert.False(report.PassesHeuristics);

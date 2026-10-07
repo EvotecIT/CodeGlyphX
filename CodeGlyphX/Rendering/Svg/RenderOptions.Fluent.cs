@@ -47,7 +47,7 @@ public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Sets the module shape.
     /// </summary>
-    public QrSvgRenderOptions WithModuleShape(QrPngModuleShape shape) {
+    public QrSvgRenderOptions WithModuleShape(QrModuleShape shape) {
         ModuleShape = shape;
         return this;
     }
@@ -71,7 +71,7 @@ public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Sets the foreground gradient.
     /// </summary>
-    public QrSvgRenderOptions WithForegroundGradient(QrPngGradientOptions? gradient) {
+    public QrSvgRenderOptions WithForegroundGradient(QrGradientOptions? gradient) {
         ForegroundGradient = gradient;
         return this;
     }
@@ -79,7 +79,7 @@ public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Sets custom eye (finder) options.
     /// </summary>
-    public QrSvgRenderOptions WithEyes(QrPngEyeOptions? eyes) {
+    public QrSvgRenderOptions WithEyes(QrEyeOptions? eyes) {
         Eyes = eyes;
         return this;
     }

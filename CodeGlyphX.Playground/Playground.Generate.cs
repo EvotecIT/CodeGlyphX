@@ -103,7 +103,7 @@ public partial class Playground {
 
                 if (UseForegroundGradient)
                 {
-                    options.ForegroundGradient = new QrPngGradientOptions
+                    options.ForegroundGradient = new QrGradientOptions
                     {
                         Type = ParseGradientType(ForegroundGradientType),
                         StartColor = ParseColor(ForegroundGradientStart),
@@ -113,7 +113,7 @@ public partial class Playground {
 
                 if (UseBackgroundGradient)
                 {
-                    options.BackgroundGradient = new QrPngGradientOptions
+                    options.BackgroundGradient = new QrGradientOptions
                     {
                         Type = ParseGradientType(BackgroundGradientType),
                         StartColor = ParseColor(BackgroundGradientStart),
@@ -125,7 +125,7 @@ public partial class Playground {
 
                 if (EnableQrBackgroundPattern)
                 {
-                    options.BackgroundPattern = new QrPngBackgroundPatternOptions
+                    options.BackgroundPattern = new QrBackgroundPatternOptions
                     {
                         Type = ParsePatternType(QrBackgroundPatternType),
                         Color = ApplyAlpha(ParseColor(QrBackgroundPatternColor), QrBackgroundPatternAlpha),
@@ -138,7 +138,7 @@ public partial class Playground {
 
                 if (EnablePalette)
                 {
-                    options.ForegroundPalette = new QrPngPaletteOptions
+                    options.ForegroundPalette = new QrPaletteOptions
                     {
                         Mode = ParsePaletteMode(PaletteMode),
                         Seed = PaletteSeed,
@@ -155,9 +155,9 @@ public partial class Playground {
 
                 if (EnableZonePalettes)
                 {
-                    options.ForegroundPaletteZones = new QrPngPaletteZoneOptions
+                    options.ForegroundPaletteZones = new QrPaletteZoneOptions
                     {
-                        CenterPalette = new QrPngPaletteOptions
+                        CenterPalette = new QrPaletteOptions
                         {
                             Mode = ParsePaletteMode(CenterPaletteMode),
                             Seed = CenterPaletteSeed,
@@ -171,7 +171,7 @@ public partial class Playground {
                             }
                         },
                         CenterSize = CenterZoneSize,
-                        CornerPalette = new QrPngPaletteOptions
+                        CornerPalette = new QrPaletteOptions
                         {
                             Mode = ParsePaletteMode(CornerPaletteMode),
                             Seed = CornerPaletteSeed,
@@ -189,7 +189,7 @@ public partial class Playground {
 
                 if (EnableScaleMap)
                 {
-                    options.ModuleScaleMap = new QrPngModuleScaleMapOptions
+                    options.ModuleScaleMap = new QrModuleScaleMapOptions
                     {
                         Mode = ParseScaleMapMode(ScaleMapMode),
                         MinScale = ScaleMapMin,
@@ -202,7 +202,7 @@ public partial class Playground {
 
                 if (CustomEyes)
                 {
-                    options.Eyes = new QrPngEyeOptions
+                    options.Eyes = new QrEyeOptions
                     {
                         UseFrame = true,
                         FrameStyle = ParseEyeFrameStyle(EyeFrameStyle),
@@ -215,13 +215,13 @@ public partial class Playground {
 
                 if (EnableCanvas)
                 {
-                    options.Canvas = new QrPngCanvasOptions
+                    options.Canvas = new QrCanvasOptions
                     {
                         PaddingPx = CanvasPaddingPx,
                         CornerRadiusPx = CanvasCornerRadiusPx,
                         Background = ParseColor(CanvasBackgroundColor),
                         BackgroundGradient = CanvasUseGradient
-                            ? new QrPngGradientOptions
+                            ? new QrGradientOptions
                             {
                                 Type = ParseGradientType(CanvasGradientType),
                                 StartColor = ParseColor(CanvasGradientStart),
@@ -229,7 +229,7 @@ public partial class Playground {
                             }
                             : null,
                         Pattern = CanvasUsePattern
-                            ? new QrPngBackgroundPatternOptions
+                            ? new QrBackgroundPatternOptions
                             {
                                 Type = ParsePatternType(CanvasPatternType),
                                 Color = ApplyAlpha(ParseColor(CanvasPatternColor), CanvasPatternAlpha),
@@ -247,7 +247,7 @@ public partial class Playground {
 
                 if (EnableDebugOverlay)
                 {
-                    options.Debug = new QrPngDebugOptions
+                    options.Debug = new QrRasterDebugOptions
                     {
                         ShowQuietZone = DebugShowQuietZone,
                         ShowQrBounds = DebugShowQrBounds,

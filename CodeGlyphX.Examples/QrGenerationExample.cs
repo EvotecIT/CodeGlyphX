@@ -9,7 +9,7 @@ internal static class QrGenerationExample {
         var payload = "https://example.com/codeglyphx?from=examples";
         QR.Save(payload, Path.Combine(outputDir, "qr-basic.png"));
         QR.Save(payload, Path.Combine(outputDir, "qr-basic.svg"));
-        QR.Save(payload, Path.Combine(outputDir, "qr-basic.html"), null, extras: new RenderExtras { HtmlTitle = "CodeGlyphX QR" });
+        QR.Save(payload, Path.Combine(outputDir, "qr-basic.html"), null, extras: new OutputOptions { HtmlTitle = "CodeGlyphX QR" });
         QR.Save(payload, Path.Combine(outputDir, "qr-basic.jpg"));
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-basic.pdf"),
@@ -21,7 +21,7 @@ internal static class QrGenerationExample {
         );
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-basic-raster.pdf"),
-            QR.Render(payload, OutputFormat.Pdf, null, extras: new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Pdf, null, extras: new OutputOptions { VectorMode = RenderMode.Raster })
         );
     }
 }

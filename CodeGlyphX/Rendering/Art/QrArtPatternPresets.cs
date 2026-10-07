@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using CodeGlyphX.Rendering.Png;
 
@@ -42,7 +43,7 @@ public static class QrArtPatternPresets {
             ModuleSize = moduleSize, Strength = 0.96,
             Canvas = new QrImageCanvasOptions { PaddingModules = 8 },
             Art = new QrImageArtOptions {
-                Style = style, Shape = QrPngModuleShape.ConnectedRounded, Scale = 0.95, DetailProtection = 0.3,
+                Style = style, Shape = QrModuleShape.ConnectedRounded, Scale = 0.95, DetailProtection = 0.3,
                 Finders = finders, FunctionalForeground = new Rgba32(21, 26, 47), FunctionalBackground = new Rgba32(255, 249, 239)
             }
         };

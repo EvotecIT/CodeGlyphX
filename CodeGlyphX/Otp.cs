@@ -52,16 +52,16 @@ public static class Otp {
         return new HotpBuilder(issuer, account, OtpAuthSecret.FromBase32(secretBase32), counter, renderOptions, encodingOptions);
     }
 
-    private static RenderedOutput RenderUri(string uri, OutputFormat format, QrRenderOptions renderOptions, QrEncodingOptions encodingOptions, RenderExtras? extras) {
+    private static RenderedOutput RenderUri(string uri, OutputFormat format, QrRenderOptions renderOptions, QrEncodingOptions encodingOptions, OutputOptions? extras) {
         return QR.Render(uri, format, renderOptions, encodingOptions, extras);
     }
 
-    private static string SaveUri(string uri, string path, QrRenderOptions renderOptions, QrEncodingOptions encodingOptions, RenderExtras? extras) {
+    private static string SaveUri(string uri, string path, QrRenderOptions renderOptions, QrEncodingOptions encodingOptions, OutputOptions? extras) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
         return OutputWriter.Write(path, RenderUri(uri, format, renderOptions, encodingOptions, extras));
     }
 
-    private static void SaveUri(string uri, Stream stream, OutputFormat format, QrRenderOptions renderOptions, QrEncodingOptions encodingOptions, RenderExtras? extras) {
+    private static void SaveUri(string uri, Stream stream, OutputFormat format, QrRenderOptions renderOptions, QrEncodingOptions encodingOptions, OutputOptions? extras) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         OutputWriter.Write(stream, RenderUri(uri, format, renderOptions, encodingOptions, extras));
     }
@@ -144,19 +144,19 @@ public static class Otp {
         /// <summary>
         /// Renders the configured TOTP QR code to the requested output format.
         /// </summary>
-        public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) =>
+        public RenderedOutput Render(OutputFormat format, OutputOptions? extras = null) =>
             RenderUri(Uri(), format, Rendering, Encoding, extras);
 
         /// <summary>
         /// Saves the configured TOTP QR code, selecting the output format from the file extension.
         /// </summary>
-        public string Save(string path, RenderExtras? extras = null) =>
+        public string Save(string path, OutputOptions? extras = null) =>
             SaveUri(Uri(), path, Rendering, Encoding, extras);
 
         /// <summary>
         /// Writes the configured TOTP QR code to a stream in the requested output format.
         /// </summary>
-        public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) =>
+        public void Save(Stream stream, OutputFormat format, OutputOptions? extras = null) =>
             SaveUri(Uri(), stream, format, Rendering, Encoding, extras);
     }
 
@@ -238,19 +238,19 @@ public static class Otp {
         /// <summary>
         /// Renders the configured HOTP QR code to the requested output format.
         /// </summary>
-        public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) =>
+        public RenderedOutput Render(OutputFormat format, OutputOptions? extras = null) =>
             RenderUri(Uri(), format, Rendering, Encoding, extras);
 
         /// <summary>
         /// Saves the configured HOTP QR code, selecting the output format from the file extension.
         /// </summary>
-        public string Save(string path, RenderExtras? extras = null) =>
+        public string Save(string path, OutputOptions? extras = null) =>
             SaveUri(Uri(), path, Rendering, Encoding, extras);
 
         /// <summary>
         /// Writes the configured HOTP QR code to a stream in the requested output format.
         /// </summary>
-        public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) =>
+        public void Save(Stream stream, OutputFormat format, OutputOptions? extras = null) =>
             SaveUri(Uri(), stream, format, Rendering, Encoding, extras);
     }
 }

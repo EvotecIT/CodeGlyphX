@@ -16,7 +16,7 @@ internal static class QrFancyExample {
             ModuleSize = 8,
             Background = new Rgba32(250, 252, 255),
             Foreground = new Rgba32(18, 44, 78),
-            ModuleShape = QrPngModuleShape.Rounded,
+            ModuleShape = QrModuleShape.Rounded,
             ModuleScale = 0.88,
             LogoPng = logoPng,
             LogoScale = 0.22,
@@ -26,11 +26,11 @@ internal static class QrFancyExample {
         QR.Save(payload, Path.Combine(outputDir, "qr-fancy.png"), options, encoding);
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-fancy.pdf"),
-            QR.Render(payload, OutputFormat.Pdf, options, encoding, extras: new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Pdf, options, encoding, extras: new OutputOptions { VectorMode = RenderMode.Raster })
         );
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-fancy.eps"),
-            QR.Render(payload, OutputFormat.Eps, options, encoding, extras: new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Eps, options, encoding, extras: new OutputOptions { VectorMode = RenderMode.Raster })
         );
     }
 }

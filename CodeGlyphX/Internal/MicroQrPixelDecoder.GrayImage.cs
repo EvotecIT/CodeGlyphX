@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 #if NET8_0_OR_GREATER
 using PixelSpan = System.ReadOnlySpan<byte>;
 #else

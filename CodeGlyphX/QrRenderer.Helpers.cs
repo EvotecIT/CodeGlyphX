@@ -42,11 +42,11 @@ internal static partial class QrRenderer {
         };
 
         if (opts.Style == QrRenderStyle.Rounded) {
-            render.ModuleShape = QrPngModuleShape.Rounded;
+            render.ModuleShape = QrModuleShape.Rounded;
             render.ModuleScale = 0.9;
             render.ModuleCornerRadiusPx = 2;
         } else if (opts.Style == QrRenderStyle.Fancy) {
-            render.ModuleShape = QrPngModuleShape.Rounded;
+            render.ModuleShape = QrModuleShape.Rounded;
             render.ModuleScale = 0.85;
             render.ModuleCornerRadiusPx = 3;
             render.ForegroundGradient = CreateFancyGradient(opts.Foreground);
@@ -79,7 +79,7 @@ internal static partial class QrRenderer {
         return render;
     }
 
-    private static IcoRenderOptions BuildIcoOptions(RenderExtras? extras) {
+    private static IcoRenderOptions BuildIcoOptions(OutputOptions? extras) {
         return new IcoRenderOptions {
             Sizes = extras?.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
             PreserveAspectRatio = extras?.IcoPreserveAspectRatio ?? true
@@ -97,23 +97,23 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngGradientOptions CreateFancyGradient(Rgba32 foreground) {
-        return new QrPngGradientOptions {
-            Type = QrPngGradientType.DiagonalDown,
+    private static QrGradientOptions CreateFancyGradient(Rgba32 foreground) {
+        return new QrGradientOptions {
+            Type = QrGradientType.DiagonalDown,
             StartColor = foreground,
             EndColor = Blend(foreground, Rgba32.White, 0.35),
         };
     }
 
-    private static QrPngEyeOptions CreateFancyEyes(Rgba32 foreground) {
-        return new QrPngEyeOptions {
+    private static QrEyeOptions CreateFancyEyes(Rgba32 foreground) {
+        return new QrEyeOptions {
             UseFrame = true,
-            OuterShape = QrPngModuleShape.Rounded,
-            InnerShape = QrPngModuleShape.Circle,
+            OuterShape = QrModuleShape.Rounded,
+            InnerShape = QrModuleShape.Circle,
             OuterCornerRadiusPx = 5,
             InnerCornerRadiusPx = 4,
-            OuterGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Radial,
+            OuterGradient = new QrGradientOptions {
+                Type = QrGradientType.Radial,
                 StartColor = foreground,
                 EndColor = Blend(foreground, Rgba32.White, 0.35),
                 CenterX = 0.35,
@@ -146,9 +146,9 @@ internal static partial class QrRenderer {
         return resolved;
     }
 
-    private static QrPngLogoOptions? BuildPngLogo(QrRenderOptions opts) {
+    private static QrRasterLogoOptions? BuildPngLogo(QrRenderOptions opts) {
         if (opts.LogoPng is null || opts.LogoPng.Length == 0) return null;
-        var logo = QrPngLogoOptions.FromPng(opts.LogoPng);
+        var logo = QrRasterLogoOptions.FromPng(opts.LogoPng);
         logo.Scale = opts.LogoScale;
         logo.PaddingPx = opts.LogoPaddingPx;
         logo.DrawBackground = opts.LogoDrawBackground;
@@ -295,7 +295,7 @@ internal static partial class QrRenderer {
             || HasPaletteArt(render.ForegroundPalette, render.ForegroundPaletteZones);
     }
 
-    private static bool HasCanvasArt(QrPngCanvasOptions? canvas) {
+    private static bool HasCanvasArt(QrCanvasOptions? canvas) {
         return canvas?.Splash is not null
             || canvas?.Halo is not null
             || canvas?.Pattern is not null
@@ -303,7 +303,7 @@ internal static partial class QrRenderer {
             || canvas?.Grain is not null;
     }
 
-    private static bool HasEyeArt(QrPngEyeOptions? eyes) {
+    private static bool HasEyeArt(QrEyeOptions? eyes) {
         return eyes is not null && (
             eyes.SparkleCount > 0
             || eyes.AccentRingCount > 0
@@ -311,7 +311,7 @@ internal static partial class QrRenderer {
             || eyes.AccentStripeCount > 0);
     }
 
-    private static bool HasPaletteArt(QrPngPaletteOptions? palette, QrPngPaletteZoneOptions? zones) {
+    private static bool HasPaletteArt(QrPaletteOptions? palette, QrPaletteZoneOptions? zones) {
         return palette?.Colors is { Length: > 2 } || zones is not null;
     }
 
@@ -481,7 +481,7 @@ internal static partial class QrRenderer {
         ApplyEyeArtLimits(render.Eyes, guardrailMode, strong: true);
     }
 
-    private static void ApplyEyeArtLimits(QrPngEyeOptions? eye, QrArtGuardrailMode guardrailMode, bool strong) {
+    private static void ApplyEyeArtLimits(QrEyeOptions? eye, QrArtGuardrailMode guardrailMode, bool strong) {
         if (eye is null) return;
 
         var limits = strong
@@ -504,14 +504,14 @@ internal static partial class QrRenderer {
         CapEyeArtAlpha(eye, limits.Alpha);
     }
 
-    private static void ProtectEyeArt(QrPngEyeOptions eye) {
+    private static void ProtectEyeArt(QrEyeOptions eye) {
         eye.SparkleProtectQrArea = true;
         eye.AccentRingProtectQrArea = true;
         eye.AccentRayProtectQrArea = true;
         eye.AccentStripeProtectQrArea = true;
     }
 
-    private static void CapEyeArtAlpha(QrPngEyeOptions eye, byte alphaCap) {
+    private static void CapEyeArtAlpha(QrEyeOptions eye, byte alphaCap) {
         eye.SparkleColor = CapAlpha(eye.SparkleColor, alphaCap);
         eye.AccentRingColor = CapAlpha(eye.AccentRingColor, alphaCap);
         eye.AccentRayColor = CapAlpha(eye.AccentRayColor, alphaCap);
@@ -522,16 +522,16 @@ internal static partial class QrRenderer {
         return color is null ? null : WithAlpha(color.Value, Math.Min(color.Value.A, alphaCap));
     }
 
-    private static QrPngModuleShape MapToConnectedShape(QrPngModuleShape shape) {
+    private static QrModuleShape MapToConnectedShape(QrModuleShape shape) {
         return shape switch {
-            QrPngModuleShape.Rounded => QrPngModuleShape.ConnectedRounded,
-            QrPngModuleShape.Squircle => QrPngModuleShape.ConnectedSquircle,
-            QrPngModuleShape.Circle => QrPngModuleShape.ConnectedRounded,
-            QrPngModuleShape.Dot => QrPngModuleShape.ConnectedRounded,
-            QrPngModuleShape.DotGrid => QrPngModuleShape.ConnectedRounded,
-            QrPngModuleShape.Leaf => QrPngModuleShape.ConnectedRounded,
-            QrPngModuleShape.Wave => QrPngModuleShape.ConnectedRounded,
-            QrPngModuleShape.Blob => QrPngModuleShape.ConnectedRounded,
+            QrModuleShape.Rounded => QrModuleShape.ConnectedRounded,
+            QrModuleShape.Squircle => QrModuleShape.ConnectedSquircle,
+            QrModuleShape.Circle => QrModuleShape.ConnectedRounded,
+            QrModuleShape.Dot => QrModuleShape.ConnectedRounded,
+            QrModuleShape.DotGrid => QrModuleShape.ConnectedRounded,
+            QrModuleShape.Leaf => QrModuleShape.ConnectedRounded,
+            QrModuleShape.Wave => QrModuleShape.ConnectedRounded,
+            QrModuleShape.Blob => QrModuleShape.ConnectedRounded,
             _ => shape,
         };
     }

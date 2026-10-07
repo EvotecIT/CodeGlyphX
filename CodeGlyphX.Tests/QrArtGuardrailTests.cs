@@ -17,7 +17,7 @@ public sealed class QrArtGuardrailTests {
             QuietZone = 1,
             ProtectFunctionalPatterns = false,
             ProtectQuietZone = false,
-            ModuleShape = QrPngModuleShape.Rounded,
+            ModuleShape = QrModuleShape.Rounded,
             ModuleScale = 0.7,
         };
 
@@ -27,7 +27,7 @@ public sealed class QrArtGuardrailTests {
         Assert.True(render.QuietZone >= 4, $"QuietZone should be at least 4 (was {render.QuietZone}).");
         Assert.True(render.ProtectFunctionalPatterns, "ProtectFunctionalPatterns should be enforced by auto-tune.");
         Assert.True(render.ProtectQuietZone, "ProtectQuietZone should be enforced by auto-tune.");
-        Assert.Equal(QrPngModuleShape.ConnectedRounded, render.ModuleShape);
+        Assert.Equal(QrModuleShape.ConnectedRounded, render.ModuleShape);
         Assert.True(render.ModuleScale >= 0.86, $"ModuleScale should be clamped by the art guardrails (was {render.ModuleScale:0.00}).");
     }
 
@@ -39,13 +39,13 @@ public sealed class QrArtGuardrailTests {
             ArtGuardrailsEnabled = true,
             Foreground = new Rgba32(220, 220, 220),
             Background = new Rgba32(255, 255, 255),
-            ForegroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
+            ForegroundGradient = new QrGradientOptions {
+                Type = QrGradientType.DiagonalDown,
                 StartColor = new Rgba32(230, 230, 230),
                 EndColor = new Rgba32(245, 245, 245),
             },
-            ForegroundPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Cycle,
+            ForegroundPalette = new QrPaletteOptions {
+                Mode = QrPaletteMode.Cycle,
                 Colors = new[] {
                     new Rgba32(235, 235, 235),
                     new Rgba32(245, 245, 245),
@@ -69,16 +69,16 @@ public sealed class QrArtGuardrailTests {
         var options = new QrRenderOptions {
             Art = QrArt.Theme(QrArtTheme.PaintSplash, QrArtVariant.Bold, intensity: 95, guardrailMode: QrArtGuardrailMode.Conservative),
             ArtGuardrailsEnabled = true,
-            ModuleScaleMap = new QrPngModuleScaleMapOptions {
-                Mode = QrPngModuleScaleMode.Random,
+            ModuleScaleMap = new QrModuleScaleMapOptions {
+                Mode = QrModuleScaleMode.Random,
                 MinScale = 0.5,
                 MaxScale = 0.6,
                 RingSize = 1,
                 Seed = 123,
                 ApplyToEyes = true,
             },
-            ForegroundPattern = new QrPngForegroundPatternOptions {
-                Type = QrPngForegroundPatternType.SpeckleDots,
+            ForegroundPattern = new QrForegroundPatternOptions {
+                Type = QrForegroundPatternType.SpeckleDots,
                 Color = new Rgba32(20, 40, 120, 180),
                 SizePx = 8,
                 ThicknessPx = 3,
@@ -90,15 +90,15 @@ public sealed class QrArtGuardrailTests {
                 ApplyToModules = true,
                 ApplyToEyes = true,
             },
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = 30,
-                Splash = new QrPngCanvasSplashOptions {
+                Splash = new QrCanvasSplashOptions {
                     Color = new Rgba32(0, 120, 220, 180),
                     Count = 40,
                     MinRadiusPx = 18,
                     MaxRadiusPx = 60,
                     SpreadPx = 28,
-                    Placement = QrPngCanvasSplashPlacement.CanvasEdges,
+                    Placement = QrCanvasSplashPlacement.CanvasEdges,
                     EdgeBandPx = 110,
                     DripChance = 1.0,
                     DripLengthPx = 52,
@@ -108,9 +108,9 @@ public sealed class QrArtGuardrailTests {
                     QrAreaAlphaMax = 200,
                 },
             },
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                FrameStyle = QrPngEyeFrameStyle.Target,
+                FrameStyle = QrEyeFrameStyle.Target,
                 OuterColor = new Rgba32(10, 30, 90),
                 InnerColor = new Rgba32(255, 255, 255),
                 SparkleCount = 60,
@@ -153,17 +153,17 @@ public sealed class QrArtGuardrailTests {
             QuietZone = 1,
             ProtectFunctionalPatterns = false,
             ProtectQuietZone = false,
-            ModuleShape = QrPngModuleShape.Rounded,
+            ModuleShape = QrModuleShape.Rounded,
             ModuleScale = 0.78,
-            ModuleScaleMap = new QrPngModuleScaleMapOptions {
-                Mode = QrPngModuleScaleMode.Random,
+            ModuleScaleMap = new QrModuleScaleMapOptions {
+                Mode = QrModuleScaleMode.Random,
                 MinScale = 0.62,
                 MaxScale = 0.72,
                 Seed = 2026,
                 ApplyToEyes = true,
             },
-            ForegroundPattern = new QrPngForegroundPatternOptions {
-                Type = QrPngForegroundPatternType.SpeckleDots,
+            ForegroundPattern = new QrForegroundPatternOptions {
+                Type = QrForegroundPatternType.SpeckleDots,
                 Color = new Rgba32(15, 60, 140, 220),
                 SizePx = 10,
                 ThicknessPx = 4,
@@ -175,15 +175,15 @@ public sealed class QrArtGuardrailTests {
                 ApplyToModules = true,
                 ApplyToEyes = true,
             },
-            Canvas = new QrPngCanvasOptions {
+            Canvas = new QrCanvasOptions {
                 PaddingPx = 36,
-                Splash = new QrPngCanvasSplashOptions {
+                Splash = new QrCanvasSplashOptions {
                     Color = new Rgba32(20, 120, 220, 210),
                     Count = 64,
                     MinRadiusPx = 16,
                     MaxRadiusPx = 66,
                     SpreadPx = 40,
-                    Placement = QrPngCanvasSplashPlacement.CanvasEdges,
+                    Placement = QrCanvasSplashPlacement.CanvasEdges,
                     EdgeBandPx = 120,
                     DripChance = 1.0,
                     DripLengthPx = 60,
@@ -193,7 +193,7 @@ public sealed class QrArtGuardrailTests {
                     QrAreaAlphaMax = 220,
                 },
             },
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
                 SparkleCount = 80,
                 AccentRingCount = 16,

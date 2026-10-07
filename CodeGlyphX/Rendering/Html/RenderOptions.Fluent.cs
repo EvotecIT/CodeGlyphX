@@ -55,7 +55,7 @@ public sealed partial class QrHtmlRenderOptions {
     /// <summary>
     /// Sets the module shape.
     /// </summary>
-    public QrHtmlRenderOptions WithModuleShape(QrPngModuleShape shape) {
+    public QrHtmlRenderOptions WithModuleShape(QrModuleShape shape) {
         ModuleShape = shape;
         return this;
     }
@@ -79,7 +79,7 @@ public sealed partial class QrHtmlRenderOptions {
     /// <summary>
     /// Sets the foreground gradient.
     /// </summary>
-    public QrHtmlRenderOptions WithForegroundGradient(QrPngGradientOptions? gradient) {
+    public QrHtmlRenderOptions WithForegroundGradient(QrGradientOptions? gradient) {
         ForegroundGradient = gradient;
         return this;
     }
@@ -87,7 +87,7 @@ public sealed partial class QrHtmlRenderOptions {
     /// <summary>
     /// Sets custom eye (finder) options.
     /// </summary>
-    public QrHtmlRenderOptions WithEyes(QrPngEyeOptions? eyes) {
+    public QrHtmlRenderOptions WithEyes(QrEyeOptions? eyes) {
         Eyes = eyes;
         return this;
     }

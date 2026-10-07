@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using System.Threading;
 using CodeGlyphX.Rendering.Png;
@@ -30,7 +31,7 @@ public static partial class QrImageComposer {
             _moduleSize = moduleSize;
             _maskSize = moduleSize * 4;
             _mask = QrPngRenderer.BuildModuleMask(_maskSize, options.Shape, options.Scale, 0);
-            _connected = options.Style == QrImageArtStyle.ModuleShape && (options.Shape == QrPngModuleShape.ConnectedRounded || options.Shape == QrPngModuleShape.ConnectedSquircle);
+            _connected = options.Style == QrImageArtStyle.ModuleShape && (options.Shape == QrModuleShape.ConnectedRounded || options.Shape == QrModuleShape.ConnectedSquircle);
             _cells = new CellGeometry[modules.Width * modules.Height];
             for (var y = 0; y < modules.Height; y++) {
                 cancellationToken.ThrowIfCancellationRequested();
@@ -47,7 +48,7 @@ public static partial class QrImageComposer {
                     var detail = Math.Min(1, (Math.Abs(tl - tr) + Math.Abs(bl - br) + Math.Abs(tl - bl) + Math.Abs(tr - br)) / 255);
                     var shiftX = (Math.Abs(tl - bl) - Math.Abs(tr - br)) / 255 * 0.12 * options.DetailProtection;
                     var shiftY = (Math.Abs(tl - tr) - Math.Abs(bl - br)) / 255 * 0.12 * options.DetailProtection;
-                    var organic = options.Shape == QrPngModuleShape.Blob || options.Shape == QrPngModuleShape.Leaf;
+                    var organic = options.Shape == QrModuleShape.Blob || options.Shape == QrModuleShape.Leaf;
                     var angle = organic ? Math.Sin(x * 12.9898 + y * 78.233) * 0.5 : 0;
                     if (_style != QrImageArtStyle.ModuleShape) angle = Math.Atan2(bl + br - tl - tr, tr + br - tl - bl) + Math.PI / 4;
                     _cells[y * modules.Width + x] = new CellGeometry(

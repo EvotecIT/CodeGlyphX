@@ -35,10 +35,10 @@ internal static partial class QrRenderer {
         if (opts.ModuleJitter is not null) unsupported.Add(nameof(opts.ModuleJitter));
         if (opts.Canvas is not null) unsupported.Add(nameof(opts.Canvas));
         if (opts.Debug is not null) unsupported.Add(nameof(opts.Debug));
-        if (opts.ModuleShape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle) unsupported.Add(nameof(opts.ModuleShape));
+        if (opts.ModuleShape is QrModuleShape.ConnectedRounded or QrModuleShape.ConnectedSquircle) unsupported.Add(nameof(opts.ModuleShape));
         var eyes = opts.Eyes;
         if (eyes is not null) {
-            if (eyes.FrameStyle != QrPngEyeFrameStyle.Single) unsupported.Add("Eyes.FrameStyle");
+            if (eyes.FrameStyle != QrEyeFrameStyle.Single) unsupported.Add("Eyes.FrameStyle");
             if (eyes.OuterColors is not null) unsupported.Add("Eyes.OuterColors");
             if (eyes.InnerColors is not null) unsupported.Add("Eyes.InnerColors");
             if (eyes.OuterGradients is not null) unsupported.Add("Eyes.OuterGradients");
@@ -48,8 +48,8 @@ internal static partial class QrRenderer {
             if (eyes.AccentRingCount > 0) unsupported.Add("Eyes.AccentRingCount");
             if (eyes.AccentRayCount > 0) unsupported.Add("Eyes.AccentRayCount");
             if (eyes.AccentStripeCount > 0) unsupported.Add("Eyes.AccentStripeCount");
-            if (eyes.OuterShape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle) unsupported.Add("Eyes.OuterShape");
-            if (eyes.InnerShape is QrPngModuleShape.ConnectedRounded or QrPngModuleShape.ConnectedSquircle) unsupported.Add("Eyes.InnerShape");
+            if (eyes.OuterShape is QrModuleShape.ConnectedRounded or QrModuleShape.ConnectedSquircle) unsupported.Add("Eyes.OuterShape");
+            if (eyes.InnerShape is QrModuleShape.ConnectedRounded or QrModuleShape.ConnectedSquircle) unsupported.Add("Eyes.InnerShape");
         }
         if (unsupported.Count > 0) {
             throw new NotSupportedException($"{format} cannot represent these QR appearance settings: {string.Join(", ", unsupported)}. Use PNG or another raster output format.");

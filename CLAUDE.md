@@ -47,7 +47,7 @@ Do not suggest removed per-format facade or builder methods such as `RenderPng`,
 using CodeGlyphX.Rendering.Png;
 
 var options = new QrRenderOptions {
-    ModuleShape = QrPngModuleShape.Rounded,
+    ModuleShape = QrModuleShape.Rounded,
     Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Conservative, intensity: 60)
 };
 

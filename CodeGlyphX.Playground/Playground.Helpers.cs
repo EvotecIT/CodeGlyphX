@@ -57,79 +57,79 @@ public partial class Playground {
         return new Rgba32(0, 0, 0);
     }
 
-    internal QrPngModuleShape ParseModuleShape(string shape)
+    internal QrModuleShape ParseModuleShape(string shape)
     {
         return shape switch
         {
-            "Dot" => QrPngModuleShape.Dot,
-            "DotGrid" => QrPngModuleShape.DotGrid,
-            "Diamond" => QrPngModuleShape.Diamond,
-            "SoftDiamond" => QrPngModuleShape.SoftDiamond,
-            "Squircle" => QrPngModuleShape.Squircle,
-            "Leaf" => QrPngModuleShape.Leaf,
-            "Wave" => QrPngModuleShape.Wave,
-            "Blob" => QrPngModuleShape.Blob,
-            "Circle" => QrPngModuleShape.Circle,
-            "Rounded" => QrPngModuleShape.Rounded,
-            _ => QrPngModuleShape.Square
+            "Dot" => QrModuleShape.Dot,
+            "DotGrid" => QrModuleShape.DotGrid,
+            "Diamond" => QrModuleShape.Diamond,
+            "SoftDiamond" => QrModuleShape.SoftDiamond,
+            "Squircle" => QrModuleShape.Squircle,
+            "Leaf" => QrModuleShape.Leaf,
+            "Wave" => QrModuleShape.Wave,
+            "Blob" => QrModuleShape.Blob,
+            "Circle" => QrModuleShape.Circle,
+            "Rounded" => QrModuleShape.Rounded,
+            _ => QrModuleShape.Square
         };
     }
 
-    internal static QrPngEyeFrameStyle ParseEyeFrameStyle(string style)
+    internal static QrEyeFrameStyle ParseEyeFrameStyle(string style)
     {
         return style switch
         {
-            "DoubleRing" => QrPngEyeFrameStyle.DoubleRing,
-            "Target" => QrPngEyeFrameStyle.Target,
-            "Bracket" => QrPngEyeFrameStyle.Bracket,
-            "Badge" => QrPngEyeFrameStyle.Badge,
-            _ => QrPngEyeFrameStyle.Single
+            "DoubleRing" => QrEyeFrameStyle.DoubleRing,
+            "Target" => QrEyeFrameStyle.Target,
+            "Bracket" => QrEyeFrameStyle.Bracket,
+            "Badge" => QrEyeFrameStyle.Badge,
+            _ => QrEyeFrameStyle.Single
         };
     }
 
-    internal static QrPngPaletteMode ParsePaletteMode(string mode)
+    internal static QrPaletteMode ParsePaletteMode(string mode)
     {
         return mode switch
         {
-            "Checker" => QrPngPaletteMode.Checker,
-            "Random" => QrPngPaletteMode.Random,
-            "Rings" => QrPngPaletteMode.Rings,
-            _ => QrPngPaletteMode.Cycle
+            "Checker" => QrPaletteMode.Checker,
+            "Random" => QrPaletteMode.Random,
+            "Rings" => QrPaletteMode.Rings,
+            _ => QrPaletteMode.Cycle
         };
     }
 
-    internal static QrPngModuleScaleMode ParseScaleMapMode(string mode)
+    internal static QrModuleScaleMode ParseScaleMapMode(string mode)
     {
         return mode switch
         {
-            "Radial" => QrPngModuleScaleMode.Radial,
-            "Random" => QrPngModuleScaleMode.Random,
-            "Checker" => QrPngModuleScaleMode.Checker,
-            _ => QrPngModuleScaleMode.Rings
+            "Radial" => QrModuleScaleMode.Radial,
+            "Random" => QrModuleScaleMode.Random,
+            "Checker" => QrModuleScaleMode.Checker,
+            _ => QrModuleScaleMode.Rings
         };
     }
 
-    internal static QrPngGradientType ParseGradientType(string mode)
+    internal static QrGradientType ParseGradientType(string mode)
     {
         return mode switch
         {
-            "Vertical" => QrPngGradientType.Vertical,
-            "DiagonalDown" => QrPngGradientType.DiagonalDown,
-            "DiagonalUp" => QrPngGradientType.DiagonalUp,
-            "Radial" => QrPngGradientType.Radial,
-            _ => QrPngGradientType.Horizontal
+            "Vertical" => QrGradientType.Vertical,
+            "DiagonalDown" => QrGradientType.DiagonalDown,
+            "DiagonalUp" => QrGradientType.DiagonalUp,
+            "Radial" => QrGradientType.Radial,
+            _ => QrGradientType.Horizontal
         };
     }
 
-    internal static QrPngBackgroundPatternType ParsePatternType(string mode)
+    internal static QrBackgroundPatternType ParsePatternType(string mode)
     {
         return mode switch
         {
-            "Grid" => QrPngBackgroundPatternType.Grid,
-            "Checker" => QrPngBackgroundPatternType.Checker,
-            "DiagonalStripes" => QrPngBackgroundPatternType.DiagonalStripes,
-            "Crosshatch" => QrPngBackgroundPatternType.Crosshatch,
-            _ => QrPngBackgroundPatternType.Dots
+            "Grid" => QrBackgroundPatternType.Grid,
+            "Checker" => QrBackgroundPatternType.Checker,
+            "DiagonalStripes" => QrBackgroundPatternType.DiagonalStripes,
+            "Crosshatch" => QrBackgroundPatternType.Crosshatch,
+            _ => QrBackgroundPatternType.Dots
         };
     }
 
@@ -251,15 +251,15 @@ public partial class Playground {
                 }
                 if (ModuleShape != "Square")
                 {
-                    sb.Append("    ModuleShape = QrPngModuleShape.").Append(ModuleShape).Append(",").Append(nl);
+                    sb.Append("    ModuleShape = QrModuleShape.").Append(ModuleShape).Append(",").Append(nl);
                 }
                 if (CustomEyes)
                 {
-                    sb.Append("    Eyes = new QrPngEyeOptions").Append(nl);
+                    sb.Append("    Eyes = new QrEyeOptions").Append(nl);
                     sb.Append("    {").Append(nl);
                     sb.Append("        UseFrame = true,").Append(nl);
-                    sb.Append("        OuterShape = QrPngModuleShape.").Append(EyeOuterShape).Append(",").Append(nl);
-                    sb.Append("        InnerShape = QrPngModuleShape.").Append(EyeInnerShape).Append(nl);
+                    sb.Append("        OuterShape = QrModuleShape.").Append(EyeOuterShape).Append(",").Append(nl);
+                    sb.Append("        InnerShape = QrModuleShape.").Append(EyeInnerShape).Append(nl);
                     sb.Append("    },").Append(nl);
                 }
                 sb.Append("};").Append(nl).Append(nl);
@@ -384,17 +384,17 @@ public partial class Playground {
                 }
                 if (ModuleShape != "Square")
                 {
-                    lines.Add("    .ModuleShape = QrPngModuleShape." + ModuleShape);
+                    lines.Add("    .ModuleShape = QrModuleShape." + ModuleShape);
                 }
                 if (CustomEyes)
                 {
                     var eyeLines = new System.Collections.Generic.List<string>
                     {
                         "        .UseFrame = True",
-                        "        .OuterShape = QrPngModuleShape." + EyeOuterShape,
-                        "        .InnerShape = QrPngModuleShape." + EyeInnerShape
+                        "        .OuterShape = QrModuleShape." + EyeOuterShape,
+                        "        .InnerShape = QrModuleShape." + EyeInnerShape
                     };
-                    var eyeBlock = "    .Eyes = New QrPngEyeOptions With {" + nl
+                    var eyeBlock = "    .Eyes = New QrEyeOptions With {" + nl
                         + string.Join("," + nl, eyeLines) + nl
                         + "    }";
                     lines.Add(eyeBlock);

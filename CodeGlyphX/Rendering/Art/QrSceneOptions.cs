@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using CodeGlyphX.Rendering.Png;
 
@@ -56,7 +57,7 @@ public sealed class QrSceneOptions {
     /// <summary>Dark QR modules and caption ink; must be opaque and have luminance at most 80.</summary>
     public Rgba32 Ink { get; set; } = new(20, 32, 53);
     /// <summary>QR data module shape; functional patterns retain protected geometry.</summary>
-    public QrPngModuleShape ModuleShape { get; set; } = QrPngModuleShape.ConnectedRounded;
+    public QrModuleShape ModuleShape { get; set; } = QrModuleShape.ConnectedRounded;
     /// <summary>Portable outlined caption, up to 48 characters. Supports Latin letters, digits, space and -./:()+?.</summary>
     public string Caption { get; set; } = "SCAN ME";
     /// <summary>Optional encoded logo image, at most 1 MiB and one million decoded pixels. It stays outside the protected QR.</summary>
@@ -87,7 +88,7 @@ public sealed class QrSceneOptions {
         foreach (var c in Colors) if (c.A != 255) throw new ArgumentException("Accent colors must be opaque.", nameof(Colors));
         if (Paper.A != 255 || Luminance(Paper) < 220) throw new ArgumentException("Use light opaque paper (luminance at least 220).", nameof(Paper));
         if (Ink.A != 255 || Luminance(Ink) > 80) throw new ArgumentException("Use dark opaque ink (luminance at most 80).", nameof(Ink));
-        if (!Enum.IsDefined(typeof(QrPngModuleShape), ModuleShape)) throw new ArgumentOutOfRangeException(nameof(ModuleShape));
+        if (!Enum.IsDefined(typeof(QrModuleShape), ModuleShape)) throw new ArgumentOutOfRangeException(nameof(ModuleShape));
         if (Caption is null || Caption.Length > 48) throw new ArgumentException("Captions must contain at most 48 characters.", nameof(Caption));
         foreach (var c in Caption) if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -./:()+?".IndexOf(char.ToUpperInvariant(c)) < 0)
             throw new ArgumentException("The portable caption font supports Latin letters, digits and -./:()+?.", nameof(Caption));

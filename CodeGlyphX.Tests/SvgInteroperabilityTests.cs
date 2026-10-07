@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using System.Linq;
 using System.Xml.Linq;
@@ -30,12 +31,12 @@ public sealed class SvgInteroperabilityTests {
         var qr = QrCodeEncoder.EncodeText("SVG-INTEROP-STYLED");
         var options = new QrSvgRenderOptions {
             QuietZone = 3,
-            ModuleShape = QrPngModuleShape.Rounded,
+            ModuleShape = QrModuleShape.Rounded,
             ModuleScale = 0.85,
-            Eyes = new QrPngEyeOptions {
+            Eyes = new QrEyeOptions {
                 UseFrame = true,
-                OuterShape = QrPngModuleShape.Rounded,
-                InnerShape = QrPngModuleShape.Circle
+                OuterShape = QrModuleShape.Rounded,
+                InnerShape = QrModuleShape.Circle
             }
         };
 

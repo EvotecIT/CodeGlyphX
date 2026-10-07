@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System.Linq;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
@@ -46,7 +47,7 @@ public sealed class QrArtHeuristicTests {
             (
                 Options: new QrRenderOptions {
                     Background = white,
-                    ForegroundGradient = new QrPngGradientOptions {
+                    ForegroundGradient = new QrGradientOptions {
                         StartColor = transparentBlack,
                         EndColor = transparentBlack
                     }
@@ -55,7 +56,7 @@ public sealed class QrArtHeuristicTests {
             (
                 Options: new QrRenderOptions {
                     Background = white,
-                    ForegroundPalette = new QrPngPaletteOptions {
+                    ForegroundPalette = new QrPaletteOptions {
                         Colors = new[] { transparentBlack }
                     }
                 },
@@ -75,9 +76,9 @@ public sealed class QrArtHeuristicTests {
             ArtGuardrailsEnabled = false,
             Foreground = Rgba32.White,
             Background = Rgba32.White,
-            ForegroundPaletteZones = new QrPngPaletteZoneOptions {
+            ForegroundPaletteZones = new QrPaletteZoneOptions {
                 CenterSize = 8,
-                CenterPalette = new QrPngPaletteOptions {
+                CenterPalette = new QrPaletteOptions {
                     Colors = new[] { Rgba32.Black }
                 }
             }

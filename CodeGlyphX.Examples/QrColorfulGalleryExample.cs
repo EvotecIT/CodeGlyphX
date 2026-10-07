@@ -16,20 +16,20 @@ internal static class QrColorfulGalleryExample {
         var checks = new List<string> { "Design\tFile\tPayload\tOriginal\tHalfSize\tBoxBlur" };
 
         Save("Prism", "prism", QR.Render(Payload, OutputFormat.Png,
-            Sticker(QrPngModuleShape.ConnectedRounded, QrPngPaletteMode.Cycle,
-                new[] { R(155, 15, 105), R(81, 31, 170), R(0, 112, 138) }, R(255, 89, 168), R(54, 218, 239)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new RenderExtras { PngCompressionLevel = 6 }).ToArray());
+            Sticker(QrModuleShape.ConnectedRounded, QrPaletteMode.Cycle,
+                new[] { R(155, 15, 105), R(81, 31, 170), R(0, 112, 138) }, R(255, 89, 168), R(54, 218, 239)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new OutputOptions { PngCompressionLevel = 6 }).ToArray());
         Save("Candy pop", "candy-pop", QR.Render(Payload, OutputFormat.Png,
-            Sticker(QrPngModuleShape.Squircle, QrPngPaletteMode.Random,
-                new[] { R(165, 23, 89), R(109, 31, 160), R(20, 95, 157) }, R(255, 166, 219), R(139, 156, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new RenderExtras { PngCompressionLevel = 6 }).ToArray());
+            Sticker(QrModuleShape.Squircle, QrPaletteMode.Random,
+                new[] { R(165, 23, 89), R(109, 31, 160), R(20, 95, 157) }, R(255, 166, 219), R(139, 156, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new OutputOptions { PngCompressionLevel = 6 }).ToArray());
         Save("Neon orbit", "neon-orbit", QR.Render(Payload, OutputFormat.Png,
-            Sticker(QrPngModuleShape.Circle, QrPngPaletteMode.Rings,
-                new[] { R(14, 98, 122), R(37, 40, 153), R(127, 23, 143) }, R(32, 231, 212), R(190, 66, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new RenderExtras { PngCompressionLevel = 6 }).ToArray());
+            Sticker(QrModuleShape.Circle, QrPaletteMode.Rings,
+                new[] { R(14, 98, 122), R(37, 40, 153), R(127, 23, 143) }, R(32, 231, 212), R(190, 66, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new OutputOptions { PngCompressionLevel = 6 }).ToArray());
 
         var qr = QR.Encode(Payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         foreach (var (name, slug, shape) in new[] {
-            ("Aurora ribbons", "aurora", QrPngModuleShape.ConnectedSquircle),
-            ("Tropical leaves", "tropical", QrPngModuleShape.Leaf),
-            ("Solar bloom", "solar-bloom", QrPngModuleShape.Rounded)
+            ("Aurora ribbons", "aurora", QrModuleShape.ConnectedSquircle),
+            ("Tropical leaves", "tropical", QrModuleShape.Leaf),
+            ("Solar bloom", "solar-bloom", QrModuleShape.Rounded)
         }) {
             var artwork = QrImageComposer.Render(qr, DrawArtwork(slug), ArtworkSize, ArtworkSize,
                 new QrImageCompositionOptions {
@@ -60,29 +60,29 @@ internal static class QrColorfulGalleryExample {
         }
     }
 
-    private static QrRenderOptions Sticker(QrPngModuleShape shape, QrPngPaletteMode mode,
+    private static QrRenderOptions Sticker(QrModuleShape shape, QrPaletteMode mode,
         Rgba32[] ink, Rgba32 start, Rgba32 end) => new() {
         ModuleSize = 16, QuietZone = 4,
         Foreground = ink[1], Background = Rgba32.White,
         ModuleShape = shape, ModuleScale = 0.94,
         ProtectFunctionalPatterns = true, ProtectQuietZone = true,
-        ForegroundPalette = new QrPngPaletteOptions { Colors = ink, Mode = mode, Seed = 20261003, ApplyToEyes = false },
-        Eyes = new QrPngEyeOptions {
-            UseFrame = true, FrameStyle = QrPngEyeFrameStyle.Single,
-            OuterShape = QrPngModuleShape.Rounded, InnerShape = QrPngModuleShape.Rounded,
+        ForegroundPalette = new QrPaletteOptions { Colors = ink, Mode = mode, Seed = 20261003, ApplyToEyes = false },
+        Eyes = new QrEyeOptions {
+            UseFrame = true, FrameStyle = QrEyeFrameStyle.Single,
+            OuterShape = QrModuleShape.Rounded, InnerShape = QrModuleShape.Rounded,
             OuterCornerRadiusPx = 20, InnerCornerRadiusPx = 10,
             OuterColor = ink[1], InnerColor = ink[0]
         },
-        Canvas = new QrPngCanvasOptions {
+        Canvas = new QrCanvasOptions {
             PaddingPx = 96, CornerRadiusPx = 0,
             BackgroundGradient = Gradient(start, end),
-            Frame = new QrPngCanvasFrameOptions {
+            Frame = new QrCanvasFrameOptions {
                 ThicknessPx = 6, GapPx = 14, RadiusPx = 20, Color = R(255, 255, 255)
             },
-            Splash = new QrPngCanvasSplashOptions {
+            Splash = new QrCanvasSplashOptions {
                 Colors = new[] { R(255, 235, 86), R(255, 85, 155), R(62, 235, 221) },
                 Count = 18, MinRadiusPx = 8, MaxRadiusPx = 26, SpreadPx = 64,
-                Placement = QrPngCanvasSplashPlacement.CanvasEdges, Seed = 701, DripChance = 0
+                Placement = QrCanvasSplashPlacement.CanvasEdges, Seed = 701, DripChance = 0
             }
         }
     };
@@ -153,5 +153,5 @@ internal static class QrColorfulGalleryExample {
         t = Math.Clamp(t, 0, 1);
         return R((byte)Math.Round(a.R + (b.R - a.R) * t), (byte)Math.Round(a.G + (b.G - a.G) * t), (byte)Math.Round(a.B + (b.B - a.B) * t));
     }
-    private static QrPngGradientOptions Gradient(Rgba32 a, Rgba32 b) => new() { Type = QrPngGradientType.DiagonalDown, StartColor = a, EndColor = b };
+    private static QrGradientOptions Gradient(Rgba32 a, Rgba32 b) => new() { Type = QrGradientType.DiagonalDown, StartColor = a, EndColor = b };
 }

@@ -41,7 +41,7 @@ var svg = Barcode.Render(SymbolFormat.Code128, "PRODUCT-12345", OutputFormat.Svg
 var png = QR.Render("Hello, World!", OutputFormat.Png).ToArray();
 
 // HTML title + raster PDF/EPS
-var extras = new RenderExtras { HtmlTitle = "My Code", VectorMode = RenderMode.Raster };
+var extras = new OutputOptions { HtmlTitle = "My Code", VectorMode = RenderMode.Raster };
 QR.Save("Hello, World!", "hello.html", extras: extras);
 ```
 

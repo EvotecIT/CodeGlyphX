@@ -25,7 +25,7 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 internal static partial class QrRenderer {
-    internal static RenderedOutput Render(QrCode qr, OutputFormat format, QrRenderOptions? options = null, RenderExtras? extras = null) {
+    internal static RenderedOutput Render(QrCode qr, OutputFormat format, QrRenderOptions? options = null, OutputOptions? extras = null) {
         if (qr is null) throw new ArgumentNullException(nameof(qr));
         if (format == OutputFormat.Unknown) throw new ArgumentOutOfRangeException(nameof(format));
 

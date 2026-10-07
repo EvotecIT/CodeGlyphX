@@ -35,7 +35,7 @@ public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Gets or sets the module shape.
     /// </summary>
-    public QrPngModuleShape ModuleShape { get; set; } = QrPngModuleShape.Square;
+    public QrModuleShape ModuleShape { get; set; } = QrModuleShape.Square;
 
     /// <summary>
     /// Gets or sets the scale of the module inside its cell (0.1..1.0).
@@ -50,10 +50,10 @@ public sealed partial class QrSvgRenderOptions {
     /// <summary>
     /// Optional gradient for the foreground (dark) modules.
     /// </summary>
-    public QrPngGradientOptions? ForegroundGradient { get; set; }
+    public QrGradientOptions? ForegroundGradient { get; set; }
 
     /// <summary>
     /// Optional eye (finder) styling overrides.
     /// </summary>
-    public QrPngEyeOptions? Eyes { get; set; }
+    public QrEyeOptions? Eyes { get; set; }
 }

@@ -40,7 +40,7 @@ public class RenderOutputTests {
 
     [Fact]
     public void RenderHtmlHonorsTitleExtras() {
-        var extras = new RenderExtras { HtmlTitle = "Render Output Test" };
+        var extras = new OutputOptions { HtmlTitle = "Render Output Test" };
         var output = Barcode.Render(BarcodeType.Code128, "CODE128-HTML", OutputFormat.Html, extras: extras);
 
         var text = output.GetText();

@@ -20,12 +20,12 @@ internal static class QrExpressiveArtExample {
         Directory.CreateDirectory(dir);
         var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var scenes = new[] {
-            ("botanical", QrPngModuleShape.Leaf, new Rgba32(17, 46, 34)),
-            ("citrus", QrPngModuleShape.Rounded, new Rgba32(65, 25, 18)),
-            ("landscape", QrPngModuleShape.ConnectedRounded, new Rgba32(24, 31, 57)),
-            ("waves", QrPngModuleShape.ConnectedSquircle, new Rgba32(8, 41, 51)),
-            ("geometric", QrPngModuleShape.Blob, new Rgba32(47, 26, 45)),
-            ("earth", QrPngModuleShape.Circle, new Rgba32(12, 31, 49)),
+            ("botanical", QrModuleShape.Leaf, new Rgba32(17, 46, 34)),
+            ("citrus", QrModuleShape.Rounded, new Rgba32(65, 25, 18)),
+            ("landscape", QrModuleShape.ConnectedRounded, new Rgba32(24, 31, 57)),
+            ("waves", QrModuleShape.ConnectedSquircle, new Rgba32(8, 41, 51)),
+            ("geometric", QrModuleShape.Blob, new Rgba32(47, 26, 45)),
+            ("earth", QrModuleShape.Circle, new Rgba32(12, 31, 49)),
         };
         foreach (var (scene, shape, ink) in scenes) {
             byte[] pixels;

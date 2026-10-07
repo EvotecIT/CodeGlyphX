@@ -10,7 +10,7 @@ public static partial class Pdf417Code {
     /// Saves Macro PDF417 to a file based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string SaveMacro(string text, Pdf417MacroOptions macro, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
+    public static string SaveMacro(string text, Pdf417MacroOptions macro, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, OutputOptions? extras = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
         var output = RenderMacro(text, macro, format, encodeOptions, renderOptions, extras);
         return OutputWriter.Write(path, output);

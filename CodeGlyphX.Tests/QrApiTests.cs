@@ -68,8 +68,8 @@ public sealed class QrApiTests {
         var rendering = new QrRenderOptions {
             ModuleSize = 5,
             Art = QrArt.Theme(QrArtTheme.PaintSplash, intensity: 55),
-            Debug = new QrPngDebugOptions { StrokePx = 2 },
-            ForegroundPalette = new QrPngPaletteOptions { Colors = new[] { Rgba32.Black, Rgba32.White } }
+            Debug = new QrRasterDebugOptions { StrokePx = 2 },
+            ForegroundPalette = new QrPaletteOptions { Colors = new[] { Rgba32.Black, Rgba32.White } }
         };
         var builder = QR.Create("BUILDER", rendering, encoding);
         encoding.ErrorCorrectionLevel = QrErrorCorrectionLevel.L;
@@ -95,7 +95,7 @@ public sealed class QrApiTests {
     [InlineData(OutputFormat.Svgz)]
     [InlineData(OutputFormat.Html)]
     public void VectorOutputs_RejectAppearanceTheyCannotRepresent(OutputFormat format) {
-        var options = new QrRenderOptions { ForegroundPalette = new QrPngPaletteOptions() };
+        var options = new QrRenderOptions { ForegroundPalette = new QrPaletteOptions() };
         var error = Assert.Throws<NotSupportedException>(() => QR.Render("VECTOR", format, options));
 
         Assert.Contains(nameof(QrRenderOptions.ForegroundPalette), error.Message);
@@ -118,7 +118,7 @@ public sealed class QrApiTests {
     [Fact]
     public void Render_DoesNotMutateCallerOwnedAsciiLayout() {
         var ascii = new MatrixAsciiRenderOptions { QuietZone = RenderDefaults.QrQuietZone };
-        var extras = new RenderExtras { MatrixAscii = ascii };
+        var extras = new OutputOptions { MatrixAscii = ascii };
 
         var text = QR.Render("ASCII", OutputFormat.Ascii, new QrRenderOptions { QuietZone = 6 }, extras: extras).GetText();
 

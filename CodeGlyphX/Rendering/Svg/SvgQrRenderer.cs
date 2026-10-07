@@ -39,7 +39,7 @@ public static class SvgQrRenderer {
         sb.Append("<rect width=\"").Append(outSize).Append("\" height=\"").Append(outSize)
             .Append("\" fill=\"").Append(opts.LightColor).Append("\"/>");
 
-        var hasAdvanced = opts.ModuleShape != QrPngModuleShape.Square ||
+        var hasAdvanced = opts.ModuleShape != QrModuleShape.Square ||
                           Math.Abs(opts.ModuleScale - 1.0) > 0.0001 ||
                           opts.ModuleCornerRadiusPx != 0;
 
@@ -251,7 +251,7 @@ public static class SvgQrRenderer {
         double cellX,
         double cellY,
         double cellSize,
-        QrPngModuleShape shape,
+        QrModuleShape shape,
         double scale,
         int cornerRadiusPx,
         int moduleSizePx,
@@ -259,10 +259,10 @@ public static class SvgQrRenderer {
         if (scale <= 0) return;
         if (scale > 1.0) scale = 1.0;
 
-        if (shape == QrPngModuleShape.ConnectedRounded) shape = QrPngModuleShape.Rounded;
-        if (shape == QrPngModuleShape.ConnectedSquircle) shape = QrPngModuleShape.Squircle;
-        if (shape == QrPngModuleShape.Dot) scale *= QrPngShapeDefaults.DotScale;
-        if (shape == QrPngModuleShape.DotGrid) {
+        if (shape == QrModuleShape.ConnectedRounded) shape = QrModuleShape.Rounded;
+        if (shape == QrModuleShape.ConnectedSquircle) shape = QrModuleShape.Squircle;
+        if (shape == QrModuleShape.Dot) scale *= QrPngShapeDefaults.DotScale;
+        if (shape == QrModuleShape.DotGrid) {
             AppendDotGrid(sb, cellX, cellY, cellSize, scale, fill);
             return;
         }
@@ -272,13 +272,13 @@ public static class SvgQrRenderer {
         var x = cellX + inset;
         var y = cellY + inset;
 
-        if (shape == QrPngModuleShape.Circle) {
+        if (shape == QrModuleShape.Circle) {
             var r = size / 2.0;
             sb.Append("<circle cx=\"").Append(Format(x + r)).Append("\" cy=\"").Append(Format(y + r))
                 .Append("\" r=\"").Append(Format(r)).Append("\" fill=\"").Append(fill).Append("\"/>");
             return;
         }
-        if (shape == QrPngModuleShape.Diamond) {
+        if (shape == QrModuleShape.Diamond) {
             var cx = x + size / 2.0;
             var cy = y + size / 2.0;
             sb.Append("<polygon points=\"")
@@ -289,29 +289,29 @@ public static class SvgQrRenderer {
                 .Append("\" fill=\"").Append(fill).Append("\"/>");
             return;
         }
-        if (shape == QrPngModuleShape.SoftDiamond) {
+        if (shape == QrModuleShape.SoftDiamond) {
             AppendSuperellipse(sb, x, y, size, QrPngShapeDefaults.SoftDiamondExponent, fill);
             return;
         }
-        if (shape == QrPngModuleShape.Squircle) {
+        if (shape == QrModuleShape.Squircle) {
             AppendSquircle(sb, x, y, size, fill);
             return;
         }
-        if (shape == QrPngModuleShape.Leaf) {
+        if (shape == QrModuleShape.Leaf) {
             AppendRadialShape(sb, x, y, size, LeafRadiusFactor, fill);
             return;
         }
-        if (shape == QrPngModuleShape.Wave) {
+        if (shape == QrModuleShape.Wave) {
             AppendRadialShape(sb, x, y, size, WaveRadiusFactor, fill);
             return;
         }
-        if (shape == QrPngModuleShape.Blob) {
+        if (shape == QrModuleShape.Blob) {
             AppendRadialShape(sb, x, y, size, BlobRadiusFactor, fill);
             return;
         }
 
         var radius = 0.0;
-        if (shape == QrPngModuleShape.Rounded) {
+        if (shape == QrModuleShape.Rounded) {
             radius = cornerRadiusPx > 0 ? cornerRadiusPx / (double)moduleSizePx : size / 4.0;
             if (radius > size / 2.0) radius = size / 2.0;
         }
@@ -460,12 +460,12 @@ public static class SvgQrRenderer {
     private static void AppendGradientDef(
         StringBuilder sb,
         string id,
-        QrPngGradientOptions gradient,
+        QrGradientOptions gradient,
         double x,
         double y,
         double w,
         double h) {
-        if (gradient.Type == QrPngGradientType.Radial) {
+        if (gradient.Type == QrGradientType.Radial) {
             var cx = x + gradient.CenterX * w;
             var cy = y + gradient.CenterY * h;
             var r = Math.Max(w, h) / 2.0;
@@ -482,19 +482,19 @@ public static class SvgQrRenderer {
         sb.Append("<stop offset=\"0%\" stop-color=\"").Append(ToCssColor(gradient.StartColor)).Append("\"/>");
         sb.Append("<stop offset=\"100%\" stop-color=\"").Append(ToCssColor(gradient.EndColor)).Append("\"/>");
 
-        if (gradient.Type == QrPngGradientType.Radial) sb.Append("</radialGradient>");
+        if (gradient.Type == QrGradientType.Radial) sb.Append("</radialGradient>");
         else sb.Append("</linearGradient>");
     }
 
-    private static void GetLinearPoints(QrPngGradientType type, double x, double y, double w, double h, out double x1, out double y1, out double x2, out double y2) {
+    private static void GetLinearPoints(QrGradientType type, double x, double y, double w, double h, out double x1, out double y1, out double x2, out double y2) {
         switch (type) {
-            case QrPngGradientType.Vertical:
+            case QrGradientType.Vertical:
                 x1 = x; y1 = y; x2 = x; y2 = y + h;
                 break;
-            case QrPngGradientType.DiagonalDown:
+            case QrGradientType.DiagonalDown:
                 x1 = x; y1 = y; x2 = x + w; y2 = y + h;
                 break;
-            case QrPngGradientType.DiagonalUp:
+            case QrGradientType.DiagonalUp:
                 x1 = x; y1 = y + h; x2 = x + w; y2 = y;
                 break;
             default:
@@ -552,7 +552,7 @@ public static class SvgQrRenderer {
         sb.Append("</g>");
     }
 
-    private static string ToCssColor(CodeGlyphX.Rendering.Png.Rgba32 color) {
+    private static string ToCssColor(CodeGlyphX.Rendering.Rgba32 color) {
         if (color.A == 255) {
             return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
         }

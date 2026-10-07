@@ -22,8 +22,8 @@ public static partial class Barcode {
         };
     }
 
-    private static IcoRenderOptions BuildIcoOptions(RenderExtras? extras) {
-        var opts = extras ?? new RenderExtras();
+    private static IcoRenderOptions BuildIcoOptions(OutputOptions? extras) {
+        var opts = extras ?? new OutputOptions();
         return new IcoRenderOptions {
             Sizes = opts.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
             PreserveAspectRatio = opts.IcoPreserveAspectRatio
@@ -46,7 +46,7 @@ public static partial class Barcode {
         };
     }
 
-    private static BarcodeHtmlRenderOptions BuildHtmlOptions(BarcodeOptions? options, RenderExtras? extras) {
+    private static BarcodeHtmlRenderOptions BuildHtmlOptions(BarcodeOptions? options, OutputOptions? extras) {
         var opts = options ?? new BarcodeOptions();
         return new BarcodeHtmlRenderOptions {
             ModuleSize = opts.ModuleSize,

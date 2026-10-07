@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using CodeGlyphX.Rendering.Png;
 
@@ -25,7 +26,7 @@ public static class QrScenePresets {
             QrSceneStyle.CosmicOrbit => "EXPLORE YOUR UNIVERSE",
             _ => "PRESS START"
         };
-        options.ModuleShape = style == QrSceneStyle.RetroArcade ? QrPngModuleShape.Square : QrPngModuleShape.ConnectedRounded;
+        options.ModuleShape = style == QrSceneStyle.RetroArcade ? QrModuleShape.Square : QrModuleShape.ConnectedRounded;
         options.Validate();
         return options;
     }

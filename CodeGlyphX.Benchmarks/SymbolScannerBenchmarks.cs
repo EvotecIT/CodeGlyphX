@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;

@@ -31,7 +31,7 @@ public sealed class GenericPngCompressionTests {
     }
 
     private static byte[] Render(int family, int level) {
-        var extras = new RenderExtras { PngCompressionLevel = level };
+        var extras = new OutputOptions { PngCompressionLevel = level };
         if (family == 1)
             return DataMatrixCode.Render("COMPRESS-MATRIX", OutputFormat.Png,
                 options: new MatrixOptions { ModuleSize = 8 }, extras: extras).Data;

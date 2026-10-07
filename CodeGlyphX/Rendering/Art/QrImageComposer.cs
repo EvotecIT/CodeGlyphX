@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using System.Threading;
 using CodeGlyphX.Qr;
@@ -104,7 +105,7 @@ public static partial class QrImageComposer {
         return new QrImageComposition(pixels, side, qrOffsetX, qrOffsetY, qrFullSize);
     }
 
-    private static void WriteColor(byte[] pixels, int index, CodeGlyphX.Rendering.Png.Rgba32 color) {
+    private static void WriteColor(byte[] pixels, int index, CodeGlyphX.Rendering.Rgba32 color) {
         pixels[index] = color.R;
         pixels[index + 1] = color.G;
         pixels[index + 2] = color.B;

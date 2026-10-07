@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Tiff;

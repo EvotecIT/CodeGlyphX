@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX;
@@ -89,7 +90,7 @@ public readonly struct QrArtPalette {
     /// <summary>
     /// Palette options for the foreground.
     /// </summary>
-    public QrPngPaletteOptions Palette { get; }
+    public QrPaletteOptions Palette { get; }
 
     /// <summary>
     /// Create a palette bundle.
@@ -97,8 +98,8 @@ public readonly struct QrArtPalette {
     public QrArtPalette(Rgba32 background, Rgba32 foreground, Rgba32[] colors) {
         Background = background;
         Foreground = foreground;
-        Palette = new QrPngPaletteOptions {
-            Mode = QrPngPaletteMode.Cycle,
+        Palette = new QrPaletteOptions {
+            Mode = QrPaletteMode.Cycle,
             Colors = colors ?? new[] { foreground },
         };
     }

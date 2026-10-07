@@ -140,7 +140,7 @@ public sealed class RoundTripTests {
         var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
             ModuleSize = 8,
             QuietZone = 4,
-            ModuleShape = QrPngModuleShape.Circle,
+            ModuleShape = QrModuleShape.Circle,
             ModuleScale = 0.65
         });
 
@@ -163,7 +163,7 @@ public sealed class RoundTripTests {
         var png = QrPngRenderer.Render(qr.Modules, new QrPngRenderOptions {
             ModuleSize = 9,
             QuietZone = 4,
-            ModuleShape = QrPngModuleShape.Circle,
+            ModuleShape = QrModuleShape.Circle,
             ModuleScale = 0.7
         });
 

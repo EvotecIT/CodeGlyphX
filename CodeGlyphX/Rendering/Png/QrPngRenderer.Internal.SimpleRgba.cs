@@ -24,7 +24,7 @@ public static partial class QrPngRenderer {
             && opts.Logo is null
             && opts.Canvas is null
             && (opts.Debug is null || !opts.Debug.HasOverlay)
-            && opts.ModuleShape == QrPngModuleShape.Square
+            && opts.ModuleShape == QrModuleShape.Square
             && IsUnitScale(opts.ModuleScale)
             && opts.ModuleCornerRadiusPx == 0;
     }

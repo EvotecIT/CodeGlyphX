@@ -24,7 +24,7 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 internal static class MatrixOutputRenderer {
-    public static RenderedOutput Render(BitMatrix modules, OutputFormat format, MatrixOptions? options, RenderExtras? extras) {
+    public static RenderedOutput Render(BitMatrix modules, OutputFormat format, MatrixOptions? options, OutputOptions? extras) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (format == OutputFormat.Unknown) throw new ArgumentOutOfRangeException(nameof(format));
 
@@ -59,27 +59,27 @@ internal static class MatrixOutputRenderer {
 
     private static RenderedOutput Text(OutputFormat format, string text) => RenderedOutput.FromText(format, text);
 
-    private static string RenderHtml(BitMatrix modules, MatrixOptions? options, RenderExtras? extras) {
+    private static string RenderHtml(BitMatrix modules, MatrixOptions? options, OutputOptions? extras) {
         var html = MatrixHtmlRenderer.Render(modules, MatrixRenderOptionsBuilder.BuildHtml(options, extras));
         var title = extras?.HtmlTitle;
         return string.IsNullOrEmpty(title) ? html : html.WrapHtml(title);
     }
 
-    private static byte[] RenderJpeg(BitMatrix modules, MatrixPngRenderOptions pngOptions, RenderExtras? extras) {
+    private static byte[] RenderJpeg(BitMatrix modules, MatrixPngRenderOptions pngOptions, OutputOptions? extras) {
         var jpegOptions = extras?.JpegOptions;
         return jpegOptions is null
             ? MatrixJpegRenderer.Render(modules, pngOptions, extras?.JpegQuality ?? 85)
             : MatrixJpegRenderer.Render(modules, pngOptions, jpegOptions);
     }
 
-    private static byte[] RenderWebp(BitMatrix modules, MatrixPngRenderOptions pngOptions, RenderExtras? extras) {
+    private static byte[] RenderWebp(BitMatrix modules, MatrixPngRenderOptions pngOptions, OutputOptions? extras) {
         var quality = extras?.WebpQuality ?? 100;
         return RenderAnimationHelpers.TryRenderMatrixWebp(extras, pngOptions, quality, out var webp)
             ? webp
             : MatrixWebpRenderer.Render(modules, pngOptions, quality);
     }
 
-    private static byte[] RenderGif(BitMatrix modules, MatrixPngRenderOptions pngOptions, RenderExtras? extras) {
+    private static byte[] RenderGif(BitMatrix modules, MatrixPngRenderOptions pngOptions, OutputOptions? extras) {
         return RenderAnimationHelpers.TryRenderMatrixGif(extras, pngOptions, out var gif)
             ? gif
             : MatrixGifRenderer.Render(modules, pngOptions);

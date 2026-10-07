@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using CodeGlyphX.Qr;
 using CodeGlyphX.Rendering.Art;
@@ -13,7 +14,7 @@ public sealed class QrImageSubjectTests {
         const string payload = "https://example.com/subject";
         var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var source = new byte[] { 170, 140, 100, 255 };
-        var options = new QrImageCompositionOptions { Strength = 1, Art = new QrImageArtOptions { Shape = QrPngModuleShape.Leaf } };
+        var options = new QrImageCompositionOptions { Strength = 1, Art = new QrImageArtOptions { Shape = QrModuleShape.Leaf } };
         var baseline = QrImageComposer.Render(qr, source, 1, 1, options);
         options.Art.Subject = new QrImageSubjectOptions { Mask = new QrImageProtectionMask(new byte[] { 255 }, 1, 1) };
         var protectedImage = QrImageComposer.Render(qr, source, 1, 1, options);

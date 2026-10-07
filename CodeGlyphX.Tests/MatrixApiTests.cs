@@ -183,7 +183,7 @@ public sealed class MatrixApiTests {
     [Fact]
     public void MatrixBarcode_Render_AsAscii_PreservesExplicitAsciiOptions() {
         var modules = MatrixBarcode.Encode(BarcodeType.DataMatrix, "DM-ASCII-EXTRAS");
-        var extras = new RenderExtras {
+        var extras = new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 ModuleWidth = 1,
@@ -206,7 +206,7 @@ public sealed class MatrixApiTests {
             BarcodeType.DataMatrix,
             "DM-HTML",
             OutputFormat.Html,
-            extras: new RenderExtras { HtmlTitle = "Matrix title" });
+            extras: new OutputOptions { HtmlTitle = "Matrix title" });
 
         Assert.Equal(OutputKind.Text, output.Kind);
         Assert.Contains("<title>Matrix title</title>", output.GetText(), StringComparison.OrdinalIgnoreCase);

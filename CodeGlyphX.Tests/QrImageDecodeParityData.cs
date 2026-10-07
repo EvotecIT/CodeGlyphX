@@ -96,12 +96,12 @@ public static class QrImageDecodeParityData {
             QrPayloads.Url("https://example.com/qr-parity-gradient"),
             configure: options => {
                 options.Foreground = new Rgba32(12, 45, 110, 255);
-                options.ForegroundGradient = new QrPngGradientOptions {
-                    Type = QrPngGradientType.DiagonalDown,
+                options.ForegroundGradient = new QrGradientOptions {
+                    Type = QrGradientType.DiagonalDown,
                     StartColor = new Rgba32(206, 32, 255, 255),
                     EndColor = new Rgba32(0, 194, 255, 255)
                 };
-                options.ModuleShape = QrPngModuleShape.Rounded;
+                options.ModuleShape = QrModuleShape.Rounded;
                 options.ModuleScale = 0.94;
             });
 
@@ -109,8 +109,8 @@ public static class QrImageDecodeParityData {
             "email-background-pattern",
             QrPayloads.Email("design@example.com", "Gradient parity", "Background pattern parity"),
             configure: options => {
-                options.BackgroundPattern = new QrPngBackgroundPatternOptions {
-                    Type = QrPngBackgroundPatternType.Dots,
+                options.BackgroundPattern = new QrBackgroundPatternOptions {
+                    Type = QrBackgroundPatternType.Dots,
                     Color = new Rgba32(0, 122, 255, 28),
                     SizePx = 10,
                     ThicknessPx = 1,

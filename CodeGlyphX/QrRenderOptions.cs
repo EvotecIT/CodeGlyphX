@@ -46,12 +46,12 @@ public sealed class QrRenderOptions {
     /// <summary>
     /// Optional background gradient.
     /// </summary>
-    public QrPngGradientOptions? BackgroundGradient { get; set; }
+    public QrGradientOptions? BackgroundGradient { get; set; }
 
     /// <summary>
     /// Optional pattern overlay for the QR background area.
     /// </summary>
-    public QrPngBackgroundPatternOptions? BackgroundPattern { get; set; }
+    public QrBackgroundPatternOptions? BackgroundPattern { get; set; }
 
     /// <summary>
     /// Background supersample factor for gradients/patterns (1 = disabled).
@@ -82,7 +82,7 @@ public sealed class QrRenderOptions {
     /// <summary>
     /// Overrides the module shape (when set).
     /// </summary>
-    public QrPngModuleShape? ModuleShape { get; set; }
+    public QrModuleShape? ModuleShape { get; set; }
 
     /// <summary>
     /// Overrides the module scale (0.1..1.0).
@@ -92,17 +92,17 @@ public sealed class QrRenderOptions {
     /// <summary>
     /// Overrides the module scale map.
     /// </summary>
-    public QrPngModuleScaleMapOptions? ModuleScaleMap { get; set; }
+    public QrModuleScaleMapOptions? ModuleScaleMap { get; set; }
 
     /// <summary>
     /// Overrides the module shape map.
     /// </summary>
-    public QrPngModuleShapeMapOptions? ModuleShapeMap { get; set; }
+    public QrModuleShapeMapOptions? ModuleShapeMap { get; set; }
 
     /// <summary>
     /// Overrides per-module jitter options.
     /// </summary>
-    public QrPngModuleJitterOptions? ModuleJitter { get; set; }
+    public QrModuleJitterOptions? ModuleJitter { get; set; }
 
 
     /// <summary>
@@ -123,37 +123,37 @@ public sealed class QrRenderOptions {
     /// <summary>
     /// Overrides the foreground gradient.
     /// </summary>
-    public QrPngGradientOptions? ForegroundGradient { get; set; }
+    public QrGradientOptions? ForegroundGradient { get; set; }
 
     /// <summary>
     /// Overrides the foreground palette.
     /// </summary>
-    public QrPngPaletteOptions? ForegroundPalette { get; set; }
+    public QrPaletteOptions? ForegroundPalette { get; set; }
 
     /// <summary>
     /// Overrides the foreground pattern overlay.
     /// </summary>
-    public QrPngForegroundPatternOptions? ForegroundPattern { get; set; }
+    public QrForegroundPatternOptions? ForegroundPattern { get; set; }
 
     /// <summary>
     /// Overrides palette zones.
     /// </summary>
-    public QrPngPaletteZoneOptions? ForegroundPaletteZones { get; set; }
+    public QrPaletteZoneOptions? ForegroundPaletteZones { get; set; }
 
     /// <summary>
     /// Optional canvas options for sticker-style output.
     /// </summary>
-    public QrPngCanvasOptions? Canvas { get; set; }
+    public QrCanvasOptions? Canvas { get; set; }
 
     /// <summary>
     /// Optional debug overlay options (PNG only).
     /// </summary>
-    public QrPngDebugOptions? Debug { get; set; }
+    public QrRasterDebugOptions? Debug { get; set; }
 
     /// <summary>
     /// Overrides eye (finder) styling.
     /// </summary>
-    public QrPngEyeOptions? Eyes { get; set; }
+    public QrEyeOptions? Eyes { get; set; }
 
     /// <summary>
     /// Optional logo PNG bytes (embedded for PNG/SVG/HTML).

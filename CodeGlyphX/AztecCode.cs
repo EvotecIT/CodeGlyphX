@@ -52,7 +52,7 @@ public static partial class AztecCode {
     /// Saves Aztec to a file based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
+    public static string Save(string text, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, OutputOptions? extras = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
         var output = Render(text, format, encodeOptions, renderOptions, extras);
         return OutputWriter.Write(path, output);
@@ -62,7 +62,7 @@ public static partial class AztecCode {
     /// Saves an Aztec binary payload to a file based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(byte[] data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
+    public static string Save(byte[] data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, OutputOptions? extras = null) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         return Save((ReadOnlySpan<byte>)data, path, encodeOptions, renderOptions, extras);
     }
@@ -71,7 +71,7 @@ public static partial class AztecCode {
     /// Saves an Aztec binary payload to a file based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
+    public static string Save(ReadOnlySpan<byte> data, string path, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, OutputOptions? extras = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
         var output = Render(data, format, encodeOptions, renderOptions, extras);
         return OutputWriter.Write(path, output);

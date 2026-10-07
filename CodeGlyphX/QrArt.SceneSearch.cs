@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,13 +31,13 @@ public static partial class QrArt {
         QrSceneCandidate? best = null; var attempted = 0; var validated = 0;
         // Original, halfway enlargement, maximum enlargement; then the same sizes with square data modules.
         for (var shapeIndex = 0; shapeIndex < 2; shapeIndex++) {
-            if (shapeIndex == 1 && (!settings.AllowSquareFallback || original.ModuleShape == QrPngModuleShape.Square)) break;
+            if (shapeIndex == 1 && (!settings.AllowSquareFallback || original.ModuleShape == QrModuleShape.Square)) break;
             for (var scaleIndex = 0; scaleIndex < 3; scaleIndex++) {
                 if (attempted >= settings.MaxCandidates) break;
                 if (scaleIndex > 0 && settings.MaxQrScale <= original.Qr.Scale) continue;
                 var candidateDesign = original.Clone();
                 candidateDesign.Qr.Scale = original.Qr.Scale + (settings.MaxQrScale - original.Qr.Scale) * scaleIndex / 2;
-                if (shapeIndex == 1) candidateDesign.ModuleShape = QrPngModuleShape.Square;
+                if (shapeIndex == 1) candidateDesign.ModuleShape = QrModuleShape.Square;
                 attempted++; token.ThrowIfCancellationRequested();
                 var moduleSize = GetSceneModuleSize(candidateDesign, code);
                 var qrSize = moduleSize * (code.Size + 8);

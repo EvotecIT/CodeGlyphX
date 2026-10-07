@@ -55,7 +55,7 @@ public partial class QrSceneStudio : IAsyncDisposable {
     }
     private Task NextSeed() => Edit(d => d.Seed = d.Seed == int.MaxValue ? int.MinValue : d.Seed + 1);
     private Task ChangeSize(ChangeEventArgs e) => Edit(d => d.Size = int.Parse(e.Value!.ToString()!, CultureInfo.InvariantCulture));
-    private Task ChangeShape(ChangeEventArgs e) => Edit(d => d.ModuleShape = Enum.Parse<QrPngModuleShape>(e.Value!.ToString()!));
+    private Task ChangeShape(ChangeEventArgs e) => Edit(d => d.ModuleShape = Enum.Parse<QrModuleShape>(e.Value!.ToString()!));
     private Task ChangeColor(int index, ChangeEventArgs e) => Edit(d => d.Colors[index] = ParseColor(e));
     private Task ChangePaper(ChangeEventArgs e) => Edit(d => d.Paper = ParseColor(e));
     private Task ChangeInk(ChangeEventArgs e) => Edit(d => d.Ink = ParseColor(e));

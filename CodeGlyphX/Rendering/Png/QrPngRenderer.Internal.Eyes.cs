@@ -63,7 +63,7 @@ public static partial class QrPngRenderer {
         return eye.InnerColor ?? opts.Foreground;
     }
 
-    private static QrPngGradientOptions? GetEyeOuterGradient(QrPngRenderOptions opts, int eyeIndex) {
+    private static QrGradientOptions? GetEyeOuterGradient(QrPngRenderOptions opts, int eyeIndex) {
         var eye = opts.Eyes;
         if (eye is null) return null;
         if (eyeIndex is >= 0 and <= 2 && eye.OuterGradients is { Length: 3 } gradients) {
@@ -72,7 +72,7 @@ public static partial class QrPngRenderer {
         return eye.OuterGradient;
     }
 
-    private static QrPngGradientOptions? GetEyeInnerGradient(QrPngRenderOptions opts, int eyeIndex) {
+    private static QrGradientOptions? GetEyeInnerGradient(QrPngRenderOptions opts, int eyeIndex) {
         var eye = opts.Eyes;
         if (eye is null) return null;
         if (eyeIndex is >= 0 and <= 2 && eye.InnerGradients is { Length: 3 } gradients) {
@@ -140,7 +140,7 @@ public static partial class QrPngRenderer {
         var qrY1 = qrOriginY + qrSizePx;
 
         switch (eye.FrameStyle) {
-            case QrPngEyeFrameStyle.Glow:
+            case QrEyeFrameStyle.Glow:
                 var glowRadiusPx = eye.GlowRadiusPx > 0 ? eye.GlowRadiusPx : Math.Max(moduleSize * 2, moduleSize + 2);
                 var glowBase = eye.GlowColor ?? outerColor;
                 var glowAlpha = (int)eye.GlowAlpha;
@@ -165,7 +165,7 @@ public static partial class QrPngRenderer {
                         qrY1);
                 }
                 goto default;
-            case QrPngEyeFrameStyle.InsetRing:
+            case QrEyeFrameStyle.InsetRing:
                 if (outerGradient is null) {
                     FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
                 } else {
@@ -193,7 +193,7 @@ public static partial class QrPngRenderer {
                     FillShape(scanlines, widthPx, heightPx, stride, holeX, holeY, holeSize, holeSize, opts.Background, eye.InnerShape, eye.InnerCornerRadiusPx);
                 }
                 break;
-            case QrPngEyeFrameStyle.CutCorner:
+            case QrEyeFrameStyle.CutCorner:
                 if (outerGradient is null) {
                     FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
                 } else {
@@ -213,8 +213,8 @@ public static partial class QrPngRenderer {
                 cutSize = Math.Min(cutSize, Math.Max(1, outerScaled / 3));
                 CutCorners(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, cutSize, opts.Background);
                 break;
-            case QrPngEyeFrameStyle.DoubleRing:
-            case QrPngEyeFrameStyle.Target:
+            case QrEyeFrameStyle.DoubleRing:
+            case QrEyeFrameStyle.Target:
                 if (outerGradient is null) {
                     FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
                 } else {
@@ -234,7 +234,7 @@ public static partial class QrPngRenderer {
                     FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, opts.Background, eye.InnerShape, eye.InnerCornerRadiusPx);
                 }
 
-                if (eye.FrameStyle == QrPngEyeFrameStyle.Target && dotScaled > 0) {
+                if (eye.FrameStyle == QrEyeFrameStyle.Target && dotScaled > 0) {
                     if (innerGradient is null) {
                         FillShape(scanlines, widthPx, heightPx, stride, dotX, dotY, dotScaled, dotScaled, innerColor, eye.InnerShape, eye.InnerCornerRadiusPx);
                     } else {
@@ -242,7 +242,7 @@ public static partial class QrPngRenderer {
                     }
                 }
                 break;
-            case QrPngEyeFrameStyle.Bracket:
+            case QrEyeFrameStyle.Bracket:
                 DrawBracketFrame(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterCornerRadiusPx, eye.OuterScale);
                 if (dotScaled > 0) {
                     if (innerGradient is null) {
@@ -252,7 +252,7 @@ public static partial class QrPngRenderer {
                     }
                 }
                 break;
-            case QrPngEyeFrameStyle.Badge:
+            case QrEyeFrameStyle.Badge:
                 if (outerGradient is null) {
                     FillShape(scanlines, widthPx, heightPx, stride, outerX, outerY, outerScaled, outerScaled, outerColor, eye.OuterShape, eye.OuterCornerRadiusPx);
                 } else {
@@ -415,33 +415,33 @@ public static partial class QrPngRenderer {
         int w,
         int h,
         Rgba32 color,
-        QrPngModuleShape shape,
+        QrModuleShape shape,
         int radius) {
         switch (shape) {
-            case QrPngModuleShape.Circle:
+            case QrModuleShape.Circle:
                 FillEllipse(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
-            case QrPngModuleShape.Rounded:
-            case QrPngModuleShape.ConnectedRounded:
+            case QrModuleShape.Rounded:
+            case QrModuleShape.ConnectedRounded:
                 FillRoundedRect(scanlines, widthPx, heightPx, stride, x, y, w, h, color, radius);
                 return;
-            case QrPngModuleShape.Diamond:
+            case QrModuleShape.Diamond:
                 FillDiamond(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
-            case QrPngModuleShape.SoftDiamond:
-            case QrPngModuleShape.Leaf:
-            case QrPngModuleShape.Wave:
-            case QrPngModuleShape.Blob:
+            case QrModuleShape.SoftDiamond:
+            case QrModuleShape.Leaf:
+            case QrModuleShape.Wave:
+            case QrModuleShape.Blob:
                 FillMaskShape(scanlines, widthPx, heightPx, stride, x, y, w, h, color, shape, radius);
                 return;
-            case QrPngModuleShape.Squircle:
-            case QrPngModuleShape.ConnectedSquircle:
+            case QrModuleShape.Squircle:
+            case QrModuleShape.ConnectedSquircle:
                 FillSquircle(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
-            case QrPngModuleShape.Dot:
+            case QrModuleShape.Dot:
                 FillDot(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
-            case QrPngModuleShape.DotGrid:
+            case QrModuleShape.DotGrid:
                 FillDotGrid(scanlines, widthPx, heightPx, stride, x, y, w, h, color);
                 return;
             default:
@@ -459,34 +459,34 @@ public static partial class QrPngRenderer {
         int y,
         int w,
         int h,
-        QrPngGradientOptions gradient,
-        QrPngModuleShape shape,
+        QrGradientOptions gradient,
+        QrModuleShape shape,
         int radius) {
         switch (shape) {
-            case QrPngModuleShape.Circle:
+            case QrModuleShape.Circle:
                 FillEllipseGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
-            case QrPngModuleShape.Rounded:
-            case QrPngModuleShape.ConnectedRounded:
+            case QrModuleShape.Rounded:
+            case QrModuleShape.ConnectedRounded:
                 FillRoundedRectGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, radius);
                 return;
-            case QrPngModuleShape.Diamond:
+            case QrModuleShape.Diamond:
                 FillDiamondGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
-            case QrPngModuleShape.SoftDiamond:
-            case QrPngModuleShape.Leaf:
-            case QrPngModuleShape.Wave:
-            case QrPngModuleShape.Blob:
+            case QrModuleShape.SoftDiamond:
+            case QrModuleShape.Leaf:
+            case QrModuleShape.Wave:
+            case QrModuleShape.Blob:
                 FillMaskShapeGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient, shape, radius);
                 return;
-            case QrPngModuleShape.Squircle:
-            case QrPngModuleShape.ConnectedSquircle:
+            case QrModuleShape.Squircle:
+            case QrModuleShape.ConnectedSquircle:
                 FillSquircleGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
-            case QrPngModuleShape.Dot:
+            case QrModuleShape.Dot:
                 FillDotGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
-            case QrPngModuleShape.DotGrid:
+            case QrModuleShape.DotGrid:
                 FillDotGridGradient(scanlines, widthPx, heightPx, stride, x, y, w, h, gradient);
                 return;
             default:
@@ -505,7 +505,7 @@ public static partial class QrPngRenderer {
         int w,
         int h,
         Rgba32 color,
-        QrPngModuleShape shape,
+        QrModuleShape shape,
         int radius) {
         var size = Math.Min(w, h);
         if (size <= 0) return;
@@ -545,8 +545,8 @@ public static partial class QrPngRenderer {
         int y,
         int w,
         int h,
-        QrPngGradientOptions gradient,
-        QrPngModuleShape shape,
+        QrGradientOptions gradient,
+        QrModuleShape shape,
         int radius) {
         var size = Math.Min(w, h);
         if (size <= 0) return;
@@ -664,7 +664,7 @@ public static partial class QrPngRenderer {
         int y,
         int w,
         int h,
-        QrPngGradientOptions gradient) {
+        QrGradientOptions gradient) {
         if (w <= 0 || h <= 0) return;
         var x0 = Math.Max(0, x);
         var y0 = Math.Max(0, y);
@@ -722,7 +722,7 @@ public static partial class QrPngRenderer {
         int y,
         int w,
         int h,
-        QrPngGradientOptions gradient) {
+        QrGradientOptions gradient) {
         var size = Math.Min(w, h);
         var dotSize = (int)Math.Round(size * QrPngShapeDefaults.DotScale);
         if (dotSize <= 0) return;
@@ -740,7 +740,7 @@ public static partial class QrPngRenderer {
         int y,
         int w,
         int h,
-        QrPngGradientOptions gradient) {
+        QrGradientOptions gradient) {
         if (w <= 0 || h <= 0) return;
         var x0 = Math.Max(0, x);
         var y0 = Math.Max(0, y);
@@ -820,7 +820,7 @@ public static partial class QrPngRenderer {
         int y,
         int w,
         int h,
-        QrPngGradientOptions gradient) {
+        QrGradientOptions gradient) {
         if (w <= 0 || h <= 0) return;
         var x0 = Math.Max(0, x);
         var y0 = Math.Max(0, y);
@@ -890,7 +890,7 @@ public static partial class QrPngRenderer {
         int y,
         int w,
         int h,
-        QrPngGradientOptions gradient) {
+        QrGradientOptions gradient) {
         if (w <= 0 || h <= 0) return;
         var size = Math.Min(w, h);
         var gridSize = size * QrPngShapeDefaults.DotGridScale;
@@ -958,7 +958,7 @@ public static partial class QrPngRenderer {
         int originX,
         int originY,
         int qrSizePx,
-        QrPngLogoOptions logo) {
+        QrRasterLogoOptions logo) {
         if (logo.Rgba.Length == 0) return;
         if (logo.Scale <= 0) return;
 
@@ -1035,7 +1035,7 @@ public static partial class QrPngRenderer {
         int y,
         int w,
         int h,
-        QrPngGradientOptions gradient,
+        QrGradientOptions gradient,
         int radius) {
         if (w <= 0 || h <= 0) return;
         var x0 = Math.Max(0, x);
@@ -1086,7 +1086,7 @@ public static partial class QrPngRenderer {
         int y0,
         int targetW,
         int targetH,
-        QrPngLogoOptions logo) {
+        QrRasterLogoOptions logo) {
         var x1 = Math.Min(widthPx, x0 + targetW);
         var y1 = Math.Min(heightPx, y0 + targetH);
         if (x1 <= x0 || y1 <= y0) return;
@@ -1160,7 +1160,7 @@ public static partial class QrPngRenderer {
         }
     }
 
-    private static bool TryGetLogoBounds(QrPngLogoOptions logo, int originX, int originY, int qrSizePx, out int x, out int y, out int w, out int h) {
+    private static bool TryGetLogoBounds(QrRasterLogoOptions logo, int originX, int originY, int qrSizePx, out int x, out int y, out int w, out int h) {
         x = 0;
         y = 0;
         w = 0;
@@ -1340,9 +1340,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngBackgroundPatternOptions? ScalePattern(QrPngBackgroundPatternOptions? pattern, int scale) {
+    private static QrBackgroundPatternOptions? ScalePattern(QrBackgroundPatternOptions? pattern, int scale) {
         if (pattern is null) return null;
-        return new QrPngBackgroundPatternOptions {
+        return new QrBackgroundPatternOptions {
             Type = pattern.Type,
             Color = pattern.Color,
             SizePx = Math.Max(1, pattern.SizePx * scale),
@@ -1352,9 +1352,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngCanvasOptions? ScaleCanvas(QrPngCanvasOptions? canvas, int scale) {
+    private static QrCanvasOptions? ScaleCanvas(QrCanvasOptions? canvas, int scale) {
         if (canvas is null) return null;
-        return new QrPngCanvasOptions {
+        return new QrCanvasOptions {
             PaddingPx = canvas.PaddingPx * scale,
             CornerRadiusPx = canvas.CornerRadiusPx * scale,
             Background = canvas.Background,
@@ -1375,9 +1375,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngCanvasBandOptions? ScaleBand(QrPngCanvasBandOptions? band, int scale) {
+    private static QrCanvasBandOptions? ScaleBand(QrCanvasBandOptions? band, int scale) {
         if (band is null) return null;
-        return new QrPngCanvasBandOptions {
+        return new QrCanvasBandOptions {
             BandPx = band.BandPx <= 0 ? 0 : Math.Max(1, band.BandPx * scale),
             GapPx = Math.Max(0, band.GapPx * scale),
             RadiusPx = Math.Max(0, band.RadiusPx * scale),
@@ -1387,9 +1387,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngCanvasBadgeOptions? ScaleBadge(QrPngCanvasBadgeOptions? badge, int scale) {
+    private static QrCanvasBadgeOptions? ScaleBadge(QrCanvasBadgeOptions? badge, int scale) {
         if (badge is null) return null;
-        return new QrPngCanvasBadgeOptions {
+        return new QrCanvasBadgeOptions {
             Shape = badge.Shape,
             Position = badge.Position,
             WidthPx = badge.WidthPx <= 0 ? 0 : Math.Max(1, badge.WidthPx * scale),
@@ -1404,9 +1404,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngCanvasFrameOptions? ScaleFrame(QrPngCanvasFrameOptions? frame, int scale) {
+    private static QrCanvasFrameOptions? ScaleFrame(QrCanvasFrameOptions? frame, int scale) {
         if (frame is null) return null;
-        return new QrPngCanvasFrameOptions {
+        return new QrCanvasFrameOptions {
             ThicknessPx = frame.ThicknessPx <= 0 ? 0 : Math.Max(1, frame.ThicknessPx * scale),
             GapPx = Math.Max(0, frame.GapPx * scale),
             RadiusPx = Math.Max(0, frame.RadiusPx * scale),
@@ -1421,9 +1421,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngCanvasEdgePatternOptions? ScaleEdgePattern(QrPngCanvasEdgePatternOptions? pattern, int scale) {
+    private static QrCanvasEdgePatternOptions? ScaleEdgePattern(QrCanvasEdgePatternOptions? pattern, int scale) {
         if (pattern is null) return null;
-        return new QrPngCanvasEdgePatternOptions {
+        return new QrCanvasEdgePatternOptions {
             Type = pattern.Type,
             Color = pattern.Color,
             ThicknessPx = pattern.ThicknessPx <= 0 ? 0 : Math.Max(1, pattern.ThicknessPx * scale),
@@ -1433,9 +1433,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngCanvasHaloOptions? ScaleHalo(QrPngCanvasHaloOptions? halo, int scale) {
+    private static QrCanvasHaloOptions? ScaleHalo(QrCanvasHaloOptions? halo, int scale) {
         if (halo is null) return null;
-        return new QrPngCanvasHaloOptions {
+        return new QrCanvasHaloOptions {
             Color = halo.Color,
             RadiusPx = Math.Max(0, halo.RadiusPx * scale),
             ProtectQrArea = halo.ProtectQrArea,
@@ -1443,9 +1443,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngCanvasSplashOptions? ScaleSplash(QrPngCanvasSplashOptions? splash, int scale) {
+    private static QrCanvasSplashOptions? ScaleSplash(QrCanvasSplashOptions? splash, int scale) {
         if (splash is null) return null;
-        return new QrPngCanvasSplashOptions {
+        return new QrCanvasSplashOptions {
             Color = splash.Color,
             Colors = splash.Colors,
             Count = splash.Count,
@@ -1463,9 +1463,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngCanvasVignetteOptions? ScaleVignette(QrPngCanvasVignetteOptions? vignette, int scale) {
+    private static QrCanvasVignetteOptions? ScaleVignette(QrCanvasVignetteOptions? vignette, int scale) {
         if (vignette is null) return null;
-        return new QrPngCanvasVignetteOptions {
+        return new QrCanvasVignetteOptions {
             Color = vignette.Color,
             BandPx = Math.Max(0, vignette.BandPx * scale),
             Strength = vignette.Strength,
@@ -1474,9 +1474,9 @@ public static partial class QrPngRenderer {
         };
     }
 
-    private static QrPngCanvasGrainOptions? ScaleGrain(QrPngCanvasGrainOptions? grain, int scale) {
+    private static QrCanvasGrainOptions? ScaleGrain(QrCanvasGrainOptions? grain, int scale) {
         if (grain is null) return null;
-        return new QrPngCanvasGrainOptions {
+        return new QrCanvasGrainOptions {
             Color = grain.Color,
             Density = grain.Density,
             PixelSizePx = Math.Max(1, grain.PixelSizePx * scale),

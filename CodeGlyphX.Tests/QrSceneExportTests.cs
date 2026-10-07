@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -17,10 +18,10 @@ namespace CodeGlyphX.Tests;
 public sealed class QrSceneExportTests {
     private const string Payload = "https://example.com/scenes";
     [Theory]
-    [InlineData(QrPngModuleShape.ConnectedRounded, 0)]
-    [InlineData(QrPngModuleShape.ConnectedSquircle, 90)]
-    [InlineData(QrPngModuleShape.Circle, 270)]
-    public void SvgContoursRecoverExactCanonicalPixelsAndKeepIllustrationsVector(QrPngModuleShape shape, int rotation) {
+    [InlineData(QrModuleShape.ConnectedRounded, 0)]
+    [InlineData(QrModuleShape.ConnectedSquircle, 90)]
+    [InlineData(QrModuleShape.Circle, 270)]
+    public void SvgContoursRecoverExactCanonicalPixelsAndKeepIllustrationsVector(QrModuleShape shape, int rotation) {
         var options = QrScenePresets.Create(QrSceneStyle.MusicFestival, 600);
         options.ModuleShape = shape; options.Qr.RotationDegrees = rotation;
         var scene = QrArt.ComposeScene(Payload, options);

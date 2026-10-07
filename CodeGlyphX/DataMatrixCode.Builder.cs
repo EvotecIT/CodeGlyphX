@@ -28,10 +28,10 @@ namespace CodeGlyphX;
 /// </summary>
 public sealed class DataMatrixBuilder {
     /// <summary>Gets the format-specific output settings configured for this builder.</summary>
-    public RenderExtras OutputOptions { get; } = new RenderExtras();
+    public OutputOptions OutputOptions { get; } = new OutputOptions();
 
     /// <summary>Configures format-specific output settings without changing symbol layout.</summary>
-    public DataMatrixBuilder WithOutputOptions(Action<RenderExtras> configure) {
+    public DataMatrixBuilder WithOutputOptions(Action<OutputOptions> configure) {
         if (configure is null) throw new ArgumentNullException(nameof(configure));
         configure(OutputOptions);
         return this;
@@ -210,7 +210,7 @@ public sealed class DataMatrixBuilder {
     /// <summary>
     /// Renders the configured Data Matrix to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+    public RenderedOutput Render(OutputFormat format, OutputOptions? extras = null) {
         return _text is not null
             ? DataMatrixCode.Render(_text, format, _encodingOptions, _options, extras ?? OutputOptions)
             : DataMatrixCode.Render(_bytes!, format, _encodingOptions, _options, extras ?? OutputOptions);
@@ -219,7 +219,7 @@ public sealed class DataMatrixBuilder {
     /// <summary>
     /// Saves the configured Data Matrix, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, RenderExtras? extras = null) {
+    public string Save(string path, OutputOptions? extras = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
         return OutputWriter.Write(path, Render(format, extras));
     }
@@ -227,7 +227,7 @@ public sealed class DataMatrixBuilder {
     /// <summary>
     /// Writes the configured Data Matrix to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? extras = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         OutputWriter.Write(stream, Render(format, extras));
     }

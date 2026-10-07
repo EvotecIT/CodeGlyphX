@@ -113,7 +113,7 @@ The generic render API accepts PNG compression without changing styling or decod
 ```csharp
 var png = QR.Render("https://example.com", OutputFormat.Png,
     new QrRenderOptions { ModuleSize = 16 },
-    extras: new RenderExtras { PngCompressionLevel = 6 });
+    extras: new OutputOptions { PngCompressionLevel = 6 });
 ```
 
 `PngCompressionLevel` also applies to generic matrix and linear-barcode rendering. Use `0` for stored data or `1` through `9` for compression. Leaving it unset preserves each renderer's existing default.
@@ -162,7 +162,7 @@ var expressive = QrArt.Compose(payload, File.ReadAllBytes("illustration.png"),
         ImagePositionX = 0.7, // Align the crop toward the image's right edge.
         ImageZoom = 1.15,
         Art = new QrImageArtOptions {
-            Shape = QrPngModuleShape.ConnectedRounded,
+            Shape = QrModuleShape.ConnectedRounded,
             DetailProtection = 0.8
         },
         Canvas = new QrImageCanvasOptions {

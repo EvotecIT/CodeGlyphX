@@ -47,13 +47,13 @@ using CodeGlyphX.Rendering.Png;
 
 var options = new QrRenderOptions
 {
-    ModuleShape = QrPngModuleShape.Rounded,
+    ModuleShape = QrModuleShape.Rounded,
     ModuleCornerRadiusPx = 3,
-    Eyes = new QrPngEyeOptions
+    Eyes = new QrEyeOptions
     {
         UseFrame = true,
-        OuterShape = QrPngModuleShape.Circle,
-        InnerShape = QrPngModuleShape.Circle,
+        OuterShape = QrModuleShape.Circle,
+        InnerShape = QrModuleShape.Circle,
         OuterColor = new Rgba32(220, 20, 60),
         InnerColor = new Rgba32(220, 20, 60)
     }
@@ -142,19 +142,19 @@ var options = new QrRenderOptions
     ModuleSize = 10,
     QuietZone = 4,
     Foreground = new Rgba32(0, 255, 213),
-    ModuleShape = QrPngModuleShape.Dot,
-    Eyes = new QrPngEyeOptions
+    ModuleShape = QrModuleShape.Dot,
+    Eyes = new QrEyeOptions
     {
         UseFrame = true,
-        FrameStyle = QrPngEyeFrameStyle.Target,
-        OuterShape = QrPngModuleShape.Rounded,
-        InnerShape = QrPngModuleShape.Circle,
+        FrameStyle = QrEyeFrameStyle.Target,
+        OuterShape = QrModuleShape.Rounded,
+        InnerShape = QrModuleShape.Circle,
         OuterColor = new Rgba32(0, 255, 213),
         InnerColor = new Rgba32(255, 59, 255)
     },
-    ForegroundPalette = new QrPngPaletteOptions
+    ForegroundPalette = new QrPaletteOptions
     {
-        Mode = QrPngPaletteMode.Random,
+        Mode = QrPaletteMode.Random,
         Seed = 14001,
         RingSize = 2,
         Colors = new[]
@@ -164,13 +164,13 @@ var options = new QrRenderOptions
             new Rgba32(255, 214, 0)
         }
     },
-    Canvas = new QrPngCanvasOptions
+    Canvas = new QrCanvasOptions
     {
         PaddingPx = 24,
         CornerRadiusPx = 26,
-        BackgroundGradient = new QrPngGradientOptions
+        BackgroundGradient = new QrGradientOptions
         {
-            Type = QrPngGradientType.DiagonalDown,
+            Type = QrGradientType.DiagonalDown,
             StartColor = new Rgba32(18, 18, 28),
             EndColor = new Rgba32(48, 23, 72)
         },

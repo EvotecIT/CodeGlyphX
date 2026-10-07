@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using System;
 using System.Linq;
 using System.Xml.Linq;
@@ -12,8 +13,8 @@ public sealed class SvgQrRendererTests {
     public void Render_With_ForegroundGradient_Uses_Path() {
         var qr = QrCodeEncoder.EncodeText("SVG-GRADIENT");
         var svg = SvgQrRenderer.Render(qr.Modules, new QrSvgRenderOptions {
-            ForegroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Horizontal,
+            ForegroundGradient = new QrGradientOptions {
+                Type = QrGradientType.Horizontal,
                 StartColor = new Rgba32(0, 0, 0),
                 EndColor = new Rgba32(255, 0, 0)
             }
@@ -26,7 +27,7 @@ public sealed class SvgQrRendererTests {
     [Fact]
     public void InlineExportsKeepAllGradientReferencesWithinTheirOwnDefinitions() {
         var qr = QrCodeEncoder.EncodeText("SVG-GRADIENT");
-        var gradient = new QrPngGradientOptions { StartColor = new(20, 100, 30), EndColor = new(100, 20, 100) };
+        var gradient = new QrGradientOptions { StartColor = new(20, 100, 30), EndColor = new(100, 20, 100) };
         var options = new QrSvgRenderOptions { ForegroundGradient = gradient, Eyes = new() { OuterGradient = gradient, InnerGradient = gradient } };
         var first = XElement.Parse(SvgQrRenderer.Render(qr.Modules, options));
         gradient.StartColor = new(150, 20, 30);

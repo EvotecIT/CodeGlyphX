@@ -43,9 +43,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngGradientOptions? CloneGradient(QrPngGradientOptions? gradient) {
+    private static QrGradientOptions? CloneGradient(QrGradientOptions? gradient) {
         if (gradient is null) return null;
-        return new QrPngGradientOptions {
+        return new QrGradientOptions {
             Type = gradient.Type,
             StartColor = gradient.StartColor,
             EndColor = gradient.EndColor,
@@ -54,9 +54,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngBackgroundPatternOptions? CloneBackgroundPattern(QrPngBackgroundPatternOptions? pattern) {
+    private static QrBackgroundPatternOptions? CloneBackgroundPattern(QrBackgroundPatternOptions? pattern) {
         if (pattern is null) return null;
-        return new QrPngBackgroundPatternOptions {
+        return new QrBackgroundPatternOptions {
             Type = pattern.Type,
             Color = pattern.Color,
             SizePx = pattern.SizePx,
@@ -66,9 +66,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngForegroundPatternOptions? CloneForegroundPattern(QrPngForegroundPatternOptions? pattern) {
+    private static QrForegroundPatternOptions? CloneForegroundPattern(QrForegroundPatternOptions? pattern) {
         if (pattern is null) return null;
-        return new QrPngForegroundPatternOptions {
+        return new QrForegroundPatternOptions {
             Type = pattern.Type,
             Color = pattern.Color,
             SizePx = pattern.SizePx,
@@ -84,9 +84,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngModuleScaleMapOptions? CloneScaleMap(QrPngModuleScaleMapOptions? map) {
+    private static QrModuleScaleMapOptions? CloneScaleMap(QrModuleScaleMapOptions? map) {
         if (map is null) return null;
-        return new QrPngModuleScaleMapOptions {
+        return new QrModuleScaleMapOptions {
             Mode = map.Mode,
             MinScale = map.MinScale,
             MaxScale = map.MaxScale,
@@ -96,9 +96,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngModuleShapeMapOptions? CloneShapeMap(QrPngModuleShapeMapOptions? map) {
+    private static QrModuleShapeMapOptions? CloneShapeMap(QrModuleShapeMapOptions? map) {
         if (map is null) return null;
-        return new QrPngModuleShapeMapOptions {
+        return new QrModuleShapeMapOptions {
             Mode = map.Mode,
             PrimaryShape = map.PrimaryShape,
             SecondaryShape = map.SecondaryShape,
@@ -112,9 +112,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngModuleJitterOptions? CloneJitter(QrPngModuleJitterOptions? jitter) {
+    private static QrModuleJitterOptions? CloneJitter(QrModuleJitterOptions? jitter) {
         if (jitter is null) return null;
-        return new QrPngModuleJitterOptions {
+        return new QrModuleJitterOptions {
             MaxOffsetPx = jitter.MaxOffsetPx,
             Seed = jitter.Seed,
             ApplyToEyes = jitter.ApplyToEyes,
@@ -124,11 +124,11 @@ internal static partial class QrRenderer {
     }
 
 
-    private static QrPngPaletteOptions? ClonePalette(QrPngPaletteOptions? palette) {
+    private static QrPaletteOptions? ClonePalette(QrPaletteOptions? palette) {
         if (palette is null) return null;
         var colors = palette.Colors;
         var colorsCopy = colors is null ? null : (Rgba32[])colors.Clone();
-        return new QrPngPaletteOptions {
+        return new QrPaletteOptions {
             Colors = colorsCopy ?? new[] { Rgba32.Black },
             Mode = palette.Mode,
             Seed = palette.Seed,
@@ -137,9 +137,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngPaletteZoneOptions? ClonePaletteZones(QrPngPaletteZoneOptions? zones) {
+    private static QrPaletteZoneOptions? ClonePaletteZones(QrPaletteZoneOptions? zones) {
         if (zones is null) return null;
-        return new QrPngPaletteZoneOptions {
+        return new QrPaletteZoneOptions {
             CenterPalette = ClonePalette(zones.CenterPalette),
             CenterSize = zones.CenterSize,
             CornerPalette = ClonePalette(zones.CornerPalette),
@@ -147,9 +147,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngEyeOptions? CloneEyes(QrPngEyeOptions? eyes) {
+    private static QrEyeOptions? CloneEyes(QrEyeOptions? eyes) {
         if (eyes is null) return null;
-        return new QrPngEyeOptions {
+        return new QrEyeOptions {
             UseFrame = eyes.UseFrame,
             FrameStyle = eyes.FrameStyle,
             OuterShape = eyes.OuterShape,
@@ -207,18 +207,18 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngGradientOptions[]? CloneGradientArray(QrPngGradientOptions[]? gradients) {
+    private static QrGradientOptions[]? CloneGradientArray(QrGradientOptions[]? gradients) {
         if (gradients is null) return null;
-        var copy = new QrPngGradientOptions[gradients.Length];
+        var copy = new QrGradientOptions[gradients.Length];
         for (var i = 0; i < gradients.Length; i++) {
             copy[i] = CloneGradient(gradients[i])!;
         }
         return copy;
     }
 
-    private static QrPngCanvasOptions? CloneCanvas(QrPngCanvasOptions? canvas) {
+    private static QrCanvasOptions? CloneCanvas(QrCanvasOptions? canvas) {
         if (canvas is null) return null;
-        return new QrPngCanvasOptions {
+        return new QrCanvasOptions {
             PaddingPx = canvas.PaddingPx,
             CornerRadiusPx = canvas.CornerRadiusPx,
             Background = canvas.Background,
@@ -239,9 +239,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngCanvasBadgeOptions? CloneBadge(QrPngCanvasBadgeOptions? badge) {
+    private static QrCanvasBadgeOptions? CloneBadge(QrCanvasBadgeOptions? badge) {
         if (badge is null) return null;
-        return new QrPngCanvasBadgeOptions {
+        return new QrCanvasBadgeOptions {
             Shape = badge.Shape,
             Position = badge.Position,
             WidthPx = badge.WidthPx,
@@ -256,9 +256,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngCanvasFrameOptions? CloneFrame(QrPngCanvasFrameOptions? frame) {
+    private static QrCanvasFrameOptions? CloneFrame(QrCanvasFrameOptions? frame) {
         if (frame is null) return null;
-        return new QrPngCanvasFrameOptions {
+        return new QrCanvasFrameOptions {
             ThicknessPx = frame.ThicknessPx,
             GapPx = frame.GapPx,
             RadiusPx = frame.RadiusPx,
@@ -273,9 +273,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngCanvasBandOptions? CloneBand(QrPngCanvasBandOptions? band) {
+    private static QrCanvasBandOptions? CloneBand(QrCanvasBandOptions? band) {
         if (band is null) return null;
-        return new QrPngCanvasBandOptions {
+        return new QrCanvasBandOptions {
             BandPx = band.BandPx,
             GapPx = band.GapPx,
             RadiusPx = band.RadiusPx,
@@ -285,9 +285,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngCanvasEdgePatternOptions? CloneEdgePattern(QrPngCanvasEdgePatternOptions? pattern) {
+    private static QrCanvasEdgePatternOptions? CloneEdgePattern(QrCanvasEdgePatternOptions? pattern) {
         if (pattern is null) return null;
-        return new QrPngCanvasEdgePatternOptions {
+        return new QrCanvasEdgePatternOptions {
             Type = pattern.Type,
             Color = pattern.Color,
             ThicknessPx = pattern.ThicknessPx,
@@ -297,9 +297,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngCanvasSplashOptions? CloneSplash(QrPngCanvasSplashOptions? splash) {
+    private static QrCanvasSplashOptions? CloneSplash(QrCanvasSplashOptions? splash) {
         if (splash is null) return null;
-        return new QrPngCanvasSplashOptions {
+        return new QrCanvasSplashOptions {
             Color = splash.Color,
             Colors = splash.Colors is null ? null : (Rgba32[])splash.Colors.Clone(),
             Count = splash.Count,
@@ -317,9 +317,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngCanvasHaloOptions? CloneHalo(QrPngCanvasHaloOptions? halo) {
+    private static QrCanvasHaloOptions? CloneHalo(QrCanvasHaloOptions? halo) {
         if (halo is null) return null;
-        return new QrPngCanvasHaloOptions {
+        return new QrCanvasHaloOptions {
             Color = halo.Color,
             RadiusPx = halo.RadiusPx,
             ProtectQrArea = halo.ProtectQrArea,
@@ -327,9 +327,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngCanvasVignetteOptions? CloneVignette(QrPngCanvasVignetteOptions? vignette) {
+    private static QrCanvasVignetteOptions? CloneVignette(QrCanvasVignetteOptions? vignette) {
         if (vignette is null) return null;
-        return new QrPngCanvasVignetteOptions {
+        return new QrCanvasVignetteOptions {
             Color = vignette.Color,
             BandPx = vignette.BandPx,
             Strength = vignette.Strength,
@@ -338,9 +338,9 @@ internal static partial class QrRenderer {
         };
     }
 
-    private static QrPngCanvasGrainOptions? CloneGrain(QrPngCanvasGrainOptions? grain) {
+    private static QrCanvasGrainOptions? CloneGrain(QrCanvasGrainOptions? grain) {
         if (grain is null) return null;
-        return new QrPngCanvasGrainOptions {
+        return new QrCanvasGrainOptions {
             Color = grain.Color,
             Density = grain.Density,
             PixelSizePx = grain.PixelSizePx,
@@ -356,7 +356,7 @@ internal static partial class QrRenderer {
         Theme = art.Theme, Variant = art.Variant, Intensity = art.Intensity, GuardrailMode = art.GuardrailMode
     };
 
-    private static QrPngDebugOptions? CloneDebug(QrPngDebugOptions? debug) => debug is null ? null : new QrPngDebugOptions {
+    private static QrRasterDebugOptions? CloneDebug(QrRasterDebugOptions? debug) => debug is null ? null : new QrRasterDebugOptions {
         ShowQuietZone = debug.ShowQuietZone, ShowQrBounds = debug.ShowQrBounds,
         ShowEyeBounds = debug.ShowEyeBounds, ShowLogoBounds = debug.ShowLogoBounds,
         StrokePx = debug.StrokePx, QuietZoneColor = debug.QuietZoneColor,

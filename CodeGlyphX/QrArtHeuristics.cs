@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using System;
 using System.Collections.Generic;
@@ -149,7 +150,7 @@ public static class QrArtHeuristics {
     }
 
     private static bool HasDecorativeModules(QrPngRenderOptions options) {
-        return options.ModuleShape != QrPngModuleShape.Square
+        return options.ModuleShape != QrModuleShape.Square
             || options.ModuleScale < 1.0
             || options.ModuleScaleMap is not null
             || options.ModuleShapeMap is not null
@@ -166,7 +167,7 @@ public static class QrArtHeuristics {
             ? new[] { options.Background }
             : new[] { options.BackgroundGradient.StartColor, options.BackgroundGradient.EndColor };
         var pattern = options.ForegroundPattern;
-        var patternActive = pattern is not null && pattern.ThicknessPx > 0 && (pattern.BlendMode == QrPngForegroundPatternBlendMode.Mask || pattern.Color.A != 0);
+        var patternActive = pattern is not null && pattern.ThicknessPx > 0 && (pattern.BlendMode == QrForegroundPatternBlendMode.Mask || pattern.Color.A != 0);
 
         if (options.ForegroundPalette is not null || options.ForegroundPaletteZones is not null) {
             EvaluatePaletteContrast(options, evaluation, bg, pattern, patternActive);
@@ -181,7 +182,7 @@ public static class QrArtHeuristics {
         EvaluateGradientContrast(options, evaluation, bg, pattern, patternActive);
     }
 
-    private static void EvaluatePaletteContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrPngForegroundPatternOptions? pattern, bool patternActive) {
+    private static void EvaluatePaletteContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrForegroundPatternOptions? pattern, bool patternActive) {
         var palettes = CollectPalettes(options.Foreground, options.ForegroundPalette, options.ForegroundPaletteZones);
         var colors = patternActive ? AddPatternVariants(palettes, pattern!) : palettes;
         if (MinContrast(colors, backgrounds) < 4.5) {
@@ -189,7 +190,7 @@ public static class QrArtHeuristics {
         }
     }
 
-    private static void EvaluateSolidContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrPngForegroundPatternOptions? pattern, bool patternActive) {
+    private static void EvaluateSolidContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrForegroundPatternOptions? pattern, bool patternActive) {
         var colors = patternActive
             ? new[] { options.Foreground, Rgba32Compositor.ComposeOver(pattern!.Color, options.Foreground) }
             : new[] { options.Foreground };
@@ -199,7 +200,7 @@ public static class QrArtHeuristics {
         }
     }
 
-    private static void EvaluateGradientContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrPngForegroundPatternOptions? pattern, bool patternActive) {
+    private static void EvaluateGradientContrast(QrPngRenderOptions options, QrArtEvaluation evaluation, Rgba32[] backgrounds, QrForegroundPatternOptions? pattern, bool patternActive) {
         var gradient = options.ForegroundGradient!;
         var gradientColors = new[] { gradient.StartColor, gradient.EndColor };
         var colors = patternActive ? AddPatternVariants(gradientColors, pattern!) : gradientColors;
@@ -259,7 +260,7 @@ public static class QrArtHeuristics {
         return min;
     }
 
-    private static Rgba32[] AddPatternVariants(Rgba32[] colors, QrPngForegroundPatternOptions pattern) {
+    private static Rgba32[] AddPatternVariants(Rgba32[] colors, QrForegroundPatternOptions pattern) {
         var list = new List<Rgba32>(colors.Length * 2);
         for (var i = 0; i < colors.Length; i++) {
             var color = colors[i];
@@ -269,7 +270,7 @@ public static class QrArtHeuristics {
         return list.ToArray();
     }
 
-    private static Rgba32[] CollectPalettes(Rgba32 baseForeground, QrPngPaletteOptions? basePalette, QrPngPaletteZoneOptions? zones) {
+    private static Rgba32[] CollectPalettes(Rgba32 baseForeground, QrPaletteOptions? basePalette, QrPaletteZoneOptions? zones) {
         var count = 1;
         if (basePalette is not null) count += basePalette.Colors.Length;
         if (zones?.CenterPalette is not null && zones.CenterSize > 0) count += zones.CenterPalette.Colors.Length;

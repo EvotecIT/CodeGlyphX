@@ -28,6 +28,6 @@ internal static class EvotecExamples {
 
         QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.png"), withLogo, encoding);
         QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.svg"), withLogo, encoding);
-        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.html"), withLogo, encoding, extras: new RenderExtras { HtmlTitle = "Evotec QR" });
+        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.html"), withLogo, encoding, extras: new OutputOptions { HtmlTitle = "Evotec QR" });
     }
 }

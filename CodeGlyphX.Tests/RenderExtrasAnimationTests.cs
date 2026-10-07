@@ -13,7 +13,7 @@ public sealed class RenderExtrasAnimationTests {
         var frame2 = new BitMatrix(1, 1);
         frame2[0, 0] = false;
 
-        var extras = new RenderExtras {
+        var extras = new OutputOptions {
             GifFrames = new[] { frame1, frame2 },
             AnimationDurationMs = 30
         };
@@ -31,7 +31,7 @@ public sealed class RenderExtrasAnimationTests {
         var frame2 = new BitMatrix(1, 1);
         frame2[0, 0] = false;
 
-        var extras = new RenderExtras {
+        var extras = new OutputOptions {
             WebpFrames = new[] { frame1, frame2 },
             AnimationDurationMs = 40
         };

@@ -26,7 +26,7 @@ public sealed class BarcodeAnimationRenderExtrasTests {
             HeightModules = 4
         };
 
-        var extras = new RenderExtras {
+        var extras = new OutputOptions {
             BarcodeGifFrames = new[] { frame1, frame2 },
             AnimationDurationsMs = new[] { 40, 60 }
         };
@@ -58,7 +58,7 @@ public sealed class BarcodeAnimationRenderExtrasTests {
             HeightModules = 4
         };
 
-        var extras = new RenderExtras {
+        var extras = new OutputOptions {
             BarcodeWebpFrames = new[] { frame1, frame2 },
             AnimationDurationsMs = new[] { 35, 55 }
         };

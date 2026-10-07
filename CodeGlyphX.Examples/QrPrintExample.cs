@@ -20,7 +20,7 @@ internal static class QrPrintExample {
         QR.Save(payload, Path.Combine(outputDir, "qr-print-8k.png"), opts);
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-print-8k.pdf"),
-            QR.Render(payload, OutputFormat.Pdf, opts, extras: new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Pdf, opts, extras: new OutputOptions { VectorMode = RenderMode.Raster })
         );
     }
 }

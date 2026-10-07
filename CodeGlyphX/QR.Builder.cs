@@ -103,7 +103,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets module shape override.
     /// </summary>
-    public QrBuilder WithModuleShape(QrPngModuleShape shape) {
+    public QrBuilder WithModuleShape(QrModuleShape shape) {
         Rendering.ModuleShape = shape;
         return this;
     }
@@ -119,7 +119,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets module scale map.
     /// </summary>
-    public QrBuilder WithModuleScaleMap(QrPngModuleScaleMapOptions? map) {
+    public QrBuilder WithModuleScaleMap(QrModuleScaleMapOptions? map) {
         Rendering.ModuleScaleMap = map;
         return this;
     }
@@ -127,7 +127,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets module shape map.
     /// </summary>
-    public QrBuilder WithModuleShapeMap(QrPngModuleShapeMapOptions? map) {
+    public QrBuilder WithModuleShapeMap(QrModuleShapeMapOptions? map) {
         Rendering.ModuleShapeMap = map;
         return this;
     }
@@ -135,7 +135,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets per-module jitter options.
     /// </summary>
-    public QrBuilder WithModuleJitter(QrPngModuleJitterOptions? jitter) {
+    public QrBuilder WithModuleJitter(QrModuleJitterOptions? jitter) {
         Rendering.ModuleJitter = jitter;
         return this;
     }
@@ -151,7 +151,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets the foreground gradient.
     /// </summary>
-    public QrBuilder WithForegroundGradient(QrPngGradientOptions? gradient) {
+    public QrBuilder WithForegroundGradient(QrGradientOptions? gradient) {
         Rendering.ForegroundGradient = gradient;
         return this;
     }
@@ -159,7 +159,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets the background gradient.
     /// </summary>
-    public QrBuilder WithBackgroundGradient(QrPngGradientOptions? gradient) {
+    public QrBuilder WithBackgroundGradient(QrGradientOptions? gradient) {
         Rendering.BackgroundGradient = gradient;
         return this;
     }
@@ -167,7 +167,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets the foreground palette.
     /// </summary>
-    public QrBuilder WithForegroundPalette(QrPngPaletteOptions? palette) {
+    public QrBuilder WithForegroundPalette(QrPaletteOptions? palette) {
         Rendering.ForegroundPalette = palette;
         return this;
     }
@@ -175,7 +175,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets the canvas options.
     /// </summary>
-    public QrBuilder WithCanvas(QrPngCanvasOptions? canvas) {
+    public QrBuilder WithCanvas(QrCanvasOptions? canvas) {
         Rendering.Canvas = canvas;
         return this;
     }
@@ -183,7 +183,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets palette overrides for specific zones.
     /// </summary>
-    public QrBuilder WithForegroundPaletteZones(QrPngPaletteZoneOptions? zones) {
+    public QrBuilder WithForegroundPaletteZones(QrPaletteZoneOptions? zones) {
         Rendering.ForegroundPaletteZones = zones;
         return this;
     }
@@ -191,7 +191,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Sets eye (finder) styling.
     /// </summary>
-    public QrBuilder WithEyes(QrPngEyeOptions? eyes) {
+    public QrBuilder WithEyes(QrEyeOptions? eyes) {
         Rendering.Eyes = eyes;
         return this;
     }
@@ -282,14 +282,14 @@ public sealed class QrBuilder {
     /// <summary>
     /// Renders the configured QR code to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
+    public RenderedOutput Render(OutputFormat format, OutputOptions? extras = null) {
         return Encode().Render(format, Rendering, extras);
     }
 
     /// <summary>
     /// Saves the configured QR code, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, RenderExtras? extras = null) {
+    public string Save(string path, OutputOptions? extras = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
         return OutputWriter.Write(path, Render(format, extras));
     }
@@ -297,7 +297,7 @@ public sealed class QrBuilder {
     /// <summary>
     /// Writes the configured QR code to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? extras = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         OutputWriter.Write(stream, Render(format, extras));
     }

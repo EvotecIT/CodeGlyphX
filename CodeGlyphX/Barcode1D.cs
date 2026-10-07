@@ -47,15 +47,15 @@ public sealed class Barcode1D {
     }
 
     /// <summary>Renders the encoded bars with layout and output settings.</summary>
-    public RenderedOutput Render(OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) =>
+    public RenderedOutput Render(OutputFormat format, BarcodeOptions? options = null, OutputOptions? extras = null) =>
         Barcode.Render(this, format, options, extras);
 
     /// <summary>Saves the barcode, selecting the output format from the file extension.</summary>
-    public string Save(string path, BarcodeOptions? options = null, RenderExtras? extras = null) =>
+    public string Save(string path, BarcodeOptions? options = null, OutputOptions? extras = null) =>
         OutputWriter.Write(path, Render(OutputFormatInfo.Resolve(path, OutputFormat.Png), options, extras));
 
     /// <summary>Writes the barcode to a stream in the specified output format.</summary>
-    public void Save(Stream stream, OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) {
+    public void Save(Stream stream, OutputFormat format, BarcodeOptions? options = null, OutputOptions? extras = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         OutputWriter.Write(stream, Render(format, options, extras));
     }

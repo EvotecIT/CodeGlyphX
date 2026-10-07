@@ -64,7 +64,7 @@ public static class HtmlQrRenderer {
         sb.Append("</table>");
 
         if (opts.Logo is null &&
-            opts.ModuleShape == QrPngModuleShape.Square &&
+            opts.ModuleShape == QrModuleShape.Square &&
             Math.Abs(opts.ModuleScale - 1.0) < 0.0001 &&
             opts.ModuleCornerRadiusPx == 0 &&
             opts.ForegroundGradient is null &&

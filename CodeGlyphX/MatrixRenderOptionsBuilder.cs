@@ -18,8 +18,8 @@ internal static class MatrixRenderOptionsBuilder {
         };
     }
 
-    public static IcoRenderOptions BuildIco(RenderExtras? extras) {
-        var opts = extras ?? new RenderExtras();
+    public static IcoRenderOptions BuildIco(OutputOptions? extras) {
+        var opts = extras ?? new OutputOptions();
         return new IcoRenderOptions {
             Sizes = opts.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
             PreserveAspectRatio = opts.IcoPreserveAspectRatio
@@ -36,7 +36,7 @@ internal static class MatrixRenderOptionsBuilder {
         };
     }
 
-    public static MatrixHtmlRenderOptions BuildHtml(MatrixOptions? options, RenderExtras? extras) {
+    public static MatrixHtmlRenderOptions BuildHtml(MatrixOptions? options, OutputOptions? extras) {
         var opts = options ?? new MatrixOptions();
         return new MatrixHtmlRenderOptions {
             ModuleSize = opts.ModuleSize,
@@ -47,7 +47,7 @@ internal static class MatrixRenderOptionsBuilder {
         };
     }
 
-    public static MatrixAsciiRenderOptions BuildAscii(MatrixOptions? options, RenderExtras? extras) {
+    public static MatrixAsciiRenderOptions BuildAscii(MatrixOptions? options, OutputOptions? extras) {
         var ascii = extras?.MatrixAscii;
         if (ascii != null) {
             return ascii;

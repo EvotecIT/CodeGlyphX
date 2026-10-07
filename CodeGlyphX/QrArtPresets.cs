@@ -15,16 +15,16 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(0, 96, 92);
         opts.Background = new Rgba32(250, 252, 255);
-        opts.ModuleShape = QrPngModuleShape.Dot;
+        opts.ModuleShape = QrModuleShape.Dot;
         opts.ModuleScale = 0.96;
-        opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
-            Mode = QrPngModuleScaleMode.Radial,
+        opts.ModuleScaleMap = new QrModuleScaleMapOptions {
+            Mode = QrModuleScaleMode.Radial,
             MinScale = 0.92,
             MaxScale = 1.0,
             RingSize = 2,
         };
-        opts.ForegroundPalette = new QrPngPaletteOptions {
-            Mode = QrPngPaletteMode.Cycle,
+        opts.ForegroundPalette = new QrPaletteOptions {
+            Mode = QrPaletteMode.Cycle,
             RingSize = 2,
             ApplyToEyes = false,
             Colors = new[] {
@@ -33,8 +33,8 @@ internal static class QrArtPresets {
                 new Rgba32(120, 40, 160),
             },
         };
-        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.SpeckleDots,
+        opts.ForegroundPattern = new QrForegroundPatternOptions {
+            Type = QrForegroundPatternType.SpeckleDots,
             Seed = 90210,
             Variation = 0.82,
             Density = 0.94,
@@ -44,11 +44,11 @@ internal static class QrArtPresets {
             ApplyToModules = true,
             ApplyToEyes = false,
         };
-        opts.Eyes = new QrPngEyeOptions {
+        opts.Eyes = new QrEyeOptions {
             UseFrame = true,
-            FrameStyle = QrPngEyeFrameStyle.Glow,
-            OuterShape = QrPngModuleShape.Rounded,
-            InnerShape = QrPngModuleShape.Circle,
+            FrameStyle = QrEyeFrameStyle.Glow,
+            OuterShape = QrModuleShape.Rounded,
+            InnerShape = QrModuleShape.Circle,
             OuterColor = new Rgba32(0, 90, 140),
             InnerColor = new Rgba32(120, 40, 160),
             OuterCornerRadiusPx = 6,
@@ -57,11 +57,11 @@ internal static class QrArtPresets {
             GlowAlpha = 96,
             GlowColor = new Rgba32(0, 170, 220, 160),
         };
-        opts.Canvas = new QrPngCanvasOptions {
+        opts.Canvas = new QrCanvasOptions {
             PaddingPx = 28,
             CornerRadiusPx = 30,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.DiagonalDown,
                 StartColor = new Rgba32(8, 10, 28),
                 EndColor = new Rgba32(30, 20, 76),
             },
@@ -81,21 +81,21 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(24, 68, 160);
         opts.Background = new Rgba32(246, 250, 255);
-        opts.ModuleShape = QrPngModuleShape.Squircle;
+        opts.ModuleShape = QrModuleShape.Squircle;
         opts.ModuleScale = 0.96;
-        opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
-            Mode = QrPngModuleScaleMode.Rings,
+        opts.ModuleScaleMap = new QrModuleScaleMapOptions {
+            Mode = QrModuleScaleMode.Rings,
             MinScale = 0.94,
             MaxScale = 1.0,
             RingSize = 3,
         };
-        opts.ForegroundGradient = new QrPngGradientOptions {
-            Type = QrPngGradientType.DiagonalDown,
+        opts.ForegroundGradient = new QrGradientOptions {
+            Type = QrGradientType.DiagonalDown,
             StartColor = new Rgba32(24, 120, 180),
             EndColor = new Rgba32(28, 52, 150),
         };
-        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.SpeckleDots,
+        opts.ForegroundPattern = new QrForegroundPatternOptions {
+            Type = QrForegroundPatternType.SpeckleDots,
             Seed = 2141,
             Variation = 0.68,
             Density = 0.92,
@@ -105,30 +105,30 @@ internal static class QrArtPresets {
             ApplyToModules = true,
             ApplyToEyes = false,
         };
-        opts.Eyes = new QrPngEyeOptions {
+        opts.Eyes = new QrEyeOptions {
             UseFrame = true,
-            FrameStyle = QrPngEyeFrameStyle.InsetRing,
-            OuterShape = QrPngModuleShape.Squircle,
-            InnerShape = QrPngModuleShape.Circle,
+            FrameStyle = QrEyeFrameStyle.InsetRing,
+            OuterShape = QrModuleShape.Squircle,
+            InnerShape = QrModuleShape.Circle,
             OuterCornerRadiusPx = 7,
             InnerCornerRadiusPx = 4,
-            OuterGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Radial,
+            OuterGradient = new QrGradientOptions {
+                Type = QrGradientType.Radial,
                 StartColor = new Rgba32(56, 150, 200),
                 EndColor = new Rgba32(28, 72, 176),
             },
             InnerColor = new Rgba32(255, 255, 255),
         };
-        opts.Canvas = new QrPngCanvasOptions {
+        opts.Canvas = new QrCanvasOptions {
             PaddingPx = 26,
             CornerRadiusPx = 28,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.DiagonalDown,
                 StartColor = new Rgba32(242, 248, 255),
                 EndColor = new Rgba32(222, 236, 255),
             },
-            Pattern = new QrPngBackgroundPatternOptions {
-                Type = QrPngBackgroundPatternType.Dots,
+            Pattern = new QrBackgroundPatternOptions {
+                Type = QrBackgroundPatternType.Dots,
                 Color = new Rgba32(80, 120, 255, 24),
                 SizePx = 12,
                 ThicknessPx = 2,
@@ -149,16 +149,16 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(60, 72, 180);
         opts.Background = new Rgba32(250, 252, 255);
-        opts.ModuleShape = QrPngModuleShape.ConnectedSquircle;
+        opts.ModuleShape = QrModuleShape.ConnectedSquircle;
         opts.ModuleScale = 0.96;
-        opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
-            Mode = QrPngModuleScaleMode.Radial,
+        opts.ModuleScaleMap = new QrModuleScaleMapOptions {
+            Mode = QrModuleScaleMode.Radial,
             MinScale = 0.94,
             MaxScale = 1.0,
             RingSize = 2,
         };
-        opts.ForegroundPalette = new QrPngPaletteOptions {
-            Mode = QrPngPaletteMode.Cycle,
+        opts.ForegroundPalette = new QrPaletteOptions {
+            Mode = QrPaletteMode.Cycle,
             RingSize = 2,
             ApplyToEyes = false,
             Colors = new[] {
@@ -167,8 +167,8 @@ internal static class QrArtPresets {
                 new Rgba32(36, 120, 164),
             },
         };
-        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.SpeckleDots,
+        opts.ForegroundPattern = new QrForegroundPatternOptions {
+            Type = QrForegroundPatternType.SpeckleDots,
             Seed = 7717,
             Variation = 0.74,
             Density = 0.9,
@@ -178,21 +178,21 @@ internal static class QrArtPresets {
             ApplyToModules = true,
             ApplyToEyes = false,
         };
-        opts.Eyes = new QrPngEyeOptions {
+        opts.Eyes = new QrEyeOptions {
             UseFrame = true,
-            FrameStyle = QrPngEyeFrameStyle.Target,
-            OuterShape = QrPngModuleShape.Rounded,
-            InnerShape = QrPngModuleShape.Circle,
+            FrameStyle = QrEyeFrameStyle.Target,
+            OuterShape = QrModuleShape.Rounded,
+            InnerShape = QrModuleShape.Circle,
             OuterCornerRadiusPx = 6,
             InnerCornerRadiusPx = 4,
             OuterColor = new Rgba32(72, 82, 190),
             InnerColor = new Rgba32(40, 130, 170),
         };
-        opts.Canvas = new QrPngCanvasOptions {
+        opts.Canvas = new QrCanvasOptions {
             PaddingPx = 28,
             CornerRadiusPx = 30,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.DiagonalDown,
                 StartColor = new Rgba32(14, 18, 42),
                 EndColor = new Rgba32(34, 22, 88),
             },
@@ -212,11 +212,11 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(20, 32, 62);
         opts.Background = new Rgba32(244, 248, 255);
-        opts.ModuleShape = QrPngModuleShape.Rounded;
+        opts.ModuleShape = QrModuleShape.Rounded;
         opts.ModuleScale = 0.9;
         opts.ModuleCornerRadiusPx = 4;
-        opts.ForegroundPalette = new QrPngPaletteOptions {
-            Mode = QrPngPaletteMode.Rings,
+        opts.ForegroundPalette = new QrPaletteOptions {
+            Mode = QrPaletteMode.Rings,
             RingSize = 2,
             ApplyToEyes = false,
             Colors = new[] {
@@ -225,18 +225,18 @@ internal static class QrArtPresets {
                 new Rgba32(18, 98, 140),
             },
         };
-        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.Crosshatch,
+        opts.ForegroundPattern = new QrForegroundPatternOptions {
+            Type = QrForegroundPatternType.Crosshatch,
             Color = new Rgba32(12, 24, 64, 92),
             SizePx = 6,
             ThicknessPx = 1,
             ApplyToModules = true,
             ApplyToEyes = false,
         };
-        opts.ForegroundPaletteZones = new QrPngPaletteZoneOptions {
+        opts.ForegroundPaletteZones = new QrPaletteZoneOptions {
             CornerSize = 9,
-            CornerPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Checker,
+            CornerPalette = new QrPaletteOptions {
+                Mode = QrPaletteMode.Checker,
                 ApplyToEyes = true,
                 Colors = new[] {
                     new Rgba32(22, 36, 84),
@@ -244,8 +244,8 @@ internal static class QrArtPresets {
                 },
             },
             CenterSize = 11,
-            CenterPalette = new QrPngPaletteOptions {
-                Mode = QrPngPaletteMode.Cycle,
+            CenterPalette = new QrPaletteOptions {
+                Mode = QrPaletteMode.Cycle,
                 RingSize = 1,
                 ApplyToEyes = false,
                 Colors = new[] {
@@ -254,26 +254,26 @@ internal static class QrArtPresets {
                 },
             },
         };
-        opts.Eyes = new QrPngEyeOptions {
+        opts.Eyes = new QrEyeOptions {
             UseFrame = true,
-            FrameStyle = QrPngEyeFrameStyle.CutCorner,
-            OuterShape = QrPngModuleShape.Square,
-            InnerShape = QrPngModuleShape.Rounded,
+            FrameStyle = QrEyeFrameStyle.CutCorner,
+            OuterShape = QrModuleShape.Square,
+            InnerShape = QrModuleShape.Rounded,
             OuterColor = new Rgba32(18, 28, 70),
             InnerColor = new Rgba32(98, 128, 255),
             OuterCornerRadiusPx = 0,
             InnerCornerRadiusPx = 4,
         };
-        opts.Canvas = new QrPngCanvasOptions {
+        opts.Canvas = new QrCanvasOptions {
             PaddingPx = 26,
             CornerRadiusPx = 28,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Horizontal,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.Horizontal,
                 StartColor = new Rgba32(232, 240, 255),
                 EndColor = new Rgba32(210, 226, 255),
             },
-            Pattern = new QrPngBackgroundPatternOptions {
-                Type = QrPngBackgroundPatternType.Grid,
+            Pattern = new QrBackgroundPatternOptions {
+                Type = QrBackgroundPatternType.Grid,
                 Color = new Rgba32(60, 90, 180, 26),
                 SizePx = 16,
                 ThicknessPx = 1,
@@ -294,16 +294,16 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(28, 60, 150);
         opts.Background = new Rgba32(248, 250, 255);
-        opts.ModuleShape = QrPngModuleShape.Squircle;
+        opts.ModuleShape = QrModuleShape.Squircle;
         opts.ModuleScale = 0.95;
-        opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
-            Mode = QrPngModuleScaleMode.Rings,
+        opts.ModuleScaleMap = new QrModuleScaleMapOptions {
+            Mode = QrModuleScaleMode.Rings,
             MinScale = 0.94,
             MaxScale = 1.0,
             RingSize = 1,
         };
-        opts.ForegroundPalette = new QrPngPaletteOptions {
-            Mode = QrPngPaletteMode.Rings,
+        opts.ForegroundPalette = new QrPaletteOptions {
+            Mode = QrPaletteMode.Rings,
             RingSize = 1,
             ApplyToEyes = false,
             Colors = new[] {
@@ -312,8 +312,8 @@ internal static class QrArtPresets {
                 new Rgba32(16, 98, 140),
             },
         };
-        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.SpeckleDots,
+        opts.ForegroundPattern = new QrForegroundPatternOptions {
+            Type = QrForegroundPatternType.SpeckleDots,
             Seed = 4422,
             Variation = 0.7,
             Density = 0.9,
@@ -323,21 +323,21 @@ internal static class QrArtPresets {
             ApplyToModules = true,
             ApplyToEyes = false,
         };
-        opts.Eyes = new QrPngEyeOptions {
+        opts.Eyes = new QrEyeOptions {
             UseFrame = true,
-            FrameStyle = QrPngEyeFrameStyle.InsetRing,
-            OuterShape = QrPngModuleShape.Rounded,
-            InnerShape = QrPngModuleShape.Circle,
+            FrameStyle = QrEyeFrameStyle.InsetRing,
+            OuterShape = QrModuleShape.Rounded,
+            InnerShape = QrModuleShape.Circle,
             OuterCornerRadiusPx = 7,
             InnerCornerRadiusPx = 4,
             OuterColor = new Rgba32(24, 52, 140),
             InnerColor = new Rgba32(255, 255, 255),
         };
-        opts.Canvas = new QrPngCanvasOptions {
+        opts.Canvas = new QrCanvasOptions {
             PaddingPx = 24,
             CornerRadiusPx = 26,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Vertical,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.Vertical,
                 StartColor = new Rgba32(238, 244, 255),
                 EndColor = new Rgba32(220, 232, 255),
             },
@@ -357,16 +357,16 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(26, 46, 128);
         opts.Background = new Rgba32(248, 250, 255);
-        opts.ModuleShape = QrPngModuleShape.Squircle;
+        opts.ModuleShape = QrModuleShape.Squircle;
         opts.ModuleScale = 0.96;
-        opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
-            Mode = QrPngModuleScaleMode.Rings,
+        opts.ModuleScaleMap = new QrModuleScaleMapOptions {
+            Mode = QrModuleScaleMode.Rings,
             MinScale = 0.94,
             MaxScale = 1.0,
             RingSize = 2,
         };
-        opts.ForegroundPalette = new QrPngPaletteOptions {
-            Mode = QrPngPaletteMode.Cycle,
+        opts.ForegroundPalette = new QrPaletteOptions {
+            Mode = QrPaletteMode.Cycle,
             RingSize = 2,
             ApplyToEyes = false,
             Colors = new[] {
@@ -375,8 +375,8 @@ internal static class QrArtPresets {
                 new Rgba32(20, 110, 156),
             },
         };
-        opts.ForegroundPattern = new QrPngForegroundPatternOptions {
-            Type = QrPngForegroundPatternType.DiagonalStripes,
+        opts.ForegroundPattern = new QrForegroundPatternOptions {
+            Type = QrForegroundPatternType.DiagonalStripes,
             Color = new Rgba32(18, 34, 108, 148),
             SizePx = 6,
             ThicknessPx = 2,
@@ -385,10 +385,10 @@ internal static class QrArtPresets {
             ApplyToModules = false,
             ApplyToEyes = true,
         };
-        opts.Eyes = new QrPngEyeOptions {
+        opts.Eyes = new QrEyeOptions {
             UseFrame = false,
-            OuterShape = QrPngModuleShape.Rounded,
-            InnerShape = QrPngModuleShape.Squircle,
+            OuterShape = QrModuleShape.Rounded,
+            InnerShape = QrModuleShape.Squircle,
             OuterCornerRadiusPx = 6,
             InnerCornerRadiusPx = 4,
             OuterColor = new Rgba32(24, 44, 132),
@@ -407,11 +407,11 @@ internal static class QrArtPresets {
             AccentStripeSeed = 424242,
             AccentStripeColor = new Rgba32(24, 44, 132, 124),
         };
-        opts.Canvas = new QrPngCanvasOptions {
+        opts.Canvas = new QrCanvasOptions {
             PaddingPx = 26,
             CornerRadiusPx = 28,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Vertical,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.Vertical,
                 StartColor = new Rgba32(236, 244, 255),
                 EndColor = new Rgba32(220, 232, 255),
             },
@@ -431,16 +431,16 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(18, 36, 92);
         opts.Background = new Rgba32(250, 252, 255);
-        opts.ModuleShape = QrPngModuleShape.ConnectedSquircle;
+        opts.ModuleShape = QrModuleShape.ConnectedSquircle;
         opts.ModuleScale = 0.96;
-        opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
-            Mode = QrPngModuleScaleMode.Radial,
+        opts.ModuleScaleMap = new QrModuleScaleMapOptions {
+            Mode = QrModuleScaleMode.Radial,
             MinScale = 0.94,
             MaxScale = 1.0,
             RingSize = 2,
         };
-        opts.ForegroundPalette = new QrPngPaletteOptions {
-            Mode = QrPngPaletteMode.Cycle,
+        opts.ForegroundPalette = new QrPaletteOptions {
+            Mode = QrPaletteMode.Cycle,
             RingSize = 2,
             ApplyToEyes = false,
             Colors = new[] {
@@ -449,25 +449,25 @@ internal static class QrArtPresets {
                 new Rgba32(14, 120, 150),
             },
         };
-        opts.Eyes = new QrPngEyeOptions {
+        opts.Eyes = new QrEyeOptions {
             UseFrame = true,
-            FrameStyle = QrPngEyeFrameStyle.Target,
-            OuterShape = QrPngModuleShape.Rounded,
-            InnerShape = QrPngModuleShape.Circle,
+            FrameStyle = QrEyeFrameStyle.Target,
+            OuterShape = QrModuleShape.Rounded,
+            InnerShape = QrModuleShape.Circle,
             OuterCornerRadiusPx = 6,
             InnerCornerRadiusPx = 4,
             OuterColor = new Rgba32(20, 44, 120),
             InnerColor = new Rgba32(26, 164, 182),
         };
-        opts.Canvas = new QrPngCanvasOptions {
+        opts.Canvas = new QrCanvasOptions {
             PaddingPx = 30,
             CornerRadiusPx = 30,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.DiagonalDown,
                 StartColor = new Rgba32(238, 246, 255),
                 EndColor = new Rgba32(218, 232, 255),
             },
-            Splash = new QrPngCanvasSplashOptions {
+            Splash = new QrCanvasSplashOptions {
                 Color = new Rgba32(40, 150, 210, 96),
                 Colors = new[] {
                     new Rgba32(40, 150, 210, 92),
@@ -501,16 +501,16 @@ internal static class QrArtPresets {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(20, 40, 98);
         opts.Background = new Rgba32(250, 252, 255);
-        opts.ModuleShape = QrPngModuleShape.ConnectedSquircle;
+        opts.ModuleShape = QrModuleShape.ConnectedSquircle;
         opts.ModuleScale = 0.96;
-        opts.ModuleScaleMap = new QrPngModuleScaleMapOptions {
-            Mode = QrPngModuleScaleMode.Radial,
+        opts.ModuleScaleMap = new QrModuleScaleMapOptions {
+            Mode = QrModuleScaleMode.Radial,
             MinScale = 0.94,
             MaxScale = 1.0,
             RingSize = 2,
         };
-        opts.ForegroundPalette = new QrPngPaletteOptions {
-            Mode = QrPngPaletteMode.Cycle,
+        opts.ForegroundPalette = new QrPaletteOptions {
+            Mode = QrPaletteMode.Cycle,
             RingSize = 2,
             ApplyToEyes = false,
             Colors = new[] {
@@ -519,25 +519,25 @@ internal static class QrArtPresets {
                 new Rgba32(24, 108, 140),
             },
         };
-        opts.Eyes = new QrPngEyeOptions {
+        opts.Eyes = new QrEyeOptions {
             UseFrame = true,
-            FrameStyle = QrPngEyeFrameStyle.Target,
-            OuterShape = QrPngModuleShape.Rounded,
-            InnerShape = QrPngModuleShape.Circle,
+            FrameStyle = QrEyeFrameStyle.Target,
+            OuterShape = QrModuleShape.Rounded,
+            InnerShape = QrModuleShape.Circle,
             OuterCornerRadiusPx = 6,
             InnerCornerRadiusPx = 4,
             OuterColor = new Rgba32(28, 60, 136),
             InnerColor = new Rgba32(60, 174, 186),
         };
-        opts.Canvas = new QrPngCanvasOptions {
+        opts.Canvas = new QrCanvasOptions {
             PaddingPx = 30,
             CornerRadiusPx = 30,
-            BackgroundGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.DiagonalDown,
+            BackgroundGradient = new QrGradientOptions {
+                Type = QrGradientType.DiagonalDown,
                 StartColor = new Rgba32(244, 248, 255),
                 EndColor = new Rgba32(226, 236, 255),
             },
-            Splash = new QrPngCanvasSplashOptions {
+            Splash = new QrCanvasSplashOptions {
                 Color = new Rgba32(96, 132, 210, 92),
                 Colors = new[] {
                     new Rgba32(96, 132, 210, 92),
@@ -592,7 +592,7 @@ internal static class QrArtPresets {
             opts.Eyes.GlowAlpha = 120;
         }
         if (opts.ForegroundPattern is not null) {
-            opts.ForegroundPattern.Type = QrPngForegroundPatternType.Starburst;
+            opts.ForegroundPattern.Type = QrForegroundPatternType.Starburst;
             opts.ForegroundPattern.ApplyToEyes = true;
             opts.ForegroundPattern.SnapToModuleSize = true;
             opts.ForegroundPattern.ModuleStep = 2;
@@ -601,7 +601,7 @@ internal static class QrArtPresets {
             opts.ForegroundPattern.Color = new Rgba32(0, 140, 220, 92);
         }
         if (opts.Canvas is not null) {
-            opts.Canvas.Halo = new QrPngCanvasHaloOptions {
+            opts.Canvas.Halo = new QrCanvasHaloOptions {
                 Color = new Rgba32(0, 176, 230, 120),
                 RadiusPx = 44,
                 ProtectQrArea = true,
@@ -625,14 +625,14 @@ internal static class QrArtPresets {
             opts.ModuleScaleMap.MinScale = 0.90;
             opts.ModuleScaleMap.RingSize = 2;
         }
-        opts.ForegroundGradient = new QrPngGradientOptions {
-            Type = QrPngGradientType.DiagonalDown,
+        opts.ForegroundGradient = new QrGradientOptions {
+            Type = QrGradientType.DiagonalDown,
             StartColor = new Rgba32(28, 132, 196),
             EndColor = new Rgba32(34, 62, 168),
         };
         if (opts.Eyes is not null) {
-            opts.Eyes.OuterGradient = new QrPngGradientOptions {
-                Type = QrPngGradientType.Radial,
+            opts.Eyes.OuterGradient = new QrGradientOptions {
+                Type = QrGradientType.Radial,
                 StartColor = new Rgba32(64, 166, 214),
                 EndColor = new Rgba32(34, 82, 188),
             };
