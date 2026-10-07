@@ -111,6 +111,8 @@ The output directory contains six full-size PNGs, a contact sheet and `validatio
 The generic render API accepts PNG compression without changing styling or decoded pixels:
 
 ```csharp
+using CodeGlyphX.Rendering;
+
 var png = QR.Render("https://example.com", OutputFormat.Png,
     new QrRenderOptions { ModuleSize = 16 },
     extras: new OutputOptions { PngCompressionLevel = 6 });
@@ -154,6 +156,7 @@ The [image-composition example](CodeGlyphX.Examples/QrImageCompositionExample.cs
 For rounded, connected, or organic image-aware shapes, set `Art`. This replaces the square treatment selected by `Style`/`CenterSize`. Decorative shapes adapt to local image edges while small scan anchors stay fixed at module centers. `Canvas` extends the same image around the QR, preserving a uniform light quiet zone. Dark ink and light paper colors can be chosen within enforced luminance bounds.
 
 ```csharp
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 var expressive = QrArt.Compose(payload, File.ReadAllBytes("illustration.png"),
@@ -258,6 +261,7 @@ best.Image.SavePng("marble-qr.png");
 ```csharp
 using CodeGlyphX;
 using CodeGlyphX.Rendering.Art;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 var artwork = QrArt.ComposePattern("https://example.com/art",

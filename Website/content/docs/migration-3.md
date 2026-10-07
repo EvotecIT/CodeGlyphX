@@ -17,6 +17,9 @@ CodeGlyphX 3.0 separates encoding from appearance, uses one general scanner, and
 | `QrCode.Encode`, `QrEasy.Encode` | `QR.Encode` |
 | Static `QrCode.Render`, `QrEasy` rendering helpers | `QR.Render` or an encoded `QrCode.Render` |
 | `QrEasyOptions` | `QrEncodingOptions` and `QrRenderOptions` |
+| `RenderExtras` | `OutputOptions` |
+| Shared `QrPng*` appearance models in `CodeGlyphX.Rendering.Png` | Format-neutral `Qr*` appearance models in `CodeGlyphX.Rendering` |
+| `CodeGlyphX.Rendering.Png.Rgba32` | `CodeGlyphX.Rendering.Rgba32` |
 | `QrEasy.EvaluateScanHeuristics` | `QR.EvaluateScanHeuristics` or `qr.EvaluateScanHeuristics` |
 | `CodeGlyph.TryDecodeImage`, `TryDecodeAll` | `SymbolScanner.Scan`, `ScanFile` and stream/file async variants |
 | `CodeGlyph.TryDecode(BitMatrix, ...)` | `SymbolDecoder.TryDecode` |
@@ -58,12 +61,15 @@ Logo and artwork choices do not silently change the encoding. Select sufficient 
 
 Shared appearance models use format-neutral names in `CodeGlyphX.Rendering`, such as `QrModuleShape` and `QrGradientOptions`. Format-specific renderers and their low-level options, such as `QrPngRenderer` and `QrPngRenderOptions`, retain their format names.
 
-Codec and container settings belong to `RenderExtras`. This includes PNG compression, JPEG quality/options, WebP quality, ICO sizes/aspect policy, HTML title/email table mode and PDF/EPS raster mode. Use named arguments when skipping the encoding options:
+Codec and container settings belong to `OutputOptions`. This includes PNG compression, JPEG quality/options, WebP quality, ICO sizes/aspect policy, HTML title/email table mode and PDF/EPS raster mode. Use named arguments when skipping the encoding options:
 
 ```csharp
+using CodeGlyphX;
+using CodeGlyphX.Rendering;
+
 var jpeg = QR.Render("Hello", OutputFormat.Jpeg,
     new QrRenderOptions { ModuleSize = 8 },
-    extras: new RenderExtras { JpegQuality = 90 });
+    extras: new OutputOptions { JpegQuality = 90 });
 ```
 
 The builder exposes separate `Encoding` and `Rendering` state. Replace `WithOptions` with `WithEncoding` or `WithRendering`. The builder takes snapshots of supplied options, so subsequent edits to the caller's option objects do not change that builder.

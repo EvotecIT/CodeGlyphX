@@ -44,6 +44,7 @@ Do not suggest removed per-format facade or builder methods such as `RenderPng`,
 ## Options
 
 ```csharp
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 var options = new QrRenderOptions {

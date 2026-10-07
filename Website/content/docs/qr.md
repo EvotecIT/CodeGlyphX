@@ -43,6 +43,7 @@ SVG, SVGZ and HTML reject explicit raster-only effects with `NotSupportedExcepti
 
 ```csharp
 using CodeGlyphX;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
 var options = new QrRenderOptions
