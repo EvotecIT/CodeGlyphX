@@ -68,6 +68,56 @@ public sealed class FractionalBarcodeSamplingTests {
         Assert.Equal("NARROW-128", decoded.Text);
     }
 
+    [Theory]
+    [InlineData(0.95)]
+    [InlineData(1.25)]
+    public void DecodeAll_FractionalPharmacode_SelectsOneCorrectPhysicalSymbol(double scale) {
+        var pixels = Resize(BarcodeEncoder.Encode(BarcodeType.Pharmacode, "91"), scale, out var width, out var height);
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32, BarcodeType.Pharmacode, out var first));
+        Assert.Equal("91", first.Text);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32, out var decoded, BarcodeType.Pharmacode));
+        Assert.Equal("91", Assert.Single(decoded).Text);
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32, BarcodeType.Pharmacode, null, default, out var diagnosticDecoded, out var diagnostics));
+        Assert.Equal("91", diagnosticDecoded.Text);
+        Assert.True(diagnostics.Success);
+#if NET8_0_OR_GREATER
+        Assert.True(BarcodeDecoder.TryDecode((ReadOnlySpan<byte>)pixels, width, height, width * 4, PixelFormat.Rgba32, BarcodeType.Pharmacode, null, default, out var spanFirst, out var spanDiagnostics));
+        Assert.Equal("91", spanFirst.Text);
+        Assert.True(spanDiagnostics.Success);
+        Assert.True(BarcodeDecoder.TryDecodeAll((ReadOnlySpan<byte>)pixels, width, height, width * 4, PixelFormat.Rgba32, out var spanDecoded, BarcodeType.Pharmacode));
+        Assert.Equal("91", Assert.Single(spanDecoded).Text);
+#endif
+        var result = SymbolScanner.Scan(EncodePng(pixels, width, height), new ScanOptions {
+            Formats = new[] { SymbolFormat.Pharmacode }, MaxSymbols = 0, EnableTileScan = false, TimeoutMilliseconds = 0
+        });
+        Assert.Equal("91", Assert.Single(result.Symbols).Text);
+    }
+
+    [Fact]
+    public void DecodeAll_FractionalPatchCode_PreservesCanonicalFormatPriorityAcrossPitches() {
+        var pixels = Resize(BarcodeEncoder.Encode(BarcodeType.PatchCode, "T"), 0.85, out var width, out var height);
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32, out var first));
+        Assert.Equal(BarcodeType.PatchCode, first.Type);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32, out var decoded));
+        var symbol = Assert.Single(decoded);
+        Assert.Equal(BarcodeType.PatchCode, symbol.Type);
+        Assert.Equal("T", symbol.Text);
+#if NET8_0_OR_GREATER
+        Assert.True(BarcodeDecoder.TryDecodeAll((ReadOnlySpan<byte>)pixels, width, height, width * 4, PixelFormat.Rgba32, out var spanDecoded));
+        Assert.Equal(BarcodeType.PatchCode, Assert.Single(spanDecoded).Type);
+#endif
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32, out var typed, BarcodeType.PatchCode));
+        Assert.Equal("T", Assert.Single(typed).Text);
+        var linearFormats = SymbolCapabilities.ImageScannableFormats
+            .Where(format => SymbolCapabilities.Get(format).Family == SymbolFamily.Linear).ToArray();
+        var scanned = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = linearFormats, MaxSymbols = 0, EnableTileScan = false, TimeoutMilliseconds = 0
+        });
+        var scannedSymbol = Assert.Single(scanned.Symbols);
+        Assert.Equal(SymbolFormat.PatchCode, scannedSymbol.Format);
+        Assert.Equal("T", scannedSymbol.Text);
+    }
+
     [Fact]
     public void Scan_FractionallyResizedCode128_UsesSameSamplingForPixelsBytesAndFiles() {
         var pixels = Resize(BarcodeEncoder.Encode(BarcodeType.Code128, "LOT-2026-1042"), 0.75, out var width, out var height);

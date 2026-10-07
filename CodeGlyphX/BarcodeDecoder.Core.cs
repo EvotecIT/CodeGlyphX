@@ -29,33 +29,42 @@ public static partial class BarcodeDecoder {
     }
 
     private static bool TryDecodeWithTransforms(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, BarcodeDecodeDiagnostics? diagnostics, out BarcodeDecoded decoded) {
+        return TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, diagnostics, out decoded, out _);
+    }
+
+    private static bool TryDecodeWithTransforms(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, BarcodeDecodeDiagnostics? diagnostics, out BarcodeDecoded decoded, out int priority) {
+        priority = int.MaxValue;
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
-        if (TryDecodeCoreTrimmed(modules, expectedType, options, cancellationToken, diagnostics, out decoded)) return true;
+        if (TryDecodeCoreTrimmed(modules, expectedType, options, cancellationToken, diagnostics, out decoded, out priority)) return true;
         if (cancellationToken.IsCancellationRequested) return false;
         var inverted = InvertModules(modules);
         if (diagnostics is not null) diagnostics.InvertedTried = true;
-        if (TryDecodeCoreTrimmed(inverted, expectedType, options, cancellationToken, diagnostics, out decoded)) return true;
+        if (TryDecodeCoreTrimmed(inverted, expectedType, options, cancellationToken, diagnostics, out decoded, out priority)) return true;
         if (cancellationToken.IsCancellationRequested) return false;
         var reversed = ReverseModules(modules);
         if (diagnostics is not null) diagnostics.ReversedTried = true;
-        if (TryDecodeCoreTrimmed(reversed, expectedType, options, cancellationToken, diagnostics, out decoded)) return true;
+        if (TryDecodeCoreTrimmed(reversed, expectedType, options, cancellationToken, diagnostics, out decoded, out priority)) return true;
         if (cancellationToken.IsCancellationRequested) return false;
         var invertedReversed = InvertModules(reversed);
         if (diagnostics is not null) diagnostics.InvertedTried = true;
-        return TryDecodeCoreTrimmed(invertedReversed, expectedType, options, cancellationToken, diagnostics, out decoded);
+        return TryDecodeCoreTrimmed(invertedReversed, expectedType, options, cancellationToken, diagnostics, out decoded, out priority);
     }
 
-    private static bool TryDecodeCoreTrimmed(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, BarcodeDecodeDiagnostics? diagnostics, out BarcodeDecoded decoded) {
+    private static bool TryDecodeCoreTrimmed(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, BarcodeDecodeDiagnostics? diagnostics, out BarcodeDecoded decoded, out int priority) {
         decoded = null!;
+        priority = int.MaxValue;
         if (cancellationToken.IsCancellationRequested) return false;
         var trimmed = TrimModules(modules);
         if (trimmed.Length == 0) return false;
         if (diagnostics is not null) diagnostics.AttemptCount++;
-        return TryDecodeCore(trimmed, expectedType, options, cancellationToken, out decoded);
+        return TryDecodeCore(trimmed, expectedType, options, cancellationToken, out decoded, out priority);
     }
 
-    private static bool TryDecodeCore(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    private static bool TryDecodeCore(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded, out int priority) {
         decoded = null!;
+        // Report the successful decoder's existing order so competing sampling
+        // hypotheses share this canonical priority rather than duplicating a type list.
+        priority = 0;
         if (cancellationToken.IsCancellationRequested) return false;
         if (expectedType.HasValue) {
             return TryDecodeType(expectedType.Value, modules, options, out decoded);
@@ -63,117 +72,140 @@ public static partial class BarcodeDecoder {
 
         // Fixed-length symbologies first.
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeEan8(modules, out var ean8)) {
             decoded = new BarcodeDecoded(BarcodeType.EAN, ean8);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeUpcA(modules, out var upca)) {
             decoded = new BarcodeDecoded(BarcodeType.UPCA, upca);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeEan13(modules, out var ean13)) {
             decoded = new BarcodeDecoded(BarcodeType.EAN, ean13);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeUpcE(modules, out var upce)) {
             decoded = new BarcodeDecoded(BarcodeType.UPCE, upce);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeItf14(modules, out var itf14)) {
             decoded = new BarcodeDecoded(BarcodeType.ITF14, itf14);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeItf(modules, out var itf)) {
             decoded = new BarcodeDecoded(BarcodeType.ITF, itf);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeIndustrial2of5(modules, out var industrial25)) {
             decoded = new BarcodeDecoded(BarcodeType.Industrial2of5, industrial25);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeMatrix2of5(modules, out var matrix25)) {
             decoded = new BarcodeDecoded(BarcodeType.Matrix2of5, matrix25);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeIata2of5(modules, out var iata25)) {
             decoded = new BarcodeDecoded(BarcodeType.IATA2of5, iata25);
             return true;
         }
 
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeCode128(modules, out var code128, out var isGs1)) {
             decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeCode32(modules, options, out var code32)) {
             decoded = new BarcodeDecoded(BarcodeType.Code32, code32);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeCode39(modules, options, out var code39)) {
             decoded = new BarcodeDecoded(BarcodeType.Code39, code39);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeCode93(modules, out var code93)) {
             decoded = new BarcodeDecoded(BarcodeType.Code93, code93);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeCodabar(modules, out var codabar)) {
             decoded = new BarcodeDecoded(BarcodeType.Codabar, codabar);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeMsi(modules, options, out var msi)) {
             decoded = new BarcodeDecoded(BarcodeType.MSI, msi);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeCode11(modules, options, out var code11)) {
             decoded = new BarcodeDecoded(BarcodeType.Code11, code11);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodePlessey(modules, options, out var plessey)) {
             decoded = new BarcodeDecoded(BarcodeType.Plessey, plessey);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodePatchCode(modules, out var patch)) {
             decoded = new BarcodeDecoded(BarcodeType.PatchCode, patch);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeTelepen(modules, out var telepen)) {
             decoded = new BarcodeDecoded(BarcodeType.Telepen, telepen);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodePharmacode(modules, out var pharmacode)) {
             decoded = new BarcodeDecoded(BarcodeType.Pharmacode, pharmacode);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeGs1DataBarTruncated(modules, out var dataBarTruncated)) {
             decoded = new BarcodeDecoded(BarcodeType.GS1DataBarTruncated, dataBarTruncated);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeGs1DataBarLimited(modules, out var dataBarLimited)) {
             decoded = new BarcodeDecoded(BarcodeType.GS1DataBarLimited, dataBarLimited);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
         if (TryDecodeGs1DataBarExpanded(modules, out var dataBarExpanded)) {
             decoded = new BarcodeDecoded(BarcodeType.GS1DataBarExpanded, dataBarExpanded);
             return true;
