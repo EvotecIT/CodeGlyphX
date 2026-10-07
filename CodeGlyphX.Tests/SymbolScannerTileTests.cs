@@ -9,9 +9,59 @@ namespace CodeGlyphX.Tests;
 [Collection("ImageScannerSerial")]
 public sealed class SymbolScannerTileTests {
     [Theory]
+    [InlineData(500, false)]
+    [InlineData(2000, true)]
+    public void DefaultFormatScanDoesNotInterpretQrScanlinesAsWeakBarcodes(int timeoutMilliseconds, bool emptyFormats) {
+        var png = QR.Render("ASYNC", OutputFormat.Png).ToArray();
+
+        var result = SymbolScanner.Scan(png, new ScanOptions {
+            MaxSymbols = 0, TimeoutMilliseconds = TestBudget.Adjust(timeoutMilliseconds),
+            Formats = emptyFormats ? Array.Empty<SymbolFormat>() : null
+        });
+
+        var summary = string.Join(", ", result.Symbols.Select(symbol => symbol.Format + ": " + symbol.Text));
+        Assert.Contains(result.Symbols, symbol => symbol.Format == SymbolFormat.QrCode && symbol.Text == "ASYNC");
+        Assert.True(result.Symbols.Count == 1, summary);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(SymbolFormat.QrCode, symbol.Format);
+        Assert.Equal("ASYNC", symbol.Text);
+    }
+
+    [Theory]
+    [InlineData(SymbolFormat.Code128, "DEFAULT-LINEAR-128", false)]
+    [InlineData(SymbolFormat.Code128, "DEFAULT-LINEAR-128", true)]
+    [InlineData(SymbolFormat.Ean, "5901234123457", false)]
+    [InlineData(SymbolFormat.Ean, "5901234123457", true)]
+    public void DefaultAndPlaygroundScansPreserveUnrestrictedLinearBudget(SymbolFormat format, string payload, bool playgroundOptions) {
+        var png = Barcode.Render(format, payload, OutputFormat.Png, new BarcodeOptions {
+            ModuleSize = 4, QuietZone = 10, HeightModules = 40
+        }).ToArray();
+        // Keep every format requested and a finite deadline: restricting the formats or
+        // disabling the deadline would miss starvation of the unrestricted linear pass.
+        var options = new ScanOptions { TimeoutMilliseconds = TestBudget.Adjust(playgroundOptions ? 2000 : 500), MaxSymbols = 1 };
+        if (playgroundOptions) {
+            options.Qr = new QrPixelDecodeOptions {
+                Profile = QrDecodeProfile.Robust, AggressiveSampling = true, StylizedSampling = true,
+                EnableTileScan = true, MaxDimension = 2048
+            };
+            options.Barcode = new BarcodeDecodeOptions { EnableTileScan = false };
+            options.Image = ImageDecodeOptions.Strict(maxBytes: 15 * 1024 * 1024,
+                maxPixels: 4096L * 4096, maxDimension: 2048);
+        }
+
+        var result = SymbolScanner.Scan(png, options);
+
+        Assert.True(result.IsSuccess, result.Failure);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(format, symbol.Format);
+        Assert.Equal(payload, symbol.Text);
+        Assert.Equal(ScanCompletionReason.SymbolLimitReached, result.CompletionReason);
+    }
+
+    [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public void RealPharmacodeBesideDataBarSurvivesTileBoundaryRejection(bool explicitFormats) {
+    public void ExplicitPharmacodeBesideDataBarSurvivesTileBoundaryRejection(bool narrowFormats) {
         var render = new BarcodePngRenderOptions { ModuleSize = 4, QuietZone = 10, HeightModules = 40 };
         var dataBar = BarcodePngRenderer.RenderPixels(DataBar.DataBar14Encoder.EncodeOmnidirectional("1234567890123"),
             render, out var dw, out var dh, out _);
@@ -23,7 +73,7 @@ public sealed class SymbolScannerTileTests {
         var canvas = Enumerable.Repeat((byte)255, width * height * 4).ToArray();
         for (var y = 0; y < dh; y++) Array.Copy(dataBar, y * dw * 4, canvas, ((y + border) * width + border) * 4, dw * 4);
         for (var y = 0; y < ph; y++) Array.Copy(pharmacode, y * pw * 4, canvas, ((y + dh + border * 2) * width + border) * 4, pw * 4);
-        var formats = explicitFormats
+        var formats = narrowFormats
             ? new[] { SymbolFormat.Gs1DataBarOmnidirectional, SymbolFormat.Pharmacode }
             : SymbolCapabilities.ImageScannableFormats
                 .Where(format => SymbolCapabilities.Get(format).Family == SymbolFamily.Linear).ToArray();

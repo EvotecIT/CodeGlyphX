@@ -52,8 +52,10 @@ public static partial class SymbolScanner {
     private static ScanResult ReadAndScan(Stream stream, ScanOptions options, ScanDeadline deadline) {
         if (deadline.ShouldStop) return Cancelled(deadline, new List<SymbolFormat>());
         try {
-            var bytes = RenderIO.ReadBinary(stream, options.Image?.MaxBytes ?? ImageReader.MaxImageBytes);
+            var bytes = RenderIO.ReadBinary(stream, options.Image?.MaxBytes ?? ImageReader.MaxImageBytes, deadline.Token);
             return ScanEncodedImage(bytes, options, deadline);
+        } catch (OperationCanceledException) when (deadline.ShouldStop) {
+            return Cancelled(deadline, new List<SymbolFormat>());
         } catch (FormatException ex) {
             return InvalidInput(deadline, ex.Message);
         }

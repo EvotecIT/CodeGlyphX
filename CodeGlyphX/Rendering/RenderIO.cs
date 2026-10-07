@@ -188,10 +188,7 @@ public static class RenderIO {
     /// <param name="stream">Input stream.</param>
     /// <returns>Binary data.</returns>
     public static byte[] ReadBinary(Stream stream) {
-        if (stream is null) throw new ArgumentNullException(nameof(stream));
-        using var ms = new MemoryStream();
-        stream.CopyTo(ms);
-        return ms.ToArray();
+        return ReadBinary(stream, 0, CancellationToken.None);
     }
 
     /// <summary>
@@ -205,21 +202,30 @@ public static class RenderIO {
     /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
     /// <returns>Binary data.</returns>
     public static byte[] ReadBinary(Stream stream, int maxBytes) {
+        return ReadBinary(stream, maxBytes, CancellationToken.None);
+    }
+
+    // Synchronous streams cannot interrupt an arbitrary blocking Read. Observe cancellation
+    // on both sides of every read so transport stops as soon as that read returns.
+    internal static byte[] ReadBinary(Stream stream, int maxBytes, CancellationToken cancellationToken) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (maxBytes <= 0) return ReadBinary(stream);
-        ValidateRemainingLength(stream, maxBytes);
+        cancellationToken.ThrowIfCancellationRequested();
+        if (maxBytes > 0) ValidateRemainingLength(stream, maxBytes);
 
         using var ms = new MemoryStream();
-        var buffer = new byte[(int)Math.Min(81920, (long)maxBytes + 1)];
+        var buffer = new byte[maxBytes > 0 ? (int)Math.Min(81920, (long)maxBytes + 1) : 81920];
         long total = 0;
         while (true) {
-            var count = (int)Math.Min(buffer.Length, (long)maxBytes - total + 1);
+            cancellationToken.ThrowIfCancellationRequested();
+            var count = maxBytes > 0 ? (int)Math.Min(buffer.Length, (long)maxBytes - total + 1) : buffer.Length;
             var read = stream.Read(buffer, 0, count);
+            cancellationToken.ThrowIfCancellationRequested();
             if (read <= 0) break;
             total += read;
-            if (total > maxBytes) throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, total, maxBytes));
+            if (maxBytes > 0 && total > maxBytes) throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, total, maxBytes));
             ms.Write(buffer, 0, read);
         }
+        cancellationToken.ThrowIfCancellationRequested();
         return ms.ToArray();
     }
 

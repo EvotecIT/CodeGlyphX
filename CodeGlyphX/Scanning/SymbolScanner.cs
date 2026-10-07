@@ -273,17 +273,19 @@ public static partial class SymbolScanner {
             && expectedTypes.Contains(BarcodeType.GS1DataBarOmni);
 
         if (classifyDataBarHeight) {
-            using var locatedAttempt = deadline.CreateAttempt(expectedTypes.Count);
-            var expected = RequestsEveryImageScannableLinearFormat(requested)
+            var expected = RequestsEveryDefaultLinearFormat(requested)
                 ? (BarcodeType?)null
                 : BarcodeType.GS1DataBarTruncated;
+            // The unrestricted pass already tries every linear type; only a typed pass
+            // shares its family budget with the per-type attempts that follow it.
+            using var locatedAttempt = expected.HasValue ? deadline.CreateAttempt(expectedTypes.Count) : null;
             ScanLocatedLinear(
                 rgba,
                 width,
                 height,
                 searchRegion,
                 options,
-                locatedAttempt,
+                locatedAttempt ?? deadline,
                 requested,
                 expectedTypes,
                 expected,
@@ -427,11 +429,12 @@ public static partial class SymbolScanner {
         return decoded;
     }
 
-    private static bool RequestsEveryImageScannableLinearFormat(ISet<SymbolFormat> requested) {
+    private static bool RequestsEveryDefaultLinearFormat(ISet<SymbolFormat> requested) {
         for (var i = 0; i < SymbolCapabilities.ImageScannableFormats.Count; i++) {
             var format = SymbolCapabilities.ImageScannableFormats[i];
             var capability = SymbolCapabilities.Get(format);
-            if (capability.Family == SymbolFamily.Linear && capability.LegacyBarcodeType.HasValue && !requested.Contains(format)) return false;
+            if (capability.IsDefaultScanFormat && capability.Family == SymbolFamily.Linear
+                && capability.LegacyBarcodeType.HasValue && !requested.Contains(format)) return false;
         }
         return true;
     }
@@ -508,7 +511,8 @@ public static partial class SymbolScanner {
         var seen = new HashSet<SymbolFormat>();
         if (formats is null || formats.Length == 0) {
             for (var i = 0; i < SymbolCapabilities.ImageScannableFormats.Count; i++) {
-                requested.Add(SymbolCapabilities.ImageScannableFormats[i]);
+                var format = SymbolCapabilities.ImageScannableFormats[i];
+                if (SymbolCapabilities.Get(format).IsDefaultScanFormat) requested.Add(format);
             }
             return requested;
         }

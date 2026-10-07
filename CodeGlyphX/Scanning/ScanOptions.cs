@@ -7,7 +7,8 @@ namespace CodeGlyphX;
 /// </summary>
 public sealed class ScanOptions {
     /// <summary>
-    /// Gets or sets the formats to scan. A null or empty array selects every image-scannable format.
+    /// Gets or sets the formats to scan. A null or empty array selects formats whose
+    /// <see cref="SymbolCapability.IsDefaultScanFormat"/> is true.
     /// Module-only requested formats are reported through <see cref="ScanResult.UnsupportedFormats"/>.
     /// </summary>
     public SymbolFormat[]? Formats { get; set; }
@@ -17,9 +18,10 @@ public sealed class ScanOptions {
 
     /// <summary>
     /// Gets or sets the total wall-clock deadline in milliseconds for image decoding, conversion, and recognition.
-    /// Zero disables the deadline. Recognition cancellation is cooperative rather than hard real-time.
+    /// The default is 500 milliseconds, matching <see cref="Balanced(int)"/>. Zero explicitly disables
+    /// the deadline. Recognition cancellation is cooperative rather than hard real-time.
     /// </summary>
-    public int TimeoutMilliseconds { get; set; }
+    public int TimeoutMilliseconds { get; set; } = 500;
 
     /// <summary>Gets or sets the maximum number of results. Zero means unlimited.</summary>
     public int MaxSymbols { get; set; } = 32;

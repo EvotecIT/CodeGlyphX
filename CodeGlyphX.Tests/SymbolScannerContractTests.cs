@@ -10,6 +10,42 @@ namespace CodeGlyphX.Tests;
 
 public sealed class SymbolScannerContractTests {
     [Fact]
+    public void CapabilityCatalog_SeparatesDefaultRecognitionFromExplicitWeakFormatSupport() {
+        Assert.True(SymbolCapabilities.Get(SymbolFormat.QrCode).IsDefaultScanFormat);
+        Assert.True(SymbolCapabilities.Get(SymbolFormat.Code128).IsDefaultScanFormat);
+        Assert.False(SymbolCapabilities.Get(SymbolFormat.Pharmacode).IsDefaultScanFormat);
+        Assert.False(SymbolCapabilities.Get(SymbolFormat.PatchCode).IsDefaultScanFormat);
+        Assert.False(SymbolCapabilities.Get(SymbolFormat.PharmacodeTwoTrack).IsDefaultScanFormat);
+        Assert.True(SymbolCapabilities.Get(SymbolFormat.Pharmacode).CanScanImages);
+        Assert.True(SymbolCapabilities.Get(SymbolFormat.PatchCode).CanScanImages);
+        Assert.All(SymbolCapabilities.All.Where(capability => !capability.CanScanImages),
+            capability => Assert.False(capability.IsDefaultScanFormat));
+    }
+
+    [Fact]
+    public void ScanOptions_DefaultDeadlineMatchesBalancedAndCanBeDisabledExplicitly() {
+        Assert.Equal(500, new ScanOptions().TimeoutMilliseconds);
+        Assert.Equal(ScanOptions.Balanced().TimeoutMilliseconds, new ScanOptions().TimeoutMilliseconds);
+        Assert.Equal(0, new ScanOptions { TimeoutMilliseconds = 0 }.TimeoutMilliseconds);
+        var png = QR.Render("DEFAULT-OPTIONS", OutputFormat.Png).ToArray();
+        var result = SymbolScanner.Scan(png);
+        Assert.Equal("DEFAULT-OPTIONS", Assert.Single(result.Symbols).Text);
+        Assert.NotEqual(ScanCompletionReason.Cancelled, result.CompletionReason);
+    }
+
+    [Theory]
+    [InlineData(SymbolFormat.Pharmacode, "91")]
+    [InlineData(SymbolFormat.PatchCode, "T")]
+    public void Scan_ExplicitWeakFormatsRemainAvailable(SymbolFormat format, string payload) {
+        var png = Barcode.Render(format, payload, OutputFormat.Png).ToArray();
+        var result = SymbolScanner.Scan(png, new ScanOptions {
+            Formats = new[] { format }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(2000)
+        });
+        Assert.Equal(format, Assert.Single(result.Symbols).Format);
+        Assert.Equal(payload, result.Symbols[0].Text);
+    }
+
+    [Fact]
     public void CapabilityCatalog_CoversEveryPublicFormatAndLegacyBarcodeType() {
         var formats = Enum.GetValues<SymbolFormat>();
         var legacyTypes = Enum.GetValues<BarcodeType>();

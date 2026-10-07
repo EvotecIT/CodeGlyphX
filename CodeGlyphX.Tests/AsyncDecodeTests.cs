@@ -46,6 +46,75 @@ public sealed class AsyncDecodeTests {
         Assert.Equal(ScanCompletionReason.DeadlineExceeded, result.CompletionReason);
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(64)]
+    public void Scanner_SynchronousTransportStopsAfterTheReadThatCancels(int maxBytes) {
+        using var cancellation = new CancellationTokenSource();
+        using var stream = new ChunkedReadStream(cancellation.Cancel);
+
+        var result = SymbolScanner.Scan(stream, new ScanOptions {
+            CancellationToken = cancellation.Token, Image = new ImageDecodeOptions { MaxBytes = maxBytes }
+        });
+
+        Assert.Equal(1, stream.ReadCalls);
+        Assert.Equal(1, stream.BytesRead);
+        Assert.True(stream.CanRead);
+        Assert.Equal(ScanStatus.Cancelled, result.Status);
+        Assert.Equal(ScanCompletionReason.Cancelled, result.CompletionReason);
+    }
+
+    [Fact]
+    public async Task Scanner_SynchronousTransportObservesDeadlineWhenABlockedReadReturns() {
+        using var entered = new ManualResetEventSlim();
+        using var release = new ManualResetEventSlim();
+        using var stream = new ChunkedReadStream(() => {
+            entered.Set();
+            if (!release.Wait(TimeSpan.FromSeconds(5))) throw new TimeoutException("The test did not release the read.");
+        });
+        var scan = Task.Run(() => SymbolScanner.Scan(stream, new ScanOptions { TimeoutMilliseconds = 50 }));
+        try {
+            Assert.True(entered.Wait(TimeSpan.FromSeconds(5)), "The scanner did not begin reading.");
+            // The real deadline must expire while Read is blocked. No elapsed-time performance
+            // assertion is made: the contract is to stop before another read after it is released.
+            await Task.Delay(250);
+        } finally {
+            release.Set();
+        }
+        var result = await scan;
+
+        Assert.Equal(1, stream.ReadCalls);
+        Assert.True(stream.CanRead);
+        Assert.Equal(ScanStatus.DeadlineExceeded, result.Status);
+        Assert.Equal(ScanCompletionReason.DeadlineExceeded, result.CompletionReason);
+    }
+
+    private sealed class ChunkedReadStream : Stream {
+        private readonly Action _firstRead;
+        private bool _disposed;
+        public int ReadCalls { get; private set; }
+        public int BytesRead { get; private set; }
+        public ChunkedReadStream(Action firstRead) => _firstRead = firstRead;
+        public override bool CanRead => !_disposed;
+        public override bool CanSeek => false;
+        public override bool CanWrite => false;
+        public override long Length => throw new NotSupportedException();
+        public override long Position { get => BytesRead; set => throw new NotSupportedException(); }
+        public override void Flush() { }
+        public override int Read(byte[] buffer, int offset, int count) {
+            ReadCalls++;
+            if (ReadCalls == 1) _firstRead();
+            if (count == 0 || BytesRead == 16) return 0;
+            buffer[offset] = 42;
+            BytesRead++;
+            return 1;
+        }
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+        public override void SetLength(long value) => throw new NotSupportedException();
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
+        protected override void Dispose(bool disposing) { _disposed = true; base.Dispose(disposing); }
+    }
+
     private sealed class SlowStream : Stream {
         public override bool CanRead => true;
         public override bool CanSeek => false;

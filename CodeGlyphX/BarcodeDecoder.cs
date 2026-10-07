@@ -102,7 +102,7 @@ public static partial class BarcodeDecoder {
         var seen = new HashSet<string>(StringComparer.Ordinal);
 
         for (var i = 0; i < candidates.Length; i++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) break;
             if (TryDecodeWithTransforms(candidates[i], expectedType, options, cancellationToken, out var hit)) {
                 AddUnique(list, seen, hit);
             }
@@ -157,7 +157,8 @@ public static partial class BarcodeDecoder {
             });
         }
 
-        if (DecodeBudget.ShouldAbort(cancellationToken) || list.Count == 0) return false;
+        // Cancellation ends the remaining search; candidates decoded before it remain valid.
+        if (list.Count == 0) return false;
         decoded = list.ToArray();
         return true;
     }
@@ -245,7 +246,7 @@ public static partial class BarcodeDecoder {
         var list = new List<BarcodeDecoded>(4);
         var seen = new HashSet<string>(StringComparer.Ordinal);
         for (var i = 0; i < candidates.Length; i++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) break;
             if (TryDecodeWithTransforms(candidates[i], expectedType, options, cancellationToken, out var hit)) {
                 AddUnique(list, seen, hit);
             }
