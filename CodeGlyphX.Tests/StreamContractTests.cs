@@ -57,7 +57,24 @@ public sealed class StreamContractTests {
     [InlineData(2)]
     [InlineData(3)]
     [InlineData(4)]
-    public async Task QrDecodeAdaptersReadFromCurrentPosition(int streamKind) {
+    public void QrDecodeAdaptersReadFromCurrentPosition(int streamKind) {
+        var png = CreateQrPng();
+        using var stream = CreateStream(png, streamKind);
+        var result = QrImageDecoder.DecodeImageResult(stream, new ImageDecodeOptions { MaxBytes = png.Length });
+        Assert.True(result.IsSuccess, result.Message);
+        Assert.Equal(Payload, result.Value!.Text);
+        AssertConsumed(stream);
+        Assert.False(QrImageDecoder.DecodeImageResult(stream).IsSuccess);
+    }
+
+#if NET8_0_OR_GREATER
+    [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    public async Task UnifiedQrDecodeAdaptersReadFromCurrentPosition(int streamKind) {
         var png = CreateQrPng();
         using (var stream = CreateStream(png, streamKind)) {
             var result = CodeGlyph.DecodeImageResult(stream, new CodeGlyphDecodeOptions {
@@ -69,16 +86,28 @@ public sealed class StreamContractTests {
             Assert.False(CodeGlyph.DecodeImageResult(stream).IsSuccess);
         }
         using (var stream = CreateStream(png, streamKind)) {
-            var result = QrImageDecoder.DecodeImageResult(stream, new ImageDecodeOptions { MaxBytes = png.Length });
-            Assert.True(result.IsSuccess, result.Message);
-            Assert.Equal(Payload, result.Value!.Text);
-            AssertConsumed(stream);
-        }
-        using (var stream = CreateStream(png, streamKind)) {
             var result = await CodeGlyph.TryDecodeImageAsync(stream);
             Assert.NotNull(result);
             Assert.Equal(Payload, result!.Text);
             AssertConsumed(stream);
+        }
+    }
+#endif
+
+    [Fact]
+    public void BoundedFileReadersEnforceSharedReadContract() {
+        var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".bin");
+        var expected = new byte[] { 10, 20, 30 };
+        try {
+            File.WriteAllBytes(path, expected);
+            Assert.Equal(expected, RenderIO.ReadBinary(path, expected.Length));
+            Assert.True(RenderIO.TryReadBinary(path, expected.Length, out var actual));
+            Assert.Equal(expected, actual);
+            Assert.Throws<FormatException>(() => RenderIO.ReadBinary(path, expected.Length - 1));
+            Assert.False(RenderIO.TryReadBinary(path, expected.Length - 1, out var rejected));
+            Assert.Empty(rejected);
+        } finally {
+            File.Delete(path);
         }
     }
 
@@ -228,7 +257,7 @@ public sealed class StreamContractTests {
 
     private static byte[] CreateQrPng() => QrPngRenderer.Render(
         QrCodeEncoder.EncodeText(Payload).Modules,
-        new QrPngRenderOptions { ModuleSize = 4, QuietZone = 4 });
+        new QrPngRenderOptions { ModuleSize = 14, QuietZone = 6 });
 
     private static Stream CreateStream(byte[] payload, int kind) {
         var bytes = new byte[PrefixLength + payload.Length];
