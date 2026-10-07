@@ -77,8 +77,8 @@ The builder exposes separate `Encoding` and `Rendering` state. Replace `WithOpti
 
 ```csharp
 QR.Create("Hello")
-    .WithEncoding(new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H })
-    .WithRendering(new QrRenderOptions { ModuleSize = 8 })
+    .WithEncoding(options => options.ErrorCorrectionLevel = QrErrorCorrectionLevel.H)
+    .WithRendering(options => options.ModuleSize = 8)
     .Save("hello.png");
 ```
 
