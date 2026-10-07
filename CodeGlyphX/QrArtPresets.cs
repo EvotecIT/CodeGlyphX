@@ -11,7 +11,7 @@ internal static class QrArtPresets {
     /// <summary>
     /// High-contrast neon glow on a dark canvas.
     /// </summary>
-    internal static QrEasyOptions NeonGlow() {
+    internal static QrRenderOptions NeonGlow() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(0, 96, 92);
         opts.Background = new Rgba32(250, 252, 255);
@@ -77,7 +77,7 @@ internal static class QrArtPresets {
     /// <summary>
     /// Soft, glassy gradients with smooth squircles.
     /// </summary>
-    internal static QrEasyOptions LiquidGlass() {
+    internal static QrRenderOptions LiquidGlass() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(24, 68, 160);
         opts.Background = new Rgba32(246, 250, 255);
@@ -145,7 +145,7 @@ internal static class QrArtPresets {
     /// <summary>
     /// Connected squircles with a bold, modern glow.
     /// </summary>
-    internal static QrEasyOptions ConnectedSquircleGlow() {
+    internal static QrRenderOptions ConnectedSquircleGlow() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(60, 72, 180);
         opts.Background = new Rgba32(250, 252, 255);
@@ -208,7 +208,7 @@ internal static class QrArtPresets {
     /// <summary>
     /// Techy cut-corner eyes with structured palettes.
     /// </summary>
-    internal static QrEasyOptions CutCornerTech() {
+    internal static QrRenderOptions CutCornerTech() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(20, 32, 62);
         opts.Background = new Rgba32(244, 248, 255);
@@ -290,7 +290,7 @@ internal static class QrArtPresets {
     /// <summary>
     /// Inset-ring eyes with orderly ring palettes.
     /// </summary>
-    internal static QrEasyOptions InsetRings() {
+    internal static QrRenderOptions InsetRings() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(28, 60, 150);
         opts.Background = new Rgba32(248, 250, 255);
@@ -353,7 +353,7 @@ internal static class QrArtPresets {
     /// <summary>
     /// Stripe-textured eyes with calm module styling.
     /// </summary>
-    internal static QrEasyOptions StripeEyes() {
+    internal static QrRenderOptions StripeEyes() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(26, 46, 128);
         opts.Background = new Rgba32(248, 250, 255);
@@ -427,7 +427,7 @@ internal static class QrArtPresets {
     /// <summary>
     /// Paint-splash canvas with crisp, scan-friendly modules.
     /// </summary>
-    internal static QrEasyOptions PaintSplash() {
+    internal static QrRenderOptions PaintSplash() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(18, 36, 92);
         opts.Background = new Rgba32(250, 252, 255);
@@ -497,7 +497,7 @@ internal static class QrArtPresets {
     /// <summary>
     /// Pastel paint-splash canvas with a softer palette.
     /// </summary>
-    internal static QrEasyOptions PaintSplashPastel() {
+    internal static QrRenderOptions PaintSplashPastel() {
         var opts = BaseArt();
         opts.Foreground = new Rgba32(20, 40, 98);
         opts.Background = new Rgba32(250, 252, 255);
@@ -567,12 +567,12 @@ internal static class QrArtPresets {
     /// <summary>
     /// Conservative variant of <see cref="NeonGlow"/>.
     /// </summary>
-    internal static QrEasyOptions NeonGlowConservative() => NeonGlow();
+    internal static QrRenderOptions NeonGlowConservative() => NeonGlow();
 
     /// <summary>
     /// Bolder variant of <see cref="NeonGlow"/> with stronger effects.
     /// </summary>
-    internal static QrEasyOptions NeonGlowBold() {
+    internal static QrRenderOptions NeonGlowBold() {
         var opts = NeonGlowConservative();
         opts.ModuleScale = 0.93;
         if (opts.ModuleScaleMap is not null) {
@@ -613,12 +613,12 @@ internal static class QrArtPresets {
     /// <summary>
     /// Conservative variant of <see cref="LiquidGlass"/>.
     /// </summary>
-    internal static QrEasyOptions LiquidGlassConservative() => LiquidGlass();
+    internal static QrRenderOptions LiquidGlassConservative() => LiquidGlass();
 
     /// <summary>
     /// Bolder variant of <see cref="LiquidGlass"/> with punchier gradients.
     /// </summary>
-    internal static QrEasyOptions LiquidGlassBold() {
+    internal static QrRenderOptions LiquidGlassBold() {
         var opts = LiquidGlassConservative();
         opts.ModuleScale = 0.94;
         if (opts.ModuleScaleMap is not null) {
@@ -643,12 +643,12 @@ internal static class QrArtPresets {
     /// <summary>
     /// Conservative variant of <see cref="ConnectedSquircleGlow"/>.
     /// </summary>
-    internal static QrEasyOptions ConnectedSquircleGlowConservative() => ConnectedSquircleGlow();
+    internal static QrRenderOptions ConnectedSquircleGlowConservative() => ConnectedSquircleGlow();
 
     /// <summary>
     /// Bolder variant of <see cref="ConnectedSquircleGlow"/> with denser rings.
     /// </summary>
-    internal static QrEasyOptions ConnectedSquircleGlowBold() {
+    internal static QrRenderOptions ConnectedSquircleGlowBold() {
         var opts = ConnectedSquircleGlowConservative();
         opts.ModuleScale = 0.94;
         if (opts.ModuleScaleMap is not null) {
@@ -669,12 +669,12 @@ internal static class QrArtPresets {
     /// <summary>
     /// Conservative variant of <see cref="CutCornerTech"/>.
     /// </summary>
-    internal static QrEasyOptions CutCornerTechConservative() => CutCornerTech();
+    internal static QrRenderOptions CutCornerTechConservative() => CutCornerTech();
 
     /// <summary>
     /// Bolder variant of <see cref="CutCornerTech"/> with tighter modules.
     /// </summary>
-    internal static QrEasyOptions CutCornerTechBold() {
+    internal static QrRenderOptions CutCornerTechBold() {
         var opts = CutCornerTechConservative();
         opts.ModuleScale = 0.88;
         opts.ModuleCornerRadiusPx = 5;
@@ -687,12 +687,12 @@ internal static class QrArtPresets {
     /// <summary>
     /// Conservative variant of <see cref="InsetRings"/>.
     /// </summary>
-    internal static QrEasyOptions InsetRingsConservative() => InsetRings();
+    internal static QrRenderOptions InsetRingsConservative() => InsetRings();
 
     /// <summary>
     /// Bolder variant of <see cref="InsetRings"/> with stronger ring contrast.
     /// </summary>
-    internal static QrEasyOptions InsetRingsBold() {
+    internal static QrRenderOptions InsetRingsBold() {
         var opts = InsetRingsConservative();
         opts.ModuleScale = 0.93;
         if (opts.ModuleScaleMap is not null) {
@@ -711,12 +711,12 @@ internal static class QrArtPresets {
     /// <summary>
     /// Conservative variant of <see cref="StripeEyes"/>.
     /// </summary>
-    internal static QrEasyOptions StripeEyesConservative() => StripeEyes();
+    internal static QrRenderOptions StripeEyesConservative() => StripeEyes();
 
     /// <summary>
     /// Bolder variant of <see cref="StripeEyes"/> that also textures modules.
     /// </summary>
-    internal static QrEasyOptions StripeEyesBold() {
+    internal static QrRenderOptions StripeEyesBold() {
         var opts = StripeEyesConservative();
         opts.ModuleScale = 0.94;
         if (opts.ModuleScaleMap is not null) {
@@ -737,12 +737,12 @@ internal static class QrArtPresets {
     /// <summary>
     /// Conservative variant of <see cref="PaintSplash"/>.
     /// </summary>
-    internal static QrEasyOptions PaintSplashConservative() => PaintSplash();
+    internal static QrRenderOptions PaintSplashConservative() => PaintSplash();
 
     /// <summary>
     /// Bolder variant of <see cref="PaintSplash"/> with denser splashes.
     /// </summary>
-    internal static QrEasyOptions PaintSplashBold() {
+    internal static QrRenderOptions PaintSplashBold() {
         var opts = PaintSplashConservative();
         opts.ModuleScale = 0.95;
         if (opts.ModuleScaleMap is not null) {
@@ -782,12 +782,12 @@ internal static class QrArtPresets {
     /// <summary>
     /// Conservative variant of <see cref="PaintSplashPastel"/>.
     /// </summary>
-    internal static QrEasyOptions PaintSplashPastelConservative() => PaintSplashPastel();
+    internal static QrRenderOptions PaintSplashPastelConservative() => PaintSplashPastel();
 
     /// <summary>
     /// Bolder variant of <see cref="PaintSplashPastel"/> with denser splashes.
     /// </summary>
-    internal static QrEasyOptions PaintSplashPastelBold() {
+    internal static QrRenderOptions PaintSplashPastelBold() {
         var opts = PaintSplashPastelConservative();
         opts.ModuleScale = 0.95;
         if (opts.ModuleScaleMap is not null) {
@@ -812,9 +812,8 @@ internal static class QrArtPresets {
         return opts;
     }
 
-    private static QrEasyOptions BaseArt() {
-        return new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+    private static QrRenderOptions BaseArt() {
+        return new QrRenderOptions {
             ModuleSize = 10,
             QuietZone = 4,
             BackgroundSupersample = 2,

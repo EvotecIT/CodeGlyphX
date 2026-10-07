@@ -7,16 +7,16 @@ public sealed class TiffEncodeTests {
     [Fact]
     public void Tiff_Encode_Respects_Compression_Mode() {
         var payload = "https://example.com/tiff";
-        var none = QrCode.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
+        var none = QR.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
             TiffCompression = TiffCompressionMode.None
         }).Data;
-        var packBits = QrCode.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
+        var packBits = QR.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
             TiffCompression = TiffCompressionMode.PackBits
         }).Data;
-        var deflate = QrCode.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
+        var deflate = QR.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
             TiffCompression = TiffCompressionMode.Deflate
         }).Data;
-        var auto = QrCode.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
+        var auto = QR.Render(payload, OutputFormat.Tiff, extras: new RenderExtras {
             TiffCompression = TiffCompressionMode.Auto
         }).Data;
 

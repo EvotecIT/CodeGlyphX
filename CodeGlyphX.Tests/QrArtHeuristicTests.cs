@@ -20,7 +20,7 @@ public sealed class QrArtHeuristicTests {
         };
 
         foreach (var (name, art) in arts) {
-            var report = QrEasy.EvaluateScanHeuristics(payload, new QrEasyOptions { Art = art });
+            var report = QR.EvaluateScanHeuristics(payload, new QrRenderOptions { Art = art });
             var warnings = string.Join(", ", report.Warnings.Select(w => w.Kind));
 
             Assert.True(report.PassesHeuristics, $"{name} should pass the static checks (score={report.Score}, warnings={warnings}).");
@@ -41,10 +41,10 @@ public sealed class QrArtHeuristicTests {
         var white = Rgba32.White;
         var cases = new[] {
             (
-                Options: new QrEasyOptions { Foreground = transparentBlack, Background = white },
+                Options: new QrRenderOptions { Foreground = transparentBlack, Background = white },
                 Warning: QrArtWarningKind.LowContrast),
             (
-                Options: new QrEasyOptions {
+                Options: new QrRenderOptions {
                     Background = white,
                     ForegroundGradient = new QrPngGradientOptions {
                         StartColor = transparentBlack,
@@ -53,7 +53,7 @@ public sealed class QrArtHeuristicTests {
                 },
                 Warning: QrArtWarningKind.LowContrastGradient),
             (
-                Options: new QrEasyOptions {
+                Options: new QrRenderOptions {
                     Background = white,
                     ForegroundPalette = new QrPngPaletteOptions {
                         Colors = new[] { transparentBlack }
@@ -63,7 +63,7 @@ public sealed class QrArtHeuristicTests {
         };
 
         foreach (var testCase in cases) {
-            var report = QrEasy.EvaluateScanHeuristics(payload, testCase.Options);
+            var report = QR.EvaluateScanHeuristics(payload, testCase.Options);
 
             Assert.Contains(report.Warnings, warning => warning.Kind == testCase.Warning);
         }
@@ -71,7 +71,7 @@ public sealed class QrArtHeuristicTests {
 
     [Fact]
     public void PaletteZones_StillEvaluateTheBaseForeground() {
-        var report = QrEasy.EvaluateScanHeuristics("https://example.com/palette-zones", new QrEasyOptions {
+        var report = QR.EvaluateScanHeuristics("https://example.com/palette-zones", new QrRenderOptions {
             ArtGuardrailsEnabled = false,
             Foreground = Rgba32.White,
             Background = Rgba32.White,

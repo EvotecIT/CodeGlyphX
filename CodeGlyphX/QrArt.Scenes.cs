@@ -14,7 +14,7 @@ public static partial class QrArt {
         if (payload is null) throw new ArgumentNullException(nameof(payload));
         cancellationToken.ThrowIfCancellationRequested();
         var design = (options ?? QrScenePresets.Create(QrSceneStyle.TropicalGarden)).Clone();
-        var code = QrCode.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var code = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         return ComposeSceneCore(payload, code, design, cancellationToken);
     }
 

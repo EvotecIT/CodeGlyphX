@@ -24,12 +24,14 @@ using CodeGlyphX.Rendering.Xpm;
 
 namespace CodeGlyphX;
 
-public static partial class QrEasy {
-    internal static RenderedOutput Render(QrCode qr, OutputFormat format, QrEasyOptions? options = null, RenderExtras? extras = null) {
+internal static partial class QrRenderer {
+    internal static RenderedOutput Render(QrCode qr, OutputFormat format, QrRenderOptions? options = null, RenderExtras? extras = null) {
         if (qr is null) throw new ArgumentNullException(nameof(qr));
         if (format == OutputFormat.Unknown) throw new ArgumentOutOfRangeException(nameof(format));
 
-        var opts = options is null ? new QrEasyOptions() : CloneOptions(options);
+        var opts = options is null ? new QrRenderOptions() : CloneOptions(options);
+        ValidateOptions(opts);
+        ValidateFormatStyles(format, opts);
         switch (format) {
             case OutputFormat.Png: {
                 var render = BuildPngOptions(opts, qr);
@@ -37,11 +39,11 @@ public static partial class QrEasy {
                 return RenderedOutput.FromBinary(format, QrPngRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Svg: {
-                var render = BuildSvgOptions(opts, qr.Modules.Width);
+                var render = BuildSvgOptions(opts, qr);
                 return RenderedOutput.FromText(format, SvgQrRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Svgz: {
-                var render = BuildSvgOptions(opts, qr.Modules.Width);
+                var render = BuildSvgOptions(opts, qr);
                 return RenderedOutput.FromBinary(format, QrSvgzRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Html: {
@@ -51,7 +53,7 @@ public static partial class QrEasy {
                     QuietZone = baseRender.QuietZone,
                     DarkColor = ToCss(baseRender.Foreground),
                     LightColor = ToCss(baseRender.Background),
-                    EmailSafeTable = opts.HtmlEmailSafeTable,
+                    EmailSafeTable = extras?.HtmlEmailSafeTable ?? false,
                     Logo = BuildLogoOptions(opts),
                     ModuleShape = baseRender.ModuleShape,
                     ModuleScale = baseRender.ModuleScale,
@@ -68,15 +70,15 @@ public static partial class QrEasy {
             }
             case OutputFormat.Jpeg: {
                 var render = BuildPngOptions(opts, qr);
-                var jpegOptions = opts.JpegOptions;
+                var jpegOptions = extras?.JpegOptions;
                 var data = jpegOptions is null
-                    ? QrJpegRenderer.Render(qr.Modules, render, opts.JpegQuality)
+                    ? QrJpegRenderer.Render(qr.Modules, render, extras?.JpegQuality ?? 85)
                     : QrJpegRenderer.Render(qr.Modules, render, jpegOptions);
                 return RenderedOutput.FromBinary(format, data);
             }
             case OutputFormat.Webp: {
                 var render = BuildPngOptions(opts, qr);
-                var quality = opts.WebpQuality;
+                var quality = extras?.WebpQuality ?? 100;
                 if (RenderAnimationHelpers.TryRenderQrWebp(extras, render, quality, out var webp)) {
                     return RenderedOutput.FromBinary(format, webp);
                 }
@@ -128,7 +130,7 @@ public static partial class QrEasy {
             }
             case OutputFormat.Ico: {
                 var render = BuildPngOptions(opts, qr);
-                return RenderedOutput.FromBinary(format, QrIcoRenderer.Render(qr.Modules, render, BuildIcoOptions(opts)));
+                return RenderedOutput.FromBinary(format, QrIcoRenderer.Render(qr.Modules, render, BuildIcoOptions(extras)));
             }
             case OutputFormat.Pdf: {
                 var render = BuildPngOptions(opts, qr);

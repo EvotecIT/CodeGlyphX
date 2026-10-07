@@ -38,6 +38,6 @@ public sealed class GenericPngCompressionTests {
         if (family == 2)
             return Barcode.Render(BarcodeType.Code128, "COMPRESS-BARCODE", OutputFormat.Png,
                 new BarcodeOptions { ModuleSize = 3, HeightModules = 40 }, extras).Data;
-        return QrCode.Render("COMPRESS-QR", OutputFormat.Png, new QrEasyOptions { ModuleSize = 8 }, extras).Data;
+        return QR.Render("COMPRESS-QR", OutputFormat.Png, new QrRenderOptions { ModuleSize = 8 }, extras: extras).Data;
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX;
@@ -44,99 +43,35 @@ public sealed class QrCode {
         if (version is < 1 or > 40) throw new ArgumentOutOfRangeException(nameof(version));
         if (errorCorrectionLevel is < QrErrorCorrectionLevel.L or > QrErrorCorrectionLevel.H) throw new ArgumentOutOfRangeException(nameof(errorCorrectionLevel));
         if (mask is < 0 or > 7) throw new ArgumentOutOfRangeException(nameof(mask));
-        Modules = modules ?? throw new ArgumentNullException(nameof(modules));
+        if (modules is null) throw new ArgumentNullException(nameof(modules));
         var size = version * 4 + 17;
         if (modules.Width != size || modules.Height != size) {
             throw new ArgumentException("Matrix width and height must equal version * 4 + 17.", nameof(modules));
         }
 
+        Modules = modules.Clone().Freeze();
         Version = version;
         ErrorCorrectionLevel = errorCorrectionLevel;
         Mask = mask;
     }
 
-    /// <summary>
-    /// Encodes a payload into a <see cref="QrCode"/>.
-    /// </summary>
-    public static QrCode Encode(string payload, QrEasyOptions? options = null) {
-        return QrEasy.Encode(payload, options);
-    }
+    /// <summary>Renders this encoded symbol without changing its version, mask or error correction.</summary>
+    public RenderedOutput Render(OutputFormat format, QrRenderOptions? renderOptions = null, RenderExtras? extras = null) =>
+        QrRenderer.Render(this, format, renderOptions, extras);
 
-    /// <summary>
-    /// Detects a payload type and encodes it into a <see cref="QrCode"/>.
-    /// </summary>
-    public static QrCode EncodeAuto(string payload, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null) {
-        return QrEasy.EncodeAuto(payload, detectOptions, options);
-    }
+    /// <summary>Renders this encoded symbol to an RGBA buffer without an image container.</summary>
+    public byte[] RenderPixels(out int widthPx, out int heightPx, out int stride, QrRenderOptions? renderOptions = null) =>
+        QrRenderer.RenderPixels(this, out widthPx, out heightPx, out stride, renderOptions);
 
-    /// <summary>
-    /// Encodes a payload with embedded defaults into a <see cref="QrCode"/>.
-    /// </summary>
-    public static QrCode Encode(QrPayloadData payload, QrEasyOptions? options = null) {
-        return QrEasy.Encode(payload, options);
-    }
+    /// <summary>Evaluates static appearance heuristics; the report does not decode the rendered artifact.</summary>
+    public QrArtHeuristicReport EvaluateScanHeuristics(QrRenderOptions? renderOptions = null) =>
+        QrRenderer.EvaluateScanHeuristics(this, renderOptions);
 
-    /// <summary>
-    /// Renders this QR code to the requested output format.
-    /// </summary>
-    public RenderedOutput Render(OutputFormat format, QrEasyOptions? options = null, RenderExtras? extras = null) {
-        return QrEasy.Render(this, format, options, extras);
-    }
+    /// <summary>Saves this encoded symbol, selecting the format from its extension (PNG by default).</summary>
+    public string Save(string path, QrRenderOptions? renderOptions = null, RenderExtras? extras = null) =>
+        OutputWriter.Write(path, Render(OutputFormatInfo.Resolve(path, OutputFormat.Png), renderOptions, extras));
 
-    /// <summary>
-    /// Renders a payload to the requested output format.
-    /// </summary>
-    public static RenderedOutput Render(string payload, OutputFormat format, QrEasyOptions? options = null, RenderExtras? extras = null) {
-        var qr = Encode(payload, options);
-        return QrEasy.Render(qr, format, options, extras);
-    }
-
-    /// <summary>
-    /// Detects a payload type and renders a QR code.
-    /// </summary>
-    public static RenderedOutput RenderAuto(string payload, OutputFormat format, QrPayloadDetectOptions? detectOptions = null, QrEasyOptions? options = null, RenderExtras? extras = null) {
-        var qr = EncodeAuto(payload, detectOptions, options);
-        return QrEasy.Render(qr, format, options, extras);
-    }
-
-    /// <summary>
-    /// Renders a payload with embedded defaults to the requested output format.
-    /// </summary>
-    public static RenderedOutput Render(QrPayloadData payload, OutputFormat format, QrEasyOptions? options = null, RenderExtras? extras = null) {
-        var qr = Encode(payload, options);
-        return QrEasy.Render(qr, format, options, extras);
-    }
-
-    /// <summary>
-    /// Saves this QR code to a file, choosing the output format based on file extension.
-    /// </summary>
-    public string Save(string path, QrEasyOptions? options = null, RenderExtras? extras = null) {
-        var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(format, options, extras);
-        return OutputWriter.Write(path, output);
-    }
-
-    /// <summary>
-    /// Saves this QR code to a stream in the specified format.
-    /// </summary>
-    public void Save(OutputFormat format, System.IO.Stream stream, QrEasyOptions? options = null, RenderExtras? extras = null) {
-        var output = Render(format, options, extras);
-        OutputWriter.Write(stream, output);
-    }
-
-    /// <summary>
-    /// Saves a payload to a file, choosing the output format based on file extension.
-    /// </summary>
-    public static string Save(string payload, string path, QrEasyOptions? options = null, RenderExtras? extras = null) {
-        var output = Render(payload, OutputFormatInfo.Resolve(path, OutputFormat.Png), options, extras);
-        return OutputWriter.Write(path, output);
-    }
-
-    /// <summary>
-    /// Saves a payload with embedded defaults to a file, choosing the output format based on file extension.
-    /// </summary>
-    public static string Save(QrPayloadData payload, string path, QrEasyOptions? options = null, RenderExtras? extras = null) {
-        var output = Render(payload, OutputFormatInfo.Resolve(path, OutputFormat.Png), options, extras);
-        return OutputWriter.Write(path, output);
-    }
+    /// <summary>Writes this encoded symbol to a caller-owned stream, leaving it open.</summary>
+    public void Save(System.IO.Stream stream, OutputFormat format, QrRenderOptions? renderOptions = null, RenderExtras? extras = null) =>
+        OutputWriter.Write(stream, Render(format, renderOptions, extras));
 }

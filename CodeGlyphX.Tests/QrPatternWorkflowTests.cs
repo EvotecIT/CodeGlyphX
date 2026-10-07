@@ -17,7 +17,7 @@ public sealed class QrPatternWorkflowTests {
         var pixels = ImageReader.DecodeRgba32(png, out var width, out var height);
         Assert.Equal(512, width);
         Assert.Equal(512, height);
-        var code = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var code = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var fromSource = QrImageComposer.Render(code, pixels, width, height, composition);
         Assert.Equal(QrArt.ComposePattern(payload, pattern, composition).GetPixels(), fromSource.GetPixels());
         Assert.Equal(png, QrArt.RenderPatternPng(pattern));

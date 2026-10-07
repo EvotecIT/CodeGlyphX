@@ -41,7 +41,7 @@ public static partial class QrArt {
         };
         composition.Validate();
         var rasterizer = new QrPatternRasterizer(pattern);
-        var qr = QrCode.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var side = (qr.Size + 2 * composition.QuietZone + 2 * (composition.Canvas?.PaddingModules ?? 0)) * composition.ModuleSize;
         RenderGuards.EnsureOutputPixels(side, side, "Procedural QR composition exceeds output limits.");
         RenderGuards.EnsureOutputBytes((long)side * side * 4, "Procedural QR composition exceeds output limits.");

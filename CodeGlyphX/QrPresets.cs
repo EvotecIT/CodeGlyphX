@@ -9,32 +9,31 @@ public static class QrPresets {
     /// <summary>
     /// Preset for OTP payloads (high error correction).
     /// </summary>
-    public static QrEasyOptions Otp() => new QrEasyOptions {
+    public static QrEncodingOptions Otp() => new QrEncodingOptions {
         ErrorCorrectionLevel = QrErrorCorrectionLevel.H
     };
 
     /// <summary>
     /// Preset for Wi-Fi payloads (more correction for noisy camera scans).
     /// </summary>
-    public static QrEasyOptions Wifi() => new QrEasyOptions {
+    public static QrEncodingOptions Wifi() => new QrEncodingOptions {
         ErrorCorrectionLevel = QrErrorCorrectionLevel.Q
     };
 
     /// <summary>
     /// Preset for contact payloads (more correction for dense payloads).
     /// </summary>
-    public static QrEasyOptions Contact() => new QrEasyOptions {
+    public static QrEncodingOptions Contact() => new QrEncodingOptions {
         ErrorCorrectionLevel = QrErrorCorrectionLevel.Q
     };
 
     /// <summary>
-    /// Preset for logo overlays (high correction plus conservative logo defaults).
+    /// Appearance preset for logo overlays. Select error correction and version separately with QrEncodingOptions.
     /// </summary>
-    public static QrEasyOptions Logo(byte[] logoPng, double? logoScale = null) {
+    public static QrRenderOptions Logo(byte[] logoPng, double? logoScale = null) {
         if (logoPng is null) throw new ArgumentNullException(nameof(logoPng));
-        return new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
-            LogoPng = logoPng,
+        return new QrRenderOptions {
+            LogoPng = (byte[])logoPng.Clone(),
             LogoScale = logoScale ?? 0.22,
             LogoDrawBackground = true,
             LogoPaddingPx = 6,

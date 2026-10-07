@@ -38,11 +38,11 @@ public static partial class QrArt {
             ? new[] { QrErrorCorrectionLevel.H, QrErrorCorrectionLevel.Q } : new[] { QrErrorCorrectionLevel.H };
         foreach (var ecc in levels) {
             cancellationToken.ThrowIfCancellationRequested();
-            var smallest = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = ecc, RespectPayloadDefaults = false });
+            var smallest = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = ecc });
             for (var version = smallest.Version; version <= Math.Min(40, smallest.Version + options.AdditionalVersions); version++) {
                 for (var mask = 0; mask < 8; mask++) {
                     cancellationToken.ThrowIfCancellationRequested();
-                    var code = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = ecc, RespectPayloadDefaults = false, MinVersion = version, MaxVersion = version, ForceMask = mask });
+                    var code = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = ecc, MinVersion = version, MaxVersion = version, ForceMask = mask });
                     foreach (var layout in layouts) {
                         if (!CanRenderLayout(code, layout)) continue;
                         var screening = layout.WithModuleSize(6);

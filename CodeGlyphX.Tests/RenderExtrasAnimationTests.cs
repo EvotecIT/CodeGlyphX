@@ -18,7 +18,7 @@ public sealed class RenderExtrasAnimationTests {
             AnimationDurationMs = 30
         };
 
-        var output = QrCode.Render("test", OutputFormat.Gif, extras: extras);
+        var output = QR.Render("test", OutputFormat.Gif, extras: extras);
         var frames = GifReader.DecodeAnimationFrames(output.Data, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);
@@ -36,7 +36,7 @@ public sealed class RenderExtrasAnimationTests {
             AnimationDurationMs = 40
         };
 
-        var output = QrCode.Render("test", OutputFormat.Webp, extras: extras);
+        var output = QR.Render("test", OutputFormat.Webp, extras: extras);
         var frames = WebpReader.DecodeAnimationFrames(output.Data, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);

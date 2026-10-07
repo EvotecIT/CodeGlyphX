@@ -7,7 +7,7 @@ using CodeGlyphX.Rendering.Png;
 namespace CodeGlyphX.Tests;
 
 public sealed class QrImageDecodeParityCase {
-    public QrImageDecodeParityCase(string name, QrPayloadData payload, Rgba32 foreground, Rgba32 background, Action<QrEasyOptions>? configure = null) {
+    public QrImageDecodeParityCase(string name, QrPayloadData payload, Rgba32 foreground, Rgba32 background, Action<QrRenderOptions>? configure = null) {
         Name = name;
         Payload = payload;
         Foreground = foreground;
@@ -19,7 +19,7 @@ public sealed class QrImageDecodeParityCase {
     public QrPayloadData Payload { get; }
     public Rgba32 Foreground { get; }
     public Rgba32 Background { get; }
-    public Action<QrEasyOptions>? Configure { get; }
+    public Action<QrRenderOptions>? Configure { get; }
 
     public override string ToString() => Name;
 }
@@ -122,7 +122,7 @@ public static class QrImageDecodeParityData {
     }
 
     public static byte[] RenderPng(QrImageDecodeParityCase testCase) {
-        var options = new QrEasyOptions {
+        var options = new QrRenderOptions {
             ModuleSize = 14,
             QuietZone = 6,
             Foreground = testCase.Foreground,
@@ -130,10 +130,10 @@ public static class QrImageDecodeParityData {
         };
         testCase.Configure?.Invoke(options);
 
-        return QrCode.Render(testCase.Payload, OutputFormat.Png, options).Data;
+        return QR.Render(testCase.Payload, OutputFormat.Png, options).Data;
     }
 
-    private static object[] Case(string name, QrPayloadData payload, Rgba32? foreground = null, Rgba32? background = null, Action<QrEasyOptions>? configure = null) {
+    private static object[] Case(string name, QrPayloadData payload, Rgba32? foreground = null, Rgba32? background = null, Action<QrRenderOptions>? configure = null) {
         return new object[] {
             new QrImageDecodeParityCase(
                 name,

@@ -1,14 +1,18 @@
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
-using CodeGlyphX.Rendering.Jpeg;
-using CodeGlyphX.Rendering.Webp;
 
 namespace CodeGlyphX;
 
 /// <summary>
-/// Simple options for QR rendering.
+/// Appearance and layout for a previously encoded QR symbol. Encoding settings belong to <see cref="QrEncodingOptions"/>.
 /// </summary>
-public sealed class QrEasyOptions {
+/// <remarks>
+/// Raster outputs support all appearance options. SVG, SVGZ and HTML support layout, colors,
+/// basic shapes, foreground gradients, simple finder styling and logos. They reject unsupported
+/// effects, including canvas art, palettes, procedural maps, connected shapes and decorative finder effects,
+/// with <see cref="System.NotSupportedException"/> instead of silently omitting them.
+/// </remarks>
+public sealed class QrRenderOptions {
     /// <summary>
     /// Module size in pixels.
     /// </summary>
@@ -28,41 +32,6 @@ public sealed class QrEasyOptions {
     /// When true, <see cref="TargetSizePx"/> includes the quiet zone.
     /// </summary>
     public bool TargetSizeIncludesQuietZone { get; set; } = true;
-
-    /// <summary>
-    /// Optional error correction level override.
-    /// </summary>
-    public QrErrorCorrectionLevel? ErrorCorrectionLevel { get; set; }
-
-    /// <summary>
-    /// Optional text encoding override (when set, emits ECI for non-default encodings).
-    /// </summary>
-    public QrTextEncoding? TextEncoding { get; set; }
-
-    /// <summary>
-    /// When true, emits ECI headers for non-default encodings.
-    /// </summary>
-    public bool IncludeEci { get; set; } = true;
-
-    /// <summary>
-    /// When true, payload defaults may override version/ECC settings.
-    /// </summary>
-    public bool RespectPayloadDefaults { get; set; } = true;
-
-    /// <summary>
-    /// Minimum QR version (1..40).
-    /// </summary>
-    public int MinVersion { get; set; } = 1;
-
-    /// <summary>
-    /// Maximum QR version (1..40).
-    /// </summary>
-    public int MaxVersion { get; set; } = 40;
-
-    /// <summary>
-    /// Optional forced mask pattern (0..7).
-    /// </summary>
-    public int? ForceMask { get; set; }
 
     /// <summary>
     /// Foreground color.
@@ -203,19 +172,8 @@ public sealed class QrEasyOptions {
 
     /// <summary>
     /// Whether to draw a background plate behind the logo.
-    /// When enabled, the encoder may auto-bump the minimum version to reduce logo coverage.
     /// </summary>
     public bool LogoDrawBackground { get; set; } = true;
-
-    /// <summary>
-    /// When true, bumps <see cref="MinVersion"/> to a more conservative minimum for logo background plates.
-    /// </summary>
-    public bool AutoBumpVersionForLogoBackground { get; set; } = true;
-
-    /// <summary>
-    /// Minimum version to use when a logo background plate is enabled (0 = disable auto bump).
-    /// </summary>
-    public int LogoBackgroundMinVersion { get; set; } = 8;
 
     /// <summary>
     /// Logo background color (defaults to QR background).
@@ -226,41 +184,5 @@ public sealed class QrEasyOptions {
     /// Logo background corner radius in pixels.
     /// </summary>
     public int LogoCornerRadiusPx { get; set; } = 8;
-
-    /// <summary>
-    /// JPEG quality (1..100).
-    /// </summary>
-    public int JpegQuality { get; set; } = 85;
-
-    /// <summary>
-    /// Optional JPEG encoding options (subsampling/progressive/metadata/etc).
-    /// When set, overrides <see cref="JpegQuality"/> where applicable.
-    /// </summary>
-    public JpegEncodeOptions? JpegOptions { get; set; }
-
-    /// <summary>
-    /// WebP quality (0..100). A value of 100 uses lossless VP8L.
-    /// </summary>
-    public int WebpQuality {
-        get => _webpQuality;
-        set => _webpQuality = WebpQualityClamp.Clamp(value);
-    }
-
-    private int _webpQuality = 100;
-
-    /// <summary>
-    /// ICO output sizes in pixels (1..256). Defaults to common icon sizes.
-    /// </summary>
-    public int[]? IcoSizes { get; set; }
-
-    /// <summary>
-    /// When true, preserves aspect ratio and pads to square for ICO.
-    /// </summary>
-    public bool IcoPreserveAspectRatio { get; set; } = true;
-
-    /// <summary>
-    /// When true, renders HTML using email-safe tables.
-    /// </summary>
-    public bool HtmlEmailSafeTable { get; set; }
 
 }

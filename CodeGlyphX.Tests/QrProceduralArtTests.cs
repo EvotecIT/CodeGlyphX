@@ -73,7 +73,7 @@ public sealed class QrProceduralArtTests {
 
     private static void AssertProtectedStructure(QrImageComposition result) {
         const int module = 18, border = 4 * module;
-        var qr = QR.Encode(Payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(Payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var functions = QrStructureAnalysis.BuildFunctionMask(qr.Version, qr.Size);
         var pixels = result.GetPixels();
         for (var y = 0; y < result.QrSize; y++) for (var x = 0; x < result.QrSize; x++) {

@@ -17,7 +17,7 @@ public sealed class QrExpressiveArtTests {
     [InlineData(QrPngModuleShape.Blob)]
     [InlineData(QrPngModuleShape.Leaf)]
     public void ShapedArtKeepsScanAnchorsAndDecodes(QrPngModuleShape shape) {
-        var qr = QR.Encode(Payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(Payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var result = QrImageComposer.Render(qr, new byte[] { 215, 154, 73, 255 }, 1, 1,
             new QrImageCompositionOptions { Art = new QrImageArtOptions { Shape = shape }, Strength = 1 });
         var pixels = result.GetPixels();

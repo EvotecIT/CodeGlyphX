@@ -41,29 +41,29 @@ public static class Otp {
     /// <summary>
     /// Starts a fluent TOTP builder.
     /// </summary>
-    public static TotpBuilder Totp(string issuer, string account, string secretBase32, QrEasyOptions? options = null) {
-        return new TotpBuilder(issuer, account, OtpAuthSecret.FromBase32(secretBase32), options);
+    public static TotpBuilder Totp(string issuer, string account, string secretBase32, QrRenderOptions? renderOptions = null, QrEncodingOptions? encodingOptions = null) {
+        return new TotpBuilder(issuer, account, OtpAuthSecret.FromBase32(secretBase32), renderOptions, encodingOptions);
     }
 
     /// <summary>
     /// Starts a fluent HOTP builder.
     /// </summary>
-    public static HotpBuilder Hotp(string issuer, string account, string secretBase32, long counter, QrEasyOptions? options = null) {
-        return new HotpBuilder(issuer, account, OtpAuthSecret.FromBase32(secretBase32), counter, options);
+    public static HotpBuilder Hotp(string issuer, string account, string secretBase32, long counter, QrRenderOptions? renderOptions = null, QrEncodingOptions? encodingOptions = null) {
+        return new HotpBuilder(issuer, account, OtpAuthSecret.FromBase32(secretBase32), counter, renderOptions, encodingOptions);
     }
 
-    private static RenderedOutput RenderUri(string uri, OutputFormat format, QrEasyOptions options, RenderExtras? extras) {
-        return QrCode.Render(uri, format, options, extras);
+    private static RenderedOutput RenderUri(string uri, OutputFormat format, QrRenderOptions renderOptions, QrEncodingOptions encodingOptions, RenderExtras? extras) {
+        return QR.Render(uri, format, renderOptions, encodingOptions, extras);
     }
 
-    private static string SaveUri(string uri, string path, QrEasyOptions options, RenderExtras? extras) {
+    private static string SaveUri(string uri, string path, QrRenderOptions renderOptions, QrEncodingOptions encodingOptions, RenderExtras? extras) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, RenderUri(uri, format, options, extras));
+        return OutputWriter.Write(path, RenderUri(uri, format, renderOptions, encodingOptions, extras));
     }
 
-    private static void SaveUri(string uri, Stream stream, OutputFormat format, QrEasyOptions options, RenderExtras? extras) {
+    private static void SaveUri(string uri, Stream stream, OutputFormat format, QrRenderOptions renderOptions, QrEncodingOptions encodingOptions, RenderExtras? extras) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, RenderUri(uri, format, options, extras));
+        OutputWriter.Write(stream, RenderUri(uri, format, renderOptions, encodingOptions, extras));
     }
 
     /// <summary>
@@ -77,7 +77,10 @@ public static class Otp {
         /// <summary>
         /// Rendering options used by this builder.
         /// </summary>
-        public QrEasyOptions Options { get; }
+        public QrRenderOptions Rendering { get; }
+
+        /// <summary>Mutable encoding settings owned by this builder.</summary>
+        public QrEncodingOptions Encoding { get; }
 
         /// <summary>
         /// OTP algorithm.
@@ -94,19 +97,27 @@ public static class Otp {
         /// </summary>
         public int Period { get; set; } = 30;
 
-        internal TotpBuilder(string issuer, string account, byte[] secret, QrEasyOptions? options) {
+        internal TotpBuilder(string issuer, string account, byte[] secret, QrRenderOptions? renderOptions, QrEncodingOptions? encodingOptions) {
             _issuer = issuer ?? throw new ArgumentNullException(nameof(issuer));
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _secret = secret ?? throw new ArgumentNullException(nameof(secret));
-            Options = options ?? new QrEasyOptions();
+            Rendering = renderOptions is null ? new QrRenderOptions() : QrRenderer.CloneOptions(renderOptions);
+            Encoding = encodingOptions?.Clone() ?? QrPresets.Otp();
         }
 
         /// <summary>
         /// Updates rendering options.
         /// </summary>
-        public TotpBuilder WithOptions(Action<QrEasyOptions> configure) {
+        public TotpBuilder WithRendering(Action<QrRenderOptions> configure) {
             if (configure is null) throw new ArgumentNullException(nameof(configure));
-            configure(Options);
+            configure(Rendering);
+            return this;
+        }
+
+        /// <summary>Updates the encoding settings owned by this builder.</summary>
+        public TotpBuilder WithEncoding(Action<QrEncodingOptions> configure) {
+            if (configure is null) throw new ArgumentNullException(nameof(configure));
+            configure(Encoding);
             return this;
         }
 
@@ -128,25 +139,25 @@ public static class Otp {
         /// <summary>
         /// Encodes the QR code.
         /// </summary>
-        public QrCode Encode() => QrEasy.Encode(Uri(), Options);
+        public QrCode Encode() => QR.Encode(Uri(), Encoding);
 
         /// <summary>
         /// Renders the configured TOTP QR code to the requested output format.
         /// </summary>
         public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) =>
-            RenderUri(Uri(), format, Options, extras);
+            RenderUri(Uri(), format, Rendering, Encoding, extras);
 
         /// <summary>
         /// Saves the configured TOTP QR code, selecting the output format from the file extension.
         /// </summary>
         public string Save(string path, RenderExtras? extras = null) =>
-            SaveUri(Uri(), path, Options, extras);
+            SaveUri(Uri(), path, Rendering, Encoding, extras);
 
         /// <summary>
         /// Writes the configured TOTP QR code to a stream in the requested output format.
         /// </summary>
         public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) =>
-            SaveUri(Uri(), stream, format, Options, extras);
+            SaveUri(Uri(), stream, format, Rendering, Encoding, extras);
     }
 
     /// <summary>
@@ -160,7 +171,10 @@ public static class Otp {
         /// <summary>
         /// Rendering options used by this builder.
         /// </summary>
-        public QrEasyOptions Options { get; }
+        public QrRenderOptions Rendering { get; }
+
+        /// <summary>Mutable encoding settings owned by this builder.</summary>
+        public QrEncodingOptions Encoding { get; }
 
         /// <summary>
         /// OTP algorithm.
@@ -177,20 +191,28 @@ public static class Otp {
         /// </summary>
         public long Counter { get; set; }
 
-        internal HotpBuilder(string issuer, string account, byte[] secret, long counter, QrEasyOptions? options) {
+        internal HotpBuilder(string issuer, string account, byte[] secret, long counter, QrRenderOptions? renderOptions, QrEncodingOptions? encodingOptions) {
             _issuer = issuer ?? throw new ArgumentNullException(nameof(issuer));
             _account = account ?? throw new ArgumentNullException(nameof(account));
             _secret = secret ?? throw new ArgumentNullException(nameof(secret));
             Counter = counter;
-            Options = options ?? new QrEasyOptions();
+            Rendering = renderOptions is null ? new QrRenderOptions() : QrRenderer.CloneOptions(renderOptions);
+            Encoding = encodingOptions?.Clone() ?? QrPresets.Otp();
         }
 
         /// <summary>
         /// Updates rendering options.
         /// </summary>
-        public HotpBuilder WithOptions(Action<QrEasyOptions> configure) {
+        public HotpBuilder WithRendering(Action<QrRenderOptions> configure) {
             if (configure is null) throw new ArgumentNullException(nameof(configure));
-            configure(Options);
+            configure(Rendering);
+            return this;
+        }
+
+        /// <summary>Updates the encoding settings owned by this builder.</summary>
+        public HotpBuilder WithEncoding(Action<QrEncodingOptions> configure) {
+            if (configure is null) throw new ArgumentNullException(nameof(configure));
+            configure(Encoding);
             return this;
         }
 
@@ -211,24 +233,24 @@ public static class Otp {
         /// <summary>
         /// Encodes the QR code.
         /// </summary>
-        public QrCode Encode() => QrEasy.Encode(Uri(), Options);
+        public QrCode Encode() => QR.Encode(Uri(), Encoding);
 
         /// <summary>
         /// Renders the configured HOTP QR code to the requested output format.
         /// </summary>
         public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) =>
-            RenderUri(Uri(), format, Options, extras);
+            RenderUri(Uri(), format, Rendering, Encoding, extras);
 
         /// <summary>
         /// Saves the configured HOTP QR code, selecting the output format from the file extension.
         /// </summary>
         public string Save(string path, RenderExtras? extras = null) =>
-            SaveUri(Uri(), path, Options, extras);
+            SaveUri(Uri(), path, Rendering, Encoding, extras);
 
         /// <summary>
         /// Writes the configured HOTP QR code to a stream in the requested output format.
         /// </summary>
         public void Save(Stream stream, OutputFormat format, RenderExtras? extras = null) =>
-            SaveUri(Uri(), stream, format, Options, extras);
+            SaveUri(Uri(), stream, format, Rendering, Encoding, extras);
     }
 }

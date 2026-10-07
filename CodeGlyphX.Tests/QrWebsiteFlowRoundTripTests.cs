@@ -9,14 +9,14 @@ public sealed class QrWebsiteFlowRoundTripTests {
     [Fact]
     public void RoundTrip_DefaultWebsiteExample() {
         const string payload = "https://example.com/website-basic";
-        var png = QrCode.Render(payload, OutputFormat.Png).Data;
+        var png = QR.Render(payload, OutputFormat.Png).Data;
         AssertRoundTrip(payload, png);
     }
 
     [Fact]
     public void RoundTrip_DocsStylingOptions() {
         const string payload = "https://example.com/website-styled";
-        var options = new QrEasyOptions {
+        var options = new QrRenderOptions {
             ModuleShape = QrPngModuleShape.Rounded,
             ModuleCornerRadiusPx = 3,
             Eyes = new QrPngEyeOptions {
@@ -28,7 +28,7 @@ public sealed class QrWebsiteFlowRoundTripTests {
             }
         };
 
-        var png = QrCode.Render(payload, OutputFormat.Png, options).Data;
+        var png = QR.Render(payload, OutputFormat.Png, options).Data;
         AssertRoundTrip(payload, png);
     }
 
@@ -45,7 +45,7 @@ public sealed class QrWebsiteFlowRoundTripTests {
         var logoOptions = QrPresets.Logo(logo);
         logoOptions.LogoScale = 0.10;
         logoOptions.LogoDrawBackground = false;
-        var png = QR.Create(payload, logoOptions).Render(OutputFormat.Png).Data;
+        var png = QR.Create(payload, logoOptions, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).Render(OutputFormat.Png).Data;
 
         Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
         var decodeOptions = new QrPixelDecodeOptions {

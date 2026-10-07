@@ -26,7 +26,7 @@ public static partial class QrArt {
         var original = (design ?? QrScenePresets.Create(QrSceneStyle.TropicalGarden)).Clone();
         if (settings.MaxQrScale < original.Qr.Scale) throw new ArgumentException("Maximum QR scale cannot shrink the requested QR.", nameof(options));
         token.ThrowIfCancellationRequested();
-        var code = QrCode.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var code = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         QrSceneCandidate? best = null; var attempted = 0; var validated = 0;
         // Original, halfway enlargement, maximum enlargement; then the same sizes with square data modules.
         for (var shapeIndex = 0; shapeIndex < 2; shapeIndex++) {

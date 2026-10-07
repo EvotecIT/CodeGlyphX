@@ -6,7 +6,7 @@ namespace CodeGlyphX.Tests.Net472;
 public sealed class SymbolScannerNet472Tests {
     [Fact]
     public void Scanner_DecodesQrAndExposesCapabilityRegistry() {
-        var pixels = QrEasy.RenderPixels("NET472-SCANNER", out var width, out var height, out _);
+        var pixels = QR.RenderPixels("NET472-SCANNER", out var width, out var height, out _);
         var frame = ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32);
 
         var result = SymbolScanner.Scan(frame, new ScanOptions {

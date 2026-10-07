@@ -16,7 +16,7 @@ public sealed class QrIllustratedCompositionTests {
     [InlineData(QrIllustratedStyle.GeometricPoster)]
     public void FramePreservesQuietZoneAndQrAndExportsSelfContainedSvg(QrIllustratedStyle style) {
         const string payload = "ILLUSTRATED-QR";
-        var qr = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var options = QrIllustratedComposer.CreateOptions(style, 16);
         var original = QrImageComposer.Render(qr, new byte[] { 170, 150, 90, 255 }, 1, 1, options);
         var framed = QrIllustratedComposer.Frame(original, style);

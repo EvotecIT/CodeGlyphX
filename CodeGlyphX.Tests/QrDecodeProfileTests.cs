@@ -6,7 +6,7 @@ namespace CodeGlyphX.Tests;
 public sealed class QrDecodeProfileTests {
     [Fact]
     public void Decode_Profiles_Work() {
-        var pixels = QrEasy.RenderPixels("PROFILE", out var width, out var height, out var stride);
+        var pixels = QR.RenderPixels("PROFILE", out var width, out var height, out var stride);
 
         var fast = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast };
         Assert.True(QrDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decodedFast, out var infoFast, fast));

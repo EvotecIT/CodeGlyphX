@@ -9,8 +9,7 @@ public sealed class QrStylizedRoundTripTests {
     [Fact]
     public void QrDecode_ArtFeatures_RoundTrip_Smoke() {
         const string payload = "https://example.com/art-smoke";
-        var options = new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+        var options = new QrRenderOptions {
             TargetSizePx = 1000,
             TargetSizeIncludesQuietZone = true,
             ModuleSize = 10,
@@ -34,7 +33,7 @@ public sealed class QrStylizedRoundTripTests {
             },
         };
 
-        var png = QrCode.Render(payload, OutputFormat.Png, options).Data;
+        var png = QR.Render(payload, OutputFormat.Png, options, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).Data;
         Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
 
         var decodeOptions = new QrPixelDecodeOptions {

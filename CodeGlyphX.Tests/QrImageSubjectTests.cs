@@ -11,7 +11,7 @@ public sealed class QrImageSubjectTests {
     [Fact]
     public void ProtectionRevealsMoreSourceColorWithoutMovingScanAnchors() {
         const string payload = "https://example.com/subject";
-        var qr = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var source = new byte[] { 170, 140, 100, 255 };
         var options = new QrImageCompositionOptions { Strength = 1, Art = new QrImageArtOptions { Shape = QrPngModuleShape.Leaf } };
         var baseline = QrImageComposer.Render(qr, source, 1, 1, options);

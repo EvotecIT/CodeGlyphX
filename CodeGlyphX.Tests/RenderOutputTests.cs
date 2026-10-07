@@ -25,7 +25,7 @@ public class RenderOutputTests {
 
     [Fact]
     public void RenderQrPngReturnsBinary() {
-        var output = QrCode.Render("HELLO-QR", OutputFormat.Png);
+        var output = QR.Render("HELLO-QR", OutputFormat.Png);
 
         Assert.Equal(OutputFormat.Png, output.Format);
         Assert.False(output.IsText);
@@ -97,57 +97,6 @@ public class RenderOutputTests {
         builder.Save(stream, OutputFormat.Png);
         Assert.True(stream.Length > 8);
         Assert.Equal(0x89, stream.GetBuffer()[0]);
-    }
-
-    [Fact]
-    public void QrBuilder_Configures_The_Public_Rendering_Surface() {
-        var logoPath = Path.Combine(Path.GetTempPath(), $"codeglyphx-logo-{Guid.NewGuid():N}.png");
-        File.WriteAllBytes(logoPath, new byte[] { 0x89, 0x50, 0x4E, 0x47 });
-
-        try {
-            var builder = QR.Create(new QrPayloadData("QR-OPTION-CONTRACT"))
-                .WithOptions(options => options.JpegQuality = 91)
-                .WithModuleSize(8)
-                .WithQuietZone(5)
-                .WithColors(Rgba32.Black, Rgba32.White)
-                .WithForeground(new Rgba32(1, 2, 3, 255))
-                .WithBackground(new Rgba32(250, 249, 248, 255))
-                .WithTransparentBackground()
-                .WithStyle(QrRenderStyle.Rounded)
-                .WithModuleShape(QrPngModuleShape.Squircle)
-                .WithModuleScale(0.8)
-                .WithModuleScaleMap(new QrPngModuleScaleMapOptions())
-                .WithModuleShapeMap(new QrPngModuleShapeMapOptions())
-                .WithModuleJitter(new QrPngModuleJitterOptions())
-                .WithModuleCornerRadiusPx(2)
-                .WithForegroundGradient(new QrPngGradientOptions())
-                .WithBackgroundGradient(new QrPngGradientOptions())
-                .WithForegroundPalette(new QrPngPaletteOptions())
-                .WithCanvas(new QrPngCanvasOptions())
-                .WithForegroundPaletteZones(new QrPngPaletteZoneOptions())
-                .WithEyes(new QrPngEyeOptions())
-                .WithTargetSize(320, includeQuietZone: false)
-                .WithFixedSize(300)
-                .WithLogoPng(new byte[] { 1, 2, 3 })
-                .WithLogoScale(0.2)
-                .WithLogoPaddingPx(3)
-                .WithLogoBackground()
-                .WithLogoBackgroundAutoBump(false)
-                .WithLogoBackgroundMinVersion(6)
-                .WithLogoBackgroundColor(Rgba32.White)
-                .WithLogoCornerRadiusPx(4)
-                .WithLogoFile(logoPath)
-                .WithErrorCorrection(QrErrorCorrectionLevel.H)
-                .WithIcoSizes(32, 64)
-                .WithIcoPreserveAspectRatio(false);
-
-            Assert.Equal(8, builder.Options.ModuleSize);
-            Assert.Equal(300, builder.Options.TargetSizePx);
-            Assert.Equal(new[] { 32, 64 }, builder.Options.IcoSizes);
-            Assert.Equal(new byte[] { 0x89, 0x50, 0x4E, 0x47 }, builder.Options.LogoPng);
-        } finally {
-            File.Delete(logoPath);
-        }
     }
 
     [Fact]
