@@ -197,12 +197,17 @@ public static class RenderIO {
     /// <summary>
     /// Reads remaining binary data from a stream with a size limit, advancing its position.
     /// </summary>
+    /// <remarks>
+    /// Known oversized seekable streams are rejected before reading. Other streams are read at most one byte beyond the limit.
+    /// The input stream remains open.
+    /// </remarks>
     /// <param name="stream">Input stream.</param>
     /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
     /// <returns>Binary data.</returns>
     public static byte[] ReadBinary(Stream stream, int maxBytes) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (maxBytes <= 0) return ReadBinary(stream);
+        ValidateRemainingLength(stream, maxBytes);
 
         using var ms = new MemoryStream();
         var buffer = new byte[(int)Math.Min(81920, (long)maxBytes + 1)];
@@ -237,6 +242,10 @@ public static class RenderIO {
     /// <summary>
     /// Reads remaining binary data from a stream asynchronously with a size limit, advancing its position.
     /// </summary>
+    /// <remarks>
+    /// Known oversized seekable streams are rejected before reading. Other streams are read at most one byte beyond the limit.
+    /// The input stream remains open.
+    /// </remarks>
     /// <param name="stream">Input stream.</param>
     /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -246,6 +255,7 @@ public static class RenderIO {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         cancellationToken.ThrowIfCancellationRequested();
         if (maxBytes <= 0) return await ReadBinaryAsync(stream, cancellationToken).ConfigureAwait(false);
+        ValidateRemainingLength(stream, maxBytes);
 
         using var ms = new MemoryStream();
         var buffer = new byte[(int)Math.Min(81920, (long)maxBytes + 1)];
@@ -514,6 +524,14 @@ public static class RenderIO {
         if (fileName is null) throw new ArgumentNullException(nameof(fileName));
         EnsureSafeFileName(fileName);
         return WriteTextAsync(Path.Combine(directory, fileName), text, encoding, cancellationToken);
+    }
+
+    private static void ValidateRemainingLength(Stream stream, int maxBytes) {
+        if (!stream.CanSeek) return;
+        var remaining = stream.Length - stream.Position;
+        if (remaining > maxBytes) {
+            throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, remaining, maxBytes));
+        }
     }
 
     private static void EnsureSafeFileName(string fileName) {
