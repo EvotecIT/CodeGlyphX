@@ -28,6 +28,9 @@
     <Compile Include="Net472\**\*.cs" />
     <Compile Include="GlobalStateCollection.cs" />
     <Compile Include="TestBudget.cs" />
+    <Compile Include="FractionalBarcodeSamplingTests.cs" />
+    <Compile Include="BarcodeGrayBoundaryTests.cs" />
+    <Compile Include="BarcodePixelSamplingTests.cs" />
     <Compile Include="QrImageDecodeParityData.cs" />
     <Compile Include="QrImageDecodeParitySharedTests.cs" />
     <Compile Include="CodecResourceBoundaryTests.cs" />
@@ -69,6 +72,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
+    <EmbeddedResource Include="Fixtures/Linear/excel-asset-register.png" />
+    <EmbeddedResource Include="Fixtures/Linear/native-svg-asset.png" />
+    <EmbeddedResource Include="Fixtures/Linear/word-asset-page.png" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.webp" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.rgba" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.webp" />
