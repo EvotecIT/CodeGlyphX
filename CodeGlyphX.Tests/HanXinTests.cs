@@ -235,9 +235,9 @@ public sealed class HanXinTests {
         var modules = MatrixBarcodeEncoder.Encode(BarcodeType.HanXin, "UNIFIED-HANXIN");
         Assert.True(MatrixBarcodeDecoder.TryDecode(BarcodeType.HanXin, modules, out var text));
         Assert.Equal("UNIFIED-HANXIN", text);
-        Assert.True(CodeGlyph.TryDecode(modules, out var decoded, expectedBarcode: BarcodeType.HanXin));
-        Assert.Equal(CodeGlyphKind.HanXin, decoded.Kind);
-        Assert.NotNull(decoded.HanXin);
+        Assert.True(SymbolDecoder.TryDecode(modules, out var decoded, format: SymbolFormat.HanXin));
+        Assert.Equal(SymbolFormat.HanXin, decoded.Format);
+        Assert.IsType<HanXinSymbolMetadata>(decoded.Metadata);
 
         var capability = SymbolCapabilities.Get(SymbolFormat.HanXin);
         Assert.True(capability.CanEncode);

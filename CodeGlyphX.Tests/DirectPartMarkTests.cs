@@ -1,3 +1,4 @@
+using CodeGlyphX.Rendering;
 using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
@@ -53,7 +54,7 @@ public sealed class DirectPartMarkTests {
         Assert.True(symbol.WasDirectPartMarkPreprocessed);
         Assert.Equal(DirectPartMarkProfile.LaserEtch, symbol.DirectPartMarkProfile);
         Assert.Equal(SymbolPayloadProfile.Gs1, symbol.PayloadProfile);
-        Assert.True(Assert.IsType<DataMatrixDecoded>(symbol.LegacyResult.DataMatrix).IsGs1);
+        Assert.True(Assert.IsType<DataMatrixSymbolMetadata>(symbol.Metadata).IsGs1);
     }
 
     [Fact]

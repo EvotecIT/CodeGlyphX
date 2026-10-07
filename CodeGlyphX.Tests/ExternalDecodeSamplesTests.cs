@@ -48,110 +48,58 @@ public sealed class ExternalDecodeSamplesTests {
         }
 
         foreach (var entry in entries) {
-            var expectedTexts = entry.ExpectedTexts;
-            var expectedKind = entry.ExpectedKind;
-            var expectedType = entry.ExpectedBarcodeType;
-            var preferBarcode = expectedKind == CodeGlyphKind.Barcode1D || expectedType.HasValue;
-
             if (!File.Exists(entry.ImagePath)) {
-                if (entry.Required) {
-                    Assert.Fail($"Missing external sample: {entry.ImagePath}");
-                } else {
-                    _output.WriteLine($"Optional sample missing: {entry.ImagePath}");
-                    continue;
-                }
+                if (entry.Required) Assert.Fail($"Missing external sample: {entry.ImagePath}");
+                _output.WriteLine($"Optional sample missing: {entry.ImagePath}");
+                continue;
             }
-
             var image = File.ReadAllBytes(entry.ImagePath);
-            var options = new CodeGlyphDecodeOptions {
-                ExpectedBarcode = expectedType,
-                PreferBarcode = preferBarcode,
-                IncludeBarcode = true,
+            var formats = ResolveFormats(entry.ExpectedKind, entry.ExpectedBarcodeType);
+            var result = SymbolScanner.Scan(image, new ScanOptions {
+                Formats = formats, MaxSymbols = entry.ExpectedTexts.Count == 1 ? 1 : 32,
+                TimeoutMilliseconds = TestBudget.Adjust(12000),
                 Qr = new QrPixelDecodeOptions {
-                    Profile = QrDecodeProfile.Robust,
-                    AggressiveSampling = true,
-                    EnableTileScan = true,
-                    MaxDimension = 2000,
-                    BudgetMilliseconds = 6000
+                    Profile = QrDecodeProfile.Robust, AggressiveSampling = true, EnableTileScan = true,
+                    MaxDimension = 2000, BudgetMilliseconds = 6000
                 },
-                Image = new ImageDecodeOptions {
-                    MaxDimension = 2000,
-                    RecognitionBudgetMilliseconds = 4000
-                },
-                Barcode = new BarcodeDecodeOptions {
-                    EnableTileScan = true,
-                    TileGrid = 0
-                }
-            };
-
-            if (expectedTexts.Count == 1) {
-                var expectedText = expectedTexts[0];
-                string decodedText;
-                string diag;
-                CodeGlyphKind? actualKind = null;
-                BarcodeType? actualBarcodeType = null;
-                bool ok;
-
-                if (expectedKind.HasValue) {
-                    ok = TryDecodeByKind(image, expectedKind.Value, expectedType, options, out decodedText, out diag, out actualBarcodeType);
-                    actualKind = expectedKind.Value;
-                } else {
-                    ok = CodeGlyph.TryDecodeImage(image, out var decoded, options);
-                    decodedText = ok ? decoded.Text : string.Empty;
-                    diag = ok ? "auto-decode ok" : "auto-decode failed";
-                    actualKind = ok ? decoded.Kind : null;
-                    actualBarcodeType = ok ? decoded.Barcode?.Type : null;
-                }
-
-                if (!ok) {
-                    if (entry.Required) {
-                        Assert.Fail($"Failed to decode external sample: {entry.ImagePath} ({diag})");
-                    }
-                    _output.WriteLine($"Optional sample failed to decode: {entry.ImagePath} ({diag})");
-                    continue;
-                }
-
-                if (entry.Required) {
-                    Assert.Equal(expectedText, decodedText);
-                    if (expectedKind.HasValue) {
-                        Assert.Equal(expectedKind.Value, actualKind);
-                    }
-                    if (expectedType.HasValue) {
-                        Assert.Equal(expectedType.Value, actualBarcodeType);
-                    }
-                } else if (!string.Equals(expectedText, decodedText, StringComparison.Ordinal)) {
-                    _output.WriteLine($"Optional sample mismatch: {entry.ImagePath} expected '{expectedText}', got '{decodedText}'.");
-                }
-            } else {
-                if (!CodeGlyph.TryDecodeAllImage(image, out var decoded, options)) {
-                    if (entry.Required) {
-                        Assert.Fail($"Failed to decode external sample (multi): {entry.ImagePath}");
-                    }
-                    _output.WriteLine($"Optional sample failed to decode (multi): {entry.ImagePath}");
-                    continue;
-                }
-
-                var decodedTexts = decoded.Select(result => result.Text).Where(text => !string.IsNullOrWhiteSpace(text)).Distinct(StringComparer.Ordinal).ToArray();
-                if (entry.Required) {
-                    foreach (var expectedText in expectedTexts) {
-                        Assert.Contains(expectedText, decodedTexts);
-                    }
-
-                    if (expectedKind.HasValue) {
-                        Assert.All(decoded, result => Assert.Equal(expectedKind.Value, result.Kind));
-                    }
-                    if (expectedType.HasValue) {
-                        Assert.All(decoded, result => Assert.Equal(expectedType.Value, result.Barcode?.Type));
-                    }
-                } else {
-                    foreach (var expectedText in expectedTexts) {
-                        if (!decodedTexts.Contains(expectedText, StringComparer.Ordinal)) {
-                            _output.WriteLine($"Optional sample mismatch: {entry.ImagePath} missing '{expectedText}'.");
-                        }
-                    }
-                }
+                Image = new ImageDecodeOptions { MaxDimension = 2000 },
+                Barcode = new BarcodeDecodeOptions { EnableTileScan = true }
+            });
+            if (!result.IsSuccess) {
+                var failure = $"{entry.ImagePath}: {result.Status}/{result.CompletionReason}: {result.Failure}";
+                if (entry.Required) Assert.Fail($"Failed to decode external sample: {failure}");
+                _output.WriteLine($"Optional sample failed to decode: {failure}");
+                continue;
+            }
+            var texts = result.Symbols.Select(symbol => symbol.Text).Distinct(StringComparer.Ordinal).ToArray();
+            foreach (var expected in entry.ExpectedTexts) {
+                if (entry.Required) Assert.Contains(expected, texts);
+                else if (!texts.Contains(expected, StringComparer.Ordinal))
+                    _output.WriteLine($"Optional sample mismatch: {entry.ImagePath} missing '{expected}'.");
+            }
+            if (entry.Required && formats is not null) {
+                Assert.All(result.Symbols, symbol => Assert.Contains(symbol.Format, formats));
             }
         }
+    }
+
+    // Existing corpus manifests describe broad families. Translate fixture metadata at this test boundary.
+    private static SymbolFormat[]? ResolveFormats(string? kind, BarcodeType? barcodeType) {
+        if (barcodeType.HasValue) {
+            var match = SymbolCapabilities.All.Single(capability => capability.LegacyBarcodeType == barcodeType.Value);
+            return new[] { match.Format };
+        }
+        return kind?.ToLowerInvariant() switch {
+            null => null,
+            "qr" => new[] { SymbolFormat.QrCode },
+            "microqr" => new[] { SymbolFormat.MicroQrCode },
+            "datamatrix" => new[] { SymbolFormat.DataMatrix },
+            "pdf417" => new[] { SymbolFormat.Pdf417 },
+            "aztec" => new[] { SymbolFormat.Aztec },
+            "barcode1d" => SymbolCapabilities.All.Where(capability => capability.Family == SymbolFamily.Linear && capability.CanScanImages)
+                .Select(capability => capability.Format).ToArray(),
+            _ => throw new InvalidDataException($"Unknown fixture family '{kind}'.")
+        };
     }
 
     private static string? ResolveSamplesDirectory() {
@@ -218,13 +166,9 @@ public sealed class ExternalDecodeSamplesTests {
                 var expected = entry.ExpectedTexts ?? (entry.ExpectedText is null ? null : new List<string> { entry.ExpectedText });
                 if (expected is null || expected.Count == 0) continue;
 
-                CodeGlyphKind? kind = null;
-                if (!string.IsNullOrWhiteSpace(entry.Kind)) {
-                    if (!Enum.TryParse(entry.Kind, true, out CodeGlyphKind parsedKind)) {
-                        Assert.Fail($"Invalid CodeGlyphKind '{entry.Kind}' in manifest entry '{entry.Id}'.");
-                    }
-                    kind = parsedKind;
-                }
+                var kind = entry.Kind;
+                if (!string.IsNullOrWhiteSpace(kind)) ResolveFormats(kind, null);
+                else kind = null;
 
                 BarcodeType? barcodeType = null;
                 if (!string.IsNullOrWhiteSpace(entry.BarcodeType)) {
@@ -240,93 +184,6 @@ public sealed class ExternalDecodeSamplesTests {
             return entries;
         } catch {
             return new List<SampleEntry>();
-        }
-    }
-
-    private static bool TryDecodeByKind(
-        byte[] image,
-        CodeGlyphKind kind,
-        BarcodeType? expectedType,
-        CodeGlyphDecodeOptions options,
-        out string text,
-        out string diagnostics,
-        out BarcodeType? actualBarcodeType) {
-        text = string.Empty;
-        diagnostics = string.Empty;
-        actualBarcodeType = null;
-
-        switch (kind) {
-            case CodeGlyphKind.Qr:
-                if (!ImageReader.TryDecodeRgba32(image, out var qrRgba, out var qrW, out var qrH)) {
-                    diagnostics = "image decode failed";
-                    return false;
-                }
-                if (QrDecoder.TryDecode(qrRgba, qrW, qrH, qrW * 4, PixelFormat.Rgba32, out var qrDecoded, out var qrInfo, options.Qr)) {
-                    text = qrDecoded.Text;
-                    diagnostics = qrInfo.ToString();
-                    return true;
-                }
-                diagnostics = qrInfo.ToString();
-                return false;
-
-            case CodeGlyphKind.DataMatrix:
-                if (DataMatrixCode.TryDecodeImage(image, options.Image, out var dmText, out var dmDiag)) {
-                    text = dmText;
-                    diagnostics = Format(dmDiag);
-                    return true;
-                }
-                diagnostics = Format(dmDiag);
-                return false;
-
-            case CodeGlyphKind.Pdf417:
-                if (Pdf417Code.TryDecodeImage(image, options.Image, out var pdfText, out var pdfDiag)) {
-                    text = pdfText;
-                    diagnostics = Format(pdfDiag);
-                    return true;
-                }
-                diagnostics = Format(pdfDiag);
-                return false;
-
-            case CodeGlyphKind.Aztec:
-                if (AztecCode.TryDecodeImage(image, options.Image, out var azText, out var azDiag)) {
-                    text = azText;
-                    diagnostics = Format(azDiag);
-                    return true;
-                }
-                diagnostics = Format(azDiag);
-                return false;
-
-            case CodeGlyphKind.Barcode1D:
-                if (!ImageReader.TryDecodeRgba32(image, out var barRgba, out var barW, out var barH)) {
-                    diagnostics = "image decode failed";
-                    return false;
-                }
-                if (BarcodeDecoder.TryDecode(barRgba, barW, barH, barW * 4, PixelFormat.Rgba32, expectedType, options.Barcode, options.CancellationToken, out var barcode, out var barDiag)) {
-                    text = barcode.Text;
-                    actualBarcodeType = barcode.Type;
-                    diagnostics = Format(barDiag);
-                    return true;
-                }
-                if (options.Barcode?.EnableTileScan == true
-                    && BarcodeDecoder.TryDecodeAll(barRgba, barW, barH, barW * 4, PixelFormat.Rgba32, out var allHits, expectedType, options.Barcode, options.CancellationToken)) {
-                    BarcodeDecoded? hit = null;
-                    if (expectedType.HasValue) {
-                        hit = allHits.FirstOrDefault(candidate => candidate.Type == expectedType.Value);
-                    }
-                    hit ??= allHits.FirstOrDefault();
-                    if (hit is not null) {
-                        text = hit.Text;
-                        actualBarcodeType = hit.Type;
-                        diagnostics = "tile scan";
-                        return true;
-                    }
-                }
-                diagnostics = Format(barDiag);
-                return false;
-
-            default:
-                diagnostics = "unsupported kind";
-                return false;
         }
     }
 
@@ -346,14 +203,12 @@ public sealed class ExternalDecodeSamplesTests {
         return lines;
     }
 
-    private static CodeGlyphKind? ReadExpectedKind(string path) {
+    private static string? ReadExpectedKind(string path) {
         if (!File.Exists(path)) return null;
         var text = File.ReadAllText(path).Trim();
         if (string.IsNullOrWhiteSpace(text)) return null;
-        if (!Enum.TryParse<CodeGlyphKind>(text, ignoreCase: true, out var kind)) {
-            Assert.Fail($"Invalid CodeGlyphKind '{text}' in {path}");
-        }
-        return kind;
+        ResolveFormats(text, null);
+        return text;
     }
 
     private static BarcodeType? ReadExpectedBarcodeType(string path) {
@@ -366,26 +221,10 @@ public sealed class ExternalDecodeSamplesTests {
         return type;
     }
 
-    private static string Format(DataMatrixDecodeDiagnostics diagnostics) {
-        return $"attempts={diagnostics.AttemptCount} mirrored={diagnostics.MirroredTried} success={diagnostics.Success} failure={diagnostics.Failure}";
-    }
-
-    private static string Format(Pdf417DecodeDiagnostics diagnostics) {
-        return $"attempts={diagnostics.AttemptCount} startCandidates={diagnostics.StartPatternCandidates} startAttempts={diagnostics.StartPatternAttempts} mirrored={diagnostics.MirroredTried} success={diagnostics.Success} failure={diagnostics.Failure}";
-    }
-
-    private static string Format(AztecDecodeDiagnostics diagnostics) {
-        return $"attempts={diagnostics.AttemptCount} inverted={diagnostics.InvertedTried} mirrored={diagnostics.MirroredTried} success={diagnostics.Success} failure={diagnostics.Failure}";
-    }
-
-    private static string Format(BarcodeDecodeDiagnostics diagnostics) {
-        return $"candidates={diagnostics.CandidateCount} attempts={diagnostics.AttemptCount} inverted={diagnostics.InvertedTried} reversed={diagnostics.ReversedTried} success={diagnostics.Success} failure={diagnostics.Failure}";
-    }
-
     private sealed record SampleEntry(
         string ImagePath,
         List<string> ExpectedTexts,
-        CodeGlyphKind? ExpectedKind,
+        string? ExpectedKind,
         BarcodeType? ExpectedBarcodeType,
         bool Required);
 

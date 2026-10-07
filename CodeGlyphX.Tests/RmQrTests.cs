@@ -160,11 +160,10 @@ public sealed class RmQrTests {
         Assert.Equal(QrErrorCorrectionLevel.M, oracleDecoded.ErrorCorrectionLevel);
         AssertMatrixEqual(oracle, code.Modules);
 
-        Assert.True(CodeGlyph.TryDecode(oracle, out var unified));
-        Assert.Equal(CodeGlyphKind.RmQr, unified.Kind);
+        Assert.True(SymbolDecoder.TryDecode(oracle, out var unified));
+        Assert.Equal(SymbolFormat.RmQrCode, unified.Format);
         Assert.Equal("RMQR-42", unified.Text);
-        Assert.NotNull(unified.RmQr);
-        Assert.Equal(20, unified.RmQr!.Version);
+        Assert.Equal(20, Assert.IsType<RmQrSymbolMetadata>(unified.Metadata).Version);
     }
 
     [Fact]

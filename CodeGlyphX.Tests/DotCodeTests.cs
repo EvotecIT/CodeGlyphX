@@ -170,9 +170,9 @@ public sealed class DotCodeTests {
 
         Assert.True(MatrixBarcodeDecoder.TryDecode(BarcodeType.DotCode, modules, out var text));
         Assert.Equal("UNIFIED-DOTCODE", text);
-        Assert.True(CodeGlyph.TryDecode(modules, out var decoded, expectedBarcode: BarcodeType.DotCode));
-        Assert.Equal(CodeGlyphKind.DotCode, decoded.Kind);
-        Assert.NotNull(decoded.DotCode);
+        Assert.True(SymbolDecoder.TryDecode(modules, out var decoded, format: SymbolFormat.DotCode));
+        Assert.Equal(SymbolFormat.DotCode, decoded.Format);
+        Assert.IsType<DotCodeSymbolMetadata>(decoded.Metadata);
         Assert.Equal("UNIFIED-DOTCODE", decoded.Text);
 
         var capability = SymbolCapabilities.Get(SymbolFormat.DotCode);

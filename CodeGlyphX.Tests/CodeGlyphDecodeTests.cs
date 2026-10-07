@@ -1,94 +1,34 @@
-using CodeGlyphX.DataMatrix;
-using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
-using CodeGlyphX.Rendering.Png;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
 
 public sealed class CodeGlyphDecodeTests {
-    [Fact]
-    public void Decode_Qr_FromPng() {
-        var png = QrCode.Render("HELLO", OutputFormat.Png).Data;
-
-        Assert.True(CodeGlyph.TryDecodePng(png, out var decoded));
-        Assert.Equal(CodeGlyphKind.Qr, decoded.Kind);
-        Assert.Equal("HELLO", decoded.Text);
-    }
-
-    [Fact]
-    public void Decode_Barcode_FromPng() {
-        var png = Barcode.Render(BarcodeType.Code128, "CODE128-12345", OutputFormat.Png, new BarcodeOptions {
-            ModuleSize = 3,
-            QuietZone = 10,
-            HeightModules = 40
-        }).Data;
-
-        Assert.True(CodeGlyph.TryDecodePng(png, out var decoded));
-        Assert.Equal(CodeGlyphKind.Barcode1D, decoded.Kind);
-        Assert.Equal("CODE128-12345", decoded.Text);
-    }
-
-    [Fact]
-    public void Decode_DataMatrix_FromPng() {
-        var matrix = DataMatrixEncoder.Encode("DM-1234");
-        var png = MatrixPngRenderer.Render(matrix, new MatrixPngRenderOptions {
-            ModuleSize = 3,
-            QuietZone = 2
+    [Theory]
+    [InlineData(SymbolFormat.QrCode)]
+    [InlineData(SymbolFormat.Code128)]
+    [InlineData(SymbolFormat.DataMatrix)]
+    [InlineData(SymbolFormat.Pdf417)]
+    [InlineData(SymbolFormat.Aztec)]
+    public void Scan_GeneratedImage_ReturnsRequestedPhysicalFormat(SymbolFormat format) {
+        const string payload = "SCAN-12345";
+        var image = format switch {
+            SymbolFormat.QrCode => QR.Render(payload, OutputFormat.Png).Data.ToArray(),
+            SymbolFormat.Code128 => Barcode.Render(SymbolFormat.Code128, payload, OutputFormat.Png).Data.ToArray(),
+            SymbolFormat.DataMatrix => DataMatrixCode.Render(payload, OutputFormat.Png).Data.ToArray(),
+            SymbolFormat.Pdf417 => Pdf417Code.Render(payload, OutputFormat.Png).Data.ToArray(),
+            SymbolFormat.Aztec => AztecCode.Render(payload, OutputFormat.Png).Data.ToArray(),
+            _ => throw new System.ArgumentOutOfRangeException(nameof(format))
+        };
+        var result = SymbolScanner.Scan(image, new ScanOptions {
+            Formats = new[] { format }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
-
-        Assert.True(CodeGlyph.TryDecodePng(png, out var decoded));
-        Assert.Equal(CodeGlyphKind.DataMatrix, decoded.Kind);
-        Assert.Equal("DM-1234", decoded.Text);
-    }
-
-    [Fact]
-    public void Decode_Pdf417_FromPng() {
-        var matrix = Pdf417Encoder.Encode("PDF-417");
-        var png = MatrixPngRenderer.Render(matrix, new MatrixPngRenderOptions {
-            ModuleSize = 3,
-            QuietZone = 2
-        });
-
-        Assert.True(CodeGlyph.TryDecodePng(png, out var decoded));
-        Assert.Equal(CodeGlyphKind.Pdf417, decoded.Kind);
-        Assert.Equal("PDF-417", decoded.Text);
-    }
-
-    [Fact]
-    public void Decode_Aztec_FromPng() {
-        var matrix = AztecCode.Encode("AZTEC-OK");
-        var png = MatrixPngRenderer.Render(matrix, new MatrixPngRenderOptions {
-            ModuleSize = 3,
-            QuietZone = 2
-        });
-
-        Assert.True(CodeGlyph.TryDecodePng(png, out var decoded));
-        Assert.Equal(CodeGlyphKind.Aztec, decoded.Kind);
-        Assert.Equal("AZTEC-OK", decoded.Text);
-    }
-
-    [Fact]
-    public void DecodeAll_Qr_FromPng() {
-        var png = QrCode.Render("HELLO-ALL", OutputFormat.Png).Data;
-
-        Assert.True(CodeGlyph.TryDecodeAllPng(png, out var decoded, includeBarcode: false));
-        Assert.Single(decoded);
-        Assert.Equal(CodeGlyphKind.Qr, decoded[0].Kind);
-        Assert.Equal("HELLO-ALL", decoded[0].Text);
-    }
-
-    [Fact]
-    public void DecodeAll_Barcode_FromPng() {
-        var png = Barcode.Render(BarcodeType.Code128, "CODE128-ALL", OutputFormat.Png, new BarcodeOptions {
-            ModuleSize = 3,
-            QuietZone = 10,
-            HeightModules = 40
-        }).Data;
-
-        Assert.True(CodeGlyph.TryDecodeAllPng(png, out var decoded, expectedBarcode: BarcodeType.Code128, includeBarcode: true, preferBarcode: true));
-        Assert.Single(decoded);
-        Assert.Equal(CodeGlyphKind.Barcode1D, decoded[0].Kind);
-        Assert.Equal("CODE128-ALL", decoded[0].Text);
+        Assert.True(result.IsSuccess, result.Failure);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(format, symbol.Format);
+        Assert.Equal(payload, symbol.Text);
+        Assert.NotNull(symbol.SearchRegion);
+        Assert.Equal(ScanCompletionReason.SymbolLimitReached, result.CompletionReason);
+        Assert.True(result.IsPartial);
     }
 }

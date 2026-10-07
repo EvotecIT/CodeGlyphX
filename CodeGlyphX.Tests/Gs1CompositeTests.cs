@@ -122,11 +122,11 @@ public sealed class Gs1CompositeTests {
         Assert.Equal(Gs1.ElementString("(21)ABC123"), text);
         Assert.True(MatrixBarcodeDecoder.TryDecodeGs1Composite(modules, out var detailed));
         Assert.Equal(Gs1.ElementString("(01)09506000134352"), detailed.LinearText);
-        Assert.True(CodeGlyph.TryDecode(modules, out var decoded, expectedBarcode: BarcodeType.GS1Composite));
-        Assert.Equal(CodeGlyphKind.Gs1Composite, decoded.Kind);
-        Assert.NotNull(decoded.Gs1Composite);
+        Assert.True(SymbolDecoder.TryDecode(modules, out var decoded, format: SymbolFormat.Gs1Composite));
+        Assert.Equal(SymbolFormat.Gs1Composite, decoded.Format);
+        Assert.IsType<Gs1CompositeSymbolMetadata>(decoded.Metadata);
         Assert.Equal(SymbolPayloadProfile.Gs1,
-            new DetectedSymbol(SymbolFormat.Gs1Composite, decoded, new ImageRegion(0, 0, 1, 1)).PayloadProfile);
+            decoded.PayloadProfile);
 
         var capability = SymbolCapabilities.Get(SymbolFormat.Gs1Composite);
         Assert.True(capability.CanEncode);

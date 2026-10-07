@@ -27,6 +27,13 @@ public sealed class ScanOptions {
     /// <summary>Gets or sets whether equivalent format-and-payload results are deduplicated.</summary>
     public bool Deduplicate { get; set; } = true;
 
+    /// <summary>Gets or sets whether bounded tile retries search for additional symbols.</summary>
+    /// <remarks>Explicit QR or barcode options retain their own tile settings.</remarks>
+    public bool EnableTileScan { get; set; } = true;
+
+    /// <summary>Gets or sets the tile grid: zero selects two or three tiles per axis; explicit values are 2..4.</summary>
+    public int TileGrid { get; set; }
+
     /// <summary>Gets or sets the scanner speed and accuracy profile.</summary>
     public ScanProfile Profile { get; set; } = ScanProfile.Balanced;
 
@@ -47,7 +54,7 @@ public sealed class ScanOptions {
 
     /// <summary>Creates low-latency scan options.</summary>
     public static ScanOptions Fast(int timeoutMilliseconds = 150) {
-        return new ScanOptions { Profile = ScanProfile.Fast, TimeoutMilliseconds = Normalize(timeoutMilliseconds) };
+        return new ScanOptions { Profile = ScanProfile.Fast, TimeoutMilliseconds = Normalize(timeoutMilliseconds), EnableTileScan = false };
     }
 
     /// <summary>Creates balanced scan options.</summary>
@@ -67,7 +74,8 @@ public sealed class ScanOptions {
     /// <summary>Creates bounded options suitable for screenshot and UI scanning.</summary>
     public static ScanOptions Screen(int timeoutMilliseconds = 300, int maxDimension = 1200) {
         var timeout = Normalize(timeoutMilliseconds);
-        var dimension = maxDimension < 0 ? 0 : maxDimension;
+        if (maxDimension < 0) throw new System.ArgumentOutOfRangeException(nameof(maxDimension));
+        var dimension = maxDimension;
         return new ScanOptions {
             Profile = ScanProfile.Screen,
             TimeoutMilliseconds = timeout,
@@ -76,5 +84,8 @@ public sealed class ScanOptions {
         };
     }
 
-    private static int Normalize(int value) => value < 0 ? 0 : value;
+    private static int Normalize(int value) {
+        if (value < 0) throw new System.ArgumentOutOfRangeException(nameof(value));
+        return value;
+    }
 }

@@ -11,7 +11,7 @@ namespace CodeGlyphX.Tests;
 
 public sealed class ImageDecodeOptionsTests {
     [Fact]
-    public void CodeGlyph_Downscales_NonQr_ImageOptions() {
+    public void Scanner_DownscalesRawNonQrFramesBeforeRecognition() {
         var matrix = DataMatrixEncoder.Encode("DOWNSCALE");
         var pixels = MatrixPngRenderer.RenderPixels(
             matrix,
@@ -20,12 +20,15 @@ public sealed class ImageDecodeOptionsTests {
             out var height,
             out var stride);
 
-        var options = new CodeGlyphDecodeOptions {
+        var options = new ScanOptions {
+            Formats = new[] { SymbolFormat.DataMatrix }, MaxSymbols = 1, TimeoutMilliseconds = TestBudget.Adjust(2000),
             Image = new ImageDecodeOptions { MaxDimension = 200, RecognitionBudgetMilliseconds = 200 },
             Qr = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Fast, BudgetMilliseconds = 200 }
         };
 
-        Assert.True(CodeGlyph.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, options));
+        var scan = SymbolScanner.Scan(new ImageFrame(pixels, width, height, stride, PixelFormat.Rgba32), options);
+        Assert.True(scan.IsSuccess, scan.Failure);
+        var decoded = Assert.Single(scan.Symbols);
         Assert.Equal("DOWNSCALE", decoded.Text);
     }
 
@@ -40,7 +43,7 @@ public sealed class ImageDecodeOptionsTests {
 
         var options = new ImageDecodeOptions { MaxDimension = 600 };
 
-        Assert.True(Barcode.TryDecodePng(png, BarcodeType.Code128, options, out var decoded));
+        Assert.True(Barcode.TryDecodePng(png, SymbolFormat.Code128, options, out var decoded));
         Assert.Equal("TEST-123", decoded.Text);
     }
 
@@ -53,10 +56,10 @@ public sealed class ImageDecodeOptionsTests {
             HeightModules = 40
         });
 
-        Assert.True(Barcode.TryDecodePng(png, BarcodeType.Code128, out _));
+        Assert.True(Barcode.TryDecodePng(png, SymbolFormat.Code128, out _));
         Assert.False(Barcode.TryDecodePng(
             png,
-            BarcodeType.Code128,
+            SymbolFormat.Code128,
             new ImageDecodeOptions { MaxDimension = 1 },
             out _));
     }
@@ -73,7 +76,7 @@ public sealed class ImageDecodeOptionsTests {
 
         var success = Barcode.TryDecodeImage(
             stream,
-            BarcodeType.Code128,
+            SymbolFormat.Code128,
             new ImageDecodeOptions { RecognitionBudgetMilliseconds = 1000 },
             out var decoded);
 
@@ -83,7 +86,7 @@ public sealed class ImageDecodeOptionsTests {
 
     [Fact]
     public void Qr_Downscales_WithImageOptions() {
-        var png = QrCode.Render("HELLO-WORLD", OutputFormat.Png, new QrEasyOptions { ModuleSize = 18, QuietZone = 4 }).Data;
+        var png = QR.Render("HELLO-WORLD", OutputFormat.Png, new QrRenderOptions { ModuleSize = 18, QuietZone = 4 }).Data;
         var imageOptions = new ImageDecodeOptions { MaxDimension = 200 };
 
         Assert.True(QR.TryDecodePng(png, imageOptions, options: null, out var decoded));

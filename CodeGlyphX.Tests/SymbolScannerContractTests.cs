@@ -44,7 +44,7 @@ public sealed class SymbolScannerContractTests {
         Assert.True(microQr.CanScanImages);
         Assert.True(microQr.ReportsGeometry);
         Assert.True(dataMatrix.CanScanImages);
-        Assert.False(dataMatrix.CanScanMultiple);
+        Assert.True(dataMatrix.CanScanMultiple);
         Assert.True(dataMatrix.Has(SymbolCapabilityFlags.EciEncode));
         Assert.True(dataMatrix.Has(SymbolCapabilityFlags.EciDecode));
         Assert.True(dataMatrix.Has(SymbolCapabilityFlags.Gs1Encode));
@@ -90,7 +90,7 @@ public sealed class SymbolScannerContractTests {
 
     [Fact]
     public void Scan_DecodesQrFromGray8StrideAndRegionOfInterest() {
-        var qr = QrEasy.RenderPixels("GRAY-ROI", out var qrWidth, out var qrHeight, out var qrStride);
+        var qr = QR.RenderPixels("GRAY-ROI", out var qrWidth, out var qrHeight, out var qrStride);
         const int offsetX = 11;
         const int offsetY = 13;
         var width = qrWidth + offsetX + 17;
@@ -119,7 +119,7 @@ public sealed class SymbolScannerContractTests {
         Assert.True(symbol.HasRawBytes);
         Assert.NotEmpty(symbol.RawBytes.ToArray());
         Assert.Equal(region, symbol.SearchRegion);
-        Assert.Equal(CodeGlyphKind.Qr, symbol.LegacyResult.Kind);
+        Assert.IsType<QrSymbolMetadata>(symbol.Metadata);
     }
 
     [Theory]
@@ -131,7 +131,7 @@ public sealed class SymbolScannerContractTests {
     [InlineData(PixelFormat.Gray16LittleEndian)]
     [InlineData(PixelFormat.Rgb565LittleEndian)]
     public void Scan_DecodesQrFromEveryAdditionalPackedPixelFormat(PixelFormat format) {
-        var rgba = QrEasy.RenderPixels("PACKED-FORMAT", out var width, out var height, out var rgbaStride);
+        var rgba = QR.RenderPixels("PACKED-FORMAT", out var width, out var height, out var rgbaStride);
         var converted = ConvertRgba(rgba, width, height, rgbaStride, format, out var stride);
         var frame = new ImageFrame(converted, width, height, stride, format);
 
@@ -201,7 +201,7 @@ public sealed class SymbolScannerContractTests {
 
     [Fact]
     public void Scan_UsesSourceCoordinatesForEncodedImageRegionWhenOutputIsDownscaled() {
-        var qr = QrEasy.RenderPixels("ENCODED-SOURCE-ROI", out var qrWidth, out var qrHeight, out var qrStride);
+        var qr = QR.RenderPixels("ENCODED-SOURCE-ROI", out var qrWidth, out var qrHeight, out var qrStride);
         const int offsetX = 550;
         const int offsetY = 30;
         var width = offsetX + qrWidth + 50;
@@ -225,7 +225,7 @@ public sealed class SymbolScannerContractTests {
 
     [Fact]
     public void Scan_ReportsOriginalEncodedDimensionsAfterFullFrameDownscaling() {
-        var qr = QrEasy.RenderPixels("ENCODED-FULL-SOURCE", out var width, out var height, out var stride);
+        var qr = QR.RenderPixels("ENCODED-FULL-SOURCE", out var width, out var height, out var stride);
         var encoded = EncodePng(qr, width, height, stride);
 
         var result = SymbolScanner.Scan(encoded, new ScanOptions {
@@ -243,7 +243,7 @@ public sealed class SymbolScannerContractTests {
 
     [Fact]
     public void Scan_AppliesImageMaxDimensionToEncodedRegionBeforeRecognition() {
-        var qr = QrEasy.RenderPixels("ENCODED-ROI-LIMIT", out var qrWidth, out var qrHeight, out var qrStride);
+        var qr = QR.RenderPixels("ENCODED-ROI-LIMIT", out var qrWidth, out var qrHeight, out var qrStride);
         const int offsetX = 40;
         const int offsetY = 30;
         var width = offsetX + qrWidth + 40;
@@ -289,7 +289,7 @@ public sealed class SymbolScannerContractTests {
                 matrix = DataMatrix.DataMatrixEncoder.Encode(payload);
                 break;
             case SymbolFormat.Aztec:
-                matrix = AztecCode.Encode(payload);
+                matrix = AztecCode.Encode(payload).Modules;
                 break;
             case SymbolFormat.Pdf417:
                 matrix = Pdf417.Pdf417Encoder.Encode(payload);
@@ -335,10 +335,9 @@ public sealed class SymbolScannerContractTests {
         Assert.Equal(ScanStatus.Success, result.Status);
         var symbol = Assert.Single(result.Symbols);
         Assert.Equal(SymbolPayloadProfile.Gs1, symbol.PayloadProfile);
-        var decoded = Assert.IsType<DataMatrix.DataMatrixDecoded>(symbol.LegacyResult.DataMatrix);
+        var decoded = Assert.IsType<DataMatrixSymbolMetadata>(symbol.Metadata);
         Assert.True(decoded.IsGs1);
-        Assert.Equal(elementString, decoded.Text);
-        Assert.Equal(decoded.Text, symbol.LegacyResult.DataMatrixText);
+        Assert.Equal(elementString, symbol.Text);
         Assert.Equal(matrix.Height, decoded.Rows);
         Assert.Equal(matrix.Width, decoded.Columns);
     }
@@ -405,8 +404,8 @@ public sealed class SymbolScannerContractTests {
 
     [Fact]
     public void Scan_ReturnsMultipleQrCodesFromOneFrame() {
-        var left = QrEasy.RenderPixels("SCANNER-LEFT", out var leftWidth, out var leftHeight, out var leftStride);
-        var right = QrEasy.RenderPixels("SCANNER-RIGHT", out var rightWidth, out var rightHeight, out var rightStride);
+        var left = QR.RenderPixels("SCANNER-LEFT", out var leftWidth, out var leftHeight, out var leftStride);
+        var right = QR.RenderPixels("SCANNER-RIGHT", out var rightWidth, out var rightHeight, out var rightStride);
         const int padding = 16;
         var cellWidth = Math.Max(leftWidth, rightWidth);
         var cellHeight = Math.Max(leftHeight, rightHeight);
@@ -436,7 +435,7 @@ public sealed class SymbolScannerContractTests {
 
     [Fact]
     public void Scan_ReportsModuleOnlyFormatsWithoutHidingSupportedResults() {
-        var png = QrCode.Render("SUPPORTED-PLUS-UNSUPPORTED", OutputFormat.Png).Data;
+        var png = QR.Render("SUPPORTED-PLUS-UNSUPPORTED", OutputFormat.Png).Data;
         var result = SymbolScanner.Scan(png, new ScanOptions {
             Formats = new[] { SymbolFormat.QrCode, SymbolFormat.MicroPdf417 },
             TimeoutMilliseconds = TestBudget.Adjust(5000)
