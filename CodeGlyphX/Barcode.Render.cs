@@ -27,7 +27,7 @@ public static partial class Barcode {
     /// <summary>
     /// Renders a barcode to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(BarcodeType type, string content, OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) {
+    public static RenderedOutput Render(SymbolFormat type, string content, OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) {
         var barcode = Encode(type, content);
         return Render(barcode, format, options, extras);
     }
@@ -49,7 +49,7 @@ public static partial class Barcode {
             case OutputFormat.Svgz:
                 return RenderedOutput.FromBinary(format, BarcodeSvgzRenderer.Render(barcode, BuildSvgOptions(options)));
             case OutputFormat.Html: {
-                var html = HtmlBarcodeRenderer.Render(barcode, BuildHtmlOptions(options));
+                var html = HtmlBarcodeRenderer.Render(barcode, BuildHtmlOptions(options, extras));
                 var title = extras?.HtmlTitle;
                 if (!string.IsNullOrEmpty(title)) {
                     html = html.WrapHtml(title);
@@ -57,14 +57,14 @@ public static partial class Barcode {
                 return RenderedOutput.FromText(format, html);
             }
             case OutputFormat.Jpeg: {
-                var jpegOptions = options?.JpegOptions;
+                var jpegOptions = extras?.JpegOptions;
                 var data = jpegOptions is null
-                    ? BarcodeJpegRenderer.Render(barcode, opts, options?.JpegQuality ?? 90)
+                    ? BarcodeJpegRenderer.Render(barcode, opts, extras?.JpegQuality ?? 85)
                     : BarcodeJpegRenderer.Render(barcode, opts, jpegOptions);
                 return RenderedOutput.FromBinary(format, data);
             }
             case OutputFormat.Webp: {
-                var quality = options?.WebpQuality ?? 100;
+                var quality = extras?.WebpQuality ?? 100;
                 if (RenderAnimationHelpers.TryRenderBarcodeWebp(extras, opts, quality, out var webp)) {
                     return RenderedOutput.FromBinary(format, webp);
                 }
@@ -95,7 +95,7 @@ public static partial class Barcode {
             case OutputFormat.Tga:
                 return RenderedOutput.FromBinary(format, BarcodeTgaRenderer.Render(barcode, opts));
             case OutputFormat.Ico:
-                return RenderedOutput.FromBinary(format, BarcodeIcoRenderer.Render(barcode, opts, BuildIcoOptions(options)));
+                return RenderedOutput.FromBinary(format, BarcodeIcoRenderer.Render(barcode, opts, BuildIcoOptions(extras)));
             case OutputFormat.Pdf:
                 return RenderedOutput.FromBinary(format, BarcodePdfRenderer.Render(barcode, opts, extras?.VectorMode ?? RenderMode.Vector));
             case OutputFormat.Eps:

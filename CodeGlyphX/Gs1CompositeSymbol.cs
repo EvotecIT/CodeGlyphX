@@ -3,9 +3,7 @@ using System;
 namespace CodeGlyphX;
 
 /// <summary>Represents a standards-linked GS1-128 Composite symbol.</summary>
-public sealed class Gs1CompositeSymbol {
-    /// <summary>Gets the complete composite module matrix.</summary>
-    public BitMatrix Modules { get; }
+public sealed class Gs1CompositeSymbol : MatrixSymbol {
     /// <summary>Gets the linear GS1 element string.</summary>
     public string LinearText { get; }
     /// <summary>Gets the two-dimensional GS1 element string.</summary>
@@ -16,8 +14,7 @@ public sealed class Gs1CompositeSymbol {
     public int ComponentRows { get; }
 
     internal Gs1CompositeSymbol(BitMatrix modules, string linearText, string compositeText,
-        Gs1CompositeComponent component, int componentRows) {
-        Modules = modules ?? throw new ArgumentNullException(nameof(modules));
+        Gs1CompositeComponent component, int componentRows) : base(SymbolFormat.Gs1Composite, modules) {
         LinearText = linearText ?? throw new ArgumentNullException(nameof(linearText));
         CompositeText = compositeText ?? throw new ArgumentNullException(nameof(compositeText));
         Component = component;

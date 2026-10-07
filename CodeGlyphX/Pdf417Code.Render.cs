@@ -9,7 +9,7 @@ public static partial class Pdf417Code {
     /// Renders a PDF417 payload to the requested output format.
     /// </summary>
     public static RenderedOutput Render(string text, OutputFormat format, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
-        var modules = Encode(text, encodeOptions);
+        var modules = Encode(text, encodeOptions).Modules;
         return Render(modules, format, renderOptions, extras);
     }
 
@@ -17,7 +17,7 @@ public static partial class Pdf417Code {
     /// Renders a Macro PDF417 payload to the requested output format.
     /// </summary>
     public static RenderedOutput RenderMacro(string text, Pdf417MacroOptions macro, OutputFormat format, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
-        var modules = EncodeMacro(text, macro, encodeOptions);
+        var modules = EncodeMacro(text, macro, encodeOptions).Modules;
         return Render(modules, format, renderOptions, extras);
     }
 

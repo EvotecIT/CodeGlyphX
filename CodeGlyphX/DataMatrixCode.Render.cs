@@ -9,7 +9,7 @@ public static partial class DataMatrixCode {
     /// Renders a Data Matrix payload to the requested output format.
     /// </summary>
     public static RenderedOutput Render(string text, OutputFormat format, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, RenderExtras? extras = null) {
-        var modules = Encode(text, mode);
+        var modules = Encode(text, mode).Modules;
         return Render(modules, format, options, extras);
     }
 
@@ -17,7 +17,7 @@ public static partial class DataMatrixCode {
     /// Renders a Data Matrix payload using explicit encoding options.
     /// </summary>
     public static RenderedOutput Render(string text, OutputFormat format, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, RenderExtras? extras = null) {
-        var modules = Encode(text, encodingOptions);
+        var modules = Encode(text, encodingOptions).Modules;
         return Render(modules, format, options, extras);
     }
 

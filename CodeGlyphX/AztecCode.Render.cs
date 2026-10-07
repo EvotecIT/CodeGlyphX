@@ -9,7 +9,7 @@ public static partial class AztecCode {
     /// Renders an Aztec payload to the requested output format.
     /// </summary>
     public static RenderedOutput Render(string text, OutputFormat format, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
-        var modules = Encode(text, encodeOptions);
+        var modules = Encode(text, encodeOptions).Modules;
         return Render(modules, format, renderOptions, extras);
     }
 
@@ -25,7 +25,7 @@ public static partial class AztecCode {
     /// Renders an Aztec binary payload to the requested output format.
     /// </summary>
     public static RenderedOutput Render(ReadOnlySpan<byte> data, OutputFormat format, AztecEncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, RenderExtras? extras = null) {
-        var modules = Encode(data, encodeOptions);
+        var modules = Encode(data, encodeOptions).Modules;
         return Render(modules, format, renderOptions, extras);
     }
 

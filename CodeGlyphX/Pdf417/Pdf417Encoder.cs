@@ -17,6 +17,11 @@ public static class Pdf417Encoder {
     /// Encodes a text payload as PDF417.
     /// </summary>
     public static BitMatrix Encode(string text, Pdf417EncodeOptions? options = null) {
+        return EncodeSymbol(text, options).Modules.Clone();
+    }
+
+    /// <summary>Encodes text while retaining the selected dimensions and error-correction level.</summary>
+    public static Pdf417Symbol EncodeSymbol(string text, Pdf417EncodeOptions? options = null) {
         if (text is null) throw new ArgumentNullException(nameof(text));
         options ??= new Pdf417EncodeOptions();
         var dataCodewords = Pdf417HighLevelEncoder.Encode(text, options.Compaction, options.TextEncoding);
@@ -27,6 +32,11 @@ public static class Pdf417Encoder {
     /// Encodes a Macro PDF417 payload.
     /// </summary>
     public static BitMatrix EncodeMacro(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? options = null) {
+        return EncodeMacroSymbol(text, macro, options).Modules.Clone();
+    }
+
+    /// <summary>Encodes a Macro PDF417 payload while retaining selected symbol metadata.</summary>
+    public static Pdf417Symbol EncodeMacroSymbol(string text, Pdf417MacroOptions macro, Pdf417EncodeOptions? options = null) {
         if (text is null) throw new ArgumentNullException(nameof(text));
         if (macro is null) throw new ArgumentNullException(nameof(macro));
         options ??= new Pdf417EncodeOptions();
@@ -44,6 +54,11 @@ public static class Pdf417Encoder {
     /// Encodes a byte payload as PDF417 (byte compaction).
     /// </summary>
     public static BitMatrix EncodeBytes(byte[] data, Pdf417EncodeOptions? options = null) {
+        return EncodeBytesSymbol(data, options).Modules.Clone();
+    }
+
+    /// <summary>Encodes bytes while retaining the selected dimensions and error-correction level.</summary>
+    public static Pdf417Symbol EncodeBytesSymbol(byte[] data, Pdf417EncodeOptions? options = null) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         return EncodeBytesCore(data, options);
     }
@@ -53,12 +68,17 @@ public static class Pdf417Encoder {
     /// Encodes a byte payload as PDF417 (byte compaction).
     /// </summary>
     public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, Pdf417EncodeOptions? options = null) {
+        return EncodeBytesCore(data, options).Modules.Clone();
+    }
+
+    /// <summary>Encodes a byte span while retaining selected symbol metadata.</summary>
+    public static Pdf417Symbol EncodeBytesSymbol(ReadOnlySpan<byte> data, Pdf417EncodeOptions? options = null) {
         return EncodeBytesCore(data, options);
     }
 #endif
 
 #if NET8_0_OR_GREATER
-    private static BitMatrix EncodeBytesCore(ReadOnlySpan<byte> data, Pdf417EncodeOptions? options) {
+    private static Pdf417Symbol EncodeBytesCore(ReadOnlySpan<byte> data, Pdf417EncodeOptions? options) {
         options ??= new Pdf417EncodeOptions();
         var dataCodewords = EncodeByteCompaction(data);
         return EncodeCodewords(dataCodewords, options);
@@ -135,7 +155,7 @@ public static class Pdf417Encoder {
         return codewords;
     }
 #else
-    private static BitMatrix EncodeBytesCore(byte[] data, Pdf417EncodeOptions? options) {
+    private static Pdf417Symbol EncodeBytesCore(byte[] data, Pdf417EncodeOptions? options) {
         options ??= new Pdf417EncodeOptions();
         var dataCodewords = EncodeByteCompaction(data);
         return EncodeCodewords(dataCodewords, options);
@@ -338,7 +358,7 @@ public static class Pdf417Encoder {
         return modules;
     }
 
-    private static BitMatrix EncodeCodewords(List<int> dataCodewords, Pdf417EncodeOptions options) {
+    private static Pdf417Symbol EncodeCodewords(List<int> dataCodewords, Pdf417EncodeOptions options) {
         var dataCount = dataCodewords.Count;
 
         var requested = options.ErrorCorrectionLevel;
@@ -398,6 +418,6 @@ public static class Pdf417Encoder {
         Array.Copy(ecc, 0, fullCodewords, dataWithPad.Count, ecc.Length);
 
         var matrix = EncodeLowLevel(fullCodewords, cols, rows, eccLevel, options.Compact);
-        return ToBitMatrix(matrix);
+        return new Pdf417Symbol(ToBitMatrix(matrix), rows, cols, eccLevel, options.Compact);
     }
 }

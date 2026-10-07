@@ -24,4 +24,10 @@ public sealed class Pdf417EncodeOptions {
 
     /// <summary>Text encoding used for byte compaction.</summary>
     public System.Text.Encoding? TextEncoding { get; set; }
+
+    internal Pdf417EncodeOptions Clone() {
+        var copy = (Pdf417EncodeOptions)MemberwiseClone();
+        copy.TextEncoding = (System.Text.Encoding?)TextEncoding?.Clone();
+        return copy;
+    }
 }

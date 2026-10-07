@@ -712,20 +712,4 @@ public static partial class Pdf417Code {
         return text;
     }
 
-    private static MatrixPngRenderOptions BuildPngOptions(MatrixOptions? options) {
-        return MatrixRenderOptionsBuilder.BuildPng(options);
-    }
-
-    private static IcoRenderOptions BuildIcoOptions(MatrixOptions? options) {
-        return MatrixRenderOptionsBuilder.BuildIco(options);
-    }
-
-    private static MatrixSvgRenderOptions BuildSvgOptions(MatrixOptions? options) {
-        return MatrixRenderOptionsBuilder.BuildSvg(options);
-    }
-
-    private static MatrixHtmlRenderOptions BuildHtmlOptions(MatrixOptions? options) {
-        return MatrixRenderOptionsBuilder.BuildHtml(options);
-    }
-
 }

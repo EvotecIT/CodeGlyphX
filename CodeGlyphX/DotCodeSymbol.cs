@@ -3,9 +3,7 @@ using System;
 namespace CodeGlyphX;
 
 /// <summary>Encoded DotCode modules and selected layout metadata.</summary>
-public sealed class DotCodeSymbol {
-    /// <summary>Gets a clone of the encoded modules.</summary>
-    public BitMatrix Modules { get; }
+public sealed class DotCodeSymbol : MatrixSymbol {
     /// <summary>Gets the selected mask from 0 through 7.</summary>
     public int Mask { get; }
     /// <summary>Gets whether the selected mask forced the orientation corners.</summary>
@@ -15,8 +13,8 @@ public sealed class DotCodeSymbol {
     /// <summary>Gets the number of error-correction codewords.</summary>
     public int ErrorCorrectionCodewordCount { get; }
 
-    internal DotCodeSymbol(BitMatrix modules, int mask, int dataCodewordCount, int errorCorrectionCodewordCount) {
-        Modules = modules ?? throw new ArgumentNullException(nameof(modules));
+    internal DotCodeSymbol(BitMatrix modules, int mask, int dataCodewordCount, int errorCorrectionCodewordCount)
+        : base(SymbolFormat.DotCode, modules) {
         Mask = mask;
         DataCodewordCount = dataCodewordCount;
         ErrorCorrectionCodewordCount = errorCorrectionCodewordCount;

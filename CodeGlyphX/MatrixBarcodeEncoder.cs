@@ -13,6 +13,24 @@ namespace CodeGlyphX;
 /// Encodes matrix, stacked, postal, and other multi-height symbologies into a <see cref="BitMatrix"/>.
 /// </summary>
 public static class MatrixBarcodeEncoder {
+    /// <summary>Encodes an orthogonal matrix symbol while retaining its format and family metadata.</summary>
+    /// <exception cref="NotSupportedException">The format needs a specialized geometry renderer or multiple payloads.</exception>
+    public static MatrixSymbol EncodeSymbol(SymbolFormat format, string value) {
+        if (value is null) throw new ArgumentNullException(nameof(value));
+        return format switch {
+            SymbolFormat.MicroQrCode => MicroQrCodeEncoder.EncodeText(value),
+            SymbolFormat.RmQrCode => RmQrCodeEncoder.EncodeText(value),
+            SymbolFormat.Aztec => Aztec.AztecEncoder.EncodeSymbol(value),
+            SymbolFormat.DataMatrix => DataMatrix.DataMatrixEncoder.EncodeSymbol(value),
+            SymbolFormat.Pdf417 => Pdf417.Pdf417Encoder.EncodeSymbol(value),
+            SymbolFormat.DotCode => DotCodeEncoder.EncodeText(value),
+            SymbolFormat.HanXin => HanXinEncoder.EncodeText(value),
+            SymbolFormat.MaxiCode => throw new NotSupportedException("MaxiCode uses a hexagonal grid and central bullseye. Use MaxiCodeCode.Encode to retain its specialized geometry."),
+            SymbolFormat.Gs1Composite => throw new NotSupportedException("GS1 Composite requires separate linear and composite payloads. Use Gs1CompositeEncoder.Encode."),
+            _ => new MatrixSymbol(format, Encode(SymbolCapabilities.GetBarcodeType(format), value))
+        };
+    }
+
     /// <summary>
     /// Encodes a matrix, stacked, postal, or multi-height symbol using the specified <see cref="BarcodeType"/>.
     /// </summary>
@@ -34,9 +52,9 @@ public static class MatrixBarcodeEncoder {
             BarcodeType.DataMatrix => DataMatrix.DataMatrixEncoder.Encode(value),
             BarcodeType.PDF417 => Pdf417.Pdf417Encoder.Encode(value),
             BarcodeType.MicroPDF417 => Pdf417.MicroPdf417Encoder.Encode(value),
-            BarcodeType.MaxiCode => MaxiCodeEncoder.EncodeText(value).Modules,
-            BarcodeType.DotCode => DotCodeEncoder.EncodeText(value).Modules,
-            BarcodeType.HanXin => HanXinEncoder.EncodeText(value).Modules,
+            BarcodeType.MaxiCode => MaxiCodeEncoder.EncodeText(value).Modules.Clone(),
+            BarcodeType.DotCode => DotCodeEncoder.EncodeText(value).Modules.Clone(),
+            BarcodeType.HanXin => HanXinEncoder.EncodeText(value).Modules.Clone(),
             _ => throw new NotSupportedException($"BarcodeType.{type} is not supported by MatrixBarcodeEncoder.")
         };
     }
@@ -120,20 +138,20 @@ public static class MatrixBarcodeEncoder {
     /// Encodes a MaxiCode symbol into its fixed sampled module grid.
     /// </summary>
     public static BitMatrix EncodeMaxiCode(string value, MaxiCodeEncodingOptions? options = null) =>
-        MaxiCodeEncoder.EncodeText(value, options ?? new MaxiCodeEncodingOptions()).Modules;
+        MaxiCodeEncoder.EncodeText(value, options ?? new MaxiCodeEncodingOptions()).Modules.Clone();
 
     /// <summary>Encodes an AIM DotCode symbol.</summary>
     public static BitMatrix EncodeDotCode(string value, DotCodeEncodingOptions? options = null) =>
-        DotCodeEncoder.EncodeText(value, options ?? new DotCodeEncodingOptions()).Modules;
+        DotCodeEncoder.EncodeText(value, options ?? new DotCodeEncodingOptions()).Modules.Clone();
 
     /// <summary>Encodes a Han Xin Code symbol.</summary>
     public static BitMatrix EncodeHanXin(string value, HanXinEncodingOptions? options = null) =>
-        HanXinEncoder.EncodeText(value, options ?? new HanXinEncodingOptions()).Modules;
+        HanXinEncoder.EncodeText(value, options ?? new HanXinEncodingOptions()).Modules.Clone();
 
     /// <summary>Encodes a standards-linked GS1-128 Composite symbol.</summary>
     public static BitMatrix EncodeGs1Composite(string linearText, string compositeText,
         Gs1CompositeEncodingOptions? options = null) =>
-        Gs1CompositeEncoder.Encode(linearText, compositeText, options).Modules;
+        Gs1CompositeEncoder.Encode(linearText, compositeText, options).Modules.Clone();
 
     private static BitMatrix ToSingleRowMatrix(Barcode1D barcode) {
         var matrix = new BitMatrix(barcode.TotalModules, 1);
@@ -141,9 +159,9 @@ public static class MatrixBarcodeEncoder {
         for (var i = 0; i < barcode.Segments.Count; i++) {
             var segment = barcode.Segments[i];
             if (segment.IsBar) {
-                for (var j = 0; j < segment.Modules; j++) matrix[x + j, 0] = true;
+                for (var j = 0; j < segment.Modules.Clone(); j++) matrix[x + j, 0] = true;
             }
-            x += segment.Modules;
+            x += segment.Modules.Clone();
         }
         return matrix;
     }

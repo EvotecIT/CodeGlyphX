@@ -35,8 +35,8 @@ internal static class MatrixOutputRenderer {
             OutputFormat.Svg => Text(format, MatrixSvgRenderer.Render(modules, MatrixRenderOptionsBuilder.BuildSvg(options))),
             OutputFormat.Svgz => Binary(format, MatrixSvgzRenderer.Render(modules, MatrixRenderOptionsBuilder.BuildSvg(options))),
             OutputFormat.Html => Text(format, RenderHtml(modules, options, extras)),
-            OutputFormat.Jpeg => Binary(format, RenderJpeg(modules, png, options)),
-            OutputFormat.Webp => Binary(format, RenderWebp(modules, png, options, extras)),
+            OutputFormat.Jpeg => Binary(format, RenderJpeg(modules, png, extras)),
+            OutputFormat.Webp => Binary(format, RenderWebp(modules, png, extras)),
             OutputFormat.Bmp => Binary(format, MatrixBmpRenderer.Render(modules, png)),
             OutputFormat.Gif => Binary(format, RenderGif(modules, png, extras)),
             OutputFormat.Tiff => Binary(format, MatrixTiffRenderer.Render(modules, png, extras?.TiffCompression ?? TiffCompressionMode.Auto)),
@@ -47,7 +47,7 @@ internal static class MatrixOutputRenderer {
             OutputFormat.Xbm => Text(format, MatrixXbmRenderer.Render(modules, png)),
             OutputFormat.Xpm => Text(format, MatrixXpmRenderer.Render(modules, png)),
             OutputFormat.Tga => Binary(format, MatrixTgaRenderer.Render(modules, png)),
-            OutputFormat.Ico => Binary(format, MatrixIcoRenderer.Render(modules, png, MatrixRenderOptionsBuilder.BuildIco(options))),
+            OutputFormat.Ico => Binary(format, MatrixIcoRenderer.Render(modules, png, MatrixRenderOptionsBuilder.BuildIco(extras))),
             OutputFormat.Pdf => Binary(format, MatrixPdfRenderer.Render(modules, png, extras?.VectorMode ?? RenderMode.Vector)),
             OutputFormat.Eps => Text(format, MatrixEpsRenderer.Render(modules, png, extras?.VectorMode ?? RenderMode.Vector)),
             OutputFormat.Ascii => Text(format, MatrixAsciiRenderer.Render(modules, MatrixRenderOptionsBuilder.BuildAscii(options, extras))),
@@ -60,20 +60,20 @@ internal static class MatrixOutputRenderer {
     private static RenderedOutput Text(OutputFormat format, string text) => RenderedOutput.FromText(format, text);
 
     private static string RenderHtml(BitMatrix modules, MatrixOptions? options, RenderExtras? extras) {
-        var html = MatrixHtmlRenderer.Render(modules, MatrixRenderOptionsBuilder.BuildHtml(options));
+        var html = MatrixHtmlRenderer.Render(modules, MatrixRenderOptionsBuilder.BuildHtml(options, extras));
         var title = extras?.HtmlTitle;
         return string.IsNullOrEmpty(title) ? html : html.WrapHtml(title);
     }
 
-    private static byte[] RenderJpeg(BitMatrix modules, MatrixPngRenderOptions pngOptions, MatrixOptions? options) {
-        var jpegOptions = options?.JpegOptions;
+    private static byte[] RenderJpeg(BitMatrix modules, MatrixPngRenderOptions pngOptions, RenderExtras? extras) {
+        var jpegOptions = extras?.JpegOptions;
         return jpegOptions is null
-            ? MatrixJpegRenderer.Render(modules, pngOptions, options?.JpegQuality ?? 85)
+            ? MatrixJpegRenderer.Render(modules, pngOptions, extras?.JpegQuality ?? 85)
             : MatrixJpegRenderer.Render(modules, pngOptions, jpegOptions);
     }
 
-    private static byte[] RenderWebp(BitMatrix modules, MatrixPngRenderOptions pngOptions, MatrixOptions? options, RenderExtras? extras) {
-        var quality = options?.WebpQuality ?? 100;
+    private static byte[] RenderWebp(BitMatrix modules, MatrixPngRenderOptions pngOptions, RenderExtras? extras) {
+        var quality = extras?.WebpQuality ?? 100;
         return RenderAnimationHelpers.TryRenderMatrixWebp(extras, pngOptions, quality, out var webp)
             ? webp
             : MatrixWebpRenderer.Render(modules, pngOptions, quality);

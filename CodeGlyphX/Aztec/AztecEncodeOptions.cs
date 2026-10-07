@@ -21,7 +21,8 @@ public sealed class AztecEncodeOptions {
     public int? ErrorCorrectionPercent { get; set; }
 
     /// <summary>
-    /// When true, encode as compact Aztec when possible.
+    /// Restricts selection to compact symbols when true and full symbols when false.
+    /// Null permits either layout during automatic selection.
     /// </summary>
     public bool? Compact { get; set; }
 }

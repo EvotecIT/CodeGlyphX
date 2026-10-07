@@ -37,22 +37,15 @@ public static partial class AztecCode {
     /// <summary>
     /// Encodes a text payload as Aztec.
     /// </summary>
-    public static BitMatrix Encode(string text, AztecEncodeOptions? options = null) {
-        return AztecEncoder.Encode(text, options);
+    public static AztecSymbol Encode(string text, AztecEncodeOptions? options = null) {
+        return AztecEncoder.EncodeSymbol(text, options);
     }
 
     /// <summary>
     /// Encodes binary payload as Aztec.
     /// </summary>
-    public static BitMatrix Encode(ReadOnlySpan<byte> data, AztecEncodeOptions? options = null) {
-        var bytes = data.ToArray();
-        var eccPercent = options?.ErrorCorrectionPercent ?? 33;
-        var userSpecifiedLayers = 0;
-        if (options?.Layers is int layers && layers > 0) {
-            var compact = options.Compact ?? layers <= 4;
-            userSpecifiedLayers = compact ? -layers : layers;
-        }
-        return AztecEncoder.Encode(bytes, eccPercent, userSpecifiedLayers, options?.EciAssignmentNumber).Matrix;
+    public static AztecSymbol Encode(ReadOnlySpan<byte> data, AztecEncodeOptions? options = null) {
+        return AztecEncoder.EncodeSymbol(data.ToArray(), options);
     }
 
     /// <summary>
@@ -84,50 +77,4 @@ public static partial class AztecCode {
         return OutputWriter.Write(path, output);
     }
 
-    private static MatrixPngRenderOptions ToPngOptions(MatrixOptions? options) {
-        var opts = options ?? new MatrixOptions();
-        return new MatrixPngRenderOptions {
-            ModuleSize = opts.ModuleSize,
-            QuietZone = opts.QuietZone,
-            Foreground = opts.Foreground,
-            Background = opts.Background
-        };
-    }
-
-    private static IcoRenderOptions ToIcoOptions(MatrixOptions? options) {
-        var opts = options ?? new MatrixOptions();
-        return new IcoRenderOptions {
-            Sizes = opts.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
-            PreserveAspectRatio = opts.IcoPreserveAspectRatio
-        };
-    }
-
-    private static MatrixSvgRenderOptions ToSvgOptions(MatrixOptions? options) {
-        var opts = options ?? new MatrixOptions();
-        return new MatrixSvgRenderOptions {
-            ModuleSize = opts.ModuleSize,
-            QuietZone = opts.QuietZone,
-            DarkColor = ToCss(opts.Foreground),
-            LightColor = ToCss(opts.Background)
-        };
-    }
-
-    private static MatrixHtmlRenderOptions ToHtmlOptions(MatrixOptions? options) {
-        var opts = options ?? new MatrixOptions();
-        return new MatrixHtmlRenderOptions {
-            ModuleSize = opts.ModuleSize,
-            QuietZone = opts.QuietZone,
-            DarkColor = ToCss(opts.Foreground),
-            LightColor = ToCss(opts.Background),
-            EmailSafeTable = opts.HtmlEmailSafeTable
-        };
-    }
-
-    private static string ToCss(Rgba32 color) {
-        if (color.A == 255) {
-            return $"rgb({color.R},{color.G},{color.B})";
-        }
-        var a = color.A / 255.0;
-        return $"rgba({color.R},{color.G},{color.B},{a:0.###})";
-    }
 }

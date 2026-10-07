@@ -44,49 +44,49 @@ public static partial class Barcode {
     /// <summary>
     /// Attempts to decode a barcode from PNG bytes with an optional expected type hint.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+    public static bool TryDecodePng(byte[] png, SymbolFormat? expectedType, out BarcodeDecoded decoded) {
         return TryDecodePng(png, expectedType, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from PNG bytes with an optional expected type hint and image decode options.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, BarcodeType? expectedType, ImageDecodeOptions? options, out BarcodeDecoded decoded) {
+    public static bool TryDecodePng(byte[] png, SymbolFormat? expectedType, ImageDecodeOptions? options, out BarcodeDecoded decoded) {
         return TryDecodePng(png, expectedType, options, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from PNG bytes with an optional expected type hint, image decode options, and barcode decode options.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, out BarcodeDecoded decoded) {
+    public static bool TryDecodePng(byte[] png, SymbolFormat? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, out BarcodeDecoded decoded) {
         return TryDecodePng(png, expectedType, options, decodeOptions, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from PNG bytes with an optional expected type hint, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, BarcodeType? expectedType, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodePng(byte[] png, SymbolFormat? expectedType, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         return TryDecodePng(png, expectedType, null, cancellationToken, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from PNG bytes with an optional expected type hint and image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, BarcodeType? expectedType, ImageDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodePng(byte[] png, SymbolFormat? expectedType, ImageDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         return TryDecodePng(png, expectedType, options, decodeOptions: null, cancellationToken, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from PNG bytes with an optional expected type hint, image decode options, barcode decode options, and cancellation.
     /// </summary>
-    public static bool TryDecodePng(byte[] png, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodePng(byte[] png, SymbolFormat? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         if (png is null) throw new ArgumentNullException(nameof(png));
         decoded = null!;
         var token = cancellationToken;
         if (token.IsCancellationRequested) return false;
         if (!ImageDecodeHelper.TryDecodePngRgba32(png, options, out var rgba, out var width, out var height)) return false;
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
-        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType.HasValue ? SymbolCapabilities.GetBarcodeType(expectedType.Value) : null, decodeOptions, token, out decoded);
     }
 
     /// <summary>
@@ -107,52 +107,52 @@ public static partial class Barcode {
     /// <summary>
     /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(byte[] image, SymbolFormat? expectedType, out BarcodeDecoded decoded) {
         decoded = null!;
         if (image is null) throw new ArgumentNullException(nameof(image));
         if (!ImageReader.TryDecodeRgba32(image, out var rgba, out var width, out var height)) return false;
-        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, out decoded);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType.HasValue ? SymbolCapabilities.GetBarcodeType(expectedType.Value) : null, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, BarcodeType? expectedType, ImageDecodeOptions? options, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(byte[] image, SymbolFormat? expectedType, ImageDecodeOptions? options, out BarcodeDecoded decoded) {
         return TryDecodeImage(image, expectedType, options, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, and barcode decode options.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(byte[] image, SymbolFormat? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, out BarcodeDecoded decoded) {
         return TryDecodeImage(image, expectedType, options, decodeOptions, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, BarcodeType? expectedType, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(byte[] image, SymbolFormat? expectedType, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         return TryDecodeImage(image, expectedType, null, cancellationToken, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, BarcodeType? expectedType, ImageDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(byte[] image, SymbolFormat? expectedType, ImageDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         return TryDecodeImage(image, expectedType, options, decodeOptions: null, cancellationToken, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.
     /// </summary>
-    public static bool TryDecodeImage(byte[] image, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(byte[] image, SymbolFormat? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
         if (image is null) throw new ArgumentNullException(nameof(image));
         var token = cancellationToken;
         if (token.IsCancellationRequested) return false;
         if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
-        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType.HasValue ? SymbolCapabilities.GetBarcodeType(expectedType.Value) : null, decodeOptions, token, out decoded);
     }
 
     /// <summary>
@@ -172,27 +172,27 @@ public static partial class Barcode {
     /// <summary>
     /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, SymbolFormat? expectedType, out BarcodeDecoded decoded) {
         return TryDecodeImage(image, expectedType, options: null, decodeOptions: null, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, SymbolFormat? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, out BarcodeDecoded decoded) {
         return TryDecodeImage(image, expectedType, options, decodeOptions, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.
     /// </summary>
-    public static bool TryDecodeImage(ReadOnlySpan<byte> image, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(ReadOnlySpan<byte> image, SymbolFormat? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
         var token = cancellationToken;
         if (token.IsCancellationRequested) return false;
         if (!ImageReader.TryDecodeRgba32(image, options, out var rgba, out var width, out var height)) return false;
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
-        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType.HasValue ? SymbolCapabilities.GetBarcodeType(expectedType.Value) : null, decodeOptions, token, out decoded);
     }
 
     /// <summary>
@@ -213,58 +213,58 @@ public static partial class Barcode {
     /// <summary>
     /// Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, BarcodeType? expectedType, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(Stream stream, SymbolFormat? expectedType, out BarcodeDecoded decoded) {
         decoded = null!;
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (!ImageReader.TryDecodeRgba32(stream, out var rgba, out var width, out var height)) return false;
-        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, out decoded);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType.HasValue ? SymbolCapabilities.GetBarcodeType(expectedType.Value) : null, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, BarcodeType? expectedType, ImageDecodeOptions? options, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(Stream stream, SymbolFormat? expectedType, ImageDecodeOptions? options, out BarcodeDecoded decoded) {
         return TryDecodeImage(stream, expectedType, options, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, and barcode decode options.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(Stream stream, SymbolFormat? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, out BarcodeDecoded decoded) {
         return TryDecodeImage(stream, expectedType, options, decodeOptions, CancellationToken.None, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, BarcodeType? expectedType, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(Stream stream, SymbolFormat? expectedType, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         return TryDecodeImage(stream, expectedType, null, cancellationToken, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint and image decode options, with cancellation.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, BarcodeType? expectedType, ImageDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(Stream stream, SymbolFormat? expectedType, ImageDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         return TryDecodeImage(stream, expectedType, options, decodeOptions: null, cancellationToken, out decoded);
     }
 
     /// <summary>
     /// Attempts to decode a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) with an optional expected type hint, image decode options, barcode decode options, and cancellation.
     /// </summary>
-    public static bool TryDecodeImage(Stream stream, BarcodeType? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
+    public static bool TryDecodeImage(Stream stream, SymbolFormat? expectedType, ImageDecodeOptions? options, BarcodeDecodeOptions? decodeOptions, CancellationToken cancellationToken, out BarcodeDecoded decoded) {
         decoded = null!;
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var token = cancellationToken;
         if (token.IsCancellationRequested) return false;
         if (!ImageReader.TryDecodeRgba32(stream, options, out var rgba, out var width, out var height)) return false;
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options, out token);
-        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out decoded);
+        return BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType.HasValue ? SymbolCapabilities.GetBarcodeType(expectedType.Value) : null, decodeOptions, token, out decoded);
     }
 
     /// <summary>
     /// Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
     /// </summary>
-    public static DecodeResult<BarcodeDecoded> DecodeImageResult(byte[] image, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
+    public static DecodeResult<BarcodeDecoded> DecodeImageResult(byte[] image, SymbolFormat? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
         if (image is null) throw new ArgumentNullException(nameof(image));
         return DecodeImageResult((ReadOnlySpan<byte>)image, expectedType, options, decodeOptions, cancellationToken);
     }
@@ -272,7 +272,7 @@ public static partial class Barcode {
     /// <summary>
     /// Decodes a barcode from common image formats (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) in a span and returns diagnostics.
     /// </summary>
-    public static DecodeResult<BarcodeDecoded> DecodeImageResult(ReadOnlySpan<byte> image, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
+    public static DecodeResult<BarcodeDecoded> DecodeImageResult(ReadOnlySpan<byte> image, SymbolFormat? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
         var stopwatch = Stopwatch.StartNew();
         if (!DecodeResultHelpers.TryCheckImageLimits(image, options, out var info, out var formatKnown, out var limitMessage)) {
             return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.InvalidInput, info, stopwatch.Elapsed, limitMessage);
@@ -290,7 +290,7 @@ public static partial class Barcode {
 
             info = DecodeResultHelpers.EnsureDimensions(info, formatKnown, width, height);
 
-            if (BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType, decodeOptions, token, out var decoded)) {
+            if (BarcodeDecoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, expectedType.HasValue ? SymbolCapabilities.GetBarcodeType(expectedType.Value) : null, decodeOptions, token, out var decoded)) {
                 return new DecodeResult<BarcodeDecoded>(decoded, info, stopwatch.Elapsed);
             }
             var failure = DecodeResultHelpers.FailureForDecode(token);
@@ -303,7 +303,7 @@ public static partial class Barcode {
     /// <summary>
     /// Decodes a barcode from an image stream (PNG/BMP/PPM/PBM/PGM/PAM/XBM/XPM/TGA) and returns diagnostics.
     /// </summary>
-    public static DecodeResult<BarcodeDecoded> DecodeImageResult(Stream stream, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
+    public static DecodeResult<BarcodeDecoded> DecodeImageResult(Stream stream, SymbolFormat? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         var maxBytes = Math.Max(0, options?.MaxBytes ?? ImageReader.MaxImageBytes);
         if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
@@ -315,7 +315,7 @@ public static partial class Barcode {
     /// <summary>
     /// Decodes a batch of barcode images with shared settings and aggregated diagnostics.
     /// </summary>
-    public static DecodeBatchResult<BarcodeDecoded> DecodeImageBatch(IEnumerable<byte[]> images, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
+    public static DecodeBatchResult<BarcodeDecoded> DecodeImageBatch(IEnumerable<byte[]> images, SymbolFormat? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
         return DecodeBatchHelpers.Run(images, image => DecodeImageResult(image, expectedType, options, decodeOptions, cancellationToken), cancellationToken);
     }
 
@@ -447,62 +447,6 @@ public static partial class Barcode {
             throw new FormatException("PNG stream does not contain a decodable barcode.");
         }
         return decoded;
-    }
-
-    private static BarcodePngRenderOptions BuildPngOptions(BarcodeOptions? options) {
-        var opts = options ?? new BarcodeOptions();
-        return new BarcodePngRenderOptions {
-            ModuleSize = opts.ModuleSize,
-            QuietZone = opts.QuietZone,
-            HeightModules = opts.HeightModules,
-            Foreground = opts.Foreground,
-            Background = opts.Background,
-            LabelText = opts.LabelText,
-            LabelFontSize = opts.LabelFontSize,
-            LabelMargin = opts.LabelMargin,
-            LabelColor = opts.LabelColor,
-        };
-    }
-
-    private static IcoRenderOptions BuildIcoOptions(BarcodeOptions? options) {
-        var opts = options ?? new BarcodeOptions();
-        return new IcoRenderOptions {
-            Sizes = opts.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
-            PreserveAspectRatio = opts.IcoPreserveAspectRatio
-        };
-    }
-
-    private static BarcodeSvgRenderOptions BuildSvgOptions(BarcodeOptions? options) {
-        var opts = options ?? new BarcodeOptions();
-        return new BarcodeSvgRenderOptions {
-            ModuleSize = opts.ModuleSize,
-            QuietZone = opts.QuietZone,
-            HeightModules = opts.HeightModules,
-            BarColor = ColorUtils.ToCss(opts.Foreground),
-            BackgroundColor = ColorUtils.ToCss(opts.Background),
-            LabelText = opts.LabelText,
-            LabelFontSize = opts.LabelFontSize,
-            LabelMargin = opts.LabelMargin,
-            LabelColor = ColorUtils.ToCss(opts.LabelColor),
-            LabelFontFamily = opts.LabelFontFamily,
-        };
-    }
-
-    private static BarcodeHtmlRenderOptions BuildHtmlOptions(BarcodeOptions? options) {
-        var opts = options ?? new BarcodeOptions();
-        return new BarcodeHtmlRenderOptions {
-            ModuleSize = opts.ModuleSize,
-            QuietZone = opts.QuietZone,
-            HeightModules = opts.HeightModules,
-            BarColor = ColorUtils.ToCss(opts.Foreground),
-            BackgroundColor = ColorUtils.ToCss(opts.Background),
-            EmailSafeTable = opts.HtmlEmailSafeTable,
-            LabelText = opts.LabelText,
-            LabelFontSize = opts.LabelFontSize,
-            LabelMargin = opts.LabelMargin,
-            LabelColor = ColorUtils.ToCss(opts.LabelColor),
-            LabelFontFamily = opts.LabelFontFamily,
-        };
     }
 
     private static int ResolveMaxBytes(ImageDecodeOptions? options) {

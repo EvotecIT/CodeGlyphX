@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX;
 
@@ -20,11 +22,16 @@ public sealed class Barcode1D {
     /// </summary>
     public int TotalModules { get; }
 
+    /// <summary>Gets the encoded physical format, or null for a manually constructed sequence of runs.</summary>
+    public SymbolFormat? Format { get; }
+
     /// <summary>
     /// Creates a new <see cref="Barcode1D"/> from the provided segments.
     /// </summary>
     /// <param name="segments">Barcode segments in order (must contain at least one segment, each with a positive width).</param>
-    public Barcode1D(IEnumerable<BarSegment> segments) {
+    public Barcode1D(IEnumerable<BarSegment> segments) : this(segments, null) { }
+
+    internal Barcode1D(IEnumerable<BarSegment> segments, SymbolFormat? format) {
         if (segments is null) throw new ArgumentNullException(nameof(segments));
         var snapshot = segments.ToArray();
         if (snapshot.Length == 0) throw new ArgumentException("At least one segment is required.", nameof(segments));
@@ -36,5 +43,20 @@ public sealed class Barcode1D {
         }
         _segments = Array.AsReadOnly(snapshot);
         TotalModules = total;
+        Format = format;
+    }
+
+    /// <summary>Renders the encoded bars with layout and output settings.</summary>
+    public RenderedOutput Render(OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) =>
+        Barcode.Render(this, format, options, extras);
+
+    /// <summary>Saves the barcode, selecting the output format from the file extension.</summary>
+    public string Save(string path, BarcodeOptions? options = null, RenderExtras? extras = null) =>
+        OutputWriter.Write(path, Render(OutputFormatInfo.Resolve(path, OutputFormat.Png), options, extras));
+
+    /// <summary>Writes the barcode to a stream in the specified output format.</summary>
+    public void Save(Stream stream, OutputFormat format, BarcodeOptions? options = null, RenderExtras? extras = null) {
+        if (stream is null) throw new ArgumentNullException(nameof(stream));
+        OutputWriter.Write(stream, Render(format, options, extras));
     }
 }

@@ -23,10 +23,20 @@ using System.Threading;
 namespace CodeGlyphX;
 
 /// <summary>
-/// Fluent barcode builder returned by <see cref="Barcode.Create(BarcodeType, string, BarcodeOptions?)"/>.
+/// Fluent barcode builder returned by <see cref="Barcode.Create(SymbolFormat, string, BarcodeOptions?)"/>.
 /// </summary>
 public sealed class BarcodeBuilder {
-    private readonly BarcodeType _type;
+    /// <summary>Gets the format-specific output settings configured for this builder.</summary>
+    public RenderExtras OutputOptions { get; } = new RenderExtras();
+
+    /// <summary>Configures format-specific output settings without changing symbol layout.</summary>
+    public BarcodeBuilder WithOutputOptions(Action<RenderExtras> configure) {
+        if (configure is null) throw new ArgumentNullException(nameof(configure));
+        configure(OutputOptions);
+        return this;
+    }
+
+    private readonly SymbolFormat _type;
     private readonly string _content;
 
     /// <summary>
@@ -34,10 +44,10 @@ public sealed class BarcodeBuilder {
     /// </summary>
     public BarcodeOptions Options { get; }
 
-    internal BarcodeBuilder(BarcodeType type, string content, BarcodeOptions? options) {
+    internal BarcodeBuilder(SymbolFormat type, string content, BarcodeOptions? options) {
         _type = type;
         _content = content ?? throw new ArgumentNullException(nameof(content));
-        Options = options ?? new BarcodeOptions();
+        Options = options?.Clone() ?? new BarcodeOptions();
     }
 
     /// <summary>
@@ -110,7 +120,7 @@ public sealed class BarcodeBuilder {
     /// Sets JPEG quality.
     /// </summary>
     public BarcodeBuilder WithJpegQuality(int quality) {
-        Options.JpegQuality = quality;
+        OutputOptions.JpegQuality = quality;
         return this;
     }
 
@@ -118,7 +128,7 @@ public sealed class BarcodeBuilder {
     /// Sets JPEG encoding options.
     /// </summary>
     public BarcodeBuilder WithJpegOptions(JpegEncodeOptions options) {
-        Options.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
+        OutputOptions.JpegOptions = options ?? throw new ArgumentNullException(nameof(options));
         return this;
     }
 
@@ -166,7 +176,7 @@ public sealed class BarcodeBuilder {
     /// Sets ICO output sizes (in pixels).
     /// </summary>
     public BarcodeBuilder WithIcoSizes(params int[] sizes) {
-        Options.IcoSizes = sizes;
+        OutputOptions.IcoSizes = sizes is null ? throw new ArgumentNullException(nameof(sizes)) : (int[])sizes.Clone();
         return this;
     }
 
@@ -174,7 +184,7 @@ public sealed class BarcodeBuilder {
     /// Sets ICO aspect ratio preservation behavior.
     /// </summary>
     public BarcodeBuilder WithIcoPreserveAspectRatio(bool enabled = true) {
-        Options.IcoPreserveAspectRatio = enabled;
+        OutputOptions.IcoPreserveAspectRatio = enabled;
         return this;
     }
 
@@ -187,7 +197,7 @@ public sealed class BarcodeBuilder {
     /// Renders the configured barcode to the requested output format.
     /// </summary>
     public RenderedOutput Render(OutputFormat format, RenderExtras? extras = null) {
-        return Barcode.Render(_type, _content, format, Options, extras);
+        return Barcode.Render(_type, _content, format, Options, extras ?? OutputOptions);
     }
 
     /// <summary>
