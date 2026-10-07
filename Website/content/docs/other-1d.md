@@ -30,10 +30,10 @@ CodeGlyphX supports a wide range of additional 1D symbologies beyond the most co
 using CodeGlyphX;
 using CodeGlyphX.Rendering.Png;
 
-Barcode.Save(BarcodeType.ITF14, "12345678901231", "itf14.png");
-Barcode.Save(BarcodeType.Codabar, "A40156B", "codabar.png");
-Barcode.Save(BarcodeType.Telepen, "TELEPEN-123", "telepen.png");
-Barcode.Save(BarcodeType.GS1DataBarExpanded, "01095011015300031725010110ABC123", "gs1-expanded.png");
+Barcode.Save(SymbolFormat.Itf14, "12345678901231", "itf14.png");
+Barcode.Save(SymbolFormat.Codabar, "A40156B", "codabar.png");
+Barcode.Save(SymbolFormat.Telepen, "TELEPEN-123", "telepen.png");
+Barcode.Save(SymbolFormat.Gs1DataBarExpanded, "01095011015300031725010110ABC123", "gs1-expanded.png");
 
 var imb = MatrixBarcodeEncoder.EncodeUspsImb("0123456709498765432101234567891");
 MatrixPngRenderer.RenderToFile(

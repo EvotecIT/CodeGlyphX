@@ -20,36 +20,36 @@ public class BarcodeBenchmarks
     [Benchmark(Description = "Code 128 PNG")]
     public byte[] Code128_Png()
     {
-        return Barcode.Render(BarcodeType.Code128, Code128Text, OutputFormat.Png).Data;
+        return Barcode.Render(SymbolFormat.Code128, Code128Text, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "Code 128 SVG")]
     public string Code128_Svg()
     {
-        return Barcode.Render(BarcodeType.Code128, Code128Text, OutputFormat.Svg).GetText();
+        return Barcode.Render(SymbolFormat.Code128, Code128Text, OutputFormat.Svg).GetText();
     }
 
     [Benchmark(Description = "EAN PNG")]
     public byte[] Ean_Png()
     {
-        return Barcode.Render(BarcodeType.EAN, EanText, OutputFormat.Png).Data;
+        return Barcode.Render(SymbolFormat.Ean, EanText, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "Code 39 PNG")]
     public byte[] Code39_Png()
     {
-        return Barcode.Render(BarcodeType.Code39, Code39Text, OutputFormat.Png).Data;
+        return Barcode.Render(SymbolFormat.Code39, Code39Text, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "Code 93 PNG")]
     public byte[] Code93_Png()
     {
-        return Barcode.Render(BarcodeType.Code93, Code39Text, OutputFormat.Png).Data;
+        return Barcode.Render(SymbolFormat.Code93, Code39Text, OutputFormat.Png).ToArray();
     }
 
     [Benchmark(Description = "UPC-A PNG")]
     public byte[] UpcA_Png()
     {
-        return Barcode.Render(BarcodeType.UPCA, "012345678905", OutputFormat.Png).Data;
+        return Barcode.Render(SymbolFormat.UpcA, "012345678905", OutputFormat.Png).ToArray();
     }
 }

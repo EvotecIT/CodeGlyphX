@@ -2,11 +2,10 @@
 
 The roadmap lists unresolved product work only. Completed implementation history belongs in releases and pull requests.
 
-## Current release boundary: 2.0
+## API and release quality
 
-- [ ] Ship the smaller rendering API and documented migration path.
-- [ ] Keep solution, package, symbol, NativeAOT, docs, and website checks green on the release commit.
-- [ ] Publish 2.0 and verify the public NuGet package contents before recommending it to consumers.
+- [ ] Keep solution, package, symbol, NativeAOT, docs, and website checks green on each release commit.
+- [ ] Verify published NuGet package contents and package-only consumer builds before recommending a release.
 
 ## Decoder reliability
 

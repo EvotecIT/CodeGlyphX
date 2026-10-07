@@ -62,16 +62,21 @@ var scan = SymbolScanner.Scan(frame, new ScanOptions {
 });
 ```
 
-## Legacy facade and stream input
+## Streams and async file input
 
-`CodeGlyph` remains available for compatibility and for stream-based input:
+Stream scans consume the remaining input from its current position. Set `Position = 0` before scanning the same stream again.
 
 ```csharp
 using var stream = File.OpenRead("barcode.png");
-if (CodeGlyph.TryDecodeImage(stream, out var decoded)) {
-    Console.WriteLine(decoded.Text);
+var scan = SymbolScanner.Scan(stream, ScanOptions.Balanced(2000));
+foreach (var symbol in scan.Symbols) {
+    Console.WriteLine(symbol.Text);
 }
+
+var fileScan = await SymbolScanner.ScanFileAsync("barcode.png", ScanOptions.Balanced(2000));
 ```
+
+`Status == Success` means at least one result exists. Inspect `CompletionReason` for `Completed`, `SymbolLimitReached`, `Cancelled` or `DeadlineExceeded`; results remain available when the scan stops early. `Metadata` holds typed family information, while `HasRawBytes` indicates whether the decoder recovered an exact byte payload.
 
 ## Multiple results
 
@@ -79,6 +84,8 @@ if (CodeGlyph.TryDecodeImage(stream, out var decoded)) {
 var scan = SymbolScanner.Scan(image, new ScanOptions {
     Formats = new[] { SymbolFormat.QrCode },
     MaxSymbols = 16,
+    EnableTileScan = true,
+    TileGrid = 3,
     Qr = QrPixelDecodeOptions.Robust().WithTileScan(enabled: true, tileGrid: 3)
 });
 
@@ -95,7 +102,7 @@ PNG, JPEG, WebP, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, and XPM are
 
 - `MaxBytes` and `MaxPixels`: `null` inherits the corresponding `ImageReader` global; `0` disables that per-call limit.
 - `MaxDimension`: validates the original image first and then resizes the single-image RGBA output. Recognition uses only the resized pixels and does not retry at the original resolution. It does not reduce codec peak memory.
-- `RecognitionBudgetMilliseconds`: cooperatively limits symbol recognition after raster decoding; it does not time the codec. Multi-format `CodeGlyph` entry points apply it independently to each candidate decoder, so it is not a wall-clock limit for the complete candidate sequence.
+- `RecognitionBudgetMilliseconds`: cooperatively limits specialist symbol recognition after raster decoding; it does not time the codec. Use `ScanOptions.TimeoutMilliseconds` for one deadline across image decoding and all selected scanner families.
 - Animation frame, duration, and per-frame pixel limits follow the same `null`/`0`/positive inheritance model.
 
 ## Known limits
@@ -119,8 +126,10 @@ pwsh Build/Download-ExternalSamples.ps1
 ## Diagnostics
 
 ```csharp
-if (!CodeGlyph.TryDecodeImage(image, out var decoded, out var diagnostics, options: null)) {
-    Console.WriteLine(diagnostics.FailureReason);
-    Console.WriteLine(diagnostics.Failure);
-}
+var scan = SymbolScanner.Scan(image, ScanOptions.Balanced(2000));
+Console.WriteLine(scan.Status);
+Console.WriteLine(scan.CompletionReason);
+Console.WriteLine(scan.Failure);
 ```
+
+Use a specialist decoder when its detailed attempt diagnostics are required. A scan's search region records where recognition ran; only formats flagged with `ReportsGeometry` provide measured symbol geometry.

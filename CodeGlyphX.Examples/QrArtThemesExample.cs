@@ -27,8 +27,8 @@ internal static class QrArtThemesExample {
         QrArtTheme theme,
         QrArtVariant variant,
         int intensity) {
-        QR.Save(payload, Path.Combine(dir, fileName), new QrEasyOptions {
+        QR.Save(payload, Path.Combine(dir, fileName), new QrRenderOptions {
             Art = QrArt.Theme(theme, variant, intensity)
-        });
+        }, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
     }
 }

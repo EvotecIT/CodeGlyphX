@@ -10,8 +10,8 @@ internal static class QrConnectedExample {
     public static void Run(string outputDir) {
         var payload = QrPayload.Url("https://example.com/qr/connected");
 
-        var options = new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+        var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
+        var options = new QrRenderOptions {
             ModuleSize = 10,
             QuietZone = 4,
             Foreground = new Rgba32(88, 120, 255),
@@ -60,14 +60,14 @@ internal static class QrConnectedExample {
             },
         };
 
-        QR.Save(payload, Path.Combine(outputDir, "qr-connected-rounded.png"), options);
+        QR.Save(payload, Path.Combine(outputDir, "qr-connected-rounded.png"), options, encoding);
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-connected-rounded.pdf"),
-            QrCode.Render(payload, OutputFormat.Pdf, options, new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Pdf, options, encoding, extras: new RenderExtras { VectorMode = RenderMode.Raster })
         );
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-connected-rounded.eps"),
-            QrCode.Render(payload, OutputFormat.Eps, options, new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Eps, options, encoding, extras: new RenderExtras { VectorMode = RenderMode.Raster })
         );
     }
 }

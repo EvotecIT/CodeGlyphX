@@ -34,7 +34,7 @@ internal static class CompareBenchmarkHelpers
     public static int BarcodeWidthPx(BarcodeType type, string content, BarcodeOptions options)
     {
         if (options is null) throw new ArgumentNullException(nameof(options));
-        var barcode = Barcode.Encode(type, content);
+        var barcode = BarcodeEncoder.Encode(type, content);
         return (barcode.TotalModules + options.QuietZone * 2) * options.ModuleSize;
     }
 

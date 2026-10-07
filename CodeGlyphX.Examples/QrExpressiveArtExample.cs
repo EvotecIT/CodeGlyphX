@@ -18,7 +18,7 @@ internal static class QrExpressiveArtExample {
         const string payload = "https://example.com/art"; // NOSONAR - reserved example URI.
         var dir = Path.Combine(outputDir, "qr-expressive-art");
         Directory.CreateDirectory(dir);
-        var qr = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         var scenes = new[] {
             ("botanical", QrPngModuleShape.Leaf, new Rgba32(17, 46, 34)),
             ("citrus", QrPngModuleShape.Rounded, new Rgba32(65, 25, 18)),

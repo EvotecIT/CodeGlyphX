@@ -7,7 +7,7 @@ internal static class QrIllustratedExample {
         var directory = Path.Combine(outputDir, "qr-illustrated");
         Directory.CreateDirectory(directory);
         const string payload = "https://example.com/art";
-        var qr = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         foreach (var style in Enum.GetValues<QrIllustratedStyle>()) {
             var subject = style == QrIllustratedStyle.EngravedPortrait ? "portrait" : style == QrIllustratedStyle.BotanicalBadge ? "flower" : "logo";
             var pixels = QrArtIllustrations.Draw(subject, 640);

@@ -17,8 +17,8 @@ internal static class EvotecExamples {
             return;
         }
 
-        var withLogo = new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+        var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H, MinVersion = 4 };
+        var withLogo = new QrRenderOptions {
             LogoPng = logoBytes,
             LogoScale = 0.22,
             LogoPaddingPx = 6,
@@ -26,8 +26,8 @@ internal static class EvotecExamples {
             LogoCornerRadiusPx = 8,
         };
 
-        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.png"), withLogo);
-        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.svg"), withLogo);
-        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.html"), withLogo, new RenderExtras { HtmlTitle = "Evotec QR" });
+        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.png"), withLogo, encoding);
+        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.svg"), withLogo, encoding);
+        QR.Save(url, Path.Combine(outputDir, "qr-evotec-logo.html"), withLogo, encoding, extras: new RenderExtras { HtmlTitle = "Evotec QR" });
     }
 }

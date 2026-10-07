@@ -42,13 +42,13 @@ internal static class PreflightChecks
 
         Check("CodeGlyphX QR PNG", () =>
         {
-            var png = QrCode.Render(QrText, OutputFormat.Png).Data;
+            var png = QR.Render(QrText, OutputFormat.Png).ToArray();
             if (png.Length == 0) throw new InvalidOperationException("Empty PNG output.");
         });
 
         Check("CodeGlyphX Barcode PNG", () =>
         {
-            var png = Barcode.Render(BarcodeType.EAN, EanText, OutputFormat.Png, new BarcodeOptions()).Data;
+            var png = Barcode.Render(SymbolFormat.Ean, EanText, OutputFormat.Png, new BarcodeOptions()).ToArray();
             if (png.Length == 0) throw new InvalidOperationException("Empty PNG output.");
         });
 

@@ -31,7 +31,10 @@ internal static partial class QrStyleBoardExample {
                 options.LogoPng = preset.LogoPng;
             }
 
-            QR.Save(preset.Payload, path, options);
+            QR.Save(preset.Payload, path, options, new QrEncodingOptions {
+                ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+                MinVersion = options.LogoPng is null ? 1 : 4
+            });
 
             manifestEntries.Add(new StyleBoardEntry(preset.Name, fileName, preset.Payload));
         }
@@ -551,7 +554,7 @@ internal static partial class QrStyleBoardExample {
     [JsonSerializable(typeof(List<StyleBoardEntry>))]
     private sealed partial class StyleBoardJsonContext : JsonSerializerContext;
 
-    private static QrEasyOptions BaseSticker(
+    private static QrRenderOptions BaseSticker(
         Rgba32 fg,
         QrPngPaletteOptions? palette,
         QrPngModuleShape shape,
@@ -564,8 +567,7 @@ internal static partial class QrStyleBoardExample {
         QrPngForegroundPatternOptions? pattern = null,
         byte[]? logo = null,
         Rgba32? background = null) {
-        return new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+        return new QrRenderOptions {
             // Web-friendly size: keeps assets lightweight while remaining crisp in the grid.
             TargetSizePx = StyleBoardTargetSizePx,
             TargetSizeIncludesQuietZone = true,
@@ -1074,6 +1076,6 @@ internal static partial class QrStyleBoardExample {
     private sealed record StylePreset(
         string Name,
         string Payload,
-        Func<QrEasyOptions> CreateOptions,
+        Func<QrRenderOptions> CreateOptions,
         byte[]? LogoPng = null);
 }

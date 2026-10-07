@@ -8,7 +8,7 @@ namespace CodeGlyphX.Examples;
 internal static class QrDecodeExample {
     public static void Run(string outputDir) {
         var payload = "Decode me with CodeGlyphX 1234";
-        var png = QrCode.Render(payload, OutputFormat.Png).Data;
+        var png = QR.Render(payload, OutputFormat.Png).ToArray();
         if (QR.TryDecodePng(png, out var decoded)) {
             decoded.Text.WriteText(outputDir, "qr-decode.txt");
         }

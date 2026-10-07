@@ -28,10 +28,10 @@ public class QrPipelineBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        var opts = new QrEasyOptions();
-        _qrShort = QrEasy.Encode(ShortText, opts);
-        _qrMedium = QrEasy.Encode(MediumText, opts);
-        _qrLong = QrEasy.Encode(LongText, opts);
+        var opts = new QrRenderOptions();
+        _qrShort = QR.Encode(ShortText);
+        _qrMedium = QR.Encode(MediumText);
+        _qrLong = QR.Encode(LongText);
         _renderShort = CreateDefaultRenderOptions(opts);
         _renderMedium = _renderShort;
         _renderLong = _renderShort;
@@ -40,19 +40,19 @@ public class QrPipelineBenchmarks
     [Benchmark(Description = "QR Encode (short text)")]
     public QrCode QrEncode_ShortText()
     {
-        return QrEasy.Encode(ShortText);
+        return QR.Encode(ShortText);
     }
 
     [Benchmark(Description = "QR Encode (medium text)")]
     public QrCode QrEncode_MediumText()
     {
-        return QrEasy.Encode(MediumText);
+        return QR.Encode(MediumText);
     }
 
     [Benchmark(Description = "QR Encode (long text)")]
     public QrCode QrEncode_LongText()
     {
-        return QrEasy.Encode(LongText);
+        return QR.Encode(LongText);
     }
 
     [Benchmark(Description = "QR Render PNG (short, pre-encoded)")]
@@ -91,7 +91,7 @@ public class QrPipelineBenchmarks
         return QrPngRenderer.RenderPixels(_qrLong.Modules, _renderLong, out _, out _, out _);
     }
 
-    private static QrPngRenderOptions CreateDefaultRenderOptions(QrEasyOptions opts)
+    private static QrPngRenderOptions CreateDefaultRenderOptions(QrRenderOptions opts)
     {
         return new QrPngRenderOptions
         {

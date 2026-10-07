@@ -38,7 +38,7 @@ public class Pdf417CompareBenchmarks
     public void Setup()
     {
 #if COMPARE_ZXING
-        var modules = Pdf417Code.Encode(LongText);
+        var modules = Pdf417Code.Encode(LongText).Modules;
         _widthPx = CompareBenchmarkHelpers.MatrixWidthPx(modules, _options);
         _heightPx = CompareBenchmarkHelpers.MatrixHeightPx(modules, _options);
         var zxingOptions = new PDF417EncodingOptions
@@ -63,7 +63,7 @@ public class Pdf417CompareBenchmarks
     [Benchmark(Baseline = true, Description = "CodeGlyphX PDF417 PNG")]
     public byte[] CodeGlyphX_Pdf417_Png()
     {
-        return Pdf417Code.Render(LongText, OutputFormat.Png, renderOptions: _options).Data;
+        return Pdf417Code.Render(LongText, OutputFormat.Png, renderOptions: _options).ToArray();
     }
 
 #if COMPARE_ZXING

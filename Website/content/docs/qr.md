@@ -21,10 +21,14 @@ using CodeGlyphX;
 QR.Save("https://example.com", "qr.png");
 
 // With error correction level
-QR.Save("https://example.com", "qr.png", new QrEasyOptions {
+QR.Save("https://example.com", "qr.png", encodingOptions: new QrEncodingOptions {
     ErrorCorrectionLevel = QrErrorCorrectionLevel.H
 });
 ```
+
+Encoding controls belong to `QrEncodingOptions`; appearance belongs to `QrRenderOptions`. An encoded `QrCode` can be rendered repeatedly without changing its payload or version. See the [3.0 migration guide](/docs/migration-3/) for the option and result changes.
+
+SVG, SVGZ and HTML reject explicit raster-only effects with `NotSupportedException`. Use PNG or raster-mode PDF/EPS to preserve those effects.
 
 ## Error Correction Levels
 
@@ -41,7 +45,7 @@ QR.Save("https://example.com", "qr.png", new QrEasyOptions {
 using CodeGlyphX;
 using CodeGlyphX.Rendering.Png;
 
-var options = new QrEasyOptions
+var options = new QrRenderOptions
 {
     ModuleShape = QrPngModuleShape.Rounded,
     ModuleCornerRadiusPx = 3,
@@ -61,12 +65,13 @@ QR.Save("https://example.com", "styled-qr.png", options);
 For a high-level art theme, start with conservative guardrails and inspect the static report:
 
 ```csharp
-var options = new QrEasyOptions {
+var options = new QrRenderOptions {
     Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Conservative, intensity: 60)
 };
 
-var report = QrEasy.EvaluateScanHeuristics("https://example.com", options);
-QR.Save("https://example.com", "styled-qr.png", options);
+var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
+var report = QR.EvaluateScanHeuristics("https://example.com", options, encoding);
+QR.Save("https://example.com", "styled-qr.png", options, encoding);
 ```
 
 `PassesHeuristics` checks configuration properties such as contrast, quiet zone, module scale, functional-pattern protection, and logo coverage. It is not a decode test and cannot guarantee interoperability. Test the final artifact on every scanner, authenticator, camera, display, print process, and device class your product supports.
@@ -84,13 +89,13 @@ var logo = LogoBuilder.CreateCirclePng(
     out _,
     out _);
 
-var png = QR.Create("https://example.com")
+var png = QR.Create("https://example.com", encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H, MinVersion = 4 })
     .WithLogoPng(logo)
     .WithLogoScale(0.22)
     .WithLogoPaddingPx(6)
     .WithStyle(QrRenderStyle.Fancy)
     .Render(OutputFormat.Png)
-    .Data;
+    .ToArray();
 ```
 
 ### Style Board Presets (Homepage Gallery)
@@ -130,9 +135,8 @@ using CodeGlyphX;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 
-var options = new QrEasyOptions
+var options = new QrRenderOptions
 {
-    ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
     TargetSizePx = 384,
     TargetSizeIncludesQuietZone = true,
     ModuleSize = 10,
@@ -178,5 +182,6 @@ var options = new QrEasyOptions
     }
 };
 
-QR.Save("https://codeglyphx.com/docs/qr?style=neon-dot#styling-options", "neon-dot.png", options);
+QR.Save("https://codeglyphx.com/docs/qr?style=neon-dot#styling-options", "neon-dot.png", options,
+    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
 ```

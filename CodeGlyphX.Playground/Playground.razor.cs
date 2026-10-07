@@ -184,6 +184,7 @@ public partial class Playground {
     // Output
     internal string? ImageDataUri { get; set; }
     internal string? SvgDataUri { get; set; }
+    internal string? SvgUnavailableReason { get; set; }
     internal string? ErrorMessage { get; set; }
     internal QrArtHeuristicReport? HeuristicReport { get; set; }
     internal string? DecodeImageDataUri { get; set; }

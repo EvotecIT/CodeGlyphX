@@ -40,10 +40,10 @@ using CodeGlyphX;
 using CodeGlyphX.Rendering;
 
 // Get raw PNG bytes
-byte[] pngBytes = QrCode.Render("Hello", OutputFormat.Png).Data;
+byte[] pngBytes = QR.Render("Hello", OutputFormat.Png).ToArray();
 
 // Get SVG string
-string svg = QrCode.Render("Hello", OutputFormat.Svg).GetText();
+string svg = QR.Render("Hello", OutputFormat.Svg).GetText();
 
 // Get Base64 data URI
 string dataUri = "data:image/png;base64," + Convert.ToBase64String(pngBytes);

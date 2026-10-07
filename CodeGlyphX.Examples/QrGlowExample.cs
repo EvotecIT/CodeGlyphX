@@ -10,8 +10,8 @@ internal static class QrGlowExample {
     public static void Run(string outputDir) {
         var payload = QrPayload.Url("https://example.com/qr/glow");
 
-        var options = new QrEasyOptions {
-            ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
+        var encoding = new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H };
+        var options = new QrRenderOptions {
             ModuleSize = 10,
             QuietZone = 4,
             Foreground = new Rgba32(0, 255, 240),
@@ -63,14 +63,14 @@ internal static class QrGlowExample {
             },
         };
 
-        QR.Save(payload, Path.Combine(outputDir, "qr-glow.png"), options);
+        QR.Save(payload, Path.Combine(outputDir, "qr-glow.png"), options, encoding);
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-glow.pdf"),
-            QrCode.Render(payload, OutputFormat.Pdf, options, new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Pdf, options, encoding, extras: new RenderExtras { VectorMode = RenderMode.Raster })
         );
         OutputWriter.Write(
             Path.Combine(outputDir, "qr-glow.eps"),
-            QrCode.Render(payload, OutputFormat.Eps, options, new RenderExtras { VectorMode = RenderMode.Raster })
+            QR.Render(payload, OutputFormat.Eps, options, encoding, extras: new RenderExtras { VectorMode = RenderMode.Raster })
         );
     }
 }

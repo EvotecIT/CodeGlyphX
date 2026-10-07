@@ -9,7 +9,7 @@ internal static class QrArtStudioExample {
         const string payload = "https://example.com/art";
         var directory = Path.Combine(outputDir, "qr-art-studio");
         Directory.CreateDirectory(directory);
-        var code = QR.Encode(payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var code = QR.Encode(payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         foreach (var scene in new[] { "portrait", "flower", "architecture", "logo" }) {
             var pixels = QrArtIllustrations.Draw(scene, 640);
             File.WriteAllBytes(Path.Combine(directory, scene + "-source.png"), PngImageEncoder.EncodeRgba32(pixels, 640, 640));

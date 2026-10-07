@@ -18,16 +18,16 @@ EAN (European Article Number) and UPC (Universal Product Code) are the standard 
 using CodeGlyphX;
 
 // EAN-13 (International)
-Barcode.Save(BarcodeType.EAN, "5901234123457", "ean13.png");
+Barcode.Save(SymbolFormat.Ean, "5901234123457", "ean13.png");
 
 // EAN-8 (Smaller packages)
-Barcode.Save(BarcodeType.EAN, "96385074", "ean8.png");
+Barcode.Save(SymbolFormat.Ean, "96385074", "ean8.png");
 
 // UPC-A (North America)
-Barcode.Save(BarcodeType.UPCA, "012345678905", "upca.png");
+Barcode.Save(SymbolFormat.UpcA, "012345678905", "upca.png");
 
 // UPC-E (Compact)
-Barcode.Save(BarcodeType.UPCE, "01234565", "upce.png");
+Barcode.Save(SymbolFormat.UpcE, "01234565", "upce.png");
 ```
 
 ## Format Guide

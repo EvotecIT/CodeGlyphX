@@ -15,17 +15,17 @@ internal static class QrColorfulGalleryExample {
         var exports = new List<byte[]>();
         var checks = new List<string> { "Design\tFile\tPayload\tOriginal\tHalfSize\tBoxBlur" };
 
-        Save("Prism", "prism", QrCode.Render(Payload, OutputFormat.Png,
+        Save("Prism", "prism", QR.Render(Payload, OutputFormat.Png,
             Sticker(QrPngModuleShape.ConnectedRounded, QrPngPaletteMode.Cycle,
-                new[] { R(155, 15, 105), R(81, 31, 170), R(0, 112, 138) }, R(255, 89, 168), R(54, 218, 239)), new RenderExtras { PngCompressionLevel = 6 }).Data);
-        Save("Candy pop", "candy-pop", QrCode.Render(Payload, OutputFormat.Png,
+                new[] { R(155, 15, 105), R(81, 31, 170), R(0, 112, 138) }, R(255, 89, 168), R(54, 218, 239)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new RenderExtras { PngCompressionLevel = 6 }).ToArray());
+        Save("Candy pop", "candy-pop", QR.Render(Payload, OutputFormat.Png,
             Sticker(QrPngModuleShape.Squircle, QrPngPaletteMode.Random,
-                new[] { R(165, 23, 89), R(109, 31, 160), R(20, 95, 157) }, R(255, 166, 219), R(139, 156, 255)), new RenderExtras { PngCompressionLevel = 6 }).Data);
-        Save("Neon orbit", "neon-orbit", QrCode.Render(Payload, OutputFormat.Png,
+                new[] { R(165, 23, 89), R(109, 31, 160), R(20, 95, 157) }, R(255, 166, 219), R(139, 156, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new RenderExtras { PngCompressionLevel = 6 }).ToArray());
+        Save("Neon orbit", "neon-orbit", QR.Render(Payload, OutputFormat.Png,
             Sticker(QrPngModuleShape.Circle, QrPngPaletteMode.Rings,
-                new[] { R(14, 98, 122), R(37, 40, 153), R(127, 23, 143) }, R(32, 231, 212), R(190, 66, 255)), new RenderExtras { PngCompressionLevel = 6 }).Data);
+                new[] { R(14, 98, 122), R(37, 40, 153), R(127, 23, 143) }, R(32, 231, 212), R(190, 66, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new RenderExtras { PngCompressionLevel = 6 }).ToArray());
 
-        var qr = QR.Encode(Payload, new QrEasyOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
+        var qr = QR.Encode(Payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         foreach (var (name, slug, shape) in new[] {
             ("Aurora ribbons", "aurora", QrPngModuleShape.ConnectedSquircle),
             ("Tropical leaves", "tropical", QrPngModuleShape.Leaf),
@@ -60,9 +60,8 @@ internal static class QrColorfulGalleryExample {
         }
     }
 
-    private static QrEasyOptions Sticker(QrPngModuleShape shape, QrPngPaletteMode mode,
+    private static QrRenderOptions Sticker(QrPngModuleShape shape, QrPngPaletteMode mode,
         Rgba32[] ink, Rgba32 start, Rgba32 end) => new() {
-        ErrorCorrectionLevel = QrErrorCorrectionLevel.H,
         ModuleSize = 16, QuietZone = 4,
         Foreground = ink[1], Background = Rgba32.White,
         ModuleShape = shape, ModuleScale = 0.94,

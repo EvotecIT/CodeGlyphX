@@ -22,7 +22,7 @@ public class DecodeGuardBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        _png = QrCode.Render("GUARD", OutputFormat.Png, new QrEasyOptions { ModuleSize = 8, QuietZone = 2 }).Data;
+        _png = QR.Render("GUARD", OutputFormat.Png, new QrRenderOptions { ModuleSize = 8, QuietZone = 2 }).ToArray();
     }
 
     [Benchmark(Description = "ImageReader Decode (default limits)")]

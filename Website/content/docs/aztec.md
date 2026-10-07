@@ -34,7 +34,7 @@ using CodeGlyphX.Rendering;
 
 byte[] payload = { 0x00, 0x01, 0xFE, 0xFF };
 
-var png = AztecCode.Render(payload, OutputFormat.Png).Data;
+var png = AztecCode.Render(payload, OutputFormat.Png).ToArray();
 AztecCode.Save(payload, "binary-ticket.svg");
 ```
 

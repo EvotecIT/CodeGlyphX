@@ -40,7 +40,8 @@ Code 128, GS1-128, Code 39/93/11, Codabar, MSI, Plessey, Telepen, Pharmacode, Co
 - **Output formats** - PNG, SVG, PDF, EPS, HTML, and more. [Output formats](/docs/renderers/)
 - **API Reference** - Full type and method documentation. [API reference](/api/)
 - **FAQ** - Common questions and troubleshooting. [FAQ](/faq/)
-- **2.0 migration** - Removed aliases and behavior changes. [Migration guide](/docs/migration-2/)
+- **3.0 migration** - Separate encoding/appearance, unified scanning and stable result ownership. [Migration guide](/docs/migration-3/)
+- **2.0 migration archive** - Earlier alias and behavior changes. [2.0 guide](/docs/migration-2/)
 
 ## Quick Example
 
@@ -51,7 +52,7 @@ using CodeGlyphX;
 QR.Save("https://evotec.xyz", "website.png");
 
 // Generate a barcode
-Barcode.Save(BarcodeType.Code128, "PRODUCT-123", "barcode.png");
+Barcode.Save(SymbolFormat.Code128, "PRODUCT-123", "barcode.png");
 
 // Decode an image
 if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))

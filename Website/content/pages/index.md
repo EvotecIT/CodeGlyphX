@@ -302,8 +302,8 @@ QR.Save(<span class="string">"https://evotec.xyz"</span>, <span class="string">"
 QR.Save(<span class="string">"https://evotec.xyz"</span>, <span class="string">"website.pdf"</span>);
 
 <span class="comment">// Barcodes</span>
-Barcode.Save(BarcodeType.Code128, <span class="string">"PRODUCT-12345"</span>, <span class="string">"barcode.png"</span>);
-Barcode.Save(BarcodeType.EAN, <span class="string">"5901234123457"</span>, <span class="string">"ean.png"</span>);
+Barcode.Save(SymbolFormat.Code128, <span class="string">"PRODUCT-12345"</span>, <span class="string">"barcode.png"</span>);
+Barcode.Save(SymbolFormat.Ean, <span class="string">"5901234123457"</span>, <span class="string">"ean.png"</span>);
 
 <span class="comment">// 2D codes</span>
 DataMatrixCode.Save(<span class="string">"Serial: ABC123"</span>, <span class="string">"datamatrix.png"</span>);

@@ -18,10 +18,10 @@ Code 39 and Code 93 are widely used linear barcodes, particularly in automotive 
 using CodeGlyphX;
 
 // Code 39
-Barcode.Save(BarcodeType.Code39, "HELLO-123", "code39.png");
+Barcode.Save(SymbolFormat.Code39, "HELLO-123", "code39.png");
 
 // Code 93 (more compact)
-Barcode.Save(BarcodeType.Code93, "HELLO-123", "code93.png");
+Barcode.Save(SymbolFormat.Code93, "HELLO-123", "code93.png");
 ```
 
 ## Valid Characters

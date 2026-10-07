@@ -92,11 +92,11 @@ internal static class QrDecodeImageOps {
         }
     }
 
-    public static byte[] BuildCompositeGrid(string[] payloads, QrEasyOptions renderOptions, int grid, int pad, out int widthPx, out int heightPx, out int stridePx) {
+    public static byte[] BuildCompositeGrid(string[] payloads, QrRenderOptions renderOptions, int grid, int pad, out int widthPx, out int heightPx, out int stridePx, QrEncodingOptions? encodingOptions = null) {
         var tiles = new List<(byte[] pixels, int width, int height, int stride)>(payloads.Length);
 
         for (var i = 0; i < payloads.Length; i++) {
-            var pixels = QrEasy.RenderPixels(payloads[i], out var tileW, out var tileH, out var tileStride, renderOptions);
+            var pixels = QR.RenderPixels(payloads[i], out var tileW, out var tileH, out var tileStride, renderOptions, encodingOptions);
             tiles.Add((pixels, tileW, tileH, tileStride));
         }
 
