@@ -3,7 +3,7 @@ using System;
 namespace CodeGlyphX.Rendering;
 
 /// <summary>
-/// Debug overlay options for QR PNG rendering.
+/// Debug overlay options for QR raster rendering.
 /// </summary>
 public sealed class QrRasterDebugOptions {
     /// <summary>

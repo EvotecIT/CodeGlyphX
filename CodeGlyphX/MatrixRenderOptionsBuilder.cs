@@ -18,8 +18,8 @@ internal static class MatrixRenderOptionsBuilder {
         };
     }
 
-    public static IcoRenderOptions BuildIco(OutputOptions? extras) {
-        var opts = extras ?? new OutputOptions();
+    public static IcoRenderOptions BuildIco(OutputOptions? outputOptions) {
+        var opts = outputOptions ?? new OutputOptions();
         return new IcoRenderOptions {
             Sizes = opts.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
             PreserveAspectRatio = opts.IcoPreserveAspectRatio
@@ -36,19 +36,19 @@ internal static class MatrixRenderOptionsBuilder {
         };
     }
 
-    public static MatrixHtmlRenderOptions BuildHtml(MatrixOptions? options, OutputOptions? extras) {
+    public static MatrixHtmlRenderOptions BuildHtml(MatrixOptions? options, OutputOptions? outputOptions) {
         var opts = options ?? new MatrixOptions();
         return new MatrixHtmlRenderOptions {
             ModuleSize = opts.ModuleSize,
             QuietZone = opts.QuietZone,
             DarkColor = ColorUtils.ToCss(opts.Foreground),
             LightColor = ColorUtils.ToCss(opts.Background),
-            EmailSafeTable = extras?.HtmlEmailSafeTable ?? false
+            EmailSafeTable = outputOptions?.HtmlEmailSafeTable ?? false
         };
     }
 
-    public static MatrixAsciiRenderOptions BuildAscii(MatrixOptions? options, OutputOptions? extras) {
-        var ascii = extras?.MatrixAscii;
+    public static MatrixAsciiRenderOptions BuildAscii(MatrixOptions? options, OutputOptions? outputOptions) {
+        var ascii = outputOptions?.MatrixAscii;
         if (ascii != null) {
             return ascii;
         }

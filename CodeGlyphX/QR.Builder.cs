@@ -282,23 +282,23 @@ public sealed class QrBuilder {
     /// <summary>
     /// Renders the configured QR code to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, OutputOptions? extras = null) {
-        return Encode().Render(format, Rendering, extras);
+    public RenderedOutput Render(OutputFormat format, OutputOptions? outputOptions = null) {
+        return Encode().Render(format, Rendering, outputOptions);
     }
 
     /// <summary>
     /// Saves the configured QR code, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, OutputOptions? extras = null) {
+    public string Save(string path, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, Render(format, extras));
+        return OutputWriter.Write(path, Render(format, outputOptions));
     }
 
     /// <summary>
     /// Writes the configured QR code to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, OutputOptions? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, Render(format, extras));
+        OutputWriter.Write(stream, Render(format, outputOptions));
     }
 }

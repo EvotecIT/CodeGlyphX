@@ -56,8 +56,8 @@ public sealed class QrCode {
     }
 
     /// <summary>Renders this encoded symbol without changing its version, mask or error correction.</summary>
-    public RenderedOutput Render(OutputFormat format, QrRenderOptions? renderOptions = null, OutputOptions? extras = null) =>
-        QrRenderer.Render(this, format, renderOptions, extras);
+    public RenderedOutput Render(OutputFormat format, QrRenderOptions? renderOptions = null, OutputOptions? outputOptions = null) =>
+        QrRenderer.Render(this, format, renderOptions, outputOptions);
 
     /// <summary>Renders this encoded symbol to an RGBA buffer without an image container.</summary>
     public byte[] RenderPixels(out int widthPx, out int heightPx, out int stride, QrRenderOptions? renderOptions = null) =>
@@ -68,10 +68,10 @@ public sealed class QrCode {
         QrRenderer.EvaluateScanHeuristics(this, renderOptions);
 
     /// <summary>Saves this encoded symbol, selecting the format from its extension (PNG by default).</summary>
-    public string Save(string path, QrRenderOptions? renderOptions = null, OutputOptions? extras = null) =>
-        OutputWriter.Write(path, Render(OutputFormatInfo.Resolve(path, OutputFormat.Png), renderOptions, extras));
+    public string Save(string path, QrRenderOptions? renderOptions = null, OutputOptions? outputOptions = null) =>
+        OutputWriter.Write(path, Render(OutputFormatInfo.Resolve(path, OutputFormat.Png), renderOptions, outputOptions));
 
     /// <summary>Writes this encoded symbol to a caller-owned stream, leaving it open.</summary>
-    public void Save(System.IO.Stream stream, OutputFormat format, QrRenderOptions? renderOptions = null, OutputOptions? extras = null) =>
-        OutputWriter.Write(stream, Render(format, renderOptions, extras));
+    public void Save(System.IO.Stream stream, OutputFormat format, QrRenderOptions? renderOptions = null, OutputOptions? outputOptions = null) =>
+        OutputWriter.Write(stream, Render(format, renderOptions, outputOptions));
 }

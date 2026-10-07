@@ -26,12 +26,12 @@ public sealed class BarcodeAnimationRenderExtrasTests {
             HeightModules = 4
         };
 
-        var extras = new OutputOptions {
+        var outputOptions = new OutputOptions {
             BarcodeGifFrames = new[] { frame1, frame2 },
             AnimationDurationsMs = new[] { 40, 60 }
         };
 
-        var output = Barcode.Render(frame1, OutputFormat.Gif, options, extras);
+        var output = Barcode.Render(frame1, OutputFormat.Gif, options, outputOptions);
         var frames = GifReader.DecodeAnimationFrames(output.Data.Span, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);
@@ -58,12 +58,12 @@ public sealed class BarcodeAnimationRenderExtrasTests {
             HeightModules = 4
         };
 
-        var extras = new OutputOptions {
+        var outputOptions = new OutputOptions {
             BarcodeWebpFrames = new[] { frame1, frame2 },
             AnimationDurationsMs = new[] { 35, 55 }
         };
 
-        var output = Barcode.Render(frame1, OutputFormat.Webp, options, extras);
+        var output = Barcode.Render(frame1, OutputFormat.Webp, options, outputOptions);
         var frames = WebpReader.DecodeAnimationFrames(output.Data.Span, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);

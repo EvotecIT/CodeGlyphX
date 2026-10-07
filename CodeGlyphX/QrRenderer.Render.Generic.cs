@@ -25,7 +25,7 @@ using CodeGlyphX.Rendering.Xpm;
 namespace CodeGlyphX;
 
 internal static partial class QrRenderer {
-    internal static RenderedOutput Render(QrCode qr, OutputFormat format, QrRenderOptions? options = null, OutputOptions? extras = null) {
+    internal static RenderedOutput Render(QrCode qr, OutputFormat format, QrRenderOptions? options = null, OutputOptions? outputOptions = null) {
         if (qr is null) throw new ArgumentNullException(nameof(qr));
         if (format == OutputFormat.Unknown) throw new ArgumentOutOfRangeException(nameof(format));
 
@@ -35,7 +35,7 @@ internal static partial class QrRenderer {
         switch (format) {
             case OutputFormat.Png: {
                 var render = BuildPngOptions(opts, qr);
-                if (extras is not null) render.PngCompressionLevel = extras.ResolvePngCompression(render.PngCompressionLevel);
+                if (outputOptions is not null) render.PngCompressionLevel = outputOptions.ResolvePngCompression(render.PngCompressionLevel);
                 return RenderedOutput.FromBinary(format, QrPngRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Svg: {
@@ -53,7 +53,7 @@ internal static partial class QrRenderer {
                     QuietZone = baseRender.QuietZone,
                     DarkColor = ToCss(baseRender.Foreground),
                     LightColor = ToCss(baseRender.Background),
-                    EmailSafeTable = extras?.HtmlEmailSafeTable ?? false,
+                    EmailSafeTable = outputOptions?.HtmlEmailSafeTable ?? false,
                     Logo = BuildLogoOptions(opts),
                     ModuleShape = baseRender.ModuleShape,
                     ModuleScale = baseRender.ModuleScale,
@@ -62,7 +62,7 @@ internal static partial class QrRenderer {
                     Eyes = baseRender.Eyes,
                 };
                 var html = HtmlQrRenderer.Render(qr.Modules, render);
-                var title = extras?.HtmlTitle;
+                var title = outputOptions?.HtmlTitle;
                 if (!string.IsNullOrEmpty(title)) {
                     html = html.WrapHtml(title);
                 }
@@ -70,23 +70,23 @@ internal static partial class QrRenderer {
             }
             case OutputFormat.Jpeg: {
                 var render = BuildPngOptions(opts, qr);
-                var jpegOptions = extras?.JpegOptions;
+                var jpegOptions = outputOptions?.JpegOptions;
                 var data = jpegOptions is null
-                    ? QrJpegRenderer.Render(qr.Modules, render, extras?.JpegQuality ?? 85)
+                    ? QrJpegRenderer.Render(qr.Modules, render, outputOptions?.JpegQuality ?? 85)
                     : QrJpegRenderer.Render(qr.Modules, render, jpegOptions);
                 return RenderedOutput.FromBinary(format, data);
             }
             case OutputFormat.Webp: {
                 var render = BuildPngOptions(opts, qr);
-                var quality = extras?.WebpQuality ?? 100;
-                if (RenderAnimationHelpers.TryRenderQrWebp(extras, render, quality, out var webp)) {
+                var quality = outputOptions?.WebpQuality ?? 100;
+                if (RenderAnimationHelpers.TryRenderQrWebp(outputOptions, render, quality, out var webp)) {
                     return RenderedOutput.FromBinary(format, webp);
                 }
                 return RenderedOutput.FromBinary(format, QrWebpRenderer.Render(qr.Modules, render, quality));
             }
             case OutputFormat.Tiff: {
                 var render = BuildPngOptions(opts, qr);
-                var compression = extras?.TiffCompression ?? TiffCompressionMode.Auto;
+                var compression = outputOptions?.TiffCompression ?? TiffCompressionMode.Auto;
                 return RenderedOutput.FromBinary(format, QrTiffRenderer.Render(qr.Modules, render, compression));
             }
             case OutputFormat.Bmp: {
@@ -95,7 +95,7 @@ internal static partial class QrRenderer {
             }
             case OutputFormat.Gif: {
                 var render = BuildPngOptions(opts, qr);
-                if (RenderAnimationHelpers.TryRenderQrGif(extras, render, out var gif)) {
+                if (RenderAnimationHelpers.TryRenderQrGif(outputOptions, render, out var gif)) {
                     return RenderedOutput.FromBinary(format, gif);
                 }
                 return RenderedOutput.FromBinary(format, QrGifRenderer.Render(qr.Modules, render));
@@ -130,23 +130,23 @@ internal static partial class QrRenderer {
             }
             case OutputFormat.Ico: {
                 var render = BuildPngOptions(opts, qr);
-                return RenderedOutput.FromBinary(format, QrIcoRenderer.Render(qr.Modules, render, BuildIcoOptions(extras)));
+                return RenderedOutput.FromBinary(format, QrIcoRenderer.Render(qr.Modules, render, BuildIcoOptions(outputOptions)));
             }
             case OutputFormat.Pdf: {
                 var render = BuildPngOptions(opts, qr);
-                return RenderedOutput.FromBinary(format, QrPdfRenderer.Render(qr.Modules, render, extras?.VectorMode ?? RenderMode.Vector));
+                return RenderedOutput.FromBinary(format, QrPdfRenderer.Render(qr.Modules, render, outputOptions?.VectorMode ?? RenderMode.Vector));
             }
             case OutputFormat.Eps: {
                 var render = BuildPngOptions(opts, qr);
-                var eps = QrEpsRenderer.Render(qr.Modules, render, extras?.VectorMode ?? RenderMode.Vector);
+                var eps = QrEpsRenderer.Render(qr.Modules, render, outputOptions?.VectorMode ?? RenderMode.Vector);
                 return RenderedOutput.FromText(format, eps, Encoding.ASCII);
             }
             case OutputFormat.Ascii: {
-                if (extras?.AsciiConsole is not null) {
-                    var fitOptions = MergeConsoleOptions(extras.AsciiConsole, opts.QuietZone);
+                if (outputOptions?.AsciiConsole is not null) {
+                    var fitOptions = MergeConsoleOptions(outputOptions.AsciiConsole, opts.QuietZone);
                     return RenderedOutput.FromText(format, AsciiConsole.Render(qr.Modules, fitOptions));
                 }
-                var asciiOptions = BuildAsciiOptions(extras?.MatrixAscii, opts);
+                var asciiOptions = BuildAsciiOptions(outputOptions?.MatrixAscii, opts);
                 return RenderedOutput.FromText(format, MatrixAsciiRenderer.Render(qr.Modules, asciiOptions));
             }
             default:

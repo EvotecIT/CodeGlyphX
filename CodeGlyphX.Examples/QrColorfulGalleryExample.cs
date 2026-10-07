@@ -17,13 +17,13 @@ internal static class QrColorfulGalleryExample {
 
         Save("Prism", "prism", QR.Render(Payload, OutputFormat.Png,
             Sticker(QrModuleShape.ConnectedRounded, QrPaletteMode.Cycle,
-                new[] { R(155, 15, 105), R(81, 31, 170), R(0, 112, 138) }, R(255, 89, 168), R(54, 218, 239)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new OutputOptions { PngCompressionLevel = 6 }).ToArray());
+                new[] { R(155, 15, 105), R(81, 31, 170), R(0, 112, 138) }, R(255, 89, 168), R(54, 218, 239)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, outputOptions: new OutputOptions { PngCompressionLevel = 6 }).ToArray());
         Save("Candy pop", "candy-pop", QR.Render(Payload, OutputFormat.Png,
             Sticker(QrModuleShape.Squircle, QrPaletteMode.Random,
-                new[] { R(165, 23, 89), R(109, 31, 160), R(20, 95, 157) }, R(255, 166, 219), R(139, 156, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new OutputOptions { PngCompressionLevel = 6 }).ToArray());
+                new[] { R(165, 23, 89), R(109, 31, 160), R(20, 95, 157) }, R(255, 166, 219), R(139, 156, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, outputOptions: new OutputOptions { PngCompressionLevel = 6 }).ToArray());
         Save("Neon orbit", "neon-orbit", QR.Render(Payload, OutputFormat.Png,
             Sticker(QrModuleShape.Circle, QrPaletteMode.Rings,
-                new[] { R(14, 98, 122), R(37, 40, 153), R(127, 23, 143) }, R(32, 231, 212), R(190, 66, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, extras: new OutputOptions { PngCompressionLevel = 6 }).ToArray());
+                new[] { R(14, 98, 122), R(37, 40, 153), R(127, 23, 143) }, R(32, 231, 212), R(190, 66, 255)), encodingOptions: new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }, outputOptions: new OutputOptions { PngCompressionLevel = 6 }).ToArray());
 
         var qr = QR.Encode(Payload, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });
         foreach (var (name, slug, shape) in new[] {

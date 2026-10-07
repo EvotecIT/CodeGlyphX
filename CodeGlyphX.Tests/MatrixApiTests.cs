@@ -137,7 +137,7 @@ public sealed class MatrixApiTests {
         var output = DataMatrixCode.Render("DM-OPTIONS", format, options: new MatrixOptions {
             ModuleSize = 2,
             QuietZone = 1
-        }, extras: new OutputOptions {
+        }, outputOptions: new OutputOptions {
             IcoSizes = new[] { 16 },
             HtmlEmailSafeTable = true
         });
@@ -154,7 +154,7 @@ public sealed class MatrixApiTests {
         var output = Pdf417Code.Render("PDF-OPTIONS", format, renderOptions: new MatrixOptions {
             ModuleSize = 2,
             QuietZone = 1
-        }, extras: new OutputOptions {
+        }, outputOptions: new OutputOptions {
             IcoSizes = new[] { 16 },
             HtmlEmailSafeTable = true
         });
@@ -187,7 +187,7 @@ public sealed class MatrixApiTests {
     [Fact]
     public void MatrixBarcode_Render_AsAscii_PreservesExplicitAsciiOptions() {
         var modules = MatrixBarcode.Encode(SymbolFormat.DataMatrix, "DM-ASCII-EXTRAS");
-        var extras = new OutputOptions {
+        var outputOptions = new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 ModuleWidth = 1,
@@ -196,7 +196,7 @@ public sealed class MatrixApiTests {
             }
         };
 
-        var output = modules.Render(OutputFormat.Ascii, new MatrixOptions { QuietZone = 0 }, extras);
+        var output = modules.Render(OutputFormat.Ascii, new MatrixOptions { QuietZone = 0 }, outputOptions);
         var lines = SplitLines(output.GetText());
 
         Assert.Equal(modules.Height + 2, lines.Length);
@@ -210,7 +210,7 @@ public sealed class MatrixApiTests {
             SymbolFormat.DataMatrix,
             "DM-HTML",
             OutputFormat.Html,
-            extras: new OutputOptions { HtmlTitle = "Matrix title" });
+            outputOptions: new OutputOptions { HtmlTitle = "Matrix title" });
 
         Assert.Equal(OutputKind.Text, output.Kind);
         Assert.Contains("<title>Matrix title</title>", output.GetText(), StringComparison.OrdinalIgnoreCase);

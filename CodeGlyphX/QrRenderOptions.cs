@@ -59,7 +59,7 @@ public sealed class QrRenderOptions {
     public int BackgroundSupersample { get; set; } = 1;
 
     /// <summary>
-    /// Style preset for PNG rendering.
+    /// Style preset for QR rendering.
     /// </summary>
     public QrRenderStyle Style { get; set; } = QrRenderStyle.Default;
 
@@ -146,7 +146,7 @@ public sealed class QrRenderOptions {
     public QrCanvasOptions? Canvas { get; set; }
 
     /// <summary>
-    /// Optional debug overlay options (PNG only).
+    /// Optional debug overlays for raster outputs.
     /// </summary>
     public QrRasterDebugOptions? Debug { get; set; }
 
@@ -156,7 +156,7 @@ public sealed class QrRenderOptions {
     public QrEyeOptions? Eyes { get; set; }
 
     /// <summary>
-    /// Optional logo PNG bytes (embedded for PNG/SVG/HTML).
+    /// Optional PNG image used as a centered logo in rendered outputs.
     /// </summary>
     public byte[]? LogoPng { get; set; }
 

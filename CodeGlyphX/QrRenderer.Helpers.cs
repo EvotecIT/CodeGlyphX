@@ -79,10 +79,10 @@ internal static partial class QrRenderer {
         return render;
     }
 
-    private static IcoRenderOptions BuildIcoOptions(OutputOptions? extras) {
+    private static IcoRenderOptions BuildIcoOptions(OutputOptions? outputOptions) {
         return new IcoRenderOptions {
-            Sizes = extras?.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
-            PreserveAspectRatio = extras?.IcoPreserveAspectRatio ?? true
+            Sizes = outputOptions?.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
+            PreserveAspectRatio = outputOptions?.IcoPreserveAspectRatio ?? true
         };
     }
 

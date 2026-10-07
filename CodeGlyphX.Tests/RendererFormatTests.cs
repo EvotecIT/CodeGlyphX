@@ -74,13 +74,13 @@ public sealed class RendererFormatTests {
         var eps = QR.Render(payload, OutputFormat.Eps).GetText();
         Assert.True(IsEps(eps));
 
-        var pdfRaster = QR.Render(payload, OutputFormat.Pdf, extras: new OutputOptions { VectorMode = RenderMode.Raster }).Data.Span;
+        var pdfRaster = QR.Render(payload, OutputFormat.Pdf, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster }).Data.Span;
         Assert.True(IsPdf(pdfRaster));
 
-        var epsRaster = QR.Render(payload, OutputFormat.Eps, extras: new OutputOptions { VectorMode = RenderMode.Raster }).GetText();
+        var epsRaster = QR.Render(payload, OutputFormat.Eps, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster }).GetText();
         Assert.True(IsEps(epsRaster));
 
-        var ascii = QR.Render(payload, OutputFormat.Ascii, extras: new OutputOptions {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions { QuietZone = 1 }
         }).GetText();
         Assert.Contains("#", ascii, StringComparison.Ordinal);
@@ -105,7 +105,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_UnicodeBlocks_Uses_Block_Glyphs() {
         var payload = "https://example.com";
-        var ascii = QR.Render(payload, OutputFormat.Ascii, extras: new OutputOptions {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 UseUnicodeBlocks = true
@@ -118,7 +118,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_AnsiColors_Emits_Escape_Codes() {
         var payload = "https://example.com";
-        var ascii = QR.Render(payload, OutputFormat.Ascii, extras: new OutputOptions {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 UseUnicodeBlocks = true,
@@ -133,7 +133,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_ConsolePreset_Is_Scan_Friendly() {
         var payload = "https://example.com";
-        var ascii = QR.Render(payload, OutputFormat.Ascii, extras: new OutputOptions {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = AsciiPresets.Console(scale: 3)
         }).GetText();
 
@@ -144,7 +144,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_ConsoleWrapper_Uses_Preset() {
         var payload = "https://example.com";
-        var ascii = QR.Render(payload, OutputFormat.Ascii, extras: new OutputOptions {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = AsciiPresets.Console(scale: 3)
         }).GetText();
 
@@ -201,7 +201,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_Console_Extras_Use_HalfBlocks() {
         var payload = "https://example.com/console";
-        var ascii = QR.Render(payload, OutputFormat.Ascii, extras: new OutputOptions {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             AsciiConsole = new AsciiConsoleOptions {
                 UseHalfBlocks = true,
                 UseAnsiColors = false,
@@ -263,7 +263,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void AsciiConsole_HalfBlock_FgOnly_Does_Not_Emit_Background_Color() {
         var payload = "https://example.com/console";
-        var ascii = QR.Render(payload, OutputFormat.Ascii, extras: new OutputOptions {
+        var ascii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             AsciiConsole = new AsciiConsoleOptions {
                 UseHalfBlocks = true,
                 HalfBlockUseBackground = false,
@@ -331,7 +331,7 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ascii_Scale_Increases_Output_Size() {
         var payload = "https://example.com";
-        var baseAscii = QR.Render(payload, OutputFormat.Ascii, extras: new OutputOptions {
+        var baseAscii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 ModuleWidth = 1,
@@ -339,7 +339,7 @@ public sealed class RendererFormatTests {
                 Scale = 1
             }
         }).GetText();
-        var scaledAscii = QR.Render(payload, OutputFormat.Ascii, extras: new OutputOptions {
+        var scaledAscii = QR.Render(payload, OutputFormat.Ascii, outputOptions: new OutputOptions {
             MatrixAscii = new MatrixAsciiRenderOptions {
                 QuietZone = 1,
                 ModuleWidth = 1,
@@ -354,9 +354,9 @@ public sealed class RendererFormatTests {
     [Fact]
     public void Qr_Ico_Respects_MultiSize_Options() {
         var payload = "https://example.com";
-        var extras = new OutputOptions { IcoSizes = new[] { 32, 64, 128 } };
+        var outputOptions = new OutputOptions { IcoSizes = new[] { 32, 64, 128 } };
 
-        var ico = QR.Render(payload, OutputFormat.Ico, extras: extras).Data.Span;
+        var ico = QR.Render(payload, OutputFormat.Ico, outputOptions: outputOptions).Data.Span;
         Assert.True(IsIco(ico));
         Assert.Equal(3, GetIcoCount(ico));
     }
@@ -415,10 +415,10 @@ public sealed class RendererFormatTests {
         var eps = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Eps).GetText();
         Assert.True(IsEps(eps));
 
-        var pdfRaster = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Pdf, extras: new OutputOptions { VectorMode = RenderMode.Raster }).Data.Span;
+        var pdfRaster = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Pdf, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster }).Data.Span;
         Assert.True(IsPdf(pdfRaster));
 
-        var epsRaster = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Eps, extras: new OutputOptions { VectorMode = RenderMode.Raster }).GetText();
+        var epsRaster = Barcode.Render(SymbolFormat.Code128, "CODEGLYPH-123", OutputFormat.Eps, outputOptions: new OutputOptions { VectorMode = RenderMode.Raster }).GetText();
         Assert.True(IsEps(epsRaster));
 
         var ascii = BarcodeAsciiRenderer.Render(barcode, new BarcodeAsciiRenderOptions { QuietZone = 1, Height = 2 });
@@ -432,12 +432,12 @@ public sealed class RendererFormatTests {
             ModuleCornerRadiusPx = 2,
         };
 
-        var pdf = QR.Render("https://example.com", OutputFormat.Pdf, opts, extras: new OutputOptions { VectorMode = RenderMode.Vector }).Data.Span;
+        var pdf = QR.Render("https://example.com", OutputFormat.Pdf, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).Data.Span;
         var pdfText = Encoding.ASCII.GetString(pdf);
         Assert.Contains(" c\n", pdfText, StringComparison.Ordinal);
         Assert.DoesNotContain("/Subtype /Image", pdfText, StringComparison.Ordinal);
 
-        var eps = QR.Render("https://example.com", OutputFormat.Eps, opts, extras: new OutputOptions { VectorMode = RenderMode.Vector }).GetText();
+        var eps = QR.Render("https://example.com", OutputFormat.Eps, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).GetText();
         Assert.Contains("curveto", eps, StringComparison.Ordinal);
         Assert.DoesNotContain("colorimage", eps, StringComparison.OrdinalIgnoreCase);
     }
@@ -452,11 +452,11 @@ public sealed class RendererFormatTests {
             },
         };
 
-        var pdf = QR.Render("https://example.com", OutputFormat.Pdf, opts, extras: new OutputOptions { VectorMode = RenderMode.Vector }).Data.Span;
+        var pdf = QR.Render("https://example.com", OutputFormat.Pdf, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).Data.Span;
         var pdfText = Encoding.ASCII.GetString(pdf);
         Assert.Contains("/Subtype /Image", pdfText, StringComparison.Ordinal);
 
-        var eps = QR.Render("https://example.com", OutputFormat.Eps, opts, extras: new OutputOptions { VectorMode = RenderMode.Vector }).GetText();
+        var eps = QR.Render("https://example.com", OutputFormat.Eps, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).GetText();
         Assert.Contains("colorimage", eps, StringComparison.Ordinal);
     }
 
@@ -476,11 +476,11 @@ public sealed class RendererFormatTests {
             LogoPng = logoPng,
         };
 
-        var pdf = QR.Render("https://example.com", OutputFormat.Pdf, opts, extras: new OutputOptions { VectorMode = RenderMode.Vector }).Data.Span;
+        var pdf = QR.Render("https://example.com", OutputFormat.Pdf, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).Data.Span;
         var pdfText = Encoding.ASCII.GetString(pdf);
         Assert.Contains("/Subtype /Image", pdfText, StringComparison.Ordinal);
 
-        var eps = QR.Render("https://example.com", OutputFormat.Eps, opts, extras: new OutputOptions { VectorMode = RenderMode.Vector }).GetText();
+        var eps = QR.Render("https://example.com", OutputFormat.Eps, opts, outputOptions: new OutputOptions { VectorMode = RenderMode.Vector }).GetText();
         Assert.Contains("colorimage", eps, StringComparison.Ordinal);
     }
 

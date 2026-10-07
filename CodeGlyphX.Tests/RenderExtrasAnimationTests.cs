@@ -13,12 +13,12 @@ public sealed class RenderExtrasAnimationTests {
         var frame2 = new BitMatrix(1, 1);
         frame2[0, 0] = false;
 
-        var extras = new OutputOptions {
+        var outputOptions = new OutputOptions {
             GifFrames = new[] { frame1, frame2 },
             AnimationDurationMs = 30
         };
 
-        var output = QR.Render("test", OutputFormat.Gif, extras: extras);
+        var output = QR.Render("test", OutputFormat.Gif, outputOptions: outputOptions);
         var frames = GifReader.DecodeAnimationFrames(output.Data.Span, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);
@@ -31,12 +31,12 @@ public sealed class RenderExtrasAnimationTests {
         var frame2 = new BitMatrix(1, 1);
         frame2[0, 0] = false;
 
-        var extras = new OutputOptions {
+        var outputOptions = new OutputOptions {
             WebpFrames = new[] { frame1, frame2 },
             AnimationDurationMs = 40
         };
 
-        var output = QR.Render("test", OutputFormat.Webp, extras: extras);
+        var output = QR.Render("test", OutputFormat.Webp, outputOptions: outputOptions);
         var frames = WebpReader.DecodeAnimationFrames(output.Data.Span, out _, out _, out _);
 
         Assert.Equal(2, frames.Length);

@@ -130,7 +130,7 @@ public static class QrImageDecodeParityData {
         };
         testCase.Configure?.Invoke(options);
 
-        return QR.Render(testCase.Payload, OutputFormat.Png, options).Data;
+        return QR.Render(testCase.Payload, OutputFormat.Png, options).ToArray();
     }
 
     private static object[] Case(string name, QrPayloadData payload, Rgba32? foreground = null, Rgba32? background = null, Action<QrRenderOptions>? configure = null) {

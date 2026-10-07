@@ -210,26 +210,26 @@ public sealed class DataMatrixBuilder {
     /// <summary>
     /// Renders the configured Data Matrix to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, OutputOptions? extras = null) {
+    public RenderedOutput Render(OutputFormat format, OutputOptions? outputOptions = null) {
         return _text is not null
-            ? DataMatrixCode.Render(_text, format, _encodingOptions, _options, extras ?? OutputOptions)
-            : DataMatrixCode.Render(_bytes!, format, _encodingOptions, _options, extras ?? OutputOptions);
+            ? DataMatrixCode.Render(_text, format, _encodingOptions, _options, outputOptions ?? OutputOptions)
+            : DataMatrixCode.Render(_bytes!, format, _encodingOptions, _options, outputOptions ?? OutputOptions);
     }
 
     /// <summary>
     /// Saves the configured Data Matrix, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, OutputOptions? extras = null) {
+    public string Save(string path, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, Render(format, extras));
+        return OutputWriter.Write(path, Render(format, outputOptions));
     }
 
     /// <summary>
     /// Writes the configured Data Matrix to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, OutputOptions? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, Render(format, extras));
+        OutputWriter.Write(stream, Render(format, outputOptions));
     }
 
     private static DataMatrixEncodingOptions CopyEncodingOptions(DataMatrixEncodingOptions options) {

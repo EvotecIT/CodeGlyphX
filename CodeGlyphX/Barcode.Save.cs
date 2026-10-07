@@ -29,16 +29,16 @@ public static partial class Barcode {
     /// Saves a barcode to a file based on the file extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(SymbolFormat type, string content, string path, BarcodeOptions? options = null, OutputOptions? extras = null) {
+    public static string Save(SymbolFormat type, string content, string path, BarcodeOptions? options = null, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(type, content, format, options, extras);
+        var output = Render(type, content, format, options, outputOptions);
         return OutputWriter.Write(path, output);
     }
 
     /// <summary>Writes a barcode to a stream in the specified output format.</summary>
-    public static void Save(SymbolFormat type, string content, Stream stream, OutputFormat format, BarcodeOptions? options = null, OutputOptions? extras = null) {
+    public static void Save(SymbolFormat type, string content, Stream stream, OutputFormat format, BarcodeOptions? options = null, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, Render(type, content, format, options, extras));
+        OutputWriter.Write(stream, Render(type, content, format, options, outputOptions));
     }
 
 

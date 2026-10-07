@@ -28,34 +28,34 @@ public static class MatrixBarcode {
     /// <summary>
     /// Renders a matrix or stacked barcode to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(SymbolFormat type, string content, OutputFormat format, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static RenderedOutput Render(SymbolFormat type, string content, OutputFormat format, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var modules = Encode(type, content).Modules;
-        return Render(modules, format, options, extras);
+        return Render(modules, format, options, outputOptions);
     }
 
     /// <summary>
     /// Renders a matrix or stacked barcode to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(BitMatrix modules, OutputFormat format, MatrixOptions? options = null, OutputOptions? extras = null) {
-        return MatrixOutputRenderer.Render(modules, format, options, extras);
+    public static RenderedOutput Render(BitMatrix modules, OutputFormat format, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
+        return MatrixOutputRenderer.Render(modules, format, options, outputOptions);
     }
 
     /// <summary>
     /// Saves a matrix or stacked barcode to a file based on the file extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(SymbolFormat type, string content, string path, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static string Save(SymbolFormat type, string content, string path, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(type, content, format, options, extras);
+        var output = Render(type, content, format, options, outputOptions);
         return OutputWriter.Write(path, output);
     }
 
     /// <summary>
     /// Saves a matrix or stacked barcode to a stream using the requested output format.
     /// </summary>
-    public static void Save(SymbolFormat type, string content, Stream stream, OutputFormat format, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static void Save(SymbolFormat type, string content, Stream stream, OutputFormat format, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        var output = Render(type, content, format, options, extras);
+        var output = Render(type, content, format, options, outputOptions);
         OutputWriter.Write(stream, output);
     }
 

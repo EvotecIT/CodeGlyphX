@@ -31,18 +31,18 @@ public static partial class DataMatrixCode {
     /// Saves Data Matrix to a file for byte payloads based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static string Save(ReadOnlySpan<byte> data, string path, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(data, format, mode, options, extras);
+        var output = Render(data, format, mode, options, outputOptions);
         return OutputWriter.Write(path, output);
     }
 
     /// <summary>
     /// Saves Data Matrix to a file for byte payloads using explicit encoding options.
     /// </summary>
-    public static string Save(ReadOnlySpan<byte> data, string path, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static string Save(ReadOnlySpan<byte> data, string path, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(data, format, encodingOptions, options, extras);
+        var output = Render(data, format, encodingOptions, options, outputOptions);
         return OutputWriter.Write(path, output);
     }
 

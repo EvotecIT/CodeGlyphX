@@ -198,7 +198,7 @@ public sealed class RoundTripTests {
         var expectedModules = QR.Encode(text, encoding).Modules.Width;
         var png = QR.Render(text, OutputFormat.Png, opts, encoding).Data;
 
-        Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
+        Assert.True(ImageReader.TryDecodeRgba32(png.Span, out var rgba, out var width, out var height));
         var stride = width * 4;
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
@@ -215,7 +215,7 @@ public sealed class RoundTripTests {
     public void DecodePixels_CanDecodeFancyQr_Robust() {
         var text = "Fancy QR";
         var opts = new QrRenderOptions { Style = QrRenderStyle.Fancy, ModuleSize = 8, QuietZone = 4 };
-        var png = QR.Render(text, OutputFormat.Png, opts, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).Data;
+        var png = QR.Render(text, OutputFormat.Png, opts, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
 
         var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
         var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true };
@@ -227,7 +227,7 @@ public sealed class RoundTripTests {
     public void DecodePixels_CanDecodeNoQuietZone_Robust() {
         var text = "No quiet zone";
         var opts = new QrRenderOptions { QuietZone = 0, ModuleSize = 8 };
-        var png = QR.Render(text, OutputFormat.Png, opts, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).Data;
+        var png = QR.Render(text, OutputFormat.Png, opts, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).ToArray();
 
         var (rgba, width, height, stride) = PngTestDecoder.DecodeRgba32(png);
         var options = new QrPixelDecodeOptions { Profile = QrDecodeProfile.Robust, AggressiveSampling = true };

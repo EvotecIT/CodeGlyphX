@@ -31,13 +31,13 @@ public sealed class GenericPngCompressionTests {
     }
 
     private static byte[] Render(int family, int level) {
-        var extras = new OutputOptions { PngCompressionLevel = level };
+        var outputOptions = new OutputOptions { PngCompressionLevel = level };
         if (family == 1)
             return DataMatrixCode.Render("COMPRESS-MATRIX", OutputFormat.Png,
-                options: new MatrixOptions { ModuleSize = 8 }, extras: extras).ToArray();
+                options: new MatrixOptions { ModuleSize = 8 }, outputOptions: outputOptions).ToArray();
         if (family == 2)
             return Barcode.Render(SymbolFormat.Code128, "COMPRESS-BARCODE", OutputFormat.Png,
-                new BarcodeOptions { ModuleSize = 3, HeightModules = 40 }, extras).ToArray();
-        return QR.Render("COMPRESS-QR", OutputFormat.Png, new QrRenderOptions { ModuleSize = 8 }, extras: extras).ToArray();
+                new BarcodeOptions { ModuleSize = 3, HeightModules = 40 }, outputOptions).ToArray();
+        return QR.Render("COMPRESS-QR", OutputFormat.Png, new QrRenderOptions { ModuleSize = 8 }, outputOptions: outputOptions).ToArray();
     }
 }

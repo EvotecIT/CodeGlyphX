@@ -22,8 +22,8 @@ public static partial class Barcode {
         };
     }
 
-    private static IcoRenderOptions BuildIcoOptions(OutputOptions? extras) {
-        var opts = extras ?? new OutputOptions();
+    private static IcoRenderOptions BuildIcoOptions(OutputOptions? outputOptions) {
+        var opts = outputOptions ?? new OutputOptions();
         return new IcoRenderOptions {
             Sizes = opts.IcoSizes ?? new[] { 16, 32, 48, 64, 128, 256 },
             PreserveAspectRatio = opts.IcoPreserveAspectRatio
@@ -46,7 +46,7 @@ public static partial class Barcode {
         };
     }
 
-    private static BarcodeHtmlRenderOptions BuildHtmlOptions(BarcodeOptions? options, OutputOptions? extras) {
+    private static BarcodeHtmlRenderOptions BuildHtmlOptions(BarcodeOptions? options, OutputOptions? outputOptions) {
         var opts = options ?? new BarcodeOptions();
         return new BarcodeHtmlRenderOptions {
             ModuleSize = opts.ModuleSize,
@@ -54,7 +54,7 @@ public static partial class Barcode {
             HeightModules = opts.HeightModules,
             BarColor = ColorUtils.ToCss(opts.Foreground),
             BackgroundColor = ColorUtils.ToCss(opts.Background),
-            EmailSafeTable = extras?.HtmlEmailSafeTable ?? false,
+            EmailSafeTable = outputOptions?.HtmlEmailSafeTable ?? false,
             LabelText = opts.LabelText,
             LabelFontSize = opts.LabelFontSize,
             LabelMargin = opts.LabelMargin,

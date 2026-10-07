@@ -69,7 +69,7 @@ using CodeGlyphX.Rendering;
 
 var jpeg = QR.Render("Hello", OutputFormat.Jpeg,
     new QrRenderOptions { ModuleSize = 8 },
-    extras: new OutputOptions { JpegQuality = 90 });
+    outputOptions: new OutputOptions { JpegQuality = 90 });
 ```
 
 The builder exposes separate `Encoding` and `Rendering` state. Replace `WithOptions` with `WithEncoding` or `WithRendering`. The builder takes snapshots of supplied options, so subsequent edits to the caller's option objects do not change that builder.

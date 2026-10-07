@@ -6,7 +6,7 @@ using CodeGlyphX;
 namespace CodeGlyphX.Rendering;
 
 /// <summary>
-/// Options and pixel data for a centered logo overlay in a QR PNG.
+/// Options and pixel data for a centered logo overlay in a QR raster output.
 /// </summary>
 public sealed class QrRasterLogoOptions {
     /// <summary>

@@ -26,16 +26,16 @@ public class MatrixSymbol {
     }
 
     /// <summary>Renders the encoded modules with layout options and format-specific output settings.</summary>
-    public RenderedOutput Render(OutputFormat format, MatrixOptions? options = null, OutputOptions? extras = null) =>
-        MatrixOutputRenderer.Render(Modules, format, options, extras);
+    public RenderedOutput Render(OutputFormat format, MatrixOptions? options = null, OutputOptions? outputOptions = null) =>
+        MatrixOutputRenderer.Render(Modules, format, options, outputOptions);
 
     /// <summary>Saves the symbol, selecting the output format from the file extension.</summary>
-    public string Save(string path, MatrixOptions? options = null, OutputOptions? extras = null) =>
-        OutputWriter.Write(path, Render(OutputFormatInfo.Resolve(path, OutputFormat.Png), options, extras));
+    public string Save(string path, MatrixOptions? options = null, OutputOptions? outputOptions = null) =>
+        OutputWriter.Write(path, Render(OutputFormatInfo.Resolve(path, OutputFormat.Png), options, outputOptions));
 
     /// <summary>Writes the symbol to a stream in the specified output format.</summary>
-    public void Save(Stream stream, OutputFormat format, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public void Save(Stream stream, OutputFormat format, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, Render(format, options, extras));
+        OutputWriter.Write(stream, Render(format, options, outputOptions));
     }
 }

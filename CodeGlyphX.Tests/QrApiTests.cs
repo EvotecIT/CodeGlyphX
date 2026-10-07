@@ -118,9 +118,9 @@ public sealed class QrApiTests {
     [Fact]
     public void Render_DoesNotMutateCallerOwnedAsciiLayout() {
         var ascii = new MatrixAsciiRenderOptions { QuietZone = RenderDefaults.QrQuietZone };
-        var extras = new OutputOptions { MatrixAscii = ascii };
+        var outputOptions = new OutputOptions { MatrixAscii = ascii };
 
-        var text = QR.Render("ASCII", OutputFormat.Ascii, new QrRenderOptions { QuietZone = 6 }, extras: extras).GetText();
+        var text = QR.Render("ASCII", OutputFormat.Ascii, new QrRenderOptions { QuietZone = 6 }, outputOptions: outputOptions).GetText();
 
         Assert.NotEmpty(text);
         Assert.Equal(RenderDefaults.QrQuietZone, ascii.QuietZone);

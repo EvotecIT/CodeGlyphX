@@ -34,7 +34,7 @@ public sealed class QrStylizedRoundTripTests {
         };
 
         var png = QR.Render(payload, OutputFormat.Png, options, new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H }).Data;
-        Assert.True(ImageReader.TryDecodeRgba32(png, out var rgba, out var width, out var height));
+        Assert.True(ImageReader.TryDecodeRgba32(png.Span, out var rgba, out var width, out var height));
 
         var decodeOptions = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,

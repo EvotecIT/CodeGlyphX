@@ -32,9 +32,9 @@ public static partial class Pdf417Code {
     /// Saves PDF417 to a file for byte payloads based on extension.
     /// Defaults to PNG when no extension is provided.
     /// </summary>
-    public static string Save(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, OutputOptions? extras = null) {
+    public static string Save(ReadOnlySpan<byte> data, string path, Pdf417EncodeOptions? encodeOptions = null, MatrixOptions? renderOptions = null, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        var output = Render(data, format, encodeOptions, renderOptions, extras);
+        var output = Render(data, format, encodeOptions, renderOptions, outputOptions);
         return OutputWriter.Write(path, output);
     }
 

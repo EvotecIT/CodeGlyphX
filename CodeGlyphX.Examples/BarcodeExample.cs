@@ -17,7 +17,7 @@ internal static class BarcodeExample {
 
         Barcode.Save(SymbolFormat.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.png"), options);
         Barcode.Save(SymbolFormat.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.svg"), options);
-        Barcode.Save(SymbolFormat.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.html"), options, extras: new OutputOptions { HtmlTitle = "Code128" });
+        Barcode.Save(SymbolFormat.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.html"), options, outputOptions: new OutputOptions { HtmlTitle = "Code128" });
         Barcode.Save(SymbolFormat.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.jpg"), options);
         Barcode.Save(SymbolFormat.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.pdf"), options);
         Barcode.Save(SymbolFormat.Code128, "CODEGLYPHX-123456", Path.Combine(outputDir, "barcode-code128.eps"), options);

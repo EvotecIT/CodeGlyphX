@@ -50,16 +50,16 @@ public static partial class QR {
     }
 
     /// <summary>Encodes text and renders the resulting symbol. Appearance never changes encoding settings.</summary>
-    public static RenderedOutput Render(string payload, OutputFormat format, QrRenderOptions? renderOptions = null, QrEncodingOptions? encodingOptions = null, OutputOptions? extras = null) =>
-        Encode(payload, encodingOptions).Render(format, renderOptions, extras);
+    public static RenderedOutput Render(string payload, OutputFormat format, QrRenderOptions? renderOptions = null, QrEncodingOptions? encodingOptions = null, OutputOptions? outputOptions = null) =>
+        Encode(payload, encodingOptions).Render(format, renderOptions, outputOptions);
 
     /// <summary>Encodes a typed payload and renders the resulting symbol.</summary>
-    public static RenderedOutput Render(QrPayloadData payload, OutputFormat format, QrRenderOptions? renderOptions = null, QrEncodingOptions? encodingOptions = null, OutputOptions? extras = null) =>
-        Encode(payload, encodingOptions).Render(format, renderOptions, extras);
+    public static RenderedOutput Render(QrPayloadData payload, OutputFormat format, QrRenderOptions? renderOptions = null, QrEncodingOptions? encodingOptions = null, OutputOptions? outputOptions = null) =>
+        Encode(payload, encodingOptions).Render(format, renderOptions, outputOptions);
 
     /// <summary>Detects and encodes a payload, then renders the resulting symbol.</summary>
-    public static RenderedOutput RenderAuto(string payload, OutputFormat format, QrPayloadDetectOptions? detectOptions = null, QrRenderOptions? renderOptions = null, QrEncodingOptions? encodingOptions = null, OutputOptions? extras = null) =>
-        EncodeAuto(payload, detectOptions, encodingOptions).Render(format, renderOptions, extras);
+    public static RenderedOutput RenderAuto(string payload, OutputFormat format, QrPayloadDetectOptions? detectOptions = null, QrRenderOptions? renderOptions = null, QrEncodingOptions? encodingOptions = null, OutputOptions? outputOptions = null) =>
+        EncodeAuto(payload, detectOptions, encodingOptions).Render(format, renderOptions, outputOptions);
 
     /// <summary>Renders text as console-friendly ASCII with automatic sizing.</summary>
     public static string AsciiConsole(string payload, AsciiConsoleOptions? consoleOptions = null, QrRenderOptions? renderOptions = null, QrEncodingOptions? encodingOptions = null) =>

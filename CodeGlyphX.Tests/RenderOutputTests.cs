@@ -40,8 +40,8 @@ public class RenderOutputTests {
 
     [Fact]
     public void RenderHtmlHonorsTitleExtras() {
-        var extras = new OutputOptions { HtmlTitle = "Render Output Test" };
-        var output = Barcode.Render(SymbolFormat.Code128, "CODE128-HTML", OutputFormat.Html, extras: extras);
+        var outputOptions = new OutputOptions { HtmlTitle = "Render Output Test" };
+        var output = Barcode.Render(SymbolFormat.Code128, "CODE128-HTML", OutputFormat.Html, outputOptions: outputOptions);
 
         var text = output.GetText();
         Assert.Contains("<title>Render Output Test</title>", text, StringComparison.OrdinalIgnoreCase);

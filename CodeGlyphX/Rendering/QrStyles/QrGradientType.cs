@@ -1,7 +1,7 @@
 namespace CodeGlyphX.Rendering;
 
 /// <summary>
-/// Gradient types for QR PNG rendering.
+/// Gradient types for QR rendering.
 /// </summary>
 public enum QrGradientType {
     /// <summary>

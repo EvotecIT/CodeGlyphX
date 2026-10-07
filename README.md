@@ -115,7 +115,7 @@ using CodeGlyphX.Rendering;
 
 var png = QR.Render("https://example.com", OutputFormat.Png,
     new QrRenderOptions { ModuleSize = 16 },
-    extras: new OutputOptions { PngCompressionLevel = 6 });
+    outputOptions: new OutputOptions { PngCompressionLevel = 6 });
 ```
 
 `PngCompressionLevel` also applies to generic matrix and linear-barcode rendering. Use `0` for stored data or `1` through `9` for compression. Leaving it unset preserves each renderer's existing default.

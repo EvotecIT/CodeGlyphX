@@ -8,54 +8,54 @@ public static partial class DataMatrixCode {
     /// <summary>
     /// Renders a Data Matrix payload to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(string text, OutputFormat format, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static RenderedOutput Render(string text, OutputFormat format, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var modules = Encode(text, mode).Modules;
-        return Render(modules, format, options, extras);
+        return Render(modules, format, options, outputOptions);
     }
 
     /// <summary>
     /// Renders a Data Matrix payload using explicit encoding options.
     /// </summary>
-    public static RenderedOutput Render(string text, OutputFormat format, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static RenderedOutput Render(string text, OutputFormat format, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var modules = Encode(text, encodingOptions).Modules;
-        return Render(modules, format, options, extras);
+        return Render(modules, format, options, outputOptions);
     }
 
     /// <summary>
     /// Renders a Data Matrix byte payload to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(byte[] data, OutputFormat format, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static RenderedOutput Render(byte[] data, OutputFormat format, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var modules = DataMatrixEncoder.EncodeBytes(data, mode);
-        return Render(modules, format, options, extras);
+        return Render(modules, format, options, outputOptions);
     }
 
     /// <summary>
     /// Renders a Data Matrix byte payload using explicit encoding options.
     /// </summary>
-    public static RenderedOutput Render(byte[] data, OutputFormat format, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static RenderedOutput Render(byte[] data, OutputFormat format, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var modules = DataMatrixEncoder.EncodeBytes(data, encodingOptions);
-        return Render(modules, format, options, extras);
+        return Render(modules, format, options, outputOptions);
     }
 
 #if NET8_0_OR_GREATER
     /// <summary>
     /// Renders a Data Matrix byte payload to the requested output format.
     /// </summary>
-    public static RenderedOutput Render(ReadOnlySpan<byte> data, OutputFormat format, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static RenderedOutput Render(ReadOnlySpan<byte> data, OutputFormat format, DataMatrixEncodingMode mode = DataMatrixEncodingMode.Auto, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var modules = DataMatrixEncoder.EncodeBytes(data, mode);
-        return Render(modules, format, options, extras);
+        return Render(modules, format, options, outputOptions);
     }
 
     /// <summary>
     /// Renders a Data Matrix byte payload using explicit encoding options.
     /// </summary>
-    public static RenderedOutput Render(ReadOnlySpan<byte> data, OutputFormat format, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? extras = null) {
+    public static RenderedOutput Render(ReadOnlySpan<byte> data, OutputFormat format, DataMatrixEncodingOptions encodingOptions, MatrixOptions? options = null, OutputOptions? outputOptions = null) {
         var modules = DataMatrixEncoder.EncodeBytes(data, encodingOptions);
-        return Render(modules, format, options, extras);
+        return Render(modules, format, options, outputOptions);
     }
 #endif
 
-    private static RenderedOutput Render(BitMatrix modules, OutputFormat format, MatrixOptions? options, OutputOptions? extras) {
-        return MatrixOutputRenderer.Render(modules, format, options, extras);
+    private static RenderedOutput Render(BitMatrix modules, OutputFormat format, MatrixOptions? options, OutputOptions? outputOptions) {
+        return MatrixOutputRenderer.Render(modules, format, options, outputOptions);
     }
 }

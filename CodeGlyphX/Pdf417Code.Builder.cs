@@ -206,25 +206,25 @@ public sealed class Pdf417Builder {
     /// <summary>
     /// Renders the configured PDF417 code to the requested output format.
     /// </summary>
-    public RenderedOutput Render(OutputFormat format, OutputOptions? extras = null) {
+    public RenderedOutput Render(OutputFormat format, OutputOptions? outputOptions = null) {
         return _text is not null
-            ? Pdf417Code.Render(_text, format, _encodeOptions, _renderOptions, extras ?? OutputOptions)
-            : Pdf417Code.Render(_bytes!, format, _encodeOptions, _renderOptions, extras ?? OutputOptions);
+            ? Pdf417Code.Render(_text, format, _encodeOptions, _renderOptions, outputOptions ?? OutputOptions)
+            : Pdf417Code.Render(_bytes!, format, _encodeOptions, _renderOptions, outputOptions ?? OutputOptions);
     }
 
     /// <summary>
     /// Saves the configured PDF417 code, selecting the output format from the file extension.
     /// </summary>
-    public string Save(string path, OutputOptions? extras = null) {
+    public string Save(string path, OutputOptions? outputOptions = null) {
         var format = OutputFormatInfo.Resolve(path, OutputFormat.Png);
-        return OutputWriter.Write(path, Render(format, extras));
+        return OutputWriter.Write(path, Render(format, outputOptions));
     }
 
     /// <summary>
     /// Writes the configured PDF417 code to a stream in the requested output format.
     /// </summary>
-    public void Save(Stream stream, OutputFormat format, OutputOptions? extras = null) {
+    public void Save(Stream stream, OutputFormat format, OutputOptions? outputOptions = null) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        OutputWriter.Write(stream, Render(format, extras));
+        OutputWriter.Write(stream, Render(format, outputOptions));
     }
 }
