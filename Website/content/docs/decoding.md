@@ -103,9 +103,12 @@ PNG, JPEG, WebP, BMP, GIF, TIFF, PPM/PGM/PBM/PAM, TGA, ICO/CUR, XBM, and XPM are
 ## Resource-limit semantics
 
 - `MaxBytes` and `MaxPixels`: `null` inherits the corresponding `ImageReader` global; `0` disables that per-call limit.
+- `MaxDecodedBytes`: limits individual decoded pixel or raster working buffers and retained animation frame pixels. It excludes encoded input copies and codec metadata, so it is not a cap on total process memory. `null` inherits the `ImageReader` global; `0` disables this limit.
 - `MaxDimension`: validates the original image first and then resizes the single-image RGBA output. Recognition uses only the resized pixels and does not retry at the original resolution. It does not reduce codec peak memory.
 - `RecognitionBudgetMilliseconds`: cooperatively limits specialist symbol recognition after raster decoding; it does not time the codec. Use `ScanOptions.TimeoutMilliseconds` for one deadline across image decoding and all selected scanner families.
 - Animation frame, duration, and per-frame pixel limits follow the same `null`/`0`/positive inheritance model.
+
+Negative limit values throw `ArgumentOutOfRangeException` when assigning properties or calling the `Screen`, `Guarded` and `Strict` factories. Use zero where the documented intent is to disable a limit.
 
 ## Known limits
 

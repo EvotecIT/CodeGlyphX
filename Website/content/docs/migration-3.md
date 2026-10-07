@@ -24,6 +24,7 @@ CodeGlyphX 3.0 separates encoding from appearance, uses one general scanner, and
 | `CodeGlyph.TryDecodeImage`, `TryDecodeAll` | `SymbolScanner.Scan`, `ScanFile` and stream/file async variants |
 | `CodeGlyph.TryDecode(BitMatrix, ...)` | `SymbolDecoder.TryDecode` |
 | `CodeGlyphDecoded.Kind` and nullable family properties | `DetectedSymbol.Format`, common payload properties and typed `Metadata` |
+| `CodeGlyphBudget` scope | `ScanOptions.TimeoutMilliseconds`, or a specialist decoder's budget option |
 | Public `Barcode` and `MatrixBarcode` calls with `BarcodeType` | The same facade calls with `SymbolFormat` |
 | Mutable `RenderedOutput.Data` array | Read-only `Data`; call `ToArray()` for an owned copy |
 | `qr.Save(format, stream, ...)` | `qr.Save(stream, format, ...)` |
@@ -107,6 +108,8 @@ Console.WriteLine(scan.CompletionReason);
 
 `Status == Success` means at least one symbol was decoded. `CompletionReason` records whether the requested scan completed, reached `MaxSymbols`, was cancelled or exceeded its deadline. Partial results stay available after cancellation or a deadline. `IsPartial` also reports when a symbol limit stopped the scan. `MaxSymbols = 1` requests the first match; it does not establish that the image contains only one symbol.
 
+Replace `CodeGlyphBudget` scopes with `ScanOptions.TimeoutMilliseconds` for one cooperative deadline across reading, image decoding and recognition. For specialist calls, use `ImageDecodeOptions.RecognitionBudgetMilliseconds` or `QrPixelDecodeOptions.BudgetMilliseconds`; these recognition budgets do not time the image codec.
+
 `RawBytes` are the bytes recovered by a decoder that exposes them. `HasRawBytes` distinguishes unavailable bytes from a decoded empty payload. Do not reconstruct original encoded bytes by applying UTF-8 to `Text`. Family-specific information belongs in typed metadata rather than a nullable union of unrelated decoder result types. Unpopulated `FrameIndex` and `PageIndex` properties are removed; a scan processes the image selected by the image reader, not every frame or page.
 
 Data Matrix, PDF417 and Aztec can return multiple results through bounded tile retries when `EnableTileScan` is enabled. This is not exhaustive recognition of arbitrary layouts.
@@ -138,6 +141,10 @@ Specialist matrix encoders return symbols that retain their format metadata. `Da
 
 Stream readers consume from the current position through the end, including `MemoryStream` fast paths. Size limits apply to the remaining input. Set `Position = 0` explicitly before reading a stream again.
 
+When a seekable stream reports more remaining bytes than the configured input limit, bounded readers reject it before reading and leave its position unchanged. For streams without a known remaining length, the reader consumes only enough input to detect the limit violation.
+
 Async stream decoding follows task cancellation: a cancelled token produces `OperationCanceledException` rather than `null` or `FormatException`. The unified scanner returns structured cancellation in `ScanResult`, retaining any decoded symbols. Cancellation and recognition deadlines are cooperative.
 
-A default `DecodeResult<T>` is not a successful result. Construct success and failure results explicitly, and never use `DecodeFailureReason.None` to construct a failure. Invalid option values fail validation instead of silently disabling resource guards.
+A default `DecodeResult<T>` is not a successful result. Construct success and failure results explicitly, and never use `DecodeFailureReason.None` to construct a failure.
+
+`ImageDecodeOptions` properties and preset factories reject negative limits with `ArgumentOutOfRangeException`. For nullable resource limits, `null` inherits the corresponding `ImageReader` global and `0` explicitly disables that limit. `MaxDimension = 0` retains the original dimensions; a zero recognition budget disables that budget. Check callers that used negative values to mean unlimited and replace them with the documented zero value.
