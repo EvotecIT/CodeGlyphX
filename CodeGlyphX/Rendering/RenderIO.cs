@@ -144,7 +144,8 @@ public static class RenderIO {
         if (info.Exists && info.Length > maxBytes) {
             throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, info.Length, maxBytes));
         }
-        return File.ReadAllBytes(path);
+        using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.SequentialScan);
+        return ReadBinary(fs, maxBytes);
     }
 
     /// <summary>
@@ -153,8 +154,10 @@ public static class RenderIO {
     /// <param name="path">Input file path.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Binary file contents.</returns>
+    /// <exception cref="OperationCanceledException">The supplied cancellation token is cancelled.</exception>
     public static async Task<byte[]> ReadBinaryAsync(string path, CancellationToken cancellationToken = default) {
         if (path is null) throw new ArgumentNullException(nameof(path));
+        cancellationToken.ThrowIfCancellationRequested();
         using var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
         return await ReadBinaryAsync(fs, cancellationToken).ConfigureAwait(false);
     }
@@ -166,8 +169,10 @@ public static class RenderIO {
     /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Binary file contents.</returns>
+    /// <exception cref="OperationCanceledException">The supplied cancellation token is cancelled.</exception>
     public static async Task<byte[]> ReadBinaryAsync(string path, int maxBytes, CancellationToken cancellationToken = default) {
         if (path is null) throw new ArgumentNullException(nameof(path));
+        cancellationToken.ThrowIfCancellationRequested();
         if (maxBytes <= 0) return await ReadBinaryAsync(path, cancellationToken).ConfigureAwait(false);
         var info = new FileInfo(path);
         if (info.Exists && info.Length > maxBytes) {
@@ -178,34 +183,31 @@ public static class RenderIO {
     }
 
     /// <summary>
-    /// Reads binary data from a stream.
+    /// Reads binary data from the current stream position through the end of the stream.
     /// </summary>
     /// <param name="stream">Input stream.</param>
     /// <returns>Binary data.</returns>
     public static byte[] ReadBinary(Stream stream) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory) return memory.ToArray();
         using var ms = new MemoryStream();
         stream.CopyTo(ms);
         return ms.ToArray();
     }
 
     /// <summary>
-    /// Reads binary data from a stream with a size limit.
+    /// Reads remaining binary data from a stream with a size limit, advancing its position.
     /// </summary>
+    /// <remarks>
+    /// Known oversized seekable streams are rejected before reading. Other streams are read at most one byte beyond the limit.
+    /// The input stream remains open.
+    /// </remarks>
     /// <param name="stream">Input stream.</param>
     /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
     /// <returns>Binary data.</returns>
     public static byte[] ReadBinary(Stream stream, int maxBytes) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
         if (maxBytes <= 0) return ReadBinary(stream);
-
-        if (stream is MemoryStream memory) {
-            if (memory.Length > maxBytes) {
-                throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, memory.Length, maxBytes));
-            }
-            return memory.ToArray();
-        }
+        ValidateRemainingLength(stream, maxBytes);
 
         using var ms = new MemoryStream();
         var buffer = new byte[(int)Math.Min(81920, (long)maxBytes + 1)];
@@ -222,43 +224,47 @@ public static class RenderIO {
     }
 
     /// <summary>
-    /// Reads binary data from a stream asynchronously.
+    /// Reads binary data from the current stream position through the end of the stream asynchronously.
     /// </summary>
     /// <param name="stream">Input stream.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Binary data.</returns>
+    /// <exception cref="OperationCanceledException">The supplied cancellation token is cancelled.</exception>
     public static async Task<byte[]> ReadBinaryAsync(Stream stream, CancellationToken cancellationToken = default) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory) return memory.ToArray();
+        cancellationToken.ThrowIfCancellationRequested();
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms, 81920, cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
         return ms.ToArray();
     }
 
     /// <summary>
-    /// Reads binary data from a stream asynchronously with a size limit.
+    /// Reads remaining binary data from a stream asynchronously with a size limit, advancing its position.
     /// </summary>
+    /// <remarks>
+    /// Known oversized seekable streams are rejected before reading. Other streams are read at most one byte beyond the limit.
+    /// The input stream remains open.
+    /// </remarks>
     /// <param name="stream">Input stream.</param>
     /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Binary data.</returns>
+    /// <exception cref="OperationCanceledException">The supplied cancellation token is cancelled.</exception>
     public static async Task<byte[]> ReadBinaryAsync(Stream stream, int maxBytes, CancellationToken cancellationToken = default) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
+        cancellationToken.ThrowIfCancellationRequested();
         if (maxBytes <= 0) return await ReadBinaryAsync(stream, cancellationToken).ConfigureAwait(false);
-
-        if (stream is MemoryStream memory) {
-            if (memory.Length > maxBytes) {
-                throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, memory.Length, maxBytes));
-            }
-            return memory.ToArray();
-        }
+        ValidateRemainingLength(stream, maxBytes);
 
         using var ms = new MemoryStream();
         var buffer = new byte[(int)Math.Min(81920, (long)maxBytes + 1)];
         long total = 0;
         while (true) {
+            cancellationToken.ThrowIfCancellationRequested();
             var count = (int)Math.Min(buffer.Length, (long)maxBytes - total + 1);
             var read = await stream.ReadAsync(buffer, 0, count, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
             if (read <= 0) break;
             total += read;
             if (total > maxBytes) throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, total, maxBytes));
@@ -274,6 +280,7 @@ public static class RenderIO {
     /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Binary data when successful; otherwise null.</returns>
+    /// <exception cref="OperationCanceledException">The supplied cancellation token is cancelled.</exception>
     public static async Task<byte[]?> TryReadBinaryAsync(Stream stream, int maxBytes, CancellationToken cancellationToken = default) {
         try {
             return await ReadBinaryAsync(stream, maxBytes, cancellationToken).ConfigureAwait(false);
@@ -289,6 +296,7 @@ public static class RenderIO {
     /// <param name="maxBytes">Maximum bytes to read (0 to disable).</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Binary data when successful; otherwise null.</returns>
+    /// <exception cref="OperationCanceledException">The supplied cancellation token is cancelled.</exception>
     public static async Task<byte[]?> TryReadBinaryAsync(string path, int maxBytes, CancellationToken cancellationToken = default) {
         try {
             return await ReadBinaryAsync(path, maxBytes, cancellationToken).ConfigureAwait(false);
@@ -320,14 +328,12 @@ public static class RenderIO {
     public static bool TryReadBinary(string path, int maxBytes, out byte[] data) {
         data = Array.Empty<byte>();
         if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return false;
-        if (maxBytes <= 0) {
-            data = File.ReadAllBytes(path);
+        try {
+            data = ReadBinary(path, maxBytes);
             return true;
+        } catch (FormatException) {
+            return false;
         }
-        var info = new FileInfo(path);
-        if (info.Exists && info.Length > maxBytes) return false;
-        data = File.ReadAllBytes(path);
-        return true;
     }
 
     /// <summary>
@@ -518,6 +524,14 @@ public static class RenderIO {
         if (fileName is null) throw new ArgumentNullException(nameof(fileName));
         EnsureSafeFileName(fileName);
         return WriteTextAsync(Path.Combine(directory, fileName), text, encoding, cancellationToken);
+    }
+
+    private static void ValidateRemainingLength(Stream stream, int maxBytes) {
+        if (!stream.CanSeek) return;
+        var remaining = stream.Length - stream.Position;
+        if (remaining > maxBytes) {
+            throw new FormatException(GuardMessages.ForBytes(InputLimitMessage, remaining, maxBytes));
+        }
     }
 
     private static void EnsureSafeFileName(string fileName) {

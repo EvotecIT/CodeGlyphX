@@ -30,6 +30,9 @@
     <Compile Include="QrImageDecodeParityData.cs" />
     <Compile Include="QrImageDecodeParitySharedTests.cs" />
     <Compile Include="CodecResourceBoundaryTests.cs" />
+    <Compile Include="StreamContractTests.cs" />
+    <Compile Include="ValueContractTests.cs" />
+    <Compile Include="QrEasyTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />
     <Compile Include="QrProceduralArtTests.cs" />

@@ -305,9 +305,6 @@ public static partial class Barcode {
     /// </summary>
     public static DecodeResult<BarcodeDecoded> DecodeImageResult(Stream stream, BarcodeType? expectedType = null, ImageDecodeOptions? options = null, BarcodeDecodeOptions? decodeOptions = null, CancellationToken cancellationToken = default) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeImageResult(buffer.AsSpan(), expectedType, options, decodeOptions, cancellationToken);
-        }
         var maxBytes = Math.Max(0, options?.MaxBytes ?? ImageReader.MaxImageBytes);
         if (!RenderIO.TryReadBinary(stream, maxBytes, out var data)) {
             return new DecodeResult<BarcodeDecoded>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");

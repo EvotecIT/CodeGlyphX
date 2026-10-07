@@ -490,9 +490,6 @@ public static partial class DataMatrixCode {
     /// </summary>
     public static DecodeResult<string> DecodeImageResult(Stream stream, ImageDecodeOptions? options = null, CancellationToken cancellationToken = default) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            return DecodeImageResult(buffer.AsSpan(), options, cancellationToken);
-        }
         if (!DecodeResultHelpers.TryReadBinary(stream, options, out var data)) {
             return new DecodeResult<string>(DecodeFailureReason.InvalidInput, default, TimeSpan.Zero, "image payload exceeds size limits");
         }

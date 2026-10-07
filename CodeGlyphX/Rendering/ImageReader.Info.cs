@@ -59,10 +59,6 @@ public static partial class ImageReader {
     /// </summary>
     public static bool TryReadInfo(Stream stream, out ImageInfo info) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) { info = default; return false; }
-            return TryReadInfo(buffer.AsSpan(), out info);
-        }
         if (!RenderIO.TryReadBinary(stream, MaxImageBytes, out var data)) { info = default; return false; }
         return TryReadInfo(data, out info);
     }
@@ -96,10 +92,6 @@ public static partial class ImageReader {
     /// </summary>
     public static bool TryReadAnimationInfo(Stream stream, out ImageAnimationInfo info) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) { info = default; return false; }
-            return TryReadAnimationInfo(buffer.AsSpan(), out info);
-        }
         if (!RenderIO.TryReadBinary(stream, MaxImageBytes, out var data)) { info = default; return false; }
         return TryReadAnimationInfo(data, out info);
     }
@@ -109,10 +101,6 @@ public static partial class ImageReader {
     /// </summary>
     public static bool TryReadInfo(Stream stream, int pageIndex, out ImageInfo info) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) { info = default; return false; }
-            return TryReadInfo(buffer.AsSpan(), pageIndex, out info);
-        }
         if (!RenderIO.TryReadBinary(stream, MaxImageBytes, out var data)) { info = default; return false; }
         return TryReadInfo(data, pageIndex, out info);
     }
@@ -139,10 +127,6 @@ public static partial class ImageReader {
     /// </summary>
     public static bool TryReadPageCount(Stream stream, out int pageCount) {
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-        if (stream is MemoryStream memory && memory.TryGetBuffer(out var buffer)) {
-            if (MaxImageBytes > 0 && buffer.Count > MaxImageBytes) { pageCount = 0; return false; }
-            return TryReadPageCount(buffer.AsSpan(), out pageCount);
-        }
         if (!RenderIO.TryReadBinary(stream, MaxImageBytes, out var data)) { pageCount = 0; return false; }
         return TryReadPageCount(data, out pageCount);
     }
