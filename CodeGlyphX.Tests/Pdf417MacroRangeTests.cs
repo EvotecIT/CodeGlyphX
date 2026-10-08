@@ -171,10 +171,90 @@ public sealed class Pdf417MacroRangeTests {
         Assert.Equal("AB", assembler.Assemble());
     }
 
+    [Theory]
+    [InlineData("FileName", false)]
+    [InlineData("FileName", true)]
+    [InlineData("Timestamp", false)]
+    [InlineData("Timestamp", true)]
+    [InlineData("Sender", false)]
+    [InlineData("Sender", true)]
+    [InlineData("Addressee", false)]
+    [InlineData("Addressee", true)]
+    [InlineData("FileSize", false)]
+    [InlineData("FileSize", true)]
+    [InlineData("Checksum", false)]
+    [InlineData("Checksum", true)]
+    public void Assembler_RejectsConflictingGlobalFieldsAtomically(string field, bool reverseArrival) {
+        var firstIndex = reverseArrival ? 1 : 0;
+        var nextIndex = 1 - firstIndex;
+        var assembler = new Pdf417MacroAssembler();
+        Assert.True(assembler.TryAdd(EncodeAndDecode(firstIndex == 0 ? "A" : "B", CreateGlobalMacroOptions(firstIndex))));
+        var conflicting = CreateGlobalMacroOptions(nextIndex);
+        switch (field) {
+            case "FileName": conflicting.FileName = "A.txt"; break;
+            case "Timestamp": conflicting.Timestamp = 1700000001; break;
+            case "Sender": conflicting.Sender = "Sender"; break;
+            case "Addressee": conflicting.Addressee = "Receiver"; break;
+            case "FileSize": conflicting.FileSize = 101; break;
+            case "Checksum": conflicting.Checksum = 12346; break;
+            default: throw new InvalidOperationException("Unknown metadata field.");
+        }
+
+        Assert.False(assembler.TryAdd(EncodeAndDecode(nextIndex == 0 ? "A" : "B", conflicting)));
+        Assert.Equal(1, assembler.ReceivedCount);
+        Assert.Equal("123", assembler.FileId);
+        Assert.Equal(2, assembler.SegmentCount);
+        Assert.Equal(reverseArrival, assembler.HasLastSegment);
+        Assert.Equal(reverseArrival ? 1 : (int?)null, assembler.LastSegmentIndex);
+        Assert.False(assembler.IsComplete);
+        AssertGlobalFields(assembler);
+
+        Assert.True(assembler.TryAdd(EncodeAndDecode(nextIndex == 0 ? "A" : "B", CreateGlobalMacroOptions(nextIndex))));
+        Assert.Equal("AB", assembler.Assemble());
+        AssertGlobalFields(assembler);
+    }
+
+    [Theory]
+    [InlineData(0)] // Matching fields on both segments.
+    [InlineData(1)] // Fields first become known on the last segment.
+    [InlineData(2)] // The last segment omits fields already known.
+    public void Assembler_AcceptsMatchingOrMissingGlobalFields(int missingFields) {
+        var assembler = new Pdf417MacroAssembler();
+        var first = missingFields == 1
+            ? new Pdf417MacroOptions { FileId = "123", SegmentIndex = 0, SegmentCount = 2 }
+            : CreateGlobalMacroOptions(0);
+        var last = missingFields == 2
+            ? new Pdf417MacroOptions { FileId = "123", SegmentIndex = 1, SegmentCount = 2, IsLastSegment = true }
+            : CreateGlobalMacroOptions(1);
+        Assert.True(assembler.TryAdd(EncodeAndDecode("A", first)));
+        Assert.True(assembler.TryAdd(EncodeAndDecode("B", last)));
+        Assert.Equal("AB", assembler.Assemble());
+        AssertGlobalFields(assembler);
+    }
+
+    private static Pdf417MacroOptions CreateGlobalMacroOptions(int index) => new Pdf417MacroOptions {
+        FileId = "123", SegmentIndex = index, SegmentCount = 2, IsLastSegment = index == 1,
+        FileName = "a.txt", Timestamp = 1700000000, Sender = "sender", Addressee = "receiver",
+        FileSize = 100, Checksum = 12345
+    };
+
+    private static void AssertGlobalFields(Pdf417MacroAssembler assembler) {
+        Assert.Equal("a.txt", assembler.FileName);
+        Assert.Equal(1700000000L, assembler.Timestamp);
+        Assert.Equal("sender", assembler.Sender);
+        Assert.Equal("receiver", assembler.Addressee);
+        Assert.Equal(100L, assembler.FileSize);
+        Assert.Equal(12345, assembler.Checksum);
+    }
+
     private static Pdf417Decoded EncodeAndDecode(string text, int index, int? count, bool last) {
-        var symbol = Pdf417Code.EncodeMacro(text, new Pdf417MacroOptions {
+        return EncodeAndDecode(text, new Pdf417MacroOptions {
             FileId = "123", SegmentIndex = index, SegmentCount = count, IsLastSegment = last
         });
+    }
+
+    private static Pdf417Decoded EncodeAndDecode(string text, Pdf417MacroOptions macro) {
+        var symbol = Pdf417Code.EncodeMacro(text, macro);
         Assert.True(Pdf417Decoder.TryDecode(symbol.Modules, out Pdf417Decoded decoded));
         Assert.NotNull(decoded.Macro);
         return decoded;

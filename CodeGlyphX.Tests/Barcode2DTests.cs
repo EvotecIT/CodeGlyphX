@@ -262,7 +262,7 @@ public sealed class Barcode2DTests {
     [Fact]
     public void Pdf417_Macro_RoundTrip_Modules() {
         var options = new Pdf417MacroOptions {
-            SegmentIndex = 5,
+            SegmentIndex = 11,
             FileId = "123456",
             IsLastSegment = true,
             SegmentCount = 12,
@@ -278,7 +278,7 @@ public sealed class Barcode2DTests {
         Assert.True(Pdf417Decoder.TryDecode(matrix, out Pdf417Decoded decoded));
         Assert.Equal("MacroPayload", decoded.Text);
         Assert.NotNull(decoded.Macro);
-        Assert.Equal(5, decoded.Macro!.SegmentIndex);
+        Assert.Equal(11, decoded.Macro!.SegmentIndex);
         Assert.Equal("123456", decoded.Macro.FileId);
         Assert.True(decoded.Macro.IsLastSegment);
         Assert.Equal(12, decoded.Macro.SegmentCount);

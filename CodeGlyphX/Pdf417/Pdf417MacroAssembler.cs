@@ -111,7 +111,8 @@ public sealed class Pdf417MacroAssembler {
 
     /// <summary>
     /// Attempts to add a Macro PDF417 segment with explicit metadata. Inconsistent file identifiers,
-    /// counts, indexes, or last-segment markers are rejected without changing the collected segments.
+    /// counts, indexes, last-segment markers, or repeated global fields are rejected without changing
+    /// the collected segments.
     /// </summary>
     public bool TryAdd(string text, Pdf417MacroMetadata macro) {
         if (macro is null) throw new ArgumentNullException(nameof(macro));
@@ -171,6 +172,12 @@ public sealed class Pdf417MacroAssembler {
 
     private bool CanAcceptSegment(Pdf417MacroMetadata macro) {
         if (!Pdf417MacroMetadata.IsValidSegment(macro.SegmentIndex, macro.SegmentCount, macro.IsLastSegment)) return false;
+        if (_fileName is not null && macro.FileName is not null && !string.Equals(_fileName, macro.FileName, StringComparison.Ordinal)) return false;
+        if (_timestamp.HasValue && macro.Timestamp.HasValue && _timestamp.Value != macro.Timestamp.Value) return false;
+        if (_sender is not null && macro.Sender is not null && !string.Equals(_sender, macro.Sender, StringComparison.Ordinal)) return false;
+        if (_addressee is not null && macro.Addressee is not null && !string.Equals(_addressee, macro.Addressee, StringComparison.Ordinal)) return false;
+        if (_fileSize.HasValue && macro.FileSize.HasValue && _fileSize.Value != macro.FileSize.Value) return false;
+        if (_checksum.HasValue && macro.Checksum.HasValue && _checksum.Value != macro.Checksum.Value) return false;
 
         var hasKnownCount = TryGetExpectedCount(out var knownCount);
         int? expected = hasKnownCount ? knownCount : null;

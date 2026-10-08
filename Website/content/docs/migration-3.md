@@ -94,7 +94,7 @@ PDF417 uses standard top-down row order and places Macro metadata after the payl
 
 Malformed numeric compaction and Macro blocks without a file identifier are rejected. Macro segment indexes range from `0` to `99998`. A supplied segment count must be between `1` and `99999`, greater than the index, and consistent with the last-segment flag: only index `count - 1` is marked as last. Index `99998` must be marked as last even when the count is omitted. Invalid metadata is rejected during encoding and decoding.
 
-Set the same segment count on every segment when using it. The encoder writes the count in the required two codewords and permits global optional fields on any segment; repeated fields should have the same value for the file. The decoder also accepts valid short counts and counts supplied only on the last segment from older producers. The assembler rejects inconsistent counts, indexes, or last-segment markers without changing the segments already collected.
+Set the same segment count on every segment when using it. The encoder writes the count in the required two codewords and permits global optional fields on any segment; repeated fields should have the same value for the file. The decoder also accepts valid short counts and counts supplied only on the last segment from older producers. The assembler rejects inconsistent counts, indexes, last-segment markers, or repeated global fields without changing the segments already collected.
 
 PDF417 image decoding fits fractional module spacing produced by physical document placement, including compact symbols and quarter-turn images. It retains the existing integer, skew and perspective sampling paths and verifies error correction before returning text or Macro metadata.
 
