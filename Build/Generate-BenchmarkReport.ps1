@@ -669,8 +669,8 @@ if ($packRunnerPayload -and -not [string]::IsNullOrWhiteSpace($packRunnerPayload
 $lines.Add("- Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.")
 $lines.Add("- Comparisons target PNG output and include encode+render (not encode-only).")
 $lines.Add("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
-$lines.Add("- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).")
-$lines.Add("- Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).")
+$lines.Add("- ZXing.Net and Barcoder encode symbols with their core packages; both use CodeGlyphX's managed PNG encoder through benchmark adapters.")
+$lines.Add("- These lanes compare symbol encoding and managed PNG composition, not the third-party image renderers. Results from earlier renderer configurations require a separate run.")
 $lines.Add("- QRCoder uses PngByteQRCode (managed PNG output, no external renderer).")
 $lines.Add("- QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).")
 $lines.Add("- QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).")
@@ -1028,8 +1028,8 @@ $notesList = @(
     $runModeLabel,
     "Comparisons target PNG output and include encode+render (not encode-only).",
     "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-    "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-    "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+    "ZXing.Net and Barcoder encode symbols with their core packages; both use CodeGlyphX's managed PNG encoder through benchmark adapters.",
+    "These lanes compare symbol encoding and managed PNG composition, not the third-party image renderers. Results from earlier renderer configurations require a separate run.",
     "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
     "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
     "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."

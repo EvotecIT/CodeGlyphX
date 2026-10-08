@@ -1,16 +1,8 @@
 using System;
-using System.IO;
 using CodeGlyphX.Rendering;
-#if COMPARE_ZXING || COMPARE_BARCODER
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
-#endif
 #if COMPARE_ZXING
+using CodeGlyphX.Rendering.Png;
 using ZXing.Common;
-#endif
-#if COMPARE_BARCODER
-using Barcoder.Renderer.Image;
 #endif
 
 namespace CodeGlyphX.Benchmarks;
@@ -54,41 +46,34 @@ internal static class CompareBenchmarkHelpers
             Margin = margin
         };
     }
+
+    public static byte[] EncodeZxingPng(ZXing.BarcodeWriterGeneric writer, string content)
+    {
+        var matrix = writer.Encode(content);
+        var pixels = new byte[checked(matrix.Width * matrix.Height * 4)];
+        for (var y = 0; y < matrix.Height; y++)
+        {
+            for (var x = 0; x < matrix.Width; x++)
+            {
+                var offset = (y * matrix.Width + x) * 4;
+                var value = matrix[x, y] ? (byte)0 : (byte)255;
+                pixels[offset] = pixels[offset + 1] = pixels[offset + 2] = value;
+                pixels[offset + 3] = 255;
+            }
+        }
+        return PngImageEncoder.EncodeRgba32(pixels, matrix.Width, matrix.Height);
+    }
 #endif
 
 #if COMPARE_BARCODER
-    public static ImageRendererOptions CreateBarcoderMatrixOptions(MatrixOptions options)
+    public static ManagedBarcodeRenderer CreateBarcoderMatrixRenderer(MatrixOptions options)
     {
-        return new ImageRendererOptions
-        {
-            ImageFormat = Barcoder.Renderer.Image.ImageFormat.Png,
-            PixelSize = options.ModuleSize,
-            CustomMargin = options.QuietZone * options.ModuleSize
-        };
+        return new ManagedBarcodeRenderer(options.ModuleSize, options.QuietZone, 1);
     }
 
-    public static ImageRendererOptions CreateBarcoderBarcodeOptions(BarcodeOptions options)
+    public static ManagedBarcodeRenderer CreateBarcoderBarcodeRenderer(BarcodeOptions options)
     {
-        return new ImageRendererOptions
-        {
-            ImageFormat = Barcoder.Renderer.Image.ImageFormat.Png,
-            PixelSize = options.ModuleSize,
-            CustomMargin = options.QuietZone * options.ModuleSize,
-            BarHeightFor1DBarcode = options.HeightModules * options.ModuleSize,
-            IncludeEanContentAsText = false
-        };
+        return new ManagedBarcodeRenderer(options.ModuleSize, options.QuietZone, options.HeightModules);
     }
 #endif
 }
-
-#if COMPARE_ZXING || COMPARE_BARCODER
-internal static class ImageSharpBenchmarkHelpers
-{
-    public static byte[] ToPngBytes(Image<Rgba32> image)
-    {
-        using var stream = new MemoryStream();
-        image.Save(stream, new PngEncoder());
-        return stream.ToArray();
-    }
-}
-#endif

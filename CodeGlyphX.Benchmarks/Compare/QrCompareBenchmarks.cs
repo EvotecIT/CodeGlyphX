@@ -1,4 +1,3 @@
-using System.IO;
 using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
@@ -12,7 +11,6 @@ using QRCoder;
 #endif
 #if COMPARE_BARCODER
 using Barcoder.Qr;
-using Barcoder.Renderer.Image;
 #endif
 
 namespace CodeGlyphX.Benchmarks;
@@ -35,7 +33,7 @@ public class QrCompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-    private ImageRenderer _barcoderRenderer = null!;
+    private ManagedBarcodeRenderer _barcoderRenderer = null!;
 #endif
 
     [GlobalSetup]
@@ -62,12 +60,11 @@ public class QrCompareBenchmarks
 
 #if COMPARE_BARCODER
         _targetSizePx = (qr.Size + _options.QuietZone * 2) * _options.ModuleSize;
-        var barcoderOptions = CompareBenchmarkHelpers.CreateBarcoderMatrixOptions(new MatrixOptions
+        _barcoderRenderer = CompareBenchmarkHelpers.CreateBarcoderMatrixRenderer(new MatrixOptions
         {
             ModuleSize = _options.ModuleSize,
             QuietZone = _options.QuietZone
         });
-        _barcoderRenderer = new ImageRenderer(barcoderOptions);
 #endif
     }
 
@@ -81,8 +78,7 @@ public class QrCompareBenchmarks
     [Benchmark(Description = "ZXing.Net QR PNG (medium)")]
     public byte[] ZXing_QrPng()
     {
-        using var image = _zxingWriter.WriteAsImageSharp<SixLabors.ImageSharp.PixelFormats.Rgba32>(MediumText);
-        return ImageSharpBenchmarkHelpers.ToPngBytes(image);
+        return CompareBenchmarkHelpers.EncodeZxingPng(_zxingWriter, MediumText);
     }
 #endif
 
@@ -99,9 +95,7 @@ public class QrCompareBenchmarks
     public byte[] Barcoder_QrPng()
     {
         var barcode = QrEncoder.Encode(MediumText, Barcoder.Qr.ErrorCorrectionLevel.M, Barcoder.Qr.Encoding.Auto);
-        using var stream = new MemoryStream();
-        _barcoderRenderer.Render(barcode, stream);
-        return stream.ToArray();
+        return _barcoderRenderer.Render(barcode);
     }
 #endif
 }

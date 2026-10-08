@@ -1,4 +1,3 @@
-using System.IO;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
@@ -8,7 +7,6 @@ using ZXing.PDF417;
 #endif
 #if COMPARE_BARCODER
 using Barcoder.Pdf417;
-using Barcoder.Renderer.Image;
 #endif
 
 namespace CodeGlyphX.Benchmarks;
@@ -31,7 +29,7 @@ public class Pdf417CompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-    private ImageRenderer _barcoderRenderer = null!;
+    private ManagedBarcodeRenderer _barcoderRenderer = null!;
 #endif
 
     [GlobalSetup]
@@ -55,8 +53,7 @@ public class Pdf417CompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-        var barcoderOptions = CompareBenchmarkHelpers.CreateBarcoderMatrixOptions(_options);
-        _barcoderRenderer = new ImageRenderer(barcoderOptions);
+        _barcoderRenderer = CompareBenchmarkHelpers.CreateBarcoderMatrixRenderer(_options);
 #endif
     }
 
@@ -70,19 +67,17 @@ public class Pdf417CompareBenchmarks
     [Benchmark(Description = "ZXing.Net PDF417 PNG")]
     public byte[] ZXing_Pdf417_Png()
     {
-        using var image = _zxingWriter.WriteAsImageSharp<SixLabors.ImageSharp.PixelFormats.Rgba32>(LongText);
-        return ImageSharpBenchmarkHelpers.ToPngBytes(image);
+        return CompareBenchmarkHelpers.EncodeZxingPng(_zxingWriter, LongText);
     }
 #endif
 
 #if COMPARE_BARCODER
-    [Benchmark(Description = "Barcoder PDF417 PNG")]
+    // This upstream encoder's PDF417 output is not payload-qualified by either decoder.
+    // Keep the adapter available for pixel-fidelity preflight, outside timed comparisons.
     public byte[] Barcoder_Pdf417_Png()
     {
         var barcode = Pdf417Encoder.Encode(LongText, securityLevel: 2);
-        using var stream = new MemoryStream();
-        _barcoderRenderer.Render(barcode, stream);
-        return stream.ToArray();
+        return _barcoderRenderer.Render(barcode);
     }
 #endif
 }

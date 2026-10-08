@@ -1,4 +1,3 @@
-using System.IO;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
@@ -8,7 +7,6 @@ using ZXing.Aztec;
 #endif
 #if COMPARE_BARCODER
 using Barcoder.Aztec;
-using Barcoder.Renderer.Image;
 #endif
 
 namespace CodeGlyphX.Benchmarks;
@@ -31,7 +29,7 @@ public class AztecCompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-    private ImageRenderer _barcoderRenderer = null!;
+    private ManagedBarcodeRenderer _barcoderRenderer = null!;
 #endif
 
     [GlobalSetup]
@@ -56,8 +54,7 @@ public class AztecCompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-        var barcoderOptions = CompareBenchmarkHelpers.CreateBarcoderMatrixOptions(_options);
-        _barcoderRenderer = new ImageRenderer(barcoderOptions);
+        _barcoderRenderer = CompareBenchmarkHelpers.CreateBarcoderMatrixRenderer(_options);
 #endif
     }
 
@@ -71,8 +68,7 @@ public class AztecCompareBenchmarks
     [Benchmark(Description = "ZXing.Net Aztec PNG")]
     public byte[] ZXing_Aztec_Png()
     {
-        using var image = _zxingWriter.WriteAsImageSharp<SixLabors.ImageSharp.PixelFormats.Rgba32>(MediumText);
-        return ImageSharpBenchmarkHelpers.ToPngBytes(image);
+        return CompareBenchmarkHelpers.EncodeZxingPng(_zxingWriter, MediumText);
     }
 #endif
 
@@ -81,9 +77,7 @@ public class AztecCompareBenchmarks
     public byte[] Barcoder_Aztec_Png()
     {
         var barcode = AztecEncoder.Encode(MediumText, minimumEccPercentage: 33, userSpecifiedLayers: 0);
-        using var stream = new MemoryStream();
-        _barcoderRenderer.Render(barcode, stream);
-        return stream.ToArray();
+        return _barcoderRenderer.Render(barcode);
     }
 #endif
 }
