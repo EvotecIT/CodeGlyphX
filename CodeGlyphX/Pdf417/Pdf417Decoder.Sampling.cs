@@ -103,29 +103,39 @@ public static partial class Pdf417Decoder {
         decoded = null!;
         diagnostics ??= new Pdf417DecodeDiagnostics();
         var seenWidths = new HashSet<int>();
-        for (var compact = 0; compact <= 1; compact++) {
-            var offset = compact == 1 ? 35 : 69;
-            for (var columns = 1; columns <= 30; columns++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                var widthModules = columns * 17 + offset;
-                if (!seenWidths.Add(widthModules)) continue;
-                var stepX = box.Width / (double)widthModules;
-                if (stepX < 1) continue;
-                var estimatedRows = (int)Math.Round(box.Height / stepX);
-                // Axis rounding may shift the inferred row count by one. Keep the attempt
-                // space within the existing PDF417 row bounds and do not rescale the image.
-                for (var delta = 0; delta < 3; delta++) {
+        // Try the same bounded grid dimensions along either physical axis. Quarter-turn
+        // symbols use the transposed grid; the existing module decoder handles orientation.
+        for (var axis = 0; axis < 2; axis++) {
+            var transpose = axis == 1;
+            var dataWidth = transpose ? box.Height : box.Width;
+            var dataHeight = transpose ? box.Width : box.Height;
+            seenWidths.Clear();
+            for (var compact = 0; compact <= 1; compact++) {
+                var offset = compact == 1 ? 35 : 69;
+                for (var columns = 1; columns <= 30; columns++) {
                     if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                    var rows = estimatedRows + (delta == 0 ? 0 : delta == 1 ? -1 : 1);
-                    if (rows < 3 || rows > 90) continue;
-                    var stepY = box.Height / (double)rows;
-                    if (stepY < 1) continue;
-                    var modules = SampleGrid(pixels, width, height, stride, format, box.Left, box.Top,
-                        widthModules, rows, stepX, stepY, roundCenters: false, threshold, invert, cancellationToken);
-                    if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                    if (!TryDecodeWithRotations(modules, cancellationToken, diagnostics, out var value)) continue;
-                    decoded = new Pdf417Decoded(value, diagnostics.Macro);
-                    return true;
+                    var widthModules = columns * 17 + offset;
+                    if (!seenWidths.Add(widthModules)) continue;
+                    var stepAcross = dataWidth / (double)widthModules;
+                    if (stepAcross < 1) continue;
+                    var estimatedRows = (int)Math.Round(dataHeight / stepAcross);
+                    // Axis rounding may shift the inferred row count by one. The two axes,
+                    // 32 distinct widths and three row counts bound this to 192 grids per box.
+                    for (var delta = 0; delta < 3; delta++) {
+                        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                        var rows = estimatedRows + (delta == 0 ? 0 : delta == 1 ? -1 : 1);
+                        if (rows < 3 || rows > 90) continue;
+                        var stepRows = dataHeight / (double)rows;
+                        if (stepRows < 1) continue;
+                        var modules = SampleGrid(pixels, width, height, stride, format, box.Left, box.Top,
+                            transpose ? rows : widthModules, transpose ? widthModules : rows,
+                            transpose ? stepRows : stepAcross, transpose ? stepAcross : stepRows,
+                            roundCenters: false, threshold, invert, cancellationToken);
+                        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                        if (!TryDecodeWithRotations(modules, cancellationToken, diagnostics, out var value)) continue;
+                        decoded = new Pdf417Decoded(value, diagnostics.Macro);
+                        return true;
+                    }
                 }
             }
         }
