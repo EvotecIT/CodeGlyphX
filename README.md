@@ -5,7 +5,7 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, industrial and retail ba
 [![NuGet](https://img.shields.io/nuget/v/CodeGlyphX)](https://www.nuget.org/packages/CodeGlyphX)
 [![CI](https://github.com/EvotecIT/CodeGlyphX/actions/workflows/ci.yml/badge.svg)](https://github.com/EvotecIT/CodeGlyphX/actions/workflows/ci.yml)
 [![Codecov](https://codecov.io/gh/EvotecIT/CodeGlyphX/branch/master/graph/badge.svg)](https://codecov.io/gh/EvotecIT/CodeGlyphX)
-[![License](https://img.shields.io/github/license/EvotecIT/CodeGlyphX.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/EvotecIT/CodeGlyphX.svg)](https://github.com/EvotecIT/CodeGlyphX/blob/master/LICENSE)
 
 ## What it covers
 
@@ -93,9 +93,9 @@ QR.Save("https://codeglyphx.com", "styled.png", options,
 
 ### Colorful QR gallery
 
-![Prism, candy, neon, aurora, tropical and solar QR designs](Assets/Examples/qr-colorful-gallery.png)
+![Prism, candy, neon, aurora, tropical and solar QR designs](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-colorful-gallery.png)
 
-The [colorful-gallery example](CodeGlyphX.Examples/QrColorfulGalleryExample.cs) renders six designs: three combine module palettes, rounded finder patterns, gradients and confetti; three weave locally drawn illustrations into the QR data area. The designs use high error correction and preserve the functional patterns and a light quiet zone.
+The [colorful-gallery example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrColorfulGalleryExample.cs) renders six designs: three combine module palettes, rounded finder patterns, gradients and confetti; three weave locally drawn illustrations into the QR data area. The designs use high error correction and preserve the functional patterns and a light quiet zone.
 
 Run the gallery from the repository root with PowerShell:
 
@@ -146,11 +146,11 @@ if (report.AllPassed) File.WriteAllBytes("artistic-qr.png", png);
 
 `ValidateImage` reads the exported image and attempts to recover the exact expected text from the original, a half-size copy, and a lightly blurred copy. Its report records each result, including failed or budget-limited attempts. It uses CodeGlyphX's decoder; legacy targets have limited image recognition. A passing report does not certify other readers or printed output. Check the actual delivery size, compression, and target devices before distributing artwork.
 
-The [image-composition example](CodeGlyphX.Examples/QrImageCompositionExample.cs) generates these illustrations and both treatments without an external service:
+The [image-composition example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrImageCompositionExample.cs) generates these illustrations and both treatments without an external service:
 
 | Botanical | Sunset | Waves |
 | --- | --- | --- |
-| ![Botanical QR artwork](Assets/Examples/qr-image-botanical.png) | ![Sunset QR artwork](Assets/Examples/qr-image-sunset.png) | ![Wave QR artwork](Assets/Examples/qr-image-waves.png) |
+| ![Botanical QR artwork](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-image-botanical.png) | ![Sunset QR artwork](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-image-sunset.png) | ![Wave QR artwork](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-image-waves.png) |
 
 
 For rounded, connected, or organic image-aware shapes, set `Art`. This replaces the square treatment selected by `Style`/`CenterSize`. Decorative shapes adapt to local image edges while small scan anchors stay fixed at module centers. `Canvas` extends the same image around the QR, preserving a uniform light quiet zone. Dark ink and light paper colors can be chosen within enforced luminance bounds.
@@ -179,17 +179,17 @@ expressive.SavePng("expressive-qr.png");
 
 `ImagePositionX/Y` control image alignment; `Canvas.PositionX/Y` place the QR within the canvas. `ImageZoom` magnifies after fitting. With a canvas, the image fits the whole canvas rather than just the QR data area. `QrOffsetX`, `QrOffsetY`, and `QrSize` on the result locate the QR including its quiet zone. Validate the complete exported canvas at its delivery size.
 
-The [expressive-art example](CodeGlyphX.Examples/QrExpressiveArtExample.cs) produces six designs and baseline comparisons. The Earth photograph is credited to [NASA](Assets/Art/README.md); the other illustrations are drawn locally by the example.
+The [expressive-art example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrExpressiveArtExample.cs) produces six designs and baseline comparisons. The Earth photograph is credited to [NASA](https://github.com/EvotecIT/CodeGlyphX/blob/master/Assets/Art/README.md); the other illustrations are drawn locally by the example.
 
 | Botanical | Citrus | Landscape |
 | --- | --- | --- |
-| ![Botanical composition](Assets/Examples/qr-expressive-botanical.png) | ![Citrus composition](Assets/Examples/qr-expressive-citrus.png) | ![Landscape composition](Assets/Examples/qr-expressive-landscape.png) |
+| ![Botanical composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-botanical.png) | ![Citrus composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-citrus.png) | ![Landscape composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-landscape.png) |
 | Waves | Geometric | Earth photograph |
-| ![Waves composition](Assets/Examples/qr-expressive-waves.png) | ![Geometric composition](Assets/Examples/qr-expressive-geometric.png) | ![Earth composition](Assets/Examples/qr-expressive-earth.png) |
+| ![Waves composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-waves.png) | ![Geometric composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-geometric.png) | ![Earth composition](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-expressive-earth.png) |
 
 ### Protect a subject and compare artistic alternatives
 
-![Engraving, halftone, contour, mosaic and botanical QR treatments](Assets/Examples/qr-art-studio-styles.png)
+![Engraving, halftone, contour, mosaic and botanical QR treatments](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-art-studio-styles.png)
 
 Set `Art.Style` to `Engraving`, `Halftone`, `Contours`, `Mosaic`, or `Botanical`. Print treatments use the functional ink/paper colors; protected regions retain more of the supplied image. `Art.Subject` selects a focal circle in source-image coordinates, or accepts a copied grayscale `QrImageProtectionMask` where white protects detail. The region follows crop and zoom. It does not identify faces or objects automatically.
 
@@ -213,12 +213,12 @@ Search screens all eight masks at six pixels per module for each selected versio
 
 `ValidateDelivery` also checks screen resizing, a requested print raster size, JPEG compression, and a perspective warp. These are observed software results: perspective recovery varies with symbol geometry, and a failed check can reflect either the artwork or decoder limitations. Raster codecs are synchronous; cancellation applies between codec operations and throughout cooperative rendering/recognition. Physical printing and phone-camera checks remain necessary. `SearchImageAsync` and `ValidateDeliveryAsync` yield between work units for browser hosts; search progress reports screened combinations.
 
-The browser playground includes image/mask uploads, focal/crop/placement controls, ranked PNG downloads and delivery reports. Processing stays in the browser. Run the [art-studio example](CodeGlyphX.Examples/QrArtStudioExample.cs) with `CODEGLYPHX_ART_STUDIO=1` to generate portrait, flower, architecture and logo illustrations with protected/unprotected comparisons across all five styles.
+The browser playground includes image/mask uploads, focal/crop/placement controls, ranked PNG downloads and delivery reports. Processing stays in the browser. Run the [art-studio example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrArtStudioExample.cs) with `CODEGLYPHX_ART_STUDIO=1` to generate portrait, flower, architecture and logo illustrations with protected/unprotected comparisons across all five styles.
 
 
 ### Illustrated compositions
 
-![Engraved portrait, botanical badge and geometric poster QR compositions](Assets/Examples/qr-illustrated-compositions.png)
+![Engraved portrait, botanical badge and geometric poster QR compositions](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-illustrated-compositions.png)
 
 `QrIllustratedComposer` provides engraved portrait, botanical badge and geometric poster families. Each combines image artwork, coordinated finder frames and decorative framing outside the QR quiet zone. `Ribbons` and `Weave` connect neighboring data modules while retaining scan anchors. `Art.Finders` selects square, rounded or squircle frames; other functional patterns remain unchanged.
 
@@ -239,7 +239,7 @@ SVG exports are self-contained **hybrid images**: framing is vector geometry and
 
 ### Procedural art
 
-![Six locally drawn QR designs: marble, waves, sunburst, geometric tiles, botanical weave and circuits](Assets/Examples/qr-procedural-art-gallery.png)
+![Six locally drawn QR designs: marble, waves, sunburst, geometric tiles, botanical weave and circuits](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-procedural-art-gallery.png)
 
 `QrArt.ComposePattern` creates artwork from geometry and a palette, with no source image, model, network request or graphics dependency. Choose `Marble`, `Waves`, `Sunburst`, `Geometric`, `Botanical` or `Circuit`; set the seed to reproduce the design. Pattern density, rotation, two to sixteen opaque palette colors, and the paper color are configurable. The paper color applies to the three tiled patterns.
 
@@ -287,11 +287,11 @@ var checks = QrArt.ValidateImage(artwork.ToPng(), "https://example.com/art");
 
 `Circuit` joins matching neighboring data modules with angular traces and small junctions. `CrossStitch` draws diagonal thread pairs. Both work with uploaded images through the existing image composer as well as procedural patterns. `Art.Finders` also accepts `Circular` and `Chamfered`; the other functional patterns and uniform light quiet zone retain their protection. Existing enum values keep their numeric values.
 
-The [procedural-art example](CodeGlyphX.Examples/QrProceduralArtExample.cs) produces the six gallery designs and their PNG exports. Run it with `CODEGLYPHX_PROCEDURAL_ART=1`; `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Each export checks the exact URL at its original size, half size and after light blur. These examples use 18 pixels per module, leaving nine after the half-size check. Busy art can lose readability at smaller sizes: validate the actual export and target devices before distributing it. Rendering is available on all supported targets; these scan checks use the modern .NET decoder, since the legacy image recognizer has limited art support. The gallery is a visual overview; use the individual exports for scanning.
+The [procedural-art example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrProceduralArtExample.cs) produces the six gallery designs and their PNG exports. Run it with `CODEGLYPHX_PROCEDURAL_ART=1`; `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Each export checks the exact URL at its original size, half size and after light blur. These examples use 18 pixels per module, leaving nine after the half-size check. Busy art can lose readability at smaller sizes: validate the actual export and target devices before distributing it. Rendering is available on all supported targets; these scan checks use the modern .NET decoder, since the legacy image recognizer has limited art support. The gallery is a visual overview; use the individual exports for scanning.
 
 ### Illustrated scenes and editable recipes
 
-![Six illustrated QR scenes: tropical garden, electric city, music festival, ocean reef, cosmic orbit and retro arcade](Assets/Examples/qr-scene-gallery.png)
+![Six illustrated QR scenes: tropical garden, electric city, music festival, ocean reef, cosmic orbit and retro arcade](https://raw.githubusercontent.com/EvotecIT/CodeGlyphX/892b6fb815bfcb1b794789aa9d74ca1b3b67bb22/Assets/Examples/qr-scene-gallery.png)
 
 `QrArt.ComposeScene` draws complete posters from seeded geometry. Each scene has five editable layers: backdrop, illustrations, QR, caption and an optional logo. Move, scale, rotate or hide decorative layers; QR rotation uses quarter turns. The QR renders above the artwork with protected functional patterns and a complete four-module quiet zone. Placement that clips the QR is rejected.
 
@@ -315,7 +315,7 @@ The browser art studio's **Illustrated scene** source offers six presets, palett
 
 Recipes are versioned local XML documents capped at 2 MiB of text. They copy settings and any embedded logo, preserve UTF-8 payloads including control characters, and reject DTDs, external resources and unknown fields. Logo input is limited to 1 MiB and one million decoded pixels. Captions use the portable outlined font: Latin letters, digits, spaces and `-./:()+?`; lowercase letters render as capitals. Paper and QR ink must meet the documented light/dark luminance limits.
 
-Run the [scene-gallery example](CodeGlyphX.Examples/QrSceneGalleryExample.cs) with `CODEGLYPHX_SCENE_GALLERY=1` to export all six scenes, thumbnails and recipes. `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Check the actual PNG with `QrArt.ValidateImage` and qualify delivery sizes and target devices before distribution; these software checks do not certify physical printing or phone cameras.
+Run the [scene-gallery example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrSceneGalleryExample.cs) with `CODEGLYPHX_SCENE_GALLERY=1` to export all six scenes, thumbnails and recipes. `CODEGLYPHX_OUTPUT_DIR` selects the output folder. Check the actual PNG with `QrArt.ValidateImage` and qualify delivery sizes and target devices before distribution; these software checks do not certify physical printing or phone cameras.
 
 ### Scene exports and delivery sizes
 
@@ -343,9 +343,9 @@ Physical width (10–200 mm) and resolution (72–600 DPI) must produce a rounde
 
 Delivery selection encodes the payload once and tries the original QR, two larger placements, and optional square data modules, stopping at the configured candidate limit or a complete pass. Equal scores keep the earlier design. Candidates with too few pixels per module or a clipped quiet zone are rejected; enlargement can recover a design that cannot initially render on a smaller grid. If no candidate can render within the limit, search throws an `ArgumentException`. The payload, illustrations, palette and seed are retained. The browser's **Print and delivery** panel offers these controls, a preview of the selected export, and downloads tied to the completed payload. Its report includes the exact PNG hash.
 
-The delivery report checks the original, half-size, blur, requested screen width, print raster size, JPEG compression and perspective against the exact payload. It reports observed successes and failures within a recognition budget. It does not certify SVG/PDF viewer behavior, phones, cameras, paper, ink or printers. Qualify those final files independently at their actual delivery size. Use the [physical qualification sheet](docs/qr-scene-qualification.md) to record that evidence.
+The delivery report checks the original, half-size, blur, requested screen width, print raster size, JPEG compression and perspective against the exact payload. It reports observed successes and failures within a recognition budget. It does not certify SVG/PDF viewer behavior, phones, cameras, paper, ink or printers. Qualify those final files independently at their actual delivery size. Use the [physical qualification sheet](https://github.com/EvotecIT/CodeGlyphX/blob/master/docs/qr-scene-qualification.md) to record that evidence.
 
-Run the [scene-delivery example](CodeGlyphX.Examples/QrSceneDeliveryExample.cs) with `CODEGLYPHX_SCENE_DELIVERY=1` to export all six presets as physically sized PNG, SVG and PDF, with matching recipes and delivery observations.
+Run the [scene-delivery example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/QrSceneDeliveryExample.cs) with `CODEGLYPHX_SCENE_DELIVERY=1` to export all six presets as physically sized PNG, SVG and PDF, with matching recipes and delivery observations.
 
 ## Standards-aware QR encoding
 
@@ -576,7 +576,7 @@ Limit semantics are deliberate:
 
 Use `SymbolScanner.Scan`, `ScanFile` or stream/file async variants to select formats and apply a timeout to the complete scan. `CompletionReason` distinguishes completion, a symbol limit, cancellation and a deadline while retaining partial results. Format-specific information is exposed through typed `Metadata`; `HasRawBytes` indicates whether exact decoded bytes are available.
 
-See [SECURITY.md](SECURITY.md) for reporting and [FUZZING.md](FUZZING.md) for the bounded decoder harness.
+See [SECURITY.md](https://github.com/EvotecIT/CodeGlyphX/blob/master/SECURITY.md) for reporting and [FUZZING.md](https://github.com/EvotecIT/CodeGlyphX/blob/master/FUZZING.md) for the bounded decoder harness.
 
 ## Targets and dependencies
 
@@ -602,7 +602,7 @@ CI builds and tests Windows, Linux, and macOS; builds the complete solution on W
 
 Version 2 removes the obsolete per-format method explosion and duplicate facades. Use generic `Render(..., OutputFormat)` and extension-based `Save(...)` APIs. It also makes decode-limit inheritance explicit, collapses QR decoding to one cooperative budget, and replaces unprovable “safe” claims with honest heuristic and guardrail terminology.
 
-See the [2.0 migration guide](Website/content/docs/migration-2.md) for mappings and behavioral changes.
+See the [2.0 migration guide](https://github.com/EvotecIT/CodeGlyphX/blob/master/Website/content/docs/migration-2.md) for mappings and behavioral changes.
 
 ## Build and validate
 
@@ -622,4 +622,4 @@ dotnet run --project CodeGlyphX.Examples -c Release
 
 ## License
 
-CodeGlyphX is licensed under the [Apache License 2.0](LICENSE). See [third-party notices](THIRD-PARTY-NOTICES.md) for incorporated standards resources.
+CodeGlyphX is licensed under the [Apache License 2.0](https://github.com/EvotecIT/CodeGlyphX/blob/master/LICENSE). See [third-party notices](https://github.com/EvotecIT/CodeGlyphX/blob/master/THIRD-PARTY-NOTICES.md) for incorporated standards resources.

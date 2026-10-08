@@ -55,6 +55,7 @@ QR.Save("https://evotec.xyz", "website.png");
 Barcode.Save(SymbolFormat.Code128, "PRODUCT-123", "barcode.png");
 
 // Decode an image
+var imageBytes = File.ReadAllBytes("website.png");
 if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
 {
     Console.WriteLine(result.Text);

@@ -2611,6 +2611,15 @@ code.signature:focus-within .copy-btn {
     color: var(--text);
 }
 
+@media (max-width: 900px) {
+    .docs-content table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
 .edit-on-github {
     float: right;
     margin: 0 0 1rem 1rem;
