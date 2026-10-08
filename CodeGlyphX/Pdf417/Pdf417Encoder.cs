@@ -43,11 +43,7 @@ public static class Pdf417Encoder {
 
         var macroCodewords = EncodeMacroBlock(macro);
         var dataCodewords = Pdf417HighLevelEncoder.Encode(text, options.Compaction, options.TextEncoding);
-        if (dataCodewords.Count > 0 && dataCodewords[0] < 900) {
-            dataCodewords.Insert(0, 900);
-        }
-        macroCodewords.AddRange(dataCodewords);
-        return EncodeCodewords(macroCodewords, options);
+        return EncodeCodewords(dataCodewords, options, macroCodewords);
     }
 
     /// <summary>
@@ -350,7 +346,8 @@ public static class Pdf417Encoder {
         var width = rows[0].Length;
         var modules = new BitMatrix(width, height);
         for (var y = 0; y < height; y++) {
-            var row = rows[y];
+            // The internal barcode matrix exposes bottom-up rows; public modules use top-down image coordinates.
+            var row = rows[height - y - 1];
             for (var x = 0; x < width; x++) {
                 modules[x, y] = row[x] != 0;
             }
@@ -358,8 +355,8 @@ public static class Pdf417Encoder {
         return modules;
     }
 
-    private static Pdf417Symbol EncodeCodewords(List<int> dataCodewords, Pdf417EncodeOptions options) {
-        var dataCount = dataCodewords.Count;
+    private static Pdf417Symbol EncodeCodewords(List<int> dataCodewords, Pdf417EncodeOptions options, IReadOnlyList<int>? macroCodewords = null) {
+        var dataCount = dataCodewords.Count + (macroCodewords?.Count ?? 0);
 
         var requested = options.ErrorCorrectionLevel;
         var auto = requested < 0 || requested > 8;
@@ -407,6 +404,7 @@ public static class Pdf417Encoder {
         dataWithPad.Add(lengthDescriptor);
         dataWithPad.AddRange(dataCodewords);
         for (var i = 0; i < pad; i++) dataWithPad.Add(900);
+        if (macroCodewords is not null) dataWithPad.AddRange(macroCodewords);
 
         var ecc = Pdf417ErrorCorrection.GenerateErrorCorrection(dataWithPad, eccLevel);
         if (dataWithPad.Count + ecc.Length != rows * cols) {

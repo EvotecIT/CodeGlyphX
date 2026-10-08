@@ -44,6 +44,7 @@
     <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="EncodingContractRegressionTests.cs" />
+    <Compile Include="Pdf417CharsetFramingTests.cs" />
     <Compile Include="RenderingContractRegressionTests.cs" />
     <Compile Include="ScannerCompletionContractTests.cs" />
     <Compile Include="ScannerDuplicateContractTests.cs" />

@@ -90,6 +90,8 @@ Text encoding preserves the supplied value or rejects an encoding that cannot re
 
 PDF417 and MicroPDF417 declare supported text character sets with ECI when byte compaction needs it. Micro QR has no ECI declaration: its byte-mode text must retain the same value under the format's undeclared Latin-1 interpretation. Use `MicroQrCodeEncoder.EncodeKanji` for supported Kanji or `EncodeBytes` for an explicit byte payload.
 
+PDF417 uses standard top-down row order and places Macro metadata after the payload and padding. The decoder also accepts legacy bottom-up CodeGlyphX symbols. It requires valid error correction before returning a payload and preserves declared multibyte character sets across byte shifts and compaction segments.
+
 QR Code Model 2, Micro QR and rMQR retain their specialized encoders and layout rules. New built-in variants can use the shared matrix rendering route when their geometry is an orthogonal grid; their finder and functional-pattern rules remain format-specific.
 
 ## General image scanning

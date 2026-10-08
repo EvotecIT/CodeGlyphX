@@ -11,6 +11,159 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class EncodingContractRegressionTests {
+    [Fact]
+    public void Pdf417_ModulesMatchIndependentCanonicalRowOrder() {
+        var modules = Pdf417Encoder.Encode("ASCII-CONTROL", new Pdf417EncodeOptions {
+            Compaction = Pdf417Compaction.Text, ErrorCorrectionLevel = 0,
+            MinColumns = 3, MaxColumns = 3, MinRows = 6, MaxRows = 6
+        });
+        // Independently verified with ZXing.Net 0.16.11's PDF417 writer using the same constraints.
+        // Each row is start, left indicator, three data codewords, right indicator, then stop.
+        // Descriptor 16 is at the top; the final parity codewords 638 and 360 are at the bottom.
+        var patterns = new[] {
+            new[] { 0x1FEA8, 0x1EAF0, 0x1D678, 0x158C0, 0x1A7BE, 0x1F57C, 0x3FA29 },
+            new[] { 0x1FEA8, 0x1EA40, 0x1F690, 0x1F126, 0x1E908, 0x1FAB8, 0x3FA29 },
+            new[] { 0x1FEA8, 0x153C0, 0x1989E, 0x1DE8E, 0x1BA38, 0x153C0, 0x3FA29 },
+            new[] { 0x1FEA8, 0x15E78, 0x10C64, 0x10C64, 0x10C64, 0x1AF3E, 0x3FA29 },
+            new[] { 0x1FEA8, 0x1EB9C, 0x17EB0, 0x17EB0, 0x17EB0, 0x1D730, 0x3FA29 },
+            new[] { 0x1FEA8, 0x1F5EC, 0x18F92, 0x1C75E, 0x1DD1E, 0x1F5EC, 0x3FA29 }
+        };
+        Assert.Equal(120, modules.Width);
+        Assert.Equal(6, modules.Height);
+        for (var y = 0; y < patterns.Length; y++) {
+            for (var segment = 0; segment < patterns[y].Length; segment++) {
+                var pattern = 0;
+                var bits = segment == 6 ? 18 : 17;
+                for (var bit = 0; bit < bits; bit++) pattern = (pattern << 1) | (modules[17 * segment + bit, y] ? 1 : 0);
+                Assert.Equal(patterns[y][segment], pattern);
+            }
+        }
+        Assert.True(Pdf417Decoder.TryDecode(modules, out string decoded));
+        Assert.Equal("ASCII-CONTROL", decoded);
+        var pixels = MatrixPngRenderer.RenderPixels(modules, new MatrixPngRenderOptions { ModuleSize = 3, QuietZone = 4 },
+            out var width, out var height, out var stride);
+        Assert.True(Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out Pdf417Decoded fromPixels));
+        Assert.Equal("ASCII-CONTROL", fromPixels.Text);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Pdf417_DecoderPreservesLegacyBottomUpSymbols(bool macro) {
+        var options = new Pdf417EncodeOptions {
+            Compaction = Pdf417Compaction.Text, ErrorCorrectionLevel = 0,
+            MinColumns = 3, MaxColumns = 3, MinRows = 9, MaxRows = 9
+        };
+        var canonical = macro
+            ? Pdf417Encoder.EncodeMacro("ASCII-CONTROL", new Pdf417MacroOptions { FileId = "123", IsLastSegment = true }, options)
+            : Pdf417Encoder.Encode("ASCII-CONTROL", options);
+        var legacy = new BitMatrix(canonical.Width, canonical.Height);
+        for (var y = 0; y < canonical.Height; y++)
+            for (var x = 0; x < canonical.Width; x++) legacy[x, y] = canonical[x, canonical.Height - y - 1];
+        var before = legacy.Clone();
+        Assert.True(Pdf417Decoder.TryDecode(legacy, out string text, out var diagnostics));
+        Assert.Equal("ASCII-CONTROL", text);
+        Assert.True(diagnostics.Success);
+        Assert.True(Pdf417Decoder.TryDecode(legacy, out Pdf417Decoded decoded));
+        Assert.Equal("ASCII-CONTROL", decoded.Text);
+        if (macro) {
+            Assert.Equal("123", decoded.Macro!.FileId);
+            Assert.True(decoded.Macro.IsLastSegment);
+        }
+        for (var y = 0; y < legacy.Height; y++)
+            for (var x = 0; x < legacy.Width; x++) Assert.Equal(before[x, y], legacy[x, y]);
+    }
+
+    [Fact]
+    public void Pdf417_DecoderRejectsRowReorderingBeyondErrorCorrectionCapacity() {
+        var modules = Pdf417Encoder.Encode("ASCII-CONTROL", new Pdf417EncodeOptions {
+            Compaction = Pdf417Compaction.Text, ErrorCorrectionLevel = 0,
+            MinColumns = 3, MaxColumns = 3, MinRows = 6, MaxRows = 6
+        });
+        // Rows 1 and 4 use the same cluster, so codeword pattern lookup still succeeds.
+        // Moving all three payload codewords exceeds ECL0's single-codeword recovery capacity.
+        var malformed = modules.Clone();
+        for (var x = 0; x < modules.Width; x++) {
+            malformed[x, 1] = modules[x, 4];
+            malformed[x, 4] = modules[x, 1];
+        }
+        Assert.False(Pdf417Decoder.TryDecode(malformed, out string text, out var diagnostics));
+        Assert.Equal(string.Empty, text);
+        Assert.False(diagnostics.Success);
+        Assert.False(Pdf417Decoder.TryDecode(malformed, out Pdf417Decoded _));
+        var pixels = MatrixPngRenderer.RenderPixels(malformed, new MatrixPngRenderOptions { ModuleSize = 3, QuietZone = 4 },
+            out var width, out var height, out var stride);
+        Assert.False(Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out string fromPixels));
+        Assert.Equal(string.Empty, fromPixels);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void Pdf417_DecoderCorrectsSinglePayloadCodeword(bool compact, bool legacy) {
+        var modules = Pdf417Encoder.Encode("ASCII-CONTROL", new Pdf417EncodeOptions {
+            Compaction = Pdf417Compaction.Text, ErrorCorrectionLevel = 0, Compact = compact,
+            MinColumns = 3, MaxColumns = 3, MinRows = 6, MaxRows = 6
+        });
+        // Replace payload codeword 18 by the independent cluster-0 pattern for codeword 16.
+        const int replacement = 0x1D678;
+        for (var bit = 0; bit < 17; bit++) modules[51 + bit, 0] = (replacement & (1 << (16 - bit))) != 0;
+        if (legacy) {
+            var reflected = new BitMatrix(modules.Width, modules.Height);
+            for (var y = 0; y < modules.Height; y++)
+                for (var x = 0; x < modules.Width; x++) reflected[x, y] = modules[x, modules.Height - y - 1];
+            modules = reflected;
+        }
+        Assert.True(Pdf417Decoder.TryDecode(modules, out string decoded));
+        Assert.Equal("ASCII-CONTROL", decoded);
+        var pixels = MatrixPngRenderer.RenderPixels(modules, new MatrixPngRenderOptions { ModuleSize = 3, QuietZone = 4 },
+            out var width, out var height, out var stride);
+        Assert.True(Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out Pdf417Decoded fromPixels));
+        Assert.Equal("ASCII-CONTROL", fromPixels.Text);
+    }
+
+    [Theory]
+    [InlineData("", false)]
+    [InlineData("", true)]
+    [InlineData("ASCII-CONTROL", false)]
+    [InlineData("ASCII-CONTROL", true)]
+    public void Pdf417_MacroPreservesEmptyAndNonemptyPayloadAndMetadata(string text, bool last) {
+        var symbol = Pdf417Encoder.EncodeMacroSymbol(text, new Pdf417MacroOptions { FileId = "123", IsLastSegment = last },
+            new Pdf417EncodeOptions { Compaction = Pdf417Compaction.Text, ErrorCorrectionLevel = 0,
+                MinColumns = 3, MaxColumns = 3, MinRows = 12, MaxRows = 12 });
+        Assert.True(Pdf417Decoder.TryDecode(symbol.Modules, out Pdf417Decoded decoded));
+        Assert.Equal(text, decoded.Text);
+        Assert.Equal("123", decoded.Macro!.FileId);
+        Assert.Equal(0, decoded.Macro.SegmentIndex);
+        Assert.Equal(last, decoded.Macro.IsLastSegment);
+        var pixels = MatrixPngRenderer.RenderPixels(symbol.Modules, new MatrixPngRenderOptions { ModuleSize = 3, QuietZone = 4 },
+            out var width, out var height, out var stride);
+        Assert.True(Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out Pdf417Decoded fromPixels));
+        Assert.Equal(text, fromPixels.Text);
+        Assert.Equal("123", fromPixels.Macro!.FileId);
+        Assert.Equal(last, fromPixels.Macro.IsLastSegment);
+    }
+
+    [Fact]
+    public void Pdf417_MacroControlBlockFollowsPaddedPayload() {
+        var modules = Pdf417Encoder.EncodeMacro("ASCII-CONTROL", new Pdf417MacroOptions { FileId = "123", IsLastSegment = true },
+            new Pdf417EncodeOptions { Compaction = Pdf417Compaction.Text, ErrorCorrectionLevel = 0,
+                MinColumns = 3, MaxColumns = 3, MinRows = 12, MaxRows = 12 });
+        // The independent writer places the Macro control block at the end of data, before parity.
+        // These known patterns represent 928,111,100,123,922 in codeword slots 29..33.
+        var suffixPatterns = new[] { 0x1BEF4, 0x1A786, 0x1A704, 0x1FA2E, 0x187D4 };
+        for (var i = 0; i < suffixPatterns.Length; i++) {
+            var index = 29 + i;
+            var x = 34 + (index % 3) * 17;
+            var y = index / 3;
+            var pattern = 0;
+            for (var bit = 0; bit < 17; bit++) pattern = (pattern << 1) | (modules[x + bit, y] ? 1 : 0);
+            Assert.Equal(suffixPatterns[i], pattern);
+        }
+    }
+
     [Theory]
     [InlineData(QrTextEncoding.Latin1, "漢")]
     [InlineData(QrTextEncoding.Ascii, "é")]
