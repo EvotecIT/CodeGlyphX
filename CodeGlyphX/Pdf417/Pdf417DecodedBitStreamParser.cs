@@ -83,6 +83,7 @@ internal static class Pdf417DecodedBitStreamParser {
             }
             if (code == NumericCompactionLatch) {
                 index = DecodeNumericCompaction(codewords, index, result);
+                if (index < 0) return null;
                 mode = TextCompactionLatch;
                 textMode = Mode.Alpha;
                 continue;
@@ -134,10 +135,12 @@ internal static class Pdf417DecodedBitStreamParser {
         while (index < codewords.Length) {
             var code = codewords[index];
             if (code == MacroPdf417Terminator || code == MacroPdf417OptionalField) break;
+            if (code < 0) return false;
             if (code >= TextCompactionLatch) break;
             fileId.Append(code.ToString("000", System.Globalization.CultureInfo.InvariantCulture));
             index++;
         }
+        if (fileId.Length == 0) return false;
 
         var isLastSegment = false;
         int? segmentCount = null;
@@ -170,6 +173,7 @@ internal static class Pdf417DecodedBitStreamParser {
                 case 1: {
                     var numeric = new StringBuilder();
                     index = DecodeMacroNumeric(codewords, index, numeric);
+                    if (index < 0) return false;
                     if (!int.TryParse(numeric.ToString(), out var value)) return false;
                     segmentCount = value;
                     break;
@@ -177,6 +181,7 @@ internal static class Pdf417DecodedBitStreamParser {
                 case 2: {
                     var numeric = new StringBuilder();
                     index = DecodeMacroNumeric(codewords, index, numeric);
+                    if (index < 0) return false;
                     if (!long.TryParse(numeric.ToString(), out var value)) return false;
                     timestamp = value;
                     break;
@@ -198,6 +203,7 @@ internal static class Pdf417DecodedBitStreamParser {
                 case 5: {
                     var numeric = new StringBuilder();
                     index = DecodeMacroNumeric(codewords, index, numeric);
+                    if (index < 0) return false;
                     if (!long.TryParse(numeric.ToString(), out var value)) return false;
                     fileSize = value;
                     break;
@@ -205,6 +211,7 @@ internal static class Pdf417DecodedBitStreamParser {
                 case 6: {
                     var numeric = new StringBuilder();
                     index = DecodeMacroNumeric(codewords, index, numeric);
+                    if (index < 0) return false;
                     if (!int.TryParse(numeric.ToString(), out var value)) return false;
                     checksum = value;
                     break;
@@ -249,7 +256,7 @@ internal static class Pdf417DecodedBitStreamParser {
 
             if (count == 15) {
                 var decoded = DecodeBase900ToBase10(numericCodewords, count);
-                if (decoded is null) return index;
+                if (decoded is null) return -1;
                 sb.Append(decoded);
                 count = 0;
             }
@@ -257,7 +264,7 @@ internal static class Pdf417DecodedBitStreamParser {
 
         if (count > 0) {
             var decoded = DecodeBase900ToBase10(numericCodewords, count);
-            if (decoded is null) return index;
+            if (decoded is null) return -1;
             sb.Append(decoded);
         }
 
@@ -497,9 +504,10 @@ internal static class Pdf417DecodedBitStreamParser {
                             if (code < 0 || code > 255) return -1;
                             bytes.Add((byte)code);
                         } else if (code == CharsetEci) {
-                            // ECI changes the charset while retaining this byte-compaction mode.
-                            index--;
-                            break;
+                            // Once 901 enters its residual bytes, ECI changes only their charset, not framing.
+                            if (bytes.Count > 0) result.AppendBytes(bytes);
+                            bytes.Clear();
+                            if (!DecodeCharsetEci(codewords, ref index, result)) return -1;
                         } else {
                             index--;
                             end = true;
@@ -540,12 +548,14 @@ internal static class Pdf417DecodedBitStreamParser {
                         index--;
                         end = true;
                         break;
+                    default:
+                        return -1;
                 }
             }
 
             if ((count % 15 == 0 || end) && count > 0) {
                 var decoded = DecodeBase900ToBase10(numericCodewords, count);
-                if (decoded is null) return index;
+                if (decoded is null) return -1;
                 result.Append(decoded);
                 count = 0;
             }
@@ -557,6 +567,7 @@ internal static class Pdf417DecodedBitStreamParser {
     private static string? DecodeBase900ToBase10(int[] codewords, int count) {
         var result = BigInteger.Zero;
         for (var i = 0; i < count; i++) {
+            if (codewords[i] < 0 || codewords[i] >= TextCompactionLatch) return null;
             result += Exp900[count - i - 1] * new BigInteger(codewords[i]);
         }
         var resultString = result.ToString();

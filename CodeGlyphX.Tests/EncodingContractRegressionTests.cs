@@ -146,6 +146,26 @@ public sealed class EncodingContractRegressionTests {
         Assert.Equal(last, fromPixels.Macro.IsLastSegment);
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(99999)]
+    public void Pdf417_MacroSegmentIndexPreservesFormatBoundaries(int segmentIndex) {
+        var symbol = Pdf417Code.EncodeMacro("A", new Pdf417MacroOptions { FileId = "123", SegmentIndex = segmentIndex });
+        Assert.True(Pdf417Decoder.TryDecode(symbol.Modules, out Pdf417Decoded decoded));
+        Assert.Equal("A", decoded.Text);
+        Assert.Equal(segmentIndex, decoded.Macro!.SegmentIndex);
+    }
+
+    [Theory]
+    [InlineData(-1)]
+    [InlineData(100000)]
+    [InlineData(809999)]
+    public void Pdf417_MacroSegmentIndexRejectsValuesOutsideFormatRange(int segmentIndex) {
+        var error = Assert.Throws<InvalidOperationException>(() => Pdf417Code.EncodeMacro("A",
+            new Pdf417MacroOptions { FileId = "123", SegmentIndex = segmentIndex }));
+        Assert.Contains("0-99999", error.Message);
+    }
+
     [Fact]
     public void Pdf417_MacroControlBlockFollowsPaddedPayload() {
         var modules = Pdf417Encoder.EncodeMacro("ASCII-CONTROL", new Pdf417MacroOptions { FileId = "123", IsLastSegment = true },

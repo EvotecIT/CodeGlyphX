@@ -136,4 +136,80 @@ public sealed class Pdf417CharsetFramingTests {
         Assert.Equal("Ã©", Pdf417DecodedBitStreamParser.Decode(new[] { 901, 0xC3, 901, 0xA9 }));
         Assert.Equal("ÿ", Pdf417DecodedBitStreamParser.Decode(new[] { 901, 0xFF }));
     }
+
+    [Theory]
+    [InlineData(new[] { 902, 0 })]
+    [InlineData(new[] { 0, 902, 0 })]
+    [InlineData(new[] { 0, 902, 12, 923 })]
+    [InlineData(new[] { 0, 902, 12, 922 })]
+    [InlineData(new[] { 0, 902, 12, 903 })]
+    [InlineData(new[] { 0, 902, -1 })]
+    public void InvalidNumericGroupsOrControls_DoNotReturnPartialText(int[] codewords) {
+        Assert.Null(Pdf417DecodedBitStreamParser.Decode(codewords));
+    }
+
+    [Fact]
+    public void InvalidNumericGroup_AfterAValidFullGroupRejectsThePayload() {
+        var codewords = new List<int> { 0, 902 };
+        // Fifteen base-900 codewords form the decimal sentinel 12 and therefore the digit 2.
+        codewords.AddRange(new int[14]);
+        codewords.Add(12);
+        codewords.Add(0); // The following group has no decimal sentinel.
+
+        Assert.Null(Pdf417DecodedBitStreamParser.Decode(codewords.ToArray()));
+        codewords[codewords.Count - 1] = 13;
+        Assert.Equal("AA23", Pdf417DecodedBitStreamParser.Decode(codewords.ToArray()));
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(5)]
+    [InlineData(6)]
+    public void MacroNumericFields_InvalidGroupAfterValidDataRejectsMetadata(int field) {
+        var codewords = new List<int> { 928, 0, 10, 123, 923, field };
+        codewords.AddRange(new int[14]);
+        codewords.Add(12);
+        codewords.Add(0); // A valid prior group must not hide this invalid trailing group.
+        codewords.Add(922);
+
+        Assert.Null(Pdf417DecodedBitStreamParser.Decode(codewords.ToArray(), out var macro));
+        Assert.Null(macro);
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(5)]
+    [InlineData(6)]
+    public void MacroNumericFields_TruncatedOrInvalidDataIsRejected(int field) {
+        Assert.Null(Pdf417DecodedBitStreamParser.Decode(new[] { 928, 0, 10, 123, 923, field }));
+        Assert.Null(Pdf417DecodedBitStreamParser.Decode(new[] { 928, 0, 10, 123, 923, field, 0, 922 }));
+    }
+
+    [Theory]
+    [InlineData(new[] { 901, 65, 927, 3, 66, 67, 68, 69, 70, 71 }, "ABCDEFG")]
+    [InlineData(new[] { 927, 26, 901, 65, 927, 25, 0, 66, 0, 67, 0, 68 }, "ABCD")]
+    [InlineData(new[] { 901, 65, 927, 3, 66, 67, 927, 26, 68, 69, 70, 71 }, "ABCDEFG")]
+    public void ByteCompaction_ResidualBytesStayResidualAcrossCharsetChanges(int[] codewords, string expected) {
+        Assert.Equal(expected, Pdf417DecodedBitStreamParser.Decode(codewords));
+    }
+
+    [Theory]
+    [InlineData(new[] { 928, 0, 10 })]
+    [InlineData(new[] { 928, 0, 10, 922 })]
+    [InlineData(new[] { 928, 0, 10, 923, 0, 0, 922 })]
+    [InlineData(new[] { 928, 0, 10, -1, 922 })]
+    [InlineData(new[] { 928, 1, 900, 123, 922 })]
+    public void MacroMandatoryData_RequiresFileIdAndValidNumericCodewords(int[] codewords) {
+        Assert.Null(Pdf417DecodedBitStreamParser.Decode(codewords, out var macro));
+        Assert.Null(macro);
+    }
+
+    [Fact]
+    public void MacroFileId_DataCodewordsKeepTheirThreeDigitBoundaries() {
+        Assert.Equal(string.Empty, Pdf417DecodedBitStreamParser.Decode(new[] { 928, 0, 10, 0, 899, 922 }, out var macro));
+        Assert.NotNull(macro);
+        Assert.Equal("000899", macro!.FileId);
+    }
 }

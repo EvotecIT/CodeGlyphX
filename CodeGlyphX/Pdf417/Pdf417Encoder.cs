@@ -190,8 +190,8 @@ public static class Pdf417Encoder {
         if (!IsDigitsOnly(fileId)) throw new InvalidOperationException("Macro PDF417 file identifier must be numeric.");
         if (fileId.Length % 3 != 0) throw new InvalidOperationException("Macro PDF417 file identifier length must be a multiple of 3.");
 
-        if (macro.SegmentIndex < 0 || macro.SegmentIndex > 809999) {
-            throw new InvalidOperationException("Macro PDF417 segment index must be in range 0-809999.");
+        if (macro.SegmentIndex < 0 || macro.SegmentIndex > 99999) {
+            throw new InvalidOperationException("Macro PDF417 segment index must be in range 0-99999.");
         }
         if (!macro.IsLastSegment &&
             (macro.SegmentCount.HasValue ||

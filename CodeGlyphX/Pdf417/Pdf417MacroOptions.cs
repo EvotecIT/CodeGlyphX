@@ -5,7 +5,7 @@ namespace CodeGlyphX.Pdf417;
 /// </summary>
 public sealed class Pdf417MacroOptions {
     /// <summary>
-    /// Segment index (0..809999).
+    /// Segment index (0..99999), encoded as five decimal digits in two codewords.
     /// </summary>
     public int SegmentIndex { get; set; }
 

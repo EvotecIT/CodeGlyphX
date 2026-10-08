@@ -92,6 +92,8 @@ PDF417 and MicroPDF417 declare supported text character sets with ECI when byte 
 
 PDF417 uses standard top-down row order and places Macro metadata after the payload and padding. The decoder also accepts legacy bottom-up CodeGlyphX symbols. It requires valid error correction before returning a payload and preserves declared multibyte character sets across byte shifts and compaction segments.
 
+Malformed numeric compaction and Macro blocks without a file identifier are rejected. Macro segment indexes use the format's five-digit range, `0..99999`; out-of-range values fail validation before encoding.
+
 QR Code Model 2, Micro QR and rMQR retain their specialized encoders and layout rules. New built-in variants can use the shared matrix rendering route when their geometry is an orthogonal grid; their finder and functional-pattern rules remain format-specific.
 
 ## General image scanning
