@@ -504,11 +504,11 @@ public static class WebpWriter {
 
     private static byte BuildVp8xFlags(bool alphaUsed, WebpMetadata metadata, bool animation) {
         byte flags = 0;
-        if (metadata.Icc is { Length: > 0 }) flags |= 0x01;
-        if (alphaUsed) flags |= 0x02;
-        if (metadata.Exif is { Length: > 0 }) flags |= 0x04;
-        if (metadata.Xmp is { Length: > 0 }) flags |= 0x08;
-        if (animation) flags |= 0x10;
+        if (metadata.Icc is { Length: > 0 }) flags |= 0x20;
+        if (alphaUsed) flags |= 0x10;
+        if (metadata.Exif is { Length: > 0 }) flags |= 0x08;
+        if (metadata.Xmp is { Length: > 0 }) flags |= 0x04;
+        if (animation) flags |= 0x02;
         return flags;
     }
 

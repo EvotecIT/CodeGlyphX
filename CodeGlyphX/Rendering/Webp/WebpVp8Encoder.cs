@@ -1664,6 +1664,16 @@ internal static partial class WebpVp8Encoder {
         var up = y > 0 ? alpha[index - width] : (byte)0;
         var upLeft = (x > 0 && y > 0) ? alpha[index - width - 1] : (byte)0;
 
+        // Every nonzero ALPH filter uses the same top-row and left-column rules.
+        if (filter != 0) {
+            if (y == 0) {
+                return left;
+            }
+            if (x == 0) {
+                return up;
+            }
+        }
+
         return filter switch {
             1 => left,
             2 => up,
@@ -1699,7 +1709,7 @@ internal static partial class WebpVp8Encoder {
 
         if (alphPayload is { Length: > 0 }) {
             var vp8x = new byte[10];
-            vp8x[0] = 0x02; // alpha
+            vp8x[0] = 0x10; // alpha
             WriteU24LE(vp8x, 4, width - 1);
             WriteU24LE(vp8x, 7, height - 1);
             WriteChunk(ms, "VP8X", vp8x);
