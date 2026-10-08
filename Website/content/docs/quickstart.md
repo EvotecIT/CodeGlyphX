@@ -62,7 +62,7 @@ Barcode.Save(SymbolFormat.Ean, "5901234123457", "ean.png");
 ```csharp
 using CodeGlyphX;
 
-var imageBytes = File.ReadAllBytes("qrcode.png");
+var imageBytes = File.ReadAllBytes("hello.png");
 
 if (QrImageDecoder.TryDecodeImage(imageBytes, out var result))
 {

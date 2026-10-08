@@ -28,7 +28,22 @@ Barcode.Save(SymbolFormat.Code93, "HELLO-123", "code93.png");
 
 Code 39 supports: `A-Z`, `0-9`, `-`, `.`, `$`, `/`, `+`, `%`, `SPACE`
 
-**Note:** Lowercase letters are automatically converted to uppercase.
+The basic `Barcode` API rejects lowercase letters and other characters outside this set. If your application's identifiers are case-insensitive, normalize them explicitly before encoding:
+
+```csharp
+var identifier = "hello-123";
+Barcode.Save(SymbolFormat.Code39, identifier.ToUpperInvariant(), "code39.png");
+```
+
+To preserve lowercase or other ASCII characters, use the specialist full-ASCII encoder:
+
+```csharp
+using CodeGlyphX.Code39;
+
+var fullAscii = Code39Encoder.Encode("hello-123", fullAsciiMode: true);
+```
+
+The receiving scanner must also support full-ASCII Code 39. This mode represents additional characters with pairs from the basic character set.
 
 ## Comparison
 

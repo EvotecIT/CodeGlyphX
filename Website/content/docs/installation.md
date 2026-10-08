@@ -34,13 +34,15 @@ Add the following to your `.csproj` file:
 
 ## Supported Frameworks
 
-- **.NET 8.0+** - Full support, no additional dependencies
-- **.NET Standard 2.0** - Requires System.Memory 4.5.5
-- **.NET Framework 4.7.2+** - Requires System.Memory 4.5.5
+- **.NET 8.0 and .NET 10.0** - Full QR pixel pipeline, no runtime package dependencies
+- **.NET Standard 2.0** - Legacy-compatible libraries with managed QR image fallback
+- **.NET Framework 4.7.2+** - Legacy applications with managed QR image fallback
+
+NuGet resolves `System.Memory` and `System.Text.Encoding.CodePages` automatically for the legacy targets. You do not need to install those dependencies separately. Every target uses managed code without a native graphics library.
 
 ## Feature Availability
 
-Most features are available across all targets, but the QR pixel pipeline and Span-based APIs are net8+ only.
+Most features are available across all targets. Modern targets have the full QR pixel pipeline; legacy targets use a less capable fallback intended for clean, generated QR images.
 
 | Feature | net8.0+ | net472 / netstandard2.0 |
 | --- | --- | --- |
@@ -48,12 +50,13 @@ Most features are available across all targets, but the QR pixel pipeline and Sp
 | Decode from module grids (BitMatrix) | Yes | Yes |
 | Renderers + image file codecs | Yes | Yes |
 | 1D/2D pixel decode (Barcode/DataMatrix/PDF417/Aztec) | Yes | Yes |
-| QR pixel decode from raw pixels / screenshots | Yes | No (returns false) |
+| QR image decode | Full pixel pipeline | Clean-image fallback |
 | QR pixel debug rendering | Yes | No |
-| Span-based overloads | Yes | No (byte[] only) |
+| Span-based encoded-image overloads | Yes | Yes |
+| Fast Span-based pixel pipeline | Yes | No |
 
-QR pixel decode APIs are net8+ only (e.g., `QrImageDecoder.TryDecodeImage(...)` and `QrDecoder.TryDecode(...)` from pixels).
+`QrImageDecoder.TryDecodeImage(...)` is available on every target. Its recognition capability depends on the selected target; the legacy fallback is not intended for screenshots, distorted images or styled QR artwork.
 
-You can check capabilities at runtime via `CodeGlyphXFeatures` (for example, `SupportsQrPixelDecode` and `SupportsQrPixelDebug`).
+Check capabilities at runtime with `CodeGlyphXFeatures.SupportsQrPixelDecode`, `SupportsQrPixelDecodeFallback`, `SupportsQrPixelDebug` and `SupportsSpanPixelPipeline`. `SupportsSpanPixelPipeline` describes the fast pixel pipeline, rather than every API that accepts a Span.
 
-**Choosing a target:** pick `net8.0+` for QR image decoding, pixel debug tools, Span APIs, and maximum throughput. Pick `net472`/`netstandard2.0` for legacy apps that only need encoding, rendering, and module-grid decode.
+**Choosing a target:** use `net8.0` or newer for screenshots, styled QR images, pixel debug tools and maximum throughput. Use `net472` or `netstandard2.0` for legacy applications, and qualify their clean-image fallback against the images your application receives.
