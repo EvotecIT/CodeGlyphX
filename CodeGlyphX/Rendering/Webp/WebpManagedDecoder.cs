@@ -261,7 +261,7 @@ internal static class WebpManagedDecoder {
         }
 
         if (TryFindChunk(chunkSpan, chunks, FourCcVp8X, out var vp8xPayload)) {
-            if (!TryReadVp8X(vp8xPayload, out canvasWidth, out canvasHeight, out _)) return false;
+            if (!TryReadVp8X(vp8xPayload, out canvasWidth, out canvasHeight, out var flags) || (flags & 0x02) == 0) return false;
         }
 
         var maxFrames = ImageReader.EffectiveMaxAnimationFrames;
@@ -370,7 +370,7 @@ internal static class WebpManagedDecoder {
         var canvasWidth = 0;
         var canvasHeight = 0;
         if (TryFindChunk(chunkSpan, chunks, FourCcVp8X, out var vp8xPayload)) {
-            if (!TryReadVp8X(vp8xPayload, out canvasWidth, out canvasHeight, out _)) return false;
+            if (!TryReadVp8X(vp8xPayload, out canvasWidth, out canvasHeight, out var flags) || (flags & 0x02) == 0) return false;
         }
 
         var background = 0u;
@@ -676,7 +676,8 @@ internal static class WebpManagedDecoder {
                 var up = y > 0 ? alpha[index - stride] : (byte)0;
                 var upLeft = (x > 0 && y > 0) ? alpha[index - stride - 1] : (byte)0;
 
-                var predictor = filter switch {
+                // The top row predicts from the left; the left column predicts from above.
+                var predictor = y == 0 ? left : x == 0 ? up : filter switch {
                     1 => left,
                     2 => up,
                     3 => (byte)Clamp(left + up - upLeft),
