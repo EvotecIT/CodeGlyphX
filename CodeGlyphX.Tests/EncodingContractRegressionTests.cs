@@ -148,9 +148,11 @@ public sealed class EncodingContractRegressionTests {
 
     [Theory]
     [InlineData(0)]
-    [InlineData(99999)]
+    [InlineData(99998)]
     public void Pdf417_MacroSegmentIndexPreservesFormatBoundaries(int segmentIndex) {
-        var symbol = Pdf417Code.EncodeMacro("A", new Pdf417MacroOptions { FileId = "123", SegmentIndex = segmentIndex });
+        var symbol = Pdf417Code.EncodeMacro("A", new Pdf417MacroOptions {
+            FileId = "123", SegmentIndex = segmentIndex, IsLastSegment = segmentIndex == 99998
+        });
         Assert.True(Pdf417Decoder.TryDecode(symbol.Modules, out Pdf417Decoded decoded));
         Assert.Equal("A", decoded.Text);
         Assert.Equal(segmentIndex, decoded.Macro!.SegmentIndex);
@@ -158,12 +160,13 @@ public sealed class EncodingContractRegressionTests {
 
     [Theory]
     [InlineData(-1)]
+    [InlineData(99999)]
     [InlineData(100000)]
     [InlineData(809999)]
     public void Pdf417_MacroSegmentIndexRejectsValuesOutsideFormatRange(int segmentIndex) {
         var error = Assert.Throws<InvalidOperationException>(() => Pdf417Code.EncodeMacro("A",
             new Pdf417MacroOptions { FileId = "123", SegmentIndex = segmentIndex }));
-        Assert.Contains("0-99999", error.Message);
+        Assert.Contains("0-99998", error.Message);
     }
 
     [Fact]

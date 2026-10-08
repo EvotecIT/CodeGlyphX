@@ -4,8 +4,11 @@ namespace CodeGlyphX.Pdf417;
 /// Macro PDF417 metadata payload.
 /// </summary>
 public sealed class Pdf417MacroMetadata {
+    internal const int MaxSegmentIndex = 99998;
+    internal const int MaxSegmentCount = 99999;
+
     /// <summary>
-    /// Gets the segment index.
+    /// Gets the segment index in the range 0..99998.
     /// </summary>
     public int SegmentIndex { get; }
 
@@ -20,7 +23,7 @@ public sealed class Pdf417MacroMetadata {
     public bool IsLastSegment { get; }
 
     /// <summary>
-    /// Gets the total number of segments, if present.
+    /// Gets the total number of segments in the range 1..99999, if present.
     /// </summary>
     public int? SegmentCount { get; }
 
@@ -75,5 +78,14 @@ public sealed class Pdf417MacroMetadata {
         Addressee = addressee;
         FileSize = fileSize;
         Checksum = checksum;
+    }
+
+    internal static bool IsValidSegment(int segmentIndex, int? segmentCount, bool isLastSegment) {
+        if (segmentIndex < 0 || segmentIndex > MaxSegmentIndex) return false;
+        // No subsequent segment can follow the maximum index within the format's limits.
+        if (!segmentCount.HasValue) return segmentIndex < MaxSegmentIndex || isLastSegment;
+        var count = segmentCount.Value;
+        return count >= 1 && count <= MaxSegmentCount && segmentIndex < count &&
+            isLastSegment == (segmentIndex == count - 1);
     }
 }

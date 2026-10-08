@@ -190,22 +190,15 @@ public static class Pdf417Encoder {
         if (!IsDigitsOnly(fileId)) throw new InvalidOperationException("Macro PDF417 file identifier must be numeric.");
         if (fileId.Length % 3 != 0) throw new InvalidOperationException("Macro PDF417 file identifier length must be a multiple of 3.");
 
-        if (macro.SegmentIndex < 0 || macro.SegmentIndex > 99999) {
-            throw new InvalidOperationException("Macro PDF417 segment index must be in range 0-99999.");
+        if (macro.SegmentIndex < 0 || macro.SegmentIndex > Pdf417MacroMetadata.MaxSegmentIndex) {
+            throw new InvalidOperationException("Macro PDF417 segment index must be in range 0-99998.");
         }
-        if (!macro.IsLastSegment &&
-            (macro.SegmentCount.HasValue ||
-             macro.FileName is not null ||
-             macro.Timestamp.HasValue ||
-             macro.Sender is not null ||
-             macro.Addressee is not null ||
-             macro.FileSize.HasValue ||
-             macro.Checksum.HasValue)) {
-            throw new InvalidOperationException("Macro PDF417 optional fields are only allowed on the last segment.");
+        if (!Pdf417MacroMetadata.IsValidSegment(macro.SegmentIndex, macro.SegmentCount, macro.IsLastSegment)) {
+            throw new InvalidOperationException("Macro PDF417 segment index, count, and last-segment flag are inconsistent.");
         }
 
         var codewords = new List<int>(64) { 928 };
-        var segmentCodewords = EncodeMacroSegmentIndex(macro.SegmentIndex);
+        var segmentCodewords = EncodeMacroSegmentValue(macro.SegmentIndex);
         codewords.AddRange(segmentCodewords);
 
         for (var i = 0; i < fileId.Length; i += 3) {
@@ -217,7 +210,11 @@ public static class Pdf417Encoder {
         }
 
         AppendOptionalField(codewords, 0, macro.FileName, numeric: false);
-        AppendOptionalField(codewords, 1, macro.SegmentCount?.ToString(CultureInfo.InvariantCulture), numeric: true);
+        if (macro.SegmentCount.HasValue) {
+            codewords.Add(923);
+            codewords.Add(1);
+            codewords.AddRange(EncodeMacroSegmentValue(macro.SegmentCount.Value));
+        }
         AppendOptionalField(codewords, 2, macro.Timestamp?.ToString(CultureInfo.InvariantCulture), numeric: true);
         AppendOptionalField(codewords, 3, macro.Sender, numeric: false);
         AppendOptionalField(codewords, 4, macro.Addressee, numeric: false);
@@ -231,11 +228,11 @@ public static class Pdf417Encoder {
         return codewords;
     }
 
-    private static List<int> EncodeMacroSegmentIndex(int segmentIndex) {
-        var digits = segmentIndex.ToString("00000", CultureInfo.InvariantCulture);
+    private static List<int> EncodeMacroSegmentValue(int value) {
+        var digits = value.ToString("00000", CultureInfo.InvariantCulture);
         var codewords = EncodeNumericField(digits);
         if (codewords.Count != 2) {
-            throw new InvalidOperationException("Macro PDF417 segment index encoding failed.");
+            throw new InvalidOperationException("Macro PDF417 segment index or count encoding failed.");
         }
         return codewords;
     }

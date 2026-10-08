@@ -92,7 +92,9 @@ PDF417 and MicroPDF417 declare supported text character sets with ECI when byte 
 
 PDF417 uses standard top-down row order and places Macro metadata after the payload and padding. The decoder also accepts legacy bottom-up CodeGlyphX symbols. It requires valid error correction before returning a payload and preserves declared multibyte character sets across byte shifts and compaction segments.
 
-Malformed numeric compaction and Macro blocks without a file identifier are rejected. Macro segment indexes use the format's five-digit range, `0..99999`; out-of-range values fail validation before encoding.
+Malformed numeric compaction and Macro blocks without a file identifier are rejected. Macro segment indexes range from `0` to `99998`. A supplied segment count must be between `1` and `99999`, greater than the index, and consistent with the last-segment flag: only index `count - 1` is marked as last. Index `99998` must be marked as last even when the count is omitted. Invalid metadata is rejected during encoding and decoding.
+
+Set the same segment count on every segment when using it. The encoder writes the count in the required two codewords and permits global optional fields on any segment; repeated fields should have the same value for the file. The decoder also accepts valid short counts and counts supplied only on the last segment from older producers. The assembler rejects inconsistent counts, indexes, or last-segment markers without changing the segments already collected.
 
 PDF417 image decoding fits fractional module spacing produced by physical document placement, including compact symbols and quarter-turn images. It retains the existing integer, skew and perspective sampling paths and verifies error correction before returning text or Macro metadata.
 

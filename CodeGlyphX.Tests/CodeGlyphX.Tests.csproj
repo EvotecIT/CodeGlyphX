@@ -46,6 +46,7 @@
     <Compile Include="EncodingContractRegressionTests.cs" />
     <Compile Include="Pdf417CharsetFramingTests.cs" />
     <Compile Include="Pdf417FractionalSamplingTests.cs" />
+    <Compile Include="Pdf417MacroRangeTests.cs" />
     <Compile Include="RenderingContractRegressionTests.cs" />
     <Compile Include="ScannerCompletionContractTests.cs" />
     <Compile Include="ScannerDuplicateContractTests.cs" />

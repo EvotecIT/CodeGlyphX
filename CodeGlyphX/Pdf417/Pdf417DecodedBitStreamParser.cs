@@ -221,6 +221,7 @@ internal static class Pdf417DecodedBitStreamParser {
             }
         }
 
+        if (!Pdf417MacroMetadata.IsValidSegment(segmentIndex, segmentCount, isLastSegment)) return false;
         macro = new Pdf417MacroMetadata(segmentIndex, fileId.ToString(), isLastSegment, segmentCount, fileName, timestamp, sender, addressee, fileSize, checksum);
         return true;
     }
