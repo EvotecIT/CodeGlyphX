@@ -154,7 +154,7 @@ public sealed class RenderingContractRegressionTests {
             case "InnerColors": eyes.InnerColors = new[] { new Rgba32(100, 0, 0), Rgba32.Black, Rgba32.Black }; break;
             case "OuterGradients": eyes.OuterGradients = new[] { new QrGradientOptions(), new QrGradientOptions(), new QrGradientOptions() }; break;
             case "InnerGradients": eyes.InnerGradients = new[] { new QrGradientOptions(), new QrGradientOptions(), new QrGradientOptions() }; break;
-            case "Glow": eyes.FrameStyle = QrEyeFrameStyle.Glow; break;
+            case "Glow": eyes.FrameStyle = QrEyeFrameStyle.Single; eyes.GlowRadiusPx = 2; break;
             case "Sparkle": eyes.SparkleCount = 1; break;
             case "Ring": eyes.AccentRingCount = 1; break;
             case "Ray": eyes.AccentRayCount = 1; break;
