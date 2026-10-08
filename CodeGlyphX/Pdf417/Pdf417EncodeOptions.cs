@@ -22,7 +22,8 @@ public sealed class Pdf417EncodeOptions {
     /// <summary>High-level compaction mode.</summary>
     public Pdf417Compaction Compaction { get; set; } = Pdf417Compaction.Auto;
 
-    /// <summary>Text encoding used for byte compaction.</summary>
+    /// <summary>Text encoding used for byte compaction, with its known charset ECI declaration. Defaults to UTF-8.
+    /// Encodings without a known ECI assignment and characters requiring replacement fallbacks are rejected.</summary>
     public System.Text.Encoding? TextEncoding { get; set; }
 
     internal Pdf417EncodeOptions Clone() {

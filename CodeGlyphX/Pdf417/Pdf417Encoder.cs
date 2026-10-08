@@ -96,8 +96,8 @@ public static class Pdf417Encoder {
         var bestScore = float.MaxValue;
 
         for (var c = minCols; c <= maxCols; c++) {
-            var r = (int)Math.Ceiling((dataCodewords + 1 + eccCodewords) / (double)c);
-            if (r < minRows || r > maxRows) continue;
+            var r = Math.Max(minRows, (int)Math.Ceiling((dataCodewords + 1 + eccCodewords) / (double)c));
+            if (r > maxRows || r * c > 928) continue;
 
             var widthModules = c * Pdf417BarcodeMatrix.ColumnWidth + (options.Compact ? 35 : 69);
             var ratio = widthModules / (float)r;
@@ -130,7 +130,7 @@ public static class Pdf417Encoder {
 
 #if NET8_0_OR_GREATER
     private static List<int> EncodeByteCompaction(ReadOnlySpan<byte> data) {
-        var codewords = new List<int>(data.Length + 3) { 901 };
+        var codewords = new List<int>(data.Length + 3) { data.Length > 0 && data.Length % 6 == 0 ? 924 : 901 };
 
         var idx = 0;
         while (idx + 6 <= data.Length) {
@@ -162,7 +162,7 @@ public static class Pdf417Encoder {
     }
 
     private static List<int> EncodeByteCompaction(byte[] data) {
-        var codewords = new List<int>(data.Length + 3) { 901 };
+        var codewords = new List<int>(data.Length + 3) { data.Length > 0 && data.Length % 6 == 0 ? 924 : 901 };
 
         var idx = 0;
         while (idx + 6 <= data.Length) {

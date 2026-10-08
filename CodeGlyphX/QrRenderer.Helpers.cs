@@ -92,6 +92,7 @@ internal static partial class QrRenderer {
             ModuleSize = styled.ModuleSize, QuietZone = styled.QuietZone,
             DarkColor = ToCss(styled.Foreground), LightColor = ToCss(styled.Background),
             ModuleShape = styled.ModuleShape, ModuleScale = styled.ModuleScale,
+            ProtectFunctionalPatterns = styled.ProtectFunctionalPatterns,
             ModuleCornerRadiusPx = styled.ModuleCornerRadiusPx,
             ForegroundGradient = styled.ForegroundGradient, Eyes = styled.Eyes, Logo = BuildLogoOptions(opts)
         };

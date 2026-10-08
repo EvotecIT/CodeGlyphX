@@ -12,7 +12,7 @@ public static class DataBar14Encoder {
     /// Encodes a GS1 DataBar-14 Truncated symbol into a <see cref="Barcode1D">Barcode1D</see>.
     /// </summary>
     public static Barcode1D EncodeTruncated(string content) {
-        return EncodeLinear(content);
+        return EncodeLinear(content, SymbolFormat.Gs1DataBarTruncated);
     }
 
     /// <summary>
@@ -20,10 +20,10 @@ public static class DataBar14Encoder {
     /// The module sequence is identical to Truncated; the physical bar-height requirement distinguishes the symbols.
     /// </summary>
     public static Barcode1D EncodeOmnidirectional(string content) {
-        return EncodeLinear(content);
+        return EncodeLinear(content, SymbolFormat.Gs1DataBarOmnidirectional);
     }
 
-    private static Barcode1D EncodeLinear(string content) {
+    private static Barcode1D EncodeLinear(string content, SymbolFormat format) {
         var widths = BuildTotalWidths(content, out _);
         var segments = new List<BarSegment>(widths.Length);
         var isBar = false;
@@ -31,7 +31,7 @@ public static class DataBar14Encoder {
             segments.Add(new BarSegment(isBar, widths[i]));
             isBar = !isBar;
         }
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, format);
     }
 
     /// <summary>

@@ -53,7 +53,7 @@ public static class UpcAEncoder {
         if (!string.IsNullOrEmpty(addOn)) {
             EanAddOn.AppendAddOn(segments, addOn!);
         }
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.UpcA);
     }
 
     private static char CalcChecksum(string content) {

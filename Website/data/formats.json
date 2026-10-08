@@ -810,8 +810,8 @@
       "geometry": false,
       "gs1Encode": false,
       "gs1Decode": false,
-      "eciEncode": false,
-      "eciDecode": false,
+      "eciEncode": true,
+      "eciDecode": true,
       "structuredAppendEncode": false,
       "structuredAppendDecode": false
     },
@@ -827,8 +827,8 @@
       "geometry": false,
       "gs1Encode": false,
       "gs1Decode": false,
-      "eciEncode": false,
-      "eciDecode": false,
+      "eciEncode": true,
+      "eciDecode": true,
       "structuredAppendEncode": false,
       "structuredAppendDecode": false
     }

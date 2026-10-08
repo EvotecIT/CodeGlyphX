@@ -20,7 +20,7 @@ public static class DataBarExpandedEncoder {
             segments.Add(new BarSegment(isBar, symbol.Elements[i]));
             isBar = !isBar;
         }
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Gs1DataBarExpanded);
     }
 
     /// <summary>

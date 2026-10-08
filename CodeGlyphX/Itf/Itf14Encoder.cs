@@ -49,7 +49,7 @@ public static class Itf14Encoder {
         AppendSegment(segments, false, 1);
         AppendSegment(segments, true, 1);
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Itf14);
     }
 
     private static char CalcChecksum(ReadOnlySpan<char> content) {

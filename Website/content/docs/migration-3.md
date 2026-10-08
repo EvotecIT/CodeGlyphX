@@ -106,7 +106,9 @@ foreach (var symbol in scan.Symbols) {
 Console.WriteLine(scan.CompletionReason);
 ```
 
-`Status == Success` means at least one symbol was decoded. `CompletionReason` records whether the requested scan completed, reached `MaxSymbols`, was cancelled or exceeded its deadline. Partial results stay available after cancellation or a deadline. `IsPartial` also reports when a symbol limit stopped the scan. `MaxSymbols = 1` requests the first match; it does not establish that the image contains only one symbol.
+`Status == Success` means at least one symbol was decoded. `CompletionReason` records whether the requested scan completed, reached `MaxSymbols`, was cancelled, exceeded its total deadline or exhausted a shorter family recognition allowance (`RecognitionBudgetExceeded`). Partial results stay available when a budget or cancellation stops further recognition. A family allowance can expire while later families continue. `IsPartial` also reports when a symbol limit stopped the scan. `MaxSymbols = 1` requests the first match; it does not establish that the image contains only one symbol.
+
+`Deduplicate = true` collapses equivalent format-and-payload results. Disable it to retain repeated recognition observations; retries can observe the same physical symbol more than once, so the result count is not a physical-label inventory.
 
 The default total deadline is 500 ms, including when options are omitted or created with `new ScanOptions()`. Set `TimeoutMilliseconds = 0` explicitly for an unlimited total budget, or select a longer deadline for expensive scans. Deadlines remain cooperative.
 

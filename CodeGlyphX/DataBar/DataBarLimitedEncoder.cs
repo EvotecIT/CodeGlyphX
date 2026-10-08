@@ -42,7 +42,7 @@ public static class DataBarLimitedEncoder {
             segments.Add(new BarSegment(isBar, totalWidths[i]));
             isBar = !isBar;
         }
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Gs1DataBarLimited);
     }
 
     private static int[] EncodePair(int pairValue) {

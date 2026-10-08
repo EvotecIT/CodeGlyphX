@@ -55,7 +55,7 @@ public static class EanEncoder {
         if (string.IsNullOrEmpty(addOn)) return baseCode;
         var segments = new List<BarSegment>(baseCode.Segments);
         EanAddOn.AppendAddOn(segments, addOn!);
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Ean);
     }
 
     private static Barcode1D EncodeEan8(string content) {
@@ -72,7 +72,7 @@ public static class EanEncoder {
             index++;
         }
         BarcodeSegments.AppendBits(segments, new[] { true, false, true });
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Ean);
     }
 
     private static Barcode1D EncodeEan13(string content) {
@@ -101,7 +101,7 @@ public static class EanEncoder {
         }
 
         BarcodeSegments.AppendBits(segments, new[] { true, false, true });
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Ean);
     }
 
     private static char CalcChecksum(string content) {

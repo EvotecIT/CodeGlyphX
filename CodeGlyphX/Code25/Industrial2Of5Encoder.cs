@@ -12,6 +12,6 @@ public static class Industrial2Of5Encoder {
     /// a Mod-10 check digit is appended.
     /// </summary>
     public static Barcode1D Encode(string content, bool includeChecksum = false) {
-        return Discrete2Of5Encoder.Encode(content, includeChecksum, StartBars, StopBars);
+        return Discrete2Of5Encoder.Encode(content, includeChecksum, StartBars, StopBars, SymbolFormat.Industrial2Of5);
     }
 }

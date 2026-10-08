@@ -41,7 +41,7 @@ public static class Code39Encoder {
             BarcodeSegments.AppendBits(segments, entry.data);
         }
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Code39);
     }
 
     private static string Prepare(string content) {

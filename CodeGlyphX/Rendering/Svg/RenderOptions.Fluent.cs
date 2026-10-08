@@ -61,6 +61,14 @@ public sealed partial class QrSvgRenderOptions {
     }
 
     /// <summary>
+    /// Enables or disables full square, solid-color modules for non-eye functional patterns.
+    /// </summary>
+    public QrSvgRenderOptions WithProtectFunctionalPatterns(bool enabled = true) {
+        ProtectFunctionalPatterns = enabled;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the module corner radius in pixels.
     /// </summary>
     public QrSvgRenderOptions WithModuleCornerRadiusPx(int radiusPx) {

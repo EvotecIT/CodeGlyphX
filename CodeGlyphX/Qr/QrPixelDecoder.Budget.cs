@@ -46,7 +46,10 @@ internal static partial class QrPixelDecoder {
             if (!Enabled) return false;
             var remaining = Deadline - Stopwatch.GetTimestamp();
             if (remaining <= 0) return true;
-            return remaining <= (long)(milliseconds * (Stopwatch.Frequency / 1000.0));
+            // A reserve for optional recovery must not consume an entire short family allowance.
+            // Keep the requested reserve for ordinary budgets and scale it down for fast calls.
+            var reserve = Math.Min(milliseconds, BudgetMilliseconds / 4);
+            return remaining <= (long)(reserve * (Stopwatch.Frequency / 1000.0));
         }
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using CodeGlyphX.Internal;
 
 #if NET8_0_OR_GREATER
 using ByteSpan = System.ReadOnlySpan<byte>;
@@ -14,6 +15,8 @@ namespace CodeGlyphX.Pdf417;
 internal static class Pdf417HighLevelEncoder {
     private const int TextCompactionLatch = 900;
     private const int ByteCompactionLatch = 901;
+    private const int ByteCompactionLatch6 = 924;
+    private const int CharsetEci = 927;
     private const int NumericCompactionLatch = 902;
 
     private const int Pl = 25;
@@ -34,14 +37,27 @@ internal static class Pdf417HighLevelEncoder {
 
     public static List<int> Encode(string msg, Pdf417Compaction compaction, Encoding? encoding) {
         if (msg is null) throw new ArgumentNullException(nameof(msg));
-        encoding ??= Encoding.UTF8;
+        if (compaction == Pdf417Compaction.Text) return EncodeTextMode(msg);
+        if (compaction == Pdf417Compaction.Numeric) return EncodeNumericMode(msg);
 
-        return compaction switch {
-            Pdf417Compaction.Text => EncodeTextMode(msg),
-            Pdf417Compaction.Numeric => EncodeNumericMode(msg),
-            Pdf417Compaction.Byte => EncodeByteMode(encoding.GetBytes(msg)),
-            _ => EncodeAuto(msg, encoding)
-        };
+        // Preserve the UTF-8 default, while declaring the charset for independent readers.
+        encoding = EncodingUtils.ResolveTextEncoding(msg, encoding ?? EncodingUtils.Utf8Strict, null, "PDF417", out var eci);
+        var bytes = EncodingUtils.GetBytesStrict(encoding, msg, nameof(msg));
+        var result = compaction == Pdf417Compaction.Byte ? EncodeByteMode(bytes) : EncodeAuto(msg, encoding);
+        if (eci.HasValue && NeedsCharsetDeclaration(msg, bytes, result)) {
+            result.Insert(0, eci.Value);
+            result.Insert(0, CharsetEci);
+        }
+        return result;
+    }
+
+    private static bool NeedsCharsetDeclaration(string msg, byte[] bytes, List<int> codewords) {
+        if (!codewords.Contains(ByteCompactionLatch) && !codewords.Contains(ByteCompactionLatch6)) return false;
+        if (bytes.Length != msg.Length) return true;
+        for (var i = 0; i < bytes.Length; i++) {
+            if (msg[i] > 0x7F || bytes[i] != msg[i]) return true;
+        }
+        return false;
     }
 
     private static List<int> EncodeAuto(string msg, Encoding encoding) {
@@ -75,11 +91,10 @@ internal static class Pdf417HighLevelEncoder {
 
             var binCount = CountConsecutiveBinary(msg, idx);
             if (binCount == 0) binCount = 1;
-            if (mode != Pdf417Compaction.Byte) {
-                result.Add(ByteCompactionLatch);
-                mode = Pdf417Compaction.Byte;
-            }
-            EncodeBytes(encoding.GetBytes(msg.Substring(idx, binCount)), result);
+            var bytes = EncodingUtils.GetBytesStrict(encoding, msg.Substring(idx, binCount), nameof(msg));
+            result.Add(bytes.Length > 0 && bytes.Length % 6 == 0 ? ByteCompactionLatch6 : ByteCompactionLatch);
+            mode = Pdf417Compaction.Byte;
+            EncodeBytes(bytes, result);
             idx += binCount;
         }
 
@@ -106,7 +121,9 @@ internal static class Pdf417HighLevelEncoder {
     }
 
     private static List<int> EncodeByteMode(byte[] data) {
-        var result = new List<int>(data.Length + 2) { ByteCompactionLatch };
+        var result = new List<int>(data.Length + 2) {
+            data.Length > 0 && data.Length % 6 == 0 ? ByteCompactionLatch6 : ByteCompactionLatch
+        };
         EncodeBytes(data, result);
         return result;
     }
@@ -238,7 +255,11 @@ internal static class Pdf417HighLevelEncoder {
 
     private static int CountConsecutiveBinary(string msg, int start) {
         var count = 0;
-        while (start + count < msg.Length && !IsText(msg[start + count])) count++;
+        while (start + count < msg.Length) {
+            var index = start + count;
+            if (CountConsecutiveDigits(msg, index) >= 13 || CountConsecutiveText(msg, index) >= 5) break;
+            count++;
+        }
         return count;
     }
 

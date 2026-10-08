@@ -5,6 +5,7 @@ using System.IO;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering.Vector;
+using CodeGlyphX.Qr;
 
 namespace CodeGlyphX.Rendering.Svg;
 
@@ -45,6 +46,9 @@ public static class SvgQrRenderer {
         var hasAdvanced = opts.ModuleShape != QrModuleShape.Square ||
                           Math.Abs(opts.ModuleScale - 1.0) > 0.0001 ||
                           opts.ModuleCornerRadiusPx != 0;
+        var functionMask = opts.ProtectFunctionalPatterns && QrStructureAnalysis.TryGetVersionFromSize(size, out var version)
+            ? QrStructureAnalysis.BuildFunctionMask(version, size)
+            : null;
 
         // Fragment IDs share the host document's namespace when exports are embedded inline.
         var gradientPrefix = "cgx-" + Guid.NewGuid().ToString("N") + "-";
@@ -60,6 +64,8 @@ public static class SvgQrRenderer {
             if (eyeOuterIds is not null || eyeInnerIds is not null) {
                 for (var i = 0; i < 3; i++) {
                     GetEyeOrigin(i, size, out var ex, out var ey);
+                    ex += opts.QuietZone;
+                    ey += opts.QuietZone;
                     if (eyeOuterIds is not null) {
                         AppendGradientDef(sb, eyeOuterIds[i], opts.Eyes!.OuterGradient!, ex, ey, 7, 7);
                     }
@@ -76,28 +82,21 @@ public static class SvgQrRenderer {
 
         if (usePath) {
             var fill = fgGradId is null ? opts.DarkColor : $"url(#{fgGradId})";
-            sb.Append("<path fill=\"").Append(fill).Append("\" d=\"");
-            for (var y = 0; y < size; y++) {
-                var outY = y + opts.QuietZone;
-                var runStart = -1;
-                for (var x = 0; x < size; x++) {
-                    if (useFrame && IsInEye(x, y, size)) continue;
-                    var dark = modules[x, y];
-                    if (dark && runStart < 0) runStart = x;
-                    if ((!dark || x == size - 1) && runStart >= 0) {
-                        var runEnd = dark && x == size - 1 ? x + 1 : x;
-                        sb.Append('M').Append(runStart + opts.QuietZone).Append(' ').Append(outY)
-                            .Append('h').Append(runEnd - runStart).Append("v1h-").Append(runEnd - runStart).Append('z');
-                        runStart = -1;
-                    }
-                }
+            var protectedGradientMask = fgGradId is null ? null : functionMask;
+            AppendModulePath(sb, modules, opts.QuietZone, useFrame, fill, protectedGradientMask, protectedOnly: false);
+            if (protectedGradientMask is not null) {
+                AppendModulePath(sb, modules, opts.QuietZone, useFrame, opts.DarkColor, protectedGradientMask, protectedOnly: true);
             }
-            sb.Append("\"/>");
         } else {
             for (var my = 0; my < size; my++) {
                 for (var mx = 0; mx < size; mx++) {
                     if (!modules[mx, my]) continue;
                     if (useFrame && IsInEye(mx, my, size)) continue;
+                    if (functionMask is not null && functionMask[mx, my] && !IsInEye(mx, my, size)) {
+                        AppendModuleShape(sb, mx + opts.QuietZone, my + opts.QuietZone, 1.0,
+                            QrModuleShape.Square, 1.0, 0, opts.ModuleSize, opts.DarkColor);
+                        continue;
+                    }
 
                     var eyeKind = EyeKind.None;
                     var eyeIndex = -1;
@@ -247,6 +246,30 @@ public static class SvgQrRenderer {
 
         if (fgGradId is not null) return $"url(#{fgGradId})";
         return opts.DarkColor;
+    }
+
+    // Keep functional cells in a separate solid-color path when data modules use a gradient.
+    private static void AppendModulePath(StringBuilder sb, BitMatrix modules, int quietZone, bool useFrame,
+        string fill, BitMatrix? functionMask, bool protectedOnly) {
+        var size = modules.Width;
+        sb.Append("<path fill=\"").Append(fill).Append("\" d=\"");
+        for (var y = 0; y < size; y++) {
+            var runStart = -1;
+            for (var x = 0; x < size; x++) {
+                var inEye = IsInEye(x, y, size);
+                var isProtected = functionMask is not null && functionMask[x, y] && !inEye;
+                var dark = modules[x, y] && !(useFrame && inEye)
+                    && (functionMask is null || isProtected == protectedOnly);
+                if (dark && runStart < 0) runStart = x;
+                if ((!dark || x == size - 1) && runStart >= 0) {
+                    var runEnd = dark && x == size - 1 ? x + 1 : x;
+                    sb.Append('M').Append(runStart + quietZone).Append(' ').Append(y + quietZone)
+                        .Append('h').Append(runEnd - runStart).Append("v1h-").Append(runEnd - runStart).Append('z');
+                    runStart = -1;
+                }
+            }
+        }
+        sb.Append("\"/>");
     }
 
     private static void AppendModuleShape(
@@ -453,8 +476,10 @@ public static class SvgQrRenderer {
         var innerFill = eyeInnerIds is not null ? $"url(#{eyeInnerIds[eyeIndex]})"
             : eyes.InnerColor.HasValue ? ToCssColor(eyes.InnerColor.Value) : opts.DarkColor;
 
+        eyeX += opts.QuietZone;
+        eyeY += opts.QuietZone;
         AppendModuleShape(sb, eyeX, eyeY, 7.0, eyes.OuterShape, eyes.OuterScale, eyes.OuterCornerRadiusPx, opts.ModuleSize, outerFill);
-        AppendModuleShape(sb, eyeX + 2, eyeY + 2, 3.0, eyes.InnerShape, 1.0, 0, opts.ModuleSize, opts.LightColor);
+        AppendModuleShape(sb, eyeX + 1, eyeY + 1, 5.0, eyes.OuterShape, eyes.OuterScale, eyes.InnerCornerRadiusPx, opts.ModuleSize, opts.LightColor);
         AppendModuleShape(sb, eyeX + 2, eyeY + 2, 3.0, eyes.InnerShape, eyes.InnerScale, eyes.InnerCornerRadiusPx, opts.ModuleSize, innerFill);
     }
 

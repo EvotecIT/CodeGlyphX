@@ -41,7 +41,7 @@ public static class Code11Encoder {
         BarcodeSegments.AppendBit(segments, false);
         AppendPattern(segments, Code11Tables.StartStopPattern);
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Code11);
     }
 
     private static void AppendPattern(List<BarSegment> segments, string pattern) {

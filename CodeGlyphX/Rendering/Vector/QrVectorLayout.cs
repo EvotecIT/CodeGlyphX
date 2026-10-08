@@ -1,5 +1,6 @@
 using CodeGlyphX.Rendering;
 using System;
+using CodeGlyphX.Qr;
 using CodeGlyphX.Rendering.Png;
 
 namespace CodeGlyphX.Rendering.Vector;
@@ -46,6 +47,9 @@ internal static class QrVectorLayout {
         var moduleRadius = opts.ModuleCornerRadiusPx;
         var eye = opts.Eyes;
         var useFrame = eye is not null && eye.UseFrame;
+        var functionMask = opts.ProtectFunctionalPatterns && QrStructureAnalysis.TryGetVersionFromSize(size, out var version)
+            ? QrStructureAnalysis.BuildFunctionMask(version, size)
+            : null;
 
         for (var my = 0; my < size; my++) {
             for (var mx = 0; mx < size; mx++) {
@@ -57,7 +61,12 @@ internal static class QrVectorLayout {
                 var radius = moduleRadius;
                 var color = fg;
 
-                if (eye is not null && TryGetEyeKind(mx, my, size, out var kind)) {
+                var protectFunctional = functionMask is not null && functionMask[mx, my] && !IsInEye(mx, my, size);
+                if (protectFunctional) {
+                    shape = QrModuleShape.Square;
+                    scale = 1.0;
+                    radius = 0;
+                } else if (eye is not null && TryGetEyeKind(mx, my, size, out var kind)) {
                     if (kind == EyeKind.Outer) {
                         shape = eye.OuterShape;
                         scale = eye.OuterScale;
@@ -89,6 +98,7 @@ internal static class QrVectorLayout {
         if (opts.BackgroundSupersample > 1) return true;
         if (opts.ForegroundGradient is not null) return true;
         if (opts.ForegroundPalette is not null) return true;
+        if (opts.ForegroundPattern is not null) return true;
         if (opts.ForegroundPaletteZones is not null) return true;
         if (opts.ModuleScaleMap is not null) return true;
         if (opts.ModuleShapeMap is not null) return true;
@@ -98,6 +108,11 @@ internal static class QrVectorLayout {
         if (opts.Debug is not null && opts.Debug.HasOverlay) return true;
         if (opts.Eyes is not null && opts.Eyes.FrameStyle != QrEyeFrameStyle.Single) return true;
         if (opts.Eyes is not null && (opts.Eyes.OuterGradient is not null || opts.Eyes.InnerGradient is not null)) return true;
+        if (opts.Eyes is not null && (
+            opts.Eyes.OuterColors is not null || opts.Eyes.InnerColors is not null
+            || opts.Eyes.OuterGradients is not null || opts.Eyes.InnerGradients is not null
+            || opts.Eyes.GlowRadiusPx > 0 || opts.Eyes.SparkleCount > 0
+            || opts.Eyes.AccentRingCount > 0 || opts.Eyes.AccentRayCount > 0 || opts.Eyes.AccentStripeCount > 0)) return true;
         if (!IsVectorShapeSupported(opts.ModuleShape)) return true;
         if (opts.Eyes is not null && (!IsVectorShapeSupported(opts.Eyes.OuterShape) || !IsVectorShapeSupported(opts.Eyes.InnerShape))) return true;
         return false;

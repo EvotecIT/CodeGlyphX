@@ -1034,10 +1034,10 @@ internal static partial class QrPixelDecoder {
 
     private readonly struct QrCollectionSink {
         public PooledList<QrDecoded> Results { get; }
-        public HashSet<byte[]> Seen { get; }
+        public HashSet<byte[]>? Seen { get; }
         public Func<QrDecoded, bool>? Accept { get; }
 
-        public QrCollectionSink(PooledList<QrDecoded> results, HashSet<byte[]> seen, Func<QrDecoded, bool>? accept) {
+        public QrCollectionSink(PooledList<QrDecoded> results, HashSet<byte[]>? seen, Func<QrDecoded, bool>? accept) {
             Results = results;
             Seen = seen;
             Accept = accept;

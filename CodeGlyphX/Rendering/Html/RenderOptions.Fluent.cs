@@ -69,6 +69,14 @@ public sealed partial class QrHtmlRenderOptions {
     }
 
     /// <summary>
+    /// Enables or disables full square, solid-color modules for non-eye functional patterns.
+    /// </summary>
+    public QrHtmlRenderOptions WithProtectFunctionalPatterns(bool enabled = true) {
+        ProtectFunctionalPatterns = enabled;
+        return this;
+    }
+
+    /// <summary>
     /// Sets the module corner radius in pixels.
     /// </summary>
     public QrHtmlRenderOptions WithModuleCornerRadiusPx(int radiusPx) {

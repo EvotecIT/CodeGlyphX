@@ -57,6 +57,7 @@ internal static partial class QrRenderer {
                     Logo = BuildLogoOptions(opts),
                     ModuleShape = baseRender.ModuleShape,
                     ModuleScale = baseRender.ModuleScale,
+                    ProtectFunctionalPatterns = baseRender.ProtectFunctionalPatterns,
                     ModuleCornerRadiusPx = baseRender.ModuleCornerRadiusPx,
                     ForegroundGradient = baseRender.ForegroundGradient,
                     Eyes = baseRender.Eyes,

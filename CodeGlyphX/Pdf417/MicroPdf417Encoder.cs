@@ -213,7 +213,7 @@ public static class MicroPdf417Encoder {
     }
 
     private static List<int> EncodeByteCompaction(byte[] data) {
-        var codewords = new List<int>(data.Length + 3) { 901 };
+        var codewords = new List<int>(data.Length + 3) { data.Length > 0 && data.Length % 6 == 0 ? 924 : 901 };
 
         var idx = 0;
         while (idx + 6 <= data.Length) {
@@ -240,7 +240,7 @@ public static class MicroPdf417Encoder {
 
 #if NET8_0_OR_GREATER
     private static List<int> EncodeByteCompaction(ReadOnlySpan<byte> data) {
-        var codewords = new List<int>(data.Length + 3) { 901 };
+        var codewords = new List<int>(data.Length + 3) { data.Length > 0 && data.Length % 6 == 0 ? 924 : 901 };
 
         var idx = 0;
         while (idx + 6 <= data.Length) {

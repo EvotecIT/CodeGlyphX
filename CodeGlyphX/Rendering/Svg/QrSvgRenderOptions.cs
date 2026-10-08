@@ -44,6 +44,12 @@ public sealed partial class QrSvgRenderOptions {
     public double ModuleScale { get; set; } = 1.0;
 
     /// <summary>
+    /// Gets or sets whether non-eye functional patterns retain full square modules and the solid dark color.
+    /// </summary>
+    /// <remarks>Applies to timing, alignment, format, version and fixed dark modules in standard QR matrices.</remarks>
+    public bool ProtectFunctionalPatterns { get; set; } = true;
+
+    /// <summary>
     /// Gets or sets the corner radius in pixels for rounded modules.
     /// </summary>
     public int ModuleCornerRadiusPx { get; set; }

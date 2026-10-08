@@ -32,7 +32,7 @@ internal static partial class QrPixelDecoder {
         int scale,
         QrProfileSettings settings,
         PooledList<QrDecoded> list,
-        HashSet<byte[]> seen,
+        HashSet<byte[]>? seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
         QrGrayImagePool? pool) {
@@ -94,7 +94,7 @@ internal static partial class QrPixelDecoder {
         QrGrayImage image,
         bool invert,
         PooledList<QrDecoded> results,
-        HashSet<byte[]> seen,
+        HashSet<byte[]>? seen,
         Func<QrDecoded, bool>? accept,
         List<QrFinderPatternDetector.FinderPattern> candidates,
         DecodeBudget budget,
@@ -133,7 +133,7 @@ internal static partial class QrPixelDecoder {
         bool invert,
         List<QrFinderPatternDetector.FinderPattern> candidates,
         PooledList<QrDecoded> results,
-        HashSet<byte[]> seen,
+        HashSet<byte[]>? seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
         bool aggressive,
@@ -172,7 +172,7 @@ internal static partial class QrPixelDecoder {
         ReadOnlySpan<QrFinderPatternDetector.FinderPattern> candidateSpan,
         int totalCandidates,
         PooledList<QrDecoded> results,
-        HashSet<byte[]> seen,
+        HashSet<byte[]>? seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget,
         bool aggressive,
@@ -228,7 +228,7 @@ internal static partial class QrPixelDecoder {
         QrGrayImage image,
         bool invert,
         PooledList<QrDecoded> results,
-        HashSet<byte[]> seen,
+        HashSet<byte[]>? seen,
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget) {
         if (budget.IsExpired) return;
@@ -274,9 +274,9 @@ internal static partial class QrPixelDecoder {
         }
     }
 
-    private static void AddResult(PooledList<QrDecoded> results, HashSet<byte[]> seen, QrDecoded decoded, Func<QrDecoded, bool>? accept) {
+    private static void AddResult(PooledList<QrDecoded> results, HashSet<byte[]>? seen, QrDecoded decoded, Func<QrDecoded, bool>? accept) {
         if (accept is not null && !accept(decoded)) return;
-        if (!seen.Add(decoded.Bytes)) return;
+        if (seen is not null && !seen.Add(decoded.Bytes)) return;
         results.Add(decoded);
     }
 

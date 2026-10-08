@@ -24,6 +24,9 @@ internal static class Pdf417DecodedBitStreamParser {
     private const int MacroPdf417ControlBlock = 928;
     private const int MacroPdf417Terminator = 922;
     private const int MacroPdf417OptionalField = 923;
+    private const int CharsetEci = 927;
+    private const int GeneralPurposeEci = 926;
+    private const int UserDefinedEci = 925;
 
     private const int Pl = 25;
     private const int Ll = 27;
@@ -44,41 +47,68 @@ internal static class Pdf417DecodedBitStreamParser {
 
     public static string? Decode(int[] codewords, out Pdf417MacroMetadata? macro) {
         if (codewords is null) throw new ArgumentNullException(nameof(codewords));
+        try {
+            return DecodeCore(codewords, out macro);
+        } catch (DecoderFallbackException) {
+            macro = null;
+            return null;
+        }
+    }
+
+    private static string? DecodeCore(int[] codewords, out Pdf417MacroMetadata? macro) {
         macro = null;
         var sb = new StringBuilder(codewords.Length * 2);
         var index = 0;
         var mode = TextCompactionLatch;
+        var textMode = Mode.Alpha;
+        Encoding? encoding = null; // Retain legacy UTF-8/Latin-1 detection for symbols without ECI.
 
         while (index < codewords.Length) {
             var code = codewords[index++];
+            if (code == CharsetEci) {
+                if (index >= codewords.Length || codewords[index] < 0 || codewords[index] >= 900
+                    || !EncodingUtils.TryGetEncoding(codewords[index++], out var mappedEncoding)) return null;
+                encoding = (Encoding)mappedEncoding.Clone();
+                encoding.DecoderFallback = DecoderFallback.ExceptionFallback;
+                continue;
+            }
+            if (code == GeneralPurposeEci || code == UserDefinedEci) return null;
             if (code == TextCompactionLatch) {
                 mode = TextCompactionLatch;
+                textMode = Mode.Alpha;
                 continue;
             }
             if (code == ByteCompactionLatch || code == ByteCompactionLatch6) {
-                index = DecodeByteCompaction(code, codewords, index, sb);
+                index = DecodeByteCompaction(code, codewords, index, sb, encoding);
+                if (index < 0) return null;
                 mode = TextCompactionLatch;
+                textMode = Mode.Alpha;
                 continue;
             }
             if (code == NumericCompactionLatch) {
                 index = DecodeNumericCompaction(codewords, index, sb);
                 mode = TextCompactionLatch;
+                textMode = Mode.Alpha;
                 continue;
             }
             if (code == MacroPdf417ControlBlock) {
                 if (!DecodeMacroBlock(codewords, ref index, ref macro)) return null;
                 mode = TextCompactionLatch;
+                textMode = Mode.Alpha;
                 continue;
             }
             if (code == ModeShiftToByte) {
                 if (index >= codewords.Length) break;
-                sb.Append((char)codewords[index++]);
+                var value = codewords[index++];
+                if (value < 0 || value > 255) return null;
+                sb.Append(DecodeBytes(new[] { (byte)value }, encoding));
                 continue;
             }
 
+            if (code < 0 || code >= TextCompactionLatch) return null;
             if (mode == TextCompactionLatch) {
                 index--;
-                index = DecodeTextCompaction(codewords, index, sb);
+                index = DecodeTextCompaction(codewords, index, sb, encoding, ref textMode);
                 continue;
             }
         }
@@ -239,7 +269,7 @@ internal static class Pdf417DecodedBitStreamParser {
         return index;
     }
 
-    private static int DecodeTextCompaction(int[] codewords, int index, StringBuilder sb) {
+    private static int DecodeTextCompaction(int[] codewords, int index, StringBuilder sb, Encoding? encoding, ref Mode textMode) {
         var textData = new List<int>((codewords.Length - index) * 2);
         var byteData = new List<int>((codewords.Length - index) * 2);
 
@@ -268,14 +298,14 @@ internal static class Pdf417DecodedBitStreamParser {
             break;
         }
 
-        DecodeTextCompactionData(textData, byteData, sb);
+        textMode = DecodeTextCompactionData(textData, byteData, sb, encoding, textMode);
         return index;
     }
 
-    private static void DecodeTextCompactionData(List<int> textData, List<int> byteData, StringBuilder sb) {
-        var subMode = Mode.Alpha;
-        var priorToShiftMode = Mode.Alpha;
-        var latchedMode = Mode.Alpha;
+    private static Mode DecodeTextCompactionData(List<int> textData, List<int> byteData, StringBuilder sb, Encoding? encoding = null, Mode initialMode = Mode.Alpha) {
+        var subMode = initialMode;
+        var priorToShiftMode = initialMode;
+        var latchedMode = initialMode;
         var byteIndex = 0;
 
         for (var i = 0; i < textData.Count; i++) {
@@ -304,7 +334,7 @@ internal static class Pdf417DecodedBitStreamParser {
                                 subMode = Mode.PunctShift;
                                 break;
                             case ModeShiftToByte:
-                                if (byteIndex < byteData.Count) sb.Append((char)byteData[byteIndex++]);
+                                if (byteIndex < byteData.Count) sb.Append(DecodeBytes(new[] { (byte)byteData[byteIndex++] }, encoding));
                                 break;
                             case TextCompactionLatch:
                                 subMode = Mode.Alpha;
@@ -334,7 +364,7 @@ internal static class Pdf417DecodedBitStreamParser {
                                 subMode = Mode.PunctShift;
                                 break;
                             case ModeShiftToByte:
-                                if (byteIndex < byteData.Count) sb.Append((char)byteData[byteIndex++]);
+                                if (byteIndex < byteData.Count) sb.Append(DecodeBytes(new[] { (byte)byteData[byteIndex++] }, encoding));
                                 break;
                             case TextCompactionLatch:
                                 subMode = Mode.Alpha;
@@ -369,7 +399,7 @@ internal static class Pdf417DecodedBitStreamParser {
                                 subMode = Mode.PunctShift;
                                 break;
                             case ModeShiftToByte:
-                                if (byteIndex < byteData.Count) sb.Append((char)byteData[byteIndex++]);
+                                if (byteIndex < byteData.Count) sb.Append(DecodeBytes(new[] { (byte)byteData[byteIndex++] }, encoding));
                                 break;
                         }
                     }
@@ -385,7 +415,7 @@ internal static class Pdf417DecodedBitStreamParser {
                                 latchedMode = subMode;
                                 break;
                             case ModeShiftToByte:
-                                if (byteIndex < byteData.Count) sb.Append((char)byteData[byteIndex++]);
+                                if (byteIndex < byteData.Count) sb.Append(DecodeBytes(new[] { (byte)byteData[byteIndex++] }, encoding));
                                 break;
                         }
                     }
@@ -418,7 +448,7 @@ internal static class Pdf417DecodedBitStreamParser {
                                 latchedMode = subMode;
                                 break;
                             case ModeShiftToByte:
-                                if (byteIndex < byteData.Count) sb.Append((char)byteData[byteIndex++]);
+                                if (byteIndex < byteData.Count) sb.Append(DecodeBytes(new[] { (byte)byteData[byteIndex++] }, encoding));
                                 break;
                         }
                     }
@@ -431,10 +461,12 @@ internal static class Pdf417DecodedBitStreamParser {
                 // no-op
             }
         }
+        return latchedMode;
     }
 
-    private static int DecodeByteCompaction(int mode, int[] codewords, int index, StringBuilder sb) {
+    private static int DecodeByteCompaction(int mode, int[] codewords, int index, StringBuilder sb, Encoding? encoding) {
         var end = false;
+        var bytes = new List<byte>();
 
         while (index < codewords.Length && !end) {
             if (index >= codewords.Length || codewords[index] >= TextCompactionLatch) {
@@ -443,33 +475,35 @@ internal static class Pdf417DecodedBitStreamParser {
                 var value = 0L;
                 var count = 0;
                 do {
+                    if (codewords[index] < 0) return -1;
                     value = 900 * value + codewords[index++];
                     count++;
                 } while (count < 5 && index < codewords.Length && codewords[index] < TextCompactionLatch);
 
                 if (count == 5 && (mode == ByteCompactionLatch6 || (index < codewords.Length && codewords[index] < TextCompactionLatch))) {
-                    var buffer = new byte[6];
+                    if (value >= (1L << 48)) return -1;
                     for (var i = 0; i < 6; i++) {
-                        buffer[i] = (byte)(value >> (8 * (5 - i)));
+                        bytes.Add((byte)(value >> (8 * (5 - i))));
                     }
-                    sb.Append(DecodeBytes(buffer));
                 } else {
+                    if (mode == ByteCompactionLatch6) return -1;
                     index -= count;
-                    var bytes = new List<byte>();
                     while (index < codewords.Length && !end) {
                         var code = codewords[index++];
                         if (code < TextCompactionLatch) {
+                            if (code < 0 || code > 255) return -1;
                             bytes.Add((byte)code);
                         } else {
                             index--;
                             end = true;
                         }
                     }
-                    if (bytes.Count > 0) sb.Append(DecodeBytes(bytes.ToArray()));
                 }
             }
         }
 
+        // Decode the complete byte segment so a multi-byte character can span six-byte groups.
+        if (bytes.Count > 0) sb.Append(DecodeBytes(bytes.ToArray(), encoding));
         return index;
     }
 
@@ -492,6 +526,10 @@ internal static class Pdf417DecodedBitStreamParser {
                     case ByteCompactionLatch6:
                     case NumericCompactionLatch:
                     case ModeShiftToByte:
+                    case CharsetEci:
+                    case GeneralPurposeEci:
+                    case UserDefinedEci:
+                    case MacroPdf417ControlBlock:
                         index--;
                         end = true;
                         break;
@@ -519,10 +557,10 @@ internal static class Pdf417DecodedBitStreamParser {
         return resultString.Substring(1);
     }
 
-    private static string DecodeBytes(byte[] bytes) {
+    private static string DecodeBytes(byte[] bytes, Encoding? encoding) {
+        if (encoding is not null) return encoding.GetString(bytes);
         try {
-            var utf8 = new UTF8Encoding(false, true);
-            return utf8.GetString(bytes);
+            return EncodingUtils.Utf8Strict.GetString(bytes);
         } catch (DecoderFallbackException) {
             return EncodingUtils.Latin1.GetString(bytes);
         }

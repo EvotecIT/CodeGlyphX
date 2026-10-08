@@ -7,20 +7,20 @@ namespace CodeGlyphX.Code128;
 internal static class Code128Encoder {
     public static Barcode1D Encode(string value) {
         var codes = EncodeCodeValues(value, gs1: false);
-        return EncodeFromCodes(codes);
+        return EncodeFromCodes(codes, SymbolFormat.Code128);
     }
 
     public static Barcode1D EncodeGs1(string elementString) {
         var codes = EncodeCodeValues(elementString, gs1: true);
-        return EncodeFromCodes(codes);
+        return EncodeFromCodes(codes, SymbolFormat.Gs1Code128);
     }
 
     internal static Barcode1D EncodeGs1Composite(string elementString, bool ccC) {
         var codes = EncodeCodeValues(elementString, gs1: true, compositeLinkage: ccC ? 2 : 1);
-        return EncodeFromCodes(codes);
+        return EncodeFromCodes(codes, SymbolFormat.Gs1Code128);
     }
 
-    private static Barcode1D EncodeFromCodes(int[] codes) {
+    private static Barcode1D EncodeFromCodes(int[] codes, SymbolFormat format) {
 
         var segments = new List<BarSegment>(codes.Length * 6);
         for (var ci = 0; ci < codes.Length; ci++) {
@@ -35,7 +35,7 @@ internal static class Code128Encoder {
             }
         }
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, format);
     }
 
     internal static int[] EncodeCodeValues(string value, bool gs1 = false, int compositeLinkage = 0) {

@@ -22,7 +22,8 @@ public sealed class MicroPdf417EncodeOptions {
     public Pdf417Compaction Compaction { get; set; } = Pdf417Compaction.Auto;
 
     /// <summary>
-    /// Text encoding used for byte compaction.
+    /// Text encoding used for byte compaction, with its known charset ECI declaration. Defaults to UTF-8.
+    /// Encodings without a known ECI assignment and characters requiring replacement fallbacks are rejected.
     /// </summary>
     public Encoding? TextEncoding { get; set; }
 }
