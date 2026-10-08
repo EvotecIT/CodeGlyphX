@@ -21,6 +21,7 @@
   ],
   "NugetSource": [],
   "IncludePrerelease": false,
+  "IncludeSymbols": true,
   "Configuration": "Release",
   "OutputPath": null,
   "StagingPath": "Artefacts/ProjectBuild",
