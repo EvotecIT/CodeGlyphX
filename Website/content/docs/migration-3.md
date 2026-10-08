@@ -84,6 +84,14 @@ QR.Create("Hello")
 
 SVG, SVGZ and HTML support a defined subset of QR appearance. An explicit raster effect that cannot be represented throws `NotSupportedException` instead of silently disappearing. Use PNG, another raster format, or raster-mode PDF/EPS for those effects.
 
+## Text encodings and specialized formats
+
+Text encoding preserves the supplied value or rejects an encoding that cannot represent it. Replacement fallbacks such as converting `é` to `?` are rejected, including through the PDF417 builder. Encode an explicit byte payload when the application owns the byte interpretation.
+
+PDF417 and MicroPDF417 declare supported text character sets with ECI when byte compaction needs it. Micro QR has no ECI declaration: its byte-mode text must retain the same value under the format's undeclared Latin-1 interpretation. Use `MicroQrCodeEncoder.EncodeKanji` for supported Kanji or `EncodeBytes` for an explicit byte payload.
+
+QR Code Model 2, Micro QR and rMQR retain their specialized encoders and layout rules. New built-in variants can use the shared matrix rendering route when their geometry is an orthogonal grid; their finder and functional-pattern rules remain format-specific.
+
 ## General image scanning
 
 Use `SymbolScanner` for bytes, streams, files or an `ImageFrame`. Select formats with `SymbolFormat` and inspect structured completion separately from the decoded symbols.
