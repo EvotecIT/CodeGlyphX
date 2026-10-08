@@ -50,6 +50,14 @@ public sealed class WebpMetadataWriterTests {
         Assert.Equal(expectedFlags, webp[20]);
         AssertChunk(webp, "ANIM");
         AssertChunk(webp, "ANMF");
+
+        Assert.True(WebpReader.TryDecodeAnimationFrames(webp, out var frames, out int width, out int height, out _));
+        Assert.Equal(1, width);
+        Assert.Equal(1, height);
+        var decodedFrame = Assert.Single(frames);
+        Assert.Equal(100, decodedFrame.DurationMs);
+        Assert.Equal(rgba.Length, decodedFrame.Rgba.Length);
+        Assert.Equal(rgba[3], decodedFrame.Rgba[3]);
     }
 
     [Fact]

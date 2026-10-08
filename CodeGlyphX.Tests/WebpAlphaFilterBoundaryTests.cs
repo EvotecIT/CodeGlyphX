@@ -53,6 +53,14 @@ public sealed class WebpAlphaFilterBoundaryTests {
             int previous = filter == 0 ? 0 : rgba[((y - 1) * width) * 4 + 3];
             Assert.Equal(unchecked((byte)(value - previous)), alpha[1 + y * width]);
         }
+
+        byte[] decoded = WebpReader.DecodeRgba32(encoded, out int decodedWidth, out int decodedHeight);
+        Assert.Equal(width, decodedWidth);
+        Assert.Equal(height, decodedHeight);
+        Assert.Equal(rgba.Length, decoded.Length);
+        for (int offset = 3; offset < rgba.Length; offset += 4) {
+            Assert.Equal(rgba[offset], decoded[offset]);
+        }
     }
 
     private static byte[] CreateAlternatingAlpha(int width, int height, bool alternatingColumns) {
