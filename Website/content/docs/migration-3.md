@@ -94,6 +94,8 @@ PDF417 uses standard top-down row order and places Macro metadata after the payl
 
 Malformed numeric compaction and Macro blocks without a file identifier are rejected. Macro segment indexes use the format's five-digit range, `0..99999`; out-of-range values fail validation before encoding.
 
+PDF417 image decoding fits fractional module spacing produced by physical document placement, including compact symbols. It retains the existing integer, skew and perspective sampling paths and verifies error correction before returning text or Macro metadata.
+
 QR Code Model 2, Micro QR and rMQR retain their specialized encoders and layout rules. New built-in variants can use the shared matrix rendering route when their geometry is an orthogonal grid; their finder and functional-pattern rules remain format-specific.
 
 ## General image scanning

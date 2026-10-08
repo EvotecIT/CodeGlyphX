@@ -233,6 +233,10 @@ public static partial class Pdf417Decoder {
 #endif
         }
 
+        if (TryDecodeFittedGrid(pixels, width, height, stride, format, box, threshold, invert, cancellationToken, null, out var fitted)) {
+            value = fitted.Text;
+            return true;
+        }
         value = string.Empty;
         return false;
     }
@@ -254,8 +258,7 @@ public static partial class Pdf417Decoder {
 #endif
         }
 
-        decoded = null!;
-        return false;
+        return TryDecodeFittedGrid(pixels, width, height, stride, format, box, threshold, invert, cancellationToken, null, out decoded);
     }
 
     private static bool TryDecodeFromBox(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int threshold, bool invert, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
@@ -275,83 +278,12 @@ public static partial class Pdf417Decoder {
 #endif
         }
 
+        if (TryDecodeFittedGrid(pixels, width, height, stride, format, box, threshold, invert, cancellationToken, diagnostics, out var fitted)) {
+            value = fitted.Text;
+            return true;
+        }
         value = string.Empty;
         return false;
-    }
-
-    private static List<Candidate> BuildCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int threshold, BoundingBox box, bool invert) {
-        var seen = new HashSet<(int module, int width, int height)>();
-
-        if (TryEstimateModuleSize(pixels, width, height, stride, format, threshold, box, invert, out var estimated)) {
-            for (var delta = -2; delta <= 2; delta++) {
-                var candidate = estimated + delta;
-                if (candidate <= 0) continue;
-                AddCandidateFromModuleSize(box, candidate, seen);
-            }
-        }
-
-        for (var compact = 0; compact <= 1; compact++) {
-            var offset = compact == 1 ? 35 : 69;
-            for (var cols = 1; cols <= 30; cols++) {
-                var widthModules = cols * 17 + offset;
-                var moduleSize = (int)Math.Round(box.Width / (double)widthModules);
-                if (moduleSize <= 0) continue;
-                AddCandidate(box, moduleSize, widthModules, seen);
-            }
-        }
-
-        var candidates = new List<Candidate>(seen.Count);
-        foreach (var entry in seen) {
-            candidates.Add(new Candidate(entry.module, entry.width, entry.height));
-        }
-
-        return candidates;
-    }
-
-    private static void AddCandidateFromModuleSize(BoundingBox box, int moduleSize, HashSet<(int module, int width, int height)> seen) {
-        var widthModules = (int)Math.Round(box.Width / (double)moduleSize);
-        var heightModules = (int)Math.Round(box.Height / (double)moduleSize);
-        if (widthModules <= 0 || heightModules <= 0) return;
-        AddCandidate(box, moduleSize, widthModules, seen);
-    }
-
-    private static void AddCandidate(BoundingBox box, int moduleSize, int widthModules, HashSet<(int module, int width, int height)> seen) {
-        var heightModules = (int)Math.Round(box.Height / (double)moduleSize);
-        if (heightModules < 3 || heightModules > 90) return;
-
-        var widthPx = widthModules * moduleSize;
-        var heightPx = heightModules * moduleSize;
-        if (Math.Abs(widthPx - box.Width) > moduleSize * 4) return;
-        if (Math.Abs(heightPx - box.Height) > moduleSize * 4) return;
-
-        if (!TryGetDimensions(widthModules, out var cols, out _)) return;
-        if (cols < 1 || cols > 30) return;
-
-        seen.Add((moduleSize, widthModules, heightModules));
-    }
-
-    private static BitMatrix SampleModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert, CancellationToken cancellationToken) {
-        var modules = new BitMatrix(widthModules, heightModules);
-        var totalWidth = widthModules * moduleSize;
-        var totalHeight = heightModules * moduleSize;
-        var offsetX = box.Left + (box.Width - totalWidth) / 2.0;
-        var offsetY = box.Top + (box.Height - totalHeight) / 2.0;
-
-        var half = moduleSize / 2.0;
-        for (var y = 0; y < heightModules; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
-            var sy = (int)Math.Round(offsetY + (y * moduleSize) + half);
-            sy = Clamp(sy, 0, height - 1);
-            for (var x = 0; x < widthModules; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
-                var sx = (int)Math.Round(offsetX + (x * moduleSize) + half);
-                sx = Clamp(sx, 0, width - 1);
-                var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
-                modules[x, y] = invert ? !dark : dark;
-            }
-        }
-
-        return modules;
     }
 
     private static bool TryDecodeWithShear(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, Candidate candidate, int threshold, bool invert, CancellationToken cancellationToken, out string value) {

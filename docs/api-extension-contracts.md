@@ -41,4 +41,6 @@ Exercise the public entry point and an encoded-result route, rather than only th
 
 Check new symbol layouts with an independent reader when one supports the format. Preserve independently specified module or codeword vectors in regression tests: an encoder and decoder can share a coordinate or compaction mistake that their own roundtrip does not expose.
 
+Image recognition also needs proof through physical placement and rasterization. Document sizes can produce fractional module spacing even when the encoded grid is exact. Check the saved document's rendered image at representative sizes and include integer-spacing controls; a module-only roundtrip cannot establish that image sampling preserves the same payload and metadata.
+
 Keep additions within their actual geometry and capability. Adding a built-in format does not require a public runtime plugin interface or a new common options framework. A new dependency, geometry model or incompatible contract needs its own explicit design and compatibility assessment.
