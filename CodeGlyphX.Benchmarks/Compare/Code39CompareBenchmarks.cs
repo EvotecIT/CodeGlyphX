@@ -1,4 +1,3 @@
-using System.IO;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
@@ -7,7 +6,6 @@ using ZXing;
 #endif
 #if COMPARE_BARCODER
 using Barcoder.Code39;
-using Barcoder.Renderer.Image;
 #endif
 
 namespace CodeGlyphX.Benchmarks;
@@ -30,7 +28,7 @@ public class Code39CompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-    private ImageRenderer _barcoderRenderer = null!;
+    private ManagedBarcodeRenderer _barcoderRenderer = null!;
 #endif
 
     [GlobalSetup]
@@ -47,8 +45,7 @@ public class Code39CompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-        var barcoderOptions = CompareBenchmarkHelpers.CreateBarcoderBarcodeOptions(_options);
-        _barcoderRenderer = new ImageRenderer(barcoderOptions);
+        _barcoderRenderer = CompareBenchmarkHelpers.CreateBarcoderBarcodeRenderer(_options);
 #endif
     }
 
@@ -62,8 +59,7 @@ public class Code39CompareBenchmarks
     [Benchmark(Description = "ZXing.Net Code39 PNG")]
     public byte[] ZXing_Code39_Png()
     {
-        using var image = _zxingWriter.WriteAsImageSharp<SixLabors.ImageSharp.PixelFormats.Rgba32>(Code39Text);
-        return ImageSharpBenchmarkHelpers.ToPngBytes(image);
+        return CompareBenchmarkHelpers.EncodeZxingPng(_zxingWriter, Code39Text);
     }
 #endif
 
@@ -72,9 +68,7 @@ public class Code39CompareBenchmarks
     public byte[] Barcoder_Code39_Png()
     {
         var barcode = Code39Encoder.Encode(Code39Text, includeChecksum: true, fullAsciiMode: false);
-        using var stream = new MemoryStream();
-        _barcoderRenderer.Render(barcode, stream);
-        return stream.ToArray();
+        return _barcoderRenderer.Render(barcode);
     }
 #endif
 }

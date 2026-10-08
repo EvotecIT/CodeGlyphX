@@ -1,4 +1,3 @@
-using System.IO;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
@@ -7,7 +6,6 @@ using ZXing;
 #endif
 #if COMPARE_BARCODER
 using Barcoder.Ean;
-using Barcoder.Renderer.Image;
 #endif
 
 namespace CodeGlyphX.Benchmarks;
@@ -30,7 +28,7 @@ public class EanCompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-    private ImageRenderer _barcoderRenderer = null!;
+    private ManagedBarcodeRenderer _barcoderRenderer = null!;
 #endif
 
     [GlobalSetup]
@@ -47,8 +45,7 @@ public class EanCompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-        var barcoderOptions = CompareBenchmarkHelpers.CreateBarcoderBarcodeOptions(_options);
-        _barcoderRenderer = new ImageRenderer(barcoderOptions);
+        _barcoderRenderer = CompareBenchmarkHelpers.CreateBarcoderBarcodeRenderer(_options);
 #endif
     }
 
@@ -62,8 +59,7 @@ public class EanCompareBenchmarks
     [Benchmark(Description = "ZXing.Net EAN-13 PNG")]
     public byte[] ZXing_Ean_Png()
     {
-        using var image = _zxingWriter.WriteAsImageSharp<SixLabors.ImageSharp.PixelFormats.Rgba32>(EanText);
-        return ImageSharpBenchmarkHelpers.ToPngBytes(image);
+        return CompareBenchmarkHelpers.EncodeZxingPng(_zxingWriter, EanText);
     }
 #endif
 
@@ -72,9 +68,7 @@ public class EanCompareBenchmarks
     public byte[] Barcoder_Ean_Png()
     {
         var barcode = EanEncoder.Encode(EanText);
-        using var stream = new MemoryStream();
-        _barcoderRenderer.Render(barcode, stream);
-        return stream.ToArray();
+        return _barcoderRenderer.Render(barcode);
     }
 #endif
 }

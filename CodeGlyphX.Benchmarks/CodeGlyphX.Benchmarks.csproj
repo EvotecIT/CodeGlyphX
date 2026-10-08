@@ -51,7 +51,7 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(CompareZXing)' == 'true'">
-    <PackageReference Include="ZXing.Net.Bindings.ImageSharp.V3" Version="0.16.18" />
+    <PackageReference Include="ZXing.Net" Version="0.16.11" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(CompareQRCoder)' == 'true'">
@@ -60,7 +60,6 @@
 
   <ItemGroup Condition="'$(CompareBarcoder)' == 'true'">
     <PackageReference Include="Barcoder" Version="3.0.0" />
-    <PackageReference Include="Barcoder.Renderer.Image" Version="3.0.0" />
   </ItemGroup>
 
 </Project>

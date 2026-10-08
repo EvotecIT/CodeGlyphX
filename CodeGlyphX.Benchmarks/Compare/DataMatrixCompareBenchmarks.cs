@@ -1,4 +1,3 @@
-using System.IO;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
@@ -8,7 +7,6 @@ using ZXing.Datamatrix;
 #endif
 #if COMPARE_BARCODER
 using Barcoder.DataMatrix;
-using Barcoder.Renderer.Image;
 #endif
 
 namespace CodeGlyphX.Benchmarks;
@@ -31,7 +29,7 @@ public class DataMatrixCompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-    private ImageRenderer _barcoderRenderer = null!;
+    private ManagedBarcodeRenderer _barcoderRenderer = null!;
 #endif
 
     [GlobalSetup]
@@ -55,8 +53,7 @@ public class DataMatrixCompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-        var barcoderOptions = CompareBenchmarkHelpers.CreateBarcoderMatrixOptions(_options);
-        _barcoderRenderer = new ImageRenderer(barcoderOptions);
+        _barcoderRenderer = CompareBenchmarkHelpers.CreateBarcoderMatrixRenderer(_options);
 #endif
     }
 
@@ -70,8 +67,7 @@ public class DataMatrixCompareBenchmarks
     [Benchmark(Description = "ZXing.Net Data Matrix PNG (medium)")]
     public byte[] ZXing_DataMatrix_Png()
     {
-        using var image = _zxingWriter.WriteAsImageSharp<SixLabors.ImageSharp.PixelFormats.Rgba32>(MediumText);
-        return ImageSharpBenchmarkHelpers.ToPngBytes(image);
+        return CompareBenchmarkHelpers.EncodeZxingPng(_zxingWriter, MediumText);
     }
 #endif
 
@@ -80,9 +76,7 @@ public class DataMatrixCompareBenchmarks
     public byte[] Barcoder_DataMatrix_Png()
     {
         var barcode = DataMatrixEncoder.Encode(MediumText, fixedNumberOfRows: null, fixedNumberOfColumns: null, gs1ModeEnabled: false);
-        using var stream = new MemoryStream();
-        _barcoderRenderer.Render(barcode, stream);
-        return stream.ToArray();
+        return _barcoderRenderer.Render(barcode);
     }
 #endif
 }

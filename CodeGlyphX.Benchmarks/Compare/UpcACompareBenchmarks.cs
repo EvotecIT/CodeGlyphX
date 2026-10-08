@@ -1,4 +1,3 @@
-using System.IO;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using CodeGlyphX.Rendering;
@@ -7,7 +6,6 @@ using ZXing;
 #endif
 #if COMPARE_BARCODER
 using Barcoder.UpcA;
-using Barcoder.Renderer.Image;
 #endif
 
 namespace CodeGlyphX.Benchmarks;
@@ -30,7 +28,7 @@ public class UpcACompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-    private ImageRenderer _barcoderRenderer = null!;
+    private ManagedBarcodeRenderer _barcoderRenderer = null!;
 #endif
 
     [GlobalSetup]
@@ -47,8 +45,7 @@ public class UpcACompareBenchmarks
 #endif
 
 #if COMPARE_BARCODER
-        var barcoderOptions = CompareBenchmarkHelpers.CreateBarcoderBarcodeOptions(_options);
-        _barcoderRenderer = new ImageRenderer(barcoderOptions);
+        _barcoderRenderer = CompareBenchmarkHelpers.CreateBarcoderBarcodeRenderer(_options);
 #endif
     }
 
@@ -62,8 +59,7 @@ public class UpcACompareBenchmarks
     [Benchmark(Description = "ZXing.Net UPC-A PNG")]
     public byte[] ZXing_UpcA_Png()
     {
-        using var image = _zxingWriter.WriteAsImageSharp<SixLabors.ImageSharp.PixelFormats.Rgba32>(UpcAText);
-        return ImageSharpBenchmarkHelpers.ToPngBytes(image);
+        return CompareBenchmarkHelpers.EncodeZxingPng(_zxingWriter, UpcAText);
     }
 #endif
 
@@ -72,9 +68,7 @@ public class UpcACompareBenchmarks
     public byte[] Barcoder_UpcA_Png()
     {
         var barcode = UpcAEncoder.Encode(UpcAText);
-        using var stream = new MemoryStream();
-        _barcoderRenderer.Render(barcode, stream);
-        return stream.ToArray();
+        return _barcoderRenderer.Render(barcode);
     }
 #endif
 }
