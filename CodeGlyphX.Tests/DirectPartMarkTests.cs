@@ -11,11 +11,15 @@ public sealed class DirectPartMarkTests {
         var modules = DataMatrixEncoder.Encode("DPM-LASER-ETCH-42");
         var frame = RenderLowContrast(modules, scale: 6, quiet: 4);
 
-        var ordinary = SymbolScanner.Scan(frame, new ScanOptions { Formats = new[] { SymbolFormat.DataMatrix } });
+        var ordinary = SymbolScanner.Scan(frame, new ScanOptions {
+            Formats = new[] { SymbolFormat.DataMatrix },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        });
         Assert.False(ordinary.IsSuccess);
 
         var recovered = SymbolScanner.Scan(frame, new ScanOptions {
             Formats = new[] { SymbolFormat.DataMatrix },
+            TimeoutMilliseconds = TestBudget.Adjust(5000),
             DirectPartMarking = DirectPartMarkOptions.LaserEtch()
         });
         var symbol = Assert.Single(recovered.Symbols);
@@ -44,6 +48,7 @@ public sealed class DirectPartMarkTests {
 
         var result = SymbolScanner.Scan(encoded, new ScanOptions {
             Formats = new[] { SymbolFormat.DataMatrix },
+            TimeoutMilliseconds = TestBudget.Adjust(5000),
             DirectPartMarking = DirectPartMarkOptions.LaserEtch(),
             Image = new ImageDecodeOptions { MaxDimension = System.Math.Max(frame.Width, frame.Height) }
         });
