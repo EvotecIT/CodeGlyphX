@@ -44,7 +44,7 @@ public static class UpcEEncoder {
         if (!string.IsNullOrEmpty(addOn)) {
             EanAddOn.AppendAddOn(segments, addOn!);
         }
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.UpcE);
     }
 
     private static string GetUpcAFromUpcE(string content, UpcENumberSystem numberSystem) {

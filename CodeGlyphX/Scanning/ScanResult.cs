@@ -22,7 +22,7 @@ public sealed class ScanResult {
     public bool IsSuccess => Status == ScanStatus.Success;
     /// <summary>Gets why recognition stopped, including after successful partial results.</summary>
     public ScanCompletionReason CompletionReason { get; }
-    /// <summary>Gets whether result capacity, cancellation, or the deadline prevented full recognition.</summary>
+    /// <summary>Gets whether result capacity, cancellation, or a total or family recognition deadline prevented full recognition.</summary>
     public bool IsPartial => CompletionReason != ScanCompletionReason.Completed;
 
     internal ScanResult(

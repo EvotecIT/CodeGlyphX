@@ -39,7 +39,7 @@ public static class PlesseyEncoder {
         AppendTerminationBar(segments);
         AppendBits(segments, PlesseyTables.StopBits, reverse: true);
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Plessey);
     }
 
     private static void AppendBits(List<BarSegment> segments, string bits, bool reverse) {

@@ -96,13 +96,17 @@ public static partial class QrImageDecoder {
     /// Attempts to decode all QR codes from a raw pixel buffer, with cancellation.
     /// </summary>
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+        return TryDecodeAll(pixels, width, height, stride, format, options, cancellationToken, deduplicate: true, out decoded);
+    }
+
+    internal static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, bool deduplicate, out QrDecoded[] decoded) {
 #if NET8_0_OR_GREATER
         if (CodeGlyphXFeatures.ForceQrFallbackForTests) {
-            return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded);
+            return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded, deduplicate);
         }
-        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, options, cancellationToken, out decoded);
+        return global::CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(pixels, width, height, stride, format, options, accept: null, cancellationToken, deduplicate, out decoded);
 #else
-        return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded);
+        return TryDecodeAllFallback(pixels, width, height, stride, format, options, cancellationToken, out decoded, deduplicate);
 #endif
     }
 
@@ -819,20 +823,20 @@ public static partial class QrImageDecoder {
         return TryDecodeFallback(rgba, width, height, stride, PixelFormat.Rgba32, options, cancellationToken, out decoded, out info);
     }
 
-    private static bool TryDecodeAllFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+    private static bool TryDecodeAllFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded, bool deduplicate = true) {
         using var budget = ImageDecodeHelper.BeginRecognitionBudget(cancellationToken, options?.BudgetMilliseconds ?? 0, out var token);
         try {
-            return TryDecodeAllFallbackCore(new QrFallbackFrame(pixels, width, height, stride, format), options, token, out decoded);
+            return TryDecodeAllFallbackCore(new QrFallbackFrame(pixels, width, height, stride, format), options, token, out decoded, deduplicate);
         } catch (OperationCanceledException) when (token.IsCancellationRequested) {
             decoded = Array.Empty<QrDecoded>();
             return false;
         }
     }
 
-    private static bool TryDecodeAllFallbackCore(QrFallbackFrame frame, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+    private static bool TryDecodeAllFallbackCore(QrFallbackFrame frame, QrPixelDecodeOptions? options, CancellationToken cancellationToken, out QrDecoded[] decoded, bool deduplicate = true) {
         decoded = Array.Empty<QrDecoded>();
         var results = new List<QrDecoded>();
-        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var seen = deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
 
         // Decode the complete frame first. A tile boundary can cut through a large symbol and
         // produce expensive false candidates, while the complete frame may decode immediately.
@@ -842,7 +846,7 @@ public static partial class QrImageDecoder {
 
         if (options?.EnableTileScan == true && !cancellationToken.IsCancellationRequested) {
             try {
-                if (TryDecodeAllTilesFallback(frame.Pixels, frame.Width, frame.Height, frame.Stride, frame.Format, options, cancellationToken, out var tileResults)) {
+                if (TryDecodeAllTilesFallback(frame.Pixels, frame.Width, frame.Height, frame.Stride, frame.Format, options, cancellationToken, out var tileResults, deduplicate)) {
                     for (var i = 0; i < tileResults.Length; i++) {
                         AddFallbackResult(results, seen, tileResults[i]);
                     }
@@ -856,7 +860,7 @@ public static partial class QrImageDecoder {
         return decoded.Length > 0;
     }
 
-    private static bool TryDecodeAllTilesFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded[] decoded) {
+    private static bool TryDecodeAllTilesFallback(byte[] pixels, int width, int height, int stride, PixelFormat format, QrPixelDecodeOptions options, CancellationToken cancellationToken, out QrDecoded[] decoded, bool deduplicate = true) {
         decoded = Array.Empty<QrDecoded>();
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         if (width <= 0 || height <= 0 || stride < width * 4) return false;
@@ -880,7 +884,7 @@ public static partial class QrImageDecoder {
         var overlap = Math.Max(16, Math.Min(width, height) / 40);
         var tileWidth = Math.Max(1, width / tileGrid);
         var tileHeight = Math.Max(1, height / tileGrid);
-        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var seen = deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
         var list = new List<QrDecoded>(tileGrid * tileGrid);
 
         try {
@@ -912,9 +916,7 @@ public static partial class QrImageDecoder {
                     continue;
                 }
 
-                var key = Convert.ToBase64String(result.Bytes);
-                if (!seen.Add(key)) continue;
-                list.Add(result);
+                AddFallbackResult(list, seen, result);
             }
         }
 
@@ -925,9 +927,8 @@ public static partial class QrImageDecoder {
         return decoded.Length > 0;
     }
 
-    private static void AddFallbackResult(List<QrDecoded> results, HashSet<string> seen, QrDecoded result) {
-        var key = Convert.ToBase64String(result.Bytes);
-        if (!seen.Add(key)) return;
+    private static void AddFallbackResult(List<QrDecoded> results, HashSet<string>? seen, QrDecoded result) {
+        if (seen is not null && !seen.Add(Convert.ToBase64String(result.Bytes))) return;
         results.Add(result);
     }
 

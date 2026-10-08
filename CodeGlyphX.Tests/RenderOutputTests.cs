@@ -246,7 +246,7 @@ public class RenderOutputTests {
     }
 
     [Fact]
-    public void Pdf417Builder_TextEncodingSnapshotsCallerFallback() {
+    public void Pdf417Builder_TextEncodingRejectsLossyFallbackWithoutMutatingCaller() {
         var encoding = (Encoding)Encoding.ASCII.Clone();
         encoding.EncoderFallback = new EncoderReplacementFallback("X");
         var builder = Pdf417Code.Create("caf\u00e9")
@@ -255,8 +255,8 @@ public class RenderOutputTests {
 
         encoding.EncoderFallback = new EncoderReplacementFallback("Y");
 
-        Assert.True(Pdf417Decoder.TryDecode(builder.Encode().Modules, out string decoded));
-        Assert.Equal("cafX", decoded);
+        Assert.Throws<ArgumentException>(() => builder.Encode());
+        Assert.Equal("Y", Assert.IsType<EncoderReplacementFallback>(encoding.EncoderFallback).DefaultString);
     }
 
     [Fact]

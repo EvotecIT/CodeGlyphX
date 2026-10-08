@@ -46,7 +46,8 @@ public static class Code32Encoder {
 
         var value = int.Parse(content, CultureInfo.InvariantCulture);
         var base32 = Code32Tables.ToBase32(value);
-        return Code39Encoder.Encode(base32, includeChecksum: false, fullAsciiMode: false);
+        var barcode = Code39Encoder.Encode(base32, includeChecksum: false, fullAsciiMode: false);
+        return new Barcode1D(barcode.Segments, SymbolFormat.Code32);
     }
 }
 

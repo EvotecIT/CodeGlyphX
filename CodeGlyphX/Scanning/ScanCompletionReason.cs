@@ -9,5 +9,7 @@ public enum ScanCompletionReason {
     /// <summary>The caller cancelled the operation.</summary>
     Cancelled,
     /// <summary>The configured total deadline elapsed.</summary>
-    DeadlineExceeded
+    DeadlineExceeded,
+    /// <summary>A recognition family's time allowance elapsed while the total scan deadline still had time.</summary>
+    RecognitionBudgetExceeded
 }

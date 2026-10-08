@@ -108,7 +108,6 @@ public static class MicroPdf417Decoder {
                 if (!MatchRap(modules, row, pos, MicroPdf417Tables.RapCBits[centreRap])) return false;
                 pos += 10;
                 pos += 1;
-                pos += 1; // double separator before third codeword
                 if (!TryReadCodeword(modules, row, pos, cluster, out output[outputIndex + 2])) return false;
                 pos += 15;
                 pos += 1;

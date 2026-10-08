@@ -19,7 +19,7 @@ public static class TelepenEncoder {
         var bits = TelepenTables.BuildBitStream(values);
         var segments = new List<BarSegment>(bits.Count * 2);
         TelepenTables.AppendEncodedBits(segments, bits);
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Telepen);
     }
 }
 

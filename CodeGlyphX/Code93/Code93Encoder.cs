@@ -39,7 +39,7 @@ public static class Code93Encoder {
 
         // Termination bar.
         BarcodeSegments.AppendBit(segments, true);
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Code93);
     }
 
     private static string Prepare(string content) {

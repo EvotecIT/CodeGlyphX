@@ -41,16 +41,16 @@ public static partial class SymbolScanner {
         try {
             var imageOptions = ResolveSourceImageDecodeOptions(options);
             if (!ImageReader.TryDecodeRgba32(encodedImage, imageOptions, out var rgba, out var width, out var height)) {
-                return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), new List<SymbolFormat>(), "The encoded image could not be decoded or exceeded its configured limits.");
+                return InvalidInput(deadline, "The encoded image could not be decoded or exceeded its configured limits.");
             }
             if (deadline.ShouldStop) return Cancelled(deadline, new List<SymbolFormat>());
             return ScanFrame(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options, deadline);
         } catch (ArgumentException ex) {
-            return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), new List<SymbolFormat>(), ex.Message);
+            return InvalidInput(deadline, ex.Message);
         } catch (InvalidOperationException ex) {
-            return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), new List<SymbolFormat>(), ex.Message);
+            return InvalidInput(deadline, ex.Message);
         } catch (NotSupportedException ex) {
-            return Result(ScanStatus.InvalidImage, deadline, new List<DetectedSymbol>(), new List<SymbolFormat>(), ex.Message);
+            return InvalidInput(deadline, ex.Message);
         }
     }
 
@@ -163,7 +163,11 @@ public static partial class SymbolScanner {
         HashSet<string>? seen,
         ref int remainingAttempts) {
         if (!requested.Contains(SymbolFormat.QrCode)) return;
-        using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
+        var sourceQr = options.Qr ?? CreateQrProfile(options.Profile, options.TimeoutMilliseconds);
+        var recognitionBudget = options.Image?.RecognitionBudgetMilliseconds ?? 0;
+        if (sourceQr.BudgetMilliseconds > 0 && (recognitionBudget == 0 || sourceQr.BudgetMilliseconds < recognitionBudget))
+            recognitionBudget = sourceQr.BudgetMilliseconds;
+        using var attempt = deadline.CreateAttempt(remainingAttempts--, recognitionBudget);
         deadline = attempt;
         var qrOptions = ResolveQrOptions(options, deadline);
         if (options.MaxSymbols == 1) {
@@ -173,7 +177,7 @@ public static partial class SymbolScanner {
             }
             if (deadline.ShouldStop) return;
         }
-        if (!QrImageDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, qrOptions, deadline.Token, out var decoded)) return;
+        if (!QrImageDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, qrOptions, deadline.Token, options.Deduplicate, out var decoded)) return;
         for (var i = 0; i < decoded.Length; i++) {
             Add(results, seen, SymbolResultFactory.From(decoded[i], searchRegion));
             if (ReachedMaximum(options, results)) return;
@@ -322,7 +326,7 @@ public static partial class SymbolScanner {
                 expectedType, barcodeOptions, results, seen);
             return;
         }
-        if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expectedType, barcodeOptions, deadline.Token)) return;
+        if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expectedType, barcodeOptions, deadline.Token, options.Deduplicate)) return;
         for (var i = 0; i < decoded.Length; i++) {
             var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes, rgba, width, height, candidate: null, cancellationToken: deadline.Token);
             if (hit is null) continue;
@@ -358,13 +362,13 @@ public static partial class SymbolScanner {
 
         // BarcodeDecoder's public multi-result contract deduplicates by physical type and payload. Preserve
         // that behavior after classifying each located DataBar candidate independently.
-        var decodedSeen = new HashSet<string>(StringComparer.Ordinal);
+        var decodedSeen = options.Deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
         for (var i = 0; i < decoded.Length; i++) {
             if (IsBoundaryClippedPharmacode(decoded[i], rgba, width, height, deadline.Token)) continue;
             var hit = ResolveRequestedLinearIdentity(decoded[i].Decoded, expectedTypes, rgba, width, height, decoded[i], deadline.Token);
             if (hit is null) continue;
             var key = hit.Type + "\u001f" + hit.Text;
-            if (!decodedSeen.Add(key)) continue;
+            if (decodedSeen is not null && !decodedSeen.Add(key)) continue;
             if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
             Add(results, seen, SymbolResultFactory.From(hit, searchRegion));
             if (ReachedMaximum(options, results)) return;
@@ -584,6 +588,10 @@ public static partial class SymbolScanner {
         List<SymbolFormat> unsupported,
         string? failure = null,
         ScanCompletionReason completionReason = ScanCompletionReason.Completed) {
+        if (completionReason == ScanCompletionReason.Completed && deadline.RecognitionBudgetExceeded) {
+            completionReason = ScanCompletionReason.RecognitionBudgetExceeded;
+            failure ??= "A recognition family exhausted its time allowance; further symbols may exist.";
+        }
         return new ScanResult(status, symbols, unsupported, deadline.Elapsed, failure, completionReason);
     }
 

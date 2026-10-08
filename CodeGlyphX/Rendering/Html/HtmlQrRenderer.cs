@@ -80,6 +80,7 @@ public static class HtmlQrRenderer {
             Logo = opts.Logo,
             ModuleShape = opts.ModuleShape,
             ModuleScale = opts.ModuleScale,
+            ProtectFunctionalPatterns = opts.ProtectFunctionalPatterns,
             ModuleCornerRadiusPx = opts.ModuleCornerRadiusPx,
             ForegroundGradient = opts.ForegroundGradient,
             Eyes = opts.Eyes,

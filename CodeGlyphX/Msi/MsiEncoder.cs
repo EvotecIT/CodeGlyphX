@@ -46,7 +46,7 @@ public static class MsiEncoder {
         }
         AppendPattern(segments, MsiTables.Stop);
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Msi);
     }
 
     private static void AppendPattern(List<BarSegment> segments, string pattern) {

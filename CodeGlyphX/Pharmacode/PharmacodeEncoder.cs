@@ -51,7 +51,7 @@ public static class PharmacodeEncoder {
             }
         }
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Pharmacode);
     }
 
     private static int GetBarCount(int value) {

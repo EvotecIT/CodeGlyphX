@@ -27,6 +27,7 @@ public sealed class ScanOptions {
     public int MaxSymbols { get; set; } = 32;
 
     /// <summary>Gets or sets whether equivalent format-and-payload results are deduplicated.</summary>
+    /// <remarks>When false, repeated recognition observations are retained. This does not count physical instances: retries can observe the same symbol more than once.</remarks>
     public bool Deduplicate { get; set; } = true;
 
     /// <summary>Gets or sets whether bounded tile retries search for additional symbols.</summary>

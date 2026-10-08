@@ -352,10 +352,14 @@ internal static partial class QrPixelDecoder {
     }
 
     internal static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, Func<QrDecoded, bool>? accept, CancellationToken cancellationToken, out QrDecoded[] results) {
-        return TryDecodeAll(pixels, width, height, stride, fmt, options, accept, cancellationToken, allowTileScan: true, out results);
+        return TryDecodeAll(pixels, width, height, stride, fmt, options, accept, cancellationToken, deduplicate: true, out results);
     }
 
-    private static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, Func<QrDecoded, bool>? accept, CancellationToken cancellationToken, bool allowTileScan, out QrDecoded[] results, DecodeBudget? parentBudget = null) {
+    internal static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, Func<QrDecoded, bool>? accept, CancellationToken cancellationToken, bool deduplicate, out QrDecoded[] results) {
+        return TryDecodeAll(pixels, width, height, stride, fmt, options, accept, cancellationToken, allowTileScan: true, deduplicate, out results);
+    }
+
+    private static bool TryDecodeAll(ReadOnlySpan<byte> pixels, int width, int height, int stride, PixelFormat fmt, QrPixelDecodeOptions? options, Func<QrDecoded, bool>? accept, CancellationToken cancellationToken, bool allowTileScan, bool deduplicate, out QrDecoded[] results, DecodeBudget? parentBudget = null) {
         results = Array.Empty<QrDecoded>();
 
         if (width <= 0 || height <= 0) return false;
@@ -381,17 +385,19 @@ internal static partial class QrPixelDecoder {
             }
         }
         var budget = new DecodeBudget(baseBudgetMs, cancellationToken, parentBudget);
-        if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
+        // Even a short family allowance must get its conservative first recognition pass.
+        // Reserve-time guards belong to optional retries, not the initial image conversion.
+        if (budget.IsExpired) return false;
         DecodeBudget tileBudget = default;
         var useTileBudget = enableTileScan && budgetMilliseconds > 0;
 
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
+        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
         var pool = new QrGrayImagePool();
         try {
             if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale: scaleStart, settings.MinContrast, shouldStop, pool, out var baseImage)) {
                 return false;
             }
-            var seen = new HashSet<byte[]>(ByteArrayComparer.Instance);
+            var seen = deduplicate ? new HashSet<byte[]>(ByteArrayComparer.Instance) : null;
             using var list = new PooledList<QrDecoded>(4);
             var baseExpired = false;
 
@@ -514,7 +520,7 @@ internal static partial class QrPixelDecoder {
                             var tileSpan = pixelSpan.Slice((int)startIndex, (int)requiredLen);
                             if (TryDecodeCore(tileSpan, tw, th, stride, fmt, tileOptions, null, cancellationToken, out var decodedSingle, out _, scanBudget)) {
                                 AddResult(list, seen, decodedSingle, accept);
-                            } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList, scanBudget) && decodedList.Length > 0) {
+                            } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, deduplicate, out var decodedList, scanBudget) && decodedList.Length > 0) {
                                 for (var i = 0; i < decodedList.Length; i++) {
                                     AddResult(list, seen, decodedList[i], accept);
                                 }
@@ -572,7 +578,7 @@ internal static partial class QrPixelDecoder {
                                 var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
                                 if (TryDecodeCore(tileSpan, tw, th, stride, fmt, tileOptions, null, cancellationToken, out var decodedSingle, out _, tileBudget)) {
                                     AddResult(list, seen, decodedSingle, accept);
-                                } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, out var decodedList, tileBudget) && decodedList.Length > 0) {
+                                } else if (TryDecodeAll(tileSpan, tw, th, stride, fmt, tileOptions, accept, cancellationToken, allowTileScan: false, deduplicate, out var decodedList, tileBudget) && decodedList.Length > 0) {
                                     for (var i = 0; i < decodedList.Length; i++) {
                                         AddResult(list, seen, decodedList[i], accept);
                                     }
@@ -629,7 +635,7 @@ internal static partial class QrPixelDecoder {
         CancellationToken cancellationToken,
         DecodeBudget budget,
         PooledList<QrDecoded> results,
-        HashSet<byte[]> seen) {
+        HashSet<byte[]>? seen) {
         var w = image.Width;
         var h = image.Height;
         if (w <= 0 || h <= 0) return;
@@ -744,7 +750,7 @@ internal static partial class QrPixelDecoder {
         CancellationToken cancellationToken,
         DecodeBudget budget,
         PooledList<QrDecoded> results,
-        HashSet<byte[]> seen) {
+        HashSet<byte[]>? seen) {
         var w = image.Width;
         var h = image.Height;
         if (w <= 0 || h <= 0) return;
@@ -862,7 +868,7 @@ internal static partial class QrPixelDecoder {
             if (startIndex + requiredLen > pixels.Length) continue;
 
             var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, out var decodedList, budget) && decodedList.Length > 0) {
+            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, deduplicate: seen is not null, out var decodedList, budget) && decodedList.Length > 0) {
                 AddResult(results, seen, decodedList[0], accept);
                 return;
             }
@@ -882,7 +888,7 @@ internal static partial class QrPixelDecoder {
         CancellationToken cancellationToken,
         DecodeBudget budget,
         PooledList<QrDecoded> results,
-        HashSet<byte[]> seen) {
+        HashSet<byte[]>? seen) {
         var w = image.Width;
         var h = image.Height;
         if (w <= 0 || h <= 0) return;
@@ -995,7 +1001,7 @@ internal static partial class QrPixelDecoder {
             if (startIndex + requiredLen > pixels.Length) continue;
 
             var tileSpan = pixels.Slice((int)startIndex, (int)requiredLen);
-            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, out var decodedList, budget) && decodedList.Length > 0) {
+            if (TryDecodeAll(tileSpan, tw, th, stride, fmt, options, accept, cancellationToken, allowTileScan: false, deduplicate: seen is not null, out var decodedList, budget) && decodedList.Length > 0) {
                 AddResult(results, seen, decodedList[0], accept);
                 return;
             }

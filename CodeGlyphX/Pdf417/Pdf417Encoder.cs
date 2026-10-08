@@ -43,11 +43,7 @@ public static class Pdf417Encoder {
 
         var macroCodewords = EncodeMacroBlock(macro);
         var dataCodewords = Pdf417HighLevelEncoder.Encode(text, options.Compaction, options.TextEncoding);
-        if (dataCodewords.Count > 0 && dataCodewords[0] < 900) {
-            dataCodewords.Insert(0, 900);
-        }
-        macroCodewords.AddRange(dataCodewords);
-        return EncodeCodewords(macroCodewords, options);
+        return EncodeCodewords(dataCodewords, options, macroCodewords);
     }
 
     /// <summary>
@@ -96,8 +92,8 @@ public static class Pdf417Encoder {
         var bestScore = float.MaxValue;
 
         for (var c = minCols; c <= maxCols; c++) {
-            var r = (int)Math.Ceiling((dataCodewords + 1 + eccCodewords) / (double)c);
-            if (r < minRows || r > maxRows) continue;
+            var r = Math.Max(minRows, (int)Math.Ceiling((dataCodewords + 1 + eccCodewords) / (double)c));
+            if (r > maxRows || r * c > 928) continue;
 
             var widthModules = c * Pdf417BarcodeMatrix.ColumnWidth + (options.Compact ? 35 : 69);
             var ratio = widthModules / (float)r;
@@ -130,7 +126,7 @@ public static class Pdf417Encoder {
 
 #if NET8_0_OR_GREATER
     private static List<int> EncodeByteCompaction(ReadOnlySpan<byte> data) {
-        var codewords = new List<int>(data.Length + 3) { 901 };
+        var codewords = new List<int>(data.Length + 3) { data.Length > 0 && data.Length % 6 == 0 ? 924 : 901 };
 
         var idx = 0;
         while (idx + 6 <= data.Length) {
@@ -162,7 +158,7 @@ public static class Pdf417Encoder {
     }
 
     private static List<int> EncodeByteCompaction(byte[] data) {
-        var codewords = new List<int>(data.Length + 3) { 901 };
+        var codewords = new List<int>(data.Length + 3) { data.Length > 0 && data.Length % 6 == 0 ? 924 : 901 };
 
         var idx = 0;
         while (idx + 6 <= data.Length) {
@@ -194,22 +190,15 @@ public static class Pdf417Encoder {
         if (!IsDigitsOnly(fileId)) throw new InvalidOperationException("Macro PDF417 file identifier must be numeric.");
         if (fileId.Length % 3 != 0) throw new InvalidOperationException("Macro PDF417 file identifier length must be a multiple of 3.");
 
-        if (macro.SegmentIndex < 0 || macro.SegmentIndex > 809999) {
-            throw new InvalidOperationException("Macro PDF417 segment index must be in range 0-809999.");
+        if (macro.SegmentIndex < 0 || macro.SegmentIndex > Pdf417MacroMetadata.MaxSegmentIndex) {
+            throw new InvalidOperationException("Macro PDF417 segment index must be in range 0-99998.");
         }
-        if (!macro.IsLastSegment &&
-            (macro.SegmentCount.HasValue ||
-             macro.FileName is not null ||
-             macro.Timestamp.HasValue ||
-             macro.Sender is not null ||
-             macro.Addressee is not null ||
-             macro.FileSize.HasValue ||
-             macro.Checksum.HasValue)) {
-            throw new InvalidOperationException("Macro PDF417 optional fields are only allowed on the last segment.");
+        if (!Pdf417MacroMetadata.IsValidSegment(macro.SegmentIndex, macro.SegmentCount, macro.IsLastSegment)) {
+            throw new InvalidOperationException("Macro PDF417 segment index, count, and last-segment flag are inconsistent.");
         }
 
         var codewords = new List<int>(64) { 928 };
-        var segmentCodewords = EncodeMacroSegmentIndex(macro.SegmentIndex);
+        var segmentCodewords = EncodeMacroSegmentValue(macro.SegmentIndex);
         codewords.AddRange(segmentCodewords);
 
         for (var i = 0; i < fileId.Length; i += 3) {
@@ -221,7 +210,11 @@ public static class Pdf417Encoder {
         }
 
         AppendOptionalField(codewords, 0, macro.FileName, numeric: false);
-        AppendOptionalField(codewords, 1, macro.SegmentCount?.ToString(CultureInfo.InvariantCulture), numeric: true);
+        if (macro.SegmentCount.HasValue) {
+            codewords.Add(923);
+            codewords.Add(1);
+            codewords.AddRange(EncodeMacroSegmentValue(macro.SegmentCount.Value));
+        }
         AppendOptionalField(codewords, 2, macro.Timestamp?.ToString(CultureInfo.InvariantCulture), numeric: true);
         AppendOptionalField(codewords, 3, macro.Sender, numeric: false);
         AppendOptionalField(codewords, 4, macro.Addressee, numeric: false);
@@ -235,11 +228,11 @@ public static class Pdf417Encoder {
         return codewords;
     }
 
-    private static List<int> EncodeMacroSegmentIndex(int segmentIndex) {
-        var digits = segmentIndex.ToString("00000", CultureInfo.InvariantCulture);
+    private static List<int> EncodeMacroSegmentValue(int value) {
+        var digits = value.ToString("00000", CultureInfo.InvariantCulture);
         var codewords = EncodeNumericField(digits);
         if (codewords.Count != 2) {
-            throw new InvalidOperationException("Macro PDF417 segment index encoding failed.");
+            throw new InvalidOperationException("Macro PDF417 segment index or count encoding failed.");
         }
         return codewords;
     }
@@ -350,7 +343,8 @@ public static class Pdf417Encoder {
         var width = rows[0].Length;
         var modules = new BitMatrix(width, height);
         for (var y = 0; y < height; y++) {
-            var row = rows[y];
+            // The internal barcode matrix exposes bottom-up rows; public modules use top-down image coordinates.
+            var row = rows[height - y - 1];
             for (var x = 0; x < width; x++) {
                 modules[x, y] = row[x] != 0;
             }
@@ -358,8 +352,8 @@ public static class Pdf417Encoder {
         return modules;
     }
 
-    private static Pdf417Symbol EncodeCodewords(List<int> dataCodewords, Pdf417EncodeOptions options) {
-        var dataCount = dataCodewords.Count;
+    private static Pdf417Symbol EncodeCodewords(List<int> dataCodewords, Pdf417EncodeOptions options, IReadOnlyList<int>? macroCodewords = null) {
+        var dataCount = dataCodewords.Count + (macroCodewords?.Count ?? 0);
 
         var requested = options.ErrorCorrectionLevel;
         var auto = requested < 0 || requested > 8;
@@ -407,6 +401,7 @@ public static class Pdf417Encoder {
         dataWithPad.Add(lengthDescriptor);
         dataWithPad.AddRange(dataCodewords);
         for (var i = 0; i < pad; i++) dataWithPad.Add(900);
+        if (macroCodewords is not null) dataWithPad.AddRange(macroCodewords);
 
         var ecc = Pdf417ErrorCorrection.GenerateErrorCorrection(dataWithPad, eccLevel);
         if (dataWithPad.Count + ecc.Length != rows * cols) {

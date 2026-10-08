@@ -81,8 +81,10 @@ public static class SymbolCapabilities {
             ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
-        Legacy(SymbolFormat.Pdf417, "PDF417", SymbolFamily.Stacked, BarcodeType.PDF417, ImageMulti),
-        Legacy(SymbolFormat.MicroPdf417, "MicroPDF417", SymbolFamily.Stacked, BarcodeType.MicroPDF417, Standard)
+        Legacy(SymbolFormat.Pdf417, "PDF417", SymbolFamily.Stacked, BarcodeType.PDF417,
+            ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
+        Legacy(SymbolFormat.MicroPdf417, "MicroPDF417", SymbolFamily.Stacked, BarcodeType.MicroPDF417,
+            Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode)
     };
 
     private static readonly ReadOnlyCollection<SymbolCapability> ReadOnlyItems = Array.AsReadOnly(Items);

@@ -441,7 +441,9 @@ internal static partial class QrPixelDecoder {
         for (var i = 0; i < n - 2; i++) {
             for (var j = i + 1; j < n - 1; j++) {
                 for (var k = j + 1; k < n; k++) {
-                    if (budget.IsExpired || budget.IsNearDeadline(120)) return false;
+                    // The first conservative finder triples are useful even when the whole
+                    // allowance is shorter than the reserve used by optional recovery passes.
+                    if (budget.IsExpired) return false;
                     triedTriples++;
                     if (triedTriples > maxTriples) return false;
                     var a = candidates[i];

@@ -11,81 +11,81 @@ public enum OutputFormat {
     /// <summary>
     /// PNG image.
     /// </summary>
-    Png,
+    Png = 1,
     /// <summary>
     /// SVG (text).
     /// </summary>
-    Svg,
+    Svg = 2,
     /// <summary>
     /// SVGZ (compressed SVG).
     /// </summary>
-    Svgz,
+    Svgz = 3,
     /// <summary>
     /// HTML (text).
     /// </summary>
-    Html,
+    Html = 4,
     /// <summary>
     /// JPEG image.
     /// </summary>
-    Jpeg,
+    Jpeg = 5,
     /// <summary>
     /// WebP image.
     /// </summary>
-    Webp,
+    Webp = 6,
     /// <summary>
     /// BMP image.
     /// </summary>
-    Bmp,
+    Bmp = 7,
     /// <summary>
     /// PPM image.
     /// </summary>
-    Ppm,
+    Ppm = 8,
     /// <summary>
     /// PBM image.
     /// </summary>
-    Pbm,
+    Pbm = 9,
     /// <summary>
     /// PGM image.
     /// </summary>
-    Pgm,
+    Pgm = 10,
     /// <summary>
     /// PAM image.
     /// </summary>
-    Pam,
+    Pam = 11,
     /// <summary>
     /// XBM (text).
     /// </summary>
-    Xbm,
+    Xbm = 12,
     /// <summary>
     /// XPM (text).
     /// </summary>
-    Xpm,
+    Xpm = 13,
     /// <summary>
     /// TGA image.
     /// </summary>
-    Tga,
+    Tga = 14,
     /// <summary>
     /// ICO image.
     /// </summary>
-    Ico,
+    Ico = 15,
     /// <summary>
     /// PDF document.
     /// </summary>
-    Pdf,
+    Pdf = 16,
     /// <summary>
     /// EPS document (text).
     /// </summary>
-    Eps,
+    Eps = 17,
     /// <summary>
     /// ASCII art (text).
     /// </summary>
-    Ascii,
+    Ascii = 18,
     /// <summary>
     /// GIF image.
     /// </summary>
-    Gif,
+    Gif = 19,
     /// <summary>
     /// TIFF image.
     /// </summary>
-    Tiff
+    Tiff = 20
 }

@@ -10,15 +10,21 @@ internal sealed class ScanDeadline : IDisposable {
     private readonly CancellationTokenSource? _source;
     private readonly IDisposable? _decoderScope;
     private readonly DecodeBudgetState _recognitionDeadline;
+    private readonly ScanDeadline? _parent;
+    private bool _recognitionBudgetExceeded;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
 
     internal int TimeoutMilliseconds { get; }
     internal CancellationToken Token => _source?.Token ?? _callerToken;
     internal TimeSpan Elapsed => _stopwatch.Elapsed;
 
-    internal ScanDeadline(CancellationToken callerToken, int timeoutMilliseconds) {
+    internal ScanDeadline(CancellationToken callerToken, int timeoutMilliseconds)
+        : this(callerToken, timeoutMilliseconds, null) { }
+
+    private ScanDeadline(CancellationToken callerToken, int timeoutMilliseconds, ScanDeadline? parent) {
         if (timeoutMilliseconds < 0) throw new ArgumentOutOfRangeException(nameof(timeoutMilliseconds));
         _callerToken = callerToken;
+        _parent = parent;
         TimeoutMilliseconds = timeoutMilliseconds;
         if (timeoutMilliseconds > 0) {
             _source = callerToken.CanBeCanceled
@@ -37,6 +43,8 @@ internal sealed class ScanDeadline : IDisposable {
     internal bool ShouldStop => Token.IsCancellationRequested || _recognitionDeadline.IsExpired ||
         (TimeoutMilliseconds > 0 && _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds);
     internal bool CallerCancelled => _callerToken.IsCancellationRequested;
+    // Descendants yield time to sibling families without stopping this enclosing scan.
+    internal bool RecognitionBudgetExceeded => _recognitionBudgetExceeded;
     internal bool DeadlineExceeded => !CallerCancelled && (_recognitionDeadline.IsExpired ||
         TimeoutMilliseconds > 0 && (_source?.IsCancellationRequested == true || _stopwatch.ElapsedMilliseconds >= TimeoutMilliseconds));
 
@@ -57,10 +65,13 @@ internal sealed class ScanDeadline : IDisposable {
             : 0;
         if (recognitionBudgetMilliseconds > 0 && (milliseconds == 0 || recognitionBudgetMilliseconds < milliseconds))
             milliseconds = recognitionBudgetMilliseconds;
-        return new ScanDeadline(Token, milliseconds);
+        return new ScanDeadline(Token, milliseconds, this);
     }
 
     public void Dispose() {
+        if (ShouldStop || RecognitionBudgetExceeded) {
+            if (_parent is not null) _parent._recognitionBudgetExceeded = true;
+        }
         _decoderScope?.Dispose();
         _stopwatch.Stop();
         _source?.Dispose();

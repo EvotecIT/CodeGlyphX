@@ -84,6 +84,22 @@ QR.Create("Hello")
 
 SVG, SVGZ and HTML support a defined subset of QR appearance. An explicit raster effect that cannot be represented throws `NotSupportedException` instead of silently disappearing. Use PNG, another raster format, or raster-mode PDF/EPS for those effects.
 
+## Text encodings and specialized formats
+
+Text encoding preserves the supplied value or rejects an encoding that cannot represent it. Replacement fallbacks such as converting `é` to `?` are rejected, including through the PDF417 builder. Encode an explicit byte payload when the application owns the byte interpretation.
+
+PDF417 and MicroPDF417 declare supported text character sets with ECI when byte compaction needs it. Micro QR has no ECI declaration: its byte-mode text must retain the same value under the format's undeclared Latin-1 interpretation. Use `MicroQrCodeEncoder.EncodeKanji` for supported Kanji or `EncodeBytes` for an explicit byte payload.
+
+PDF417 uses standard top-down row order and places Macro metadata after the payload and padding. The decoder also accepts legacy bottom-up CodeGlyphX symbols. It requires valid error correction before returning a payload and preserves declared multibyte character sets across byte shifts and compaction segments.
+
+Malformed numeric compaction and Macro blocks without a file identifier are rejected. Macro segment indexes range from `0` to `99998`. A supplied segment count must be between `1` and `99999`, greater than the index, and consistent with the last-segment flag: only index `count - 1` is marked as last. Index `99998` must be marked as last even when the count is omitted. Invalid metadata is rejected during encoding and decoding.
+
+Set the same segment count on every segment when using it. The encoder writes the count in the required two codewords and permits global optional fields on any segment; repeated fields should have the same value for the file. The decoder also accepts valid short counts and counts supplied only on the last segment from older producers. The assembler rejects inconsistent counts, indexes, last-segment markers, or repeated global fields without changing the segments already collected. Use one assembler per file and serialize access to that instance.
+
+PDF417 image decoding fits fractional module spacing produced by physical document placement, including compact symbols and quarter-turn images. It retains the existing integer, skew and perspective sampling paths and verifies error correction before returning text or Macro metadata.
+
+QR Code Model 2, Micro QR and rMQR retain their specialized encoders and layout rules. New built-in variants can use the shared matrix rendering route when their geometry is an orthogonal grid; their finder and functional-pattern rules remain format-specific.
+
 ## General image scanning
 
 Use `SymbolScanner` for bytes, streams, files or an `ImageFrame`. Select formats with `SymbolFormat` and inspect structured completion separately from the decoded symbols.
@@ -106,7 +122,9 @@ foreach (var symbol in scan.Symbols) {
 Console.WriteLine(scan.CompletionReason);
 ```
 
-`Status == Success` means at least one symbol was decoded. `CompletionReason` records whether the requested scan completed, reached `MaxSymbols`, was cancelled or exceeded its deadline. Partial results stay available after cancellation or a deadline. `IsPartial` also reports when a symbol limit stopped the scan. `MaxSymbols = 1` requests the first match; it does not establish that the image contains only one symbol.
+`Status == Success` means at least one symbol was decoded. `CompletionReason` records whether the requested scan completed, reached `MaxSymbols`, was cancelled, exceeded its total deadline or exhausted a shorter family recognition allowance (`RecognitionBudgetExceeded`). Partial results stay available when a budget or cancellation stops further recognition. A family allowance can expire while later families continue. `IsPartial` also reports when a symbol limit stopped the scan. `MaxSymbols = 1` requests the first match; it does not establish that the image contains only one symbol.
+
+`Deduplicate = true` collapses equivalent format-and-payload results. Disable it to retain repeated recognition observations; retries can observe the same physical symbol more than once, so the result count is not a physical-label inventory.
 
 The default total deadline is 500 ms, including when options are omitted or created with `new ScanOptions()`. Set `TimeoutMilliseconds = 0` explicitly for an unlimited total budget, or select a longer deadline for expensive scans. Deadlines remain cooperative.
 

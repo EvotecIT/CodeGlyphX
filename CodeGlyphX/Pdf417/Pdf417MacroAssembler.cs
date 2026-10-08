@@ -110,13 +110,17 @@ public sealed class Pdf417MacroAssembler {
     }
 
     /// <summary>
-    /// Attempts to add a Macro PDF417 segment with explicit metadata.
+    /// Attempts to add a Macro PDF417 segment with explicit metadata. Inconsistent file identifiers,
+    /// counts, indexes, last-segment markers, or repeated global fields are rejected without changing
+    /// the collected segments.
     /// </summary>
     public bool TryAdd(string text, Pdf417MacroMetadata macro) {
         if (macro is null) throw new ArgumentNullException(nameof(macro));
-        if (!TryAcceptFileId(macro.FileId)) return false;
         if (_segments.ContainsKey(macro.SegmentIndex)) return false;
+        if (_fileId is not null && !string.Equals(_fileId, macro.FileId, StringComparison.Ordinal)) return false;
+        if (!CanAcceptSegment(macro)) return false;
 
+        if (_fileId is null) _fileId = macro.FileId;
         _segments[macro.SegmentIndex] = text ?? string.Empty;
         MergeOptionalFields(macro);
         return true;
@@ -166,12 +170,36 @@ public sealed class Pdf417MacroAssembler {
         return text;
     }
 
-    private bool TryAcceptFileId(string fileId) {
-        if (_fileId is null) {
-            _fileId = fileId ?? string.Empty;
-            return true;
+    private bool CanAcceptSegment(Pdf417MacroMetadata macro) {
+        if (!Pdf417MacroMetadata.IsValidSegment(macro.SegmentIndex, macro.SegmentCount, macro.IsLastSegment)) return false;
+        if (_fileName is not null && macro.FileName is not null && !string.Equals(_fileName, macro.FileName, StringComparison.Ordinal)) return false;
+        if (_timestamp.HasValue && macro.Timestamp.HasValue && _timestamp.Value != macro.Timestamp.Value) return false;
+        if (_sender is not null && macro.Sender is not null && !string.Equals(_sender, macro.Sender, StringComparison.Ordinal)) return false;
+        if (_addressee is not null && macro.Addressee is not null && !string.Equals(_addressee, macro.Addressee, StringComparison.Ordinal)) return false;
+        if (_fileSize.HasValue && macro.FileSize.HasValue && _fileSize.Value != macro.FileSize.Value) return false;
+        if (_checksum.HasValue && macro.Checksum.HasValue && _checksum.Value != macro.Checksum.Value) return false;
+
+        var hasKnownCount = TryGetExpectedCount(out var knownCount);
+        int? expected = hasKnownCount ? knownCount : null;
+        if (macro.SegmentCount.HasValue) {
+            if (expected.HasValue && expected.Value != macro.SegmentCount.Value) return false;
+            expected = macro.SegmentCount.Value;
         }
-        return string.Equals(_fileId, fileId, StringComparison.Ordinal);
+        if (macro.IsLastSegment) {
+            var countFromLast = macro.SegmentIndex + 1;
+            if (expected.HasValue && expected.Value != countFromLast) return false;
+            expected = countFromLast;
+        }
+
+        if (!expected.HasValue) return true;
+        if (!Pdf417MacroMetadata.IsValidSegment(macro.SegmentIndex, expected, macro.IsLastSegment)) return false;
+        // Stored segments were checked when the expected count first became known.
+        if (hasKnownCount) return true;
+        foreach (var index in _segments.Keys) {
+            var isLast = _hasLastSegment && _lastSegmentIndex == index;
+            if (!Pdf417MacroMetadata.IsValidSegment(index, expected, isLast)) return false;
+        }
+        return true;
     }
 
     private void MergeOptionalFields(Pdf417MacroMetadata macro) {

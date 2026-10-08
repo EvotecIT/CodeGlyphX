@@ -100,8 +100,10 @@ public static partial class Barcode {
                 return RenderedOutput.FromBinary(format, BarcodePdfRenderer.Render(barcode, opts, outputOptions?.VectorMode ?? RenderMode.Vector));
             case OutputFormat.Eps:
                 return RenderedOutput.FromText(format, BarcodeEpsRenderer.Render(barcode, opts, outputOptions?.VectorMode ?? RenderMode.Vector));
-            case OutputFormat.Ascii:
-                return RenderedOutput.FromText(format, BarcodeAsciiRenderer.Render(barcode, outputOptions?.BarcodeAscii));
+            case OutputFormat.Ascii: {
+                var ascii = outputOptions?.BarcodeAscii ?? new BarcodeAsciiRenderOptions { QuietZone = opts.QuietZone };
+                return RenderedOutput.FromText(format, BarcodeAsciiRenderer.Render(barcode, ascii));
+            }
             default:
                 throw new ArgumentOutOfRangeException(nameof(format), format, "Unsupported output format.");
         }

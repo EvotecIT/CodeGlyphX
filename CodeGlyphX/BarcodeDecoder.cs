@@ -91,6 +91,10 @@ public static partial class BarcodeDecoder {
     /// Attempts to decode all 1D barcodes from a raw pixel buffer.
     /// </summary>
     public static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out BarcodeDecoded[] decoded, BarcodeType? expectedType = null, BarcodeDecodeOptions? options = null, CancellationToken cancellationToken = default) {
+        return TryDecodeAll(pixels, width, height, stride, format, out decoded, expectedType, options, cancellationToken, deduplicate: true);
+    }
+
+    internal static bool TryDecodeAll(byte[] pixels, int width, int height, int stride, PixelFormat format, out BarcodeDecoded[] decoded, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, bool deduplicate) {
         decoded = Array.Empty<BarcodeDecoded>();
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
@@ -99,7 +103,7 @@ public static partial class BarcodeDecoder {
         }
 
         var list = new List<BarcodeDecoded>(4);
-        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var seen = deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
 
         for (var i = 0; i < candidates.Length;) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) break;
@@ -295,10 +299,9 @@ public static partial class BarcodeDecoder {
         return TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, out decoded);
     }
 
-    private static void AddUnique(List<BarcodeDecoded> list, HashSet<string> seen, BarcodeDecoded decoded) {
+    private static void AddUnique(List<BarcodeDecoded> list, HashSet<string>? seen, BarcodeDecoded decoded) {
         if (decoded is null) return;
-        var key = decoded.Type.ToString() + ":" + decoded.Text;
-        if (seen.Add(key)) list.Add(decoded);
+        if (seen is null || seen.Add(decoded.Type.ToString() + ":" + decoded.Text)) list.Add(decoded);
     }
 
     private static void DecodeLocatedRegion(

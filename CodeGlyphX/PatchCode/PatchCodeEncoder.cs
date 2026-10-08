@@ -32,7 +32,7 @@ public static class PatchCodeEncoder {
             }
         }
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.PatchCode);
     }
 }
 

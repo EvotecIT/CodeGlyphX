@@ -57,8 +57,8 @@ CodeGlyphX currently describes 46 physical symbol formats through `SymbolCapabil
 | USPS Intelligent Mail | Postal | Yes | Yes | No | No | No | No | No | No | No |
 | KIX Code | Postal | Yes | Yes | No | No | No | No | No | No | No |
 | Data Matrix | Matrix | Yes | Yes | Yes | Yes | Yes | Encode + decode | Encode + decode | Encode + decode | No |
-| PDF417 | Stacked | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
-| MicroPDF417 | Stacked | Yes | Yes | No | No | No | No | No | No | No |
+| PDF417 | Stacked | Yes | Yes | Yes | Yes | Yes | No | Encode + decode | No | No |
+| MicroPDF417 | Stacked | Yes | Yes | No | No | No | No | Encode + decode | No | No |
 
 ## Check a capability at runtime
 

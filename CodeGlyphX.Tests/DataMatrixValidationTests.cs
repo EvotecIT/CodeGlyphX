@@ -187,7 +187,11 @@ public sealed class DataMatrixValidationTests {
         });
 
         Assert.Equal(ScanStatus.NoSymbolFound, result.Status);
-        Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
+        // A family can exhaust its allowance while later families continue. This
+        // fixture protects grid rejection; completion reporting is tested separately.
+        Assert.Contains(result.CompletionReason, new[] {
+            ScanCompletionReason.Completed, ScanCompletionReason.RecognitionBudgetExceeded
+        });
         Assert.Empty(result.Symbols);
     }
 

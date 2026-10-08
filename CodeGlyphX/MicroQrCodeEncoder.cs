@@ -21,7 +21,8 @@ public static class MicroQrCodeEncoder {
     }
 
     /// <summary>
-    /// Encodes a text payload as a Micro QR code (byte mode, using a QR text encoding).
+    /// Encodes text in Micro QR byte mode. The selected encoding must preserve Latin-1 text;
+    /// Micro QR has no ECI charset declaration. Use <see cref="EncodeKanji"/> for Kanji text.
     /// </summary>
     public static MicroQrCode EncodeText(
         string text,
@@ -31,7 +32,13 @@ public static class MicroQrCodeEncoder {
         int maxVersion = 4,
         int? forceMask = null) {
         if (text is null) throw new ArgumentNullException(nameof(text));
+        if (!QrEncoding.CanEncode(text, encoding)) {
+            throw new ArgumentException($"Text cannot be represented by {encoding}.", nameof(text));
+        }
         var data = QrEncoding.Encode(text, encoding);
+        if (!string.Equals(QrEncoding.Decode(QrTextEncoding.Latin1, data), text, StringComparison.Ordinal)) {
+            throw new ArgumentException("Micro QR byte mode has no ECI declaration and decodes as Latin-1. Use EncodeKanji for Kanji text or EncodeBytes for an explicitly managed byte payload.", nameof(encoding));
+        }
         return MicroQrEncoder.EncodeBytes(data, ecc, minVersion, maxVersion, forceMask);
     }
 

@@ -34,7 +34,7 @@ public static class CodabarEncoder {
         BarcodeSegments.AppendBit(segments, false);
         AppendChar(segments, stop);
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, SymbolFormat.Codabar);
     }
 
     private static void AppendChar(List<BarSegment> segments, char ch) {

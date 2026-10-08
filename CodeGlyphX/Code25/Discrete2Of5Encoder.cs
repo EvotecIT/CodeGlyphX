@@ -6,7 +6,7 @@ using CodeGlyphX.Itf;
 namespace CodeGlyphX.Code25;
 
 internal static class Discrete2Of5Encoder {
-    public static Barcode1D Encode(string content, bool includeChecksum, int[] startBars, int[] stopBars) {
+    public static Barcode1D Encode(string content, bool includeChecksum, int[] startBars, int[] stopBars, SymbolFormat format) {
         if (content is null) throw new ArgumentNullException(nameof(content));
         if (!RegexCache.DigitsOptional().IsMatch(content)) throw new InvalidOperationException("Can only encode numerical digits (0-9)");
         if (content.Length == 0) throw new InvalidOperationException("Content cannot be empty.");
@@ -27,7 +27,7 @@ internal static class Discrete2Of5Encoder {
 
         AppendBarsPattern(segments, stopBars, appendTrailingSpace: false);
 
-        return new Barcode1D(segments);
+        return new Barcode1D(segments, format);
     }
 
     private static char CalcChecksum(ReadOnlySpan<char> content) {
