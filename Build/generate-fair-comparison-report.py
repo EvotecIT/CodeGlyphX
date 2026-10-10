@@ -41,7 +41,8 @@ def main():
     names += [f"{kind}-final-{domain}-result.json" for kind, domain in runs]
     names += [name for name in ("previous-candidate-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
-    names += sorted(path.name for path in root.glob("qr-variation-*.json"))
+    if qualification.get("QrVariation"):
+        names += sorted(path.name for path in root.glob("qr-variation-*.json"))
     evidence = output / "evidence"
     evidence.mkdir(exist_ok=True)
     hashes = {}
@@ -51,9 +52,10 @@ def main():
         (evidence / name).write_bytes(raw)
         hashes[name] = hashlib.sha256(raw).hexdigest()
     (evidence / "sha256.json").write_bytes((json.dumps(hashes, indent=2) + "\n").encode("utf-8"))
+    unsupported = sum(x["Engine"] == "CodeGlyphX" and x["Status"] == "Unsupported" for x in current)
     lines = ["# Current barcode comparisons", "", "Generated from the complete result packets by `Build/generate-fair-comparison-report.py`.", "",
              "See [methodology](../fair-comparisons.md) for versions, adapter boundaries, settings, corpus selection, scoring and proof limits.", "",
-             "## Recognition", "", "The 279-image corpus includes twelve negative images and eighteen images whose formats have no CodeGlyphX image scanner. Exact payload sets are checked after the documented physical representation rules.", "",
+             "## Recognition", "", f"The 279-image corpus includes twelve negative images and {unsupported} images whose formats have no CodeGlyphX image scanner. Exact payload sets are checked after the documented physical representation rules.", "",
              "| Engine | Before: positive correct | Current: positive correct | Unsupported positive images | Unexpected-output images | Negative-image false positives | Inconclusive negative images |",
              "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for engine in engines:
@@ -129,7 +131,7 @@ def main():
         for x in packet["Summary"]:
             # milliseconds/batch * 1000 microseconds/millisecond / 100 outputs
             lines.append(f'| {x["Scenario"]} | {x["Operation"]} | {x["Engine"]} | {x["MedianMs"] * 10:.2f} | {x["P95Ms"] * 10:.2f} | {x["MinMs"] * 10:.2f}–{x["MaxMs"] * 10:.2f} | {x["Metrics"]["ManagedAllocatedBytes"] / 100:.0f} |')
-    lines += ["", "## Decode latency", "", "The nineteen-image subset includes a negative, two unsupported formats and a four-QR image. Loading is excluded. These timings retain recognition failures and do not establish a speed ranking at equal accuracy. Other activity on the shared host can affect wall-clock measurements; read the sample distributions across both domains.", "",
+    lines += ["", "## Decode latency", "", "The nineteen-image subset includes a negative, an unsupported MaxiCode image and a four-QR image. Loading is excluded. These timings retain recognition failures and do not establish a speed ranking at equal accuracy. Other activity on the shared host can affect wall-clock measurements; read the sample distributions across both domains.", "",
               "| Domain | Engine | Median ms / 19 images | P95 ms | Min–max ms | Correct images range | Unexpected images range |",
               "| --- | --- | ---: | ---: | ---: | ---: | ---: |"]
     for domain in ("ccd0", "ccd1"):
