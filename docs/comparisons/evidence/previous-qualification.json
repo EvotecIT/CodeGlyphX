@@ -1,11 +1,11 @@
 {
   "BaselineSource": "cbcf4af8e906d00e86c5d97ea0511100d52220fa",
-  "CompiledSource": "3b9515353e536bc549062acf840d5411d0c012f4",
-  "MeasurementSource": "3b9515353e536bc549062acf840d5411d0c012f4",
-  "CoreSourceUnchangedAfter": "3b9515353e536bc549062acf840d5411d0c012f4",
+  "CompiledSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
+  "MeasurementSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
+  "CoreSourceUnchangedAfter": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
   "BaselineCoreSha256": "298719E62EC63B736C9C1CAC1375463E16363F7DAEBF65373D17EC0DC40403D9",
-  "CandidateCoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
-  "ComparisonAssemblySha256": "0DB85F21BA1F404720DBBA199C073851DF273AD92D39DAB2FE31D8DF35C24904",
+  "CandidateCoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
+  "ComparisonAssemblySha256": "5F156F7BBA3363E8A1EE8E696EB3038FFBB4340918C5921130E2FBC0923F627E",
   "NativeEngineSha256": "1550C1AB6529C2F977BEBAC3F4BF218CA7F932C6CB5B1089121787FE16449C78",
   "Versions": {
     "SDK": "10.0.401",
@@ -44,64 +44,224 @@
   "Tests": {
     "Failures": 0,
     "Skipped": 0,
-    "net10": 2073,
-    "net8": 2051,
-    "net472": 554
+    "net10": 2078,
+    "net8": 2056,
+    "net472": 559
   },
   "OptionalRuntimeConfigurations": [
     "All three external engines; unchanged opt-in dependency boundary"
   ],
-  "Review": "One independent read-only pass and targeted confirmation covered the scanline, Expanded and completion changes. A separate non-overlapping row-assembly pass and targeted confirmation covered the later perspective fusion; reproduced regressions were repaired and tested.",
+  "Review": "Independent read-only review covered the new bounded print-gain retry and weighted recognition-time changes; previous decoder review remains recorded in previous-qualification.json.",
   "ProductionBoundary": "No external comparison engine in CodeGlyphX.csproj; benchmark executable is non-packable, dependencies are opt-in.",
-  "CorpusCompiledSource": "3b9515353e536bc549062acf840d5411d0c012f4",
-  "CorpusCandidateCoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
-  "CorpusComparisonAssemblySha256": "0DB85F21BA1F404720DBBA199C073851DF273AD92D39DAB2FE31D8DF35C24904",
+  "CorpusCompiledSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
+  "CorpusCandidateCoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
+  "CorpusComparisonAssemblySha256": "5F156F7BBA3363E8A1EE8E696EB3038FFBB4340918C5921130E2FBC0923F627E",
   "NegativeManifestSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
   "Netstandard20Build": "Succeeded, zero warnings and errors",
   "ArchivedFinalTests": [
     {
-      "File": "final-net10.trx",
-      "Passed": 2073,
+      "File": "full-net10.trx",
+      "Passed": 2078,
       "Failed": 0,
-      "Sha256": "C5EE9BB4CA5A4397E8D9A6B5DFBFEC27729F25636B894C5C9DF8ACA2EEBFE8FD"
+      "Sha256": "5485D82541C171F5C4F87D41AC35234E7B10A36BFB6F9A6C07C49A697479085E"
     },
     {
-      "File": "final-net8.trx",
-      "Passed": 2051,
+      "File": "full-net8.trx",
+      "Passed": 2056,
       "Failed": 0,
-      "Sha256": "19C087D7AF884749A0F623652233ADF6E1ECB932AC6D69A32EC6D4E9DFB4F9A2"
+      "Sha256": "5BCB02883C5B56A1200B07110EA6345BFE6C2F52881381E5C6E1C7EB719B1E6B"
     },
     {
-      "File": "final-net472.trx",
-      "Passed": 554,
+      "File": "full-net472.trx",
+      "Passed": 559,
       "Failed": 0,
-      "Sha256": "F42F65ED8399E89A75DD7FB4445DF207A7E78A109520FF5CF6C0365955FD88AE"
+      "Sha256": "4BDB841E9E67FF8D96C649F3168D1ADF6392DC4E0123A5217720CB65101367D7"
     }
   ],
-  "QualifiedUtc": "2026-10-10T14:30:33.529581+00:00",
-  "PreviousMeasurementSource": "34bd19ec0d55313fdc178807c34534be09bf966a",
+  "QualifiedUtc": "2026-10-10T16:17:21.170449+00:00",
+  "PreviousMeasurementSource": "3b9515353e536bc549062acf840d5411d0c012f4",
   "NegativeCorpus": "The identical 25-image falsepositives-2 manifest is retained. Six images overlap the twelve main-corpus negatives. Budget exhaustion remains inconclusive.",
-  "HardwareCapturedUtc": "2026-10-10T13:50:32.5882569Z",
+  "HardwareCapturedUtc": "2026-10-10T15:55:35.7554620Z",
   "HostCpuBeforeSuites": {
     "generation-ccd0": [
-      31.6207107634892,
-      20.102157340208816,
-      17.408115878714845
+      15.545670447560688,
+      26.47804321808832,
+      27.67639653178251
     ],
     "generation-ccd1": [
-      28.65816480358294,
-      27.960187531352965,
-      33.98001702805693
+      80.32344696134697,
+      58.73840766894619,
+      44.25463468689984
     ],
     "decoding-ccd0": [
-      6.41753174083457,
-      11.049312881759764,
-      8.984407399623395
+      17.07206602414868,
+      11.381347642881856,
+      7.791904399904426
     ],
     "decoding-ccd1": [
-      59.22726149814501,
-      48.44698848909239,
-      79.23868410800577
+      46.04865400613263,
+      44.75542975624667,
+      40.98893527145173
     ]
+  },
+  "CorpusHostCpuBeforeScans": {
+    "corpus": [
+      73.30593542620223,
+      92.72535802608779,
+      68.39244921822963
+    ],
+    "negatives": [
+      47.3424304655772,
+      61.26585880335968,
+      45.08248027070021
+    ]
+  },
+  "NegativeRotationManifestSha256": "E9FA10D2B65CA5A2A76292792EF92BA39A830AF890E4B9117ACE7DF5379C5C43",
+  "NegativeRotationSources": {
+    "previous": {
+      "Source": "3b9515353e536bc549062acf840d5411d0c012f4",
+      "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81"
+    },
+    "current": {
+      "Source": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
+      "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925"
+    }
+  },
+  "NegativeRotation": {
+    "ccd0": [
+      {
+        "Source": "previous",
+        "File": "negative-rotation-ccd0-0-previous.json",
+        "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
+        "Cpu": [
+          62.72978801559371,
+          64.31827815934821,
+          66.12634366324647
+        ],
+        "Unexpected": 0,
+        "Inconclusive": 6,
+        "Completed": 25,
+        "Domain": "ccd0",
+        "Index": 0
+      },
+      {
+        "Source": "current",
+        "File": "negative-rotation-ccd0-1-current.json",
+        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
+        "Cpu": [
+          70.84342725934259,
+          59.13399549483762,
+          59.759943436658524
+        ],
+        "Unexpected": 0,
+        "Inconclusive": 5,
+        "Completed": 26,
+        "Domain": "ccd0",
+        "Index": 1
+      },
+      {
+        "Source": "current",
+        "File": "negative-rotation-ccd0-2-current.json",
+        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
+        "Cpu": [
+          44.567436925100715,
+          36.25698496373438,
+          74.40362070064708
+        ],
+        "Unexpected": 0,
+        "Inconclusive": 3,
+        "Completed": 28,
+        "Domain": "ccd0",
+        "Index": 2
+      },
+      {
+        "Source": "previous",
+        "File": "negative-rotation-ccd0-3-previous.json",
+        "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
+        "Cpu": [
+          49.74572254672361,
+          50.52544998193813,
+          47.82517847745692
+        ],
+        "Unexpected": 0,
+        "Inconclusive": 2,
+        "Completed": 29,
+        "Domain": "ccd0",
+        "Index": 3
+      }
+    ],
+    "ccd1": [
+      {
+        "Inconclusive": 1,
+        "Completed": 30,
+        "Source": "current",
+        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
+        "Index": 0,
+        "Unexpected": 0,
+        "Cpu": [
+          46.68496677373163,
+          44.070028837171435,
+          83.89619062109446
+        ],
+        "Domain": "ccd1",
+        "File": "negative-rotation-ccd1-0-current.json"
+      },
+      {
+        "Inconclusive": 1,
+        "Completed": 30,
+        "Source": "previous",
+        "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
+        "Index": 1,
+        "Unexpected": 0,
+        "Cpu": [
+          30.615050449575875,
+          25.79014517854805,
+          27.992618558489646
+        ],
+        "Domain": "ccd1",
+        "File": "negative-rotation-ccd1-1-previous.json"
+      },
+      {
+        "Inconclusive": 1,
+        "Completed": 30,
+        "Source": "previous",
+        "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
+        "Index": 2,
+        "Unexpected": 0,
+        "Cpu": [
+          34.066238938128,
+          26.00034782263033,
+          19.317694524553218
+        ],
+        "Domain": "ccd1",
+        "File": "negative-rotation-ccd1-2-previous.json"
+      },
+      {
+        "Inconclusive": 2,
+        "Completed": 29,
+        "Source": "current",
+        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
+        "Index": 3,
+        "Unexpected": 0,
+        "Cpu": [
+          13.340107969782967,
+          17.058569208571395,
+          27.759805772387548
+        ],
+        "Domain": "ccd1",
+        "File": "negative-rotation-ccd1-3-current.json"
+      }
+    ]
+  },
+  "ReviewProbe": {
+    "Source": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
+    "Reviewer": "print_gain_budget_review",
+    "Boundary": "current",
+    "Scope": "New print-gain retry and weighted recognition budget only",
+    "Findings": "No confirmed actionable technical findings",
+    "ProductApi": "Accept as shaped; no new public APIs or production dependencies",
+    "ConfirmationUsed": false,
+    "OrderingProbe": "Nine synthetic mixed-luminance 4-column cases passed across padding80/1200/4000 and budgets250/750/1500; source-derived timing tradeoff remains bounded by cooperative deadlines",
+    "ExternalReview": "Not published; none requested"
   }
 }

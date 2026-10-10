@@ -1,11 +1,11 @@
 {
   "BaselineSource": "cbcf4af8e906d00e86c5d97ea0511100d52220fa",
-  "CompiledSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
-  "MeasurementSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
-  "CoreSourceUnchangedAfter": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
+  "CompiledSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
+  "MeasurementSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
+  "CoreSourceUnchangedAfter": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
   "BaselineCoreSha256": "298719E62EC63B736C9C1CAC1375463E16363F7DAEBF65373D17EC0DC40403D9",
-  "CandidateCoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-  "ComparisonAssemblySha256": "5F156F7BBA3363E8A1EE8E696EB3038FFBB4340918C5921130E2FBC0923F627E",
+  "CandidateCoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
+  "ComparisonAssemblySha256": "4846BFF3DF1028A7F5314323130E27ABBDE039F3525F6EA10806D48E79EC81FF",
   "NativeEngineSha256": "1550C1AB6529C2F977BEBAC3F4BF218CA7F932C6CB5B1089121787FE16449C78",
   "Versions": {
     "SDK": "10.0.401",
@@ -24,17 +24,17 @@
   },
   "CacheDomains": [
     {
-      "mask": "0xffff",
       "bytes": 100663296,
-      "level": 3
+      "level": 3,
+      "mask": "0xffff"
     },
     {
-      "mask": "0xffff0000",
       "bytes": 100663296,
-      "level": 3
+      "level": 3,
+      "mask": "0xffff0000"
     }
   ],
-  "PowerPlan": "High performance",
+  "PowerPlan": "Power Scheme GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c  (High performance)",
   "Priority": "Normal",
   "OutlierMode": "None",
   "SharedHost": "Other tasks remained active. Engine ordering is rotated, cache-domain affinity and Normal priority are fixed, and all outliers are retained. Three host CPU samples before each suite are recorded below; these do not establish an idle-machine measurement.",
@@ -44,224 +44,528 @@
   "Tests": {
     "Failures": 0,
     "Skipped": 0,
-    "net10": 2078,
-    "net8": 2056,
-    "net472": 559
+    "net10": 2092,
+    "net8": 2070,
+    "net472": 571
   },
   "OptionalRuntimeConfigurations": [
     "All three external engines; unchanged opt-in dependency boundary"
   ],
-  "Review": "Independent read-only review covered the new bounded print-gain retry and weighted recognition-time changes; previous decoder review remains recorded in previous-qualification.json.",
+  "Review": "Independent read-only review covered PDF417 marker/edge recovery and scanline buffers, plus DPM alpha handling, incremental preprocessing and monotonic recognition deadlines. One stop-only-crop regression was reproduced, fixed and confirmed; previous decoder qualification is retained separately.",
   "ProductionBoundary": "No external comparison engine in CodeGlyphX.csproj; benchmark executable is non-packable, dependencies are opt-in.",
-  "CorpusCompiledSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
-  "CorpusCandidateCoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-  "CorpusComparisonAssemblySha256": "5F156F7BBA3363E8A1EE8E696EB3038FFBB4340918C5921130E2FBC0923F627E",
+  "CorpusCompiledSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
+  "CorpusCandidateCoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
+  "CorpusComparisonAssemblySha256": "4846BFF3DF1028A7F5314323130E27ABBDE039F3525F6EA10806D48E79EC81FF",
   "NegativeManifestSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
   "Netstandard20Build": "Succeeded, zero warnings and errors",
   "ArchivedFinalTests": [
     {
       "File": "full-net10.trx",
-      "Passed": 2078,
+      "Passed": 2092,
       "Failed": 0,
-      "Sha256": "5485D82541C171F5C4F87D41AC35234E7B10A36BFB6F9A6C07C49A697479085E"
+      "Sha256": "EF7E9BE99575BED78F8C267FF52F5E943E732A54DB2D355C72C4E68A444B3EB4"
     },
     {
       "File": "full-net8.trx",
-      "Passed": 2056,
+      "Passed": 2070,
       "Failed": 0,
-      "Sha256": "5BCB02883C5B56A1200B07110EA6345BFE6C2F52881381E5C6E1C7EB719B1E6B"
+      "Sha256": "D24C94D63280DD8ACFC718DE75F301D28E4A62AA27A5D2402A47DF4BBC61416A"
     },
     {
       "File": "full-net472.trx",
-      "Passed": 559,
+      "Passed": 571,
       "Failed": 0,
-      "Sha256": "4BDB841E9E67FF8D96C649F3168D1ADF6392DC4E0123A5217720CB65101367D7"
+      "Sha256": "9B31C195C5B27151EE170FC298ED4A0BF7B1EE838FBD87187D5B0B3500B0FF43"
     }
   ],
-  "QualifiedUtc": "2026-10-10T16:17:21.170449+00:00",
-  "PreviousMeasurementSource": "3b9515353e536bc549062acf840d5411d0c012f4",
+  "QualifiedUtc": "2026-10-10T17:22:35.947332+00:00",
+  "PreviousMeasurementSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
   "NegativeCorpus": "The identical 25-image falsepositives-2 manifest is retained. Six images overlap the twelve main-corpus negatives. Budget exhaustion remains inconclusive.",
-  "HardwareCapturedUtc": "2026-10-10T15:55:35.7554620Z",
+  "HardwareCapturedUtc": "2026-10-10T17:01:39.8150910Z",
   "HostCpuBeforeSuites": {
     "generation-ccd0": [
-      15.545670447560688,
-      26.47804321808832,
-      27.67639653178251
+      54.79950526479336,
+      78.88701811681503,
+      57.26362157336185
     ],
     "generation-ccd1": [
-      80.32344696134697,
-      58.73840766894619,
-      44.25463468689984
+      8.233406870544524,
+      11.341811940645153,
+      13.177659442685307
     ],
     "decoding-ccd0": [
-      17.07206602414868,
-      11.381347642881856,
-      7.791904399904426
+      44.57674273119958,
+      24.8264294417062,
+      36.552460822276565
     ],
     "decoding-ccd1": [
-      46.04865400613263,
-      44.75542975624667,
-      40.98893527145173
+      9.37241151687348,
+      12.28237544630575,
+      18.837130844259754
     ]
   },
   "CorpusHostCpuBeforeScans": {
     "corpus": [
-      73.30593542620223,
-      92.72535802608779,
-      68.39244921822963
+      54.480648061931625,
+      74.73074819381101,
+      74.58627839984324
     ],
     "negatives": [
-      47.3424304655772,
-      61.26585880335968,
-      45.08248027070021
+      21.005662314568852,
+      21.962866971312987,
+      17.778451867458976
     ]
   },
-  "NegativeRotationManifestSha256": "E9FA10D2B65CA5A2A76292792EF92BA39A830AF890E4B9117ACE7DF5379C5C43",
+  "NegativeRotationManifestSha256": "A2FFA645DE5CC4390B719E64ADE632CB4F4C1BBD0C2862964F03C27498B6637F",
   "NegativeRotationSources": {
     "previous": {
-      "Source": "3b9515353e536bc549062acf840d5411d0c012f4",
-      "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81"
-    },
-    "current": {
       "Source": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
       "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925"
+    },
+    "current": {
+      "Source": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
+      "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257"
     }
   },
   "NegativeRotation": {
     "ccd0": [
       {
+        "Index": 0,
+        "Unexpected": 0,
+        "Cpu": [
+          80.5904954706941,
+          84.01550476110467,
+          98.41949211644044
+        ],
+        "Domain": "ccd0",
+        "Inconclusive": 4,
+        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
         "Source": "previous",
         "File": "negative-rotation-ccd0-0-previous.json",
-        "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
-        "Cpu": [
-          62.72978801559371,
-          64.31827815934821,
-          66.12634366324647
-        ],
-        "Unexpected": 0,
-        "Inconclusive": 6,
-        "Completed": 25,
-        "Domain": "ccd0",
-        "Index": 0
+        "Completed": 27
       },
       {
+        "Index": 1,
+        "Unexpected": 0,
+        "Cpu": [
+          59.66312343198006,
+          89.60512900118025,
+          78.09863588334154
+        ],
+        "Domain": "ccd0",
+        "Inconclusive": 3,
+        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
         "Source": "current",
         "File": "negative-rotation-ccd0-1-current.json",
-        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-        "Cpu": [
-          70.84342725934259,
-          59.13399549483762,
-          59.759943436658524
-        ],
-        "Unexpected": 0,
-        "Inconclusive": 5,
-        "Completed": 26,
-        "Domain": "ccd0",
-        "Index": 1
+        "Completed": 28
       },
       {
+        "Index": 2,
+        "Unexpected": 0,
+        "Cpu": [
+          31.273117185264322,
+          21.576377750473153,
+          18.155732707034577
+        ],
+        "Domain": "ccd0",
+        "Inconclusive": 2,
+        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
         "Source": "current",
         "File": "negative-rotation-ccd0-2-current.json",
-        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-        "Cpu": [
-          44.567436925100715,
-          36.25698496373438,
-          74.40362070064708
-        ],
-        "Unexpected": 0,
-        "Inconclusive": 3,
-        "Completed": 28,
-        "Domain": "ccd0",
-        "Index": 2
+        "Completed": 29
       },
       {
+        "Index": 3,
+        "Unexpected": 0,
+        "Cpu": [
+          25.977874285867586,
+          17.947591911462002,
+          12.929223268669887
+        ],
+        "Domain": "ccd0",
+        "Inconclusive": 8,
+        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
         "Source": "previous",
         "File": "negative-rotation-ccd0-3-previous.json",
-        "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
-        "Cpu": [
-          49.74572254672361,
-          50.52544998193813,
-          47.82517847745692
-        ],
-        "Unexpected": 0,
-        "Inconclusive": 2,
-        "Completed": 29,
-        "Domain": "ccd0",
-        "Index": 3
+        "Completed": 23
       }
     ],
     "ccd1": [
       {
-        "Inconclusive": 1,
-        "Completed": 30,
-        "Source": "current",
-        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-        "Index": 0,
         "Unexpected": 0,
-        "Cpu": [
-          46.68496677373163,
-          44.070028837171435,
-          83.89619062109446
-        ],
+        "Index": 0,
+        "Inconclusive": 12,
         "Domain": "ccd1",
+        "Source": "current",
+        "Completed": 19,
+        "Cpu": [
+          95.91023179990333,
+          86.02155570018213,
+          80.98415186998768
+        ],
+        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
         "File": "negative-rotation-ccd1-0-current.json"
       },
       {
-        "Inconclusive": 1,
-        "Completed": 30,
-        "Source": "previous",
-        "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
-        "Index": 1,
         "Unexpected": 0,
-        "Cpu": [
-          30.615050449575875,
-          25.79014517854805,
-          27.992618558489646
-        ],
+        "Index": 1,
+        "Inconclusive": 4,
         "Domain": "ccd1",
+        "Source": "previous",
+        "Completed": 27,
+        "Cpu": [
+          70.52302772221867,
+          43.296227837333454,
+          94.27421622080237
+        ],
+        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
         "File": "negative-rotation-ccd1-1-previous.json"
       },
       {
-        "Inconclusive": 1,
-        "Completed": 30,
-        "Source": "previous",
-        "CoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
-        "Index": 2,
         "Unexpected": 0,
-        "Cpu": [
-          34.066238938128,
-          26.00034782263033,
-          19.317694524553218
-        ],
+        "Index": 2,
+        "Inconclusive": 1,
         "Domain": "ccd1",
+        "Source": "previous",
+        "Completed": 30,
+        "Cpu": [
+          53.436666051141124,
+          97.62582153926584,
+          99.17182885167976
+        ],
+        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
         "File": "negative-rotation-ccd1-2-previous.json"
       },
       {
-        "Inconclusive": 2,
-        "Completed": 29,
-        "Source": "current",
-        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-        "Index": 3,
         "Unexpected": 0,
-        "Cpu": [
-          13.340107969782967,
-          17.058569208571395,
-          27.759805772387548
-        ],
+        "Index": 3,
+        "Inconclusive": 2,
         "Domain": "ccd1",
+        "Source": "current",
+        "Completed": 29,
+        "Cpu": [
+          60.837254481039196,
+          84.09519829635035,
+          77.42584714226936
+        ],
+        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
         "File": "negative-rotation-ccd1-3-current.json"
       }
     ]
   },
   "ReviewProbe": {
-    "Source": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
-    "Reviewer": "print_gain_budget_review",
-    "Boundary": "current",
-    "Scope": "New print-gain retry and weighted recognition budget only",
-    "Findings": "No confirmed actionable technical findings",
-    "ProductApi": "Accept as shaped; no new public APIs or production dependencies",
-    "ConfirmationUsed": false,
-    "OrderingProbe": "Nine synthetic mixed-luminance 4-column cases passed across padding80/1200/4000 and budgets250/750/1500; source-derived timing tradeoff remains bounded by cooperative deadlines",
-    "ExternalReview": "Not published; none requested"
-  }
+    "Source": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
+    "Reviewer": "recognition_goal_review",
+    "Boundary": "candidate-reviewed",
+    "Scope": "Reader-initialization payload parsing, cropped PDF417 characters and scanline buffers; DPM transparency, incremental preprocessing and recognition deadlines",
+    "Findings": "One confirmed P2 stop-only-crop regression in the first candidate; fixed and targeted confirmation completed with no further actionable findings",
+    "ProductApi": "Accept as shaped; existing public APIs and production dependency boundary retained",
+    "ConfirmationUsed": true,
+    "FocusedTests": 114,
+    "ExternalReview": "Local work only; no hosted review requested"
+  },
+  "AllocationDiagnostics": {
+    "Scope": "Eight retained warm public-API calls after two warmups per case; diagnostic managed allocations only, not an equal-accuracy timing comparison",
+    "PreviousSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
+    "CurrentSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
+    "Cases": {
+      "dpm-allocation": {
+        "before": {
+          "MinimumBytes": 1202688,
+          "MaximumBytes": 1205616,
+          "Samples": 8,
+          "RetainedSamples": [
+            {
+              "Iteration": 0,
+              "Allocated": 1202688,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 1,
+              "Allocated": 1205616,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 2,
+              "Allocated": 1203104,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 3,
+              "Allocated": 1202688,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 4,
+              "Allocated": 1205616,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 5,
+              "Allocated": 1203104,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 6,
+              "Allocated": 1202688,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 7,
+              "Allocated": 1205616,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            }
+          ],
+          "ArchivedRawFile": "dpm-allocation-before.jsonl",
+          "Sha256": "3A3D71547B903EFF231EE2842DE5FF89719FC4037C27A2929ED2C7D16575BE5A"
+        },
+        "after": {
+          "MinimumBytes": 150920,
+          "MaximumBytes": 150920,
+          "Samples": 8,
+          "RetainedSamples": [
+            {
+              "Iteration": 0,
+              "Allocated": 150920,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 1,
+              "Allocated": 150920,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 2,
+              "Allocated": 150920,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 3,
+              "Allocated": 150920,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 4,
+              "Allocated": 150920,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 5,
+              "Allocated": 150920,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 6,
+              "Allocated": 150920,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 7,
+              "Allocated": 150920,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            }
+          ],
+          "ArchivedRawFile": "dpm-allocation-after.jsonl",
+          "Sha256": "D67B8DA805F68BEA140EF8FA98F2DF06F7C90CDA65F622CDDCEB77CE35E2FB7D"
+        }
+      },
+      "pdf-negative": {
+        "before": {
+          "MinimumBytes": 27229392,
+          "MaximumBytes": 27229392,
+          "Samples": 8,
+          "RetainedSamples": [
+            {
+              "Iteration": 0,
+              "Milliseconds": 50.6795,
+              "Allocated": 27229392,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 1,
+              "Milliseconds": 45.448,
+              "Allocated": 27229392,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 2,
+              "Milliseconds": 48.8619,
+              "Allocated": 27229392,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 3,
+              "Milliseconds": 42.5664,
+              "Allocated": 27229392,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 4,
+              "Milliseconds": 44.6714,
+              "Allocated": 27229392,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 5,
+              "Milliseconds": 40.2084,
+              "Allocated": 27229392,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 6,
+              "Milliseconds": 40.4361,
+              "Allocated": 27229392,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 7,
+              "Milliseconds": 44.536,
+              "Allocated": 27229392,
+              "Success": false,
+              "Text": ""
+            }
+          ],
+          "ArchivedRawFile": "pdf-negative-before.jsonl",
+          "Sha256": "05951ED959EC9D4EB929DDA61FBF5C9AC9B89651C20CBC3C469BD3560B9D770F"
+        },
+        "after": {
+          "MinimumBytes": 1286712,
+          "MaximumBytes": 1286712,
+          "Samples": 8,
+          "RetainedSamples": [
+            {
+              "Iteration": 0,
+              "Milliseconds": 37.1652,
+              "Allocated": 1286712,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 1,
+              "Milliseconds": 37.8308,
+              "Allocated": 1286712,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 2,
+              "Milliseconds": 40.2721,
+              "Allocated": 1286712,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 3,
+              "Milliseconds": 39.1372,
+              "Allocated": 1286712,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 4,
+              "Milliseconds": 42.1049,
+              "Allocated": 1286712,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 5,
+              "Milliseconds": 37.6411,
+              "Allocated": 1286712,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 6,
+              "Milliseconds": 42.112,
+              "Allocated": 1286712,
+              "Success": false,
+              "Text": ""
+            },
+            {
+              "Iteration": 7,
+              "Milliseconds": 39.3938,
+              "Allocated": 1286712,
+              "Success": false,
+              "Text": ""
+            }
+          ],
+          "ArchivedRawFile": "pdf-negative-after.jsonl",
+          "Sha256": "F1F9904FA31E492F2B2B10B738CEA3D54CC8DB6D3944F1490A5B5F3D1A18EF1C"
+        }
+      }
+    }
+  },
+  "CropRegression": "Independent review reproduced a stop-only crop regression in e01c61e3; 68bebf12 fixes it. Both normal and inverted crop contracts pass beside the original payload-clipped cases."
 }

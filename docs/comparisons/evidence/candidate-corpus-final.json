@@ -1522,8 +1522,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives/03.png",
@@ -1533,8 +1533,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives/15.png",
@@ -1599,8 +1599,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/16.png",
@@ -1610,8 +1610,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/18.png",
@@ -1621,8 +1621,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/15.png",
@@ -1938,13 +1938,13 @@
     "Expected": [
       "TESTINGTESTING"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "TESTINGTESTING"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-1/14.png",
@@ -2118,13 +2118,13 @@
     "Expected": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-3/08.png",
