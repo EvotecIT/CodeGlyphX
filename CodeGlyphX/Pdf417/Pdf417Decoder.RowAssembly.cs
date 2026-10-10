@@ -22,6 +22,8 @@ public static partial class Pdf417Decoder {
 
         internal bool Accepts(PixelRowSet rows) => Math.Abs(rows.MeanX - _anchorX) <= Math.Min(rows.MeanWidth, _width) / 2;
 
+        internal int FramedRowCount => _votes.Count;
+
         internal void Observe(PixelRowSet rows, bool partial = false) {
             var votes = partial ? _partialVotes : _votes;
             var positions = partial ? _partialPositions : _positions;

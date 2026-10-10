@@ -1,4 +1,5 @@
 using CodeGlyphX.Internal;
+using System;
 using System.IO;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering.Png;
@@ -12,6 +13,7 @@ public sealed class Pdf417ErasureImageTests {
     [InlineData("zxing-damaged-strip.png", "This is PDF417")]
     [InlineData("zxing-occluded-rows.png", "A larger PDF417 barcode with text and error correction level 4.")]
     [InlineData("zxing-skewed-numeric.png", "1234567890")]
+    [InlineData("zxing-damaged-right-frame.png", "A larger PDF417 barcode with text and error correction level 4.")]
     public void IndependentDamagedAndSkewedImages_PreserveExactPayload(string name, string expected) {
         using var fixture = typeof(Pdf417ErasureImageTests).Assembly.GetManifestResourceStream("CodeGlyphX.Tests.Fixtures.Pdf417." + name);
         Assert.NotNull(fixture);
@@ -22,6 +24,42 @@ public sealed class Pdf417ErasureImageTests {
         options.MaxSymbols = 1;
 
         Assert.Equal(expected, Assert.Single(SymbolScanner.Scan(buffer.ToArray(), options).Symbols).Text);
+    }
+
+    [Theory]
+    [InlineData(-0.025)]
+    [InlineData(0.025)]
+    public void ShallowSkewWithDamagedRightFraming_PreservesReadableDataRows(double slope) {
+        const string payload = "RIGHT-FRAME-DAMAGE-KEEPS-VALID-DATA-0417";
+        var modules = Pdf417Encoder.EncodeSymbol(payload, new Pdf417EncodeOptions {
+            ErrorCorrectionLevel = 4, MinColumns = 6, MaxColumns = 6, MinRows = 14, MaxRows = 14
+        }).Modules.Clone();
+        // Keep three framed rows to establish the header independently. The
+        // remaining rows retain every data character but lose both right-side
+        // patterns, with no compact terminator to justify a different symbol.
+        var tail = 34 + 6 * 17;
+        for (var y = 3; y < modules.Height; y++)
+            for (var x = tail; x < modules.Width; x++) {
+                var offset = x - tail;
+                modules[x, y] = offset < 2 || offset >= 3 && offset < 5 || offset >= 6;
+            }
+        var pixels = MatrixPngRenderer.RenderPixels(modules,
+            new MatrixPngRenderOptions { ModuleSize = 3, QuietZone = 4 }, out var width, out var height, out var stride);
+        var offsetY = (int)Math.Ceiling(Math.Abs(slope) * width);
+        var skewed = new byte[stride * (height * 3 + offsetY)];
+        for (var i = 0; i < skewed.Length; i++) skewed[i] = 255;
+        for (var y = 0; y < height; y++) for (var repeat = 0; repeat < 3; repeat++) for (var x = 0; x < width; x++) {
+            var shiftedY = y * 3 + repeat + (int)Math.Round(x * slope) + (slope < 0 ? offsetY : 0);
+            Buffer.BlockCopy(pixels, y * stride + x * 4, skewed, shiftedY * stride + x * 4, 4);
+        }
+        pixels = skewed;
+        height = height * 3 + offsetY;
+        var original = (byte[])pixels.Clone();
+        using var deadline = DecodeBudget.Begin(TestBudget.Adjust(5000));
+
+        Assert.True(Pdf417Decoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, out string text));
+        Assert.Equal(payload, text);
+        Assert.Equal(original, pixels);
     }
 
     [Theory]

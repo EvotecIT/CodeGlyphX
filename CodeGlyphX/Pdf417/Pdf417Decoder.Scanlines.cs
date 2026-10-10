@@ -13,7 +13,9 @@ namespace CodeGlyphX.Pdf417;
 public static partial class Pdf417Decoder {
     private static readonly int[] PixelStartRuns = { 8, 1, 1, 1, 1, 1, 1, 3 };
     private static readonly int[] PixelStopRuns = { 7, 1, 1, 3, 1, 1, 1, 2, 1 };
-    private static readonly double[] PixelRowSlopes = { 0.0, -0.05, 0.05, -0.1, 0.1, -0.15, 0.15, -0.2, 0.2, -0.25, 0.25, -0.3, 0.3 };
+    // Shallow skew can cross an entire physical row over a wide symbol.
+    // Resolve it before the coarser perspective angles contaminate row votes.
+    private static readonly double[] PixelRowSlopes = { 0.0, -0.025, 0.025, -0.05, 0.05, -0.1, 0.1, -0.15, 0.15, -0.2, 0.2, -0.25, 0.25, -0.3, 0.3 };
     // A row's start/stop runs establish its local pitch. Row indicators identify
     // logical rows independently of physical row height, borders and image text.
     private static bool TryDecodePixelRows(PixelSpan pixels, int width, int height, int stride, PixelFormat format,
@@ -56,6 +58,7 @@ public static partial class Pdf417Decoder {
                         if (slope != 0 && !orientationHasStart) break;
                         var rowSets = new Dictionary<(int Columns, bool Compact, int StartBin), PixelRowSet>();
                         var partialSets = new Dictionary<(int Columns, int StartBin), PixelRowSet>();
+                        var unframedSets = new Dictionary<(int Columns, int StartBin), PixelRowSet>();
                         var runs = new List<int>();
                         for (var y = 0; y < down; y++) {
                             if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
@@ -110,12 +113,14 @@ public static partial class Pdf417Decoder {
                                     indicatedColumns >= words.Count && indicatedColumns - words.Count <= 1;
                                 if (clipped) compact = true;
                                 if (!regular && indicatedColumns > 0 && indicatedColumns <= 30 &&
-                                    words.Count > 0 && words.Count < indicatedColumns) {
-                                    // Unknown suffix positions remain erasures. Only a
-                                    // separately framed, validated assembly can use them.
+                                    words.Count > 0 && words.Count <= indicatedColumns) {
+                                    // Unknown suffix positions remain erasures. Complete
+                                    // payloads with no right framing are kept separately:
+                                    // they need repeated framing elsewhere on the symbol.
                                     var partialKey = (indicatedColumns, headerBin);
-                                    if (!partialSets.TryGetValue(partialKey, out var partial))
-                                        partialSets[partialKey] = partial = new PixelRowSet(indicatedColumns, true);
+                                    var targetSets = words.Count == indicatedColumns ? unframedSets : partialSets;
+                                    if (!targetSets.TryGetValue(partialKey, out var partial))
+                                        targetSets[partialKey] = partial = new PixelRowSet(indicatedColumns, true);
                                     var prefix = new int[indicatedColumns + 1];
                                     for (var i = 1; i < prefix.Length; i++) prefix[i] = -1;
                                     prefix[0] = left;
@@ -179,6 +184,13 @@ public static partial class Pdf417Decoder {
                                     assembly.Observe(rowSet);
                             }
                             foreach (var partial in partialSets.Values) {
+                                if (partial.Ordered && partial.Columns == columns && assembly.Accepts(partial))
+                                    assembly.Observe(partial, partial: true);
+                            }
+                            // A single plausible framed row can create a complete
+                            // header. Require three distinct validated rows before
+                            // admitting payload-only observations of regular rows.
+                            if (!compactSymbol && assembly.FramedRowCount >= 3) foreach (var partial in unframedSets.Values) {
                                 if (partial.Ordered && partial.Columns == columns && assembly.Accepts(partial))
                                     assembly.Observe(partial, partial: true);
                             }
