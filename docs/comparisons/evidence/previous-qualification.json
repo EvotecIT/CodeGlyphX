@@ -1,11 +1,11 @@
 {
   "BaselineSource": "cbcf4af8e906d00e86c5d97ea0511100d52220fa",
-  "CompiledSource": "34bd19ec0d55313fdc178807c34534be09bf966a",
-  "MeasurementSource": "34bd19ec0d55313fdc178807c34534be09bf966a",
-  "CoreSourceUnchangedAfter": "e9be95d2",
+  "CompiledSource": "3b9515353e536bc549062acf840d5411d0c012f4",
+  "MeasurementSource": "3b9515353e536bc549062acf840d5411d0c012f4",
+  "CoreSourceUnchangedAfter": "3b9515353e536bc549062acf840d5411d0c012f4",
   "BaselineCoreSha256": "298719E62EC63B736C9C1CAC1375463E16363F7DAEBF65373D17EC0DC40403D9",
-  "CandidateCoreSha256": "FD180506425F647122EB5CCC15DEB178561FCEA4586DC5B6D29F025EE9E35F62",
-  "ComparisonAssemblySha256": "587639FF34CE2026498401F1202D6E5EF43F3BF3725C1834E9BC6AA7542D7BA4",
+  "CandidateCoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
+  "ComparisonAssemblySha256": "0DB85F21BA1F404720DBBA199C073851DF273AD92D39DAB2FE31D8DF35C24904",
   "NativeEngineSha256": "1550C1AB6529C2F977BEBAC3F4BF218CA7F932C6CB5B1089121787FE16449C78",
   "Versions": {
     "SDK": "10.0.401",
@@ -24,62 +24,84 @@
   },
   "CacheDomains": [
     {
-      "level": 3,
       "mask": "0xffff",
-      "bytes": 100663296
+      "bytes": 100663296,
+      "level": 3
     },
     {
-      "level": 3,
       "mask": "0xffff0000",
-      "bytes": 100663296
+      "bytes": 100663296,
+      "level": 3
     }
   ],
   "PowerPlan": "High performance",
   "Priority": "Normal",
   "OutlierMode": "None",
-  "SharedHost": "Other tasks remained active. Measurements use rotated ordering and fixed affinity per cache domain; results are not an idle-machine qualification.",
+  "SharedHost": "Other tasks remained active. Engine ordering is rotated, cache-domain affinity and Normal priority are fixed, and all outliers are retained. Three host CPU samples before each suite are recorded below; these do not establish an idle-machine measurement.",
   "CorpusRevision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
   "CorpusManifestSha256": "3714951ED16A82C1BD9B7A94543590DD609312EF3A39EFDD462F6C7F5BE7DD28",
   "LatencyManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
   "Tests": {
-    "Skipped": 0,
     "Failures": 0,
-    "LogSha256": "BA7163243E085264B90526022BEB2857787FB06F287C40DE97AD9124157629B0",
-    "net8": 2033,
-    "net10": 2055,
-    "net472": 537
+    "Skipped": 0,
+    "net10": 2073,
+    "net8": 2051,
+    "net472": 554
   },
   "OptionalRuntimeConfigurations": [
-    "Default",
-    "QRCoder only",
-    "All three external engines"
+    "All three external engines; unchanged opt-in dependency boundary"
   ],
-  "Review": "One independent read-only review and one targeted confirmation completed; reviewed fixes passed focused tests and optional configuration builds/runtime setup.",
+  "Review": "One independent read-only pass and targeted confirmation covered the scanline, Expanded and completion changes. A separate non-overlapping row-assembly pass and targeted confirmation covered the later perspective fusion; reproduced regressions were repaired and tested.",
   "ProductionBoundary": "No external comparison engine in CodeGlyphX.csproj; benchmark executable is non-packable, dependencies are opt-in.",
-  "CorpusCompiledSource": "8b248178",
-  "CorpusCandidateCoreSha256": "5F522C1CEA065153BBE1B0364E503F79D7DBC9116122048E70A5CE8AA9AB5DAB",
-  "CorpusComparisonAssemblySha256": "C9EF1F9C111046C5610A6FF741813B59E2887A2B61A6D546951DA8BE8B82CA2E",
+  "CorpusCompiledSource": "3b9515353e536bc549062acf840d5411d0c012f4",
+  "CorpusCandidateCoreSha256": "9311FFAC7F297910AFE1B4508B4C420FF4B9B6AA863278E298ABCFDDDDF1DB81",
+  "CorpusComparisonAssemblySha256": "0DB85F21BA1F404720DBBA199C073851DF273AD92D39DAB2FE31D8DF35C24904",
   "NegativeManifestSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
   "Netstandard20Build": "Succeeded, zero warnings and errors",
   "ArchivedFinalTests": [
     {
-      "File": "przemyslaw.klys_EVOMAGIC_2026-10-10_11_59_21_net10.0.trx",
-      "Passed": 2055,
+      "File": "final-net10.trx",
+      "Passed": 2073,
       "Failed": 0,
-      "Sha256": "FD51C3D534B645B81BBF71548EA1C76747AC073AF570DF76D9EC4FD2639A86F3"
+      "Sha256": "C5EE9BB4CA5A4397E8D9A6B5DFBFEC27729F25636B894C5C9DF8ACA2EEBFE8FD"
     },
     {
-      "File": "przemyslaw.klys_EVOMAGIC_2026-10-10_11_59_21_net8.0.trx",
-      "Passed": 2033,
+      "File": "final-net8.trx",
+      "Passed": 2051,
       "Failed": 0,
-      "Sha256": "B07D35B86C599D34C5D23AFE916CFB55A352079DD60F6EBCB0AE3BD0E250B29D"
+      "Sha256": "19C087D7AF884749A0F623652233ADF6E1ECB932AC6D69A32EC6D4E9DFB4F9A2"
     },
     {
-      "File": "przemyslaw.klys_EVOMAGIC_2026-10-10_11_59_23_net472.trx",
-      "Passed": 537,
+      "File": "final-net472.trx",
+      "Passed": 554,
       "Failed": 0,
-      "Sha256": "121E310CEBF475B0C1941E89AF3A4E272F88BF0A53F401752FA89B9DE007FCC0"
+      "Sha256": "F42F65ED8399E89A75DD7FB4445DF207A7E78A109520FF5CF6C0365955FD88AE"
     }
   ],
-  "TestArchiveSha256": "6A1F7BBE27A8E2401283DD800F12F731599B1653127F4A59944C9E221715DE78"
+  "QualifiedUtc": "2026-10-10T14:30:33.529581+00:00",
+  "PreviousMeasurementSource": "34bd19ec0d55313fdc178807c34534be09bf966a",
+  "NegativeCorpus": "The identical 25-image falsepositives-2 manifest is retained. Six images overlap the twelve main-corpus negatives. Budget exhaustion remains inconclusive.",
+  "HardwareCapturedUtc": "2026-10-10T13:50:32.5882569Z",
+  "HostCpuBeforeSuites": {
+    "generation-ccd0": [
+      31.6207107634892,
+      20.102157340208816,
+      17.408115878714845
+    ],
+    "generation-ccd1": [
+      28.65816480358294,
+      27.960187531352965,
+      33.98001702805693
+    ],
+    "decoding-ccd0": [
+      6.41753174083457,
+      11.049312881759764,
+      8.984407399623395
+    ],
+    "decoding-ccd1": [
+      59.22726149814501,
+      48.44698848909239,
+      79.23868410800577
+    ]
+  }
 }

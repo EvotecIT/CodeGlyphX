@@ -34,6 +34,13 @@
         </details>
         <h3>Negative images and completed scans</h3>
         <p>{{ copy.negatives }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Main corpus negative results" tabindex="0">
+            <table class="bench-table">
+                <caption>The 12 main-corpus negative images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Correct rejections</th><th scope="col">Unexpected output</th><th scope="col">Inconclusive</th></tr></thead>
+                <tbody>{{ for row in comparison.recognition }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.main_rejected }}/12</td><td>{{ row.main_unexpected }}</td><td>{{ row.main_inconclusive }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
         <div class="comparison-scroll" role="region" aria-label="Negative image results" tabindex="0">
             <table class="bench-table">
                 <caption>Supplementary 25-image negative corpus; six overlap with the 12 main-corpus negatives</caption>

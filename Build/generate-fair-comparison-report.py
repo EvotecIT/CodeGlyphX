@@ -20,6 +20,7 @@ def main():
     output.mkdir(parents=True, exist_ok=True)
     baseline = read(root / "qualified-baseline-corpus.json")
     current = read(root / "candidate-corpus-final.json")
+    qualification = read(root / "qualification.json")
     engines = ["CodeGlyphX", "ZXing.Net", "ZXing-C++"]
     runs = {}
     for kind in ("generation", "decoding"):
@@ -39,6 +40,7 @@ def main():
              "qualification.json"]
     names += [f"{kind}-final-{domain}-result.json" for kind, domain in runs]
     names += [name for name in ("previous-candidate-corpus.json", "previous-qualification.json") if (root / name).exists()]
+    names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
     evidence = output / "evidence"
     evidence.mkdir(exist_ok=True)
     hashes = {}
@@ -74,8 +76,13 @@ def main():
         old_correct = sum(x["Engine"] == "CodeGlyphX" and bool(x["Expected"]) and x["Status"] == "Correct" for x in previous)
         new_correct = sum(x["Engine"] == "CodeGlyphX" and bool(x["Expected"]) and x["Status"] == "Correct" for x in current)
         previous_by_id = {x["Id"]: x for x in previous if x["Engine"] == "CodeGlyphX"}
-        lost = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and x["Status"] != "Correct" and previous_by_id[x["Id"]]["Status"] == "Correct"]
-        lines += ["", f"This decoding follow-up improves CodeGlyphX from {old_correct} to {new_correct}/267 positive images compared with the [previous pass](evidence/previous-candidate-corpus.json). Previously correct images lost in this follow-up: " + (", ".join(lost) if lost else "none in this run.")]
+        lost = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and x["Expected"] and x["Status"] != "Correct" and previous_by_id[x["Id"]]["Status"] == "Correct"]
+        incomplete = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and not x["Expected"] and x["Status"] != "Correct" and previous_by_id[x["Id"]]["Status"] == "Correct"]
+        lines += ["", f"This decoding follow-up improves CodeGlyphX from {old_correct} to {new_correct}/267 positive images compared with the [previous pass](evidence/previous-candidate-corpus.json). Previously correct positive images lost in this follow-up: " + (", ".join(lost) if lost else "none in this run."), "",
+                  "Previously completed main-corpus negatives now inconclusive: " + (", ".join(incomplete) if incomplete else "none in this run.")]
+    if "CorpusHostCpuBeforeScans" in qualification:
+        host = qualification["CorpusHostCpuBeforeScans"]
+        lines += ["", "Host CPU samples before the main corpus pass: " + ", ".join(f"{x:.1f}%" for x in host["corpus"]) + ". Before the supplementary negative pass: " + ", ".join(f"{x:.1f}%" for x in host["negatives"]) + ". These are separate passes; overlapping images can have different completion outcomes."]
     negatives_before = read(root / "negative-baseline-corpus.json")
     negatives_current = read(root / "negative-candidate-corpus.json")
     lines += ["", "## Supplementary negative corpus", "",
@@ -88,6 +95,28 @@ def main():
         if len(old) != 25 or len(new) != 25 or any(x["Expected"] for x in old + new):
             raise ValueError("Supplementary negative corpus differs from its contract")
         lines.append(f'| {engine} | {sum(x["Status"] == "Correct" for x in old)}/25 | {sum(x["Status"] == "Correct" for x in new)}/25 | {sum(bool(x["Unexpected"]) for x in new)} | {sum(x["Status"] == "Inconclusive" for x in new)} |')
+    if (root / "negative-rotation-manifest.json").exists():
+        ids = {sample["Id"] for sample in read(root / "negative-rotation-manifest.json")["Samples"]}
+        expected_ids = {row["Id"] for row in current + negatives_current if not row["Expected"]}
+        if ids != expected_ids or len(ids) != 31:
+            raise ValueError("Paired negative inputs differ from the fixed corpus union")
+        lines += ["", "## Paired negative completion", "",
+                  "The previous and current binaries scan the same 31 distinct negative IDs from the two fixed manifests. Order alternates on each cache domain, with Normal priority and the same 1,500 ms per-image budget. Every pass is retained. CPU readings are three host samples before each pass; they do not establish an idle machine. These repeated passes expose budget sensitivity and do not replace the main or supplementary results above.", "",
+                  "| Domain | Pass | Binary | Correct rejection | Inconclusive | Unexpected output | Mean host CPU before pass |",
+                  "| --- | ---: | --- | ---: | ---: | ---: | ---: |"]
+        for domain in ("ccd0", "ccd1"):
+            summaries = read(root / f"negative-rotation-{domain}-summary.json")
+            if len(summaries) != 4:
+                raise ValueError("Incomplete paired negative passes")
+            for row in summaries:
+                outcomes = [x for x in read(root / row["File"]) if x["Engine"] == "CodeGlyphX"]
+                if len(outcomes) != 31 or {x["Id"] for x in outcomes} != ids or any(x["Expected"] for x in outcomes):
+                    raise ValueError("Paired negative output identities differ")
+                counts = [sum(x["Status"] == "Correct" for x in outcomes), sum(x["Status"] == "Inconclusive" for x in outcomes), sum(bool(x["Unexpected"]) for x in outcomes)]
+                if counts != [row["Completed"], row["Inconclusive"], row["Unexpected"]]:
+                    raise ValueError("Paired negative summary differs from raw outcomes")
+                cpu = sum(row["Cpu"]) / len(row["Cpu"])
+                lines.append(f'| {domain} | {row["Index"] + 1} | {row["Source"]} | {row["Completed"]}/31 | {row["Inconclusive"]} | {row["Unexpected"]} | {cpu:.1f}% |')
     for domain in ("ccd0", "ccd1"):
         packet = runs["generation", domain]
         metadata = packet["Metadata"]

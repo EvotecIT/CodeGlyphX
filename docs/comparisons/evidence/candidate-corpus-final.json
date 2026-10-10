@@ -1522,8 +1522,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/03.png",
@@ -1533,8 +1533,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/15.png",
@@ -1599,8 +1599,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives-2/16.png",
@@ -1610,8 +1610,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives-2/18.png",
@@ -1621,8 +1621,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives-2/15.png",
@@ -2028,13 +2028,13 @@
     "Expected": [
       "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-2/22.png",
@@ -2043,13 +2043,13 @@
     "Expected": [
       "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-2/15.png",
@@ -2124,7 +2124,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "Completed"
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "pdf417-3/08.png",
@@ -2139,7 +2139,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "Completed"
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "pdf417-3/09.png",
@@ -2154,7 +2154,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "Completed"
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "pdf417-3/03.png",
@@ -2672,7 +2672,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "Completed"
+    "Completion": "DeadlineExceeded"
   },
   {
     "Id": "qrcode-6/4.png",
@@ -2717,7 +2717,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "Completed"
+    "Completion": "DeadlineExceeded"
   },
   {
     "Id": "qrcode-6/12.png",
@@ -2732,7 +2732,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "Completed"
+    "Completion": "DeadlineExceeded"
   },
   {
     "Id": "rss14-1/4.png",

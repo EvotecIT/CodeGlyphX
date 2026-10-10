@@ -31,6 +31,9 @@ def build_website_data(root):
             "rejected": sum(x["Status"] == "Correct" for x in negative),
             "unexpected": sum(bool(x["Unexpected"]) for x in negative),
             "inconclusive": sum(x["Status"] == "Inconclusive" for x in negative),
+            "main_rejected": sum(not x["Expected"] and x["Status"] == "Correct" for x in new),
+            "main_unexpected": sum(not x["Expected"] and bool(x["Unexpected"]) for x in new),
+            "main_inconclusive": sum(not x["Expected"] and x["Status"] == "Inconclusive" for x in new),
         })
     for symbol in sorted({x["Format"] for x in current if x["Expected"]}):
         rows = [x for x in current if x["Format"] == symbol]
