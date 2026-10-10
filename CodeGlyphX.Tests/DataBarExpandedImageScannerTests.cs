@@ -7,6 +7,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class DataBarExpandedImageScannerTests {
     [Theory]
     [InlineData("(01)12345678901231", 2, 0, false, 0)]
@@ -34,8 +35,11 @@ public sealed class DataBarExpandedImageScannerTests {
         Assert.False(SymbolCapabilities.Get(symbol.Format).CanScanMultiple);
     }
 
-    [Fact]
-    public void Scanner_RecognizesIndependentStackedModulesThroughEncodedImage() {
+    [Theory]
+    [InlineData(3, 0)]
+    [InlineData(1, 1)]
+    [InlineData(1, 3)]
+    public void Scanner_RecognizesIndependentStackedModulesThroughEncodedImage(int scale, int turns) {
         // Independent Zint 2.13.0 fixture, shared with module conformance proof.
         var rows = new[] {
             "518E2FF0A270DBEC4BC0EF4C74", "0E71D00A5D8F2413B42A10B380",
@@ -48,9 +52,54 @@ public sealed class DataBarExpandedImageScannerTests {
                 var value = Convert.ToByte(rows[y].Substring((x / 8) * 2, 2), 16);
                 matrix[x, y] = (value & (1 << (7 - x % 8))) != 0;
             }
-        var png = MatrixPngRenderer.Render(matrix, new MatrixPngRenderOptions { ModuleSize = 3, QuietZone = 4 });
+        var pixels = MatrixPngRenderer.RenderPixels(matrix, new MatrixPngRenderOptions { ModuleSize = scale, QuietZone = 4 }, out var width, out var height, out _);
+        for (var i = 0; i < turns; i++) pixels = Rotate(pixels, ref width, ref height);
+        var scanlines = new byte[(width * 4 + 1) * height];
+        for (var y = 0; y < height; y++) Buffer.BlockCopy(pixels, y * width * 4, scanlines, y * (width * 4 + 1) + 1, width * 4);
+        var png = PngWriter.WriteRgba8(width, height, scanlines);
         var result = SymbolScanner.Scan(png, Options());
         Assert.Equal("01988987654321063103000001", Assert.Single(result.Symbols).Text);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public void MixedScanner_ReportsPhysicalRowIdentityOnce(bool defaults, bool stacked) {
+        const string input = "(01)98898765432106(3103)000001";
+        byte[] pixels;
+        int width, height;
+        if (stacked) pixels = Render(DataBarExpandedEncoder.EncodeExpandedStacked(input, 2), 6, out width, out height);
+        else pixels = BarcodePngRenderer.RenderPixels(DataBarExpandedEncoder.EncodeExpanded(input), new BarcodePngRenderOptions(), out width, out height, out _);
+        var options = Options();
+        options.Formats = defaults ? null : new[] { SymbolFormat.Gs1DataBarExpanded, SymbolFormat.Gs1DataBarExpandedStacked };
+        options.MaxSymbols = 0;
+        options.TimeoutMilliseconds = 10000;
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Equal(stacked ? SymbolFormat.Gs1DataBarExpandedStacked : SymbolFormat.Gs1DataBarExpanded, symbol.Format);
+        Assert.Equal(Gs1.ElementString(input), symbol.Text);
+    }
+
+    [Fact]
+    public void RowSearch_StopsAtMonotonicBudgetAndReusesPooledStorage() {
+        var matrix = DataBarExpandedEncoder.EncodeExpandedStacked("(91)ABCDEFGHIJKLMNOPQRST", 2);
+        var valid = Render(matrix, 6, out var width, out var height);
+        Assert.True(CodeGlyphX.Internal.BarcodeScanline.TryDecodeExpandedStacked(valid, width, height, true, CancellationToken.None, out _));
+        const int size = 1600;
+        var noisy = new byte[size * size * 4];
+        for (var y = 0; y < size; y++) for (var x = 0; x < size; x++) {
+            var at = (y * size + x) * 4;
+            noisy[at] = noisy[at + 1] = noisy[at + 2] = (byte)(((x / 2 + y / 3) & 1) * 255);
+            noisy[at + 3] = 255;
+        }
+        using (CodeGlyphX.Internal.DecodeBudget.Begin(20)) {
+            Assert.False(CodeGlyphX.Internal.BarcodeScanline.TryDecodeExpandedStacked(noisy, size, size, true, CancellationToken.None, out _));
+            Assert.True(CodeGlyphX.Internal.DecodeBudget.IsExpired);
+        }
+        Assert.True(CodeGlyphX.Internal.BarcodeScanline.TryDecodeExpandedStacked(valid, width, height, true, CancellationToken.None, out var content));
+        Assert.Equal(Gs1.ElementString("(91)ABCDEFGHIJKLMNOPQRST"), content);
     }
 
     [Fact]

@@ -9,7 +9,10 @@ public static partial class SymbolScanner {
         List<DetectedSymbol> results, HashSet<string>? seen, ref int remainingAttempts) {
         if (!requested.Contains(SymbolFormat.Gs1DataBarExpandedStacked)) return;
         using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
-        if (BarcodeScanline.TryDecodeExpandedStacked(rgba, width, height, attempt.Token, out var content))
+        // A one-row Expanded symbol has the same physical encoding in both APIs.
+        // Mixed/default recognition assigns it to the linear format once.
+        var allowSingleRow = !requested.Contains(SymbolFormat.Gs1DataBarExpanded);
+        if (BarcodeScanline.TryDecodeExpandedStacked(rgba, width, height, allowSingleRow, attempt.Token, out var content))
             Add(results, seen, SymbolResultFactory.From(new BarcodeDecoded(BarcodeType.GS1DataBarExpandedStacked, content), region));
     }
 }

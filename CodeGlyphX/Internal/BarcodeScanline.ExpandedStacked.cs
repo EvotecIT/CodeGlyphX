@@ -21,16 +21,16 @@ internal static partial class BarcodeScanline {
     }
 
     /// <summary>Locates Expanded Stacked rows in packed RGBA data and validates their assembled checksum.</summary>
-    internal static bool TryDecodeExpandedStacked(byte[] rgba, int width, int height, CancellationToken token, out string content) {
+    internal static bool TryDecodeExpandedStacked(byte[] rgba, int width, int height, bool allowSingleRow, CancellationToken token, out string content) {
         content = string.Empty;
-        if (width < 20 || height < 1 || DecodeBudget.ShouldAbort(token)) return false;
+        if (width < 1 || height < 1 || (width < 20 && height < 20) || DecodeBudget.ShouldAbort(token)) return false;
         var rented = ArrayPool<byte>.Shared.Rent(Math.Max(width, height));
         try {
             for (var vertical = 0; vertical < 2; vertical++) {
                 var length = vertical == 0 ? width : height;
                 var across = vertical == 0 ? height : width;
                 if (length < 20) continue;
-                var step = Math.Max(1, across / 256);
+                var step = Math.Max(1, (across + 255) / 256);
                 for (var reverse = 0; reverse < 2; reverse++) {
                     var observations = new List<ExpandedRowObservation>[ExpandedStackedPatterns.Patterns.Count];
                     for (var position = 0; position < across; position += step) {
@@ -53,7 +53,7 @@ internal static partial class BarcodeScanline {
                             CollectExpandedStackedRows(rented.AsSpan(0, length), threshold, position, step, observations, token);
                         }
                     }
-                    if (TryAssembleExpandedRows(observations, token, out content)) return true;
+                    if (TryAssembleExpandedRows(observations, allowSingleRow, token, out content)) return true;
                 }
             }
             return false;
@@ -132,12 +132,13 @@ internal static partial class BarcodeScanline {
         return true;
     }
 
-    private static bool TryAssembleExpandedRows(List<ExpandedRowObservation>[] observations, CancellationToken token, out string content) {
+    private static bool TryAssembleExpandedRows(List<ExpandedRowObservation>[] observations, bool allowSingleRow, CancellationToken token, out string content) {
         content = string.Empty;
         var decoded = string.Empty;
         var remaining = 4096;
         foreach (var layout in ExpandedStackedPatterns.Layouts) {
             if (DecodeBudget.ShouldAbort(token) || remaining <= 0) return false;
+            if (!allowSingleRow && layout.Rows.Length == 1) continue;
             var complete = true;
             foreach (var row in layout.Rows) if (observations[row] is null) { complete = false; break; }
             if (!complete) continue;
