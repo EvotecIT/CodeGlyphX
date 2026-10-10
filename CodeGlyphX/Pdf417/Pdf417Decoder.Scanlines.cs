@@ -112,6 +112,11 @@ public static partial class Pdf417Decoder {
                                 var regular = at + 9 <= runs.Count && MatchPixelRuns(runs, at, PixelStopRuns, 18);
                                 var compact = !regular && at + 1 < runs.Count && runs[at + 1] > runs[at] * 2;
                                 var indicatedColumns = cluster == 2 ? left % 30 + 1 : hints.Columns;
+                                // A regular row can retain its right indicator but
+                                // lose the stop. Keep the indicator in the ordinary
+                                // metadata checks rather than counting it as payload.
+                                if (!regular && !compact && at == runs.Count && indicatedColumns > 0 &&
+                                    words.Count == indicatedColumns + 1) regular = true;
                                 var clipped = !regular && !compact && at + 8 >= runs.Count && indicatedColumns > 0 &&
                                     indicatedColumns >= words.Count && indicatedColumns - words.Count <= 1;
                                 if (clipped) compact = true;

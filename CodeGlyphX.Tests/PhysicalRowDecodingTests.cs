@@ -8,17 +8,19 @@ namespace CodeGlyphX.Tests;
 
 public sealed class PhysicalRowDecodingTests {
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void Pdf417Image_LastReadableCharacterCanEndAtTheImageEdge(bool inverted) {
+    [InlineData(false, 9)]
+    [InlineData(true, 9)]
+    [InlineData(false, 11)]
+    [InlineData(true, 11)]
+    public void Pdf417Image_LastReadableCharacterCanEndAtTheImageEdge(bool inverted, int retainedCharacters) {
         const string text = "CLIPPED-PDF417-1042";
         var symbol = Pdf417Encoder.Encode(text, new Pdf417EncodeOptions {
             ErrorCorrectionLevel = 8, MinColumns = 10, MaxColumns = 10, MinRows = 55, MaxRows = 55
         });
         const int pitch = 2, padding = 10;
-        // Crop the final payload column, right indicator and stop. Keep exactly
-        // nine payload characters; the ninth character's space ends at the edge.
-        var inkWidth = (34 + 9 * 17) * pitch;
+        // End after either the ninth payload character or the right indicator.
+        // Both images lose their stop pattern; the final space reaches the edge.
+        var inkWidth = (34 + retainedCharacters * 17) * pitch;
         var width = padding + inkWidth;
         var height = symbol.Height * 3 + padding * 2;
         var pixels = White(width, height);
