@@ -1,0 +1,12 @@
+{
+  "qualified-baseline-corpus.json": "58ffe76f16cd0543250bfae53c654236febca036f79ef1012e2984de3bc82294",
+  "candidate-corpus-final.json": "0d7bec5143bc9153530c0ade3a0ae691c8650db5211634dc5648c6b2e80f048d",
+  "negative-baseline-corpus.json": "399e80e500a5596e2d498032806b17469f54e0d3b9e8f6a38cc8147176fa9ec9",
+  "negative-candidate-corpus.json": "399e80e500a5596e2d498032806b17469f54e0d3b9e8f6a38cc8147176fa9ec9",
+  "negative-manifest.json": "6b8dcaee1bb7a39c6a989a7ed58f998c9ec2fb7e609011c751f162eca89b8751",
+  "qualification.json": "812a13d6c2798e55a554fa39031116be27057cab9e011d7206d2e0f8f61cc736",
+  "generation-final-ccd0-result.json": "6d4cafb213efbeefe3ae6870ef73c7655ae82c7815c76f7f0cce6163a053a949",
+  "generation-final-ccd1-result.json": "7538e1f39e884115c9d58891aaec0ff4c1072b3ecefbd13818e89e6d7a44b3dd",
+  "decoding-final-ccd0-result.json": "1aad7ce7c2d6590381016591d95757f024b6a8d0884b9717c2853815a9781ff5",
+  "decoding-final-ccd1-result.json": "ba26256ef5b7d40ea1bd7bb6d161784cd8e9447179e2c5d1cd398d6943cca131"
+}

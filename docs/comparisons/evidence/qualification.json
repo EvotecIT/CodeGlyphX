@@ -1,0 +1,85 @@
+{
+  "BaselineSource": "cbcf4af8e906d00e86c5d97ea0511100d52220fa",
+  "CompiledSource": "34bd19ec0d55313fdc178807c34534be09bf966a",
+  "MeasurementSource": "34bd19ec0d55313fdc178807c34534be09bf966a",
+  "CoreSourceUnchangedAfter": "e9be95d2",
+  "BaselineCoreSha256": "298719E62EC63B736C9C1CAC1375463E16363F7DAEBF65373D17EC0DC40403D9",
+  "CandidateCoreSha256": "FD180506425F647122EB5CCC15DEB178561FCEA4586DC5B6D29F025EE9E35F62",
+  "ComparisonAssemblySha256": "587639FF34CE2026498401F1202D6E5EF43F3BF3725C1834E9BC6AA7542D7BA4",
+  "NativeEngineSha256": "1550C1AB6529C2F977BEBAC3F4BF218CA7F932C6CB5B1089121787FE16449C78",
+  "Versions": {
+    "SDK": "10.0.401",
+    "PowerShell": "7.6.6",
+    "DotnetRuntime": "10.0.12",
+    "SharedBenchmarkRunner": "3.0.158.3",
+    "QRCoder": "1.8.0",
+    "ZXingNet": "0.16.11",
+    "NativeZXingCpp": "3.1.1, publisher reported",
+    "ZXingCpp": "0.5.3"
+  },
+  "Cpu": {
+    "Name": "AMD Ryzen 9 9950X3D2 16-Core Processor         ",
+    "NumberOfCores": 16,
+    "NumberOfLogicalProcessors": 32
+  },
+  "CacheDomains": [
+    {
+      "level": 3,
+      "mask": "0xffff",
+      "bytes": 100663296
+    },
+    {
+      "level": 3,
+      "mask": "0xffff0000",
+      "bytes": 100663296
+    }
+  ],
+  "PowerPlan": "High performance",
+  "Priority": "Normal",
+  "OutlierMode": "None",
+  "SharedHost": "Other tasks remained active. Measurements use rotated ordering and fixed affinity per cache domain; results are not an idle-machine qualification.",
+  "CorpusRevision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "CorpusManifestSha256": "3714951ED16A82C1BD9B7A94543590DD609312EF3A39EFDD462F6C7F5BE7DD28",
+  "LatencyManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+  "Tests": {
+    "Skipped": 0,
+    "Failures": 0,
+    "LogSha256": "BA7163243E085264B90526022BEB2857787FB06F287C40DE97AD9124157629B0",
+    "net8": 2033,
+    "net10": 2055,
+    "net472": 537
+  },
+  "OptionalRuntimeConfigurations": [
+    "Default",
+    "QRCoder only",
+    "All three external engines"
+  ],
+  "Review": "One independent read-only review and one targeted confirmation completed; reviewed fixes passed focused tests and optional configuration builds/runtime setup.",
+  "ProductionBoundary": "No external comparison engine in CodeGlyphX.csproj; benchmark executable is non-packable, dependencies are opt-in.",
+  "CorpusCompiledSource": "8b248178",
+  "CorpusCandidateCoreSha256": "5F522C1CEA065153BBE1B0364E503F79D7DBC9116122048E70A5CE8AA9AB5DAB",
+  "CorpusComparisonAssemblySha256": "C9EF1F9C111046C5610A6FF741813B59E2887A2B61A6D546951DA8BE8B82CA2E",
+  "NegativeManifestSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
+  "Netstandard20Build": "Succeeded, zero warnings and errors",
+  "ArchivedFinalTests": [
+    {
+      "File": "przemyslaw.klys_EVOMAGIC_2026-10-10_11_59_21_net10.0.trx",
+      "Passed": 2055,
+      "Failed": 0,
+      "Sha256": "FD51C3D534B645B81BBF71548EA1C76747AC073AF570DF76D9EC4FD2639A86F3"
+    },
+    {
+      "File": "przemyslaw.klys_EVOMAGIC_2026-10-10_11_59_21_net8.0.trx",
+      "Passed": 2033,
+      "Failed": 0,
+      "Sha256": "B07D35B86C599D34C5D23AFE916CFB55A352079DD60F6EBCB0AE3BD0E250B29D"
+    },
+    {
+      "File": "przemyslaw.klys_EVOMAGIC_2026-10-10_11_59_23_net472.trx",
+      "Passed": 537,
+      "Failed": 0,
+      "Sha256": "121E310CEBF475B0C1941E89AF3A4E272F88BF0A53F401752FA89B9DE007FCC0"
+    }
+  ],
+  "TestArchiveSha256": "6A1F7BBE27A8E2401283DD800F12F731599B1653127F4A59944C9E221715DE78"
+}

@@ -1,7 +1,10 @@
 [CmdletBinding()]
-param([Parameter(Mandatory)][string] $OutputRoot)
+param(
+    [Parameter(Mandatory)][string] $OutputRoot,
+    [string] $ManifestPath = (Join-Path $PSScriptRoot '../CodeGlyphX.Benchmarks/Corpus/corpus-manifest.json')
+)
 $ErrorActionPreference = 'Stop'
-$manifest = Get-Content -Raw (Join-Path $PSScriptRoot '../CodeGlyphX.Benchmarks/Corpus/corpus-manifest.json') | ConvertFrom-Json
+$manifest = Get-Content -Raw -LiteralPath $ManifestPath | ConvertFrom-Json
 $root = [IO.Path]::GetFullPath($OutputRoot).TrimEnd([IO.Path]::DirectorySeparatorChar) + [IO.Path]::DirectorySeparatorChar
 $comparison = if ($IsWindows) { [StringComparison]::OrdinalIgnoreCase } else { [StringComparison]::Ordinal }
 foreach ($sample in $manifest.Samples) {

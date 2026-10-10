@@ -2,7 +2,6 @@
 import argparse
 import hashlib
 import json
-import shutil
 from pathlib import Path
 
 
@@ -41,20 +40,22 @@ def main():
     evidence.mkdir(exist_ok=True)
     hashes = {}
     for name in names:
-        shutil.copyfile(root / name, evidence / name)
-        hashes[name] = hashlib.sha256((root / name).read_bytes()).hexdigest()
-    (evidence / "sha256.json").write_text(json.dumps(hashes, indent=2) + "\n", encoding="utf-8")
+        # Normalize JSON formatting, leaving escaped payload line endings untouched.
+        raw = (root / name).read_bytes().replace(b"\r\n", b"\n")
+        (evidence / name).write_bytes(raw)
+        hashes[name] = hashlib.sha256(raw).hexdigest()
+    (evidence / "sha256.json").write_bytes((json.dumps(hashes, indent=2) + "\n").encode("utf-8"))
     lines = ["# Current barcode comparisons", "", "Generated from the complete result packets by `Build/generate-fair-comparison-report.py`.", "",
              "See [methodology](../fair-comparisons.md) for versions, adapter boundaries, settings, corpus selection, scoring and proof limits.", "",
              "## Recognition", "", "The 279-image corpus includes twelve negative images and eighteen images whose formats have no CodeGlyphX image scanner. Exact payload sets are checked after the documented physical representation rules.", "",
-             "| Engine | Before repairs | Current correct | Unsupported | Unexpected-output images | Negative-image false positives | Inconclusive negative images |",
+             "| Engine | Before: positive correct | Current: positive correct | Unsupported positive images | Unexpected-output images | Negative-image false positives | Inconclusive negative images |",
              "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for engine in engines:
         old = [x for x in baseline if x["Engine"] == engine]
         new = [x for x in current if x["Engine"] == engine]
         if len(old) != 279 or len(new) != 279 or {x["Id"] for x in old} != {x["Id"] for x in new}:
             raise ValueError("Baseline/candidate corpus identities differ")
-        lines.append(f'| {engine} | {sum(x["Status"] == "Correct" for x in old)}/279 | {sum(x["Status"] == "Correct" for x in new)}/279 | {sum(x["Status"] == "Unsupported" for x in new)} | {sum(bool(x["Unexpected"]) for x in new)} | {sum(not x["Expected"] and bool(x["Actual"]) for x in new)} | {sum(x["Status"] == "Inconclusive" for x in new)} |')
+        lines.append(f'| {engine} | {sum(bool(x["Expected"]) and x["Status"] == "Correct" for x in old)}/267 | {sum(bool(x["Expected"]) and x["Status"] == "Correct" for x in new)}/267 | {sum(x["Status"] == "Unsupported" for x in new)} | {sum(bool(x["Unexpected"]) for x in new)} | {sum(not x["Expected"] and bool(x["Actual"]) for x in new)} | {sum(x["Status"] == "Inconclusive" for x in new)} |')
     lines += ["", "Unexpected output on a positive image may include an oracle limitation or an encoding-policy difference. Raw text is preserved; these counts must not be presented as a measured false-positive rate.", "",
               "| Format | Images | CodeGlyphX before | CodeGlyphX current | ZXing.Net | ZXing-C++ |", "| --- | ---: | ---: | ---: | ---: | ---: |"]
     for format in sorted({x["Format"] for x in current}):
@@ -96,7 +97,7 @@ def main():
             correct = [s["Metrics"]["CorrectImages"] for s in samples]
             unexpected = [s["Metrics"]["UnexpectedImages"] for s in samples]
             lines.append(f'| {domain} | {x["Engine"]} | {x["MedianMs"]:.2f} | {x["P95Ms"]:.2f} | {x["MinMs"]:.2f}–{x["MaxMs"]:.2f} | {min(correct):g}–{max(correct):g} | {min(unexpected):g}–{max(unexpected):g} |')
-    lines += ["", "All individual corpus outcomes and benchmark samples are in [evidence](evidence/sha256.json). Those files preserve the original environment/provenance metadata and untrimmed results. The frozen manifest and acquisition script permit an independent rerun.", ""]
+    lines += ["", "All individual corpus outcomes and benchmark samples are in [evidence](evidence/sha256.json). Those files preserve the original environment/provenance metadata and untrimmed results. JSON formatting uses LF for portable evidence hashes; escaped payload line endings remain unchanged. Recorded run-input hashes identify the original measured files. The frozen manifest and acquisition script permit an independent rerun.", ""]
     (output / "results.md").write_text("\n".join(lines), encoding="utf-8")
 
 
