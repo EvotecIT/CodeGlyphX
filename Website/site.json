@@ -10,7 +10,9 @@
   "ThemesRoot": "themes",
   "DataRoot": "data",
   "StaticAssets": [
-    { "Source": "static" }
+    { "Source": "static" },
+    { "Source": "../docs/comparisons", "Destination": "comparisons" },
+    { "Source": "../docs/fair-comparisons.md", "Destination": "fair-comparisons.md" }
   ],
   "Collections": [
     {

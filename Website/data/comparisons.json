@@ -1,0 +1,733 @@
+{
+  "date": "2026-10-10",
+  "source": "34bd19ec0d55313fdc178807c34534be09bf966a",
+  "versions": {
+    "SDK": "10.0.401",
+    "PowerShell": "7.6.6",
+    "DotnetRuntime": "10.0.12",
+    "SharedBenchmarkRunner": "3.0.158.3",
+    "QRCoder": "1.8.0",
+    "ZXingNet": "0.16.11",
+    "NativeZXingCpp": "3.1.1, publisher reported",
+    "ZXingCpp": "0.5.3"
+  },
+  "cpu": "AMD Ryzen 9 9950X3D2 16-Core Processor",
+  "png_wins": 6,
+  "png_cases": 6,
+  "module_cpp_wins": 6,
+  "png_qrc_allocation_wins": 6,
+  "recognition": [
+    {
+      "engine": "CodeGlyphX",
+      "before": 73,
+      "correct": 121,
+      "positives": 267,
+      "percent": "45.3",
+      "unsupported": 18,
+      "rejected": 0,
+      "unexpected": 0,
+      "inconclusive": 25
+    },
+    {
+      "engine": "ZXing.Net",
+      "before": 220,
+      "correct": 220,
+      "positives": 267,
+      "percent": "82.4",
+      "unsupported": 0,
+      "rejected": 21,
+      "unexpected": 4,
+      "inconclusive": 0
+    },
+    {
+      "engine": "ZXing-C++",
+      "before": 224,
+      "correct": 224,
+      "positives": 267,
+      "percent": "83.9",
+      "unsupported": 0,
+      "rejected": 25,
+      "unexpected": 0,
+      "inconclusive": 0
+    }
+  ],
+  "formats": [
+    {
+      "format": "Aztec",
+      "images": 12,
+      "correct": [
+        4,
+        5,
+        12
+      ]
+    },
+    {
+      "format": "Codabar",
+      "images": 6,
+      "correct": [
+        4,
+        6,
+        6
+      ]
+    },
+    {
+      "format": "Code128",
+      "images": 14,
+      "correct": [
+        10,
+        13,
+        13
+      ]
+    },
+    {
+      "format": "Code39",
+      "images": 12,
+      "correct": [
+        9,
+        12,
+        12
+      ]
+    },
+    {
+      "format": "Code93",
+      "images": 3,
+      "correct": [
+        2,
+        3,
+        3
+      ]
+    },
+    {
+      "format": "DataMatrix",
+      "images": 18,
+      "correct": [
+        12,
+        18,
+        18
+      ]
+    },
+    {
+      "format": "Ean",
+      "images": 30,
+      "correct": [
+        15,
+        19,
+        19
+      ]
+    },
+    {
+      "format": "Ean8",
+      "images": 6,
+      "correct": [
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "format": "Gs1DataBarExpanded",
+      "images": 18,
+      "correct": [
+        0,
+        18,
+        18
+      ]
+    },
+    {
+      "format": "Gs1DataBarExpandedStacked",
+      "images": 12,
+      "correct": [
+        0,
+        12,
+        11
+      ]
+    },
+    {
+      "format": "Gs1DataBarOmnidirectional",
+      "images": 12,
+      "correct": [
+        4,
+        8,
+        8
+      ]
+    },
+    {
+      "format": "Itf",
+      "images": 12,
+      "correct": [
+        10,
+        12,
+        12
+      ]
+    },
+    {
+      "format": "MaxiCode",
+      "images": 6,
+      "correct": [
+        0,
+        6,
+        6
+      ]
+    },
+    {
+      "format": "Pdf417",
+      "images": 18,
+      "correct": [
+        2,
+        18,
+        17
+      ]
+    },
+    {
+      "format": "QrCode",
+      "images": 37,
+      "correct": [
+        22,
+        34,
+        34
+      ]
+    },
+    {
+      "format": "UpcA",
+      "images": 36,
+      "correct": [
+        11,
+        19,
+        19
+      ]
+    },
+    {
+      "format": "UpcE",
+      "images": 15,
+      "correct": [
+        10,
+        11,
+        10
+      ]
+    }
+  ],
+  "domains": [
+    {
+      "id": "ccd0",
+      "label": "CCD0",
+      "affinity": "0xFFFF",
+      "generation": [
+        {
+          "operation": "Png",
+          "payload": "Url",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "272.86",
+              "p95": "452.59",
+              "min": "211.82",
+              "max": "467.56",
+              "bytes": "60,305"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "2120.33",
+              "p95": "2801.06",
+              "min": "1859.46",
+              "max": "3121.71",
+              "bytes": "1,377,772"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "1972.70",
+              "p95": "2378.37",
+              "min": "1669.66",
+              "max": "2378.94",
+              "bytes": "1,313,880"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "577.58",
+              "p95": "807.20",
+              "min": "498.53",
+              "max": "807.77",
+              "bytes": "8,375"
+            }
+          ]
+        },
+        {
+          "operation": "Png",
+          "payload": "Numeric",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "176.51",
+              "p95": "388.91",
+              "min": "124.64",
+              "max": "524.08",
+              "bytes": "40,340"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "1616.84",
+              "p95": "3472.70",
+              "min": "1081.43",
+              "max": "4394.64",
+              "bytes": "877,618"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "1228.61",
+              "p95": "2970.95",
+              "min": "1019.65",
+              "max": "2998.59",
+              "bytes": "848,372"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "274.35",
+              "p95": "530.61",
+              "min": "225.49",
+              "max": "723.92",
+              "bytes": "6,737"
+            }
+          ]
+        },
+        {
+          "operation": "Png",
+          "payload": "Unicode",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "2413.09",
+              "p95": "3129.71",
+              "min": "2126.26",
+              "max": "3342.50",
+              "bytes": "274,942"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "11989.38",
+              "p95": "16826.58",
+              "min": "10915.97",
+              "max": "18919.53",
+              "bytes": "6,798,139"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "9702.67",
+              "p95": "15857.87",
+              "min": "9251.72",
+              "max": "16095.76",
+              "bytes": "6,228,264"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "4200.95",
+              "p95": "6869.66",
+              "min": "3461.34",
+              "max": "8035.22",
+              "bytes": "26,681"
+            }
+          ]
+        },
+        {
+          "operation": "Modules",
+          "payload": "Url",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "1062.22",
+              "p95": "2570.55",
+              "min": "385.05",
+              "max": "3443.89",
+              "bytes": "5,057"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "884.59",
+              "p95": "1551.49",
+              "min": "285.04",
+              "max": "1876.57",
+              "bytes": "71,135"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "241.10",
+              "p95": "1198.15",
+              "min": "137.89",
+              "max": "1274.45",
+              "bytes": "2,709"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "1323.47",
+              "p95": "2675.95",
+              "min": "490.74",
+              "max": "2733.63",
+              "bytes": "7,411"
+            }
+          ]
+        },
+        {
+          "operation": "Modules",
+          "payload": "Numeric",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "106.74",
+              "p95": "145.30",
+              "min": "91.46",
+              "max": "151.17",
+              "bytes": "3,832"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "78.52",
+              "p95": "162.80",
+              "min": "63.78",
+              "max": "221.66",
+              "bytes": "31,304"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "48.65",
+              "p95": "85.32",
+              "min": "41.82",
+              "max": "88.00",
+              "bytes": "1,696"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "130.00",
+              "p95": "155.91",
+              "min": "119.89",
+              "max": "161.81",
+              "bytes": "5,568"
+            }
+          ]
+        },
+        {
+          "operation": "Modules",
+          "payload": "Unicode",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "2406.34",
+              "p95": "4658.56",
+              "min": "2020.79",
+              "max": "6249.21",
+              "bytes": "23,872"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "2481.62",
+              "p95": "3910.07",
+              "min": "1917.57",
+              "max": "4487.96",
+              "bytes": "606,591"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "1749.51",
+              "p95": "3364.40",
+              "min": "1380.79",
+              "max": "3766.07",
+              "bytes": "14,648"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "4442.03",
+              "p95": "6792.58",
+              "min": "3629.08",
+              "max": "6993.91",
+              "bytes": "44,788"
+            }
+          ]
+        }
+      ],
+      "decoding": [
+        {
+          "engine": "CodeGlyphX",
+          "median": "4115.37",
+          "p95": "4257.41",
+          "min": "4068.86",
+          "max": "4278.72",
+          "correct": "13"
+        },
+        {
+          "engine": "ZXing.Net",
+          "median": "218.50",
+          "p95": "353.76",
+          "min": "153.69",
+          "max": "372.82",
+          "correct": "19"
+        },
+        {
+          "engine": "ZXing-C++",
+          "median": "31.32",
+          "p95": "58.95",
+          "min": "21.49",
+          "max": "63.43",
+          "correct": "19"
+        }
+      ]
+    },
+    {
+      "id": "ccd1",
+      "label": "CCD1",
+      "affinity": "0xFFFF0000",
+      "generation": [
+        {
+          "operation": "Png",
+          "payload": "Url",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "315.16",
+              "p95": "415.56",
+              "min": "186.78",
+              "max": "453.30",
+              "bytes": "60,306"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "1838.96",
+              "p95": "2324.10",
+              "min": "1343.42",
+              "max": "2357.06",
+              "bytes": "1,377,723"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "1630.98",
+              "p95": "1850.23",
+              "min": "1170.26",
+              "max": "1893.69",
+              "bytes": "1,309,262"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "552.25",
+              "p95": "741.61",
+              "min": "440.83",
+              "max": "818.68",
+              "bytes": "8,375"
+            }
+          ]
+        },
+        {
+          "operation": "Png",
+          "payload": "Numeric",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "164.88",
+              "p95": "325.55",
+              "min": "127.52",
+              "max": "341.87",
+              "bytes": "40,340"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "1701.30",
+              "p95": "2835.72",
+              "min": "1068.48",
+              "max": "3299.67",
+              "bytes": "877,701"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "1852.15",
+              "p95": "2630.94",
+              "min": "1234.87",
+              "max": "2879.57",
+              "bytes": "848,338"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "300.30",
+              "p95": "603.59",
+              "min": "240.07",
+              "max": "604.63",
+              "bytes": "6,743"
+            }
+          ]
+        },
+        {
+          "operation": "Png",
+          "payload": "Unicode",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "1995.83",
+              "p95": "2593.11",
+              "min": "1651.27",
+              "max": "2645.56",
+              "bytes": "275,105"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "9631.99",
+              "p95": "12079.56",
+              "min": "7854.97",
+              "max": "12966.00",
+              "bytes": "6,819,863"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "8320.51",
+              "p95": "10717.08",
+              "min": "6352.18",
+              "max": "10755.10",
+              "bytes": "6,206,870"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "3243.36",
+              "p95": "4175.83",
+              "min": "2758.79",
+              "max": "4361.38",
+              "bytes": "48,361"
+            }
+          ]
+        },
+        {
+          "operation": "Modules",
+          "payload": "Url",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "1013.47",
+              "p95": "1367.11",
+              "min": "331.45",
+              "max": "1512.84",
+              "bytes": "5,057"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "954.18",
+              "p95": "1357.14",
+              "min": "211.51",
+              "max": "1407.35",
+              "bytes": "71,136"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "216.23",
+              "p95": "320.18",
+              "min": "93.37",
+              "max": "325.31",
+              "bytes": "2,709"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "1324.99",
+              "p95": "1508.98",
+              "min": "419.32",
+              "max": "1547.50",
+              "bytes": "7,421"
+            }
+          ]
+        },
+        {
+          "operation": "Modules",
+          "payload": "Numeric",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "147.16",
+              "p95": "236.79",
+              "min": "106.04",
+              "max": "237.77",
+              "bytes": "3,832"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "110.60",
+              "p95": "174.49",
+              "min": "74.72",
+              "max": "179.52",
+              "bytes": "31,304"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "77.19",
+              "p95": "152.26",
+              "min": "45.77",
+              "max": "173.82",
+              "bytes": "1,696"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "209.96",
+              "p95": "257.73",
+              "min": "155.15",
+              "max": "260.18",
+              "bytes": "11,956"
+            }
+          ]
+        },
+        {
+          "operation": "Modules",
+          "payload": "Unicode",
+          "cells": [
+            {
+              "engine": "CodeGlyphX",
+              "median": "2144.09",
+              "p95": "2629.74",
+              "min": "1792.34",
+              "max": "2855.45",
+              "bytes": "23,872"
+            },
+            {
+              "engine": "ZXing.Net",
+              "median": "2365.46",
+              "p95": "3758.70",
+              "min": "1872.31",
+              "max": "4634.78",
+              "bytes": "606,588"
+            },
+            {
+              "engine": "ZXing-C++",
+              "median": "1490.50",
+              "p95": "2575.92",
+              "min": "1211.55",
+              "max": "2750.11",
+              "bytes": "14,648"
+            },
+            {
+              "engine": "QRCoder",
+              "median": "3820.03",
+              "p95": "4748.42",
+              "min": "2996.28",
+              "max": "5270.31",
+              "bytes": "44,786"
+            }
+          ]
+        }
+      ],
+      "decoding": [
+        {
+          "engine": "CodeGlyphX",
+          "median": "4094.72",
+          "p95": "4234.32",
+          "min": "4084.75",
+          "max": "4343.43",
+          "correct": "13"
+        },
+        {
+          "engine": "ZXing.Net",
+          "median": "196.05",
+          "p95": "327.93",
+          "min": "176.16",
+          "max": "339.04",
+          "correct": "19"
+        },
+        {
+          "engine": "ZXing-C++",
+          "median": "29.90",
+          "p95": "42.58",
+          "min": "23.51",
+          "max": "44.01",
+          "correct": "19"
+        }
+      ]
+    }
+  ]
+}

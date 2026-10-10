@@ -3514,6 +3514,86 @@ section {
     padding: 2rem 1.5rem 4rem;
 }
 
+/* Qualified comparison tables remain readable without widening the page. */
+.comparison-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 1.25rem 0;
+}
+
+.comparison-scroll:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.comparison-scroll table {
+    width: 100%;
+    min-width: 640px;
+}
+
+.comparison-scroll caption {
+    padding: 0.75rem 0;
+    text-align: left;
+    color: var(--text-muted);
+}
+
+.comparison-scroll th[scope="row"] {
+    text-transform: none;
+    letter-spacing: normal;
+    font-size: 0.9rem;
+}
+
+.comparison-scroll .comparison-generation {
+    min-width: 850px;
+}
+
+.comparison-generation td {
+    white-space: nowrap;
+    line-height: 1.65;
+}
+
+.comparison-generation td span {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.comparison-summary, .comparison-limit {
+    padding: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg-secondary);
+}
+
+.comparison-summary p:last-child {
+    margin-bottom: 0;
+}
+
+.comparison-summary p + p {
+    margin-top: 0.75rem;
+}
+
+.comparison-disclosure {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.comparison-disclosure summary {
+    cursor: pointer;
+    color: var(--text);
+    font-weight: 600;
+    padding: 0.25rem;
+}
+
+.comparison-disclosure[open] summary {
+    margin-bottom: 1rem;
+}
+
+.comparison-source {
+    overflow-wrap: anywhere;
+}
+
 .benchmark-hero {
     text-align: center;
     margin-bottom: 3rem;

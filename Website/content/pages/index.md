@@ -361,6 +361,11 @@ QR.Save(QrPayloads.Girocode(
 </section>
 
 <!-- CTA Section -->
+<section class="benchmark-page" aria-labelledby="home-comparisons">
+    <h2 id="home-comparisons">Measured performance and recognition</h2>
+    {{< comparison-summary >}}
+</section>
+
 <section class="cta">
     <div class="cta-content">
         <h2>Ready to Get Started?</h2>

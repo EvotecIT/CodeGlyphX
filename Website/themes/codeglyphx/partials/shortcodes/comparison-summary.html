@@ -1,0 +1,6 @@
+<div class="comparison-summary">
+    <p><strong>Generation:</strong> CodeGlyphX has the lowest PNG median in {{ data.comparisons.png_wins }}/{{ data.comparisons.png_cases }} payload/domain cases. ZXing-C++ has the lowest module median in {{ data.comparisons.module_cpp_wins }}/{{ data.comparisons.png_cases }} cases; QRCoder has the lowest managed PNG allocation in {{ data.comparisons.png_qrc_allocation_wins }}/{{ data.comparisons.png_cases }} cases. The ZXing PNG adapters use the CodeGlyphX PNG codec.</p>
+    <p><strong>Image recognition:</strong> {{ for row in data.comparisons.recognition }}{{ row.engine }} {{ row.correct }}/{{ row.positives }} ({{ row.percent }}%){{ if !for.last }} · {{ end }}{{ end }}.</p>
+    <p>Measured {{ data.comparisons.date }} on a busy shared Windows host. CodeGlyphX negative scans exhaust their budget; no lower false-positive rate is established. These results do not establish an overall winner.</p>
+    <p><a href="/benchmarks/#recognition">Read the corpus results, timing distributions and limits</a></p>
+</div>

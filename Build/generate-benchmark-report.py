@@ -990,14 +990,8 @@ def write_json(
 
 def qualify_existing_reports(repo_root):
     notice = "Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md."
-    replacements = {
-        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).": "ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.",
-        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).": "Barcoder uses the managed comparison renderer.",
-    }
     report = repo_root / "BENCHMARK.md"
     content = report.read_text(encoding="utf-8-sig")
-    for old, new in replacements.items():
-        content = content.replace(old, new)
     marker = "# Benchmarks"
     if notice not in content:
         content = content.replace(marker, marker + "\n\n> " + notice, 1)
@@ -1006,7 +1000,6 @@ def qualify_existing_reports(repo_root):
     def qualify(value):
         if isinstance(value, dict):
             if isinstance(value.get("notes"), list):
-                value["notes"] = [replacements.get(note, note) for note in value["notes"]]
                 if notice not in value["notes"]:
                     value["notes"].insert(0, notice)
                 value["qualification"] = "historical-unqualified"

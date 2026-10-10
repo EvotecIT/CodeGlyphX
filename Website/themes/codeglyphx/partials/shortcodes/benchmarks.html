@@ -1,126 +1,87 @@
+{{ comparison = data.comparisons; copy = data.benchmarks }}
 <div class="benchmark-page">
     <section class="benchmark-hero">
-        {{ if data.benchmarks && data.benchmarks.hero }}
-            {{ if data.benchmarks.hero.title }}<h1>{{ data.benchmarks.hero.title }}</h1>{{ end }}
-            {{ if data.benchmarks.hero.intro }}<p class="benchmark-intro">{{ data.benchmarks.hero.intro }}</p>{{ end }}
-        {{ end }}
-        <div class="benchmark-meta" data-benchmark-meta></div>
+        <h1>{{ copy.hero.title }}</h1>
+        <p class="benchmark-intro">{{ copy.hero.intro }}</p>
+        <p>Measured <time datetime="{{ comparison.date }}">{{ comparison.date }}</time> · Windows · .NET {{ comparison.versions.DotnetRuntime }}</p>
+        <p class="comparison-limit">{{ copy.sharedHost }}</p>
     </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.about }}
-            {{ if data.benchmarks.about.title }}<h2>{{ data.benchmarks.about.title }}</h2>{{ end }}
-            <div class="benchmark-info-grid">
-                {{ for card in data.benchmarks.about.cards }}
-                    <div class="benchmark-info-card">
-                        {{ if card.title }}<h3>{{ card.title }}</h3>{{ end }}
-                        {{ if card.paragraphs }}
-                            {{ for paragraph in card.paragraphs }}{{ paragraph }}{{ end }}
-                        {{ end }}
-                        {{ if card.list }}
-                            <ul>
-                                {{ for item in card.list }}<li>{{ item }}</li>{{ end }}
-                            </ul>
-                        {{ end }}
-                    </div>
-                {{ end }}
+    <section class="benchmark-section" aria-labelledby="comparison-overview">
+        <h2 id="comparison-overview">What the results show</h2>
+        {{ include "shortcodes/comparison-summary" }}
+        <p>The January reports use older versions and different QR result APIs. Their rankings do not support a current comparison. This page uses the qualified October evidence.</p>
+    </section>
+    <section class="benchmark-section" aria-labelledby="recognition">
+        <h2 id="recognition">Image recognition</h2>
+        <p>{{ copy.recognition }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Image recognition results" tabindex="0">
+            <table class="bench-table">
+                <caption>Exact payload sets on 267 positive images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Before repair</th><th scope="col">Current</th><th scope="col">Correct</th><th scope="col">Unsupported images</th></tr></thead>
+                <tbody>{{ for row in comparison.recognition }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }}/{{ row.positives }}</td><td>{{ row.correct }}/{{ row.positives }}</td><td>{{ row.percent }}%</td><td>{{ row.unsupported }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ copy.recognitionLimit }}</p>
+        <details class="comparison-disclosure">
+            <summary>Recognition by format</summary>
+            <div class="comparison-scroll" role="region" aria-label="Recognition by format" tabindex="0">
+                <table class="bench-table">
+                    <caption>Correct images by format, including unsupported formats</caption>
+                    <thead><tr><th scope="col">Format</th><th scope="col">Images</th><th scope="col">CodeGlyphX</th><th scope="col">ZXing.Net</th><th scope="col">ZXing-C++</th></tr></thead>
+                    <tbody>{{ for row in comparison.formats }}<tr><th scope="row">{{ row.format }}</th><td>{{ row.images }}</td>{{ for count in row.correct }}<td>{{ count }}</td>{{ end }}</tr>{{ end }}</tbody>
+                </table>
             </div>
-        {{ end }}
+        </details>
+        <h3>Negative images and completed scans</h3>
+        <p>{{ copy.negatives }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Negative image results" tabindex="0">
+            <table class="bench-table">
+                <caption>Supplementary 25-image negative corpus; includes the 12 main-corpus negatives</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Correct rejections</th><th scope="col">Unexpected output</th><th scope="col">Inconclusive</th></tr></thead>
+                <tbody>{{ for row in comparison.recognition }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.rejected }}/25</td><td>{{ row.unexpected }}</td><td>{{ row.inconclusive }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
     </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.runMode }}
-            {{ if data.benchmarks.runMode.title }}<h2>{{ data.benchmarks.runMode.title }}</h2>{{ end }}
-            <div class="benchmark-mode-selector">
-                {{ for button in data.benchmarks.runMode.buttons }}
-                    <button class="benchmark-mode-btn{{ if button.active }} active{{ end }}" data-mode="{{ button.mode }}">{{ button.label }}</button>
-                {{ end }}
+    <section class="benchmark-section" aria-labelledby="generation">
+        <h2 id="generation">QR generation and decode timing</h2>
+        <p>{{ copy.generation }}</p>
+        <p>{{ copy.adapters }}</p>
+        <p>{{ copy.allocation }}</p>
+        {{ for domain in comparison.domains }}
+        <details class="comparison-disclosure" {{ if for.first }}open{{ end }}>
+            <summary>{{ domain.label }} · affinity {{ domain.affinity }} · 96 MiB L3</summary>
+            <p>Generation cells show median µs/output, P95 and min–max µs/output, then managed bytes/output. Each value normalizes a 100-output batch; it is not an individual-call latency distribution.</p>
+            <div class="comparison-scroll" role="region" aria-label="{{ domain.label }} generation results" tabindex="0">
+                <table class="bench-table comparison-generation">
+                    <caption>{{ domain.label }} generation · 12 samples per lane · 3 warmups · all outliers retained</caption>
+                    <thead><tr><th scope="col">Output / payload</th><th scope="col">CodeGlyphX</th><th scope="col">ZXing.Net</th><th scope="col">ZXing-C++</th><th scope="col">QRCoder</th></tr></thead>
+                    <tbody>{{ for row in domain.generation }}<tr><th scope="row">{{ row.operation }}<br>{{ row.payload }}</th>{{ for cell in row.cells }}<td><strong>{{ cell.median }} µs</strong><br><span>P95 {{ cell.p95 }}</span><br><span>{{ cell.min }}–{{ cell.max }}</span><br><span>{{ cell.bytes }} B managed</span></td>{{ end }}</tr>{{ end }}</tbody>
+                </table>
             </div>
-        {{ end }}
-        <p class="benchmark-mode-note" data-mode-note></p>
-    </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.runOs }}
-            {{ if data.benchmarks.runOs.title }}<h2>{{ data.benchmarks.runOs.title }}</h2>{{ end }}
-            <div class="benchmark-os-selector">
-                {{ for button in data.benchmarks.runOs.buttons }}
-                    <button class="benchmark-os-btn{{ if button.active }} active{{ end }}" data-os="{{ button.os }}">{{ button.label }}</button>
-                {{ end }}
+            <h3>{{ domain.label }} decoding</h3>
+            <p>{{ copy.decoding }}</p>
+            <div class="comparison-scroll" role="region" aria-label="{{ domain.label }} decode timing" tabindex="0">
+                <table class="bench-table">
+                    <caption>{{ domain.label }} · milliseconds per 19-image batch · failed decodes retained</caption>
+                    <thead><tr><th scope="col">Reader</th><th scope="col">Median ms</th><th scope="col">P95 ms</th><th scope="col">Min–max ms</th><th scope="col">Correct images</th></tr></thead>
+                    <tbody>{{ for row in domain.decoding }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.median }}</td><td>{{ row.p95 }}</td><td>{{ row.min }}–{{ row.max }}</td><td>{{ row.correct }}/19</td></tr>{{ end }}</tbody>
+                </table>
             </div>
-        {{ end }}
-        <p class="benchmark-os-note" data-os-note></p>
-    </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.summary }}
-            <h2>{{ data.benchmarks.sections.summary.title }}</h2>
-            <p class="section-description">{{ data.benchmarks.sections.summary.description }}</p>
-        {{ end }}
-        <div class="benchmark-table-container" data-benchmark-summary>
-            <p class="loading-text">Loading benchmark data...</p>
-        </div>
-    </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.charts }}
-            <h2>{{ data.benchmarks.sections.charts.title }}</h2>
-            <p class="section-description">{{ data.benchmarks.sections.charts.description }}</p>
-        {{ end }}
-        <div class="benchmark-charts" data-benchmark-charts>
-            <p class="loading-text">Loading chart data...</p>
-        </div>
-    </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.details }}
-            <h2>{{ data.benchmarks.sections.details.title }}</h2>
-            <p class="section-description">{{ data.benchmarks.sections.details.description }}</p>
-        {{ end }}
-        <div class="benchmark-details" data-benchmark-details>
-            <p class="loading-text">Loading detailed results...</p>
-        </div>
-    </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.baseline }}
-            <h2>{{ data.benchmarks.sections.baseline.title }}</h2>
-            <p class="section-description">{{ data.benchmarks.sections.baseline.description }}</p>
-        {{ end }}
-        <div class="benchmark-baseline" data-benchmark-baseline>
-            <p class="loading-text">Loading baseline data...</p>
-        </div>
-    </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.environment }}
-            <h2>{{ data.benchmarks.sections.environment.title }}</h2>
-        {{ end }}
-        <div class="benchmark-environment" data-benchmark-environment>
-            <p class="loading-text">Loading environment info...</p>
-        </div>
-    </section>
-
-    <section class="benchmark-section benchmark-notes">
-        {{ if data.benchmarks && data.benchmarks.notes }}
-            {{ if data.benchmarks.notes.title }}<h2>{{ data.benchmarks.notes.title }}</h2>{{ end }}
-            <div data-benchmark-notes>
-                <ul>
-                    {{ for item in data.benchmarks.notes.items }}
-                        <li>{{ item }}</li>
-                    {{ end }}
-                </ul>
-            </div>
+        </details>
         {{ end }}
     </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.run }}
-            {{ if data.benchmarks.run.title }}<h2>{{ data.benchmarks.run.title }}</h2>{{ end }}
-            {{ if data.benchmarks.run.intro }}<p>{{ data.benchmarks.run.intro }}</p>{{ end }}
-            {{ if data.benchmarks.run.commands }}
-                <pre class="code-block"><code>{{ data.benchmarks.run.commands }}</code></pre>
-            {{ end }}
-        {{ end }}
+    <section class="benchmark-section" aria-labelledby="methodology">
+        <h2 id="methodology">Versions, method and evidence</h2>
+        <ul>
+            <li>CodeGlyphX local source: <code class="comparison-source">{{ comparison.source }}</code>.</li>
+            <li>ZXing.Net {{ comparison.versions.ZXingNet }} · ZXingCpp {{ comparison.versions.ZXingCpp }} (native {{ comparison.versions.NativeZXingCpp }}) · QRCoder {{ comparison.versions.QRCoder }}. QRCoder generates QR codes and has no decoder.</li>
+            <li>{{ comparison.cpu }} · 16 cores / 32 logical processors · two cache domains · High performance power plan · Normal process priority.</li>
+            <li>SDK {{ comparison.versions.SDK }} · .NET {{ comparison.versions.DotnetRuntime }} · PowerShell {{ comparison.versions.PowerShell }} · shared benchmark runner {{ comparison.versions.SharedBenchmarkRunner }}.</li>
+            {{ for note in copy.methodology }}<li>{{ note }}</li>{{ end }}
+        </ul>
+        <p><a href="/comparisons/results.md">Download the results report</a> · <a href="/fair-comparisons.md">Methodology and reproduction</a> · <a href="/comparisons/evidence/sha256.json">Evidence hashes</a> · <a href="/comparisons/evidence/candidate-corpus-final.json">Every image outcome</a> · <a href="/comparisons/evidence/qualification.json">Qualification and provenance</a></p>
+        <p>Raw samples: <a href="/comparisons/evidence/generation-final-ccd0-result.json">CCD0 generation</a> · <a href="/comparisons/evidence/generation-final-ccd1-result.json">CCD1 generation</a> · <a href="/comparisons/evidence/decoding-final-ccd0-result.json">CCD0 decoding</a> · <a href="/comparisons/evidence/decoding-final-ccd1-result.json">CCD1 decoding</a>.</p>
+        <p>{{ copy.reproduce }}</p>
+        <p><a href="https://github.com/EvotecIT/CodeGlyphX">Repository and reproducible comparison scripts</a></p>
     </section>
 </div>

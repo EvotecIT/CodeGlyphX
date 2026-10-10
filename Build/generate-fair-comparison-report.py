@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+from comparison_website_data import write_website_data
 
 
 def read(path):
@@ -13,6 +14,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--evidence-root", type=Path, required=True)
     parser.add_argument("--output-root", type=Path, required=True)
+    parser.add_argument("--website-root", type=Path, help="Also refresh the website view from this evidence")
     args = parser.parse_args()
     root, output = args.evidence_root, args.output_root
     output.mkdir(parents=True, exist_ok=True)
@@ -99,6 +101,8 @@ def main():
             lines.append(f'| {domain} | {x["Engine"]} | {x["MedianMs"]:.2f} | {x["P95Ms"]:.2f} | {x["MinMs"]:.2f}–{x["MaxMs"]:.2f} | {min(correct):g}–{max(correct):g} | {min(unexpected):g}–{max(unexpected):g} |')
     lines += ["", "All individual corpus outcomes and benchmark samples are in [evidence](evidence/sha256.json). Those files preserve the original environment/provenance metadata and untrimmed results. JSON formatting uses LF for portable evidence hashes; escaped payload line endings remain unchanged. Recorded run-input hashes identify the original measured files. The frozen manifest and acquisition script permit an independent rerun.", ""]
     (output / "results.md").write_text("\n".join(lines), encoding="utf-8")
+    if args.website_root:
+        write_website_data(evidence, args.website_root)
 
 
 if __name__ == "__main__":

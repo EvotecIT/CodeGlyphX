@@ -33,6 +33,15 @@ The nineteen-image timing subset is locked separately: the first selected image 
 
 ## Reproduce
 
+The website reads `Website/data/comparisons.json`, generated from the checked-in evidence. Its page and quick summary share the same data and shortcode. Refresh or verify that projection without rerunning measurements:
+
+```text
+python Build/comparison_website_data.py --evidence-root docs/comparisons/evidence --website-root Website
+python Build/comparison_website_data.py --evidence-root docs/comparisons/evidence --website-root Website --check
+```
+
+`Build/generate-fair-comparison-report.py --website-root Website` also refreshes the projection when generating a new report. PowerForge copies `docs/comparisons` into the site for raw evidence downloads. Historical January data remains an archive; the active page does not use its rankings.
+
 Use PowerShell 7 with PSPublishModule's shared benchmark runner. Choose a mounted development scratch root, then run from the repository root:
 
 ```powershell

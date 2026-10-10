@@ -149,6 +149,11 @@ if (navToggle) {
 
     loadBenchmarkSummary().then(function(data) {
       var entry = pickBenchmarkSummary(data);
+      if (entry && entry.qualification === 'historical-unqualified') {
+        container.textContent = 'Historical benchmark results are not a current ranking. Read the qualified comparisons at /benchmarks/.';
+        container.dataset.loaded = 'true';
+        return;
+      }
       if (!entry || !entry.summary || !entry.summary.length) {
         container.textContent = 'Benchmark summary unavailable.';
         container.dataset.loaded = 'true';
