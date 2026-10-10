@@ -6,12 +6,18 @@ namespace CodeGlyphX.Benchmarks;
 // Product adapters only. Loading, expected payloads and measurement policy live outside these operations.
 internal static class CorpusReaders {
     internal static string[] Decode(byte[] rgba, int width, int height, string format, string engine, bool robust, bool multiple) {
+        return Decode(rgba, width, height, format, engine, robust, multiple, out _);
+    }
+
+    internal static string[] Decode(byte[] rgba, int width, int height, string format, string engine, bool robust, bool multiple, out string completion) {
+        completion = "Completed";
         if (engine == "CodeGlyphX") {
             var options = robust ? ScanOptions.Robust(1500) : ScanOptions.Balanced(500);
             options.Formats = format == "All" ? null : new[] { Enum.Parse<SymbolFormat>(format == "Ean8" ? "Ean" : format) };
             options.MaxSymbols = multiple ? 32 : 1;
             options.Image = new ImageDecodeOptions { MaxDimension = 0 };
             var result = SymbolScanner.Scan(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options);
+            completion = result.CompletionReason.ToString();
             return result.Symbols.Select(symbol => symbol.Text).Distinct(StringComparer.Ordinal).ToArray();
         }
 #if COMPARE_ZXING

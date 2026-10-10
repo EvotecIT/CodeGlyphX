@@ -32,27 +32,29 @@ public sealed class CorpusSession {
     }
 
     /// <summary>Reads each preloaded frame once. Expected-payload validation takes place outside this operation.</summary>
-    public string[][] Decode(string engine, bool robust = true) {
-        var results = new string[Count][];
+    public CorpusRead[] Decode(string engine, bool robust = true) {
+        var results = new CorpusRead[Count];
         for (var i = 0; i < Count; i++) {
             var sample = _samples[i];
-            results[i] = CorpusReaders.Decode(_pixels[i], _widths[i], _heights[i], sample.Format, engine, robust, sample.Expected.Length != 1);
+            var texts = CorpusReaders.Decode(_pixels[i], _widths[i], _heights[i], sample.Format, engine, robust, sample.Expected.Length != 1, out var completion);
+            results[i] = new CorpusRead(texts, completion);
         }
         return results;
     }
 
     /// <summary>Retains every miss and unexpected payload instead of treating nonempty output as success.</summary>
-    public CorpusOutcome[] Evaluate(string engine, string[][] results) {
+    public CorpusOutcome[] Evaluate(string engine, CorpusRead[] results) {
         if (results.Length != Count) throw new InvalidDataException("Corpus result count differs from input count.");
         return _samples.Select((sample, i) => {
             var expected = sample.Expected.Select(text => CorpusScoring.Canonical(text, sample.Format)).ToHashSet(StringComparer.Ordinal);
-            var actual = results[i].Select(text => CorpusScoring.Canonical(text, sample.Format)).ToHashSet(StringComparer.Ordinal);
+            var actual = results[i].Texts.Select(text => CorpusScoring.Canonical(text, sample.Format)).ToHashSet(StringComparer.Ordinal);
             var missing = expected.Except(actual).ToArray();
             var unexpected = actual.Except(expected).ToArray();
             var unsupported = engine == "CodeGlyphX" && sample.Format != "All" &&
                 !SymbolCapabilities.Get(Enum.Parse<SymbolFormat>(sample.Format == "Ean8" ? "Ean" : sample.Format)).CanScanImages;
-            return new CorpusOutcome(sample.Id, sample.Format, engine, sample.Expected, results[i], missing, unexpected,
-                unsupported ? "Unsupported" : missing.Length == 0 && unexpected.Length == 0 ? "Correct" : "Failed");
+            var inconclusive = sample.Expected.Length == 0 && actual.Count == 0 && results[i].Completion != "Completed";
+            return new CorpusOutcome(sample.Id, sample.Format, engine, sample.Expected, results[i].Texts, missing, unexpected,
+                unsupported ? "Unsupported" : inconclusive ? "Inconclusive" : missing.Length == 0 && unexpected.Length == 0 ? "Correct" : "Failed", results[i].Completion);
         }).ToArray();
     }
 
@@ -61,4 +63,5 @@ public sealed class CorpusSession {
 
 public sealed record CorpusManifest(string Revision, string Selection, CorpusSample[] Samples);
 public sealed record CorpusSample(string Id, string File, string Sha256, string Format, string[] Expected);
-public sealed record CorpusOutcome(string Id, string Format, string Engine, string[] Expected, string[] Actual, string[] Missing, string[] Unexpected, string Status);
+public sealed record CorpusRead(string[] Texts, string Completion);
+public sealed record CorpusOutcome(string Id, string Format, string Engine, string[] Expected, string[] Actual, string[] Missing, string[] Unexpected, string Status, string Completion);

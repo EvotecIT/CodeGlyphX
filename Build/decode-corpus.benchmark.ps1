@@ -34,6 +34,7 @@ New-BenchmarkSuite 'decode-corpus' -OutputRoot $outputRoot {
     Add-BenchmarkMetric Images { param($case, $run) $run.Session.Count }
     Add-BenchmarkMetric CorrectImages { param($case, $run) @($run.Outcomes | Where-Object Status -eq Correct).Count }
     Add-BenchmarkMetric UnsupportedImages { param($case, $run) @($run.Outcomes | Where-Object Status -eq Unsupported).Count }
+    Add-BenchmarkMetric InconclusiveImages { param($case, $run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }
     Add-BenchmarkMetric UnexpectedImages { param($case, $run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }
     Set-BenchmarkArtifacts Json, Csv, Markdown
 }
