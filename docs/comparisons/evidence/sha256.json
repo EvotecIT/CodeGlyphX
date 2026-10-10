@@ -1,12 +1,14 @@
 {
   "qualified-baseline-corpus.json": "58ffe76f16cd0543250bfae53c654236febca036f79ef1012e2984de3bc82294",
-  "candidate-corpus-final.json": "0d7bec5143bc9153530c0ade3a0ae691c8650db5211634dc5648c6b2e80f048d",
+  "candidate-corpus-final.json": "afcd124eac7dfcb8486b23587f466d9aab12648c2d8c3b2927c46549b6850b8b",
   "negative-baseline-corpus.json": "399e80e500a5596e2d498032806b17469f54e0d3b9e8f6a38cc8147176fa9ec9",
-  "negative-candidate-corpus.json": "399e80e500a5596e2d498032806b17469f54e0d3b9e8f6a38cc8147176fa9ec9",
+  "negative-candidate-corpus.json": "374cfcf3d3074cdd881e519c346693c363086c5b5db662fe4128efb5a15243b2",
   "negative-manifest.json": "6b8dcaee1bb7a39c6a989a7ed58f998c9ec2fb7e609011c751f162eca89b8751",
-  "qualification.json": "812a13d6c2798e55a554fa39031116be27057cab9e011d7206d2e0f8f61cc736",
-  "generation-final-ccd0-result.json": "6d4cafb213efbeefe3ae6870ef73c7655ae82c7815c76f7f0cce6163a053a949",
-  "generation-final-ccd1-result.json": "7538e1f39e884115c9d58891aaec0ff4c1072b3ecefbd13818e89e6d7a44b3dd",
-  "decoding-final-ccd0-result.json": "1aad7ce7c2d6590381016591d95757f024b6a8d0884b9717c2853815a9781ff5",
-  "decoding-final-ccd1-result.json": "ba26256ef5b7d40ea1bd7bb6d161784cd8e9447179e2c5d1cd398d6943cca131"
+  "qualification.json": "b43029dfdca5761c9dfb965c19391477731e510c02035c9d1c825e8953f84d40",
+  "generation-final-ccd0-result.json": "e7a579231b0a2be948f759d1e2a8203388328cccfc90b55834c6f789377f5ca5",
+  "generation-final-ccd1-result.json": "4961b13e764ede2c49f519ddf9cd2a7f8167393aae7684cac9699943d6e19573",
+  "decoding-final-ccd0-result.json": "ebd458614ae359e9a3de25935cc800076626b349e82c599b182b509d164803c2",
+  "decoding-final-ccd1-result.json": "37428e304e1de65e44f447ebf3954fbdc9bf8624d7ff5ac549fe7db031c343e5",
+  "previous-candidate-corpus.json": "0d7bec5143bc9153530c0ade3a0ae691c8650db5211634dc5648c6b2e80f048d",
+  "previous-qualification.json": "812a13d6c2798e55a554fa39031116be27057cab9e011d7206d2e0f8f61cc736"
 }

@@ -72,7 +72,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "aztec-1/reader-init.png",
@@ -87,7 +87,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "aztec-2/19.png",
@@ -102,7 +102,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "aztec-2/15.png",
@@ -117,7 +117,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "aztec-2/13.png",
@@ -132,7 +132,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "aztec-2/14.png",
@@ -147,7 +147,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "aztec-2/17.png",
@@ -162,7 +162,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "aztec-2/10.png",
@@ -177,7 +177,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "codabar-1/09.png",
@@ -1522,8 +1522,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives/03.png",
@@ -1533,8 +1533,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives/15.png",
@@ -1545,7 +1545,7 @@
     "Missing": [],
     "Unexpected": [],
     "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/16.png",
@@ -1555,8 +1555,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives/04.png",
@@ -1567,7 +1567,7 @@
     "Missing": [],
     "Unexpected": [],
     "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/01.png",
@@ -1577,8 +1577,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/14.png",
@@ -1588,8 +1588,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/17.png",
@@ -1599,8 +1599,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/16.png",
@@ -1610,8 +1610,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/18.png",
@@ -1621,8 +1621,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/15.png",
@@ -1632,8 +1632,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/06.png",
@@ -1643,8 +1643,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "itf-1/15.png",
@@ -1968,13 +1968,13 @@
     "Expected": [
       "12345678"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "12345678"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-1/06.png",
@@ -1998,13 +1998,13 @@
     "Expected": [
       "-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-2/14.png",
@@ -2013,13 +2013,13 @@
     "Expected": [
       "A PDF 417 barcode with ASCII text"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A PDF 417 barcode with ASCII text"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-2/17.png",
@@ -2049,7 +2049,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "pdf417-2/15.png",
@@ -2058,13 +2058,13 @@
     "Expected": [
       "A PDF 417 barcode with ASCII text"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A PDF 417 barcode with ASCII text"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-2/05.png",
@@ -2073,13 +2073,13 @@
     "Expected": [
       "1234567890"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "1234567890"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-2/19.png",
@@ -2088,13 +2088,13 @@
     "Expected": [
       "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-3/04.png",
@@ -2103,13 +2103,13 @@
     "Expected": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-3/18.png",
@@ -2139,7 +2139,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "pdf417-3/09.png",
@@ -2154,7 +2154,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "pdf417-3/03.png",
@@ -2163,13 +2163,13 @@
     "Expected": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-3/06.png",
@@ -2178,13 +2178,13 @@
     "Expected": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-1/6.png",
@@ -2199,7 +2199,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Completion": "DeadlineExceeded"
   },
   {
     "Id": "qrcode-1/10.png",
@@ -2238,13 +2238,13 @@
     "Expected": [
       "Sean Owen\r\nsrowen@google.com\r\n917-364-2918\r\nhttp://awesome-thoughts.com"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "Sean Owen\r\nsrowen@google.com\r\n917-364-2918\r\nhttp://awesome-thoughts.com"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-1/12.png",
@@ -2347,13 +2347,17 @@
     "Expected": [
       "Google \u30E2\u30D0\u30A4\u30EB\r\nhttp://google.jp"
     ],
-    "Actual": [],
+    "Actual": [
+      "Google \u0083\u0082\u0083o\u0083C\u0083\u008B\r\nhttp://google.jp"
+    ],
     "Missing": [
       "Google \u30E2\u30D0\u30A4\u30EB\r\nhttp://google.jp"
     ],
-    "Unexpected": [],
+    "Unexpected": [
+      "Google \u0083\u0082\u0083o\u0083C\u0083\u008B\r\nhttp://google.jp"
+    ],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-2/23.png",
@@ -2542,13 +2546,13 @@
     "Expected": [
       "Google Print Ads - T.G.I.A.F. - January 31, 2008"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "Google Print Ads - T.G.I.A.F. - January 31, 2008"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-5/04.png",
@@ -2617,13 +2621,13 @@
     "Expected": [
       "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-5/19.png",
@@ -2668,7 +2672,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "qrcode-6/4.png",
@@ -2713,7 +2717,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "qrcode-6/12.png",
@@ -2728,7 +2732,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "rss14-1/4.png",
@@ -2917,13 +2921,13 @@
     "Expected": [
       "(01)90012345678908(3102)001750(11)100312"
     ],
-    "Actual": [],
-    "Missing": [
-      "(01)90012345678908(3102)001750(11)100312"
+    "Actual": [
+      "0190012345678908310200175011100312"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-1/29.png",
@@ -2932,13 +2936,13 @@
     "Expected": [
       "(10)1098.1234"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)1098.1234"
+    "Actual": [
+      "101098.1234"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-1/6.png",
@@ -2947,13 +2951,13 @@
     "Expected": [
       "(10)567(01)90012345678908(11)010101"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)567(01)90012345678908(11)010101"
+    "Actual": [
+      "10567\u001D019001234567890811010101"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-1/2.png",
@@ -2962,13 +2966,13 @@
     "Expected": [
       "(01)90012345678908(3103)001750"
     ],
-    "Actual": [],
-    "Missing": [
-      "(01)90012345678908(3103)001750"
+    "Actual": [
+      "01900123456789083103001750"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-1/23.png",
@@ -2977,13 +2981,13 @@
     "Expected": [
       "(10)56789(11)010101"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)56789(11)010101"
+    "Actual": [
+      "1056789\u001D11010101"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-1/9.png",
@@ -2992,13 +2996,13 @@
     "Expected": [
       "(10)567(3102)123456"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)567(3102)123456"
+    "Actual": [
+      "10567\u001D3102123456"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-2/3_02.png",
@@ -3007,13 +3011,13 @@
     "Expected": [
       "(10)12A"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)12A"
+    "Actual": [
+      "1012A"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-2/4_02.png",
@@ -3022,13 +3026,13 @@
     "Expected": [
       "(01)98898765432106(3202)012345(15)991231"
     ],
-    "Actual": [],
-    "Missing": [
-      "(01)98898765432106(3202)012345(15)991231"
+    "Actual": [
+      "0198898765432106320201234515991231"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-2/3_03.png",
@@ -3037,13 +3041,13 @@
     "Expected": [
       "(10)12A"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)12A"
+    "Actual": [
+      "1012A"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-2/4_05.png",
@@ -3052,13 +3056,13 @@
     "Expected": [
       "(01)98898765432106(3202)012345(15)991231"
     ],
-    "Actual": [],
-    "Missing": [
-      "(01)98898765432106(3202)012345(15)991231"
+    "Actual": [
+      "0198898765432106320201234515991231"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-2/4_01.png",
@@ -3067,13 +3071,13 @@
     "Expected": [
       "(01)98898765432106(3202)012345(15)991231"
     ],
-    "Actual": [],
-    "Missing": [
-      "(01)98898765432106(3202)012345(15)991231"
+    "Actual": [
+      "0198898765432106320201234515991231"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-2/3_09.png",
@@ -3082,13 +3086,13 @@
     "Expected": [
       "(10)12A"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)12A"
+    "Actual": [
+      "1012A"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-3/29.png",
@@ -3097,13 +3101,13 @@
     "Expected": [
       "(10)1098!1234"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)1098!1234"
+    "Actual": [
+      "101098!1234"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-3/24.png",
@@ -3112,13 +3116,13 @@
     "Expected": [
       "(10)1098,1234"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)1098,1234"
+    "Actual": [
+      "101098,1234"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-3/41.png",
@@ -3127,13 +3131,13 @@
     "Expected": [
       "(10)1098_1234"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)1098_1234"
+    "Actual": [
+      "101098_1234"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-3/99.png",
@@ -3142,13 +3146,13 @@
     "Expected": [
       "(10)1098_1234"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)1098_1234"
+    "Actual": [
+      "101098_1234"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-3/87.png",
@@ -3157,13 +3161,13 @@
     "Expected": [
       "(10)1098!1234"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)1098!1234"
+    "Actual": [
+      "101098!1234"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpanded-3/20.png",
@@ -3172,13 +3176,13 @@
     "Expected": [
       "(10)5678(11)001010"
     ],
-    "Actual": [],
-    "Missing": [
-      "(10)5678(11)001010"
+    "Actual": [
+      "105678\u001D11001010"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rssexpandedstacked-1/64.png",
@@ -3189,7 +3193,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(10)123"
+      "10123"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3204,7 +3208,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(10)1;:/0123456789012"
+      "101;:/0123456789012"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3219,7 +3223,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(10)1098!1234"
+      "101098!1234"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3234,7 +3238,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(01)90012345678908(3932)0401234"
+      "019001234567890839320401234"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3249,7 +3253,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(01)12345678901231(10)PIRAMIDE-PROJECT"
+      "011234567890123110PIRAMIDE-PROJECT"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3264,7 +3268,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(15)991231(3103)001750(10)12A(422)123(21)123456(423)0123456789012"
+      "1599123131030017501012A\u001D422123\u001D21123456\u001D4230123456789012"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3279,7 +3283,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(8110)10014141012345290110100"
+      "811010014141012345290110100"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3294,7 +3298,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(01)98898765432106(15)991231(3103)001750(10)12A(422)123(21)123456(423)012345678901"
+      "01988987654321061599123131030017501012A\u001D422123\u001D21123456\u001D423012345678901"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3309,7 +3313,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(01)98898765432106(3202)012345(15)991231"
+      "0198898765432106320201234515991231"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3324,7 +3328,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(01)12345678901231(10)UNIVERSITY-OF-DEUSTO"
+      "011234567890123110UNIVERSITY-OF-DEUSTO"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
@@ -3339,7 +3343,7 @@
     ],
     "Actual": [],
     "Missing": [
-      "(15)991231(3103)001750(10)12A(422)123(21)123456(423)0123456789012"
+      "1599123131030017501012A\u001D422123\u001D21123456\u001D4230123456789012"
     ],
     "Unexpected": [],
     "Status": "Unsupported",
