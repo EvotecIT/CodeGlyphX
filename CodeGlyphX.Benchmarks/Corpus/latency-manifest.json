@@ -1,0 +1,178 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "First sample of each format from frozen independent corpus; exact same preloaded pixels for all readers.",
+  "Samples": [
+    {
+      "Id": "falsepositives/19.png",
+      "File": "falsepositives/19.png",
+      "Sha256": "342fdb2e223f3a41144aaa1029dc3ce7dc4d278a07e7e47dc885c874b1e57c77",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "aztec-1/Historico.png",
+      "File": "aztec-1/Historico.png",
+      "Sha256": "2db5c6fa97f0dd6d72f9e600c843abb77178d0452a5345d0647adcde9822b5c7",
+      "Format": "Aztec",
+      "Expected": [
+        "Histórico"
+      ]
+    },
+    {
+      "Id": "codabar-1/09.png",
+      "File": "codabar-1/09.png",
+      "Sha256": "5fd6c62f13c8278203a0ad1aea9d3f7acfa0d7be4f11d4b7861b1c89f9aef851",
+      "Format": "Codabar",
+      "Expected": [
+        "12345"
+      ]
+    },
+    {
+      "Id": "code128-1/2.png",
+      "File": "code128-1/2.png",
+      "Sha256": "75ffa82278a6e4411ca251c9b1a30cf33ea0faafe3b2cf815e92157af434006f",
+      "Format": "Code128",
+      "Expected": [
+        "Code 128"
+      ]
+    },
+    {
+      "Id": "code39-1/4.png",
+      "File": "code39-1/4.png",
+      "Sha256": "b7f7dd951b5f13d70c2d4472a3e5e162c0908b7889537e0ed36a1e06466a50c5",
+      "Format": "Code39",
+      "Expected": [
+        "ABC123"
+      ]
+    },
+    {
+      "Id": "code93-1/2.png",
+      "File": "code93-1/2.png",
+      "Sha256": "f1cc65906b0b0cb922c56e045584d5e0e0270817b67602c0b8ff2d2938bbc351",
+      "Format": "Code93",
+      "Expected": [
+        "CODE 93"
+      ]
+    },
+    {
+      "Id": "datamatrix-1/HelloWorld_Text_L_Kaywa_2_error_byte.png",
+      "File": "datamatrix-1/HelloWorld_Text_L_Kaywa_2_error_byte.png",
+      "Sha256": "4d8404b43eccdd5efa34b92a5ad2b5ef28516119b976d8e4dc288785d5678405",
+      "Format": "DataMatrix",
+      "Expected": [
+        "Hello World"
+      ]
+    },
+    {
+      "Id": "ean13-1/31.png",
+      "File": "ean13-1/31.png",
+      "Sha256": "ce6ab8c0e6cc722b6e660f5bb333ee39bd917081030f81386ed5145ed138bd2f",
+      "Format": "Ean",
+      "Expected": [
+        "9780393058673"
+      ]
+    },
+    {
+      "Id": "ean8-1/8.png",
+      "File": "ean8-1/8.png",
+      "Sha256": "a32b3a89c61ccd8d07f6b2dd28328d5d5e83db6b05b4fed20a3592aa98fa2f51",
+      "Format": "Ean8",
+      "Expected": [
+        "55123457"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/15.png",
+      "File": "rssexpanded-1/15.png",
+      "Sha256": "e49855bb21033198dbb7f4dc65470c22cda2090f762eb02df324d22781f0ba31",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)90012345678908(3102)001750(11)100312"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/64.png",
+      "File": "rssexpandedstacked-1/64.png",
+      "Sha256": "491b308289ace592e5187953bd0d7f3d45a3ffe9f9c090c35980ae77c2038f95",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(10)123"
+      ]
+    },
+    {
+      "Id": "rss14-1/4.png",
+      "File": "rss14-1/4.png",
+      "Sha256": "c1443144e3ea6c68f97c3eb003ad712a99e9a6f2b8bc07d06b88e5ea5e124bed",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "20012345678909"
+      ]
+    },
+    {
+      "Id": "itf-1/15.png",
+      "File": "itf-1/15.png",
+      "Sha256": "e1b618dfef3da35c1216f8b3e55e334c6e5182438ca6ca7cd388c855a32648bd",
+      "Format": "Itf",
+      "Expected": [
+        "0829220875"
+      ]
+    },
+    {
+      "Id": "maxicode-1/with-errors.png",
+      "File": "maxicode-1/with-errors.png",
+      "Sha256": "be292b7d992357b4fd93b02ccc0aa90e73cf16c1ac1556bcb68ea08928d2a2e4",
+      "Format": "MaxiCode",
+      "Expected": [
+        "\rABCDEFGHIJKLMNOPQRSTUVWXYZ\u001c\u001d\u001e \"#$%&'()*+,-./01234:56789"
+      ]
+    },
+    {
+      "Id": "pdf417-1/05.png",
+      "File": "pdf417-1/05.png",
+      "Sha256": "f88b2a2e07d692d68f409f7c1966b97f0ab59cb13e706e971ca1d94d330e8792",
+      "Format": "Pdf417",
+      "Expected": [
+        "-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-1/6.png",
+      "File": "qrcode-1/6.png",
+      "Sha256": "8e6d85ff2f01fc79cdd53eae7099504fbf0c8e208c2868868ecddf68ae2f7a9d",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "upca-1/9.png",
+      "File": "upca-1/9.png",
+      "Sha256": "83bef066741199c7437a5e22396f713651b62fc10adada68d5a260fafebcfe8c",
+      "Format": "UpcA",
+      "Expected": [
+        "071831007995"
+      ]
+    },
+    {
+      "Id": "upce-1/1.png",
+      "File": "upce-1/1.png",
+      "Sha256": "5614ac7795e7d596dc8ccc5e7629b569c27f39a2e364530b67cbc837bcb8f88a",
+      "Format": "UpcE",
+      "Expected": [
+        "01234565"
+      ]
+    },
+    {
+      "Id": "multi-qrcode-1/1.png",
+      "File": "multi-qrcode-1/1.png",
+      "Sha256": "22aa7015f341ee8ecb8219e7790df7cb21814daf05c56e86953f24f09c87ea56",
+      "Format": "QrCode",
+      "Expected": [
+        "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+        "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+        "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+        "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+      ]
+    }
+  ]
+}

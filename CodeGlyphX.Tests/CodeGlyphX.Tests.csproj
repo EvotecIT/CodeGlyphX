@@ -82,6 +82,7 @@
     <EmbeddedResource Include="Fixtures/Linear/excel-asset-register.png" />
     <EmbeddedResource Include="Fixtures/Linear/native-svg-asset.png" />
     <EmbeddedResource Include="Fixtures/Linear/word-asset-page.png" />
+    <EmbeddedResource Include="Fixtures/Linear/zxing-*.png" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.webp" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.rgba" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.webp" />

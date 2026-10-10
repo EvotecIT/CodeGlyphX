@@ -34,7 +34,7 @@ internal readonly struct BarcodeScanlineCandidate {
     }
 }
 
-internal static class BarcodeScanline {
+internal static partial class BarcodeScanline {
     public static bool TryGetModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, out bool[] modules) {
         return TryGetModules(pixels, width, height, stride, format, CancellationToken.None, out modules);
     }
@@ -445,6 +445,7 @@ internal static class BarcodeScanline {
                 if (alternative.Length == 0) minimumRunFitError = Math.Min(minimumRunFitError, fitError);
                 AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(minimumRunModules, position, isVertical, alternative, minimumRunFitError, fitError));
             }
+            TryCollectRetailRunCandidates(luminance, thresholds[i], cancellationToken, candidates, position, isVertical);
         }
     }
     private static void AddUniqueLocatedCandidate(List<BarcodeScanlineCandidate> candidates, BarcodeScanlineCandidate candidate) {

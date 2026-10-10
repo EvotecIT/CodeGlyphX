@@ -1,17 +1,5 @@
-using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
-using CodeGlyphX.Rendering;
-#if COMPARE_ZXING
-using ZXing;
-using ZXing.QrCode;
-#endif
-#if COMPARE_QRCODER
-using QRCoder;
-#endif
-#if COMPARE_BARCODER
-using Barcoder.Qr;
-#endif
 
 namespace CodeGlyphX.Benchmarks;
 
@@ -22,80 +10,37 @@ namespace CodeGlyphX.Benchmarks;
 #endif
 [MemoryDiagnoser]
 [RankColumn]
-public class QrCompareBenchmarks
-{
-    private const string MediumText = "https://github.com/EvotecIT/CodeGlyphX";
-    private readonly QrRenderOptions _options = new();
-    private int _targetSizePx;
-
-#if COMPARE_ZXING
-    private BarcodeWriterGeneric _zxingWriter = null!;
-#endif
-
-#if COMPARE_BARCODER
-    private ManagedBarcodeRenderer _barcoderRenderer = null!;
-#endif
+public class QrCompareBenchmarks {
+    private readonly FairQrGeneration _generator = new("https://github.com/EvotecIT/CodeGlyphX", 4);
 
     [GlobalSetup]
-    public void Setup()
-    {
-        var qr = QR.Encode(MediumText);
-        _targetSizePx = (qr.Size + _options.QuietZone * 2) * _options.ModuleSize;
-
+    public void Setup() {
+        foreach (var engine in Engines()) _generator.Validate(_generator.Generate(engine, "Png"), "Png");
+    }
+    private static IEnumerable<string> Engines() {
+        yield return "CodeGlyphX";
 #if COMPARE_ZXING
-        var zxingOptions = new QrCodeEncodingOptions
-        {
-            Width = _targetSizePx,
-            Height = _targetSizePx,
-            Margin = _options.QuietZone,
-            ErrorCorrection = ZXing.QrCode.Internal.ErrorCorrectionLevel.M,
-            CharacterSet = "UTF-8"
-        };
-        _zxingWriter = new BarcodeWriterGeneric
-        {
-            Format = BarcodeFormat.QR_CODE,
-            Options = zxingOptions
-        };
+        yield return "ZXing.Net";
 #endif
-
-#if COMPARE_BARCODER
-        _targetSizePx = (qr.Size + _options.QuietZone * 2) * _options.ModuleSize;
-        _barcoderRenderer = CompareBenchmarkHelpers.CreateBarcoderMatrixRenderer(new MatrixOptions
-        {
-            ModuleSize = _options.ModuleSize,
-            QuietZone = _options.QuietZone
-        });
-#endif
-    }
-
-    [Benchmark(Baseline = true, Description = "CodeGlyphX QR PNG (medium)")]
-    public byte[] CodeGlyphX_QrPng()
-    {
-        return QR.Render(MediumText, OutputFormat.Png, _options).ToArray();
-    }
-
-#if COMPARE_ZXING
-    [Benchmark(Description = "ZXing.Net QR PNG (medium)")]
-    public byte[] ZXing_QrPng()
-    {
-        return CompareBenchmarkHelpers.EncodeZxingPng(_zxingWriter, MediumText);
-    }
-#endif
-
 #if COMPARE_QRCODER
-    [Benchmark(Description = "QRCoder QR PNG (medium)")]
-    public byte[] QrCoder_QrPng()
-    {
-        return PngByteQRCodeHelper.GetQRCode(MediumText, QRCodeGenerator.ECCLevel.M, _options.ModuleSize, true);
-    }
+        yield return "QRCoder";
 #endif
-
-#if COMPARE_BARCODER
-    [Benchmark(Description = "Barcoder QR PNG (medium)")]
-    public byte[] Barcoder_QrPng()
-    {
-        var barcode = QrEncoder.Encode(MediumText, Barcoder.Qr.ErrorCorrectionLevel.M, Barcoder.Qr.Encoding.Auto);
-        return _barcoderRenderer.Render(barcode);
+#if COMPARE_ZXINGCPP
+        yield return "ZXing-C++";
+#endif
     }
+    [Benchmark(Baseline = true, Description = "CodeGlyphX QR PNG (fixed V4/M)")]
+    public byte[] CodeGlyphX_QrPng() => _generator.GeneratePng("CodeGlyphX");
+#if COMPARE_ZXING
+    [Benchmark(Description = "ZXing.Net QR PNG (fixed V4/M)")]
+    public byte[] ZXing_QrPng() => _generator.GeneratePng("ZXing.Net");
+#endif
+#if COMPARE_QRCODER
+    [Benchmark(Description = "QRCoder QR PNG (fixed V4/M)")]
+    public byte[] QrCoder_QrPng() => _generator.GeneratePng("QRCoder");
+#endif
+#if COMPARE_ZXINGCPP
+    [Benchmark(Description = "ZXing-C++ QR PNG (fixed V4/M)")]
+    public byte[] ZXingCpp_QrPng() => _generator.GeneratePng("ZXing-C++");
 #endif
 }

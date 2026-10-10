@@ -500,12 +500,13 @@ def build_section(
     lines.append("- Quick and Full runs include the same scenario list; only the iteration settings differ.")
     lines.append("- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.")
     lines.append("Notes:")
+    lines.append("- Historical reports are not a current competitive ranking. Older QR-pack runs compared single-result and multiple-result APIs. Use Docs/fair-comparisons.md for the qualified independent corpus and matched generation workload.")
     lines.append(f"- {run_mode_details}")
     lines.append("- Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.")
     lines.append("- Comparisons target PNG output and include encode+render (not encode-only).")
     lines.append("- Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.")
-    lines.append("- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).")
-    lines.append("- Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).")
+    lines.append("- ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.")
+    lines.append("- Barcoder uses the managed comparison renderer.")
     lines.append("- QRCoder uses PngByteQRCode (managed PNG output, no external renderer).")
     lines.append("- QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).")
     lines.append("- QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).")
@@ -850,11 +851,12 @@ def write_json(
     pack_runner = load_pack_runner_payload(artifacts_path, run_mode)
 
     notes = [
+        "Historical reports are not a current competitive ranking. Older QR-pack runs compared single-result and multiple-result APIs. See Docs/fair-comparisons.md.",
         run_mode_details,
         "Comparisons target PNG output and include encode+render (not encode-only).",
         "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+        "ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.",
+        "Barcoder uses the managed comparison renderer.",
         "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
         "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
         "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).",

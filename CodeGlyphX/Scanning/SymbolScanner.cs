@@ -321,7 +321,7 @@ public static partial class SymbolScanner {
         HashSet<string>? seen,
         BarcodeType expectedType,
         BarcodeDecodeOptions? barcodeOptions) {
-        if (expectedType == BarcodeType.Pharmacode) {
+        if (expectedType == BarcodeType.Pharmacode || expectedType == BarcodeType.ITF) {
             ScanLocatedLinear(rgba, width, height, searchRegion, options, deadline, requested, expectedTypes,
                 expectedType, barcodeOptions, results, seen);
             return;
@@ -364,7 +364,7 @@ public static partial class SymbolScanner {
         // that behavior after classifying each located DataBar candidate independently.
         var decodedSeen = options.Deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
         for (var i = 0; i < decoded.Length; i++) {
-            if (IsBoundaryClippedPharmacode(decoded[i], rgba, width, height, deadline.Token)) continue;
+            if (IsBoundaryClippedUncheckedBarcode(decoded[i], rgba, width, height, deadline.Token)) continue;
             var hit = ResolveRequestedLinearIdentity(decoded[i].Decoded, expectedTypes, rgba, width, height, decoded[i], deadline.Token);
             if (hit is null) continue;
             var key = hit.Type + "\u001f" + hit.Text;
@@ -375,15 +375,15 @@ public static partial class SymbolScanner {
         }
     }
 
-    private static bool IsBoundaryClippedPharmacode(BarcodeImageCandidate candidate, byte[] rgba,
+    private static bool IsBoundaryClippedUncheckedBarcode(BarcodeImageCandidate candidate, byte[] rgba,
         int width, int height, CancellationToken cancellationToken) {
-        if (candidate.Decoded.Type != BarcodeType.Pharmacode) return false;
+        if (candidate.Decoded.Type != BarcodeType.Pharmacode && candidate.Decoded.Type != BarcodeType.ITF) return false;
         var region = candidate.SearchRegion;
-        if (region.X == 0 && region.Y == 0 && region.Width == width && region.Height == height) return false;
+        if (candidate.Decoded.Type == BarcodeType.Pharmacode && region.X == 0 && region.Y == 0 && region.Width == width && region.Height == height) return false;
 
-        // Pharmacode has no checksum or start/stop pattern. A tile boundary through a bar can
-        // turn part of a different barcode into a valid number. Require background at both ends
-        // of this actual sampled scanline, wider than Pharmacode's single-module internal spaces.
+        // Pharmacode and ordinary ITF have no mandatory checksum. A tile boundary through
+        // a bar can turn a fragment into another valid number, even with ITF's short guards.
+        // Require background at both ends of the actual sampled scanline.
         var vertical = candidate.Scanline.IsVertical;
         var position = vertical ? region.X + candidate.Scanline.Position : region.Y + candidate.Scanline.Position;
         var start = vertical ? region.Y : region.X;
@@ -408,7 +408,8 @@ public static partial class SymbolScanner {
         while (first < end && Luminance(first) >= threshold) first++;
         var last = end - 1;
         while (last > first && Luminance(last) >= threshold) last--;
-        var quietPixels = Math.Max(2, 2 * (last - first + 1) / candidate.Scanline.Modules.Length);
+        var quietModules = candidate.Decoded.Type == BarcodeType.ITF ? 10 : 2;
+        var quietPixels = Math.Max(2, quietModules * (last - first + 1) / candidate.Scanline.Modules.Length);
         return first - start < quietPixels || end - last - 1 < quietPixels;
     }
 

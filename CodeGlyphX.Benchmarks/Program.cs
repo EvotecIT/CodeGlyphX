@@ -8,6 +8,9 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        if (args.Length > 0 && args[0] == "--corpus") {
+            Environment.Exit(CorpusRunner.Run(args));
+        }
         var preflight = args.Any(arg => string.Equals(arg, "--preflight", StringComparison.OrdinalIgnoreCase));
         var filteredArgs = args.Where(arg => !string.Equals(arg, "--preflight", StringComparison.OrdinalIgnoreCase)).ToArray();
 

@@ -531,7 +531,8 @@ public static partial class DataMatrixDecoder {
             }
 
             if (index + 1 >= data.Length) {
-                index = data.Length;
+                // ECC200 implicitly returns to ASCII when one data codeword remains.
+                // Leave that byte for the ASCII decoder instead of dropping the last character.
                 return DataMatrixEncodation.Ascii;
             }
 

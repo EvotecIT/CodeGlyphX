@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
@@ -7,6 +8,39 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class BarcodeGrayBoundaryTests {
+    [Theory]
+    [InlineData("zxing-code128-photo.png", SymbolFormat.Code128, "005-3379497200006")]
+    [InlineData("zxing-code39-photo.png", SymbolFormat.Code39, " WWW.CITRONSOFT.COM ")]
+    [InlineData("zxing-upca-photo.png", SymbolFormat.UpcA, "071831007995")]
+    public void IndependentPhotographs_PreserveCompletePayload(string name, SymbolFormat format, string expected) {
+        using var fixture = typeof(BarcodeGrayBoundaryTests).Assembly.GetManifestResourceStream("CodeGlyphX.Tests.Fixtures.Linear." + name);
+        Assert.NotNull(fixture);
+        using var buffer = new MemoryStream(); fixture!.CopyTo(buffer);
+        var options = ScanOptions.Robust(TestBudget.Adjust(5000));
+        options.Formats = new[] { format }; options.MaxSymbols = 1;
+        Assert.Equal(expected, Assert.Single(SymbolScanner.Scan(buffer.ToArray(), options).Symbols).Text);
+    }
+
+    [Fact]
+    public void ItfPhotograph_DoesNotAdmitShortPayloadFromClippedTile() {
+        using var fixture = typeof(BarcodeGrayBoundaryTests).Assembly.GetManifestResourceStream("CodeGlyphX.Tests.Fixtures.Linear.zxing-itf-clipped.png");
+        Assert.NotNull(fixture);
+        using var buffer = new MemoryStream(); fixture!.CopyTo(buffer);
+        var options = ScanOptions.Robust(TestBudget.Adjust(5000));
+        options.Formats = new[] { SymbolFormat.Itf }; options.MaxSymbols = 32;
+        var result = SymbolScanner.Scan(buffer.ToArray(), options);
+        Assert.All(result.Symbols, symbol => Assert.Equal("00012345678905", symbol.Text));
+    }
+
+    [Fact]
+    public void InvalidEan13Parity_IsRejectedWithoutThrowing() {
+        // Valid digit and guard patterns do not imply a valid first-digit parity.
+        var bits = "101";
+        foreach (var parity in "010010") bits += parity == '0' ? "0001101" : "0100111";
+        bits += "01010" + string.Concat(Enumerable.Repeat("1110010", 6)) + "101";
+        Assert.False(BarcodeDecoder.TryDecode(bits.Select(bit => bit == '1').ToArray(), BarcodeType.EAN, out _));
+    }
+
     [Fact]
     public void Scan_SavedSpreadsheet_PreservesCode128AcrossImageAndRegionInputs() {
         // A saved spreadsheet raster at scale 1.5 retains opposite barcode edges

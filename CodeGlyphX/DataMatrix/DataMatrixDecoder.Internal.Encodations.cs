@@ -75,7 +75,7 @@ public static partial class DataMatrixDecoder {
             }
 
             if (index + 1 >= data.Length) {
-                index = data.Length;
+                // X12 uses the same implicit single-codeword ASCII tail as C40/Text.
                 return DataMatrixEncodation.Ascii;
             }
 

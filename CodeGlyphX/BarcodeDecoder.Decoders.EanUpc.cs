@@ -26,7 +26,7 @@ public static partial class BarcodeDecoder {
         if (!TryDecodeEanLeftDigits(normalized, out var leftDigits, out var parity)) return false;
         if (!TryDecodeEanRightDigits(normalized, out var rightDigits)) return false;
 
-        var firstDigit = EanParityMap.Value[ParityKey(parity)];
+        if (!EanParityMap.Value.TryGetValue(ParityKey(parity), out var firstDigit)) return false;
         var raw = firstDigit + new string(leftDigits) + new string(rightDigits);
         if (!IsValidEanChecksum(raw)) return false;
         SetTextWithAddOn(raw, source, 95, GuardStart, out text);

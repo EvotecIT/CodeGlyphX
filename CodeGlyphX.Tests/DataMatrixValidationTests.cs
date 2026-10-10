@@ -8,6 +8,27 @@ namespace CodeGlyphX.Tests;
 
 [Collection("ImageScannerSerial")]
 public sealed class DataMatrixValidationTests {
+    [Theory]
+    [InlineData(230, "ABCABCABCD")]
+    [InlineData(239, "abcabcabcD")]
+    [InlineData(238, "ABCABCABCD")]
+    public void PackedMode_ImplicitlyUnlatchesToFinalAsciiCodeword(byte latch, string expected) {
+        // Three packed ABC/abc triplets fill six codewords. The eighth data
+        // codeword is ASCII D, without an explicit 254 unlatch (ISO ECC200).
+        var data = new byte[] { latch, 89, 233, 89, 233, 89, 233, 69 };
+        var ecc = DataMatrixReedSolomon.ComputeRemainder(data, DataMatrixReedSolomon.ComputeDivisor(10));
+        var codewords = new byte[18];
+        Array.Copy(data, codewords, 8); Array.Copy(ecc, 0, codewords, 8, 10);
+        var region = DataMatrixPlacement.PlaceCodewords(codewords, 12, 12);
+        var matrix = new BitMatrix(14, 14);
+        for (var y = 0; y < 14; y++) { matrix[0, y] = true; matrix[13, y] = (y & 1) != 0; }
+        for (var x = 0; x < 14; x++) { matrix[x, 0] = (x & 1) == 0; matrix[x, 13] = true; }
+        for (var y = 0; y < 12; y++) for (var x = 0; x < 12; x++) matrix[x + 1, y + 1] = region[x, y];
+        Assert.True(DataMatrixDecoder.TryDecode(matrix, out var text));
+        Assert.Equal(expected, text);
+        AssertPixelPayload(matrix, 4, expected);
+    }
+
     [Fact]
     public void EmptyGrid_IsNotADataMatrixEvenWhenZeroCodewordsPassEcc() {
         AssertRejected(new BitMatrix(24, 24));

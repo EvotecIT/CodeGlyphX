@@ -5,6 +5,7 @@
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +22,9 @@
 
     <CompareZXing Condition="'$(CompareZXing)' == '' and '$(COMPARE_ZXING)' != ''">$(COMPARE_ZXING)</CompareZXing>
     <CompareZXing Condition="'$(CompareZXing)' == ''">$(CompareExternal)</CompareZXing>
+
+    <CompareZXingCpp Condition="'$(CompareZXingCpp)' == '' and '$(COMPARE_ZXINGCPP)' != ''">$(COMPARE_ZXINGCPP)</CompareZXingCpp>
+    <CompareZXingCpp Condition="'$(CompareZXingCpp)' == ''">$(CompareExternal)</CompareZXingCpp>
 
     <CompareQRCoder Condition="'$(CompareQRCoder)' == '' and '$(COMPARE_QRCODER)' != ''">$(COMPARE_QRCODER)</CompareQRCoder>
     <CompareQRCoder Condition="'$(CompareQRCoder)' == ''">$(CompareExternal)</CompareQRCoder>
@@ -46,6 +50,10 @@
     <DefineConstants>$(DefineConstants);COMPARE_QRCODER</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(CompareZXingCpp)' == 'true'">
+    <DefineConstants>$(DefineConstants);COMPARE_ZXINGCPP</DefineConstants>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(CompareBarcoder)' == 'true'">
     <DefineConstants>$(DefineConstants);COMPARE_BARCODER</DefineConstants>
   </PropertyGroup>
@@ -55,7 +63,12 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(CompareQRCoder)' == 'true'">
-    <PackageReference Include="QRCoder" Version="1.7.0" />
+    <PackageReference Include="QRCoder" Version="1.8.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(CompareZXingCpp)' == 'true'">
+    <!-- Official binding for ZXing-C++ 3.1.1; comparison-only native assets. -->
+    <PackageReference Include="ZXingCpp" Version="0.5.3" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(CompareBarcoder)' == 'true'">
