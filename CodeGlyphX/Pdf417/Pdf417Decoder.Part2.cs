@@ -364,7 +364,7 @@ public static partial class Pdf417Decoder {
     }
 
     private static bool TryGetDimensions(int width, out int cols, out bool compact) {
-        if (width >= 69 && (width - 69) % 17 == 0) {
+        if (width >= 86 && (width - 69) % 17 == 0) {
             cols = (width - 69) / 17;
             compact = false;
             return cols > 0;

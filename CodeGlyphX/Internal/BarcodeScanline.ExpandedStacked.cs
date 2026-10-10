@@ -76,52 +76,64 @@ internal static partial class BarcodeScanline {
         runs.Add(count); runs.Add(0);
         var offsets = new int[runs.Count + 1];
         for (var i = 0; i < runs.Count; i++) offsets[i + 1] = offsets[i] + runs[i];
-        for (var patternIndex = 0; patternIndex < observations.Length; patternIndex++) {
+        var starts = new List<int>();
+        foreach (var group in ExpandedStackedPatterns.FinderGroups) {
             if (DecodeBudget.ShouldAbort(token)) return;
-            var pattern = ExpandedStackedPatterns.Patterns[patternIndex];
-            for (var start = 0; start + pattern.Widths.Length <= runs.Count; start++) {
+            starts.Clear();
+            for (var start = 0; start + group.MinimumWidth <= runs.Count; start++) {
                 if ((start & 63) == 0 && DecodeBudget.ShouldAbort(token)) return;
-                if (!ExpandedFinderMatches(runs, start + 10, pattern.FirstFinder)) continue;
-                var firstIsBar = !first == ((start & 1) == 0);
-                var inverted = firstIsBar != pattern.FirstIsBar;
-                var widths = new List<int>(pattern.Widths.Length) { pattern.Widths[0], 1 };
-                var fit = 0.0;
-                var at = 2;
-                while (at < pattern.Widths.Length - 2) {
-                    if (pattern.Widths[at] == 0) {
-                        if (!NormalizeExpandedCharacter(runs, start + at, widths, ref fit)) break;
-                        at += 8;
-                    } else {
-                        var finder = new int[5];
-                        Array.Copy(pattern.Widths, at, finder, 0, 5);
-                        if (!ExpandedFinderMatches(runs, start + at, finder)) break;
-                        widths.AddRange(finder); at += 5;
+                if (ExpandedFinderMatches(runs, start + 10, group.Finder)) starts.Add(start);
+            }
+            // Each pattern still observes starts in their original order. Shared
+            // finder shapes are fitted once before the character/guard checks.
+            foreach (var patternIndex in group.PatternIndices) {
+                if (DecodeBudget.ShouldAbort(token)) return;
+                var pattern = ExpandedStackedPatterns.Patterns[patternIndex];
+                for (var startIndex = 0; startIndex < starts.Count; startIndex++) {
+                    if ((startIndex & 63) == 0 && DecodeBudget.ShouldAbort(token)) return;
+                    var start = starts[startIndex];
+                    if (start + pattern.Widths.Length > runs.Count) break;
+                    var firstIsBar = !first == ((start & 1) == 0);
+                    var inverted = firstIsBar != pattern.FirstIsBar;
+                    var widths = new List<int>(pattern.Widths.Length) { pattern.Widths[0], 1 };
+                    var fit = 0.0;
+                    var at = 2;
+                    while (at < pattern.Widths.Length - 2) {
+                        if (pattern.Widths[at] == 0) {
+                            if (!NormalizeExpandedCharacter(runs, start + at, widths, ref fit)) break;
+                            at += 8;
+                        } else {
+                            var finder = new int[5];
+                            Array.Copy(pattern.Widths, at, finder, 0, 5);
+                            if (!ExpandedFinderMatches(runs, start + at, finder)) break;
+                            widths.AddRange(finder); at += 5;
+                        }
                     }
+                    if (at != pattern.Widths.Length - 2) continue;
+                    var pitch = 0.0;
+                    for (var i = 0; i < 5; i++) pitch += runs[start + 10 + i];
+                    pitch /= 15;
+                    var firstDark = pattern.FirstIsBar ? 0 : 1;
+                    // Polarity changes colors, not which physical guard must have
+                    // a measurable transition against the surrounding quiet space.
+                    if (Math.Abs(runs[start + firstDark] / pitch - pattern.Widths[firstDark]) > 0.85) continue;
+                    var lastDark = pattern.FirstIsBar == ((pattern.Widths.Length & 1) != 0) ? at + 1 : at;
+                    if (Math.Abs(runs[start + lastDark] / pitch - 1) > 0.85) continue;
+                    widths.Add(1); widths.Add(1);
+                    var rowStart = offsets[start + 2] - (int)Math.Round((pattern.Widths[0] + 1) * pitch);
+                    var rowEnd = offsets[start + at] + (int)Math.Round(2 * pitch);
+                    var list = observations[patternIndex] ??= new List<ExpandedRowObservation>();
+                    var match = false;
+                    foreach (var existing in list) {
+                        if (existing.Inverted != inverted || Math.Abs(existing.Start - rowStart) > pitch * 2 ||
+                            Math.Abs(existing.End - rowEnd) > pitch * 2 || position > existing.LastPosition + step * 2 ||
+                            !ExpandedWidthsEqual(existing.Widths, widths)) continue;
+                        existing.LastPosition = position; match = true; break;
+                    }
+                    // The bounded observation set avoids unbounded noisy-image work.
+                    if (!match && list.Count < 64)
+                        list.Add(new ExpandedRowObservation(widths.ToArray(), rowStart, rowEnd, inverted, position));
                 }
-                if (at != pattern.Widths.Length - 2) continue;
-                var pitch = 0.0;
-                for (var i = 0; i < 5; i++) pitch += runs[start + 10 + i];
-                pitch /= 15;
-                var firstDark = pattern.FirstIsBar ? 0 : 1;
-                // Polarity changes colors, not which physical guard must have
-                // a measurable transition against the surrounding quiet space.
-                if (Math.Abs(runs[start + firstDark] / pitch - pattern.Widths[firstDark]) > 0.85) continue;
-                var lastDark = pattern.FirstIsBar == ((pattern.Widths.Length & 1) != 0) ? at + 1 : at;
-                if (Math.Abs(runs[start + lastDark] / pitch - 1) > 0.85) continue;
-                widths.Add(1); widths.Add(1);
-                var rowStart = offsets[start + 2] - (int)Math.Round((pattern.Widths[0] + 1) * pitch);
-                var rowEnd = offsets[start + at] + (int)Math.Round(2 * pitch);
-                var list = observations[patternIndex] ??= new List<ExpandedRowObservation>();
-                var match = false;
-                foreach (var existing in list) {
-                    if (existing.Inverted != inverted || Math.Abs(existing.Start - rowStart) > pitch * 2 ||
-                        Math.Abs(existing.End - rowEnd) > pitch * 2 || position > existing.LastPosition + step * 2 ||
-                        !ExpandedWidthsEqual(existing.Widths, widths)) continue;
-                    existing.LastPosition = position; match = true; break;
-                }
-                // The bounded observation set avoids unbounded noisy-image work.
-                if (!match && list.Count < 64)
-                    list.Add(new ExpandedRowObservation(widths.ToArray(), rowStart, rowEnd, inverted, position));
             }
         }
     }

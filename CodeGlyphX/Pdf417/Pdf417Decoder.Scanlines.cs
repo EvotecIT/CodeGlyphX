@@ -11,7 +11,6 @@ using PixelSpan = byte[];
 namespace CodeGlyphX.Pdf417;
 
 public static partial class Pdf417Decoder {
-    private static readonly int[][][] PixelCodewordRuns = BuildPixelCodewordRuns();
     private static readonly int[] PixelStartRuns = { 8, 1, 1, 1, 1, 1, 1, 3 };
     private static readonly int[] PixelStopRuns = { 7, 1, 1, 3, 1, 1, 1, 2, 1 };
     private static readonly double[] PixelRowSlopes = { 0.0, -0.05, 0.05, -0.1, 0.1, -0.15, 0.15, -0.2, 0.2, -0.25, 0.25, -0.3, 0.3 };
@@ -32,14 +31,15 @@ public static partial class Pdf417Decoder {
                 darkPixels[y * width + x] = IsDarkAt(pixels, y * stride, x, format, threshold);
             }
         }
-        if (TryReadPixelRows(darkPixels, width, height, cancellationToken, false, out decoded, out hasStartPattern)) return true;
+        var runCache = new PixelRunCache(darkPixels, width, height);
+        if (TryReadPixelRows(width, height, runCache, cancellationToken, false, out decoded, out hasStartPattern)) return true;
         // Preserve the ordinary reader's decisions. A print-gain retry requires
         // repeated, consistent row indicators and shares the caller's deadline.
         if (!hasStartPattern || DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        return TryReadPixelRows(darkPixels, width, height, cancellationToken, true, out decoded, out _);
+        return TryReadPixelRows(width, height, runCache, cancellationToken, true, out decoded, out _);
     }
 
-    private static bool TryReadPixelRows(bool[] darkPixels, int width, int height, CancellationToken cancellationToken,
+    private static bool TryReadPixelRows(int width, int height, PixelRunCache runCache, CancellationToken cancellationToken,
         bool correctPrintGain, out Pdf417Decoded decoded, out bool hasStartPattern) {
         decoded = null!;
         hasStartPattern = false;
@@ -57,9 +57,11 @@ public static partial class Pdf417Decoder {
                         var runs = new List<int>();
                         for (var y = 0; y < down; y++) {
                             if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                            if (!TryReadPixelRuns(darkPixels, width, height, axis, reverse != 0,
-                                invert != 0, y, slope, runs, cancellationToken, out var first)) return false;
-                            for (var start = first ? 0 : 1; start + 41 <= runs.Count; start += 2) {
+                            if (!runCache.TryRead(axis, reverse != 0, invert != 0, y, slope,
+                                runs, cancellationToken, out var first)) return false;
+                            // Compact framing needs only start, left indicator,
+                            // one data character and its final bar: 25 runs.
+                            for (var start = first ? 0 : 1; start + 25 <= runs.Count; start += 2) {
                                 if (!MatchPixelRuns(runs, start, PixelStartRuns, 17)) continue;
                                 var cluster = -1;
                                 var left = 0;
@@ -182,47 +184,6 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool ReadPixelCodeword(List<int> runs, int start, int cluster, out int word, bool approximate = true, bool correctPrintGain = false) {
-        word = 0;
-        if (start + 8 > runs.Count) return false;
-        var total = 0;
-        for (var i = 0; i < 8; i++) total += runs[start + i];
-        var pitch = total / 17.0;
-        Span<double> normalized = stackalloc double[8];
-        for (var i = 0; i < 8; i++) normalized[i] = runs[start + i] / pitch;
-        var bits = 0;
-        var modules = 0;
-        for (var i = 0; i < 8; i++) {
-            var count = (int)Math.Round(normalized[i]);
-            if (count < 1 || count > 6) { modules = -100; break; }
-            modules += count;
-            for (var j = 0; j < count; j++) bits = (bits << 1) | ((i & 1) == 0 ? 1 : 0);
-        }
-        if (modules == 17 && PatternToCodeword[cluster].TryGetValue(bits, out word)) return true;
-        if (!approximate) return false;
-        // Pixel rounding can move a run across its half-module boundary. Select
-        // only a close legal character, then retain row metadata and RS validation.
-        var bestError = 1.5;
-        var found = false;
-        for (var candidate = 0; candidate < PixelCodewordRuns[cluster].Length; candidate++) {
-            // Blur and print gain expand every dark run while shrinking its
-            // neighboring space. Fit that common bias without changing pitch.
-            var bias = 0.0;
-            if (correctPrintGain) for (var i = 0; i < 8; i++)
-                bias += (normalized[i] - PixelCodewordRuns[cluster][candidate][i]) * ((i & 1) == 0 ? 1 : -1);
-            bias = Math.Max(-0.65, Math.Min(0.65, bias / 8));
-            var error = 0.0;
-            for (var i = 0; i < 8; i++) {
-                var residual = normalized[i] - PixelCodewordRuns[cluster][candidate][i] - bias * ((i & 1) == 0 ? 1 : -1);
-                if (Math.Abs(residual) > 0.85) { error = bestError; break; }
-                error += residual * residual;
-            }
-            if (error >= bestError) continue;
-            word = candidate; bestError = error; found = true;
-        }
-        return found;
-    }
-
     private static bool TryReadPixelRuns(bool[] pixels, int width, int height, int axis, bool reverse,
         bool invert, int y, double slope, List<int> runs, CancellationToken cancellationToken, out bool first) {
         runs.Clear();
@@ -258,25 +219,6 @@ public static partial class Pdf417Decoder {
         }
         runs.Add(length);
         return true;
-    }
-
-    private static int[][][] BuildPixelCodewordRuns() {
-        var result = new int[3][][];
-        for (var cluster = 0; cluster < 3; cluster++) {
-            result[cluster] = new int[929][];
-            for (var word = 0; word < 929; word++) {
-                var runs = new int[8];
-                var index = 0;
-                var previous = true;
-                for (var bit = 16; bit >= 0; bit--) {
-                    var dark = (Pdf417CodewordTable.Table[cluster][word] & (1 << bit)) != 0;
-                    if (dark != previous) { index++; previous = dark; }
-                    runs[index]++;
-                }
-                result[cluster][word] = runs;
-            }
-        }
-        return result;
     }
 
     private static bool MatchPixelRuns(List<int> runs, int start, int[] pattern, int modules) {

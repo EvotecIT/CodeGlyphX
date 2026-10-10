@@ -23,9 +23,17 @@ internal static partial class BarcodeScanline {
         internal ExpandedLayout(int columns, int[] rows) { Columns = columns; Rows = rows; }
     }
 
+    private sealed class ExpandedFinderGroup {
+        internal readonly int[] Finder;
+        internal readonly List<int> PatternIndices = new();
+        internal int MinimumWidth = int.MaxValue;
+        internal ExpandedFinderGroup(int[] finder) { Finder = finder; }
+    }
+
     private sealed class ExpandedPatternCatalog {
         internal readonly List<ExpandedRowPattern> Patterns = new();
         internal readonly List<ExpandedLayout> Layouts = new();
+        internal readonly List<ExpandedFinderGroup> FinderGroups = new();
 
         internal ExpandedPatternCatalog() {
             var known = new Dictionary<string, int>(StringComparer.Ordinal);
@@ -56,6 +64,18 @@ internal static partial class BarcodeScanline {
                     }
                     Layouts.Add(new ExpandedLayout(columns, rows));
                 }
+            }
+            var finders = new Dictionary<string, ExpandedFinderGroup>(StringComparer.Ordinal);
+            for (var index = 0; index < Patterns.Count; index++) {
+                var pattern = Patterns[index];
+                var key = string.Join(",", pattern.FirstFinder);
+                if (!finders.TryGetValue(key, out var group)) {
+                    group = new ExpandedFinderGroup(pattern.FirstFinder);
+                    finders.Add(key, group);
+                    FinderGroups.Add(group);
+                }
+                group.PatternIndices.Add(index);
+                group.MinimumWidth = Math.Min(group.MinimumWidth, pattern.Widths.Length);
             }
         }
     }
