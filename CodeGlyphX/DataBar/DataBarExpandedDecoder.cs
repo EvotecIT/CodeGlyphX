@@ -7,7 +7,7 @@ namespace CodeGlyphX.DataBar;
 /// <summary>
 /// Decodes GS1 DataBar Expanded symbols (linear and stacked).
 /// </summary>
-public static class DataBarExpandedDecoder {
+public static partial class DataBarExpandedDecoder {
     private const char GroupSeparator = Gs1.GroupSeparator;
 
     /// <summary>
@@ -53,9 +53,7 @@ public static class DataBarExpandedDecoder {
         if ((modules.Height - 1) % 4 != 0) return false;
 
         if (!TryExtractStackedRows(modules, out var rowRuns, out var maxBlocks)) return false;
-        if (!TryBuildStackedElements(rowRuns, maxBlocks, out var elements)) return false;
-        if (!TryTrimElements(elements, out var trimmed)) return false;
-        return TryDecodeFromWidths(trimmed, out content);
+        return TryDecodeExpandedStackedRows(rowRuns, maxBlocks, out content);
     }
 
     private static bool TryDecodeFromWidths(int[] widths, out string content) {

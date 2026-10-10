@@ -54,6 +54,7 @@
     <Compile Include="ScannerDuplicateContractTests.cs" />
     <Compile Include="DataMatrixValidationTests.cs" />
     <Compile Include="DataMatrixPerspectiveTests.cs" />
+    <Compile Include="DataBarExpandedImageScannerTests.cs" />
     <Compile Include="AztecReaderInitializationTests.cs" />
     <Compile Include="BitMatrixTransformTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />

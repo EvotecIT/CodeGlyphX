@@ -107,6 +107,7 @@ public static partial class SymbolScanner {
         if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanPdf417(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanLinear(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        if (!ShouldStop(options, deadline, results)) ScanExpandedStacked(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results) && options.EnableTileScan) {
             ScanMatrixTiles(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
         }
