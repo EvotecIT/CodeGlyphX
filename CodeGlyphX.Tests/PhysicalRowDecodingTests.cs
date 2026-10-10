@@ -8,6 +8,33 @@ namespace CodeGlyphX.Tests;
 
 public sealed class PhysicalRowDecodingTests {
     [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Pdf417Image_LastReadableCharacterCanEndAtTheImageEdge(bool inverted) {
+        const string text = "CLIPPED-PDF417-1042";
+        var symbol = Pdf417Encoder.Encode(text, new Pdf417EncodeOptions {
+            ErrorCorrectionLevel = 8, MinColumns = 10, MaxColumns = 10, MinRows = 55, MaxRows = 55
+        });
+        const int pitch = 2, padding = 10;
+        // Crop the final payload column, right indicator and stop. Keep exactly
+        // nine payload characters; the ninth character's space ends at the edge.
+        var inkWidth = (34 + 9 * 17) * pitch;
+        var width = padding + inkWidth;
+        var height = symbol.Height * 3 + padding * 2;
+        var pixels = White(width, height);
+        for (var row = 0; row < symbol.Height; row++)
+            for (var dy = 0; dy < 3; dy++)
+                for (var x = 0; x < inkWidth; x++)
+                    Set(pixels, width, padding + x, padding + row * 3 + dy, symbol[x / pitch, row]);
+        if (inverted) for (var at = 0; at < pixels.Length; at += 4)
+            pixels[at] = pixels[at + 1] = pixels[at + 2] = (byte)(255 - pixels[at]);
+        using var cancellation = new System.Threading.CancellationTokenSource(TestBudget.Adjust(1500));
+        Assert.True(Pdf417Decoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32,
+            cancellation.Token, out string decoded));
+        Assert.Equal(text, decoded);
+    }
+
+    [Theory]
     [InlineData("(10)1098.1234", false)]
     [InlineData("(10)1098.1234", true)]
     [InlineData("(01)90012345678908(3102)001750(11)100312", false)]

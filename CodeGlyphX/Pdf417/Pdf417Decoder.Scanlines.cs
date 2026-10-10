@@ -12,6 +12,9 @@ namespace CodeGlyphX.Pdf417;
 
 public static partial class Pdf417Decoder {
     private static readonly int[][][] PixelCodewordRuns = BuildPixelCodewordRuns();
+    private static readonly int[] PixelStartRuns = { 8, 1, 1, 1, 1, 1, 1, 3 };
+    private static readonly int[] PixelStopRuns = { 7, 1, 1, 3, 1, 1, 1, 2, 1 };
+    private static readonly double[] PixelRowSlopes = { 0.0, -0.05, 0.05, -0.1, 0.1, -0.15, 0.15, -0.2, 0.2, -0.25, 0.25, -0.3, 0.3 };
     // A row's start/stop runs establish its local pitch. Row indicators identify
     // logical rows independently of physical row height, borders and image text.
     private static bool TryDecodePixelRows(PixelSpan pixels, int width, int height, int stride, PixelFormat format,
@@ -45,16 +48,16 @@ public static partial class Pdf417Decoder {
             var down = axis == 0 ? height : width;
             for (var reverse = 0; reverse < 2; reverse++) {
                 for (var invert = 0; invert < 2; invert++) {
-                    var slopes = new[] { 0.0, -0.05, 0.05, -0.1, 0.1, -0.15, 0.15, -0.2, 0.2, -0.25, 0.25, -0.3, 0.3 };
                     var orientationHasStart = false;
                     var headerRows = new Dictionary<int, PixelRowHints>();
                     var assemblies = new Dictionary<(int Columns, int Upper, int Lower, int Ec, bool Compact), List<PixelRowAssembly>>();
-                    foreach (var slope in slopes) {
+                    foreach (var slope in PixelRowSlopes) {
                         if (slope != 0 && !orientationHasStart) break;
                         var rowSets = new Dictionary<(int Columns, bool Compact, int StartBin), PixelRowSet>();
+                        var runs = new List<int>();
                         for (var y = 0; y < down; y++) {
                             if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                            var runs = new List<int>();
+                            runs.Clear();
                             var first = false;
                             var color = false;
                             var length = 0;
@@ -72,7 +75,7 @@ public static partial class Pdf417Decoder {
                             }
                             runs.Add(length);
                             for (var start = first ? 0 : 1; start + 41 <= runs.Count; start += 2) {
-                                if (!MatchPixelRuns(runs, start, new[] { 8, 1, 1, 1, 1, 1, 1, 3 }, 17)) continue;
+                                if (!MatchPixelRuns(runs, start, PixelStartRuns, 17)) continue;
                                 var cluster = -1;
                                 var left = 0;
                                 for (var c = 0; c < 3; c++) {
@@ -98,13 +101,15 @@ public static partial class Pdf417Decoder {
                                 if (hints.Observe(logicalRow, cluster, left)) hasStartPattern = orientationHasStart = true;
                                 var words = new List<int>();
                                 var at = start + 16;
-                                for (; words.Count <= 31 && at + 9 <= runs.Count; at += 8) {
+                                // A data character has eight runs. Its last space
+                                // can reach a cropped image edge without a ninth run.
+                                for (; words.Count <= 31 && at + 8 <= runs.Count; at += 8) {
                                     if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                                    if (MatchPixelRuns(runs, at, new[] { 7, 1, 1, 3, 1, 1, 1, 2, 1 }, 18)) break;
+                                    if (MatchPixelRuns(runs, at, PixelStopRuns, 18)) break;
                                     if (!ReadPixelCodeword(runs, at, cluster, out var word, correctPrintGain: correctPrintGain)) break;
                                     words.Add(word);
                                 }
-                                var regular = at + 9 <= runs.Count && MatchPixelRuns(runs, at, new[] { 7, 1, 1, 3, 1, 1, 1, 2, 1 }, 18);
+                                var regular = at + 9 <= runs.Count && MatchPixelRuns(runs, at, PixelStopRuns, 18);
                                 var compact = !regular && at + 1 < runs.Count && runs[at + 1] > runs[at] * 2;
                                 var indicatedColumns = cluster == 2 ? left % 30 + 1 : hints.Columns;
                                 var clipped = !regular && !compact && at + 8 >= runs.Count && indicatedColumns > 0 &&

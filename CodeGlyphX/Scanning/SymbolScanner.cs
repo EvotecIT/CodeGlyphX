@@ -207,8 +207,9 @@ public static partial class SymbolScanner {
         if (options.DirectPartMarking is null || deadline.ShouldStop) return;
         var dpm = options.DirectPartMarking.Clone();
         var variants = DirectPartMarkPreprocessor.CreateVariants(rgba, width, height, dpm, deadline.Token);
-        for (var i = 0; i < variants.Count && !deadline.ShouldStop; i++) {
-            if (!DataMatrixDecoder.TryDecodeDetailed(variants[i], width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out decoded)) continue;
+        foreach (var variant in variants) {
+            if (deadline.ShouldStop) return;
+            if (!DataMatrixDecoder.TryDecodeDetailed(variant, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out decoded)) continue;
             Add(results, seen, SymbolResultFactory.From(decoded, searchRegion, dpm.Profile));
             return;
         }

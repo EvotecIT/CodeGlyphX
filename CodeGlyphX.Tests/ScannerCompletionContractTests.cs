@@ -8,6 +8,21 @@ namespace CodeGlyphX.Tests;
 [Collection("ImageScannerSerial")]
 public sealed class ScannerCompletionContractTests {
     [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DirectPartMarkPreprocessingStopsAtMonotonicDeadline(bool afterFirstVariant) {
+        var pixels = new byte[] { 255, 255, 255, 255 };
+        using var variants = DirectPartMarkPreprocessor.CreateVariants(pixels, 1, 1,
+            new DirectPartMarkOptions(), CancellationToken.None).GetEnumerator();
+        if (afterFirstVariant) Assert.True(variants.MoveNext());
+        // A single-threaded host cannot rely on timer callbacks cancelling a token.
+        // Check the recognition clock before starting or continuing preprocessing.
+        using var budget = CodeGlyphX.Internal.DecodeBudget.Begin(1);
+        Assert.True(SpinWait.SpinUntil(() => CodeGlyphX.Internal.DecodeBudget.IsExpired, 1000));
+        Assert.False(variants.MoveNext());
+    }
+
+    [Theory]
     [InlineData(1)]
     [InlineData(32)]
     public void ShortQrAllowanceStillAttemptsReadableSymbol(int maximum) {

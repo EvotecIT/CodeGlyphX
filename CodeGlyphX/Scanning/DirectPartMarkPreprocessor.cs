@@ -1,47 +1,56 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX;
 
 internal static class DirectPartMarkPreprocessor {
-    internal static IReadOnlyList<byte[]> CreateVariants(byte[] rgba, int width, int height, DirectPartMarkOptions options, CancellationToken cancellationToken) {
+    internal static IEnumerable<byte[]> CreateVariants(byte[] rgba, int width, int height, DirectPartMarkOptions options, CancellationToken cancellationToken) {
         Validate(options);
-        var variants = new List<byte[]>(Math.Min(options.MaxAttempts, 8));
-        if (cancellationToken.IsCancellationRequested) return variants;
+        return EnumerateVariants(rgba, width, height, options, cancellationToken);
+    }
+
+    private static IEnumerable<byte[]> EnumerateVariants(byte[] rgba, int width, int height, DirectPartMarkOptions options, CancellationToken cancellationToken) {
+        if (DecodeBudget.ShouldAbort(cancellationToken)) yield break;
         var gray = ToGray(rgba, width, height, cancellationToken);
-        if (cancellationToken.IsCancellationRequested) return variants;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) yield break;
         var radius = options.AdaptiveWindowRadius > 0 ? options.AdaptiveWindowRadius : Math.Max(2, Math.Min(24, Math.Min(width, height) / 24));
+        var count = 0;
 
         var stretched = ContrastStretch(gray, width, height, cancellationToken);
-        if (cancellationToken.IsCancellationRequested) return variants;
-        Add(variants, stretched, width, height, options.MaxAttempts, cancellationToken);
-        if (cancellationToken.IsCancellationRequested || variants.Count >= options.MaxAttempts) return variants;
+        var variant = ToRgba(stretched, width, height, cancellationToken);
+        if (variant is null) yield break;
+        yield return variant;
+        if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
 
         var dark = Adaptive(gray, width, height, radius, options.ThresholdBias, lightMarks: false, cancellationToken);
-        if (cancellationToken.IsCancellationRequested) return variants;
-        Add(variants, dark, width, height, options.MaxAttempts, cancellationToken);
-        if (cancellationToken.IsCancellationRequested || variants.Count >= options.MaxAttempts) return variants;
+        variant = ToRgba(dark, width, height, cancellationToken);
+        if (variant is null) yield break;
+        yield return variant;
+        if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
 
         var light = Adaptive(gray, width, height, radius, options.ThresholdBias, lightMarks: true, cancellationToken);
-        if (cancellationToken.IsCancellationRequested) return variants;
-        Add(variants, light, width, height, options.MaxAttempts, cancellationToken);
-        if (cancellationToken.IsCancellationRequested || variants.Count >= options.MaxAttempts) return variants;
+        variant = ToRgba(light, width, height, cancellationToken);
+        if (variant is null) yield break;
+        yield return variant;
+        if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
 
         if (options.Profile is DirectPartMarkProfile.Auto or DirectPartMarkProfile.DotPeen && options.MorphologyRadius > 0) {
             var closedDark = Close(dark, width, height, options.MorphologyRadius, cancellationToken);
-            if (cancellationToken.IsCancellationRequested) return variants;
-            Add(variants, closedDark, width, height, options.MaxAttempts, cancellationToken);
-            if (cancellationToken.IsCancellationRequested || variants.Count >= options.MaxAttempts) return variants;
+            variant = ToRgba(closedDark, width, height, cancellationToken);
+            if (variant is null) yield break;
+            yield return variant;
+            if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
             var dilatedDark = Dilate(dark, width, height, options.MorphologyRadius, cancellationToken);
-            if (cancellationToken.IsCancellationRequested) return variants;
-            Add(variants, dilatedDark, width, height, options.MaxAttempts, cancellationToken);
-            if (cancellationToken.IsCancellationRequested || variants.Count >= options.MaxAttempts) return variants;
+            variant = ToRgba(dilatedDark, width, height, cancellationToken);
+            if (variant is null) yield break;
+            yield return variant;
+            if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
             var closedLight = Close(light, width, height, options.MorphologyRadius, cancellationToken);
-            if (cancellationToken.IsCancellationRequested) return variants;
-            Add(variants, closedLight, width, height, options.MaxAttempts, cancellationToken);
+            variant = ToRgba(closedLight, width, height, cancellationToken);
+            if (variant is not null) yield return variant;
         }
-        return variants;
     }
 
     internal static void Validate(DirectPartMarkOptions options) {
@@ -55,11 +64,15 @@ internal static class DirectPartMarkPreprocessor {
     private static byte[] ToGray(byte[] rgba, int width, int height, CancellationToken token) {
         var gray = new byte[checked(width * height)];
         for (var y = 0; y < height; y++) {
-            if (token.IsCancellationRequested) return gray;
+            if (DecodeBudget.ShouldAbort(token)) return gray;
             for (var x = 0; x < width; x++) {
                 var i = y * width + x;
                 var p = i * 4;
-                gray[i] = (byte)((rgba[p] * 77 + rgba[p + 1] * 150 + rgba[p + 2] * 29) >> 8);
+                var luminance = (rgba[p] * 77 + rgba[p + 1] * 150 + rgba[p + 2] * 29) >> 8;
+                var alpha = rgba[p + 3];
+                // Match ordinary pixel decoding: transparent RGB contributes
+                // no visible mark against the scanner's white background.
+                gray[i] = (byte)((luminance * alpha + 255 * (255 - alpha) + 127) / 255);
             }
         }
         return gray;
@@ -68,7 +81,7 @@ internal static class DirectPartMarkPreprocessor {
     private static byte[] ContrastStretch(byte[] gray, int width, int height, CancellationToken token) {
         var histogram = new int[256];
         for (var y = 0; y < height; y++) {
-            if (token.IsCancellationRequested) return (byte[])gray.Clone();
+            if (DecodeBudget.ShouldAbort(token)) return (byte[])gray.Clone();
             var offset = y * width;
             for (var x = 0; x < width; x++) histogram[gray[offset + x]]++;
         }
@@ -80,7 +93,7 @@ internal static class DirectPartMarkPreprocessor {
         if (high <= low) return (byte[])gray.Clone();
         var output = new byte[gray.Length];
         for (var y = 0; y < height; y++) {
-            if (token.IsCancellationRequested) return output;
+            if (DecodeBudget.ShouldAbort(token)) return output;
             var offset = y * width;
             for (var x = 0; x < width; x++) {
                 var i = offset + x;
@@ -94,13 +107,13 @@ internal static class DirectPartMarkPreprocessor {
         var stride = width + 1;
         var integral = new long[checked((width + 1) * (height + 1))];
         for (var y = 0; y < height; y++) {
-            if (token.IsCancellationRequested) return new byte[gray.Length];
+            if (DecodeBudget.ShouldAbort(token)) return new byte[gray.Length];
             long row = 0;
             for (var x = 0; x < width; x++) { row += gray[y * width + x]; integral[(y + 1) * stride + x + 1] = integral[y * stride + x + 1] + row; }
         }
         var mask = new byte[gray.Length];
         for (var y = 0; y < height; y++) {
-            if (token.IsCancellationRequested) return mask;
+            if (DecodeBudget.ShouldAbort(token)) return mask;
             var top = Math.Max(0, y - radius); var bottom = Math.Min(height - 1, y + radius);
             for (var x = 0; x < width; x++) {
                 var left = Math.Max(0, x - radius); var right = Math.Min(width - 1, x + radius);
@@ -116,13 +129,13 @@ internal static class DirectPartMarkPreprocessor {
 
     private static byte[] Close(byte[] mask, int width, int height, int radius, CancellationToken token) {
         var dilated = Dilate(mask, width, height, radius, token);
-        return token.IsCancellationRequested ? dilated : Erode(dilated, width, height, radius, token);
+        return DecodeBudget.ShouldAbort(token) ? dilated : Erode(dilated, width, height, radius, token);
     }
 
     private static byte[] Dilate(byte[] mask, int width, int height, int radius, CancellationToken token) {
         var output = new byte[mask.Length];
         for (var y = 0; y < height; y++) {
-            if (token.IsCancellationRequested) return output;
+            if (DecodeBudget.ShouldAbort(token)) return output;
             for (var x = 0; x < width; x++) {
                 byte value = 0;
                 for (var dy = -radius; dy <= radius && value == 0; dy++) for (var dx = -radius; dx <= radius; dx++) {
@@ -138,7 +151,7 @@ internal static class DirectPartMarkPreprocessor {
     private static byte[] Erode(byte[] mask, int width, int height, int radius, CancellationToken token) {
         var output = new byte[mask.Length];
         for (var y = 0; y < height; y++) {
-            if (token.IsCancellationRequested) return output;
+            if (DecodeBudget.ShouldAbort(token)) return output;
             for (var x = 0; x < width; x++) {
                 byte value = 1;
                 for (var dy = -radius; dy <= radius && value != 0; dy++) for (var dx = -radius; dx <= radius; dx++) {
@@ -151,19 +164,19 @@ internal static class DirectPartMarkPreprocessor {
         return output;
     }
 
-    private static void Add(List<byte[]> variants, byte[] grayOrMask, int width, int height, int max, CancellationToken token) {
-        if (variants.Count >= max || token.IsCancellationRequested) return;
+    private static byte[]? ToRgba(byte[] grayOrMask, int width, int height, CancellationToken token) {
+        if (DecodeBudget.ShouldAbort(token)) return null;
         var rgba = new byte[checked(width * height * 4)];
         var binary = true;
         for (var i = 0; i < grayOrMask.Length; i++) {
-            if ((i & 4095) == 0 && token.IsCancellationRequested) return;
+            if ((i & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return null;
             if (grayOrMask[i] > 1) { binary = false; break; }
         }
         for (var i = 0; i < grayOrMask.Length; i++) {
-            if ((i & 4095) == 0 && token.IsCancellationRequested) return;
+            if ((i & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return null;
             var value = binary ? (grayOrMask[i] == 0 ? (byte)255 : (byte)0) : grayOrMask[i];
             var p = i * 4; rgba[p] = rgba[p + 1] = rgba[p + 2] = value; rgba[p + 3] = 255;
         }
-        variants.Add(rgba);
+        return rgba;
     }
 }
