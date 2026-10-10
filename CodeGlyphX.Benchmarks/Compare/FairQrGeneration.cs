@@ -40,7 +40,8 @@ public sealed class FairQrGeneration {
         if (engine == "QRCoder") {
             using var generator = new QRCoder.QRCodeGenerator();
             using var data = generator.CreateQrCode(Payload, QRCoder.QRCodeGenerator.ECCLevel.M,
-                forceUtf8: Payload.Any(c => c > 127), utf8BOM: false, requestedVersion: Version);
+                forceUtf8: Payload.Any(c => c > 127), utf8BOM: false,
+                eciMode: QRCoder.QRCodeGenerator.EciMode.Utf8, requestedVersion: Version);
             var modules = new BitMatrix(data.ModuleMatrix.Count - 8, data.ModuleMatrix.Count - 8);
             for (var y = 0; y < modules.Height; y++) for (var x = 0; x < modules.Width; x++) modules[x, y] = data.ModuleMatrix[y + 4][x + 4];
             return modules;
@@ -70,7 +71,8 @@ public sealed class FairQrGeneration {
         if (engine == "QRCoder") {
             using var generator = new QRCoder.QRCodeGenerator();
             using var data = generator.CreateQrCode(Payload, QRCoder.QRCodeGenerator.ECCLevel.M,
-                forceUtf8: Payload.Any(c => c > 127), utf8BOM: false, requestedVersion: Version);
+                forceUtf8: Payload.Any(c => c > 127), utf8BOM: false,
+                eciMode: QRCoder.QRCodeGenerator.EciMode.Utf8, requestedVersion: Version);
             using var png = new QRCoder.PngByteQRCode(data);
             return png.GetGraphic(Scale, drawQuietZones: true);
         }
