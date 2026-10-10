@@ -9,6 +9,16 @@ namespace CodeGlyphX.Tests;
 [Collection("ImageScannerSerial")]
 public sealed class DataMatrixPerspectiveTests {
     [Theory]
+    [InlineData(0)]
+    [InlineData(-80)]
+    public void NonPositivePixelStride_IsRejectedByEveryPixelEntryPoint(int stride) {
+        var pixels = new byte[20 * 20 * 4];
+        Assert.False(DataMatrixDecoder.TryDecode(pixels, 20, 20, stride, PixelFormat.Rgba32, out _));
+        Assert.False(DataMatrixDecoder.TryDecode(pixels, 20, 20, stride, PixelFormat.Rgba32, out _, out _));
+        Assert.False(DataMatrixDecoder.TryDecodeDetailed(pixels, 20, 20, stride, PixelFormat.Rgba32, out _));
+    }
+
+    [Theory]
     [InlineData("zxing-perspective-20.png", "http://google.com/m")]
     [InlineData("zxing-perspective-40.png", "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode.")]
     [InlineData("zxing-perspective-lowcontrast.png", "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode.")]
