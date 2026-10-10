@@ -81,6 +81,7 @@ def build_website_data(root):
             correct = {x["Metrics"]["CorrectImages"] for x in samples}
             decode_rows.append({"engine": engine, "median": f'{lane["MedianMs"]:.2f}',
                                 "p95": f'{lane["P95Ms"]:.2f}', "min": f'{lane["MinMs"]:.2f}', "max": f'{lane["MaxMs"]:.2f}',
+                                "managed_mib": f'{lane["Metrics"]["AllocatedBytes"] / 1048576:.2f}',
                                 "correct": f"{min(correct):g}–{max(correct):g}" if len(correct) > 1 else f"{min(correct):g}"})
         domains.append({"id": domain, "label": domain.upper(), "affinity": generation["Metadata"]["processAffinityMask"],
                         "generation": generation_rows, "decoding": decode_rows})

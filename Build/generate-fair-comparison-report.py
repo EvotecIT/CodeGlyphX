@@ -132,15 +132,16 @@ def main():
             # milliseconds/batch * 1000 microseconds/millisecond / 100 outputs
             lines.append(f'| {x["Scenario"]} | {x["Operation"]} | {x["Engine"]} | {x["MedianMs"] * 10:.2f} | {x["P95Ms"] * 10:.2f} | {x["MinMs"] * 10:.2f}–{x["MaxMs"] * 10:.2f} | {x["Metrics"]["ManagedAllocatedBytes"] / 100:.0f} |')
     lines += ["", "## Decode latency", "", "The nineteen-image subset includes a negative, an unsupported MaxiCode image and a four-QR image. Loading is excluded. These timings retain recognition failures and do not establish a speed ranking at equal accuracy. Other activity on the shared host can affect wall-clock measurements; read the sample distributions across both domains.", "",
-              "| Domain | Engine | Median ms / 19 images | P95 ms | Min–max ms | Correct images range | Unexpected images range |",
-              "| --- | --- | ---: | ---: | ---: | ---: | ---: |"]
+              "Managed allocation is the mean process-wide allocation during each complete batch operation, including runner invocation overhead. It excludes image loading, result evaluation and native allocations. It does not measure peak or total memory use.", "",
+              "| Domain | Engine | Median ms / 19 images | P95 ms | Min–max ms | Mean managed MiB / batch | Correct images range | Unexpected images range |",
+              "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for domain in ("ccd0", "ccd1"):
         packet = runs["decoding", domain]
         for x in packet["Summary"]:
             samples = [s for s in packet["Samples"] if s["Engine"] == x["Engine"] and s["Iteration"] >= 0]
             correct = [s["Metrics"]["CorrectImages"] for s in samples]
             unexpected = [s["Metrics"]["UnexpectedImages"] for s in samples]
-            lines.append(f'| {domain} | {x["Engine"]} | {x["MedianMs"]:.2f} | {x["P95Ms"]:.2f} | {x["MinMs"]:.2f}–{x["MaxMs"]:.2f} | {min(correct):g}–{max(correct):g} | {min(unexpected):g}–{max(unexpected):g} |')
+            lines.append(f'| {domain} | {x["Engine"]} | {x["MedianMs"]:.2f} | {x["P95Ms"]:.2f} | {x["MinMs"]:.2f}–{x["MaxMs"]:.2f} | {x["Metrics"]["AllocatedBytes"] / 1048576:.2f} | {min(correct):g}–{max(correct):g} | {min(unexpected):g}–{max(unexpected):g} |')
     lines += ["", "All individual corpus outcomes and benchmark samples are in [evidence](evidence/sha256.json). Those files preserve the original environment/provenance metadata and untrimmed results. JSON formatting uses LF for portable evidence hashes; escaped payload line endings remain unchanged. Recorded run-input hashes identify the original measured files. The frozen manifest and acquisition script permit an independent rerun.", ""]
     (output / "results.md").write_text("\n".join(lines), encoding="utf-8")
     if args.website_root:

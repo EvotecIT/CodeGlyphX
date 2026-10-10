@@ -70,8 +70,8 @@
             <div class="comparison-scroll" role="region" aria-label="{{ domain.label }} decode timing" tabindex="0">
                 <table class="bench-table">
                     <caption>{{ domain.label }} · milliseconds per 19-image batch · failed decodes retained</caption>
-                    <thead><tr><th scope="col">Reader</th><th scope="col">Median ms</th><th scope="col">P95 ms</th><th scope="col">Min–max ms</th><th scope="col">Correct images</th></tr></thead>
-                    <tbody>{{ for row in domain.decoding }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.median }}</td><td>{{ row.p95 }}</td><td>{{ row.min }}–{{ row.max }}</td><td>{{ row.correct }}/19</td></tr>{{ end }}</tbody>
+                    <thead><tr><th scope="col">Reader</th><th scope="col">Median ms</th><th scope="col">P95 ms</th><th scope="col">Min–max ms</th><th scope="col">Mean managed MiB</th><th scope="col">Correct images</th></tr></thead>
+                    <tbody>{{ for row in domain.decoding }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.median }}</td><td>{{ row.p95 }}</td><td>{{ row.min }}–{{ row.max }}</td><td>{{ row.managed_mib }}</td><td>{{ row.correct }}/19</td></tr>{{ end }}</tbody>
                 </table>
             </div>
         </details>
