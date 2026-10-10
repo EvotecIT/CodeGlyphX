@@ -806,6 +806,8 @@ internal static partial class QrPixelDecoder {
             for (var p = 0; p < phaseCount; p++) {
                 if (checkBudget && budget.IsExpired) return false;
                 var phase = phases[p];
+                if (!HasPlausibleBoundingFinders(image, minX, minY, modulesCount, moduleSizeX, moduleSizeY,
+                    phase, invert, useRing, ringDelta, budget)) continue;
                 var bm = new global::CodeGlyphX.BitMatrix(modulesCount, modulesCount);
                 var bmWords = bm.Words;
                 var bmWidth = modulesCount;

@@ -3,6 +3,10 @@ namespace CodeGlyphX.Benchmarks;
 // Text and physical payload are separate contracts. Preserve raw output and score these documented representations explicitly.
 internal static class CorpusScoring {
     internal static string Canonical(string text, string format) {
+        if (format is "Gs1DataBarExpanded" or "Gs1DataBarExpandedStacked") {
+            try { return Gs1.ElementString(text); }
+            catch (FormatException) { return text; } // Invalid decoded/oracle text remains visible, never aborts scoring.
+        }
         if (format == "Codabar" && text.Length >= 2 && "ABCD".Contains(text[0]) && "ABCD".Contains(text[^1])) return text[1..^1];
         if (format == "UpcA" && text.Length == 13 && text[0] == '0') return text[1..];
         if (format == "UpcE") {

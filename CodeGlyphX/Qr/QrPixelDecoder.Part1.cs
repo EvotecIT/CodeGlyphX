@@ -377,11 +377,11 @@ internal static partial class QrPixelDecoder {
         var baseBudgetMs = budgetMilliseconds;
         if (enableTileScan && budgetMilliseconds > 0) {
             if (budgetMilliseconds <= 4000) {
-                tileBudgetMs = Math.Max(300, budgetMilliseconds / 3);
-                baseBudgetMs = Math.Max(300, budgetMilliseconds - tileBudgetMs);
+                tileBudgetMs = Math.Max(1, budgetMilliseconds / 3);
+                baseBudgetMs = Math.Max(1, budgetMilliseconds - tileBudgetMs);
             } else {
-                tileBudgetMs = Math.Max(400, budgetMilliseconds / 2);
-                baseBudgetMs = Math.Max(400, budgetMilliseconds - tileBudgetMs);
+                tileBudgetMs = Math.Max(1, budgetMilliseconds / 2);
+                baseBudgetMs = Math.Max(1, budgetMilliseconds - tileBudgetMs);
             }
         }
         var budget = new DecodeBudget(baseBudgetMs, cancellationToken, parentBudget);

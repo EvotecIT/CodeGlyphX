@@ -96,6 +96,7 @@ public static partial class SymbolScanner {
         if (deadline.ShouldStop) return Cancelled(deadline, unsupported);
 
         var results = new List<DetectedSymbol>();
+        if (IsUniformDefaultFrame(rgba, requested, deadline)) return Result(ScanStatus.NoSymbolFound, deadline, results, unsupported);
         var seen = options.Deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
         var requestedSet = new HashSet<SymbolFormat>(requested);
         var remainingAttempts = CountInitialAttempts(requestedSet, options, width, height);
@@ -106,7 +107,6 @@ public static partial class SymbolScanner {
         if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanPdf417(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanLinear(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
-
         if (!ShouldStop(options, deadline, results) && options.EnableTileScan) {
             ScanMatrixTiles(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
         }

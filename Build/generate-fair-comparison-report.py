@@ -38,6 +38,7 @@ def main():
              "negative-baseline-corpus.json", "negative-candidate-corpus.json", "negative-manifest.json",
              "qualification.json"]
     names += [f"{kind}-final-{domain}-result.json" for kind, domain in runs]
+    names += [name for name in ("previous-candidate-corpus.json", "previous-qualification.json") if (root / name).exists()]
     evidence = output / "evidence"
     evidence.mkdir(exist_ok=True)
     hashes = {}
@@ -68,10 +69,17 @@ def main():
     old_by_id = {x["Id"]: x for x in baseline if x["Engine"] == "CodeGlyphX"}
     regressions = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and x["Status"] != "Correct" and old_by_id[x["Id"]]["Status"] == "Correct"]
     lines += ["", "Previously correct images now missed: " + (", ".join(regressions) if regressions else "none in this run.")]
+    if (root / "previous-candidate-corpus.json").exists():
+        previous = read(root / "previous-candidate-corpus.json")
+        old_correct = sum(x["Engine"] == "CodeGlyphX" and bool(x["Expected"]) and x["Status"] == "Correct" for x in previous)
+        new_correct = sum(x["Engine"] == "CodeGlyphX" and bool(x["Expected"]) and x["Status"] == "Correct" for x in current)
+        previous_by_id = {x["Id"]: x for x in previous if x["Engine"] == "CodeGlyphX"}
+        lost = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and x["Status"] != "Correct" and previous_by_id[x["Id"]]["Status"] == "Correct"]
+        lines += ["", f"This decoding follow-up improves CodeGlyphX from {old_correct} to {new_correct}/267 positive images compared with the [previous pass](evidence/previous-candidate-corpus.json). Previously correct images lost in this follow-up: " + (", ".join(lost) if lost else "none in this run.")]
     negatives_before = read(root / "negative-baseline-corpus.json")
     negatives_current = read(root / "negative-candidate-corpus.json")
     lines += ["", "## Supplementary negative corpus", "",
-              "All 25 images in the two upstream false-positive directories are checked, including the twelve in the main corpus. This supplementary check is reported separately. Empty output counts as a correct rejection only when scanning completes; an exhausted budget remains inconclusive.", "",
+              "The fixed supplementary set contains all 25 images in upstream falsepositives-2; six also appear in the main corpus. This supplementary check is reported separately. Empty output counts as a correct rejection only when scanning completes; an exhausted budget remains inconclusive.", "",
               "| Engine | Before: correct rejection | Current: correct rejection | Current: unexpected output | Current: inconclusive |",
               "| --- | ---: | ---: | ---: | ---: |"]
     for engine in engines:

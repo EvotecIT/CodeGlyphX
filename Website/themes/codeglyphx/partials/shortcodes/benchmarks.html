@@ -17,7 +17,7 @@
         <div class="comparison-scroll" role="region" aria-label="Image recognition results" tabindex="0">
             <table class="bench-table">
                 <caption>Exact payload sets on 267 positive images</caption>
-                <thead><tr><th scope="col">Reader</th><th scope="col">Before repair</th><th scope="col">Current</th><th scope="col">Correct</th><th scope="col">Unsupported images</th></tr></thead>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Original source</th><th scope="col">Current</th><th scope="col">Correct</th><th scope="col">Unsupported images</th></tr></thead>
                 <tbody>{{ for row in comparison.recognition }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }}/{{ row.positives }}</td><td>{{ row.correct }}/{{ row.positives }}</td><td>{{ row.percent }}%</td><td>{{ row.unsupported }}</td></tr>{{ end }}</tbody>
             </table>
         </div>
@@ -36,7 +36,7 @@
         <p>{{ copy.negatives }}</p>
         <div class="comparison-scroll" role="region" aria-label="Negative image results" tabindex="0">
             <table class="bench-table">
-                <caption>Supplementary 25-image negative corpus; includes the 12 main-corpus negatives</caption>
+                <caption>Supplementary 25-image negative corpus; six overlap with the 12 main-corpus negatives</caption>
                 <thead><tr><th scope="col">Reader</th><th scope="col">Correct rejections</th><th scope="col">Unexpected output</th><th scope="col">Inconclusive</th></tr></thead>
                 <tbody>{{ for row in comparison.recognition }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.rejected }}/25</td><td>{{ row.unexpected }}</td><td>{{ row.inconclusive }}</td></tr>{{ end }}</tbody>
             </table>

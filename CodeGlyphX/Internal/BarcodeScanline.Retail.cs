@@ -27,6 +27,7 @@ internal static partial class BarcodeScanline {
         runs.Add(length);
         TryCollectCode128RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
         TryCollectCode39RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
+        TryCollectExpandedRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
         for (var start = 0; start + 33 <= runs.Count; start++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) return;
             // Also locate inverted symbols; the normal transform path resolves polarity.

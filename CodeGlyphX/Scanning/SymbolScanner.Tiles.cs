@@ -51,9 +51,12 @@ public static partial class SymbolScanner {
             break;
         }
         if (options.EnableTileScan && matrixFamilies > 0) {
-            // Reserve time for each tile, without multiplying the initial penalty by its decoder count.
+            // Reserve one share for the tile stage, which divides its own remaining time.
             var grid = ResolveMatrixTileGrid(options, width, height);
-            count += grid * grid;
+            // Do not reserve recognition time for tiles too short to be scanned.
+            var padding = Math.Max(8, Math.Min(width, height) / 40);
+            if (width / grid + padding * 2 >= 48 && height / grid + padding * 2 >= 48)
+                count++;
         }
         return count;
     }

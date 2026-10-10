@@ -42,6 +42,22 @@ public sealed class AztecTests {
     }
 
     [Fact]
+    public void Aztec_MirroredPixels_ReportMirrorAttempt() {
+        var matrix = AztecCode.Encode("AZTEC-MIRROR-DIAGNOSTIC").Modules;
+        var pixels = MatrixPngRenderer.RenderPixels(matrix, new MatrixPngRenderOptions {
+            ModuleSize = 3, QuietZone = 2
+        }, out var width, out var height, out _);
+        var mirrored = new byte[pixels.Length];
+        for (var y = 0; y < height; y++)
+            for (var x = 0; x < width; x++)
+                Buffer.BlockCopy(pixels, (y * width + x) * 4, mirrored, (y * width + width - 1 - x) * 4, 4);
+        Assert.True(AztecCode.TryDecode(mirrored, width, height, width * 4, PixelFormat.Rgba32,
+            out var text, out var diagnostics));
+        Assert.Equal("AZTEC-MIRROR-DIAGNOSTIC", text);
+        Assert.True(diagnostics.MirroredTried);
+    }
+
+    [Fact]
     public void Aztec_Binary_Render_And_Save_Use_Generic_Surface() {
         var payload = new byte[] { 0x00, 0x01, 0x7F, 0x80, 0xFE, 0xFF };
         var svg = AztecCode.Render(payload, OutputFormat.Svg).GetText();

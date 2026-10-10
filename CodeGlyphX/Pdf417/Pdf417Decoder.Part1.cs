@@ -105,8 +105,15 @@ public static partial class Pdf417Decoder {
     }
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value) {
-        foreach (var threshold in BuildThresholds(pixels, width, height, stride, format)) {
+        var thresholds = BuildThresholds(pixels, width, height, stride, format);
+        var hasStartPattern = false;
+        foreach (var threshold in thresholds) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
+            if (TryDecodePixelRows(pixels, width, height, stride, format, threshold, cancellationToken, out var rows, out var hasStart)) { value = rows.Text; return true; }
+            hasStartPattern |= hasStart;
+        }
+        if (!hasStartPattern) { value = string.Empty; return false; }
+        foreach (var threshold in thresholds) {
             if (TryDecodeFromPixels(pixels, width, height, stride, format, threshold, cancellationToken, out value)) return true;
         }
         value = string.Empty;
@@ -114,8 +121,23 @@ public static partial class Pdf417Decoder {
     }
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out string value, Pdf417DecodeDiagnostics diagnostics) {
-        foreach (var threshold in BuildThresholds(pixels, width, height, stride, format)) {
+        if (width <= 0 || height <= 0 || stride <= 0) {
+            value = string.Empty;
+            diagnostics.Failure = "Invalid image size.";
+            return false;
+        }
+        var thresholds = BuildThresholds(pixels, width, height, stride, format);
+        var hasStartPattern = false;
+        foreach (var threshold in thresholds) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
+            diagnostics.AttemptCount++;
+            if (TryDecodePixelRows(pixels, width, height, stride, format, threshold, cancellationToken, out var rows, out var hasStart)) {
+                value = rows.Text; diagnostics.Macro = rows.Macro; return MarkSuccessful(diagnostics);
+            }
+            hasStartPattern |= hasStart;
+        }
+        if (!hasStartPattern) { value = string.Empty; diagnostics.Failure ??= "No PDF417 start pattern."; return false; }
+        foreach (var threshold in thresholds) {
             if (TryDecodeFromPixels(pixels, width, height, stride, format, threshold, cancellationToken, diagnostics, out value)) {
                 return MarkSuccessful(diagnostics);
             }
@@ -126,8 +148,15 @@ public static partial class Pdf417Decoder {
     }
 
     private static bool TryDecodePixels(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
-        foreach (var threshold in BuildThresholds(pixels, width, height, stride, format)) {
+        var thresholds = BuildThresholds(pixels, width, height, stride, format);
+        var hasStartPattern = false;
+        foreach (var threshold in thresholds) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+            if (TryDecodePixelRows(pixels, width, height, stride, format, threshold, cancellationToken, out decoded, out var hasStart)) return true;
+            hasStartPattern |= hasStart;
+        }
+        if (!hasStartPattern) { decoded = null!; return false; }
+        foreach (var threshold in thresholds) {
             if (TryDecodeFromPixels(pixels, width, height, stride, format, threshold, cancellationToken, out decoded)) return true;
         }
         decoded = null!;

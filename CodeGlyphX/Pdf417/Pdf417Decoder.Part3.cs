@@ -190,6 +190,8 @@ public static partial class Pdf417Decoder {
         }
 
         var lum = (r * 77 + g * 150 + b * 29) >> 8;
+        var alpha = pixels[p + 3];
+        lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
         return lum < threshold;
     }
 
@@ -244,6 +246,8 @@ public static partial class Pdf417Decoder {
                     b = pixels[p + 2];
                 }
                 var lum = (r * 77 + g * 150 + b * 29) >> 8;
+                var alpha = pixels[p + 3];
+                lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
                 if (lum < min) min = lum;
                 if (lum > max) max = lum;
             }

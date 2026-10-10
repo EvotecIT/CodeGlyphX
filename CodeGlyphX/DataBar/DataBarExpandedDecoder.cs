@@ -27,7 +27,21 @@ public static class DataBarExpandedDecoder {
         content = string.Empty;
         if (modules is null || modules.Length == 0) return false;
         if (!TryExtractWidths(modules, out var widths)) return false;
-        return TryDecodeFromWidths(widths, out content);
+        if (TryDecodeFromWidths(widths, out content)) return true;
+        // Generic linear extraction trims light quiet space, including Expanded's
+        // one-module light guard. Restore only that boundary element; checksum
+        // and character-count validation still decide whether this is a symbol.
+        var first = 0;
+        var last = modules.Length - 1;
+        while (first <= last && !modules[first]) first++;
+        while (last >= first && !modules[last]) last--;
+        if (first > last) return false;
+        var guarded = new bool[last - first + 2];
+        Array.Copy(modules, first, guarded, 1, last - first + 1);
+        if (TryExtractWidths(guarded, out widths) && TryDecodeFromWidths(widths, out content)) return true;
+        // An even character count also ends in a light guard.
+        Array.Resize(ref guarded, guarded.Length + 1);
+        return TryExtractWidths(guarded, out widths) && TryDecodeFromWidths(widths, out content);
     }
 
     /// <summary>
