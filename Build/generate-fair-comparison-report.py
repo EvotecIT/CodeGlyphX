@@ -33,7 +33,9 @@ def main():
                 raise ValueError(f"Unqualified benchmark packet: {path}")
             runs[kind, domain] = packet
     # Keep every sample, failure, unsupported format and returned payload available for audit.
-    names = ["qualified-baseline-corpus.json", "candidate-corpus-final.json"]
+    names = ["qualified-baseline-corpus.json", "candidate-corpus-final.json",
+             "negative-baseline-corpus.json", "negative-candidate-corpus.json", "negative-manifest.json",
+             "qualification.json"]
     names += [f"{kind}-final-{domain}-result.json" for kind, domain in runs]
     evidence = output / "evidence"
     evidence.mkdir(exist_ok=True)
@@ -45,14 +47,14 @@ def main():
     lines = ["# Current barcode comparisons", "", "Generated from the complete result packets by `Build/generate-fair-comparison-report.py`.", "",
              "See [methodology](../fair-comparisons.md) for versions, adapter boundaries, settings, corpus selection, scoring and proof limits.", "",
              "## Recognition", "", "The 279-image corpus includes twelve negative images and eighteen images whose formats have no CodeGlyphX image scanner. Exact payload sets are checked after the documented physical representation rules.", "",
-             "| Engine | Before repairs | Current correct | Unsupported | Unexpected-output images | Negative-image false positives |",
-             "| --- | ---: | ---: | ---: | ---: | ---: |"]
+             "| Engine | Before repairs | Current correct | Unsupported | Unexpected-output images | Negative-image false positives | Inconclusive negative images |",
+             "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for engine in engines:
         old = [x for x in baseline if x["Engine"] == engine]
         new = [x for x in current if x["Engine"] == engine]
         if len(old) != 279 or len(new) != 279 or {x["Id"] for x in old} != {x["Id"] for x in new}:
             raise ValueError("Baseline/candidate corpus identities differ")
-        lines.append(f'| {engine} | {sum(x["Status"] == "Correct" for x in old)}/279 | {sum(x["Status"] == "Correct" for x in new)}/279 | {sum(x["Status"] == "Unsupported" for x in new)} | {sum(bool(x["Unexpected"]) for x in new)} | {sum(not x["Expected"] and bool(x["Actual"]) for x in new)} |')
+        lines.append(f'| {engine} | {sum(x["Status"] == "Correct" for x in old)}/279 | {sum(x["Status"] == "Correct" for x in new)}/279 | {sum(x["Status"] == "Unsupported" for x in new)} | {sum(bool(x["Unexpected"]) for x in new)} | {sum(not x["Expected"] and bool(x["Actual"]) for x in new)} | {sum(x["Status"] == "Inconclusive" for x in new)} |')
     lines += ["", "Unexpected output on a positive image may include an oracle limitation or an encoding-policy difference. Raw text is preserved; these counts must not be presented as a measured false-positive rate.", "",
               "| Format | Images | CodeGlyphX before | CodeGlyphX current | ZXing.Net | ZXing-C++ |", "| --- | ---: | ---: | ---: | ---: | ---: |"]
     for format in sorted({x["Format"] for x in current}):
@@ -63,6 +65,18 @@ def main():
     old_by_id = {x["Id"]: x for x in baseline if x["Engine"] == "CodeGlyphX"}
     regressions = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and x["Status"] != "Correct" and old_by_id[x["Id"]]["Status"] == "Correct"]
     lines += ["", "Previously correct images now missed: " + (", ".join(regressions) if regressions else "none in this run.")]
+    negatives_before = read(root / "negative-baseline-corpus.json")
+    negatives_current = read(root / "negative-candidate-corpus.json")
+    lines += ["", "## Supplementary negative corpus", "",
+              "All 25 images in the two upstream false-positive directories are checked, including the twelve in the main corpus. This supplementary check is reported separately. Empty output counts as a correct rejection only when scanning completes; an exhausted budget remains inconclusive.", "",
+              "| Engine | Before: correct rejection | Current: correct rejection | Current: unexpected output | Current: inconclusive |",
+              "| --- | ---: | ---: | ---: | ---: |"]
+    for engine in engines:
+        old = [x for x in negatives_before if x["Engine"] == engine]
+        new = [x for x in negatives_current if x["Engine"] == engine]
+        if len(old) != 25 or len(new) != 25 or any(x["Expected"] for x in old + new):
+            raise ValueError("Supplementary negative corpus differs from its contract")
+        lines.append(f'| {engine} | {sum(x["Status"] == "Correct" for x in old)}/25 | {sum(x["Status"] == "Correct" for x in new)}/25 | {sum(bool(x["Unexpected"]) for x in new)} | {sum(x["Status"] == "Inconclusive" for x in new)} |')
     for domain in ("ccd0", "ccd1"):
         packet = runs["generation", domain]
         metadata = packet["Metadata"]
