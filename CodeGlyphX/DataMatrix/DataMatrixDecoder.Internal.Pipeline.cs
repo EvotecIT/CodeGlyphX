@@ -38,6 +38,10 @@ public static partial class DataMatrixDecoder {
                 if (TryDecodeWithRotations(MirrorX(modules), cancellationToken, out value)) return true;
             }
         }
+        if (TryDecodePerspective(pixels, width, height, stride, format, cancellationToken, out var perspectiveDecoded)) {
+            value = perspectiveDecoded.Text;
+            return true;
+        }
         value = string.Empty;
         return false;
     }
@@ -63,6 +67,12 @@ public static partial class DataMatrixDecoder {
             }
         } else {
             diagnostics.Failure ??= "Failed to extract Data Matrix modules.";
+        }
+        if (TryDecodePerspective(pixels, width, height, stride, format, cancellationToken, out var perspectiveDecoded, diagnostics)) {
+            value = perspectiveDecoded.Text;
+            diagnostics.Success = true;
+            diagnostics.Failure = null;
+            return true;
         }
         value = string.Empty;
         if (DecodeBudget.ShouldAbort(cancellationToken)) diagnostics.Failure = "Cancelled.";
@@ -491,17 +501,17 @@ public static partial class DataMatrixDecoder {
         out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
         decoded = null!;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        if (!TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) return false;
-        for (var attempt = 0; attempt < 2; attempt++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-            if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
-            if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics)) return true;
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-            if (diagnostics is not null) diagnostics.MirroredTried = true;
-            if (TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded, diagnostics)) return true;
+        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) {
+            for (var attempt = 0; attempt < 2; attempt++) {
+                if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
+                if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics)) return true;
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+                if (diagnostics is not null) diagnostics.MirroredTried = true;
+                if (TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded, diagnostics)) return true;
+            }
         }
-        decoded = null!;
-        return false;
+        return TryDecodePerspective(pixels, width, height, stride, format, cancellationToken, out decoded, diagnostics);
     }
 
     private static bool TryDecodeDetailedWithRotations(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {

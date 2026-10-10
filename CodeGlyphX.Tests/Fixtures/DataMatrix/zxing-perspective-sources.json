@@ -1,0 +1,31 @@
+{
+  "License": "Apache-2.0",
+  "Copyright": "ZXing authors",
+  "Copies": "Unmodified",
+  "Sources": [
+    {
+      "File": "zxing-perspective-20.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/datamatrix-2/03.png",
+      "Sha256": "22dc1a5d67a0e70d672450a4463cf8a1881943b885a8c0999bb8d8c862330dee",
+      "Expected": [
+        "http://google.com/m"
+      ]
+    },
+    {
+      "File": "zxing-perspective-40.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/datamatrix-2/13.png",
+      "Sha256": "173fd43660800973ffd5c6c1e359b6fe3b6d480df1304114798295e7a25ec65b",
+      "Expected": [
+        "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
+      ]
+    },
+    {
+      "File": "zxing-perspective-lowcontrast.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/datamatrix-2/18.png",
+      "Sha256": "e7222e1631af381c97a0e90eac7f7e4092936291729db09615537720cb0e6fa8",
+      "Expected": [
+        "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
+      ]
+    }
+  ]
+}
