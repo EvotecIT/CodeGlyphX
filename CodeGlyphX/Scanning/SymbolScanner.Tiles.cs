@@ -11,7 +11,7 @@ public static partial class SymbolScanner {
         if (!requested.Contains(SymbolFormat.DataMatrix) && !requested.Contains(SymbolFormat.Aztec) &&
             !requested.Contains(SymbolFormat.Pdf417)) return;
         var grid = ResolveMatrixTileGrid(options, width, height);
-        var remainingAttempts = grid * grid * CountMatrixFamilies(requested);
+        var remainingAttempts = grid * grid * CountMatrixAttemptWeight(requested);
         var padding = Math.Max(8, Math.Min(width, height) / 40);
         for (var ty = 0; ty < grid; ty++) {
             for (var tx = 0; tx < grid; tx++) {
@@ -42,8 +42,11 @@ public static partial class SymbolScanner {
 
     private static int CountInitialAttempts(ISet<SymbolFormat> requested, ScanOptions options, int width, int height) {
         var matrixFamilies = CountMatrixFamilies(requested);
-        var count = matrixFamilies;
-        if (requested.Contains(SymbolFormat.QrCode)) count++;
+        var count = CountMatrixAttemptWeight(requested);
+        // QR searches multiple scales and grayscale variants; Data Matrix also
+        // tries direct-part-mark variants. Give these stages more of the same
+        // total deadline while retaining time for the other requested families.
+        if (requested.Contains(SymbolFormat.QrCode)) count += 3;
         if (requested.Contains(SymbolFormat.MicroQrCode)) count++;
         foreach (var format in requested) {
             if (SymbolCapabilities.Get(format).Family != SymbolFamily.Linear) continue;
@@ -65,6 +68,9 @@ public static partial class SymbolScanner {
         (requested.Contains(SymbolFormat.DataMatrix) ? 1 : 0) +
         (requested.Contains(SymbolFormat.Pdf417) ? 1 : 0) +
         (requested.Contains(SymbolFormat.Aztec) ? 1 : 0);
+
+    private static int CountMatrixAttemptWeight(ISet<SymbolFormat> requested) =>
+        CountMatrixFamilies(requested) + (requested.Contains(SymbolFormat.DataMatrix) ? 1 : 0);
 
     private static int ResolveMatrixTileGrid(ScanOptions options, int width, int height) =>
         options.TileGrid == 0 ? (Math.Max(width, height) >= 720 ? 3 : 2) : options.TileGrid;

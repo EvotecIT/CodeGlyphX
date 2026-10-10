@@ -41,6 +41,19 @@ public sealed class ScannerCompletionContractTests {
     }
 
     [Fact]
+    public void WeightedRecognitionSharesRetainExplicitLimitsAndSiblingTime() {
+        using var complete = new ScanDeadline(CancellationToken.None, 60000);
+        using (var qr = complete.CreateAttempt(10, weight: 3))
+            Assert.InRange(qr.TimeoutMilliseconds, 17000, 18000);
+        using (var matrix = complete.CreateAttempt(7, recognitionBudgetMilliseconds: 2000, weight: 2))
+            Assert.Equal(2000, matrix.TimeoutMilliseconds);
+        using (var sibling = complete.CreateAttempt(5))
+            Assert.InRange(sibling.TimeoutMilliseconds, 11000, 12000);
+        Assert.False(complete.ShouldStop);
+        Assert.False(complete.RecognitionBudgetExceeded);
+    }
+
+    [Fact]
     public void ExpiredFamilyDoesNotCancelSiblingButMarksIncompleteRecognition() {
         using var complete = new ScanDeadline(CancellationToken.None, 5000);
         using (var attempt = complete.CreateAttempt(1, 2)) {

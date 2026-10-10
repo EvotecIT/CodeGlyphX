@@ -167,7 +167,8 @@ public static partial class SymbolScanner {
         var recognitionBudget = options.Image?.RecognitionBudgetMilliseconds ?? 0;
         if (sourceQr.BudgetMilliseconds > 0 && (recognitionBudget == 0 || sourceQr.BudgetMilliseconds < recognitionBudget))
             recognitionBudget = sourceQr.BudgetMilliseconds;
-        using var attempt = deadline.CreateAttempt(remainingAttempts--, recognitionBudget);
+        using var attempt = deadline.CreateAttempt(remainingAttempts, recognitionBudget, weight: 3);
+        remainingAttempts -= 3;
         deadline = attempt;
         var qrOptions = ResolveQrOptions(options, deadline);
         if (options.MaxSymbols == 1) {
@@ -196,7 +197,8 @@ public static partial class SymbolScanner {
         HashSet<string>? seen,
         ref int remainingAttempts) {
         if (!requested.Contains(SymbolFormat.DataMatrix)) return;
-        using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
+        using var attempt = deadline.CreateAttempt(remainingAttempts, options.Image?.RecognitionBudgetMilliseconds ?? 0, weight: 2);
+        remainingAttempts -= 2;
         deadline = attempt;
         if (DataMatrixDecoder.TryDecodeDetailed(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out var decoded)) {
             Add(results, seen, SymbolResultFactory.From(decoded, searchRegion));

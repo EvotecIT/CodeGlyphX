@@ -29,6 +29,17 @@ public static partial class Pdf417Decoder {
                 darkPixels[y * width + x] = IsDarkAt(pixels, y * stride, x, format, threshold);
             }
         }
+        if (TryReadPixelRows(darkPixels, width, height, cancellationToken, false, out decoded, out hasStartPattern)) return true;
+        // Preserve the ordinary reader's decisions. A print-gain retry requires
+        // repeated, consistent row indicators and shares the caller's deadline.
+        if (!hasStartPattern || DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        return TryReadPixelRows(darkPixels, width, height, cancellationToken, true, out decoded, out _);
+    }
+
+    private static bool TryReadPixelRows(bool[] darkPixels, int width, int height, CancellationToken cancellationToken,
+        bool correctPrintGain, out Pdf417Decoded decoded, out bool hasStartPattern) {
+        decoded = null!;
+        hasStartPattern = false;
         for (var axis = 0; axis < 2; axis++) {
             var across = axis == 0 ? width : height;
             var down = axis == 0 ? height : width;
@@ -70,7 +81,7 @@ public static partial class Pdf417Decoder {
                                 }
                                 if (cluster < 0) {
                                     for (var c = 0; c < 3; c++) {
-                                        if (!ReadPixelCodeword(runs, start + 8, c, out left)) continue;
+                                        if (!ReadPixelCodeword(runs, start + 8, c, out left, correctPrintGain: correctPrintGain)) continue;
                                         cluster = c; break;
                                     }
                                 }
@@ -90,7 +101,7 @@ public static partial class Pdf417Decoder {
                                 for (; words.Count <= 31 && at + 9 <= runs.Count; at += 8) {
                                     if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
                                     if (MatchPixelRuns(runs, at, new[] { 7, 1, 1, 3, 1, 1, 1, 2, 1 }, 18)) break;
-                                    if (!ReadPixelCodeword(runs, at, cluster, out var word)) break;
+                                    if (!ReadPixelCodeword(runs, at, cluster, out var word, correctPrintGain: correctPrintGain)) break;
                                     words.Add(word);
                                 }
                                 var regular = at + 9 <= runs.Count && MatchPixelRuns(runs, at, new[] { 7, 1, 1, 3, 1, 1, 1, 2, 1 }, 18);
@@ -176,7 +187,7 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool ReadPixelCodeword(List<int> runs, int start, int cluster, out int word, bool approximate = true) {
+    private static bool ReadPixelCodeword(List<int> runs, int start, int cluster, out int word, bool approximate = true, bool correctPrintGain = false) {
         word = 0;
         if (start + 8 > runs.Count) return false;
         var total = 0;
@@ -197,9 +208,15 @@ public static partial class Pdf417Decoder {
         var bestError = 1.5;
         var found = false;
         for (var candidate = 0; candidate < PixelCodewordRuns[cluster].Length; candidate++) {
+            // Blur and print gain expand every dark run while shrinking its
+            // neighboring space. Fit that common bias without changing pitch.
+            var bias = 0.0;
+            if (correctPrintGain) for (var i = 0; i < 8; i++)
+                bias += (runs[start + i] / pitch - PixelCodewordRuns[cluster][candidate][i]) * ((i & 1) == 0 ? 1 : -1);
+            bias = Math.Max(-0.65, Math.Min(0.65, bias / 8));
             var error = 0.0;
             for (var i = 0; i < 8; i++) {
-                var residual = runs[start + i] / pitch - PixelCodewordRuns[cluster][candidate][i];
+                var residual = runs[start + i] / pitch - PixelCodewordRuns[cluster][candidate][i] - bias * ((i & 1) == 0 ? 1 : -1);
                 if (Math.Abs(residual) > 0.85) { error = bestError; break; }
                 error += residual * residual;
             }

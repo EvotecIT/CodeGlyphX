@@ -195,6 +195,46 @@ public sealed class PhysicalRowDecodingTests {
         Assert.Equal(ScanStatus.NoSymbolFound, result.Status);
     }
 
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public void Pdf417Image_ReadsPayloadRunsWithPrintGain(bool thinBars, bool inverted) {
+        const string text = "PRINT-GAIN-DISPATCH-1042";
+        var symbol = Pdf417Encoder.Encode(text, new Pdf417EncodeOptions {
+            ErrorCorrectionLevel = 2, MinColumns = 4, MaxColumns = 4, MinRows = 18, MaxRows = 18
+        });
+        const int pitch = 4, padding = 20;
+        var width = symbol.Width * pitch + padding * 2;
+        var height = symbol.Height * 4 + padding * 2;
+        var pixels = White(width, height);
+        var top = padding;
+        for (var y = 0; y < symbol.Height; y++) {
+            var rowHeight = y % 3 + 2;
+            for (var x = 0; x < symbol.Width * pitch; x++) {
+                var dark = symbol[x / pitch, y];
+                // Keep the row indicators intact. A localized blur or print defect
+                // widens bars (or spaces) in each payload character by half a module.
+                if (x >= 34 * pitch && x < (34 + 4 * 17) * pitch) {
+                    var before = symbol[(x - 1) / pitch, y];
+                    var after = symbol[(x + 1) / pitch, y];
+                    dark = thinBars ? dark && before && after : dark || before || after;
+                }
+                for (var dy = 0; dy < rowHeight; dy++)
+                    Set(pixels, width, padding + x, top + dy, dark);
+            }
+            top += rowHeight;
+        }
+        for (var x = 5; x < width - 5; x++) Set(pixels, width, x, height - 5, true);
+        if (inverted) for (var at = 0; at < pixels.Length; at += 4)
+            pixels[at] = pixels[at + 1] = pixels[at + 2] = (byte)(255 - pixels[at]);
+        using var cancellation = new System.Threading.CancellationTokenSource(TestBudget.Adjust(1500));
+        Assert.True(Pdf417Decoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32,
+            cancellation.Token, out string decoded));
+        Assert.Equal(text, decoded);
+    }
+
     private static byte[] White(int width, int height) {
         var pixels = new byte[width * height * 4];
         for (var i = 0; i < pixels.Length; i++) pixels[i] = 255;
