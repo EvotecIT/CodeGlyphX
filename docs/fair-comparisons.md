@@ -25,7 +25,7 @@ All readers receive the same preloaded RGBA32 pixels, with image loading outside
 
 Expected and returned payloads are retained verbatim. Comparison applies only these physical representation rules: Codabar start/stop letters, UPC-A's optional leading zero, compact versus expanded UPC-E, and GS1 DataBar's equivalent GTIN/AI presentation. Whitespace, Unicode, line endings and empty payloads remain significant. Every missing or unexpected payload remains in the result packet. A single expected oracle can omit an additional real symbol, so an unexpected result is not automatically a false positive; negative-image results are reported separately.
 
-The twenty-image timing subset is locked separately: the first selected image of each format plus the four-QR image. Correct-image and unexpected-image metrics accompany each timing sample. Failed and unsupported decodes are retained; no timing-only decoder ranking is produced.
+The nineteen-image timing subset is locked separately: the first selected image of each format plus the four-QR image. Correct-image and unexpected-image metrics accompany each timing sample. Failed and unsupported decodes are retained; no timing-only decoder ranking is produced.
 
 ## Reproduce
 

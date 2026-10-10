@@ -72,8 +72,8 @@ def main():
         for x in packet["Summary"]:
             # milliseconds/batch * 1000 microseconds/millisecond / 100 outputs
             lines.append(f'| {x["Scenario"]} | {x["Operation"]} | {x["Engine"]} | {x["MedianMs"] * 10:.2f} | {x["P95Ms"] * 10:.2f} | {x["MinMs"] * 10:.2f}–{x["MaxMs"] * 10:.2f} | {x["Metrics"]["ManagedAllocatedBytes"] / 100:.0f} |')
-    lines += ["", "## Decode latency", "", "The twenty-image subset includes a negative, two unsupported formats and a four-QR image. Loading is excluded. These timings retain recognition failures and do not establish a speed ranking at equal accuracy. Other activity on the shared host can affect wall-clock measurements; read the sample distributions across both domains.", "",
-              "| Domain | Engine | Median ms / 20 images | P95 ms | Min–max ms | Correct images range | Unexpected images range |",
+    lines += ["", "## Decode latency", "", "The nineteen-image subset includes a negative, two unsupported formats and a four-QR image. Loading is excluded. These timings retain recognition failures and do not establish a speed ranking at equal accuracy. Other activity on the shared host can affect wall-clock measurements; read the sample distributions across both domains.", "",
+              "| Domain | Engine | Median ms / 19 images | P95 ms | Min–max ms | Correct images range | Unexpected images range |",
               "| --- | --- | ---: | ---: | ---: | ---: | ---: |"]
     for domain in ("ccd0", "ccd1"):
         packet = runs["decoding", domain]
