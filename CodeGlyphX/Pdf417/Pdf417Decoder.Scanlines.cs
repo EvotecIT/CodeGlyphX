@@ -51,9 +51,11 @@ public static partial class Pdf417Decoder {
                     var orientationHasStart = false;
                     var headerRows = new Dictionary<int, PixelRowHints>();
                     var assemblies = new Dictionary<(int Columns, int Upper, int Lower, int Ec, bool Compact), List<PixelRowAssembly>>();
+                    var recoveries = new List<PixelRecoveryCandidate>();
                     foreach (var slope in PixelRowSlopes) {
                         if (slope != 0 && !orientationHasStart) break;
                         var rowSets = new Dictionary<(int Columns, bool Compact, int StartBin), PixelRowSet>();
+                        var partialSets = new Dictionary<(int Columns, int StartBin), PixelRowSet>();
                         var runs = new List<int>();
                         for (var y = 0; y < down; y++) {
                             if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
@@ -107,6 +109,25 @@ public static partial class Pdf417Decoder {
                                 var clipped = !regular && !compact && at + 8 >= runs.Count && indicatedColumns > 0 &&
                                     indicatedColumns >= words.Count && indicatedColumns - words.Count <= 1;
                                 if (clipped) compact = true;
+                                if (!regular && indicatedColumns > 0 && indicatedColumns <= 30 &&
+                                    words.Count > 0 && words.Count < indicatedColumns) {
+                                    // Unknown suffix positions remain erasures. Only a
+                                    // separately framed, validated assembly can use them.
+                                    var partialKey = (indicatedColumns, headerBin);
+                                    if (!partialSets.TryGetValue(partialKey, out var partial))
+                                        partialSets[partialKey] = partial = new PixelRowSet(indicatedColumns, true);
+                                    var prefix = new int[indicatedColumns + 1];
+                                    for (var i = 1; i < prefix.Length; i++) prefix[i] = -1;
+                                    prefix[0] = left;
+                                    words.CopyTo(prefix, 1);
+                                    var startWidth = 0;
+                                    for (var i = 0; i < 8; i++) startWidth += runs[start + i];
+                                    var estimatedWidth = startWidth / 17.0 * (indicatedColumns * 17 + 69);
+                                    var center = leftPixel + estimatedWidth / 2;
+                                    if (reverse != 0) center = across - 1 - center;
+                                    partial.Observe(logicalRow, left, -1, prefix, center,
+                                        y + (center - across / 2.0) * slope, slope, estimatedWidth);
+                                }
                                 if (!regular && !compact || words.Count < (compact ? 1 : 2) || words.Count > (compact ? 30 : 31)) continue;
                                 var right = compact ? -1 : words[words.Count - 1];
                                 var cols = clipped ? indicatedColumns : words.Count - (compact ? 0 : 1);
@@ -115,6 +136,7 @@ public static partial class Pdf417Decoder {
                                 var setKey = (cols, compact, headerBin);
                                 if (!rowSets.TryGetValue(setKey, out var rowSet)) rowSets[setKey] = rowSet = new PixelRowSet(cols, compact);
                                 var rowWords = new int[cols + (compact ? 1 : 2)];
+                                if (clipped && words.Count < cols) rowWords[cols] = -1;
                                 rowWords[0] = left;
                                 words.CopyTo(rowWords, 1);
                                 var rightPixel = leftPixel;
@@ -156,27 +178,19 @@ public static partial class Pdf417Decoder {
                                 if (rowSet.Ordered && rowSet.Columns == columns && rowSet.Compact == compactSymbol && assembly.Accepts(rowSet))
                                     assembly.Observe(rowSet);
                             }
-                            if (!assembly.TryAssemble(out var rows) || rows.Count < 3 ||
-                                (count - rows.Count) * columns * 2 > (1 << (ecLevel + 1))) continue;
-                            var matrix = new BitMatrix(columns * 17 + (compactSymbol == true ? 35 : 69), count);
-                            for (var row = 0; row < count; row++) {
-                                if (!rows.TryGetValue(row, out var rowData)) {
-                                    rowData = new int[columns + (compactSymbol == true ? 1 : 2)];
-                                    var group = 30 * (row / 3);
-                                    rowData[0] = group + (row % 3 == 0 ? rowUpper : row % 3 == 1 ? ecLevel * 3 + rowLower : columns - 1);
-                                    if (compactSymbol != true) rowData[columns + 1] = group + (row % 3 == 0 ? columns - 1 : row % 3 == 1 ? rowUpper : ecLevel * 3 + rowLower);
-                                }
-                                WritePixelRowPattern(matrix, row, 0, StartPattern, 17);
-                                for (var word = 0; word < rowData.Length; word++)
-                                    WritePixelRowPattern(matrix, row, 17 + word * 17, Pdf417CodewordTable.Table[row % 3][rowData[word]], 17);
-                                var stopWidth = compactSymbol == true ? 1 : 18;
-                                WritePixelRowPattern(matrix, row, matrix.Width - stopWidth, compactSymbol == true ? 1 : StopPattern, stopWidth);
+                            foreach (var partial in partialSets.Values) {
+                                if (partial.Ordered && partial.Columns == columns && assembly.Accepts(partial))
+                                    assembly.Observe(partial, partial: true);
                             }
-                            if (TryDecodeCore(matrix, cancellationToken, out var text, out var macro)) {
-                                decoded = new Pdf417Decoded(text, macro);
-                                return true;
-                            }
+                            if (!assembly.TryAssemble(out var rows) || rows.Count < 3) continue;
+                            if (TryDecodePixelAssembly(rows, columns, count, ecLevel, false, cancellationToken, out decoded)) return true;
+                            RetainPixelRecovery(recoveries, rows, columns, count, ecLevel);
                         }
+                    }
+                    foreach (var recovery in recoveries) {
+                        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                        if (TryDecodePixelAssembly(recovery.Rows, recovery.Columns, recovery.Count, recovery.EcLevel,
+                            true, cancellationToken, out decoded)) return true;
                     }
                 }
             }
@@ -235,7 +249,4 @@ public static partial class Pdf417Decoder {
         return error < pattern.Length * 0.35;
     }
 
-    private static void WritePixelRowPattern(BitMatrix matrix, int row, int offset, int pattern, int width) {
-        for (var bit = 0; bit < width; bit++) matrix[offset + bit, row] = (pattern & (1 << (width - bit - 1))) != 0;
-    }
 }

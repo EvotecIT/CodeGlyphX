@@ -48,6 +48,8 @@
     <Compile Include="Pdf417CharsetFramingTests.cs" />
     <Compile Include="Pdf417FractionalSamplingTests.cs" />
     <Compile Include="Pdf417ScanlineImageTests.cs" />
+    <Compile Include="Pdf417ErasureImageTests.cs" />
+    <Compile Include="Pdf417ErrorCorrectionTests.cs" />
     <Compile Include="PhysicalRowDecodingTests.cs" />
     <Compile Include="Pdf417MacroRangeTests.cs" />
     <Compile Include="RenderingContractRegressionTests.cs" />
@@ -86,6 +88,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
+    <EmbeddedResource Include="Fixtures/Pdf417/*.png" />
     <EmbeddedResource Include="Fixtures/Linear/excel-asset-register.png" />
     <EmbeddedResource Include="Fixtures/Linear/native-svg-asset.png" />
     <EmbeddedResource Include="Fixtures/Linear/word-asset-page.png" />

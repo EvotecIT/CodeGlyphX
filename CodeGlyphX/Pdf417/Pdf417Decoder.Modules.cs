@@ -128,7 +128,7 @@ public static partial class Pdf417Decoder {
                 if (total <= k) continue;
                 var expectedLength = total - k;
                 var candidate = (int[])received.Clone();
-                if (!ec.Decode(candidate, k)) continue;
+                if (!ec.Decode(candidate, k, cancellationToken: cancellationToken)) continue;
                 if (candidate[0] != expectedLength) continue;
                 received = candidate;
                 eccCount = k;
