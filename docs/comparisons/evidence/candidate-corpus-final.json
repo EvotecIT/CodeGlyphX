@@ -81,13 +81,13 @@
     "Expected": [
       "init-test"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "init-test"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "aztec-2/19.png",
@@ -801,13 +801,13 @@
     "Expected": [
       "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "datamatrix-2/03.png",
@@ -816,13 +816,13 @@
     "Expected": [
       "http://google.com/m"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "http://google.com/m"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "datamatrix-2/04.png",
@@ -831,13 +831,13 @@
     "Expected": [
       "http://google.com/m"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "http://google.com/m"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "datamatrix-2/12.png",
@@ -846,13 +846,13 @@
     "Expected": [
       "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "datamatrix-2/13.png",
@@ -861,13 +861,13 @@
     "Expected": [
       "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "datamatrix-2/11.png",
@@ -876,13 +876,13 @@
     "Expected": [
       "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "datamatrix-3/abcd-144x8.png",
