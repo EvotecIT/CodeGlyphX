@@ -30,18 +30,24 @@ public static partial class BarcodeDecoder {
         for (var i = index; i < end; i++) {
             var candidate = candidates[i];
             if (DecodeBudget.ShouldAbort(cancellationToken)) break;
+            // Local illumination is a fallback for the same physical scanline.
+            // Its residuals must not displace a globally validated payload or supplement.
+            if (candidate.IsLocalThreshold && bestDecoded is not null && !bestScanline.IsLocalThreshold) continue;
+            if (candidate.IsLocalThreshold && expectedType.HasValue &&
+                expectedType != BarcodeType.EAN && expectedType != BarcodeType.UPCA && expectedType != BarcodeType.UPCE) continue;
             Consider(candidate.Modules, candidate.FitError, candidate);
             if (candidate.AlternativeModules.Length > 0 && !DecodeBudget.ShouldAbort(cancellationToken)) {
                 Consider(candidate.AlternativeModules, candidate.AlternativeFitError, candidate);
             }
         }
         index = end;
-        decoded = bestDecoded;
+        decoded = bestDecoded!;
         selected = bestScanline;
         return decoded is not null;
 
         void Consider(bool[] modules, double error, BarcodeScanlineCandidate candidate) {
             if (!TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, diagnostics, out var hit, out var priority)) return;
+            if (candidate.IsLocalThreshold && !IsCompleteLocalRetailPayload(hit, modules.Length)) return;
             if (priority > bestPriority) return;
             var preserveSupplement = false;
             if (priority == bestPriority && bestDecoded is not null && hit.Type == bestDecoded.Type &&
@@ -58,7 +64,19 @@ public static partial class BarcodeDecoder {
             bestDecoded = hit;
             // Located consumers need the modules that actually decoded, rather
             // than the other pitch's length when classifying the same scanline.
-            bestScanline = new BarcodeScanlineCandidate(modules, candidate.Position, candidate.IsVertical);
+            bestScanline = new BarcodeScanlineCandidate(modules, candidate.Position, candidate.IsVertical, isLocalThreshold: candidate.IsLocalThreshold);
         }
+    }
+
+    private static bool IsCompleteLocalRetailPayload(BarcodeDecoded decoded, int moduleCount) {
+        // A local run candidate already has the complete guards for one base
+        // symbol. Do not reinterpret a prefix as a shorter format or supplement:
+        // a checksum-valid UPC-E prefix can occur in unrelated striped textures.
+        return decoded.Type switch {
+            BarcodeType.EAN => (moduleCount == 67 && decoded.Text.Length == 8) || (moduleCount == 95 && decoded.Text.Length == 13),
+            BarcodeType.UPCA => moduleCount == 95 && decoded.Text.Length == 12,
+            BarcodeType.UPCE => moduleCount == 51 && decoded.Text.Length == 8,
+            _ => false
+        };
     }
 }

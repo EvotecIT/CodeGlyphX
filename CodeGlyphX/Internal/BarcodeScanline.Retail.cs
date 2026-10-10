@@ -12,7 +12,7 @@ internal static partial class BarcodeScanline {
     // retail symbols inside a scanline and estimate pitch independently for each digit.
     // The existing decoder remains responsible for parity and checksum validation.
     private static void TryCollectRetailRunCandidates(ReadOnlySpan<byte> luminance, int threshold,
-        CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, int position, bool isVertical) {
+        CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, int position, bool isVertical, bool localThreshold = false) {
         if (luminance.Length < 51) return;
         var runs = new List<int>();
         var firstIsBar = luminance[0] < threshold;
@@ -25,9 +25,11 @@ internal static partial class BarcodeScanline {
             else { runs.Add(length); current = bar; length = 1; }
         }
         runs.Add(length);
-        TryCollectCode128RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
-        TryCollectCode39RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
-        TryCollectExpandedRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
+        if (!localThreshold) {
+            TryCollectCode128RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
+            TryCollectCode39RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
+            TryCollectExpandedRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
+        }
         for (var start = 0; start + 33 <= runs.Count; start++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) return;
             // Also locate inverted symbols; the normal transform path resolves polarity.
@@ -75,7 +77,7 @@ internal static partial class BarcodeScanline {
                     for (var i = 0; i < width; i++) modules[offset++] = bar;
                     bar = !bar;
                 }
-                AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(modules, position, isVertical, fitError: fit));
+                AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(modules, position, isVertical, fitError: fit, isLocalThreshold: localThreshold));
             }
         }
     }

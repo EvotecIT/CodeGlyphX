@@ -30,6 +30,7 @@
     <Compile Include="TestBudget.cs" />
     <Compile Include="FractionalBarcodeSamplingTests.cs" />
     <Compile Include="BarcodeGrayBoundaryTests.cs" />
+    <Compile Include="RetailIlluminationTests.cs" />
     <Compile Include="BarcodePixelSamplingTests.cs" />
     <Compile Include="QrImageDecodeParityData.cs" />
     <Compile Include="QrImageDecodeParitySharedTests.cs" />

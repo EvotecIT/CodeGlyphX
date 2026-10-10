@@ -23,14 +23,16 @@ internal readonly struct BarcodeScanlineCandidate {
     internal double AlternativeFitError { get; }
     internal int Position { get; }
     internal bool IsVertical { get; }
+    internal bool IsLocalThreshold { get; }
 
-    internal BarcodeScanlineCandidate(bool[] modules, int position, bool isVertical, bool[]? alternativeModules = null, double fitError = 0, double alternativeFitError = 0) {
+    internal BarcodeScanlineCandidate(bool[] modules, int position, bool isVertical, bool[]? alternativeModules = null, double fitError = 0, double alternativeFitError = 0, bool isLocalThreshold = false) {
         Modules = modules ?? throw new ArgumentNullException(nameof(modules));
         AlternativeModules = alternativeModules ?? Array.Empty<bool>();
         FitError = fitError;
         AlternativeFitError = alternativeFitError;
         Position = position;
         IsVertical = isVertical;
+        IsLocalThreshold = isLocalThreshold;
     }
 }
 
@@ -447,17 +449,19 @@ internal static partial class BarcodeScanline {
             }
             TryCollectRetailRunCandidates(luminance, thresholds[i], cancellationToken, candidates, position, isVertical);
         }
+        TryCollectAdaptiveRetailCandidates(luminance, cancellationToken, candidates, position, isVertical);
     }
     private static void AddUniqueLocatedCandidate(List<BarcodeScanlineCandidate> candidates, BarcodeScanlineCandidate candidate) {
         for (var i = 0; i < candidates.Count; i++) {
             var existing = candidates[i];
             if (existing.Position != candidate.Position || existing.IsVertical != candidate.IsVertical) continue;
+            if (existing.IsLocalThreshold != candidate.IsLocalThreshold) continue;
             if (ModulesEqual(existing.Modules, candidate.Modules) && ModulesEqual(existing.AlternativeModules, candidate.AlternativeModules)) {
                 // Repeated thresholds can preserve the modules while improving
                 // their pixel fit. Keep the best evidence for each interpretation.
                 candidates[i] = new BarcodeScanlineCandidate(existing.Modules, existing.Position, existing.IsVertical,
                     existing.AlternativeModules, Math.Min(existing.FitError, candidate.FitError),
-                    Math.Min(existing.AlternativeFitError, candidate.AlternativeFitError));
+                    Math.Min(existing.AlternativeFitError, candidate.AlternativeFitError), existing.IsLocalThreshold);
                 return;
             }
         }
