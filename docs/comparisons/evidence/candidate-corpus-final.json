@@ -2426,13 +2426,13 @@
     "Expected": [
       "MECARD:N:Google 411,;TEL:18665881077;;"
     ],
-    "Actual": [
+    "Actual": [],
+    "Missing": [
       "MECARD:N:Google 411,;TEL:18665881077;;"
     ],
-    "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "SymbolLimitReached"
+    "Status": "Failed",
+    "Completion": "DeadlineExceeded"
   },
   {
     "Id": "qrcode-3/35.png",

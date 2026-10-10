@@ -1,0 +1,182 @@
+[
+  {
+    "Id": "qrcode-3/13.png",
+    "Format": "QrCode",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Actual": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "qrcode-3/05.png",
+    "Format": "QrCode",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+    ],
+    "Actual": [
+      "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "qrcode-3/32.png",
+    "Format": "QrCode",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
+    ],
+    "Actual": [
+      "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "qrcode-3/11.png",
+    "Format": "QrCode",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Actual": [],
+    "Missing": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "DeadlineExceeded"
+  },
+  {
+    "Id": "qrcode-3/13.png",
+    "Format": "QrCode",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Actual": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "qrcode-3/05.png",
+    "Format": "QrCode",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+    ],
+    "Actual": [
+      "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "qrcode-3/32.png",
+    "Format": "QrCode",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
+    ],
+    "Actual": [
+      "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "qrcode-3/11.png",
+    "Format": "QrCode",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Actual": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "qrcode-3/13.png",
+    "Format": "QrCode",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Actual": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "qrcode-3/05.png",
+    "Format": "QrCode",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+    ],
+    "Actual": [
+      "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "qrcode-3/32.png",
+    "Format": "QrCode",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
+    ],
+    "Actual": [
+      "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "qrcode-3/11.png",
+    "Format": "QrCode",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Actual": [
+      "MECARD:N:Google 411,;TEL:18665881077;;"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  }
+]

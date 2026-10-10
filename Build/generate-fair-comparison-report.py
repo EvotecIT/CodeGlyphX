@@ -41,6 +41,7 @@ def main():
     names += [f"{kind}-final-{domain}-result.json" for kind, domain in runs]
     names += [name for name in ("previous-candidate-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
+    names += sorted(path.name for path in root.glob("qr-variation-*.json"))
     evidence = output / "evidence"
     evidence.mkdir(exist_ok=True)
     hashes = {}

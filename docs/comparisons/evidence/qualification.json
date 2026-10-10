@@ -1,11 +1,11 @@
 {
   "BaselineSource": "cbcf4af8e906d00e86c5d97ea0511100d52220fa",
-  "CompiledSource": "8fc393b060701645bc397e6fc9c128ead4db1a69",
-  "MeasurementSource": "8fc393b060701645bc397e6fc9c128ead4db1a69",
-  "CoreSourceUnchangedAfter": "8fc393b060701645bc397e6fc9c128ead4db1a69",
+  "CompiledSource": "419b84d950ea481a4775a7f7c717b9efa95bc520",
+  "MeasurementSource": "419b84d950ea481a4775a7f7c717b9efa95bc520",
+  "CoreSourceUnchangedAfter": "419b84d950ea481a4775a7f7c717b9efa95bc520",
   "BaselineCoreSha256": "298719E62EC63B736C9C1CAC1375463E16363F7DAEBF65373D17EC0DC40403D9",
-  "CandidateCoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
-  "ComparisonAssemblySha256": "9915DB53BE85264B4B4E9D450F25F8BC529A5C80120951D0F8BC078F4F4CB3FE",
+  "CandidateCoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+  "ComparisonAssemblySha256": "6DB062BEE66F553FCAA97B8AB010554DD77211F9C5C313E76C72D0D8EF96FC66",
   "NativeEngineSha256": "1550C1AB6529C2F977BEBAC3F4BF218CA7F932C6CB5B1089121787FE16449C78",
   "Versions": {
     "SDK": "10.0.401",
@@ -51,11 +51,11 @@
   "OptionalRuntimeConfigurations": [
     "All three external engines; unchanged opt-in dependency boundary"
   ],
-  "Review": "Fresh read-only review of the bounded local-threshold retail fallback, complete-base format validation, global-candidate preservation and public decoding entry points; result is retained in ReviewProbe. Earlier matrix/search qualification remains separate.",
+  "Review": "Fresh read-only review of QR horizontal-run component traversal, exact four-connected geometry and order, cancellation, pooled storage ownership and existing image entry points; result is retained in ReviewProbe. Earlier decoder qualification remains separate.",
   "ProductionBoundary": "No external comparison engine in CodeGlyphX.csproj; benchmark executable is non-packable, dependencies are opt-in.",
-  "CorpusCompiledSource": "8fc393b060701645bc397e6fc9c128ead4db1a69",
-  "CorpusCandidateCoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
-  "CorpusComparisonAssemblySha256": "9915DB53BE85264B4B4E9D450F25F8BC529A5C80120951D0F8BC078F4F4CB3FE",
+  "CorpusCompiledSource": "419b84d950ea481a4775a7f7c717b9efa95bc520",
+  "CorpusCandidateCoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+  "CorpusComparisonAssemblySha256": "6DB062BEE66F553FCAA97B8AB010554DD77211F9C5C313E76C72D0D8EF96FC66",
   "NegativeManifestSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
   "Netstandard20Build": "Succeeded, zero warnings and errors",
   "ArchivedFinalTests": [
@@ -63,229 +63,431 @@
       "File": "full-net10.trx",
       "Passed": 2127,
       "Failed": 0,
-      "Sha256": "98C8C2CF79989A56C8DA37C5227F7D836109CE1822A5CD8B7A17A437981A5171"
+      "Sha256": "7454B606A7280C94DB166F133AE9C93279CA4476ED78F7DD6696EBCB45634AD4"
     },
     {
       "File": "full-net8.trx",
       "Passed": 2105,
       "Failed": 0,
-      "Sha256": "A3C2E86527465D1B8DABE4F61153B0FB9309BD4133F46BA51DC4BF8244179EE7"
+      "Sha256": "1BA69B5303EED6D3B71A9979C99DBD78EC839580824F58419CBB61FC41395263"
     },
     {
       "File": "full-net472.trx",
       "Passed": 606,
       "Failed": 0,
-      "Sha256": "A05102EA0D8AC81C9E614B12F2BD1E72907BB6B383320ECFF4A41F0B6194C7D6"
+      "Sha256": "66B44F5A5B425385EBF0ADF55554495937FA420488AFF5112BA082B5FB0F82FB"
     }
   ],
-  "QualifiedUtc": "2026-10-10T19:57:49.733018+00:00",
-  "PreviousMeasurementSource": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
+  "QualifiedUtc": "2026-10-10T20:44:14.702341+00:00",
+  "PreviousMeasurementSource": "8fc393b060701645bc397e6fc9c128ead4db1a69",
   "NegativeCorpus": "The identical 25-image falsepositives-2 manifest is retained. Six images overlap the twelve main-corpus negatives. Budget exhaustion remains inconclusive.",
-  "HardwareCapturedUtc": "2026-10-10T19:48:38.4260191Z",
+  "HardwareCapturedUtc": "2026-10-10T20:33:17.2420405Z",
   "HostCpuBeforeSuites": {
     "generation-ccd0": [
-      18.8243281792561,
-      11.269065845373794,
-      15.231469834460453
+      74.67297549159572,
+      83.27676658756646,
+      31.71284887856658
     ],
     "generation-ccd1": [
-      30.69664691527264,
-      26.96109142150982,
-      35.050710790753655
+      41.45329165637912,
+      48.61223440344688,
+      40.02440130533193
     ],
     "decoding-ccd0": [
-      14.600029361617095,
-      10.064347551716658,
-      11.640317067006222
+      21.06116132497394,
+      25.234379988223353,
+      29.27486760161332
     ],
     "decoding-ccd1": [
-      10.765407179434739,
-      11.001774383562212,
-      8.84493865341003
+      49.91993106122556,
+      37.67767527329451,
+      37.01502568761433
     ]
   },
   "CorpusHostCpuBeforeScans": {
     "corpus": [
-      10.946021578578103,
-      9.675313077740523,
-      25.221584327570902
+      49.98453062632081,
+      50.87277240070348,
+      45.08810307925778
     ],
     "negatives": [
-      30.99447701770428,
-      26.022165308200616,
-      31.170436024117098
+      22.914553778470292,
+      17.094280103480575,
+      16.765910407000263
     ]
   },
   "NegativeRotationManifestSha256": "A2FFA645DE5CC4390B719E64ADE632CB4F4C1BBD0C2862964F03C27498B6637F",
   "NegativeRotationSources": {
     "previous": {
-      "Source": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
-      "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865"
-    },
-    "current": {
       "Source": "8fc393b060701645bc397e6fc9c128ead4db1a69",
       "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75"
+    },
+    "current": {
+      "Source": "419b84d950ea481a4775a7f7c717b9efa95bc520",
+      "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB"
     }
   },
   "NegativeRotation": {
     "ccd0": [
       {
-        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-        "Cpu": [
-          49.572528329723845,
-          55.10671092643289,
-          44.46700440109369
-        ],
-        "Inconclusive": 0,
-        "Source": "previous",
-        "Index": 0,
-        "Unexpected": 0,
         "File": "negative-rotation-ccd0-0-previous.json",
-        "Domain": "ccd0",
-        "Completed": 31
-      },
-      {
-        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
-        "Cpu": [
-          21.704527042545674,
-          22.110717544324142,
-          25.326670719206213
-        ],
-        "Inconclusive": 0,
-        "Source": "current",
-        "Index": 1,
-        "Unexpected": 0,
-        "File": "negative-rotation-ccd0-1-current.json",
-        "Domain": "ccd0",
-        "Completed": 31
-      },
-      {
-        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
-        "Cpu": [
-          19.857154177603885,
-          19.325221627456134,
-          22.917380848493472
-        ],
-        "Inconclusive": 0,
-        "Source": "current",
-        "Index": 2,
-        "Unexpected": 0,
-        "File": "negative-rotation-ccd0-2-current.json",
-        "Domain": "ccd0",
-        "Completed": 31
-      },
-      {
-        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-        "Cpu": [
-          18.661520560366796,
-          19.33537679418468,
-          21.122560008583957
-        ],
-        "Inconclusive": 0,
         "Source": "previous",
-        "Index": 3,
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
         "Unexpected": 0,
-        "File": "negative-rotation-ccd0-3-previous.json",
         "Domain": "ccd0",
-        "Completed": 31
+        "Cpu": [
+          37.849683667196366,
+          14.751117141471791,
+          14.21936730173784
+        ],
+        "Index": 0,
+        "Completed": 31,
+        "Inconclusive": 0
+      },
+      {
+        "File": "negative-rotation-ccd0-1-current.json",
+        "Source": "current",
+        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+        "Unexpected": 0,
+        "Domain": "ccd0",
+        "Cpu": [
+          24.235240753719033,
+          18.630566827955054,
+          17.91511766047601
+        ],
+        "Index": 1,
+        "Completed": 31,
+        "Inconclusive": 0
+      },
+      {
+        "File": "negative-rotation-ccd0-2-current.json",
+        "Source": "current",
+        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+        "Unexpected": 0,
+        "Domain": "ccd0",
+        "Cpu": [
+          30.664785342589486,
+          41.37614445945965,
+          37.62762713957244
+        ],
+        "Index": 2,
+        "Completed": 31,
+        "Inconclusive": 0
+      },
+      {
+        "File": "negative-rotation-ccd0-3-previous.json",
+        "Source": "previous",
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Unexpected": 0,
+        "Domain": "ccd0",
+        "Cpu": [
+          22.623897326577,
+          28.871859400241927,
+          25.941997031116713
+        ],
+        "Index": 3,
+        "Completed": 31,
+        "Inconclusive": 0
       }
     ],
     "ccd1": [
       {
-        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
-        "Cpu": [
-          10.31688520173052,
-          16.683719903174186,
-          24.32536327130441
-        ],
-        "Inconclusive": 0,
-        "Source": "current",
-        "Index": 0,
-        "Unexpected": 0,
         "File": "negative-rotation-ccd1-0-current.json",
-        "Domain": "ccd1",
-        "Completed": 31
-      },
-      {
-        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-        "Cpu": [
-          12.32930796055528,
-          12.71433463495153,
-          7.2397727694854535
-        ],
-        "Inconclusive": 0,
-        "Source": "previous",
-        "Index": 1,
-        "Unexpected": 0,
-        "File": "negative-rotation-ccd1-1-previous.json",
-        "Domain": "ccd1",
-        "Completed": 31
-      },
-      {
-        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-        "Cpu": [
-          10.46922583188017,
-          9.740151379046114,
-          14.498500738162633
-        ],
-        "Inconclusive": 0,
-        "Source": "previous",
-        "Index": 2,
-        "Unexpected": 0,
-        "File": "negative-rotation-ccd1-2-previous.json",
-        "Domain": "ccd1",
-        "Completed": 31
-      },
-      {
-        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
-        "Cpu": [
-          11.207396980200457,
-          20.300694122360806,
-          36.44124822228915
-        ],
-        "Inconclusive": 0,
         "Source": "current",
-        "Index": 3,
+        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
         "Unexpected": 0,
-        "File": "negative-rotation-ccd1-3-current.json",
         "Domain": "ccd1",
-        "Completed": 31
+        "Cpu": [
+          43.95708893321674,
+          44.269255122994664,
+          67.02409814928521
+        ],
+        "Index": 0,
+        "Completed": 31,
+        "Inconclusive": 0
+      },
+      {
+        "File": "negative-rotation-ccd1-1-previous.json",
+        "Source": "previous",
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Unexpected": 0,
+        "Domain": "ccd1",
+        "Cpu": [
+          22.15008011393983,
+          24.52450651268967,
+          20.702216632443328
+        ],
+        "Index": 1,
+        "Completed": 31,
+        "Inconclusive": 0
+      },
+      {
+        "File": "negative-rotation-ccd1-2-previous.json",
+        "Source": "previous",
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Unexpected": 0,
+        "Domain": "ccd1",
+        "Cpu": [
+          62.34125954894431,
+          52.02738907159669,
+          52.76850285383545
+        ],
+        "Index": 2,
+        "Completed": 31,
+        "Inconclusive": 0
+      },
+      {
+        "File": "negative-rotation-ccd1-3-current.json",
+        "Source": "current",
+        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+        "Unexpected": 0,
+        "Domain": "ccd1",
+        "Cpu": [
+          42.304889613024876,
+          35.736828568223565,
+          43.871171800753025
+        ],
+        "Index": 3,
+        "Completed": 31,
+        "Inconclusive": 0
       }
     ]
   },
   "ReviewProbe": {
     "Status": "complete",
-    "Head": "8fc393b060701645bc397e6fc9c128ead4db1a69",
-    "Base": "855499d1685a94bc394b25b543bd401849f81bf8",
-    "Agent": "/root/retail_sampling_review",
-    "Boundary": "current",
+    "Head": "419b84d950ea481a4775a7f7c717b9efa95bc520",
+    "Base": "3ad43092a6247d651dc7a5df40bc11a21f820ec9",
+    "Reviewer": "qr_component_traversal_review",
+    "FreshContext": true,
     "ReadOnly": true,
-    "Recommendation": "Accept as shaped, subject to full corpus, framework and comparable performance qualification",
-    "Scope": "Bounded local-contrast retail scanline sampling, global candidate preservation, complete-base format guard, public pixel and scanner paths, cancellation, bounds, pooled buffers, regression value and fixture provenance",
-    "Excluded": "Unchanged PDF417, Aztec and prior matrix/search optimizations",
-    "Findings": [],
+    "Reason": "Different traversal strategies share component geometry and pooled ownership; cancellation inside traversal adds a subtle resource boundary.",
+    "Scope": [
+      "Four-connected geometry, order, area and filters",
+      "Global and adaptive thresholds and inversion",
+      "Broad-run versus narrow-pixel traversal",
+      "Cancellation, duplicate seeds, pooled lifetime",
+      "Existing callers and framework boundaries"
+    ],
+    "TechnicalFindings": [],
     "UnresolvedFindings": [],
-    "ProductAssessment": "The change belongs in the existing scanline engine, adds no public API or production dependency, and keeps adaptive sampling in a focused partial file.",
-    "QualificationGap": "Adaptive collection also runs on non-retail hinted calls; current corpus, paired negative completion and timing evidence must quantify its effect before performance or no-regression claims.",
-    "ReviewerExecution": "No edits, tests or builds"
+    "Disposition": "accept as shaped",
+    "PublicApiChanged": false,
+    "NewDependencies": false,
+    "TargetedConfirmationUsed": false,
+    "Evidence": [
+      "component-equivalence.json",
+      "tests/qr-final-focused.trx"
+    ],
+    "Limits": [
+      "Reviewer did not execute builds or tests; primary owns full framework, corpus and timing proof",
+      "Synthetic timing before comment-only edit is diagnostic; final timing binds the committed candidate",
+      "Local review is not hosted CI, publication or merge approval"
+    ]
   },
   "CropRegression": "Independent review reproduced a stop-only crop regression in e01c61e3; 68bebf12 fixes it. Both normal and inverted crop contracts pass beside the original payload-clipped cases.",
   "TestedCoreSha256": {
-    "net10.0": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
-    "net8.0": "6B1A6EEC857D50CD5EE9060C48F69DBD305BBA382F480F4E209AF846C9B2B292",
-    "net472": "65EC2F5D35D04F1E85128CA981AE4086CF5B83D06A759DFF7996759343A3C0D1"
+    "net10.0": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+    "net8.0": "2B23E4B5EC67936CCEF1DDDEE2FFD67AD4F37F39E4A6D3145F19537B29DBE08B",
+    "net472": "A9E143F4021DB156E5EA0325C3425F18414F41A0E079DD9EF8C234869E0B9408"
   },
-  "TestedSource": "8fc393b060701645bc397e6fc9c128ead4db1a69",
+  "TestedSource": "419b84d950ea481a4775a7f7c717b9efa95bc520",
   "ChangedDecoders": [
-    "Two bounded local-contrast scanline windows use sliding extrema and periodic cancellation checks",
-    "Only guarded complete retail base symbols are admitted, with existing parity and checksum validation",
-    "Globally validated scanline payloads and supplements retain priority over local threshold hypotheses"
+    "QR component discovery uses horizontal runs for broad regions and pixel traversal for narrow strokes, with unchanged four-connected geometry, area, filters and row-major seed order",
+    "A single initialized foreground mask replaces separate visited storage",
+    "Cancellation is checked periodically inside component traversal; partial components are never returned"
   ],
   "RegressionProof": {
-    "PreviousCore": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
-    "ExpectedPositiveRegressionFailures": 6,
-    "ChecksumAndNegativeCasesStillPass": 3,
-    "CandidateCoreRestored": "421D45B6259FE1B45F2E0E1F0D4A133530E32F5AA4A1434D9F70C3F082BC1EA0"
+    "Cases": 2448,
+    "Components": 49375,
+    "OrderedComponentSha256": "55DC5AD3A1FF789A0CE1E848B3076755CAD57132ED9FA165A217207F498C26F4",
+    "BeforeSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+    "AfterSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+    "CancellationInsideTraversal": true,
+    "PoolReuseAfterCancellation": true,
+    "PoolReuseAfterException": true
   },
-  "AttributionLimits": "This implementation changes retail scanline sampling only. The current main pass also completed one additional QR photograph, qrcode-3/11.png, with no QR source change; that result is retained as run variability rather than a retail-algorithm gain. Shared-host deadline effects remain visible in every negative and timing pass."
+  "AttributionLimits": "This implementation changes QR connected-component traversal only. Exact component equivalence is checked separately from public recognition and latency. The current main score is 173/267 versus 174/267 in the previous pass: qrcode-3/11.png, already variable before this change, is missed. Eight targeted alternating old/current passes across both cache domains also miss that photograph with DeadlineExceeded, four per binary. These probes do not isolate a traversal regression or establish a decoding gain; the main result is retained. Shared-host effects and all timing samples remain visible. Main negatives are still 11/12 completed, so a general timeout fix is not established.",
+  "QrVariationManifestSha256": "2EDF21C30B841D21ED94483A4C73BD454D0CF16E8F3ED910E00627EE13085B04",
+  "QrVariation": {
+    "ccd0": [
+      {
+        "Index": 0,
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Source": "previous",
+        "File": "qr-variation-ccd0-0-previous.json",
+        "Target": {
+          "Id": "qrcode-3/11.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Actual": [],
+          "Missing": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "DeadlineExceeded"
+        },
+        "Domain": "ccd0"
+      },
+      {
+        "Index": 1,
+        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+        "Source": "current",
+        "File": "qr-variation-ccd0-1-current.json",
+        "Target": {
+          "Id": "qrcode-3/11.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Actual": [],
+          "Missing": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "DeadlineExceeded"
+        },
+        "Domain": "ccd0"
+      },
+      {
+        "Index": 2,
+        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+        "Source": "current",
+        "File": "qr-variation-ccd0-2-current.json",
+        "Target": {
+          "Id": "qrcode-3/11.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Actual": [],
+          "Missing": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "DeadlineExceeded"
+        },
+        "Domain": "ccd0"
+      },
+      {
+        "Index": 3,
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Source": "previous",
+        "File": "qr-variation-ccd0-3-previous.json",
+        "Target": {
+          "Id": "qrcode-3/11.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Actual": [],
+          "Missing": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "DeadlineExceeded"
+        },
+        "Domain": "ccd0"
+      }
+    ],
+    "ccd1": [
+      {
+        "Index": 0,
+        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+        "Source": "current",
+        "File": "qr-variation-ccd1-0-current.json",
+        "Target": {
+          "Id": "qrcode-3/11.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Actual": [],
+          "Missing": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "DeadlineExceeded"
+        },
+        "Domain": "ccd1"
+      },
+      {
+        "Index": 1,
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Source": "previous",
+        "File": "qr-variation-ccd1-1-previous.json",
+        "Target": {
+          "Id": "qrcode-3/11.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Actual": [],
+          "Missing": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "DeadlineExceeded"
+        },
+        "Domain": "ccd1"
+      },
+      {
+        "Index": 2,
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Source": "previous",
+        "File": "qr-variation-ccd1-2-previous.json",
+        "Target": {
+          "Id": "qrcode-3/11.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Actual": [],
+          "Missing": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "DeadlineExceeded"
+        },
+        "Domain": "ccd1"
+      },
+      {
+        "Index": 3,
+        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
+        "Source": "current",
+        "File": "qr-variation-ccd1-3-current.json",
+        "Target": {
+          "Id": "qrcode-3/11.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Actual": [],
+          "Missing": [
+            "MECARD:N:Google 411,;TEL:18665881077;;"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "DeadlineExceeded"
+        },
+        "Domain": "ccd1"
+      }
+    ]
+  }
 }
