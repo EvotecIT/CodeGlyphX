@@ -379,7 +379,7 @@ public static partial class SymbolScanner {
         int width, int height, CancellationToken cancellationToken) {
         if (candidate.Decoded.Type != BarcodeType.Pharmacode && candidate.Decoded.Type != BarcodeType.ITF) return false;
         var region = candidate.SearchRegion;
-        if (candidate.Decoded.Type == BarcodeType.Pharmacode && region.X == 0 && region.Y == 0 && region.Width == width && region.Height == height) return false;
+        if (region.X == 0 && region.Y == 0 && region.Width == width && region.Height == height) return false;
 
         // Pharmacode and ordinary ITF have no mandatory checksum. A tile boundary through
         // a bar can turn a fragment into another valid number, even with ITF's short guards.
@@ -404,10 +404,16 @@ public static partial class SymbolScanner {
         }
         var threshold = (minimum + maximum) / 2;
         if (minimum >= maximum) return true;
+        // Ordinary ITF also supports white bars on a dark quiet background. Require
+        // the same background polarity at both edges; the ten-module check below
+        // rejects internal gaps and clipped edge bars for either polarity.
+        var darkBackground = candidate.Decoded.Type == BarcodeType.ITF &&
+            Luminance(start) < threshold && Luminance(end - 1) < threshold;
+        bool IsBackground(int at) => darkBackground ? Luminance(at) < threshold : Luminance(at) >= threshold;
         var first = start;
-        while (first < end && Luminance(first) >= threshold) first++;
+        while (first < end && IsBackground(first)) first++;
         var last = end - 1;
-        while (last > first && Luminance(last) >= threshold) last--;
+        while (last > first && IsBackground(last)) last--;
         var quietModules = candidate.Decoded.Type == BarcodeType.ITF ? 10 : 2;
         var quietPixels = Math.Max(2, quietModules * (last - first + 1) / candidate.Scanline.Modules.Length);
         return first - start < quietPixels || end - last - 1 < quietPixels;

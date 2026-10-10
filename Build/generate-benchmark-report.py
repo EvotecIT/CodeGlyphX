@@ -500,7 +500,7 @@ def build_section(
     lines.append("- Quick and Full runs include the same scenario list; only the iteration settings differ.")
     lines.append("- Benchmarks run under controlled, ideal conditions on a single machine; treat results as directional, not definitive.")
     lines.append("Notes:")
-    lines.append("- Historical reports are not a current competitive ranking. Older QR-pack runs compared single-result and multiple-result APIs. Use Docs/fair-comparisons.md for the qualified independent corpus and matched generation workload.")
+    lines.append("- Historical reports are not a current competitive ranking. Older QR-pack runs compared single-result and multiple-result APIs. Use docs/fair-comparisons.md for the qualified independent corpus and matched generation workload.")
     lines.append(f"- {run_mode_details}")
     lines.append("- Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.")
     lines.append("- Comparisons target PNG output and include encode+render (not encode-only).")
@@ -607,7 +607,8 @@ def update_section(path: Path, section: str, os_name: str, run_mode: str):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--artifacts-path", required=True)
+    parser.add_argument("--artifacts-path")
+    parser.add_argument("--qualify-existing", action="store_true", help="Label historical generated reports without inventing new measurements.")
     parser.add_argument("--output", default=None)
     parser.add_argument("--framework", default="net8.0")
     parser.add_argument("--configuration", default="Release")
@@ -622,6 +623,12 @@ def main():
     parser.add_argument("--no-publish", action="store_true")
     parser.add_argument("--fail-on-missing-compare", action="store_true")
     args = parser.parse_args()
+
+    if args.qualify_existing:
+        qualify_existing_reports(Path(__file__).resolve().parent.parent)
+        return
+    if not args.artifacts_path:
+        parser.error("--artifacts-path is required unless --qualify-existing is used")
 
     artifacts_path = Path(args.artifacts_path).resolve()
     output_path = Path(args.output).resolve() if args.output else Path(__file__).resolve().parent.parent / "BENCHMARK.md"
@@ -851,7 +858,7 @@ def write_json(
     pack_runner = load_pack_runner_payload(artifacts_path, run_mode)
 
     notes = [
-        "Historical reports are not a current competitive ranking. Older QR-pack runs compared single-result and multiple-result APIs. See Docs/fair-comparisons.md.",
+        "Historical reports are not a current competitive ranking. Older QR-pack runs compared single-result and multiple-result APIs. See docs/fair-comparisons.md.",
         run_mode_details,
         "Comparisons target PNG output and include encode+render (not encode-only).",
         "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
@@ -979,6 +986,41 @@ def write_json(
 
     if fail_on_missing_compare and payload["missingComparisons"]:
         raise SystemExit(f"Missing compare results: {', '.join(payload['missingComparisons'])}.")
+
+
+def qualify_existing_reports(repo_root):
+    notice = "Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md."
+    replacements = {
+        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).": "ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.",
+        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).": "Barcoder uses the managed comparison renderer.",
+    }
+    report = repo_root / "BENCHMARK.md"
+    content = report.read_text(encoding="utf-8-sig")
+    for old, new in replacements.items():
+        content = content.replace(old, new)
+    marker = "# Benchmarks"
+    if notice not in content:
+        content = content.replace(marker, marker + "\n\n> " + notice, 1)
+    report.write_text(content, encoding="utf-8")
+
+    def qualify(value):
+        if isinstance(value, dict):
+            if isinstance(value.get("notes"), list):
+                value["notes"] = [replacements.get(note, note) for note in value["notes"]]
+                if notice not in value["notes"]:
+                    value["notes"].insert(0, notice)
+                value["qualification"] = "historical-unqualified"
+            for child in value.values():
+                qualify(child)
+        elif isinstance(value, list):
+            for child in value:
+                qualify(child)
+
+    for name in ("benchmark.json", "benchmark-summary.json"):
+        path = repo_root / "Assets" / "Data" / name
+        payload = json.loads(path.read_text(encoding="utf-8-sig"))
+        qualify(payload)
+        path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 if __name__ == "__main__":

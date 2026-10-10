@@ -42,7 +42,17 @@ public static partial class BarcodeDecoder {
 
         void Consider(bool[] modules, double error, BarcodeScanlineCandidate candidate) {
             if (!TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, diagnostics, out var hit, out var priority)) return;
-            if (priority > bestPriority || (priority == bestPriority && error >= bestError)) return;
+            if (priority > bestPriority) return;
+            var preserveSupplement = false;
+            if (priority == bestPriority && bestDecoded is not null && hit.Type == bestDecoded.Type &&
+                (hit.Type == BarcodeType.EAN || hit.Type == BarcodeType.UPCA || hit.Type == BarcodeType.UPCE)) {
+                // A guarded local candidate can cover only the base symbol. A complete,
+                // parity-validated supplement from the same scanline must not be discarded
+                // merely because the base's local width fit has a smaller residual.
+                if (bestDecoded.Text.StartsWith(hit.Text + "+", System.StringComparison.Ordinal)) return;
+                preserveSupplement = hit.Text.StartsWith(bestDecoded.Text + "+", System.StringComparison.Ordinal);
+            }
+            if (priority == bestPriority && !preserveSupplement && error >= bestError) return;
             bestPriority = priority;
             bestError = error;
             bestDecoded = hit;

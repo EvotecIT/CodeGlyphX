@@ -88,6 +88,8 @@ internal static class CorpusReaders {
 
 /// <summary>Resolves comparison-only native assets in hosts without the executable's deps.json resolver.</summary>
 public static class CorpusNativeLibrary {
+    private static readonly object ResolverLock = new();
+    private static string? _configuredPath;
     /// <summary>Uses the binding's platform asset without relying on a PowerShell host's deps.json.</summary>
     public static void ConfigureFromDirectory(string assemblyDirectory) {
         var architecture = RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
@@ -98,9 +100,20 @@ public static class CorpusNativeLibrary {
 
     public static void Configure(string absoluteLibraryPath) {
 #if COMPARE_ZXINGCPP
-        var handle = NativeLibrary.Load(Path.GetFullPath(absoluteLibraryPath));
-        NativeLibrary.GetExport(handle, "ZXing_ReaderOptions_delete");
-        NativeLibrary.SetDllImportResolver(typeof(ZXingCpp.Barcode).Assembly, (name, assembly, searchPath) => name == "ZXing" ? handle : IntPtr.Zero);
+        var path = Path.GetFullPath(absoluteLibraryPath);
+        lock (ResolverLock) {
+            if (_configuredPath is not null) {
+                var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+                if (!_configuredPath.Equals(path, comparison)) throw new InvalidOperationException("Run a different native engine in a fresh host.");
+                return;
+            }
+            var handle = NativeLibrary.Load(path);
+            try {
+                NativeLibrary.GetExport(handle, "ZXing_ReaderOptions_delete");
+                NativeLibrary.SetDllImportResolver(typeof(ZXingCpp.Barcode).Assembly, (name, assembly, searchPath) => name == "ZXing" ? handle : IntPtr.Zero);
+                _configuredPath = path;
+            } catch { NativeLibrary.Free(handle); throw; }
+        }
 #else
         throw new NotSupportedException("ZXing-C++ was not compiled in.");
 #endif

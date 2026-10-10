@@ -34,11 +34,12 @@
         "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
       ],
       "notes": [
+        "Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md.",
         "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
         "Comparisons target PNG output and include encode+render (not encode-only).",
         "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+        "ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.",
+        "Barcoder uses the managed comparison renderer.",
         "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
         "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
         "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).",
@@ -751,7 +752,8 @@
           }
         ],
         "note": "QR pack runner (quick): CodeGlyphX expected=98% (misses: art-jess3-grid); ZXing.Net expected=62% (misses: art-dots-variants, art-jess3-grid, art-jess3-splash, art-jess3-splash-variant)"
-      }
+      },
+      "qualification": "historical-unqualified"
     },
     "full": {
       "generatedUtc": "2026-01-24T10:49:40.7910358Z",
@@ -787,11 +789,12 @@
         "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
       ],
       "notes": [
+        "Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md.",
         "Run mode: Full (BenchmarkDotNet default job settings).",
         "Comparisons target PNG output and include encode+render (not encode-only).",
         "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+        "ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.",
+        "Barcoder uses the managed comparison renderer.",
         "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
         "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
         "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy)."
@@ -1221,7 +1224,8 @@
             }
           }
         }
-      ]
+      ],
+      "qualification": "historical-unqualified"
     }
   },
   "linux": {
@@ -1259,11 +1263,12 @@
         "Quick runs use fewer iterations for fast feedback; Full runs use BenchmarkDotNet defaults and are recommended for publishing."
       ],
       "notes": [
+        "Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md.",
         "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
         "Comparisons target PNG output and include encode+render (not encode-only).",
         "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
-        "ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).",
-        "Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).",
+        "ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.",
+        "Barcoder uses the managed comparison renderer.",
         "QRCoder uses PngByteQRCode (managed PNG output, no external renderer).",
         "QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).",
         "QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).",
@@ -1976,7 +1981,8 @@
           }
         ],
         "note": "QR pack runner (quick): CodeGlyphX expected=98 % (misses: art-jess3-grid); ZXing.Net expected=62 % (misses: art-dots-variants, art-jess3-grid, art-jess3-splash, art-jess3-splash-variant)"
-      }
+      },
+      "qualification": "historical-unqualified"
     },
     "full": null
   },

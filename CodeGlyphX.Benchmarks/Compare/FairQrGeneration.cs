@@ -123,14 +123,24 @@ public sealed class FairQrGeneration {
             var matrix = new BitMatrix(moduleCount, moduleCount);
             for (var y = 0; y < moduleCount; y++) for (var x = 0; x < moduleCount; x++)
                 matrix[x, y] = rgba[((y + 4) * Scale + Scale / 2) * width * 4 + ((x + 4) * Scale + Scale / 2) * 4] < 128;
-            if (!QrDecoder.TryDecode(matrix, out var metadata) || metadata.Version != Version ||
+            if (!QrDecoder.TryDecode(matrix, out var metadata) || metadata.Text != Payload || metadata.Version != Version ||
                 metadata.ErrorCorrectionLevel != QrErrorCorrectionLevel.M)
                 throw new InvalidDataException("Generated QR version or error correction differs from the comparison contract.");
-            foreach (var engine in new[] { "ZXing.Net", "ZXing-C++" }) {
+            foreach (var engine in ValidationReaders()) {
                 var actual = CorpusReaders.Decode(rgba, width, height, "QrCode", engine, false, false);
                 if (actual.Length != 1 || actual[0] != Payload) throw new InvalidDataException($"{engine} rejected generated payload.");
             }
         }
+    }
+
+    private static IEnumerable<string> ValidationReaders() {
+#if COMPARE_ZXING
+        yield return "ZXing.Net";
+#endif
+#if COMPARE_ZXINGCPP
+        yield return "ZXing-C++";
+#endif
+        yield break;
     }
 }
 

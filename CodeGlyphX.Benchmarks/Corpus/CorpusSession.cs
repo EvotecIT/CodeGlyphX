@@ -18,7 +18,7 @@ public sealed class CorpusSession {
         _samples = manifest.Samples;
         if (_samples is null || _samples.Length == 0) throw new InvalidDataException("Corpus has no samples.");
         _pixels = new byte[Count][]; _widths = new int[Count]; _heights = new int[Count];
-        var root = Path.GetFullPath(imageRoot) + Path.DirectorySeparatorChar;
+        var root = Path.GetFullPath(imageRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar;
         for (var i = 0; i < Count; i++) {
             var path = Path.GetFullPath(Path.Combine(root, _samples[i].File));
             var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;

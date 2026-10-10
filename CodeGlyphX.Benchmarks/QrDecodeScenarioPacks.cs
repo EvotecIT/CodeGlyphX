@@ -208,8 +208,8 @@ internal static class QrDecodeScenarioPacks {
     private const string ExpectedFacebookJess3 = "http://www.facebook.com/JESS3"; // NOSONAR
     private const string ExpectedZip2Montage = "http://zip2.it/brqr#793618522169349375768512169081277855174341298682677390128336508746685343206314554540757831128512012765565340457163802334869373954682682661341296002959959682672725341202682890853371864448104673341141687721219362682984020043955491325341340146702703341956113384000533341141"; // NOSONAR
     private const string ExpectedCleanLarge = "This is a quick test! 123#?";
-    private const string ExpectedCleanSmall = "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=jnll6mrqknd57pmn&issuer=Microsoft";
-    private const string ExpectedNoisyUi = "otpauth://totp/Evotec+Services+sp.+z+o.o.%3aprzemyslaw.klys%40evotec.pl?secret=pqhjwcgzncvzykhd&issuer=Microsoft";
+    private const string ExpectedCleanSmall = CodeGlyphX.Tests.SyntheticQrFixtureData.Clean;
+    private const string ExpectedNoisyUi = CodeGlyphX.Tests.SyntheticQrFixtureData.Noisy;
     private static readonly string LongPayload = BuildLongPayload();
     private static readonly string[] MultiPayloads = Enumerable.Range(1, 8).Select(i => $"SHOT-{i}").ToArray();
 

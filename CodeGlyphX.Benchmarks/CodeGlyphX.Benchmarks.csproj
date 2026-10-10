@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
+    <Compile Include="../CodeGlyphX.Tests/Fixtures/SyntheticQrFixtureData.cs" Link="SyntheticQrFixtureData.cs" />
   </ItemGroup>
 
   <PropertyGroup>

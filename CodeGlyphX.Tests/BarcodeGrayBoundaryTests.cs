@@ -8,6 +8,55 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class BarcodeGrayBoundaryTests {
+    [Fact]
+    public void InvertedItfSymbols_KeepDarkQuietZonesDuringTileScanning() {
+        var left = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(BarcodeType.ITF, "12345678"),
+            new BarcodePngRenderOptions { ModuleSize = 3, QuietZone = 20, HeightModules = 30 }, out var lw, out var lh, out _);
+        var right = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(BarcodeType.ITF, "87654321"),
+            new BarcodePngRenderOptions { ModuleSize = 3, QuietZone = 20, HeightModules = 30 }, out var rw, out var rh, out _);
+        var width = lw + rw; var height = Math.Max(lh, rh);
+        var pixels = new byte[width * height * 4];
+        for (var i = 3; i < pixels.Length; i += 4) pixels[i] = 255;
+        PlaceInverted(left, lw, lh, 0); PlaceInverted(right, rw, rh, lw);
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32),
+            new ScanOptions { Formats = new[] { SymbolFormat.Itf }, MaxSymbols = 0, EnableTileScan = true, TileGrid = 2, TimeoutMilliseconds = 0 });
+        Assert.Equal(new[] { "12345678", "87654321" }, result.Symbols.Select(symbol => symbol.Text).OrderBy(text => text).ToArray());
+        void PlaceInverted(byte[] source, int sw, int sh, int x0) {
+            for (var y = 0; y < sh; y++) for (var x = 0; x < sw; x++) {
+                var offset = (y * width + x0 + x) * 4;
+                pixels[offset] = pixels[offset + 1] = pixels[offset + 2] = (byte)(255 - source[(y * sw + x) * 4]);
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(BarcodeType.EAN, "590123412345+12", 95)]
+    [InlineData(BarcodeType.EAN, "1234567+12", 67)]
+    [InlineData(BarcodeType.UPCA, "01234567890+12", 95)]
+    [InlineData(BarcodeType.UPCE, "123456+12", 51)]
+    public void LocalRetailCandidates_PreserveValidatedSupplement(BarcodeType type, string input, int baseLength) {
+        var encoded = BarcodeEncoder.Encode(type, input);
+        var modules = encoded.Segments.SelectMany(segment => Enumerable.Repeat(segment.IsBar, segment.Modules)).ToList();
+        modules.InsertRange(baseLength, Enumerable.Repeat(false, 8));
+        Assert.True(BarcodeDecoder.TryDecode(modules.ToArray(), type, out var expected));
+        Assert.EndsWith("+12", expected.Text);
+        var runs = new System.Collections.Generic.List<BarSegment>();
+        var start = 0;
+        while (start < modules.Count) {
+            var end = start + 1;
+            while (end < modules.Count && modules[end] == modules[start]) end++;
+            // A one-pixel threshold perturbation keeps the complete global decode valid,
+            // while a base-only local candidate otherwise receives a lower residual.
+            runs.Add(new BarSegment(modules[start], (end - start) * 4 + (start == baseLength + 9 ? 1 : 0)));
+            start = end;
+        }
+        var pixels = BarcodePngRenderer.RenderPixels(new Barcode1D(runs), new BarcodePngRenderOptions {
+            ModuleSize = 1, QuietZone = 40, HeightModules = 80
+        }, out var width, out var height, out var stride);
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, type, out var actual));
+        Assert.Equal(expected.Text, actual.Text);
+    }
+
     [Theory]
     [InlineData("zxing-code128-photo.png", SymbolFormat.Code128, "005-3379497200006")]
     [InlineData("zxing-code39-photo.png", SymbolFormat.Code39, " WWW.CITRONSOFT.COM ")]

@@ -1,5 +1,7 @@
 # Benchmarks
 
+> Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md.
+
 **Data locations**
 - Generated files are overwritten on each run (do not edit by hand).
 - Human-readable report: `BENCHMARK.md`
@@ -39,8 +41,8 @@ Artifacts: C:\Support\GitHub\CodeMatrix\Build\BenchmarkResults\windows-20260130-
 - Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.
 - Comparisons target PNG output and include encode+render (not encode-only).
 - Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.
-- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).
-- Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).
+- ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.
+- Barcoder uses the managed comparison renderer.
 - QRCoder uses PngByteQRCode (managed PNG output, no external renderer).
 - QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).
 - QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).
@@ -228,8 +230,8 @@ Artifacts: Build/BenchmarkResults/windows-20260124-091830
 - Run mode: Full (BenchmarkDotNet default job settings).
 - Comparisons target PNG output and include encode+render (not encode-only).
 - Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.
-- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).
-- Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).
+- ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.
+- Barcoder uses the managed comparison renderer.
 - QRCoder uses PngByteQRCode (managed PNG output, no external renderer).
 - QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).
 - QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).
@@ -404,8 +406,8 @@ Artifacts: /mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-2026013
 - Quick runs include the same scenario set as Full runs; run time is driven by iteration counts.
 - Comparisons target PNG output and include encode+render (not encode-only).
 - Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.
-- ZXing.Net uses ZXing.Net.Bindings.ImageSharp.V3 (ImageSharp 3.x renderer).
-- Barcoder uses Barcoder.Renderer.Image (ImageSharp renderer).
+- ZXing.Net uses the managed CodeGlyphX PNG adapter; PNG timings include that adapter.
+- Barcoder uses the managed comparison renderer.
 - QRCoder uses PngByteQRCode (managed PNG output, no external renderer).
 - QR decode comparisons use raw RGBA32 bytes (ZXing via RGBLuminanceSource).
 - QR decode clean uses CodeGlyphX Balanced; noisy uses CodeGlyphX Robust with aggressive sampling/limits; ZXing uses default (clean) and TryHarder (noisy).
