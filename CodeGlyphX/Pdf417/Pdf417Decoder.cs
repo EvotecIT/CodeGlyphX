@@ -22,6 +22,8 @@ public static partial class Pdf417Decoder {
     private const int StartPattern = 0x1fea8; // 17 bits
     private const int StopPattern = 0x3fa29;  // 18 bits
     private const int DefaultThreshold = 128;
+    // Compact framing plus one data column is the narrowest accepted symbol.
+    private const int MinimumSymbolWidth = 52;
 
     private static readonly Dictionary<int, int>[] PatternToCodeword = BuildPatternMaps();
 

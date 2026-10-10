@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Internal.ReedSolomon;
 
 namespace CodeGlyphX.Aztec;
@@ -7,20 +8,25 @@ internal sealed class AztecDetector {
     private const int MaxLayers = 32;
     private const int MaxCompactLayers = 4;
 
-    private readonly BitMatrix _matrix;
+    private readonly BitMatrixView _matrix;
     private bool _compact;
     private int _nbLayers;
     private int _nbDataBlocks;
     private int _nbCenterLayers;
     private int _shift;
 
-    private AztecDetector(BitMatrix matrix) {
+    private AztecDetector(BitMatrixView matrix) {
         _matrix = matrix;
     }
 
     public static bool TryDetect(BitMatrix matrix, out AztecDetectorResult result) {
         result = null!;
         if (matrix is null) return false;
+        return TryDetect(new BitMatrixView(matrix), out result);
+    }
+
+    internal static bool TryDetect(BitMatrixView matrix, out AztecDetectorResult result) {
+        result = null!;
         if (matrix.Width != matrix.Height) return false;
 
         try {
@@ -41,7 +47,7 @@ internal sealed class AztecDetector {
         if (!TryGetBullsEyeCorners(centerX, centerY, out var bullsEyeCorners)) return false;
         if (!ExtractParameters(bullsEyeCorners)) return false;
 
-        var bits = _matrix;
+        var bits = _matrix.ToMatrix();
         if (_shift != 0) {
             bits = Rotate(bits, _shift);
         }
@@ -65,7 +71,7 @@ internal sealed class AztecDetector {
                 if (!TryReadModeMessage(size, compact, out var modeBits)) continue;
                 if (!TryDecodeParameters(modeBits, compact, out var nbLayers, out var nbDataBlocks)) continue;
                 if (nbLayers != layers) continue;
-                result = new AztecDetectorResult(_matrix, compact, nbDataBlocks, nbLayers);
+                result = new AztecDetectorResult(_matrix.ToMatrix(), compact, nbDataBlocks, nbLayers);
                 return true;
             }
         }

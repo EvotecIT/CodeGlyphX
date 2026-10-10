@@ -474,7 +474,7 @@ public static partial class Pdf417Decoder {
             }
 
             for (var x = 0; x < widthModules; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
+                if ((x & 31) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return modules;
                 var sx = (int)Math.Round(rowOffsetX + (x * moduleSize) + half);
                 sx = Clamp(sx, 0, width - 1);
                 var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);

@@ -6,8 +6,8 @@ using CodeGlyphX.Internal;
 namespace CodeGlyphX.Aztec;
 
 internal static partial class AztecPixelDecoder {
-    private static bool TrySampleModules(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken, out BitMatrix modules, Dictionary<(int Pitch, int X, int Y), bool>? probes = null) {
-        modules = null!;
+    private static bool TrySampleModules(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken, out BitMatrixView modules, Dictionary<(int Pitch, int X, int Y), bool>? probes = null) {
+        modules = default;
         // Probe the required alternating central rings before sampling a full
         // candidate. Leave imperfect probes to the tolerant corner detector.
         var key = (moduleSize, offsetX + size / 2 * moduleSize, offsetY + size / 2 * moduleSize);
@@ -27,21 +27,21 @@ internal static partial class AztecPixelDecoder {
             }
             if (probes is not null) probes[key] = true;
         }
-        modules = new BitMatrix(size, size);
+        modules = CreateSampledView(image, invert, size, moduleSize, offsetX, offsetY, cancellationToken);
+        return !DecodeBudget.ShouldAbort(cancellationToken);
+    }
 
+    // Keep the capture outside the probe method so rejected offsets allocate nothing.
+    private static BitMatrixView CreateSampledView(AztecGrayImage image, bool invert,
+        int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken) {
         var centerOffset = moduleSize / 2;
-        for (var y = 0; y < size; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-            var sy = offsetY + y * moduleSize + centerOffset;
-            for (var x = 0; x < size; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                var sx = offsetX + x * moduleSize + centerOffset;
-                var black = SampleMajority3x3(image, sx, sy, invert);
-                modules.Set(x, y, black);
-            }
-        }
-
-        return true;
+        var samples = 0;
+        return new BitMatrixView(size, size, (x, y) => {
+            if ((samples++ & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken))
+                throw new OperationCanceledException(cancellationToken);
+            return SampleMajority3x3(image, offsetX + x * moduleSize + centerOffset,
+                offsetY + y * moduleSize + centerOffset, invert);
+        });
     }
 
     private static bool TryDecodeWithOffsets(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken, out string value, Dictionary<(int Pitch, int X, int Y), bool>? probes = null, AztecDecodeDiagnostics? diagnostics = null) {
@@ -63,35 +63,19 @@ internal static partial class AztecPixelDecoder {
         return false;
     }
 
-    // Rotate small sampled grids rather than resampling the full image for each
-    // orientation. Ring probes and pixel sampling are shared by all orientations.
-    private static bool TryDecodeSampledOrientations(BitMatrix modules, CancellationToken cancellationToken, out string value, AztecDecodeDiagnostics? diagnostics) {
+    // Share sampling and inspect orientations through a view. Rejected framing
+    // and metadata do not need eight copies of a candidate's payload grid.
+    private static bool TryDecodeSampledOrientations(BitMatrixView modules, CancellationToken cancellationToken, out string value, AztecDecodeDiagnostics? diagnostics) {
         for (var mirror = 0; mirror < 2; mirror++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
             if (mirror != 0 && diagnostics is not null) diagnostics.MirroredTried = true;
-            var candidate = mirror == 0 ? modules : MirrorSampledGrid(modules);
             for (var rotation = 0; rotation < 4; rotation++) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-                if (AztecDecoder.TryDecode(candidate, cancellationToken, out value) && !DecodeBudget.ShouldAbort(cancellationToken)) return true;
-                if (rotation != 3) candidate = RotateSampledGrid(candidate);
+                if (AztecDecoder.TryDecode(modules.Orient(rotation, mirror != 0), cancellationToken, out value) && !DecodeBudget.ShouldAbort(cancellationToken)) return true;
             }
         }
         value = string.Empty;
         return false;
-    }
-
-    private static BitMatrix RotateSampledGrid(BitMatrix source) {
-        var result = new BitMatrix(source.Height, source.Width);
-        for (var y = 0; y < source.Height; y++)
-            for (var x = 0; x < source.Width; x++) result[source.Height - 1 - y, x] = source[x, y];
-        return result;
-    }
-
-    private static BitMatrix MirrorSampledGrid(BitMatrix source) {
-        var result = new BitMatrix(source.Width, source.Height);
-        for (var y = 0; y < source.Height; y++)
-            for (var x = 0; x < source.Width; x++) result[source.Width - 1 - x, y] = source[x, y];
-        return result;
     }
 
     private static bool SampleMajority3x3(AztecGrayImage image, int px, int py, bool invert) {
@@ -101,6 +85,21 @@ internal static partial class AztecPixelDecoder {
         var threshold = image.Threshold;
 
         var black = 0;
+        // Interior modules need the same nine votes without repeated edge clamps.
+        // Keep clamping below for candidates whose samples reach an image edge.
+        if (px > 0 && px < width - 1 && py > 0 && py < height - 1) {
+            var at = py * width + px;
+            black = (gray[at - width - 1] <= threshold ? 1 : 0)
+                + (gray[at - width] <= threshold ? 1 : 0)
+                + (gray[at - width + 1] <= threshold ? 1 : 0)
+                + (gray[at - 1] <= threshold ? 1 : 0)
+                + (gray[at] <= threshold ? 1 : 0)
+                + (gray[at + 1] <= threshold ? 1 : 0)
+                + (gray[at + width - 1] <= threshold ? 1 : 0)
+                + (gray[at + width] <= threshold ? 1 : 0)
+                + (gray[at + width + 1] <= threshold ? 1 : 0);
+            return invert ? black < 5 : black >= 5;
+        }
         if (!invert) {
             for (var dy = -1; dy <= 1; dy++) {
                 var y = py + dy;

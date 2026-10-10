@@ -109,7 +109,7 @@ public static partial class Pdf417Decoder {
         for (var y = 0; y < heightModules; y++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
             for (var x = 0; x < widthModules; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
+                if ((x & 31) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return modules;
                 transform.Transform(x + 0.5 + offsetX, y + 0.5 + offsetY, out var sx, out var sy);
                 if (double.IsNaN(sx) || double.IsNaN(sy)) continue;
                 var dark = IsDarkAverage(pixels, width, height, stride, format, sx, sy, threshold);
@@ -146,7 +146,7 @@ public static partial class Pdf417Decoder {
                 }
                 var lum = (r * 77 + g * 150 + b * 29) >> 8;
                 var alpha = pixels[p + 3];
-                lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
+                if (alpha != 255) lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
                 sum += lum;
                 count++;
             }
@@ -352,7 +352,7 @@ public static partial class Pdf417Decoder {
             var sy = (int)Math.Round(offsetY + (y * moduleSize) + half);
             sy = Clamp(sy, 0, height - 1);
             for (var x = 0; x < widthModules; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
+                if ((x & 31) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return modules;
                 var sx = (int)Math.Round(offsetX + rowShift + (x * moduleSize) + half);
                 sx = Clamp(sx, 0, width - 1);
                 var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
@@ -383,11 +383,11 @@ public static partial class Pdf417Decoder {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryDecode(modules, cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecode(Rotate90(modules), cancellationToken, out value)) return true;
+        if (modules.Height >= MinimumSymbolWidth && TryDecode(Rotate90(modules), cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryDecode(Rotate180(modules), cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecode(Rotate270(modules), cancellationToken, out value)) return true;
+        if (modules.Height >= MinimumSymbolWidth && TryDecode(Rotate270(modules), cancellationToken, out value)) return true;
         value = string.Empty;
         return false;
     }
@@ -396,11 +396,11 @@ public static partial class Pdf417Decoder {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
         if (TryDecode(modules, cancellationToken, out Pdf417Decoded pdf417)) { decoded = pdf417; return true; }
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecode(Rotate90(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
+        if (modules.Height >= MinimumSymbolWidth && TryDecode(Rotate90(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
         if (TryDecode(Rotate180(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecode(Rotate270(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
+        if (modules.Height >= MinimumSymbolWidth && TryDecode(Rotate270(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
         decoded = null!;
         return false;
     }
@@ -409,11 +409,11 @@ public static partial class Pdf417Decoder {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeInternal(modules, cancellationToken, diagnostics, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeInternal(Rotate90(modules), cancellationToken, diagnostics, out value)) return true;
+        if (modules.Height >= MinimumSymbolWidth && TryDecodeInternal(Rotate90(modules), cancellationToken, diagnostics, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeInternal(Rotate180(modules), cancellationToken, diagnostics, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeInternal(Rotate270(modules), cancellationToken, diagnostics, out value)) return true;
+        if (modules.Height >= MinimumSymbolWidth && TryDecodeInternal(Rotate270(modules), cancellationToken, diagnostics, out value)) return true;
         value = string.Empty;
         return false;
     }
@@ -632,11 +632,11 @@ public static partial class Pdf417Decoder {
         var width = modules.Width;
         if (length <= 0 || width < length) yield break;
 
+        var bits = 0;
+        for (var i = 0; i < length; i++) bits = (bits << 1) | (modules[i, row] ? 1 : 0);
+        var mask = length >= 32 ? -1 : (1 << length) - 1;
         for (var x = 0; x <= width - length; x++) {
-            var bits = 0;
-            for (var i = 0; i < length; i++) {
-                bits = (bits << 1) | (modules[x + i, row] ? 1 : 0);
-            }
+            if (x != 0) bits = ((bits << 1) | (modules[x + length - 1, row] ? 1 : 0)) & mask;
             var diff = bits ^ pattern;
             var errors = PopCount(diff);
             if (errors <= maxErrors) yield return new OffsetMatch(x, errors);

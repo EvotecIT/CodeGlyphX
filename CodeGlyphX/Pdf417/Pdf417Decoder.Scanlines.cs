@@ -57,23 +57,8 @@ public static partial class Pdf417Decoder {
                         var runs = new List<int>();
                         for (var y = 0; y < down; y++) {
                             if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                            runs.Clear();
-                            var first = false;
-                            var color = false;
-                            var length = 0;
-                            for (var x = 0; x < across; x++) {
-                                if ((x & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                                var at = reverse == 0 ? x : across - x - 1;
-                                var lineY = y + (int)Math.Round((at - across / 2.0) * slope);
-                                var sx = axis == 0 ? at : lineY;
-                                var sy = axis == 0 ? lineY : at;
-                                var dark = ((uint)sx < (uint)width && (uint)sy < (uint)height &&
-                                    darkPixels[sy * width + sx]) != (invert != 0);
-                                if (x == 0) first = color = dark;
-                                if (dark == color) length++;
-                                else { runs.Add(length); length = 1; color = dark; }
-                            }
-                            runs.Add(length);
+                            if (!TryReadPixelRuns(darkPixels, width, height, axis, reverse != 0,
+                                invert != 0, y, slope, runs, cancellationToken, out var first)) return false;
                             for (var start = first ? 0 : 1; start + 41 <= runs.Count; start += 2) {
                                 if (!MatchPixelRuns(runs, start, PixelStartRuns, 17)) continue;
                                 var cluster = -1;
@@ -203,10 +188,12 @@ public static partial class Pdf417Decoder {
         var total = 0;
         for (var i = 0; i < 8; i++) total += runs[start + i];
         var pitch = total / 17.0;
+        Span<double> normalized = stackalloc double[8];
+        for (var i = 0; i < 8; i++) normalized[i] = runs[start + i] / pitch;
         var bits = 0;
         var modules = 0;
         for (var i = 0; i < 8; i++) {
-            var count = (int)Math.Round(runs[start + i] / pitch);
+            var count = (int)Math.Round(normalized[i]);
             if (count < 1 || count > 6) { modules = -100; break; }
             modules += count;
             for (var j = 0; j < count; j++) bits = (bits << 1) | ((i & 1) == 0 ? 1 : 0);
@@ -222,11 +209,11 @@ public static partial class Pdf417Decoder {
             // neighboring space. Fit that common bias without changing pitch.
             var bias = 0.0;
             if (correctPrintGain) for (var i = 0; i < 8; i++)
-                bias += (runs[start + i] / pitch - PixelCodewordRuns[cluster][candidate][i]) * ((i & 1) == 0 ? 1 : -1);
+                bias += (normalized[i] - PixelCodewordRuns[cluster][candidate][i]) * ((i & 1) == 0 ? 1 : -1);
             bias = Math.Max(-0.65, Math.Min(0.65, bias / 8));
             var error = 0.0;
             for (var i = 0; i < 8; i++) {
-                var residual = runs[start + i] / pitch - PixelCodewordRuns[cluster][candidate][i] - bias * ((i & 1) == 0 ? 1 : -1);
+                var residual = normalized[i] - PixelCodewordRuns[cluster][candidate][i] - bias * ((i & 1) == 0 ? 1 : -1);
                 if (Math.Abs(residual) > 0.85) { error = bestError; break; }
                 error += residual * residual;
             }
@@ -234,6 +221,43 @@ public static partial class Pdf417Decoder {
             word = candidate; bestError = error; found = true;
         }
         return found;
+    }
+
+    private static bool TryReadPixelRuns(bool[] pixels, int width, int height, int axis, bool reverse,
+        bool invert, int y, double slope, List<int> runs, CancellationToken cancellationToken, out bool first) {
+        runs.Clear();
+        first = false;
+        var color = false;
+        var length = 0;
+        var across = axis == 0 ? width : height;
+        // Horizontal and vertical scanlines are entirely in bounds. Index them
+        // directly instead of rounding and checking a transformed pixel each time.
+        if (slope == 0) {
+            var step = axis == 0 ? 1 : width;
+            var index = axis == 0 ? y * width : y;
+            if (reverse) { index += (across - 1) * step; step = -step; }
+            for (var x = 0; x < across; x++, index += step) {
+                if ((x & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                var dark = pixels[index] != invert;
+                if (x == 0) first = color = dark;
+                if (dark == color) length++;
+                else { runs.Add(length); length = 1; color = dark; }
+            }
+        } else {
+            for (var x = 0; x < across; x++) {
+                if ((x & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                var at = reverse ? across - x - 1 : x;
+                var lineY = y + (int)Math.Round((at - across / 2.0) * slope);
+                var sx = axis == 0 ? at : lineY;
+                var sy = axis == 0 ? lineY : at;
+                var dark = ((uint)sx < (uint)width && (uint)sy < (uint)height && pixels[sy * width + sx]) != invert;
+                if (x == 0) first = color = dark;
+                if (dark == color) length++;
+                else { runs.Add(length); length = 1; color = dark; }
+            }
+        }
+        runs.Add(length);
+        return true;
     }
 
     private static int[][][] BuildPixelCodewordRuns() {

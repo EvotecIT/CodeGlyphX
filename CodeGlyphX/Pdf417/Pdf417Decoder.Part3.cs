@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Internal;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Threading;
@@ -191,7 +192,7 @@ public static partial class Pdf417Decoder {
 
         var lum = (r * 77 + g * 150 + b * 29) >> 8;
         var alpha = pixels[p + 3];
-        lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
+        if (alpha != 255) lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
         return lum < threshold;
     }
 
@@ -247,7 +248,7 @@ public static partial class Pdf417Decoder {
                 }
                 var lum = (r * 77 + g * 150 + b * 29) >> 8;
                 var alpha = pixels[p + 3];
-                lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
+                if (alpha != 255) lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
                 if (lum < min) min = lum;
                 if (lum > max) max = lum;
             }
@@ -256,45 +257,10 @@ public static partial class Pdf417Decoder {
         return max >= min;
     }
 
-    private static BitMatrix Rotate90(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Height, matrix.Width);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[matrix.Height - 1 - y, x] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
-    private static BitMatrix Rotate180(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Width, matrix.Height);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[matrix.Width - 1 - x, matrix.Height - 1 - y] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
-    private static BitMatrix Rotate270(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Height, matrix.Width);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[y, matrix.Width - 1 - x] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
-    private static BitMatrix MirrorX(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Width, matrix.Height);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[matrix.Width - 1 - x, y] = matrix[x, y];
-            }
-        }
-        return result;
-    }
+    private static BitMatrix Rotate90(BitMatrix matrix) => BitMatrixTransforms.Rotate90(matrix);
+    private static BitMatrix Rotate180(BitMatrix matrix) => BitMatrixTransforms.Rotate180(matrix);
+    private static BitMatrix Rotate270(BitMatrix matrix) => BitMatrixTransforms.Rotate270(matrix);
+    private static BitMatrix MirrorX(BitMatrix matrix) => BitMatrixTransforms.MirrorHorizontal(matrix);
 
     private static int Clamp(int value, int min, int max) {
         if (value < min) return min;

@@ -54,6 +54,7 @@
     <Compile Include="DataMatrixValidationTests.cs" />
     <Compile Include="DataMatrixPerspectiveTests.cs" />
     <Compile Include="AztecReaderInitializationTests.cs" />
+    <Compile Include="BitMatrixTransformTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />
     <Compile Include="QrProceduralArtTests.cs" />
     <Compile Include="QrPatternWorkflowTests.cs" />
