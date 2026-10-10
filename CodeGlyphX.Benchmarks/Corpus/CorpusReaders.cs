@@ -88,8 +88,10 @@ internal static class CorpusReaders {
 
 /// <summary>Resolves comparison-only native assets in hosts without the executable's deps.json resolver.</summary>
 public static class CorpusNativeLibrary {
+#if COMPARE_ZXINGCPP
     private static readonly object ResolverLock = new();
     private static string? _configuredPath;
+#endif
     /// <summary>Uses the binding's platform asset without relying on a PowerShell host's deps.json.</summary>
     public static void ConfigureFromDirectory(string assemblyDirectory) {
         var architecture = RuntimeInformation.ProcessArchitecture.ToString().ToLowerInvariant();
