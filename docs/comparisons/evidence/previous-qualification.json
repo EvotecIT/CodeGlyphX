@@ -1,11 +1,11 @@
 {
   "BaselineSource": "cbcf4af8e906d00e86c5d97ea0511100d52220fa",
-  "CompiledSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
-  "MeasurementSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
-  "CoreSourceUnchangedAfter": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
+  "CompiledSource": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
+  "MeasurementSource": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
+  "CoreSourceUnchangedAfter": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
   "BaselineCoreSha256": "298719E62EC63B736C9C1CAC1375463E16363F7DAEBF65373D17EC0DC40403D9",
-  "CandidateCoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
-  "ComparisonAssemblySha256": "4846BFF3DF1028A7F5314323130E27ABBDE039F3525F6EA10806D48E79EC81FF",
+  "CandidateCoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
+  "ComparisonAssemblySha256": "9442E6EEE84D4AA57EAF1BF7F04CFFC8A49EEA2BF334C408BFAFEE2696E41CA2",
   "NativeEngineSha256": "1550C1AB6529C2F977BEBAC3F4BF218CA7F932C6CB5B1089121787FE16449C78",
   "Versions": {
     "SDK": "10.0.401",
@@ -44,314 +44,235 @@
   "Tests": {
     "Failures": 0,
     "Skipped": 0,
-    "net10": 2092,
-    "net8": 2070,
-    "net472": 571
+    "net10": 2112,
+    "net8": 2090,
+    "net472": 591
   },
   "OptionalRuntimeConfigurations": [
     "All three external engines; unchanged opt-in dependency boundary"
   ],
-  "Review": "Independent read-only review covered PDF417 marker/edge recovery and scanline buffers, plus DPM alpha handling, incremental preprocessing and monotonic recognition deadlines. One stop-only-crop regression was reproduced, fixed and confirmed; previous decoder qualification is retained separately.",
+  "Review": "Fresh read-only review of the Data Matrix image locator, projective sampling and metadata routing, plus Aztec initialization parameter handling; final result is retained in ReviewProbe. Previous PDF417/DPM qualification remains separate.",
   "ProductionBoundary": "No external comparison engine in CodeGlyphX.csproj; benchmark executable is non-packable, dependencies are opt-in.",
-  "CorpusCompiledSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
-  "CorpusCandidateCoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
-  "CorpusComparisonAssemblySha256": "4846BFF3DF1028A7F5314323130E27ABBDE039F3525F6EA10806D48E79EC81FF",
+  "CorpusCompiledSource": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
+  "CorpusCandidateCoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
+  "CorpusComparisonAssemblySha256": "9442E6EEE84D4AA57EAF1BF7F04CFFC8A49EEA2BF334C408BFAFEE2696E41CA2",
   "NegativeManifestSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
   "Netstandard20Build": "Succeeded, zero warnings and errors",
   "ArchivedFinalTests": [
     {
       "File": "full-net10.trx",
-      "Passed": 2092,
+      "Passed": 2112,
       "Failed": 0,
-      "Sha256": "EF7E9BE99575BED78F8C267FF52F5E943E732A54DB2D355C72C4E68A444B3EB4"
+      "Sha256": "1836F5A34825A6DE57483E69ADA71853F9C4F3CC3C26ECDABE3BC904FD8BCA49"
     },
     {
       "File": "full-net8.trx",
-      "Passed": 2070,
+      "Passed": 2090,
       "Failed": 0,
-      "Sha256": "D24C94D63280DD8ACFC718DE75F301D28E4A62AA27A5D2402A47DF4BBC61416A"
+      "Sha256": "E87E91DD1655DA07C412C598510A18BBC35082E6E0829645BEFD0C78BB2DDA06"
     },
     {
       "File": "full-net472.trx",
-      "Passed": 571,
+      "Passed": 591,
       "Failed": 0,
-      "Sha256": "9B31C195C5B27151EE170FC298ED4A0BF7B1EE838FBD87187D5B0B3500B0FF43"
+      "Sha256": "D7A71E8A23A693EF9C3709A81EE169AD98C11A033BA93A27F413BE86847D7A58"
     }
   ],
-  "QualifiedUtc": "2026-10-10T17:22:35.947332+00:00",
-  "PreviousMeasurementSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
+  "QualifiedUtc": "2026-10-10T18:24:49.414659+00:00",
+  "PreviousMeasurementSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
   "NegativeCorpus": "The identical 25-image falsepositives-2 manifest is retained. Six images overlap the twelve main-corpus negatives. Budget exhaustion remains inconclusive.",
-  "HardwareCapturedUtc": "2026-10-10T17:01:39.8150910Z",
+  "HardwareCapturedUtc": "2026-10-10T18:14:38.2264109Z",
   "HostCpuBeforeSuites": {
     "generation-ccd0": [
-      54.79950526479336,
-      78.88701811681503,
-      57.26362157336185
+      76.99091264822997,
+      61.69229239974563,
+      57.58757379453705
     ],
     "generation-ccd1": [
-      8.233406870544524,
-      11.341811940645153,
-      13.177659442685307
+      25.377462336642154,
+      10.09503701490294,
+      12.918368332932706
     ],
     "decoding-ccd0": [
-      44.57674273119958,
-      24.8264294417062,
-      36.552460822276565
+      44.64174604647706,
+      28.203252307204508,
+      19.821508668214037
     ],
     "decoding-ccd1": [
-      9.37241151687348,
-      12.28237544630575,
-      18.837130844259754
+      85.50853331834617,
+      79.92854199648673,
+      80.36174075638337
     ]
   },
   "CorpusHostCpuBeforeScans": {
     "corpus": [
-      54.480648061931625,
-      74.73074819381101,
-      74.58627839984324
+      56.959094703608756,
+      45.15750657267677,
+      37.98181930411001
     ],
     "negatives": [
-      21.005662314568852,
-      21.962866971312987,
-      17.778451867458976
+      99.90355411720215,
+      99.8188290014223,
+      91.6944435568119
     ]
   },
   "NegativeRotationManifestSha256": "A2FFA645DE5CC4390B719E64ADE632CB4F4C1BBD0C2862964F03C27498B6637F",
   "NegativeRotationSources": {
     "previous": {
-      "Source": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
-      "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925"
-    },
-    "current": {
       "Source": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
       "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257"
+    },
+    "current": {
+      "Source": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
+      "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D"
     }
   },
   "NegativeRotation": {
     "ccd0": [
       {
+        "Source": "previous",
+        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
+        "Inconclusive": 3,
+        "File": "negative-rotation-ccd0-0-previous.json",
         "Index": 0,
         "Unexpected": 0,
-        "Cpu": [
-          80.5904954706941,
-          84.01550476110467,
-          98.41949211644044
-        ],
+        "Completed": 28,
         "Domain": "ccd0",
-        "Inconclusive": 4,
-        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-        "Source": "previous",
-        "File": "negative-rotation-ccd0-0-previous.json",
-        "Completed": 27
+        "Cpu": [
+          79.01585400700333,
+          75.08621472002905,
+          69.96147082638329
+        ]
       },
       {
+        "Source": "current",
+        "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
+        "Inconclusive": 2,
+        "File": "negative-rotation-ccd0-1-current.json",
         "Index": 1,
         "Unexpected": 0,
-        "Cpu": [
-          59.66312343198006,
-          89.60512900118025,
-          78.09863588334154
-        ],
+        "Completed": 29,
         "Domain": "ccd0",
-        "Inconclusive": 3,
-        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
-        "Source": "current",
-        "File": "negative-rotation-ccd0-1-current.json",
-        "Completed": 28
+        "Cpu": [
+          29.462995630165146,
+          37.85467914736137,
+          33.16080688293776
+        ]
       },
       {
+        "Source": "current",
+        "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
+        "Inconclusive": 2,
+        "File": "negative-rotation-ccd0-2-current.json",
         "Index": 2,
         "Unexpected": 0,
-        "Cpu": [
-          31.273117185264322,
-          21.576377750473153,
-          18.155732707034577
-        ],
+        "Completed": 29,
         "Domain": "ccd0",
-        "Inconclusive": 2,
-        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
-        "Source": "current",
-        "File": "negative-rotation-ccd0-2-current.json",
-        "Completed": 29
+        "Cpu": [
+          29.229450863115204,
+          26.223162987602056,
+          25.869109965400582
+        ]
       },
       {
+        "Source": "previous",
+        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
+        "Inconclusive": 2,
+        "File": "negative-rotation-ccd0-3-previous.json",
         "Index": 3,
         "Unexpected": 0,
-        "Cpu": [
-          25.977874285867586,
-          17.947591911462002,
-          12.929223268669887
-        ],
+        "Completed": 29,
         "Domain": "ccd0",
-        "Inconclusive": 8,
-        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-        "Source": "previous",
-        "File": "negative-rotation-ccd0-3-previous.json",
-        "Completed": 23
+        "Cpu": [
+          52.699096758022044,
+          47.409488179954394,
+          47.83714457046264
+        ]
       }
     ],
     "ccd1": [
       {
-        "Unexpected": 0,
-        "Index": 0,
-        "Inconclusive": 12,
-        "Domain": "ccd1",
         "Source": "current",
-        "Completed": 19,
-        "Cpu": [
-          95.91023179990333,
-          86.02155570018213,
-          80.98415186998768
-        ],
-        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
-        "File": "negative-rotation-ccd1-0-current.json"
-      },
-      {
-        "Unexpected": 0,
-        "Index": 1,
-        "Inconclusive": 4,
-        "Domain": "ccd1",
-        "Source": "previous",
-        "Completed": 27,
-        "Cpu": [
-          70.52302772221867,
-          43.296227837333454,
-          94.27421622080237
-        ],
-        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-        "File": "negative-rotation-ccd1-1-previous.json"
-      },
-      {
-        "Unexpected": 0,
-        "Index": 2,
-        "Inconclusive": 1,
-        "Domain": "ccd1",
-        "Source": "previous",
-        "Completed": 30,
-        "Cpu": [
-          53.436666051141124,
-          97.62582153926584,
-          99.17182885167976
-        ],
-        "CoreSha256": "FF6779B09750382F26B1FFC63A79C84D7A27305B75F84C7D98A701E86F8C7925",
-        "File": "negative-rotation-ccd1-2-previous.json"
-      },
-      {
-        "Unexpected": 0,
-        "Index": 3,
+        "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
         "Inconclusive": 2,
-        "Domain": "ccd1",
-        "Source": "current",
+        "File": "negative-rotation-ccd1-0-current.json",
+        "Index": 0,
+        "Unexpected": 0,
         "Completed": 29,
+        "Domain": "ccd1",
         "Cpu": [
-          60.837254481039196,
-          84.09519829635035,
-          77.42584714226936
-        ],
+          50.297480743665886,
+          55.317500043540946,
+          49.567148009514305
+        ]
+      },
+      {
+        "Source": "previous",
         "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
-        "File": "negative-rotation-ccd1-3-current.json"
+        "Inconclusive": 2,
+        "File": "negative-rotation-ccd1-1-previous.json",
+        "Index": 1,
+        "Unexpected": 0,
+        "Completed": 29,
+        "Domain": "ccd1",
+        "Cpu": [
+          74.05323233948553,
+          56.037032689857156,
+          62.61220461702497
+        ]
+      },
+      {
+        "Source": "previous",
+        "CoreSha256": "A5AE920E3E76A382FA7F88F3880B3C8E6FF1886A1A0C38AEA45CDF6ADE7C1257",
+        "Inconclusive": 2,
+        "File": "negative-rotation-ccd1-2-previous.json",
+        "Index": 2,
+        "Unexpected": 0,
+        "Completed": 29,
+        "Domain": "ccd1",
+        "Cpu": [
+          27.493899706909065,
+          26.651031956927184,
+          31.361422669698726
+        ]
+      },
+      {
+        "Source": "current",
+        "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
+        "Inconclusive": 2,
+        "File": "negative-rotation-ccd1-3-current.json",
+        "Index": 3,
+        "Unexpected": 0,
+        "Completed": 29,
+        "Domain": "ccd1",
+        "Cpu": [
+          33.56538905539237,
+          35.65935189041654,
+          35.16931338335325
+        ]
       }
     ]
   },
   "ReviewProbe": {
-    "Source": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
-    "Reviewer": "recognition_goal_review",
-    "Boundary": "candidate-reviewed",
-    "Scope": "Reader-initialization payload parsing, cropped PDF417 characters and scanline buffers; DPM transparency, incremental preprocessing and recognition deadlines",
-    "Findings": "One confirmed P2 stop-only-crop regression in the first candidate; fixed and targeted confirmation completed with no further actionable findings",
-    "ProductApi": "Accept as shaped; existing public APIs and production dependency boundary retained",
-    "ConfirmationUsed": true,
-    "FocusedTests": 114,
-    "ExternalReview": "Local work only; no hosted review requested"
+    "Status": "complete",
+    "Head": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
+    "ReviewedBase": "7e486699aa1145844f3c41ea1168d2ace41413be",
+    "OriginalCandidate": "620e7820a32480520558870224da6e37c7313c77",
+    "Reviewer": "Independent read-only local review",
+    "Scope": "Data Matrix component detection, perspective sampling, cancellation, pooling, framing/ECC and metadata routing; Aztec initialization parameter handling",
+    "Finding": "P2: fallback omitted nonpositive stride rejection; reproduced negative-stride exception on original candidate and false return on archived baseline",
+    "Resolution": "Shared fallback rejects stride <= 0 before pixel access; two theory cases cover all three public pixel entry points; 20 focused cases pass",
+    "Confirmation": "One targeted read-only confirmation at final source head; no unresolved findings",
+    "UnresolvedFindings": false,
+    "ProductAssessment": "Accept shape: existing decoder and geometry owners; no public API or production dependency added"
   },
   "AllocationDiagnostics": {
     "Scope": "Eight retained warm public-API calls after two warmups per case; diagnostic managed allocations only, not an equal-accuracy timing comparison",
-    "PreviousSource": "5e9962442a7d5b88a78ed5fefdf541eb3bcc53aa",
-    "CurrentSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
+    "PreviousSource": "68bebf1233cf6f0543cc6085a7a9b42c3c3b0163",
+    "CurrentSource": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
     "Cases": {
       "dpm-allocation": {
         "before": {
-          "MinimumBytes": 1202688,
-          "MaximumBytes": 1205616,
-          "Samples": 8,
-          "RetainedSamples": [
-            {
-              "Iteration": 0,
-              "Allocated": 1202688,
-              "Status": "Success",
-              "Completion": "SymbolLimitReached",
-              "Symbols": [
-                "DPM-LASER-ETCH-42"
-              ]
-            },
-            {
-              "Iteration": 1,
-              "Allocated": 1205616,
-              "Status": "Success",
-              "Completion": "SymbolLimitReached",
-              "Symbols": [
-                "DPM-LASER-ETCH-42"
-              ]
-            },
-            {
-              "Iteration": 2,
-              "Allocated": 1203104,
-              "Status": "Success",
-              "Completion": "SymbolLimitReached",
-              "Symbols": [
-                "DPM-LASER-ETCH-42"
-              ]
-            },
-            {
-              "Iteration": 3,
-              "Allocated": 1202688,
-              "Status": "Success",
-              "Completion": "SymbolLimitReached",
-              "Symbols": [
-                "DPM-LASER-ETCH-42"
-              ]
-            },
-            {
-              "Iteration": 4,
-              "Allocated": 1205616,
-              "Status": "Success",
-              "Completion": "SymbolLimitReached",
-              "Symbols": [
-                "DPM-LASER-ETCH-42"
-              ]
-            },
-            {
-              "Iteration": 5,
-              "Allocated": 1203104,
-              "Status": "Success",
-              "Completion": "SymbolLimitReached",
-              "Symbols": [
-                "DPM-LASER-ETCH-42"
-              ]
-            },
-            {
-              "Iteration": 6,
-              "Allocated": 1202688,
-              "Status": "Success",
-              "Completion": "SymbolLimitReached",
-              "Symbols": [
-                "DPM-LASER-ETCH-42"
-              ]
-            },
-            {
-              "Iteration": 7,
-              "Allocated": 1205616,
-              "Status": "Success",
-              "Completion": "SymbolLimitReached",
-              "Symbols": [
-                "DPM-LASER-ETCH-42"
-              ]
-            }
-          ],
-          "ArchivedRawFile": "dpm-allocation-before.jsonl",
-          "Sha256": "3A3D71547B903EFF231EE2842DE5FF89719FC4037C27A2929ED2C7D16575BE5A"
-        },
-        "after": {
           "MinimumBytes": 150920,
           "MaximumBytes": 150920,
           "Samples": 8,
@@ -429,75 +350,156 @@
               ]
             }
           ],
-          "ArchivedRawFile": "dpm-allocation-after.jsonl",
+          "ArchivedRawFile": "dpm-allocation-before.jsonl",
           "Sha256": "D67B8DA805F68BEA140EF8FA98F2DF06F7C90CDA65F622CDDCEB77CE35E2FB7D"
-        }
-      },
-      "pdf-negative": {
-        "before": {
-          "MinimumBytes": 27229392,
-          "MaximumBytes": 27229392,
+        },
+        "after": {
+          "MinimumBytes": 152184,
+          "MaximumBytes": 152184,
           "Samples": 8,
           "RetainedSamples": [
             {
               "Iteration": 0,
-              "Milliseconds": 50.6795,
-              "Allocated": 27229392,
+              "Allocated": 152184,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 1,
+              "Allocated": 152184,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 2,
+              "Allocated": 152184,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 3,
+              "Allocated": 152184,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 4,
+              "Allocated": 152184,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 5,
+              "Allocated": 152184,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 6,
+              "Allocated": 152184,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            },
+            {
+              "Iteration": 7,
+              "Allocated": 152184,
+              "Status": "Success",
+              "Completion": "SymbolLimitReached",
+              "Symbols": [
+                "DPM-LASER-ETCH-42"
+              ]
+            }
+          ],
+          "ArchivedRawFile": "dpm-allocation-after.jsonl",
+          "Sha256": "59E49B6ABC11A287E9DCACBE83D79F6EDB6A9F6A195F9BBBBC484376ECF64269"
+        }
+      },
+      "pdf-negative": {
+        "before": {
+          "MinimumBytes": 1286712,
+          "MaximumBytes": 1286712,
+          "Samples": 8,
+          "RetainedSamples": [
+            {
+              "Iteration": 0,
+              "Milliseconds": 98.4938,
+              "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 1,
-              "Milliseconds": 45.448,
-              "Allocated": 27229392,
+              "Milliseconds": 82.4227,
+              "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 2,
-              "Milliseconds": 48.8619,
-              "Allocated": 27229392,
+              "Milliseconds": 72.2814,
+              "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 3,
-              "Milliseconds": 42.5664,
-              "Allocated": 27229392,
+              "Milliseconds": 57.1771,
+              "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 4,
-              "Milliseconds": 44.6714,
-              "Allocated": 27229392,
+              "Milliseconds": 84.5905,
+              "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 5,
-              "Milliseconds": 40.2084,
-              "Allocated": 27229392,
+              "Milliseconds": 56.6802,
+              "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 6,
-              "Milliseconds": 40.4361,
-              "Allocated": 27229392,
+              "Milliseconds": 63.0587,
+              "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 7,
-              "Milliseconds": 44.536,
-              "Allocated": 27229392,
+              "Milliseconds": 63.2232,
+              "Allocated": 1286712,
               "Success": false,
               "Text": ""
             }
           ],
           "ArchivedRawFile": "pdf-negative-before.jsonl",
-          "Sha256": "05951ED959EC9D4EB929DDA61FBF5C9AC9B89651C20CBC3C469BD3560B9D770F"
+          "Sha256": "1AFCDD4ACDF66083F292525A61AEC640DBD7931CC948025B873A5D34E9788C0D"
         },
         "after": {
           "MinimumBytes": 1286712,
@@ -506,66 +508,79 @@
           "RetainedSamples": [
             {
               "Iteration": 0,
-              "Milliseconds": 37.1652,
+              "Milliseconds": 47.3763,
               "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 1,
-              "Milliseconds": 37.8308,
+              "Milliseconds": 42.937,
               "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 2,
-              "Milliseconds": 40.2721,
+              "Milliseconds": 37.5958,
               "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 3,
-              "Milliseconds": 39.1372,
+              "Milliseconds": 40.6524,
               "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 4,
-              "Milliseconds": 42.1049,
+              "Milliseconds": 44.3599,
               "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 5,
-              "Milliseconds": 37.6411,
+              "Milliseconds": 40.3625,
               "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 6,
-              "Milliseconds": 42.112,
+              "Milliseconds": 41.804,
               "Allocated": 1286712,
               "Success": false,
               "Text": ""
             },
             {
               "Iteration": 7,
-              "Milliseconds": 39.3938,
+              "Milliseconds": 43.6001,
               "Allocated": 1286712,
               "Success": false,
               "Text": ""
             }
           ],
           "ArchivedRawFile": "pdf-negative-after.jsonl",
-          "Sha256": "F1F9904FA31E492F2B2B10B738CEA3D54CC8DB6D3944F1490A5B5F3D1A18EF1C"
-        }
+          "Sha256": "18A06FBAF1D461B62D544E27AAC9006085CEDC745101A03ADD4B5A432994F8C4"
+        },
+        "Input": "falsepositives/19.png",
+        "InputSha256": "342FDB2E223F3A41144AAA1029DC3CE7DC4D278A07E7E47DC885C874B1E57C77"
       }
     }
   },
-  "CropRegression": "Independent review reproduced a stop-only crop regression in e01c61e3; 68bebf12 fixes it. Both normal and inverted crop contracts pass beside the original payload-clipped cases."
+  "CropRegression": "Independent review reproduced a stop-only crop regression in e01c61e3; 68bebf12 fixes it. Both normal and inverted crop contracts pass beside the original payload-clipped cases.",
+  "TestedCoreSha256": {
+    "net10.0": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
+    "net8.0": "74396B9FAB1341BE2108A0CAB32196B92BDFE50932F7088E683C3138AC66EEC5",
+    "net472": "678AFE224C724104B2A7CE0FD29AEC1FD59D72752AA888DA37DE0E4B0B7E21FD"
+  },
+  "TestedSource": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
+  "ChangedDecoders": [
+    "Bounded Data Matrix image components and projective grid sampling with existing framing/ECC and metadata validation",
+    "Aztec reader-initialization mode flag interpreted only at eligible layer counts and capacities",
+    "Nonpositive Data Matrix pixel strides retain false-return rejection across all three entry paths"
+  ]
 }

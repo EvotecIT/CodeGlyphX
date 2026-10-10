@@ -78,7 +78,7 @@ def main():
         previous_by_id = {x["Id"]: x for x in previous if x["Engine"] == "CodeGlyphX"}
         lost = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and x["Expected"] and x["Status"] != "Correct" and previous_by_id[x["Id"]]["Status"] == "Correct"]
         incomplete = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and not x["Expected"] and x["Status"] != "Correct" and previous_by_id[x["Id"]]["Status"] == "Correct"]
-        lines += ["", f"This decoding follow-up improves CodeGlyphX from {old_correct} to {new_correct}/267 positive images compared with the [previous pass](evidence/previous-candidate-corpus.json). Previously correct positive images lost in this follow-up: " + (", ".join(lost) if lost else "none in this run."), "",
+        lines += ["", f"This decoding follow-up records {new_correct}/267 correct positive images, compared with {old_correct}/267 in the [previous pass](evidence/previous-candidate-corpus.json). Previously correct positive images lost in this follow-up: " + (", ".join(lost) if lost else "none in this run."), "",
                   "Previously completed main-corpus negatives now inconclusive: " + (", ".join(incomplete) if incomplete else "none in this run.")]
     if "CorpusHostCpuBeforeScans" in qualification:
         host = qualification["CorpusHostCpuBeforeScans"]
