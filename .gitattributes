@@ -6,6 +6,9 @@
 # Files installed on Linux hosts must keep Unix line endings on every checkout.
 deploy/linux/* text eol=lf
 
+# The generated website projection is checked byte for byte against its evidence.
+Website/data/comparisons.json text eol=lf
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #
