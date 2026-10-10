@@ -1566,8 +1566,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives/01.png",
@@ -2154,7 +2154,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "pdf417-3/03.png",
@@ -2672,7 +2672,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "qrcode-6/4.png",
@@ -2717,7 +2717,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "qrcode-6/12.png",
@@ -2732,7 +2732,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Completion": "Completed"
   },
   {
     "Id": "rss14-1/4.png",

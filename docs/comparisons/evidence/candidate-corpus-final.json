@@ -1026,13 +1026,13 @@
     "Expected": [
       "5449000039231"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "5449000039231"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "ean13-1/8.png",
@@ -1131,13 +1131,13 @@
     "Expected": [
       "9784872348880"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "9784872348880"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "ean13-2/08.png",
@@ -2426,13 +2426,13 @@
     "Expected": [
       "MECARD:N:Google 411,;TEL:18665881077;;"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "MECARD:N:Google 411,;TEL:18665881077;;"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-3/35.png",
@@ -3566,13 +3566,13 @@
     "Expected": [
       "854818000116"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "854818000116"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-3/05.png",
@@ -3581,13 +3581,13 @@
     "Expected": [
       "049000042566"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "049000042566"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-3/03.png",
@@ -3596,13 +3596,13 @@
     "Expected": [
       "049000042566"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "049000042566"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-3/04.png",
@@ -3611,13 +3611,13 @@
     "Expected": [
       "049000042566"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "049000042566"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-3/01.png",
@@ -3626,13 +3626,13 @@
     "Expected": [
       "049000042566"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "049000042566"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-4/14.png",
@@ -3776,13 +3776,13 @@
     "Expected": [
       "312547701310"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "312547701310"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-5/09.png",
@@ -4046,13 +4046,13 @@
     "Expected": [
       "04965802"
     ],
-    "Actual": [],
-    "Missing": [
-      "049000006582"
+    "Actual": [
+      "04965802"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upce-3/03.png",
@@ -4076,13 +4076,13 @@
     "Expected": [
       "04965802"
     ],
-    "Actual": [],
-    "Missing": [
-      "049000006582"
+    "Actual": [
+      "04965802"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upce-3/10.png",
@@ -4121,13 +4121,13 @@
     "Expected": [
       "04965802"
     ],
-    "Actual": [],
-    "Missing": [
-      "049000006582"
+    "Actual": [
+      "04965802"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "multi-qrcode-1/1.png",

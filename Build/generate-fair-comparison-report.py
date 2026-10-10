@@ -80,6 +80,8 @@ def main():
         incomplete = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and not x["Expected"] and x["Status"] != "Correct" and previous_by_id[x["Id"]]["Status"] == "Correct"]
         lines += ["", f"This decoding follow-up records {new_correct}/267 correct positive images, compared with {old_correct}/267 in the [previous pass](evidence/previous-candidate-corpus.json). Previously correct positive images lost in this follow-up: " + (", ".join(lost) if lost else "none in this run."), "",
                   "Previously completed main-corpus negatives now inconclusive: " + (", ".join(incomplete) if incomplete else "none in this run.")]
+    if qualification.get("AttributionLimits"):
+        lines += ["", qualification["AttributionLimits"]]
     if "CorpusHostCpuBeforeScans" in qualification:
         host = qualification["CorpusHostCpuBeforeScans"]
         lines += ["", "Host CPU samples before the main corpus pass: " + ", ".join(f"{x:.1f}%" for x in host["corpus"]) + ". Before the supplementary negative pass: " + ", ".join(f"{x:.1f}%" for x in host["negatives"]) + ". These are separate passes; overlapping images can have different completion outcomes."]

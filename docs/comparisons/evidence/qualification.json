@@ -1,11 +1,11 @@
 {
   "BaselineSource": "cbcf4af8e906d00e86c5d97ea0511100d52220fa",
-  "CompiledSource": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
-  "MeasurementSource": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
-  "CoreSourceUnchangedAfter": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
+  "CompiledSource": "8fc393b060701645bc397e6fc9c128ead4db1a69",
+  "MeasurementSource": "8fc393b060701645bc397e6fc9c128ead4db1a69",
+  "CoreSourceUnchangedAfter": "8fc393b060701645bc397e6fc9c128ead4db1a69",
   "BaselineCoreSha256": "298719E62EC63B736C9C1CAC1375463E16363F7DAEBF65373D17EC0DC40403D9",
-  "CandidateCoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-  "ComparisonAssemblySha256": "5C2EEA73F1D6D86BA9001226CE2DF840966C0BEF691BCF90BBBAAA1790B8F5C2",
+  "CandidateCoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+  "ComparisonAssemblySha256": "9915DB53BE85264B4B4E9D450F25F8BC529A5C80120951D0F8BC078F4F4CB3FE",
   "NativeEngineSha256": "1550C1AB6529C2F977BEBAC3F4BF218CA7F932C6CB5B1089121787FE16449C78",
   "Versions": {
     "SDK": "10.0.401",
@@ -24,13 +24,13 @@
   },
   "CacheDomains": [
     {
-      "bytes": 100663296,
       "mask": "0xffff",
+      "bytes": 100663296,
       "level": 3
     },
     {
-      "bytes": 100663296,
       "mask": "0xffff0000",
+      "bytes": 100663296,
       "level": 3
     }
   ],
@@ -44,674 +44,248 @@
   "Tests": {
     "Failures": 0,
     "Skipped": 0,
-    "net10": 2118,
-    "net8": 2096,
-    "net472": 597
+    "net10": 2127,
+    "net8": 2105,
+    "net472": 606
   },
   "OptionalRuntimeConfigurations": [
     "All three external engines; unchanged opt-in dependency boundary"
   ],
-  "Review": "Fresh read-only review of packed matrix transforms, oriented/lazy views, Aztec parameter detection before payload sampling, and PDF417 search optimizations; result is retained in ReviewProbe. Earlier decoder qualification remains separate.",
+  "Review": "Fresh read-only review of the bounded local-threshold retail fallback, complete-base format validation, global-candidate preservation and public decoding entry points; result is retained in ReviewProbe. Earlier matrix/search qualification remains separate.",
   "ProductionBoundary": "No external comparison engine in CodeGlyphX.csproj; benchmark executable is non-packable, dependencies are opt-in.",
-  "CorpusCompiledSource": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
-  "CorpusCandidateCoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-  "CorpusComparisonAssemblySha256": "5C2EEA73F1D6D86BA9001226CE2DF840966C0BEF691BCF90BBBAAA1790B8F5C2",
+  "CorpusCompiledSource": "8fc393b060701645bc397e6fc9c128ead4db1a69",
+  "CorpusCandidateCoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+  "CorpusComparisonAssemblySha256": "9915DB53BE85264B4B4E9D450F25F8BC529A5C80120951D0F8BC078F4F4CB3FE",
   "NegativeManifestSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
   "Netstandard20Build": "Succeeded, zero warnings and errors",
   "ArchivedFinalTests": [
     {
       "File": "full-net10.trx",
-      "Passed": 2118,
+      "Passed": 2127,
       "Failed": 0,
-      "Sha256": "84C46F12624E9D030ECA35197F3955E5D368DBD6C91B5008BC2135F274E642C4"
+      "Sha256": "98C8C2CF79989A56C8DA37C5227F7D836109CE1822A5CD8B7A17A437981A5171"
     },
     {
       "File": "full-net8.trx",
-      "Passed": 2096,
+      "Passed": 2105,
       "Failed": 0,
-      "Sha256": "7C241C263E93E38E33B23B0F37C6306F2F40C31769A22AC4D6BE567BB180CDFA"
+      "Sha256": "A3C2E86527465D1B8DABE4F61153B0FB9309BD4133F46BA51DC4BF8244179EE7"
     },
     {
       "File": "full-net472.trx",
-      "Passed": 597,
+      "Passed": 606,
       "Failed": 0,
-      "Sha256": "AF3A0CCBFBEA6DCFAC77BF1AC03934CE70CEC8234FFA418209C0F14CED472CBA"
+      "Sha256": "A05102EA0D8AC81C9E614B12F2BD1E72907BB6B383320ECFF4A41F0B6194C7D6"
     }
   ],
-  "QualifiedUtc": "2026-10-10T19:13:42.779192+00:00",
-  "PreviousMeasurementSource": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
+  "QualifiedUtc": "2026-10-10T19:57:49.733018+00:00",
+  "PreviousMeasurementSource": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
   "NegativeCorpus": "The identical 25-image falsepositives-2 manifest is retained. Six images overlap the twelve main-corpus negatives. Budget exhaustion remains inconclusive.",
-  "HardwareCapturedUtc": "2026-10-10T19:02:44.5184697Z",
+  "HardwareCapturedUtc": "2026-10-10T19:48:38.4260191Z",
   "HostCpuBeforeSuites": {
     "generation-ccd0": [
-      29.745043418639693,
-      29.283671991764326,
-      36.454142353925576
+      18.8243281792561,
+      11.269065845373794,
+      15.231469834460453
     ],
     "generation-ccd1": [
-      23.830468627124755,
-      22.445193517359485,
-      19.68012195424198
+      30.69664691527264,
+      26.96109142150982,
+      35.050710790753655
     ],
     "decoding-ccd0": [
-      40.11128770326315,
-      41.5920081767605,
-      45.92618854572721
+      14.600029361617095,
+      10.064347551716658,
+      11.640317067006222
     ],
     "decoding-ccd1": [
-      48.13086570828957,
-      64.24039082419111,
-      64.0162454165505
+      10.765407179434739,
+      11.001774383562212,
+      8.84493865341003
     ]
   },
   "CorpusHostCpuBeforeScans": {
     "corpus": [
-      37.3769507365451,
-      29.524946485259417,
-      30.822070635606725
+      10.946021578578103,
+      9.675313077740523,
+      25.221584327570902
     ],
     "negatives": [
-      51.68652924719426,
-      48.68918354624292,
-      31.880324087320457
+      30.99447701770428,
+      26.022165308200616,
+      31.170436024117098
     ]
   },
   "NegativeRotationManifestSha256": "A2FFA645DE5CC4390B719E64ADE632CB4F4C1BBD0C2862964F03C27498B6637F",
   "NegativeRotationSources": {
     "previous": {
-      "Source": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
-      "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D"
-    },
-    "current": {
       "Source": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
       "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865"
+    },
+    "current": {
+      "Source": "8fc393b060701645bc397e6fc9c128ead4db1a69",
+      "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75"
     }
   },
   "NegativeRotation": {
     "ccd0": [
       {
-        "Domain": "ccd0",
-        "Unexpected": 0,
-        "Completed": 27,
-        "File": "negative-rotation-ccd0-0-previous.json",
-        "Inconclusive": 4,
-        "Source": "previous",
+        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
         "Cpu": [
-          37.31626387945701,
-          30.023610444161175,
-          52.7536651450949
+          49.572528329723845,
+          55.10671092643289,
+          44.46700440109369
         ],
-        "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
-        "Index": 0
+        "Inconclusive": 0,
+        "Source": "previous",
+        "Index": 0,
+        "Unexpected": 0,
+        "File": "negative-rotation-ccd0-0-previous.json",
+        "Domain": "ccd0",
+        "Completed": 31
       },
       {
-        "Domain": "ccd0",
-        "Unexpected": 0,
-        "Completed": 31,
-        "File": "negative-rotation-ccd0-1-current.json",
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Cpu": [
+          21.704527042545674,
+          22.110717544324142,
+          25.326670719206213
+        ],
         "Inconclusive": 0,
         "Source": "current",
-        "Cpu": [
-          28.089686154174267,
-          35.46404695500802,
-          34.737377607534484
-        ],
-        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-        "Index": 1
+        "Index": 1,
+        "Unexpected": 0,
+        "File": "negative-rotation-ccd0-1-current.json",
+        "Domain": "ccd0",
+        "Completed": 31
       },
       {
-        "Domain": "ccd0",
-        "Unexpected": 0,
-        "Completed": 28,
-        "File": "negative-rotation-ccd0-2-current.json",
-        "Inconclusive": 3,
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Cpu": [
+          19.857154177603885,
+          19.325221627456134,
+          22.917380848493472
+        ],
+        "Inconclusive": 0,
         "Source": "current",
-        "Cpu": [
-          14.067538830960613,
-          20.61552641257791,
-          41.42711587482055
-        ],
-        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-        "Index": 2
+        "Index": 2,
+        "Unexpected": 0,
+        "File": "negative-rotation-ccd0-2-current.json",
+        "Domain": "ccd0",
+        "Completed": 31
       },
       {
-        "Domain": "ccd0",
-        "Unexpected": 0,
-        "Completed": 29,
-        "File": "negative-rotation-ccd0-3-previous.json",
-        "Inconclusive": 2,
-        "Source": "previous",
+        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
         "Cpu": [
-          44.56134874021639,
-          46.35711732895268,
-          37.7488635478038
+          18.661520560366796,
+          19.33537679418468,
+          21.122560008583957
         ],
-        "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
-        "Index": 3
+        "Inconclusive": 0,
+        "Source": "previous",
+        "Index": 3,
+        "Unexpected": 0,
+        "File": "negative-rotation-ccd0-3-previous.json",
+        "Domain": "ccd0",
+        "Completed": 31
       }
     ],
     "ccd1": [
       {
-        "Domain": "ccd1",
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Cpu": [
+          10.31688520173052,
+          16.683719903174186,
+          24.32536327130441
+        ],
+        "Inconclusive": 0,
+        "Source": "current",
+        "Index": 0,
         "Unexpected": 0,
-        "Completed": 31,
         "File": "negative-rotation-ccd1-0-current.json",
-        "Inconclusive": 0,
-        "Source": "current",
-        "Cpu": [
-          62.24700342908472,
-          32.59450748620333,
-          25.567869880327553
-        ],
-        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-        "Index": 0
+        "Domain": "ccd1",
+        "Completed": 31
       },
       {
-        "Domain": "ccd1",
+        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
+        "Cpu": [
+          12.32930796055528,
+          12.71433463495153,
+          7.2397727694854535
+        ],
+        "Inconclusive": 0,
+        "Source": "previous",
+        "Index": 1,
         "Unexpected": 0,
-        "Completed": 26,
         "File": "negative-rotation-ccd1-1-previous.json",
-        "Inconclusive": 5,
-        "Source": "previous",
-        "Cpu": [
-          45.44100856555532,
-          28.843091398626065,
-          29.98108384301125
-        ],
-        "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
-        "Index": 1
+        "Domain": "ccd1",
+        "Completed": 31
       },
       {
-        "Domain": "ccd1",
+        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
+        "Cpu": [
+          10.46922583188017,
+          9.740151379046114,
+          14.498500738162633
+        ],
+        "Inconclusive": 0,
+        "Source": "previous",
+        "Index": 2,
         "Unexpected": 0,
-        "Completed": 29,
         "File": "negative-rotation-ccd1-2-previous.json",
-        "Inconclusive": 2,
-        "Source": "previous",
-        "Cpu": [
-          88.46574057308317,
-          88.23227034726477,
-          79.4746980310462
-        ],
-        "CoreSha256": "5D35BB5D2901DBA9FBE0655EC66D8F0E685B3CE1BD0409E82F0BBB295E7D598D",
-        "Index": 2
+        "Domain": "ccd1",
+        "Completed": 31
       },
       {
-        "Domain": "ccd1",
-        "Unexpected": 0,
-        "Completed": 31,
-        "File": "negative-rotation-ccd1-3-current.json",
+        "CoreSha256": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+        "Cpu": [
+          11.207396980200457,
+          20.300694122360806,
+          36.44124822228915
+        ],
         "Inconclusive": 0,
         "Source": "current",
-        "Cpu": [
-          44.752744248400475,
-          28.01278079744668,
-          20.828305385091607
-        ],
-        "CoreSha256": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-        "Index": 3
+        "Index": 3,
+        "Unexpected": 0,
+        "File": "negative-rotation-ccd1-3-current.json",
+        "Domain": "ccd1",
+        "Completed": 31
       }
     ]
   },
   "ReviewProbe": {
     "Status": "complete",
-    "Head": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
-    "Base": "9a9ed52725ac8100ab321d76a17ee2a556980b09",
-    "Reviewer": "candidate_search_review",
-    "Scope": "Packed matrix transforms and oriented/lazy views; Aztec sampling and parameter routing; PDF417 exact search optimizations and bounded cancellation",
+    "Head": "8fc393b060701645bc397e6fc9c128ead4db1a69",
+    "Base": "855499d1685a94bc394b25b543bd401849f81bf8",
+    "Agent": "/root/retail_sampling_review",
     "Boundary": "current",
+    "ReadOnly": true,
+    "Recommendation": "Accept as shaped, subject to full corpus, framework and comparable performance qualification",
+    "Scope": "Bounded local-contrast retail scanline sampling, global candidate preservation, complete-base format guard, public pixel and scanner paths, cancellation, bounds, pooled buffers, regression value and fixture provenance",
+    "Excluded": "Unchanged PDF417, Aztec and prior matrix/search optimizations",
     "Findings": [],
     "UnresolvedFindings": [],
-    "ConfirmationUsed": false,
-    "ProductApiDisposition": "accept as shaped",
-    "DependencyApproval": "No public API or production dependency additions",
-    "Limits": "Read-only source review; tests and frozen comparisons are separate parent qualification"
-  },
-  "AllocationDiagnostics": {
-    "Scope": "Eight retained warm scanner calls after two warmups per case, requested family with tiles enabled and explicit unlimited diagnostic budget; allocations and latency are exploratory diagnostics, separate from the 1500 ms corpus and timing comparison",
-    "PreviousSource": "7c6f8db8b11bd98bbf84e8173cf0496046ac9f97",
-    "CurrentSource": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
-    "Cases": {
-      "aztec-negative": {
-        "before": {
-          "MinimumBytes": 12198992,
-          "MaximumBytes": 12207072,
-          "Samples": 8,
-          "RetainedSamples": [
-            {
-              "Image": "04.png",
-              "Iteration": 2,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 143.4771,
-              "Allocated": 12198992,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 3,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 179.3321,
-              "Allocated": 12198992,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 4,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 138.4071,
-              "Allocated": 12198992,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 5,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 119.3729,
-              "Allocated": 12199920,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 6,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 131.8559,
-              "Allocated": 12207072,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 7,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 129.7064,
-              "Allocated": 12199920,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 8,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 123.711,
-              "Allocated": 12207072,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 9,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 164.8334,
-              "Allocated": 12199920,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            }
-          ],
-          "ArchivedRawFile": "aztec-negative-before.jsonl",
-          "Sha256": "0240B8490A1BD3C685A2BAC0B8901AF9E48FBEB6AA78F180856F17F4747976F6"
-        },
-        "after": {
-          "MinimumBytes": 8058560,
-          "MaximumBytes": 8067568,
-          "Samples": 8,
-          "RetainedSamples": [
-            {
-              "Image": "04.png",
-              "Iteration": 2,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 95.6916,
-              "Allocated": 8058560,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 3,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 34.7368,
-              "Allocated": 8058560,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 4,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 28.7331,
-              "Allocated": 8058560,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 5,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 27.5921,
-              "Allocated": 8058560,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 6,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 29.8247,
-              "Allocated": 8066640,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 7,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 27.2258,
-              "Allocated": 8059488,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 8,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 26.6725,
-              "Allocated": 8067568,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "04.png",
-              "Iteration": 9,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Aztec",
-              "Milliseconds": 38.7034,
-              "Allocated": 8059488,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            }
-          ],
-          "ArchivedRawFile": "aztec-negative-after.jsonl",
-          "Sha256": "62D94DED28BF559999312A03E8E2B8FE4F9532D518C060ED9CE92C81BB473E74"
-        },
-        "Input": "falsepositives/04.png",
-        "InputSha256": "BFCD333D527DA6BEB0C0B3CF715388E13555976EB9388B888D859543D009FC64"
-      },
-      "pdf-negative": {
-        "before": {
-          "MinimumBytes": 10755056,
-          "MaximumBytes": 10764688,
-          "Samples": 8,
-          "RetainedSamples": [
-            {
-              "Image": "15.png",
-              "Iteration": 2,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 367.3925,
-              "Allocated": 10759632,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 3,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 349.7057,
-              "Allocated": 10759632,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 4,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 361.5719,
-              "Allocated": 10758080,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 5,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 375.836,
-              "Allocated": 10755056,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 6,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 359.3864,
-              "Allocated": 10763024,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 7,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 422.3629,
-              "Allocated": 10755056,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 8,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 478.8223,
-              "Allocated": 10755168,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 9,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 519.1061,
-              "Allocated": 10764688,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            }
-          ],
-          "ArchivedRawFile": "pdf-negative-before.jsonl",
-          "Sha256": "5AC18D426095332BD9A37556BEB593D381F3C03B5EA7590E2B47F25DBEEF4444"
-        },
-        "after": {
-          "MinimumBytes": 10129488,
-          "MaximumBytes": 10138512,
-          "Samples": 8,
-          "RetainedSamples": [
-            {
-              "Image": "15.png",
-              "Iteration": 2,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 281.6317,
-              "Allocated": 10134992,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 3,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 280.1195,
-              "Allocated": 10134992,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 4,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 278.9945,
-              "Allocated": 10134992,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 5,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 270.5086,
-              "Allocated": 10132320,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 6,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 270.9363,
-              "Allocated": 10138384,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 7,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 278.5619,
-              "Allocated": 10130416,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 8,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 258.6446,
-              "Allocated": 10129488,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            },
-            {
-              "Image": "15.png",
-              "Iteration": 9,
-              "Tiles": true,
-              "Limit": 0,
-              "Formats": "Pdf417",
-              "Milliseconds": 278.103,
-              "Allocated": 10138512,
-              "Status": "NoSymbolFound",
-              "Completion": "Completed",
-              "Symbols": []
-            }
-          ],
-          "ArchivedRawFile": "pdf-negative-after.jsonl",
-          "Sha256": "5DB2EB1C774788534FAE8786CE9DA484DEED5F9114DB5D5AF7B8191727D1DA0D"
-        },
-        "Input": "falsepositives/15.png",
-        "InputSha256": "ACC5CD8DDB6C29324CBDB8FCD0DBE35CBD8847CD877399186FEE566B98993270"
-      }
-    }
+    "ProductAssessment": "The change belongs in the existing scanline engine, adds no public API or production dependency, and keeps adaptive sampling in a focused partial file.",
+    "QualificationGap": "Adaptive collection also runs on non-retail hinted calls; current corpus, paired negative completion and timing evidence must quantify its effect before performance or no-regression claims.",
+    "ReviewerExecution": "No edits, tests or builds"
   },
   "CropRegression": "Independent review reproduced a stop-only crop regression in e01c61e3; 68bebf12 fixes it. Both normal and inverted crop contracts pass beside the original payload-clipped cases.",
   "TestedCoreSha256": {
-    "net10.0": "E64C8838D17D01800BCD4A4991A189F92951A82AA60B0A7781A83DB0EEC06865",
-    "net8.0": "DE690D5C442002855BDD3D3DD88533F00AB4D1C54FE99589E6E6FFC559E6DC8B",
-    "net472": "3C6288A852E38DD29A0A0B803268AF3FD062A7883854CC73BDC22EFB10BBC5D4"
+    "net10.0": "0DD4FFA6A8E658D47472E384E08773714F3BFBA9D75007CBE51E6D2036102E75",
+    "net8.0": "6B1A6EEC857D50CD5EE9060C48F69DBD305BBA382F480F4E209AF846C9B2B292",
+    "net472": "65EC2F5D35D04F1E85128CA981AE4086CF5B83D06A759DFF7996759343A3C0D1"
   },
-  "TestedSource": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
+  "TestedSource": "8fc393b060701645bc397e6fc9c128ead4db1a69",
   "ChangedDecoders": [
-    "Lazy oriented Aztec module sampling preserves the framing, parameter and payload decisions with periodic cancellation checks",
-    "Packed bit transforms shared by Aztec and PDF417 avoid checked per-cell copying",
-    "PDF417 exact scanline indexing, normalized codeword reuse, sliding header matching, opaque luminance fast path and impossible narrow orientation pruning"
-  ]
+    "Two bounded local-contrast scanline windows use sliding extrema and periodic cancellation checks",
+    "Only guarded complete retail base symbols are admitted, with existing parity and checksum validation",
+    "Globally validated scanline payloads and supplements retain priority over local threshold hypotheses"
+  ],
+  "RegressionProof": {
+    "PreviousCore": "8d93e8e3cd502e482c7764d5f2909c5e2222b0ab",
+    "ExpectedPositiveRegressionFailures": 6,
+    "ChecksumAndNegativeCasesStillPass": 3,
+    "CandidateCoreRestored": "421D45B6259FE1B45F2E0E1F0D4A133530E32F5AA4A1434D9F70C3F082BC1EA0"
+  },
+  "AttributionLimits": "This implementation changes retail scanline sampling only. The current main pass also completed one additional QR photograph, qrcode-3/11.png, with no QR source change; that result is retained as run variability rather than a retail-algorithm gain. Shared-host deadline effects remain visible in every negative and timing pass."
 }
