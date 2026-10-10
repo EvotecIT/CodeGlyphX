@@ -34,6 +34,7 @@
         </details>
         <h3>Negative images and completed scans</h3>
         <p>{{ copy.negatives }}</p>
+        {{ if comparison.negative_followup }}<p>{{ comparison.negative_followup }}</p>{{ end }}
         <div class="comparison-scroll" role="region" aria-label="Main corpus negative results" tabindex="0">
             <table class="bench-table">
                 <caption>The 12 main-corpus negative images</caption>

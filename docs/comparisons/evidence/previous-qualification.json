@@ -1,11 +1,11 @@
 {
   "BaselineSource": "cbcf4af8e906d00e86c5d97ea0511100d52220fa",
-  "CompiledSource": "c6deddd5187924cd03cdc2c7592b52b6ab3cc355",
-  "MeasurementSource": "c6deddd5187924cd03cdc2c7592b52b6ab3cc355",
-  "CoreSourceUnchangedAfter": "c6deddd5187924cd03cdc2c7592b52b6ab3cc355",
+  "CompiledSource": "138e0180f10cbc897eb5a4bebbdf1c28d131b2b3",
+  "MeasurementSource": "138e0180f10cbc897eb5a4bebbdf1c28d131b2b3",
+  "CoreSourceUnchangedAfter": "138e0180f10cbc897eb5a4bebbdf1c28d131b2b3",
   "BaselineCoreSha256": "298719E62EC63B736C9C1CAC1375463E16363F7DAEBF65373D17EC0DC40403D9",
-  "CandidateCoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
-  "ComparisonAssemblySha256": "5206AC8B231C21BDF7DDD273B7A3D191294D3A061CC4AEF61BF6D1FA1C3CDCB3",
+  "CandidateCoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
+  "ComparisonAssemblySha256": "5A4B1FE5D783190158B5E89301218DCAF559C4539073C082F49A7EEF7458CC03",
   "NativeEngineSha256": "1550C1AB6529C2F977BEBAC3F4BF218CA7F932C6CB5B1089121787FE16449C78",
   "Versions": {
     "SDK": "10.0.401",
@@ -24,14 +24,14 @@
   },
   "CacheDomains": [
     {
-      "level": 3,
       "mask": "0xffff",
-      "bytes": 100663296
+      "bytes": 100663296,
+      "level": 3
     },
     {
-      "level": 3,
       "mask": "0xffff0000",
-      "bytes": 100663296
+      "bytes": 100663296,
+      "level": 3
     }
   ],
   "PowerPlan": "Power Scheme GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c  (High performance)",
@@ -44,287 +44,304 @@
   "Tests": {
     "Failures": 0,
     "Skipped": 0,
-    "net10": 2144,
-    "net8": 2122,
-    "net472": 623
+    "net10": 2154,
+    "net8": 2132,
+    "net472": 633
   },
   "OptionalRuntimeConfigurations": [
     "All three external engines; unchanged opt-in dependency boundary"
   ],
-  "Review": "Fresh read-only review of physical row sampling, shared layout/normalization, checksum assembly, bounded work and scanner capability integration; details are retained in ReviewProbe.",
+  "Review": "Fresh read-only review of PDF417 indexed character fits, bounded canonical run caching, compact framing and Expanded Stacked shared finder fitting; details are retained in ReviewProbe.",
   "ProductionBoundary": "No external comparison engine in CodeGlyphX.csproj; benchmark executable is non-packable, dependencies are opt-in.",
-  "CorpusCompiledSource": "c6deddd5187924cd03cdc2c7592b52b6ab3cc355",
-  "CorpusCandidateCoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
-  "CorpusComparisonAssemblySha256": "5206AC8B231C21BDF7DDD273B7A3D191294D3A061CC4AEF61BF6D1FA1C3CDCB3",
+  "CorpusCompiledSource": "138e0180f10cbc897eb5a4bebbdf1c28d131b2b3",
+  "CorpusCandidateCoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
+  "CorpusComparisonAssemblySha256": "5A4B1FE5D783190158B5E89301218DCAF559C4539073C082F49A7EEF7458CC03",
   "NegativeManifestSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
   "Netstandard20Build": "Succeeded, zero warnings and errors",
   "ArchivedFinalTests": [
     {
       "File": "full-net10.trx",
-      "Passed": 2144,
+      "Passed": 2154,
       "Failed": 0,
-      "Sha256": "4A9C40A86342030281F6029390AD62D0ECA576DE44F58A543A8897EBF97B094E"
+      "Sha256": "FF77C626F84E756F98E241C57C6AB200D4835817E4D82B69CDDE36683CFEB0EA"
     },
     {
       "File": "full-net8.trx",
-      "Passed": 2122,
+      "Passed": 2132,
       "Failed": 0,
-      "Sha256": "618C2000806B3A9BF9CA6566C54AFDBAB3711A6592EC16641BA21FFB4322F3DF"
+      "Sha256": "B0A4934F1FD8EA43FC3219695ED53034D3F4DBD89D5F6908753FB83DFE0A5198"
     },
     {
       "File": "full-net472.trx",
-      "Passed": 623,
+      "Passed": 633,
       "Failed": 0,
-      "Sha256": "B76490646CF70A1873AED5C1D0B3443212D2ADC68B7CA69EECD6DB8BD3A6A386"
+      "Sha256": "6E7F2FB978134507A9D3433D44A5E79C5B768E665A3E16796BDA6ABC489F9A6D"
     }
   ],
-  "QualifiedUtc": "2026-10-10T21:30:58.600768+00:00",
-  "PreviousMeasurementSource": "419b84d950ea481a4775a7f7c717b9efa95bc520",
+  "QualifiedUtc": "2026-10-10T22:27:22.656188+00:00",
+  "PreviousMeasurementSource": "c6deddd5187924cd03cdc2c7592b52b6ab3cc355",
   "NegativeCorpus": "The identical 25-image falsepositives-2 manifest is retained. Six images overlap the twelve main-corpus negatives. Budget exhaustion remains inconclusive.",
-  "HardwareCapturedUtc": "2026-10-10T21:20:59.9901126Z",
+  "HardwareCapturedUtc": "2026-10-10T22:17:03.0470077Z",
   "HostCpuBeforeSuites": {
     "generation-ccd0": [
-      70.52735265190289,
-      47.98253654553258,
-      91.49939205355673
+      38.07736190716036,
+      29.247053321479267,
+      31.415256095908127
     ],
     "generation-ccd1": [
-      41.907862413850495,
-      33.56590558981566,
-      26.29038295132915
+      35.8016192414106,
+      39.65870902292138,
+      28.290194729312923
     ],
     "decoding-ccd0": [
-      28.197158696227255,
-      56.58700893720947,
-      81.7657325748528
+      53.6267235443959,
+      55.746766199754425,
+      48.35273404037197
     ],
     "decoding-ccd1": [
-      41.5600731754067,
-      30.309217581091687,
-      30.531012540288348
+      34.911191496079375,
+      79.3364507960967,
+      43.625363296442586
     ]
   },
   "CorpusHostCpuBeforeScans": {
     "corpus": [
-      39.60353229634785,
-      36.22451308424013,
-      39.32444145479121
+      61.9707735150268,
+      45.36941448888494,
+      58.635016025680954
     ],
     "negatives": [
-      99.56439100135255,
-      99.36900815339126,
-      97.39949718635371
+      56.80714178023856,
+      86.01044265186056,
+      76.32565548491293
     ]
   },
   "NegativeRotationManifestSha256": "A2FFA645DE5CC4390B719E64ADE632CB4F4C1BBD0C2862964F03C27498B6637F",
   "NegativeRotationSources": {
     "previous": {
-      "Source": "419b84d950ea481a4775a7f7c717b9efa95bc520",
-      "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB"
-    },
-    "current": {
       "Source": "c6deddd5187924cd03cdc2c7592b52b6ab3cc355",
       "CoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401"
+    },
+    "current": {
+      "Source": "138e0180f10cbc897eb5a4bebbdf1c28d131b2b3",
+      "CoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3"
     }
   },
   "NegativeRotation": {
     "ccd0": [
       {
+        "Unexpected": 0,
+        "Source": "previous",
         "Cpu": [
-          73.93948533811614,
-          78.88739835476551,
-          62.99747162862219
+          97.79400180196444,
+          99.36141384818056,
+          99.52456203896276
         ],
+        "Inconclusive": 2,
+        "Domain": "ccd0",
+        "CoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
         "Index": 0,
-        "Source": "previous",
-        "Domain": "ccd0",
-        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
-        "File": "negative-rotation-ccd0-0-previous.json",
-        "Unexpected": 0,
-        "Inconclusive": 0,
-        "Completed": 31
+        "Completed": 29,
+        "File": "negative-rotation-ccd0-0-previous.json"
       },
       {
+        "Unexpected": 0,
+        "Source": "current",
         "Cpu": [
-          19.536084054090953,
-          22.81422735702545,
-          20.265270387708412
+          75.8453312578438,
+          57.167201303064076,
+          60.106234831092806
         ],
+        "Inconclusive": 6,
+        "Domain": "ccd0",
+        "CoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
         "Index": 1,
-        "Source": "current",
-        "Domain": "ccd0",
-        "CoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
-        "File": "negative-rotation-ccd0-1-current.json",
-        "Unexpected": 0,
-        "Inconclusive": 1,
-        "Completed": 30
+        "Completed": 25,
+        "File": "negative-rotation-ccd0-1-current.json"
       },
       {
+        "Unexpected": 0,
+        "Source": "current",
         "Cpu": [
-          22.04242169516746,
-          30.122399329419224,
-          59.8954799191729
+          85.22819135313505,
+          83.60170668462013,
+          90.91936003791061
         ],
+        "Inconclusive": 4,
+        "Domain": "ccd0",
+        "CoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
         "Index": 2,
-        "Source": "current",
-        "Domain": "ccd0",
-        "CoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
-        "File": "negative-rotation-ccd0-2-current.json",
-        "Unexpected": 0,
-        "Inconclusive": 1,
-        "Completed": 30
+        "Completed": 27,
+        "File": "negative-rotation-ccd0-2-current.json"
       },
       {
-        "Cpu": [
-          31.39865603814821,
-          32.09763571196609,
-          54.199521373900915
-        ],
-        "Index": 3,
-        "Source": "previous",
-        "Domain": "ccd0",
-        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
-        "File": "negative-rotation-ccd0-3-previous.json",
         "Unexpected": 0,
-        "Inconclusive": 0,
-        "Completed": 31
+        "Source": "previous",
+        "Cpu": [
+          51.92154598300029,
+          48.799813382602345,
+          36.50327303426722
+        ],
+        "Inconclusive": 2,
+        "Domain": "ccd0",
+        "CoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
+        "Index": 3,
+        "Completed": 29,
+        "File": "negative-rotation-ccd0-3-previous.json"
       }
     ],
     "ccd1": [
       {
-        "Cpu": [
-          52.48298296536586,
-          51.804184994958646,
-          49.472642283795196
-        ],
-        "Index": 0,
+        "Unexpected": 0,
         "Source": "current",
-        "Domain": "ccd1",
-        "CoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
-        "File": "negative-rotation-ccd1-0-current.json",
-        "Unexpected": 0,
-        "Inconclusive": 3,
-        "Completed": 28
-      },
-      {
         "Cpu": [
-          29.506747447907834,
-          28.645939970960853,
-          20.10061189904485
+          29.614503195807217,
+          31.938222526205664,
+          33.06145774424834
         ],
-        "Index": 1,
-        "Source": "previous",
-        "Domain": "ccd1",
-        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
-        "File": "negative-rotation-ccd1-1-previous.json",
-        "Unexpected": 0,
-        "Inconclusive": 1,
-        "Completed": 30
-      },
-      {
-        "Cpu": [
-          76.93299872627732,
-          70.43271506657366,
-          54.251645501627266
-        ],
-        "Index": 2,
-        "Source": "previous",
-        "Domain": "ccd1",
-        "CoreSha256": "6B8771D93751C2116226FAE92412069398FDB8CEFA0DC355A457025E1AFDF6AB",
-        "File": "negative-rotation-ccd1-2-previous.json",
-        "Unexpected": 0,
         "Inconclusive": 0,
-        "Completed": 31
+        "Domain": "ccd1",
+        "CoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
+        "Index": 0,
+        "Completed": 31,
+        "File": "negative-rotation-ccd1-0-current.json"
       },
       {
+        "Unexpected": 0,
+        "Source": "previous",
         "Cpu": [
-          52.9683246713767,
-          33.43474484717517,
-          42.047007735383104
+          47.8380556415174,
+          28.97649393041275,
+          36.93228939739167
         ],
-        "Index": 3,
-        "Source": "current",
+        "Inconclusive": 1,
         "Domain": "ccd1",
         "CoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
-        "File": "negative-rotation-ccd1-3-current.json",
+        "Index": 1,
+        "Completed": 30,
+        "File": "negative-rotation-ccd1-1-previous.json"
+      },
+      {
         "Unexpected": 0,
-        "Inconclusive": 1,
-        "Completed": 30
+        "Source": "previous",
+        "Cpu": [
+          33.67515240986994,
+          41.87948004403053,
+          39.822910524426916
+        ],
+        "Inconclusive": 0,
+        "Domain": "ccd1",
+        "CoreSha256": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
+        "Index": 2,
+        "Completed": 31,
+        "File": "negative-rotation-ccd1-2-previous.json"
+      },
+      {
+        "Unexpected": 0,
+        "Source": "current",
+        "Cpu": [
+          41.70479108895579,
+          28.963851176821052,
+          33.52525621550178
+        ],
+        "Inconclusive": 0,
+        "Domain": "ccd1",
+        "CoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
+        "Index": 3,
+        "Completed": 31,
+        "File": "negative-rotation-ccd1-3-current.json"
       }
     ]
   },
   "ReviewProbe": {
     "Status": "complete",
-    "Head": "c6deddd5187924cd03cdc2c7592b52b6ab3cc355",
-    "Base": "dfca5b18bc13fc06e706d93685bccc7a405dc0c2",
-    "InitialHead": "5ad60b25102df5e4c8ffe777411c9ec9c16fd1cf",
-    "Reviewer": "expanded_stacked_review",
+    "Base": "7d8b73b9b85f2f70312b45fe0395a56b33289e3b",
+    "Head": "138e0180f10cbc897eb5a4bebbdf1c28d131b2b3",
+    "Reviewer": "/root/negative_completion_review",
     "FreshContext": true,
     "ReadOnly": true,
-    "Reason": "Physical row grouping, orientation, shared layout and checksum assembly introduce subtle recognition and default-format boundaries.",
-    "Scope": [
-      "Row sampling and ordering",
-      "Guard normalization and inversion",
-      "Checksum and GS1 assembly",
-      "Bounded search, cancellation and pooled lifetime",
-      "Capability/default recognition and framework contracts"
-    ],
-    "TechnicalFindings": [
-      {
-        "Priority": "P2",
-        "Finding": "Width-only entry guard rejects compact quarter-turn symbols",
-        "Disposition": "Reproduced in public scan; fixed with orientation-neutral guard and compact independent-fixture tests"
-      },
-      {
-        "Priority": "P2",
-        "Finding": "Mixed/default scanning reports a one-row Expanded symbol under two physical identities",
-        "Disposition": "Reproduced in public scan; mixed recognition requires multi-row Stacked layouts while explicit Stacked-only retains one-row support"
-      }
-    ],
+    "Boundary": "current",
+    "Reason": "Changed indexed pixel character search, canonical run cache resource/cancellation and orientation behavior, compact framing, and grouped Expanded Stacked finder fitting.",
+    "Scope": "Eight-file decoding and regression-test change. Website and performance claims are outside this review.",
+    "Findings": [],
     "UnresolvedFindings": [],
-    "Disposition": "accept as shaped",
-    "Boundary": "candidate-reviewed",
-    "TargetedConfirmationUsed": true,
-    "Confirmation": "Both original P2 findings addressed; no unresolved actionable defect in fixes or directly affected sibling paths",
-    "PublicApiChanged": false,
-    "CapabilityChanged": true,
-    "NewDependencies": false,
-    "Evidence": [
-      "run/review-regressions-before.json",
-      "run/review-regressions-after.json",
-      "tests/focused/expanded-reviewed-net10.trx"
+    "ProductDisposition": "Accept as shaped: useful existing-owner decoding improvement; no new public API or production dependency.",
+    "TargetedConfirmationUsed": false,
+    "ValidationLimits": [
+      "Full framework tests, frozen corpus and benchmark were pending in the reviewer packet.",
+      "Semantic differential proofs do not establish universal negative completion or performance.",
+      "Website requires separate generated-data, download and visual validation."
     ],
-    "Limits": [
-      "Reviewer did not run tests; primary owns full qualification",
-      "Monotonic budget and subsequent valid decoding are tested; reuse of a particular pool array is not asserted",
-      "Local review is not hosted CI or publication/merge approval"
-    ]
+    "CompletedUtc": "2026-10-10T22:06:20.849106+00:00"
   },
   "CropRegression": "Independent review reproduced a stop-only crop regression in e01c61e3; 68bebf12 fixes it. Both normal and inverted crop contracts pass beside the original payload-clipped cases.",
   "TestedCoreSha256": {
-    "net10.0": "C5428704A03703530C7F8601D7EE96BFD61FF2CE13CD8A233D3CE4197239E401",
-    "net8.0": "AECDA3D3A439A585EA6BF02D6975B4328A03F727CB59A0CD0B694E5903CE67EA",
-    "net472": "4818218D4AEBB866B1CA205C0BFBFD9DDAA776FF3976E80F547FDDD475EFFC5E"
+    "net10.0": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
+    "net8.0": "BCC5DAD00D6E68BF602F65BFD21F5CC6899284246CD856AED4D3657E82E6736D",
+    "net472": "7C758752072BC3695261C322BC48286D073D9B8F736E235DA3D670BF61C1B525"
   },
-  "TestedSource": "c6deddd5187924cd03cdc2c7592b52b6ab3cc355",
+  "TestedSource": "138e0180f10cbc897eb5a4bebbdf1c28d131b2b3",
   "ChangedDecoders": [
-    "Expanded Stacked image scanning samples guarded physical rows in both axes, line directions and polarities.",
-    "Row templates share the encoder layout; local character normalization and existing row assembly, finder sequence and checksum remain authoritative.",
-    "Search checks the cooperative deadline and bounds sampled lines, row observations and row combinations; one result is supported.",
-    "The existing capability catalog now includes Expanded Stacked image recognition and default selection; no new API, options or production dependencies."
+    "PDF417 pixel character candidates use a conservative index and retain the complete eight-run acceptance fit and lowest-codeword tie order.",
+    "PDF417 sampling reuses canonical forward, non-inverted runs within one thresholded image, including print-gain retries. Cache accounting is bounded to 8 MiB and 8192 entries; uncached lines retain fresh sampling.",
+    "Expanded Stacked physical row matching shares identical first-finder fits across row patterns, retaining per-pattern observation order, guards, normalization and checksum assembly.",
+    "Compact PDF417 accepts the 25-run minimum row framing and recognizes a 69-module two-column symbol without rejecting it as a zero-column regular symbol.",
+    "Cached sampling checks cancellation and the same monotonic deadline; no public API, options or production dependencies are added."
   ],
-  "AttributionLimits": "Expanded Stacked image scanning records 11/12 correct images that were previously unsupported. The complete positive score is 184/267 versus 173/267 in the previous pass. The long AI (3922) oracle in rssexpandedstacked-2/13.png exceeds the GS1 field limit; raw encoded digits are returned, but the invalid parenthesized oracle remains verbatim and the result remains failed under unchanged scoring. No previous positive successes are lost in this run. Current paired negative passes complete 28-30/31, versus 30-31/31 for the previous binary. All passes and load readings remain visible; the added stage and changed deadline shares require further completion investigation. The comparison retains all outcomes and host load. One image result per Expanded Stacked request is supported; arbitrary perspective and multiple-symbol localization are not established. Main and supplementary negative completion and paired passes remain separate; a general timeout fix is not established.",
+  "AttributionLimits": "This follow-up records 184/267 correct positive images versus 184/267 in the previous pass. No previous positive successes are lost in this run. Paired negative passes complete 25-31/31 with the current binary and 29-31/31 with the previous binary. Every pass and host CPU reading is retained. Shared-host load and wall-clock deadlines limit attribution; no general timeout guarantee is established. Compact PDF417 width and polarity regressions are covered by separate generated public-API tests; they do not expand or alter the frozen image corpus. The long AI (3922) oracle in rssexpandedstacked-2/13.png exceeds the GS1 field limit; raw encoded digits are returned, but the invalid parenthesized oracle remains verbatim and remains failed under unchanged scoring. One Expanded Stacked image result per request is supported; arbitrary perspective and multiple-symbol localization are not established.",
   "RegressionProof": {
-    "NewScannerFocusedTests": 17,
+    "NewFocusedCases": 10,
     "Frameworks": [
       "net10.0",
       "net8.0",
       "net472"
     ],
-    "FrozenStackedImages": 12,
-    "PreviouslyUnsupported": 12,
-    "CurrentCorrect": 11,
-    "CurrentUnexpected": 1,
-    "OraclesAndScoringChanged": false
+    "PreviouslyCorrectPositiveImagesLost": [],
+    "OraclesAndScoringChanged": false,
+    "SemanticChecks": {
+      "characters": {
+        "Calls": 474801,
+        "InputSha256": "2462C0A906591A475C31732120DD7682CC8CB802FA73B2921786B075C3F2AAC0",
+        "ResultSha256": "E91A2D63F447109EC22BD5F869F282188191D1D5BF5A39EFA887DCEFD1A01577",
+        "CoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
+        "ElapsedMs": 313.9411,
+        "Coverage": "All 2787 cluster/codeword patterns at scales 1,2,5; single-run perturbations; alternating print gain; 20000 seeded arbitrary positive run vectors; exact, approximate and gain modes."
+      },
+      "cache": {
+        "Calls": 115588,
+        "Mismatches": 0,
+        "AccountedCacheBytes": 8388560,
+        "EntryBoundedCacheCount": 8192,
+        "CancellationChecked": true,
+        "DeadlineChecked": true,
+        "CoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
+        "Coverage": "Fresh sampling versus mixed-order cache capture/hits for both axes, directions, polarities and all slopes; six independent patterns and three sizes; budget saturation and uncached fallback."
+      },
+      "expanded": {
+        "Calls": 24510,
+        "Observations": 326,
+        "Patterns": 124,
+        "ManifestSha256": "61C2FEB8CB78BF24A39ECEB4A3502A3E7C70EF829C133C5D47C2347E0143C6F8",
+        "ObservationSha256": "0348086DD39E458738B3F59837EA7BF036C3B5F3EBEDEE0682BFE81ED90BB3CF",
+        "CoreSha256": "AEE260979F3899E9CC71594C671696549B5FFE436EC5323A058BCCC74E76FED3",
+        "Coverage": "Complete physical row observations for all twelve frozen Expanded Stacked images, both axes/directions and three luminance cutoffs, with original line spacing, polarity, bounds, deduplication and per-pattern caps."
+      }
+    }
+  },
+  "TestExecution": {
+    "ModernFrameworks": "Default repository runner settings",
+    "Net472": "Same compiled tests and core, collection parallelism disabled in a task-local runner configuration; all recognition allowances and assertions unchanged.",
+    "RunnerConfigurationSha256": "D0831AE69438C55FC68F8F8991DE7B3470CED9AFE93792ECB1A2DBE1D38E5DAA",
+    "InitialNet472": {
+      "Passed": 630,
+      "Failed": 3,
+      "Sha256": "4641C65A2E78AE25E2319DF52013E45110C737F913FA83E360D35E8A9EF555A4"
+    },
+    "UnchangedFocusedReproduction": {
+      "Passed": 4,
+      "Failed": 0,
+      "Sha256": "07FD13F5C70B5197E8C324565E88B8F01F80679B39B1AF82C5D71508F1D37A7C"
+    },
+    "Limit": "Short wall-clock allowances remain sensitive to host load. The initial three failures and complete final serial rerun are archived; this does not establish a deadline guarantee."
   }
 }

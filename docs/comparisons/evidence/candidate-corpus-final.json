@@ -1522,8 +1522,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives/03.png",
@@ -1953,13 +1953,13 @@
     "Expected": [
       "This is PDF417"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "This is PDF417"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-1/02.png",
@@ -2148,13 +2148,13 @@
     "Expected": [
       "A larger PDF417 barcode with text and error correction level 4."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A larger PDF417 barcode with text and error correction level 4."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-3/03.png",
@@ -2426,13 +2426,13 @@
     "Expected": [
       "MECARD:N:Google 411,;TEL:18665881077;;"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "MECARD:N:Google 411,;TEL:18665881077;;"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-3/35.png",
@@ -2717,7 +2717,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "Completed"
+    "Completion": "DeadlineExceeded"
   },
   {
     "Id": "qrcode-6/12.png",
@@ -2732,7 +2732,7 @@
     ],
     "Unexpected": [],
     "Status": "Failed",
-    "Completion": "Completed"
+    "Completion": "DeadlineExceeded"
   },
   {
     "Id": "rss14-1/4.png",

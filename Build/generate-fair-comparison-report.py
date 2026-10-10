@@ -39,7 +39,7 @@ def main():
              "negative-baseline-corpus.json", "negative-candidate-corpus.json", "negative-manifest.json",
              "qualification.json"]
     names += [f"{kind}-final-{domain}-result.json" for kind, domain in runs]
-    names += [name for name in ("previous-candidate-corpus.json", "previous-qualification.json") if (root / name).exists()]
+    names += [name for name in ("previous-candidate-corpus.json", "previous-negative-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
     if qualification.get("QrVariation"):
         names += sorted(path.name for path in root.glob("qr-variation-*.json"))
@@ -56,7 +56,7 @@ def main():
     lines = ["# Current barcode comparisons", "", "Generated from the complete result packets by `Build/generate-fair-comparison-report.py`.", "",
              "See [methodology](../fair-comparisons.md) for versions, adapter boundaries, settings, corpus selection, scoring and proof limits.", "",
              "## Recognition", "", f"The 279-image corpus includes twelve negative images and {unsupported} images whose formats have no CodeGlyphX image scanner. Exact payload sets are checked after the documented physical representation rules.", "",
-             "| Engine | Before: positive correct | Current: positive correct | Unsupported positive images | Unexpected-output images | Negative-image false positives | Inconclusive negative images |",
+             "| Engine | Original source: positive correct | Current: positive correct | Unsupported positive images | Unexpected-output images | Negative-image false positives | Inconclusive negative images |",
              "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for engine in engines:
         old = [x for x in baseline if x["Engine"] == engine]
@@ -65,7 +65,7 @@ def main():
             raise ValueError("Baseline/candidate corpus identities differ")
         lines.append(f'| {engine} | {sum(bool(x["Expected"]) and x["Status"] == "Correct" for x in old)}/267 | {sum(bool(x["Expected"]) and x["Status"] == "Correct" for x in new)}/267 | {sum(x["Status"] == "Unsupported" for x in new)} | {sum(bool(x["Unexpected"]) for x in new)} | {sum(not x["Expected"] and bool(x["Actual"]) for x in new)} | {sum(x["Status"] == "Inconclusive" for x in new)} |')
     lines += ["", "Unexpected output on a positive image may include an oracle limitation or an encoding-policy difference. Raw text is preserved; these counts must not be presented as a measured false-positive rate.", "",
-              "| Format | Images | CodeGlyphX before | CodeGlyphX current | ZXing.Net | ZXing-C++ |", "| --- | ---: | ---: | ---: | ---: | ---: |"]
+              "| Format | Images | CodeGlyphX original source | CodeGlyphX current | ZXing.Net | ZXing-C++ |", "| --- | ---: | ---: | ---: | ---: | ---: |"]
     for format in sorted({x["Format"] for x in current}):
         counts = [sum(x["Format"] == format and x["Status"] == "Correct" and x["Engine"] == engine for x in current) for engine in engines]
         before = sum(x["Format"] == format and x["Status"] == "Correct" and x["Engine"] == "CodeGlyphX" for x in baseline)
@@ -92,7 +92,7 @@ def main():
     negatives_current = read(root / "negative-candidate-corpus.json")
     lines += ["", "## Supplementary negative corpus", "",
               "The fixed supplementary set contains all 25 images in upstream falsepositives-2; six also appear in the main corpus. This supplementary check is reported separately. Empty output counts as a correct rejection only when scanning completes; an exhausted budget remains inconclusive.", "",
-              "| Engine | Before: correct rejection | Current: correct rejection | Current: unexpected output | Current: inconclusive |",
+              "| Engine | Original source: correct rejection | Current: correct rejection | Current: unexpected output | Current: inconclusive |",
               "| --- | ---: | ---: | ---: | ---: |"]
     for engine in engines:
         old = [x for x in negatives_before if x["Engine"] == engine]
@@ -100,6 +100,14 @@ def main():
         if len(old) != 25 or len(new) != 25 or any(x["Expected"] for x in old + new):
             raise ValueError("Supplementary negative corpus differs from its contract")
         lines.append(f'| {engine} | {sum(x["Status"] == "Correct" for x in old)}/25 | {sum(x["Status"] == "Correct" for x in new)}/25 | {sum(bool(x["Unexpected"]) for x in new)} | {sum(x["Status"] == "Inconclusive" for x in new)} |')
+    if (root / "previous-negative-corpus.json").exists():
+        previous_negatives = [x for x in read(root / "previous-negative-corpus.json") if x["Engine"] == "CodeGlyphX"]
+        now = [x for x in negatives_current if x["Engine"] == "CodeGlyphX"]
+        if len(previous_negatives) != 25 or {x["Id"] for x in now} != {x["Id"] for x in previous_negatives} or any(x["Expected"] for x in previous_negatives):
+            raise ValueError("Previous supplementary negative identities differ")
+        previously_completed = {x["Id"] for x in previous_negatives if x["Status"] == "Correct"}
+        incomplete = [x["Id"] for x in now if x["Id"] in previously_completed and x["Status"] != "Correct"]
+        lines += ["", f'Compared with the [previous decoding pass](evidence/previous-negative-corpus.json), CodeGlyphX completes {sum(x["Status"] == "Correct" for x in now)}/25 supplementary negatives versus {len(previously_completed)}/25. Previously completed images now unfinished: ' + (", ".join(incomplete) if incomplete else "none in this run.")]
     if (root / "negative-rotation-manifest.json").exists():
         ids = {sample["Id"] for sample in read(root / "negative-rotation-manifest.json")["Samples"]}
         expected_ids = {row["Id"] for row in current + negatives_current if not row["Expected"]}
@@ -122,6 +130,17 @@ def main():
                     raise ValueError("Paired negative summary differs from raw outcomes")
                 cpu = sum(row["Cpu"]) / len(row["Cpu"])
                 lines.append(f'| {domain} | {row["Index"] + 1} | {row["Source"]} | {row["Completed"]}/31 | {row["Inconclusive"]} | {row["Unexpected"]} | {cpu:.1f}% |')
+    if qualification.get("PlacementCpuBeforePasses"):
+        lines += ["", "## Initial host load", "", qualification["PlacementCpuLimits"], "",
+                  "| Pass | Mean host CPU | Mean CCD0 CPU | Mean CCD1 CPU |",
+                  "| --- | ---: | ---: | ---: |"]
+        for name, capture in sorted(qualification["PlacementCpuBeforePasses"].items()):
+            samples = capture["Samples"]
+            if len(samples) != 3 or capture["Masks"] != ["0xFFFF", "0xFFFF0000"]:
+                raise ValueError("Incomplete CPU placement capture")
+            means = [sum(sample[key] for sample in samples) / len(samples) for key in ("Global", "Ccd0", "Ccd1")]
+            label = name.removesuffix("-placement-cpu.json")
+            lines.append(f'| {label} | {means[0]:.1f}% | {means[1]:.1f}% | {means[2]:.1f}% |')
     for domain in ("ccd0", "ccd1"):
         packet = runs["generation", domain]
         metadata = packet["Metadata"]

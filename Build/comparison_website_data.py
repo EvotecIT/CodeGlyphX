@@ -39,6 +39,23 @@ def build_website_data(root):
         rows = [x for x in current if x["Format"] == symbol]
         formats.append({"format": symbol, "images": len([x for x in rows if x["Engine"] == "CodeGlyphX"]),
                         "correct": [sum(x["Engine"] == engine and x["Status"] == "Correct" for x in rows) for engine in engines]})
+    negative_followup = None
+    previous_negative_path = root / "previous-negative-corpus.json"
+    if previous_negative_path.exists():
+        previous_negatives = [x for x in load(previous_negative_path) if x["Engine"] == "CodeGlyphX"]
+        now = [x for x in negatives if x["Engine"] == "CodeGlyphX"]
+        if len(previous_negatives) != 25 or {x["Id"] for x in previous_negatives} != {x["Id"] for x in now} or any(x["Expected"] for x in previous_negatives):
+            raise ValueError("Previous website negative evidence differs")
+        before_completed = sum(x["Status"] == "Correct" for x in previous_negatives)
+        now_completed = sum(x["Status"] == "Correct" for x in now)
+        passes = [x for rows in qualification["NegativeRotation"].values() for x in rows]
+        completion = {source: [x["Completed"] for x in passes if x["Source"] == source] for source in ("previous", "current")}
+        negative_followup = (
+            f'Compared with the previous decoding pass, CodeGlyphX completes {now_completed}/25 supplementary negatives versus {before_completed}/25. '
+            f'Alternating scans of the 31 distinct negative IDs complete {min(completion["current"])}–{max(completion["current"])}/31 for the current binary '
+            f'and {min(completion["previous"])}–{max(completion["previous"])}/31 for the previous binary. '
+            'Every pass is retained in the downloadable report; unfinished scans remain inconclusive.'
+        )
     domains = []
     png_wins = 0
     module_cpp_wins = 0
@@ -89,7 +106,7 @@ def build_website_data(root):
             "versions": qualification["Versions"], "cpu": qualification["Cpu"]["Name"].strip(),
             "png_wins": png_wins, "png_cases": 6, "module_cpp_wins": module_cpp_wins,
             "png_qrc_allocation_wins": png_qrc_allocation_wins,
-            "recognition": recognition, "formats": formats, "domains": domains}
+            "recognition": recognition, "formats": formats, "domains": domains, "negative_followup": negative_followup}
 
 
 def write_website_data(evidence_root, website_root, check=False):
