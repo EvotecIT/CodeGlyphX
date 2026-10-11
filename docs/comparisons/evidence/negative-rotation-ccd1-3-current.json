@@ -128,8 +128,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/13.png",
