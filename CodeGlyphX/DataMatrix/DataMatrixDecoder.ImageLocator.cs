@@ -1,5 +1,4 @@
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.Threading;
 using CodeGlyphX.Internal;
@@ -48,46 +47,22 @@ public static partial class DataMatrixDecoder {
         bool invert, CancellationToken cancellationToken) {
         var count = width * height;
         var components = new List<ImageComponent>(8);
-        var queue = ArrayPool<int>.Shared.Rent(count);
-        try {
-            var minimumArea = Math.Max(100, count / 1000);
-            for (var at = 0; at < count; at++) {
-                if ((at & 511) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) break;
-                if ((mask[at] & 2) != 0 || ((mask[at] & 1) != 0) == invert) continue;
-                var component = new ImageComponent(at % width, at / width);
-                mask[at] |= 2;
-                queue[0] = at;
-                var length = 1;
-                var touchesEdge = false;
-                for (var head = 0; head < length; head++) {
-                    if ((head & 511) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return components;
-                    var current = queue[head];
-                    var x = current % width;
-                    var y = current / width;
-                    component.Add(x, y);
-                    if (x == 0 || y == 0 || x == width - 1 || y == height - 1) touchesEdge = true;
-                    if (x > 0) EnqueueImagePixel(mask, current - 1, invert, queue, ref length);
-                    if (x + 1 < width) EnqueueImagePixel(mask, current + 1, invert, queue, ref length);
-                    if (y > 0) EnqueueImagePixel(mask, current - width, invert, queue, ref length);
-                    if (y + 1 < height) EnqueueImagePixel(mask, current + width, invert, queue, ref length);
-                }
-                if (touchesEdge || component.Area < minimumArea || component.Area > count * 4L / 5) continue;
-                var position = 0;
-                while (position < components.Count && components[position].Area >= component.Area) position++;
-                if (position >= 8) continue;
-                components.Insert(position, component);
-                if (components.Count > 8) components.RemoveAt(8);
+        var minimumArea = Math.Max(100, count / 1000);
+        BinaryImageComponents.Visit(mask, width, height, invert, cancellationToken, (queue, length, touchesEdge) => {
+            if (touchesEdge || length < minimumArea || length > count * 4L / 5) return false;
+            var component = new ImageComponent(queue[0] % width, queue[0] / width);
+            for (var i = 0; i < length; i++) {
+                if ((i & 511) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                component.Add(queue[i] % width, queue[i] / width);
             }
-        } finally {
-            ArrayPool<int>.Shared.Return(queue);
-        }
+            var position = 0;
+            while (position < components.Count && components[position].Area >= component.Area) position++;
+            if (position >= 8) return false;
+            components.Insert(position, component);
+            if (components.Count > 8) components.RemoveAt(8);
+            return false;
+        });
         return components;
-    }
-
-    private static void EnqueueImagePixel(byte[] mask, int at, bool invert, int[] queue, ref int length) {
-        if ((mask[at] & 2) != 0 || ((mask[at] & 1) != 0) == invert) return;
-        mask[at] |= 2;
-        queue[length++] = at;
     }
 
     private static bool ImageBit(byte[] mask, int width, int height, double x, double y, bool invert) {

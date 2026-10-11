@@ -21,8 +21,8 @@ internal static partial class AztecPixelDecoder {
                 for (var axis = 0; axis < (ring == 0 ? 1 : 8); axis++) {
                     var x = center + (axis == 0 || axis == 4 || axis == 5 ? ring : axis == 1 || axis == 6 || axis == 7 ? -ring : 0);
                     var y = center + (axis == 2 || axis == 4 || axis == 6 ? ring : axis == 3 || axis == 5 || axis == 7 ? -ring : 0);
-                    if (SampleMajority3x3(image, offsetX + x * moduleSize + moduleSize / 2,
-                        offsetY + y * moduleSize + moduleSize / 2, invert) != expected && ++errors > 4) { if (probes is not null) probes[key] = false; return false; }
+                    if (SampleModule(image, offsetX + x * moduleSize + moduleSize / 2,
+                        offsetY + y * moduleSize + moduleSize / 2, moduleSize, invert) != expected && ++errors > 4) { if (probes is not null) probes[key] = false; return false; }
                 }
             }
             if (probes is not null) probes[key] = true;
@@ -39,8 +39,8 @@ internal static partial class AztecPixelDecoder {
         return new BitMatrixView(size, size, (x, y) => {
             if ((samples++ & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken))
                 throw new OperationCanceledException(cancellationToken);
-            return SampleMajority3x3(image, offsetX + x * moduleSize + centerOffset,
-                offsetY + y * moduleSize + centerOffset, invert);
+            return SampleModule(image, offsetX + x * moduleSize + centerOffset,
+                offsetY + y * moduleSize + centerOffset, moduleSize, invert);
         });
     }
 
@@ -78,11 +78,20 @@ internal static partial class AztecPixelDecoder {
         return false;
     }
 
-    private static bool SampleMajority3x3(AztecGrayImage image, int px, int py, bool invert) {
+    private static bool SampleModule(AztecGrayImage image, int px, int py, int moduleSize, bool invert) {
         var width = image.Width;
         var height = image.Height;
         var gray = image.Gray;
         var threshold = image.Threshold;
+
+        // A 3x3 vote crosses the boundary of one- and two-pixel modules.
+        // Preserve their centre sample; larger modules retain noise averaging.
+        if (moduleSize < 3) {
+            px = Math.Max(0, Math.Min(width - 1, px));
+            py = Math.Max(0, Math.Min(height - 1, py));
+            var dark = gray[py * width + px] <= threshold;
+            return invert ? !dark : dark;
+        }
 
         var black = 0;
         // Interior modules need the same nine votes without repeated edge clamps.

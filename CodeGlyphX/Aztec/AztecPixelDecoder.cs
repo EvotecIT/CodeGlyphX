@@ -64,9 +64,7 @@ internal static partial class AztecPixelDecoder {
         if (TryDecodeWithThresholds(image, invert: false, cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryDecodeWithThresholds(image, invert: true, cancellationToken, out value)) return true;
-
-        value = string.Empty;
-        return false;
+        return TryDecodePerspective(image, cancellationToken, out value);
     }
 
     private static bool TryDecodeAllOrientations(AztecGrayImage image, CancellationToken cancellationToken, AztecDecodeDiagnostics diagnostics, out string value) {
@@ -75,8 +73,8 @@ internal static partial class AztecPixelDecoder {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         diagnostics.InvertedTried = true;
         if (TryDecodeWithThresholds(image, invert: true, cancellationToken, diagnostics, out value)) return true;
-
-        value = string.Empty;
+        if (TryDecodePerspective(image, cancellationToken, out value, diagnostics)) return true;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) diagnostics.Failure = "Cancelled.";
         return false;
     }
     private static bool TryDecodeWithThresholds(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out string value) {

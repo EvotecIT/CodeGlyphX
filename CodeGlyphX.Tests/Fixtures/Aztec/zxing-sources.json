@@ -1,0 +1,63 @@
+{
+  "Copyright": "ZXing authors",
+  "Sources": [
+    {
+      "Sha256": "60e470e448449629174f605a0a05c273d158d0548ec6070e49ad25dd9e1fa60f",
+      "Expected": [
+        "Code 2D!"
+      ],
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/aztec-1/7.png",
+      "File": "two-pixel-modules.png"
+    },
+    {
+      "Sha256": "05fbdf44b35b1f08f9ab7fd35de71d6abe753e03b01b3205817a14f6f96a08d6",
+      "File": "photograph-19.png",
+      "Expected": [
+        "http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/result/URIResultHandler.java"
+      ],
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/aztec-2/19.png"
+    },
+    {
+      "Sha256": "4d4de88e15c1e1961d9da95e9efd71060d67d2cdadf1cecf52271eb00fbf5201",
+      "File": "photograph-15.png",
+      "Expected": [
+        "mailto:zxing@googlegroups.com"
+      ],
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/aztec-2/15.png"
+    },
+    {
+      "Sha256": "b085dc5376db22b4b92692de0200bf01186c27f25ee9bf3289758f58af41bdfe",
+      "File": "photograph-13.png",
+      "Expected": [
+        "mailto:zxing@googlegroups.com"
+      ],
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/aztec-2/13.png"
+    },
+    {
+      "Sha256": "44ed7f11cbe4ca16b462c957a64e265be2c1cdc0b1879d7c9e12490f4dda0092",
+      "File": "photograph-14.png",
+      "Expected": [
+        "mailto:zxing@googlegroups.com"
+      ],
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/aztec-2/14.png"
+    },
+    {
+      "Sha256": "8959e45d3e27ea775c7a7fd6310733ae54798dba07b8dcf68e0ff7d500ebbed6",
+      "File": "photograph-17.png",
+      "Expected": [
+        "http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/result/URIResultHandler.java"
+      ],
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/aztec-2/17.png"
+    },
+    {
+      "Sha256": "4515ca80e8176cc51239947420d835ec37c33a8bf779bf13028f361c1c6af31a",
+      "File": "photograph-10.png",
+      "Expected": [
+        "mailto:zxing@googlegroups.com"
+      ],
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/aztec-2/10.png"
+    }
+  ],
+  "Copies": "Unmodified",
+  "License": "Apache-2.0; full text in ZXING-LICENSE.txt"
+}
