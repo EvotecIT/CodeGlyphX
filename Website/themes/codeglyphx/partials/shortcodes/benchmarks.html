@@ -64,6 +64,17 @@
             </table>
         </div>
     </section>
+    {{ if comparison.maxicode_image.images }}
+    <section class="benchmark-section" aria-labelledby="maxicode-image-recognition">
+        <h2 id="maxicode-image-recognition">MaxiCode image recognition</h2>
+        <p>The same six images now decode correctly: {{ comparison.maxicode_image.correct }}/{{ comparison.maxicode_image.images }}, versus {{ comparison.maxicode_image.before }}/{{ comparison.maxicode_image.images }} previously. All six previously lacked image-scanning support. Image bytes, format hints, payload oracles and the per-image deadline are unchanged.</p>
+        <p>The scanner verifies circular finder bands, samples the staggered module grid and uses the existing primary and secondary error correction. Focused checks cover planar rotation on a larger label, inverse polarity, damaged fixed markers and cropped bottom-up frames. The capability catalog reports one-symbol scanning without geometry.</p>
+        <p>{{ comparison.maxicode_image.text_contract }}</p>
+        <p>{{ comparison.maxicode_image.evidence }}</p>
+        <p>{{ comparison.maxicode_image.limits }} Fixture filenames do not establish coverage of every numeric encoding mode.</p>
+        <p><a href="/comparisons/evidence/maxicode-image-proof.json">Source hashes and search bounds</a> · <a href="/docs/symbol-capabilities/">Capability catalog</a> · <a href="/comparisons/evidence/candidate-corpus-final.json">Complete image outcomes</a></p>
+    </section>
+    {{ end }}
     {{ if comparison.datamatrix_deadline.cases }}
     <section class="benchmark-section" aria-labelledby="datamatrix-deadline-cost">
         <h2 id="datamatrix-deadline-cost">Data Matrix deadline lookup</h2>
@@ -156,7 +167,7 @@
             <p>{{ copy.decoding }}</p>
             <div class="comparison-scroll" role="region" aria-label="{{ domain.label }} decode timing" tabindex="0">
                 <table class="bench-table">
-                    <caption>{{ domain.label }} · milliseconds per 19-image batch · failed decodes retained</caption>
+                    <caption>{{ domain.label }} · milliseconds per 19-image batch · all samples retained</caption>
                     <thead><tr><th scope="col">Reader</th><th scope="col">Median ms</th><th scope="col">P95 ms</th><th scope="col">Min–max ms</th><th scope="col">Mean managed MiB</th><th scope="col">Correct images</th></tr></thead>
                     <tbody>{{ for row in domain.decoding }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.median }}</td><td>{{ row.p95 }}</td><td>{{ row.min }}–{{ row.max }}</td><td>{{ row.managed_mib }}</td><td>{{ row.correct }}/19</td></tr>{{ end }}</tbody>
                 </table>
@@ -167,7 +178,7 @@
     {{ if comparison.paired_decode_cost.size > 0 }}
     <section class="benchmark-section" aria-labelledby="paired-decoding">
         <h2 id="paired-decoding">Paired whole-image decoding cost</h2>
-        <p>The previous and current CodeGlyphX binaries process the same 19 preloaded images with the same options and 1,500 ms allowance. Each cache domain uses three warmups and twelve rotated measurements per binary. Lower current/previous ratios mean lower elapsed time. These shared-host results retain every sample, including incomplete negative searches and unsupported MaxiCode.</p>
+        <p>The previous and current CodeGlyphX binaries process the same 19 preloaded images with the same options and 1,500 ms allowance. Each cache domain uses three warmups and twelve rotated measurements per binary. Lower current/previous ratios mean lower elapsed time. These shared-host results retain every sample, including incomplete negative searches and the previous binary's unsupported MaxiCode input.</p>
         {{ for note in comparison.paired_decode_notes }}<p>{{ note }}</p>{{ end }}
         <div class="comparison-scroll" role="region" aria-label="Paired decoding cost table" tabindex="0">
             <table class="bench-table">

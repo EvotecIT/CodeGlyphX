@@ -202,6 +202,13 @@ def build_website_data(root):
                         "finder_cases": f'{decisions["FinderCases"]:,}',
                         "accepted_finders": f'{decisions["AcceptedFinders"]:,}',
                         "limits": alignment["Limits"]}
+    maxicode_image = {}
+    maxi = qualification.get("MaxiCodeImageProof")
+    if maxi:
+        if maxi["Source"] != qualification["MeasurementSource"] or maxi["CoreSha256"] != qualification["CandidateCoreSha256"]:
+            raise ValueError("MaxiCode proof differs from the qualified source")
+        maxicode_image = {"correct": maxi["Correct"], "images": maxi["Images"], "before": maxi["PreviousCorrect"],
+                          "limits": maxi["Limits"], "evidence": maxi["Evidence"], "text_contract": maxi["TextContract"]}
     datamatrix_deadline = {}
     matrix = qualification.get("DataMatrixDeadlineProof")
     if matrix:
@@ -225,7 +232,7 @@ def build_website_data(root):
             "retail": retail_rows, "retail_cost": retail_cost, "paired_decode_cost": paired_decode_rows,
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
-            "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline,
+            "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 

@@ -48,7 +48,9 @@ def main():
         names += sorted(path.name for path in root.glob("pdf417-cost-*.json"))
     if qualification.get("QrAlignmentProof") or qualification.get("HistoricalQrAlignmentProof"):
         names.append("qr-alignment-equivalence.json")
-    if qualification.get("DataMatrixDeadlineProof"):
+    if qualification.get("MaxiCodeImageProof"):
+        names.append("maxicode-image-proof.json")
+    if qualification.get("DataMatrixDeadlineProof") or qualification.get("HistoricalDataMatrixDeadlineProof"):
         names.append("datamatrix-box-equivalence.json")
         names += sorted(path.name for path in root.glob("datamatrix-box-cost-*-result.json"))
     if qualification.get("RetailRecoveryProof"):
@@ -67,9 +69,11 @@ def main():
         hashes[name] = hashlib.sha256(raw).hexdigest()
     (evidence / "sha256.json").write_bytes((json.dumps(hashes, indent=2) + "\n").encode("utf-8"))
     unsupported = sum(x["Engine"] == "CodeGlyphX" and x["Status"] == "Unsupported" for x in current)
+    scanner_coverage = (f"{unsupported} images use formats without a CodeGlyphX image scanner."
+                        if unsupported else "Every positive format has a CodeGlyphX image scanner.")
     lines = ["# Current barcode comparisons", "", "Generated from the complete result packets by `Build/generate-fair-comparison-report.py`.", "",
              "See [methodology](../fair-comparisons.md) for versions, adapter boundaries, settings, corpus selection, scoring and proof limits.", "",
-             "## Recognition", "", f"The 279-image corpus includes twelve negative images and {unsupported} images whose formats have no CodeGlyphX image scanner. Exact payload sets are checked after the documented physical representation rules.", "",
+             "## Recognition", "", f"The 279-image corpus includes twelve negative images. {scanner_coverage} Exact payload sets are checked after the documented physical representation rules.", "",
              "| Engine | Original source: positive correct | Current: positive correct | Unsupported positive images | Unexpected-output images | Negative-image false positives | Inconclusive negative images |",
              "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for engine in engines:
@@ -127,6 +131,15 @@ def main():
                   f'The actual previous and current private methods agree on {decisions["ScoreCases"]:,} scoring cases, including {decisions["AcceptedScores"]:,} accepted scores, and {decisions["FinderCases"]:,} complete finder searches, including {decisions["AcceptedFinders"]:,} successful searches. There are zero decision or selected-center mismatches. Boundary patterns, inversion, global and adaptive thresholds, fractional coordinates, transformed and edge patterns, noise and first-perfect ties are included.', "",
                   alignment["Limits"], "",
                   "The [decision diagnostic](evidence/qr-alignment-equivalence.json) records the exact baseline and candidate core hashes. Current whole-image timings and completion counts are reported in the paired decoding comparison below."]
+    maxi = qualification.get("MaxiCodeImageProof")
+    if maxi:
+        if maxi["Source"] != qualification["MeasurementSource"] or maxi["CoreSha256"] != qualification["CandidateCoreSha256"]:
+            raise ValueError("MaxiCode proof differs from the measured candidate")
+        lines += ["", "## MaxiCode image recognition", "",
+                  f'The same six MaxiCode images now decode correctly ({maxi["Correct"]}/{maxi["Images"]}), versus {maxi["PreviousCorrect"]}/{maxi["Images"]} previously. All six previously lacked image-scanning support. Their bytes, format hints and payload oracles are unchanged.', "",
+                  "The scanner verifies circular finder bands, samples the staggered module grid and uses the existing primary and secondary error correction. It accepts planar rotation and inverted polarity, and can recover small damage to fixed orientation modules. The existing result carries secondary text and bytes, typed carrier metadata and the searched source region.", "",
+                  maxi["TextContract"], "", maxi["Evidence"], "", maxi["Limits"], "",
+                  "The [MaxiCode proof](evidence/maxicode-image-proof.json) records source hashes and search bounds. The capability catalog advertises one-symbol image scanning without geometry. Independent fixture tests do not establish coverage of every numeric MaxiCode mode; fixture filenames are not encoding-mode evidence."]
     matrix = qualification.get("DataMatrixDeadlineProof")
     if matrix:
         decisions = matrix["DecisionEquivalence"]
@@ -258,7 +271,7 @@ def main():
         for x in packet["Summary"]:
             # milliseconds/batch * 1000 microseconds/millisecond / 100 outputs
             lines.append(f'| {x["Scenario"]} | {x["Operation"]} | {x["Engine"]} | {x["MedianMs"] * 10:.2f} | {x["P95Ms"] * 10:.2f} | {x["MinMs"] * 10:.2f}–{x["MaxMs"] * 10:.2f} | {x["Metrics"]["ManagedAllocatedBytes"] / 100:.0f} |')
-    lines += ["", "## Decode latency", "", "The nineteen-image subset includes a negative, an unsupported MaxiCode image and a four-QR image. Loading is excluded. These timings retain recognition failures and do not establish a speed ranking at equal accuracy. Other activity on the shared host can affect wall-clock measurements; read the sample distributions across both domains.", "",
+    lines += ["", "## Decode latency", "", "The nineteen-image subset includes a negative, a MaxiCode image that was unsupported by the previous source, and a four-QR image. Loading is excluded. Missed and unfinished decodes remain included, with correctness reported alongside timing. The timing comparison applies to this fixed subset; accuracy on the full corpus differs. Other activity on the shared host can affect wall-clock measurements; read the sample distributions across both domains.", "",
               "Managed allocation is the mean process-wide allocation during each complete batch operation, including runner invocation overhead. It excludes image loading, result evaluation and native allocations. It does not measure peak or total memory use.", "",
               "| Domain | Engine | Median ms / 19 images | P95 ms | Min–max ms | Mean managed MiB / batch | Correct images range | Unexpected images range |",
               "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
