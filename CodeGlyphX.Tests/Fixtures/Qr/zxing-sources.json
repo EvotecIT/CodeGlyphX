@@ -7,7 +7,33 @@
       "File": "contact-photograph.png",
       "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-3/11.png",
       "Sha256": "3eab0098a500a9b50a1f02d0a91dd6d7feed2d27406f9adc73d7306a2bb1910d",
-      "Expected": ["MECARD:N:Google 411,;TEL:18665881077;;"]
+      "Expected": [
+        "MECARD:N:Google 411,;TEL:18665881077;;"
+      ]
+    },
+    {
+      "File": "small-rotated-13.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-6/13.png",
+      "Sha256": "8f1b358cd934f95d326abd89a55ba7609478060d455b271c3f1b35ddd0e98039",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "File": "small-rotated-7.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-6/7.png",
+      "Sha256": "c32be7f134a927159edceb63eec1c7ed186823c2dfeea71db184ce414790a941",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "File": "small-rotated-12.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-6/12.png",
+      "Sha256": "e9d97c47629bc2560f860c376abf4e7aa838b826f9e880550fa4f47dcba1adba",
+      "Expected": [
+        "1234567890"
+      ]
     }
   ]
 }
