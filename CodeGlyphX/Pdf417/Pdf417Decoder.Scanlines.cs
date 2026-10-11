@@ -271,11 +271,12 @@ public static partial class Pdf417Decoder {
 
     private static bool MatchPixelRuns(List<int> runs, int start, int[] pattern, int modules) {
         if (start + pattern.Length > runs.Count) return false;
-        // Both guards begin with a wide bar followed by a one-module space.
-        // The existing residual limit requires at least six modules for that
-        // bar and at most two for the space. Reject clearly impossible pairs
-        // before summing and normalizing every run; keep the full fit unchanged.
-        if (runs[start] <= 2L * runs[start + 1]) return false;
+        // Both guards start with a bar of at least seven modules, then two
+        // one-module runs. The existing residual limit permits at least six
+        // modules for the first bar and at most two for either following run.
+        // Reject only ratios strictly below 3:1; the full fit and its inclusive
+        // residual boundary still decide every surviving guard.
+        if (runs[start] < 3L * runs[start + 1] || runs[start] < 3L * runs[start + 2]) return false;
         var total = 0;
         for (var i = 0; i < pattern.Length; i++) total += runs[start + i];
         var pitch = total / (double)modules;

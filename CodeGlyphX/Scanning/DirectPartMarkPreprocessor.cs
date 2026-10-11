@@ -24,13 +24,18 @@ internal static class DirectPartMarkPreprocessor {
         yield return variant;
         if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
 
-        var dark = Adaptive(gray, width, height, radius, options.ThresholdBias, lightMarks: false, cancellationToken);
+        // Both adaptive polarities use the same source pixels and local means.
+        // Keep one summed-area table across the lazy retries instead of building
+        // the identical image-sized table again for light marks.
+        var integral = BuildIntegral(gray, width, height, cancellationToken);
+        if (DecodeBudget.ShouldAbort(cancellationToken)) yield break;
+        var dark = Adaptive(gray, integral, width, height, radius, options.ThresholdBias, lightMarks: false, cancellationToken);
         variant = ToRgba(dark, width, height, cancellationToken);
         if (variant is null) yield break;
         yield return variant;
         if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
 
-        var light = Adaptive(gray, width, height, radius, options.ThresholdBias, lightMarks: true, cancellationToken);
+        var light = Adaptive(gray, integral, width, height, radius, options.ThresholdBias, lightMarks: true, cancellationToken);
         variant = ToRgba(light, width, height, cancellationToken);
         if (variant is null) yield break;
         yield return variant;
@@ -103,14 +108,19 @@ internal static class DirectPartMarkPreprocessor {
         return output;
     }
 
-    private static byte[] Adaptive(byte[] gray, int width, int height, int radius, int bias, bool lightMarks, CancellationToken token) {
+    private static long[] BuildIntegral(byte[] gray, int width, int height, CancellationToken token) {
         var stride = width + 1;
         var integral = new long[checked((width + 1) * (height + 1))];
         for (var y = 0; y < height; y++) {
-            if (DecodeBudget.ShouldAbort(token)) return new byte[gray.Length];
+            if (DecodeBudget.ShouldAbort(token)) return integral;
             long row = 0;
             for (var x = 0; x < width; x++) { row += gray[y * width + x]; integral[(y + 1) * stride + x + 1] = integral[y * stride + x + 1] + row; }
         }
+        return integral;
+    }
+
+    private static byte[] Adaptive(byte[] gray, long[] integral, int width, int height, int radius, int bias, bool lightMarks, CancellationToken token) {
+        var stride = width + 1;
         var mask = new byte[gray.Length];
         for (var y = 0; y < height; y++) {
             if (DecodeBudget.ShouldAbort(token)) return mask;
