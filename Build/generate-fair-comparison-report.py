@@ -41,6 +41,7 @@ def main():
     names += [f"{kind}-final-{domain}-result.json" for kind, domain in runs]
     names += [name for name in ("previous-candidate-corpus.json", "previous-negative-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
+    names += sorted(path.name for path in root.glob("pdf417-supplemental-*.json"))
     if qualification.get("QrVariation"):
         names += sorted(path.name for path in root.glob("qr-variation-*.json"))
     evidence = output / "evidence"
@@ -83,6 +84,18 @@ def main():
         incomplete = [x["Id"] for x in current if x["Engine"] == "CodeGlyphX" and not x["Expected"] and x["Status"] != "Correct" and previous_by_id[x["Id"]]["Status"] == "Correct"]
         lines += ["", f"This decoding follow-up records {new_correct}/267 correct positive images, compared with {old_correct}/267 in the [previous pass](evidence/previous-candidate-corpus.json). Previously correct positive images lost in this follow-up: " + (", ".join(lost) if lost else "none in this run."), "",
                   "Previously completed main-corpus negatives now inconclusive: " + (", ".join(incomplete) if incomplete else "none in this run.")]
+    if qualification.get("SupplementalPdf417"):
+        supplemental = qualification["SupplementalPdf417"]
+        lines += ["", "## Supplemental PDF417 images", "", supplemental["Selection"], "", supplemental["Limit"], "",
+                  "| Engine | Previous pass | Current pass | Unexpected-output images |",
+                  "| --- | ---: | ---: | ---: |"]
+        for engine in engines:
+            result = supplemental["Engines"][engine]
+            lines.append(f'| {engine} | {result["PreviousCorrect"]}/{supplemental["Images"]} | {result["Correct"]}/{supplemental["Images"]} | {result["UnexpectedImages"]} |')
+        lines += ["", "CodeGlyphX gains: " + (", ".join(supplemental["Gained"]) or "none") + ". Lost previous successes: " + (", ".join(supplemental["Lost"]) or "none") + ".",
+                  "", "The [manifest](evidence/pdf417-supplemental-manifest.json), [current outcomes](evidence/pdf417-supplemental-current.json), [previous outcomes](evidence/pdf417-supplemental-previous.json) and [pinned image/oracle provenance](evidence/pdf417-supplemental-provenance.json) retain the complete set."]
+        if supplemental.get("TimingSensitiveGains"):
+            lines += ["", "Timing-sensitive changes: " + "; ".join(supplemental["TimingSensitiveGains"]) + ". These outcomes do not establish a decoder accuracy gain."]
     if qualification.get("AttributionLimits"):
         lines += ["", qualification["AttributionLimits"]]
     if "CorpusHostCpuBeforeScans" in qualification:

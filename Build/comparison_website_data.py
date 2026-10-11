@@ -55,6 +55,7 @@ def build_website_data(root):
             f'Alternating scans of the 31 distinct negative IDs complete {min(completion["current"])}–{max(completion["current"])}/31 for the current binary '
             f'and {min(completion["previous"])}–{max(completion["previous"])}/31 for the previous binary. '
             'Every pass is retained in the downloadable report; unfinished scans remain inconclusive.'
+            + (' The current binary completes fewer negatives in every paired pass. This measured completion loss remains open.' if max(completion['current']) < min(completion['previous']) else '')
         )
     domains = []
     png_wins = 0
@@ -102,11 +103,23 @@ def build_website_data(root):
                                 "correct": f"{min(correct):g}–{max(correct):g}" if len(correct) > 1 else f"{min(correct):g}"})
         domains.append({"id": domain, "label": domain.upper(), "affinity": generation["Metadata"]["processAffinityMask"],
                         "generation": generation_rows, "decoding": decode_rows})
+    supplemental = qualification.get("SupplementalPdf417")
+    supplemental_rows = []
+    if supplemental:
+        if supplemental["CurrentSource"] != qualification["MeasurementSource"]:
+            raise ValueError("Supplemental PDF417 source differs from the qualified candidate")
+        for engine in engines:
+            result = supplemental["Engines"][engine]
+            supplemental_rows.append({"engine": engine, "before": result["PreviousCorrect"],
+                                      "correct": result["Correct"], "images": supplemental["Images"],
+                                      "unexpected": result["UnexpectedImages"]})
     return {"date": generation["StartedUtc"][:10], "source": qualification["MeasurementSource"],
             "versions": qualification["Versions"], "cpu": qualification["Cpu"]["Name"].strip(),
             "png_wins": png_wins, "png_cases": 6, "module_cpp_wins": module_cpp_wins,
             "png_qrc_allocation_wins": png_qrc_allocation_wins,
-            "recognition": recognition, "formats": formats, "domains": domains, "negative_followup": negative_followup}
+            "recognition": recognition, "formats": formats, "domains": domains,
+            "negative_followup": negative_followup, "supplemental_pdf417": supplemental_rows,
+            "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 
 
 def write_website_data(evidence_root, website_root, check=False):

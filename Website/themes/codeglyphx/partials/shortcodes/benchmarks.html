@@ -32,6 +32,19 @@
                 </table>
             </div>
         </details>
+        {{ if comparison.supplemental_pdf417.size > 0 }}
+        <h3>Supplemental PDF417 images</h3>
+        <p>A separate check uses all 38 PNG images with text oracles from the same three upstream PDF417 folders outside the 18 frozen cases. The selection was fixed before the first supplemental outcomes. A failure there informed the final correction and a permanent regression test, so this is supplemental regression evidence rather than an unseen holdout. It does not replace the 267-positive-image ranking or establish performance on an independent dataset.</p>
+        <div class="comparison-scroll" role="region" aria-label="Supplemental PDF417 results" tabindex="0">
+            <table class="bench-table">
+                <caption>Exact payload sets on 38 additional PDF417 images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Previous pass</th><th scope="col">Current pass</th><th scope="col">Unexpected-output images</th></tr></thead>
+                <tbody>{{ for row in comparison.supplemental_pdf417 }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }}/{{ row.images }}</td><td>{{ row.correct }}/{{ row.images }}</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        {{ if comparison.supplemental_pdf417_timing_changes != "" }}<p>Timing-sensitive changes: {{ comparison.supplemental_pdf417_timing_changes }}. The previous scan exhausted its recognition budget, so the changed outcome does not establish a decoder accuracy gain.</p>{{ end }}
+        <p><a href="/comparisons/evidence/pdf417-supplemental-manifest.json">Image manifest</a> · <a href="/comparisons/evidence/pdf417-supplemental-current.json">Current outcomes</a> · <a href="/comparisons/evidence/pdf417-supplemental-previous.json">Previous outcomes</a></p>
+        {{ end }}
         <h3>Negative images and completed scans</h3>
         <p>{{ copy.negatives }}</p>
         {{ if comparison.negative_followup }}<p>{{ comparison.negative_followup }}</p>{{ end }}
