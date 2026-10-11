@@ -65,7 +65,7 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Gs1DataBarStackedOmnidirectional, "GS1 DataBar Stacked Omnidirectional", SymbolFamily.Stacked, BarcodeType.GS1DataBarStackedOmni,
             Image | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.MaxiCode, "MaxiCode", SymbolFamily.Matrix, BarcodeType.MaxiCode,
-            Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
+            Image | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
         Legacy(SymbolFormat.DotCode, "DotCode", SymbolFamily.Matrix, BarcodeType.DotCode,
             Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |

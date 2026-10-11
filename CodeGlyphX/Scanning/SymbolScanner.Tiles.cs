@@ -48,6 +48,7 @@ public static partial class SymbolScanner {
         // total deadline while retaining time for the other requested families.
         if (requested.Contains(SymbolFormat.QrCode)) count += 3;
         if (requested.Contains(SymbolFormat.MicroQrCode)) count++;
+        if (requested.Contains(SymbolFormat.MaxiCode)) count++;
         if (requested.Contains(SymbolFormat.Gs1DataBarExpandedStacked)) count++;
         if (requested.Contains(SymbolFormat.Gs1DataBarStacked) || requested.Contains(SymbolFormat.Gs1DataBarStackedOmnidirectional)) count++;
         foreach (var format in requested) {

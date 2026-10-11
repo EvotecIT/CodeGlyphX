@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
+    <Compile Include="../CodeGlyphX.Benchmarks/Corpus/CorpusPresentation.cs" Link="Comparison/CorpusPresentation.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
@@ -61,6 +62,8 @@
     <Compile Include="Pdf417MacroRangeTests.cs" />
     <Compile Include="RenderingContractRegressionTests.cs" />
     <Compile Include="ScannerCompletionContractTests.cs" />
+    <Compile Include="MaxiCodeImageTests.cs" />
+    <Compile Include="CorpusPresentationTests.cs" />
     <Compile Include="ScannerDuplicateContractTests.cs" />
     <Compile Include="DataMatrixValidationTests.cs" />
     <Compile Include="DataMatrixOrientationTests.cs" />
@@ -101,6 +104,7 @@
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
     <EmbeddedResource Include="Fixtures/Aztec/*.png" />
     <EmbeddedResource Include="Fixtures/MicroQr/*.png" />
+    <EmbeddedResource Include="Fixtures/MaxiCode/*.png" />
     <EmbeddedResource Include="Fixtures/Pdf417/*.png" />
     <EmbeddedResource Include="Fixtures/Linear/excel-asset-register.png" />
     <EmbeddedResource Include="Fixtures/Linear/native-svg-asset.png" />

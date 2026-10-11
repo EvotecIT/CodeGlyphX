@@ -24,7 +24,7 @@ internal static class CorpusReaders {
             options.Image = new ImageDecodeOptions { MaxDimension = 0 };
             var result = SymbolScanner.Scan(ImageFrame.Packed(rgba, width, height, PixelFormat.Rgba32), options);
             completion = result.CompletionReason.ToString();
-            return result.Symbols.Select(symbol => symbol.Text).Distinct(StringComparer.Ordinal).ToArray();
+            return result.Symbols.Select(CorpusPresentation.Text).Distinct(StringComparer.Ordinal).ToArray();
         }
 #if COMPARE_ZXING
         if (engine == "ZXing.Net") {

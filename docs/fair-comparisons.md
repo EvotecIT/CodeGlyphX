@@ -6,6 +6,8 @@ The [current results and complete evidence](comparisons/results.md) compare the 
 
 The comparison engines are opt-in dependencies of the non-packable benchmark executable. CodeGlyphX's shipped library does not reference them. QRCoder participates in generation only.
 
+MaxiCode carrier comparisons present the same primary and secondary information across engines. CodeGlyphX exposes the secondary message as `Text` and the postal code, country code and service class as typed metadata. The comparison adapter joins those fields with group separators, uses three digits for the country and service codes, and inserts them after the nine-character ISO 15434 Format 01 header when present. Other secondary text is prefixed with the carrier fields. The library result remains unchanged; no oracle text is trimmed or rewritten.
+
 ## Engine and input boundaries
 
 | Engine | Package | Role | License |

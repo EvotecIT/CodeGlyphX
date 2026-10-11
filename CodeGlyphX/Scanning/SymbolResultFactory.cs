@@ -22,8 +22,9 @@ internal static class SymbolResultFactory {
             searchRegion: region, directPartMarkProfile: directPartMarkProfile);
     internal static DetectedSymbol From(Pdf417Decoded value, ImageRegion? region = null) =>
         new(SymbolFormat.Pdf417, value.Text, metadata: new Pdf417SymbolMetadata(value), searchRegion: region);
-    internal static DetectedSymbol From(MaxiCodeDecoded value) =>
-        new(SymbolFormat.MaxiCode, value.Text, value.Bytes, new MaxiCodeSymbolMetadata(value), symbologyIdentifier: value.SymbologyIdentifier);
+    internal static DetectedSymbol From(MaxiCodeDecoded value, ImageRegion? region = null, bool? inverted = null) =>
+        new(SymbolFormat.MaxiCode, value.Text, value.Bytes, new MaxiCodeSymbolMetadata(value), searchRegion: region,
+            isInverted: inverted, symbologyIdentifier: value.SymbologyIdentifier);
     internal static DetectedSymbol From(DotCodeDecoded value) =>
         new(SymbolFormat.DotCode, value.Text, value.Bytes, new DotCodeSymbolMetadata(value),
             value.HasFnc1 ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None, symbologyIdentifier: value.SymbologyIdentifier);
