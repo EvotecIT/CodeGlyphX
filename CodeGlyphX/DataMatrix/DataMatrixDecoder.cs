@@ -51,9 +51,9 @@ public static partial class DataMatrixDecoder {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
 
-        if (TryDecodeCore(modules, cancellationToken, out value)) return true;
+        if (TryDecodeCore(new BitMatrixView(modules), cancellationToken, out value)) return true;
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
-        var mirror = MirrorX(modules);
+        var mirror = new BitMatrixView(modules, mirrored: true);
         return TryDecodeCore(mirror, cancellationToken, out value);
     }
 
@@ -70,9 +70,9 @@ public static partial class DataMatrixDecoder {
     public static bool TryDecodeDetailed(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
-        if (TryDecodeDetailedCore(modules, cancellationToken, out decoded)) return true;
+        if (TryDecodeDetailedCore(new BitMatrixView(modules), cancellationToken, out decoded)) return true;
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
-        return TryDecodeDetailedCore(MirrorX(modules), cancellationToken, out decoded);
+        return TryDecodeDetailedCore(new BitMatrixView(modules, mirrored: true), cancellationToken, out decoded);
     }
 
 #if NET8_0_OR_GREATER
@@ -121,10 +121,10 @@ public static partial class DataMatrixDecoder {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
 
-        if (TryDecodeCore(modules, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
+        if (TryDecodeCore(new BitMatrixView(modules), cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         diagnostics.MirroredTried = true;
-        var mirror = MirrorX(modules);
+        var mirror = new BitMatrixView(modules, mirrored: true);
         if (TryDecodeCore(mirror, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
 
         value = string.Empty;

@@ -167,7 +167,7 @@ public static partial class DataMatrixDecoder {
                         modules[x, y] = ImageBit(mask, width, height, px, py, invert);
                     }
                 }
-                if (TryDecodeDetailedCore(modules, cancellationToken, out decoded, diagnostics)) {
+                if (TryDecodeDetailedCore(new BitMatrixView(modules), cancellationToken, out decoded, diagnostics)) {
                     if (diagnostics is not null && (q[2].X - q[3].X) * (q[0].Y - q[3].Y) -
                         (q[2].Y - q[3].Y) * (q[0].X - q[3].X) > 0) diagnostics.MirroredTried = true;
                     return true;

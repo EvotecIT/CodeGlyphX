@@ -364,46 +364,6 @@ public static partial class DataMatrixDecoder {
         return lum < 128;
     }
 
-    private static BitMatrix Rotate90(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Height, matrix.Width);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[matrix.Height - 1 - y, x] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
-    private static BitMatrix Rotate180(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Width, matrix.Height);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[matrix.Width - 1 - x, matrix.Height - 1 - y] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
-    private static BitMatrix Rotate270(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Height, matrix.Width);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[y, matrix.Width - 1 - x] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
-    private static BitMatrix MirrorX(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Width, matrix.Height);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[matrix.Width - 1 - x, y] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
     private readonly struct BoundingBox {
         public int Left { get; }
         public int Top { get; }
