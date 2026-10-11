@@ -64,14 +64,24 @@
             </table>
         </div>
     </section>
+    {{ if comparison.qr_alignment.score_cases }}
+    <section class="benchmark-section" aria-labelledby="qr-alignment-scoring">
+        <h2 id="qr-alignment-scoring">QR alignment scoring</h2>
+        <p>On .NET 8 and later, alignment scoring stops after four mismatches in its 25-position pattern because that candidate cannot reach the existing 22/25 acceptance threshold. Accepted scores, candidate order, selected centers and first-best ties remain unchanged. Recognition allowances, format hints, payload oracles and scoring are unchanged.</p>
+        <p>The actual previous and current private methods agree on {{ comparison.qr_alignment.score_cases }} scoring cases, including {{ comparison.qr_alignment.accepted_scores }} accepted scores, and {{ comparison.qr_alignment.finder_cases }} complete finder searches, including {{ comparison.qr_alignment.accepted_finders }} successful searches. There are zero decision or selected-center mismatches. The diagnostic includes acceptance-boundary patterns, inversion, global and adaptive thresholds, fractional coordinates, transformed and edge patterns, noise and first-perfect ties.</p>
+        <p>{{ comparison.qr_alignment.limits }}</p>
+        <p><a href="/comparisons/evidence/qr-alignment-equivalence.json">Decision diagnostic and exact core hashes</a>. Current whole-image timings and completion counts appear in the <a href="#paired-decoding">paired decoding comparison</a>.</p>
+    </section>
+    {{ end }}
     {{ if comparison.pdf417_cost.size > 0 }}
     <section class="benchmark-section" aria-labelledby="pdf417-search-cost">
-        <h2 id="pdf417-search-cost">PDF417 search cost</h2>
+        <h2 id="pdf417-search-cost">{{ if comparison.pdf417_cost_historical }}Historical {{ end }}PDF417 search cost</h2>
+        {{ if comparison.pdf417_cost_historical }}<p>These retained measurements qualify the earlier PDF417 optimization at source <code>{{ comparison.pdf417_cost_source }}</code>. They do not measure the current QR candidate.</p>{{ end }}
         <p>These 31 fixed negative images use an explicit PDF417 hint to isolate its search cost. Previous and current binaries receive identical preloaded pixels and options. Three warmups precede twelve rotated measurements on each cache domain; all samples are retained. Loading and result evaluation are excluded.</p>
         <div class="comparison-scroll" role="region" aria-label="PDF417 search cost table" tabindex="0">
             <table class="bench-table">
-                <caption>Paired PDF417 negative-search batch: 31 requests</caption>
-                <thead><tr><th scope="col">Domain</th><th scope="col">Previous ms</th><th scope="col">Current ms</th><th scope="col">Current / previous</th><th scope="col">Previous completed</th><th scope="col">Current completed</th><th scope="col">Previous managed MiB</th><th scope="col">Current managed MiB</th></tr></thead>
+                <caption>{{ if comparison.pdf417_cost_historical }}Earlier {{ end }}paired PDF417 negative-search batch: 31 requests</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Before ms</th><th scope="col">After ms</th><th scope="col">After / before</th><th scope="col">Before completed</th><th scope="col">After completed</th><th scope="col">Before managed MiB</th><th scope="col">After managed MiB</th></tr></thead>
                 <tbody>{{ for row in comparison.pdf417_cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }}</td><td>{{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_correct }}/31; {{ row.previous_unfinished }}/12 batches unfinished</td><td>{{ row.current_correct }}/31; {{ row.current_unfinished }}/12 batches unfinished</td><td>{{ row.previous_managed_mib }}</td><td>{{ row.current_managed_mib }}</td></tr>{{ end }}</tbody>
             </table>
         </div>

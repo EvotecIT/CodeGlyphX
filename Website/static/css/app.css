@@ -3514,6 +3514,10 @@ section {
     padding: 2rem 1.5rem 4rem;
 }
 
+.benchmark-page [id] {
+    scroll-margin-top: 6rem;
+}
+
 /* Qualified comparison tables remain readable without widening the page. */
 .comparison-scroll {
     max-width: 100%;

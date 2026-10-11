@@ -1,0 +1,25 @@
+{
+  "Scope": "Differential diagnostic of actual private scoring and actual finder methods; no production hook or timing claim.",
+  "Seed": 261011,
+  "BaselineCoreSha256": "877165EE4B2CE32A831F212E989CCCAE74D8C5FAFB89D823936C7D729F12786B",
+  "CandidateCoreSha256": "03D09B3452D7DF1DF251566B5AD0F64F920EEBDF94219BCAA2D0E4EF5B5B8285",
+  "ScoreCases": 67104,
+  "AcceptedScores": 10504,
+  "EarlyRejectedScores": 56600,
+  "FinderCases": 330,
+  "AcceptedFinders": 142,
+  "Mismatches": 0,
+  "Categories": {
+    "boundary-binary": 15276,
+    "boundary-inverted": 15276,
+    "boundary-near-threshold": 15276,
+    "boundary-threshold-map": 15276,
+    "fractional-noise": 6000,
+    "transformed-find": 216,
+    "edge-find": 8,
+    "outside-find": 8,
+    "noise-find": 96,
+    "perfect-tie-find": 2
+  },
+  "Invariant": "Four mismatches cannot reach22/25. Accepted scores, first-best centers, perfect-score termination and false-return zero coordinates agree. Rejected private scores may differ."
+}

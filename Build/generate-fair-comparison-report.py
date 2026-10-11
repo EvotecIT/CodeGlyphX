@@ -44,8 +44,10 @@ def main():
     names += sorted(path.name for path in root.glob("pdf417-supplemental-*.json"))
     if qualification.get("Pdf417FramingProof") or qualification.get("HistoricalPdf417FramingProof"):
         names += sorted(path.name for path in root.glob("pdf417-framing-*.json"))
-    if qualification.get("Pdf417CostProof"):
+    if qualification.get("Pdf417CostProof") or qualification.get("HistoricalPdf417CostProof"):
         names += sorted(path.name for path in root.glob("pdf417-cost-*.json"))
+    if qualification.get("QrAlignmentProof"):
+        names.append("qr-alignment-equivalence.json")
     if qualification.get("RetailRecoveryProof"):
         names += sorted(path.name for path in root.glob("retail-*.json"))
     if qualification.get("PairedDecodeCost"):
@@ -110,12 +112,33 @@ def main():
                       "", "A separate PDF417-hinted check completes all 31 distinct negative images with no unexpected output for each reader. This diagnostic does not replace all-format negative completion. Its [unchanged inputs](evidence/pdf417-framing-negative-manifest.json), [outcomes](evidence/pdf417-framing-negative-outcomes.json), [four regression inputs](evidence/pdf417-framing-regression-manifest.json), [previous results](evidence/pdf417-framing-previous-misses.json) and [current results](evidence/pdf417-framing-current-misses.json) are retained."]
         if supplemental.get("TimingSensitiveGains"):
             lines += ["", "Timing-sensitive changes: " + "; ".join(supplemental["TimingSensitiveGains"]) + ". These outcomes do not establish a decoder accuracy gain."]
-    pdf_cost = qualification.get("Pdf417CostProof")
+    alignment = qualification.get("QrAlignmentProof")
+    if alignment:
+        decisions = alignment["DecisionEquivalence"]
+        if (alignment["Source"] != qualification["MeasurementSource"]
+                or alignment["CoreSha256"] != qualification["CandidateCoreSha256"]
+                or decisions["Mismatches"] != 0):
+            raise ValueError("QR alignment proof differs from the measured candidate")
+        lines += ["", "## QR alignment scoring", "",
+                  "On .NET 8 and later, alignment scoring stops after four mismatches in its 25-position pattern: that candidate cannot reach the existing 22/25 acceptance threshold. Accepted scores, candidate order, selected centers and first-best ties remain unchanged. Recognition allowances, format hints, payload oracles and scoring are unchanged.", "",
+                  f'The actual previous and current private methods agree on {decisions["ScoreCases"]:,} scoring cases, including {decisions["AcceptedScores"]:,} accepted scores, and {decisions["FinderCases"]:,} complete finder searches, including {decisions["AcceptedFinders"]:,} successful searches. There are zero decision or selected-center mismatches. Boundary patterns, inversion, global and adaptive thresholds, fractional coordinates, transformed and edge patterns, noise and first-perfect ties are included.', "",
+                  alignment["Limits"], "",
+                  "The [decision diagnostic](evidence/qr-alignment-equivalence.json) records the exact baseline and candidate core hashes. Current whole-image timings and completion counts are reported in the paired decoding comparison below."]
+    pdf_cost = qualification.get("Pdf417CostProof") or qualification.get("HistoricalPdf417CostProof")
     if pdf_cost:
-        if pdf_cost["Source"] != qualification["MeasurementSource"]:
+        historical = not qualification.get("Pdf417CostProof")
+        if not historical and pdf_cost["Source"] != qualification["MeasurementSource"]:
             raise ValueError("PDF417 cost source differs from the measured candidate")
-        lines += ["", "## PDF417 search cost", "", pdf_cost["Scope"], "", pdf_cost["Limits"], "",
-                  "| Domain | Previous ms | Current ms | Current / previous | Previous completed /31 | Current completed /31 | Previous unfinished batches /12 | Current unfinished batches /12 | Previous managed MiB | Current managed MiB |",
+        for domain in ("ccd0", "ccd1"):
+            metadata = read(root / f"pdf417-cost-{domain}-result.json")["Metadata"]
+            if (metadata["benchmark.CandidateSource"] != pdf_cost["Source"]
+                    or metadata["benchmark.CandidateCoreSha256"] != pdf_cost["CoreSha256"]):
+                raise ValueError("PDF417 cost packet differs from its recorded source")
+        heading = "## Historical PDF417 search cost" if historical else "## PDF417 search cost"
+        source_note = (f'These retained measurements compare source `{pdf_cost["PreviousSource"]}` with `{pdf_cost["Source"]}`. They qualify the earlier PDF417 optimization and do not measure the current QR candidate.'
+                       if historical else f'Measured candidate: `{pdf_cost["Source"]}`.')
+        lines += ["", heading, "", source_note, "", pdf_cost["Scope"], "", pdf_cost["Limits"], "",
+                  "| Domain | Before ms | After ms | After / before | Before completed /31 | After completed /31 | Before unfinished batches /12 | After unfinished batches /12 | Before managed MiB | After managed MiB |",
                   "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
         for row in pdf_cost["Cost"]:
             ranges = [str(int(v[0])) if v[0] == v[1] else f"{v[0]:g}–{v[1]:g}" for v in (row["PreviousCorrectRange"], row["CurrentCorrectRange"])]
