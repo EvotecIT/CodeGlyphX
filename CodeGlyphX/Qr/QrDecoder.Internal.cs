@@ -158,60 +158,72 @@ public static partial class QrDecoder {
         return result;
     }
 
-    private static bool TryDecodeWithCandidates(BitMatrix modules, int version, QrFormatCandidate[] candidates, int formatBestDistance, Func<bool>? shouldStop, out QrDecoded result, out QrDecodeDiagnostics diagnostics) {
+    private struct QrCandidateSearch {
+        public readonly BitMatrix FunctionMask;
+        public readonly byte[]? ExtractionCache;
+        public int ExtractedMasks;
+        public uint TriedCandidates;
+        public bool SawPayloadFailure;
+
+        public QrCandidateSearch(int version, int size, bool cacheExtractions) {
+            FunctionMask = QrStructureAnalysis.BuildFunctionMask(version, size);
+            ExtractionCache = cacheExtractions ? ArrayPool<byte>.Shared.Rent(QrTables.GetNumRawDataModules(version) / 8 * 8) : null;
+            ExtractedMasks = 0;
+            TriedCandidates = 0;
+            SawPayloadFailure = false;
+        }
+
+        public void Dispose() {
+            if (ExtractionCache is not null) ArrayPool<byte>.Shared.Return(ExtractionCache, clearArray: false);
+        }
+    }
+
+    private static bool TryDecodeWithCandidates(BitMatrix modules, int version, QrFormatCandidate[] candidates, int formatBestDistance, Func<bool>? shouldStop, ref QrCandidateSearch search, out QrDecoded result, out QrDecodeDiagnostics diagnostics) {
         result = null!;
         diagnostics = default;
 
         if (candidates.Length == 0) return false;
 
-        var functionMask = QrStructureAnalysis.BuildFunctionMask(version, modules.Width);
         var failureEcc = candidates[0].ErrorCorrectionLevel;
         var failureMask = candidates[0].Mask;
-        var sawPayloadFailure = false;
-        // The extracted stream depends on the mask, not the error-correction level.
-        // Only broad fallback searches need storage for sharing it between candidates.
-        var rawCodewords = QrTables.GetNumRawDataModules(version) / 8;
-        var extractedMasks = 0;
-        var extractionCache = candidates.Length > 8 ? ArrayPool<byte>.Shared.Rent(rawCodewords * 8) : null;
 
-        try {
-            foreach (var candidate in candidates) {
+        foreach (var candidate in candidates) {
+            if (shouldStop?.Invoke() == true) {
+                diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Cancelled, version);
+                return false;
+            }
+            // Keep the final failure metadata in the original sorted order even
+            // when a candidate has already failed in the closest-pattern pass.
+            failureEcc = candidate.ErrorCorrectionLevel;
+            failureMask = candidate.Mask;
+            var candidateBit = 1u << candidate.Index;
+            if ((search.TriedCandidates & candidateBit) != 0) continue;
+            search.TriedCandidates |= candidateBit;
+            if (!TryExtractDataCodewords(modules, search.FunctionMask, version, candidate.ErrorCorrectionLevel, candidate.Mask, shouldStop, search.ExtractionCache, ref search.ExtractedMasks, out var dataCodewords)) {
                 if (shouldStop?.Invoke() == true) {
-                    diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Cancelled, version);
+                    diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Cancelled, version, candidate.ErrorCorrectionLevel, candidate.Mask, formatBestDistance);
                     return false;
                 }
-                if (!TryExtractDataCodewords(modules, functionMask, version, candidate.ErrorCorrectionLevel, candidate.Mask, shouldStop, extractionCache, ref extractedMasks, out var dataCodewords)) {
-                    failureEcc = candidate.ErrorCorrectionLevel;
-                    failureMask = candidate.Mask;
-                    if (shouldStop?.Invoke() == true) {
-                        diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Cancelled, version, candidate.ErrorCorrectionLevel, candidate.Mask, formatBestDistance);
-                        return false;
-                    }
-                    continue;
+                continue;
+            }
+            if (!QrPayloadParser.TryParse(dataCodewords, version, shouldStop, out var payload, out var segments, out var structuredAppend, out var fnc1Mode, out var fnc1ApplicationIndicator)) {
+                search.SawPayloadFailure = true;
+                if (shouldStop?.Invoke() == true) {
+                    diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Cancelled, version, candidate.ErrorCorrectionLevel, candidate.Mask, formatBestDistance);
+                    return false;
                 }
-                if (!QrPayloadParser.TryParse(dataCodewords, version, shouldStop, out var payload, out var segments, out var structuredAppend, out var fnc1Mode, out var fnc1ApplicationIndicator)) {
-                    sawPayloadFailure = true;
-                    failureEcc = candidate.ErrorCorrectionLevel;
-                    failureMask = candidate.Mask;
-                    if (shouldStop?.Invoke() == true) {
-                        diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.Cancelled, version, candidate.ErrorCorrectionLevel, candidate.Mask, formatBestDistance);
-                        return false;
-                    }
-                    continue;
-                }
-
-                var text = DecodeSegments(segments);
-                result = new QrDecoded(version, candidate.ErrorCorrectionLevel, candidate.Mask, payload, text, structuredAppend, fnc1Mode, fnc1ApplicationIndicator);
-                diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.None, version, candidate.ErrorCorrectionLevel, candidate.Mask, formatBestDistance);
-                return true;
+                continue;
             }
 
-            var failure = sawPayloadFailure ? QrDecodeFailure.Payload : QrDecodeFailure.ReedSolomon;
-            diagnostics = new QrDecodeDiagnostics(failure, version, failureEcc, failureMask, formatBestDistance);
-            return false;
-        } finally {
-            if (extractionCache is not null) ArrayPool<byte>.Shared.Return(extractionCache, clearArray: false);
+            var text = DecodeSegments(segments);
+            result = new QrDecoded(version, candidate.ErrorCorrectionLevel, candidate.Mask, payload, text, structuredAppend, fnc1Mode, fnc1ApplicationIndicator);
+            diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.None, version, candidate.ErrorCorrectionLevel, candidate.Mask, formatBestDistance);
+            return true;
         }
+
+        var failure = search.SawPayloadFailure ? QrDecodeFailure.Payload : QrDecodeFailure.ReedSolomon;
+        diagnostics = new QrDecodeDiagnostics(failure, version, failureEcc, failureMask, formatBestDistance);
+        return false;
     }
 
     private static int CountBits(int x) {
