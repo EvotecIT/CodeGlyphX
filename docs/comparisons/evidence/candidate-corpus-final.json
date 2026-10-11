@@ -291,13 +291,13 @@
     "Expected": [
       "168901"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "168901"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "code128-1/6.png",
@@ -351,13 +351,13 @@
     "Expected": [
       "8101054321120021123456"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "8101054321120021123456"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "code128-2/30.png",

@@ -66,13 +66,13 @@
     "Expected": [
       "Code 2D!"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "Code 2D!"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "aztec-1/reader-init.png",
@@ -96,13 +96,13 @@
     "Expected": [
       "http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/result/URIResultHandler.java"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/result/URIResultHandler.java"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "aztec-2/15.png",
@@ -111,13 +111,13 @@
     "Expected": [
       "mailto:zxing@googlegroups.com"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "mailto:zxing@googlegroups.com"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "aztec-2/13.png",
@@ -126,13 +126,13 @@
     "Expected": [
       "mailto:zxing@googlegroups.com"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "mailto:zxing@googlegroups.com"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "aztec-2/14.png",
@@ -141,13 +141,13 @@
     "Expected": [
       "mailto:zxing@googlegroups.com"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "mailto:zxing@googlegroups.com"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "aztec-2/17.png",
@@ -156,13 +156,13 @@
     "Expected": [
       "http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/result/URIResultHandler.java"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/result/URIResultHandler.java"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "aztec-2/10.png",
@@ -171,13 +171,13 @@
     "Expected": [
       "mailto:zxing@googlegroups.com"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "mailto:zxing@googlegroups.com"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "codabar-1/09.png",
@@ -1522,8 +1522,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives/03.png",
@@ -1643,8 +1643,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "itf-1/15.png",
