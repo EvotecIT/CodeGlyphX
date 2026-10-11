@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Threading;
 using CodeGlyphX.Ean;
@@ -27,111 +28,125 @@ internal static partial class BarcodeScanline {
         if (luminance.Length < 51) return default;
         var hasRetailGuards = false;
         var hasNormalizedBase = false;
-        var runs = new List<int>();
-        var firstIsBar = luminance[0] < threshold;
-        var current = firstIsBar;
-        var length = 1;
-        for (var i = 1; i < luminance.Length; i++) {
-            if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return default;
-            var bar = luminance[i] < threshold;
-            if (bar == current) length++;
-            else { runs.Add(length); current = bar; length = 1; }
-        }
-        runs.Add(length);
-        if (!localThreshold && !retailOnly) {
-            TryCollectCode128RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
-            TryCollectCode39RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
-            TryCollectCode93RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
-            TryCollectExpandedRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
-        }
-        for (var start = 0; start + 33 <= runs.Count; start++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return default;
-            // Also locate inverted symbols; the normal transform path resolves polarity.
-            var pitch = (runs[start] + runs[start + 1] + runs[start + 2]) / 3.0;
-            if (!RetailGuardMatches(runs, start, 3, pitch) || (start > 0 && runs[start - 1] < pitch * 3)) continue;
-            Collect(6, 6, false);
-            Collect(4, 4, false);
-            Collect(6, 0, true);
-            if (!includeParityRecovery) continue;
-
-            // Constrain ambiguous digits only as a fallback. UPC-A and EAN-8 use
-            // odd-family run widths on both halves; reversed rows use even widths.
-            // EAN-13 permits mixed left parity, with a fixed right-hand family.
-            // The complete guards, residual bounds and decoder checks still apply.
-            Collect(6, 6, false, 0, 0);
-            Collect(6, 6, false, 1, 1);
-            Collect(6, 6, false, -1, 0);
-            Collect(6, 6, false, 1, -1);
-            Collect(4, 4, false, 0, 0);
-            Collect(4, 4, false, 1, 1);
-
-            void Collect(int leftDigits, int rightDigits, bool upce, int leftParity = -1, int rightParity = -1) {
-                var count = 3 + leftDigits * 4 + (upce ? 6 : 5 + rightDigits * 4 + 3);
-                var end = start + count;
-                if (end > runs.Count) return;
-                var lastGuard = upce ? 6 : 3;
-                var endPitch = 0.0;
-                for (var i = end - lastGuard; i < end; i++) endPitch += runs[i];
-                endPitch /= lastGuard;
-                if (!RetailGuardMatches(runs, end - lastGuard, lastGuard, endPitch)) return;
-                var hasQuietZone = end == runs.Count || runs[end] >= endPitch * 3;
-                // The encoder separates an add-on by one module, before the base's
-                // standalone quiet zone. Keep that evidence for full-row validation,
-                // while local base-only candidates retain their quiet-zone check.
-                if (!hasQuietZone && runs[end] < endPitch) return;
-                if (!upce) {
-                    var centerAt = start + 3 + leftDigits * 4;
-                    var centerPitch = 0.0;
-                    for (var i = centerAt; i < centerAt + 5; i++) centerPitch += runs[i];
-                    if (!RetailGuardMatches(runs, centerAt, 5, centerPitch / 5)) return;
+        var rentedRuns = ArrayPool<int>.Shared.Rent(luminance.Length);
+        try {
+            var runCount = 0;
+            var firstIsBar = luminance[0] < threshold;
+            var current = firstIsBar;
+            var length = 1;
+            for (var i = 1; i < luminance.Length; i++) {
+                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return default;
+                var bar = luminance[i] < threshold;
+                if (bar == current) length++;
+                else { rentedRuns[runCount++] = length; current = bar; length = 1; }
+            }
+            rentedRuns[runCount++] = length;
+            var runs = rentedRuns.AsSpan(0, runCount);
+            if (!localThreshold && !retailOnly) {
+                // Existing non-retail localizers consume an owned list. Only that
+                // ordinary path needs a copy; retail and adaptive hypotheses use
+                // the bounded pooled runs directly, including rejected fits.
+                var otherRuns = new List<int>(runCount);
+                for (var i = 0; i < runCount; i++) {
+                    if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return default;
+                    otherRuns.Add(runs[i]);
                 }
-                // Guard geometry can survive a damaged digit on this exact row.
-                // Recovery may inspect its immediate neighbors before giving up.
-                hasRetailGuards = true;
-                // Rejected hypotheses must not allocate a list and its growing
-                // buffers for every digit. The largest retail shape has 59 runs.
-                Span<int> widths = stackalloc int[59];
-                var widthCount = 3;
-                widths.Slice(0, 3).Fill(1);
-                var at = start + 3;
-                var fit = 0.0;
-                for (var digit = 0; digit < leftDigits; digit++, at += 4) {
-                    if (!TryNormalizeRetailDigit(runs, at, leftParity, out var pattern, out var error)) return;
-                    for (var i = 0; i < pattern.Length; i++) widths[widthCount++] = pattern[i];
-                    fit += error;
-                }
-                if (!upce) {
-                    widths.Slice(widthCount, 5).Fill(1); widthCount += 5; at += 5;
-                    for (var digit = 0; digit < rightDigits; digit++, at += 4) {
-                        if (!TryNormalizeRetailDigit(runs, at, rightParity, out var pattern, out var error)) return;
+                TryCollectCode128RunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
+                TryCollectCode39RunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
+                TryCollectCode93RunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
+                TryCollectExpandedRunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
+            }
+            for (var start = 0; start + 33 <= runs.Length; start++) {
+                if (DecodeBudget.ShouldAbort(cancellationToken)) return default;
+                // Also locate inverted symbols; the normal transform path resolves polarity.
+                var pitch = (runs[start] + runs[start + 1] + runs[start + 2]) / 3.0;
+                if (!RetailGuardMatches(runs, start, 3, pitch) || (start > 0 && runs[start - 1] < pitch * 3)) continue;
+                Collect(runs, 6, 6, false);
+                Collect(runs, 4, 4, false);
+                Collect(runs, 6, 0, true);
+                if (!includeParityRecovery) continue;
+
+                // Constrain ambiguous digits only as a fallback. UPC-A and EAN-8 use
+                // odd-family run widths on both halves; reversed rows use even widths.
+                // EAN-13 permits mixed left parity, with a fixed right-hand family.
+                // The complete guards, residual bounds and decoder checks still apply.
+                Collect(runs, 6, 6, false, 0, 0);
+                Collect(runs, 6, 6, false, 1, 1);
+                Collect(runs, 6, 6, false, -1, 0);
+                Collect(runs, 6, 6, false, 1, -1);
+                Collect(runs, 4, 4, false, 0, 0);
+                Collect(runs, 4, 4, false, 1, 1);
+
+                void Collect(ReadOnlySpan<int> sampledRuns, int leftDigits, int rightDigits, bool upce, int leftParity = -1, int rightParity = -1) {
+                    var count = 3 + leftDigits * 4 + (upce ? 6 : 5 + rightDigits * 4 + 3);
+                    var end = start + count;
+                    if (end > sampledRuns.Length) return;
+                    var lastGuard = upce ? 6 : 3;
+                    var endPitch = 0.0;
+                    for (var i = end - lastGuard; i < end; i++) endPitch += sampledRuns[i];
+                    endPitch /= lastGuard;
+                    if (!RetailGuardMatches(sampledRuns, end - lastGuard, lastGuard, endPitch)) return;
+                    var hasQuietZone = end == sampledRuns.Length || sampledRuns[end] >= endPitch * 3;
+                    // The encoder separates an add-on by one module, before the base's
+                    // standalone quiet zone. Keep that evidence for full-row validation,
+                    // while local base-only candidates retain their quiet-zone check.
+                    if (!hasQuietZone && sampledRuns[end] < endPitch) return;
+                    if (!upce) {
+                        var centerAt = start + 3 + leftDigits * 4;
+                        var centerPitch = 0.0;
+                        for (var i = centerAt; i < centerAt + 5; i++) centerPitch += sampledRuns[i];
+                        if (!RetailGuardMatches(sampledRuns, centerAt, 5, centerPitch / 5)) return;
+                    }
+                    // Guard geometry can survive a damaged digit on this exact row.
+                    // Recovery may inspect its immediate neighbors before giving up.
+                    hasRetailGuards = true;
+                    // Rejected hypotheses must not allocate a list and its growing
+                    // buffers for every digit. The largest retail shape has 59 runs.
+                    Span<int> widths = stackalloc int[59];
+                    var widthCount = 3;
+                    widths.Slice(0, 3).Fill(1);
+                    var at = start + 3;
+                    var fit = 0.0;
+                    for (var digit = 0; digit < leftDigits; digit++, at += 4) {
+                        if (!TryNormalizeRetailDigit(sampledRuns, at, leftParity, out var pattern, out var error)) return;
                         for (var i = 0; i < pattern.Length; i++) widths[widthCount++] = pattern[i];
                         fit += error;
                     }
+                    if (!upce) {
+                        widths.Slice(widthCount, 5).Fill(1); widthCount += 5; at += 5;
+                        for (var digit = 0; digit < rightDigits; digit++, at += 4) {
+                            if (!TryNormalizeRetailDigit(sampledRuns, at, rightParity, out var pattern, out var error)) return;
+                            for (var i = 0; i < pattern.Length; i++) widths[widthCount++] = pattern[i];
+                            fit += error;
+                        }
+                    }
+                    widths.Slice(widthCount, lastGuard).Fill(1); widthCount += lastGuard;
+                    hasNormalizedBase = true;
+                    if (!hasQuietZone) return;
+                    var moduleCount = upce ? 51 : leftDigits == 6 ? 95 : 67;
+                    var modules = new bool[moduleCount];
+                    var offset = 0;
+                    var bar = firstIsBar == ((start & 1) == 0);
+                    foreach (var width in widths.Slice(0, widthCount)) {
+                        for (var i = 0; i < width; i++) modules[offset++] = bar;
+                        bar = !bar;
+                    }
+                    AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(modules, position, isVertical, fitError: fit,
+                        isLocalThreshold: localThreshold, isRetailParityFallback: leftParity >= 0 || rightParity >= 0));
                 }
-                widths.Slice(widthCount, lastGuard).Fill(1); widthCount += lastGuard;
-                hasNormalizedBase = true;
-                if (!hasQuietZone) return;
-                var moduleCount = upce ? 51 : leftDigits == 6 ? 95 : 67;
-                var modules = new bool[moduleCount];
-                var offset = 0;
-                var bar = firstIsBar == ((start & 1) == 0);
-                foreach (var width in widths.Slice(0, widthCount)) {
-                    for (var i = 0; i < width; i++) modules[offset++] = bar;
-                    bar = !bar;
-                }
-                AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(modules, position, isVertical, fitError: fit,
-                    isLocalThreshold: localThreshold, isRetailParityFallback: leftParity >= 0 || rightParity >= 0));
             }
+            return new RetailRowEvidence(hasRetailGuards, hasNormalizedBase);
+        } finally {
+            ArrayPool<int>.Shared.Return(rentedRuns);
         }
-        return new RetailRowEvidence(hasRetailGuards, hasNormalizedBase);
     }
 
-    private static bool RetailGuardMatches(List<int> runs, int start, int count, double pitch) {
+    private static bool RetailGuardMatches(ReadOnlySpan<int> runs, int start, int count, double pitch) {
         for (var i = 0; i < count; i++) if (Math.Abs(runs[start + i] - pitch) > pitch * 0.5 + 0.5) return false;
         return true;
     }
 
-    private static bool TryNormalizeRetailDigit(List<int> runs, int start, int parity, out int[] pattern, out double fit) {
+    private static bool TryNormalizeRetailDigit(ReadOnlySpan<int> runs, int start, int parity, out int[] pattern, out double fit) {
         pattern = Array.Empty<int>(); fit = double.PositiveInfinity;
         var total = runs[start] + runs[start + 1] + runs[start + 2] + runs[start + 3];
         var pitch = total / 7.0;

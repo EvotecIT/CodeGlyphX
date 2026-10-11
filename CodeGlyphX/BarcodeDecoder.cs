@@ -57,7 +57,7 @@ public static partial class BarcodeDecoder {
         decoded = null!;
         if (cancellationToken.IsCancellationRequested) return false;
         for (var pass = 0; pass < (ShouldTryRetailRecovery(expectedType) ? 2 : 1); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1)) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1, retailHint: IsRetailBarcodeType(expectedType))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out decoded, out var selected, retailOnly: pass == 1)) {
@@ -77,7 +77,7 @@ public static partial class BarcodeDecoder {
         diagnostics = new BarcodeDecodeDiagnostics();
         if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
         for (var pass = 0; pass < (ShouldTryRetailRecovery(expectedType) ? 2 : 1); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1)) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1, retailHint: IsRetailBarcodeType(expectedType))) continue;
             diagnostics.CandidateCount += candidates.Length;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) { diagnostics.Failure = "Cancelled."; return false; }
@@ -110,7 +110,7 @@ public static partial class BarcodeDecoder {
         var seen = deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
 
         for (var pass = 0; pass < (ShouldTryRetailRecovery(expectedType) ? 2 : 1) && (pass == 0 || recoverAfterHit || list.Count == 0); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1)) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1, retailHint: IsRetailBarcodeType(expectedType))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) break;
                 if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out var hit, out var selected, retailOnly: pass == 1, ordinaryHits: pass == 1 ? ordinaryHits : null)) {
@@ -215,7 +215,7 @@ public static partial class BarcodeDecoder {
         decoded = null!;
         if (cancellationToken.IsCancellationRequested) return false;
         for (var pass = 0; pass < (ShouldTryRetailRecovery(expectedType) ? 2 : 1); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1)) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1, retailHint: IsRetailBarcodeType(expectedType))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
                 if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out decoded, out var selected, retailOnly: pass == 1)) {
@@ -235,7 +235,7 @@ public static partial class BarcodeDecoder {
         diagnostics = new BarcodeDecodeDiagnostics();
         if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
         for (var pass = 0; pass < (ShouldTryRetailRecovery(expectedType) ? 2 : 1); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1)) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1, retailHint: IsRetailBarcodeType(expectedType))) continue;
             diagnostics.CandidateCount += candidates.Length;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) { diagnostics.Failure = "Cancelled."; return false; }
@@ -269,7 +269,7 @@ public static partial class BarcodeDecoder {
         var ordinaryHits = new List<BarcodeDecoded>(4);
         var seen = new HashSet<string>(StringComparer.Ordinal);
         for (var pass = 0; pass < (ShouldTryRetailRecovery(expectedType) ? 2 : 1); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1)) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1, retailHint: IsRetailBarcodeType(expectedType))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) break;
                 if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out var hit, out var selected, retailOnly: pass == 1, ordinaryHits: pass == 1 ? ordinaryHits : null)) {
@@ -348,7 +348,7 @@ public static partial class BarcodeDecoder {
         for (var pass = 0; pass < (ShouldTryRetailRecovery(expectedType) ? 2 : 1) && (pass == 0 || recoverAfterHit || decoded.Count == originalCount); pass++) {
             if (!BarcodeScanline.TryGetLocatedModuleCandidates(
                     pixels, width, height, stride, format, cancellationToken,
-                    out var candidates, retailRecovery: pass == 1)) continue;
+                    out var candidates, retailRecovery: pass == 1, retailHint: IsRetailBarcodeType(expectedType))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) return;
                 if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out var hit, out var selected, retailOnly: pass == 1, ordinaryHits: pass == 1 ? ordinaryHits : null)) {

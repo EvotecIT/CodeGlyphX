@@ -108,8 +108,11 @@ public static partial class BarcodeDecoder {
         }
     }
 
+    private static bool IsRetailBarcodeType(BarcodeType? expectedType) =>
+        expectedType == BarcodeType.EAN || expectedType == BarcodeType.UPCA || expectedType == BarcodeType.UPCE;
+
     private static bool ShouldTryRetailRecovery(BarcodeType? expectedType) =>
-        !expectedType.HasValue || expectedType == BarcodeType.EAN || expectedType == BarcodeType.UPCA || expectedType == BarcodeType.UPCE;
+        !expectedType.HasValue || IsRetailBarcodeType(expectedType);
 
     private static bool IsCompleteLocalRetailPayload(BarcodeDecoded decoded, int moduleCount) {
         // A local run candidate already has the complete guards for one base

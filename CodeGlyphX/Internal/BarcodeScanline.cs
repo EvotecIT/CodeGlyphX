@@ -87,8 +87,8 @@ internal static partial class BarcodeScanline {
         return TryGetModuleCandidates(pixels, width, height, stride, format, CancellationToken.None, out candidates);
     }
 
-    public static bool TryGetModuleCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BarcodeScanlineCandidate[] candidates, bool retailRecovery = false) {
-        return TryGetLocatedModuleCandidates(pixels, width, height, stride, format, cancellationToken, out candidates, retailRecovery);
+    public static bool TryGetModuleCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BarcodeScanlineCandidate[] candidates, bool retailRecovery = false, bool retailHint = false) {
+        return TryGetLocatedModuleCandidates(pixels, width, height, stride, format, cancellationToken, out candidates, retailRecovery, retailHint);
     }
 
     internal static bool TryGetLocatedModuleCandidates(
@@ -99,7 +99,8 @@ internal static partial class BarcodeScanline {
         PixelFormat format,
         CancellationToken cancellationToken,
         out BarcodeScanlineCandidate[] candidates,
-        bool retailRecovery = false) {
+        bool retailRecovery = false,
+        bool retailHint = false) {
         candidates = Array.Empty<BarcodeScanlineCandidate>();
 #if !NET8_0_OR_GREATER
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
@@ -112,12 +113,12 @@ internal static partial class BarcodeScanline {
         if (retailRecovery) {
             CollectRetailRecoveryRows(pixels, width, height, stride, format, cancellationToken, list);
         } else {
-            TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, height / 2, cancellationToken, list);
-            TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, height / 3, cancellationToken, list);
-            TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, (height * 2) / 3, cancellationToken, list);
-            TryCollectCandidatesFromVertical(pixels, width, height, stride, format, width / 2, cancellationToken, list);
-            TryCollectCandidatesFromVertical(pixels, width, height, stride, format, width / 3, cancellationToken, list);
-            TryCollectCandidatesFromVertical(pixels, width, height, stride, format, (width * 2) / 3, cancellationToken, list);
+            TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, height / 2, cancellationToken, list, includeOtherFormats: !retailHint);
+            TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, height / 3, cancellationToken, list, includeOtherFormats: !retailHint);
+            TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, (height * 2) / 3, cancellationToken, list, includeOtherFormats: !retailHint);
+            TryCollectCandidatesFromVertical(pixels, width, height, stride, format, width / 2, cancellationToken, list, includeOtherFormats: !retailHint);
+            TryCollectCandidatesFromVertical(pixels, width, height, stride, format, width / 3, cancellationToken, list, includeOtherFormats: !retailHint);
+            TryCollectCandidatesFromVertical(pixels, width, height, stride, format, (width * 2) / 3, cancellationToken, list, includeOtherFormats: !retailHint);
         }
 
         if (DecodeBudget.ShouldAbort(cancellationToken) || list.Count == 0) return false;
@@ -368,7 +369,7 @@ internal static partial class BarcodeScanline {
         return pitch;
     }
 
-    private static bool TryCollectCandidatesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, bool retailOnly = false) {
+    private static bool TryCollectCandidatesFromHorizontal(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int y, CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, bool retailOnly = false, bool includeOtherFormats = true) {
         if ((uint)y >= (uint)height) return false;
         var rented = ArrayPool<byte>.Shared.Rent(width);
         var luminance = rented.AsSpan(0, width);
@@ -398,13 +399,13 @@ internal static partial class BarcodeScanline {
                 if (lum > max) max = lum;
             }
 
-            return TryCollectCandidates(luminance, min, max, cancellationToken, candidates, y, isVertical: false, retailOnly);
+            return TryCollectCandidates(luminance, min, max, cancellationToken, candidates, y, isVertical: false, retailOnly, includeOtherFormats);
         } finally {
             ArrayPool<byte>.Shared.Return(rented);
         }
     }
 
-    private static bool TryCollectCandidatesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, bool retailOnly = false) {
+    private static bool TryCollectCandidatesFromVertical(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int x, CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, bool retailOnly = false, bool includeOtherFormats = true) {
         if ((uint)x >= (uint)width) return false;
         var rented = ArrayPool<byte>.Shared.Rent(height);
         var luminance = rented.AsSpan(0, height);
@@ -433,23 +434,19 @@ internal static partial class BarcodeScanline {
                 if (lum > max) max = lum;
             }
 
-            return TryCollectCandidates(luminance, min, max, cancellationToken, candidates, x, isVertical: true, retailOnly);
+            return TryCollectCandidates(luminance, min, max, cancellationToken, candidates, x, isVertical: true, retailOnly, includeOtherFormats);
         } finally {
             ArrayPool<byte>.Shared.Return(rented);
         }
     }
 
-    private static bool TryCollectCandidates(ReadOnlySpan<byte> luminance, int min, int max, CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, int position, bool isVertical, bool retailOnly = false) {
+    private static bool TryCollectCandidates(ReadOnlySpan<byte> luminance, int min, int max, CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, int position, bool isVertical, bool retailOnly = false, bool includeOtherFormats = true) {
         if (max - min < 8) return false;
         var hasRetailGuards = false;
-        var range = max - min;
-        var midpoint = (min + max) / 2;
-        // An odd intensity sum has two neighboring integer cutoffs. Retain both:
-        // resampling can place opposite edges at those adjacent gray values.
-        var thresholds = ((min + max) & 1) == 0
-            ? new[] { midpoint, min + range / 3, min + (range * 2) / 3 }
-            : new[] { midpoint, midpoint + 1, min + range / 3, min + (range * 2) / 3 };
-        for (var i = 0; i < thresholds.Length; i++) {
+        Span<int> thresholds = stackalloc int[4];
+        var thresholdCount = GetDistinctScanlineThresholds(luminance, min, max, cancellationToken, thresholds);
+        if (thresholdCount == 0) return false;
+        for (var i = 0; i < thresholdCount; i++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
             if (retailOnly) {
                 var evidence = TryCollectRetailRunCandidates(luminance, thresholds[i], cancellationToken, candidates, position, isVertical,
@@ -467,9 +464,55 @@ internal static partial class BarcodeScanline {
                 AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(minimumRunModules, position, isVertical, alternative, minimumRunFitError, fitError));
             }
             if (!retailOnly)
-                hasRetailGuards |= TryCollectRetailRunCandidates(luminance, thresholds[i], cancellationToken, candidates, position, isVertical).HasGuards;
+                // A strict retail hint does not need Code 128/39/93 or Expanded
+                // normalization. Whole-row pitch and ordinary retail hypotheses
+                // remain unchanged; constrained parity still belongs to recovery.
+                hasRetailGuards |= TryCollectRetailRunCandidates(luminance, thresholds[i], cancellationToken, candidates, position, isVertical,
+                    retailOnly: !includeOtherFormats).HasGuards;
         }
         return TryCollectAdaptiveRetailCandidates(luminance, cancellationToken, candidates, position, isVertical, retailRecovery: retailOnly) || hasRetailGuards;
+    }
+
+    /// <summary>
+    /// Retains each threshold's first distinct binary row. Thresholding the same
+    /// luminance is monotone, so equal dark-pixel counts imply identical pixels,
+    /// run widths and fit errors. Adjacent gray cutoffs remain distinct whenever
+    /// even one pixel changes, including a base's gray add-on.
+    /// </summary>
+    private static int GetDistinctScanlineThresholds(ReadOnlySpan<byte> luminance, int min, int max,
+        CancellationToken cancellationToken, Span<int> thresholds) {
+        var range = max - min;
+        var midpoint = (min + max) / 2;
+        var count = 0;
+        thresholds[count++] = midpoint;
+        if (((min + max) & 1) != 0) thresholds[count++] = midpoint + 1;
+        thresholds[count++] = min + range / 3;
+        thresholds[count++] = min + (range * 2) / 3;
+
+        Span<int> darkCounts = stackalloc int[256];
+        darkCounts.Clear();
+        for (var x = 0; x < luminance.Length; x++) {
+            if ((x & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return 0;
+            darkCounts[luminance[x]]++;
+        }
+        var below = 0;
+        for (var value = 0; value < darkCounts.Length; value++) {
+            var atValue = darkCounts[value];
+            darkCounts[value] = below;
+            below += atValue;
+        }
+        var distinct = 0;
+        for (var i = 0; i < count; i++) {
+            var threshold = thresholds[i];
+            var duplicate = false;
+            for (var previous = 0; previous < distinct; previous++) {
+                if (darkCounts[thresholds[previous]] != darkCounts[threshold]) continue;
+                duplicate = true;
+                break;
+            }
+            if (!duplicate) thresholds[distinct++] = threshold;
+        }
+        return distinct;
     }
     private static void AddUniqueLocatedCandidate(List<BarcodeScanlineCandidate> candidates, BarcodeScanlineCandidate candidate) {
         for (var i = 0; i < candidates.Count; i++) {
