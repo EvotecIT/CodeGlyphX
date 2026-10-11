@@ -125,7 +125,8 @@ internal static partial class BarcodeScanline {
         best = candidate;
     }
 
-    private static byte GetLuminance(byte red, byte green, byte blue, byte alpha) {
+    /// <summary>Returns visible luminance after compositing straight-alpha pixels against white.</summary>
+    internal static byte GetLuminance(byte red, byte green, byte blue, byte alpha) {
         var luminance = (red * 54 + green * 183 + blue * 19) >> 8;
         // Match the white background used by the other image decoders. RGB in
         // transparent padding does not describe a visible foreground bar.

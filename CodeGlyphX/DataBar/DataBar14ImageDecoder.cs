@@ -223,6 +223,6 @@ internal static class DataBar14ImageDecoder {
 
     private static int Luminance(byte[] rgba, int width, bool vertical, int along, int across) {
         var at = (vertical ? along * width + across : across * width + along) * 4;
-        return (rgba[at] * 77 + rgba[at + 1] * 150 + rgba[at + 2] * 29) >> 8;
+        return BarcodeScanline.GetLuminance(rgba[at], rgba[at + 1], rgba[at + 2], rgba[at + 3]);
     }
 }

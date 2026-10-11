@@ -63,6 +63,33 @@ public sealed class DataBarStackedImageScannerTests {
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
+    public void Scanner_CompositesAlphaAgainstWhite(bool omni) {
+        var matrix = omni ? DataBar14Encoder.EncodeStackedOmnidirectional("0001234567890") : DataBar14Encoder.EncodeStacked("0001234567890");
+        var pixels = Render(matrix, 2, out var width, out var height);
+        for (var i = 3; i < pixels.Length; i += 4) pixels[i] = 0;
+        Assert.Empty(Scan(pixels, width, height).Symbols);
+        // Partially transparent bars remain visible against the white background.
+        for (var i = 3; i < pixels.Length; i += 4) pixels[i] = 96;
+        Assert.Equal("0001234567890", Assert.Single(Scan(pixels, width, height).Symbols).Text);
+    }
+
+    [Fact]
+    public void Scanner_ClassifiesVisibleBarHeightWithoutTransparentRgbExtensions() {
+        const string input = "0001234567890";
+        var pixels = CodeGlyphX.Rendering.Png.BarcodePngRenderer.RenderPixels(DataBar14Encoder.EncodeTruncated(input),
+            new CodeGlyphX.Rendering.Png.BarcodePngRenderOptions { ModuleSize = 2, QuietZone = 10, HeightModules = 40 },
+            out var width, out var height, out _);
+        // Keep thirteen modules of visible bars, with invisible copies extending below them.
+        for (var y = 0; y < height; y++) for (var x = 0; x < width; x++) if (y < 27 || y >= 53) pixels[(y * width + x) * 4 + 3] = 0;
+        var options = Options(); options.Formats = new[] { SymbolFormat.Gs1DataBarTruncated, SymbolFormat.Gs1DataBarOmnidirectional };
+        var symbol = Assert.Single(SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options).Symbols);
+        Assert.Equal(input, symbol.Text);
+        Assert.Equal(SymbolFormat.Gs1DataBarTruncated, symbol.Format);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
     public void Scanner_RejectsUnrelatedRowsAndMissingSeparators(bool unrelated) {
         var matrix = DataBar14Encoder.EncodeStackedOmnidirectional("0001234567890");
         var other = DataBar14Encoder.EncodeStackedOmnidirectional("0082193510642");
