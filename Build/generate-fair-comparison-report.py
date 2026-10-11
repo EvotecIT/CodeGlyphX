@@ -48,6 +48,9 @@ def main():
         names += sorted(path.name for path in root.glob("pdf417-cost-*.json"))
     if qualification.get("QrAlignmentProof") or qualification.get("HistoricalQrAlignmentProof"):
         names.append("qr-alignment-equivalence.json")
+    if qualification.get("Pdf417CacheCostProof"):
+        names += ["pdf417-cache-cost-proof.json", "pdf417-cache-controls-manifest.json", "pdf417-cache-checks-previous.json", "pdf417-cache-checks-current.json", "pdf417-cache-pressure-previous.json", "pdf417-cache-pressure-current.json"]
+        names += sorted(p.name for p in root.glob("pdf417-cache-cost-*-result.json"))
     if qualification.get("NegativeSearchCostProof"):
         names.append("negative-search-cost-proof.json")
     if qualification.get("MaxiCodeImageProof"):
@@ -142,6 +145,25 @@ def main():
                   "The scanner verifies circular finder bands, samples the staggered module grid and uses the existing primary and secondary error correction. It accepts planar rotation and inverted polarity, and can recover small damage to fixed orientation modules. The existing result carries secondary text and bytes, typed carrier metadata and the searched source region.", "",
                   maxi["TextContract"], "", maxi["Evidence"], "", maxi["Limits"], "",
                   "The [MaxiCode proof](evidence/maxicode-image-proof.json) records source hashes and search bounds. The capability catalog advertises one-symbol image scanning without geometry. Independent fixture tests do not establish coverage of every numeric MaxiCode mode; fixture filenames are not encoding-mode evidence."]
+    cache = qualification.get("Pdf417CacheCostProof")
+    if cache:
+        decisions = cache["DecisionEquivalence"]
+        if (cache["Source"] != qualification["MeasurementSource"]
+                or cache["CoreSha256"] != qualification["CandidateCoreSha256"] or decisions["Mismatches"] != 0):
+            raise ValueError("PDF417 cache proof differs from the measured candidate")
+        old_cache = cache["InstrumentedBaseline"]["LargeCaches"][0]
+        new_cache = cache["InstrumentedCandidate"]["LargeCaches"][0]
+        lines += ["", "## PDF417 scanline reuse", "",
+                  "PDF417 stores short scanline runs in 16-bit arrays and retains 32-bit widths for longer lines. More tilted lines fit within the same 8 MiB estimated cache allowance. Search order, acceptance rules and recognition deadlines are unchanged.", "",
+                  f'All {decisions["Cases"]:,} cache reads match independently sampled pixels, including reversed, inverted and tilted lines, width boundaries, entry saturation and byte pressure. The checks also cover pre-cancelled and expired calls.', "",
+                  f'On the existing difficult negative image, the instrumented PDF417 search retains {new_cache["Entries"]:,} lines instead of {old_cache["Entries"]:,}. Capacity rejections fall from {old_cache["EntryRejections"]:,} to {new_cache["EntryRejections"]:,}; sampled pixels fall from {old_cache["SampledPixels"]:,} to {new_cache["SampledPixels"]:,}. These diagnostic counts use a longer allowance to complete all work; their timings are unranked.', "",
+                  "The paired control batch contains the same two negative images with PDF417-only and all-format hints: four requests, each with the original 1,500 ms allowance. Correctness and completion accompany cost.", "",
+                  "| Domain | Previous median ms | Current median ms | Current/previous | Previous/current mean managed bytes | Previous/current mean correct requests | Previous/current mean inconclusive requests |",
+                  "|---|---:|---:|---:|---:|---:|---:|"]
+        for row in cache["PairedControls"]:
+            old, now = row["PreviousMetrics"], row["CurrentMetrics"]
+            lines.append(f'| {row["Domain"].upper()} | {row["PreviousMedianMs"]:.3f} | {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["PreviousMeanAllocatedBytes"]:,.0f} / {row["CurrentMeanAllocatedBytes"]:,.0f} | {old["CorrectImages"]:.3f} / {now["CorrectImages"]:.3f} | {old["InconclusiveImages"]:.3f} / {now["InconclusiveImages"]:.3f} |')
+        lines += ["", cache["Limits"], "", "[Cache checks, counts and paired costs](evidence/pdf417-cache-cost-proof.json). Whole-image comparison results remain the practical measure of scanner cost and completion."]
     negative_cost = qualification.get("NegativeSearchCostProof")
     if negative_cost:
         decisions = negative_cost["DecisionEquivalence"]

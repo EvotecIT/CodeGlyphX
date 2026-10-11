@@ -1,0 +1,265 @@
+{
+  "Source": "34bfc0ab2216f02a6d84acbed997b3b9f9513f90",
+  "CoreSha256": "DC005150AC82C7473BBC1A8C49BD8AAFA5F8AC0B34D011E4F975431375D3567F",
+  "PreviousSource": "c7f1eb7ea85e698efc709df31b2b34504ea5ca44",
+  "PreviousCoreSha256": "FD01E5DE9A28204BB3E6EFA73D478EA283778E48B117550EB38ED69EEB16FBDD",
+  "DecisionEquivalence": {
+    "Cases": 227692,
+    "Mismatches": 0,
+    "DecisionsSha256": "2E0567A48EE37C932556C1EF05EFD750FB9375762D1C4C13ED59432B05EC749C",
+    "CancellationAndDeadlineCases": 12,
+    "Widths": [
+      65535,
+      65536,
+      70000
+    ]
+  },
+  "BaselineCacheChecks": {
+    "CoreSha256": "FD01E5DE9A28204BB3E6EFA73D478EA283778E48B117550EB38ED69EEB16FBDD",
+    "Cases": 227692,
+    "Mismatches": 0,
+    "DecisionsSha256": "2E0567A48EE37C932556C1EF05EFD750FB9375762D1C4C13ED59432B05EC749C",
+    "MaximumEntries": 8192,
+    "MaximumBytes": 8388608,
+    "CancellationAndDeadlineCases": 12,
+    "Snapshots": [
+      {
+        "Width": 1,
+        "Height": 40000,
+        "Entries": 8192,
+        "Bytes": 1343488
+      },
+      {
+        "Width": 640,
+        "Height": 480,
+        "Entries": 6091,
+        "Bytes": 8388280
+      },
+      {
+        "Width": 73,
+        "Height": 59,
+        "Entries": 30,
+        "Bytes": 5028
+      },
+      {
+        "Width": 65535,
+        "Height": 3,
+        "Entries": 30,
+        "Bytes": 5100
+      },
+      {
+        "Width": 65536,
+        "Height": 3,
+        "Entries": 30,
+        "Bytes": 5100
+      },
+      {
+        "Width": 70000,
+        "Height": 3,
+        "Entries": 30,
+        "Bytes": 5100
+      }
+    ]
+  },
+  "CurrentCacheChecks": {
+    "CoreSha256": "DC005150AC82C7473BBC1A8C49BD8AAFA5F8AC0B34D011E4F975431375D3567F",
+    "Cases": 227692,
+    "Mismatches": 0,
+    "DecisionsSha256": "2E0567A48EE37C932556C1EF05EFD750FB9375762D1C4C13ED59432B05EC749C",
+    "MaximumEntries": 32768,
+    "MaximumBytes": 8388608,
+    "CancellationAndDeadlineCases": 12,
+    "Snapshots": [
+      {
+        "Width": 1,
+        "Height": 40000,
+        "Entries": 32768,
+        "Bytes": 5308416
+      },
+      {
+        "Width": 640,
+        "Height": 480,
+        "Entries": 11689,
+        "Bytes": 8388344
+      },
+      {
+        "Width": 73,
+        "Height": 59,
+        "Entries": 30,
+        "Bytes": 4914
+      },
+      {
+        "Width": 65535,
+        "Height": 3,
+        "Entries": 30,
+        "Bytes": 4950
+      },
+      {
+        "Width": 65536,
+        "Height": 3,
+        "Entries": 30,
+        "Bytes": 5030
+      },
+      {
+        "Width": 70000,
+        "Height": 3,
+        "Entries": 30,
+        "Bytes": 5030
+      }
+    ]
+  },
+  "InstrumentedBaseline": {
+    "PublicFile": "pdf417-cache-pressure-previous.json",
+    "Metadata": {
+      "Kind": "diagnostic-only",
+      "CoreSha256": "FD4E63CB50E9E6C5ED0370037EDF420AED300A7A6C4D29F29736D603D77E8040",
+      "TimeoutMilliseconds": 60000,
+      "Affinity": "0xFFFF",
+      "Priority": "Normal",
+      "Repeats": 2
+    },
+    "LargeCaches": [
+      {
+        "Width": 640,
+        "Height": 480,
+        "Hits": 31264,
+        "Misses": 29856,
+        "EntryRejections": 21664,
+        "ByteRejections": 0,
+        "SampledPixels": 15636480,
+        "CopiedRuns": 2862193,
+        "Entries": 8192,
+        "Bytes": 4610844
+      },
+      {
+        "Width": 640,
+        "Height": 480,
+        "Hits": 31264,
+        "Misses": 29856,
+        "EntryRejections": 21664,
+        "ByteRejections": 0,
+        "SampledPixels": 15636480,
+        "CopiedRuns": 2862193,
+        "Entries": 8192,
+        "Bytes": 4610844
+      }
+    ],
+    "Totals": {
+      "Hits": 433920,
+      "Misses": 112768,
+      "EntryRejections": 43328,
+      "ByteRejections": 0,
+      "SampledPixels": 50583552,
+      "CopiedRuns": 22669482,
+      "Bytes": 27393560
+    },
+    "RawSha256": "89CB619E800DAB2C7355DB5BB10369FC50CC593231B51CB5978C2411DE28877C"
+  },
+  "InstrumentedCandidate": {
+    "PublicFile": "pdf417-cache-pressure-current.json",
+    "Metadata": {
+      "Kind": "diagnostic-only",
+      "CoreSha256": "E9F1301A3C06091F3B9D8FAFE44A1952B4674290CAFA2E57206D560FFFF1672A",
+      "TimeoutMilliseconds": 60000,
+      "Affinity": "0xFFFF",
+      "Priority": "Normal",
+      "Repeats": 2
+    },
+    "LargeCaches": [
+      {
+        "Width": 640,
+        "Height": 480,
+        "Hits": 44320,
+        "Misses": 16800,
+        "EntryRejections": 0,
+        "ByteRejections": 0,
+        "SampledPixels": 9216000,
+        "CopiedRuns": 3918169,
+        "Entries": 16800,
+        "Bytes": 5751970
+      },
+      {
+        "Width": 640,
+        "Height": 480,
+        "Hits": 44320,
+        "Misses": 16800,
+        "EntryRejections": 0,
+        "ByteRejections": 0,
+        "SampledPixels": 9216000,
+        "CopiedRuns": 3918169,
+        "Entries": 16800,
+        "Bytes": 5751970
+      }
+    ],
+    "Totals": {
+      "Hits": 460032,
+      "Misses": 86656,
+      "EntryRejections": 0,
+      "ByteRejections": 0,
+      "SampledPixels": 37742592,
+      "CopiedRuns": 24781434,
+      "Bytes": 24834356
+    },
+    "RawSha256": "3DBF0D25D3FD8210CED52E2A8CA24D6658559A18E8745568791883D0DBF16A86"
+  },
+  "PairedControls": [
+    {
+      "Domain": "ccd0",
+      "PreviousMedianMs": 2939.5113,
+      "CurrentMedianMs": 2709.288,
+      "LatencyRatio": 0.921679736356176,
+      "PreviousMeanAllocatedBytes": 177688295.33333334,
+      "CurrentMeanAllocatedBytes": 177560334.66666666,
+      "PreviousMetrics": {
+        "Requests": 4.0,
+        "CorrectImages": 2.6666666666666665,
+        "UnexpectedImages": 0.0,
+        "InconclusiveImages": 1.3333333333333333,
+        "AllocatedBytes": 177688295.33333334,
+        "WorkingSetDeltaBytes": -1034581.3333333334
+      },
+      "CurrentMetrics": {
+        "Requests": 4.0,
+        "CorrectImages": 2.75,
+        "UnexpectedImages": 0.0,
+        "InconclusiveImages": 1.25,
+        "AllocatedBytes": 177560334.66666666,
+        "WorkingSetDeltaBytes": 2233002.6666666665
+      },
+      "RawFile": "pdf417-cache-cost-ccd0-12-result.json"
+    },
+    {
+      "Domain": "ccd1",
+      "PreviousMedianMs": 2146.9155,
+      "CurrentMedianMs": 2179.85185,
+      "LatencyRatio": 1.0153412418886538,
+      "PreviousMeanAllocatedBytes": 187482001.33333334,
+      "CurrentMeanAllocatedBytes": 185419214.0,
+      "PreviousMetrics": {
+        "Requests": 4.0,
+        "CorrectImages": 3.0,
+        "UnexpectedImages": 0.0,
+        "InconclusiveImages": 1.0,
+        "AllocatedBytes": 187482001.33333334,
+        "WorkingSetDeltaBytes": 975189.3333333334
+      },
+      "CurrentMetrics": {
+        "Requests": 4.0,
+        "CorrectImages": 3.0,
+        "UnexpectedImages": 0.0,
+        "InconclusiveImages": 1.0,
+        "AllocatedBytes": 185419214.0,
+        "WorkingSetDeltaBytes": 2601642.6666666665
+      },
+      "RawFile": "pdf417-cache-cost-ccd1-12-result.json"
+    }
+  ],
+  "Changes": [
+    "PDF417 stores scanline runs in 16-bit arrays when the line length permits, and retains 32-bit widths for longer lines. More tilted lines fit within the same 8 MiB estimated cache allowance; entry count remains bounded. Search order, acceptance rules, cancellation and deadlines are unchanged."
+  ],
+  "ControlsChanged": false,
+  "ProductionDependenciesAdded": false,
+  "PublicApiAdded": false,
+  "Limits": "Private cache checks compare every run against independently sampled pixels. Instrumented cache counts use two existing negatives, two PDF417-only passes with a 60,000 ms diagnostic allowance to complete all work; their timings are unranked. The actual baseline/current cache source is retained in the archive. Cache byte accounting is an estimate and excludes other decoder working memory; no peak-memory claim is made. The paired controls and whole-image costs preserve the 1,500 ms allowance, preloaded pixels, hints and empty oracles. Shared-host load limits portable latency and completion claims.",
+  "ManifestSha256": "84E4444915AA47870E129507F3E65282AB5873939C76FA1A85FA84BA39492624"
+}

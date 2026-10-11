@@ -209,6 +209,27 @@ def build_website_data(root):
             raise ValueError("MaxiCode proof differs from the qualified source")
         maxicode_image = {"correct": maxi["Correct"], "images": maxi["Images"], "before": maxi["PreviousCorrect"],
                           "limits": maxi["Limits"], "evidence": maxi["Evidence"], "text_contract": maxi["TextContract"]}
+    pdf417_cache = {}
+    cache = qualification.get("Pdf417CacheCostProof")
+    if cache:
+        decisions = cache["DecisionEquivalence"]
+        if (cache["Source"] != qualification["MeasurementSource"]
+                or cache["CoreSha256"] != qualification["CandidateCoreSha256"] or decisions["Mismatches"] != 0):
+            raise ValueError("PDF417 cache proof differs from the qualified source")
+        old_cache = cache["InstrumentedBaseline"]["LargeCaches"][0]
+        new_cache = cache["InstrumentedCandidate"]["LargeCaches"][0]
+        pdf417_cache = {"cases": f'{decisions["Cases"]:,}', "previous_lines": f'{old_cache["Entries"]:,}',
+                        "current_lines": f'{new_cache["Entries"]:,}', "previous_rejections": f'{old_cache["EntryRejections"]:,}',
+                        "previous_pixels": f'{old_cache["SampledPixels"]:,}', "current_pixels": f'{new_cache["SampledPixels"]:,}',
+                        "limits": cache["Limits"],
+                        "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["PreviousMedianMs"]:.3f}',
+                                  "current_ms": f'{row["CurrentMedianMs"]:.3f}', "ratio": f'{row["LatencyRatio"]:.3f}',
+                                  "previous_mib": f'{row["PreviousMeanAllocatedBytes"] / 1048576:.2f}',
+                                  "current_mib": f'{row["CurrentMeanAllocatedBytes"] / 1048576:.2f}',
+                                  "previous_correct": f'{row["PreviousMetrics"]["CorrectImages"]:.2f}',
+                                  "current_correct": f'{row["CurrentMetrics"]["CorrectImages"]:.2f}',
+                                  "previous_unfinished": f'{row["PreviousMetrics"]["InconclusiveImages"]:.2f}',
+                                  "current_unfinished": f'{row["CurrentMetrics"]["InconclusiveImages"]:.2f}'} for row in cache["PairedControls"]]}
     negative_search_cost = {}
     negative_cost = qualification.get("NegativeSearchCostProof")
     if negative_cost:
@@ -245,7 +266,7 @@ def build_website_data(root):
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
             "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,
-            "negative_search_cost": negative_search_cost,
+            "negative_search_cost": negative_search_cost, "pdf417_cache": pdf417_cache,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 
