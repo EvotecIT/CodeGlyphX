@@ -2666,13 +2666,13 @@
     "Expected": [
       "1234567890"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "1234567890"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-6/4.png",
@@ -2711,13 +2711,13 @@
     "Expected": [
       "1234567890"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "1234567890"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-6/12.png",
@@ -2726,13 +2726,13 @@
     "Expected": [
       "1234567890"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "1234567890"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rss14-1/4.png",

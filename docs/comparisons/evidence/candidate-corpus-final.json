@@ -666,13 +666,13 @@
     "Expected": [
       "CODE 93"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "CODE 93"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "code93-1/1.png",
@@ -2193,13 +2193,13 @@
     "Expected": [
       "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-1/10.png",
@@ -2591,13 +2591,13 @@
     "Expected": [
       "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-5/09.png",
@@ -2606,13 +2606,13 @@
     "Expected": [
       "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "MECARD:N:Sean Owen;TEL:\u002B12125658770;EMAIL:srowen@google.com;;"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "qrcode-5/14.png",
