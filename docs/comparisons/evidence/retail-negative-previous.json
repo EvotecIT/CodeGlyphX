@@ -92,14 +92,10 @@
     "Format": "UpcE",
     "Engine": "CodeGlyphX",
     "Expected": [],
-    "Actual": [
-      "06332420"
-    ],
+    "Actual": [],
     "Missing": [],
-    "Unexpected": [
-      "063200003240"
-    ],
-    "Status": "Failed",
+    "Unexpected": [],
+    "Status": "Correct",
     "Completion": "Completed"
   },
   {

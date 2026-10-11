@@ -591,13 +591,13 @@
     "Expected": [
       "071831007995"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "071831007995"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-1/21.png",
@@ -621,13 +621,13 @@
     "Expected": [
       "070097025088"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "070097025088"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-2/46.png",
@@ -636,13 +636,13 @@
     "Expected": [
       "075720003259"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "075720003259"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-2/07.png",
@@ -651,13 +651,13 @@
     "Expected": [
       "890444000335"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "890444000335"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-2/01.png",
@@ -726,13 +726,13 @@
     "Expected": [
       "049000042566"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "049000042566"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-3/17.png",
@@ -816,13 +816,13 @@
     "Expected": [
       "066721017185"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "066721017185"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-4/4.png",
@@ -876,13 +876,13 @@
     "Expected": [
       "807648011401"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "807648011401"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-4/7.png",
@@ -891,13 +891,13 @@
     "Expected": [
       "023942431015"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "023942431015"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-5/29.png",
@@ -981,13 +981,13 @@
     "Expected": [
       "625034201058"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "625034201058"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-6/02.png",
@@ -1131,13 +1131,13 @@
     "Expected": [
       "01264904"
     ],
-    "Actual": [],
-    "Missing": [
-      "012000006494"
+    "Actual": [
+      "01264904"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upce-2/34.png",
@@ -1191,13 +1191,13 @@
     "Expected": [
       "01264904"
     ],
-    "Actual": [],
-    "Missing": [
-      "012000006494"
+    "Actual": [
+      "01264904"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upce-2/13.png",

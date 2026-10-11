@@ -120,7 +120,7 @@ def main():
                   "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
         for row in retail["Cost"]:
             lines.append(f'| {row["Domain"]} | {row["BaselineMedianMs"]:.2f} | {row["CurrentMedianMs"]:.2f} | {row["LatencyRatio"]:.2f}x | {row["BaselineAllocatedBytes"] / 1048576:.2f} | {row["CurrentAllocatedBytes"] / 1048576:.2f} | {row["AllocationRatio"]:.2f}x | {row["PreviousCorrectRequests"]:g}/9 → {row["CurrentCorrectRequests"]:g}/9 |')
-        lines += ["", "The previous binary invents a UPC-E payload on one of these requests. Correctness differs, and extra recovery work costs time and allocation. These measurements do not establish a speed gain or a population false-positive rate.", "",
+        lines += ["", "Correct-request counts accompany these costs. Unexpected outputs and unfinished scans remain in the raw samples. Shared-host measurements do not establish portable speed or a population false-positive rate.", "",
                   "[Positive requests](evidence/retail-positive-diagnostic.json) · [negative requests](evidence/retail-negative-diagnostic.json) · [current outcomes](evidence/retail-negative-current.json) · [CCD0 raw cost samples](evidence/retail-cost-ccd0-result.json) · [CCD1 raw cost samples](evidence/retail-cost-ccd1-result.json)."]
     if qualification.get("AttributionLimits"):
         lines += ["", qualification["AttributionLimits"]]
