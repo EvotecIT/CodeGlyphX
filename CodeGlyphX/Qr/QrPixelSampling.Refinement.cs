@@ -204,9 +204,10 @@ internal static partial class QrPixelSampling {
         fineY[3] = bestY + 0.05;
         fineY[4] = bestY + 0.10;
 
-        bestDist = int.MaxValue;
-        bestTiming = int.MinValue;
-
+        // The fine grid contains the coarse winner at its centre. Seed its score
+        // to avoid timing work for candidates that cannot beat that known point,
+        // but let the first equal fine candidate retain the original tie order.
+        var hasFineWinner = false;
         for (var yi = 0; yi < fineY.Length; yi++) {
             var oy = Math.Clamp(fineY[yi], -0.49, 0.49);
             for (var xi = 0; xi < fine.Length; xi++) {
@@ -216,11 +217,12 @@ internal static partial class QrPixelSampling {
                 if (dist > bestDist) continue;
                 var timing = ComputeTimingAlternations(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, ox, oy);
 
-                if (dist < bestDist || (dist == bestDist && timing > bestTiming)) {
+                if (dist < bestDist || (dist == bestDist && (timing > bestTiming || (!hasFineWinner && timing == bestTiming)))) {
                     bestDist = dist;
                     bestTiming = timing;
                     bestX = ox;
                     bestY = oy;
+                    hasFineWinner = true;
                 }
 
                 if (bestDist == 0 && bestTiming > (dimension - 16) * 2 - 4) return;
