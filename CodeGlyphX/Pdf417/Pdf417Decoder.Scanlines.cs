@@ -13,9 +13,8 @@ namespace CodeGlyphX.Pdf417;
 public static partial class Pdf417Decoder {
     private static readonly int[] PixelStartRuns = { 8, 1, 1, 1, 1, 1, 1, 3 };
     private static readonly int[] PixelStopRuns = { 7, 1, 1, 3, 1, 1, 1, 2, 1 };
-    // Shallow skew can cross an entire physical row over a wide symbol.
-    // Resolve it before the coarser perspective angles contaminate row votes.
-    private static readonly double[] PixelRowSlopes = { 0.0, -0.025, 0.025, -0.05, 0.05, -0.1, 0.1, -0.15, 0.15, -0.2, 0.2, -0.25, 0.25, -0.3, 0.3 };
+    private static readonly double[] PixelRowSlopes = { 0.0, -0.05, 0.05, -0.1, 0.1, -0.15, 0.15, -0.2, 0.2, -0.25, 0.25, -0.3, 0.3 };
+    private static readonly double[] PixelShallowRowSlopes = { 0.0, -0.025, 0.025 };
     // A row's start/stop runs establish its local pitch. Row indicators identify
     // logical rows independently of physical row height, borders and image text.
     private static bool TryDecodePixelRows(PixelSpan pixels, int width, int height, int stride, PixelFormat format,
@@ -34,15 +33,22 @@ public static partial class Pdf417Decoder {
             }
         }
         var runCache = new PixelRunCache(darkPixels, width, height);
-        if (TryReadPixelRows(width, height, runCache, cancellationToken, false, out decoded, out hasStartPattern)) return true;
+        if (TryReadPixelRows(width, height, runCache, cancellationToken, false, false, out decoded, out hasStartPattern)) return true;
         // Preserve the ordinary reader's decisions. A print-gain retry requires
         // repeated, consistent row indicators and shares the caller's deadline.
         if (!hasStartPattern || DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        return TryReadPixelRows(width, height, runCache, cancellationToken, true, out decoded, out _);
+        if (TryReadPixelRows(width, height, runCache, cancellationToken, true, false, out decoded, out _)) return true;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        // New angles and payload-only rows must not replace an established
+        // decode. Preserve both original passes before the shallow-skew retry,
+        // sharing their thresholded pixels, cached runs and remaining budget.
+        if (TryReadPixelRows(width, height, runCache, cancellationToken, false, true, out decoded, out _)) return true;
+        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        return TryReadPixelRows(width, height, runCache, cancellationToken, true, true, out decoded, out _);
     }
 
     private static bool TryReadPixelRows(int width, int height, PixelRunCache runCache, CancellationToken cancellationToken,
-        bool correctPrintGain, out Pdf417Decoded decoded, out bool hasStartPattern) {
+        bool correctPrintGain, bool shallowSkew, out Pdf417Decoded decoded, out bool hasStartPattern) {
         decoded = null!;
         hasStartPattern = false;
         for (var axis = 0; axis < 2; axis++) {
@@ -54,7 +60,7 @@ public static partial class Pdf417Decoder {
                     var headerRows = new Dictionary<int, PixelRowHints>();
                     var assemblies = new Dictionary<(int Columns, int Upper, int Lower, int Ec, bool Compact), List<PixelRowAssembly>>();
                     var recoveries = new List<PixelRecoveryCandidate>();
-                    foreach (var slope in PixelRowSlopes) {
+                    foreach (var slope in shallowSkew ? PixelShallowRowSlopes : PixelRowSlopes) {
                         if (slope != 0 && !orientationHasStart) break;
                         var rowSets = new Dictionary<(int Columns, bool Compact, int StartBin), PixelRowSet>();
                         var partialSets = new Dictionary<(int Columns, int StartBin), PixelRowSet>();
@@ -113,7 +119,7 @@ public static partial class Pdf417Decoder {
                                     indicatedColumns >= words.Count && indicatedColumns - words.Count <= 1;
                                 if (clipped) compact = true;
                                 if (!regular && indicatedColumns > 0 && indicatedColumns <= 30 &&
-                                    words.Count > 0 && words.Count <= indicatedColumns) {
+                                    words.Count > 0 && (words.Count < indicatedColumns || shallowSkew && words.Count == indicatedColumns)) {
                                     // Unknown suffix positions remain erasures. Complete
                                     // payloads with no right framing are kept separately:
                                     // they need repeated framing elsewhere on the symbol.
