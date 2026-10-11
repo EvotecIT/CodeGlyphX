@@ -2786,13 +2786,13 @@
     "Expected": [
       "00034567890125"
     ],
-    "Actual": [],
-    "Missing": [
-      "00034567890125"
+    "Actual": [
+      "0003456789012"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rss14-1/2.png",
@@ -2801,13 +2801,13 @@
     "Expected": [
       "00821935106427"
     ],
-    "Actual": [],
-    "Missing": [
-      "00821935106427"
+    "Actual": [
+      "0082193510642"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rss14-1/1.png",
@@ -2891,13 +2891,13 @@
     "Expected": [
       "00012345678905"
     ],
-    "Actual": [],
-    "Missing": [
-      "00012345678905"
+    "Actual": [
+      "0001234567890"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rss14-2/7.png",

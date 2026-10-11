@@ -45,11 +45,11 @@ CodeGlyphX currently describes 46 physical symbol formats through `SymbolCapabil
 | Japan Post | Postal | Yes | Yes | No | No | No | No | No | No | No |
 | GS1 DataBar Truncated | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
 | GS1 DataBar Omnidirectional | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
-| GS1 DataBar Stacked | Stacked | Yes | Yes | No | No | No | Encode + decode | No | No | No |
+| GS1 DataBar Stacked | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | No |
 | GS1 DataBar Expanded | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
 | GS1 DataBar Expanded Stacked | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | No |
 | GS1 DataBar Limited | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
-| GS1 DataBar Stacked Omnidirectional | Stacked | Yes | Yes | No | No | No | Encode + decode | No | No | No |
+| GS1 DataBar Stacked Omnidirectional | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | No |
 | MaxiCode | Matrix | Yes | Yes | No | No | No | No | Encode + decode | Encode + decode | No |
 | DotCode | Matrix | Yes | Yes | No | No | No | Encode + decode | Encode + decode | Encode + decode | No |
 | Han Xin Code | Matrix | Yes | Yes | No | No | No | No | Encode + decode | No | No |
