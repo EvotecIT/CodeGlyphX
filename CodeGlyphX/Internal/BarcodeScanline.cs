@@ -452,12 +452,14 @@ internal static partial class BarcodeScanline {
         for (var i = 0; i < thresholds.Length; i++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
             if (retailOnly) {
-                var before = candidates.Count;
-                hasRetailGuards |= TryCollectRetailRunCandidates(luminance, thresholds[i], cancellationToken, candidates, position, isVertical,
+                var evidence = TryCollectRetailRunCandidates(luminance, thresholds[i], cancellationToken, candidates, position, isVertical,
                     retailOnly: true, includeParityRecovery: true);
+                hasRetailGuards |= evidence.HasGuards;
                 // Whole-row pitch hypotheses can preserve a validated add-on, but
                 // only a complete guarded base justifies them in retail recovery.
-                if (candidates.Count == before) continue;
+                // An identical base can have a different add-on at this cutoff.
+                // Cross-threshold deduplication must not hide that hypothesis.
+                if (!evidence.HasNormalizedBase) continue;
             }
             if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out var modules, out var minimumRunModules, out var fitError, out var minimumRunFitError)) {
                 var alternative = ModulesEqual(modules, minimumRunModules) ? Array.Empty<bool>() : modules;
@@ -465,7 +467,7 @@ internal static partial class BarcodeScanline {
                 AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(minimumRunModules, position, isVertical, alternative, minimumRunFitError, fitError));
             }
             if (!retailOnly)
-                hasRetailGuards |= TryCollectRetailRunCandidates(luminance, thresholds[i], cancellationToken, candidates, position, isVertical);
+                hasRetailGuards |= TryCollectRetailRunCandidates(luminance, thresholds[i], cancellationToken, candidates, position, isVertical).HasGuards;
         }
         return TryCollectAdaptiveRetailCandidates(luminance, cancellationToken, candidates, position, isVertical, retailRecovery: retailOnly) || hasRetailGuards;
     }

@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Linq;
+using CodeGlyphX.Rendering.Png;
 using CodeGlyphX.Rendering;
 using Xunit;
 
@@ -79,6 +81,36 @@ public sealed class RetailParityRecoveryTests {
         Assert.True(BarcodeDecoder.TryDecode(row.AsSpan(), width, 1, width * 4, PixelFormat.Rgba32, BarcodeType.UPCA, out var spanDecoded));
         Assert.Equal(expected, spanDecoded.Text);
 #endif
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DecodeAll_EasySymbolDoesNotSuppressRecoveryOfAnotherSymbol(bool defaultFormats) {
+        var hard = ReadFixture("zxing-upca-parity-blur.png", out var hardWidth, out var hardHeight);
+        var easy = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(BarcodeType.UPCA, "03600029145"),
+            new BarcodePngRenderOptions { ModuleSize = 3, QuietZone = 12, HeightModules = 30 },
+            out var easyWidth, out var easyHeight, out _);
+        const int width = 800, height = 480;
+        var pixels = Enumerable.Repeat((byte)255, width * height * 4).ToArray();
+        Place(hard, hardWidth, hardHeight, 500, 120);
+        Place(easy, easyWidth, easyHeight, 20, 220);
+        var expected = new[] { "036000291452", "890444000335" };
+        BarcodeType? type = defaultFormats ? null : BarcodeType.UPCA;
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32, out var array, type));
+        Assert.Equal(expected, array.Where(hit => hit.Type == BarcodeType.UPCA).Select(hit => hit.Text).OrderBy(text => text).ToArray());
+#if NET8_0_OR_GREATER
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels.AsSpan(), width, height, width * 4, PixelFormat.Rgba32, out var span, type));
+        Assert.Equal(expected, span.Where(hit => hit.Type == BarcodeType.UPCA).Select(hit => hit.Text).OrderBy(text => text).ToArray());
+#endif
+        var options = new ScanOptions { Formats = defaultFormats ? null : new[] { SymbolFormat.UpcA },
+            Profile = ScanProfile.Fast, MaxSymbols = 0, EnableTileScan = false, TimeoutMilliseconds = 0 };
+        var scanned = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options);
+        Assert.Equal(expected, scanned.Symbols.Where(hit => hit.Format == SymbolFormat.UpcA).Select(hit => hit.Text).OrderBy(text => text).ToArray());
+        void Place(byte[] source, int sourceWidth, int sourceHeight, int left, int top) {
+            for (var y = 0; y < sourceHeight; y++)
+                Buffer.BlockCopy(source, y * sourceWidth * 4, pixels, ((top + y) * width + left) * 4, sourceWidth * 4);
+        }
     }
 
     private static byte[] ReadFixture(string name, out int width, out int height) {

@@ -331,7 +331,7 @@ public static partial class SymbolScanner {
                 expectedType, barcodeOptions, results, seen);
             return;
         }
-        if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expectedType, barcodeOptions, deadline.Token, options.Deduplicate)) return;
+        if (!BarcodeDecoder.TryDecodeAll(rgba, width, height, width * 4, PixelFormat.Rgba32, out var decoded, expectedType, barcodeOptions, deadline.Token, options.Deduplicate, recoverAfterHit: options.MaxSymbols != 1)) return;
         for (var i = 0; i < decoded.Length; i++) {
             var hit = ResolveRequestedLinearIdentity(decoded[i], expectedTypes, rgba, width, height, candidate: null, cancellationToken: deadline.Token);
             if (hit is null) continue;
@@ -363,7 +363,8 @@ public static partial class SymbolScanner {
                 out var decoded,
                 expected,
                 barcodeOptions,
-                deadline.Token)) return;
+                deadline.Token,
+                recoverAfterHit: options.MaxSymbols != 1)) return;
 
         // BarcodeDecoder's public multi-result contract includes physical type, payload and initialization state. Preserve
         // that behavior after classifying each located DataBar candidate independently.

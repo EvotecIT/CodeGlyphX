@@ -30,7 +30,7 @@ internal static partial class BarcodeScanline {
                 var bias = pass < 2 ? 0 : pass == 2 ? 1 : -1;
                 if (!TryBinarizeRetailRow(luminance, pass == 0 ? small : large, binary, minima, maxima, cancellationToken, bias)) return false;
                 hasRetailGuards |= TryCollectRetailRunCandidates(binary.AsSpan(0, luminance.Length), 128,
-                    cancellationToken, candidates, position, isVertical, localThreshold: true, includeParityRecovery: retailRecovery);
+                    cancellationToken, candidates, position, isVertical, localThreshold: true, includeParityRecovery: retailRecovery).HasGuards;
             }
             return hasRetailGuards;
         } finally {

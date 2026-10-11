@@ -13,7 +13,7 @@ internal static partial class BarcodeScanline {
     private static readonly int[] RetailRecoveryFractions = { 4, 12, 6, 10, 2, 14, 7, 9, 5, 11, 3, 13, 1, 15 };
 
     /// <summary>
-    /// Searches fourteen anchors per axis after ordinary decoding fails, with at
+    /// Searches fourteen anchors per axis when retail recovery is requested, with at
     /// most two adjacent refinements for each guarded retail-shaped anchor.
     /// The caller restricts recovery to complete retail decodes and requires
     /// a matching neighboring row; digit, parity and checksum validation stays intact.
@@ -23,7 +23,7 @@ internal static partial class BarcodeScanline {
         var horizontal = new HashSet<int> { height / 2, height / 3, (int)((long)height * 2 / 3) };
         var vertical = new HashSet<int> { width / 2, width / 3, (int)((long)width * 2 / 3) };
         // Revisit the ordinary positions with constrained parity before widening
-        // coverage. The successful ordinary path never pays for this pass.
+        // coverage. Single-result callers skip this pass after an ordinary hit.
         foreach (var y in new[] { height / 2, height / 3, (int)((long)height * 2 / 3) })
             TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, y, cancellationToken, candidates, retailOnly: true);
         foreach (var x in new[] { width / 2, width / 3, (int)((long)width * 2 / 3) })

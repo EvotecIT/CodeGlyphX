@@ -6,22 +6,33 @@ using CodeGlyphX.Ean;
 namespace CodeGlyphX.Internal;
 
 internal static partial class BarcodeScanline {
+    /// <summary>Threshold-local evidence survives cross-threshold candidate deduplication.</summary>
+    private readonly struct RetailRowEvidence {
+        internal bool HasGuards { get; }
+        internal bool HasNormalizedBase { get; }
+        internal RetailRowEvidence(bool hasGuards, bool hasNormalizedBase) {
+            HasGuards = hasGuards;
+            HasNormalizedBase = hasNormalizedBase;
+        }
+    }
+
     private static readonly int[][] RetailDigitRuns = BuildRetailDigitRuns();
 
     // Photographs contain text, borders, add-ons and varying bar pitch. Locate guarded
     // retail symbols inside a scanline and estimate pitch independently for each digit.
     // The existing decoder remains responsible for parity and checksum validation.
-    private static bool TryCollectRetailRunCandidates(ReadOnlySpan<byte> luminance, int threshold,
+    private static RetailRowEvidence TryCollectRetailRunCandidates(ReadOnlySpan<byte> luminance, int threshold,
         CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, int position, bool isVertical, bool localThreshold = false,
         bool retailOnly = false, bool includeParityRecovery = false) {
-        if (luminance.Length < 51) return false;
+        if (luminance.Length < 51) return default;
         var hasRetailGuards = false;
+        var hasNormalizedBase = false;
         var runs = new List<int>();
         var firstIsBar = luminance[0] < threshold;
         var current = firstIsBar;
         var length = 1;
         for (var i = 1; i < luminance.Length; i++) {
-            if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return default;
             var bar = luminance[i] < threshold;
             if (bar == current) length++;
             else { runs.Add(length); current = bar; length = 1; }
@@ -34,7 +45,7 @@ internal static partial class BarcodeScanline {
             TryCollectExpandedRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
         }
         for (var start = 0; start + 33 <= runs.Count; start++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return default;
             // Also locate inverted symbols; the normal transform path resolves polarity.
             var pitch = (runs[start] + runs[start + 1] + runs[start + 2]) / 3.0;
             if (!RetailGuardMatches(runs, start, 3, pitch) || (start > 0 && runs[start - 1] < pitch * 3)) continue;
@@ -62,8 +73,12 @@ internal static partial class BarcodeScanline {
                 var endPitch = 0.0;
                 for (var i = end - lastGuard; i < end; i++) endPitch += runs[i];
                 endPitch /= lastGuard;
-                if (!RetailGuardMatches(runs, end - lastGuard, lastGuard, endPitch) ||
-                    (end < runs.Count && runs[end] < endPitch * 3)) return;
+                if (!RetailGuardMatches(runs, end - lastGuard, lastGuard, endPitch)) return;
+                var hasQuietZone = end == runs.Count || runs[end] >= endPitch * 3;
+                // The encoder separates an add-on by one module, before the base's
+                // standalone quiet zone. Keep that evidence for full-row validation,
+                // while local base-only candidates retain their quiet-zone check.
+                if (!hasQuietZone && runs[end] < endPitch) return;
                 if (!upce) {
                     var centerAt = start + 3 + leftDigits * 4;
                     var centerPitch = 0.0;
@@ -94,6 +109,8 @@ internal static partial class BarcodeScanline {
                     }
                 }
                 widths.Slice(widthCount, lastGuard).Fill(1); widthCount += lastGuard;
+                hasNormalizedBase = true;
+                if (!hasQuietZone) return;
                 var moduleCount = upce ? 51 : leftDigits == 6 ? 95 : 67;
                 var modules = new bool[moduleCount];
                 var offset = 0;
@@ -106,7 +123,7 @@ internal static partial class BarcodeScanline {
                     isLocalThreshold: localThreshold, isRetailParityFallback: leftParity >= 0 || rightParity >= 0));
             }
         }
-        return hasRetailGuards;
+        return new RetailRowEvidence(hasRetailGuards, hasNormalizedBase);
     }
 
     private static bool RetailGuardMatches(List<int> runs, int start, int count, double pitch) {

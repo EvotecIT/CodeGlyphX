@@ -1,4 +1,5 @@
 using System.Threading;
+using System.Collections.Generic;
 using CodeGlyphX.Internal;
 
 namespace CodeGlyphX;
@@ -18,7 +19,9 @@ public static partial class BarcodeDecoder {
         BarcodeDecodeDiagnostics? diagnostics,
         out BarcodeDecoded decoded,
         out BarcodeScanlineCandidate selected,
-        bool retailOnly = false) {
+        bool retailOnly = false,
+        IReadOnlyList<BarcodeDecoded>? ordinaryHits = null,
+        BarcodeDecoded? requiredDecoded = null) {
         BarcodeDecoded bestDecoded = null!;
         BarcodeScanlineCandidate bestScanline = default;
         var first = candidates[index];
@@ -54,6 +57,17 @@ public static partial class BarcodeDecoder {
         void Consider(bool[] modules, double error, BarcodeScanlineCandidate candidate) {
             if (!TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, diagnostics, out var hit, out var priority)) return;
             if (retailOnly && hit.Type != BarcodeType.EAN && hit.Type != BarcodeType.UPCA && hit.Type != BarcodeType.UPCE) return;
+            // Confirmation looks for this payload even when another symbol has
+            // the preferred fit on the same neighboring physical row.
+            if (requiredDecoded is not null && (hit.Type != requiredDecoded.Type || hit.Text != requiredDecoded.Text)) return;
+            if (ordinaryHits is not null) {
+                foreach (var ordinary in ordinaryHits) {
+                    if (hit.Type != ordinary.Type) continue;
+                    // Recovery seeks additional payloads. A base-only view must
+                    // not split an already validated symbol with an add-on.
+                    if (hit.Text == ordinary.Text || ordinary.Text.StartsWith(hit.Text + "+", System.StringComparison.Ordinal)) return;
+                }
+            }
             if ((candidate.IsLocalThreshold || candidate.IsRetailParityFallback) && !IsCompleteLocalRetailPayload(hit, modules.Length)) return;
             var rank = (candidate.IsRetailParityFallback ? 2 : 0) + (candidate.IsLocalThreshold ? 1 : 0);
             if (rank == bestRank && priority > bestPriority) return;

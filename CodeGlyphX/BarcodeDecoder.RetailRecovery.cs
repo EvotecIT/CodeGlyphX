@@ -35,7 +35,7 @@ public static partial class BarcodeDecoder {
                 for (var i = 0; i < candidates.Length;) {
                     if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
                     if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null,
-                            out var neighbor, out _, retailOnly: true) && neighbor.Type == decoded.Type && neighbor.Text == decoded.Text)
+                            out var neighbor, out _, retailOnly: true, requiredDecoded: decoded) && neighbor.Type == decoded.Type && neighbor.Text == decoded.Text)
                         return true;
                 }
             }

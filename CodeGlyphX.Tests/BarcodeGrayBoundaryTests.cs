@@ -160,6 +160,39 @@ public sealed class BarcodeGrayBoundaryTests {
         Assert.Equal(text, symbol.Text);
     }
 
+    [Theory]
+    [InlineData(BarcodeType.EAN, "590123412345+12", 95)]
+    [InlineData(BarcodeType.EAN, "1234567+12", 67)]
+    [InlineData(BarcodeType.UPCA, "01234567890+12", 95)]
+    [InlineData(BarcodeType.UPCE, "123456+12", 51)]
+    public void Decode_GraySupplementSurvivesConfirmationOfUnchangedBase(BarcodeType type, string input, int baseLength) {
+        var encoded = BarcodeEncoder.Encode(type, input);
+        Assert.True(BarcodeDecoder.TryDecode(encoded.Segments.SelectMany(segment => Enumerable.Repeat(segment.IsBar, segment.Modules)).ToArray(), type, out var expected));
+        var pixels = BarcodePngRenderer.RenderPixels(encoded,
+            new BarcodePngRenderOptions { ModuleSize = 3, QuietZone = 12, HeightModules = 30 },
+            out var width, out var height, out var stride);
+        // Base modules are identical at cutoffs 127 and 128. Only the latter
+        // includes the gray add-on, which must survive neighboring-row confirmation.
+        for (var y = 0; y < height; y++) for (var x = (12 + baseLength) * 3; x < width; x++) {
+            var at = y * stride + x * 4;
+            if (pixels[at] == 0) pixels[at] = pixels[at + 1] = pixels[at + 2] = 127;
+        }
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, type, out var actual));
+        Assert.Equal(expected.Text, actual.Text);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, PixelFormat.Rgba32, out var all, type));
+        Assert.Equal(expected.Text, Assert.Single(all).Text);
+#if NET8_0_OR_GREATER
+        Assert.True(BarcodeDecoder.TryDecode(pixels.AsSpan(), width, height, stride, PixelFormat.Rgba32, type, out var span));
+        Assert.Equal(expected.Text, span.Text);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels.AsSpan(), width, height, stride, PixelFormat.Rgba32, out var spanAll, type));
+        Assert.Equal(expected.Text, Assert.Single(spanAll).Text);
+#endif
+        var format = type == BarcodeType.EAN ? SymbolFormat.Ean : type == BarcodeType.UPCA ? SymbolFormat.UpcA : SymbolFormat.UpcE;
+        var options = new ScanOptions { Formats = new[] { format }, Profile = ScanProfile.Fast,
+            MaxSymbols = 0, EnableTileScan = false, TimeoutMilliseconds = 0 };
+        Assert.Equal(expected.Text, Assert.Single(SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options).Symbols).Text);
+    }
+
     private static void AssertCode128(ScanResult result) {
         Assert.Equal(ScanStatus.Success, result.Status);
         Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
