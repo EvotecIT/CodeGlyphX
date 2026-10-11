@@ -532,22 +532,6 @@ public static partial class BarcodeDecoder {
         return '#';
     }
 
-    private static char GetCode93Checksum(string content, int maxWeight) {
-        var weight = 1;
-        var sum = 0;
-        for (var i = content.Length - 1; i >= 0; i--) {
-            var ch = content[i];
-            if (!Code93Tables.EncodingTable.TryGetValue(ch, out var entry)) return ' ';
-            sum += entry.value * weight;
-            if (++weight > maxWeight) weight = 1;
-        }
-        sum %= 47;
-        foreach (var kvp in Code93Tables.EncodingTable) {
-            if (kvp.Value.value == sum) return kvp.Key;
-        }
-        return ' ';
-    }
-
     private static bool TryStripMsiChecksum(string raw, out string stripped) {
         stripped = raw;
         if (raw.Length >= 2) {

@@ -85,13 +85,7 @@ public static partial class BarcodeDecoder {
 
         if (chars[0] != '*' || chars[chars.Length - 1] != '*') return false;
         var raw = new string(chars, 1, chars.Length - 2);
-        if (raw.Length >= 2) {
-            var c = GetCode93Checksum(raw.Substring(0, raw.Length - 2), 20);
-            var k = GetCode93Checksum(raw.Substring(0, raw.Length - 1), 15);
-            if (raw[raw.Length - 2] == c && raw[raw.Length - 1] == k) {
-                raw = raw.Substring(0, raw.Length - 2);
-            }
-        }
+        if (Code93Tables.HasChecksums(raw.AsSpan())) raw = raw.Substring(0, raw.Length - 2);
 
         text = DecodeCode93Extended(raw);
         return true;

@@ -29,6 +29,7 @@
     <Compile Include="GlobalStateCollection.cs" />
     <Compile Include="TestBudget.cs" />
     <Compile Include="FractionalBarcodeSamplingTests.cs" />
+    <Compile Include="Code93RunLocalizationTests.cs" />
     <Compile Include="BarcodeGrayBoundaryTests.cs" />
     <Compile Include="RetailIlluminationTests.cs" />
     <Compile Include="BarcodePixelSamplingTests.cs" />

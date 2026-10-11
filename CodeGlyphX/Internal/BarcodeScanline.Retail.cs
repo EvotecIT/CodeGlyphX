@@ -28,6 +28,7 @@ internal static partial class BarcodeScanline {
         if (!localThreshold) {
             TryCollectCode128RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
             TryCollectCode39RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
+            TryCollectCode93RunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
             TryCollectExpandedRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
         }
         for (var start = 0; start + 33 <= runs.Count; start++) {
