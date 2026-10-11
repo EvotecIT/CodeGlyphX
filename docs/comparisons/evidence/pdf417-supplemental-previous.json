@@ -411,13 +411,13 @@
     "Expected": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "A larger PDF417 barcode with text and error correction level 8."
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-3/07.png",
