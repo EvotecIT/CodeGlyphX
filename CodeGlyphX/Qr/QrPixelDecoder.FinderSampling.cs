@@ -282,6 +282,13 @@ internal static partial class QrPixelDecoder {
                 var predY = tl.Y + vxY * dxA + vyY * dyA;
 
                 if (QrAlignmentPatternFinder.TryFind(image, invert, predX, predY, vxX, vxY, vyX, vyY, moduleSize, out var ax, out var ay)) {
+                    if (TrySampleWithAlignmentLandmarks(image, invert, dimension, scratch, tl, tr, bl,
+                        a, ax, ay, moduleSize, accept, aggressive, stylized, budget, out result, out var landmarkDiag)) {
+                        diagnostics = new QrPixelDecodeDiagnostics(scale, threshold, invert, candidateCount, candidateTriplesTried, dimension, landmarkDiag);
+                        return true;
+                    }
+                    best = Better(best, landmarkDiag);
+
                     // Convert the alignment center back into an estimated outer bottom-right corner.
                     // The bottom-right alignment center is at (dimension-6.5, dimension-6.5) in module-center coordinates,
                     // i.e. 6.5 modules inward from the outer corner along both axes.

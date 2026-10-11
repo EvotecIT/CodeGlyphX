@@ -4,6 +4,14 @@
   "Copies": "Unmodified",
   "Sources": [
     {
+      "File": "perspective-bookmark.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-1/6.png",
+      "Sha256": "8e6d85ff2f01fc79cdd53eae7099504fbf0c8e208c2868868ecdddf68ae2f7a9d",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
       "File": "contact-photograph.png",
       "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-3/11.png",
       "Sha256": "3eab0098a500a9b50a1f02d0a91dd6d7feed2d27406f9adc73d7306a2bb1910d",
