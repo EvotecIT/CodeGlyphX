@@ -12,6 +12,9 @@ public static partial class Pdf417Decoder {
         CancellationToken token, bool correctPrintGain, out Pdf417Decoded decoded, out bool hasRightPattern) {
         decoded = null!;
         hasRightPattern = false;
+        // No nested deadline scope is opened by this synchronous reader. Keep
+        // the enclosing deadline without an AsyncLocal lookup at every guard.
+        var budget = DecodeBudget.Capture();
         for (var axis = 0; axis < 2; axis++) {
             var down = axis == 0 ? height : width;
             for (var reverse = 0; reverse < 2; reverse++) for (var invert = 0; invert < 2; invert++) {
@@ -27,14 +30,14 @@ public static partial class Pdf417Decoder {
                         if (((lastStop - firstRun) & 1) != 0) lastStop--;
                         var rightPixel = 0;
                         for (var i = 0; i < lastStop; i++) {
-                            if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                            if ((i & 255) == 0 && (token.IsCancellationRequested || budget.IsExpired)) return false;
                             rightPixel += runs[i];
                         }
                         // Rightmost guards get priority when the finite spatial
                         // candidate limit is reached on a busy scanline.
                         for (var stop = lastStop; stop >= firstRun + 16; stop -= 2) {
                             if (stop != lastStop) rightPixel -= runs[stop] + runs[stop + 1];
-                            if (DecodeBudget.ShouldAbort(token)) return false;
+                            if (token.IsCancellationRequested || budget.IsExpired) return false;
                             if (!MatchPixelRuns(runs, stop, PixelStopRuns, 18) ||
                                 !TryReadPixelIndicator(runs, stop - 8, correctPrintGain, out var cluster, out var right)) continue;
                             var logicalRow = right / 30 * 3 + cluster;
@@ -47,7 +50,7 @@ public static partial class Pdf417Decoder {
                             }
                             var words = new List<int> { right };
                             for (var at = stop - 16; at >= firstRun && words.Count <= 30; at -= 8) {
-                                if (DecodeBudget.ShouldAbort(token)) return false;
+                                if (token.IsCancellationRequested || budget.IsExpired) return false;
                                 if (!ReadPixelCodeword(runs, at, cluster, out var word, correctPrintGain: correctPrintGain)) break;
                                 words.Add(word);
                             }
@@ -55,7 +58,7 @@ public static partial class Pdf417Decoder {
                         }
                     }
                     foreach (var set in sets.Values) {
-                        if (DecodeBudget.ShouldAbort(token)) return false;
+                        if (token.IsCancellationRequested || budget.IsExpired) return false;
                         if (!set.TryAssemble(out var rows, out var columns, out var count, out var ec)) continue;
                         hasRightPattern = orientationHasRight = true;
                         if (TryDecodePixelAssembly(rows, columns, count, ec, true, token, out decoded)) return true;
