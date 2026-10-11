@@ -1,0 +1,13 @@
+{
+  "License": "Apache-2.0; full text in ZXING-LICENSE.txt",
+  "Copyright": "ZXing authors",
+  "Copies": "Unmodified",
+  "Sources": [
+    {
+      "File": "contact-photograph.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-3/11.png",
+      "Sha256": "3eab0098a500a9b50a1f02d0a91dd6d7feed2d27406f9adc73d7306a2bb1910d",
+      "Expected": ["MECARD:N:Google 411,;TEL:18665881077;;"]
+    }
+  ]
+}
