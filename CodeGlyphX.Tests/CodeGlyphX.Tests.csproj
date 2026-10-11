@@ -66,6 +66,7 @@
     <Compile Include="DataBarStackedImageScannerTests.cs" />
     <Compile Include="AztecReaderInitializationTests.cs" />
     <Compile Include="AztecPixelSamplingTests.cs" />
+    <Compile Include="MicroQrValidationTests.cs" />
     <Compile Include="BitMatrixTransformTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />
     <Compile Include="QrProceduralArtTests.cs" />
@@ -96,6 +97,7 @@
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
     <EmbeddedResource Include="Fixtures/Aztec/*.png" />
+    <EmbeddedResource Include="Fixtures/MicroQr/*.png" />
     <EmbeddedResource Include="Fixtures/Pdf417/*.png" />
     <EmbeddedResource Include="Fixtures/Linear/excel-asset-register.png" />
     <EmbeddedResource Include="Fixtures/Linear/native-svg-asset.png" />

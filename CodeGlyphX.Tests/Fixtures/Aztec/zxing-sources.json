@@ -56,6 +56,14 @@
         "mailto:zxing@googlegroups.com"
       ],
       "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/aztec-2/10.png"
+    },
+    {
+      "File": "historico.png",
+      "Sha256": "2db5c6fa97f0dd6d72f9e600c843abb77178d0452a5345d0647adcde9822b5c7",
+      "Expected": [
+        "Hist\u00f3rico"
+      ],
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/aztec-1/Historico.png"
     }
   ],
   "Copies": "Unmodified",

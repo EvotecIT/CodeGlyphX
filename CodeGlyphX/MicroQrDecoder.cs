@@ -51,15 +51,35 @@ public static partial class MicroQrDecoder {
             if (bit.Value) eccBytes[i >> 3] |= (byte)(1 << (7 - (i & 7)));
         }
 
-        var codewords = new byte[dataLen + eccLen];
-        Array.Copy(dataBytes, 0, codewords, 0, dataLen);
-        Array.Copy(eccBytes, 0, codewords, dataLen, eccLen);
-        if (!QrReedSolomonDecoder.TryCorrectInPlace(codewords, eccLen)) return false;
-
-        Array.Copy(codewords, 0, dataBytes, 0, dataLen);
+        if (!TryCorrectData(dataBytes, eccBytes, version, ecc)) return false;
         if (!MicroQrPayloadParser.TryParse(dataBytes, dataBits, version, out var payload, out var text)) return false;
 
         result = new MicroQrDecoded(version, ecc, mask, payload, text);
+        return true;
+    }
+
+    private static bool TryCorrectData(byte[] data, byte[] parity, int version, QrErrorCorrectionLevel ecc) {
+        var capacity = MicroQrTables.GetMaxCorrectableErrors(version, ecc);
+        if (capacity == 0) {
+            // M1 uses both parity codewords for detection, never data repair.
+            var expected = QrReedSolomon.ComputeRemainder(data, QrReedSolomon.ComputeDivisor(parity.Length));
+            for (var i = 0; i < parity.Length; i++) if (parity[i] != expected[i]) return false;
+            return true;
+        }
+
+        var codewords = new byte[data.Length + parity.Length];
+        Array.Copy(data, 0, codewords, 0, data.Length);
+        Array.Copy(parity, 0, codewords, data.Length, parity.Length);
+        if (!QrReedSolomonDecoder.TryCorrectInPlace(codewords, parity.Length)) return false;
+
+        // The generic RS solver can repair more errors than the symbol permits.
+        // Count changes in data and parity so the reserved detection capacity remains.
+        var corrected = 0;
+        for (var i = 0; i < codewords.Length; i++) {
+            var original = i < data.Length ? data[i] : parity[i - data.Length];
+            if (codewords[i] != original && ++corrected > capacity) return false;
+        }
+        Array.Copy(codewords, 0, data, 0, data.Length);
         return true;
     }
 

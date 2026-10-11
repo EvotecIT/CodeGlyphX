@@ -1,0 +1,14 @@
+{
+  "Sources": [
+    {
+      "File": "independent-m1.png",
+      "Sha256": "4cc807f3381fb92d7da3a3edf9b08452b811786d732692bade84e7f92d15de7e",
+      "Generator": "BWIPP through bwip-js API",
+      "Source": "https://bwipjs-api.metafloor.com/?bcid=microqrcode&text=12345&version=M1&scale=3&padding=6",
+      "AcquiredUtc": "2026-10-11",
+      "ExpectedVersion": 1,
+      "Expected": ["12345"],
+      "Purpose": "Independent valid M1 image protects interoperability while enforcing detection-only parity. Generated image only; no generator code or runtime dependency is included."
+    }
+  ]
+}
