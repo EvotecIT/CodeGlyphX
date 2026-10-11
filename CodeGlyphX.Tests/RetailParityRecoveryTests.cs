@@ -84,18 +84,22 @@ public sealed class RetailParityRecoveryTests {
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void DecodeAll_EasySymbolDoesNotSuppressRecoveryOfAnotherSymbol(bool defaultFormats) {
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public void DecodeAll_EasySymbolDoesNotSuppressRecoveryOfAnotherSymbol(bool defaultFormats, bool sameBaseWithSupplement) {
         var hard = ReadFixture("zxing-upca-parity-blur.png", out var hardWidth, out var hardHeight);
-        var easy = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(BarcodeType.UPCA, "03600029145"),
+        var easy = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(BarcodeType.UPCA, sameBaseWithSupplement ? "890444000335+12" : "03600029145"),
             new BarcodePngRenderOptions { ModuleSize = 3, QuietZone = 12, HeightModules = 30 },
             out var easyWidth, out var easyHeight, out _);
         const int width = 800, height = 480;
         var pixels = Enumerable.Repeat((byte)255, width * height * 4).ToArray();
-        Place(hard, hardWidth, hardHeight, 500, 120);
-        Place(easy, easyWidth, easyHeight, 20, 220);
-        var expected = new[] { "036000291452", "890444000335" };
+        Place(hard, hardWidth, hardHeight, 500, sameBaseWithSupplement ? 0 : 120);
+        Place(easy, easyWidth, easyHeight, 20, sameBaseWithSupplement ? 300 : 220);
+        var expected = sameBaseWithSupplement
+            ? new[] { "890444000335", "890444000335+12" }
+            : new[] { "036000291452", "890444000335" };
         BarcodeType? type = defaultFormats ? null : BarcodeType.UPCA;
         Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32, out var array, type));
         Assert.Equal(expected, array.Where(hit => hit.Type == BarcodeType.UPCA).Select(hit => hit.Text).OrderBy(text => text).ToArray());

@@ -28,6 +28,7 @@ public static partial class BarcodeDecoder {
         var bestPriority = int.MaxValue;
         var bestRank = int.MaxValue;
         var bestError = double.PositiveInfinity;
+        List<BarcodeDecoded>? supplementsOnRow = null;
         // Collection keeps each physical row/column contiguous. Consume its
         // alternatives together so TryDecodeAll cannot admit them as extra symbols.
         var end = index + 1;
@@ -63,10 +64,25 @@ public static partial class BarcodeDecoder {
             if (ordinaryHits is not null) {
                 foreach (var ordinary in ordinaryHits) {
                     if (hit.Type != ordinary.Type) continue;
-                    // Recovery seeks additional payloads. A base-only view must
-                    // not split an already validated symbol with an add-on.
-                    if (hit.Text == ordinary.Text || ordinary.Text.StartsWith(hit.Text + "+", System.StringComparison.Ordinal)) return;
+                    if (hit.Text != ordinary.Text) continue;
+                    // Suppress a base-only interpretation only when this physical
+                    // scanline also supplies the validated supplement. A different
+                    // row can contain a separate symbol with the same base text.
+                    if (hit.Text.IndexOf('+') >= 0) {
+                        (supplementsOnRow ??= new List<BarcodeDecoded>()).Add(hit);
+                        if (bestDecoded is not null && hit.Type == bestDecoded.Type &&
+                            hit.Text.StartsWith(bestDecoded.Text + "+", System.StringComparison.Ordinal)) {
+                            bestDecoded = null!;
+                            bestPriority = bestRank = int.MaxValue;
+                            bestError = double.PositiveInfinity;
+                        }
+                    }
+                    return;
                 }
+            }
+            if (supplementsOnRow is not null) {
+                foreach (var supplement in supplementsOnRow)
+                    if (hit.Type == supplement.Type && supplement.Text.StartsWith(hit.Text + "+", System.StringComparison.Ordinal)) return;
             }
             if ((candidate.IsLocalThreshold || candidate.IsRetailParityFallback) && !IsCompleteLocalRetailPayload(hit, modules.Length)) return;
             var rank = (candidate.IsRetailParityFallback ? 2 : 0) + (candidate.IsLocalThreshold ? 1 : 0);
