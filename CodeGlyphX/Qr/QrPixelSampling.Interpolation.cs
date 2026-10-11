@@ -52,6 +52,9 @@ internal static partial class QrPixelSampling {
         var l01 = g[y1 * w + x0];
         var l11 = g[y1 * w + x1];
 
+        // A uniform block has the same interpolated value at every fractional position.
+        if (l00 == l10 && l00 == l01 && l00 == l11) return l00;
+
         var l0 = l00 + (l10 - l00) * fx;
         var l1 = l01 + (l11 - l01) * fx;
         var lum = l0 + (l1 - l0) * fy;
@@ -79,6 +82,9 @@ internal static partial class QrPixelSampling {
         var l10 = g[y0 * width + x1];
         var l01 = g[y1 * width + x0];
         var l11 = g[y1 * width + x1];
+
+        // A uniform block has the same interpolated value at every fractional position.
+        if (l00 == l10 && l00 == l01 && l00 == l11) return l00;
 
         var l0 = l00 + (l10 - l00) * fx;
         var l1 = l01 + (l11 - l01) * fx;
