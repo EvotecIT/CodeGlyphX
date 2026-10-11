@@ -34,7 +34,10 @@ internal static class SymbolResultFactory {
     internal static DetectedSymbol From(BarcodeDecoded value, ImageRegion? region = null) {
         if (!SymbolCapabilities.TryFromLegacy(value.Type, out var format))
             throw new System.InvalidOperationException("The decoder returned an unknown physical format.");
-        return new DetectedSymbol(format, value.Text, payloadProfile: IsGs1(format) ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None,
+        var metadata = format == SymbolFormat.Code128 || format == SymbolFormat.Gs1Code128
+            ? new Code128SymbolMetadata(value) : null;
+        return new DetectedSymbol(format, value.Text, metadata: metadata,
+            payloadProfile: IsGs1(format) ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None,
             searchRegion: region);
     }
     private static bool IsGs1(SymbolFormat format) => format == SymbolFormat.Gs1Code128 ||

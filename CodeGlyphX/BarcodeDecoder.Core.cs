@@ -128,8 +128,8 @@ public static partial class BarcodeDecoder {
 
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
-        if (TryDecodeCode128(modules, out var code128, out var isGs1)) {
-            decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128);
+        if (TryDecodeCode128(modules, out var code128, out var isGs1, out var readerInitialization)) {
+            decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128, readerInitialization);
             return true;
         }
         if (cancellationToken.IsCancellationRequested) return false;
@@ -270,14 +270,14 @@ public static partial class BarcodeDecoder {
                 }
                 return false;
             case BarcodeType.Code128:
-                if (TryDecodeCode128(modules, out var code128, out var isGs1)) {
-                    decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128);
+                if (TryDecodeCode128(modules, out var code128, out var isGs1, out var readerInitialization)) {
+                    decoded = new BarcodeDecoded(isGs1 ? BarcodeType.GS1_128 : BarcodeType.Code128, code128, readerInitialization);
                     return true;
                 }
                 return false;
             case BarcodeType.GS1_128:
-                if (TryDecodeCode128(modules, out var gs1, out var isGs1Only) && isGs1Only) {
-                    decoded = new BarcodeDecoded(BarcodeType.GS1_128, gs1);
+                if (TryDecodeCode128(modules, out var gs1, out var isGs1Only, out var gs1ReaderInitialization) && isGs1Only) {
+                    decoded = new BarcodeDecoded(BarcodeType.GS1_128, gs1, gs1ReaderInitialization);
                     return true;
                 }
                 return false;

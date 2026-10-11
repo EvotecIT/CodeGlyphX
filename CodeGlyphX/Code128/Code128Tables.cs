@@ -10,6 +10,7 @@ internal static class Code128Tables {
     public const int CodeC = 99;
     public const int CodeB = 100;
     public const int Fnc1 = 102;
+    public const int Fnc3 = 96;
     public const int Stop = 106;
 
     private static readonly uint[] Patterns = {
