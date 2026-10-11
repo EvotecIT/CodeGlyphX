@@ -42,6 +42,8 @@ def main():
     names += [name for name in ("previous-candidate-corpus.json", "previous-negative-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
     names += sorted(path.name for path in root.glob("pdf417-supplemental-*.json"))
+    if qualification.get("RetailRecoveryProof"):
+        names += sorted(path.name for path in root.glob("retail-*.json"))
     if qualification.get("QrVariation"):
         names += sorted(path.name for path in root.glob("qr-variation-*.json"))
     evidence = output / "evidence"
@@ -96,6 +98,30 @@ def main():
                   "", "The [manifest](evidence/pdf417-supplemental-manifest.json), [current outcomes](evidence/pdf417-supplemental-current.json), [previous outcomes](evidence/pdf417-supplemental-previous.json) and [pinned image/oracle provenance](evidence/pdf417-supplemental-provenance.json) retain the complete set."]
         if supplemental.get("TimingSensitiveGains"):
             lines += ["", "Timing-sensitive changes: " + "; ".join(supplemental["TimingSensitiveGains"]) + ". These outcomes do not establish a decoder accuracy gain."]
+    if qualification.get("RetailRecoveryProof"):
+        retail = qualification["RetailRecoveryProof"]
+        if retail["Source"] != qualification["MeasurementSource"]:
+            raise ValueError("Retail diagnostics differ from the measured source")
+        lines += ["", "## Retail recovery and search cost", "", retail["Scope"], "",
+                  "The 87 positive requests reuse the frozen retail images. These diagnostics help isolate the changed behavior and do not add independent images to the recognition ranking.", "",
+                  "| Reader | Previous positive correct | Current positive correct | Current unexpected-output images |",
+                  "| --- | ---: | ---: | ---: |"]
+        for engine in engines:
+            row = retail["Engines"][engine]["positive"]
+            lines.append(f'| {engine} | {row["PreviousCorrect"]}/87 | {row["Correct"]}/87 | {row["Unexpected"]} |')
+        lines += ["", "Each of 31 fixed negative images is scanned with EAN, UPC-A and UPC-E hints: 93 requests, rather than 93 independent images.", "",
+                  "| Reader | Previous correct rejection | Current correct rejection | Current unexpected output | Current inconclusive |",
+                  "| --- | ---: | ---: | ---: | ---: |"]
+        for engine in engines:
+            row = retail["Engines"][engine]["negative"]
+            lines.append(f'| {engine} | {row["PreviousCorrect"]}/93 | {row["Correct"]}/93 | {row["Unexpected"]} | {row["Inconclusive"]} |')
+        lines += ["", retail["CostLimits"], "",
+                  "| Domain | Previous median ms / nine requests | Current median ms / nine requests | Latency ratio | Previous mean managed MiB | Current mean managed MiB | Allocation ratio | Previous/current correct requests |",
+                  "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
+        for row in retail["Cost"]:
+            lines.append(f'| {row["Domain"]} | {row["BaselineMedianMs"]:.2f} | {row["CurrentMedianMs"]:.2f} | {row["LatencyRatio"]:.2f}x | {row["BaselineAllocatedBytes"] / 1048576:.2f} | {row["CurrentAllocatedBytes"] / 1048576:.2f} | {row["AllocationRatio"]:.2f}x | {row["PreviousCorrectRequests"]:g}/9 → {row["CurrentCorrectRequests"]:g}/9 |')
+        lines += ["", "The previous binary invents a UPC-E payload on one of these requests. Correctness differs, and extra recovery work costs time and allocation. These measurements do not establish a speed gain or a population false-positive rate.", "",
+                  "[Positive requests](evidence/retail-positive-diagnostic.json) · [negative requests](evidence/retail-negative-diagnostic.json) · [current outcomes](evidence/retail-negative-current.json) · [CCD0 raw cost samples](evidence/retail-cost-ccd0-result.json) · [CCD1 raw cost samples](evidence/retail-cost-ccd1-result.json)."]
     if qualification.get("AttributionLimits"):
         lines += ["", qualification["AttributionLimits"]]
     if "CorpusHostCpuBeforeScans" in qualification:

@@ -113,6 +113,24 @@ def build_website_data(root):
             supplemental_rows.append({"engine": engine, "before": result["PreviousCorrect"],
                                       "correct": result["Correct"], "images": supplemental["Images"],
                                       "unexpected": result["UnexpectedImages"]})
+    retail = qualification.get("RetailRecoveryProof")
+    retail_rows, retail_cost = [], []
+    if retail:
+        if retail["Source"] != qualification["MeasurementSource"]:
+            raise ValueError("Retail diagnostics differ from the qualified source")
+        for engine in engines:
+            positive, negative = (retail["Engines"][engine][kind] for kind in ("positive", "negative"))
+            retail_rows.append({"engine": engine, "positive_before": positive["PreviousCorrect"],
+                                "positive": positive["Correct"], "positive_unexpected": positive["Unexpected"],
+                                "negative_before": negative["PreviousCorrect"], "negative": negative["Correct"],
+                                "negative_unexpected": negative["Unexpected"], "inconclusive": negative["Inconclusive"]})
+        for row in retail["Cost"]:
+            retail_cost.append({"domain": row["Domain"].upper(), "before_ms": f'{row["BaselineMedianMs"]:.2f}',
+                                "current_ms": f'{row["CurrentMedianMs"]:.2f}', "latency_ratio": f'{row["LatencyRatio"]:.2f}',
+                                "before_mib": f'{row["BaselineAllocatedBytes"] / 1048576:.2f}',
+                                "current_mib": f'{row["CurrentAllocatedBytes"] / 1048576:.2f}',
+                                "allocation_ratio": f'{row["AllocationRatio"]:.2f}',
+                                "before_correct": f'{row["PreviousCorrectRequests"]:g}', "current_correct": f'{row["CurrentCorrectRequests"]:g}'})
     return {"date": generation["StartedUtc"][:10], "source": qualification["MeasurementSource"],
             "versions": qualification["Versions"], "cpu": qualification["Cpu"]["Name"].strip(),
             "png_wins": png_wins, "png_cases": 6, "module_cpp_wins": module_cpp_wins,
@@ -120,6 +138,7 @@ def build_website_data(root):
             "recognition": recognition, "formats": formats, "domains": domains,
             "format_scope_notes": [qualification["DataBarStackedDiscovery"]["PublicNote"]] if qualification.get("DataBarStackedDiscovery") else [],
             "negative_followup": negative_followup, "supplemental_pdf417": supplemental_rows,
+            "retail": retail_rows, "retail_cost": retail_cost,
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 
 
