@@ -48,9 +48,11 @@ def main():
         names += sorted(path.name for path in root.glob("pdf417-cost-*.json"))
     if qualification.get("QrAlignmentProof") or qualification.get("HistoricalQrAlignmentProof"):
         names.append("qr-alignment-equivalence.json")
-    if qualification.get("Pdf417CacheCostProof"):
+    if qualification.get("Pdf417CacheCostProof") or qualification.get("HistoricalPdf417CacheCostProof"):
         names += ["pdf417-cache-cost-proof.json", "pdf417-cache-controls-manifest.json", "pdf417-cache-checks-previous.json", "pdf417-cache-checks-current.json", "pdf417-cache-pressure-previous.json", "pdf417-cache-pressure-current.json"]
         names += sorted(p.name for p in root.glob("pdf417-cache-cost-*-result.json"))
+    if qualification.get("CodabarRunRecoveryProof"):
+        names += sorted(p.name for p in root.glob("codabar-*.json"))
     if qualification.get("NegativeSearchCostProof"):
         names.append("negative-search-cost-proof.json")
     if qualification.get("MaxiCodeImageProof"):
@@ -145,11 +147,13 @@ def main():
                   "The scanner verifies circular finder bands, samples the staggered module grid and uses the existing primary and secondary error correction. It accepts planar rotation and inverted polarity, and can recover small damage to fixed orientation modules. The existing result carries secondary text and bytes, typed carrier metadata and the searched source region.", "",
                   maxi["TextContract"], "", maxi["Evidence"], "", maxi["Limits"], "",
                   "The [MaxiCode proof](evidence/maxicode-image-proof.json) records source hashes and search bounds. The capability catalog advertises one-symbol image scanning without geometry. Independent fixture tests do not establish coverage of every numeric MaxiCode mode; fixture filenames are not encoding-mode evidence."]
-    cache = qualification.get("Pdf417CacheCostProof")
+    historical_cache = not qualification.get("Pdf417CacheCostProof")
+    cache = qualification.get("Pdf417CacheCostProof") or qualification.get("HistoricalPdf417CacheCostProof")
     if cache:
         decisions = cache["DecisionEquivalence"]
-        if (cache["Source"] != qualification["MeasurementSource"]
-                or cache["CoreSha256"] != qualification["CandidateCoreSha256"] or decisions["Mismatches"] != 0):
+        if (decisions["Mismatches"] != 0 or (not historical_cache and
+                (cache["Source"] != qualification["MeasurementSource"]
+                 or cache["CoreSha256"] != qualification["CandidateCoreSha256"]))):
             raise ValueError("PDF417 cache proof differs from the measured candidate")
         old_cache = cache["InstrumentedBaseline"]["LargeCaches"][0]
         new_cache = cache["InstrumentedCandidate"]["LargeCaches"][0]
@@ -160,10 +164,29 @@ def main():
                   "The paired control batch contains the same two negative images with PDF417-only and all-format hints: four requests, each with the original 1,500 ms allowance. Correctness and completion accompany cost.", "",
                   "| Domain | Previous median ms | Current median ms | Current/previous | Previous/current mean managed bytes | Previous/current mean correct requests | Previous/current mean inconclusive requests |",
                   "|---|---:|---:|---:|---:|---:|---:|"]
+        if historical_cache:
+            lines.insert(len(lines) - 2, f'Historical diagnostic and paired-control measurements from source `{cache["Source"]}`. These counts and costs were not rerun for the current Codabar candidate; the current corpus and whole-image costs below are rerun separately.')
+            lines.insert(len(lines) - 2, "")
         for row in cache["PairedControls"]:
             old, now = row["PreviousMetrics"], row["CurrentMetrics"]
             lines.append(f'| {row["Domain"].upper()} | {row["PreviousMedianMs"]:.3f} | {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["PreviousMeanAllocatedBytes"]:,.0f} / {row["CurrentMeanAllocatedBytes"]:,.0f} | {old["CorrectImages"]:.3f} / {now["CorrectImages"]:.3f} | {old["InconclusiveImages"]:.3f} / {now["InconclusiveImages"]:.3f} |')
         lines += ["", cache["Limits"], "", "[Cache checks, counts and paired costs](evidence/pdf417-cache-cost-proof.json). Whole-image comparison results remain the practical measure of scanner cost and completion."]
+    codabar = qualification.get("CodabarRunRecoveryProof")
+    if codabar:
+        if codabar["Source"] != qualification["MeasurementSource"] or codabar["CoreSha256"] != qualification["CandidateCoreSha256"]:
+            raise ValueError("Codabar proof differs from the measured candidate")
+        main = codabar["MainCorpus"]
+        lines += ["", "## Codabar pixel-run recovery", "",
+                  f'The same six Codabar images decode correctly ({main["Correct"]}/{main["Images"]}), versus {main["PreviousCorrect"]}/{main["Images"]} previously. Two previously failing photographs now pass the hinted decoder, unrestricted decoder and unified scanner.', "",
+                  codabar["Changes"][0], "",
+                  "| Engine | Previous/current main diagnostic positives / 6 | Previous/current completed negatives / 31 | Previous/current supplemental positives / 5 | Current unexpected diagnostic/supplemental images |",
+                  "|---|---:|---:|---:|---:|"]
+        for engine, row in codabar["Diagnostics"]["diagnostic"].items():
+            old, now = row["Previous"], row["Current"]
+            sup = codabar["Diagnostics"]["supplemental"][engine]
+            lines.append(f'| {engine} | {old["CorrectPositive"]} / {now["CorrectPositive"]} | {old["CorrectNegative"]} / {now["CorrectNegative"]} | {sup["Previous"]["CorrectPositive"]} / {sup["Current"]["CorrectPositive"]} | {now["UnexpectedImages"]} / {sup["Current"]["UnexpectedImages"]} |')
+        lines += ["", "Six new image-entrypoint regressions fail on the old core and pass on the candidate. Sixteen focused cases per framework additionally cover print gain, punctuation, orientation, polarity and malformed symbols.", "",
+                  codabar["Limits"], "", "[Codabar proof and provenance](evidence/codabar-run-recovery-proof.json) · [Supplemental input provenance](evidence/codabar-supplemental-provenance.json)."]
     negative_cost = qualification.get("NegativeSearchCostProof")
     if negative_cost:
         decisions = negative_cost["DecisionEquivalence"]

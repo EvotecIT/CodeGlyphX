@@ -210,15 +210,17 @@ def build_website_data(root):
         maxicode_image = {"correct": maxi["Correct"], "images": maxi["Images"], "before": maxi["PreviousCorrect"],
                           "limits": maxi["Limits"], "evidence": maxi["Evidence"], "text_contract": maxi["TextContract"]}
     pdf417_cache = {}
-    cache = qualification.get("Pdf417CacheCostProof")
+    historical_cache = not qualification.get("Pdf417CacheCostProof")
+    cache = qualification.get("Pdf417CacheCostProof") or qualification.get("HistoricalPdf417CacheCostProof")
     if cache:
         decisions = cache["DecisionEquivalence"]
-        if (cache["Source"] != qualification["MeasurementSource"]
-                or cache["CoreSha256"] != qualification["CandidateCoreSha256"] or decisions["Mismatches"] != 0):
+        if (decisions["Mismatches"] != 0 or (not historical_cache and
+                (cache["Source"] != qualification["MeasurementSource"]
+                 or cache["CoreSha256"] != qualification["CandidateCoreSha256"]))):
             raise ValueError("PDF417 cache proof differs from the qualified source")
         old_cache = cache["InstrumentedBaseline"]["LargeCaches"][0]
         new_cache = cache["InstrumentedCandidate"]["LargeCaches"][0]
-        pdf417_cache = {"cases": f'{decisions["Cases"]:,}', "previous_lines": f'{old_cache["Entries"]:,}',
+        pdf417_cache = {"historical": historical_cache, "source": cache["Source"], "source_short": cache["Source"][:8], "cases": f'{decisions["Cases"]:,}', "previous_lines": f'{old_cache["Entries"]:,}',
                         "current_lines": f'{new_cache["Entries"]:,}', "previous_rejections": f'{old_cache["EntryRejections"]:,}',
                         "previous_pixels": f'{old_cache["SampledPixels"]:,}', "current_pixels": f'{new_cache["SampledPixels"]:,}',
                         "limits": cache["Limits"],
@@ -230,6 +232,20 @@ def build_website_data(root):
                                   "current_correct": f'{row["CurrentMetrics"]["CorrectImages"]:.2f}',
                                   "previous_unfinished": f'{row["PreviousMetrics"]["InconclusiveImages"]:.2f}',
                                   "current_unfinished": f'{row["CurrentMetrics"]["InconclusiveImages"]:.2f}'} for row in cache["PairedControls"]]}
+    codabar_run_recovery = {}
+    codabar = qualification.get("CodabarRunRecoveryProof")
+    if codabar:
+        if codabar["Source"] != qualification["MeasurementSource"] or codabar["CoreSha256"] != qualification["CandidateCoreSha256"]:
+            raise ValueError("Codabar proof differs from the qualified source")
+        codabar_run_recovery = {"before": codabar["MainCorpus"]["PreviousCorrect"], "correct": codabar["MainCorpus"]["Correct"],
+                               "images": codabar["MainCorpus"]["Images"], "limits": codabar["Limits"], "rows": []}
+        for engine, row in codabar["Diagnostics"]["diagnostic"].items():
+            old, now = row["Previous"], row["Current"]
+            sup = codabar["Diagnostics"]["supplemental"][engine]
+            codabar_run_recovery["rows"].append({"engine": engine, "before": old["CorrectPositive"], "correct": now["CorrectPositive"],
+                "negative_before": old["CorrectNegative"], "negative_correct": now["CorrectNegative"],
+                "supplemental_before": sup["Previous"]["CorrectPositive"], "supplemental_correct": sup["Current"]["CorrectPositive"],
+                "unexpected": now["UnexpectedImages"], "supplemental_unexpected": sup["Current"]["UnexpectedImages"]})
     negative_search_cost = {}
     negative_cost = qualification.get("NegativeSearchCostProof")
     if negative_cost:
@@ -266,7 +282,7 @@ def build_website_data(root):
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
             "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,
-            "negative_search_cost": negative_search_cost, "pdf417_cache": pdf417_cache,
+            "negative_search_cost": negative_search_cost, "pdf417_cache": pdf417_cache, "codabar_run_recovery": codabar_run_recovery,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 

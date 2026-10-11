@@ -231,13 +231,13 @@
     "Expected": [
       "3419500"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "3419500"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "codabar-1/01.png",
@@ -261,13 +261,13 @@
     "Expected": [
       "123455"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "123455"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "code128-1/2.png",
