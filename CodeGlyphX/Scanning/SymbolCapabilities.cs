@@ -55,7 +55,7 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Gs1DataBarOmnidirectional, "GS1 DataBar Omnidirectional", SymbolFamily.Linear, BarcodeType.GS1DataBarOmni,
             ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Gs1DataBarStacked, "GS1 DataBar Stacked", SymbolFamily.Stacked, BarcodeType.GS1DataBarStacked,
-            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+            Image | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Gs1DataBarExpanded, "GS1 DataBar Expanded", SymbolFamily.Linear, BarcodeType.GS1DataBarExpanded,
             ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Gs1DataBarExpandedStacked, "GS1 DataBar Expanded Stacked", SymbolFamily.Stacked, BarcodeType.GS1DataBarExpandedStacked,
@@ -63,7 +63,7 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Gs1DataBarLimited, "GS1 DataBar Limited", SymbolFamily.Linear, BarcodeType.GS1DataBarLimited,
             ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Gs1DataBarStackedOmnidirectional, "GS1 DataBar Stacked Omnidirectional", SymbolFamily.Stacked, BarcodeType.GS1DataBarStackedOmni,
-            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+            Image | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.MaxiCode, "MaxiCode", SymbolFamily.Matrix, BarcodeType.MaxiCode,
             Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),

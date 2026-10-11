@@ -61,6 +61,7 @@
     <Compile Include="DataMatrixOrientationTests.cs" />
     <Compile Include="DataMatrixPerspectiveTests.cs" />
     <Compile Include="DataBarExpandedImageScannerTests.cs" />
+    <Compile Include="DataBarStackedImageScannerTests.cs" />
     <Compile Include="AztecReaderInitializationTests.cs" />
     <Compile Include="BitMatrixTransformTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />

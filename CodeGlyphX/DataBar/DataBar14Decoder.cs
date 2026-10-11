@@ -6,7 +6,7 @@ namespace CodeGlyphX.DataBar;
 /// <summary>
 /// Decodes GS1 DataBar-14 symbols (Truncated / Omnidirectional / Stacked / Stacked Omnidirectional).
 /// </summary>
-public static class DataBar14Decoder {
+public static partial class DataBar14Decoder {
     /// <summary>
     /// Attempts to decode a GS1 DataBar-14 Truncated symbol from a <see cref="Barcode1D">Barcode1D</see>.
     /// </summary>

@@ -49,6 +49,7 @@ public static partial class SymbolScanner {
         if (requested.Contains(SymbolFormat.QrCode)) count += 3;
         if (requested.Contains(SymbolFormat.MicroQrCode)) count++;
         if (requested.Contains(SymbolFormat.Gs1DataBarExpandedStacked)) count++;
+        if (requested.Contains(SymbolFormat.Gs1DataBarStacked) || requested.Contains(SymbolFormat.Gs1DataBarStackedOmnidirectional)) count++;
         foreach (var format in requested) {
             if (SymbolCapabilities.Get(format).Family != SymbolFamily.Linear) continue;
             count++;
