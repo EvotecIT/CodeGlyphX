@@ -13,11 +13,12 @@ internal static class CorpusReaders {
         completion = "Completed";
         if (engine == "CodeGlyphX") {
             var options = robust ? ScanOptions.Robust(1500) : ScanOptions.Balanced(500);
-            // RSS-14 is a physical family in both comparison readers. Its frozen
-            // image group includes linear and stacked layouts, so use the same scope.
+            // Comparison hints name physical families. CODE_128 includes GS1-128;
+            // RSS-14 includes both linear and stacked layouts in the frozen corpus.
             options.Formats = format == "All" ? null : format == "Gs1DataBarOmnidirectional"
                 ? new[] { SymbolFormat.Gs1DataBarOmnidirectional, SymbolFormat.Gs1DataBarTruncated,
                     SymbolFormat.Gs1DataBarStacked, SymbolFormat.Gs1DataBarStackedOmnidirectional }
+                : format == "Code128" ? new[] { SymbolFormat.Code128, SymbolFormat.Gs1Code128 }
                 : new[] { Enum.Parse<SymbolFormat>(format == "Ean8" ? "Ean" : format) };
             options.MaxSymbols = multiple ? 32 : 1;
             options.Image = new ImageDecodeOptions { MaxDimension = 0 };
