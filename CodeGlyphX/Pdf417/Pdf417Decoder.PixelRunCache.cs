@@ -10,7 +10,9 @@ public static partial class Pdf417Decoder {
     // Keep a bounded, per-image cache across orientations and the print-gain retry.
     private sealed class PixelRunCache {
         private const int MaximumCacheBytes = 8 * 1024 * 1024;
-        private const int MaximumEntries = 8192;
+        // Let tilted lines share the byte allowance instead of exhausting the
+        // entry limit while most of that allowance is still unused.
+        private const int MaximumEntries = 32768;
         private const int EntryOverheadBytes = 160;
         private readonly bool[] _pixels;
         private readonly int _width;
@@ -19,9 +21,9 @@ public static partial class Pdf417Decoder {
         private int _bytes;
 
         private sealed class CachedRuns {
-            internal readonly int[] Widths;
+            internal readonly Array Widths;
             internal readonly bool First;
-            internal CachedRuns(int[] widths, bool first) { Widths = widths; First = first; }
+            internal CachedRuns(Array widths, bool first) { Widths = widths; First = first; }
         }
 
         internal PixelRunCache(bool[] pixels, int width, int height) {
@@ -38,25 +40,47 @@ public static partial class Pdf417Decoder {
                 first = cached.First;
                 if (reverse && (cached.Widths.Length & 1) == 0) first = !first;
                 if (invert) first = !first;
-                for (var i = 0; i < cached.Widths.Length; i++) {
-                    if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
-                    runs.Add(cached.Widths[reverse ? cached.Widths.Length - 1 - i : i]);
+                if (cached.Widths is ushort[] compact) {
+                    for (var i = 0; i < compact.Length; i++) {
+                        if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                        runs.Add(compact[reverse ? compact.Length - 1 - i : i]);
+                    }
+                } else {
+                    var widths = (int[])cached.Widths;
+                    for (var i = 0; i < widths.Length; i++) {
+                        if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                        runs.Add(widths[reverse ? widths.Length - 1 - i : i]);
+                    }
                 }
                 return true;
             }
             if (!TryReadPixelRuns(_pixels, _width, _height, axis, reverse, invert, line, slope, runs, token, out first)) return false;
-            var bytes = (long)runs.Count * sizeof(int) + EntryOverheadBytes;
+            // Every run is at most the scanline length, including tilted lines
+            // padded with light pixels. Keep full widths for larger images.
+            var useCompact = (axis == 0 ? _width : _height) <= ushort.MaxValue;
+            var bytes = (long)runs.Count * (useCompact ? sizeof(ushort) : sizeof(int)) + EntryOverheadBytes;
             if (_lines.Count >= MaximumEntries || bytes > MaximumCacheBytes - _bytes) return true;
-            var widths = new int[runs.Count];
-            for (var i = 0; i < widths.Length; i++) {
-                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
-                widths[i] = runs[reverse ? widths.Length - 1 - i : i];
+            Array stored;
+            if (useCompact) {
+                var widths = new ushort[runs.Count];
+                for (var i = 0; i < widths.Length; i++) {
+                    if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                    widths[i] = (ushort)runs[reverse ? widths.Length - 1 - i : i];
+                }
+                stored = widths;
+            } else {
+                var widths = new int[runs.Count];
+                for (var i = 0; i < widths.Length; i++) {
+                    if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                    widths[i] = runs[reverse ? widths.Length - 1 - i : i];
+                }
+                stored = widths;
             }
             // Canonical entries run forward without inversion, including the
             // out-of-bounds light pixels on tilted lines.
             var canonicalFirst = invert ? !first : first;
-            if (reverse && (widths.Length & 1) == 0) canonicalFirst = !canonicalFirst;
-            _lines.Add(key, new CachedRuns(widths, canonicalFirst));
+            if (reverse && (stored.Length & 1) == 0) canonicalFirst = !canonicalFirst;
+            _lines.Add(key, new CachedRuns(stored, canonicalFirst));
             _bytes += (int)bytes;
             return true;
         }
