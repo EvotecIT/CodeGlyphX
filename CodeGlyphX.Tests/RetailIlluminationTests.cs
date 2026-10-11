@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -40,7 +41,8 @@ public sealed class RetailIlluminationTests {
     [Theory]
     [InlineData("zxing-striped-negative-14.png")]
     [InlineData("zxing-striped-negative-15.png")]
-    public void Scan_StripedTexture_CompletesWithoutInventingRetailPayload(string name) {
+    [InlineData("zxing-noise-negative-03.png")]
+    public void Scan_Texture_CompletesWithoutInventingRetailPayload(string name) {
         using var fixture = typeof(RetailIlluminationTests).Assembly.GetManifestResourceStream("CodeGlyphX.Tests.Fixtures.Linear." + name);
         Assert.NotNull(fixture);
         using var buffer = new MemoryStream();
@@ -50,6 +52,15 @@ public sealed class RetailIlluminationTests {
         var result = SymbolScanner.Scan(buffer.ToArray(), options);
         Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
         Assert.Empty(result.Symbols);
+        var pixels = ImageReader.DecodeRgba32(buffer.ToArray(), out var width, out var height);
+        foreach (var type in new[] { BarcodeType.EAN, BarcodeType.UPCA, BarcodeType.UPCE }) {
+            Assert.False(BarcodeDecoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32, type, out _));
+            Assert.False(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32, out _, type));
+#if NET8_0_OR_GREATER
+            Assert.False(BarcodeDecoder.TryDecode(pixels.AsSpan(), width, height, width * 4, PixelFormat.Rgba32, type, out _));
+            Assert.False(BarcodeDecoder.TryDecodeAll(pixels.AsSpan(), width, height, width * 4, PixelFormat.Rgba32, out _, type));
+#endif
+        }
     }
 
     [Fact]

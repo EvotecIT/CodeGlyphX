@@ -17,11 +17,13 @@ public static partial class BarcodeDecoder {
         CancellationToken cancellationToken,
         BarcodeDecodeDiagnostics? diagnostics,
         out BarcodeDecoded decoded,
-        out BarcodeScanlineCandidate selected) {
+        out BarcodeScanlineCandidate selected,
+        bool retailOnly = false) {
         BarcodeDecoded bestDecoded = null!;
         BarcodeScanlineCandidate bestScanline = default;
         var first = candidates[index];
         var bestPriority = int.MaxValue;
+        var bestRank = int.MaxValue;
         var bestError = double.PositiveInfinity;
         // Collection keeps each physical row/column contiguous. Consume its
         // alternatives together so TryDecodeAll cannot admit them as extra symbols.
@@ -30,11 +32,15 @@ public static partial class BarcodeDecoder {
         for (var i = index; i < end; i++) {
             var candidate = candidates[i];
             if (DecodeBudget.ShouldAbort(cancellationToken)) break;
-            // Local illumination is a fallback for the same physical scanline.
-            // Its residuals must not displace a globally validated payload or supplement.
-            if (candidate.IsLocalThreshold && bestDecoded is not null && !bestScanline.IsLocalThreshold) continue;
+            // Preserve an ordinary validated interpretation before considering
+            // parity-constrained recovery. Within either group, local illumination
+            // remains a fallback for the same physical row or column.
+            var rank = (candidate.IsRetailParityFallback ? 2 : 0) + (candidate.IsLocalThreshold ? 1 : 0);
+            if (rank > bestRank) continue;
             if (candidate.IsLocalThreshold && expectedType.HasValue &&
                 expectedType != BarcodeType.EAN && expectedType != BarcodeType.UPCA && expectedType != BarcodeType.UPCE) continue;
+            if (candidate.IsRetailParityFallback && expectedType.HasValue &&
+                expectedType != BarcodeType.EAN && expectedType != BarcodeType.UPCA) continue;
             Consider(candidate.Modules, candidate.FitError, candidate);
             if (candidate.AlternativeModules.Length > 0 && !DecodeBudget.ShouldAbort(cancellationToken)) {
                 Consider(candidate.AlternativeModules, candidate.AlternativeFitError, candidate);
@@ -47,10 +53,12 @@ public static partial class BarcodeDecoder {
 
         void Consider(bool[] modules, double error, BarcodeScanlineCandidate candidate) {
             if (!TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, diagnostics, out var hit, out var priority)) return;
-            if (candidate.IsLocalThreshold && !IsCompleteLocalRetailPayload(hit, modules.Length)) return;
-            if (priority > bestPriority) return;
+            if (retailOnly && hit.Type != BarcodeType.EAN && hit.Type != BarcodeType.UPCA && hit.Type != BarcodeType.UPCE) return;
+            if ((candidate.IsLocalThreshold || candidate.IsRetailParityFallback) && !IsCompleteLocalRetailPayload(hit, modules.Length)) return;
+            var rank = (candidate.IsRetailParityFallback ? 2 : 0) + (candidate.IsLocalThreshold ? 1 : 0);
+            if (rank == bestRank && priority > bestPriority) return;
             var preserveSupplement = false;
-            if (priority == bestPriority && bestDecoded is not null && hit.Type == bestDecoded.Type &&
+            if (rank == bestRank && priority == bestPriority && bestDecoded is not null && hit.Type == bestDecoded.Type &&
                 (hit.Type == BarcodeType.EAN || hit.Type == BarcodeType.UPCA || hit.Type == BarcodeType.UPCE)) {
                 // A guarded local candidate can cover only the base symbol. A complete,
                 // parity-validated supplement from the same scanline must not be discarded
@@ -58,15 +66,20 @@ public static partial class BarcodeDecoder {
                 if (bestDecoded.Text.StartsWith(hit.Text + "+", System.StringComparison.Ordinal)) return;
                 preserveSupplement = hit.Text.StartsWith(bestDecoded.Text + "+", System.StringComparison.Ordinal);
             }
-            if (priority == bestPriority && !preserveSupplement && error >= bestError) return;
+            if (rank == bestRank && priority == bestPriority && !preserveSupplement && error >= bestError) return;
+            bestRank = rank;
             bestPriority = priority;
             bestError = error;
             bestDecoded = hit;
             // Located consumers need the modules that actually decoded, rather
             // than the other pitch's length when classifying the same scanline.
-            bestScanline = new BarcodeScanlineCandidate(modules, candidate.Position, candidate.IsVertical, isLocalThreshold: candidate.IsLocalThreshold);
+            bestScanline = new BarcodeScanlineCandidate(modules, candidate.Position, candidate.IsVertical,
+                isLocalThreshold: candidate.IsLocalThreshold, isRetailParityFallback: candidate.IsRetailParityFallback);
         }
     }
+
+    private static bool ShouldTryRetailRecovery(BarcodeType? expectedType) =>
+        !expectedType.HasValue || expectedType == BarcodeType.EAN || expectedType == BarcodeType.UPCA || expectedType == BarcodeType.UPCE;
 
     private static bool IsCompleteLocalRetailPayload(BarcodeDecoded decoded, int moduleCount) {
         // A local run candidate already has the complete guards for one base
