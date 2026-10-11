@@ -13,6 +13,9 @@ internal static partial class QrPixelDecoder {
         public int BudgetMilliseconds { get; }
         private readonly CancellationToken _cancellationToken;
         private readonly bool _hasCancellation;
+        private readonly global::CodeGlyphX.Internal.DecodeBudgetState _enclosingDeadline;
+        private readonly long _effectiveDeadline;
+        private readonly bool _hasEffectiveDeadline;
 
         /// <summary>Creates a local allowance that can shorten, but never extend, a parent deadline.</summary>
         public DecodeBudget(int budgetMilliseconds, CancellationToken cancellationToken, DecodeBudget? parent = null) {
@@ -31,18 +34,29 @@ internal static partial class QrPixelDecoder {
                 Deadline = shared.Deadline;
                 BudgetMilliseconds = budgetMilliseconds > 0 ? Math.Min(budgetMilliseconds, shared.BudgetMilliseconds) : shared.BudgetMilliseconds;
             }
+            // The enclosing scope is fixed for this pass. Capture it once rather than
+            // reading AsyncLocal for every module, keeping the earliest monotonic limit.
+            _enclosingDeadline = global::CodeGlyphX.Internal.DecodeBudget.Capture();
+            _hasEffectiveDeadline = Enabled || _enclosingDeadline.Enabled;
+            _effectiveDeadline = Enabled ? Deadline : _enclosingDeadline.DeadlineTicks;
+            if (_enclosingDeadline.Enabled && (!Enabled || _enclosingDeadline.DeadlineTicks < _effectiveDeadline))
+                _effectiveDeadline = _enclosingDeadline.DeadlineTicks;
+            if (parent is { } bounded && bounded._hasEffectiveDeadline &&
+                (!_hasEffectiveDeadline || bounded._effectiveDeadline < _effectiveDeadline)) {
+                _hasEffectiveDeadline = true;
+                _effectiveDeadline = bounded._effectiveDeadline;
+            }
         }
 
         public bool IsExpired => (_hasCancellation && _cancellationToken.IsCancellationRequested) ||
-                                 global::CodeGlyphX.Internal.DecodeBudget.IsExpired ||
-                                 (Enabled && Stopwatch.GetTimestamp() > Deadline);
+                                 (_hasEffectiveDeadline && Stopwatch.GetTimestamp() >= _effectiveDeadline);
 
         public bool IsCancelled => _hasCancellation && _cancellationToken.IsCancellationRequested;
         public bool CanCancel => _hasCancellation;
 
         public bool IsNearDeadline(int milliseconds) {
             if ((_hasCancellation && _cancellationToken.IsCancellationRequested) ||
-                global::CodeGlyphX.Internal.DecodeBudget.IsExpired) return true;
+                _enclosingDeadline.IsExpired) return true;
             if (!Enabled) return false;
             var remaining = Deadline - Stopwatch.GetTimestamp();
             if (remaining <= 0) return true;

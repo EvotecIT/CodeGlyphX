@@ -83,7 +83,8 @@ public static partial class Pdf417Decoder {
             var sy = (int)(roundCenters ? Math.Round(centerY) : Math.Floor(centerY));
             sy = Clamp(sy, 0, height - 1);
             for (var x = 0; x < widthModules; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
+                // Bound cancellation latency to 32 samples, as in the perspective sampler.
+                if ((x & 31) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return modules;
                 var centerX = left + (x + 0.5) * stepX;
                 var sx = (int)(roundCenters ? Math.Round(centerX) : Math.Floor(centerX));
                 sx = Clamp(sx, 0, width - 1);

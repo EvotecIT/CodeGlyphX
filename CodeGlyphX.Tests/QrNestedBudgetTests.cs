@@ -9,6 +9,20 @@ public sealed class QrNestedBudgetTests {
     [Theory]
     [InlineData(0)]
     [InlineData(5000)]
+    public void PassAndTileHonorAShorterEnclosingDeadline(int passBudget) {
+        using (CodeGlyphX.Internal.DecodeBudget.Begin(1)) {
+            var pass = new QrPixelDecoder.DecodeBudget(passBudget, CancellationToken.None);
+            var tile = new QrPixelDecoder.DecodeBudget(5000, CancellationToken.None, pass);
+            Assert.True(SpinWait.SpinUntil(() => CodeGlyphX.Internal.DecodeBudget.IsExpired, TimeSpan.FromSeconds(1)));
+            Assert.True(pass.IsExpired);
+            Assert.True(tile.IsExpired);
+            Assert.True(pass.IsNearDeadline(120));
+        }
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(5000)]
     public void TileAttempts_CannotRestartAnExpiredSharedDeadline(int attemptBudget) {
         var shared = new QrPixelDecoder.DecodeBudget(1, CancellationToken.None);
         Assert.True(SpinWait.SpinUntil(() => shared.IsExpired, TimeSpan.FromSeconds(1)));

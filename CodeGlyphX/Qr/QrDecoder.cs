@@ -88,7 +88,7 @@ public static partial class QrDecoder {
             // If format info is too noisy, attempt a bounded brute-force over all masks.
             if (formatBestDistance <= 7) {
                 var allCandidates = BuildAllFormatCandidates(formatBitsA, formatBitsB);
-                if (TryDecodeWithCandidates(modules, version, allCandidates, formatBestDistance, requireBothWithin: false, shouldStop, out result, out diagnostics)) {
+                if (TryDecodeWithCandidates(modules, version, allCandidates, formatBestDistance, shouldStop, out result, out diagnostics)) {
                     return true;
                 }
             }
@@ -97,20 +97,16 @@ public static partial class QrDecoder {
             return false;
         }
 
-        if (formatCandidates.Length > 0 && HasBothWithin(formatCandidates)) {
-            if (TryDecodeWithCandidates(modules, version, formatCandidates, formatBestDistance, requireBothWithin: true, shouldStop, out result, out diagnostics)) {
-                return true;
-            }
-        }
-
-        if (TryDecodeWithCandidates(modules, version, formatCandidates, formatBestDistance, requireBothWithin: false, shouldStop, out result, out diagnostics)) {
+        // CompareCandidates already puts matches from both format copies first.
+        // Trying that subset separately repeats the same failed extraction and RS work.
+        if (TryDecodeWithCandidates(modules, version, formatCandidates, formatBestDistance, shouldStop, out result, out diagnostics)) {
             return true;
         }
 
         // If format bits are noisy, retry all masks (RS + payload validation will reject wrong masks).
         if (formatBestDistance > 3) {
             var allCandidates = BuildAllFormatCandidates(formatBitsA, formatBitsB);
-            if (TryDecodeWithCandidates(modules, version, allCandidates, formatBestDistance, requireBothWithin: false, shouldStop, out result, out diagnostics)) {
+            if (TryDecodeWithCandidates(modules, version, allCandidates, formatBestDistance, shouldStop, out result, out diagnostics)) {
                 return true;
             }
         }
