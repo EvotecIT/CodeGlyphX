@@ -125,7 +125,11 @@ public static partial class DataMatrixDecoder {
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         diagnostics.MirroredTried = true;
         var mirror = new BitMatrixView(modules, mirrored: true);
-        if (TryDecodeCore(mirror, cancellationToken, diagnostics, out value)) { diagnostics.Success = true; return true; }
+        if (TryDecodeCore(mirror, cancellationToken, diagnostics, out value)) {
+            diagnostics.Success = true;
+            diagnostics.Failure = null;
+            return true;
+        }
 
         value = string.Empty;
         diagnostics.Failure ??= "No Data Matrix decoded.";

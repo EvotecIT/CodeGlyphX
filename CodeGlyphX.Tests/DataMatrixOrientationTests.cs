@@ -43,6 +43,13 @@ public sealed class DataMatrixOrientationTests {
                 Assert.Equal(payload, text);
                 Assert.True(diagnostics.Success);
                 Assert.Null(diagnostics.Failure);
+                if (rotation == 0) {
+                    Assert.True(DataMatrixDecoder.TryDecode(oriented, out text, out diagnostics), diagnostics.Failure);
+                    Assert.Equal(payload, text);
+                    Assert.True(diagnostics.Success);
+                    Assert.Null(diagnostics.Failure);
+                    Assert.Equal(mirror != 0, diagnostics.MirroredTried);
+                }
                 Assert.True(DataMatrixDecoder.TryDecodeDetailed(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded));
                 Assert.Equal(payload, decoded.Text);
                 Assert.True(decoded.IsGs1);
