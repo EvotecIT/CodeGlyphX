@@ -249,6 +249,14 @@ public static partial class DataMatrixDecoder {
         var rows = (int)Math.Round((double)box.Height / moduleSize);
         if (cols <= 0 || rows <= 0) return false;
 
+        // Unsupported dimensions cannot decode in any orientation. Resolve the
+        // clock tracks before allocating a grid, retaining fractional-pitch recovery.
+        // A supported integer estimate still has priority over a clock alternative.
+        if (!DataMatrixSymbolInfo.TryGetForSize(rows, cols, out _) &&
+            !DataMatrixSymbolInfo.TryGetForSize(cols, rows, out _) &&
+            !TryResolveTimingGrid(pixels, width, height, stride, format, box, invert,
+                moduleSize, cancellationToken, ref cols, ref rows)) return false;
+
         sampling = new ImageSamplingGrid(box, invert, moduleSize, cols, rows);
         return TrySampleGrid(pixels, width, height, stride, format, box, invert, cols, rows, cancellationToken, out modules);
     }

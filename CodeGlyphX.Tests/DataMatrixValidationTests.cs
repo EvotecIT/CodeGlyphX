@@ -167,12 +167,20 @@ public sealed class DataMatrixValidationTests {
         }
     }
 
-    [Fact]
-    public void FractionalPitch_CanRecoverWhenTheIntegerEstimateIsAnotherSupportedSize() {
-        var modules = DataMatrixEncoder.Encode("PART-0042", new DataMatrixEncodingOptions { Rows = 16, Columns = 16 });
-        // The 72-pixel bounds contain 16 modules at pitch 4.5. A shortest run
-        // of four pixels estimates 18 modules, which is also a supported size.
-        const double pitch = 4.5;
+    [Theory]
+    [InlineData(16, 16, 4.5, false)] // Integer estimate: 18 x 18, a different supported size.
+    [InlineData(16, 16, 3.5, false)] // Integer estimate: 19 x 19, unsupported.
+    [InlineData(16, 48, 3.5, true)]  // Rotated rectangle; neither estimated orientation is supported.
+    [InlineData(8, 64, 3.5, true)]   // Rotated DMRE; recover its clock tracks before sampling.
+    public void FractionalPitch_RetainsClockRecoveryForSupportedAndUnsupportedEstimates(int rows, int columns, double pitch, bool rotated) {
+        var original = DataMatrixEncoder.Encode("PART-0042", new DataMatrixEncodingOptions { Rows = rows, Columns = columns });
+        var modules = original;
+        if (rotated) {
+            modules = new BitMatrix(original.Height, original.Width);
+            for (var y = 0; y < original.Height; y++) {
+                for (var x = 0; x < original.Width; x++) modules[original.Height - 1 - y, x] = original[x, y];
+            }
+        }
         const int quietZone = 2;
         var width = (int)((modules.Width + quietZone * 2) * pitch);
         var height = (int)((modules.Height + quietZone * 2) * pitch);
@@ -190,8 +198,8 @@ public sealed class DataMatrixValidationTests {
         }
 
         var decoded = AssertPixelPayload(pixels, width, height, width * 4, "PART-0042");
-        Assert.Equal(16, decoded.Rows);
-        Assert.Equal(16, decoded.Columns);
+        Assert.Equal(rows, decoded.Rows);
+        Assert.Equal(columns, decoded.Columns);
         var scan = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
             Formats = new[] { SymbolFormat.DataMatrix }, TimeoutMilliseconds = TestBudget.Adjust(5000)
         });
