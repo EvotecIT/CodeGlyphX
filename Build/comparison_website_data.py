@@ -55,7 +55,10 @@ def build_website_data(root):
             f'Alternating scans of the 31 distinct negative IDs complete {min(completion["current"])}–{max(completion["current"])}/31 for the current binary '
             f'and {min(completion["previous"])}–{max(completion["previous"])}/31 for the previous binary. '
             'Every pass is retained in the downloadable report; unfinished scans remain inconclusive.'
-            + (' The current binary completes fewer negatives in every paired pass. This measured completion loss remains open.' if max(completion['current']) < min(completion['previous']) else '')
+            + (' The current binary completes fewer negatives in every paired pass. This measured completion loss remains open.'
+               if max(completion['current']) < min(completion['previous'])
+               else ' The current binary records a lower minimum completion count in the alternating passes. This measured loss remains open.'
+               if min(completion['current']) < min(completion['previous']) else '')
         )
     domains = []
     png_wins = 0
@@ -157,6 +160,21 @@ def build_website_data(root):
                     row[f"{prefix}_{name}"] = f"{min(values):g}–{max(values):g}" if min(values) != max(values) else f"{min(values):g}"
                 row[f"{prefix}_managed_mib"] = f'{lanes[engine]["Metrics"]["AllocatedBytes"] / 1048576:.2f}'
             paired_decode_rows.append(row)
+    pdf417_cost = []
+    proof = qualification.get("Pdf417CostProof")
+    if proof:
+        if proof["Source"] != qualification["MeasurementSource"] or len(proof["Cost"]) != 2:
+            raise ValueError("PDF417 cost evidence differs from the qualified source")
+        for cost in proof["Cost"]:
+            row = {"domain": cost["Domain"].upper(), "previous_ms": f'{cost["BaselineMedianMs"]:.2f}',
+                   "current_ms": f'{cost["CurrentMedianMs"]:.2f}', "ratio": f'{cost["LatencyRatio"]:.3f}',
+                   "previous_managed_mib": f'{cost["BaselineAllocatedBytes"]/1048576:.2f}',
+                   "current_managed_mib": f'{cost["CurrentAllocatedBytes"]/1048576:.2f}'}
+            for source, prefix in (("Previous", "previous"), ("Current", "current")):
+                values = cost[f"{source}CorrectRange"]
+                row[f"{prefix}_correct"] = f"{values[0]:g}–{values[1]:g}" if values[0] != values[1] else f"{values[0]:g}"
+                row[f"{prefix}_unfinished"] = cost[f"{source}InconclusiveBatches"]
+            pdf417_cost.append(row)
     return {"date": generation["StartedUtc"][:10], "source": qualification["MeasurementSource"],
             "versions": qualification["Versions"], "cpu": qualification["Cpu"]["Name"].strip(),
             "png_wins": png_wins, "png_cases": 6, "module_cpp_wins": module_cpp_wins,
@@ -166,6 +184,7 @@ def build_website_data(root):
             "negative_followup": negative_followup, "supplemental_pdf417": supplemental_rows,
             "supplemental_pdf417_limit": supplemental["Limit"] if supplemental else "",
             "retail": retail_rows, "retail_cost": retail_cost, "paired_decode_cost": paired_decode_rows,
+            "pdf417_cost": pdf417_cost,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 

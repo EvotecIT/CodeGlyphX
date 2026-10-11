@@ -42,8 +42,10 @@ def main():
     names += [name for name in ("previous-candidate-corpus.json", "previous-negative-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
     names += sorted(path.name for path in root.glob("pdf417-supplemental-*.json"))
-    if qualification.get("Pdf417FramingProof"):
+    if qualification.get("Pdf417FramingProof") or qualification.get("HistoricalPdf417FramingProof"):
         names += sorted(path.name for path in root.glob("pdf417-framing-*.json"))
+    if qualification.get("Pdf417CostProof"):
+        names += sorted(path.name for path in root.glob("pdf417-cost-*.json"))
     if qualification.get("RetailRecoveryProof"):
         names += sorted(path.name for path in root.glob("retail-*.json"))
     if qualification.get("PairedDecodeCost"):
@@ -108,6 +110,20 @@ def main():
                       "", "A separate PDF417-hinted check completes all 31 distinct negative images with no unexpected output for each reader. This diagnostic does not replace all-format negative completion. Its [unchanged inputs](evidence/pdf417-framing-negative-manifest.json), [outcomes](evidence/pdf417-framing-negative-outcomes.json), [four regression inputs](evidence/pdf417-framing-regression-manifest.json), [previous results](evidence/pdf417-framing-previous-misses.json) and [current results](evidence/pdf417-framing-current-misses.json) are retained."]
         if supplemental.get("TimingSensitiveGains"):
             lines += ["", "Timing-sensitive changes: " + "; ".join(supplemental["TimingSensitiveGains"]) + ". These outcomes do not establish a decoder accuracy gain."]
+    pdf_cost = qualification.get("Pdf417CostProof")
+    if pdf_cost:
+        if pdf_cost["Source"] != qualification["MeasurementSource"]:
+            raise ValueError("PDF417 cost source differs from the measured candidate")
+        lines += ["", "## PDF417 search cost", "", pdf_cost["Scope"], "", pdf_cost["Limits"], "",
+                  "| Domain | Previous ms | Current ms | Current / previous | Previous completed /31 | Current completed /31 | Previous unfinished batches /12 | Current unfinished batches /12 | Previous managed MiB | Current managed MiB |",
+                  "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
+        for row in pdf_cost["Cost"]:
+            ranges = [str(int(v[0])) if v[0] == v[1] else f"{v[0]:g}–{v[1]:g}" for v in (row["PreviousCorrectRange"], row["CurrentCorrectRange"])]
+            lines.append(f'| {row["Domain"].upper()} | {row["BaselineMedianMs"]:.2f} | {row["CurrentMedianMs"]:.2f} | {row["LatencyRatio"]:.3f} | {ranges[0]} | {ranges[1]} | {row["PreviousInconclusiveBatches"]} | {row["CurrentInconclusiveBatches"]} | {row["BaselineAllocatedBytes"]/1048576:.2f} | {row["CurrentAllocatedBytes"]/1048576:.2f} |')
+        guard = pdf_cost["GuardEquivalence"]
+        lines += ["", "Completed counts show the range across measured batches; neither binary returns an unexpected payload. An unfinished negative search remains inconclusive.", "",
+                  f'The actual old and new guard matchers return identical decisions across {guard["Cases"]:,} deterministic cases, including {guard["Accepted"]:,} accepted fits. Existing focused PDF417 and budget checks pass; no public API or production dependency changes.', "",
+                  "Raw [CCD0 samples](evidence/pdf417-cost-ccd0-result.json), [CCD1 samples](evidence/pdf417-cost-ccd1-result.json), [unchanged negative inputs](evidence/pdf417-cost-negative-manifest.json), [separate diagnostic outcomes](evidence/pdf417-cost-negative-outcomes.json) and [guard equivalence evidence](evidence/pdf417-cost-guard-equivalence.json) are retained."]
     if qualification.get("RetailRecoveryProof"):
         retail = qualification["RetailRecoveryProof"]
         if retail["Source"] != qualification["MeasurementSource"]:
