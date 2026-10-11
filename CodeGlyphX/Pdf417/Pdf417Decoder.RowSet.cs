@@ -34,7 +34,8 @@ public static partial class Pdf417Decoder {
             }
         }
 
-        internal void Observe(int row, int left, int right, int[] words, double x, double y, double slope, double width) {
+        internal void Observe(int row, int left, int right, int[] words, double x, double y, double slope, double width,
+            int maximumCandidates = int.MaxValue) {
             var cluster = row % 3;
             var upper = cluster == 0 ? left % 30 : cluster == 1 && !Compact ? right % 30 : -1;
             var lower = cluster == 1 ? left % 3 : cluster == 2 && !Compact ? right % 3 : -1;
@@ -43,7 +44,7 @@ public static partial class Pdf417Decoder {
             if (cluster == 1) Ec = left % 30 / 3;
             if (cluster == 2 && !Compact) Ec = right % 30 / 3;
             if (!Votes.TryGetValue(row, out var vote)) Votes[row] = vote = new PixelRowVote();
-            Rows[row] = vote.Observe(words);
+            Rows[row] = vote.Observe(words, maximumCandidates: maximumCandidates);
             Positions[row] = (x, y, slope, width);
             if (_last >= 0 && row != _last) {
                 var direction = Math.Sign(row - _last);

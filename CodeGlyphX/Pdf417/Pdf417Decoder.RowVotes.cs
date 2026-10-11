@@ -12,7 +12,7 @@ public static partial class Pdf417Decoder {
         internal int BestCount => _candidates[_best].Count;
         internal int[] BestWords => _candidates[_best].Words;
 
-        internal int[] Observe(int[] words, int weight = 1) {
+        internal int[] Observe(int[] words, int weight = 1, int maximumCandidates = int.MaxValue) {
             var index = 0;
             for (; index < _candidates.Count; index++) {
                 var prior = _candidates[index].Words;
@@ -22,6 +22,7 @@ public static partial class Pdf417Decoder {
                     if (prior[i] != words[i]) { equal = false; break; }
                 if (equal) break;
             }
+            if (index == _candidates.Count && index >= maximumCandidates) return BestWords;
             if (index == _candidates.Count) _candidates.Add((words, weight));
             else _candidates[index] = (_candidates[index].Words, _candidates[index].Count + weight);
             if (_candidates[index].Count > _candidates[_best].Count) _best = index;

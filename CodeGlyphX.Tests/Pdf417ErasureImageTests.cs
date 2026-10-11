@@ -15,6 +15,10 @@ public sealed class Pdf417ErasureImageTests {
     [InlineData("zxing-skewed-numeric.png", "1234567890")]
     [InlineData("zxing-damaged-right-frame.png", "A larger PDF417 barcode with text and error correction level 4.")]
     [InlineData("zxing-shallow-angle-priority.png", "A PDF 417 barcode with ASCII text")]
+    [InlineData("zxing-left-cropped-start.png", "A larger PDF417 barcode with text and error correction level 8.")]
+    [InlineData("zxing-left-cropped-indicator.png", "A larger PDF417 barcode with text and error correction level 8.")]
+    [InlineData("zxing-left-cropped-data.png", "A larger PDF417 barcode with text and error correction level 8.")]
+    [InlineData("zxing-missing-stop-and-starts.png", "This is PDF417")]
     public void IndependentDamagedAndSkewedImages_PreserveExactPayload(string name, string expected) {
         using var fixture = typeof(Pdf417ErasureImageTests).Assembly.GetManifestResourceStream("CodeGlyphX.Tests.Fixtures.Pdf417." + name);
         Assert.NotNull(fixture);

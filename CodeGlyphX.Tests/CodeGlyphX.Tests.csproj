@@ -55,6 +55,7 @@
     <Compile Include="Pdf417FractionalSamplingTests.cs" />
     <Compile Include="Pdf417ScanlineImageTests.cs" />
     <Compile Include="Pdf417ErasureImageTests.cs" />
+    <Compile Include="Pdf417RightFramingTests.cs" />
     <Compile Include="Pdf417ErrorCorrectionTests.cs" />
     <Compile Include="PhysicalRowDecodingTests.cs" />
     <Compile Include="Pdf417MacroRangeTests.cs" />

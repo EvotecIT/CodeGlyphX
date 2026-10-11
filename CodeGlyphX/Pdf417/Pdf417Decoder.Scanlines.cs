@@ -33,22 +33,34 @@ public static partial class Pdf417Decoder {
             }
         }
         var runCache = new PixelRunCache(darkPixels, width, height);
-        if (TryReadPixelRows(width, height, runCache, cancellationToken, false, false, out decoded, out hasStartPattern)) return true;
+        var framingCandidates = new List<PixelFramingCandidate>(16);
+        if (TryReadPixelRows(width, height, runCache, cancellationToken, false, false, out decoded, out hasStartPattern, framingCandidates)) return true;
         // Preserve the ordinary reader's decisions. A print-gain retry requires
         // repeated, consistent row indicators and shares the caller's deadline.
-        if (!hasStartPattern || DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        if (TryReadPixelRows(width, height, runCache, cancellationToken, true, false, out decoded, out _)) return true;
+        if (hasStartPattern) {
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (TryReadPixelRows(width, height, runCache, cancellationToken, true, false, out decoded, out _)) return true;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            // New angles and payload-only rows must not replace an established
+            // decode. Preserve both original passes before the shallow-skew retry,
+            // sharing their thresholded pixels, cached runs and remaining budget.
+            if (TryReadPixelRows(width, height, runCache, cancellationToken, false, true, out decoded, out _)) return true;
+            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (TryReadPixelRows(width, height, runCache, cancellationToken, true, true, out decoded, out _)) return true;
+        }
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        // New angles and payload-only rows must not replace an established
-        // decode. Preserve both original passes before the shallow-skew retry,
-        // sharing their thresholded pixels, cached runs and remaining budget.
-        if (TryReadPixelRows(width, height, runCache, cancellationToken, false, true, out decoded, out _)) return true;
+        if (TryReadDamagedFrameRows(width, height, runCache, framingCandidates, cancellationToken, out decoded)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        return TryReadPixelRows(width, height, runCache, cancellationToken, true, true, out decoded, out _);
+        // A crop can remove the left framing while leaving independently
+        // validated right indicators. Preserve ordinary row-reader priority.
+        if (TryReadRightFramedRows(width, height, runCache, cancellationToken, false, out decoded, out var hasRight)) return true;
+        if (!hasRight || DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        return TryReadRightFramedRows(width, height, runCache, cancellationToken, true, out decoded, out _);
     }
 
     private static bool TryReadPixelRows(int width, int height, PixelRunCache runCache, CancellationToken cancellationToken,
-        bool correctPrintGain, bool shallowSkew, out Pdf417Decoded decoded, out bool hasStartPattern) {
+        bool correctPrintGain, bool shallowSkew, out Pdf417Decoded decoded, out bool hasStartPattern,
+        List<PixelFramingCandidate>? framingCandidates = null) {
         decoded = null!;
         hasStartPattern = false;
         for (var axis = 0; axis < 2; axis++) {
@@ -96,7 +108,11 @@ public static partial class Pdf417Decoder {
                                 // A tilted symbol may cross row boundaries before reaching
                                 // the right indicator. Repeated left indicators still justify
                                 // the bounded slope search; a lone accidental pattern does not.
-                                if (hints.Observe(logicalRow, cluster, left)) hasStartPattern = orientationHasStart = true;
+                                if (hints.Observe(logicalRow, cluster, left)) {
+                                    hasStartPattern = orientationHasStart = true;
+                                    if (framingCandidates is not null)
+                                        RetainFramingCandidate(framingCandidates, hints, runs, start, leftPixel, axis, reverse != 0, invert != 0, slope);
+                                }
                                 var words = new List<int>();
                                 var at = start + 16;
                                 // A data character has eight runs. Its last space
