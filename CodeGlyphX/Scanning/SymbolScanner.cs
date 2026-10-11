@@ -365,14 +365,14 @@ public static partial class SymbolScanner {
                 barcodeOptions,
                 deadline.Token)) return;
 
-        // BarcodeDecoder's public multi-result contract deduplicates by physical type and payload. Preserve
+        // BarcodeDecoder's public multi-result contract includes physical type, payload and initialization state. Preserve
         // that behavior after classifying each located DataBar candidate independently.
         var decodedSeen = options.Deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
         for (var i = 0; i < decoded.Length; i++) {
             if (IsBoundaryClippedUncheckedBarcode(decoded[i], rgba, width, height, deadline.Token)) continue;
             var hit = ResolveRequestedLinearIdentity(decoded[i].Decoded, expectedTypes, rgba, width, height, decoded[i], deadline.Token);
             if (hit is null) continue;
-            var key = hit.Type + "\u001f" + hit.Text;
+            var key = hit.DeduplicationKey;
             if (decodedSeen is not null && !decodedSeen.Add(key)) continue;
             if (!SymbolCapabilities.TryFromLegacy(hit.Type, out var format) || !requested.Contains(format)) continue;
             Add(results, seen, SymbolResultFactory.From(hit, searchRegion));
@@ -569,7 +569,14 @@ public static partial class SymbolScanner {
 
     private static string CreateKey(DetectedSymbol symbol) {
         var bytes = symbol.HasRawBytes ? Convert.ToBase64String(symbol.RawBytes.ToArray()) : string.Empty;
-        return symbol.Format + "\u001f" + symbol.Text + "\u001f" + bytes;
+        var readerInitialization = symbol.Metadata switch {
+            Code128SymbolMetadata value => value.ReaderInitialization,
+            DotCodeSymbolMetadata value => value.ReaderInitialization,
+            DataMatrixSymbolMetadata value => value.ReaderProgramming,
+            MaxiCodeSymbolMetadata value => value.IsReaderProgramming,
+            _ => false
+        };
+        return symbol.Format + "\u001f" + readerInitialization + "\u001f" + symbol.Text + "\u001f" + bytes;
     }
 
     private static bool ShouldStop(ScanOptions options, ScanDeadline deadline, List<DetectedSymbol> results) {

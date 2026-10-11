@@ -23,6 +23,9 @@ public sealed class BarcodeDecoded {
     /// <remarks>The library exposes the content and flag; it does not apply reader settings.</remarks>
     public bool ReaderInitialization { get; }
 
+    // Configuration and ordinary data can have identical visible contents.
+    internal string DeduplicationKey => Type + "\u001f" + ReaderInitialization + "\u001f" + Text;
+
     internal BarcodeDecoded(BarcodeType type, string text, bool readerInitialization = false) {
         Type = type;
         Text = text ?? throw new ArgumentNullException(nameof(text));

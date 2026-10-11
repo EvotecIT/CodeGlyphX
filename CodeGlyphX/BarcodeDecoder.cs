@@ -301,7 +301,7 @@ public static partial class BarcodeDecoder {
 
     private static void AddUnique(List<BarcodeDecoded> list, HashSet<string>? seen, BarcodeDecoded decoded) {
         if (decoded is null) return;
-        if (seen is null || seen.Add(decoded.Type.ToString() + ":" + decoded.Text)) list.Add(decoded);
+        if (seen is null || seen.Add(decoded.DeduplicationKey)) list.Add(decoded);
     }
 
     private static void DecodeLocatedRegion(

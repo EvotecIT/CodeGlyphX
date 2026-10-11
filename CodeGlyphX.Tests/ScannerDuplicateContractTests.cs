@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using CodeGlyphX.DataMatrix;
 using CodeGlyphX.Rendering.Png;
 using Xunit;
 
@@ -8,6 +9,31 @@ namespace CodeGlyphX.Tests;
 [Collection("GlobalState")]
 public sealed class ScannerDuplicateContractTests {
     private const string Payload = "SAME-CODE";
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Scanner_ReaderProgrammingAndDataWithEqualTextRemainDistinct(bool programmingFirst) {
+        const int width = 320;
+        var pixels = Enumerable.Repeat((byte)255, width * width * 4).ToArray();
+        Paint(DataMatrixEncoder.Encode("ABC", new DataMatrixEncodingOptions { Rows = 14, Columns = 14, ReaderProgramming = programmingFirst }), 40);
+        Paint(DataMatrixEncoder.Encode("ABC", new DataMatrixEncodingOptions { Rows = 14, Columns = 14, ReaderProgramming = !programmingFirst }), 200);
+        var options = ScanOptions.Robust(TestBudget.Adjust(5000));
+        options.Formats = new[] { SymbolFormat.DataMatrix };
+        options.TileGrid = 2;
+        options.MaxSymbols = 2;
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, width, PixelFormat.Rgba32), options);
+        Assert.Equal(new[] { false, true }, result.Symbols.Select(x => Assert.IsType<DataMatrixSymbolMetadata>(x.Metadata).ReaderProgramming).OrderBy(x => x).ToArray());
+        Assert.All(result.Symbols, x => Assert.Equal("ABC", x.Text));
+
+        void Paint(BitMatrix matrix, int origin) {
+            for (var y = 0; y < matrix.Height * 4; y++) for (var x = 0; x < matrix.Width * 4; x++) {
+                if (!matrix[x / 4, y / 4]) continue;
+                var offset = ((origin + y) * width + origin + x) * 4;
+                pixels[offset] = pixels[offset + 1] = pixels[offset + 2] = 0;
+            }
+        }
+    }
 
     [Theory]
 #if NET8_0_OR_GREATER

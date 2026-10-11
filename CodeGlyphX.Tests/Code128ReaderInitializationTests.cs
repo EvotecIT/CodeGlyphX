@@ -83,6 +83,45 @@ public sealed class Code128ReaderInitializationTests {
         Assert.True(Assert.IsType<Code128SymbolMetadata>(symbol.Metadata).ReaderInitialization);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Decode_EqualTextDataAndInitialization_RemainDistinct(bool initializationFirst) {
+        var ordinary = Modules(new[] { 104, 65 });
+        var initialization = Modules(new[] { 104, 96, 65 });
+        var width = (initialization.Length + 24) * 3;
+        const int height = 180;
+        var pixels = Enumerable.Repeat((byte)255, width * height * 4).ToArray();
+        Paint(initializationFirst ? initialization : ordinary, 20, 100);
+        Paint(initializationFirst ? ordinary : initialization, 110, 160);
+
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32,
+            out var all, BarcodeType.Code128));
+        Assert.Equal(new[] { false, true }, all.Select(x => x.ReaderInitialization).OrderBy(x => x).ToArray());
+        Assert.All(all, x => Assert.Equal("a", x.Text));
+#if NET8_0_OR_GREATER
+        Assert.True(BarcodeDecoder.TryDecodeAll((ReadOnlySpan<byte>)pixels, width, height, width * 4,
+            PixelFormat.Rgba32, out var spanAll, BarcodeType.Code128));
+        Assert.Equal(new[] { false, true }, spanAll.Select(x => x.ReaderInitialization).OrderBy(x => x).ToArray());
+#endif
+        foreach (var defaultFormats in new[] { false, true }) {
+            var options = ScanOptions.Robust(TestBudget.Adjust(5000));
+            options.MaxSymbols = 2;
+            if (!defaultFormats) options.Formats = new[] { SymbolFormat.Code128 };
+            var symbols = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options).Symbols;
+            Assert.Equal(new[] { false, true }, symbols.Select(x => Assert.IsType<Code128SymbolMetadata>(x.Metadata).ReaderInitialization).OrderBy(x => x).ToArray());
+            Assert.All(symbols, x => Assert.Equal("a", x.Text));
+        }
+
+        void Paint(bool[] modules, int firstRow, int lastRow) {
+            for (var y = firstRow; y < lastRow; y++) for (var x = 0; x < modules.Length * 3; x++) {
+                if (!modules[x / 3]) continue;
+                var offset = (y * width + x + 36) * 4;
+                pixels[offset] = pixels[offset + 1] = pixels[offset + 2] = 0;
+            }
+        }
+    }
+
     private static byte[] Fixture() {
         using var stream = typeof(Code128ReaderInitializationTests).Assembly.GetManifestResourceStream(
             "CodeGlyphX.Tests.Fixtures.Linear.zxing-code128-reader-init.png");
