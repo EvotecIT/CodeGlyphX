@@ -1,6 +1,6 @@
 {
   "date": "2026-10-11",
-  "source": "3266d3b059d9bfb6158b8be981dc68075aa9961a",
+  "source": "d4f24483f3afef201c614986a12871ecc349bfd1",
   "versions": {
     "SDK": "10.0.401",
     "PowerShell": "7.6.6",
@@ -20,13 +20,13 @@
     {
       "engine": "CodeGlyphX",
       "before": 73,
-      "correct": 187,
+      "correct": 188,
       "positives": 267,
-      "percent": "70.0",
+      "percent": "70.4",
       "unsupported": 6,
-      "rejected": 25,
+      "rejected": 24,
       "unexpected": 0,
-      "inconclusive": 0,
+      "inconclusive": 1,
       "main_rejected": 11,
       "main_unexpected": 0,
       "main_inconclusive": 1
@@ -191,7 +191,7 @@
       "format": "QrCode",
       "images": 37,
       "correct": [
-        25,
+        26,
         34,
         34
       ]
@@ -227,34 +227,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "174.08",
-              "p95": "224.04",
-              "min": "134.76",
-              "max": "268.28",
+              "median": "265.62",
+              "p95": "335.32",
+              "min": "144.73",
+              "max": "350.76",
               "bytes": "60,283"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1341.86",
-              "p95": "1418.10",
-              "min": "1212.48",
-              "max": "1434.05",
-              "bytes": "1,377,485"
+              "median": "1695.44",
+              "p95": "2724.38",
+              "min": "1564.86",
+              "max": "2866.84",
+              "bytes": "1,377,443"
             },
             {
               "engine": "ZXing-C++",
-              "median": "1210.52",
-              "p95": "1252.66",
-              "min": "1144.43",
-              "max": "1263.08",
-              "bytes": "1,309,056"
+              "median": "1662.64",
+              "p95": "2571.64",
+              "min": "1399.15",
+              "max": "2649.60",
+              "bytes": "1,308,993"
             },
             {
               "engine": "QRCoder",
-              "median": "401.85",
-              "p95": "503.29",
-              "min": "384.15",
-              "max": "518.86",
+              "median": "510.57",
+              "p95": "889.02",
+              "min": "480.41",
+              "max": "918.20",
               "bytes": "8,200"
             }
           ]
@@ -265,34 +265,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "89.00",
-              "p95": "110.56",
-              "min": "76.22",
-              "max": "119.47",
+              "median": "129.87",
+              "p95": "161.04",
+              "min": "82.55",
+              "max": "166.37",
               "bytes": "40,312"
             },
             {
               "engine": "ZXing.Net",
-              "median": "720.47",
-              "p95": "739.84",
-              "min": "688.73",
-              "max": "749.04",
-              "bytes": "877,590"
+              "median": "1000.94",
+              "p95": "1055.81",
+              "min": "928.29",
+              "max": "1062.39",
+              "bytes": "877,588"
             },
             {
               "engine": "ZXing-C++",
-              "median": "687.69",
-              "p95": "733.57",
-              "min": "649.55",
-              "max": "737.32",
-              "bytes": "848,275"
+              "median": "987.01",
+              "p95": "1106.74",
+              "min": "882.21",
+              "max": "1109.80",
+              "bytes": "848,302"
             },
             {
               "engine": "QRCoder",
-              "median": "148.36",
-              "p95": "164.56",
-              "min": "145.16",
-              "max": "165.80",
+              "median": "215.90",
+              "p95": "258.44",
+              "min": "169.45",
+              "max": "277.24",
               "bytes": "6,568"
             }
           ]
@@ -303,34 +303,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "1683.65",
-              "p95": "1895.80",
-              "min": "1605.00",
-              "max": "2036.18",
-              "bytes": "274,843"
+              "median": "1989.96",
+              "p95": "2183.81",
+              "min": "1850.57",
+              "max": "2238.45",
+              "bytes": "274,832"
             },
             {
               "engine": "ZXing.Net",
-              "median": "7225.86",
-              "p95": "7692.63",
-              "min": "6952.09",
-              "max": "7744.47",
-              "bytes": "6,798,108"
+              "median": "8879.65",
+              "p95": "9995.23",
+              "min": "8620.30",
+              "max": "10123.05",
+              "bytes": "6,798,026"
             },
             {
               "engine": "ZXing-C++",
-              "median": "6589.47",
-              "p95": "7325.27",
-              "min": "6300.22",
-              "max": "7372.85",
-              "bytes": "6,206,537"
+              "median": "8025.54",
+              "p95": "8730.38",
+              "min": "7729.01",
+              "max": "8985.69",
+              "bytes": "6,206,453"
             },
             {
               "engine": "QRCoder",
-              "median": "2801.74",
-              "p95": "3212.79",
-              "min": "2747.20",
-              "max": "3231.69",
+              "median": "3269.42",
+              "p95": "3589.13",
+              "min": "3183.76",
+              "max": "3660.87",
               "bytes": "26,112"
             }
           ]
@@ -341,34 +341,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "536.26",
-              "p95": "931.47",
-              "min": "99.24",
-              "max": "940.39",
+              "median": "157.91",
+              "p95": "980.49",
+              "min": "106.84",
+              "max": "1063.03",
               "bytes": "5,057"
             },
             {
               "engine": "ZXing.Net",
-              "median": "433.13",
-              "p95": "859.24",
-              "min": "169.61",
-              "max": "862.41",
-              "bytes": "71,098"
+              "median": "252.29",
+              "p95": "909.69",
+              "min": "201.87",
+              "max": "911.50",
+              "bytes": "71,092"
             },
             {
               "engine": "ZXing-C++",
-              "median": "114.25",
-              "p95": "195.58",
-              "min": "58.99",
-              "max": "222.06",
-              "bytes": "2,701"
+              "median": "97.60",
+              "p95": "176.96",
+              "min": "68.79",
+              "max": "181.88",
+              "bytes": "2,697"
             },
             {
               "engine": "QRCoder",
-              "median": "606.40",
-              "p95": "1143.31",
-              "min": "312.60",
-              "max": "1234.22",
+              "median": "934.14",
+              "p95": "1076.94",
+              "min": "303.46",
+              "max": "1096.62",
               "bytes": "7,395"
             }
           ]
@@ -379,34 +379,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "63.96",
-              "p95": "92.81",
-              "min": "60.90",
-              "max": "94.34",
+              "median": "107.93",
+              "p95": "163.66",
+              "min": "77.98",
+              "max": "165.94",
               "bytes": "3,832"
             },
             {
               "engine": "ZXing.Net",
-              "median": "41.56",
-              "p95": "81.17",
-              "min": "37.87",
-              "max": "89.54",
+              "median": "83.80",
+              "p95": "104.57",
+              "min": "38.51",
+              "max": "106.05",
               "bytes": "31,304"
             },
             {
               "engine": "ZXing-C++",
-              "median": "31.40",
-              "p95": "61.47",
-              "min": "28.31",
-              "max": "64.44",
+              "median": "47.66",
+              "p95": "94.55",
+              "min": "35.96",
+              "max": "111.33",
               "bytes": "1,696"
             },
             {
               "engine": "QRCoder",
-              "median": "84.62",
-              "p95": "110.79",
-              "min": "76.91",
-              "max": "113.47",
+              "median": "130.31",
+              "p95": "207.80",
+              "min": "76.14",
+              "max": "219.19",
               "bytes": "5,568"
             }
           ]
@@ -417,35 +417,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "1655.08",
-              "p95": "1808.38",
-              "min": "1511.57",
-              "max": "1818.89",
+              "median": "1848.65",
+              "p95": "1925.70",
+              "min": "1754.78",
+              "max": "1933.36",
               "bytes": "23,872"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1603.04",
-              "p95": "1849.92",
-              "min": "1509.08",
-              "max": "1869.54",
-              "bytes": "606,588"
+              "median": "1769.65",
+              "p95": "1840.95",
+              "min": "1695.96",
+              "max": "1846.63",
+              "bytes": "606,589"
             },
             {
               "engine": "ZXing-C++",
-              "median": "1133.33",
-              "p95": "1193.17",
-              "min": "972.86",
-              "max": "1204.53",
+              "median": "1175.27",
+              "p95": "1220.70",
+              "min": "1059.89",
+              "max": "1225.23",
               "bytes": "14,648"
             },
             {
               "engine": "QRCoder",
-              "median": "2681.43",
-              "p95": "2878.74",
-              "min": "2408.70",
-              "max": "2905.36",
-              "bytes": "23,222"
+              "median": "2793.10",
+              "p95": "2883.20",
+              "min": "2737.38",
+              "max": "2926.17",
+              "bytes": "23,216"
             }
           ]
         }
@@ -453,29 +453,29 @@
       "decoding": [
         {
           "engine": "CodeGlyphX",
-          "median": "3012.02",
-          "p95": "3114.20",
-          "min": "2979.02",
-          "max": "3142.66",
-          "managed_mib": "88.30",
+          "median": "3102.04",
+          "p95": "3182.41",
+          "min": "3084.29",
+          "max": "3186.89",
+          "managed_mib": "87.52",
           "correct": "16"
         },
         {
           "engine": "ZXing.Net",
-          "median": "164.57",
-          "p95": "177.98",
-          "min": "152.95",
-          "max": "183.34",
+          "median": "196.84",
+          "p95": "239.59",
+          "min": "186.33",
+          "max": "267.98",
           "managed_mib": "12.93",
           "correct": "19"
         },
         {
           "engine": "ZXing-C++",
-          "median": "21.60",
-          "p95": "24.82",
-          "min": "18.41",
-          "max": "25.17",
-          "managed_mib": "2.15",
+          "median": "26.94",
+          "p95": "33.81",
+          "min": "23.57",
+          "max": "37.05",
+          "managed_mib": "2.14",
           "correct": "19"
         }
       ]
@@ -491,34 +491,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "130.47",
-              "p95": "178.48",
-              "min": "125.71",
-              "max": "183.61",
+              "median": "175.03",
+              "p95": "199.53",
+              "min": "139.61",
+              "max": "219.86",
               "bytes": "60,272"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1276.97",
-              "p95": "1392.65",
-              "min": "1213.56",
-              "max": "1409.59",
-              "bytes": "1,377,493"
+              "median": "1349.01",
+              "p95": "1458.50",
+              "min": "1275.58",
+              "max": "1468.95",
+              "bytes": "1,377,468"
             },
             {
               "engine": "ZXing-C++",
-              "median": "1198.37",
-              "p95": "1248.91",
-              "min": "1162.38",
-              "max": "1254.63",
-              "bytes": "1,309,091"
+              "median": "1334.48",
+              "p95": "1405.53",
+              "min": "1252.69",
+              "max": "1411.94",
+              "bytes": "1,309,072"
             },
             {
               "engine": "QRCoder",
-              "median": "385.20",
-              "p95": "417.17",
-              "min": "377.72",
-              "max": "439.41",
+              "median": "413.79",
+              "p95": "508.07",
+              "min": "387.09",
+              "max": "544.17",
               "bytes": "8,200"
             }
           ]
@@ -529,34 +529,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "89.41",
-              "p95": "103.69",
-              "min": "75.67",
-              "max": "103.73",
+              "median": "85.75",
+              "p95": "124.44",
+              "min": "76.39",
+              "max": "126.38",
               "bytes": "40,312"
             },
             {
               "engine": "ZXing.Net",
-              "median": "754.15",
-              "p95": "812.59",
-              "min": "730.52",
-              "max": "831.22",
-              "bytes": "877,636"
+              "median": "782.51",
+              "p95": "840.74",
+              "min": "712.31",
+              "max": "856.88",
+              "bytes": "877,618"
             },
             {
               "engine": "ZXing-C++",
-              "median": "728.98",
-              "p95": "740.92",
-              "min": "688.07",
-              "max": "741.65",
-              "bytes": "848,315"
+              "median": "768.48",
+              "p95": "861.58",
+              "min": "700.88",
+              "max": "889.61",
+              "bytes": "848,331"
             },
             {
               "engine": "QRCoder",
-              "median": "152.05",
-              "p95": "163.79",
-              "min": "147.70",
-              "max": "166.75",
+              "median": "157.39",
+              "p95": "185.09",
+              "min": "141.15",
+              "max": "186.00",
               "bytes": "6,568"
             }
           ]
@@ -567,34 +567,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "1729.35",
-              "p95": "1802.34",
-              "min": "1647.68",
-              "max": "1803.92",
+              "median": "1852.23",
+              "p95": "1977.60",
+              "min": "1702.81",
+              "max": "2030.30",
               "bytes": "274,832"
             },
             {
               "engine": "ZXing.Net",
-              "median": "7593.91",
-              "p95": "8100.04",
-              "min": "7063.47",
-              "max": "8577.55",
-              "bytes": "6,798,337"
+              "median": "8000.48",
+              "p95": "9630.12",
+              "min": "7397.84",
+              "max": "9646.89",
+              "bytes": "6,798,281"
             },
             {
               "engine": "ZXing-C++",
-              "median": "6710.15",
-              "p95": "7351.09",
-              "min": "6406.70",
-              "max": "7482.10",
-              "bytes": "6,206,559"
+              "median": "7210.51",
+              "p95": "7671.88",
+              "min": "6752.74",
+              "max": "7692.96",
+              "bytes": "6,206,646"
             },
             {
               "engine": "QRCoder",
-              "median": "2819.83",
-              "p95": "2882.87",
-              "min": "2748.79",
-              "max": "2888.93",
+              "median": "2990.38",
+              "p95": "3913.46",
+              "min": "2767.28",
+              "max": "4359.25",
               "bytes": "26,112"
             }
           ]
@@ -605,34 +605,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "108.43",
-              "p95": "140.97",
-              "min": "100.85",
-              "max": "155.13",
+              "median": "126.27",
+              "p95": "151.90",
+              "min": "100.33",
+              "max": "157.85",
               "bytes": "5,056"
             },
             {
               "engine": "ZXing.Net",
-              "median": "197.92",
-              "p95": "238.47",
-              "min": "168.90",
-              "max": "265.15",
-              "bytes": "71,066"
+              "median": "191.26",
+              "p95": "224.37",
+              "min": "158.84",
+              "max": "238.20",
+              "bytes": "71,064"
             },
             {
               "engine": "ZXing-C++",
-              "median": "70.33",
-              "p95": "122.36",
-              "min": "59.32",
-              "max": "160.97",
+              "median": "88.82",
+              "p95": "108.84",
+              "min": "64.70",
+              "max": "116.10",
               "bytes": "2,696"
             },
             {
               "engine": "QRCoder",
-              "median": "310.68",
-              "p95": "339.19",
-              "min": "284.61",
-              "max": "357.79",
+              "median": "305.41",
+              "p95": "340.27",
+              "min": "290.82",
+              "max": "345.15",
               "bytes": "7,376"
             }
           ]
@@ -643,34 +643,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "63.25",
-              "p95": "87.93",
-              "min": "58.96",
-              "max": "89.08",
+              "median": "74.07",
+              "p95": "111.10",
+              "min": "59.90",
+              "max": "121.86",
               "bytes": "3,832"
             },
             {
               "engine": "ZXing.Net",
-              "median": "40.75",
-              "p95": "69.11",
-              "min": "37.32",
-              "max": "69.19",
+              "median": "51.04",
+              "p95": "102.46",
+              "min": "37.39",
+              "max": "126.81",
               "bytes": "31,304"
             },
             {
               "engine": "ZXing-C++",
-              "median": "28.68",
-              "p95": "56.94",
-              "min": "27.42",
-              "max": "59.41",
+              "median": "34.42",
+              "p95": "55.41",
+              "min": "29.56",
+              "max": "55.91",
               "bytes": "1,696"
             },
             {
               "engine": "QRCoder",
-              "median": "76.50",
-              "p95": "104.05",
-              "min": "74.66",
-              "max": "104.13",
+              "median": "97.75",
+              "p95": "133.21",
+              "min": "71.66",
+              "max": "140.88",
               "bytes": "5,568"
             }
           ]
@@ -681,34 +681,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "1498.20",
-              "p95": "1620.52",
-              "min": "1470.33",
-              "max": "1748.78",
+              "median": "1712.45",
+              "p95": "1775.78",
+              "min": "1572.64",
+              "max": "1812.14",
               "bytes": "23,872"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1474.02",
-              "p95": "1528.01",
-              "min": "1452.07",
-              "max": "1538.40",
+              "median": "1677.37",
+              "p95": "1741.93",
+              "min": "1582.86",
+              "max": "1745.08",
               "bytes": "606,585"
             },
             {
               "engine": "ZXing-C++",
-              "median": "991.93",
-              "p95": "1042.32",
-              "min": "981.17",
-              "max": "1050.65",
+              "median": "1164.88",
+              "p95": "1178.77",
+              "min": "1051.57",
+              "max": "1187.96",
               "bytes": "14,648"
             },
             {
               "engine": "QRCoder",
-              "median": "2373.38",
-              "p95": "2459.94",
-              "min": "2345.03",
-              "max": "2540.86",
+              "median": "2690.47",
+              "p95": "2758.06",
+              "min": "2460.00",
+              "max": "2770.19",
               "bytes": "23,216"
             }
           ]
@@ -717,35 +717,35 @@
       "decoding": [
         {
           "engine": "CodeGlyphX",
-          "median": "3148.45",
-          "p95": "3317.54",
-          "min": "2974.51",
-          "max": "3321.82",
-          "managed_mib": "87.30",
+          "median": "3099.90",
+          "p95": "3346.42",
+          "min": "3040.75",
+          "max": "3451.05",
+          "managed_mib": "87.77",
           "correct": "16"
         },
         {
           "engine": "ZXing.Net",
-          "median": "208.89",
-          "p95": "293.13",
-          "min": "150.00",
-          "max": "315.70",
-          "managed_mib": "12.95",
+          "median": "191.48",
+          "p95": "246.20",
+          "min": "177.37",
+          "max": "296.89",
+          "managed_mib": "12.94",
           "correct": "19"
         },
         {
           "engine": "ZXing-C++",
-          "median": "23.79",
-          "p95": "43.31",
-          "min": "19.98",
-          "max": "51.59",
-          "managed_mib": "2.16",
+          "median": "26.14",
+          "p95": "33.00",
+          "min": "22.26",
+          "max": "35.22",
+          "managed_mib": "2.15",
           "correct": "19"
         }
       ]
     }
   ],
-  "negative_followup": "Compared with the previous decoding pass, CodeGlyphX completes 25/25 supplementary negatives versus 25/25. Alternating scans of the 31 distinct negative IDs complete 30–31/31 for the current binary and 30–31/31 for the previous binary. Every pass is retained in the downloadable report; unfinished scans remain inconclusive.",
+  "negative_followup": "Compared with the previous decoding pass, CodeGlyphX completes 24/25 supplementary negatives versus 25/25. Alternating scans of the 31 distinct negative IDs complete 29–31/31 for the current binary and 30–30/31 for the previous binary. Every pass is retained in the downloadable report; unfinished scans remain inconclusive.",
   "supplemental_pdf417": [
     {
       "engine": "CodeGlyphX",
