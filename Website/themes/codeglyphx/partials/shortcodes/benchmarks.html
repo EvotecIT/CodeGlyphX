@@ -122,6 +122,20 @@
         </details>
         {{ end }}
     </section>
+    {{ if comparison.paired_decode_cost.size > 0 }}
+    <section class="benchmark-section" aria-labelledby="paired-decoding">
+        <h2 id="paired-decoding">Paired whole-image decoding cost</h2>
+        <p>The previous and current CodeGlyphX binaries process the same 19 preloaded images with the same options and 1,500 ms allowance. Each cache domain uses three warmups and twelve rotated measurements per binary. Lower current/previous ratios mean lower elapsed time. These shared-host results retain every sample, including incomplete negative searches and unsupported MaxiCode.</p>
+        <div class="comparison-scroll" role="region" aria-label="Paired decoding cost table" tabindex="0">
+            <table class="bench-table">
+                <caption>Previous → current · 19-image batches · ranges include every measured sample</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct / 19</th><th scope="col">Unexpected</th><th scope="col">Inconclusive</th></tr></thead>
+                <tbody>{{ for row in comparison.paired_decode_cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_managed_mib }} → {{ row.current_managed_mib }}</td><td>{{ row.previous_correct }} → {{ row.current_correct }}</td><td>{{ row.previous_unexpected }} → {{ row.current_unexpected }}</td><td>{{ row.previous_inconclusive }} → {{ row.current_inconclusive }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>A faster incomplete search does not count as a successful negative scan. <a href="/comparisons/evidence/paired-decode-cost-ccd0-result.json">CCD0 paired samples</a> · <a href="/comparisons/evidence/paired-decode-cost-ccd1-result.json">CCD1 paired samples</a>.</p>
+    </section>
+    {{ end }}
     <section class="benchmark-section" aria-labelledby="methodology">
         <h2 id="methodology">Versions, method and evidence</h2>
         <ul>

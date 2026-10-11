@@ -44,6 +44,8 @@ def main():
     names += sorted(path.name for path in root.glob("pdf417-supplemental-*.json"))
     if qualification.get("RetailRecoveryProof"):
         names += sorted(path.name for path in root.glob("retail-*.json"))
+    if qualification.get("PairedDecodeCost"):
+        names += sorted(path.name for path in root.glob("paired-decode-cost-*.json"))
     if qualification.get("QrVariation"):
         names += sorted(path.name for path in root.glob("qr-variation-*.json"))
     evidence = output / "evidence"
@@ -200,6 +202,27 @@ def main():
             correct = [s["Metrics"]["CorrectImages"] for s in samples]
             unexpected = [s["Metrics"]["UnexpectedImages"] for s in samples]
             lines.append(f'| {domain} | {x["Engine"]} | {x["MedianMs"]:.2f} | {x["P95Ms"]:.2f} | {x["MinMs"]:.2f}–{x["MaxMs"]:.2f} | {x["Metrics"]["AllocatedBytes"] / 1048576:.2f} | {min(correct):g}–{max(correct):g} | {min(unexpected):g}–{max(unexpected):g} |')
+    if qualification.get("PairedDecodeCost"):
+        paired = qualification["PairedDecodeCost"]
+        if paired["Source"] != qualification["MeasurementSource"]:
+            raise ValueError("Paired whole-image cost source differs")
+        lines += ["", "## Paired whole-image decoding cost", "", paired["Scope"], "",
+                  "Lower current/previous ratios mean lower elapsed time. Correctness and unfinished-search ranges retain every measured sample; a faster incomplete search is not a successful negative scan.", "",
+                  "| Domain | Binary | Median ms / 19 images | P95 ms | Min–max ms | Mean managed MiB | Correct / 19 | Unexpected | Inconclusive | Current / previous median |",
+                  "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
+        for domain in ("ccd0", "ccd1"):
+            packet = read(root / f"paired-decode-cost-{domain}-result.json")
+            lanes = {row["Engine"]: row for row in packet["Summary"]}
+            ratio = lanes["Candidate"]["MedianMs"] / lanes["Baseline"]["MedianMs"]
+            for engine in ("Baseline", "Candidate"):
+                lane = lanes[engine]
+                samples = [s for s in packet["Samples"] if s["Engine"] == engine and s["Iteration"] >= 0]
+                ranges = []
+                for metric in ("CorrectImages", "UnexpectedImages", "InconclusiveImages"):
+                    values = [s["Metrics"][metric] for s in samples]
+                    ranges.append(f"{min(values):g}–{max(values):g}")
+                lines.append(f'| {domain} | {engine} | {lane["MedianMs"]:.2f} | {lane["P95Ms"]:.2f} | {lane["MinMs"]:.2f}–{lane["MaxMs"]:.2f} | {lane["Metrics"]["AllocatedBytes"] / 1048576:.2f} | {ranges[0]} | {ranges[1]} | {ranges[2]} | {ratio:.3f} |')
+        lines += ["", "[CCD0 paired samples](evidence/paired-decode-cost-ccd0-result.json) · [CCD1 paired samples](evidence/paired-decode-cost-ccd1-result.json)."]
     lines += ["", "All individual corpus outcomes and benchmark samples are in [evidence](evidence/sha256.json). Those files preserve the original environment/provenance metadata and untrimmed results. JSON formatting uses LF for portable evidence hashes; escaped payload line endings remain unchanged. Recorded run-input hashes identify the original measured files. The frozen manifest and acquisition script permit an independent rerun.", ""]
     (output / "results.md").write_text("\n".join(lines), encoding="utf-8")
     if args.website_root:

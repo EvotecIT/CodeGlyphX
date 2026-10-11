@@ -131,6 +131,32 @@ def build_website_data(root):
                                 "current_mib": f'{row["CurrentAllocatedBytes"] / 1048576:.2f}',
                                 "allocation_ratio": f'{row["AllocationRatio"]:.2f}',
                                 "before_correct": f'{row["PreviousCorrectRequests"]:g}', "current_correct": f'{row["CurrentCorrectRequests"]:g}'})
+    paired_decode = qualification.get("PairedDecodeCost")
+    paired_decode_rows = []
+    if paired_decode:
+        if paired_decode["Source"] != qualification["MeasurementSource"]:
+            raise ValueError("Paired decoding source differs from the qualified candidate")
+        for domain in ("ccd0", "ccd1"):
+            packet = load(root / f"paired-decode-cost-{domain}-result.json")
+            if packet["Metadata"]["benchmark.CandidateSource"] != qualification["MeasurementSource"]:
+                raise ValueError("Paired decoding packet source differs")
+            lanes = {row["Engine"]: row for row in packet["Summary"]}
+            if set(lanes) != {"Baseline", "Candidate"} or any(
+                row["Status"] != "Succeeded" or row["FailureCount"] or row["SampleCount"] != 12
+                for row in lanes.values()
+            ):
+                raise ValueError("Incomplete paired decoding evidence")
+            row = {"domain": domain.upper(),
+                   "previous_ms": f'{lanes["Baseline"]["MedianMs"]:.2f}',
+                   "current_ms": f'{lanes["Candidate"]["MedianMs"]:.2f}',
+                   "ratio": f'{lanes["Candidate"]["MedianMs"] / lanes["Baseline"]["MedianMs"]:.3f}'}
+            for engine, prefix in (("Baseline", "previous"), ("Candidate", "current")):
+                samples = [s for s in packet["Samples"] if s["Engine"] == engine and s["Iteration"] >= 0]
+                for metric, name in (("CorrectImages", "correct"), ("UnexpectedImages", "unexpected"), ("InconclusiveImages", "inconclusive")):
+                    values = [s["Metrics"][metric] for s in samples]
+                    row[f"{prefix}_{name}"] = f"{min(values):g}–{max(values):g}" if min(values) != max(values) else f"{min(values):g}"
+                row[f"{prefix}_managed_mib"] = f'{lanes[engine]["Metrics"]["AllocatedBytes"] / 1048576:.2f}'
+            paired_decode_rows.append(row)
     return {"date": generation["StartedUtc"][:10], "source": qualification["MeasurementSource"],
             "versions": qualification["Versions"], "cpu": qualification["Cpu"]["Name"].strip(),
             "png_wins": png_wins, "png_cases": 6, "module_cpp_wins": module_cpp_wins,
@@ -138,7 +164,7 @@ def build_website_data(root):
             "recognition": recognition, "formats": formats, "domains": domains,
             "format_scope_notes": [qualification["DataBarStackedDiscovery"]["PublicNote"]] if qualification.get("DataBarStackedDiscovery") else [],
             "negative_followup": negative_followup, "supplemental_pdf417": supplemental_rows,
-            "retail": retail_rows, "retail_cost": retail_cost,
+            "retail": retail_rows, "retail_cost": retail_cost, "paired_decode_cost": paired_decode_rows,
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 
 
