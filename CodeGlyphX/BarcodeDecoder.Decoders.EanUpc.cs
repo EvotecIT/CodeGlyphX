@@ -656,14 +656,6 @@ public static partial class BarcodeDecoder {
         return dict;
     });
 
-    private static readonly Lazy<Dictionary<int, char>> CodabarPatternMap = new(() => {
-        var dict = new Dictionary<int, char>();
-        foreach (var kvp in CodabarTables.EncodingTable) {
-            dict[PatternBitsFromString(kvp.Value)] = kvp.Key;
-        }
-        return dict;
-    });
-
     private static readonly Lazy<Dictionary<int, char>> Code11PatternMap = new(() => {
         var dict = new Dictionary<int, char> {
             { PatternBitsFromString(Code11Tables.StartStopPattern), '*' }

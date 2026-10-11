@@ -120,7 +120,7 @@ public static partial class BarcodeDecoder {
                 for (var i = 0; i < 7; i++) {
                     key = (key << 1) | (runs[pos + i] > threshold ? 1 : 0);
                 }
-                if (!CodabarPatternMap.Value.TryGetValue(key, out var ch)) return false;
+                if (!CodabarTables.PatternMap.Value.TryGetValue(key, out var ch)) return false;
                 if (count >= rented.Length) return false;
                 rented[count++] = ch;
                 pos += 7;

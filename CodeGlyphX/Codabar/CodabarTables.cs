@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace CodeGlyphX.Codabar;
@@ -27,4 +28,15 @@ internal static class CodabarTables {
     };
 
     public static readonly HashSet<char> StartStopChars = new() { 'A', 'B', 'C', 'D' };
+
+    // Both module decoding and pixel-run localization use the same patterns.
+    internal static readonly Lazy<Dictionary<int, char>> PatternMap = new(() => {
+        var patterns = new Dictionary<int, char>();
+        foreach (var pair in EncodingTable) {
+            var key = 0;
+            foreach (var bit in pair.Value) key = (key << 1) | (bit == '1' ? 1 : 0);
+            patterns[key] = pair.Key;
+        }
+        return patterns;
+    });
 }
