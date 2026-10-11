@@ -42,6 +42,8 @@ def main():
     names += [name for name in ("previous-candidate-corpus.json", "previous-negative-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
     names += sorted(path.name for path in root.glob("pdf417-supplemental-*.json"))
+    if qualification.get("Pdf417FramingProof"):
+        names += sorted(path.name for path in root.glob("pdf417-framing-*.json"))
     if qualification.get("RetailRecoveryProof"):
         names += sorted(path.name for path in root.glob("retail-*.json"))
     if qualification.get("PairedDecodeCost"):
@@ -98,6 +100,12 @@ def main():
             lines.append(f'| {engine} | {result["PreviousCorrect"]}/{supplemental["Images"]} | {result["Correct"]}/{supplemental["Images"]} | {result["UnexpectedImages"]} |')
         lines += ["", "CodeGlyphX gains: " + (", ".join(supplemental["Gained"]) or "none") + ". Lost previous successes: " + (", ".join(supplemental["Lost"]) or "none") + ".",
                   "", "The [manifest](evidence/pdf417-supplemental-manifest.json), [current outcomes](evidence/pdf417-supplemental-current.json), [previous outcomes](evidence/pdf417-supplemental-previous.json) and [pinned image/oracle provenance](evidence/pdf417-supplemental-provenance.json) retain the complete set."]
+        framing = qualification.get("Pdf417FramingProof")
+        if framing:
+            if framing["Source"] != qualification["MeasurementSource"]:
+                raise ValueError("PDF417 framing proof differs from the measured source")
+            lines += ["", f'The four damaged-framing regression images change from {framing["PreviousIndependentCorrect"]}/4 to {framing["CurrentIndependentCorrect"]}/4 exact payloads. The previous binary also fails {framing["PreviousBinaryContractCheck"]["failed"]} of {framing["PreviousBinaryContractCheck"]["total"]} selected contract checks; the candidate passes all {framing["CurrentFramingContracts"]["passed"]} recovery checks and {framing["OwnerContracts"]["passed"]} focused owner/budget/scanner checks.',
+                      "", "A separate PDF417-hinted check completes all 31 distinct negative images with no unexpected output for each reader. This diagnostic does not replace all-format negative completion. Its [unchanged inputs](evidence/pdf417-framing-negative-manifest.json), [outcomes](evidence/pdf417-framing-negative-outcomes.json), [four regression inputs](evidence/pdf417-framing-regression-manifest.json), [previous results](evidence/pdf417-framing-previous-misses.json) and [current results](evidence/pdf417-framing-current-misses.json) are retained."]
         if supplemental.get("TimingSensitiveGains"):
             lines += ["", "Timing-sensitive changes: " + "; ".join(supplemental["TimingSensitiveGains"]) + ". These outcomes do not establish a decoder accuracy gain."]
     if qualification.get("RetailRecoveryProof"):
@@ -206,8 +214,10 @@ def main():
         paired = qualification["PairedDecodeCost"]
         if paired["Source"] != qualification["MeasurementSource"]:
             raise ValueError("Paired whole-image cost source differs")
-        lines += ["", "## Paired whole-image decoding cost", "", paired["Scope"], "",
-                  "Lower current/previous ratios mean lower elapsed time. Correctness and unfinished-search ranges retain every measured sample; a faster incomplete search is not a successful negative scan.", "",
+        lines += ["", "## Paired whole-image decoding cost", "", paired["Scope"]]
+        for note in paired.get("FollowupNotes", []):
+            lines += ["", note]
+        lines += ["", "Lower current/previous ratios mean lower elapsed time. Correctness and unfinished-search ranges retain every measured sample; a faster incomplete search is not a successful negative scan.", "",
                   "| Domain | Binary | Median ms / 19 images | P95 ms | Min–max ms | Mean managed MiB | Correct / 19 | Unexpected | Inconclusive | Current / previous median |",
                   "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
         for domain in ("ccd0", "ccd1"):

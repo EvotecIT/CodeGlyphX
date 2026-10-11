@@ -164,7 +164,9 @@ def build_website_data(root):
             "recognition": recognition, "formats": formats, "domains": domains,
             "format_scope_notes": [qualification["DataBarStackedDiscovery"]["PublicNote"]] if qualification.get("DataBarStackedDiscovery") else [],
             "negative_followup": negative_followup, "supplemental_pdf417": supplemental_rows,
+            "supplemental_pdf417_limit": supplemental["Limit"] if supplemental else "",
             "retail": retail_rows, "retail_cost": retail_cost, "paired_decode_cost": paired_decode_rows,
+            "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 
 

@@ -35,7 +35,7 @@
         </details>
         {{ if comparison.supplemental_pdf417.size > 0 }}
         <h3>Supplemental PDF417 images</h3>
-        <p>A separate check uses all 38 PNG images with text oracles from the same three upstream PDF417 folders outside the 18 frozen cases. The selection was fixed before the first supplemental outcomes. A failure there informed the final correction and a permanent regression test, so this is supplemental regression evidence rather than an unseen holdout. It does not replace the 267-positive-image ranking or establish performance on an independent dataset.</p>
+        <p>A separate check uses all 38 PNG images with text oracles from the same three upstream PDF417 folders outside the 18 frozen cases. The selection was fixed before the first supplemental outcomes. {{ comparison.supplemental_pdf417_limit }} It does not replace the 267-positive-image ranking or establish performance on an independent dataset.</p>
         <div class="comparison-scroll" role="region" aria-label="Supplemental PDF417 results" tabindex="0">
             <table class="bench-table">
                 <caption>Exact payload sets on 38 additional PDF417 images</caption>
@@ -126,6 +126,7 @@
     <section class="benchmark-section" aria-labelledby="paired-decoding">
         <h2 id="paired-decoding">Paired whole-image decoding cost</h2>
         <p>The previous and current CodeGlyphX binaries process the same 19 preloaded images with the same options and 1,500 ms allowance. Each cache domain uses three warmups and twelve rotated measurements per binary. Lower current/previous ratios mean lower elapsed time. These shared-host results retain every sample, including incomplete negative searches and unsupported MaxiCode.</p>
+        {{ for note in comparison.paired_decode_notes }}<p>{{ note }}</p>{{ end }}
         <div class="comparison-scroll" role="region" aria-label="Paired decoding cost table" tabindex="0">
             <table class="bench-table">
                 <caption>Previous → current · 19-image batches · ranges include every measured sample</caption>
