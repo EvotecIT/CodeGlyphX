@@ -1,0 +1,7 @@
+{
+  "Scope": "Actual private synchronous Data Matrix bounding-box methods through strongly typed delegates; RGBA/BGRA, alpha, padding, polarity, blank/solid/random masks, live/expired ambient clocks and pre-cancelled tokens. No product test hooks. This is a decision diagnostic, not scanner performance or mid-loop timing proof.",
+  "BaselineCoreSha256": "03D09B3452D7DF1DF251566B5AD0F64F920EEBDF94219BCAA2D0E4EF5B5B8285",
+  "CandidateCoreSha256": "48827C50013802DDC6F5DA8C24C1BD846057EA995DEB452275D42C6C5489C48A",
+  "Cases": 1024,
+  "Mismatches": 0
+}

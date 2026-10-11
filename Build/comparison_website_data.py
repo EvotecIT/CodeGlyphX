@@ -202,6 +202,18 @@ def build_website_data(root):
                         "finder_cases": f'{decisions["FinderCases"]:,}',
                         "accepted_finders": f'{decisions["AcceptedFinders"]:,}',
                         "limits": alignment["Limits"]}
+    datamatrix_deadline = {}
+    matrix = qualification.get("DataMatrixDeadlineProof")
+    if matrix:
+        decisions = matrix["DecisionEquivalence"]
+        if (matrix["Source"] != qualification["MeasurementSource"]
+                or matrix["CoreSha256"] != qualification["CandidateCoreSha256"]
+                or decisions["Mismatches"] != 0):
+            raise ValueError("Data Matrix deadline proof differs from the qualified source")
+        datamatrix_deadline = {"cases": f'{decisions["Cases"]:,}', "limits": matrix["Limits"], "cost_scope": matrix["CostScope"],
+            "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["PreviousMedianMs"]:.3f}',
+                      "current_ms": f'{row["CurrentMedianMs"]:.3f}', "ratio": f'{row["Ratio"]:.3f}',
+                      "previous_bytes": f'{row["PreviousAllocatedBytes"]:,.0f}', "current_bytes": f'{row["CurrentAllocatedBytes"]:,.0f}'} for row in matrix["Cost"]]}
     return {"date": generation["StartedUtc"][:10], "source": qualification["MeasurementSource"],
             "versions": qualification["Versions"], "cpu": qualification["Cpu"]["Name"].strip(),
             "png_wins": png_wins, "png_cases": 6, "module_cpp_wins": module_cpp_wins,
@@ -213,7 +225,7 @@ def build_website_data(root):
             "retail": retail_rows, "retail_cost": retail_cost, "paired_decode_cost": paired_decode_rows,
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
-            "qr_alignment": qr_alignment,
+            "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 

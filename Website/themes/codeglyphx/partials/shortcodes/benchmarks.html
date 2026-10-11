@@ -64,6 +64,23 @@
             </table>
         </div>
     </section>
+    {{ if comparison.datamatrix_deadline.cases }}
+    <section class="benchmark-section" aria-labelledby="datamatrix-deadline-cost">
+        <h2 id="datamatrix-deadline-cost">Data Matrix deadline lookup</h2>
+        <p>Bounding-box search captures its fixed enclosing deadline once per synchronous call. Caller cancellation and the monotonic clock remain checked at every original row and pixel position. Pixel arithmetic, polarity, bounds, recognition allowances, format hints, payload oracles and scoring are unchanged.</p>
+        <p>The actual previous and current private methods agree on {{ comparison.datamatrix_deadline.cases }} cases, with zero mismatches. The diagnostic covers RGBA and BGRA pixels, transparency, padded strides, inversion, blank, solid and random images, live and expired ambient clocks, and cancelled tokens.</p>
+        <p>{{ comparison.datamatrix_deadline.limits }}</p>
+        <p><a href="/comparisons/evidence/datamatrix-box-equivalence.json">Download the decision diagnostic</a>. Current whole-image timings and completion counts are reported below.</p>
+        <p>{{ comparison.datamatrix_deadline.cost_scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Data Matrix bounding-box kernel cost table" tabindex="0">
+            <table class="bench-table">
+                <caption>Isolated bounding-box kernel diagnostic</caption>
+                <thead><tr><th>Domain</th><th>Previous ms</th><th>Current ms</th><th>Current / previous</th><th>Previous managed bytes</th><th>Current managed bytes</th></tr></thead>
+                <tbody>{{ for row in comparison.datamatrix_deadline.cost }}<tr><td>{{ row.domain }}</td><td>{{ row.previous_ms }}</td><td>{{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_bytes }}</td><td>{{ row.current_bytes }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+    </section>
+    {{ end }}
     {{ if comparison.qr_alignment.score_cases }}
     <section class="benchmark-section" aria-labelledby="qr-alignment-scoring">
         <h2 id="qr-alignment-scoring">QR alignment scoring</h2>
@@ -76,7 +93,7 @@
     {{ if comparison.pdf417_cost.size > 0 }}
     <section class="benchmark-section" aria-labelledby="pdf417-search-cost">
         <h2 id="pdf417-search-cost">{{ if comparison.pdf417_cost_historical }}Historical {{ end }}PDF417 search cost</h2>
-        {{ if comparison.pdf417_cost_historical }}<p>These retained measurements qualify the earlier PDF417 optimization at source <code>{{ comparison.pdf417_cost_source }}</code>. They do not measure the current QR candidate.</p>{{ end }}
+        {{ if comparison.pdf417_cost_historical }}<p>These retained measurements qualify the earlier PDF417 optimization at source <code>{{ comparison.pdf417_cost_source }}</code>. They do not measure the current candidate.</p>{{ end }}
         <p>These 31 fixed negative images use an explicit PDF417 hint to isolate its search cost. Previous and current binaries receive identical preloaded pixels and options. Three warmups precede twelve rotated measurements on each cache domain; all samples are retained. Loading and result evaluation are excluded.</p>
         <div class="comparison-scroll" role="region" aria-label="PDF417 search cost table" tabindex="0">
             <table class="bench-table">

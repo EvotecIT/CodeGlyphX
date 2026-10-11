@@ -46,8 +46,11 @@ def main():
         names += sorted(path.name for path in root.glob("pdf417-framing-*.json"))
     if qualification.get("Pdf417CostProof") or qualification.get("HistoricalPdf417CostProof"):
         names += sorted(path.name for path in root.glob("pdf417-cost-*.json"))
-    if qualification.get("QrAlignmentProof"):
+    if qualification.get("QrAlignmentProof") or qualification.get("HistoricalQrAlignmentProof"):
         names.append("qr-alignment-equivalence.json")
+    if qualification.get("DataMatrixDeadlineProof"):
+        names.append("datamatrix-box-equivalence.json")
+        names += sorted(path.name for path in root.glob("datamatrix-box-cost-*-result.json"))
     if qualification.get("RetailRecoveryProof"):
         names += sorted(path.name for path in root.glob("retail-*.json"))
     if qualification.get("PairedDecodeCost"):
@@ -124,6 +127,23 @@ def main():
                   f'The actual previous and current private methods agree on {decisions["ScoreCases"]:,} scoring cases, including {decisions["AcceptedScores"]:,} accepted scores, and {decisions["FinderCases"]:,} complete finder searches, including {decisions["AcceptedFinders"]:,} successful searches. There are zero decision or selected-center mismatches. Boundary patterns, inversion, global and adaptive thresholds, fractional coordinates, transformed and edge patterns, noise and first-perfect ties are included.', "",
                   alignment["Limits"], "",
                   "The [decision diagnostic](evidence/qr-alignment-equivalence.json) records the exact baseline and candidate core hashes. Current whole-image timings and completion counts are reported in the paired decoding comparison below."]
+    matrix = qualification.get("DataMatrixDeadlineProof")
+    if matrix:
+        decisions = matrix["DecisionEquivalence"]
+        if (matrix["Source"] != qualification["MeasurementSource"]
+                or matrix["CoreSha256"] != qualification["CandidateCoreSha256"]
+                or decisions["Mismatches"] != 0):
+            raise ValueError("Data Matrix deadline proof differs from the measured candidate")
+        lines += ["", "## Data Matrix deadline lookup", "",
+                  "Bounding-box search captures its fixed enclosing deadline once per synchronous call. It still checks caller cancellation and the monotonic clock at every original row and pixel position. Pixel arithmetic, polarity and bounds are unchanged, as are recognition allowances, format hints, payload oracles and scoring.", "",
+                  f'The actual previous and current private methods agree on {decisions["Cases"]:,} cases, with zero mismatches. The diagnostic covers RGBA and BGRA pixels, transparency, padded strides, inversion, blank, solid and random images, live and expired ambient clocks, and cancelled tokens.', "",
+                  matrix["Limits"], "",
+                  "The [decision diagnostic](evidence/datamatrix-box-equivalence.json) records the exact baseline and candidate core hashes. Current whole-image timings and completion counts are reported in the paired decoding comparison below.", "",
+                  matrix["CostScope"], "",
+                  "| Domain | Previous kernel ms | Current kernel ms | Current / previous | Previous managed bytes | Current managed bytes |",
+                  "| --- | ---: | ---: | ---: | ---: | ---: |"]
+        for row in matrix["Cost"]:
+            lines.append(f'| {row["Domain"].upper()} | {row["PreviousMedianMs"]:.3f} | {row["CurrentMedianMs"]:.3f} | {row["Ratio"]:.3f} | {row["PreviousAllocatedBytes"]:,.0f} | {row["CurrentAllocatedBytes"]:,.0f} |')
     pdf_cost = qualification.get("Pdf417CostProof") or qualification.get("HistoricalPdf417CostProof")
     if pdf_cost:
         historical = not qualification.get("Pdf417CostProof")
@@ -135,7 +155,7 @@ def main():
                     or metadata["benchmark.CandidateCoreSha256"] != pdf_cost["CoreSha256"]):
                 raise ValueError("PDF417 cost packet differs from its recorded source")
         heading = "## Historical PDF417 search cost" if historical else "## PDF417 search cost"
-        source_note = (f'These retained measurements compare source `{pdf_cost["PreviousSource"]}` with `{pdf_cost["Source"]}`. They qualify the earlier PDF417 optimization and do not measure the current QR candidate.'
+        source_note = (f'These retained measurements compare source `{pdf_cost["PreviousSource"]}` with `{pdf_cost["Source"]}`. They qualify the earlier PDF417 optimization and do not measure the current candidate.'
                        if historical else f'Measured candidate: `{pdf_cost["Source"]}`.')
         lines += ["", heading, "", source_note, "", pdf_cost["Scope"], "", pdf_cost["Limits"], "",
                   "| Domain | Before ms | After ms | After / before | Before completed /31 | After completed /31 | Before unfinished batches /12 | After unfinished batches /12 | Before managed MiB | After managed MiB |",
