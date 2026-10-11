@@ -214,18 +214,6 @@ public static partial class QrDecoder {
         return false;
     }
 
-    internal static int GetBestFormatDistance(int bitsA, int bitsB) {
-        var best = int.MaxValue;
-        for (var i = 0; i < FormatPatterns.Length; i++) {
-            var pattern = FormatPatterns[i];
-            var distA = CountBits(bitsA ^ pattern);
-            var distB = CountBits(bitsB ^ pattern);
-            var minDist = Math.Min(distA, distB);
-            if (minDist < best) best = minDist;
-        }
-        return best;
-    }
-
     private static int CountBits(int x) {
         unchecked {
             x = x - ((x >> 1) & 0x55555555);

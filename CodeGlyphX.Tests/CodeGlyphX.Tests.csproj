@@ -42,6 +42,7 @@
     <Compile Include="IndependentPngPixelTests.cs" />
     <Compile Include="PngMalformedInputTests.cs" />
     <Compile Include="QrDecodeInfoTests.cs" />
+    <Compile Include="QrFormatDistanceTests.cs" />
     <Compile Include="QrApiTests.cs" />
     <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
