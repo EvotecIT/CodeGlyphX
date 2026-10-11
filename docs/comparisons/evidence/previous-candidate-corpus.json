@@ -1522,8 +1522,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "DeadlineExceeded"
   },
   {
     "Id": "falsepositives/03.png",
@@ -1533,8 +1533,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/15.png",
@@ -1566,8 +1566,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/01.png",
@@ -1588,8 +1588,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives-2/17.png",
@@ -1599,8 +1599,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives-2/16.png",
@@ -1643,8 +1643,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "itf-1/15.png",
@@ -1833,13 +1833,13 @@
     "Expected": [
       "\rABCDEFGHIJKLMNOPQRSTUVWXYZ\u001C\u001D\u001E \u0022#$%\u0026\u0027()*\u002B,-./01234:56789"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "\rABCDEFGHIJKLMNOPQRSTUVWXYZ\u001C\u001D\u001E \u0022#$%\u0026\u0027()*\u002B,-./01234:56789"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Unsupported",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "maxicode-1/1.png",
@@ -1848,13 +1848,13 @@
     "Expected": [
       "\rABCDEFGHIJKLMNOPQRSTUVWXYZ\u001C\u001D\u001E \u0022#$%\u0026\u0027()*\u002B,-./01234:56789"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "\rABCDEFGHIJKLMNOPQRSTUVWXYZ\u001C\u001D\u001E \u0022#$%\u0026\u0027()*\u002B,-./01234:56789"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Unsupported",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "maxicode-1/MODE6.png",
@@ -1863,13 +1863,13 @@
     "Expected": [
       "[)\u003E\u001E01\u001D96123450000\u001D222\u001D111\u001DMODE6"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "[)\u003E\u001E01\u001D96123450000\u001D222\u001D111\u001DMODE6"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Unsupported",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "maxicode-1/MODE3.png",
@@ -1878,13 +1878,13 @@
     "Expected": [
       "[)\u003E\u001E01\u001D96123450000\u001D222\u001D111\u001DMODE3"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "[)\u003E\u001E01\u001D96123450000\u001D222\u001D111\u001DMODE3"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Unsupported",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "maxicode-1/mode4-mixed-sets.png",
@@ -1893,13 +1893,13 @@
     "Expected": [
       "ABCDE12abcde1\u00C0\u00C1\u00C2\u00C3\u00A2\u00A3\u00A4\u00A51\u00E0\u00E1\u00E2\u00E3abcde123A123456789\u00E0\u00E1\u00E2\u00E3\u00A2\u00A3\u00A4\u00A5abcd\u00DA\u00DB\u00DC\u00DD123456789\u00BE"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "ABCDE12abcde1\u00C0\u00C1\u00C2\u00C3\u00A2\u00A3\u00A4\u00A51\u00E0\u00E1\u00E2\u00E3abcde123A123456789\u00E0\u00E1\u00E2\u00E3\u00A2\u00A3\u00A4\u00A5abcd\u00DA\u00DB\u00DC\u00DD123456789\u00BE"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Unsupported",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "maxicode-1/MODE5.png",
@@ -1908,13 +1908,13 @@
     "Expected": [
       "[)\u003E\u001E01\u001D96123450000\u001D222\u001D111\u001DMODE5"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "[)\u003E\u001E01\u001D96123450000\u001D222\u001D111\u001DMODE5"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Unsupported",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "pdf417-1/05.png",

@@ -7,8 +7,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/02.png",
@@ -18,8 +18,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/03.png",
@@ -29,8 +29,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "DeadlineExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/04.png",
@@ -51,8 +51,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/06.png",
@@ -73,8 +73,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/08.png",
@@ -150,8 +150,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/15.png",
@@ -194,8 +194,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/19.png",

@@ -48,6 +48,8 @@ def main():
         names += sorted(path.name for path in root.glob("pdf417-cost-*.json"))
     if qualification.get("QrAlignmentProof") or qualification.get("HistoricalQrAlignmentProof"):
         names.append("qr-alignment-equivalence.json")
+    if qualification.get("NegativeSearchCostProof"):
+        names.append("negative-search-cost-proof.json")
     if qualification.get("MaxiCodeImageProof"):
         names.append("maxicode-image-proof.json")
     if qualification.get("DataMatrixDeadlineProof") or qualification.get("HistoricalDataMatrixDeadlineProof"):
@@ -136,10 +138,22 @@ def main():
         if maxi["Source"] != qualification["MeasurementSource"] or maxi["CoreSha256"] != qualification["CandidateCoreSha256"]:
             raise ValueError("MaxiCode proof differs from the measured candidate")
         lines += ["", "## MaxiCode image recognition", "",
-                  f'The same six MaxiCode images now decode correctly ({maxi["Correct"]}/{maxi["Images"]}), versus {maxi["PreviousCorrect"]}/{maxi["Images"]} previously. All six previously lacked image-scanning support. Their bytes, format hints and payload oracles are unchanged.', "",
+                  f'The same six MaxiCode images now decode correctly ({maxi["Correct"]}/{maxi["Images"]}), versus {maxi["PreviousCorrect"]}/{maxi["Images"]} previously. Image bytes, format hints and payload oracles are unchanged.', "",
                   "The scanner verifies circular finder bands, samples the staggered module grid and uses the existing primary and secondary error correction. It accepts planar rotation and inverted polarity, and can recover small damage to fixed orientation modules. The existing result carries secondary text and bytes, typed carrier metadata and the searched source region.", "",
                   maxi["TextContract"], "", maxi["Evidence"], "", maxi["Limits"], "",
                   "The [MaxiCode proof](evidence/maxicode-image-proof.json) records source hashes and search bounds. The capability catalog advertises one-symbol image scanning without geometry. Independent fixture tests do not establish coverage of every numeric MaxiCode mode; fixture filenames are not encoding-mode evidence."]
+    negative_cost = qualification.get("NegativeSearchCostProof")
+    if negative_cost:
+        decisions = negative_cost["DecisionEquivalence"]
+        if (negative_cost["Source"] != qualification["MeasurementSource"]
+                or negative_cost["CoreSha256"] != qualification["CandidateCoreSha256"]
+                or decisions["Mismatches"] != 0):
+            raise ValueError("Negative-search cost proof differs from the measured candidate")
+        lines += ["", "## Negative-image decoding work", "",
+                  "Direct-mark retries reuse one local-intensity table across dark and light adaptive masks. PDF417 scanlines reject guard ratios that cannot satisfy the existing fit. Search bounds, variant order, cancellation checks, recognition allowances and payload scoring are unchanged.", "",
+                  f'The actual previous and current private methods produce identical bytes for {decisions["PreprocessingOutputs"]} preprocessing outputs across {decisions["PreprocessingConfigurations"]} configurations. All {decisions["GuardCases"]:,} guard decisions match, including {decisions["AcceptedGuards"]:,} accepted fits.', "",
+                  negative_cost["Limits"], "",
+                  "The [decision and allocation diagnostic](evidence/negative-search-cost-proof.json) records source hashes, output checks and allocation observations. Paired whole-image costs and negative completion below determine the measured outcome."]
     matrix = qualification.get("DataMatrixDeadlineProof")
     if matrix:
         decisions = matrix["DecisionEquivalence"]

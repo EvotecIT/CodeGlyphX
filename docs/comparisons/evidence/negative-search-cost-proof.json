@@ -1,0 +1,187 @@
+{
+  "Source": "c7f1eb7ea85e698efc709df31b2b34504ea5ca44",
+  "CoreSha256": "FD01E5DE9A28204BB3E6EFA73D478EA283778E48B117550EB38ED69EEB16FBDD",
+  "PreviousSource": "160f13a0b90e97b32b6ad363dd8553d079a62009",
+  "PreviousCoreSha256": "57740696F73C920107DD758469B9C50E8C497329FF66119A12FB97290F23FA51",
+  "DiagnosticProbeCoreSha256": "FD01E5DE9A28204BB3E6EFA73D478EA283778E48B117550EB38ED69EEB16FBDD",
+  "DecisionEquivalence": {
+    "GuardCases": 400000,
+    "AcceptedGuards": 14877,
+    "GuardDecisionsSha256": "0E5CFDABC7072E391E3619F95C7F34A72957F002367D628C902BD6EED691FA17",
+    "PreprocessingConfigurations": 12,
+    "PreprocessingOutputs": 36,
+    "Mismatches": 0
+  },
+  "PreprocessingAllocationDiagnostic": [
+    {
+      "Width": 73,
+      "Height": 59,
+      "Attempts": 1,
+      "PreviousAllocatedBytes": 27680,
+      "CurrentAllocatedBytes": 27680
+    },
+    {
+      "Width": 73,
+      "Height": 59,
+      "Attempts": 2,
+      "PreviousAllocatedBytes": 84632,
+      "CurrentAllocatedBytes": 84632
+    },
+    {
+      "Width": 73,
+      "Height": 59,
+      "Attempts": 3,
+      "PreviousAllocatedBytes": 141976,
+      "CurrentAllocatedBytes": 106432
+    },
+    {
+      "Width": 73,
+      "Height": 59,
+      "Attempts": 6,
+      "PreviousAllocatedBytes": 216136,
+      "CurrentAllocatedBytes": 180592
+    },
+    {
+      "Width": 257,
+      "Height": 193,
+      "Attempts": 1,
+      "PreviousAllocatedBytes": 299056,
+      "CurrentAllocatedBytes": 299056
+    },
+    {
+      "Width": 257,
+      "Height": 193,
+      "Attempts": 2,
+      "PreviousAllocatedBytes": 947768,
+      "CurrentAllocatedBytes": 947768
+    },
+    {
+      "Width": 257,
+      "Height": 193,
+      "Attempts": 3,
+      "PreviousAllocatedBytes": 1596480,
+      "CurrentAllocatedBytes": 1196040
+    },
+    {
+      "Width": 257,
+      "Height": 193,
+      "Attempts": 6,
+      "PreviousAllocatedBytes": 2441848,
+      "CurrentAllocatedBytes": 2041408
+    },
+    {
+      "Width": 320,
+      "Height": 240,
+      "Attempts": 1,
+      "PreviousAllocatedBytes": 462232,
+      "CurrentAllocatedBytes": 462232
+    },
+    {
+      "Width": 320,
+      "Height": 240,
+      "Attempts": 2,
+      "PreviousAllocatedBytes": 1465400,
+      "CurrentAllocatedBytes": 1465400
+    },
+    {
+      "Width": 320,
+      "Height": 240,
+      "Attempts": 3,
+      "PreviousAllocatedBytes": 2469240,
+      "CurrentAllocatedBytes": 1850304
+    },
+    {
+      "Width": 320,
+      "Height": 240,
+      "Attempts": 6,
+      "PreviousAllocatedBytes": 3775744,
+      "CurrentAllocatedBytes": 3156160
+    }
+  ],
+  "DiagnosticFilesSha256": {
+    "guards-baseline.json": "CBF4B68EB075793F1BD1C965985854DB070CE2FA6D189302576ABE2CC79FD653",
+    "guards-candidate.json": "CBF4B68EB075793F1BD1C965985854DB070CE2FA6D189302576ABE2CC79FD653",
+    "preprocess-baseline.jsonl": "2E47F1B11E1B554927222B6BA21C0FDFA1D87AB45D33876B184147286671402D",
+    "preprocess-candidate.jsonl": "4B6762B246F7A3CFCCC97DB8AAFC54ADDB1E022FA30D6949C38851C318F8E7CE",
+    "family-frozen-candidate.jsonl": "5655C41FBBF102BD2B82598D2FD8C17C5D7D37F6DF6B91CDE63C0278505A239E"
+  },
+  "Changes": [
+    "Direct-part-mark retries reuse one summed-area intensity table for dark and light adaptive masks. Original masks, variant order and lazy attempt bounds remain unchanged.",
+    "PDF417 guards reject a first bar narrower than three times either following one-module run. Such ratios cannot meet the existing residual limit. The original full fit decides all remaining candidates."
+  ],
+  "Limits": "Deterministic private-method diagnostics protect original arithmetic and outputs; they are not a representative accuracy or speed survey. Instrumented baseline stacks identify expensive searches but do not establish exclusive CPU cycles. Isolated-family timings have different allowance distribution from all-format searches and are not ranked benchmarks. Allocation savings do not establish a latency win or completion of every negative. Whole-image paired results retain every sample, recognition difference and cost loss.",
+  "ControlsChanged": false,
+  "ProductionDependenciesAdded": false,
+  "PublicApiAdded": false,
+  "BaselineProfile": {
+    "Source": "160f13a0b90e97b32b6ad363dd8553d079a62009",
+    "CoreSha256": "57740696F73C920107DD758469B9C50E8C497329FF66119A12FB97290F23FA51",
+    "TraceSha256": "FC801881F8A0EC44F0547B26784FE7EC7BCBE16906D3E072C12159BF1C01CE4A",
+    "SummarySha256": "1AD308CC70D587427611D39FBC338212D63B785FF1ADC2CDEE778564C1E2525A",
+    "Families": [
+      {
+        "Frame": "ScanDataMatrix",
+        "Weight": 4051.880940706065,
+        "PercentOfBarcodeStacks": 27.549942188546762
+      },
+      {
+        "Frame": "ScanQr",
+        "Weight": 3614.669262602043,
+        "PercentOfBarcodeStacks": 24.577210108757573
+      },
+      {
+        "Frame": "ScanPdf417",
+        "Weight": 2683.8354172382387,
+        "PercentOfBarcodeStacks": 18.248194275817823
+      },
+      {
+        "Frame": "ScanAztec",
+        "Weight": 1640.7230221731234,
+        "PercentOfBarcodeStacks": 11.155763229412802
+      },
+      {
+        "Frame": "ScanExpandedStacked",
+        "Weight": 753.7584945426931,
+        "PercentOfBarcodeStacks": 5.12502791978844
+      },
+      {
+        "Frame": "ScanLocatedLinear",
+        "Weight": 619.8458195375442,
+        "PercentOfBarcodeStacks": 4.214515861637339
+      },
+      {
+        "Frame": "ScanMatrixTiles",
+        "Weight": 608.5288969240137,
+        "PercentOfBarcodeStacks": 4.137568742924444
+      },
+      {
+        "Frame": "ScanMicroQr",
+        "Weight": 327.7911885074598,
+        "PercentOfBarcodeStacks": 2.2287496660062054
+      },
+      {
+        "Frame": "ScanDataBarStacked",
+        "Weight": 304.8775907638566,
+        "PercentOfBarcodeStacks": 2.0729533081157183
+      },
+      {
+        "Frame": "ScanMaxiCode",
+        "Weight": 55.241200313567106,
+        "PercentOfBarcodeStacks": 0.3756013311683107
+      },
+      {
+        "Frame": "Other",
+        "Weight": 34.242101683616056,
+        "PercentOfBarcodeStacks": 0.23282222148254295
+      },
+      {
+        "Frame": "Scan",
+        "Weight": 12.008762899969867,
+        "PercentOfBarcodeStacks": 0.08165114634204527
+      }
+    ],
+    "Limit": "Sampled managed thread time from instrumented diagnostic execution. Counts do not establish exclusive CPU cycles, uninstrumented latency or native cost.",
+    "ArchivedTrace": "diagnosis/baseline-all.nettrace",
+    "ArchivedSummary": "diagnosis/baseline-all-profile-summary.json"
+  }
+}

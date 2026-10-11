@@ -67,7 +67,7 @@
     {{ if comparison.maxicode_image.images }}
     <section class="benchmark-section" aria-labelledby="maxicode-image-recognition">
         <h2 id="maxicode-image-recognition">MaxiCode image recognition</h2>
-        <p>The same six images now decode correctly: {{ comparison.maxicode_image.correct }}/{{ comparison.maxicode_image.images }}, versus {{ comparison.maxicode_image.before }}/{{ comparison.maxicode_image.images }} previously. All six previously lacked image-scanning support. Image bytes, format hints, payload oracles and the per-image deadline are unchanged.</p>
+        <p>The same six images now decode correctly: {{ comparison.maxicode_image.correct }}/{{ comparison.maxicode_image.images }}, versus {{ comparison.maxicode_image.before }}/{{ comparison.maxicode_image.images }} previously. Image bytes, format hints, payload oracles and the per-image deadline are unchanged.</p>
         <p>The scanner verifies circular finder bands, samples the staggered module grid and uses the existing primary and secondary error correction. Focused checks cover planar rotation on a larger label, inverse polarity, damaged fixed markers and cropped bottom-up frames. The capability catalog reports one-symbol scanning without geometry.</p>
         <p>{{ comparison.maxicode_image.text_contract }}</p>
         <p>{{ comparison.maxicode_image.evidence }}</p>
@@ -175,10 +175,18 @@
         </details>
         {{ end }}
     </section>
+    {{ if comparison.negative_search_cost.outputs }}
+    <section class="benchmark-section" aria-labelledby="negative-decoding-work">
+        <h2 id="negative-decoding-work">Negative-image decoding work</h2>
+        <p>Direct-mark retries reuse a local-intensity table across dark and light adaptive masks. PDF417 scanlines reject guard ratios that cannot satisfy the existing fit. Search bounds, variant order, cancellation checks, recognition allowances and payload scoring are unchanged.</p>
+        <p>The previous and current routines produce identical bytes for {{ comparison.negative_search_cost.outputs }} preprocessing outputs across {{ comparison.negative_search_cost.configurations }} configurations. All {{ comparison.negative_search_cost.guard_cases }} guard decisions match, including {{ comparison.negative_search_cost.accepted_guards }} accepted fits. These diagnostics preserve behavior; allocation savings alone do not establish faster decoding or completed negative searches.</p>
+        <p><a href="/comparisons/evidence/negative-search-cost-proof.json">Decision and allocation diagnostic</a>. The paired measurements below report whole-image cost and recognition together.</p>
+    </section>
+    {{ end }}
     {{ if comparison.paired_decode_cost.size > 0 }}
     <section class="benchmark-section" aria-labelledby="paired-decoding">
         <h2 id="paired-decoding">Paired whole-image decoding cost</h2>
-        <p>The previous and current CodeGlyphX binaries process the same 19 preloaded images with the same options and 1,500 ms allowance. Each cache domain uses three warmups and twelve rotated measurements per binary. Lower current/previous ratios mean lower elapsed time. These shared-host results retain every sample, including incomplete negative searches and the previous binary's unsupported MaxiCode input.</p>
+        <p>The previous and current CodeGlyphX binaries process the same 19 preloaded images with the same options and 1,500 ms allowance. Each cache domain uses three warmups and twelve rotated measurements per binary. Lower current/previous ratios mean lower elapsed time. These shared-host results retain every sample, including incomplete negative searches. Both binaries support the MaxiCode image in this workload.</p>
         {{ for note in comparison.paired_decode_notes }}<p>{{ note }}</p>{{ end }}
         <div class="comparison-scroll" role="region" aria-label="Paired decoding cost table" tabindex="0">
             <table class="bench-table">

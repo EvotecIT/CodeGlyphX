@@ -1,20 +1,13 @@
 {
-  "Source": "160f13a0b90e97b32b6ad363dd8553d079a62009",
-  "CoreSha256": "57740696F73C920107DD758469B9C50E8C497329FF66119A12FB97290F23FA51",
-  "PreviousSource": "b006759fea1017ffb9940b9251a2d201b29b0615",
-  "PreviousCoreSha256": "48827C50013802DDC6F5DA8C24C1BD846057EA995DEB452275D42C6C5489C48A",
+  "Source": "c7f1eb7ea85e698efc709df31b2b34504ea5ca44",
+  "CoreSha256": "FD01E5DE9A28204BB3E6EFA73D478EA283778E48B117550EB38ED69EEB16FBDD",
+  "PreviousSource": "160f13a0b90e97b32b6ad363dd8553d079a62009",
+  "PreviousCoreSha256": "57740696F73C920107DD758469B9C50E8C497329FF66119A12FB97290F23FA51",
   "Images": 6,
   "Correct": 6,
-  "PreviousCorrect": 0,
-  "PreviouslyUnsupported": 6,
-  "Gained": [
-    "maxicode-1/with-errors.png",
-    "maxicode-1/1.png",
-    "maxicode-1/MODE6.png",
-    "maxicode-1/MODE3.png",
-    "maxicode-1/mode4-mixed-sets.png",
-    "maxicode-1/MODE5.png"
-  ],
+  "PreviousCorrect": 6,
+  "PreviouslyUnsupported": 0,
+  "Gained": [],
   "Bounds": {
     "Finders": 16,
     "Orientations": 360,
@@ -25,5 +18,6 @@
   "Evidence": "Six unmodified independently authored images and original expected payloads, selected before outcomes. They now also inform permanent regression fixtures and are not an unseen holdout.",
   "Limits": "One symbol per image; multiple MaxiCode instances, symbol geometry, mirrored lattices and arbitrary perspective are unproved. Planar rotation, inverse polarity and label clutter have focused regression coverage. Frozen corpus recognition and cost do not establish general or equal-accuracy superiority.",
   "ProductionDependenciesAdded": false,
-  "PublicApiAdded": false
+  "PublicApiAdded": false,
+  "DiscoverySource": "160f13a0b90e97b32b6ad363dd8553d079a62009"
 }

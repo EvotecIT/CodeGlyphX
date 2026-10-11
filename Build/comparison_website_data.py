@@ -209,6 +209,18 @@ def build_website_data(root):
             raise ValueError("MaxiCode proof differs from the qualified source")
         maxicode_image = {"correct": maxi["Correct"], "images": maxi["Images"], "before": maxi["PreviousCorrect"],
                           "limits": maxi["Limits"], "evidence": maxi["Evidence"], "text_contract": maxi["TextContract"]}
+    negative_search_cost = {}
+    negative_cost = qualification.get("NegativeSearchCostProof")
+    if negative_cost:
+        decisions = negative_cost["DecisionEquivalence"]
+        if (negative_cost["Source"] != qualification["MeasurementSource"]
+                or negative_cost["CoreSha256"] != qualification["CandidateCoreSha256"]
+                or decisions["Mismatches"] != 0):
+            raise ValueError("Negative-search cost proof differs from the qualified source")
+        negative_search_cost = {"outputs": decisions["PreprocessingOutputs"],
+                               "configurations": decisions["PreprocessingConfigurations"],
+                               "guard_cases": f'{decisions["GuardCases"]:,}',
+                               "accepted_guards": f'{decisions["AcceptedGuards"]:,}'}
     datamatrix_deadline = {}
     matrix = qualification.get("DataMatrixDeadlineProof")
     if matrix:
@@ -233,6 +245,7 @@ def build_website_data(root):
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
             "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,
+            "negative_search_cost": negative_search_cost,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 
