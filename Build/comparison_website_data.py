@@ -118,6 +118,7 @@ def build_website_data(root):
             "png_wins": png_wins, "png_cases": 6, "module_cpp_wins": module_cpp_wins,
             "png_qrc_allocation_wins": png_qrc_allocation_wins,
             "recognition": recognition, "formats": formats, "domains": domains,
+            "format_scope_notes": [qualification["DataBarStackedDiscovery"]["PublicNote"]] if qualification.get("DataBarStackedDiscovery") else [],
             "negative_followup": negative_followup, "supplemental_pdf417": supplemental_rows,
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 

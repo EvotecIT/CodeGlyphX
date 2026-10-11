@@ -31,6 +31,7 @@
                     <tbody>{{ for row in comparison.formats }}<tr><th scope="row">{{ row.format }}</th><td>{{ row.images }}</td>{{ for count in row.correct }}<td>{{ count }}</td>{{ end }}</tr>{{ end }}</tbody>
                 </table>
             </div>
+            {{ for note in comparison.format_scope_notes }}<p>{{ note }}</p>{{ end }}
         </details>
         {{ if comparison.supplemental_pdf417.size > 0 }}
         <h3>Supplemental PDF417 images</h3>
