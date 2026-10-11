@@ -319,12 +319,15 @@ public static partial class DataMatrixDecoder {
         var right = -1;
         var top = height;
         var bottom = -1;
+        // This synchronous pixel loop never opens a nested budget. Keep checking
+        // the same clock and token without reading AsyncLocal for every pixel.
+        var budget = DecodeBudget.Capture();
 
         for (var y = 0; y < height; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { box = default; return false; }
+            if (cancellationToken.IsCancellationRequested || budget.IsExpired) { box = default; return false; }
             var row = y * stride;
             for (var x = 0; x < width; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) { box = default; return false; }
+                if (cancellationToken.IsCancellationRequested || budget.IsExpired) { box = default; return false; }
                 var dark = IsDarkAt(pixels, row, x, format);
                 if (invert) dark = !dark;
                 if (!dark) continue;
