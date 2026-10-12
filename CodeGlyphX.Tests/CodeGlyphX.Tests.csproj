@@ -32,6 +32,7 @@
     <Compile Include="FractionalBarcodeSamplingTests.cs" />
     <Compile Include="Code93RunLocalizationTests.cs" />
     <Compile Include="Code39RunLocalizationTests.cs" />
+    <Compile Include="ItfRunLocalizationTests.cs" />
     <Compile Include="CodabarRunLocalizationTests.cs" />
     <Compile Include="BarcodeGrayBoundaryTests.cs" />
     <Compile Include="RetailIlluminationTests.cs" />

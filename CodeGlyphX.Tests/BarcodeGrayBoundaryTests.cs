@@ -78,6 +78,7 @@ public sealed class BarcodeGrayBoundaryTests {
         var options = ScanOptions.Robust(TestBudget.Adjust(5000));
         options.Formats = new[] { SymbolFormat.Itf }; options.MaxSymbols = 32;
         var result = SymbolScanner.Scan(buffer.ToArray(), options);
+        Assert.NotEmpty(result.Symbols);
         Assert.All(result.Symbols, symbol => Assert.Equal("00012345678905", symbol.Text));
     }
 

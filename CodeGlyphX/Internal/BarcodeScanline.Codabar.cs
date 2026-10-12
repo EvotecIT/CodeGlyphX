@@ -107,18 +107,7 @@ internal static partial class BarcodeScanline {
                 maxima[group] = Math.Max(maxima[group], width);
             }
         }
-        for (var group = 0; group < 4; group++) {
-            if (counts[group] == 0) return false;
-            sums[group] /= counts[group];
-        }
-        if (maxima[0] >= minima[1] || maxima[2] >= minima[3]) return false;
-        var pitch = (sums[0] + sums[2]) / 2;
-        var widePitch = (sums[1] + sums[3]) / 2;
-        var gain = (sums[2] - sums[0]) / 2;
-        if (widePitch < pitch * 1.5 || widePitch > pitch * 4 || Math.Abs(gain) > pitch * 0.8) return false;
-        // The same printing bias must explain both narrow and wide elements.
-        if (Math.Abs((sums[3] - sums[1]) - 2 * gain) > pitch * 0.75 + 0.5) return false;
-        var tolerance = pitch * 0.65 + 0.5;
+        if (!TryFitTwoWidthRunModel(sums, counts, minima, maxima, out var pitch, out var tolerance)) return false;
         var end = start + keys.Count * 8 - 1;
         if (!HasCodabarQuietZone(runs, start - 1, reverse, pitch) ||
             !HasCodabarQuietZone(runs, end, reverse, pitch)) return false;

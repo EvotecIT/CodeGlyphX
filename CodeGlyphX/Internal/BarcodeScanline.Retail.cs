@@ -55,6 +55,7 @@ internal static partial class BarcodeScanline {
                 TryCollectCode39RunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
                 TryCollectCode93RunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
                 TryCollectCodabarRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
+                TryCollectItfRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
                 TryCollectExpandedRunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
             }
             for (var start = 0; start + 33 <= runs.Length; start++) {
