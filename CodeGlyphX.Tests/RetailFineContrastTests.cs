@@ -17,21 +17,7 @@ public sealed class RetailFineContrastTests {
     [InlineData(2, true)]
     [InlineData(3, true)]
     public void Decode_TiltedPhotograph_ConfirmsFineContrastOnAdjacentRows(int quarterTurns, bool inverted) {
-        using var fixture = typeof(RetailFineContrastTests).Assembly.GetManifestResourceStream(
-            "CodeGlyphX.Tests.Fixtures.Linear.zxing-ean-fine-contrast.png");
-        Assert.NotNull(fixture);
-        using var buffer = new MemoryStream();
-        fixture!.CopyTo(buffer);
-        var pixels = ImageReader.DecodeRgba32(buffer.ToArray(), out var width, out var height);
-        for (var turn = 0; turn < quarterTurns; turn++) {
-            var rotated = new byte[pixels.Length];
-            for (var y = 0; y < height; y++) for (var x = 0; x < width; x++)
-                Buffer.BlockCopy(pixels, (y * width + x) * 4, rotated, (x * height + height - 1 - y) * 4, 4);
-            pixels = rotated;
-            (width, height) = (height, width);
-        }
-        if (inverted) for (var at = 0; at < pixels.Length; at += 4)
-            for (var channel = 0; channel < 3; channel++) pixels[at + channel] = (byte)(255 - pixels[at + channel]);
+        var pixels = ReadFixture("zxing-ean-fine-contrast.png", quarterTurns, inverted, out var width, out var height);
 
         const string expected = "9780441014989";
         Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32, BarcodeType.EAN, out var decoded));
@@ -44,5 +30,48 @@ public sealed class RetailFineContrastTests {
                 EnableTileScan = false, TimeoutMilliseconds = TestBudget.Adjust(1500)
             });
         Assert.Equal(expected, Assert.Single(result.Symbols).Text);
+    }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(1, false)]
+    [InlineData(2, false)]
+    [InlineData(3, false)]
+    [InlineData(0, true)]
+    [InlineData(1, true)]
+    [InlineData(2, true)]
+    [InlineData(3, true)]
+    public void Scan_PerforatedTexture_DoesNotInventRetailPayloadDuringTileRecovery(int quarterTurns, bool inverted) {
+        var pixels = ReadFixture("zxing-perforated-negative-13.png", quarterTurns, inverted, out var width, out var height);
+        var options = ScanOptions.Robust(TestBudget.Adjust(5000));
+        options.MaxSymbols = 32;
+        options.Image = new ImageDecodeOptions { MaxDimension = 0 };
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options);
+
+        Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
+        Assert.DoesNotContain(result.Symbols, hit => hit.Format == SymbolFormat.Ean || hit.Format == SymbolFormat.UpcA || hit.Format == SymbolFormat.UpcE);
+        // The original corpus image is negative for every format. Inversion is
+        // an additional retail regression diagnostic, outside that corpus.
+        if (!inverted) Assert.Empty(result.Symbols);
+    }
+
+    private static byte[] ReadFixture(string name, int quarterTurns, bool inverted, out int width, out int height) {
+        using var fixture = typeof(RetailFineContrastTests).Assembly.GetManifestResourceStream(
+            "CodeGlyphX.Tests.Fixtures.Linear." + name);
+        Assert.NotNull(fixture);
+        using var buffer = new MemoryStream();
+        fixture!.CopyTo(buffer);
+        var pixels = ImageReader.DecodeRgba32(buffer.ToArray(), out width, out height);
+        for (var turn = 0; turn < quarterTurns; turn++) {
+            var rotated = new byte[pixels.Length];
+            for (var y = 0; y < height; y++) for (var x = 0; x < width; x++)
+                Buffer.BlockCopy(pixels, (y * width + x) * 4, rotated, (x * height + height - 1 - y) * 4, 4);
+            pixels = rotated;
+            (width, height) = (height, width);
+        }
+        if (inverted) for (var at = 0; at < pixels.Length; at += 4)
+            for (var channel = 0; channel < 3; channel++) pixels[at + channel] = (byte)(255 - pixels[at + channel]);
+
+        return pixels;
     }
 }

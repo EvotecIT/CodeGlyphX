@@ -50,7 +50,8 @@ internal static partial class BarcodeScanline {
                 if (!binarized) return false;
                 previousRadius = radius;
                 hasRetailGuards |= TryCollectRetailRunCandidates(binary.AsSpan(0, luminance.Length), 128,
-                    cancellationToken, candidates, position, isVertical, localThreshold: true, includeParityRecovery: retailRecovery).HasGuards;
+                    cancellationToken, candidates, position, isVertical, localThreshold: true, includeParityRecovery: retailRecovery,
+                    fullLengthRetailOnly: pass >= 8).HasGuards;
             }
             return hasRetailGuards;
         } finally {

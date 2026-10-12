@@ -24,7 +24,7 @@ internal static partial class BarcodeScanline {
     // The existing decoder remains responsible for parity and checksum validation.
     private static RetailRowEvidence TryCollectRetailRunCandidates(ReadOnlySpan<byte> luminance, int threshold,
         CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, int position, bool isVertical, bool localThreshold = false,
-        bool retailOnly = false, bool includeParityRecovery = false) {
+        bool retailOnly = false, bool includeParityRecovery = false, bool fullLengthRetailOnly = false) {
         if (luminance.Length < 51) return default;
         var hasRetailGuards = false;
         var hasNormalizedBase = false;
@@ -65,8 +65,13 @@ internal static partial class BarcodeScanline {
                 var pitch = (runs[start] + runs[start + 1] + runs[start + 2]) / 3.0;
                 if (!RetailGuardMatches(runs, start, 3, pitch) || (start > 0 && runs[start - 1] < pitch * 3)) continue;
                 Collect(runs, 6, 6, false);
-                Collect(runs, 4, 4, false);
-                Collect(runs, 6, 0, true);
+                // Additional fine cutoffs need the full-length symbol's center
+                // guard and twelve encoded digits. Shorter shapes can fit
+                // perforated textures even when a neighboring row agrees.
+                if (!fullLengthRetailOnly) {
+                    Collect(runs, 4, 4, false);
+                    Collect(runs, 6, 0, true);
+                }
                 if (!includeParityRecovery) continue;
 
                 // Constrain ambiguous digits only as a fallback. UPC-A and EAN-8 use
@@ -77,8 +82,10 @@ internal static partial class BarcodeScanline {
                 Collect(runs, 6, 6, false, 1, 1);
                 Collect(runs, 6, 6, false, -1, 0);
                 Collect(runs, 6, 6, false, 1, -1);
-                Collect(runs, 4, 4, false, 0, 0);
-                Collect(runs, 4, 4, false, 1, 1);
+                if (!fullLengthRetailOnly) {
+                    Collect(runs, 4, 4, false, 0, 0);
+                    Collect(runs, 4, 4, false, 1, 1);
+                }
 
                 void Collect(ReadOnlySpan<int> sampledRuns, int leftDigits, int rightDigits, bool upce, int leftParity = -1, int rightParity = -1) {
                     var count = 3 + leftDigits * 4 + (upce ? 6 : 5 + rightDigits * 4 + 3);
