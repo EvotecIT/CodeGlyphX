@@ -3,6 +3,61 @@ using CodeGlyphX.Pharmacode;
 namespace CodeGlyphX;
 
 public static partial class BarcodeDecoder {
+    private static bool TryDecodePharmacodeWithBackground(bool[] modules, bool[] physicalModules,
+        bool? backgroundIsDark, bool allowPharmacode, out string text) {
+        if (!TryDecodePharmacode(modules, out text)) return false;
+        // Perform the additional image check only for a valid interpretation
+        // that conflicts with the proposed endpoint polarity. Other formats and
+        // ordinary successful Pharmacodes retain their existing search cost.
+        if (allowPharmacode || !backgroundIsDark.HasValue ||
+            !HasPharmacodeBackgroundEvidence(physicalModules, backgroundIsDark.Value)) return true;
+        text = string.Empty;
+        return false;
+    }
+
+    /// <summary>
+    /// Confirms quiet margins around a valid foreground symbol, or around valid
+    /// neighbors separated by a wider background gap. Matching endpoints alone
+    /// may be actual outer bars in a tightly cropped image.
+    /// </summary>
+    private static bool HasPharmacodeBackgroundEvidence(bool[] modules, bool backgroundIsDark) {
+        var first = 0;
+        while (first < modules.Length && modules[first] == backgroundIsDark) first++;
+        var last = modules.Length - 1;
+        while (last >= first && modules[last] == backgroundIsDark) last--;
+        if (last < first) return false;
+        var foreground = new bool[last - first + 1];
+        for (var i = 0; i < foreground.Length; i++) foreground[i] = modules[first + i] != backgroundIsDark;
+        var runs = GetRuns(foreground);
+        var minimumBar = int.MaxValue;
+        var maximumBar = 0;
+        for (var i = 0; i < runs.Length; i += 2) {
+            minimumBar = System.Math.Min(minimumBar, runs[i]);
+            maximumBar = System.Math.Max(maximumBar, runs[i]);
+        }
+        if ((long)first < (long)minimumBar * 2 || (long)modules.Length - last - 1 < (long)minimumBar * 2) return false;
+        if (TryDecodePharmacode(foreground, out _)) return true;
+        var partStart = 0;
+        var offset = 0;
+        var parts = 0;
+        for (var i = 0; i < runs.Length; i++) {
+            var gap = runs[i];
+            if ((i & 1) != 0 && gap > maximumBar && (long)gap >= (long)minimumBar * 4) {
+                if (!ValidPart(partStart, offset)) return false;
+                partStart = offset + gap;
+                parts++;
+            }
+            offset += gap;
+        }
+        return parts > 0 && ValidPart(partStart, foreground.Length);
+
+        bool ValidPart(int start, int end) {
+            var part = new bool[end - start];
+            System.Array.Copy(foreground, start, part, 0, part.Length);
+            return TryDecodePharmacode(part, out _);
+        }
+    }
+
     private static bool TryDecodePharmacode(bool[] modules, out string text) {
         text = string.Empty;
         if (modules.Length < 3 || !modules[0]) return false;

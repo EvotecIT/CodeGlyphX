@@ -56,6 +56,14 @@ public static partial class BarcodeDecoder {
         var lastModule = modules.Length - 1;
         while (lastModule >= firstModule && modules[lastModule] == darkBackground) lastModule--;
         if (lastModule < firstModule) return true;
+        if (candidate.Decoded.Type == BarcodeType.Pharmacode) {
+            // A long outer bar in a tight crop can resemble a quiet margin.
+            // The foreground between the proposed margins must itself decode
+            // to this payload before those margins can validate a tile.
+            var foreground = new bool[lastModule - firstModule + 1];
+            for (var i = 0; i < foreground.Length; i++) foreground[i] = modules[firstModule + i] != darkBackground;
+            if (!TryDecodePharmacode(foreground, out var text) || text != candidate.Decoded.Text) return true;
+        }
         var quietModules = candidate.Decoded.Type == BarcodeType.Pharmacode ? 2 : 10;
         var quietPixels = Math.Max(2, (long)quietModules * (last - first + 1) / (lastModule - firstModule + 1));
         return first - start < quietPixels || end - last - 1 < quietPixels;

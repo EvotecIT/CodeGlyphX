@@ -104,7 +104,7 @@ public static partial class BarcodeDecoder {
             bestDecoded = hit;
             // Located consumers need the modules that actually decoded, rather
             // than the other pitch's length when classifying the same scanline.
-            bestScanline = new BarcodeScanlineCandidate(modules, candidate.Position, candidate.IsVertical,
+            bestScanline = new BarcodeScanlineCandidate(TrimModules(modules), candidate.Position, candidate.IsVertical,
                 isLocalThreshold: candidate.IsLocalThreshold, isRetailParityFallback: candidate.IsRetailParityFallback,
                 backgroundIsDark: candidate.BackgroundIsDark);
         }

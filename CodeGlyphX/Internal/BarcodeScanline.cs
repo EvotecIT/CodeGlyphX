@@ -25,7 +25,7 @@ internal readonly struct BarcodeScanlineCandidate {
     internal bool IsVertical { get; }
     internal bool IsLocalThreshold { get; }
     internal bool IsRetailParityFallback { get; }
-    /// <summary>Thresholded polarity at agreeing physical scanline ends, when available.</summary>
+    /// <summary>Proposed background polarity at agreeing ends; the decoder validates quiet-margin evidence.</summary>
     internal bool? BackgroundIsDark { get; }
 
     internal BarcodeScanlineCandidate(bool[] modules, int position, bool isVertical, bool[]? alternativeModules = null, double fitError = 0, double alternativeFitError = 0, bool isLocalThreshold = false, bool isRetailParityFallback = false, bool? backgroundIsDark = null) {
@@ -295,13 +295,20 @@ internal static partial class BarcodeScanline {
             if (minRun <= 0) return false;
             var modulePitch = EstimateModulePitch(runs, start, end, minRun, cancellationToken);
             if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-            if (!TrySampleRuns(runs, runBars, start, end, modulePitch, cancellationToken, out modules, out fitError)) return false;
+            // Retain the physical light ends for polarity transforms. They can
+            // be outer white bars in a tight crop, rather than quiet margins.
+            // Exclude them from pitch estimation and fit residuals as before.
+            var leadingLightPixels = start > 0 ? runs[0] : 0;
+            var trailingLightPixels = end + 1 < runCount ? runs[end + 1] : 0;
+            if (!TrySampleRuns(runs, runBars, start, end, modulePitch, cancellationToken, out modules, out fitError,
+                    leadingLightPixels, trailingLightPixels)) return false;
             // Narrow-run distributions can be ambiguous. Keep the established
             // sampling as a bounded alternative; format/checksum validation still
             // decides whether either candidate represents a barcode.
             // The estimator returns a finite pitch at or above minRun.
             if (modulePitch > minRun) {
-                if (!TrySampleRuns(runs, runBars, start, end, minRun, cancellationToken, out minimumRunModules, out minimumRunFitError)) return false;
+                if (!TrySampleRuns(runs, runBars, start, end, minRun, cancellationToken, out minimumRunModules, out minimumRunFitError,
+                        leadingLightPixels, trailingLightPixels)) return false;
             } else {
                 minimumRunModules = modules;
                 minimumRunFitError = fitError;
@@ -313,10 +320,13 @@ internal static partial class BarcodeScanline {
         }
     }
 
-    private static bool TrySampleRuns(int[] runs, bool[] runBars, int start, int end, double pitch, CancellationToken cancellationToken, out bool[] modules, out double fitError) {
+    private static bool TrySampleRuns(int[] runs, bool[] runBars, int start, int end, double pitch, CancellationToken cancellationToken, out bool[] modules, out double fitError,
+        int leadingLightPixels, int trailingLightPixels) {
         modules = Array.Empty<bool>();
         fitError = 0;
-        var totalModules = 0;
+        var leading = leadingLightPixels > 0 ? Math.Max(1, (int)Math.Round(leadingLightPixels / pitch)) : 0;
+        var trailing = trailingLightPixels > 0 ? Math.Max(1, (int)Math.Round(trailingLightPixels / pitch)) : 0;
+        var totalModules = leading + trailing;
         for (var i = start; i <= end; i++) {
             if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
             var count = Math.Max(1, (int)Math.Round(runs[i] / pitch));
@@ -327,7 +337,7 @@ internal static partial class BarcodeScanline {
         if (totalModules <= 0) return false;
 
         modules = new bool[totalModules];
-        var offset = 0;
+        var offset = leading;
         for (var i = start; i <= end; i++) {
             if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
             var count = Math.Max(1, (int)Math.Round(runs[i] / pitch));

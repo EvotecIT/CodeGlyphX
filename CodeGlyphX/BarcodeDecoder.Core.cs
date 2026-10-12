@@ -36,41 +36,45 @@ public static partial class BarcodeDecoder {
         priority = int.MaxValue;
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
         // Without guards or a checksum, Pharmacode can reinterpret spaces as
-        // bars. Agreeing image margins establish its physical polarity; raw
-        // module input has no such evidence and retains both interpretations.
-        if (TryDecodeCoreTrimmed(modules, expectedType, options, cancellationToken, diagnostics, out decoded, out priority, allowPharmacode: backgroundIsDark != true)) return true;
+        // bars. Agreeing endpoints only propose a background polarity; the
+        // Pharmacode decoder must validate it before excluding an interpretation.
+        if (TryDecodeCoreTrimmed(modules, expectedType, options, cancellationToken, diagnostics, out decoded, out priority, modules, backgroundIsDark, allowPharmacode: backgroundIsDark != true)) return true;
         if (cancellationToken.IsCancellationRequested) return false;
         var inverted = InvertModules(modules);
         if (diagnostics is not null) diagnostics.InvertedTried = true;
-        if (TryDecodeCoreTrimmed(inverted, expectedType, options, cancellationToken, diagnostics, out decoded, out priority, allowPharmacode: backgroundIsDark != false)) return true;
+        if (TryDecodeCoreTrimmed(inverted, expectedType, options, cancellationToken, diagnostics, out decoded, out priority, modules, backgroundIsDark, allowPharmacode: backgroundIsDark != false)) return true;
         if (cancellationToken.IsCancellationRequested) return false;
         var reversed = ReverseModules(modules);
         if (diagnostics is not null) diagnostics.ReversedTried = true;
-        if (TryDecodeCoreTrimmed(reversed, expectedType, options, cancellationToken, diagnostics, out decoded, out priority, allowPharmacode: backgroundIsDark != true)) return true;
+        if (TryDecodeCoreTrimmed(reversed, expectedType, options, cancellationToken, diagnostics, out decoded, out priority, modules, backgroundIsDark, allowPharmacode: backgroundIsDark != true)) return true;
         if (cancellationToken.IsCancellationRequested) return false;
         var invertedReversed = InvertModules(reversed);
         if (diagnostics is not null) diagnostics.InvertedTried = true;
-        return TryDecodeCoreTrimmed(invertedReversed, expectedType, options, cancellationToken, diagnostics, out decoded, out priority, allowPharmacode: backgroundIsDark != false);
+        return TryDecodeCoreTrimmed(invertedReversed, expectedType, options, cancellationToken, diagnostics, out decoded, out priority, modules, backgroundIsDark, allowPharmacode: backgroundIsDark != false);
     }
 
-    private static bool TryDecodeCoreTrimmed(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, BarcodeDecodeDiagnostics? diagnostics, out BarcodeDecoded decoded, out int priority, bool allowPharmacode) {
+    private static bool TryDecodeCoreTrimmed(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, BarcodeDecodeDiagnostics? diagnostics, out BarcodeDecoded decoded, out int priority, bool[] physicalModules, bool? backgroundIsDark, bool allowPharmacode) {
         decoded = null!;
         priority = int.MaxValue;
         if (cancellationToken.IsCancellationRequested) return false;
         var trimmed = TrimModules(modules);
         if (trimmed.Length == 0) return false;
         if (diagnostics is not null) diagnostics.AttemptCount++;
-        return TryDecodeCore(trimmed, expectedType, options, cancellationToken, out decoded, out priority, allowPharmacode);
+        return TryDecodeCore(trimmed, expectedType, options, cancellationToken, out decoded, out priority, physicalModules, backgroundIsDark, allowPharmacode);
     }
 
-    private static bool TryDecodeCore(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded, out int priority, bool allowPharmacode) {
+    private static bool TryDecodeCore(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, out BarcodeDecoded decoded, out int priority, bool[] physicalModules, bool? backgroundIsDark, bool allowPharmacode) {
         decoded = null!;
         // Report the successful decoder's existing order so competing sampling
         // hypotheses share this canonical priority rather than duplicating a type list.
         priority = 0;
         if (cancellationToken.IsCancellationRequested) return false;
         if (expectedType.HasValue) {
-            if (expectedType == BarcodeType.Pharmacode && !allowPharmacode) return false;
+            if (expectedType == BarcodeType.Pharmacode) {
+                if (!TryDecodePharmacodeWithBackground(modules, physicalModules, backgroundIsDark, allowPharmacode, out var hintedPharmacode)) return false;
+                decoded = new BarcodeDecoded(BarcodeType.Pharmacode, hintedPharmacode);
+                return true;
+            }
             return TryDecodeType(expectedType.Value, modules, options, out decoded);
         }
 
@@ -192,7 +196,7 @@ public static partial class BarcodeDecoder {
         }
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
-        if (allowPharmacode && TryDecodePharmacode(modules, out var pharmacode)) {
+        if (TryDecodePharmacodeWithBackground(modules, physicalModules, backgroundIsDark, allowPharmacode, out var pharmacode)) {
             decoded = new BarcodeDecoded(BarcodeType.Pharmacode, pharmacode);
             return true;
         }

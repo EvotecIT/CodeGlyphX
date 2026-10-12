@@ -9,6 +9,51 @@ namespace CodeGlyphX.Tests;
 
 public sealed class BarcodeGrayBoundaryTests {
     [Theory]
+    [InlineData("91", false, false)]
+    [InlineData("91", false, true)]
+    [InlineData("91", true, false)]
+    [InlineData("91", true, true)]
+    [InlineData("104", false, false)]
+    [InlineData("104", false, true)]
+    [InlineData("104", true, false)]
+    [InlineData("104", true, true)]
+    public void PharmacodeWithoutQuietMargin_PreservesCompletePayload(string text, bool inverted, bool vertical) {
+        // 91 starts/ends with narrow bars; 104 starts/ends with wide bars.
+        // Both can be tightly cropped without making those bars background.
+        var runs = BarcodeEncoder.Encode(BarcodeType.Pharmacode, text).Segments
+            .Select(run => new BarSegment(run.IsBar, text == "104" && run.IsBar && run.Modules == 2 ? 6 : run.Modules)).ToArray();
+        var pixels = BarcodePngRenderer.RenderPixels(new Barcode1D(runs), new BarcodePngRenderOptions {
+            ModuleSize = 3, QuietZone = 0, HeightModules = 30
+        }, out var width, out var height, out _);
+        if (inverted) for (var at = 0; at < pixels.Length; at += 4)
+            for (var c = 0; c < 3; c++) pixels[at + c] = (byte)(255 - pixels[at + c]);
+        if (vertical) {
+            var rotated = new byte[pixels.Length];
+            for (var y = 0; y < height; y++) for (var x = 0; x < width; x++)
+                Buffer.BlockCopy(pixels, (y * width + x) * 4, rotated, (x * height + height - 1 - y) * 4, 4);
+            pixels = rotated; (width, height) = (height, width);
+        }
+        var stride = width * 4;
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, BarcodeType.Pharmacode, out var single));
+        Assert.Equal(text, single.Text);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, PixelFormat.Rgba32, out var all, BarcodeType.Pharmacode));
+        Assert.Equal(text, Assert.Single(all).Text);
+#if NET8_0_OR_GREATER
+        Assert.True(BarcodeDecoder.TryDecode(pixels.AsSpan(), width, height, stride, PixelFormat.Rgba32, BarcodeType.Pharmacode, out var spanSingle));
+        Assert.Equal(text, spanSingle.Text);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels.AsSpan(), width, height, stride, PixelFormat.Rgba32, out var spanAll, BarcodeType.Pharmacode));
+        Assert.Equal(text, Assert.Single(spanAll).Text);
+#endif
+        foreach (var tileScan in new[] { false, true }) {
+            var scan = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+                Formats = new[] { SymbolFormat.Pharmacode }, MaxSymbols = 0, EnableTileScan = tileScan, TimeoutMilliseconds = 0
+            });
+            Assert.Equal(ScanCompletionReason.Completed, scan.CompletionReason);
+            Assert.Equal(text, Assert.Single(scan.Symbols).Text);
+        }
+    }
+
+    [Theory]
     [InlineData(false, false)]
     [InlineData(false, true)]
     [InlineData(true, false)]

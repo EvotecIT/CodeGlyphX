@@ -75,6 +75,10 @@ public static partial class BarcodeDecoder {
                     }
                     if (bars < 2 || bars > 16 || (long)first - left < (long)minimumBar * 2
                         || (long)right - last < (long)minimumBar * 2) continue;
+                    var foregroundModules = new bool[last - first];
+                    for (var at = first; at < last; at++)
+                        foregroundModules[at - first] = (luminance[at] < threshold) != darkBackground;
+                    if (!TryDecodePharmacode(foregroundModules, out _)) continue;
                     var region = vertical ? new ImageRegion(0, left, width, right - left)
                         : new ImageRegion(left, 0, right - left, height);
                     if (seen.Add(region)) regions.Add(region);
