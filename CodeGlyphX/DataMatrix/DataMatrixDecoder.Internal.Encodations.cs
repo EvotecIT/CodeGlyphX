@@ -320,22 +320,36 @@ public static partial class DataMatrixDecoder {
         var top = height;
         var bottom = -1;
         // This synchronous pixel loop never opens a nested budget. Keep checking
-        // the same clock and token without reading AsyncLocal for every pixel.
+        // the same clock and token without reading AsyncLocal for each examined pixel.
         var budget = DecodeBudget.Capture();
 
         for (var y = 0; y < height; y++) {
             if (cancellationToken.IsCancellationRequested || budget.IsExpired) { box = default; return false; }
             var row = y * stride;
+            var first = width;
             for (var x = 0; x < width; x++) {
                 if (cancellationToken.IsCancellationRequested || budget.IsExpired) { box = default; return false; }
                 var dark = IsDarkAt(pixels, row, x, format);
                 if (invert) dark = !dark;
                 if (!dark) continue;
+                first = x;
+                break;
+            }
+            if (first == width) continue;
+            if (first < left) left = first;
+            if (first > right) right = first;
+            if (y < top) top = y;
+            bottom = y;
 
-                if (x < left) left = x;
-                if (x > right) right = x;
-                if (y < top) top = y;
-                if (y > bottom) bottom = y;
+            // Interior pixels cannot enlarge the bounds. Only search beyond
+            // the rightmost dark pixel already observed, starting at the edge.
+            for (var x = width - 1; x > right; x--) {
+                if (cancellationToken.IsCancellationRequested || budget.IsExpired) { box = default; return false; }
+                var dark = IsDarkAt(pixels, row, x, format);
+                if (invert) dark = !dark;
+                if (!dark) continue;
+                right = x;
+                break;
             }
         }
 

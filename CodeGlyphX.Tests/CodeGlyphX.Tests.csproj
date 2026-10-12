@@ -69,6 +69,7 @@
     <Compile Include="ScannerDuplicateContractTests.cs" />
     <Compile Include="DataMatrixValidationTests.cs" />
     <Compile Include="DataMatrixOrientationTests.cs" />
+    <Compile Include="DataMatrixImageBoundsTests.cs" />
     <Compile Include="DataMatrixPerspectiveTests.cs" />
     <Compile Include="DataBarExpandedImageScannerTests.cs" />
     <Compile Include="DataBarStackedImageScannerTests.cs" />

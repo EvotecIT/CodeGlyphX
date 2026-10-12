@@ -50,6 +50,9 @@ public static partial class DataMatrixDecoder {
         var minimumArea = Math.Max(100, count / 1000);
         BinaryImageComponents.Visit(mask, width, height, invert, cancellationToken, (queue, length, touchesEdge) => {
             if (touchesEdge || length < minimumArea || length > count * 4L / 5) return false;
+            // Area is the queue length. Equal-sized later components follow
+            // existing ties and cannot enter a full list of eight candidates.
+            if (components.Count == 8 && length <= components[7].Area) return false;
             var component = new ImageComponent(queue[0] % width, queue[0] / width);
             for (var i = 0; i < length; i++) {
                 if ((i & 511) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
