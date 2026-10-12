@@ -66,7 +66,8 @@
     </section>
     {{ if comparison.itf_recovery.cases }}
     <section class="benchmark-section" aria-labelledby="itf-run-recovery">
-        <h2 id="itf-run-recovery">ITF complete-symbol recovery</h2>
+        <h2 id="itf-run-recovery">{{ if comparison.itf_recovery.historical }}Historical {{ end }}ITF complete-symbol recovery</h2>
+        {{ if comparison.itf_recovery.historical }}<p>These diagnostics and paired costs belong to source <code>{{ comparison.itf_recovery.source }}</code>. They describe the earlier ITF change; current corpus, retail and whole-image measurements are separate.</p>{{ end }}
         <p>{{ comparison.itf_recovery.changes }}</p>
         <p>{{ comparison.itf_recovery.scope }}</p>
         <p>The actual previous and current Codabar validators agree on {{ comparison.itf_recovery.cases }} decisions and exact fit outputs across printing bias, rounding, framing, direction and cancellation. Two independent ITF images and direction, polarity, framing and ITF-14 checksum regressions pass through public entrypoints.</p>
@@ -210,6 +211,7 @@
     {{ if comparison.retail.size > 0 }}
     <section class="benchmark-section" aria-labelledby="retail-recovery">
         <h2 id="retail-recovery">Retail recovery and search cost</h2>
+        {{ if comparison.retail_changes != "" }}<p>{{ comparison.retail_changes }}</p>{{ end }}
         <p>The 87 positive requests reuse the frozen retail images. They isolate the changed recovery behavior and do not add independent images to the recognition ranking. Each of 31 fixed negative images is also scanned with EAN, UPC-A and UPC-E hints: 93 requests, rather than 93 independent images.</p>
         <div class="comparison-scroll" role="region" aria-label="Retail positive diagnostics" tabindex="0">
             <table class="bench-table">
@@ -234,6 +236,18 @@
             </table>
         </div>
         <p>Correct-request counts accompany these costs. Unexpected outputs and unfinished scans remain in the raw samples. Shared-host measurements do not establish portable speed or a population false-positive rate.</p>
+        {{ if comparison.retail_positive_cost.size > 0 }}
+        <p>{{ comparison.retail_positive_cost_scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Retail positive paired image cost results" tabindex="0">
+            <table class="bench-table">
+                <caption>Same 87 retail positives · previous → current · every measured sample retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Mean correct / 87</th></tr></thead>
+                <tbody>{{ for row in comparison.retail_positive_cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.latency_ratio }}×</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>Three independent EAN photographs pass in both orientations and polarities. Lone-row and invalid-checksum inputs remain rejected. These fixtures informed the changes and are part of the frozen corpus.</p>
+        <p><a href="/comparisons/evidence/retail-row-recovery-proof.json">Retail row-recovery proof</a> · <a href="/comparisons/evidence/retail-positive-cost-ccd0-result.json">CCD0 positive cost samples</a> · <a href="/comparisons/evidence/retail-positive-cost-ccd1-result.json">CCD1 positive cost samples</a></p>
+        {{ end }}
         <p><a href="/comparisons/evidence/retail-positive-diagnostic.json">Positive requests</a> · <a href="/comparisons/evidence/retail-negative-diagnostic.json">Negative requests</a> · <a href="/comparisons/evidence/retail-negative-current.json">Current negative outcomes</a> · <a href="/comparisons/evidence/retail-cost-ccd0-result.json">CCD0 raw cost samples</a> · <a href="/comparisons/evidence/retail-cost-ccd1-result.json">CCD1 raw cost samples</a></p>
     </section>
     {{ end }}

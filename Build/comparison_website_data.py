@@ -125,7 +125,7 @@ def build_website_data(root):
                                       "correct": result["Correct"], "images": supplemental["Images"],
                                       "unexpected": result["UnexpectedImages"]})
     retail = qualification.get("RetailRecoveryProof")
-    retail_rows, retail_cost = [], []
+    retail_rows, retail_cost, retail_positive_cost = [], [], []
     if retail:
         if retail["Source"] != qualification["MeasurementSource"]:
             raise ValueError("Retail diagnostics differ from the qualified source")
@@ -135,8 +135,9 @@ def build_website_data(root):
                                 "positive": positive["Correct"], "positive_unexpected": positive["Unexpected"],
                                 "negative_before": negative["PreviousCorrect"], "negative": negative["Correct"],
                                 "negative_unexpected": negative["Unexpected"], "inconclusive": negative["Inconclusive"]})
-        for row in retail["Cost"]:
-            retail_cost.append({"domain": row["Domain"].upper(), "before_ms": f'{row["BaselineMedianMs"]:.2f}',
+        for key, projected in (("Cost", retail_cost), ("PositiveCost", retail_positive_cost)):
+            for row in retail.get(key, []):
+                projected.append({"domain": row["Domain"].upper(), "before_ms": f'{row["BaselineMedianMs"]:.2f}',
                                 "current_ms": f'{row["CurrentMedianMs"]:.2f}', "latency_ratio": f'{row["LatencyRatio"]:.2f}',
                                 "before_mib": f'{row["BaselineAllocatedBytes"] / 1048576:.2f}',
                                 "current_mib": f'{row["CurrentAllocatedBytes"] / 1048576:.2f}',
@@ -294,11 +295,12 @@ def build_website_data(root):
                       "current_ms": f'{row["CurrentMedianMs"]:.3f}', "ratio": f'{row["Ratio"]:.3f}',
                       "previous_bytes": f'{row["PreviousAllocatedBytes"]:,.0f}', "current_bytes": f'{row["CurrentAllocatedBytes"]:,.0f}'} for row in matrix["Cost"]]}
     itf_recovery = {}
-    recovery = qualification.get("ItfRunRecoveryProof")
+    recovery = qualification.get("ItfRunRecoveryProof") or qualification.get("HistoricalItfRunRecoveryProof")
+    historical_itf = bool(recovery) and not qualification.get("ItfRunRecoveryProof")
     if recovery:
-        if recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"] or recovery["WidthModelEquivalence"]["Mismatches"]:
+        if (not historical_itf and (recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"])) or recovery["WidthModelEquivalence"]["Mismatches"]:
             raise ValueError("ITF proof differs from the qualified source")
-        itf_recovery = {"changes": recovery["Changes"], "scope": recovery["Scope"], "limits": recovery["Limits"],
+        itf_recovery = {"historical": historical_itf, "source": recovery["Source"], "changes": recovery["Changes"], "scope": recovery["Scope"], "limits": recovery["Limits"],
             "cases": f'{recovery["WidthModelEquivalence"]["Cases"]:,}',
             "outcomes": [{"engine": engine, "previous_positive": values["positive"]["previous"]["Correct"], "current_positive": values["positive"]["current"]["Correct"],
                           "previous_negative": values["negative"]["previous"]["Correct"], "current_negative": values["negative"]["current"]["Correct"], "unexpected": values["negative"]["current"]["Unexpected"]} for engine, values in recovery["Engines"].items()],
@@ -339,7 +341,9 @@ def build_website_data(root):
             "format_scope_notes": [qualification["DataBarStackedDiscovery"]["PublicNote"]] if qualification.get("DataBarStackedDiscovery") else [],
             "negative_followup": negative_followup, "supplemental_pdf417": supplemental_rows,
             "supplemental_pdf417_limit": supplemental["Limit"] if supplemental else "",
-            "retail": retail_rows, "retail_cost": retail_cost, "paired_decode_cost": paired_decode_rows,
+            "retail": retail_rows, "retail_cost": retail_cost, "retail_positive_cost": retail_positive_cost,
+            "retail_changes": retail.get("Changes", "") if retail else "",
+            "retail_positive_cost_scope": retail.get("PositiveCostScope", "") if retail else "", "paired_decode_cost": paired_decode_rows,
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
             "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,

@@ -63,7 +63,8 @@ def main():
     if qualification.get("Code39RunRecoveryProof") or qualification.get("HistoricalCode39RunRecoveryProof"):
         names += sorted(p.name for p in root.glob("code39-*.json"))
     names += sorted(p.name for p in root.glob("historical-code39-*.json"))
-    if qualification.get("ItfRunRecoveryProof"):
+    names += sorted(p.name for p in root.glob("historical-itf-*.json"))
+    if qualification.get("ItfRunRecoveryProof") or qualification.get("HistoricalItfRunRecoveryProof"):
         names += sorted(p.name for p in root.glob("itf-*.json"))
     if qualification.get("DataMatrixSpatialSearchProof") or qualification.get("HistoricalDataMatrixSpatialSearchProof"):
         names += sorted(p.name for p in root.glob("datamatrix-spatial-*.json"))
@@ -188,11 +189,13 @@ def main():
             old, now = row["PreviousMetrics"], row["CurrentMetrics"]
             lines.append(f'| {row["Domain"].upper()} | {row["PreviousMedianMs"]:.3f} | {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["PreviousMeanAllocatedBytes"]:,.0f} / {row["CurrentMeanAllocatedBytes"]:,.0f} | {old["CorrectImages"]:.3f} / {now["CorrectImages"]:.3f} | {old["InconclusiveImages"]:.3f} / {now["InconclusiveImages"]:.3f} |')
         lines += ["", cache["Limits"], "", "[Cache checks, counts and paired costs](evidence/pdf417-cache-cost-proof.json). Whole-image comparison results remain the practical measure of scanner cost and completion."]
-    recovery = qualification.get("ItfRunRecoveryProof")
+    recovery = qualification.get("ItfRunRecoveryProof") or qualification.get("HistoricalItfRunRecoveryProof")
+    historical_itf = bool(recovery) and not qualification.get("ItfRunRecoveryProof")
     if recovery:
-        if recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"] or recovery["WidthModelEquivalence"]["Mismatches"]:
+        if (not historical_itf and (recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"])) or recovery["WidthModelEquivalence"]["Mismatches"]:
             raise ValueError("ITF proof differs from the measured candidate")
-        lines += ["", "## ITF complete-symbol recovery", "", recovery["Changes"], "", recovery["Scope"], "",
+        notice = [f'These diagnostics and paired costs belong to source `{recovery["Source"]}`. They describe the earlier ITF change; current corpus, retail and whole-image measurements are separate.', ""] if historical_itf else []
+        lines += ["", "## Historical ITF complete-symbol recovery" if historical_itf else "## ITF complete-symbol recovery", "", *notice, recovery["Changes"], "", recovery["Scope"], "",
                   f'The actual previous and current Codabar validators agree on {recovery["WidthModelEquivalence"]["Cases"]:,} decisions and exact fit outputs across printing bias, rounding, framing, direction and cancellation. Two independent ITF images and direction, polarity, framing and ITF-14 checksum regressions pass through public entrypoints.', "",
                   "| Reader | Previous → current positives / 12 | Previous → current completed negative rejections / 31 | Current unexpected negative images |",
                   "|---|---:|---:|---:|"]
@@ -344,7 +347,7 @@ def main():
         retail = qualification["RetailRecoveryProof"]
         if retail["Source"] != qualification["MeasurementSource"]:
             raise ValueError("Retail diagnostics differ from the measured source")
-        lines += ["", "## Retail recovery and search cost", "", retail["Scope"], "",
+        lines += ["", "## Retail recovery and search cost", "", retail.get("Changes", ""), "", retail["Scope"], "",
                   "The 87 positive requests reuse the frozen retail images. These diagnostics help isolate the changed behavior and do not add independent images to the recognition ranking.", "",
                   "| Reader | Previous positive correct | Current positive correct | Current unexpected-output images |",
                   "| --- | ---: | ---: | ---: |"]
@@ -364,6 +367,14 @@ def main():
             lines.append(f'| {row["Domain"]} | {row["BaselineMedianMs"]:.2f} | {row["CurrentMedianMs"]:.2f} | {row["LatencyRatio"]:.2f}x | {row["BaselineAllocatedBytes"] / 1048576:.2f} | {row["CurrentAllocatedBytes"] / 1048576:.2f} | {row["AllocationRatio"]:.2f}x | {row["PreviousCorrectRequests"]:g}/9 → {row["CurrentCorrectRequests"]:g}/9 |')
         lines += ["", "Correct-request counts accompany these costs. Unexpected outputs and unfinished scans remain in the raw samples. Shared-host measurements do not establish portable speed or a population false-positive rate.", "",
                   "[Positive requests](evidence/retail-positive-diagnostic.json) · [negative requests](evidence/retail-negative-diagnostic.json) · [current outcomes](evidence/retail-negative-current.json) · [CCD0 raw cost samples](evidence/retail-cost-ccd0-result.json) · [CCD1 raw cost samples](evidence/retail-cost-ccd1-result.json)."]
+        if retail.get("PositiveCost"):
+            lines += ["", retail["PositiveCostScope"], "",
+                      "| Domain | Previous → current median ms / 87 positives | Current / previous | Previous → current mean managed MiB | Previous → current mean correct / 87 |",
+                      "| --- | ---: | ---: | ---: | ---: |"]
+            for row in retail["PositiveCost"]:
+                lines.append(f'| {row["Domain"].upper()} | {row["BaselineMedianMs"]:.3f} → {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} | {row["PreviousCorrectRequests"]:.3f} → {row["CurrentCorrectRequests"]:.3f} |')
+            lines += ["", f'Three independent EAN photographs pass in both orientations and polarities. {retail["ExactBaselineFailures"]} of {retail["FocusedCases"]} new cases fail against the exact preceding binary; all pass on the current core. Lone-row and invalid-checksum inputs remain rejected.', "",
+                      "[Retail row-recovery proof](evidence/retail-row-recovery-proof.json) · [CCD0 positive cost samples](evidence/retail-positive-cost-ccd0-result.json) · [CCD1 positive cost samples](evidence/retail-positive-cost-ccd1-result.json)."]
     if qualification.get("AttributionLimits"):
         lines += ["", qualification["AttributionLimits"]]
     if "CorpusHostCpuBeforeScans" in qualification:

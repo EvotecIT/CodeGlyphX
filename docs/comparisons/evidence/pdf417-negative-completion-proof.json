@@ -187,6 +187,5 @@
   "RejectedExperiments": {
     "HeaderTightening": "Earlier coarse-header tightening corrupted a valid PDF417 payload; removed before the frozen candidate.",
     "Evidence": "Archived diagnostic packets and experimental source patches preserve the failed outcomes."
-  },
-  "WarmupRetentionClarification": "PowerForge executes three warmups. Successful warmup samples are not retained; failed warmups and all measured samples are retained. This corrects descriptive retention wording only; outcomes, raw measurements, source identities and historical attribution are unchanged. Original historical wording remains in the preceding verification archives."
+  }
 }
