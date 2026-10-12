@@ -8,6 +8,34 @@ namespace CodeGlyphX.DataBar;
 
 /// <summary>Locates DataBar-14 data rows; payload and separator definitions stay with their module owners.</summary>
 internal static class DataBar14ImageDecoder {
+    /// <summary>Fits a complete unstacked row using both finders and four independently scaled characters.</summary>
+    internal static bool TryNormalizeUnstackedRow(List<int> runs, int start, out int[] widths, out double fit) {
+        widths = Array.Empty<int>(); fit = 0;
+        if (start < 0 || start + 46 > runs.Count ||
+            !FitFinder(runs, start + 10, false, out var left, out var leftPitch) ||
+            !FitFinder(runs, start + 31, true, out var right, out var rightPitch)) return false;
+        // Light guards may merge with quiet space; the two dark guards must
+        // retain their measured one-module widths at the corresponding end.
+        if (Math.Abs(runs[start + 1] / leftPitch - 1) > 0.8 ||
+            Math.Abs(runs[start + 45] / rightPitch - 1) > 0.8) return false;
+        var normalized = new int[46];
+        normalized[0] = normalized[1] = normalized[44] = normalized[45] = 1;
+        Array.Copy(left, 0, normalized, 10, 5);
+        Array.Copy(right, 0, normalized, 31, 5);
+        if (!FitCharacter(runs, start + 2, 16, leftPitch, normalized, 2) ||
+            !FitCharacter(runs, start + 15, 15, leftPitch, normalized, 15) ||
+            !FitCharacter(runs, start + 23, 15, rightPitch, normalized, 23) ||
+            !FitCharacter(runs, start + 36, 16, rightPitch, normalized, 36)) return false;
+        widths = normalized;
+        for (var i = 0; i < 46; i++) {
+            if (i == 0 || i == 44) continue;
+            var pitch = i < 23 ? leftPitch : rightPitch;
+            var residual = runs[start + i] / pitch - normalized[i];
+            fit += residual * residual;
+        }
+        return true;
+    }
+
     private sealed class Row {
         internal readonly int[] Widths;
         internal readonly double Start, End;

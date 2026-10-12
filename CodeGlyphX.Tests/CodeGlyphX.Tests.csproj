@@ -38,6 +38,7 @@
     <Compile Include="RetailIlluminationTests.cs" />
     <Compile Include="RetailParityRecoveryTests.cs" />
     <Compile Include="RetailRowCoverageTests.cs" />
+    <Compile Include="DataBar14RunLocalizationTests.cs" />
     <Compile Include="Code128ReaderInitializationTests.cs" />
     <Compile Include="BarcodePixelSamplingTests.cs" />
     <Compile Include="QrImageDecodeParityData.cs" />

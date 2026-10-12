@@ -57,6 +57,7 @@ internal static partial class BarcodeScanline {
                 TryCollectCodabarRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
                 TryCollectItfRunCandidates(runs, firstIsBar, cancellationToken, candidates, position, isVertical);
                 TryCollectExpandedRunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
+                TryCollectDataBar14RunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
             }
             for (var start = 0; start + 33 <= runs.Length; start++) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) return default;
