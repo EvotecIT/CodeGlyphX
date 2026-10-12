@@ -84,7 +84,7 @@ internal static partial class QrPixelDecoder {
 
         if (budget.IsExpired) return false;
 
-        var scratch = new global::CodeGlyphX.BitMatrix(dimension, dimension);
+        using var scratch = new SamplingScratch(dimension);
         var modulesBetweenCenters = dimension - 7;
         if (modulesBetweenCenters <= 0) return false;
 

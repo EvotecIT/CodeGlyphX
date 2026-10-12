@@ -10,7 +10,7 @@ internal static partial class QrPixelDecoder {
     /// centers off their grid coordinates when perspective changes local pitch.
     /// </summary>
     private static bool TrySampleWithAlignmentLandmarks(QrGrayImage image, bool invert, int dimension,
-        global::CodeGlyphX.BitMatrix scratch, QrFinderPatternDetector.FinderPattern tl,
+        SamplingScratch scratch, QrFinderPatternDetector.FinderPattern tl,
         QrFinderPatternDetector.FinderPattern tr, QrFinderPatternDetector.FinderPattern bl,
         int alignmentPosition, double alignmentX, double alignmentY, double moduleSize,
         Func<QrDecoded, bool>? accept, bool aggressive, bool stylized, DecodeBudget budget,
