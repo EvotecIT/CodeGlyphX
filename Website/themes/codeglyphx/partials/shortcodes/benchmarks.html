@@ -392,9 +392,34 @@
         <p><a href="/comparisons/evidence/negative-search-cost-proof.json">Decision and allocation diagnostic</a>. The paired measurements below report whole-image cost and recognition together.</p>
     </section>
     {{ end }}
+    {{ if comparison.scanner_boundaries }}
+    <section class="benchmark-section" aria-labelledby="scanner-boundaries">
+        <h2 id="scanner-boundaries">Linear barcode margins and neighboring symbols</h2>
+        <p>{{ comparison.scanner_boundaries.changes }}</p>
+        <p>{{ comparison.scanner_boundaries.scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Scanner margin regression contracts" tabindex="0">
+            <table class="bench-table">
+                <caption>Targeted regressions: {{ comparison.scanner_boundaries.before }} → {{ comparison.scanner_boundaries.current }} passed out of {{ comparison.scanner_boundaries.cases }}</caption>
+                <thead><tr><th scope="col">Contract</th><th scope="col">Previous passed</th><th scope="col">Current passed</th><th scope="col">Cases</th></tr></thead>
+                <tbody>{{ for row in comparison.scanner_boundaries.contracts }}<tr><th scope="row">{{ row.name }}</th><td>{{ row.before }}</td><td>{{ row.current }}</td><td>{{ row.cases }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.scanner_boundaries.cost_scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Current scanner paired retail costs" tabindex="0">
+            <table class="bench-table">
+                <caption>Current scanner change: paired retail search costs</caption>
+                <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.scanner_boundaries.costs }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.scanner_boundaries.limits }}</p>
+        <p><a href="/comparisons/evidence/scanner-boundary-proof.json">Regression and binary proof</a> · <a href="/comparisons/evidence/scanner-final-core-probes.json">Exact-core diagnostics</a> · <a href="/comparisons/evidence/scanner-retail-negative-diagnostic.json">Current typed retail negatives</a> · <a href="/comparisons/evidence/scanner-boundary-positive-ccd0-result.json">Positive CCD0 samples</a> · <a href="/comparisons/evidence/scanner-boundary-positive-ccd1-result.json">Positive CCD1 samples</a> · <a href="/comparisons/evidence/scanner-boundary-negative-ccd0-result.json">Negative CCD0 samples</a> · <a href="/comparisons/evidence/scanner-boundary-negative-ccd1-result.json">Negative CCD1 samples</a></p>
+    </section>
+    {{ end }}
     {{ if comparison.retail_fine }}
     <section class="benchmark-section" aria-labelledby="retail-fine">
-        <h2 id="retail-fine">Retail photographs and tile boundary safety</h2>
+        <h2 id="retail-fine">{{ if comparison.retail_fine.historical }}Historical retail photographs and tile boundary safety{{ else }}Retail photographs and tile boundary safety{{ end }}</h2>
+        {{ if comparison.retail_fine.historical }}<p>These retained diagnostics and costs belong to source {{ comparison.retail_fine.source }}; the current scanner contracts and costs appear separately. The current scanner repair above covers the inverted single-digit and joined-Pharmacode gaps described in this historical packet.</p>{{ end }}
         <p>{{ comparison.retail_fine.changes }}</p>
         <p>{{ comparison.retail_fine.scope }}</p>
         <div class="comparison-scroll" role="region" aria-label="Fine retail contrast recognition results" tabindex="0">

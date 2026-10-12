@@ -3,13 +3,14 @@ import json
 
 
 def project_retail_fine(root, qualification):
-    proof = qualification.get("RetailFineContrastProof")
+    proof = qualification.get("RetailFineContrastProof") or qualification.get("HistoricalRetailFineContrastProof")
+    historical = bool(proof) and not qualification.get("RetailFineContrastProof")
     if not proof:
         return None
-    if (proof["Source"] != qualification["MeasurementSource"]
+    if not historical and (proof["Source"] != qualification["MeasurementSource"]
             or proof["CoreSha256"] != qualification["CandidateCoreSha256"]):
         raise ValueError("Fine retail proof differs from the qualified core")
-    industrial = qualification["IndustrialTileBoundaryProof"]
+    industrial = qualification.get("IndustrialTileBoundaryProof") or qualification["HistoricalIndustrialTileBoundaryProof"]
     if (industrial["Source"] != proof["Source"] or industrial["CoreSha256"] != proof["CoreSha256"]
             or industrial["RegressionBefore"]["Failed"] != 6
             or industrial["NegativeCases"] != {"net10": 8, "net8": 8, "net472": 8}
@@ -50,7 +51,7 @@ def project_retail_fine(root, qualification):
                     row[f"{prefix}_{name}"] = (f"{min(values):g}–{max(values):g}"
                                                 if min(values) != max(values) else f"{min(values):g}")
             costs.append(row)
-    return {"changes": proof["Changes"], "scope": proof["Scope"], "limits": proof["Limits"],
+    return {"historical": historical, "source": proof["Source"], "changes": proof["Changes"], "scope": proof["Scope"], "limits": proof["Limits"],
             "negative_variant_limits": proof["AdditionalNegativeVariants"]["Scope"],
             "industrial": {"changes": industrial["Changes"], "scope": industrial["Scope"], "limits": industrial["Limits"]},
             "cost_scope": proof["CostScope"], "costs": costs,

@@ -7,6 +7,8 @@ from comparison_website_data import write_website_data
 from comparison_qr_morphology import project_qr_morphology
 from comparison_databar_tilted import project_databar_tilted
 from comparison_retail_fine import project_retail_fine
+from comparison_scanner_boundaries import project_scanner_boundaries, append_scanner_boundary_section
+from comparison_packet_identity import validate_current_packet
 
 
 def read(path):
@@ -30,12 +32,7 @@ def main():
         for domain in ("ccd0", "ccd1"):
             path = root / f"{kind}-final-{domain}-result.json"
             packet = read(path)
-            expected = 24 if kind == "generation" else 3
-            if len(packet["Summary"]) != expected or any(
-                row["Status"] != "Succeeded" or row["FailureCount"] or row["SampleCount"] != 12
-                for row in packet["Summary"]
-            ):
-                raise ValueError(f"Unqualified benchmark packet: {path}")
+            validate_current_packet(packet, qualification, kind, domain)
             runs[kind, domain] = packet
     # Keep every sample, failure, unsupported format and returned payload available for audit.
     names = ["qualified-baseline-corpus.json", "candidate-corpus-final.json",
@@ -47,9 +44,13 @@ def main():
     names += sorted(path.name for path in root.glob("historical-qr-morphology-*.json"))
     names += sorted(path.name for path in root.glob("historical-databar-tilt-*.json"))
     names += sorted(path.name for path in root.glob("historical-retail-fine-*.json"))
-    if qualification.get("RetailFineContrastProof"):
+    names += sorted(path.name for path in root.glob("historical-scanner-boundary-*.json"))
+    if qualification.get("ScannerBoundaryProof"):
+        names += sorted(path.name for path in root.glob("scanner-*.json"))
+        names += ["frozen-input-inventory.json", "scanline-closure-review.json"]
+    if qualification.get("RetailFineContrastProof") or qualification.get("HistoricalRetailFineContrastProof"):
         names += sorted(path.name for path in root.glob("retail-fine-*.json"))
-    if qualification.get("IndustrialTileBoundaryProof"):
+    if qualification.get("IndustrialTileBoundaryProof") or qualification.get("HistoricalIndustrialTileBoundaryProof"):
         names += sorted(path.name for path in root.glob("industrial-tile-*.json"))
     if qualification.get("DataBarTiltedSeparatorProof") or qualification.get("HistoricalDataBarTiltedSeparatorProof"):
         names += sorted(path.name for path in root.glob("databar-tilted-*.json"))
@@ -432,9 +433,10 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    append_scanner_boundary_section(lines, project_scanner_boundaries(root, qualification))
     fine = project_retail_fine(root, qualification)
     if fine:
-        lines += ["", "## Retail photographs and tile boundary safety", "", fine["changes"], "", fine["scope"], "",
+        lines += ["", "## Historical retail photographs and tile boundary safety" if fine["historical"] else "## Retail photographs and tile boundary safety", "", (f'These retained diagnostics and costs belong to source {fine["source"]}; the current scanner contracts and costs appear separately. The current scanner repair above covers the inverted single-digit and joined-Pharmacode gaps described in this historical packet.' if fine["historical"] else ""), "", fine["changes"], "", fine["scope"], "",
                   "| Engine | Previous correct / 87 | Current correct / 87 | Unexpected images |",
                   "| --- | ---: | ---: | ---: |"]
         for row in fine["engines"]:

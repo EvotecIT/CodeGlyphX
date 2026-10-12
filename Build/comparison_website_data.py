@@ -5,6 +5,8 @@ from pathlib import Path
 from comparison_qr_morphology import project_qr_morphology
 from comparison_databar_tilted import project_databar_tilted
 from comparison_retail_fine import project_retail_fine
+from comparison_scanner_boundaries import project_scanner_boundaries
+from comparison_packet_identity import validate_current_packet
 
 
 def load(path):
@@ -79,12 +81,8 @@ def build_website_data(root):
     for domain in ("ccd0", "ccd1"):
         generation = load(root / f"generation-final-{domain}-result.json")
         decoding = load(root / f"decoding-final-{domain}-result.json")
-        for packet, count in ((generation, 24), (decoding, 3)):
-            if len(packet["Summary"]) != count or any(
-                x["Status"] != "Succeeded" or x["FailureCount"] or x["SampleCount"] != 12
-                for x in packet["Summary"]
-            ):
-                raise ValueError("Incomplete website timing evidence")
+        for kind, packet in (("generation", generation), ("decoding", decoding)):
+            validate_current_packet(packet, qualification, kind, domain)
         generation_rows = []
         for operation in ("Png", "Modules"):
             for scenario in ("Url", "Numeric", "Unicode"):
@@ -366,6 +364,7 @@ def build_website_data(root):
             "qr_morphology": project_qr_morphology(root, qualification),
             "databar_tilted": project_databar_tilted(root, qualification),
             "retail_fine": project_retail_fine(root, qualification),
+            "scanner_boundaries": project_scanner_boundaries(root, qualification),
             "retail_changes": retail.get("Changes", "") if retail else "",
             "databar14_recovery": databar14_projected,
             "retail_extrema_reuse": ({"masks": f'{retail["ExtremaReuse"]["Masks"]:,}',

@@ -4,7 +4,7 @@ Generated from the complete result packets by `Build/generate-fair-comparison-re
 
 See [methodology](../fair-comparisons.md) for versions, adapter boundaries, settings, corpus selection, scoring and proof limits.
 
-Host CPU sampled before the current corpus and timing passes ranged from 15.2% to 98.6%. These readings do not describe load throughout each operation. Contention limits timing comparisons and can change completion under the fixed deadline.
+Host CPU sampled before the current corpus and timing passes ranged from 19.1% to 82.3%. These initial readings do not describe load throughout each operation. Shared-host contention limits timing comparisons and can change completion under the fixed deadline.
 
 ## Recognition
 
@@ -12,7 +12,7 @@ The 279-image corpus includes twelve negative images. Every positive format has 
 
 | Engine | Original source: positive correct | Current: positive correct | Unsupported positive images | Unexpected-output images | Negative-image false positives | Inconclusive negative images |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| CodeGlyphX | 73/267 | 242/267 | 0 | 3 | 0 | 3 |
+| CodeGlyphX | 73/267 | 242/267 | 0 | 3 | 0 | 1 |
 | ZXing.Net | 220/267 | 220/267 | 0 | 6 | 2 | 0 |
 | ZXing-C++ | 224/267 | 224/267 | 0 | 3 | 0 | 0 |
 
@@ -20,7 +20,7 @@ Unexpected output on a positive image may include an oracle limitation or an enc
 
 | Format | Images | CodeGlyphX original source | CodeGlyphX current | ZXing.Net | ZXing-C++ |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| All | 12 | 0 | 9 | 10 | 12 |
+| All | 12 | 0 | 11 | 10 | 12 |
 | Aztec | 12 | 4 | 12 | 5 | 12 |
 | Codabar | 6 | 4 | 6 | 6 | 6 |
 | Code128 | 14 | 5 | 13 | 13 | 13 |
@@ -41,9 +41,9 @@ Unexpected output on a positive image may include an oracle limitation or an enc
 
 Previously correct images now missed: none in this run.
 
-This decoding follow-up records 242/267 correct positive images, compared with 241/267 in the [previous pass](evidence/previous-candidate-corpus.json). Previously correct positive images lost in this follow-up: none in this run.
+This decoding follow-up records 242/267 correct positive images, compared with 242/267 in the [previous pass](evidence/previous-candidate-corpus.json). Previously correct positive images lost in this follow-up: none in this run.
 
-Previously completed main-corpus negatives now inconclusive: falsepositives/19.png, falsepositives-2/06.png
+Previously completed main-corpus negatives now inconclusive: none in this run.
 
 ## Supplemental PDF417 images
 
@@ -352,7 +352,36 @@ The remaining three main-corpus DataBar misses and inverted versions of the reco
 
 [Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json).
 
-## Retail photographs and tile boundary safety
+## Linear barcode margins and neighboring symbols
+
+Cropped and inverted Pharmacodes preserve their complete payloads, including independently rounded and wider bars. Closely spaced Pharmacodes return the two original payloads without a combined extra result. Pixel multi-result APIs and the scanner share margin checks, including transparent margins. Default-format scans also recover inverted single-digit Industrial 2 of 5 symbols.
+
+Fifty-eight targeted contracts use the exact previous qualified binary and current committed core. They cover both axes and polarities, alpha 0/128 margins, compact neighbors with ordinary and wider bars, independently rounded bar widths, and crops with zero or one quiet margin. The current full framework suites include these contracts.
+
+| Targeted contract | Previous passed | Current passed | Cases |
+| --- | ---: | ---: | ---: |
+| Industrial single-digit symbols | 6 | 8 | 8 |
+| Neighboring symbols and transparent margins | 8 | 24 | 24 |
+| Pixel-rounded Pharmacode bars | 2 | 4 | 4 |
+| Pharmacode bar-width ratios | 3 | 6 | 6 |
+| Pharmacode tight and one-sided crops | 8 | 16 | 16 |
+
+Shared scanline sampling also affects retail inputs. The same 87 positive requests and nine typed negative requests are compared with the exact preceding binary, using three warmups and twelve rotated measurements on each fixed cache domain. Every latency, allocation, correctness and inconclusive sample is retained.
+
+| Batch | Domain | Previous → current median ms | Current / previous | Previous → current correct range | Previous → current inconclusive range | Previous → current unexpected range | Previous → current mean managed MiB |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Positive: 87 | CCD0 | 1093.05 → 1084.10 | 0.992 | 70 → 70 | 0 → 0 | 0 → 0 | 91.64 → 96.19 |
+| Positive: 87 | CCD1 | 1014.52 → 1010.83 | 0.996 | 70 → 70 | 0 → 0 | 0 → 0 | 91.66 → 96.20 |
+| Negative: 9 | CCD0 | 878.35 → 841.46 | 0.958 | 9 → 9 | 0 → 0 | 0 → 0 | 34.54 → 34.98 |
+| Negative: 9 | CCD1 | 745.40 → 731.96 | 0.982 | 9 → 9 | 0 → 0 | 0 → 0 | 34.54 → 34.98 |
+
+These generated and independent-raster regression controls informed the fixes; they are separate from the frozen photograph ranking. Pharmacode has no guards or mandatory checksum and remains an explicitly requested format. The controls do not establish unseen accuracy or universal rejection of barcode-like textures.
+
+[Regression and binary proof](evidence/scanner-boundary-proof.json) · [Exact-core diagnostics](evidence/scanner-final-core-probes.json) · [Current typed retail negatives](evidence/scanner-retail-negative-diagnostic.json) · [Positive CCD0 samples](evidence/scanner-boundary-positive-ccd0-result.json) · [Positive CCD1 samples](evidence/scanner-boundary-positive-ccd1-result.json) · [Negative CCD0 samples](evidence/scanner-boundary-negative-ccd0-result.json) · [Negative CCD1 samples](evidence/scanner-boundary-negative-ccd1-result.json).
+
+## Historical retail photographs and tile boundary safety
+
+These retained diagnostics and costs belong to source 63677a2c11e9561677736cc001a8bf748ca28670; the current scanner contracts and costs appear separately. The current scanner repair above covers the inverted single-digit and joined-Pharmacode gaps described in this historical packet.
 
 Retail recovery adds two complementary 9/16 local-contrast masks after the original masks establish complete retail guard geometry. The added masks admit only full-length EAN-13/UPC-A geometry; EAN-8 and UPC-E retain their original masks. It reuses the completed middle window without adding buffers. The original eight masks, digit fitting, parity, checksums and nearby-row confirmation remain unchanged.
 
@@ -427,9 +456,9 @@ Kernel speed does not establish equal whole-image improvement or eliminate timeo
 
 [Proof and output hashes](evidence/qr-morphology-cost-proof.json) · [Unchanged images and oracles](evidence/qr-morphology-negative-manifest.json) · [CCD0 kernel samples](evidence/qr-morphology-cost-ccd0-result.json) · [CCD1 kernel samples](evidence/qr-morphology-cost-ccd1-result.json) · [CCD0 whole-image samples](evidence/qr-negative-cost-ccd0-result.json) · [CCD1 whole-image samples](evidence/qr-negative-cost-ccd1-result.json).
 
-Current corpus, alternating negatives, generation, whole-image decoding and paired retail costs are rerun on the frozen tested core. Earlier decoder-specific discovery, QR morphology and cost packets retain their original identities. Hints, oracles, format priorities and recognition allowances are unchanged. Wall-clock deadlines and shared-host contention still affect completion. Invalid GS1 AI (3922) oracles and undeclared QR encoding policies remain unchanged. These finite workloads do not establish overall superiority.
+Current corpus, alternating negatives, generation, whole-image decoding and paired retail costs are rerun on the frozen tested core. Earlier decoder-specific discovery and cost packets retain their original identities. Hints, oracles and recognition allowances are unchanged. Shared-host contention affects completion and timing. The invalid GS1 oracle and undeclared QR encoding policies remain unchanged. These finite workloads do not establish overall superiority.
 
-Host CPU samples before the main corpus pass: 93.4%, 79.9%, 64.5%. Before the supplementary negative pass: 63.9%, 57.3%, 59.7%. These are separate passes; overlapping images can have different completion outcomes.
+Host CPU samples before the main corpus pass: 51.3%, 53.1%, 55.2%. Before the supplementary negative pass: 58.3%, 59.4%, 61.0%. These are separate passes; overlapping images can have different completion outcomes.
 
 ## Supplementary negative corpus
 
@@ -437,11 +466,11 @@ The fixed supplementary set contains all 25 images in upstream falsepositives-2;
 
 | Engine | Original source: correct rejection | Current: correct rejection | Current: unexpected output | Current: inconclusive |
 | --- | ---: | ---: | ---: | ---: |
-| CodeGlyphX | 0/25 | 24/25 | 0 | 1 |
+| CodeGlyphX | 0/25 | 22/25 | 0 | 3 |
 | ZXing.Net | 21/25 | 21/25 | 4 | 0 |
 | ZXing-C++ | 25/25 | 25/25 | 0 | 0 |
 
-Compared with the [previous decoding pass](evidence/previous-negative-corpus.json), CodeGlyphX completes 24/25 supplementary negatives versus 24/25. Previously completed images now unfinished: falsepositives-2/03.png
+Compared with the [previous decoding pass](evidence/previous-negative-corpus.json), CodeGlyphX completes 22/25 supplementary negatives versus 24/25. Previously completed images now unfinished: falsepositives-2/01.png, falsepositives-2/21.png
 
 ## Paired negative completion
 
@@ -449,14 +478,14 @@ The previous and current binaries scan the same 31 distinct negative IDs from th
 
 | Domain | Pass | Binary | Correct rejection | Inconclusive | Unexpected output | Mean host CPU before pass |
 | --- | ---: | --- | ---: | ---: | ---: | ---: |
-| ccd0 | 1 | previous | 30/31 | 1 | 0 | 89.4% |
-| ccd0 | 2 | current | 27/31 | 4 | 0 | 98.3% |
-| ccd0 | 3 | current | 30/31 | 1 | 0 | 57.0% |
-| ccd0 | 4 | previous | 31/31 | 0 | 0 | 49.6% |
-| ccd1 | 1 | current | 31/31 | 0 | 0 | 35.0% |
-| ccd1 | 2 | previous | 31/31 | 0 | 0 | 44.0% |
-| ccd1 | 3 | previous | 30/31 | 1 | 0 | 37.6% |
-| ccd1 | 4 | current | 31/31 | 0 | 0 | 32.6% |
+| ccd0 | 1 | previous | 29/31 | 2 | 0 | 47.7% |
+| ccd0 | 2 | current | 31/31 | 0 | 0 | 56.1% |
+| ccd0 | 3 | current | 30/31 | 1 | 0 | 25.0% |
+| ccd0 | 4 | previous | 30/31 | 1 | 0 | 51.4% |
+| ccd1 | 1 | current | 30/31 | 1 | 0 | 55.5% |
+| ccd1 | 2 | previous | 31/31 | 0 | 0 | 26.1% |
+| ccd1 | 3 | previous | 31/31 | 0 | 0 | 27.4% |
+| ccd1 | 4 | current | 30/31 | 1 | 0 | 45.9% |
 
 ## Initial host load
 
@@ -464,85 +493,87 @@ Three samples before each pass retain overall and per-logical-processor CPU use,
 
 | Pass | Mean host CPU | Mean CCD0 CPU | Mean CCD1 CPU |
 | --- | ---: | ---: | ---: |
-| corpus-ccd0 | 79.3% | 84.7% | 74.2% |
-| decoding-ccd0 | 90.8% | 94.2% | 87.4% |
-| decoding-ccd1 | 31.6% | 46.8% | 16.4% |
-| generation-ccd0 | 33.1% | 48.3% | 17.9% |
-| generation-ccd1 | 44.1% | 56.2% | 32.0% |
-| holdout-current | 24.8% | 37.2% | 12.4% |
-| holdout-previous | 27.5% | 44.0% | 11.1% |
-| negative-rotation-ccd0-0-previous | 89.4% | 92.0% | 86.9% |
-| negative-rotation-ccd0-1-current | 98.3% | 98.9% | 97.6% |
-| negative-rotation-ccd0-2-current | 57.0% | 65.7% | 48.3% |
-| negative-rotation-ccd0-3-previous | 49.6% | 62.7% | 36.6% |
-| negative-rotation-ccd1-0-current | 35.0% | 51.9% | 18.0% |
-| negative-rotation-ccd1-1-previous | 44.0% | 58.0% | 30.1% |
-| negative-rotation-ccd1-2-previous | 37.6% | 53.2% | 22.1% |
-| negative-rotation-ccd1-3-current | 32.6% | 50.7% | 14.5% |
-| negatives-ccd0 | 60.3% | 71.5% | 49.0% |
-| retail-diagnostic | 22.5% | 36.9% | 8.0% |
+| corpus-ccd0 | 53.2% | 63.5% | 42.9% |
+| decoding-ccd0 | 30.9% | 43.9% | 17.9% |
+| decoding-ccd1 | 47.2% | 58.8% | 35.6% |
+| generation-ccd0 | 33.7% | 49.2% | 18.3% |
+| generation-ccd1 | 48.6% | 58.6% | 38.6% |
+| negative-rotation-ccd0-0-previous | 47.7% | 62.2% | 33.1% |
+| negative-rotation-ccd0-1-current | 56.1% | 67.4% | 44.7% |
+| negative-rotation-ccd0-2-current | 25.0% | 39.5% | 10.6% |
+| negative-rotation-ccd0-3-previous | 51.4% | 62.1% | 40.7% |
+| negative-rotation-ccd1-0-current | 55.5% | 65.4% | 45.7% |
+| negative-rotation-ccd1-1-previous | 26.1% | 38.4% | 14.2% |
+| negative-rotation-ccd1-2-previous | 27.4% | 41.1% | 13.5% |
+| negative-rotation-ccd1-3-current | 45.9% | 59.5% | 32.3% |
+| negatives-ccd0 | 59.6% | 67.6% | 51.6% |
+| pdf417-supplemental-current | 77.5% | 83.6% | 71.3% |
+| pdf417-supplemental-previous | 57.2% | 67.6% | 46.9% |
+| scanner-qr-exact-grid-recheck | 54.3% | 65.2% | 43.4% |
+| scanner-retail-negative-diagnostic | 60.0% | 70.7% | 49.4% |
+| scanner-retail-positive-diagnostic | 73.8% | 79.8% | 67.7% |
 
 ## Generation on ccd0
 
-Source `63677a2c11e9561677736cc001a8bf748ca28670`, affinity `0xFFFF`, priority `Normal`. Twelve rotated samples after three warmups; all outliers retained. Each batch materializes 100 outputs.
+Source `f42250892ab5234464dbf2a7c926a903f9946ab5`, affinity `0xFFFF`, priority `Normal`. Twelve rotated samples after three warmups; all outliers retained. Each batch materializes 100 outputs.
 
 | Payload | Operation | Engine | Median µs/output | P95 µs/output | Min–max µs/output | Managed bytes/output |
 | --- | --- | --- | ---: | ---: | ---: | ---: |
-| Numeric | Modules | CodeGlyphX | 91.64 | 131.62 | 85.78–133.16 | 3832 |
-| Numeric | Modules | QRCoder | 112.81 | 165.19 | 96.27–175.75 | 5568 |
-| Numeric | Modules | ZXing-C++ | 45.39 | 72.95 | 31.19–74.83 | 1696 |
-| Numeric | Modules | ZXing.Net | 63.52 | 103.52 | 48.83–110.82 | 31304 |
-| Numeric | Png | CodeGlyphX | 130.39 | 168.38 | 95.99–171.80 | 40312 |
-| Numeric | Png | QRCoder | 242.56 | 325.42 | 155.18–335.51 | 6568 |
-| Numeric | Png | ZXing-C++ | 966.02 | 1672.64 | 865.82–1935.47 | 848328 |
-| Numeric | Png | ZXing.Net | 1076.85 | 1271.55 | 854.88–1329.87 | 877574 |
-| Unicode | Modules | CodeGlyphX | 2021.09 | 2113.88 | 1744.40–2131.82 | 23872 |
-| Unicode | Modules | QRCoder | 2985.85 | 3417.40 | 2695.08–3578.83 | 23216 |
-| Unicode | Modules | ZXing-C++ | 1361.58 | 1612.62 | 1113.87–1732.21 | 14648 |
-| Unicode | Modules | ZXing.Net | 1929.99 | 2213.58 | 1735.36–2289.40 | 606584 |
-| Unicode | Png | CodeGlyphX | 1675.93 | 1826.14 | 1588.77–1830.93 | 274832 |
-| Unicode | Png | QRCoder | 2831.67 | 3115.54 | 2660.06–3144.68 | 26112 |
-| Unicode | Png | ZXing-C++ | 6550.81 | 7680.81 | 6168.62–7687.19 | 6206788 |
-| Unicode | Png | ZXing.Net | 7745.48 | 8970.32 | 7368.00–9276.85 | 6798192 |
-| Url | Modules | CodeGlyphX | 860.78 | 994.77 | 132.42–1013.87 | 5057 |
-| Url | Modules | QRCoder | 1031.54 | 1157.23 | 335.02–1183.79 | 7412 |
-| Url | Modules | ZXing-C++ | 147.54 | 211.34 | 103.89–219.48 | 2709 |
-| Url | Modules | ZXing.Net | 822.50 | 951.79 | 194.57–963.66 | 71141 |
-| Url | Png | CodeGlyphX | 176.36 | 237.28 | 158.31–286.37 | 60278 |
-| Url | Png | QRCoder | 460.13 | 509.82 | 407.75–524.73 | 8200 |
-| Url | Png | ZXing-C++ | 1448.78 | 1518.30 | 1407.63–1556.13 | 1309003 |
-| Url | Png | ZXing.Net | 1520.85 | 1625.40 | 1448.32–1692.22 | 1377485 |
+| Numeric | Modules | CodeGlyphX | 96.63 | 122.98 | 73.62–129.57 | 3832 |
+| Numeric | Modules | QRCoder | 126.79 | 182.50 | 100.31–218.17 | 5569 |
+| Numeric | Modules | ZXing-C++ | 52.83 | 80.80 | 34.80–82.93 | 1696 |
+| Numeric | Modules | ZXing.Net | 68.42 | 114.39 | 60.35–125.11 | 31304 |
+| Numeric | Png | CodeGlyphX | 115.10 | 190.89 | 93.49–236.93 | 40340 |
+| Numeric | Png | QRCoder | 209.00 | 252.31 | 164.24–262.46 | 6737 |
+| Numeric | Png | ZXing-C++ | 930.32 | 1015.94 | 863.97–1030.22 | 848484 |
+| Numeric | Png | ZXing.Net | 929.30 | 1181.74 | 892.02–1277.38 | 877715 |
+| Unicode | Modules | CodeGlyphX | 1831.00 | 2212.18 | 1733.88–2424.12 | 23872 |
+| Unicode | Modules | QRCoder | 2847.31 | 3504.19 | 2751.90–4015.43 | 23221 |
+| Unicode | Modules | ZXing-C++ | 1195.78 | 1471.53 | 1144.38–1593.31 | 14648 |
+| Unicode | Modules | ZXing.Net | 1890.46 | 2132.31 | 1704.69–2265.79 | 606588 |
+| Unicode | Png | CodeGlyphX | 2060.18 | 2266.18 | 2000.61–2357.30 | 274942 |
+| Unicode | Png | QRCoder | 3327.00 | 3637.69 | 3180.38–3651.19 | 26812 |
+| Unicode | Png | ZXing-C++ | 8185.20 | 9411.13 | 7659.90–9595.17 | 6207105 |
+| Unicode | Png | ZXing.Net | 9860.13 | 11652.26 | 9047.81–12233.90 | 6798329 |
+| Url | Modules | CodeGlyphX | 916.52 | 1281.85 | 142.75–1331.31 | 5063 |
+| Url | Modules | QRCoder | 1110.92 | 1357.97 | 464.52–1383.23 | 7414 |
+| Url | Modules | ZXing-C++ | 166.04 | 231.86 | 95.68–256.44 | 2709 |
+| Url | Modules | ZXing.Net | 947.93 | 1123.02 | 272.11–1135.60 | 71135 |
+| Url | Png | CodeGlyphX | 288.92 | 587.00 | 185.45–748.38 | 60305 |
+| Url | Png | QRCoder | 573.72 | 917.23 | 443.94–1094.87 | 8395 |
+| Url | Png | ZXing-C++ | 1853.70 | 2721.33 | 1436.26–2883.74 | 1309144 |
+| Url | Png | ZXing.Net | 1946.61 | 3268.29 | 1548.35–3675.11 | 1377577 |
 
 ## Generation on ccd1
 
-Source `63677a2c11e9561677736cc001a8bf748ca28670`, affinity `0xFFFF0000`, priority `Normal`. Twelve rotated samples after three warmups; all outliers retained. Each batch materializes 100 outputs.
+Source `f42250892ab5234464dbf2a7c926a903f9946ab5`, affinity `0xFFFF0000`, priority `Normal`. Twelve rotated samples after three warmups; all outliers retained. Each batch materializes 100 outputs.
 
 | Payload | Operation | Engine | Median µs/output | P95 µs/output | Min–max µs/output | Managed bytes/output |
 | --- | --- | --- | ---: | ---: | ---: | ---: |
-| Numeric | Modules | CodeGlyphX | 60.40 | 91.92 | 58.86–100.16 | 3832 |
-| Numeric | Modules | QRCoder | 78.79 | 129.23 | 74.35–166.54 | 5568 |
-| Numeric | Modules | ZXing-C++ | 27.97 | 52.77 | 27.82–54.65 | 1696 |
-| Numeric | Modules | ZXing.Net | 37.46 | 71.82 | 36.56–83.89 | 31304 |
-| Numeric | Png | CodeGlyphX | 90.52 | 124.38 | 76.85–140.66 | 40312 |
-| Numeric | Png | QRCoder | 146.51 | 170.65 | 143.62–182.43 | 6568 |
-| Numeric | Png | ZXing-C++ | 675.49 | 782.91 | 611.63–824.17 | 848301 |
-| Numeric | Png | ZXing.Net | 755.73 | 841.63 | 619.98–852.75 | 877584 |
-| Unicode | Modules | CodeGlyphX | 1489.50 | 1721.57 | 1453.31–1818.87 | 23872 |
-| Unicode | Modules | QRCoder | 2498.27 | 2695.92 | 2342.71–2761.02 | 23216 |
-| Unicode | Modules | ZXing-C++ | 1015.98 | 1142.06 | 950.32–1161.14 | 14648 |
-| Unicode | Modules | ZXing.Net | 1464.73 | 1771.33 | 1405.70–1938.24 | 606584 |
-| Unicode | Png | CodeGlyphX | 1618.90 | 1680.98 | 1578.47–1697.20 | 274832 |
-| Unicode | Png | QRCoder | 2720.40 | 2887.88 | 2686.38–2908.79 | 26112 |
-| Unicode | Png | ZXing-C++ | 6101.44 | 6359.02 | 5865.74–6435.24 | 6206812 |
-| Unicode | Png | ZXing.Net | 6667.64 | 7059.67 | 6459.84–7116.06 | 6798361 |
-| Url | Modules | CodeGlyphX | 608.14 | 726.61 | 576.51–738.15 | 5057 |
-| Url | Modules | QRCoder | 749.48 | 842.77 | 721.15–858.02 | 7409 |
-| Url | Modules | ZXing-C++ | 97.02 | 140.78 | 90.86–162.90 | 2707 |
-| Url | Modules | ZXing.Net | 581.81 | 670.29 | 552.97–756.90 | 71146 |
-| Url | Png | CodeGlyphX | 143.64 | 166.67 | 121.35–178.30 | 60294 |
-| Url | Png | QRCoder | 383.49 | 415.26 | 367.95–424.19 | 8200 |
-| Url | Png | ZXing-C++ | 1133.68 | 1288.99 | 983.44–1348.67 | 1309075 |
-| Url | Png | ZXing.Net | 1217.15 | 1445.04 | 1031.67–1519.50 | 1377523 |
+| Numeric | Modules | CodeGlyphX | 103.36 | 132.85 | 74.42–134.23 | 3832 |
+| Numeric | Modules | QRCoder | 126.41 | 151.35 | 94.19–158.49 | 5569 |
+| Numeric | Modules | ZXing-C++ | 46.66 | 75.74 | 43.68–76.84 | 1696 |
+| Numeric | Modules | ZXing.Net | 67.54 | 89.18 | 38.55–101.65 | 31304 |
+| Numeric | Png | CodeGlyphX | 125.41 | 158.78 | 96.40–175.81 | 40340 |
+| Numeric | Png | QRCoder | 234.07 | 263.15 | 199.10–264.50 | 6744 |
+| Numeric | Png | ZXing-C++ | 983.18 | 1126.45 | 888.70–1147.94 | 848431 |
+| Numeric | Png | ZXing.Net | 1037.34 | 1126.02 | 919.11–1158.69 | 877708 |
+| Unicode | Modules | CodeGlyphX | 1998.91 | 2274.50 | 1885.33–2278.14 | 23872 |
+| Unicode | Modules | QRCoder | 3052.06 | 3309.03 | 2908.16–3427.04 | 23220 |
+| Unicode | Modules | ZXing-C++ | 1268.64 | 1374.32 | 1163.38–1422.31 | 14648 |
+| Unicode | Modules | ZXing.Net | 2004.93 | 2309.69 | 1878.37–2383.75 | 606585 |
+| Unicode | Png | CodeGlyphX | 2096.88 | 2181.45 | 2019.63–2198.10 | 274942 |
+| Unicode | Png | QRCoder | 3405.21 | 3589.36 | 3245.79–3635.97 | 26805 |
+| Unicode | Png | ZXing-C++ | 8777.33 | 9765.05 | 8418.84–10154.66 | 6207532 |
+| Unicode | Png | ZXing.Net | 9661.18 | 11331.20 | 9068.77–11451.20 | 6799184 |
+| Url | Modules | CodeGlyphX | 947.59 | 1129.07 | 132.63–1192.38 | 5057 |
+| Url | Modules | QRCoder | 1116.36 | 1202.90 | 454.27–1223.09 | 7417 |
+| Url | Modules | ZXing-C++ | 151.46 | 181.59 | 71.08–186.42 | 2709 |
+| Url | Modules | ZXing.Net | 930.87 | 1014.78 | 272.54–1036.13 | 71141 |
+| Url | Png | CodeGlyphX | 237.23 | 260.03 | 172.94–273.07 | 60319 |
+| Url | Png | QRCoder | 482.35 | 542.27 | 443.05–553.73 | 8375 |
+| Url | Png | ZXing-C++ | 1542.24 | 1617.39 | 1477.16–1637.47 | 1309315 |
+| Url | Png | ZXing.Net | 1619.85 | 1673.56 | 1522.07–1686.77 | 1377756 |
 
 ## Decode latency
 
@@ -552,12 +583,12 @@ Managed allocation is the mean process-wide allocation during each complete batc
 
 | Domain | Engine | Median ms / 19 images | P95 ms | Min–max ms | Mean managed MiB / batch | Correct images range | Unexpected images range |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| ccd0 | CodeGlyphX | 1535.25 | 1684.11 | 1479.91–1763.23 | 85.85 | 19–19 | 0–0 |
-| ccd0 | ZXing-C++ | 26.48 | 32.11 | 20.90–32.34 | 2.19 | 19–19 | 0–0 |
-| ccd0 | ZXing.Net | 185.84 | 217.84 | 161.66–222.02 | 12.97 | 19–19 | 0–0 |
-| ccd1 | CodeGlyphX | 1505.64 | 1594.41 | 1425.95–1608.56 | 86.48 | 19–19 | 0–0 |
-| ccd1 | ZXing-C++ | 21.49 | 38.53 | 18.89–39.73 | 2.20 | 19–19 | 0–0 |
-| ccd1 | ZXing.Net | 165.59 | 229.48 | 147.21–264.48 | 13.00 | 19–19 | 0–0 |
+| ccd0 | CodeGlyphX | 1684.30 | 1769.23 | 1499.12–1780.59 | 92.21 | 19–19 | 0–0 |
+| ccd0 | ZXing-C++ | 29.51 | 39.80 | 25.89–44.42 | 2.22 | 19–19 | 0–0 |
+| ccd0 | ZXing.Net | 217.73 | 229.65 | 199.49–232.97 | 13.20 | 19–19 | 0–0 |
+| ccd1 | CodeGlyphX | 1550.05 | 1580.86 | 1515.25–1592.07 | 87.42 | 19–19 | 0–0 |
+| ccd1 | ZXing-C++ | 27.27 | 32.06 | 21.49–33.93 | 2.22 | 19–19 | 0–0 |
+| ccd1 | ZXing.Net | 203.02 | 221.44 | 180.67–228.95 | 12.99 | 19–19 | 0–0 |
 
 ## Paired whole-image decoding cost
 
@@ -567,10 +598,10 @@ Lower current/previous ratios mean lower elapsed time. Correctness and unfinishe
 
 | Domain | Binary | Median ms / 19 images | P95 ms | Min–max ms | Mean managed MiB | Correct / 19 | Unexpected | Inconclusive | Current / previous median |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| ccd0 | Baseline | 2477.62 | 2897.47 | 2078.68–2903.35 | 83.34 | 18–19 | 0–0 | 0–1 | 0.989 |
-| ccd0 | Candidate | 2450.83 | 2784.65 | 2021.66–2878.70 | 82.80 | 18–19 | 0–0 | 0–1 | 0.989 |
-| ccd1 | Baseline | 2010.14 | 2485.63 | 1862.95–2513.25 | 86.16 | 18–19 | 0–0 | 0–1 | 0.970 |
-| ccd1 | Candidate | 1949.81 | 2431.30 | 1880.12–2492.21 | 86.53 | 18–19 | 0–0 | 0–1 | 0.970 |
+| ccd0 | Baseline | 2184.47 | 2458.33 | 2115.79–2461.85 | 86.17 | 18–19 | 0–0 | 0–1 | 1.056 |
+| ccd0 | Candidate | 2306.78 | 2868.66 | 2187.17–3175.57 | 85.50 | 18–19 | 0–0 | 0–1 | 1.056 |
+| ccd1 | Baseline | 2117.27 | 2221.93 | 1972.25–2226.14 | 86.20 | 19–19 | 0–0 | 0–0 | 1.019 |
+| ccd1 | Candidate | 2158.47 | 2206.40 | 2072.42–2212.91 | 87.54 | 19–19 | 0–0 | 0–0 | 1.019 |
 
 [CCD0 paired samples](evidence/paired-decode-cost-ccd0-result.json) · [CCD1 paired samples](evidence/paired-decode-cost-ccd1-result.json).
 
