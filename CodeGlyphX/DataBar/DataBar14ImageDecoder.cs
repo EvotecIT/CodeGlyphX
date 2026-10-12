@@ -14,9 +14,10 @@ internal static class DataBar14ImageDecoder {
         if (start < 0 || start + 46 > runs.Count ||
             !FitFinder(runs, start + 10, false, out var left, out var leftPitch) ||
             !FitFinder(runs, start + 31, true, out var right, out var rightPitch)) return false;
-        // Light guards may merge with quiet space; the two dark guards must
-        // retain their measured one-module widths at the corresponding end.
+        // Only the leading light guard can merge with quiet space. The
+        // enclosed light gap and both dark guards retain their measured widths.
         if (Math.Abs(runs[start + 1] / leftPitch - 1) > 0.8 ||
+            Math.Abs(runs[start + 44] / rightPitch - 1) > 0.8 ||
             Math.Abs(runs[start + 45] / rightPitch - 1) > 0.8) return false;
         var normalized = new int[46];
         normalized[0] = normalized[1] = normalized[44] = normalized[45] = 1;
@@ -28,7 +29,7 @@ internal static class DataBar14ImageDecoder {
             !FitCharacter(runs, start + 36, 16, rightPitch, normalized, 36)) return false;
         widths = normalized;
         for (var i = 0; i < 46; i++) {
-            if (i == 0 || i == 44) continue;
+            if (i == 0) continue;
             var pitch = i < 23 ? leftPitch : rightPitch;
             var residual = runs[start + i] / pitch - normalized[i];
             fit += residual * residual;
@@ -112,6 +113,10 @@ internal static class DataBar14ImageDecoder {
                     var lastDark = bottom == 0 ? 23 : 24;
                     if (Math.Abs(runs[start + firstDark] / pitch - 1) > 0.8 ||
                         Math.Abs(runs[start + lastDark] / pitch - 1) > 0.8) continue;
+                    // A bottom row starts and ends dark. Its two light guard
+                    // gaps are enclosed and cannot absorb outer quiet space.
+                    if (bottom != 0 && (Math.Abs(runs[start + 1] / pitch - 1) > 0.8 ||
+                        Math.Abs(runs[start + 23] / pitch - 1) > 0.8)) continue;
                     var widths = new int[25];
                     widths[0] = widths[1] = widths[23] = widths[24] = 1;
                     Array.Copy(finder, 0, widths, 10, 5);

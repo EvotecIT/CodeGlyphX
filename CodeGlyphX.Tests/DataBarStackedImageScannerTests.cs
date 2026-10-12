@@ -124,6 +124,24 @@ public sealed class DataBarStackedImageScannerTests {
         Assert.Equal(ScanCompletionReason.Cancelled, SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options).CompletionReason);
     }
 
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void Scanner_RejectsStretchedEnclosedBottomGuard(bool omni, bool leading) {
+        var original = omni ? DataBar14Encoder.EncodeStackedOmnidirectional("0001234567890")
+            : DataBar14Encoder.EncodeStacked("0001234567890");
+        var invalid = new BitMatrix(original.Width + 2, original.Height);
+        var insertion = leading ? 2 : original.Width - 1;
+        for (var y = 0; y < original.Height; y++) for (var x = 0; x < original.Width; x++) {
+            var offset = y == original.Height - 1 && x >= insertion ? 2 : 0;
+            invalid[x + offset, y] = original[x, y];
+        }
+        var pixels = Render(invalid, 3, out var width, out var height);
+        Assert.Empty(Scan(pixels, width, height).Symbols);
+    }
+
     private static ScanOptions Options() {
         var options = ScanOptions.Robust(5000);
         options.Formats = new[] { SymbolFormat.Gs1DataBarStacked, SymbolFormat.Gs1DataBarStackedOmnidirectional };
@@ -139,12 +157,12 @@ public sealed class DataBarStackedImageScannerTests {
         var rowHeights = matrix.Height == 5 ? new[] { 33, 1, 1, 1, 33 } : new[] { 5, 1, 7 };
         var total = quiet * 2;
         foreach (var value in rowHeights) total += value;
-        width = (50 + quiet * 2) * scale; height = total * scale;
+        width = (matrix.Width + quiet * 2) * scale; height = total * scale;
         var pixels = new byte[width * height * 4];
         for (var i = 0; i < pixels.Length; i++) pixels[i] = 255;
         var rowStart = quiet * scale;
         for (var row = 0; row < matrix.Height; row++) {
-            for (var y = rowStart; y < rowStart + rowHeights[row] * scale; y++) for (var x = 0; x < 50 * scale; x++) {
+            for (var y = rowStart; y < rowStart + rowHeights[row] * scale; y++) for (var x = 0; x < matrix.Width * scale; x++) {
                 var at = (y * width + quiet * scale + x) * 4;
                 if (matrix[x / scale, row]) pixels[at] = pixels[at + 1] = pixels[at + 2] = 0;
             }

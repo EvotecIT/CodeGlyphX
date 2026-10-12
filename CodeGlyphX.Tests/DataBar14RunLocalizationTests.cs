@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Collections.Generic;
+using CodeGlyphX.DataBar;
 using CodeGlyphX.Rendering;
 using Xunit;
 
@@ -34,6 +36,33 @@ public sealed class DataBar14RunLocalizationTests {
         var symbol = Assert.Single(scan.Symbols);
         Assert.Equal("0200123456789", symbol.Text);
         Assert.Equal(SymbolFormat.Gs1DataBarOmnidirectional, symbol.Format);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void Decode_StretchedEnclosedEndGuard_RemainsInvalid(bool vertical, bool inverted) {
+        var encoded = DataBar14Encoder.EncodeOmnidirectional("0200123456789");
+        var segments = new List<BarSegment>(encoded.Segments);
+        var gap = segments.Count - 2;
+        Assert.False(segments[gap].IsBar);
+        segments[gap] = new BarSegment(false, 3);
+        var invalid = new Barcode1D(segments);
+        Assert.False(DataBar14Decoder.TryDecodeOmnidirectional(invalid, out _));
+        var pixels = Rendering.Png.BarcodePngRenderer.RenderPixels(invalid,
+            new Rendering.Png.BarcodePngRenderOptions { ModuleSize = 3, QuietZone = 10, HeightModules = 40 },
+            out var width, out var height, out _);
+        Transform(ref pixels, ref width, ref height, vertical, inverted);
+        Assert.False(BarcodeDecoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32,
+            BarcodeType.GS1DataBarOmni, out _));
+        Assert.False(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32,
+            out _, BarcodeType.GS1DataBarOmni));
+        Assert.Empty(SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { SymbolFormat.Gs1DataBarOmnidirectional },
+            TimeoutMilliseconds = TestBudget.Adjust(5000)
+        }).Symbols);
     }
 
     private static void Transform(ref byte[] pixels, ref int width, ref int height, bool vertical, bool inverted) {
