@@ -1,13 +1,13 @@
 {
-  "Source": "7c907b2c9f64b622fac80fde24d9a2f421035b39",
-  "CoreSha256": "3FCE2A04CDD023B164AE723CE8FE5DE6E596F847C6C090E572FCBF8E50FA804E",
+  "Source": "5145edfb766f1ced33dfc6427b65cfdbd2aa7eb3",
+  "CoreSha256": "DFDDE80285429E278828398F62EFE78659647C8BF164015592A1773EB18DC609",
   "Scope": "Supplementary contract diagnostics, not a representative accuracy or negative-rate survey. Thirty-one fixed negative IDs are each requested with three explicit retail-family hints (93 requests).",
   "PositiveRequests": 87,
   "NegativeRequests": 93,
   "Engines": {
     "CodeGlyphX": {
       "positive": {
-        "PreviousCorrect": 64,
+        "PreviousCorrect": 69,
         "Correct": 69,
         "Unexpected": 0,
         "Inconclusive": 0
@@ -51,12 +51,12 @@
   "Cost": [
     {
       "Domain": "ccd0",
-      "BaselineMedianMs": 244.99235,
-      "CurrentMedianMs": 763.6408,
-      "LatencyRatio": 3.1169985511792513,
-      "BaselineAllocatedBytes": 22379163.333333332,
-      "CurrentAllocatedBytes": 35558370.0,
-      "AllocationRatio": 1.588905245042673,
+      "BaselineMedianMs": 638.2098000000001,
+      "CurrentMedianMs": 551.55385,
+      "LatencyRatio": 0.8642202767804568,
+      "BaselineAllocatedBytes": 35568430.0,
+      "CurrentAllocatedBytes": 35569642.0,
+      "AllocationRatio": 1.000034075161597,
       "PreviousCorrectRequests": 9.0,
       "CurrentCorrectRequests": 9.0,
       "PreviousUnexpectedRequests": 0.0,
@@ -67,12 +67,12 @@
     },
     {
       "Domain": "ccd1",
-      "BaselineMedianMs": 224.18439999999998,
-      "CurrentMedianMs": 681.31475,
-      "LatencyRatio": 3.0390818897300615,
-      "BaselineAllocatedBytes": 22379712.0,
-      "CurrentAllocatedBytes": 35567357.333333336,
-      "AllocationRatio": 1.589267874999166,
+      "BaselineMedianMs": 630.77785,
+      "CurrentMedianMs": 538.81145,
+      "LatencyRatio": 0.854201602037865,
+      "BaselineAllocatedBytes": 35541428.666666664,
+      "CurrentAllocatedBytes": 35541316.666666664,
+      "AllocationRatio": 0.9999968487479485,
       "PreviousCorrectRequests": 9.0,
       "CurrentCorrectRequests": 9.0,
       "PreviousUnexpectedRequests": 0.0,
@@ -89,22 +89,21 @@
       "benchmark.CandidateWorktreeClean"
     ],
     "Control": "The suite lives in task scratch outside Git. Its wrapper verifies the frozen clean repository before and after timing; the suite records the exact baseline/current core hashes and frozen candidate source.",
-    "PreviousSource": "56f04ae35ce5e98ecc596ad85dcb391e9d0fc204",
+    "PreviousSource": "7c907b2c9f64b622fac80fde24d9a2f421035b39",
     "HistoricalRawPackets": "Previous qualification and prior raw cost packets remain historical; their correctness and cost differences are not attributed to the current baseline."
   },
-  "Changes": "Retail recovery refines guarded anchors by at most three rows in either direction and uses four additional bounded contrast hypotheses for fine bars and glare. Inverted fine bars are normalized before low-contrast padding is classified. Full framing, digit-fit bounds, parity, checksums and independent neighboring-row confirmation remain enforced.",
-  "FocusedCases": 16,
-  "ExactBaselineFailures": 10,
+  "Changes": "Retail scanline recovery reuses sliding minima and maxima across adjacent contrast cutoffs, reducing window construction from eight passes to four. All eight binary hypotheses, their order, pixel classification, cancellation checks, guards, parity, checksums and neighboring-row corroboration remain enforced. The additional pooled storage is two bytes per scanline pixel during retail recovery.",
+  "HistoricalRowRecoverySource": "7c907b2c9f64b622fac80fde24d9a2f421035b39",
   "PositiveCost": [
     {
       "Domain": "ccd0",
-      "BaselineMedianMs": 447.0248,
-      "CurrentMedianMs": 1144.5410000000002,
-      "LatencyRatio": 2.5603523562898527,
-      "BaselineAllocatedBytes": 76284684.0,
-      "CurrentAllocatedBytes": 95012206.66666667,
-      "AllocationRatio": 1.2454951857264909,
-      "PreviousCorrectRequests": 64.0,
+      "BaselineMedianMs": 916.32905,
+      "CurrentMedianMs": 751.7470000000001,
+      "LatencyRatio": 0.8203897933826283,
+      "BaselineAllocatedBytes": 95699088.66666667,
+      "CurrentAllocatedBytes": 94997909.33333333,
+      "AllocationRatio": 0.9926730824388971,
+      "PreviousCorrectRequests": 69.0,
       "CurrentCorrectRequests": 69.0,
       "PreviousUnexpectedRequests": 0.0,
       "CurrentUnexpectedRequests": 0.0,
@@ -113,13 +112,13 @@
     },
     {
       "Domain": "ccd1",
-      "BaselineMedianMs": 362.37615,
-      "CurrentMedianMs": 921.0013,
-      "LatencyRatio": 2.541561579038797,
-      "BaselineAllocatedBytes": 76290250.0,
-      "CurrentAllocatedBytes": 95014525.33333333,
-      "AllocationRatio": 1.2454347093282998,
-      "PreviousCorrectRequests": 64.0,
+      "BaselineMedianMs": 1140.3396,
+      "CurrentMedianMs": 947.6503,
+      "LatencyRatio": 0.8310246351174685,
+      "BaselineAllocatedBytes": 95019548.66666667,
+      "CurrentAllocatedBytes": 95011666.0,
+      "AllocationRatio": 0.999917041632198,
+      "PreviousCorrectRequests": 69.0,
       "CurrentCorrectRequests": 69.0,
       "PreviousUnexpectedRequests": 0.0,
       "CurrentUnexpectedRequests": 0.0,
@@ -127,5 +126,17 @@
       "CurrentInconclusiveRequests": 0.0
     }
   ],
-  "PositiveCostScope": "Same 87 preloaded retail positives with identical hints, payload validation and 1500 ms allowance. Separate contexts, 3 warmups and 12 rotated measurements per binary/domain, Normal priority and fixed affinity; no outlier removal. Loading and evaluation are excluded. More successful decodes change completed work. Managed allocation excludes native costs. All measured samples and failed warmups are retained; successful warmup samples are not retained by PowerForge."
+  "PositiveCostScope": "Same 87 preloaded retail positives with identical hints, payload validation and 1500 ms allowance. Separate contexts, 3 warmups and 12 rotated measurements per binary/domain, Normal priority and fixed affinity; no outlier removal. Loading and evaluation are excluded. Correctness is recorded with cost; successful decode counts must be read alongside the timing. Managed allocation excludes native costs. All measured samples and failed warmups are retained; successful warmup samples are not retained by PowerForge.",
+  "ExtremaReuse": {
+    "Rows": 3982,
+    "Masks": 39820,
+    "PixelDecisions": 23593100,
+    "IndependentExtremaPoints": 270776,
+    "Mismatches": 0,
+    "PreCancelled": true,
+    "Expired": true,
+    "BeforeCoreSha256": "3FCE2A04CDD023B164AE723CE8FE5DE6E596F847C6C090E572FCBF8E50FA804E",
+    "CandidateCoreSha256": "DFDDE80285429E278828398F62EFE78659647C8BF164015592A1773EB18DC609",
+    "Scope": "Actual old/new private binarizers; eight production passes, unchanged ordinary no-storage path; 1024 seeded rows and 17 rows per axis of every one of the 87 fixed retail requests. Every output pixel compared; representative extrema checked against independent direct min/max. No production instrumentation or test hook."
+  }
 }

@@ -1086,13 +1086,13 @@
     "Expected": [
       "9780345348036"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "9780345348036"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "ean13-2/07.png",
@@ -1251,13 +1251,13 @@
     "Expected": [
       "9780441014989"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "9780441014989"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "ean13-4/07.png",
@@ -1266,13 +1266,13 @@
     "Expected": [
       "9780441014989"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "9780441014989"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "ean13-4/22.png",
@@ -1326,13 +1326,13 @@
     "Expected": [
       "9780441014989"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "9780441014989"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "ean13-5/17.png",
@@ -1588,8 +1588,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/17.png",
@@ -1632,8 +1632,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Inconclusive",
-    "Completion": "RecognitionBudgetExceeded"
+    "Status": "Correct",
+    "Completion": "Completed"
   },
   {
     "Id": "falsepositives-2/06.png",
@@ -3765,13 +3765,13 @@
     "Expected": [
       "625034201058"
     ],
-    "Actual": [],
-    "Missing": [
+    "Actual": [
       "625034201058"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "upca-5/17.png",
