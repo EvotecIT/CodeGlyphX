@@ -8,6 +8,49 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class BarcodeGrayBoundaryTests {
+    [Theory]
+    [InlineData(BarcodeType.Industrial2of5, 0, false)]
+    [InlineData(BarcodeType.Industrial2of5, 0, true)]
+    [InlineData(BarcodeType.Industrial2of5, 128, false)]
+    [InlineData(BarcodeType.Industrial2of5, 128, true)]
+    [InlineData(BarcodeType.ITF, 0, false)]
+    [InlineData(BarcodeType.ITF, 0, true)]
+    [InlineData(BarcodeType.ITF, 128, false)]
+    [InlineData(BarcodeType.ITF, 128, true)]
+    [InlineData(BarcodeType.Pharmacode, 0, false)]
+    [InlineData(BarcodeType.Pharmacode, 0, true)]
+    [InlineData(BarcodeType.Pharmacode, 128, false)]
+    [InlineData(BarcodeType.Pharmacode, 128, true)]
+    public void TransparentTileMargins_PreserveBothOriginalPayloads(BarcodeType type, byte alpha, bool vertical) {
+        var expected = type == BarcodeType.ITF ? new[] { "12345678", "87654321" }
+            : type == BarcodeType.Pharmacode ? new[] { "91", "123" } : new[] { "2", "8" };
+        var format = type == BarcodeType.ITF ? SymbolFormat.Itf
+            : type == BarcodeType.Pharmacode ? SymbolFormat.Pharmacode : SymbolFormat.Industrial2Of5;
+        var render = new BarcodePngRenderOptions { ModuleSize = 3, QuietZone = 20, HeightModules = 30,
+            Background = new Rgba32(0, 0, 0, alpha) };
+        var left = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(type, expected[0]), render, out var lw, out var lh, out _);
+        var right = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(type, expected[1]), render, out var rw, out var rh, out _);
+        var width = lw + rw; var height = Math.Max(lh, rh);
+        var pixels = new byte[width * height * 4];
+        for (var at = 3; at < pixels.Length; at += 4) pixels[at] = alpha;
+        for (var y = 0; y < lh; y++) Array.Copy(left, y * lw * 4, pixels, y * width * 4, lw * 4);
+        for (var y = 0; y < rh; y++) Array.Copy(right, y * rw * 4, pixels, (y * width + lw) * 4, rw * 4);
+        if (vertical) {
+            var rotated = new byte[pixels.Length];
+            for (var y = 0; y < height; y++) for (var x = 0; x < width; x++)
+                Buffer.BlockCopy(pixels, (y * width + x) * 4, rotated, (x * height + height - 1 - y) * 4, 4);
+            pixels = rotated; (width, height) = (height, width);
+        }
+        var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { format }, EnableTileScan = true, TileGrid = 2, MaxSymbols = 0, TimeoutMilliseconds = 0
+        });
+        Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
+        foreach (var text in expected) Assert.Contains(result.Symbols, hit => hit.Format == format && hit.Text == text);
+        // The separate full-frame Pharmacode ambiguity is retained in the diagnostic;
+        // this contract protects recovery of both original tile payloads.
+        if (type != BarcodeType.Pharmacode) Assert.Equal(2, result.Symbols.Count);
+    }
+
     [Fact]
     public void InvertedItfSymbols_KeepDarkQuietZonesDuringTileScanning() {
         var left = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(BarcodeType.ITF, "12345678"),

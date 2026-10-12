@@ -401,7 +401,7 @@ public static partial class SymbolScanner {
             var x = vertical ? position : at;
             var y = vertical ? at : position;
             var offset = (y * width + x) * 4;
-            return (rgba[offset] * 54 + rgba[offset + 1] * 183 + rgba[offset + 2] * 19) >> 8;
+            return BarcodeScanline.GetLuminance(rgba[offset], rgba[offset + 1], rgba[offset + 2], rgba[offset + 3]);
         }
         var minimum = 255;
         var maximum = 0;
