@@ -328,7 +328,7 @@ public static partial class SymbolScanner {
         HashSet<string>? seen,
         BarcodeType expectedType,
         BarcodeDecodeOptions? barcodeOptions) {
-        if (expectedType == BarcodeType.Pharmacode || expectedType == BarcodeType.ITF) {
+        if (expectedType == BarcodeType.Pharmacode || expectedType == BarcodeType.ITF || expectedType == BarcodeType.Industrial2of5) {
             ScanLocatedLinear(rgba, width, height, searchRegion, options, deadline, requested, expectedTypes,
                 expectedType, barcodeOptions, results, seen);
             return;
@@ -385,11 +385,12 @@ public static partial class SymbolScanner {
 
     private static bool IsBoundaryClippedUncheckedBarcode(BarcodeImageCandidate candidate, byte[] rgba,
         int width, int height, CancellationToken cancellationToken) {
-        if (candidate.Decoded.Type != BarcodeType.Pharmacode && candidate.Decoded.Type != BarcodeType.ITF) return false;
+        if (candidate.Decoded.Type != BarcodeType.Pharmacode && candidate.Decoded.Type != BarcodeType.ITF &&
+            candidate.Decoded.Type != BarcodeType.Industrial2of5) return false;
         var region = candidate.SearchRegion;
         if (region.X == 0 && region.Y == 0 && region.Width == width && region.Height == height) return false;
 
-        // Pharmacode and ordinary ITF have no mandatory checksum. A tile boundary through
+        // Pharmacode, ordinary ITF and Industrial 2 of 5 have no mandatory checksum. A tile boundary through
         // a bar can turn a fragment into another valid number, even with ITF's short guards.
         // Require background at both ends of the actual sampled scanline.
         var vertical = candidate.Scanline.IsVertical;
@@ -412,17 +413,17 @@ public static partial class SymbolScanner {
         }
         var threshold = (minimum + maximum) / 2;
         if (minimum >= maximum) return true;
-        // Ordinary ITF also supports white bars on a dark quiet background. Require
+        // ITF and Industrial 2 of 5 also support white bars on a dark quiet background. Require
         // the same background polarity at both edges; the ten-module check below
         // rejects internal gaps and clipped edge bars for either polarity.
-        var darkBackground = candidate.Decoded.Type == BarcodeType.ITF &&
+        var darkBackground = (candidate.Decoded.Type == BarcodeType.ITF || candidate.Decoded.Type == BarcodeType.Industrial2of5) &&
             Luminance(start) < threshold && Luminance(end - 1) < threshold;
         bool IsBackground(int at) => darkBackground ? Luminance(at) < threshold : Luminance(at) >= threshold;
         var first = start;
         while (first < end && IsBackground(first)) first++;
         var last = end - 1;
         while (last > first && IsBackground(last)) last--;
-        var quietModules = candidate.Decoded.Type == BarcodeType.ITF ? 10 : 2;
+        var quietModules = candidate.Decoded.Type == BarcodeType.Pharmacode ? 2 : 10;
         var quietPixels = Math.Max(2, quietModules * (last - first + 1) / candidate.Scanline.Modules.Length);
         return first - start < quietPixels || end - last - 1 < quietPixels;
     }
