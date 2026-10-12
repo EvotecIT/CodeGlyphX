@@ -39,7 +39,7 @@ public static partial class Pdf417Decoder {
                             if (stop != lastStop) rightPixel -= runs[stop] + runs[stop + 1];
                             if (token.IsCancellationRequested || budget.IsExpired) return false;
                             if (!MatchPixelRuns(runs, stop, PixelStopRuns, 18) ||
-                                !TryReadPixelIndicator(runs, stop - 8, correctPrintGain, out var cluster, out var right)) continue;
+                                !TryReadPixelIndicator(runCache.Codewords, runs, stop - 8, correctPrintGain, out var cluster, out var right)) continue;
                             var logicalRow = right / 30 * 3 + cluster;
                             if (logicalRow >= 90) continue;
                             var bin = rightPixel / 32;
@@ -51,7 +51,7 @@ public static partial class Pdf417Decoder {
                             var words = new List<int> { right };
                             for (var at = stop - 16; at >= firstRun && words.Count <= 30; at -= 8) {
                                 if (token.IsCancellationRequested || budget.IsExpired) return false;
-                                if (!ReadPixelCodeword(runs, at, cluster, out var word, correctPrintGain: correctPrintGain)) break;
+                                if (!runCache.Codewords.Read(runs, at, cluster, out var word, correctPrintGain: correctPrintGain)) break;
                                 words.Add(word);
                             }
                             if (words.Count > 1) set.Observe(logicalRow, words.ToArray(), y);
@@ -69,12 +69,12 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool TryReadPixelIndicator(List<int> runs, int start, bool correctPrintGain, out int cluster, out int word) {
-        for (var c = 0; c < 3; c++) if (ReadPixelCodeword(runs, start, c, out word, approximate: false)) {
+    private static bool TryReadPixelIndicator(PixelCodewordCache codewords, List<int> runs, int start, bool correctPrintGain, out int cluster, out int word) {
+        for (var c = 0; c < 3; c++) if (codewords.Read(runs, start, c, out word, approximate: false)) {
             cluster = c;
             return true;
         }
-        for (var c = 0; c < 3; c++) if (ReadPixelCodeword(runs, start, c, out word, correctPrintGain: correctPrintGain)) {
+        for (var c = 0; c < 3; c++) if (codewords.Read(runs, start, c, out word, correctPrintGain: correctPrintGain)) {
             cluster = c;
             return true;
         }

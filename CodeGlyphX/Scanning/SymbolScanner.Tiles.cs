@@ -44,7 +44,8 @@ public static partial class SymbolScanner {
         var matrixFamilies = CountMatrixFamilies(requested);
         var count = CountMatrixAttemptWeight(requested);
         // QR searches multiple scales and grayscale variants; Data Matrix also
-        // tries direct-part-mark variants. Give these stages more of the same
+        // tries direct-part-mark variants, and PDF417 searches row slopes and
+        // damaged framing. Give these stages more of the same
         // total deadline while retaining time for the other requested families.
         if (requested.Contains(SymbolFormat.QrCode)) count += 3;
         if (requested.Contains(SymbolFormat.MicroQrCode)) count++;
@@ -73,7 +74,8 @@ public static partial class SymbolScanner {
         (requested.Contains(SymbolFormat.Aztec) ? 1 : 0);
 
     private static int CountMatrixAttemptWeight(ISet<SymbolFormat> requested) =>
-        CountMatrixFamilies(requested) + (requested.Contains(SymbolFormat.DataMatrix) ? 1 : 0);
+        CountMatrixFamilies(requested) + (requested.Contains(SymbolFormat.DataMatrix) ? 1 : 0) +
+        (requested.Contains(SymbolFormat.Pdf417) ? 1 : 0);
 
     private static int ResolveMatrixTileGrid(ScanOptions options, int width, int height) =>
         options.TileGrid == 0 ? (Math.Max(width, height) >= 720 ? 3 : 2) : options.TileGrid;

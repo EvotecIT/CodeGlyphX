@@ -249,7 +249,8 @@ public static partial class SymbolScanner {
         HashSet<string>? seen,
         ref int remainingAttempts) {
         if (!requested.Contains(SymbolFormat.Pdf417)) return;
-        using var attempt = deadline.CreateAttempt(remainingAttempts--, options.Image?.RecognitionBudgetMilliseconds ?? 0);
+        using var attempt = deadline.CreateAttempt(remainingAttempts, options.Image?.RecognitionBudgetMilliseconds ?? 0, weight: 2);
+        remainingAttempts -= 2;
         deadline = attempt;
         if (Pdf417Decoder.TryDecode(rgba, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out Pdf417Decoded decoded)) {
             Add(results, seen, SymbolResultFactory.From(decoded, searchRegion));

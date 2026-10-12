@@ -58,7 +58,7 @@ public static partial class Pdf417Decoder {
                     if (DecodeBudget.ShouldAbort(token)) return false;
                     if (x > candidate.IndicatorX + candidate.Pitch) break;
                     if (((start + (first ? 0 : 1)) & 1) != 0 || Math.Abs(x - candidate.IndicatorX) > candidate.Pitch ||
-                        !TryReadPixelIndicator(runs, start, false, out var cluster, out var left)) continue;
+                        !TryReadPixelIndicator(cache.Codewords, runs, start, false, out var cluster, out var left)) continue;
                     var row = left / 30 * 3 + cluster;
                     if (row >= candidate.Count || left != candidate.Left(row)) continue;
                     var words = new int[candidate.Columns + 2];
@@ -67,7 +67,7 @@ public static partial class Pdf417Decoder {
                     var column = 1;
                     for (; column <= candidate.Columns; column++, at += 8) {
                         if (DecodeBudget.ShouldAbort(token)) return false;
-                        if (!ReadPixelCodeword(runs, at, cluster, out words[column])) break;
+                        if (!cache.Codewords.Read(runs, at, cluster, out words[column])) break;
                     }
                     var right = candidate.Right(row);
                     if (column <= candidate.Columns || !MatchRightIndicatorTail(runs, at, cluster, right, candidate.Pitch)) continue;

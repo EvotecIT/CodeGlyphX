@@ -19,6 +19,7 @@ public static partial class Pdf417Decoder {
         private readonly int _height;
         private readonly Dictionary<(int Axis, int Line, double Slope), CachedRuns> _lines = new();
         private int _bytes;
+        internal readonly PixelCodewordCache Codewords = new();
 
         private sealed class CachedRuns {
             internal readonly Array Widths;

@@ -555,7 +555,7 @@ public static partial class Pdf417Decoder {
 
     private static bool TryDecodeWithOffset(BitMatrix modules, int startOffset, CancellationToken cancellationToken, out string value) {
         var maxWidth = modules.Width - startOffset;
-        if (maxWidth < StartPatternWidth + 17 + 17 + 1) {
+        if (maxWidth < StartPatternWidth + 17 + 17 + 1 || !HasInitialOffsetCodewords(modules, startOffset)) {
             value = string.Empty;
             return false;
         }
@@ -580,7 +580,7 @@ public static partial class Pdf417Decoder {
     private static bool TryDecodeWithOffset(BitMatrix modules, int startOffset, CancellationToken cancellationToken, out string value, out Pdf417MacroMetadata? macro) {
         var maxWidth = modules.Width - startOffset;
         macro = null;
-        if (maxWidth < StartPatternWidth + 17 + 17 + 1) {
+        if (maxWidth < StartPatternWidth + 17 + 17 + 1 || !HasInitialOffsetCodewords(modules, startOffset)) {
             value = string.Empty;
             return false;
         }
@@ -605,7 +605,7 @@ public static partial class Pdf417Decoder {
 
     private static bool TryDecodeWithOffset(BitMatrix modules, int startOffset, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         var maxWidth = modules.Width - startOffset;
-        if (maxWidth < StartPatternWidth + 17 + 17 + 1) {
+        if (maxWidth < StartPatternWidth + 17 + 17 + 1 || !HasInitialOffsetCodewords(modules, startOffset)) {
             value = string.Empty;
             diagnostics.Failure ??= "Invalid start offset.";
             return false;

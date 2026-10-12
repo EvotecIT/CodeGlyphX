@@ -89,12 +89,12 @@ public static partial class Pdf417Decoder {
                                 var cluster = -1;
                                 var left = 0;
                                 for (var c = 0; c < 3; c++) {
-                                    if (!ReadPixelCodeword(runs, start + 8, c, out left, approximate: false)) continue;
+                                    if (!runCache.Codewords.Read(runs, start + 8, c, out left, approximate: false)) continue;
                                     cluster = c; break;
                                 }
                                 if (cluster < 0) {
                                     for (var c = 0; c < 3; c++) {
-                                        if (!ReadPixelCodeword(runs, start + 8, c, out left, correctPrintGain: correctPrintGain)) continue;
+                                        if (!runCache.Codewords.Read(runs, start + 8, c, out left, correctPrintGain: correctPrintGain)) continue;
                                         cluster = c; break;
                                     }
                                 }
@@ -120,7 +120,7 @@ public static partial class Pdf417Decoder {
                                 for (; words.Count <= 31 && at + 8 <= runs.Count; at += 8) {
                                     if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
                                     if (MatchPixelRuns(runs, at, PixelStopRuns, 18)) break;
-                                    if (!ReadPixelCodeword(runs, at, cluster, out var word, correctPrintGain: correctPrintGain)) break;
+                                    if (!runCache.Codewords.Read(runs, at, cluster, out var word, correctPrintGain: correctPrintGain)) break;
                                     words.Add(word);
                                 }
                                 var regular = at + 9 <= runs.Count && MatchPixelRuns(runs, at, PixelStopRuns, 18);
