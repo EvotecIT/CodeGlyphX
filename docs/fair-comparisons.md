@@ -4,9 +4,9 @@ CodeGlyphX's current comparison uses matched QR generation settings and an indep
 
 The [current results and complete evidence](comparisons/results.md) compare the repaired source with the original source and the previous decoding pass. They report every miss, completed negative scan, inconclusive search and timing sample across both cache domains. Recognition, latency and managed allocation are separate results. These are shared-host measurements with all outliers retained.
 
-The current pass preserves complete Pharmacode payloads through tight crops, one-sided margins, inversion and independently rounded bar widths. Closely spaced symbols return the two original payloads without an extra combined value. The same physical margin checks serve the pixel multi-result APIs and unified scanner, including transparent backgrounds. Default-format scans also recover inverted single-digit Industrial 2 of 5 symbols.
+Linear decoding reuses already trimmed module arrays and builds run lengths in one exactly sized array. The same frozen corpus, fixed recognition allowances and rotated comparisons measure the allocation change alongside latency, correctness and negative completion. Lower allocations do not establish universal speed or completion improvements.
 
-Fifty-eight targeted contracts compare the exact preceding qualified binary with the current committed core: 27 pass before the fixes and all 58 pass afterward on each supported test framework. These cases informed the implementation and remain separate from the photograph ranking. Earlier tilted-retail recovery and Industrial tile diagnostics retain their measured source identities in the historical sections.
+All 58 retained scanner-margin contracts and four caller-ownership tests pass on each supported test framework. The ownership tests cover padding, reversal, inversion and repeated decoding without modifying caller modules. Earlier Pharmacode margin and neighboring-symbol repairs retain their original regression evidence and costs in the historical section.
 
 The full frozen corpus, alternating negative passes, generation, whole-image timings and paired retail costs are rerun on the tested core. Earlier DataBar tilted-photograph, QR morphology, DataBar-14, retail and other decoder-specific diagnostics retain their original source identities.
 

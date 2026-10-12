@@ -1,0 +1,57 @@
+{
+  "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+  "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence.",
+  "Rows": [
+    {
+      "Iteration": 0,
+      "AllocatedBytes": 120673152,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Iteration": 1,
+      "AllocatedBytes": 134641040,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Iteration": 2,
+      "AllocatedBytes": 133625896,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    }
+  ]
+}

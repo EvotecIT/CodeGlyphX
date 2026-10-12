@@ -392,9 +392,28 @@
         <p><a href="/comparisons/evidence/negative-search-cost-proof.json">Decision and allocation diagnostic</a>. The paired measurements below report whole-image cost and recognition together.</p>
     </section>
     {{ end }}
+    {{ if comparison.decode_allocations }}
+    <section class="benchmark-section" aria-labelledby="decode-allocations">
+        <h2 id="decode-allocations">Linear decoder allocations</h2>
+        <p>{{ comparison.decode_allocations.changes }}</p>
+        <p>{{ comparison.decode_allocations.contracts }}</p>
+        <p>{{ comparison.decode_allocations.scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Current linear decoder allocation and completion costs" tabindex="0">
+            <table class="bench-table">
+                <caption>Paired retail decoding: allocation, latency and recognition</caption>
+                <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Allocation reduction</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.decode_allocations.costs }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.allocation_reduction }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.decode_allocations.limits }}</p>
+        <p>{{ comparison.decode_allocations.profile_scope }}</p>
+        <p><a href="/comparisons/evidence/decode-allocation-proof.json">Allocation and regression proof</a> · <a href="/comparisons/evidence/decode-allocation-positive-ccd0-result.json">Positive CCD0 samples</a> · <a href="/comparisons/evidence/decode-allocation-positive-ccd1-result.json">Positive CCD1 samples</a> · <a href="/comparisons/evidence/decode-allocation-negative-ccd0-result.json">Negative CCD0 samples</a> · <a href="/comparisons/evidence/decode-allocation-negative-ccd1-result.json">Negative CCD1 samples</a></p>
+    </section>
+    {{ end }}
     {{ if comparison.scanner_boundaries }}
     <section class="benchmark-section" aria-labelledby="scanner-boundaries">
-        <h2 id="scanner-boundaries">Linear barcode margins and neighboring symbols</h2>
+        <h2 id="scanner-boundaries">{{ if comparison.scanner_boundaries.historical }}Historical linear barcode margins and neighboring symbols{{ else }}Linear barcode margins and neighboring symbols{{ end }}</h2>
+        {{ if comparison.scanner_boundaries.historical }}<p>These scanner-repair contracts and costs belong to source {{ comparison.scanner_boundaries.source }}. Current allocation costs and regression coverage appear separately.</p>{{ end }}
         <p>{{ comparison.scanner_boundaries.changes }}</p>
         <p>{{ comparison.scanner_boundaries.scope }}</p>
         <div class="comparison-scroll" role="region" aria-label="Scanner margin regression contracts" tabindex="0">
@@ -405,15 +424,15 @@
             </table>
         </div>
         <p>{{ comparison.scanner_boundaries.cost_scope }}</p>
-        <div class="comparison-scroll" role="region" aria-label="Current scanner paired retail costs" tabindex="0">
+        <div class="comparison-scroll" role="region" aria-label="Scanner repair paired retail costs" tabindex="0">
             <table class="bench-table">
-                <caption>Current scanner change: paired retail search costs</caption>
+                <caption>Scanner repair pass: paired retail search costs</caption>
                 <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th><th scope="col">Mean managed MiB</th></tr></thead>
                 <tbody>{{ for row in comparison.scanner_boundaries.costs }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
             </table>
         </div>
         <p>{{ comparison.scanner_boundaries.limits }}</p>
-        <p><a href="/comparisons/evidence/scanner-boundary-proof.json">Regression and binary proof</a> · <a href="/comparisons/evidence/scanner-final-core-probes.json">Exact-core diagnostics</a> · <a href="/comparisons/evidence/scanner-retail-negative-diagnostic.json">Current typed retail negatives</a> · <a href="/comparisons/evidence/scanner-boundary-positive-ccd0-result.json">Positive CCD0 samples</a> · <a href="/comparisons/evidence/scanner-boundary-positive-ccd1-result.json">Positive CCD1 samples</a> · <a href="/comparisons/evidence/scanner-boundary-negative-ccd0-result.json">Negative CCD0 samples</a> · <a href="/comparisons/evidence/scanner-boundary-negative-ccd1-result.json">Negative CCD1 samples</a></p>
+        <p><a href="/comparisons/evidence/scanner-boundary-proof.json">Regression and binary proof</a> · <a href="/comparisons/evidence/scanner-final-core-probes.json">Exact-core diagnostics</a> · <a href="/comparisons/evidence/scanner-retail-negative-diagnostic.json">Typed retail negatives from this scanner-repair pass</a> · <a href="/comparisons/evidence/scanner-boundary-positive-ccd0-result.json">Positive CCD0 samples</a> · <a href="/comparisons/evidence/scanner-boundary-positive-ccd1-result.json">Positive CCD1 samples</a> · <a href="/comparisons/evidence/scanner-boundary-negative-ccd0-result.json">Negative CCD0 samples</a> · <a href="/comparisons/evidence/scanner-boundary-negative-ccd1-result.json">Negative CCD1 samples</a></p>
     </section>
     {{ end }}
     {{ if comparison.retail_fine }}

@@ -8,7 +8,8 @@ from comparison_qr_morphology import project_qr_morphology
 from comparison_databar_tilted import project_databar_tilted
 from comparison_retail_fine import project_retail_fine
 from comparison_scanner_boundaries import project_scanner_boundaries, append_scanner_boundary_section
-from comparison_packet_identity import validate_current_packet
+from comparison_packet_identity import validate_current_packet, validate_qualified_whole_image_packet
+from comparison_decode_allocations import project_decode_allocations, append_decode_allocation_section
 
 
 def read(path):
@@ -45,7 +46,10 @@ def main():
     names += sorted(path.name for path in root.glob("historical-databar-tilt-*.json"))
     names += sorted(path.name for path in root.glob("historical-retail-fine-*.json"))
     names += sorted(path.name for path in root.glob("historical-scanner-boundary-*.json"))
-    if qualification.get("ScannerBoundaryProof"):
+    names += sorted(path.name for path in root.glob("historical-decode-allocation-*.json"))
+    if qualification.get("DecodeAllocationProof"):
+        names += sorted(path.name for path in root.glob("decode-allocation-*.json"))
+    if qualification.get("ScannerBoundaryProof") or qualification.get("HistoricalScannerBoundaryProof"):
         names += sorted(path.name for path in root.glob("scanner-*.json"))
         names += ["frozen-input-inventory.json", "scanline-closure-review.json"]
     if qualification.get("RetailFineContrastProof") or qualification.get("HistoricalRetailFineContrastProof"):
@@ -433,6 +437,7 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    append_decode_allocation_section(lines, project_decode_allocations(root, qualification))
     append_scanner_boundary_section(lines, project_scanner_boundaries(root, qualification))
     fine = project_retail_fine(root, qualification)
     if fine:
@@ -557,6 +562,7 @@ def main():
                   "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
         for domain in ("ccd0", "ccd1"):
             packet = read(root / f"paired-decode-cost-{domain}-result.json")
+            validate_qualified_whole_image_packet(packet, qualification, domain)
             lanes = {row["Engine"]: row for row in packet["Summary"]}
             ratio = lanes["Candidate"]["MedianMs"] / lanes["Baseline"]["MedianMs"]
             for engine in ("Baseline", "Candidate"):

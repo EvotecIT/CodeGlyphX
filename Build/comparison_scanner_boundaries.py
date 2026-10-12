@@ -3,11 +3,12 @@ import json
 
 
 def project_scanner_boundaries(root, qualification):
-    proof = qualification.get('ScannerBoundaryProof')
+    proof = qualification.get('ScannerBoundaryProof') or qualification.get('HistoricalScannerBoundaryProof')
+    historical = bool(proof) and not qualification.get('ScannerBoundaryProof')
     if not proof:
         return None
-    if (proof['Source'] != qualification['MeasurementSource']
-            or proof['CoreSha256'] != qualification['CandidateCoreSha256']
+    if ((not historical and (proof['Source'] != qualification['MeasurementSource']
+            or proof['CoreSha256'] != qualification['CandidateCoreSha256']))
             or proof['CurrentCoreProbe']['CoreSha256'] != proof['CoreSha256']):
         raise ValueError('Scanner boundary proof differs from the qualified core')
     if (proof['BaselineCases'] != 58 or proof['BaselinePassed'] != 27
@@ -51,7 +52,7 @@ def project_scanner_boundaries(root, qualification):
             'before_correct': span('PreviousCorrectImages'), 'current_correct': span('CurrentCorrectImages'),
             'before_inconclusive': span('PreviousInconclusiveImages'), 'current_inconclusive': span('CurrentInconclusiveImages'),
             'before_unexpected': span('PreviousUnexpectedImages'), 'current_unexpected': span('CurrentUnexpectedImages')})
-    return {'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'], 'cost_scope': proof['CostScope'],
+    return {'historical': historical, 'source': proof['Source'], 'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'], 'cost_scope': proof['CostScope'],
             'contracts': [{'name': labels[r['Contract']], 'cases': r['Cases'], 'before': r['PreviousPassed'], 'current': r['CurrentPassed']} for r in proof['Contracts']],
             'before': proof['BaselinePassed'], 'current': 58, 'cases': 58, 'costs': costs}
 
@@ -59,7 +60,10 @@ def project_scanner_boundaries(root, qualification):
 def append_scanner_boundary_section(lines, proof):
     if not proof:
         return
-    lines += ['', '## Linear barcode margins and neighboring symbols', '', proof['changes'], '', proof['scope'], '',
+    title = 'Historical linear barcode margins and neighboring symbols' if proof['historical'] else 'Linear barcode margins and neighboring symbols'
+    if proof['historical']:
+        lines += ['', f'The scanner-repair contracts and costs below belong to source `{proof["source"]}`. Current allocation costs and regression coverage appear separately.']
+    lines += ['', '## ' + title, '', proof['changes'], '', proof['scope'], '',
               '| Targeted contract | Previous passed | Current passed | Cases |', '| --- | ---: | ---: | ---: |']
     for row in proof['contracts']:
         lines.append(f'| {row["name"]} | {row["before"]} | {row["current"]} | {row["cases"]} |')
@@ -68,4 +72,4 @@ def append_scanner_boundary_section(lines, proof):
               '| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |']
     for row in proof['costs']:
         lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_unexpected"]} → {row["current_unexpected"]} | {row["before_mib"]} → {row["current_mib"]} |')
-    lines += ['', proof['limits'], '', '[Regression and binary proof](evidence/scanner-boundary-proof.json) · [Exact-core diagnostics](evidence/scanner-final-core-probes.json) · [Current typed retail negatives](evidence/scanner-retail-negative-diagnostic.json) · [Positive CCD0 samples](evidence/scanner-boundary-positive-ccd0-result.json) · [Positive CCD1 samples](evidence/scanner-boundary-positive-ccd1-result.json) · [Negative CCD0 samples](evidence/scanner-boundary-negative-ccd0-result.json) · [Negative CCD1 samples](evidence/scanner-boundary-negative-ccd1-result.json).']
+    lines += ['', proof['limits'], '', '[Regression and binary proof](evidence/scanner-boundary-proof.json) · [Exact-core diagnostics](evidence/scanner-final-core-probes.json) · [Typed retail negatives from this scanner-repair pass](evidence/scanner-retail-negative-diagnostic.json) · [Positive CCD0 samples](evidence/scanner-boundary-positive-ccd0-result.json) · [Positive CCD1 samples](evidence/scanner-boundary-positive-ccd1-result.json) · [Negative CCD0 samples](evidence/scanner-boundary-negative-ccd0-result.json) · [Negative CCD1 samples](evidence/scanner-boundary-negative-ccd1-result.json).']

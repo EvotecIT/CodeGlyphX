@@ -6,7 +6,8 @@ from comparison_qr_morphology import project_qr_morphology
 from comparison_databar_tilted import project_databar_tilted
 from comparison_retail_fine import project_retail_fine
 from comparison_scanner_boundaries import project_scanner_boundaries
-from comparison_packet_identity import validate_current_packet
+from comparison_packet_identity import validate_current_packet, validate_qualified_whole_image_packet
+from comparison_decode_allocations import project_decode_allocations
 
 
 def load(path):
@@ -167,8 +168,7 @@ def build_website_data(root):
             raise ValueError("Paired decoding source differs from the qualified candidate")
         for domain in ("ccd0", "ccd1"):
             packet = load(root / f"paired-decode-cost-{domain}-result.json")
-            if packet["Metadata"]["benchmark.CandidateSource"] != qualification["MeasurementSource"]:
-                raise ValueError("Paired decoding packet source differs")
+            validate_qualified_whole_image_packet(packet, qualification, domain)
             lanes = {row["Engine"]: row for row in packet["Summary"]}
             if set(lanes) != {"Baseline", "Candidate"} or any(
                 row["Status"] != "Succeeded" or row["FailureCount"] or row["SampleCount"] != 12
@@ -365,6 +365,7 @@ def build_website_data(root):
             "databar_tilted": project_databar_tilted(root, qualification),
             "retail_fine": project_retail_fine(root, qualification),
             "scanner_boundaries": project_scanner_boundaries(root, qualification),
+            "decode_allocations": project_decode_allocations(root, qualification),
             "retail_changes": retail.get("Changes", "") if retail else "",
             "databar14_recovery": databar14_projected,
             "retail_extrema_reuse": ({"masks": f'{retail["ExtremaReuse"]["Masks"]:,}',

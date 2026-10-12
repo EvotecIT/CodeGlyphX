@@ -1,0 +1,698 @@
+{
+  "Scope": "Sampled allocation amounts and managed thread-time stacks on the decoding thread between probe markers. Inclusive stacks overlap; these are not CPU utilization or competitive timings.",
+  "Markers": [
+    {
+      "EventName": "Begin",
+      "Id": 1,
+      "ThreadID": 117516,
+      "TimeStampRelativeMSec": 535.0358
+    },
+    {
+      "EventName": "End",
+      "Id": 2,
+      "ThreadID": 117516,
+      "TimeStampRelativeMSec": 1926.9918
+    },
+    {
+      "EventName": "Begin",
+      "Id": 1,
+      "ThreadID": 117516,
+      "TimeStampRelativeMSec": 1929.5458
+    },
+    {
+      "EventName": "End",
+      "Id": 2,
+      "ThreadID": 117516,
+      "TimeStampRelativeMSec": 2762.9329
+    },
+    {
+      "EventName": "Begin",
+      "Id": 1,
+      "ThreadID": 117516,
+      "TimeStampRelativeMSec": 2763.1266
+    },
+    {
+      "EventName": "End",
+      "Id": 2,
+      "ThreadID": 117516,
+      "TimeStampRelativeMSec": 3821.8366
+    }
+  ],
+  "AllocationTicks": 2184,
+  "SampledAllocationBytes": 294957424,
+  "ThreadTimeSamples": 1312,
+  "AllocationTypes": [
+    {
+      "Key": "System.Boolean[]",
+      "Value": 139811856
+    },
+    {
+      "Key": "System.Byte[]",
+      "Value": 135896192
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanlineCandidate[]",
+      "Value": 10832312
+    },
+    {
+      "Key": "System.String",
+      "Value": 1803760
+    },
+    {
+      "Key": "System.Int32[]",
+      "Value": 1593416
+    },
+    {
+      "Key": "Entry[System.Int32,System.Boolean][]",
+      "Value": 1392200
+    },
+    {
+      "Key": "System.Char[]",
+      "Value": 748384
+    },
+    {
+      "Key": "Entry[System.Int32][]",
+      "Value": 536592
+    },
+    {
+      "Key": "System.String[]",
+      "Value": 427912
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate]",
+      "Value": 423472
+    },
+    {
+      "Key": "System.Collections.Generic.HashSet\u00601[System.Int32]",
+      "Value": 212816
+    },
+    {
+      "Key": "IEnumerableSelectIterator\u00602[System.Char,System.Int32]",
+      "Value": 212688
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[System.Int32,System.Boolean]",
+      "Value": 110352
+    },
+    {
+      "Key": "Scope",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoded",
+      "Value": 106600
+    }
+  ],
+  "InclusiveAllocationStacks": [
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanFrame(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline)",
+      "Value": 294957424
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.Scan(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions)",
+      "Value": 294957424
+    },
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusReaders.Decode(unsigned int8[],int32,int32,class System.String,class System.String,bool,bool,class System.String\u0026)",
+      "Value": 294957424
+    },
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusSession.Decode(class System.String,bool)",
+      "Value": 294957424
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanLinear(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 294640576
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ScanTiles(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeOptions,class System.Func\u00607\u003Cunsigned int8[],int32,int32,int32,int32,int32,bool\u003E,bool)",
+      "Value": 242023456
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeAll(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.BarcodeDecoded[]\u0026,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,bool,bool)",
+      "Value": 193953128
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.AddLinearResults(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,value class CodeGlyphX.BarcodeType,class CodeGlyphX.BarcodeDecodeOptions)",
+      "Value": 193953128
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.\u003CScanTiles\u003Eg__ScanBarcodeRegion|34_0(value class CodeGlyphX.ImageRegion,value class \u003C\u003Ec__DisplayClass34_0\u0026)",
+      "Value": 164880728
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeScanline(value class CodeGlyphX.Internal.BarcodeScanlineCandidate[],int32\u0026,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,value class CodeGlyphX.Internal.BarcodeScanlineCandidate\u0026,bool,class System.Collections.Generic.IReadOnlyList\u00601\u003Cclass CodeGlyphX.BarcodeDecoded\u003E,class CodeGlyphX.BarcodeDecoded)",
+      "Value": 124714120
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.\u003CTryDecodeScanline\u003Eg__Consider|147_0(bool[],float64,value class CodeGlyphX.Internal.BarcodeScanlineCandidate,value class \u003C\u003Ec__DisplayClass147_0\u0026)",
+      "Value": 69228392
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TrimModules(bool[])",
+      "Value": 48349376
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeType(value class CodeGlyphX.BarcodeType,bool[],class CodeGlyphX.BarcodeDecodeOptions,class CodeGlyphX.BarcodeDecoded\u0026)",
+      "Value": 45170440
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCore(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool)",
+      "Value": 45170440
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeWithTransforms(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,value class System.Nullable\u00601\u003Cbool\u003E)",
+      "Value": 35126880
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecode(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecoded\u0026)",
+      "Value": 30674144
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder\u002B\u003C\u003Ec__DisplayClass18_0.\u003CTryDecodeAll\u003Eb__0(unsigned int8[],int32,int32,int32,int32,int32)",
+      "Value": 30674144
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCoreTrimmed(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool)",
+      "Value": 21716784
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeUpcA(bool[],class System.String\u0026)",
+      "Value": 16076368
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool,bool)",
+      "Value": 15035768
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryNormalizeModules(bool[],int32,bool[]\u0026)",
+      "Value": 13960264
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.CollectRetailRecoveryRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E)",
+      "Value": 13558416
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeEan13(bool[],class System.String\u0026)",
+      "Value": 12802384
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeEan8(bool[],class System.String\u0026)",
+      "Value": 12134584
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.IsCorroboratedRetailRecovery(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecoded,value class CodeGlyphX.Internal.BarcodeScanlineCandidate)",
+      "Value": 11715112
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryDecodeRuns(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,bool[]\u0026,bool[]\u0026,float64\u0026,float64\u0026)",
+      "Value": 10434200
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryGetModuleCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BarcodeScanlineCandidate[]\u0026,bool,bool)",
+      "Value": 8335680
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ReverseModules(bool[])",
+      "Value": 6712584
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CTryCollectRetailRunCandidates\u003Eg__Collect|65_0(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,int32,int32,bool,int32,int32,value class \u003C\u003Ec__DisplayClass65_0\u0026,value class \u003C\u003Ec__DisplayClass65_1\u0026,value class \u003C\u003Ec__DisplayClass65_2\u0026)",
+      "Value": 6410296
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectRetailRunCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool,bool,bool,bool)",
+      "Value": 6410296
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.InvertModules(bool[])",
+      "Value": 6381936
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryPrepareModules(bool[],int32,bool[],bool[]\u0026,bool[]\u0026)",
+      "Value": 6185024
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryGetLocatedModuleCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BarcodeScanlineCandidate[]\u0026,bool,bool)",
+      "Value": 5883256
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate].AddWithResize(!0)",
+      "Value": 5704384
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.AddUniqueLocatedCandidate(class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,value class CodeGlyphX.Internal.BarcodeScanlineCandidate)",
+      "Value": 5704384
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectAdaptiveRetailCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool)",
+      "Value": 4920960
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeUpcE(bool[],class System.String\u0026)",
+      "Value": 4050504
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CCollectRetailRecoveryRows\u003Eg__CollectHorizontal|70_0(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class \u003C\u003Ec__DisplayClass70_0\u0026)",
+      "Value": 3325600
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromHorizontal(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 2779928
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate].ToArray()",
+      "Value": 2669768
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromVertical(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 2235704
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TrySampleRuns(int32[],bool[],int32,int32,float64,value class System.Threading.CancellationToken,bool[]\u0026,float64\u0026,int32,int32)",
+      "Value": 2126544
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryExtractBaseModules(bool[],int32,bool[],bool[]\u0026)",
+      "Value": 1710624
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryGetRetailRowCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,bool,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BarcodeScanlineCandidate[]\u0026)",
+      "Value": 1387536
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate].set_Capacity(int32)",
+      "Value": 1091648
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate].Grow(int32)",
+      "Value": 1091648
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate]..ctor(int32)",
+      "Value": 962328
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CCollectRetailRecoveryRows\u003Eg__CollectVertical|70_1(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class \u003C\u003Ec__DisplayClass70_0\u0026)",
+      "Value": 856056
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ParityKey(value class Parity[])",
+      "Value": 851632
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.IsValidUpcAChecksum(class System.String)",
+      "Value": 742976
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate].Add(!0)",
+      "Value": 653424
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoded.get_DeduplicationKey()",
+      "Value": 533576
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.AddUnique(class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.BarcodeDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,class CodeGlyphX.BarcodeDecoded)",
+      "Value": 533576
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.CalcUpcAChecksum(class System.String)",
+      "Value": 531512
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.IsValidUpcE(class System.String)",
+      "Value": 529808
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeEanLeftDigits(bool[],wchar[]\u0026,bool[]\u0026)",
+      "Value": 319544
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ExpandUpcEToUpcA(class System.String)",
+      "Value": 316648
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ParityKey(bool[])",
+      "Value": 212688
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ResolveRequestedFormats(value class CodeGlyphX.SymbolFormat[],class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E)",
+      "Value": 210760
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudget.Begin(int32)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.ScanDeadline..ctor(value class System.Threading.CancellationToken,int32,class CodeGlyphX.ScanDeadline)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.ScanDeadline.CreateAttempt(int32,int32,int32)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.IsValidEanChecksum(class System.String)",
+      "Value": 106600
+    },
+    {
+      "Key": "System.Collections.Generic.HashSet\u00601[CodeGlyphX.SymbolFormat].Initialize(int32)",
+      "Value": 106088
+    },
+    {
+      "Key": "System.Collections.Generic.HashSet\u00601[CodeGlyphX.SymbolFormat]..ctor(class System.Collections.Generic.IEnumerable\u00601\u003C!0\u003E,class System.Collections.Generic.IEqualityComparer\u00601\u003C!0\u003E)",
+      "Value": 106088
+    },
+    {
+      "Key": "System.Collections.Generic.HashSet\u00601[CodeGlyphX.SymbolFormat]..ctor(class System.Collections.Generic.IEnumerable\u00601\u003C!0\u003E)",
+      "Value": 106088
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[CodeGlyphX.SymbolFormat,System.__Canon].Resize(int32,bool)",
+      "Value": 104160
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[CodeGlyphX.SymbolFormat,System.__Canon].Resize()",
+      "Value": 104160
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[CodeGlyphX.SymbolFormat,System.__Canon].TryInsert(!0,!1,value class System.Collections.Generic.InsertionBehavior)",
+      "Value": 104160
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[CodeGlyphX.SymbolFormat,System.__Canon].Add(!0,!1)",
+      "Value": 104160
+    },
+    {
+      "Key": "CodeGlyphX.SymbolCapabilities.CreateLookup()",
+      "Value": 104160
+    },
+    {
+      "Key": "CodeGlyphX.SymbolCapabilities..cctor()",
+      "Value": 104160
+    },
+    {
+      "Key": "CodeGlyphX.SymbolCapabilities.TryGet(value class CodeGlyphX.SymbolFormat,class CodeGlyphX.SymbolCapability\u0026)",
+      "Value": 104160
+    }
+  ],
+  "InclusiveThreadTimeStacks": [
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusSession.Decode(class System.String,bool)",
+      "Value": 1312
+    },
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusReaders.Decode(unsigned int8[],int32,int32,class System.String,class System.String,bool,bool,class System.String\u0026)",
+      "Value": 1311
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.Scan(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions)",
+      "Value": 1309
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanFrame(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline)",
+      "Value": 1305
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanLinear(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 1298
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeAll(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.BarcodeDecoded[]\u0026,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,bool,bool)",
+      "Value": 1129
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.AddLinearResults(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,value class CodeGlyphX.BarcodeType,class CodeGlyphX.BarcodeDecodeOptions)",
+      "Value": 1129
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.CollectRetailRecoveryRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E)",
+      "Value": 1030
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectAdaptiveRetailCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool)",
+      "Value": 991
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ScanTiles(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeOptions,class System.Func\u00607\u003Cunsigned int8[],int32,int32,int32,int32,int32,bool\u003E,bool)",
+      "Value": 944
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool,bool)",
+      "Value": 856
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.\u003CScanTiles\u003Eg__ScanBarcodeRegion|34_0(value class CodeGlyphX.ImageRegion,value class \u003C\u003Ec__DisplayClass34_0\u0026)",
+      "Value": 832
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryGetModuleCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BarcodeScanlineCandidate[]\u0026,bool,bool)",
+      "Value": 661
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryGetLocatedModuleCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BarcodeScanlineCandidate[]\u0026,bool,bool)",
+      "Value": 534
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectRetailRunCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool,bool,bool,bool)",
+      "Value": 490
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder\u002B\u003C\u003Ec__DisplayClass18_0.\u003CTryDecodeAll\u003Eb__0(unsigned int8[],int32,int32,int32,int32,int32)",
+      "Value": 488
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecode(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecoded\u0026)",
+      "Value": 487
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CCollectRetailRecoveryRows\u003Eg__CollectHorizontal|70_0(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class \u003C\u003Ec__DisplayClass70_0\u0026)",
+      "Value": 374
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudget.get_IsExpired()",
+      "Value": 366
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudget.ShouldAbort(value class System.Threading.CancellationToken)",
+      "Value": 358
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudgetState.get_IsExpired()",
+      "Value": 347
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromHorizontal(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 328
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CCollectRetailRecoveryRows\u003Eg__CollectVertical|70_1(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class \u003C\u003Ec__DisplayClass70_0\u0026)",
+      "Value": 228
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeScanline(value class CodeGlyphX.Internal.BarcodeScanlineCandidate[],int32\u0026,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,value class CodeGlyphX.Internal.BarcodeScanlineCandidate\u0026,bool,class System.Collections.Generic.IReadOnlyList\u00601\u003Cclass CodeGlyphX.BarcodeDecoded\u003E,class CodeGlyphX.BarcodeDecoded)",
+      "Value": 118
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromVertical(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 115
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryBinarizeRetailRow(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,unsigned int8[],int32[],int32[],value class System.Threading.CancellationToken,int32,bool,unsigned int16[])",
+      "Value": 113
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryBinarizeRetailRowFromExtrema(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,unsigned int16[],unsigned int8[],value class System.Threading.CancellationToken,int32,bool)",
+      "Value": 62
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.IsCorroboratedRetailRecovery(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecoded,value class CodeGlyphX.Internal.BarcodeScanlineCandidate)",
+      "Value": 51
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryGetRetailRowCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,bool,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BarcodeScanlineCandidate[]\u0026)",
+      "Value": 30
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryDecodeRuns(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,bool[]\u0026,bool[]\u0026,float64\u0026,float64\u0026)",
+      "Value": 18
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.GetDistinctScanlineThresholds(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,value class System.Threading.CancellationToken,value class System.Span\u00601\u003Cint32\u003E)",
+      "Value": 15
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryBinarizeFineRetailRowFromExtrema(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,unsigned int16[],unsigned int8[],value class System.Threading.CancellationToken,bool)",
+      "Value": 11
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CTryCollectRetailRunCandidates\u003Eg__Collect|65_0(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,int32,int32,bool,int32,int32,value class \u003C\u003Ec__DisplayClass65_0\u0026,value class \u003C\u003Ec__DisplayClass65_1\u0026,value class \u003C\u003Ec__DisplayClass65_2\u0026)",
+      "Value": 8
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeType(value class CodeGlyphX.BarcodeType,bool[],class CodeGlyphX.BarcodeDecodeOptions,class CodeGlyphX.BarcodeDecoded\u0026)",
+      "Value": 6
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCore(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool)",
+      "Value": 6
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.\u003CTryDecodeScanline\u003Eg__Consider|147_0(bool[],float64,value class CodeGlyphX.Internal.BarcodeScanlineCandidate,value class \u003C\u003Ec__DisplayClass147_0\u0026)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline..cctor()",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryNormalizeRetailDigit(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,int32,int32,int32[]\u0026,float64\u0026)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCoreTrimmed(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeWithTransforms(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,value class System.Nullable\u00601\u003Cbool\u003E)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.SnapshotOptions(class CodeGlyphX.ScanOptions)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeEan13(bool[],class System.String\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate].AddWithResize(!0)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.AddUniqueLocatedCandidate(class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,value class CodeGlyphX.Internal.BarcodeScanlineCandidate)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.IsUniformDefaultFrame(unsigned int8[],class System.Collections.Generic.IList\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class CodeGlyphX.ScanDeadline)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TrySampleRuns(int32[],bool[],int32,int32,float64,value class System.Threading.CancellationToken,bool[]\u0026,float64\u0026,int32,int32)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeUpcE(bool[],class System.String\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkOptions.Clone()",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[CodeGlyphX.SymbolFormat,System.__Canon].Add(!0,!1)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolCapabilities.CreateLookup()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolCapabilities..cctor()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolCapabilities.TryGet(value class CodeGlyphX.SymbolFormat,class CodeGlyphX.SymbolCapability\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ResolveRequestedFormats(value class CodeGlyphX.SymbolFormat[],class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.SymbolFormat].GetEnumerator()",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.SymbolFormat].System.Collections.Generic.IEnumerable\u003CT\u003E.GetEnumerator()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ShouldStop(class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.BarcodeType].IndexOf(!0)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.BarcodeType].Contains(!0)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Code93.Code93Tables..cctor()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.BuildRetailDigitRuns()",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[System.Char,CodeGlyphX.Ean.EanTables\u002BEncodedNumber].get_Item(!0)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryMatchEanDigit(bool[],int32,value class EanDigitKind,wchar\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeEanLeftDigits(bool[],wchar[]\u0026,bool[]\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.ScanResult..ctor(value class CodeGlyphX.ScanStatus,class System.Collections.Generic.IList\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.IList\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,value class System.TimeSpan,class System.String,value class CodeGlyphX.ScanCompletionReason)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.Result(value class CodeGlyphX.ScanStatus,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.String,value class CodeGlyphX.ScanCompletionReason)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.GetProposedBackgroundPolarity(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryMatchUpcDigit(bool[],int32,bool,wchar\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeUpcA(bool[],class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate].set_Capacity(int32)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate].Grow(int32)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.Internal.BarcodeScanlineCandidate].Add(!0)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.ScanDeadline.Dispose()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryMatchUpcEDigit(bool[],int32,value class Parity,wchar\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.ScanDeadline.get_ShouldStop()",
+      "Value": 1
+    }
+  ]
+}
