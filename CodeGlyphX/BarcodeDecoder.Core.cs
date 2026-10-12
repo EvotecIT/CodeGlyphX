@@ -1,6 +1,5 @@
 using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using CodeGlyphX.Code11;
@@ -384,6 +383,9 @@ public static partial class BarcodeDecoder {
         var end = modules.Length - 1;
         while (end >= start && !modules[end]) end--;
         if (start > end) return Array.Empty<bool>();
+        // Decoders only read these modules. Keep an already trimmed candidate
+        // rather than copying it for each transform attempt.
+        if (start == 0 && end == modules.Length - 1) return modules;
         var trimmed = new bool[end - start + 1];
         Array.Copy(modules, start, trimmed, 0, trimmed.Length);
         return trimmed;
@@ -402,20 +404,23 @@ public static partial class BarcodeDecoder {
     }
 
     private static int[] GetRuns(bool[] modules) {
-        var runs = new List<int>(modules.Length / 2);
-        var current = modules[0];
-        var len = 1;
+        // Allocate only the actual transitions, rather than a list sized from
+        // pixel/module width followed by a second array for its contents.
+        var count = 1;
         for (var i = 1; i < modules.Length; i++) {
-            if (modules[i] == current) {
-                len++;
-            } else {
-                runs.Add(len);
-                current = modules[i];
-                len = 1;
+            if (modules[i] != modules[i - 1]) count++;
+        }
+        var runs = new int[count];
+        var run = 0;
+        var start = 0;
+        for (var i = 1; i < modules.Length; i++) {
+            if (modules[i] != modules[i - 1]) {
+                runs[run++] = i - start;
+                start = i;
             }
         }
-        runs.Add(len);
-        return runs.ToArray();
+        runs[run] = modules.Length - start;
+        return runs;
     }
 
 }

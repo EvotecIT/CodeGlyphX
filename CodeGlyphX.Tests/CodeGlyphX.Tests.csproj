@@ -35,6 +35,7 @@
     <Compile Include="ItfRunLocalizationTests.cs" />
     <Compile Include="CodabarRunLocalizationTests.cs" />
     <Compile Include="BarcodeGrayBoundaryTests.cs" />
+    <Compile Include="BarcodeModuleOwnershipTests.cs" />
     <Compile Include="IndustrialTileBoundaryTests.cs" />
     <Compile Include="RetailIlluminationTests.cs" />
     <Compile Include="RetailParityRecoveryTests.cs" />
