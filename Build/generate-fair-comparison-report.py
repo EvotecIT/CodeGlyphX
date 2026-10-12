@@ -80,6 +80,7 @@ def main():
         names += sorted(path.name for path in root.glob("datamatrix-box-cost-*-result.json"))
     if qualification.get("RetailRecoveryProof"):
         names += sorted(path.name for path in root.glob("retail-*.json"))
+    names += sorted(path.name for path in root.glob("historical-retail-*.json"))
     if qualification.get("PairedDecodeCost"):
         names += sorted(path.name for path in root.glob("paired-decode-cost-*.json"))
     if qualification.get("QrVariation"):
@@ -373,8 +374,15 @@ def main():
                       "| --- | ---: | ---: | ---: | ---: |"]
             for row in retail["PositiveCost"]:
                 lines.append(f'| {row["Domain"].upper()} | {row["BaselineMedianMs"]:.3f} → {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} | {row["PreviousCorrectRequests"]:.3f} → {row["CurrentCorrectRequests"]:.3f} |')
-            lines += ["", f'Three independent EAN photographs pass in both orientations and polarities. {retail["ExactBaselineFailures"]} of {retail["FocusedCases"]} new cases fail against the exact preceding binary; all pass on the current core. Lone-row and invalid-checksum inputs remain rejected.', "",
-                      "[Retail row-recovery proof](evidence/retail-row-recovery-proof.json) · [CCD0 positive cost samples](evidence/retail-positive-cost-ccd0-result.json) · [CCD1 positive cost samples](evidence/retail-positive-cost-ccd1-result.json)."]
+            if retail.get("FocusedCases"):
+                lines += ["", f'Three independent EAN photographs pass in both orientations and polarities. {retail["ExactBaselineFailures"]} of {retail["FocusedCases"]} new cases fail against the exact preceding binary; all pass on the current core. Lone-row and invalid-checksum inputs remain rejected.']
+            lines += ["", "[Retail recovery and cost proof](evidence/retail-row-recovery-proof.json) · [CCD0 positive cost samples](evidence/retail-positive-cost-ccd0-result.json) · [CCD1 positive cost samples](evidence/retail-positive-cost-ccd1-result.json)."]
+        reuse = retail.get("ExtremaReuse")
+        if reuse:
+            if reuse["CandidateCoreSha256"] != retail["CoreSha256"] or reuse["Mismatches"]:
+                raise ValueError("Retail extrema proof differs from the measured core")
+            lines += ["", f'The current optimization reuses sliding minima and maxima across adjacent cutoffs. It preserves all eight binary hypotheses and their order. The actual previous and current binarizers agree on {reuse["Masks"]:,} masks and {reuse["PixelDecisions"]:,} pixel decisions across {reuse["Rows"]:,} fixed-image and seeded diagnostic rows. Independent direct extrema checks cover {reuse["IndependentExtremaPoints"]:,} positions. Precancelled and expired-budget calls abort. These deterministic checks establish output equivalence on their inputs; they are not an accuracy survey.', "",
+                      "[Extrema equivalence proof](evidence/retail-extrema-equivalence.json). Earlier photograph recovery and its exact preceding-binary failures remain in the [historical row-recovery proof](evidence/historical-retail-row-recovery-proof.json); those gains are not attributed to the current optimization."]
     if qualification.get("AttributionLimits"):
         lines += ["", qualification["AttributionLimits"]]
     if "CorpusHostCpuBeforeScans" in qualification:

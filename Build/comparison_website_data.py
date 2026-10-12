@@ -343,6 +343,10 @@ def build_website_data(root):
             "supplemental_pdf417_limit": supplemental["Limit"] if supplemental else "",
             "retail": retail_rows, "retail_cost": retail_cost, "retail_positive_cost": retail_positive_cost,
             "retail_changes": retail.get("Changes", "") if retail else "",
+            "retail_extrema_reuse": ({"masks": f'{retail["ExtremaReuse"]["Masks"]:,}',
+                                      "pixels": f'{retail["ExtremaReuse"]["PixelDecisions"]:,}',
+                                      "rows": f'{retail["ExtremaReuse"]["Rows"]:,}'}
+                                     if retail and retail.get("ExtremaReuse") else None),
             "retail_positive_cost_scope": retail.get("PositiveCostScope", "") if retail else "", "paired_decode_cost": paired_decode_rows,
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",

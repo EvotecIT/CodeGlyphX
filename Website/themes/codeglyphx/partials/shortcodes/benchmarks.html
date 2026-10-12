@@ -245,8 +245,13 @@
                 <tbody>{{ for row in comparison.retail_positive_cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.latency_ratio }}×</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td></tr>{{ end }}</tbody>
             </table>
         </div>
+        {{ if comparison.retail_extrema_reuse }}
+        <p>The current optimization reuses sliding minima and maxima across adjacent cutoffs while preserving all eight binary hypotheses and their order. The actual previous and current binarizers agree on {{ comparison.retail_extrema_reuse.masks }} masks and {{ comparison.retail_extrema_reuse.pixels }} pixel decisions across {{ comparison.retail_extrema_reuse.rows }} fixed-image and seeded diagnostic rows. Precancelled and expired-budget calls abort. This is deterministic equivalence evidence on those inputs.</p>
+        <p><a href="/comparisons/evidence/retail-extrema-equivalence.json">Extrema equivalence proof</a> · <a href="/comparisons/evidence/historical-retail-row-recovery-proof.json">Earlier photograph-recovery proof</a>. The earlier photograph gains belong to their recorded source.</p>
+        {{ else }}
         <p>Three independent EAN photographs pass in both orientations and polarities. Lone-row and invalid-checksum inputs remain rejected. These fixtures informed the changes and are part of the frozen corpus.</p>
-        <p><a href="/comparisons/evidence/retail-row-recovery-proof.json">Retail row-recovery proof</a> · <a href="/comparisons/evidence/retail-positive-cost-ccd0-result.json">CCD0 positive cost samples</a> · <a href="/comparisons/evidence/retail-positive-cost-ccd1-result.json">CCD1 positive cost samples</a></p>
+        {{ end }}
+        <p><a href="/comparisons/evidence/retail-row-recovery-proof.json">Retail recovery and cost proof</a> · <a href="/comparisons/evidence/retail-positive-cost-ccd0-result.json">CCD0 positive cost samples</a> · <a href="/comparisons/evidence/retail-positive-cost-ccd1-result.json">CCD1 positive cost samples</a></p>
         {{ end }}
         <p><a href="/comparisons/evidence/retail-positive-diagnostic.json">Positive requests</a> · <a href="/comparisons/evidence/retail-negative-diagnostic.json">Negative requests</a> · <a href="/comparisons/evidence/retail-negative-current.json">Current negative outcomes</a> · <a href="/comparisons/evidence/retail-cost-ccd0-result.json">CCD0 raw cost samples</a> · <a href="/comparisons/evidence/retail-cost-ccd1-result.json">CCD1 raw cost samples</a></p>
     </section>
