@@ -7,7 +7,7 @@ namespace CodeGlyphX.Internal;
 
 internal static partial class BarcodeScanline {
     /// <summary>
-    /// Adds two bounded local-contrast hypotheses for guarded retail symbols.
+    /// Adds two ordinary local-contrast hypotheses and at most eight during retail recovery.
     /// Sliding extrema keep work linear in the scanline length; the ordinary
     /// decoder still validates digit parity and the complete symbol checksum.
     /// </summary>
@@ -23,12 +23,18 @@ internal static partial class BarcodeScanline {
             // without searching an unbounded collection of threshold scales.
             var small = Math.Max(8, Math.Min(32, luminance.Length / 32));
             var large = Math.Max(16, Math.Min(64, luminance.Length / 16));
-            for (var pass = 0; pass < (retailRecovery ? 4 : 2); pass++) {
+            for (var pass = 0; pass < (retailRecovery ? 8 : 2); pass++) {
                 // Blur can widen dark or light elements asymmetrically. Recovery
                 // adds two complementary cutoffs in the larger window; guard,
                 // digit, checksum and neighboring-row validation remain required.
-                var bias = pass < 2 ? 0 : pass == 2 ? 1 : -1;
-                if (!TryBinarizeRetailRow(luminance, pass == 0 ? small : large, binary, minima, maxima, cancellationToken, bias)) return false;
+                // A smaller midpoint window preserves fine bars under blur. A
+                // middle window and complementary eighth-step cutoffs cover
+                // glare without broadening any guard or digit-fit tolerance.
+                // Each hypothesis must locate complete retail guard geometry;
+                // wider windows can lose that geometry on fine inverted bars.
+                var radius = pass == 0 ? small : pass == 4 || pass == 5 ? Math.Max(4, small / 4) : pass >= 6 ? (small + large) / 2 : large;
+                var bias = pass == 2 ? 2 : pass == 3 ? -2 : pass == 6 ? 1 : pass == 7 ? -1 : 0;
+                if (!TryBinarizeRetailRow(luminance, radius, binary, minima, maxima, cancellationToken, bias, invertLuminance: pass == 5)) return false;
                 hasRetailGuards |= TryCollectRetailRunCandidates(binary.AsSpan(0, luminance.Length), 128,
                     cancellationToken, candidates, position, isVertical, localThreshold: true, includeParityRecovery: retailRecovery).HasGuards;
             }
@@ -42,7 +48,7 @@ internal static partial class BarcodeScanline {
     }
 
     private static bool TryBinarizeRetailRow(ReadOnlySpan<byte> luminance, int radius, byte[] binary,
-        int[] minima, int[] maxima, CancellationToken cancellationToken, int bias = 0) {
+        int[] minima, int[] maxima, CancellationToken cancellationToken, int bias = 0, bool invertLuminance = false) {
         var minHead = 0;
         var minTail = 0;
         var maxHead = 0;
@@ -63,8 +69,14 @@ internal static partial class BarcodeScanline {
             while (maxima[maxHead] < first) maxHead++;
             var min = luminance[minima[minHead]];
             var max = luminance[maxima[maxHead]];
-            var threshold = min + (max - min) * (2 + bias) / 4;
-            binary[x] = (byte)(max - min >= 8 && luminance[x] < threshold ? 0 : 255);
+            var threshold = min + (max - min) * (4 + bias) / 8;
+            // Normalize inverted fine bars before classifying low-contrast
+            // padding as white. Merely inverting the binary row would also
+            // invert that padding and can merge it into the start guard.
+            var bar = invertLuminance
+                ? luminance[x] > max - (max - min) * (4 + bias) / 8
+                : luminance[x] < threshold;
+            binary[x] = (byte)(max - min >= 8 && bar ? 0 : 255);
         }
         return true;
     }

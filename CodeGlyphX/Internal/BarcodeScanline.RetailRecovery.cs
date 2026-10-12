@@ -14,7 +14,7 @@ internal static partial class BarcodeScanline {
 
     /// <summary>
     /// Searches fourteen anchors per axis when retail recovery is requested, with at
-    /// most two adjacent refinements for each guarded retail-shaped anchor.
+    /// most six adjacent refinements for each guarded retail-shaped anchor.
     /// The caller restricts recovery to complete retail decodes and requires
     /// a matching neighboring row; digit, parity and checksum validation stays intact.
     /// </summary>
@@ -33,9 +33,12 @@ internal static partial class BarcodeScanline {
             var y = (int)((long)height * fraction / 16);
             if (horizontal.Add(y)) {
                 if (TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, y, cancellationToken, candidates, retailOnly: true)) {
-                    for (var adjacent = y - 1; adjacent <= y + 1; adjacent += 2)
-                        if ((uint)adjacent < (uint)height && horizontal.Add(adjacent))
-                            TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, adjacent, cancellationToken, candidates, retailOnly: true);
+                    // A mirrored integer anchor can move by one pixel. Three
+                    // neighbors cover the same two-pixel gap in either direction.
+                    for (var distance = 1; distance <= 3; distance++)
+                        for (var adjacent = y - distance; adjacent <= y + distance; adjacent += distance * 2)
+                            if ((uint)adjacent < (uint)height && horizontal.Add(adjacent))
+                                TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, adjacent, cancellationToken, candidates, retailOnly: true);
                 }
             }
         }
@@ -44,9 +47,10 @@ internal static partial class BarcodeScanline {
             var x = (int)((long)width * fraction / 16);
             if (vertical.Add(x)) {
                 if (TryCollectCandidatesFromVertical(pixels, width, height, stride, format, x, cancellationToken, candidates, retailOnly: true)) {
-                    for (var adjacent = x - 1; adjacent <= x + 1; adjacent += 2)
-                        if ((uint)adjacent < (uint)width && vertical.Add(adjacent))
-                            TryCollectCandidatesFromVertical(pixels, width, height, stride, format, adjacent, cancellationToken, candidates, retailOnly: true);
+                    for (var distance = 1; distance <= 3; distance++)
+                        for (var adjacent = x - distance; adjacent <= x + distance; adjacent += distance * 2)
+                            if ((uint)adjacent < (uint)width && vertical.Add(adjacent))
+                                TryCollectCandidatesFromVertical(pixels, width, height, stride, format, adjacent, cancellationToken, candidates, retailOnly: true);
                 }
             }
         }
