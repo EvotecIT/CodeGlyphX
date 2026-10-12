@@ -48,11 +48,20 @@ public sealed class RetailFineContrastTests {
         options.Image = new ImageDecodeOptions { MaxDimension = 0 };
         var result = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options);
 
-        Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
+        // A different format can exhaust its attempt on a legacy runtime while
+        // later formats still run. Keep incompletion distinct from false acceptance.
+        Assert.Contains(result.CompletionReason, new[] { ScanCompletionReason.Completed, ScanCompletionReason.RecognitionBudgetExceeded });
         Assert.DoesNotContain(result.Symbols, hit => hit.Format == SymbolFormat.Ean || hit.Format == SymbolFormat.UpcA || hit.Format == SymbolFormat.UpcE);
         // The original corpus image is negative for every format. Inversion is
         // an additional retail regression diagnostic, outside that corpus.
         if (!inverted) Assert.Empty(result.Symbols);
+
+        // Exhaust the typed retail tile paths as well, without a competing QR
+        // attempt or a recognition deadline masking their false-acceptance check.
+        foreach (var type in new[] { BarcodeType.EAN, BarcodeType.UPCA, BarcodeType.UPCE }) {
+            Assert.False(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32,
+                out _, type, new BarcodeDecodeOptions { EnableTileScan = true, TileGrid = 2 }));
+        }
     }
 
     private static byte[] ReadFixture(string name, int quarterTurns, bool inverted, out int width, out int height) {
