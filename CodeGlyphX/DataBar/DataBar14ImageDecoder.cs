@@ -14,20 +14,22 @@ internal static class DataBar14ImageDecoder {
         if (start < 0 || start + 46 > runs.Count ||
             !FitFinder(runs, start + 10, false, out var left, out var leftPitch) ||
             !FitFinder(runs, start + 31, true, out var right, out var rightPitch)) return false;
+        // Edge guards follow their adjacent character's measured pitch. Only
+        // the leading light guard can merge with quiet space; enclosed gaps
+        // and dark guards still require one module within the existing residual.
+        var firstPitch = CharacterPitch(runs, start + 2, 16);
+        var lastPitch = CharacterPitch(runs, start + 36, 16);
+        if (Math.Abs(runs[start + 1] / firstPitch - 1) > 0.8 ||
+            Math.Abs(runs[start + 44] / lastPitch - 1) > 0.8 ||
+            Math.Abs(runs[start + 45] / lastPitch - 1) > 0.8) return false;
         var normalized = new int[46];
         normalized[0] = normalized[1] = normalized[44] = normalized[45] = 1;
         Array.Copy(left, 0, normalized, 10, 5);
         Array.Copy(right, 0, normalized, 31, 5);
-        if (!FitCharacter(runs, start + 2, 16, leftPitch, normalized, 2, out var firstPitch) ||
-            !FitCharacter(runs, start + 15, 15, leftPitch, normalized, 15, out _) ||
-            !FitCharacter(runs, start + 23, 15, rightPitch, normalized, 23, out _) ||
-            !FitCharacter(runs, start + 36, 16, rightPitch, normalized, 36, out var lastPitch)) return false;
-        // Edge guards follow their adjacent character's measured pitch. Only
-        // the leading light guard can merge with quiet space; enclosed gaps
-        // and dark guards still require one module within the existing residual.
-        if (Math.Abs(runs[start + 1] / firstPitch - 1) > 0.8 ||
-            Math.Abs(runs[start + 44] / lastPitch - 1) > 0.8 ||
-            Math.Abs(runs[start + 45] / lastPitch - 1) > 0.8) return false;
+        if (!FitCharacter(runs, start + 2, 16, leftPitch, normalized, 2) ||
+            !FitCharacter(runs, start + 15, 15, leftPitch, normalized, 15) ||
+            !FitCharacter(runs, start + 23, 15, rightPitch, normalized, 23) ||
+            !FitCharacter(runs, start + 36, 16, rightPitch, normalized, 36)) return false;
         widths = normalized;
         for (var i = 0; i < 46; i++) {
             if (i == 0) continue;
@@ -110,11 +112,8 @@ internal static class DataBar14ImageDecoder {
                 if ((start & 31) == 0 && DecodeBudget.ShouldAbort(token)) return;
                 for (var bottom = 0; bottom < 2; bottom++) {
                     if (!FitFinder(runs, start + 10, bottom != 0, out var finder, out var pitch)) continue;
-                    var widths = new int[25];
-                    widths[0] = widths[1] = widths[23] = widths[24] = 1;
-                    Array.Copy(finder, 0, widths, 10, 5);
-                    if (!FitCharacter(runs, start + 2, bottom == 0 ? 16 : 15, pitch, widths, 2, out var firstPitch) ||
-                        !FitCharacter(runs, start + 15, bottom == 0 ? 15 : 16, pitch, widths, 15, out var lastPitch)) continue;
+                    var firstPitch = CharacterPitch(runs, start + 2, bottom == 0 ? 16 : 15);
+                    var lastPitch = CharacterPitch(runs, start + 15, bottom == 0 ? 15 : 16);
                     var firstDark = bottom == 0 ? 1 : 0;
                     var lastDark = bottom == 0 ? 23 : 24;
                     if (Math.Abs(runs[start + firstDark] / firstPitch - 1) > 0.8 ||
@@ -123,6 +122,13 @@ internal static class DataBar14ImageDecoder {
                     // gaps are enclosed and cannot absorb outer quiet space.
                     if (bottom != 0 && (Math.Abs(runs[start + 1] / firstPitch - 1) > 0.8 ||
                         Math.Abs(runs[start + 23] / lastPitch - 1) > 0.8)) continue;
+                    // Reject malformed guards before allocating and fitting the
+                    // character widths; guard pitch still uses the same raw runs.
+                    var widths = new int[25];
+                    widths[0] = widths[1] = widths[23] = widths[24] = 1;
+                    Array.Copy(finder, 0, widths, 10, 5);
+                    if (!FitCharacter(runs, start + 2, bottom == 0 ? 16 : 15, pitch, widths, 2) ||
+                        !FitCharacter(runs, start + 15, bottom == 0 ? 15 : 16, pitch, widths, 15)) continue;
                     var rowStart = offsets[start + 2] - pitch * 2;
                     var rowEnd = offsets[start + 23] + pitch * 2;
                     if (Math.Abs((rowEnd - rowStart) / pitch - 50) > 3) continue;
@@ -163,10 +169,14 @@ internal static class DataBar14ImageDecoder {
         return true;
     }
 
-    private static bool FitCharacter(List<int> runs, int start, int modules, double finderPitch, int[] widths, int offset, out double pitch) {
+    private static double CharacterPitch(List<int> runs, int start, int modules) {
         var total = 0;
         for (var i = 0; i < 8; i++) total += runs[start + i];
-        pitch = total / (double)modules;
+        return total / (double)modules;
+    }
+
+    private static bool FitCharacter(List<int> runs, int start, int modules, double finderPitch, int[] widths, int offset) {
+        var pitch = CharacterPitch(runs, start, modules);
         if (pitch < finderPitch * 0.7 || pitch > finderPitch * 1.3) return false;
         var sum = 0;
         for (var i = 0; i < 8; i++) { widths[offset + i] = Math.Max(1, (int)Math.Round(runs[start + i] / pitch)); sum += widths[offset + i]; }
