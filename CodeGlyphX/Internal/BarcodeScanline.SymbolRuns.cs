@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using CodeGlyphX.Code128;
-using CodeGlyphX.Code39;
 
 namespace CodeGlyphX.Internal;
 
@@ -58,52 +57,6 @@ internal static partial class BarcodeScanline {
             if (valid && fit < error && fit < pattern.Length * 0.22) { best = code; error = fit; }
         }
         return best;
-    }
-
-    private static void TryCollectCode39RunCandidates(List<int> runs, bool firstIsBar, CancellationToken cancellationToken,
-        List<BarcodeScanlineCandidate> candidates, int position, bool isVertical) {
-        for (var start = 0; start + 29 <= runs.Count; start++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return;
-            if (!NormalizeCode39(runs, start, out var pattern, out var pitch) || !IsCode39Asterisk(pattern)) continue;
-            if (start > 0 && runs[start - 1] < pitch * 3) continue;
-            var widths = new List<int>(pattern);
-            var at = start + 9;
-            for (var count = 0; count < 256 && at + 10 <= runs.Count; count++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return;
-                if (runs[at] > pitch * 3 || runs[at] < pitch * 0.4) break;
-                widths.Add(1); at++;
-                if (!NormalizeCode39(runs, at, out pattern, out pitch)) break;
-                widths.AddRange(pattern); at += 9;
-                if (IsCode39Asterisk(pattern)) {
-                    if (count >= 1 && (at == runs.Count || runs[at] >= pitch * 3))
-                        AddRunCandidate(widths, firstIsBar == ((start & 1) == 0), 0, candidates, position, isVertical);
-                    break;
-                }
-            }
-        }
-    }
-
-    private static bool NormalizeCode39(List<int> runs, int start, out int[] pattern, out double pitch) {
-        pattern = Array.Empty<int>(); pitch = 0;
-        if (start + 9 > runs.Count) return false;
-        var ordered = runs.Skip(start).Take(9).OrderBy(width => width).ToArray();
-        pitch = ordered.Take(6).Average();
-        var wide = ordered.Skip(6).Average();
-        if (wide < pitch * 1.5 || wide > pitch * 3.8 || ordered[6] <= ordered[5]) return false;
-        pattern = new int[9]; var wideCount = 0;
-        for (var i = 0; i < 9; i++) {
-            var isWide = runs[start + i] >= ordered[6];
-            if (Math.Abs(runs[start + i] - (isWide ? wide : pitch)) > pitch * 0.65 + 0.5) return false;
-            pattern[i] = isWide ? 2 : 1; if (isWide) wideCount++;
-        }
-        return wideCount == 3;
-    }
-
-    private static bool IsCode39Asterisk(int[] pattern) {
-        var bits = Code39Tables.EncodingTable['*'].data;
-        var modules = new bool[12]; var offset = 0; var bar = true;
-        foreach (var width in pattern) { for (var i = 0; i < width; i++) modules[offset++] = bar; bar = !bar; }
-        return modules.AsSpan().SequenceEqual(bits);
     }
 
     private static void AddRunCandidate(List<int> widths, bool firstIsBar, double fit,
