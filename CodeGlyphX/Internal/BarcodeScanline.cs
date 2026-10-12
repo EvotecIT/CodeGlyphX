@@ -25,8 +25,10 @@ internal readonly struct BarcodeScanlineCandidate {
     internal bool IsVertical { get; }
     internal bool IsLocalThreshold { get; }
     internal bool IsRetailParityFallback { get; }
+    /// <summary>Thresholded polarity at agreeing physical scanline ends, when available.</summary>
+    internal bool? BackgroundIsDark { get; }
 
-    internal BarcodeScanlineCandidate(bool[] modules, int position, bool isVertical, bool[]? alternativeModules = null, double fitError = 0, double alternativeFitError = 0, bool isLocalThreshold = false, bool isRetailParityFallback = false) {
+    internal BarcodeScanlineCandidate(bool[] modules, int position, bool isVertical, bool[]? alternativeModules = null, double fitError = 0, double alternativeFitError = 0, bool isLocalThreshold = false, bool isRetailParityFallback = false, bool? backgroundIsDark = null) {
         Modules = modules ?? throw new ArgumentNullException(nameof(modules));
         AlternativeModules = alternativeModules ?? Array.Empty<bool>();
         FitError = fitError;
@@ -35,6 +37,7 @@ internal readonly struct BarcodeScanlineCandidate {
         IsVertical = isVertical;
         IsLocalThreshold = isLocalThreshold;
         IsRetailParityFallback = isRetailParityFallback;
+        BackgroundIsDark = backgroundIsDark;
     }
 }
 
@@ -461,7 +464,10 @@ internal static partial class BarcodeScanline {
             if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out var modules, out var minimumRunModules, out var fitError, out var minimumRunFitError)) {
                 var alternative = ModulesEqual(modules, minimumRunModules) ? Array.Empty<bool>() : modules;
                 if (alternative.Length == 0) minimumRunFitError = Math.Min(minimumRunFitError, fitError);
-                AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(minimumRunModules, position, isVertical, alternative, minimumRunFitError, fitError));
+                var firstIsDark = luminance[0] < thresholds[i];
+                bool? backgroundIsDark = firstIsDark == (luminance[luminance.Length - 1] < thresholds[i]) ? firstIsDark : null;
+                AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(minimumRunModules, position, isVertical, alternative, minimumRunFitError, fitError,
+                    backgroundIsDark: backgroundIsDark));
             }
             if (!retailOnly)
                 // A strict retail hint does not need Code 128/39/93 or Expanded
@@ -520,12 +526,13 @@ internal static partial class BarcodeScanline {
             if (existing.Position != candidate.Position || existing.IsVertical != candidate.IsVertical) continue;
             if (existing.IsLocalThreshold != candidate.IsLocalThreshold) continue;
             if (existing.IsRetailParityFallback != candidate.IsRetailParityFallback) continue;
+            if (existing.BackgroundIsDark != candidate.BackgroundIsDark) continue;
             if (ModulesEqual(existing.Modules, candidate.Modules) && ModulesEqual(existing.AlternativeModules, candidate.AlternativeModules)) {
                 // Repeated thresholds can preserve the modules while improving
                 // their pixel fit. Keep the best evidence for each interpretation.
                 candidates[i] = new BarcodeScanlineCandidate(existing.Modules, existing.Position, existing.IsVertical,
                     existing.AlternativeModules, Math.Min(existing.FitError, candidate.FitError),
-                    Math.Min(existing.AlternativeFitError, candidate.AlternativeFitError), existing.IsLocalThreshold, existing.IsRetailParityFallback);
+                    Math.Min(existing.AlternativeFitError, candidate.AlternativeFitError), existing.IsLocalThreshold, existing.IsRetailParityFallback, existing.BackgroundIsDark);
                 return;
             }
         }

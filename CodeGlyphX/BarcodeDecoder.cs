@@ -109,6 +109,16 @@ public static partial class BarcodeDecoder {
         var ordinaryHits = new List<BarcodeDecoded>(4);
         var seen = deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
 
+        // Unchecked formats need the same physical tile-boundary validation
+        // through the pixel API and SymbolScanner. Keep that policy here.
+        if (expectedType == BarcodeType.Pharmacode || expectedType == BarcodeType.ITF || expectedType == BarcodeType.Industrial2of5) {
+            if (!TryDecodeAllLocated(pixels, width, height, stride, format, out var located,
+                    expectedType, options, cancellationToken, recoverAfterHit)) return false;
+            foreach (var candidate in located) AddUnique(list, seen, candidate.Decoded);
+            decoded = list.ToArray();
+            return decoded.Length > 0;
+        }
+
         for (var pass = 0; pass < (ShouldTryRetailRecovery(expectedType) ? 2 : 1) && (pass == 0 || recoverAfterHit || list.Count == 0); pass++) {
             if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: pass == 1, retailHint: IsRetailBarcodeType(expectedType))) continue;
             for (var i = 0; i < candidates.Length;) {
@@ -123,12 +133,12 @@ public static partial class BarcodeDecoder {
         }
 
         if (options?.EnableTileScan == true && !DecodeBudget.ShouldAbort(cancellationToken)) {
-            ScanTiles(pixels, width, height, stride, cancellationToken, options, (tile, tw, th, tstride, _, _) => {
+            ScanTiles(pixels, width, height, stride, format, cancellationToken, options, (tile, tw, th, tstride, _, _) => {
                 if (TryDecode(tile, tw, th, tstride, format, expectedType, options, cancellationToken, out var hit)) {
                     AddUnique(list, seen, hit);
                 }
                 return false;
-            });
+            }, findPharmacodeRegions: expectedType == BarcodeType.Pharmacode);
         }
 
         if (list.Count == 0) return false;
@@ -167,13 +177,16 @@ public static partial class BarcodeDecoder {
             recoverAfterHit);
 
         if (options?.EnableTileScan == true && !DecodeBudget.ShouldAbort(cancellationToken)) {
-            ScanTiles(pixels, width, height, stride, cancellationToken, options, (tile, tw, th, tstride, x, y) => {
+            ScanTiles(pixels, width, height, stride, format, cancellationToken, options, (tile, tw, th, tstride, x, y) => {
                 DecodeLocatedRegion(tile, tw, th, tstride, format, expectedType, options, cancellationToken, x, y, list, recoverAfterHit);
                 return false;
-            });
+            }, findPharmacodeRegions: expectedType == BarcodeType.Pharmacode);
         }
 
         // Cancellation ends the remaining search; candidates decoded before it remain valid.
+        for (var i = list.Count - 1; i >= 0; i--) {
+            if (IsBoundaryClippedUncheckedBarcode(list[i], pixels, width, height, stride, format, cancellationToken)) list.RemoveAt(i);
+        }
         if (list.Count == 0) return false;
         decoded = list.ToArray();
         return true;
@@ -361,8 +374,13 @@ public static partial class BarcodeDecoder {
         }
     }
 
-    private static void ScanTiles(byte[] rgba, int width, int height, int stride, CancellationToken token, BarcodeDecodeOptions? options, Func<byte[], int, int, int, int, int, bool> onTile) {
+    private static void ScanTiles(byte[] rgba, int width, int height, int stride, PixelFormat format, CancellationToken token, BarcodeDecodeOptions? options, Func<byte[], int, int, int, int, int, bool> onTile, bool findPharmacodeRegions = false) {
         if (width <= 0 || height <= 0 || stride < width * 4) return;
+        if (findPharmacodeRegions) {
+            foreach (var region in FindPharmacodeRegions(rgba, width, height, stride, format, token)) {
+                if (ScanBarcodeRegion(region)) return;
+            }
+        }
         var grid = options?.TileGrid > 1 ? options.TileGrid : (Math.Max(width, height) >= 720 ? 3 : 2);
         var pad = Math.Max(8, Math.Min(width, height) / 40);
         var tileW = width / grid;
@@ -385,15 +403,18 @@ public static partial class BarcodeDecoder {
                 var th = y1 - y0;
                 if (tw < 48 || th < 48) continue;
 
-                var tileStride = tw * 4;
-                var tile = new byte[tileStride * th];
-                for (var y = 0; y < th; y++) {
-                    if (DecodeBudget.ShouldAbort(token)) return;
-                    Buffer.BlockCopy(rgba, (y0 + y) * stride + x0 * 4, tile, y * tileStride, tileStride);
-                }
-
-                if (onTile(tile, tw, th, tileStride, x0, y0)) return;
+                if (ScanBarcodeRegion(new ImageRegion(x0, y0, tw, th))) return;
             }
+        }
+
+        bool ScanBarcodeRegion(ImageRegion region) {
+            var tileStride = checked(region.Width * 4);
+            var tile = new byte[checked(tileStride * region.Height)];
+            for (var y = 0; y < region.Height; y++) {
+                if (DecodeBudget.ShouldAbort(token)) return true;
+                Buffer.BlockCopy(rgba, (region.Y + y) * stride + region.X * 4, tile, y * tileStride, tileStride);
+            }
+            return onTile(tile, region.Width, region.Height, tileStride, region.X, region.Y);
         }
     }
 }

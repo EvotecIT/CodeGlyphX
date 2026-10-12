@@ -56,7 +56,8 @@ public static partial class BarcodeDecoder {
         return decoded is not null;
 
         void Consider(bool[] modules, double error, BarcodeScanlineCandidate candidate) {
-            if (!TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, diagnostics, out var hit, out var priority)) return;
+            if (!TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, diagnostics, out var hit, out var priority,
+                    backgroundIsDark: candidate.BackgroundIsDark)) return;
             if (retailOnly && hit.Type != BarcodeType.EAN && hit.Type != BarcodeType.UPCA && hit.Type != BarcodeType.UPCE) return;
             // Confirmation looks for this payload even when another symbol has
             // the preferred fit on the same neighboring physical row.
@@ -104,7 +105,8 @@ public static partial class BarcodeDecoder {
             // Located consumers need the modules that actually decoded, rather
             // than the other pitch's length when classifying the same scanline.
             bestScanline = new BarcodeScanlineCandidate(modules, candidate.Position, candidate.IsVertical,
-                isLocalThreshold: candidate.IsLocalThreshold, isRetailParityFallback: candidate.IsRetailParityFallback);
+                isLocalThreshold: candidate.IsLocalThreshold, isRetailParityFallback: candidate.IsRetailParityFallback,
+                backgroundIsDark: candidate.BackgroundIsDark);
         }
     }
 

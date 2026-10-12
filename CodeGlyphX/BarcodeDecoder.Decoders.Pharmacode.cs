@@ -19,9 +19,10 @@ public static partial class BarcodeDecoder {
             maximumBar = System.Math.Max(maximumBar, runs[i]);
         }
         // Laetus's standard and miniature width ranges allow at most 6.25:1.
-        // Leave room for pixel rounding while rejecting grossly oversized runs,
-        // including quiet zones interpreted as bars after polarity inversion.
-        if ((long)maximumBar > (long)minimumBar * 7) return false;
+        // Allow one sampled module at both ends for raster and pitch rounding.
+        // Image candidates also retain background polarity: a width ratio alone
+        // cannot distinguish a short joining quiet zone from a real wide bar.
+        if ((long)(maximumBar - 1) * 4 > ((long)minimumBar + 1) * 25) return false;
         if (!TryGetRunThreshold(runs, startIndex: 0, step: 2, out var threshold)) return false;
         if (!AreRunsBelowThreshold(runs, startIndex: 1, step: 2, threshold)) return false;
 
