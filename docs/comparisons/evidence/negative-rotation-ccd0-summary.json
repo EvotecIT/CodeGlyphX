@@ -1,62 +1,62 @@
 [
   {
-    "Unexpected": 0,
     "Index": 0,
-    "Completed": 31,
-    "Cpu": [
-      24.675323775768256,
-      18.85730357205837,
-      23.190853999205796
-    ],
+    "Source": "previous",
+    "Unexpected": 0,
     "File": "negative-rotation-ccd0-0-previous.json",
-    "Source": "previous",
-    "Inconclusive": 0,
-    "Domain": "ccd0",
-    "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E"
-  },
-  {
-    "Unexpected": 0,
-    "Index": 1,
-    "Completed": 30,
     "Cpu": [
-      31.92118832020666,
-      22.992301016438788,
-      13.964373312191858
+      51.81449727496214,
+      54.34796568700674,
+      48.44713792298215
     ],
-    "File": "negative-rotation-ccd0-1-current.json",
-    "Source": "current",
     "Inconclusive": 1,
+    "Completed": 30,
     "Domain": "ccd0",
     "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4"
   },
   {
-    "Unexpected": 0,
-    "Index": 2,
-    "Completed": 31,
-    "Cpu": [
-      20.19283923032742,
-      25.218856580982717,
-      29.836765036453162
-    ],
-    "File": "negative-rotation-ccd0-2-current.json",
+    "Index": 1,
     "Source": "current",
-    "Inconclusive": 0,
+    "Unexpected": 0,
+    "File": "negative-rotation-ccd0-1-current.json",
+    "Cpu": [
+      29.74996246815751,
+      30.32402700752649,
+      32.85084571751036
+    ],
+    "Inconclusive": 1,
+    "Completed": 30,
     "Domain": "ccd0",
-    "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4"
+    "CoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18"
   },
   {
+    "Index": 2,
+    "Source": "current",
     "Unexpected": 0,
-    "Index": 3,
-    "Completed": 31,
+    "File": "negative-rotation-ccd0-2-current.json",
     "Cpu": [
-      13.437490022456123,
-      12.180956079539119,
-      12.218864998511448
+      19.919207095976333,
+      32.433762228240056,
+      28.26276521001031
     ],
-    "File": "negative-rotation-ccd0-3-previous.json",
-    "Source": "previous",
-    "Inconclusive": 0,
+    "Inconclusive": 1,
+    "Completed": 30,
     "Domain": "ccd0",
-    "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E"
+    "CoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18"
+  },
+  {
+    "Index": 3,
+    "Source": "previous",
+    "Unexpected": 0,
+    "File": "negative-rotation-ccd0-3-previous.json",
+    "Cpu": [
+      21.89873538804138,
+      24.469378516906946,
+      37.399115384356065
+    ],
+    "Inconclusive": 1,
+    "Completed": 30,
+    "Domain": "ccd0",
+    "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4"
   }
 ]

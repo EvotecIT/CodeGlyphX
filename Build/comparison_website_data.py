@@ -293,14 +293,26 @@ def build_website_data(root):
             "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["PreviousMedianMs"]:.3f}',
                       "current_ms": f'{row["CurrentMedianMs"]:.3f}', "ratio": f'{row["Ratio"]:.3f}',
                       "previous_bytes": f'{row["PreviousAllocatedBytes"]:,.0f}', "current_bytes": f'{row["CurrentAllocatedBytes"]:,.0f}'} for row in matrix["Cost"]]}
+    code39_recovery = {}
+    recovery = qualification.get("Code39RunRecoveryProof")
+    if recovery:
+        if recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"] or recovery["NormalizerEquivalence"]["Mismatches"]:
+            raise ValueError("Code 39 proof differs from the qualified source")
+        code39_recovery = {"changes": recovery["Changes"], "scope": recovery["Scope"], "limits": recovery["Limits"],
+            "cases": f'{recovery["NormalizerEquivalence"]["Cases"]:,}',
+            "outcomes": [{"engine": engine, "previous_positive": values["positive"]["previous"]["Correct"], "current_positive": values["positive"]["current"]["Correct"],
+                          "previous_negative": values["negative"]["previous"]["Correct"], "current_negative": values["negative"]["current"]["Correct"], "unexpected": values["negative"]["current"]["Unexpected"]} for engine, values in recovery["Engines"].items()],
+            "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["PreviousMedianMs"]:.3f}', "current_ms": f'{row["CurrentMedianMs"]:.3f}',
+                      "ratio": f'{row["LatencyRatio"]:.3f}', "previous_mib": f'{row["PreviousAllocatedBytes"]/1048576:.2f}', "current_mib": f'{row["CurrentAllocatedBytes"]/1048576:.2f}',
+                      "previous_correct": f'{row["PreviousCorrect"]:.3f}', "current_correct": f'{row["CurrentCorrect"]:.3f}'} for row in recovery["Cost"]]}
     datamatrix_spatial = {}
-    spatial = qualification.get("DataMatrixSpatialSearchProof")
+    spatial = qualification.get("DataMatrixSpatialSearchProof") or qualification.get("HistoricalDataMatrixSpatialSearchProof")
+    historical_spatial = spatial is not None and not qualification.get("DataMatrixSpatialSearchProof")
     if spatial:
-        if (spatial["Source"] != qualification["MeasurementSource"]
-                or spatial["CoreSha256"] != qualification["CandidateCoreSha256"]
-                or spatial["BoundsEquivalence"]["Mismatches"] or spatial["ComponentEquivalence"]["Mismatches"]):
+        if (not historical_spatial and (spatial["Source"] != qualification["MeasurementSource"]
+                or spatial["CoreSha256"] != qualification["CandidateCoreSha256"])) or spatial["BoundsEquivalence"]["Mismatches"] or spatial["ComponentEquivalence"]["Mismatches"]:
             raise ValueError("Data Matrix spatial proof differs from the qualified source")
-        datamatrix_spatial = {"changes": spatial["Changes"], "bounds_cases": f'{spatial["BoundsEquivalence"]["Cases"]:,}',
+        datamatrix_spatial = {"historical": historical_spatial, "source": spatial["Source"], "changes": spatial["Changes"], "bounds_cases": f'{spatial["BoundsEquivalence"]["Cases"]:,}',
             "component_cases": f'{spatial["ComponentEquivalence"]["Cases"]:,}', "scope": spatial["CostScope"], "selected_scope": spatial["SelectedNegativeScope"], "limits": spatial["Limits"],
             "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["BaselineMedianMs"]:.3f}', "current_ms": f'{row["CurrentMedianMs"]:.3f}',
                       "ratio": f'{row["LatencyRatio"]:.3f}', "previous_mib": f'{row["BaselineAllocatedBytes"]/1048576:.2f}', "current_mib": f'{row["CurrentAllocatedBytes"]/1048576:.2f}',
@@ -318,7 +330,7 @@ def build_website_data(root):
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
             "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,
-            "negative_search_cost": negative_search_cost, "pdf417_negative_completion": pdf417_negative_completion, "datamatrix_spatial": datamatrix_spatial,
+            "negative_search_cost": negative_search_cost, "pdf417_negative_completion": pdf417_negative_completion, "datamatrix_spatial": datamatrix_spatial, "code39_recovery": code39_recovery,
             "pdf417_cache": pdf417_cache, "codabar_run_recovery": codabar_run_recovery, "qr_exact_grid": qr_exact_grid,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
