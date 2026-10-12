@@ -7,7 +7,7 @@ namespace CodeGlyphX.Internal;
 
 internal static partial class BarcodeScanline {
     /// <summary>
-    /// Adds two ordinary local-contrast hypotheses and at most eight during retail recovery.
+    /// Adds two ordinary local-contrast hypotheses and at most ten during retail recovery.
     /// Sliding extrema keep work linear in the scanline length; the ordinary
     /// decoder still validates digit parity and the complete symbol checksum.
     /// </summary>
@@ -26,7 +26,10 @@ internal static partial class BarcodeScanline {
             var small = Math.Max(8, Math.Min(32, luminance.Length / 32));
             var large = Math.Max(16, Math.Min(64, luminance.Length / 16));
             var previousRadius = -1;
-            for (var pass = 0; pass < (retailRecovery ? 8 : 2); pass++) {
+            for (var pass = 0; pass < (retailRecovery ? 10 : 2); pass++) {
+                // Fine cutoffs are useful only after the existing masks establish
+                // complete retail guard geometry. Unstructured rows stop at eight.
+                if (pass >= 8 && !hasRetailGuards) break;
                 // Blur can widen dark or light elements asymmetrically. Recovery
                 // adds two complementary cutoffs in the larger window; guard,
                 // digit, checksum and neighboring-row validation remain required.
@@ -39,9 +42,11 @@ internal static partial class BarcodeScanline {
                 var bias = pass == 2 ? 2 : pass == 3 ? -2 : pass == 6 ? 1 : pass == 7 ? -1 : 0;
                 // Adjacent cutoffs use exactly the same extrema. Keep every
                 // binary hypothesis and its order, but build each window once.
-                var binarized = extrema is not null && radius == previousRadius
-                    ? TryBinarizeRetailRowFromExtrema(luminance, extrema, binary, cancellationToken, bias, invertLuminance: pass == 5)
-                    : TryBinarizeRetailRow(luminance, radius, binary, minima, maxima, cancellationToken, bias, invertLuminance: pass == 5, extrema: extrema);
+                var binarized = pass >= 8
+                    ? TryBinarizeFineRetailRowFromExtrema(luminance, extrema!, binary, cancellationToken, invertLuminance: pass == 9)
+                    : extrema is not null && radius == previousRadius
+                        ? TryBinarizeRetailRowFromExtrema(luminance, extrema, binary, cancellationToken, bias, invertLuminance: pass == 5)
+                        : TryBinarizeRetailRow(luminance, radius, binary, minima, maxima, cancellationToken, bias, invertLuminance: pass == 5, extrema: extrema);
                 if (!binarized) return false;
                 previousRadius = radius;
                 hasRetailGuards |= TryCollectRetailRunCandidates(binary.AsSpan(0, luminance.Length), 128,
@@ -92,6 +97,22 @@ internal static partial class BarcodeScanline {
             if ((x & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
             var packed = extrema[x];
             binary[x] = GetRetailBinaryPixel(luminance[x], packed & 255, packed >> 8, bias, invertLuminance);
+        }
+        return true;
+    }
+
+    /// <summary>Reuses the completed middle window for two complementary 9/16 cutoffs.</summary>
+    private static bool TryBinarizeFineRetailRowFromExtrema(ReadOnlySpan<byte> luminance, ushort[] extrema,
+        byte[] binary, CancellationToken cancellationToken, bool invertLuminance) {
+        for (var x = 0; x < luminance.Length; x++) {
+            if ((x & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            var min = extrema[x] & 255;
+            var max = extrema[x] >> 8;
+            var cutoff = (max - min) * 9 / 16;
+            var bar = invertLuminance ? luminance[x] > max - cutoff : luminance[x] < min + cutoff;
+            // Keep low-contrast padding white in both polarities, as in the
+            // existing masks; inverting the binary row would merge its guards.
+            binary[x] = (byte)(max - min >= 8 && bar ? 0 : 255);
         }
         return true;
     }
