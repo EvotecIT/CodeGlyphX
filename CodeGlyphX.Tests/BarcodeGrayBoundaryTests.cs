@@ -17,7 +17,15 @@ public sealed class BarcodeGrayBoundaryTests {
     [InlineData("104", false, true)]
     [InlineData("104", true, false)]
     [InlineData("104", true, true)]
-    public void PharmacodeWithoutQuietMargin_PreservesCompletePayload(string text, bool inverted, bool vertical) {
+    [InlineData("91", false, false, -1)]
+    [InlineData("91", false, true, -1)]
+    [InlineData("91", true, false, -1)]
+    [InlineData("91", true, true, -1)]
+    [InlineData("91", false, false, 1)]
+    [InlineData("91", false, true, 1)]
+    [InlineData("91", true, false, 1)]
+    [InlineData("91", true, true, 1)]
+    public void PharmacodeWithoutQuietMargin_PreservesCompletePayload(string text, bool inverted, bool vertical, int marginSide = 0) {
         // 91 starts/ends with narrow bars; 104 starts/ends with wide bars.
         // Both can be tightly cropped without making those bars background.
         var runs = BarcodeEncoder.Encode(BarcodeType.Pharmacode, text).Segments
@@ -25,6 +33,12 @@ public sealed class BarcodeGrayBoundaryTests {
         var pixels = BarcodePngRenderer.RenderPixels(new Barcode1D(runs), new BarcodePngRenderOptions {
             ModuleSize = 3, QuietZone = 0, HeightModules = 30
         }, out var width, out var height, out _);
+        if (marginSide != 0) {
+            var padded = Enumerable.Repeat((byte)255, (width + 9) * height * 4).ToArray();
+            for (var y = 0; y < height; y++)
+                Buffer.BlockCopy(pixels, y * width * 4, padded, (y * (width + 9) + (marginSide < 0 ? 9 : 0)) * 4, width * 4);
+            pixels = padded; width += 9;
+        }
         if (inverted) for (var at = 0; at < pixels.Length; at += 4)
             for (var c = 0; c < 3; c++) pixels[at + c] = (byte)(255 - pixels[at + c]);
         if (vertical) {
@@ -135,15 +149,21 @@ public sealed class BarcodeGrayBoundaryTests {
     [InlineData(BarcodeType.Pharmacode, 0, true, false, 2)]
     [InlineData(BarcodeType.Pharmacode, 0, false, true, 2)]
     [InlineData(BarcodeType.Pharmacode, 0, true, true, 2)]
-    public void TransparentTileMargins_PreserveBothOriginalPayloads(BarcodeType type, byte alpha, bool vertical, bool inverted = false, int quietZone = 20) {
+    [InlineData(BarcodeType.Pharmacode, 0, false, false, 2, 6)]
+    [InlineData(BarcodeType.Pharmacode, 0, true, false, 2, 6)]
+    [InlineData(BarcodeType.Pharmacode, 0, false, true, 2, 6)]
+    [InlineData(BarcodeType.Pharmacode, 0, true, true, 2, 6)]
+    public void TransparentTileMargins_PreserveBothOriginalPayloads(BarcodeType type, byte alpha, bool vertical, bool inverted = false, int quietZone = 20, int wideWidth = 2) {
         var expected = type == BarcodeType.ITF ? new[] { "12345678", "87654321" }
             : type == BarcodeType.Pharmacode ? new[] { "91", "123" } : new[] { "2", "8" };
         var format = type == BarcodeType.ITF ? SymbolFormat.Itf
             : type == BarcodeType.Pharmacode ? SymbolFormat.Pharmacode : SymbolFormat.Industrial2Of5;
         var render = new BarcodePngRenderOptions { ModuleSize = 3, QuietZone = quietZone, HeightModules = 30,
             Background = new Rgba32(0, 0, 0, alpha) };
-        var left = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(type, expected[0]), render, out var lw, out var lh, out _);
-        var right = BarcodePngRenderer.RenderPixels(BarcodeEncoder.Encode(type, expected[1]), render, out var rw, out var rh, out _);
+        Barcode1D Encode(string text) => new Barcode1D(BarcodeEncoder.Encode(type, text).Segments
+            .Select(run => new BarSegment(run.IsBar, type == BarcodeType.Pharmacode && run.IsBar && run.Modules == 2 ? wideWidth : run.Modules)).ToArray());
+        var left = BarcodePngRenderer.RenderPixels(Encode(expected[0]), render, out var lw, out var lh, out _);
+        var right = BarcodePngRenderer.RenderPixels(Encode(expected[1]), render, out var rw, out var rh, out _);
         var width = lw + rw; var height = Math.Max(lh, rh);
         var pixels = new byte[width * height * 4];
         for (var at = 3; at < pixels.Length; at += 4) pixels[at] = alpha;

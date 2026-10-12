@@ -25,7 +25,7 @@ internal readonly struct BarcodeScanlineCandidate {
     internal bool IsVertical { get; }
     internal bool IsLocalThreshold { get; }
     internal bool IsRetailParityFallback { get; }
-    /// <summary>Proposed background polarity at agreeing ends; the decoder validates quiet-margin evidence.</summary>
+    /// <summary>Proposed endpoint background polarity; the decoder validates quiet-margin evidence.</summary>
     internal bool? BackgroundIsDark { get; }
 
     internal BarcodeScanlineCandidate(bool[] modules, int position, bool isVertical, bool[]? alternativeModules = null, double fitError = 0, double alternativeFitError = 0, bool isLocalThreshold = false, bool isRetailParityFallback = false, bool? backgroundIsDark = null) {
@@ -474,8 +474,7 @@ internal static partial class BarcodeScanline {
             if (TryDecodeRuns(luminance, thresholds[i], cancellationToken, out var modules, out var minimumRunModules, out var fitError, out var minimumRunFitError)) {
                 var alternative = ModulesEqual(modules, minimumRunModules) ? Array.Empty<bool>() : modules;
                 if (alternative.Length == 0) minimumRunFitError = Math.Min(minimumRunFitError, fitError);
-                var firstIsDark = luminance[0] < thresholds[i];
-                bool? backgroundIsDark = firstIsDark == (luminance[luminance.Length - 1] < thresholds[i]) ? firstIsDark : null;
+                var backgroundIsDark = GetProposedBackgroundPolarity(luminance, thresholds[i], cancellationToken);
                 AddUniqueLocatedCandidate(candidates, new BarcodeScanlineCandidate(minimumRunModules, position, isVertical, alternative, minimumRunFitError, fitError,
                     backgroundIsDark: backgroundIsDark));
             }

@@ -16,9 +16,9 @@ public static partial class BarcodeDecoder {
     }
 
     /// <summary>
-    /// Confirms quiet margins around a valid foreground symbol, or around valid
-    /// neighbors separated by a wider background gap. Matching endpoints alone
-    /// may be actual outer bars in a tightly cropped image.
+    /// Confirms one or both quiet margins around a valid foreground symbol, or
+    /// around valid neighbors separated by a wider background gap. An endpoint
+    /// can instead be an actual outer bar in a tightly cropped image.
     /// </summary>
     private static bool HasPharmacodeBackgroundEvidence(bool[] modules, bool backgroundIsDark) {
         var first = 0;
@@ -30,19 +30,19 @@ public static partial class BarcodeDecoder {
         for (var i = 0; i < foreground.Length; i++) foreground[i] = modules[first + i] != backgroundIsDark;
         var runs = GetRuns(foreground);
         var minimumBar = int.MaxValue;
-        var maximumBar = 0;
         for (var i = 0; i < runs.Length; i += 2) {
             minimumBar = System.Math.Min(minimumBar, runs[i]);
-            maximumBar = System.Math.Max(maximumBar, runs[i]);
         }
-        if ((long)first < (long)minimumBar * 2 || (long)modules.Length - last - 1 < (long)minimumBar * 2) return false;
+        if (first == 0 && last == modules.Length - 1) return false;
+        if (first > 0 && (long)first < (long)minimumBar * 2) return false;
+        if (last < modules.Length - 1 && (long)modules.Length - last - 1 < (long)minimumBar * 2) return false;
         if (TryDecodePharmacode(foreground, out _)) return true;
         var partStart = 0;
         var offset = 0;
         var parts = 0;
         for (var i = 0; i < runs.Length; i++) {
             var gap = runs[i];
-            if ((i & 1) != 0 && gap > maximumBar && (long)gap >= (long)minimumBar * 4) {
+            if ((i & 1) != 0 && (long)gap >= (long)minimumBar * 4) {
                 if (!ValidPart(partStart, offset)) return false;
                 partStart = offset + gap;
                 parts++;
