@@ -210,7 +210,8 @@
     {{ end }}
     {{ if comparison.retail.size > 0 }}
     <section class="benchmark-section" aria-labelledby="retail-recovery">
-        <h2 id="retail-recovery">Retail recovery and search cost</h2>
+        <h2 id="retail-recovery">{{ if comparison.retail_historical }}Historical {{ end }}retail recovery and search cost</h2>
+        {{ if comparison.retail_historical }}<p>Diagnostics and paired costs in this section belong to source <code>{{ comparison.retail_source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
         {{ if comparison.retail_changes != "" }}<p>{{ comparison.retail_changes }}</p>{{ end }}
         <p>The 87 positive requests reuse the frozen retail images. They isolate the changed recovery behavior and do not add independent images to the recognition ranking. Each of 31 fixed negative images is also scanned with EAN, UPC-A and UPC-E hints: 93 requests, rather than 93 independent images.</p>
         <div class="comparison-scroll" role="region" aria-label="Retail positive diagnostics" tabindex="0">
@@ -258,7 +259,8 @@
     {{ end }}
     {{ if comparison.databar14_recovery }}
     <section class="benchmark-section" aria-labelledby="databar14-recovery">
-        <h2 id="databar14-recovery">GS1 DataBar-14 character pitch recovery</h2>
+        <h2 id="databar14-recovery">{{ if comparison.databar14_recovery.historical }}Historical {{ end }}GS1 DataBar-14 character pitch recovery</h2>
+        {{ if comparison.databar14_recovery.historical }}<p>Diagnostics and paired costs in this section belong to source <code>{{ comparison.databar14_recovery.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
         <p>{{ comparison.databar14_recovery.changes }}</p>
         <p>{{ comparison.databar14_recovery.scope }}</p>
         <div class="comparison-scroll" role="region" aria-label="DataBar-14 positive diagnostics" tabindex="0">
@@ -361,6 +363,30 @@
         <p>Direct-mark retries reuse a local-intensity table across dark and light adaptive masks. PDF417 scanlines reject guard ratios that cannot satisfy the existing fit. Search bounds, variant order, cancellation checks, recognition allowances and payload scoring are unchanged.</p>
         <p>The previous and current routines produce identical bytes for {{ comparison.negative_search_cost.outputs }} preprocessing outputs across {{ comparison.negative_search_cost.configurations }} configurations. All {{ comparison.negative_search_cost.guard_cases }} guard decisions match, including {{ comparison.negative_search_cost.accepted_guards }} accepted fits. These diagnostics preserve behavior; allocation savings alone do not establish faster decoding or completed negative searches.</p>
         <p><a href="/comparisons/evidence/negative-search-cost-proof.json">Decision and allocation diagnostic</a>. The paired measurements below report whole-image cost and recognition together.</p>
+    </section>
+    {{ end }}
+    {{ if comparison.qr_morphology }}
+    <section class="benchmark-section" aria-labelledby="qr-morphology">
+        <h2 id="qr-morphology">QR image cleanup and negative-search cost</h2>
+        <p>{{ comparison.qr_morphology.changes }}</p>
+        <p>{{ comparison.qr_morphology.scope }}</p>
+        <p>Every output pixel matches the preceding binary on 24 closing/opening filters over four corpus images. Eight direct-neighborhood cases pass on each modern framework, covering clipped borders, narrow images, solid and mixed pixels, and adaptive thresholds.</p>
+        <div class="comparison-scroll" role="region" aria-label="QR image cleanup filter costs" tabindex="0">
+            <table class="bench-table">
+                <caption>24 QR filters · previous → current · every sample retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.qr_morphology.kernel }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <div class="comparison-scroll" role="region" aria-label="Difficult negative complete-image costs" tabindex="0">
+            <table class="bench-table">
+                <caption>Same four difficult negatives · previous → current · range (mean) across all twelve measured batches</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Completed / 4 range (mean)</th><th scope="col">Inconclusive range (mean)</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.qr_morphology.negatives }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_correct }} ({{ row.before_correct_mean }}) → {{ row.current_correct }} ({{ row.current_correct_mean }})</td><td>{{ row.before_inconclusive }} ({{ row.before_inconclusive_mean }}) → {{ row.current_inconclusive }} ({{ row.current_inconclusive_mean }})</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.qr_morphology.limits }}</p>
+        <p><a href="/comparisons/evidence/qr-morphology-cost-proof.json">Proof and output hashes</a> · <a href="/comparisons/evidence/qr-morphology-negative-manifest.json">Unchanged inputs</a> · <a href="/comparisons/evidence/qr-morphology-cost-ccd0-result.json">CCD0 filter samples</a> · <a href="/comparisons/evidence/qr-morphology-cost-ccd1-result.json">CCD1 filter samples</a> · <a href="/comparisons/evidence/qr-negative-cost-ccd0-result.json">CCD0 image samples</a> · <a href="/comparisons/evidence/qr-negative-cost-ccd1-result.json">CCD1 image samples</a></p>
     </section>
     {{ end }}
     {{ if comparison.paired_decode_cost.size > 0 }}

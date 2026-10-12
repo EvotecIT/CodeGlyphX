@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 from comparison_website_data import write_website_data
+from comparison_qr_morphology import project_qr_morphology
 
 
 def read(path):
@@ -41,6 +42,10 @@ def main():
     names += [f"{kind}-final-{domain}-result.json" for kind, domain in runs]
     names += [name for name in ("previous-candidate-corpus.json", "previous-negative-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
+    names += sorted(path.name for path in root.glob("historical-qr-morphology-*.json"))
+    if qualification.get("QrMorphologyCostProof"):
+        names += sorted(path.name for path in root.glob("qr-morphology-*.json"))
+        names += sorted(path.name for path in root.glob("qr-negative-cost-*.json"))
     names += sorted(path.name for path in root.glob("pdf417-supplemental-*.json"))
     if qualification.get("Pdf417FramingProof") or qualification.get("HistoricalPdf417FramingProof"):
         names += sorted(path.name for path in root.glob("pdf417-framing-*.json"))
@@ -78,10 +83,10 @@ def main():
     if qualification.get("DataMatrixDeadlineProof") or qualification.get("HistoricalDataMatrixDeadlineProof"):
         names.append("datamatrix-box-equivalence.json")
         names += sorted(path.name for path in root.glob("datamatrix-box-cost-*-result.json"))
-    if qualification.get("RetailRecoveryProof"):
+    if qualification.get("RetailRecoveryProof") or qualification.get("HistoricalRetailRecoveryProof"):
         names += sorted(path.name for path in root.glob("retail-*.json"))
     names += sorted(path.name for path in root.glob("historical-retail-*.json"))
-    if qualification.get("DataBar14RunRecoveryProof"):
+    if qualification.get("DataBar14RunRecoveryProof") or qualification.get("HistoricalDataBar14RunRecoveryProof"):
         names += sorted(path.name for path in root.glob("databar14-*.json"))
         names += sorted(path.name for path in root.glob("historical-databar14-*.json"))
     if qualification.get("PairedDecodeCost"):
@@ -347,11 +352,12 @@ def main():
         lines += ["", "Completed counts show the range across measured batches; neither binary returns an unexpected payload. An unfinished negative search remains inconclusive.", "",
                   f'The actual old and new guard matchers return identical decisions across {guard["Cases"]:,} deterministic cases, including {guard["Accepted"]:,} accepted fits. Existing focused PDF417 and budget checks pass; no public API or production dependency changes.', "",
                   "Raw [CCD0 samples](evidence/pdf417-cost-ccd0-result.json), [CCD1 samples](evidence/pdf417-cost-ccd1-result.json), [unchanged negative inputs](evidence/pdf417-cost-negative-manifest.json), [separate diagnostic outcomes](evidence/pdf417-cost-negative-outcomes.json) and [guard equivalence evidence](evidence/pdf417-cost-guard-equivalence.json) are retained."]
-    if qualification.get("RetailRecoveryProof"):
-        retail = qualification["RetailRecoveryProof"]
-        if retail["Source"] != qualification["MeasurementSource"]:
+    if qualification.get("RetailRecoveryProof") or qualification.get("HistoricalRetailRecoveryProof"):
+        retail = qualification.get("RetailRecoveryProof") or qualification["HistoricalRetailRecoveryProof"]
+        historical_retail = not qualification.get("RetailRecoveryProof")
+        if not historical_retail and retail["Source"] != qualification["MeasurementSource"]:
             raise ValueError("Retail diagnostics differ from the measured source")
-        lines += ["", "## Retail recovery and search cost", "", retail.get("Changes", ""), "", retail["Scope"], "",
+        lines += ["", ("## Historical retail recovery and search cost" if historical_retail else "## Retail recovery and search cost"), "", (f'The diagnostics and paired costs in this section belong to source {retail["Source"]}; they retain their original binary identities.' if historical_retail else ""), "", retail.get("Changes", ""), "", retail["Scope"], "",
                   "The 87 positive requests reuse the frozen retail images. These diagnostics help isolate the changed behavior and do not add independent images to the recognition ranking.", "",
                   "| Reader | Previous positive correct | Current positive correct | Current unexpected-output images |",
                   "| --- | ---: | ---: | ---: |"]
@@ -386,11 +392,12 @@ def main():
                 raise ValueError("Retail extrema proof differs from the measured core")
             lines += ["", f'Retail thresholding reuses sliding minima and maxima across adjacent cutoffs. It preserves all eight binary hypotheses and their order. The actual previous and current binarizers agree on {reuse["Masks"]:,} masks and {reuse["PixelDecisions"]:,} pixel decisions across {reuse["Rows"]:,} fixed-image and seeded diagnostic rows. Independent direct extrema checks cover {reuse["IndependentExtremaPoints"]:,} positions. Precancelled and expired-budget calls abort. These deterministic checks establish output equivalence on their inputs; they are not an accuracy survey.', "",
                       "[Extrema equivalence proof](evidence/retail-extrema-equivalence.json). Earlier photograph recovery and its exact preceding-binary failures remain in the [historical row-recovery proof](evidence/historical-retail-row-recovery-proof.json); those gains are not attributed to the current optimization."]
-    if qualification.get("DataBar14RunRecoveryProof"):
-        recovery = qualification["DataBar14RunRecoveryProof"]
-        if recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"]:
+    if qualification.get("DataBar14RunRecoveryProof") or qualification.get("HistoricalDataBar14RunRecoveryProof"):
+        recovery = qualification.get("DataBar14RunRecoveryProof") or qualification["HistoricalDataBar14RunRecoveryProof"]
+        historical_databar14 = not qualification.get("DataBar14RunRecoveryProof")
+        if not historical_databar14 and (recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"]):
             raise ValueError("DataBar-14 recovery differs from the measured source")
-        lines += ["", "## GS1 DataBar-14 character pitch recovery", "", recovery["Changes"], "", recovery["Scope"], "",
+        lines += ["", ("## Historical GS1 DataBar-14 character pitch recovery" if historical_databar14 else "## GS1 DataBar-14 character pitch recovery"), "", (f'The diagnostics and paired costs in this section belong to source {recovery["Source"]}; current whole-image qualification appears separately.' if historical_databar14 else ""), "", recovery["Changes"], "", recovery["Scope"], "",
                   "| Reader | Previous correct / 12 | Current correct / 12 | Current unexpected output |",
                   "| --- | ---: | ---: | ---: |"]
         for engine in engines:
@@ -402,6 +409,20 @@ def main():
         for row in recovery["Cost"]:
             lines.append(f'| {row["Domain"].upper()} | {row["BaselineMedianMs"]:.2f} → {row["CurrentMedianMs"]:.2f} | {row["LatencyRatio"]:.3f} | {row["PreviousCorrectRequests"]:g} → {row["CurrentCorrectRequests"]:g} | {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} |')
         lines += ["", "[DataBar-14 recovery proof](evidence/databar14-run-recovery-proof.json) · [Positive requests](evidence/databar14-positive-manifest.json) · [Negative requests](evidence/databar14-negative-manifest.json) · [CCD0 samples](evidence/databar14-cost-ccd0-result.json) · [CCD1 samples](evidence/databar14-cost-ccd1-result.json)."]
+    morphology = project_qr_morphology(root, qualification)
+    if morphology:
+        lines += ["", "## QR image cleanup and negative-search cost", "", morphology["changes"], "", morphology["scope"], "",
+                  "Every output pixel matches the preceding binary on 24 closing/opening filters over four corpus images. Eight direct-neighborhood cases pass on each modern framework, covering solid and mixed images, clipped borders, narrow dimensions and adaptive thresholds.", "",
+                  "| Domain | Previous → current median ms / 24 filters | Current / previous | Previous → current mean managed MiB |",
+                  "| --- | ---: | ---: | ---: |"]
+        for row in morphology["kernel"]:
+            lines.append(f'| {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_mib"]} → {row["current_mib"]} |')
+        lines += ["", "The same four difficult negatives are also measured through the complete scanner. Completed-image ranges retain every measured batch; an unfinished empty search remains inconclusive.", "",
+                  "| Domain | Previous → current median ms / 4 images | Current / previous | Previous → current completed / 4 range (mean) | Previous → current inconclusive range (mean) | Previous → current mean managed MiB |",
+                  "| --- | ---: | ---: | ---: | ---: | ---: |"]
+        for row in morphology["negatives"]:
+            lines.append(f'| {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} ({row["before_correct_mean"]}) → {row["current_correct"]} ({row["current_correct_mean"]}) | {row["before_inconclusive"]} ({row["before_inconclusive_mean"]}) → {row["current_inconclusive"]} ({row["current_inconclusive_mean"]}) | {row["before_mib"]} → {row["current_mib"]} |')
+        lines += ["", morphology["limits"], "", "[Proof and output hashes](evidence/qr-morphology-cost-proof.json) · [Unchanged images and oracles](evidence/qr-morphology-negative-manifest.json) · [CCD0 kernel samples](evidence/qr-morphology-cost-ccd0-result.json) · [CCD1 kernel samples](evidence/qr-morphology-cost-ccd1-result.json) · [CCD0 whole-image samples](evidence/qr-negative-cost-ccd0-result.json) · [CCD1 whole-image samples](evidence/qr-negative-cost-ccd1-result.json)."]
     if qualification.get("AttributionLimits"):
         lines += ["", qualification["AttributionLimits"]]
     if "CorpusHostCpuBeforeScans" in qualification:

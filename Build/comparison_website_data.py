@@ -2,6 +2,7 @@
 import argparse
 import json
 from pathlib import Path
+from comparison_qr_morphology import project_qr_morphology
 
 
 def load(path):
@@ -124,12 +125,13 @@ def build_website_data(root):
             supplemental_rows.append({"engine": engine, "before": result["PreviousCorrect"],
                                       "correct": result["Correct"], "images": supplemental["Images"],
                                       "unexpected": result["UnexpectedImages"]})
-    databar14 = qualification.get("DataBar14RunRecoveryProof")
+    databar14 = qualification.get("DataBar14RunRecoveryProof") or qualification.get("HistoricalDataBar14RunRecoveryProof")
+    historical_databar14 = bool(databar14) and not qualification.get("DataBar14RunRecoveryProof")
     databar14_projected = None
     if databar14:
-        if databar14["Source"] != qualification["MeasurementSource"] or databar14["CoreSha256"] != qualification["CandidateCoreSha256"]:
+        if not historical_databar14 and (databar14["Source"] != qualification["MeasurementSource"] or databar14["CoreSha256"] != qualification["CandidateCoreSha256"]):
             raise ValueError("DataBar-14 recovery differs from the qualified core")
-        databar14_projected = {"changes": databar14["Changes"], "scope": databar14["Scope"], "cost_scope": databar14["CostScope"],
+        databar14_projected = {"historical": historical_databar14, "source": databar14["Source"], "changes": databar14["Changes"], "scope": databar14["Scope"], "cost_scope": databar14["CostScope"],
             "rows": [{"engine": engine, "before": databar14["Engines"][engine]["PreviousCorrect"],
                       "current": databar14["Engines"][engine]["Correct"], "unexpected": databar14["Engines"][engine]["Unexpected"]}
                      for engine in engines],
@@ -138,10 +140,11 @@ def build_website_data(root):
                       "before_correct": f'{row["PreviousCorrectRequests"]:g}', "current_correct": f'{row["CurrentCorrectRequests"]:g}',
                       "before_mib": f'{row["BaselineAllocatedBytes"]/1048576:.2f}', "current_mib": f'{row["CurrentAllocatedBytes"]/1048576:.2f}'}
                      for row in databar14["Cost"]]}
-    retail = qualification.get("RetailRecoveryProof")
+    retail = qualification.get("RetailRecoveryProof") or qualification.get("HistoricalRetailRecoveryProof")
+    historical_retail = bool(retail) and not qualification.get("RetailRecoveryProof")
     retail_rows, retail_cost, retail_positive_cost = [], [], []
     if retail:
-        if retail["Source"] != qualification["MeasurementSource"]:
+        if not historical_retail and retail["Source"] != qualification["MeasurementSource"]:
             raise ValueError("Retail diagnostics differ from the qualified source")
         for engine in engines:
             positive, negative = (retail["Engines"][engine][kind] for kind in ("positive", "negative"))
@@ -356,6 +359,8 @@ def build_website_data(root):
             "negative_followup": negative_followup, "supplemental_pdf417": supplemental_rows,
             "supplemental_pdf417_limit": supplemental["Limit"] if supplemental else "",
             "retail": retail_rows, "retail_cost": retail_cost, "retail_positive_cost": retail_positive_cost,
+            "retail_historical": historical_retail, "retail_source": retail["Source"] if retail else "",
+            "qr_morphology": project_qr_morphology(root, qualification),
             "retail_changes": retail.get("Changes", "") if retail else "",
             "databar14_recovery": databar14_projected,
             "retail_extrema_reuse": ({"masks": f'{retail["ExtremaReuse"]["Masks"]:,}',
