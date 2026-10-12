@@ -51,8 +51,10 @@ def main():
     if qualification.get("Pdf417CacheCostProof") or qualification.get("HistoricalPdf417CacheCostProof"):
         names += ["pdf417-cache-cost-proof.json", "pdf417-cache-controls-manifest.json", "pdf417-cache-checks-previous.json", "pdf417-cache-checks-current.json", "pdf417-cache-pressure-previous.json", "pdf417-cache-pressure-current.json"]
         names += sorted(p.name for p in root.glob("pdf417-cache-cost-*-result.json"))
-    if qualification.get("CodabarRunRecoveryProof"):
+    if qualification.get("CodabarRunRecoveryProof") or qualification.get("HistoricalCodabarRunRecoveryProof"):
         names += sorted(p.name for p in root.glob("codabar-*.json"))
+    if qualification.get("QrExactGridRecoveryProof"):
+        names += ["qr-exact-grid-recovery-proof.json"]
     if qualification.get("NegativeSearchCostProof"):
         names.append("negative-search-cost-proof.json")
     if qualification.get("MaxiCodeImageProof"):
@@ -165,18 +167,29 @@ def main():
                   "| Domain | Previous median ms | Current median ms | Current/previous | Previous/current mean managed bytes | Previous/current mean correct requests | Previous/current mean inconclusive requests |",
                   "|---|---:|---:|---:|---:|---:|---:|"]
         if historical_cache:
-            lines.insert(len(lines) - 2, f'Historical diagnostic and paired-control measurements from source `{cache["Source"]}`. These counts and costs were not rerun for the current Codabar candidate; the current corpus and whole-image costs below are rerun separately.')
+            lines.insert(len(lines) - 2, f'Historical diagnostic and paired-control measurements from source `{cache["Source"]}`. These counts and costs were not rerun for the current candidate; the current corpus and whole-image costs below are rerun separately.')
             lines.insert(len(lines) - 2, "")
         for row in cache["PairedControls"]:
             old, now = row["PreviousMetrics"], row["CurrentMetrics"]
             lines.append(f'| {row["Domain"].upper()} | {row["PreviousMedianMs"]:.3f} | {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["PreviousMeanAllocatedBytes"]:,.0f} / {row["CurrentMeanAllocatedBytes"]:,.0f} | {old["CorrectImages"]:.3f} / {now["CorrectImages"]:.3f} | {old["InconclusiveImages"]:.3f} / {now["InconclusiveImages"]:.3f} |')
         lines += ["", cache["Limits"], "", "[Cache checks, counts and paired costs](evidence/pdf417-cache-cost-proof.json). Whole-image comparison results remain the practical measure of scanner cost and completion."]
-    codabar = qualification.get("CodabarRunRecoveryProof")
+    exact = qualification.get("QrExactGridRecoveryProof")
+    if exact:
+        if exact["Source"] != qualification["MeasurementSource"] or exact["CoreSha256"] != qualification["CandidateCoreSha256"]:
+            raise ValueError("QR exact-grid proof differs from the measured candidate")
+        lines += ["", "## Exact QR raster recovery", "",
+                  f'The two dense version-40 images decode correctly ({exact["Correct"]}/{len(exact["Images"])}), versus {exact["PreviousCorrect"]}/{len(exact["Images"])} previously. Both have one pixel per module. The single-image API and unrestricted unified scanner preserve their exact payloads.', "",
+                  exact["Changes"][0], "",
+                  f'Four independent image-entrypoint regression cases fail before the fix. {exact["FocusedCases"]} focused cases cover integer and anisotropic spacing, padding, rotations, inversion, cancellation, inherited deadlines, damaged codewords and acceptance filtering. Full modern suites rerun on the measured core.', "",
+                  exact["LegacyScope"], "", exact["Limits"], "", "[QR raster proof and provenance](evidence/qr-exact-grid-recovery-proof.json)."]
+    codabar = qualification.get("CodabarRunRecoveryProof") or qualification.get("HistoricalCodabarRunRecoveryProof")
+    historical_codabar = codabar is not None and not qualification.get("CodabarRunRecoveryProof")
     if codabar:
-        if codabar["Source"] != qualification["MeasurementSource"] or codabar["CoreSha256"] != qualification["CandidateCoreSha256"]:
+        if not historical_codabar and (codabar["Source"] != qualification["MeasurementSource"] or codabar["CoreSha256"] != qualification["CandidateCoreSha256"]):
             raise ValueError("Codabar proof differs from the measured candidate")
         main = codabar["MainCorpus"]
-        lines += ["", "## Codabar pixel-run recovery", "",
+        notice = [f'The Codabar discovery below belongs to source `{codabar["Source"]}`. Its gain and diagnostic table describe that earlier change. Current corpus results and costs are measured separately on the current core.', ""] if historical_codabar else []
+        lines += ["", "## Historical Codabar pixel-run recovery" if historical_codabar else "## Codabar pixel-run recovery", "", *notice,
                   f'The same six Codabar images decode correctly ({main["Correct"]}/{main["Images"]}), versus {main["PreviousCorrect"]}/{main["Images"]} previously. Two previously failing photographs now pass the hinted decoder, unrestricted decoder and unified scanner.', "",
                   codabar["Changes"][0], "",
                   "| Engine | Previous/current main diagnostic positives / 6 | Previous/current completed negatives / 31 | Previous/current supplemental positives / 5 | Current unexpected diagnostic/supplemental images |",

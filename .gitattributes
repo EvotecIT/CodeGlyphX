@@ -9,6 +9,9 @@ deploy/linux/* text eol=lf
 # The generated website projection is checked byte for byte against its evidence.
 Website/data/comparisons.json text eol=lf
 
+# QR payload fixture line endings are part of the exact decoding oracle.
+CodeGlyphX.Tests/Fixtures/Qr/zxing-exact-grid-*.txt text eol=lf
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #

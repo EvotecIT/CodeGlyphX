@@ -4,6 +4,8 @@ CodeGlyphX's current comparison uses matched QR generation settings and an indep
 
 The [current results and complete evidence](comparisons/results.md) compare the repaired source with the original source and the previous decoding pass. They report every miss, completed negative scan, inconclusive search and timing sample across both cache domains. Recognition, latency and managed allocation are separate results. These are shared-host measurements with all outliers retained.
 
+The current QR recovery recognizes exact two-tone integer rasters through the existing image decoder. The two version-40 regression images informed the fix and are part of the frozen corpus. Existing format, error-correction, payload and deadline checks remain in force. This recovery uses the modern pixel path on .NET 8 and .NET 10; legacy fallback validation is reported separately. Earlier Codabar and PDF417 discovery measurements retain their original source identities.
+
 The comparison engines are opt-in dependencies of the non-packable benchmark executable. CodeGlyphX's shipped library does not reference them. QRCoder participates in generation only.
 
 MaxiCode carrier comparisons present the same primary and secondary information across engines. CodeGlyphX exposes the secondary message as `Text` and the postal code, country code and service class as typed metadata. The comparison adapter joins those fields with group separators, uses three digits for the country and service codes, and inserts them after the nine-character ISO 15434 Format 01 header when present. Other secondary text is prefixed with the carrier fields. The library result remains unchanged; no oracle text is trimmed or rewritten.

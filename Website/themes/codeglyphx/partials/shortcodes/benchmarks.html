@@ -175,9 +175,21 @@
         </details>
         {{ end }}
     </section>
+    {{ if comparison.qr_exact_grid.images }}
+    <section class="benchmark-section" aria-labelledby="qr-exact-grid-recovery">
+        <h2 id="qr-exact-grid-recovery">Exact QR raster recovery</h2>
+        <p>The two dense version-40 images decode correctly ({{ comparison.qr_exact_grid.correct }}/{{ comparison.qr_exact_grid.images }}), versus {{ comparison.qr_exact_grid.before }}/{{ comparison.qr_exact_grid.images }} previously. Both have one pixel per module. The single-image API and unrestricted unified scanner preserve their exact payloads.</p>
+        <p>Integer finder borders determine the grid before neighborhood sampling. Three recognizable finder patterns and uniform pixel blocks are required; existing format, error-correction and payload validation decide whether it decodes.</p>
+        <p>Four independent image-entrypoint regressions fail before the fix. {{ comparison.qr_exact_grid.focused_cases }} focused cases cover spacing, padding, rotations, inversion, cancellation, inherited deadlines, damaged codewords and acceptance filtering.</p>
+        <p>{{ comparison.qr_exact_grid.legacy_scope }}</p>
+        <p>{{ comparison.qr_exact_grid.limits }}</p>
+        <p><a href="/comparisons/evidence/qr-exact-grid-recovery-proof.json">QR raster proof and provenance</a>.</p>
+    </section>
+    {{ end }}
     {{ if comparison.codabar_run_recovery.images }}
     <section class="benchmark-section" aria-labelledby="codabar-run-recovery">
-        <h2 id="codabar-run-recovery">Codabar pixel-run recovery</h2>
+        <h2 id="codabar-run-recovery">{{ if comparison.codabar_run_recovery.historical }}Historical {{ end }}Codabar pixel-run recovery</h2>
+        {{ if comparison.codabar_run_recovery.historical }}<p>This discovery belongs to source <code title="{{ comparison.codabar_run_recovery.source }}">{{ comparison.codabar_run_recovery.source_short }}</code>. Its gain and diagnostic table describe that earlier change. Current corpus results and costs are measured separately on the current core.</p>{{ end }}
         <p>The same six Codabar images decode correctly ({{ comparison.codabar_run_recovery.correct }}/{{ comparison.codabar_run_recovery.images }}), versus {{ comparison.codabar_run_recovery.before }}/{{ comparison.codabar_run_recovery.images }} previously. Two previously failing photographs now pass the hinted decoder, unrestricted decoder and unified scanner.</p>
         <p>Recovery uses exact pixel runs before module rounding, with separate bar and space width checks and a consistent print-gain model. Candidates require valid framing, intercharacter gaps and quiet zones. Sixteen regression cases per framework cover these images, punctuation, orientation, polarity and malformed symbols.</p>
         <div class="comparison-scroll" role="region" aria-label="Codabar recovery diagnostics" tabindex="0">
@@ -194,7 +206,7 @@
     {{ if comparison.pdf417_cache.cases }}
     <section class="benchmark-section" aria-labelledby="pdf417-scanline-reuse">
         <h2 id="pdf417-scanline-reuse">PDF417 scanline reuse</h2>
-        {{ if comparison.pdf417_cache.historical }}<p>Historical diagnostics and paired controls from source <code title="{{ comparison.pdf417_cache.source }}">{{ comparison.pdf417_cache.source_short }}</code>. These counts and costs were not rerun for the current Codabar candidate. The current corpus and whole-image measurements below are rerun separately.</p>{{ end }}
+        {{ if comparison.pdf417_cache.historical }}<p>Historical diagnostics and paired controls from source <code title="{{ comparison.pdf417_cache.source }}">{{ comparison.pdf417_cache.source_short }}</code>. These counts and costs were not rerun for the current candidate. The current corpus and whole-image measurements below are rerun separately.</p>{{ end }}
         <p>PDF417 stores short scanline runs in 16-bit arrays and retains full widths for longer lines. More tilted lines fit within the same 8 MiB estimated cache allowance. Search order, acceptance rules and recognition deadlines are unchanged.</p>
         <p>All {{ comparison.pdf417_cache.cases }} cache reads match independently sampled pixels, including reversed, inverted and tilted lines, width boundaries and capacity pressure. Checks also cover pre-cancelled and expired calls.</p>
         <p>For the existing difficult negative image, the instrumented PDF417 search retains {{ comparison.pdf417_cache.current_lines }} lines instead of {{ comparison.pdf417_cache.previous_lines }}. It avoids {{ comparison.pdf417_cache.previous_rejections }} capacity rejections and samples {{ comparison.pdf417_cache.current_pixels }} pixels instead of {{ comparison.pdf417_cache.previous_pixels }}. These diagnostic counts use a longer allowance to finish all work; they do not establish completion within the normal scanner deadline.</p>

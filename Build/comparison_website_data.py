@@ -233,11 +233,12 @@ def build_website_data(root):
                                   "previous_unfinished": f'{row["PreviousMetrics"]["InconclusiveImages"]:.2f}',
                                   "current_unfinished": f'{row["CurrentMetrics"]["InconclusiveImages"]:.2f}'} for row in cache["PairedControls"]]}
     codabar_run_recovery = {}
-    codabar = qualification.get("CodabarRunRecoveryProof")
+    codabar = qualification.get("CodabarRunRecoveryProof") or qualification.get("HistoricalCodabarRunRecoveryProof")
+    historical_codabar = codabar is not None and not qualification.get("CodabarRunRecoveryProof")
     if codabar:
-        if codabar["Source"] != qualification["MeasurementSource"] or codabar["CoreSha256"] != qualification["CandidateCoreSha256"]:
+        if not historical_codabar and (codabar["Source"] != qualification["MeasurementSource"] or codabar["CoreSha256"] != qualification["CandidateCoreSha256"]):
             raise ValueError("Codabar proof differs from the qualified source")
-        codabar_run_recovery = {"before": codabar["MainCorpus"]["PreviousCorrect"], "correct": codabar["MainCorpus"]["Correct"],
+        codabar_run_recovery = {"historical": historical_codabar, "source": codabar["Source"], "source_short": codabar["Source"][:8], "before": codabar["MainCorpus"]["PreviousCorrect"], "correct": codabar["MainCorpus"]["Correct"],
                                "images": codabar["MainCorpus"]["Images"], "limits": codabar["Limits"], "rows": []}
         for engine, row in codabar["Diagnostics"]["diagnostic"].items():
             old, now = row["Previous"], row["Current"]
@@ -246,6 +247,13 @@ def build_website_data(root):
                 "negative_before": old["CorrectNegative"], "negative_correct": now["CorrectNegative"],
                 "supplemental_before": sup["Previous"]["CorrectPositive"], "supplemental_correct": sup["Current"]["CorrectPositive"],
                 "unexpected": now["UnexpectedImages"], "supplemental_unexpected": sup["Current"]["UnexpectedImages"]})
+    qr_exact_grid = {}
+    exact = qualification.get("QrExactGridRecoveryProof")
+    if exact:
+        if exact["Source"] != qualification["MeasurementSource"] or exact["CoreSha256"] != qualification["CandidateCoreSha256"]:
+            raise ValueError("QR exact-grid proof differs from the qualified source")
+        qr_exact_grid = {"before": exact["PreviousCorrect"], "correct": exact["Correct"], "images": len(exact["Images"]),
+                         "focused_cases": exact["FocusedCases"], "limits": exact["Limits"], "legacy_scope": exact["LegacyScope"]}
     negative_search_cost = {}
     negative_cost = qualification.get("NegativeSearchCostProof")
     if negative_cost:
@@ -282,7 +290,7 @@ def build_website_data(root):
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
             "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,
-            "negative_search_cost": negative_search_cost, "pdf417_cache": pdf417_cache, "codabar_run_recovery": codabar_run_recovery,
+            "negative_search_cost": negative_search_cost, "pdf417_cache": pdf417_cache, "codabar_run_recovery": codabar_run_recovery, "qr_exact_grid": qr_exact_grid,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 
