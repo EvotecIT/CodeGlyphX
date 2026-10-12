@@ -1,0 +1,542 @@
+[
+  {
+    "Id": "itf-1/15.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "0829220875"
+    ],
+    "Actual": [
+      "0829220875"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-1/2.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-1/7.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "0817605453"
+    ],
+    "Actual": [
+      "0817605453"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-1/1.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "30712345000010"
+    ],
+    "Actual": [
+      "30712345000010"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-1/8.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "0829220874"
+    ],
+    "Actual": [
+      "0829220874"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-1/14.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "0829220875"
+    ],
+    "Actual": [
+      "0829220875"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-2/08.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-2/05.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-2/14.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-2/09.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-2/13.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-2/03.png",
+    "Format": "Itf",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "itf-1/15.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "0829220875"
+    ],
+    "Actual": [
+      "0829220875"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/2.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/7.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "0817605453"
+    ],
+    "Actual": [
+      "0817605453"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/1.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "30712345000010"
+    ],
+    "Actual": [
+      "30712345000010"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/8.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "0829220874"
+    ],
+    "Actual": [
+      "0829220874"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/14.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "0829220875"
+    ],
+    "Actual": [
+      "0829220875"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/08.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/05.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/14.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/09.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/13.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/03.png",
+    "Format": "Itf",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/15.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "0829220875"
+    ],
+    "Actual": [
+      "0829220875"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/2.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/7.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "0817605453"
+    ],
+    "Actual": [
+      "0817605453"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/1.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "30712345000010"
+    ],
+    "Actual": [
+      "30712345000010"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/8.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "0829220874"
+    ],
+    "Actual": [
+      "0829220874"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-1/14.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "0829220875"
+    ],
+    "Actual": [
+      "0829220875"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/08.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/05.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/14.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/09.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/13.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "itf-2/03.png",
+    "Format": "Itf",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "070429"
+    ],
+    "Actual": [
+      "070429"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  }
+]

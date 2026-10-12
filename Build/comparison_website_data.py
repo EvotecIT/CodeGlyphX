@@ -293,12 +293,25 @@ def build_website_data(root):
             "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["PreviousMedianMs"]:.3f}',
                       "current_ms": f'{row["CurrentMedianMs"]:.3f}', "ratio": f'{row["Ratio"]:.3f}',
                       "previous_bytes": f'{row["PreviousAllocatedBytes"]:,.0f}', "current_bytes": f'{row["CurrentAllocatedBytes"]:,.0f}'} for row in matrix["Cost"]]}
-    code39_recovery = {}
-    recovery = qualification.get("Code39RunRecoveryProof")
+    itf_recovery = {}
+    recovery = qualification.get("ItfRunRecoveryProof")
     if recovery:
-        if recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"] or recovery["NormalizerEquivalence"]["Mismatches"]:
+        if recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"] or recovery["WidthModelEquivalence"]["Mismatches"]:
+            raise ValueError("ITF proof differs from the qualified source")
+        itf_recovery = {"changes": recovery["Changes"], "scope": recovery["Scope"], "limits": recovery["Limits"],
+            "cases": f'{recovery["WidthModelEquivalence"]["Cases"]:,}',
+            "outcomes": [{"engine": engine, "previous_positive": values["positive"]["previous"]["Correct"], "current_positive": values["positive"]["current"]["Correct"],
+                          "previous_negative": values["negative"]["previous"]["Correct"], "current_negative": values["negative"]["current"]["Correct"], "unexpected": values["negative"]["current"]["Unexpected"]} for engine, values in recovery["Engines"].items()],
+            "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["PreviousMedianMs"]:.3f}', "current_ms": f'{row["CurrentMedianMs"]:.3f}',
+                      "ratio": f'{row["LatencyRatio"]:.3f}', "previous_mib": f'{row["PreviousAllocatedBytes"]/1048576:.2f}', "current_mib": f'{row["CurrentAllocatedBytes"]/1048576:.2f}',
+                      "previous_correct": f'{row["PreviousCorrect"]:.3f}', "current_correct": f'{row["CurrentCorrect"]:.3f}'} for row in recovery["Cost"]]}
+    code39_recovery = {}
+    recovery = qualification.get("Code39RunRecoveryProof") or qualification.get("HistoricalCode39RunRecoveryProof")
+    historical_code39 = bool(recovery) and not qualification.get("Code39RunRecoveryProof")
+    if recovery:
+        if (not historical_code39 and (recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"])) or recovery["NormalizerEquivalence"]["Mismatches"]:
             raise ValueError("Code 39 proof differs from the qualified source")
-        code39_recovery = {"changes": recovery["Changes"], "scope": recovery["Scope"], "limits": recovery["Limits"],
+        code39_recovery = {"historical": historical_code39, "source": recovery["Source"], "changes": recovery["Changes"], "scope": recovery["Scope"], "limits": recovery["Limits"],
             "cases": f'{recovery["NormalizerEquivalence"]["Cases"]:,}',
             "outcomes": [{"engine": engine, "previous_positive": values["positive"]["previous"]["Correct"], "current_positive": values["positive"]["current"]["Correct"],
                           "previous_negative": values["negative"]["previous"]["Correct"], "current_negative": values["negative"]["current"]["Correct"], "unexpected": values["negative"]["current"]["Unexpected"]} for engine, values in recovery["Engines"].items()],
@@ -330,7 +343,7 @@ def build_website_data(root):
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
             "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,
-            "negative_search_cost": negative_search_cost, "pdf417_negative_completion": pdf417_negative_completion, "datamatrix_spatial": datamatrix_spatial, "code39_recovery": code39_recovery,
+            "negative_search_cost": negative_search_cost, "pdf417_negative_completion": pdf417_negative_completion, "datamatrix_spatial": datamatrix_spatial, "code39_recovery": code39_recovery, "itf_recovery": itf_recovery,
             "pdf417_cache": pdf417_cache, "codabar_run_recovery": codabar_run_recovery, "qr_exact_grid": qr_exact_grid,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}

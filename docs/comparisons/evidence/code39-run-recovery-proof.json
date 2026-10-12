@@ -124,9 +124,10 @@
     }
   ],
   "Scope": "Twelve unchanged Code 39 positives from the main corpus and the same thirty-one negative image IDs with an explicit Code 39 hint. These are supplementary contract checks; they do not establish a general recognition or false-positive rate.",
-  "Limits": "Both binaries receive identical hints, pixels, validation and allowances. The earlier binary reads fewer positive images, so latency ratios include different completed recognition work. Managed allocation excludes native costs; shared-host measurements do not establish portable speed, throughput or capacity. Every warmup, measurement, completion and unexpected payload is retained.",
+  "Limits": "Both binaries receive identical hints, pixels, validation and allowances. The earlier binary reads fewer positive images, so latency ratios include different completed recognition work. Managed allocation excludes native costs; shared-host measurements do not establish portable speed, throughput or capacity. Every measured sample, warmup failure, completion and unexpected payload is retained; successful warmup samples are not retained.",
   "RawCostPackets": [
     "code39-cost-ccd0-result.json",
     "code39-cost-ccd1-result.json"
-  ]
+  ],
+  "WarmupRetentionClarification": "PowerForge executes three warmups. Successful warmup samples are not retained; failed warmups and all measured samples are retained. This corrects descriptive retention wording only; outcomes, raw measurements, source identities and historical attribution are unchanged. Original historical wording remains in the preceding verification archives."
 }

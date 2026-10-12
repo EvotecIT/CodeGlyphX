@@ -1,0 +1,542 @@
+[
+  {
+    "Id": "code39-1/4.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "ABC123"
+    ],
+    "Actual": [
+      "ABC123"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-1/3.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "MOROVIA"
+    ],
+    "Actual": [
+      "MOROVIA"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-1/2.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      " WWW.CITRONSOFT.COM "
+    ],
+    "Actual": [
+      " WWW.CITRONSOFT.COM "
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-1/1.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "TEST-SHEET"
+    ],
+    "Actual": [
+      "TEST-SHEET"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-2/1.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "Extended !?*#"
+    ],
+    "Actual": [
+      "Extended !?*#"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-2/2.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "12ab"
+    ],
+    "Actual": [
+      "12ab"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-3/01.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "165627"
+    ],
+    "Actual": [
+      "165627"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-3/11.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "001EC94767E0"
+    ],
+    "Actual": [
+      "001EC94767E0"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-3/04.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "001EC947D49B"
+    ],
+    "Actual": [
+      "001EC947D49B"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-3/17.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "404785"
+    ],
+    "Actual": [
+      "404785"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-3/02.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "165627"
+    ],
+    "Actual": [
+      "165627"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-3/06.png",
+    "Format": "Code39",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "165340"
+    ],
+    "Actual": [
+      "165340"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code39-1/4.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "ABC123"
+    ],
+    "Actual": [
+      "ABC123"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-1/3.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "MOROVIA"
+    ],
+    "Actual": [
+      "MOROVIA"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-1/2.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      " WWW.CITRONSOFT.COM "
+    ],
+    "Actual": [
+      " WWW.CITRONSOFT.COM "
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-1/1.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "TEST-SHEET"
+    ],
+    "Actual": [
+      "TEST-SHEET"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-2/1.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "Extended !?*#"
+    ],
+    "Actual": [
+      "Extended !?*#"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-2/2.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "12ab"
+    ],
+    "Actual": [
+      "12ab"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/01.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "165627"
+    ],
+    "Actual": [
+      "165627"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/11.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "001EC94767E0"
+    ],
+    "Actual": [
+      "001EC94767E0"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/04.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "001EC947D49B"
+    ],
+    "Actual": [
+      "001EC947D49B"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/17.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "404785"
+    ],
+    "Actual": [
+      "404785"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/02.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "165627"
+    ],
+    "Actual": [
+      "165627"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/06.png",
+    "Format": "Code39",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "165340"
+    ],
+    "Actual": [
+      "165340"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-1/4.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "ABC123"
+    ],
+    "Actual": [
+      "ABC123"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-1/3.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "MOROVIA"
+    ],
+    "Actual": [
+      "MOROVIA"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-1/2.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      " WWW.CITRONSOFT.COM "
+    ],
+    "Actual": [
+      " WWW.CITRONSOFT.COM "
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-1/1.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "TEST-SHEET"
+    ],
+    "Actual": [
+      "TEST-SHEET"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-2/1.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "Extended !?*#"
+    ],
+    "Actual": [
+      "Extended !?*#"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-2/2.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "12ab"
+    ],
+    "Actual": [
+      "12ab"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/01.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "165627"
+    ],
+    "Actual": [
+      "165627"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/11.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "001EC94767E0"
+    ],
+    "Actual": [
+      "001EC94767E0"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/04.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "001EC947D49B"
+    ],
+    "Actual": [
+      "001EC947D49B"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/17.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "404785"
+    ],
+    "Actual": [
+      "404785"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/02.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "165627"
+    ],
+    "Actual": [
+      "165627"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code39-3/06.png",
+    "Format": "Code39",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "165340"
+    ],
+    "Actual": [
+      "165340"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  }
+]

@@ -64,9 +64,35 @@
             </table>
         </div>
     </section>
+    {{ if comparison.itf_recovery.cases }}
+    <section class="benchmark-section" aria-labelledby="itf-run-recovery">
+        <h2 id="itf-run-recovery">ITF complete-symbol recovery</h2>
+        <p>{{ comparison.itf_recovery.changes }}</p>
+        <p>{{ comparison.itf_recovery.scope }}</p>
+        <p>The actual previous and current Codabar validators agree on {{ comparison.itf_recovery.cases }} decisions and exact fit outputs across printing bias, rounding, framing, direction and cancellation. Two independent ITF images and direction, polarity, framing and ITF-14 checksum regressions pass through public entrypoints.</p>
+        <div class="comparison-scroll" role="region" aria-label="ITF recognition results" tabindex="0">
+            <table class="bench-table">
+                <caption>Same twelve ITF positives and thirty-one negative images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Previous → current positives / 12</th><th scope="col">Previous → current negative rejections / 31</th><th scope="col">Current unexpected negatives</th></tr></thead>
+                <tbody>{{ for row in comparison.itf_recovery.outcomes }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.previous_positive }} → {{ row.current_positive }}</td><td>{{ row.previous_negative }} → {{ row.current_negative }}</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>Paired cost for the same twelve ITF images. Both binaries use preloaded RGBA32, identical hints and 1500 ms allowances; 3 warmups and 12 rotated samples per engine and domain. Input loading and outcome evaluation are excluded.</p>
+        <div class="comparison-scroll" role="region" aria-label="ITF paired image cost results" tabindex="0">
+            <table class="bench-table">
+                <caption>Previous → current · every sample retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Mean correct / 12</th></tr></thead>
+                <tbody>{{ for row in comparison.itf_recovery.cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_mib }} → {{ row.current_mib }}</td><td>{{ row.previous_correct }} → {{ row.current_correct }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.itf_recovery.limits }}</p>
+        <p><a href="/comparisons/evidence/itf-run-recovery-proof.json">ITF proof, outcomes and every timing sample</a> · <a href="/comparisons/evidence/itf-codabar-model-equivalence.json">Codabar width-model compatibility</a></p>
+    </section>
+    {{ end }}
     {{ if comparison.code39_recovery.cases }}
     <section class="benchmark-section" aria-labelledby="code39-run-recovery">
-        <h2 id="code39-run-recovery">Code 39 clipped and reversed scanlines</h2>
+        <h2 id="code39-run-recovery">{{ if comparison.code39_recovery.historical }}Historical {{ end }}Code 39 clipped and reversed scanlines</h2>
+        {{ if comparison.code39_recovery.historical }}<p>These diagnostics and paired costs belong to source <code>{{ comparison.code39_recovery.source }}</code>. They describe the earlier Code 39 change; current corpus and whole-image measurements are separate.</p>{{ end }}
         <p>{{ comparison.code39_recovery.changes }}</p>
         <p>{{ comparison.code39_recovery.scope }}</p>
         <p>The actual previous and current width normalizers agree on {{ comparison.code39_recovery.cases }} decisions, including reversed run lists. Independent images and direction, polarity, framing and short-checksum regressions pass through public entrypoints.</p>

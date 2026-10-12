@@ -182,10 +182,11 @@
   ],
   "Changes": "PDF417 reuses eight-run codeword fits within each thresholded image and skips offset crops whose required prefix cannot decode. It receives two weighted shares of the existing 1500 ms total scanner allowance. Candidate order, fit rules, payload validation and inherited deadlines are unchanged.",
   "CostScope": "Three prespecified unrestricted negative images: falsepositives-2/01.png, falsepositives-2/09.png and falsepositives/15.png. PowerForge runs 3 warmups and 12 rotated measurements per engine on each verified affinity domain. Both binaries receive identical preloaded RGBA32 images and options; loading and outcome evaluation are excluded.",
-  "Limits": "Completion and latency depend on the unchanged wall-clock budgets and shared-host load. Managed allocation is measured separately; CPU cost, sustained throughput and portable performance are unproved. Every warmup, measured sample, failure and unfinished search is retained. A lower time with an unfinished search does not establish a speed win.",
+  "Limits": "Completion and latency depend on the unchanged wall-clock budgets and shared-host load. Managed allocation is measured separately; CPU cost, sustained throughput and portable performance are unproved. Every measured sample, warmup failure and unfinished search is retained; successful warmup samples are not retained. A lower time with an unfinished search does not establish a speed win.",
   "CompletionNotes": "Across four alternating passes per domain on the same 31 negative images, completed scans are CCD0: previous [28, 29], current [31, 30]; CCD1: previous [29, 29], current [30, 28]. All individual outcomes and unexpected payloads are retained in the rotation packets.",
   "RejectedExperiments": {
     "HeaderTightening": "Earlier coarse-header tightening corrupted a valid PDF417 payload; removed before the frozen candidate.",
     "Evidence": "Archived diagnostic packets and experimental source patches preserve the failed outcomes."
-  }
+  },
+  "WarmupRetentionClarification": "PowerForge executes three warmups. Successful warmup samples are not retained; failed warmups and all measured samples are retained. This corrects descriptive retention wording only; outcomes, raw measurements, source identities and historical attribution are unchanged. Original historical wording remains in the preceding verification archives."
 }

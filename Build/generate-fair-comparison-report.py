@@ -60,8 +60,11 @@ def main():
         names += sorted(p.name for p in root.glob("pdf-negative-cost-*-result.json"))
     names += sorted(p.name for p in root.glob("historical-pdf417-*.json"))
     names += sorted(p.name for p in root.glob("historical-datamatrix-*.json"))
-    if qualification.get("Code39RunRecoveryProof"):
+    if qualification.get("Code39RunRecoveryProof") or qualification.get("HistoricalCode39RunRecoveryProof"):
         names += sorted(p.name for p in root.glob("code39-*.json"))
+    names += sorted(p.name for p in root.glob("historical-code39-*.json"))
+    if qualification.get("ItfRunRecoveryProof"):
+        names += sorted(p.name for p in root.glob("itf-*.json"))
     if qualification.get("DataMatrixSpatialSearchProof") or qualification.get("HistoricalDataMatrixSpatialSearchProof"):
         names += sorted(p.name for p in root.glob("datamatrix-spatial-*.json"))
         names += sorted(p.name for p in root.glob("datamatrix-components-*.json"))
@@ -185,11 +188,30 @@ def main():
             old, now = row["PreviousMetrics"], row["CurrentMetrics"]
             lines.append(f'| {row["Domain"].upper()} | {row["PreviousMedianMs"]:.3f} | {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["PreviousMeanAllocatedBytes"]:,.0f} / {row["CurrentMeanAllocatedBytes"]:,.0f} | {old["CorrectImages"]:.3f} / {now["CorrectImages"]:.3f} | {old["InconclusiveImages"]:.3f} / {now["InconclusiveImages"]:.3f} |')
         lines += ["", cache["Limits"], "", "[Cache checks, counts and paired costs](evidence/pdf417-cache-cost-proof.json). Whole-image comparison results remain the practical measure of scanner cost and completion."]
-    recovery = qualification.get("Code39RunRecoveryProof")
+    recovery = qualification.get("ItfRunRecoveryProof")
     if recovery:
-        if recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"] or recovery["NormalizerEquivalence"]["Mismatches"]:
+        if recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"] or recovery["WidthModelEquivalence"]["Mismatches"]:
+            raise ValueError("ITF proof differs from the measured candidate")
+        lines += ["", "## ITF complete-symbol recovery", "", recovery["Changes"], "", recovery["Scope"], "",
+                  f'The actual previous and current Codabar validators agree on {recovery["WidthModelEquivalence"]["Cases"]:,} decisions and exact fit outputs across printing bias, rounding, framing, direction and cancellation. Two independent ITF images and direction, polarity, framing and ITF-14 checksum regressions pass through public entrypoints.', "",
+                  "| Reader | Previous → current positives / 12 | Previous → current completed negative rejections / 31 | Current unexpected negative images |",
+                  "|---|---:|---:|---:|"]
+        for engine, values in recovery["Engines"].items():
+            a,b=values["positive"],values["negative"]
+            lines.append(f'| {engine} | {a["previous"]["Correct"]} → {a["current"]["Correct"]} | {b["previous"]["Correct"]} → {b["current"]["Correct"]} | {b["current"]["Unexpected"]} |')
+        lines += ["", "Paired cost for the same twelve ITF images. Both binaries use preloaded RGBA32, identical hints and 1500 ms allowances; 3 warmups and 12 rotated samples per engine and domain. Input loading and outcome evaluation are excluded.", "",
+                  "| Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Previous → current mean correct / 12 |",
+                  "|---|---:|---:|---:|---:|"]
+        for row in recovery["Cost"]:
+            lines.append(f'| {row["Domain"].upper()} | {row["PreviousMedianMs"]:.3f} → {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["PreviousAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} | {row["PreviousCorrect"]:.3f} → {row["CurrentCorrect"]:.3f} |')
+        lines += ["", recovery["Limits"], "", "[ITF proof, outcomes and every timing sample](evidence/itf-run-recovery-proof.json) · [Codabar width-model compatibility](evidence/itf-codabar-model-equivalence.json)."]
+    recovery = qualification.get("Code39RunRecoveryProof") or qualification.get("HistoricalCode39RunRecoveryProof")
+    historical_code39 = bool(recovery) and not qualification.get("Code39RunRecoveryProof")
+    if recovery:
+        if (not historical_code39 and (recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"])) or recovery["NormalizerEquivalence"]["Mismatches"]:
             raise ValueError("Code 39 proof differs from the measured candidate")
-        lines += ["", "## Code 39 clipped and reversed scanlines", "", recovery["Changes"], "", recovery["Scope"], "",
+        notice = [f'These diagnostics and paired costs belong to source `{recovery["Source"]}`. They describe the earlier Code 39 change; current corpus and whole-image measurements are separate.', ""] if historical_code39 else []
+        lines += ["", "## Historical Code 39 clipped and reversed scanlines" if historical_code39 else "## Code 39 clipped and reversed scanlines", "", *notice, recovery["Changes"], "", recovery["Scope"], "",
                   f'The actual previous and current width normalizers agree on {recovery["NormalizerEquivalence"]["Cases"]:,} decisions, including reversed run lists. Three independent images and direction, polarity, framing and short-checksum regressions pass through public entrypoints.', "",
                   "| Reader | Previous → current positives / 12 | Previous → current completed negative rejections / 31 | Current unexpected negative images |",
                   "|---|---:|---:|---:|"]
