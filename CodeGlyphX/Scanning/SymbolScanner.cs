@@ -413,18 +413,26 @@ public static partial class SymbolScanner {
         }
         var threshold = (minimum + maximum) / 2;
         if (minimum >= maximum) return true;
-        // ITF and Industrial 2 of 5 also support white bars on a dark quiet background. Require
+        // These formats also support white bars on a dark quiet background. Require
         // the same background polarity at both edges; the ten-module check below
         // rejects internal gaps and clipped edge bars for either polarity.
-        var darkBackground = (candidate.Decoded.Type == BarcodeType.ITF || candidate.Decoded.Type == BarcodeType.Industrial2of5) &&
-            Luminance(start) < threshold && Luminance(end - 1) < threshold;
+        var darkBackground = Luminance(start) < threshold && Luminance(end - 1) < threshold;
         bool IsBackground(int at) => darkBackground ? Luminance(at) < threshold : Luminance(at) >= threshold;
         var first = start;
         while (first < end && IsBackground(first)) first++;
         var last = end - 1;
         while (last > first && IsBackground(last)) last--;
+        // Inverted whole-row hypotheses retain the dark quiet zones in their
+        // module buffer. Exclude those ends when estimating foreground pitch;
+        // otherwise an internal gap can look like a sufficiently wide margin.
+        var modules = candidate.Scanline.Modules;
+        var firstModule = 0;
+        while (firstModule < modules.Length && modules[firstModule] == darkBackground) firstModule++;
+        var lastModule = modules.Length - 1;
+        while (lastModule >= firstModule && modules[lastModule] == darkBackground) lastModule--;
+        if (lastModule < firstModule) return true;
         var quietModules = candidate.Decoded.Type == BarcodeType.Pharmacode ? 2 : 10;
-        var quietPixels = Math.Max(2, quietModules * (last - first + 1) / candidate.Scanline.Modules.Length);
+        var quietPixels = Math.Max(2, (long)quietModules * (last - first + 1) / (lastModule - firstModule + 1));
         return first - start < quietPixels || end - last - 1 < quietPixels;
     }
 

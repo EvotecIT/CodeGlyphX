@@ -9,6 +9,34 @@ namespace CodeGlyphX.Tests;
 
 public sealed class BarcodeGrayBoundaryTests {
     [Theory]
+    [InlineData(2, false)]
+    [InlineData(3, false)]
+    [InlineData(6, false)]
+    [InlineData(2, true)]
+    [InlineData(3, true)]
+    [InlineData(6, true)]
+    public void PharmacodeWidthRatios_PreserveCompletePayload(int wideWidth, bool inverted) {
+        var runs = BarcodeEncoder.Encode(BarcodeType.Pharmacode, "91").Segments
+            .Select(run => new BarSegment(run.IsBar, run.IsBar && run.Modules == 2 ? wideWidth : run.Modules)).ToArray();
+        var barcode = new Barcode1D(runs);
+        var modules = runs.SelectMany(run => Enumerable.Repeat(run.IsBar, run.Modules)).ToArray();
+        Assert.True(BarcodeDecoder.TryDecode(modules, BarcodeType.Pharmacode, out var raw));
+        Assert.Equal("91", raw.Text);
+        var pixels = BarcodePngRenderer.RenderPixels(barcode, new BarcodePngRenderOptions {
+            ModuleSize = 3, QuietZone = 20, HeightModules = 30
+        }, out var width, out var height, out var stride);
+        if (inverted) for (var at = 0; at < pixels.Length; at += 4)
+            for (var c = 0; c < 3; c++) pixels[at + c] = (byte)(255 - pixels[at + c]);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, stride, PixelFormat.Rgba32, out var decoded, BarcodeType.Pharmacode));
+        Assert.Equal("91", Assert.Single(decoded).Text);
+        var scan = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), new ScanOptions {
+            Formats = new[] { SymbolFormat.Pharmacode }, MaxSymbols = 0, TimeoutMilliseconds = 0
+        });
+        Assert.Equal(ScanCompletionReason.Completed, scan.CompletionReason);
+        Assert.Equal("91", Assert.Single(scan.Symbols).Text);
+    }
+
+    [Theory]
     [InlineData(BarcodeType.Industrial2of5, 0, false)]
     [InlineData(BarcodeType.Industrial2of5, 0, true)]
     [InlineData(BarcodeType.Industrial2of5, 128, false)]
@@ -21,7 +49,11 @@ public sealed class BarcodeGrayBoundaryTests {
     [InlineData(BarcodeType.Pharmacode, 0, true)]
     [InlineData(BarcodeType.Pharmacode, 128, false)]
     [InlineData(BarcodeType.Pharmacode, 128, true)]
-    public void TransparentTileMargins_PreserveBothOriginalPayloads(BarcodeType type, byte alpha, bool vertical) {
+    [InlineData(BarcodeType.Pharmacode, 0, false, true)]
+    [InlineData(BarcodeType.Pharmacode, 0, true, true)]
+    [InlineData(BarcodeType.Pharmacode, 128, false, true)]
+    [InlineData(BarcodeType.Pharmacode, 128, true, true)]
+    public void TransparentTileMargins_PreserveBothOriginalPayloads(BarcodeType type, byte alpha, bool vertical, bool inverted = false) {
         var expected = type == BarcodeType.ITF ? new[] { "12345678", "87654321" }
             : type == BarcodeType.Pharmacode ? new[] { "91", "123" } : new[] { "2", "8" };
         var format = type == BarcodeType.ITF ? SymbolFormat.Itf
@@ -35,6 +67,12 @@ public sealed class BarcodeGrayBoundaryTests {
         for (var at = 3; at < pixels.Length; at += 4) pixels[at] = alpha;
         for (var y = 0; y < lh; y++) Array.Copy(left, y * lw * 4, pixels, y * width * 4, lw * 4);
         for (var y = 0; y < rh; y++) Array.Copy(right, y * rw * 4, pixels, (y * width + lw) * 4, rw * 4);
+        if (inverted) for (var at = 0; at < pixels.Length; at += 4) {
+            // Invert the composited visible pixel, including transparent padding.
+            var opacity = pixels[at + 3];
+            for (var c = 0; c < 3; c++) pixels[at + c] = (byte)(255 - (pixels[at + c] * opacity + 255 * (255 - opacity) + 127) / 255);
+            pixels[at + 3] = 255;
+        }
         if (vertical) {
             var rotated = new byte[pixels.Length];
             for (var y = 0; y < height; y++) for (var x = 0; x < width; x++)
@@ -46,9 +84,7 @@ public sealed class BarcodeGrayBoundaryTests {
         });
         Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
         foreach (var text in expected) Assert.Contains(result.Symbols, hit => hit.Format == format && hit.Text == text);
-        // The separate full-frame Pharmacode ambiguity is retained in the diagnostic;
-        // this contract protects recovery of both original tile payloads.
-        if (type != BarcodeType.Pharmacode) Assert.Equal(2, result.Symbols.Count);
+        Assert.Equal(2, result.Symbols.Count);
     }
 
     [Fact]

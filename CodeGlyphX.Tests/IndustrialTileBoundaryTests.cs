@@ -38,6 +38,8 @@ public sealed class IndustrialTileBoundaryTests {
     [InlineData(false, true, false)]
     [InlineData(false, false, true)]
     [InlineData(false, true, true)]
+    [InlineData(true, false, false)]
+    [InlineData(true, true, false)]
     [InlineData(true, false, true)]
     [InlineData(true, true, true)]
     public void Scan_CompleteSingleDigitSymbols_PreservesTypedAndDefaultTileResults(bool inverted, bool vertical, bool typed) {
