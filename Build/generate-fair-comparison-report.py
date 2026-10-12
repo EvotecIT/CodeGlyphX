@@ -81,6 +81,9 @@ def main():
     if qualification.get("RetailRecoveryProof"):
         names += sorted(path.name for path in root.glob("retail-*.json"))
     names += sorted(path.name for path in root.glob("historical-retail-*.json"))
+    if qualification.get("DataBar14RunRecoveryProof"):
+        names += sorted(path.name for path in root.glob("databar14-*.json"))
+        names += sorted(path.name for path in root.glob("historical-databar14-*.json"))
     if qualification.get("PairedDecodeCost"):
         names += sorted(path.name for path in root.glob("paired-decode-cost-*.json"))
     if qualification.get("QrVariation"):
@@ -381,8 +384,24 @@ def main():
         if reuse:
             if reuse["CandidateCoreSha256"] != retail["CoreSha256"] or reuse["Mismatches"]:
                 raise ValueError("Retail extrema proof differs from the measured core")
-            lines += ["", f'The current optimization reuses sliding minima and maxima across adjacent cutoffs. It preserves all eight binary hypotheses and their order. The actual previous and current binarizers agree on {reuse["Masks"]:,} masks and {reuse["PixelDecisions"]:,} pixel decisions across {reuse["Rows"]:,} fixed-image and seeded diagnostic rows. Independent direct extrema checks cover {reuse["IndependentExtremaPoints"]:,} positions. Precancelled and expired-budget calls abort. These deterministic checks establish output equivalence on their inputs; they are not an accuracy survey.', "",
+            lines += ["", f'Retail thresholding reuses sliding minima and maxima across adjacent cutoffs. It preserves all eight binary hypotheses and their order. The actual previous and current binarizers agree on {reuse["Masks"]:,} masks and {reuse["PixelDecisions"]:,} pixel decisions across {reuse["Rows"]:,} fixed-image and seeded diagnostic rows. Independent direct extrema checks cover {reuse["IndependentExtremaPoints"]:,} positions. Precancelled and expired-budget calls abort. These deterministic checks establish output equivalence on their inputs; they are not an accuracy survey.', "",
                       "[Extrema equivalence proof](evidence/retail-extrema-equivalence.json). Earlier photograph recovery and its exact preceding-binary failures remain in the [historical row-recovery proof](evidence/historical-retail-row-recovery-proof.json); those gains are not attributed to the current optimization."]
+    if qualification.get("DataBar14RunRecoveryProof"):
+        recovery = qualification["DataBar14RunRecoveryProof"]
+        if recovery["Source"] != qualification["MeasurementSource"] or recovery["CoreSha256"] != qualification["CandidateCoreSha256"]:
+            raise ValueError("DataBar-14 recovery differs from the measured source")
+        lines += ["", "## GS1 DataBar-14 character pitch recovery", "", recovery["Changes"], "", recovery["Scope"], "",
+                  "| Reader | Previous correct / 12 | Current correct / 12 | Current unexpected output |",
+                  "| --- | ---: | ---: | ---: |"]
+        for engine in engines:
+            row = recovery["Engines"][engine]
+            lines.append(f'| {engine} | {row["PreviousCorrect"]} | {row["Correct"]} | {row["Unexpected"]} |')
+        lines += ["", f'All {recovery["FocusedCases"]} new photograph cases fail against the exact preceding binary and pass on the current core. They cover both axes and polarities through single-result pixels, multi-result pixels and the scanner. The {recovery["NegativeRequests"]} family-hinted negative requests remain separate from the main ranking.', "",
+                  recovery["CostScope"], "", "| Domain | Previous → current median ms / 12 images | Current / previous | Previous → current correct / 12 | Previous → current managed MiB |",
+                  "| --- | ---: | ---: | ---: | ---: |"]
+        for row in recovery["Cost"]:
+            lines.append(f'| {row["Domain"].upper()} | {row["BaselineMedianMs"]:.2f} → {row["CurrentMedianMs"]:.2f} | {row["LatencyRatio"]:.3f} | {row["PreviousCorrectRequests"]:g} → {row["CurrentCorrectRequests"]:g} | {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} |')
+        lines += ["", "[DataBar-14 recovery proof](evidence/databar14-run-recovery-proof.json) · [Positive requests](evidence/databar14-positive-manifest.json) · [Negative requests](evidence/databar14-negative-manifest.json) · [CCD0 samples](evidence/databar14-cost-ccd0-result.json) · [CCD1 samples](evidence/databar14-cost-ccd1-result.json)."]
     if qualification.get("AttributionLimits"):
         lines += ["", qualification["AttributionLimits"]]
     if "CorpusHostCpuBeforeScans" in qualification:

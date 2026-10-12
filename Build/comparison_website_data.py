@@ -124,6 +124,20 @@ def build_website_data(root):
             supplemental_rows.append({"engine": engine, "before": result["PreviousCorrect"],
                                       "correct": result["Correct"], "images": supplemental["Images"],
                                       "unexpected": result["UnexpectedImages"]})
+    databar14 = qualification.get("DataBar14RunRecoveryProof")
+    databar14_projected = None
+    if databar14:
+        if databar14["Source"] != qualification["MeasurementSource"] or databar14["CoreSha256"] != qualification["CandidateCoreSha256"]:
+            raise ValueError("DataBar-14 recovery differs from the qualified core")
+        databar14_projected = {"changes": databar14["Changes"], "scope": databar14["Scope"], "cost_scope": databar14["CostScope"],
+            "rows": [{"engine": engine, "before": databar14["Engines"][engine]["PreviousCorrect"],
+                      "current": databar14["Engines"][engine]["Correct"], "unexpected": databar14["Engines"][engine]["Unexpected"]}
+                     for engine in engines],
+            "cost": [{"domain": row["Domain"].upper(), "before_ms": f'{row["BaselineMedianMs"]:.2f}',
+                      "current_ms": f'{row["CurrentMedianMs"]:.2f}', "ratio": f'{row["LatencyRatio"]:.3f}',
+                      "before_correct": f'{row["PreviousCorrectRequests"]:g}', "current_correct": f'{row["CurrentCorrectRequests"]:g}',
+                      "before_mib": f'{row["BaselineAllocatedBytes"]/1048576:.2f}', "current_mib": f'{row["CurrentAllocatedBytes"]/1048576:.2f}'}
+                     for row in databar14["Cost"]]}
     retail = qualification.get("RetailRecoveryProof")
     retail_rows, retail_cost, retail_positive_cost = [], [], []
     if retail:
@@ -343,6 +357,7 @@ def build_website_data(root):
             "supplemental_pdf417_limit": supplemental["Limit"] if supplemental else "",
             "retail": retail_rows, "retail_cost": retail_cost, "retail_positive_cost": retail_positive_cost,
             "retail_changes": retail.get("Changes", "") if retail else "",
+            "databar14_recovery": databar14_projected,
             "retail_extrema_reuse": ({"masks": f'{retail["ExtremaReuse"]["Masks"]:,}',
                                       "pixels": f'{retail["ExtremaReuse"]["PixelDecisions"]:,}',
                                       "rows": f'{retail["ExtremaReuse"]["Rows"]:,}'}
