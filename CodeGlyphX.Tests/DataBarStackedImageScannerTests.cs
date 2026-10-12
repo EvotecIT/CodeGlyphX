@@ -61,6 +61,44 @@ public sealed class DataBarStackedImageScannerTests {
     }
 
     [Theory]
+    [InlineData(0)]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(3)]
+    public void Scanner_RecognizesTiltedPhotographWithNarrowSeparator(int turns) {
+        using var stream = typeof(DataBarStackedImageScannerTests).Assembly.GetManifestResourceStream(
+            "CodeGlyphX.Tests.Fixtures.Linear.zxing-databar-stacked-tilted.png");
+        Assert.NotNull(stream);
+        using var bytes = new MemoryStream(); stream!.CopyTo(bytes);
+        var pixels = ImageReader.DecodeRgba32(bytes.ToArray(), out var width, out var height);
+        for (var turn = 0; turn < turns; turn++) pixels = Rotate(pixels, ref width, ref height);
+        var symbol = Assert.Single(Scan(pixels, width, height).Symbols);
+        Assert.Equal("0001234567890", symbol.Text);
+        Assert.Contains(symbol.Format, new[] { SymbolFormat.Gs1DataBarStacked, SymbolFormat.Gs1DataBarStackedOmnidirectional });
+        Assert.Equal(SymbolPayloadProfile.Gs1, symbol.PayloadProfile);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Scanner_RejectsTiltedRowsWithoutSeparatorEvidence(bool omni) {
+        var matrix = omni ? DataBar14Encoder.EncodeStackedOmnidirectional("0001234567890")
+            : DataBar14Encoder.EncodeStacked("0001234567890");
+        for (var row = 1; row < matrix.Height - 1; row++)
+            for (var x = 0; x < matrix.Width; x++) matrix[x, row] = false;
+        var pixels = Render(matrix, 3, out var width, out var height);
+        var tilted = new byte[pixels.Length];
+        for (var i = 0; i < tilted.Length; i++) tilted[i] = 255;
+        for (var y = 0; y < height; y++) for (var x = 0; x < width; x++) {
+            var sourceY = y - (int)Math.Round((x - (width - 1) / 2.0) * 6 / width);
+            if ((uint)sourceY < (uint)height) Buffer.BlockCopy(pixels, (sourceY * width + x) * 4, tilted, (y * width + x) * 4, 4);
+        }
+        var result = Scan(tilted, width, height);
+        Assert.Empty(result.Symbols);
+        Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
+    }
+
+    [Theory]
     [InlineData(false)]
     [InlineData(true)]
     public void Scanner_CompositesAlphaAgainstWhite(bool omni) {
