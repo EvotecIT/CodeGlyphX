@@ -64,9 +64,29 @@
             </table>
         </div>
     </section>
+    {{ if comparison.datamatrix_spatial.bounds_cases }}
+    <section class="benchmark-section" aria-labelledby="datamatrix-spatial-search">
+        <h2 id="datamatrix-spatial-search">Data Matrix image-search cost</h2>
+        <p>{{ comparison.datamatrix_spatial.changes }}</p>
+        <p>The production bounding-box method matches a full-raster reference in {{ comparison.datamatrix_spatial.bounds_cases }} cases. Ordered component areas and corners match the retained binary in {{ comparison.datamatrix_spatial.component_cases }} cases, including equal-area ties. Cancellation and ambient deadline checks also pass.</p>
+        <p>{{ comparison.datamatrix_spatial.scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Data Matrix texture image cost results" tabindex="0">
+            <table class="bench-table">
+                <caption>Previous → current · one unchanged texture negative · all measured samples retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Mean completed / 1</th></tr></thead>
+                <tbody>{{ for row in comparison.datamatrix_spatial.cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_mib }} → {{ row.current_mib }}</td><td>{{ row.previous_correct }} → {{ row.current_correct }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.datamatrix_spatial.selected_scope }}</p>
+        {{ for note in comparison.datamatrix_spatial.selected_notes }}<p>{{ note }}</p>{{ end }}
+        <p>{{ comparison.datamatrix_spatial.limits }}</p>
+        <p><a href="/comparisons/evidence/datamatrix-spatial-search-proof.json">Search proof and every measured outcome</a> · <a href="/comparisons/evidence/datamatrix-spatial-bounds-equivalence.json">Bounds equivalence</a> · <a href="/comparisons/evidence/datamatrix-components-current.json">Ordered component checks</a></p>
+    </section>
+    {{ end }}
     {{ if comparison.pdf417_negative_completion.checks }}
     <section class="benchmark-section" aria-labelledby="pdf417-negative-completion">
-        <h2 id="pdf417-negative-completion">PDF417 negative-search completion</h2>
+        <h2 id="pdf417-negative-completion">{{ if comparison.pdf417_negative_completion.historical }}Historical PDF417 negative-search completion{{ else }}PDF417 negative-search completion{{ end }}</h2>
+        {{ if comparison.pdf417_negative_completion.historical }}<p>These measurements belong to source <code>{{ comparison.pdf417_negative_completion.source }}</code>. They describe the earlier PDF417 change. Current corpus, alternating negatives and whole-image costs are measured separately on the current binary.</p>{{ end }}
         <p>{{ comparison.pdf417_negative_completion.changes }}</p>
         <p>The cached and uncached fitters agree on {{ comparison.pdf417_negative_completion.checks }} decisions, including failed fits, wide runs and cache capacity pressure. Four module-entrypoint controls preserve offset symbols and macro metadata in both row orders.</p>
         <p>{{ comparison.pdf417_negative_completion.notes }}</p>

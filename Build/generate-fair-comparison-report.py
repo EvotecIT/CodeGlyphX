@@ -55,9 +55,15 @@ def main():
         names += sorted(p.name for p in root.glob("codabar-*.json"))
     if qualification.get("QrExactGridRecoveryProof") or qualification.get("HistoricalQrExactGridRecoveryProof"):
         names += ["qr-exact-grid-recovery-proof.json"]
-    if qualification.get("Pdf417NegativeCompletionProof"):
+    if qualification.get("Pdf417NegativeCompletionProof") or qualification.get("HistoricalPdf417NegativeCompletionProof"):
         names += ["pdf417-negative-completion-proof.json", "pdf417-codeword-cache-equivalence.json"]
         names += sorted(p.name for p in root.glob("pdf-negative-cost-*-result.json"))
+    names += sorted(p.name for p in root.glob("historical-pdf417-*.json"))
+    if qualification.get("DataMatrixSpatialSearchProof"):
+        names += sorted(p.name for p in root.glob("datamatrix-spatial-*.json"))
+        names += sorted(p.name for p in root.glob("datamatrix-components-*.json"))
+        names += sorted(p.name for p in root.glob("datamatrix-texture-*.json"))
+        names += sorted(p.name for p in root.glob("datamatrix-selected-*.json"))
     if qualification.get("NegativeSearchCostProof") or qualification.get("HistoricalNegativeSearchCostProof"):
         names.append("negative-search-cost-proof.json")
     if qualification.get("MaxiCodeImageProof"):
@@ -176,13 +182,33 @@ def main():
             old, now = row["PreviousMetrics"], row["CurrentMetrics"]
             lines.append(f'| {row["Domain"].upper()} | {row["PreviousMedianMs"]:.3f} | {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["PreviousMeanAllocatedBytes"]:,.0f} / {row["CurrentMeanAllocatedBytes"]:,.0f} | {old["CorrectImages"]:.3f} / {now["CorrectImages"]:.3f} | {old["InconclusiveImages"]:.3f} / {now["InconclusiveImages"]:.3f} |')
         lines += ["", cache["Limits"], "", "[Cache checks, counts and paired costs](evidence/pdf417-cache-cost-proof.json). Whole-image comparison results remain the practical measure of scanner cost and completion."]
-    completion = qualification.get("Pdf417NegativeCompletionProof")
+    spatial = qualification.get("DataMatrixSpatialSearchProof")
+    if spatial:
+        if (spatial["Source"] != qualification["MeasurementSource"]
+                or spatial["CoreSha256"] != qualification["CandidateCoreSha256"]
+                or spatial["BoundsEquivalence"]["Mismatches"] or spatial["ComponentEquivalence"]["Mismatches"]):
+            raise ValueError("Data Matrix spatial proof differs from the measured candidate")
+        lines += ["", "## Data Matrix image-search cost", "", spatial["Changes"], "",
+                  f'The production bounding-box method matches a full-raster reference in {spatial["BoundsEquivalence"]["Cases"]:,} cases. Another {spatial["BoundsEquivalence"]["CanceledCases"]:,} cases reject cancelled tokens, and live and expired ambient deadlines are checked. Ordered component area and corner coordinates match the retained binary in {spatial["ComponentEquivalence"]["Cases"]:,} cases, including equal-area ties.', "",
+                  spatial["CostScope"], "",
+                  "| Domain | Previous → current median ms | Current / previous | Previous → current managed MiB | Previous → current mean completed / 1 |",
+                  "|---|---:|---:|---:|---:|"]
+        for row in spatial["Cost"]:
+            lines.append(f'| {row["Domain"].upper()} | {row["BaselineMedianMs"]:.3f} → {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} | {row["PreviousCorrectRequests"]:.3f} → {row["CurrentCorrectRequests"]:.3f} |')
+        lines += ["", spatial["SelectedNegativeScope"], "",
+                  "| Domain | Previous → current median ms | Current / previous | Previous → current managed MiB | Previous → current mean completed / 3 |",
+                  "|---|---:|---:|---:|---:|"]
+        for row in spatial["SelectedNegativeCost"]:
+            lines.append(f'| {row["Domain"].upper()} | {row["BaselineMedianMs"]:.3f} → {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} | {row["PreviousCorrectRequests"]:.3f} → {row["CurrentCorrectRequests"]:.3f} |')
+        lines += ["", spatial["Limits"], "", "[Spatial-search proof and raw cost references](evidence/datamatrix-spatial-search-proof.json) · [Bounds equivalence](evidence/datamatrix-spatial-bounds-equivalence.json) · [Ordered component checks](evidence/datamatrix-components-current.json)."]
+    completion = qualification.get("Pdf417NegativeCompletionProof") or qualification.get("HistoricalPdf417NegativeCompletionProof")
+    historical_completion = completion is not None and not qualification.get("Pdf417NegativeCompletionProof")
     if completion:
-        if (completion["Source"] != qualification["MeasurementSource"]
-                or completion["CoreSha256"] != qualification["CandidateCoreSha256"]
-                or completion["DecisionEquivalence"]["mismatches"] != 0):
+        if (not historical_completion and (completion["Source"] != qualification["MeasurementSource"]
+                or completion["CoreSha256"] != qualification["CandidateCoreSha256"])) or completion["DecisionEquivalence"]["mismatches"] != 0:
             raise ValueError("PDF417 negative-search proof differs from the measured candidate")
-        lines += ["", "## PDF417 negative-search completion", "", completion["Changes"], "",
+        notice = [f'These completion and cost measurements belong to source `{completion["Source"]}`. They describe the earlier PDF417 change; current corpus, alternating negatives and whole-image costs are measured separately on the current binary.', ""] if historical_completion else []
+        lines += ["", "## Historical PDF417 negative-search completion" if historical_completion else "## PDF417 negative-search completion", "", *notice, completion["Changes"], "",
                   f'The cached and uncached fitters agree on {completion["DecisionEquivalence"]["checks"]:,} decisions, including failed fits, wide runs and cache capacity pressure. Four module-entrypoint controls preserve offset symbols and macro metadata in both row orders.', "",
                   completion["CompletionNotes"], "", completion["CostScope"], "",
                   "| Domain | Previous median ms | Current median ms | Current / previous | Previous managed bytes | Current managed bytes | Previous / current mean completed images |",

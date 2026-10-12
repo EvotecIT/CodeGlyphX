@@ -258,13 +258,13 @@ def build_website_data(root):
                          "before": exact["PreviousCorrect"], "correct": exact["Correct"], "images": len(exact["Images"]),
                          "focused_cases": exact["FocusedCases"], "limits": exact["Limits"], "legacy_scope": exact["LegacyScope"]}
     pdf417_negative_completion = {}
-    completion = qualification.get("Pdf417NegativeCompletionProof")
+    completion = qualification.get("Pdf417NegativeCompletionProof") or qualification.get("HistoricalPdf417NegativeCompletionProof")
+    historical_completion = completion is not None and not qualification.get("Pdf417NegativeCompletionProof")
     if completion:
-        if (completion["Source"] != qualification["MeasurementSource"]
-                or completion["CoreSha256"] != qualification["CandidateCoreSha256"]
-                or completion["DecisionEquivalence"]["mismatches"] != 0):
+        if (not historical_completion and (completion["Source"] != qualification["MeasurementSource"]
+                or completion["CoreSha256"] != qualification["CandidateCoreSha256"])) or completion["DecisionEquivalence"]["mismatches"] != 0:
             raise ValueError("PDF417 negative-search proof differs from the qualified source")
-        pdf417_negative_completion = {"checks": f'{completion["DecisionEquivalence"]["checks"]:,}',
+        pdf417_negative_completion = {"historical": historical_completion, "source": completion["Source"], "checks": f'{completion["DecisionEquivalence"]["checks"]:,}',
             "changes": completion["Changes"], "notes": completion["CompletionNotes"], "scope": completion["CostScope"], "limits": completion["Limits"],
             "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["BaselineMedianMs"]:.3f}', "current_ms": f'{row["CurrentMedianMs"]:.3f}',
                       "ratio": f'{row["LatencyRatio"]:.3f}', "previous_mib": f'{row["BaselineAllocatedBytes"] / 1048576:.2f}', "current_mib": f'{row["CurrentAllocatedBytes"] / 1048576:.2f}',
@@ -293,6 +293,19 @@ def build_website_data(root):
             "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["PreviousMedianMs"]:.3f}',
                       "current_ms": f'{row["CurrentMedianMs"]:.3f}', "ratio": f'{row["Ratio"]:.3f}',
                       "previous_bytes": f'{row["PreviousAllocatedBytes"]:,.0f}', "current_bytes": f'{row["CurrentAllocatedBytes"]:,.0f}'} for row in matrix["Cost"]]}
+    datamatrix_spatial = {}
+    spatial = qualification.get("DataMatrixSpatialSearchProof")
+    if spatial:
+        if (spatial["Source"] != qualification["MeasurementSource"]
+                or spatial["CoreSha256"] != qualification["CandidateCoreSha256"]
+                or spatial["BoundsEquivalence"]["Mismatches"] or spatial["ComponentEquivalence"]["Mismatches"]):
+            raise ValueError("Data Matrix spatial proof differs from the qualified source")
+        datamatrix_spatial = {"changes": spatial["Changes"], "bounds_cases": f'{spatial["BoundsEquivalence"]["Cases"]:,}',
+            "component_cases": f'{spatial["ComponentEquivalence"]["Cases"]:,}', "scope": spatial["CostScope"], "selected_scope": spatial["SelectedNegativeScope"], "limits": spatial["Limits"],
+            "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["BaselineMedianMs"]:.3f}', "current_ms": f'{row["CurrentMedianMs"]:.3f}',
+                      "ratio": f'{row["LatencyRatio"]:.3f}', "previous_mib": f'{row["BaselineAllocatedBytes"]/1048576:.2f}', "current_mib": f'{row["CurrentAllocatedBytes"]/1048576:.2f}',
+                      "previous_correct": f'{row["PreviousCorrectRequests"]:.3f}', "current_correct": f'{row["CurrentCorrectRequests"]:.3f}'} for row in spatial["Cost"]],
+            "selected_notes": [f'{row["Domain"].upper()}: the three additional negatives take {row["BaselineMedianMs"]:.3f} → {row["CurrentMedianMs"]:.3f} ms (ratio {row["LatencyRatio"]:.3f}), with mean completed images {row["PreviousCorrectRequests"]:.3f} → {row["CurrentCorrectRequests"]:.3f}/3 and managed allocation {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} MiB.' for row in spatial["SelectedNegativeCost"]]}
     return {"date": generation["StartedUtc"][:10], "source": qualification["MeasurementSource"],
             "versions": qualification["Versions"], "cpu": qualification["Cpu"]["Name"].strip(),
             "png_wins": png_wins, "png_cases": 6, "module_cpp_wins": module_cpp_wins,
@@ -305,7 +318,7 @@ def build_website_data(root):
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
             "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,
-            "negative_search_cost": negative_search_cost, "pdf417_negative_completion": pdf417_negative_completion,
+            "negative_search_cost": negative_search_cost, "pdf417_negative_completion": pdf417_negative_completion, "datamatrix_spatial": datamatrix_spatial,
             "pdf417_cache": pdf417_cache, "codabar_run_recovery": codabar_run_recovery, "qr_exact_grid": qr_exact_grid,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}

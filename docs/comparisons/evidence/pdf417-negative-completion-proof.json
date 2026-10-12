@@ -45,7 +45,7 @@
       {
         "Source": "previous",
         "Domain": "ccd0",
-        "File": "negative-rotation-ccd0-0-previous.json",
+        "File": "historical-pdf417-negative-rotation-ccd0-0-previous.json",
         "Cpu": [
           26.172796934034004,
           26.291502770792775,
@@ -60,7 +60,7 @@
       {
         "Source": "current",
         "Domain": "ccd0",
-        "File": "negative-rotation-ccd0-1-current.json",
+        "File": "historical-pdf417-negative-rotation-ccd0-1-current.json",
         "Cpu": [
           25.862794619039185,
           33.600365522069154,
@@ -75,7 +75,7 @@
       {
         "Source": "current",
         "Domain": "ccd0",
-        "File": "negative-rotation-ccd0-2-current.json",
+        "File": "historical-pdf417-negative-rotation-ccd0-2-current.json",
         "Cpu": [
           46.23872003262078,
           32.528088417907895,
@@ -90,7 +90,7 @@
       {
         "Source": "previous",
         "Domain": "ccd0",
-        "File": "negative-rotation-ccd0-3-previous.json",
+        "File": "historical-pdf417-negative-rotation-ccd0-3-previous.json",
         "Cpu": [
           29.98982075698112,
           36.88863579629324,
@@ -115,7 +115,7 @@
         "Index": 0,
         "Inconclusive": 1,
         "Source": "current",
-        "File": "negative-rotation-ccd1-0-current.json",
+        "File": "historical-pdf417-negative-rotation-ccd1-0-current.json",
         "Completed": 30,
         "Unexpected": 0
       },
@@ -130,7 +130,7 @@
         "Index": 1,
         "Inconclusive": 2,
         "Source": "previous",
-        "File": "negative-rotation-ccd1-1-previous.json",
+        "File": "historical-pdf417-negative-rotation-ccd1-1-previous.json",
         "Completed": 29,
         "Unexpected": 0
       },
@@ -145,7 +145,7 @@
         "Index": 2,
         "Inconclusive": 2,
         "Source": "previous",
-        "File": "negative-rotation-ccd1-2-previous.json",
+        "File": "historical-pdf417-negative-rotation-ccd1-2-previous.json",
         "Completed": 29,
         "Unexpected": 0
       },
@@ -160,25 +160,25 @@
         "Index": 3,
         "Inconclusive": 3,
         "Source": "current",
-        "File": "negative-rotation-ccd1-3-current.json",
+        "File": "historical-pdf417-negative-rotation-ccd1-3-current.json",
         "Completed": 28,
         "Unexpected": 0
       }
     ]
   },
   "RawCostPackets": [
-    "pdf-negative-cost-ccd0-result.json",
-    "pdf-negative-cost-ccd1-result.json"
+    "historical-pdf417-pdf-negative-cost-ccd0-result.json",
+    "historical-pdf417-pdf-negative-cost-ccd1-result.json"
   ],
   "RawRotationPackets": [
-    "negative-rotation-ccd0-0-previous.json",
-    "negative-rotation-ccd0-1-current.json",
-    "negative-rotation-ccd0-2-current.json",
-    "negative-rotation-ccd0-3-previous.json",
-    "negative-rotation-ccd1-0-current.json",
-    "negative-rotation-ccd1-1-previous.json",
-    "negative-rotation-ccd1-2-previous.json",
-    "negative-rotation-ccd1-3-current.json"
+    "historical-pdf417-negative-rotation-ccd0-0-previous.json",
+    "historical-pdf417-negative-rotation-ccd0-1-current.json",
+    "historical-pdf417-negative-rotation-ccd0-2-current.json",
+    "historical-pdf417-negative-rotation-ccd0-3-previous.json",
+    "historical-pdf417-negative-rotation-ccd1-0-current.json",
+    "historical-pdf417-negative-rotation-ccd1-1-previous.json",
+    "historical-pdf417-negative-rotation-ccd1-2-previous.json",
+    "historical-pdf417-negative-rotation-ccd1-3-current.json"
   ],
   "Changes": "PDF417 reuses eight-run codeword fits within each thresholded image and skips offset crops whose required prefix cannot decode. It receives two weighted shares of the existing 1500 ms total scanner allowance. Candidate order, fit rules, payload validation and inherited deadlines are unchanged.",
   "CostScope": "Three prespecified unrestricted negative images: falsepositives-2/01.png, falsepositives-2/09.png and falsepositives/15.png. PowerForge runs 3 warmups and 12 rotated measurements per engine on each verified affinity domain. Both binaries receive identical preloaded RGBA32 images and options; loading and outcome evaluation are excluded.",
