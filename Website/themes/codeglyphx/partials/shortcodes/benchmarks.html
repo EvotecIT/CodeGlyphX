@@ -5,6 +5,7 @@
         <p class="benchmark-intro">{{ copy.hero.intro }}</p>
         <p>Measured <time datetime="{{ comparison.date }}">{{ comparison.date }}</time> · Windows · .NET {{ comparison.versions.DotnetRuntime }}</p>
         <p class="comparison-limit">{{ copy.sharedHost }}</p>
+        {{ if comparison.host_load_note }}<p class="comparison-limit">{{ comparison.host_load_note }}</p>{{ end }}
     </section>
     <section class="benchmark-section" aria-labelledby="comparison-overview">
         <h2 id="comparison-overview">What the results show</h2>
@@ -257,6 +258,31 @@
         <p><a href="/comparisons/evidence/retail-positive-diagnostic.json">Positive requests</a> · <a href="/comparisons/evidence/retail-negative-diagnostic.json">Negative requests</a> · <a href="/comparisons/evidence/retail-negative-current.json">Current negative outcomes</a> · <a href="/comparisons/evidence/retail-cost-ccd0-result.json">CCD0 raw cost samples</a> · <a href="/comparisons/evidence/retail-cost-ccd1-result.json">CCD1 raw cost samples</a></p>
     </section>
     {{ end }}
+    {{ if comparison.databar_tilted }}
+    <section class="benchmark-section" aria-labelledby="databar-tilted">
+        <h2 id="databar-tilted">GS1 DataBar tilted photographs</h2>
+        <p>{{ comparison.databar_tilted.changes }}</p>
+        <p>{{ comparison.databar_tilted.scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Tilted DataBar recognition results" tabindex="0">
+            <table class="bench-table">
+                <caption>Unchanged RSS-14 family corpus: 12 images</caption>
+                <thead><tr><th scope="col">Engine</th><th scope="col">Previous correct</th><th scope="col">Current correct</th><th scope="col">Unexpected images</th></tr></thead>
+                <tbody>{{ for row in comparison.databar_tilted.engines }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }}/12</td><td>{{ row.correct }}/12</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.databar_tilted.cost_scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Tilted DataBar paired search costs" tabindex="0">
+            <table class="bench-table">
+                <caption>Paired DataBar search costs: previous → current; every measured outcome retained</caption>
+                <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.databar_tilted.costs }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.databar_tilted.limits }}</p>
+        <p><a href="/comparisons/evidence/databar-tilted-separator-proof.json">Recovery and regression proof</a> · <a href="/comparisons/evidence/databar14-positive-manifest.json">Positive inputs</a> · <a href="/comparisons/evidence/databar14-negative-manifest.json">Negative inputs</a> · <a href="/comparisons/evidence/databar-tilted-positive-ccd0-result.json">CCD0 positive samples</a> · <a href="/comparisons/evidence/databar-tilted-positive-ccd1-result.json">CCD1 positive samples</a> · <a href="/comparisons/evidence/databar-tilted-negative-ccd0-result.json">CCD0 negative samples</a> · <a href="/comparisons/evidence/databar-tilted-negative-ccd1-result.json">CCD1 negative samples</a></p>
+    </section>
+    {{ end }}
+
     {{ if comparison.databar14_recovery }}
     <section class="benchmark-section" aria-labelledby="databar14-recovery">
         <h2 id="databar14-recovery">{{ if comparison.databar14_recovery.historical }}Historical {{ end }}GS1 DataBar-14 character pitch recovery</h2>
@@ -367,7 +393,8 @@
     {{ end }}
     {{ if comparison.qr_morphology }}
     <section class="benchmark-section" aria-labelledby="qr-morphology">
-        <h2 id="qr-morphology">QR image cleanup and negative-search cost</h2>
+        <h2 id="qr-morphology">{{ if comparison.qr_morphology.historical }}Historical {{ end }}QR image cleanup and negative-search cost</h2>
+        {{ if comparison.qr_morphology.historical }}<p>These retained filter and whole-image costs belong to source <code>{{ comparison.qr_morphology.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
         <p>{{ comparison.qr_morphology.changes }}</p>
         <p>{{ comparison.qr_morphology.scope }}</p>
         <p>Every output pixel matches the preceding binary on 24 closing/opening filters over four corpus images. Eight direct-neighborhood cases pass on each modern framework, covering clipped borders, narrow images, solid and mixed pixels, and adaptive thresholds.</p>

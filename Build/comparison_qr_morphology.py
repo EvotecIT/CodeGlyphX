@@ -3,11 +3,12 @@ import json
 
 
 def project_qr_morphology(root, qualification):
-    proof = qualification.get("QrMorphologyCostProof")
+    proof = qualification.get("QrMorphologyCostProof") or qualification.get("HistoricalQrMorphologyCostProof")
+    historical = bool(proof) and not qualification.get("QrMorphologyCostProof")
     if not proof:
         return None
-    if (proof["Source"] != qualification["MeasurementSource"]
-            or proof["CoreSha256"] != qualification["CandidateCoreSha256"]
+    if ((not historical and (proof["Source"] != qualification["MeasurementSource"]
+            or proof["CoreSha256"] != qualification["CandidateCoreSha256"]))
             or proof["PixelEquivalence"]["Mismatches"]):
         raise ValueError("QR morphology proof differs from the qualified core")
     rows = {}
@@ -41,5 +42,5 @@ def project_qr_morphology(root, qualification):
                         row[f"{prefix}_{name}_mean"] = f"{sum(values) / len(values):.2f}"
             projected.append(row)
         rows[kind] = projected
-    return {"changes": proof["Changes"], "scope": proof["Scope"], "limits": proof["Limits"],
+    return {"historical": historical, "source": proof["Source"], "changes": proof["Changes"], "scope": proof["Scope"], "limits": proof["Limits"],
             "kernel": rows["morphology"], "negatives": rows["negative"]}

@@ -3,6 +3,7 @@ import argparse
 import json
 from pathlib import Path
 from comparison_qr_morphology import project_qr_morphology
+from comparison_databar_tilted import project_databar_tilted
 
 
 def load(path):
@@ -352,6 +353,7 @@ def build_website_data(root):
             "selected_notes": [f'{row["Domain"].upper()}: the three additional negatives take {row["BaselineMedianMs"]:.3f} → {row["CurrentMedianMs"]:.3f} ms (ratio {row["LatencyRatio"]:.3f}), with mean completed images {row["PreviousCorrectRequests"]:.3f} → {row["CurrentCorrectRequests"]:.3f}/3 and managed allocation {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} MiB.' for row in spatial["SelectedNegativeCost"]]}
     return {"date": generation["StartedUtc"][:10], "source": qualification["MeasurementSource"],
             "versions": qualification["Versions"], "cpu": qualification["Cpu"]["Name"].strip(),
+            "host_load_note": qualification.get("CurrentHostLoadNote", ""),
             "png_wins": png_wins, "png_cases": 6, "module_cpp_wins": module_cpp_wins,
             "png_qrc_allocation_wins": png_qrc_allocation_wins,
             "recognition": recognition, "formats": formats, "domains": domains,
@@ -361,6 +363,7 @@ def build_website_data(root):
             "retail": retail_rows, "retail_cost": retail_cost, "retail_positive_cost": retail_positive_cost,
             "retail_historical": historical_retail, "retail_source": retail["Source"] if retail else "",
             "qr_morphology": project_qr_morphology(root, qualification),
+            "databar_tilted": project_databar_tilted(root, qualification),
             "retail_changes": retail.get("Changes", "") if retail else "",
             "databar14_recovery": databar14_projected,
             "retail_extrema_reuse": ({"masks": f'{retail["ExtremaReuse"]["Masks"]:,}',

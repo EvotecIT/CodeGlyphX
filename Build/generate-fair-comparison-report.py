@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from comparison_website_data import write_website_data
 from comparison_qr_morphology import project_qr_morphology
+from comparison_databar_tilted import project_databar_tilted
 
 
 def read(path):
@@ -43,7 +44,10 @@ def main():
     names += [name for name in ("previous-candidate-corpus.json", "previous-negative-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
     names += sorted(path.name for path in root.glob("historical-qr-morphology-*.json"))
-    if qualification.get("QrMorphologyCostProof"):
+    names += sorted(path.name for path in root.glob("historical-databar-tilt-*.json"))
+    if qualification.get("DataBarTiltedSeparatorProof"):
+        names += sorted(path.name for path in root.glob("databar-tilted-*.json"))
+    if qualification.get("QrMorphologyCostProof") or qualification.get("HistoricalQrMorphologyCostProof"):
         names += sorted(path.name for path in root.glob("qr-morphology-*.json"))
         names += sorted(path.name for path in root.glob("qr-negative-cost-*.json"))
     names += sorted(path.name for path in root.glob("pdf417-supplemental-*.json"))
@@ -107,7 +111,7 @@ def main():
                         if unsupported else "Every positive format has a CodeGlyphX image scanner.")
     lines = ["# Current barcode comparisons", "", "Generated from the complete result packets by `Build/generate-fair-comparison-report.py`.", "",
              "See [methodology](../fair-comparisons.md) for versions, adapter boundaries, settings, corpus selection, scoring and proof limits.", "",
-             "## Recognition", "", f"The 279-image corpus includes twelve negative images. {scanner_coverage} Exact payload sets are checked after the documented physical representation rules.", "",
+             qualification.get("CurrentHostLoadNote", ""), "", "## Recognition", "", f"The 279-image corpus includes twelve negative images. {scanner_coverage} Exact payload sets are checked after the documented physical representation rules.", "",
              "| Engine | Original source: positive correct | Current: positive correct | Unsupported positive images | Unexpected-output images | Negative-image false positives | Inconclusive negative images |",
              "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for engine in engines:
@@ -409,9 +413,22 @@ def main():
         for row in recovery["Cost"]:
             lines.append(f'| {row["Domain"].upper()} | {row["BaselineMedianMs"]:.2f} → {row["CurrentMedianMs"]:.2f} | {row["LatencyRatio"]:.3f} | {row["PreviousCorrectRequests"]:g} → {row["CurrentCorrectRequests"]:g} | {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} |')
         lines += ["", "[DataBar-14 recovery proof](evidence/databar14-run-recovery-proof.json) · [Positive requests](evidence/databar14-positive-manifest.json) · [Negative requests](evidence/databar14-negative-manifest.json) · [CCD0 samples](evidence/databar14-cost-ccd0-result.json) · [CCD1 samples](evidence/databar14-cost-ccd1-result.json)."]
+    tilted = project_databar_tilted(root, qualification)
+    if tilted:
+        lines += ["", "## GS1 DataBar tilted photographs", "", tilted["changes"], "", tilted["scope"], "",
+                  "| Engine | Previous correct / 12 | Current correct / 12 | Unexpected images |",
+                  "| --- | ---: | ---: | ---: |"]
+        for row in tilted["engines"]:
+            lines.append(f'| {row["engine"]} | {row["before"]} | {row["correct"]} | {row["unexpected"]} |')
+        lines += ["", tilted["cost_scope"], "",
+                  "| Batch | Domain | Previous → current median ms | Current / previous | Previous → current correct range | Previous → current inconclusive range | Previous → current mean managed MiB |",
+                  "| --- | --- | ---: | ---: | ---: | ---: | ---: |"]
+        for row in tilted["costs"]:
+            lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
+        lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
     morphology = project_qr_morphology(root, qualification)
     if morphology:
-        lines += ["", "## QR image cleanup and negative-search cost", "", morphology["changes"], "", morphology["scope"], "",
+        lines += ["", "## Historical QR image cleanup and negative-search cost" if morphology["historical"] else "## QR image cleanup and negative-search cost", "", (f'These retained filter and whole-image costs belong to source {morphology["source"]}; current whole-image qualification appears separately.' if morphology["historical"] else ""), "", morphology["changes"], "", morphology["scope"], "",
                   "Every output pixel matches the preceding binary on 24 closing/opening filters over four corpus images. Eight direct-neighborhood cases pass on each modern framework, covering solid and mixed images, clipped borders, narrow dimensions and adaptive thresholds.", "",
                   "| Domain | Previous → current median ms / 24 filters | Current / previous | Previous → current mean managed MiB |",
                   "| --- | ---: | ---: | ---: |"]
