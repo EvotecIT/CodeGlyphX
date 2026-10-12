@@ -150,71 +150,84 @@ internal static partial class QrPixelSampling {
     }
 
     private static void FindBestPhase(
-        QrGrayImage image, bool invert, double tlX, double tlY,
-        double vxX, double vxY, double vyX, double vyY, int dimension,
-        out double bestX, out double bestY, out int bestDist, out int bestTiming) {
-        bestX = bestY = 0;
+        QrGrayImage image,
+        bool invert,
+        double tlX,
+        double tlY,
+        double vxX,
+        double vxY,
+        double vyX,
+        double vyY,
+        int dimension,
+        out double bestX,
+        out double bestY,
+        out int bestDist,
+        out int bestTiming) {
+        bestX = 0;
+        bestY = 0;
         bestDist = int.MaxValue;
         bestTiming = int.MinValue;
-        if (ScorePhaseCandidates(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension,
-            PhaseOffsetsCoarse, PhaseOffsetsCoarse, preferFirstEqual: false,
-            ref bestX, ref bestY, ref bestDist, ref bestTiming)) return;
 
-        Span<double> fineX = stackalloc double[5];
+        for (var yi = 0; yi < PhaseOffsetsCoarse.Length; yi++) {
+            var oy = PhaseOffsetsCoarse[yi];
+            for (var xi = 0; xi < PhaseOffsetsCoarse.Length; xi++) {
+                var ox = PhaseOffsetsCoarse[xi];
+
+                var dist = ComputeFormatDistance(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, ox, oy);
+                // Timing only breaks equal format scores; a worse format score cannot win.
+                if (dist > bestDist) continue;
+                var timing = ComputeTimingAlternations(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, ox, oy);
+
+                if (dist < bestDist || (dist == bestDist && timing > bestTiming)) {
+                    bestDist = dist;
+                    bestTiming = timing;
+                    bestX = ox;
+                    bestY = oy;
+                }
+
+                if (bestDist == 0 && bestTiming > (dimension - 16) * 2 - 4) return;
+            }
+        }
+
+        // Small refinement pass around the best coarse point.
+        Span<double> fine = stackalloc double[5];
+        fine[0] = bestX - 0.10;
+        fine[1] = bestX - 0.05;
+        fine[2] = bestX;
+        fine[3] = bestX + 0.05;
+        fine[4] = bestX + 0.10;
+
         Span<double> fineY = stackalloc double[5];
-        for (var i = 0; i < 5; i++) {
-            // Preserve the original arithmetic and fine-grid tie order.
-            var offset = i switch { 0 => -0.10, 1 => -0.05, 2 => 0, 3 => 0.05, _ => 0.10 };
-            fineX[i] = Math.Clamp(bestX + offset, -0.49, 0.49);
-            fineY[i] = Math.Clamp(bestY + offset, -0.49, 0.49);
-        }
-        ScorePhaseCandidates(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension,
-            fineX, fineY, preferFirstEqual: true, ref bestX, ref bestY, ref bestDist, ref bestTiming);
-    }
+        fineY[0] = bestY - 0.10;
+        fineY[1] = bestY - 0.05;
+        fineY[2] = bestY;
+        fineY[3] = bestY + 0.05;
+        fineY[4] = bestY + 0.10;
 
-    /// <summary>Defers positive-distance timing scores until the final minimum format distance is known.</summary>
-    private static bool ScorePhaseCandidates(
-        QrGrayImage image, bool invert, double tlX, double tlY,
-        double vxX, double vxY, double vyX, double vyY, int dimension,
-        ReadOnlySpan<double> phasesX, ReadOnlySpan<double> phasesY, bool preferFirstEqual,
-        ref double bestX, ref double bestY, ref int bestDist, ref int bestTiming) {
-        Span<int> distances = stackalloc int[25];
-        var minimum = bestDist;
-        var hasWinner = !preferFirstEqual;
-        var index = 0;
-        for (var y = 0; y < phasesY.Length; y++) {
-            for (var x = 0; x < phasesX.Length; x++) {
-                var distance = ComputeFormatDistance(image, invert, tlX, tlY, vxX, vxY, vyX, vyY,
-                    dimension, phasesX[x], phasesY[y]);
-                distances[index++] = distance;
-                if (distance < minimum) minimum = distance;
-                // Evaluate exact format matches immediately in the original order.
-                // They alone can trigger the existing perfect-score early return.
-                if (distance != 0) continue;
-                var timing = ComputeTimingAlternations(image, invert, tlX, tlY, vxX, vxY, vyX, vyY,
-                    dimension, phasesX[x], phasesY[y]);
-                if (distance < bestDist || timing > bestTiming || (!hasWinner && timing == bestTiming)) {
-                    bestDist = distance; bestTiming = timing;
-                    bestX = phasesX[x]; bestY = phasesY[y]; hasWinner = true;
+        // The fine grid contains the coarse winner at its centre. Seed its score
+        // to avoid timing work for candidates that cannot beat that known point,
+        // but let the first equal fine candidate retain the original tie order.
+        var hasFineWinner = false;
+        for (var yi = 0; yi < fineY.Length; yi++) {
+            var oy = Math.Clamp(fineY[yi], -0.49, 0.49);
+            for (var xi = 0; xi < fine.Length; xi++) {
+                var ox = Math.Clamp(fine[xi], -0.49, 0.49);
+
+                var dist = ComputeFormatDistance(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, ox, oy);
+                if (dist > bestDist) continue;
+                var timing = ComputeTimingAlternations(image, invert, tlX, tlY, vxX, vxY, vyX, vyY, dimension, ox, oy);
+
+                if (dist < bestDist || (dist == bestDist && (timing > bestTiming || (!hasFineWinner && timing == bestTiming)))) {
+                    bestDist = dist;
+                    bestTiming = timing;
+                    bestX = ox;
+                    bestY = oy;
+                    hasFineWinner = true;
                 }
-                if (bestTiming > (dimension - 16) * 2 - 4) return true;
+
+                if (bestDist == 0 && bestTiming > (dimension - 16) * 2 - 4) return;
             }
         }
-        if (minimum == 0) return false;
-
-        index = 0;
-        for (var y = 0; y < phasesY.Length; y++) {
-            for (var x = 0; x < phasesX.Length; x++) {
-                if (distances[index++] != minimum) continue;
-                var timing = ComputeTimingAlternations(image, invert, tlX, tlY, vxX, vxY, vyX, vyY,
-                    dimension, phasesX[x], phasesY[y]);
-                if (minimum < bestDist || timing > bestTiming || (!hasWinner && timing == bestTiming)) {
-                    bestDist = minimum; bestTiming = timing;
-                    bestX = phasesX[x]; bestY = phasesY[y]; hasWinner = true;
-                }
-            }
-        }
-        return false;
     }
 
     private static int ComputeFormatDistance(
