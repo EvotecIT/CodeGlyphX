@@ -6,6 +6,7 @@ from pathlib import Path
 from comparison_website_data import write_website_data
 from comparison_qr_morphology import project_qr_morphology
 from comparison_databar_tilted import project_databar_tilted
+from comparison_retail_fine import project_retail_fine
 
 
 def read(path):
@@ -45,7 +46,12 @@ def main():
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
     names += sorted(path.name for path in root.glob("historical-qr-morphology-*.json"))
     names += sorted(path.name for path in root.glob("historical-databar-tilt-*.json"))
-    if qualification.get("DataBarTiltedSeparatorProof"):
+    names += sorted(path.name for path in root.glob("historical-retail-fine-*.json"))
+    if qualification.get("RetailFineContrastProof"):
+        names += sorted(path.name for path in root.glob("retail-fine-*.json"))
+    if qualification.get("IndustrialTileBoundaryProof"):
+        names += sorted(path.name for path in root.glob("industrial-tile-*.json"))
+    if qualification.get("DataBarTiltedSeparatorProof") or qualification.get("HistoricalDataBarTiltedSeparatorProof"):
         names += sorted(path.name for path in root.glob("databar-tilted-*.json"))
     if qualification.get("QrMorphologyCostProof") or qualification.get("HistoricalQrMorphologyCostProof"):
         names += sorted(path.name for path in root.glob("qr-morphology-*.json"))
@@ -415,7 +421,7 @@ def main():
         lines += ["", "[DataBar-14 recovery proof](evidence/databar14-run-recovery-proof.json) · [Positive requests](evidence/databar14-positive-manifest.json) · [Negative requests](evidence/databar14-negative-manifest.json) · [CCD0 samples](evidence/databar14-cost-ccd0-result.json) · [CCD1 samples](evidence/databar14-cost-ccd1-result.json)."]
     tilted = project_databar_tilted(root, qualification)
     if tilted:
-        lines += ["", "## GS1 DataBar tilted photographs", "", tilted["changes"], "", tilted["scope"], "",
+        lines += ["", "## Historical GS1 DataBar tilted photographs" if tilted["historical"] else "## GS1 DataBar tilted photographs", "", (f'These retained recovery and paired costs belong to source {tilted["source"]}; current whole-image qualification appears separately.' if tilted["historical"] else ""), "", tilted["changes"], "", tilted["scope"], "",
                   "| Engine | Previous correct / 12 | Current correct / 12 | Unexpected images |",
                   "| --- | ---: | ---: | ---: |"]
         for row in tilted["engines"]:
@@ -426,6 +432,25 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    fine = project_retail_fine(root, qualification)
+    if fine:
+        lines += ["", "## Retail photographs and tile boundary safety", "", fine["changes"], "", fine["scope"], "",
+                  "| Engine | Previous correct / 87 | Current correct / 87 | Unexpected images |",
+                  "| --- | ---: | ---: | ---: |"]
+        for row in fine["engines"]:
+            lines.append(f'| {row["engine"]} | {row["before"]} | {row["correct"]} | {row["unexpected"]} |')
+        lines += ["", fine["cost_scope"], "",
+                  "| Batch | Domain | Previous → current median ms | Current / previous | Previous → current correct range | Previous → current inconclusive range | Previous → current unexpected range | Previous → current mean managed MiB |",
+                  "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
+        for row in fine["costs"]:
+            lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_unexpected"]} → {row["current_unexpected"]} | {row["before_mib"]} → {row["current_mib"]} |')
+        lines += ["", "The 31 distinct negative images are also scanned separately with each retail hint: 93 requests. This diagnostic does not replace all-format negative completion.", "",
+                  "| Engine | Completed / 93 | Inconclusive | Unexpected requests |", "| --- | ---: | ---: | ---: |"]
+        for row in fine["negative_diagnostic"]:
+            lines.append(f'| {row["engine"]} | {row["completed"]} | {row["inconclusive"]} | {row["unexpected"]} |')
+        lines += ["", "Eight default all-format tile-scanner cases prohibit retail payloads on the perforated negative fixture in four rotations and both polarities. The four non-inverted cases return no symbol. Each case also exhausts typed EAN/UPC tile decoding. An unrelated format can reach its recognition limit on a legacy runtime, so safety and completion remain separate. All eight fail with the exact initial candidate before the full-length restriction.", "", fine["negative_variant_limits"], "", "[Additional negative variants before](evidence/retail-fine-negative-variants-baseline.json) · [Additional negative variants current](evidence/retail-fine-negative-variants-current.json).", "", fine["limits"], "", "[Recovery and regression proof](evidence/retail-fine-contrast-proof.json) · [Positive requests](evidence/retail-fine-positive-manifest.json) · [Negative cost requests](evidence/retail-fine-negative-manifest.json) · [Hinted negative outcomes](evidence/retail-fine-negative-diagnostic.json) · [CCD0 positive samples](evidence/retail-fine-positive-ccd0-result.json) · [CCD1 positive samples](evidence/retail-fine-positive-ccd1-result.json) · [CCD0 negative samples](evidence/retail-fine-negative-ccd0-result.json) · [CCD1 negative samples](evidence/retail-fine-negative-ccd1-result.json)."]
+        lines += ["", "### Complete margins for Industrial 2 of 5 tiles", "", fine["industrial"]["changes"], "", fine["industrial"]["scope"], "", fine["industrial"]["limits"], "", "[Tile boundary and single-digit regression proof](evidence/industrial-tile-boundary-proof.json) · [Tile geometry before correction](evidence/industrial-tile-boundary-diagnosis.json) · [Safety contracts before correction](evidence/industrial-tile-before-proof.json) · [Current short-symbol diagnostic](evidence/industrial-tile-boundary-current-diagnostic.json) · [Transparent-margin contracts before correction](evidence/industrial-tile-alpha-before-proof.json) · [Current transparent-margin diagnostic](evidence/industrial-tile-alpha-current-diagnostic.json)."]
+
     morphology = project_qr_morphology(root, qualification)
     if morphology:
         lines += ["", "## Historical QR image cleanup and negative-search cost" if morphology["historical"] else "## QR image cleanup and negative-search cost", "", (f'These retained filter and whole-image costs belong to source {morphology["source"]}; current whole-image qualification appears separately.' if morphology["historical"] else ""), "", morphology["changes"], "", morphology["scope"], "",

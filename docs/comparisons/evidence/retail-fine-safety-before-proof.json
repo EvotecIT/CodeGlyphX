@@ -1,0 +1,11 @@
+{
+  "RejectedSource": "ec38af27998ca9febe4bae87537a2ceceac9d426",
+  "RejectedCoreSha256": "9358E8C32421376A6171C9CC27724B56C8ABF3D1C17009E4DE3B81E53D5428FE",
+  "FixtureSha256": "8ED198F523B6881AEE9AF81BFF855C74CE67D5939952887D39AD0C1B5331DF95",
+  "Failed": 8,
+  "Passed": 0,
+  "TrxSha256": "3856FEC4029EFD6B6F2F5ED7113BAB3BA2EFC9CCC03A6142F886E03200A64958",
+  "Boundary": "The final safety contracts run with the exact rejected core. All eight fail because default tile scanning returns an EAN payload, independently of whether an unrelated format exhausts its recognition attempt. The corrected contracts additionally exhaust typed retail tile paths.",
+  "TrxFile": "retail-safety-before-final-contract-net10.trx",
+  "TestSourceSha256": "406F4B7C5A31CC4B671F8B84F34BB7F75760C7A52F91307B96ED2DAB96074DF5"
+}

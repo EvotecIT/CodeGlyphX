@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from comparison_qr_morphology import project_qr_morphology
 from comparison_databar_tilted import project_databar_tilted
+from comparison_retail_fine import project_retail_fine
 
 
 def load(path):
@@ -364,6 +365,7 @@ def build_website_data(root):
             "retail_historical": historical_retail, "retail_source": retail["Source"] if retail else "",
             "qr_morphology": project_qr_morphology(root, qualification),
             "databar_tilted": project_databar_tilted(root, qualification),
+            "retail_fine": project_retail_fine(root, qualification),
             "retail_changes": retail.get("Changes", "") if retail else "",
             "databar14_recovery": databar14_projected,
             "retail_extrema_reuse": ({"masks": f'{retail["ExtremaReuse"]["Masks"]:,}',

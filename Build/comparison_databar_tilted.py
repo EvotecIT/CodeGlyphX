@@ -3,11 +3,12 @@ import json
 
 
 def project_databar_tilted(root, qualification):
-    proof = qualification.get('DataBarTiltedSeparatorProof')
+    proof = qualification.get('DataBarTiltedSeparatorProof') or qualification.get('HistoricalDataBarTiltedSeparatorProof')
+    historical = bool(proof) and not qualification.get('DataBarTiltedSeparatorProof')
     if not proof:
         return None
-    if (proof['Source'] != qualification['MeasurementSource']
-            or proof['CoreSha256'] != qualification['CandidateCoreSha256']):
+    if (not historical and (proof['Source'] != qualification['MeasurementSource']
+            or proof['CoreSha256'] != qualification['CandidateCoreSha256'])):
         raise ValueError('Tilted DataBar proof differs from the qualified core')
     costs = []
     for kind, requests in (('positive', 12), ('negative', 31)):
@@ -37,7 +38,7 @@ def project_databar_tilted(root, qualification):
                     values = [r['Metrics'][metric] for r in samples]
                     row[f'{prefix}_{name}'] = f'{min(values):g}–{max(values):g}' if min(values) != max(values) else f'{min(values):g}'
             costs.append(row)
-    return {'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'],
+    return {'historical': historical, 'source': proof['Source'], 'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'],
             'cost_scope': proof['CostScope'], 'costs': costs,
             'engines': [{'engine': name, 'before': r['PreviousCorrect'], 'correct': r['Correct'], 'unexpected': r['Unexpected']}
                         for name, r in proof['Engines'].items()]}

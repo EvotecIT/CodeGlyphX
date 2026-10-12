@@ -2846,13 +2846,13 @@
     "Expected": [
       "00012345678905"
     ],
-    "Actual": [],
-    "Missing": [
-      "00012345678905"
+    "Actual": [
+      "0001234567890"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rss14-2/18.png",
