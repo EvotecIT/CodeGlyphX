@@ -4,7 +4,7 @@ CodeGlyphX's current comparison uses matched QR generation settings and an indep
 
 The [current results and complete evidence](comparisons/results.md) compare the repaired source with the original source and the previous decoding pass. They report every miss, completed negative scan, inconclusive search and timing sample across both cache domains. Recognition, latency and managed allocation are separate results. These are shared-host measurements with all outliers retained.
 
-The current pass measures retail recovery under glare and fine-bar blur. Three independent EAN regression photographs are part of the frozen corpus and informed the fix. Earlier ITF, Code 39, Data Matrix, PDF417, QR and Codabar discovery measurements retain their original source identities. The current pass rechecks those payloads and reruns the full corpus, retail and whole-image cost comparisons.
+The current pass measures DataBar-14 recovery when photographed characters have different apparent module widths. The regression photograph is part of the frozen corpus and informed the fix. Four axis and polarity cases exercise the same photograph through typed pixels, multi-result pixels and the scanner; eight additional cases reject malformed enclosed guard gaps in unstacked and stacked symbols. Earlier retail, ITF, Code 39, Data Matrix, PDF417, QR and Codabar discovery measurements retain their original source identities. The current pass rechecks those payloads and reruns the full corpus, DataBar-14, retail and whole-image cost comparisons.
 
 The comparison engines are opt-in dependencies of the non-packable benchmark executable. CodeGlyphX's shipped library does not reference them. QRCoder participates in generation only.
 
