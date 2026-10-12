@@ -50,10 +50,12 @@ public static partial class BarcodeDecoder {
             var rawLen = count - 2;
             var raw = rawLen > 0 ? new string(rented, 1, rawLen) : string.Empty;
             var policy = options?.Code39Checksum ?? Code39ChecksumPolicy.None;
-            if (policy != Code39ChecksumPolicy.None && raw.Length >= 2) {
-                // Minimum length is one data symbol plus optional checksum.
-                var expected = GetCode39ChecksumChar(raw.AsSpan(0, raw.Length - 1));
-                if (expected != '#' && raw[raw.Length - 1] == expected) {
+            if (policy != Code39ChecksumPolicy.None) {
+                // Optional stripping retains short ordinary data. RequireValid
+                // also validates the encoder's checksum for an empty payload.
+                var hasChecksum = raw.Length >= 2 || (raw.Length == 1 && policy == Code39ChecksumPolicy.RequireValid);
+                var expected = hasChecksum ? GetCode39ChecksumChar(raw.AsSpan(0, raw.Length - 1)) : '#';
+                if (hasChecksum && expected != '#' && raw[raw.Length - 1] == expected) {
                     raw = raw.Substring(0, raw.Length - 1);
                 } else if (policy == Code39ChecksumPolicy.RequireValid) {
                     return false;

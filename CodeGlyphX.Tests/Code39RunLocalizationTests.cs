@@ -91,6 +91,33 @@ public sealed class Code39RunLocalizationTests {
         Assert.Empty(Scan(pixels, width, height, options).Symbols);
     }
 
+    [Theory]
+    [InlineData("", false)]
+    [InlineData("A", false)]
+    [InlineData("", true)]
+    [InlineData("A", true)]
+    public void Decode_RequireChecksum_ValidatesShortPayloadsAndStripsEmptyPayloadChecksum(string input, bool checksum) {
+        var barcode = BarcodeEncoder.EncodeCode39(input, includeChecksum: checksum, fullAsciiMode: false);
+        var modules = barcode.Segments.SelectMany(s => Enumerable.Repeat(s.IsBar, s.Modules)).ToArray();
+        var options = new BarcodeDecodeOptions { Code39Checksum = Code39ChecksumPolicy.RequireValid };
+        Assert.Equal(checksum, BarcodeDecoder.TryDecode(modules, BarcodeType.Code39, options, out var fromModules));
+        if (checksum) Assert.Equal(input, fromModules.Text);
+        var pixels = BarcodePngRenderer.RenderPixels(barcode,
+            new BarcodePngRenderOptions { ModuleSize = 3, QuietZone = 12, HeightModules = 48 },
+            out var width, out var height, out var stride);
+        Assert.Equal(checksum, BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Rgba32, BarcodeType.Code39, options, out var fromPixels));
+        if (checksum) {
+            Assert.Equal(input, fromPixels.Text);
+            Assert.Equal(input, Assert.Single(Scan(pixels, width, height, options).Symbols).Text);
+        } else {
+            Assert.Empty(Scan(pixels, width, height, options).Symbols);
+            // Optional checksum stripping preserves short ordinary data.
+            options.Code39Checksum = Code39ChecksumPolicy.StripIfValid;
+            Assert.True(BarcodeDecoder.TryDecode(modules, BarcodeType.Code39, options, out var optional));
+            Assert.Equal(input, optional.Text);
+        }
+    }
+
     private static ScanResult Scan(byte[] pixels, int width, int height, BarcodeDecodeOptions? barcode = null) => SymbolScanner.Scan(
         ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32),
         new ScanOptions { Profile = ScanProfile.Robust, Formats = new[] { SymbolFormat.Code39 }, Barcode = barcode,
