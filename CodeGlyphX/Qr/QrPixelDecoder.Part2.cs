@@ -64,6 +64,8 @@ internal static partial class QrPixelDecoder {
                 return false;
             }
 
+            if (TryDecodeExactGrid(scale, baseImage, budget, accept, out result, out diagnostics)) return true;
+
             if (budget.Enabled && budget.BudgetMilliseconds <= 800) {
                 var tightSettings = new QrProfileSettings(
                     settings.MaxScale,

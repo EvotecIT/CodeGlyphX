@@ -42,6 +42,18 @@
       "Expected": [
         "1234567890"
       ]
+    },
+    {
+      "File": "zxing-exact-grid-18.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-5/18.png",
+      "Sha256": "3b63f527f1c4999b14d93d741b88699e5ab42922eaf4259c3e77d062249ddc97",
+      "ExpectedFile": "zxing-exact-grid-18.txt"
+    },
+    {
+      "File": "zxing-exact-grid-19.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-5/19.png",
+      "Sha256": "ed8890b9e31698774de78572738c1b91930887c802b2a8c32d18e49340a8975b",
+      "ExpectedFile": "zxing-exact-grid-19.txt"
     }
   ]
 }

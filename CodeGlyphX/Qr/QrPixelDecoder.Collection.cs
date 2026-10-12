@@ -8,6 +8,10 @@ namespace CodeGlyphX.Qr;
 internal static partial class QrPixelDecoder {
     private static void CollectAllFromImage(int scale, QrGrayImage baseImage, QrProfileSettings settings, QrCollectionSink sink, DecodeBudget budget, QrGrayImagePool? pool) {
         if (budget.IsExpired) return;
+        if (TryDecodeExactGrid(scale, baseImage, budget, sink.Accept, out var exactGrid, out _)) {
+            AddResult(sink.Results, sink.Seen, exactGrid, sink.Accept);
+        }
+        if (budget.IsExpired) return;
         var candidates = RentCandidateList();
         try {
             // Multi-result decoding must recognize every symbol that the single-result path can
