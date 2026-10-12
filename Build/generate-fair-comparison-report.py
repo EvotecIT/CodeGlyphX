@@ -53,9 +53,12 @@ def main():
         names += sorted(p.name for p in root.glob("pdf417-cache-cost-*-result.json"))
     if qualification.get("CodabarRunRecoveryProof") or qualification.get("HistoricalCodabarRunRecoveryProof"):
         names += sorted(p.name for p in root.glob("codabar-*.json"))
-    if qualification.get("QrExactGridRecoveryProof"):
+    if qualification.get("QrExactGridRecoveryProof") or qualification.get("HistoricalQrExactGridRecoveryProof"):
         names += ["qr-exact-grid-recovery-proof.json"]
-    if qualification.get("NegativeSearchCostProof"):
+    if qualification.get("Pdf417NegativeCompletionProof"):
+        names += ["pdf417-negative-completion-proof.json", "pdf417-codeword-cache-equivalence.json"]
+        names += sorted(p.name for p in root.glob("pdf-negative-cost-*-result.json"))
+    if qualification.get("NegativeSearchCostProof") or qualification.get("HistoricalNegativeSearchCostProof"):
         names.append("negative-search-cost-proof.json")
     if qualification.get("MaxiCodeImageProof"):
         names.append("maxicode-image-proof.json")
@@ -145,7 +148,7 @@ def main():
         if maxi["Source"] != qualification["MeasurementSource"] or maxi["CoreSha256"] != qualification["CandidateCoreSha256"]:
             raise ValueError("MaxiCode proof differs from the measured candidate")
         lines += ["", "## MaxiCode image recognition", "",
-                  f'The same six MaxiCode images now decode correctly ({maxi["Correct"]}/{maxi["Images"]}), versus {maxi["PreviousCorrect"]}/{maxi["Images"]} previously. Image bytes, format hints and payload oracles are unchanged.', "",
+                  (f'Both previous and current binaries decode the same six MaxiCode images correctly ({maxi["Correct"]}/{maxi["Images"]}).' if maxi["Correct"] == maxi["PreviousCorrect"] else f'The same six MaxiCode images decode correctly ({maxi["Correct"]}/{maxi["Images"]}), versus {maxi["PreviousCorrect"]}/{maxi["Images"]} previously.') + ' Image bytes, format hints and payload oracles are unchanged.', "",
                   "The scanner verifies circular finder bands, samples the staggered module grid and uses the existing primary and secondary error correction. It accepts planar rotation and inverted polarity, and can recover small damage to fixed orientation modules. The existing result carries secondary text and bytes, typed carrier metadata and the searched source region.", "",
                   maxi["TextContract"], "", maxi["Evidence"], "", maxi["Limits"], "",
                   "The [MaxiCode proof](evidence/maxicode-image-proof.json) records source hashes and search bounds. The capability catalog advertises one-symbol image scanning without geometry. Independent fixture tests do not establish coverage of every numeric MaxiCode mode; fixture filenames are not encoding-mode evidence."]
@@ -173,11 +176,27 @@ def main():
             old, now = row["PreviousMetrics"], row["CurrentMetrics"]
             lines.append(f'| {row["Domain"].upper()} | {row["PreviousMedianMs"]:.3f} | {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["PreviousMeanAllocatedBytes"]:,.0f} / {row["CurrentMeanAllocatedBytes"]:,.0f} | {old["CorrectImages"]:.3f} / {now["CorrectImages"]:.3f} | {old["InconclusiveImages"]:.3f} / {now["InconclusiveImages"]:.3f} |')
         lines += ["", cache["Limits"], "", "[Cache checks, counts and paired costs](evidence/pdf417-cache-cost-proof.json). Whole-image comparison results remain the practical measure of scanner cost and completion."]
-    exact = qualification.get("QrExactGridRecoveryProof")
+    completion = qualification.get("Pdf417NegativeCompletionProof")
+    if completion:
+        if (completion["Source"] != qualification["MeasurementSource"]
+                or completion["CoreSha256"] != qualification["CandidateCoreSha256"]
+                or completion["DecisionEquivalence"]["mismatches"] != 0):
+            raise ValueError("PDF417 negative-search proof differs from the measured candidate")
+        lines += ["", "## PDF417 negative-search completion", "", completion["Changes"], "",
+                  f'The cached and uncached fitters agree on {completion["DecisionEquivalence"]["checks"]:,} decisions, including failed fits, wide runs and cache capacity pressure. Four module-entrypoint controls preserve offset symbols and macro metadata in both row orders.', "",
+                  completion["CompletionNotes"], "", completion["CostScope"], "",
+                  "| Domain | Previous median ms | Current median ms | Current / previous | Previous managed bytes | Current managed bytes | Previous / current mean completed images |",
+                  "|---|---:|---:|---:|---:|---:|---:|"]
+        for row in completion["Cost"]:
+            lines.append(f'| {row["Domain"].upper()} | {row["BaselineMedianMs"]:.3f} | {row["CurrentMedianMs"]:.3f} | {row["LatencyRatio"]:.3f} | {row["BaselineAllocatedBytes"]:,.0f} | {row["CurrentAllocatedBytes"]:,.0f} | {row["PreviousCorrectRequests"]:.3f} / {row["CurrentCorrectRequests"]:.3f} |')
+        lines += ["", completion["Limits"], "", "[Completion proof](evidence/pdf417-negative-completion-proof.json) · [Fitter equivalence](evidence/pdf417-codeword-cache-equivalence.json)."]
+    exact = qualification.get("QrExactGridRecoveryProof") or qualification.get("HistoricalQrExactGridRecoveryProof")
+    historical_exact = exact is not None and not qualification.get("QrExactGridRecoveryProof")
     if exact:
-        if exact["Source"] != qualification["MeasurementSource"] or exact["CoreSha256"] != qualification["CandidateCoreSha256"]:
+        if not historical_exact and (exact["Source"] != qualification["MeasurementSource"] or exact["CoreSha256"] != qualification["CandidateCoreSha256"]):
             raise ValueError("QR exact-grid proof differs from the measured candidate")
-        lines += ["", "## Exact QR raster recovery", "",
+        notice = [f'The discovery and focused checks below belong to source `{exact["Source"]}`. The current corpus recheck preserves {qualification["QrExactGridRecheck"]["Correct"]}/2 correct payloads on the current core.', ""] if historical_exact else []
+        lines += ["", "## Historical exact QR raster recovery" if historical_exact else "## Exact QR raster recovery", "", *notice,
                   f'The two dense version-40 images decode correctly ({exact["Correct"]}/{len(exact["Images"])}), versus {exact["PreviousCorrect"]}/{len(exact["Images"])} previously. Both have one pixel per module. The single-image API and unrestricted unified scanner preserve their exact payloads.', "",
                   exact["Changes"][0], "",
                   f'Four independent image-entrypoint regression cases fail before the fix. {exact["FocusedCases"]} focused cases cover integer and anisotropic spacing, padding, rotations, inversion, cancellation, inherited deadlines, damaged codewords and acceptance filtering. Full modern suites rerun on the measured core.', "",

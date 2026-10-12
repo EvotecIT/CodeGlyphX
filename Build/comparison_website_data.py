@@ -248,12 +248,27 @@ def build_website_data(root):
                 "supplemental_before": sup["Previous"]["CorrectPositive"], "supplemental_correct": sup["Current"]["CorrectPositive"],
                 "unexpected": now["UnexpectedImages"], "supplemental_unexpected": sup["Current"]["UnexpectedImages"]})
     qr_exact_grid = {}
-    exact = qualification.get("QrExactGridRecoveryProof")
+    exact = qualification.get("QrExactGridRecoveryProof") or qualification.get("HistoricalQrExactGridRecoveryProof")
+    historical_exact = exact is not None and not qualification.get("QrExactGridRecoveryProof")
     if exact:
-        if exact["Source"] != qualification["MeasurementSource"] or exact["CoreSha256"] != qualification["CandidateCoreSha256"]:
+        if not historical_exact and (exact["Source"] != qualification["MeasurementSource"] or exact["CoreSha256"] != qualification["CandidateCoreSha256"]):
             raise ValueError("QR exact-grid proof differs from the qualified source")
-        qr_exact_grid = {"before": exact["PreviousCorrect"], "correct": exact["Correct"], "images": len(exact["Images"]),
+        qr_exact_grid = {"historical": historical_exact, "source": exact["Source"], "source_short": exact["Source"][:8],
+                         "rechecked": qualification.get("QrExactGridRecheck", {}).get("Correct", exact["Correct"]),
+                         "before": exact["PreviousCorrect"], "correct": exact["Correct"], "images": len(exact["Images"]),
                          "focused_cases": exact["FocusedCases"], "limits": exact["Limits"], "legacy_scope": exact["LegacyScope"]}
+    pdf417_negative_completion = {}
+    completion = qualification.get("Pdf417NegativeCompletionProof")
+    if completion:
+        if (completion["Source"] != qualification["MeasurementSource"]
+                or completion["CoreSha256"] != qualification["CandidateCoreSha256"]
+                or completion["DecisionEquivalence"]["mismatches"] != 0):
+            raise ValueError("PDF417 negative-search proof differs from the qualified source")
+        pdf417_negative_completion = {"checks": f'{completion["DecisionEquivalence"]["checks"]:,}',
+            "changes": completion["Changes"], "notes": completion["CompletionNotes"], "scope": completion["CostScope"], "limits": completion["Limits"],
+            "cost": [{"domain": row["Domain"].upper(), "previous_ms": f'{row["BaselineMedianMs"]:.3f}', "current_ms": f'{row["CurrentMedianMs"]:.3f}',
+                      "ratio": f'{row["LatencyRatio"]:.3f}', "previous_mib": f'{row["BaselineAllocatedBytes"] / 1048576:.2f}', "current_mib": f'{row["CurrentAllocatedBytes"] / 1048576:.2f}',
+                      "previous_correct": f'{row["PreviousCorrectRequests"]:.3f}', "current_correct": f'{row["CurrentCorrectRequests"]:.3f}'} for row in completion["Cost"]]}
     negative_search_cost = {}
     negative_cost = qualification.get("NegativeSearchCostProof")
     if negative_cost:
@@ -290,7 +305,8 @@ def build_website_data(root):
             "pdf417_cost": pdf417_cost, "pdf417_cost_historical": historical_pdf417,
             "pdf417_cost_source": proof["Source"] if proof else "",
             "qr_alignment": qr_alignment, "datamatrix_deadline": datamatrix_deadline, "maxicode_image": maxicode_image,
-            "negative_search_cost": negative_search_cost, "pdf417_cache": pdf417_cache, "codabar_run_recovery": codabar_run_recovery, "qr_exact_grid": qr_exact_grid,
+            "negative_search_cost": negative_search_cost, "pdf417_negative_completion": pdf417_negative_completion,
+            "pdf417_cache": pdf417_cache, "codabar_run_recovery": codabar_run_recovery, "qr_exact_grid": qr_exact_grid,
             "paired_decode_notes": qualification.get("PairedDecodeCost", {}).get("FollowupNotes", []),
             "supplemental_pdf417_timing_changes": ", ".join(supplemental.get("TimingSensitiveGains", [])) if supplemental else ""}
 

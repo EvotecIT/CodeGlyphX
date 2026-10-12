@@ -1,0 +1,8 @@
+{
+  "checks": 140332,
+  "mismatches": 0,
+  "retainedEntries": 16384,
+  "Cases": "All 2787 codeword patterns, six pitches including byte boundary and wide bypass, three modes, cold/hot; 20000 random fits after capacity pressure",
+  "Source": "84e37687c8fc9e46bd34047c72e56a8262db13e4",
+  "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E"
+}
