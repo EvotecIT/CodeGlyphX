@@ -61,14 +61,44 @@ public sealed class RetailRowCoverageTests {
         Assert.Empty(Scan(pixels, width, height).Symbols);
     }
 
-    private static byte[] RenderRows(int[] rows, bool invalidChecksum, out int width, out int height) {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void Decode_CompactImage_NeighborSamplingDoesNotConsumeLaterAnchor(bool vertical) {
+        var invalid = RenderRows(new[] { 37, 40 }, true, out var width, out _, 50);
+        var pixels = RenderRows(new[] { 41, 42 }, false, out _, out var height, 50);
+        foreach (var y in new[] { 37, 40 })
+            Buffer.BlockCopy(invalid, y * width * 4, pixels, y * width * 4, width * 4);
+        if (vertical) {
+            var rotated = new byte[pixels.Length];
+            for (var y = 0; y < height; y++) for (var x = 0; x < width; x++)
+                Buffer.BlockCopy(pixels, (y * width + x) * 4, rotated, (x * height + height - 1 - y) * 4, 4);
+            pixels = rotated; (width, height) = (height, width);
+        }
+        const string expected = "9780441014989";
+        Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, width * 4, PixelFormat.Rgba32, BarcodeType.EAN, out var typed));
+        Assert.Equal(expected, typed.Text);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32, out var all, BarcodeType.EAN));
+        Assert.Equal(expected, Assert.Single(all).Text);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels, width, height, width * 4, PixelFormat.Rgba32, out var untyped));
+        Assert.Contains(untyped, hit => hit.Type == BarcodeType.EAN && hit.Text == expected);
+        Assert.Equal(expected, Assert.Single(Scan(pixels, width, height).Symbols).Text);
+#if NET8_0_OR_GREATER
+        Assert.True(BarcodeDecoder.TryDecode(pixels.AsSpan(), width, height, width * 4, PixelFormat.Rgba32, BarcodeType.EAN, out var span));
+        Assert.Equal(expected, span.Text);
+        Assert.True(BarcodeDecoder.TryDecodeAll(pixels.AsSpan(), width, height, width * 4, PixelFormat.Rgba32, out var spanAll, BarcodeType.EAN));
+        Assert.Equal(expected, Assert.Single(spanAll).Text);
+#endif
+    }
+
+    private static byte[] RenderRows(int[] rows, bool invalidChecksum, out int width, out int height, int imageHeight = 240) {
         var modules = BarcodeEncoder.Encode(BarcodeType.EAN, "9780441014989").Segments
             .SelectMany(segment => Enumerable.Repeat(segment.IsBar, segment.Modules)).ToArray();
         if (invalidChecksum) {
             const string wrongFinalDigit = "1110010";
             for (var i = 0; i < 7; i++) modules[85 + i] = wrongFinalDigit[i] == '1';
         }
-        width = (modules.Length + 24) * 2; height = 240;
+        width = (modules.Length + 24) * 2; height = imageHeight;
         var pixels = Enumerable.Repeat((byte)255, width * height * 4).ToArray();
         foreach (var y in rows) for (var module = 0; module < modules.Length; module++) {
             if (!modules[module]) continue;
