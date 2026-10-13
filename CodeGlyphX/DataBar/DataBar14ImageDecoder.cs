@@ -89,10 +89,11 @@ internal static class DataBar14ImageDecoder {
 
     private static void Collect(ReadOnlySpan<byte> line, int threshold, int position, int step, List<Row>[] rows, CancellationToken token) {
         var runs = new List<int> { 0 };
+        var budget = DecodeBudget.Capture();
         var first = line[0] < threshold;
         var current = first; var count = 1;
         for (var i = 1; i < line.Length; i++) {
-            if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return;
+            if ((i & 255) == 0 && budget.ShouldAbort(token)) return;
             var dark = line[i] < threshold;
             if (dark == current) count++;
             else { runs.Add(count); current = dark; count = 1; }
@@ -109,7 +110,7 @@ internal static class DataBar14ImageDecoder {
             var offsets = new int[runs.Count + 1];
             for (var i = 0; i < runs.Count; i++) offsets[i + 1] = offsets[i] + runs[i];
             for (var start = 0; start + 25 <= runs.Count; start++) {
-                if ((start & 31) == 0 && DecodeBudget.ShouldAbort(token)) return;
+                if ((start & 31) == 0 && budget.ShouldAbort(token)) return;
                 for (var bottom = 0; bottom < 2; bottom++) {
                     if (!FitFinder(runs, start + 10, bottom != 0, out var finder, out var pitch)) continue;
                     var firstPitch = CharacterPitch(runs, start + 2, bottom == 0 ? 16 : 15);

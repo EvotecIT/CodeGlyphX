@@ -64,11 +64,12 @@ internal static partial class BarcodeScanline {
         List<ExpandedRowObservation>[] observations, CancellationToken token) {
         // Empty edge runs preserve a light guard clipped at the image boundary.
         var runs = new List<int> { 0 };
+        var budget = DecodeBudget.Capture();
         var first = luminance[0] < threshold;
         var current = first;
         var count = 1;
         for (var i = 1; i < luminance.Length; i++) {
-            if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return;
+            if ((i & 255) == 0 && budget.ShouldAbort(token)) return;
             var bar = luminance[i] < threshold;
             if (bar == current) count++;
             else { runs.Add(count); current = bar; count = 1; }
@@ -78,19 +79,19 @@ internal static partial class BarcodeScanline {
         for (var i = 0; i < runs.Count; i++) offsets[i + 1] = offsets[i] + runs[i];
         var starts = new List<int>();
         foreach (var group in ExpandedStackedPatterns.FinderGroups) {
-            if (DecodeBudget.ShouldAbort(token)) return;
+            if (budget.ShouldAbort(token)) return;
             starts.Clear();
             for (var start = 0; start + group.MinimumWidth <= runs.Count; start++) {
-                if ((start & 63) == 0 && DecodeBudget.ShouldAbort(token)) return;
+                if ((start & 63) == 0 && budget.ShouldAbort(token)) return;
                 if (ExpandedFinderMatches(runs, start + 10, group.Finder)) starts.Add(start);
             }
             // Each pattern still observes starts in their original order. Shared
             // finder shapes are fitted once before the character/guard checks.
             foreach (var patternIndex in group.PatternIndices) {
-                if (DecodeBudget.ShouldAbort(token)) return;
+                if (budget.ShouldAbort(token)) return;
                 var pattern = ExpandedStackedPatterns.Patterns[patternIndex];
                 for (var startIndex = 0; startIndex < starts.Count; startIndex++) {
-                    if ((startIndex & 63) == 0 && DecodeBudget.ShouldAbort(token)) return;
+                    if ((startIndex & 63) == 0 && budget.ShouldAbort(token)) return;
                     var start = starts[startIndex];
                     if (start + pattern.Widths.Length > runs.Count) break;
                     var firstIsBar = !first == ((start & 1) == 0);

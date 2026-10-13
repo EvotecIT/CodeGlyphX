@@ -22,13 +22,14 @@ public static partial class Pdf417Decoder {
         decoded = null!;
         hasStartPattern = false;
         if (width <= 0 || height <= 0 || stride <= 0) return false;
+        var budget = DecodeBudget.Capture();
         // Each orientation revisits the same pixels. Threshold once, including
         // alpha, so slope retries do not repeat RGBA conversion per sample.
         var darkPixels = new bool[checked(width * height)];
         for (var y = 0; y < height; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (budget.ShouldAbort(cancellationToken)) return false;
             for (var x = 0; x < width; x++) {
-                if ((x & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                if ((x & 255) == 0 && budget.ShouldAbort(cancellationToken)) return false;
                 darkPixels[y * width + x] = IsDarkAt(pixels, y * stride, x, format, threshold);
             }
         }
@@ -38,23 +39,23 @@ public static partial class Pdf417Decoder {
         // Preserve the ordinary reader's decisions. A print-gain retry requires
         // repeated, consistent row indicators and shares the caller's deadline.
         if (hasStartPattern) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (budget.ShouldAbort(cancellationToken)) return false;
             if (TryReadPixelRows(width, height, runCache, cancellationToken, true, false, out decoded, out _)) return true;
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (budget.ShouldAbort(cancellationToken)) return false;
             // New angles and payload-only rows must not replace an established
             // decode. Preserve both original passes before the shallow-skew retry,
             // sharing their thresholded pixels, cached runs and remaining budget.
             if (TryReadPixelRows(width, height, runCache, cancellationToken, false, true, out decoded, out _)) return true;
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if (budget.ShouldAbort(cancellationToken)) return false;
             if (TryReadPixelRows(width, height, runCache, cancellationToken, true, true, out decoded, out _)) return true;
         }
-        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        if (budget.ShouldAbort(cancellationToken)) return false;
         if (TryReadDamagedFrameRows(width, height, runCache, framingCandidates, cancellationToken, out decoded)) return true;
-        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        if (budget.ShouldAbort(cancellationToken)) return false;
         // A crop can remove the left framing while leaving independently
         // validated right indicators. Preserve ordinary row-reader priority.
         if (TryReadRightFramedRows(width, height, runCache, cancellationToken, false, out decoded, out var hasRight)) return true;
-        if (!hasRight || DecodeBudget.ShouldAbort(cancellationToken)) return false;
+        if (!hasRight || budget.ShouldAbort(cancellationToken)) return false;
         return TryReadRightFramedRows(width, height, runCache, cancellationToken, true, out decoded, out _);
     }
 
@@ -63,6 +64,7 @@ public static partial class Pdf417Decoder {
         List<PixelFramingCandidate>? framingCandidates = null) {
         decoded = null!;
         hasStartPattern = false;
+        var budget = DecodeBudget.Capture();
         for (var axis = 0; axis < 2; axis++) {
             var across = axis == 0 ? width : height;
             var down = axis == 0 ? height : width;
@@ -119,7 +121,7 @@ public static partial class Pdf417Decoder {
                                 // A data character has eight runs. Its last space
                                 // can reach a cropped image edge without a ninth run.
                                 for (; words.Count <= 31 && at + 8 <= runs.Count; at += 8) {
-                                    if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                                    if (budget.ShouldAbort(cancellationToken)) return false;
                                     if (MatchPixelRuns(runs, at, PixelStopRuns, 18)) break;
                                     if (!runCache.Codewords.Read(runs, at, cluster, out var word, correctPrintGain: correctPrintGain)) break;
                                     words.Add(word);
@@ -223,7 +225,7 @@ public static partial class Pdf417Decoder {
                         }
                     }
                     foreach (var recovery in recoveries) {
-                        if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                        if (budget.ShouldAbort(cancellationToken)) return false;
                         if (TryDecodePixelAssembly(recovery.Rows, recovery.Columns, recovery.Count, recovery.EcLevel,
                             true, cancellationToken, out decoded)) return true;
                     }

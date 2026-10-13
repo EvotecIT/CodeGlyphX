@@ -49,9 +49,14 @@ internal static partial class AztecPixelDecoder {
         // A large physical module must not multiply candidate count quadratically
         // by its pixel area. Nine offsets per axis cover the half-module interval.
         var shiftStep = Math.Max(1, (maxShift + 3) / 4);
+        var budget = DecodeBudget.Capture();
+        var candidates = 0;
         for (var dy = -maxShift; dy <= maxShift; dy += shiftStep) {
             for (var dx = -maxShift; dx <= maxShift; dx += shiftStep) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
+                // A rejected central-ring probe reads at most 33 groups of nine pixels.
+                // Cancellation stays live per offset; accepted views keep their own checks.
+                if (cancellationToken.IsCancellationRequested ||
+                    (candidates++ & 31) == 0 && budget.IsExpired) { value = string.Empty; return false; }
                 if (!TrySampleModules(image, invert, size, moduleSize, offsetX + dx, offsetY + dy, cancellationToken, out var modules, probes)) {
                     continue;
                 }
