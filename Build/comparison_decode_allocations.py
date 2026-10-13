@@ -4,23 +4,42 @@ from comparison_packet_identity import validate_paired_packet
 
 
 def project_decode_allocations(root, qualification):
-    proof = qualification.get('DecodeAllocationProof')
+    proof = qualification.get('DecodeAllocationProof') or qualification.get('HistoricalDecodeAllocationProof')
     if not proof:
         return None
-    if (proof['Source'] != qualification['MeasurementSource']
-            or proof['CoreSha256'] != qualification['CandidateCoreSha256']
-            or proof['PreviousSource'] != qualification['NegativeRotationSources']['previous']['Source']
-            or proof['PreviousCoreSha256'] != qualification['NegativeRotationSources']['previous']['CoreSha256']
+    historical = 'DecodeAllocationProof' not in qualification
+    owner = qualification
+    if historical:
+        owner = json.loads((root / 'previous-qualification.json').read_text(encoding='utf-8-sig'))
+        previous = qualification['NegativeRotationSources']['previous']
+        if (proof != owner.get('DecodeAllocationProof')
+                or qualification['PreviousMeasurementSource'] != proof['Source']
+                or previous['Source'] != proof['Source'] or previous['CoreSha256'] != proof['CoreSha256']):
+            raise ValueError('Historical allocation proof differs from its qualified owner')
+    if (proof['Source'] != owner['MeasurementSource']
+            or proof['CoreSha256'] != owner['CandidateCoreSha256']
+            or proof['PreviousSource'] != owner['NegativeRotationSources']['previous']['Source']
+            or proof['PreviousCoreSha256'] != owner['NegativeRotationSources']['previous']['CoreSha256']
             or proof['RetainedScannerContracts'] != {'net10': 58, 'net8': 58, 'net472': 58}
             or proof['CallerOwnershipContracts'] != {'net10': 4, 'net8': 4, 'net472': 4}):
         raise ValueError('Allocation proof differs from the qualified core or regression contracts')
+    rows = project_retail_costs(root, proof, 'decode-allocation')
+    return {'historical': historical, 'source': proof['Source'], 'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'], 'costs': rows,
+        'contracts': ('On that core, all 58' if historical else 'All 58') + ' retained scanner-margin contracts and four caller-ownership tests pass on each supported test framework. Caller modules stay unchanged through padding, inversion, reversal and repeated decoding.',
+        'profile_scope': proof['ProfileScope']}
+
+
+def project_retail_costs(root, proof, prefix):
+    """Validate both fixed domains and project every measured outcome range."""
     if len(proof['RetailCosts']) != 4 or {(r['Kind'], r['Domain']) for r in proof['RetailCosts']} != {
             (kind, domain) for kind in ('positive', 'negative') for domain in ('ccd0', 'ccd1')}:
         raise ValueError('Incomplete allocation cost groups')
     rows = []
     for row in proof['RetailCosts']:
         kind, domain = row['Kind'], row['Domain']
-        packet = json.loads((root / f'decode-allocation-{kind}-{domain}-result.json').read_text(encoding='utf-8-sig'))
+        if row['Requests'] != (87 if kind == 'positive' else 9):
+            raise ValueError('Retail request count differs from the frozen batch')
+        packet = json.loads((root / f'{prefix}-{kind}-{domain}-result.json').read_text(encoding='utf-8-sig'))
         validate_paired_packet(packet, proof['Source'], proof['CoreSha256'], proof['PreviousCoreSha256'],
                               domain, row['Requests'], row['ManifestSha256'])
         lanes = {r['Engine']: r for r in packet['Summary']}
@@ -37,15 +56,13 @@ def project_decode_allocations(root, qualification):
             **{prefix + '_' + name: span(engine, metric)
                for prefix, engine in (('before','Baseline'), ('current','Candidate'))
                for name, metric in (('correct','CorrectImages'), ('inconclusive','InconclusiveImages'), ('unexpected','UnexpectedImages'))}})
-    return {'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'], 'costs': rows,
-        'contracts': 'All 58 retained scanner-margin contracts and four caller-ownership tests pass on each supported test framework. Caller modules stay unchanged through padding, inversion, reversal and repeated decoding.',
-        'profile_scope': proof['ProfileScope']}
-
+    return rows
 
 def append_decode_allocation_section(lines, proof):
     if not proof:
         return
-    lines += ['', '## Linear decoder allocations', '', proof['changes'], '', proof['contracts'], '', proof['scope'], '',
+    lines += ['', '## Historical linear decoder allocations' if proof['historical'] else '## Linear decoder allocations', '',
+        f'These allocation measurements and regression contracts belong to source {proof["source"]}; current decoding costs appear separately.' if proof['historical'] else '', '', proof['changes'], '', proof['contracts'], '', proof['scope'], '',
         '| Batch | Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Allocation reduction | Previous → current correct range | Previous → current inconclusive range | Previous → current unexpected range |',
         '| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |']
     for row in proof['costs']:
