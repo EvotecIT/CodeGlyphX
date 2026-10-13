@@ -66,7 +66,9 @@ internal static partial class DataBar14ImageDecoder {
         content = string.Empty; omni = false;
         if ((!allowStacked && !allowOmni) || width < 1 || height < 1 || DecodeBudget.ShouldAbort(token)) return false;
         var buffer = ArrayPool<byte>.Shared.Rent(Math.Max(width, height));
+        int[]? offsets = null;
         try {
+            var runs = new List<int>();
             for (var vertical = 0; vertical < 2; vertical++) {
                 var length = vertical == 0 ? width : height;
                 var across = vertical == 0 ? height : width;
@@ -86,17 +88,22 @@ internal static partial class DataBar14ImageDecoder {
                     if (max - min < 8) continue;
                     for (var cutoff = 1; cutoff <= 3; cutoff++) {
                         var threshold = min + (max - min) * cutoff / 4;
-                        Collect(buffer.AsSpan(0, length), threshold, position, step, rows, token);
+                        Collect(buffer.AsSpan(0, length), threshold, position, step, rows, token, runs, ref offsets);
                     }
                 }
                 if (Assemble(rgba, width, length, vertical != 0, rows, allowStacked, allowOmni, token, out content, out omni)) return true;
             }
             return false;
-        } finally { ArrayPool<byte>.Shared.Return(buffer); }
+        } finally {
+            if (offsets is not null) ArrayPool<int>.Shared.Return(offsets);
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
-    private static void Collect(ReadOnlySpan<byte> line, int threshold, int position, int step, List<Row>[] rows, CancellationToken token) {
-        var runs = new List<int> { 0 };
+    private static void Collect(ReadOnlySpan<byte> line, int threshold, int position, int step, List<Row>[] rows,
+        CancellationToken token, List<int> runs, ref int[]? offsets) {
+        // Sequential samples share only temporary runs and offsets. Each retained Row owns its widths.
+        runs.Clear(); runs.Add(0);
         var budget = DecodeBudget.Capture();
         var first = line[0] < threshold;
         var current = first; var count = 1;
@@ -108,6 +115,11 @@ internal static partial class DataBar14ImageDecoder {
         }
         runs.Add(count); runs.Add(0);
         if (runs.Count < 25) return;
+        if (offsets is null || offsets.Length < runs.Count + 1) {
+            var replacement = ArrayPool<int>.Shared.Rent(runs.Count + 1);
+            if (offsets is not null) ArrayPool<int>.Shared.Return(offsets);
+            offsets = replacement;
+        }
         // The extra empty edge runs retain guards that merge with the quiet zone.
         var firstRunDark = !first;
         for (var reverse = 0; reverse < 2; reverse++) {
@@ -115,7 +127,7 @@ internal static partial class DataBar14ImageDecoder {
                 firstRunDark = firstRunDark == ((runs.Count & 1) != 0);
                 runs.Reverse();
             }
-            var offsets = new int[runs.Count + 1];
+            offsets[0] = 0;
             for (var i = 0; i < runs.Count; i++) offsets[i + 1] = offsets[i] + runs[i];
             for (var start = 0; start + 25 <= runs.Count; start++) {
                 if ((start & 31) == 0 && budget.ShouldAbort(token)) return;
