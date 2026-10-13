@@ -11,7 +11,8 @@ namespace CodeGlyphX.Benchmarks;
 [MemoryDiagnoser]
 [RankColumn]
 public class QrCompareBenchmarks {
-    private readonly FairQrGeneration _generator = new("https://github.com/EvotecIT/CodeGlyphX", 4);
+    private const string Content = "https://github.com/EvotecIT/CodeGlyphX";
+    private readonly FairQrGeneration _generator = new(Content, 4);
 
     [GlobalSetup]
     public void Setup() {

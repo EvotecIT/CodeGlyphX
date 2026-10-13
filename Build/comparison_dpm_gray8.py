@@ -1,16 +1,17 @@
 """Project exact-core grayscale retry evidence and retain completion beside cost."""
 import json
 from comparison_packet_identity import project_paired_cost
+from comparison_qualification_history import resolve_proof_owner
 from comparison_decode_allocations import project_retail_costs
 
 
 def project_dpm_gray8(root, qualification):
-    proof = qualification.get('DpmGray8Proof')
+    proof, owner, historical = resolve_proof_owner(root, qualification, 'DpmGray8Proof')
     if not proof:
         return None
-    previous = qualification['NegativeRotationSources']['previous']
-    if (proof['Source'] != qualification['MeasurementSource']
-            or proof['CoreSha256'] != qualification['CandidateCoreSha256']
+    previous = owner['NegativeRotationSources']['previous']
+    if (proof['Source'] != owner['MeasurementSource']
+            or proof['CoreSha256'] != owner['CandidateCoreSha256']
             or proof['PreviousSource'] != previous['Source']
             or proof['PreviousCoreSha256'] != previous['CoreSha256']
             or proof['GrayPixelContracts'] != {'net10': 10, 'net8': 10, 'net472': 10}
@@ -32,15 +33,16 @@ def project_dpm_gray8(root, qualification):
             raise ValueError('Texture cost must use the single frozen negative image')
         packet = json.loads((root / f'dpm-gray8-texture-{domain}-result.json').read_text(encoding='utf-8-sig'))
         costs.append(project_paired_cost(packet, proof['Source'], proof['CoreSha256'], proof['PreviousCoreSha256'], domain, 1, row['ManifestSha256']))
-    return {'source': proof['Source'], 'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'],
-        'contracts': 'On each of .NET 10, .NET 8 and .NET Framework 4.7.2, ten raw-pixel cases cover padded Gray8 rows, rotations, mirroring, inversion, GS1 metadata, cancellation and malformed layouts. Three Gray8 perspective cases and six DPM scanner cases also pass. All 675 retries across 225 diagnostic cases preserve the preceding binary’s normalized pixels and order.',
+    return {'historical': historical, 'source': proof['Source'], 'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'],
+        'contracts': ('On that core, on each of' if historical else 'On each of') + ' .NET 10, .NET 8 and .NET Framework 4.7.2, ten raw-pixel cases cover padded Gray8 rows, rotations, mirroring, inversion, GS1 metadata, cancellation and malformed layouts. Three Gray8 perspective cases and six DPM scanner cases also pass. All 675 retries across 225 diagnostic cases preserve the preceding binary’s normalized pixels and order.',
         'costs': costs, 'controls': project_retail_costs(root, {**proof, 'RetailCosts': proof['RetailControlCosts']}, 'dpm-gray8-retail')}
 
 
 def append_dpm_gray8_section(lines, proof):
     if not proof:
         return
-    lines += ['', '## Data Matrix grayscale retries', '', proof['changes'], '', proof['contracts'], '', proof['scope'], '',
+    lines += ['', '## Historical Data Matrix grayscale retries' if proof['historical'] else '## Data Matrix grayscale retries', '',
+        f'These grayscale retry measurements belong to source {proof["source"]}; current costs appear separately.' if proof['historical'] else '', '', proof['changes'], '', proof['contracts'], '', proof['scope'], '',
         '| Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Allocation reduction | Previous → current completed negatives / 1 | Previous → current inconclusive range | Previous → current unexpected range |',
         '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |']
     for row in proof['costs']:

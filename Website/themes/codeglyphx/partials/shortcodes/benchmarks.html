@@ -65,9 +65,37 @@
             </table>
         </div>
     </section>
+    {{ if comparison.dpm_window_means }}
+    <section class="benchmark-section" aria-labelledby="dpm-window-means">
+        <h2 id="dpm-window-means">DPM local-window means</h2>
+        <p>{{ comparison.dpm_window_means.changes }}</p>
+        <p>{{ comparison.dpm_window_means.contracts }}</p>
+        <p>{{ comparison.dpm_window_means.scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="DPM window cost and negative completion" tabindex="0">
+            <table class="bench-table">
+                <caption>Frozen fabric and texture negatives · all measured samples retained</caption>
+                <thead><tr><th scope="col">Image</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Allocation reduction</th><th scope="col">Completed negatives / 1</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.dpm_window_means.costs }}<tr><th scope="row">{{ row.kind }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.allocation_reduction }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <details>
+            <summary>Retail controls for DPM window means</summary>
+            <div class="comparison-scroll" role="region" aria-label="Retail controls for DPM window means" tabindex="0">
+                <table class="bench-table">
+                    <caption>Original retail requests, hints and oracles</caption>
+                    <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                    <tbody>{{ for row in comparison.dpm_window_means.controls }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+                </table>
+            </div>
+        </details>
+        <p>{{ comparison.dpm_window_means.limits }}</p>
+        <p><a href="/comparisons/evidence/dpm-window-means-proof.json">Local-window proof</a> · <a href="/comparisons/evidence/dpm-window-means-mask-equivalence.json">Pixel equivalence</a> · <a href="/comparisons/evidence/dpm-window-means-fabric-ccd0-result.json">Fabric CCD0 samples</a> · <a href="/comparisons/evidence/dpm-window-means-fabric-ccd1-result.json">Fabric CCD1 samples</a> · <a href="/comparisons/evidence/dpm-window-means-texture-ccd0-result.json">Texture CCD0 samples</a> · <a href="/comparisons/evidence/dpm-window-means-texture-ccd1-result.json">Texture CCD1 samples</a></p>
+    </section>
+    {{ end }}
     {{ if comparison.dpm_gray8 }}
     <section class="benchmark-section" aria-labelledby="dpm-gray8">
-        <h2 id="dpm-gray8">Data Matrix grayscale retries</h2>
+        <h2 id="dpm-gray8">{{ if comparison.dpm_gray8.historical }}Historical Data Matrix grayscale retries{{ else }}Data Matrix grayscale retries{{ end }}</h2>
+        {{ if comparison.dpm_gray8.historical }}<p>These grayscale retry measurements belong to source <code class="comparison-source">{{ comparison.dpm_gray8.source }}</code>. Current decoding costs appear separately.</p>{{ end }}
         <p>{{ comparison.dpm_gray8.changes }}</p>
         <p>{{ comparison.dpm_gray8.contracts }}</p>
         <p>{{ comparison.dpm_gray8.scope }}</p>

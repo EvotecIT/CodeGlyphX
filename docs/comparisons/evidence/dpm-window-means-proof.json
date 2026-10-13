@@ -1,0 +1,392 @@
+{
+  "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+  "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+  "PreviousSource": "6fb1250566eae8ad74fb464354c47795175f28bd",
+  "PreviousCoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+  "Changes": "Direct-part-mark preprocessing stores clipped-window means as bytes and advances bounded column/window sums once per row. Dark and light retries share those means instead of retaining an image-sized Int64 summed-area table. Retry pixels, order, profiles, attempt limits and recognition allowances are unchanged; partial means are discarded on cancellation or deadline expiry.",
+  "Scope": "The unchanged fabric negative falsepositives/15.png and texture negative falsepositives/19.png each receive the same unrestricted scan and 1500 ms allowance. Exact preceding and tested binaries use three warmups and twelve rotated measurements per fixed cache domain. Every completed negative, inconclusive request, unexpected output, latency and managed allocation remains visible. The full nineteen-image workload and retail controls are measured separately.",
+  "Limits": "Lower managed allocation does not establish faster or reliably completed negative scans, lower CPU use, throughput or memory capacity. Managed allocation excludes native allocations. Shared-host contention can change completion under fixed deadlines. Slower medians and lost completions remain included. These finite workloads do not establish overall superiority.",
+  "WindowContracts": {
+    "net10": 9,
+    "net8": 9,
+    "net472": 9
+  },
+  "DpmContracts": {
+    "net10": 6,
+    "net8": 6,
+    "net472": 6
+  },
+  "Costs": [
+    {
+      "Kind": "fabric",
+      "Requests": 1,
+      "Domain": "ccd0",
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "BaselineMedianMs": 1247.5079,
+      "CurrentMedianMs": 1237.98885,
+      "LatencyRatio": 0.9923695473190991,
+      "BaselineAllocatedBytes": 64399644.0,
+      "CurrentAllocatedBytes": 62061575.333333336,
+      "PreviousCorrectImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousCorrectImagesMean": 0.0,
+      "PreviousInconclusiveImagesRange": [
+        1.0,
+        1.0
+      ],
+      "PreviousInconclusiveImagesMean": 1.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentCorrectImagesMean": 0.0,
+      "CurrentInconclusiveImagesRange": [
+        1.0,
+        1.0
+      ],
+      "CurrentInconclusiveImagesMean": 1.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "fabric",
+      "Requests": 1,
+      "Domain": "ccd1",
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "BaselineMedianMs": 1223.24375,
+      "CurrentMedianMs": 1222.70345,
+      "LatencyRatio": 0.9995583055298667,
+      "BaselineAllocatedBytes": 74205455.33333333,
+      "CurrentAllocatedBytes": 70685550.0,
+      "PreviousCorrectImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousCorrectImagesMean": 0.0,
+      "PreviousInconclusiveImagesRange": [
+        1.0,
+        1.0
+      ],
+      "PreviousInconclusiveImagesMean": 1.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentCorrectImagesMean": 0.0,
+      "CurrentInconclusiveImagesRange": [
+        1.0,
+        1.0
+      ],
+      "CurrentInconclusiveImagesMean": 1.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "texture",
+      "Requests": 1,
+      "Domain": "ccd0",
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "BaselineMedianMs": 1021.94245,
+      "CurrentMedianMs": 1058.46335,
+      "LatencyRatio": 1.0357367481896853,
+      "BaselineAllocatedBytes": 53650544.666666664,
+      "CurrentAllocatedBytes": 49132719.333333336,
+      "PreviousCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "PreviousCorrectImagesMean": 1.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "CurrentCorrectImagesMean": 1.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "texture",
+      "Requests": 1,
+      "Domain": "ccd1",
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "BaselineMedianMs": 979.7046,
+      "CurrentMedianMs": 961.04525,
+      "LatencyRatio": 0.980954105962144,
+      "BaselineAllocatedBytes": 53657599.333333336,
+      "CurrentAllocatedBytes": 49133655.333333336,
+      "PreviousCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "PreviousCorrectImagesMean": 1.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "CurrentCorrectImagesMean": 1.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "RetailControlCosts": [
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd0",
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "BaselineMedianMs": 1069.6613499999999,
+      "CurrentMedianMs": 1038.24825,
+      "LatencyRatio": 0.9706326679934731,
+      "BaselineAllocatedBytes": 95712159.33333333,
+      "CurrentAllocatedBytes": 95700728.66666667,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd1",
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "BaselineMedianMs": 956.5566,
+      "CurrentMedianMs": 947.29555,
+      "LatencyRatio": 0.9903183460340977,
+      "BaselineAllocatedBytes": 95695642.0,
+      "CurrentAllocatedBytes": 95681276.66666667,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd0",
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "BaselineMedianMs": 737.1907,
+      "CurrentMedianMs": 730.6437,
+      "LatencyRatio": 0.9911189872579781,
+      "BaselineAllocatedBytes": 34149334.666666664,
+      "CurrentAllocatedBytes": 34148360.0,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd1",
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "BaselineMedianMs": 630.60865,
+      "CurrentMedianMs": 627.982,
+      "LatencyRatio": 0.9958347383912352,
+      "BaselineAllocatedBytes": 34138566.666666664,
+      "CurrentAllocatedBytes": 34137801.333333336,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "Profiles": {
+    "before": {
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "AllocatedBytes": [
+        89729488,
+        101768240,
+        92937616
+      ],
+      "CompletedNegatives": [
+        0,
+        1,
+        0
+      ],
+      "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+    },
+    "after": {
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "AllocatedBytes": [
+        72815992,
+        86479720,
+        73214864
+      ],
+      "CompletedNegatives": [
+        0,
+        0,
+        0
+      ],
+      "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+    }
+  },
+  "MaskEquivalence": {
+    "Cases": 675,
+    "Variants": 2025,
+    "IdenticalNormalizedPixelHashesAndOrder": true,
+    "PreCancelledAndLaterCancelledStopped": true,
+    "BaselineCoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+    "CandidateCoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+    "BaselineVariantBytes": 4701645,
+    "CandidateVariantBytes": 4701645,
+    "Scope": "Exact retry output equivalence; retained array lengths do not measure total allocation or latency."
+  }
+}
