@@ -25,6 +25,8 @@ New-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {
         # The runner does not validate successful warmups. Capture the preceding
         # priming call here, before the next timed operation, including misses.
         if($run.Session.HasDecodedResult -and $lastIterations.ContainsKey($case.Engine) -and $lastIterations[$case.Engine] -lt 0){
+            $warmupOutput=Join-Path (Join-Path $run.OutputRoot $run.RunId) 'warmup-outcomes'
+            [IO.Directory]::CreateDirectory($warmupOutput) | Out-Null
             $path=Join-Path $warmupOutput ("{0}-{1}.json" -f $case.Engine,$lastIterations[$case.Engine])
             [IO.File]::WriteAllText($path,(ConvertTo-Json -InputObject @($run.Session.Evaluate()) -Depth 20))
         }

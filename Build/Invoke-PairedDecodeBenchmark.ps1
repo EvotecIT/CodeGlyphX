@@ -29,8 +29,6 @@ try {
     $source=(git rev-parse HEAD).Trim()
     if($LASTEXITCODE -ne 0 -or (git status --porcelain)){throw 'Use a clean source snapshot for paired measurements.'}
     if($ExpectedSource -and $source -ne $ExpectedSource){throw 'Source differs from the expected snapshot.'}
-    $warmupOutput=Join-Path $output 'warmup-outcomes'
-    New-Item -ItemType Directory -Path $warmupOutput -Force | Out-Null
     $sessions.Baseline=[CodeGlyphX.Benchmarks.Tools.IsolatedCorpusSession]::new($baselinePath,$manifestPath,$imagePath)
     $sessions.Candidate=[CodeGlyphX.Benchmarks.Tools.IsolatedCorpusSession]::new($candidatePath,$manifestPath,$imagePath)
     $variables=@{OutputRoot=$output;ManifestPath=$manifestPath;Iterations="$Iterations";Warmup="$Warmup";Source=$source}
