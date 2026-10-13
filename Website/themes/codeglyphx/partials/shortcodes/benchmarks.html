@@ -65,6 +65,8 @@
             </table>
         </div>
     </section>
+    {{ session_costs = comparison.databar_module_runs }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
     {{ session_costs = comparison.component_coordinates }}
     {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
     {{ session_costs = comparison.databar_recovery_buffers }}

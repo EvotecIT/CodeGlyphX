@@ -4,6 +4,8 @@ CodeGlyphX's current comparison uses matched QR generation settings and an indep
 
 The [current results and complete evidence](comparisons/results.md) compare the repaired source with the original source and the previous decoding pass. They report every miss, completed negative scan, inconclusive search and timing sample across both cache domains. Recognition, latency and managed allocation are separate results. These are shared-host measurements with all outliers retained.
 
+DataBar Limited and Expanded extract exact module runs into bounded stack buffers. Expanded restores trimmed light guards from those widths and avoids rebuilding module arrays for each retry. Checksums, supported character counts, stacked assembly and public decoding outcomes stay unchanged. The current comparison reruns the full corpus and complete image scans; earlier component-only timings retain their original binary identity.
+
 Component searches reuse an exact integer reciprocal for image row coordinates. The shared Data Matrix/Aztec visitor and QR traversal preserve their queues, pixel order, component bounds and cancellation checks. Component-only timing uses identical prepared grayscale inputs and stays separate from complete public scans, where every deadline miss and slower pass remains visible.
 
 DataBar photo recovery reuses its temporary run list and offset workspace within each call. Accepted results keep their own module arrays, and the decoder initializes each active pooled offset prefix before reading it. Dirty-pool checks preserve complete candidates across rotation, inversion and padded pixel rows. The report separates allocation reduction from elapsed time and retains every incomplete search and recognition loss.

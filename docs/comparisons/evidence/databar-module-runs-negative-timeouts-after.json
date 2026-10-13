@@ -1,0 +1,654 @@
+{
+  "CoreSha256": "0C204227B51A43765CEACB2F58B42E4D5B7F3557CC5350EC0E76855DAC87E7E4",
+  "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence.",
+  "Rows": [
+    {
+      "Id": "falsepositives/19.png",
+      "Iteration": -1,
+      "AllocatedBytes": 54824416,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/19.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Iteration": -1,
+      "AllocatedBytes": 50539680,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Iteration": -1,
+      "AllocatedBytes": 38756848,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/03.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Iteration": -1,
+      "AllocatedBytes": 46186640,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/21.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Iteration": -1,
+      "AllocatedBytes": 57917952,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/14.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Iteration": -1,
+      "AllocatedBytes": 37620032,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/07.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Iteration": -1,
+      "AllocatedBytes": 42187192,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/06.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Iteration": -1,
+      "AllocatedBytes": 54975728,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/03.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Iteration": -1,
+      "AllocatedBytes": 26156376,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/01.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Iteration": 0,
+      "AllocatedBytes": 26041680,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/01.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Iteration": 0,
+      "AllocatedBytes": 55309504,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/03.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Iteration": 0,
+      "AllocatedBytes": 42038784,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/06.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Iteration": 0,
+      "AllocatedBytes": 37581312,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/07.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Iteration": 0,
+      "AllocatedBytes": 56646584,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/14.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Iteration": 0,
+      "AllocatedBytes": 38308856,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/21.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Iteration": 0,
+      "AllocatedBytes": 41722864,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/03.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Iteration": 0,
+      "AllocatedBytes": 55718768,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Iteration": 0,
+      "AllocatedBytes": 34509400,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/19.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Iteration": 1,
+      "AllocatedBytes": 37199840,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/19.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Iteration": 1,
+      "AllocatedBytes": 64007072,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Iteration": 1,
+      "AllocatedBytes": 41635224,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/03.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Iteration": 1,
+      "AllocatedBytes": 39832120,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/21.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Iteration": 1,
+      "AllocatedBytes": 56645424,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/14.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Iteration": 1,
+      "AllocatedBytes": 37884992,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/07.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Iteration": 1,
+      "AllocatedBytes": 43683616,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/06.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Iteration": 1,
+      "AllocatedBytes": 54701672,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/03.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Iteration": 1,
+      "AllocatedBytes": 26173960,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/01.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Iteration": 2,
+      "AllocatedBytes": 25414032,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/01.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Iteration": 2,
+      "AllocatedBytes": 54717000,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/03.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Iteration": 2,
+      "AllocatedBytes": 42305152,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/06.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Iteration": 2,
+      "AllocatedBytes": 39266312,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/07.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Iteration": 2,
+      "AllocatedBytes": 56646656,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/14.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Iteration": 2,
+      "AllocatedBytes": 38586712,
+      "Outcomes": [
+        {
+          "Id": "falsepositives-2/21.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Iteration": 2,
+      "AllocatedBytes": 41926432,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/03.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Iteration": 2,
+      "AllocatedBytes": 62358168,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Iteration": 2,
+      "AllocatedBytes": 37166680,
+      "Outcomes": [
+        {
+          "Id": "falsepositives/19.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    }
+  ]
+}
