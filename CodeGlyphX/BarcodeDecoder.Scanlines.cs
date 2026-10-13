@@ -117,6 +117,18 @@ public static partial class BarcodeDecoder {
     private static bool ShouldTryRetailRecovery(BarcodeType? expectedType) =>
         !expectedType.HasValue || IsRetailBarcodeType(expectedType);
 
+    private static bool ShouldTryDataBarRecovery(BarcodeType? expectedType) =>
+        !expectedType.HasValue || expectedType == BarcodeType.GS1DataBarOmni || expectedType == BarcodeType.GS1DataBarTruncated;
+
+    private static int PixelPassCount(BarcodeType? expectedType) =>
+        1 + (ShouldTryRetailRecovery(expectedType) ? 1 : 0) + (ShouldTryDataBarRecovery(expectedType) ? 1 : 0);
+
+    private static bool IsRetailRecoveryPass(BarcodeType? expectedType, int pass) =>
+        pass == 1 && ShouldTryRetailRecovery(expectedType);
+
+    private static bool IsDataBarRecoveryPass(BarcodeType? expectedType, int pass) =>
+        pass > 0 && pass == PixelPassCount(expectedType) - 1 && ShouldTryDataBarRecovery(expectedType);
+
     private static bool IsCompleteLocalRetailPayload(BarcodeDecoded decoded, int moduleCount) {
         // A local run candidate already has the complete guards for one base
         // symbol. Do not reinterpret a prefix as a shorter format or supplement:

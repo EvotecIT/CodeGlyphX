@@ -7,13 +7,21 @@ using CodeGlyphX.Internal;
 namespace CodeGlyphX.DataBar;
 
 /// <summary>Locates DataBar-14 data rows; payload and separator definitions stay with their module owners.</summary>
-internal static class DataBar14ImageDecoder {
+internal static partial class DataBar14ImageDecoder {
     /// <summary>Fits a complete unstacked row using both finders and four independently scaled characters.</summary>
     internal static bool TryNormalizeUnstackedRow(List<int> runs, int start, out int[] widths, out double fit) {
+        return TryNormalizeUnstackedRow(runs, start, out widths, out fit, out _, repairCharacter: false);
+    }
+
+    /// <summary>Reports finder evidence even when a constrained character fit fails.</summary>
+    internal static bool TryNormalizeUnstackedRow(List<int> runs, int start, out int[] widths, out double fit,
+        out bool hasFinders, bool repairCharacter) {
+        hasFinders = false;
         widths = Array.Empty<int>(); fit = 0;
         if (start < 0 || start + 46 > runs.Count ||
             !FitFinder(runs, start + 10, false, out var left, out var leftPitch) ||
             !FitFinder(runs, start + 31, true, out var right, out var rightPitch)) return false;
+        hasFinders = true;
         // Edge guards follow their adjacent character's measured pitch. Only
         // the leading light guard can merge with quiet space; enclosed gaps
         // and dark guards still require one module within the existing residual.
@@ -26,10 +34,10 @@ internal static class DataBar14ImageDecoder {
         normalized[0] = normalized[1] = normalized[44] = normalized[45] = 1;
         Array.Copy(left, 0, normalized, 10, 5);
         Array.Copy(right, 0, normalized, 31, 5);
-        if (!FitCharacter(runs, start + 2, 16, leftPitch, normalized, 2) ||
-            !FitCharacter(runs, start + 15, 15, leftPitch, normalized, 15) ||
-            !FitCharacter(runs, start + 23, 15, rightPitch, normalized, 23) ||
-            !FitCharacter(runs, start + 36, 16, rightPitch, normalized, 36)) return false;
+        if (!FitCharacter(runs, start + 2, 16, leftPitch, normalized, 2, repairCharacter: repairCharacter) ||
+            !FitCharacter(runs, start + 15, 15, leftPitch, normalized, 15, reverse: true, repairCharacter: repairCharacter) ||
+            !FitCharacter(runs, start + 23, 15, rightPitch, normalized, 23, repairCharacter: repairCharacter) ||
+            !FitCharacter(runs, start + 36, 16, rightPitch, normalized, 36, reverse: true, repairCharacter: repairCharacter)) return false;
         widths = normalized;
         for (var i = 0; i < 46; i++) {
             if (i == 0) continue;
@@ -176,7 +184,8 @@ internal static class DataBar14ImageDecoder {
         return total / (double)modules;
     }
 
-    private static bool FitCharacter(List<int> runs, int start, int modules, double finderPitch, int[] widths, int offset) {
+    private static bool FitCharacter(List<int> runs, int start, int modules, double finderPitch, int[] widths, int offset,
+        bool reverse = false, bool repairCharacter = false) {
         var pitch = CharacterPitch(runs, start, modules);
         if (pitch < finderPitch * 0.7 || pitch > finderPitch * 1.3) return false;
         var sum = 0;
@@ -195,7 +204,7 @@ internal static class DataBar14ImageDecoder {
             widths[offset + best] += adjust; sum += adjust;
         }
         for (var i = 0; i < 8; i++) if (Math.Abs(widths[offset + i] - runs[start + i] / pitch) > 0.8) return false;
-        return true;
+        return !repairCharacter || ValidateOrRepairCharacter(runs, start, pitch, widths.AsSpan(offset, 8), modules == 16, reverse);
     }
 
     private static bool EqualWidths(int[] left, int[] right) {

@@ -90,8 +90,8 @@ internal static partial class BarcodeScanline {
         return TryGetModuleCandidates(pixels, width, height, stride, format, CancellationToken.None, out candidates);
     }
 
-    public static bool TryGetModuleCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BarcodeScanlineCandidate[] candidates, bool retailRecovery = false, bool retailHint = false) {
-        return TryGetLocatedModuleCandidates(pixels, width, height, stride, format, cancellationToken, out candidates, retailRecovery, retailHint);
+    public static bool TryGetModuleCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BarcodeScanlineCandidate[] candidates, bool retailRecovery = false, bool retailHint = false, bool dataBarRecovery = false) {
+        return TryGetLocatedModuleCandidates(pixels, width, height, stride, format, cancellationToken, out candidates, retailRecovery, retailHint, dataBarRecovery);
     }
 
     internal static bool TryGetLocatedModuleCandidates(
@@ -103,7 +103,8 @@ internal static partial class BarcodeScanline {
         CancellationToken cancellationToken,
         out BarcodeScanlineCandidate[] candidates,
         bool retailRecovery = false,
-        bool retailHint = false) {
+        bool retailHint = false,
+        bool dataBarRecovery = false) {
         candidates = Array.Empty<BarcodeScanlineCandidate>();
 #if !NET8_0_OR_GREATER
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
@@ -113,7 +114,9 @@ internal static partial class BarcodeScanline {
         if (width <= 0 || height <= 0 || stride < width * 4 || DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
         var list = new List<BarcodeScanlineCandidate>(8);
-        if (retailRecovery) {
+        if (dataBarRecovery) {
+            CollectDataBarRecoveryRows(pixels, width, height, stride, format, cancellationToken, list);
+        } else if (retailRecovery) {
             CollectRetailRecoveryRows(pixels, width, height, stride, format, cancellationToken, list);
         } else {
             TryCollectCandidatesFromHorizontal(pixels, width, height, stride, format, height / 2, cancellationToken, list, includeOtherFormats: !retailHint);

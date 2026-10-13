@@ -7,6 +7,7 @@ Frozen upstream revision: `33dfdefcb35576612841e614d44ba9edc9aee2b5`.
 
 | Fixture | Upstream image | SHA-256 |
 | --- | --- | --- |
+| zxing-databar14-character-recovery.png | [rss14-2/11.png](https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/11.png) | `0436cd131a7cacfe5a51fa69b714c5015a5b6a8697bbc7152ec93977e4a5aab3` |
 | zxing-code93-diagram.png | [code93-1/2.png](https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code93-1/2.png) | `f1cc65906b0b0cb922c56e045584d5e0e0270817b67602c0b8ff2d2938bbc351` |
 | zxing-code128-photo.png | [code128-2/02.png](https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/02.png) | `df86b0ab5f5e8be6da6b3b6e9986cbfdf7f0f77326de260549964f99debe93c2` |
 | zxing-code39-photo.png | [code39-1/2.png](https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code39-1/2.png) | `da37008b78f688f9583942676f3727407e46a7030ea04cc651fda49510d2d9af` |
