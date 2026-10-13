@@ -11,7 +11,7 @@ internal static partial class QrPixelDecoder {
     /// strokes and fragmented foreground.
     /// </summary>
     private static PooledList<Component> FindComponents(QrGrayImage image, bool invert,
-        Func<bool>? shouldStop, int minAreaDivisor, int minComponentSize) {
+        DecodeBudget budget, int minAreaDivisor, int minComponentSize) {
         var width = image.Width;
         var height = image.Height;
         var components = new PooledList<Component>(8);
@@ -27,7 +27,7 @@ internal static partial class QrPixelDecoder {
             // Every byte is written before traversal. Zero marks background or
             // consumed pixels; one is unqueued foreground and two is queued.
             for (var y = 0; y < height; y++) {
-                if (shouldStop?.Invoke() == true) return components;
+                if (budget.IsExpired) return components;
                 var end = (y + 1) * width;
                 if (image.ThresholdMap is null) {
                     for (var at = y * width; at < end; at++)
@@ -40,7 +40,7 @@ internal static partial class QrPixelDecoder {
             var useRuns = HasBroadComponentRuns(foreground, width, height);
             var runCount = 0;
             for (var y = 0; y < height; y++) {
-                if (shouldStop?.Invoke() == true) return components;
+                if (budget.IsExpired) return components;
                 var row = y * width;
                 for (var x = 0; x < width; x++) {
                     var first = row + x;
@@ -69,7 +69,7 @@ internal static partial class QrPixelDecoder {
                     foreground[first] = 2;
                     stack[count++] = first;
                     while (count > 0) {
-                        if ((runCount++ & 63) == 0 && shouldStop?.Invoke() == true) return components;
+                        if ((runCount++ & 63) == 0 && budget.IsExpired) return components;
                         var seed = stack[--count];
                         if (foreground[seed] == 0) continue;
                         var cy = seed / width;

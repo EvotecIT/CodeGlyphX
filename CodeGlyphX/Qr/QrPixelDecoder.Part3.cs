@@ -37,7 +37,7 @@ internal static partial class QrPixelDecoder {
         DecodeBudget budget,
         QrGrayImagePool? pool) {
         if (budget.IsExpired) return;
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
+        Func<bool>? shouldStop = budget.CanAbort ? () => budget.IsNearDeadline(120) : null;
         if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale, settings.MinContrast, shouldStop, pool, out var image)) {
             return;
         }
@@ -101,7 +101,7 @@ internal static partial class QrPixelDecoder {
         bool aggressive,
         bool stylized) {
         if (budget.IsExpired) return;
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
+        Func<bool>? shouldStop = budget.CanAbort ? () => budget.IsExpired : null;
         var tightBudget = budget.Enabled && budget.BudgetMilliseconds <= 800;
         var rowStepOverride = 0;
         var maxCandidates = 0;
@@ -236,8 +236,7 @@ internal static partial class QrPixelDecoder {
         Func<QrDecoded, bool>? accept,
         DecodeBudget budget) {
         if (budget.IsExpired) return;
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        using var comps = FindComponents(image, invert, shouldStop, minAreaDivisor: 400, minComponentSize: 21);
+        using var comps = FindComponents(image, invert, budget, minAreaDivisor: 400, minComponentSize: 21);
         if (comps.Count == 0) return;
 
         const int maxTry = 12;
@@ -335,7 +334,7 @@ internal static partial class QrPixelDecoder {
         if (budget.IsExpired) return false;
 
         // Finder-based sampling (robust to extra background/noise). Try multiple triples when the region contains UI/text.
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
+        Func<bool>? shouldStop = budget.CanAbort ? () => budget.IsExpired : null;
         var tightBudget = budget.Enabled && budget.BudgetMilliseconds <= 800;
         var rowStepOverride = 0;
         if (tightBudget) {
@@ -782,8 +781,7 @@ internal static partial class QrPixelDecoder {
         var h = image.Height;
 
         if (budget.IsExpired) return false;
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
-        using var comps = FindComponents(image, invert, shouldStop, minAreaDivisor: 400, minComponentSize: 21);
+        using var comps = FindComponents(image, invert, budget, minAreaDivisor: 400, minComponentSize: 21);
         if (comps.Count == 0) return false;
 
         comps.Sort(static (a, b) => b.Area.CompareTo(a.Area));

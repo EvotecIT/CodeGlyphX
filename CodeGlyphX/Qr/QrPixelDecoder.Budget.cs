@@ -52,7 +52,8 @@ internal static partial class QrPixelDecoder {
                                  (_hasEffectiveDeadline && Stopwatch.GetTimestamp() >= _effectiveDeadline);
 
         public bool IsCancelled => _hasCancellation && _cancellationToken.IsCancellationRequested;
-        public bool CanCancel => _hasCancellation;
+        /// <summary>Whether a pass must poll caller cancellation or any captured deadline.</summary>
+        public bool CanAbort => _hasCancellation || _hasEffectiveDeadline;
 
         public bool IsNearDeadline(int milliseconds) {
             if ((_hasCancellation && _cancellationToken.IsCancellationRequested) ||

@@ -132,11 +132,10 @@ internal static partial class QrPixelDecoder {
         diagnostics = default;
 
         if (budget.IsExpired) return false;
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
         var minDim = Math.Min(image.Width, image.Height);
         var minAreaDivisor = aggressive ? 2000 : 400;
         var minComponentSize = aggressive ? Math.Max(12, minDim / 90) : 21;
-        using var comps = FindComponents(image, invert, shouldStop, minAreaDivisor, minComponentSize);
+        using var comps = FindComponents(image, invert, budget, minAreaDivisor, minComponentSize);
         if (comps.Count < 3) return false;
 
         var minSize = Math.Max(10, (int)Math.Round(minDim * (aggressive ? 0.03 : 0.05)));

@@ -13,11 +13,25 @@ public sealed class QrNestedBudgetTests {
         using (CodeGlyphX.Internal.DecodeBudget.Begin(1)) {
             var pass = new QrPixelDecoder.DecodeBudget(passBudget, CancellationToken.None);
             var tile = new QrPixelDecoder.DecodeBudget(5000, CancellationToken.None, pass);
+            Assert.True(pass.CanAbort);
+            Assert.True(tile.CanAbort);
             Assert.True(SpinWait.SpinUntil(() => CodeGlyphX.Internal.DecodeBudget.IsExpired, TimeSpan.FromSeconds(1)));
             Assert.True(pass.IsExpired);
             Assert.True(tile.IsExpired);
             Assert.True(pass.IsNearDeadline(120));
         }
+    }
+
+    [Fact]
+    public void UntimedPassKeepsLiveCallerCancellationPolling() {
+        using var cancellation = new CancellationTokenSource();
+        var pass = new QrPixelDecoder.DecodeBudget(0, cancellation.Token);
+        Assert.False(pass.Enabled);
+        Assert.True(pass.CanAbort);
+        Assert.False(pass.IsExpired);
+
+        cancellation.Cancel();
+        Assert.True(pass.IsExpired);
     }
 
     [Theory]

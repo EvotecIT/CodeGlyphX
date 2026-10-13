@@ -391,7 +391,7 @@ internal static partial class QrPixelDecoder {
         DecodeBudget tileBudget = default;
         var useTileBudget = enableTileScan && budgetMilliseconds > 0;
 
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsExpired : null;
+        Func<bool>? shouldStop = budget.CanAbort ? () => budget.IsExpired : null;
         var pool = new QrGrayImagePool();
         try {
             if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale: scaleStart, settings.MinContrast, shouldStop, pool, out var baseImage)) {

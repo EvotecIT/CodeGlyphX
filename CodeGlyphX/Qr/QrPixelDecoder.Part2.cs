@@ -48,7 +48,7 @@ internal static partial class QrPixelDecoder {
             return false;
         }
 
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
+        Func<bool>? shouldStop = budget.CanAbort ? () => budget.IsNearDeadline(120) : null;
         var pool = new QrGrayImagePool();
         var candidates = RentCandidateList();
         try {
@@ -494,7 +494,7 @@ internal static partial class QrPixelDecoder {
         result = null!;
         diagnostics = default;
 
-        Func<bool>? shouldStop = budget.Enabled ? () => budget.IsNearDeadline(120) : null;
+        Func<bool>? shouldStop = budget.CanAbort ? () => budget.IsNearDeadline(120) : null;
         var minContrast = Math.Max(2, settings.MinContrast - 4);
 
         for (var channel = 0; channel < 3; channel++) {

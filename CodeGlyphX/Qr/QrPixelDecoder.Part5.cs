@@ -310,7 +310,7 @@ internal static partial class QrPixelDecoder {
         if (!sampledOk) return false;
 
         if (budget.IsNearDeadline(120)) return false;
-        Func<bool>? shouldStop = budget.Enabled || budget.CanCancel ? () => budget.IsExpired : null;
+        Func<bool>? shouldStop = budget.CanAbort ? () => budget.IsExpired : null;
         if (global::CodeGlyphX.QrDecoder.TryDecodeInternal(bm, shouldStop, out result, out global::CodeGlyphX.QrDecodeDiagnostics moduleDiag)) {
             moduleDiagnostics = moduleDiag;
             if (accept == null || accept(result)) return true;
@@ -404,7 +404,7 @@ internal static partial class QrPixelDecoder {
         var height = image.Height;
         var maxX = width - 1;
         var maxY = height - 1;
-        var checkBudget = budget.Enabled || budget.CanCancel;
+        var checkBudget = budget.CanAbort;
         var budgetCounter = 0;
         var xStart = 0.5 + phaseX;
 
@@ -645,7 +645,7 @@ internal static partial class QrPixelDecoder {
         var gray = image.Gray;
         var thresholdMap = image.ThresholdMap;
         var imageThreshold = image.Threshold;
-        var checkBudget = budget.Enabled || budget.CanCancel;
+        var checkBudget = budget.CanAbort;
         var budgetCounter = 0;
         if (checkBudget && budget.IsExpired) return false;
 
@@ -1228,7 +1228,7 @@ internal static partial class QrPixelDecoder {
         result = null!;
         diagnostics = default;
 
-        Func<bool>? shouldStop = budget.Enabled || budget.CanCancel ? () => budget.IsExpired : null;
+        Func<bool>? shouldStop = budget.CanAbort ? () => budget.IsExpired : null;
         var ok = global::CodeGlyphX.QrDecoder.TryDecodeInternal(matrix, shouldStop, out result, out global::CodeGlyphX.QrDecodeDiagnostics moduleDiag);
         var best = moduleDiag;
         if (ok && (accept == null || accept(result))) {
