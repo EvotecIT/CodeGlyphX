@@ -2831,13 +2831,13 @@
     "Expected": [
       "02001234567893"
     ],
-    "Actual": [],
-    "Missing": [
-      "02001234567893"
+    "Actual": [
+      "0200123456789"
     ],
+    "Missing": [],
     "Unexpected": [],
-    "Status": "Failed",
-    "Completion": "Completed"
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
   },
   {
     "Id": "rss14-2/22.png",

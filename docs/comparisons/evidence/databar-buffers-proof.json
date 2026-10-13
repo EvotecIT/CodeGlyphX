@@ -1,0 +1,415 @@
+{
+  "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+  "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+  "PreviousSource": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+  "PreviousCoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+  "HostSha256": "782116BD36496BA4C6FC847F8CD2E33886D681299FF26048D41EF2CDF54748DB",
+  "PreviousHostSha256": "A9268D6B8D8088B3DD2B0DCF807ED3E6B01D19EEB11AC177462E788181295094",
+  "Changes": "DataBar photo recovery reuses one temporary run list per call and a lazily rented integer offset buffer. Every active offset prefix is initialized before reads; growth returns the previous lease and every exit returns the current lease. Accepted observations own their module arrays. All fifteen cutoffs, candidate order, character fits, three-row corroboration, conflict rejection and original deadlines retain their behavior.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are a separate workload from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "databar-buffers-fabric-ccd0-result.json",
+      "OutcomesFile": "databar-buffers-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "FAFBE1A73E73DBD33616F188C9C921058F5A50D7AE0C41947131EB5D42E0546B"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "databar-buffers-fabric-ccd1-result.json",
+      "OutcomesFile": "databar-buffers-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "EFB8DBC01A19A4E236C03CF6FC0F7B289706773CC9AFFD7DB6A152BA241B3EB2"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "databar-buffers-texture-ccd0-result.json",
+      "OutcomesFile": "databar-buffers-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "16EEFAF823EEC228147DF363261AF8522E11EFAB8E06C6E787E06846BCD861EA"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "databar-buffers-texture-ccd1-result.json",
+      "OutcomesFile": "databar-buffers-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "70076F6A4BA379B4C7389968A2B22AC7D1EF29208B5AA16506513F085CC954FA"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "databar-buffers-whole-ccd0-result.json",
+      "OutcomesFile": "databar-buffers-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "6F5C97E6E0BAB7C5FD40E9BF87E3BEDC4BF0C25118F5C831C136F6FAB178555A"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "databar-buffers-whole-ccd1-result.json",
+      "OutcomesFile": "databar-buffers-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "098B4F52D70CA963241077EAEF825DC491716182B14548342E74660672CD4EAD"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "databar-buffers-retail-positive-ccd0-result.json",
+      "OutcomesFile": "databar-buffers-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "96026AE8CCB7A67C848D783F8F8D1EC32E8913B0C46045E9939CA50AF5EB47B7"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "databar-buffers-retail-positive-ccd1-result.json",
+      "OutcomesFile": "databar-buffers-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "E3C0F006B38AC5602668BFF37CC00ACFA60653B07F95CC2103A5845648E58B9D"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "databar-buffers-retail-negative-ccd0-result.json",
+      "OutcomesFile": "databar-buffers-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "A98A9EC5875FD9FA14DC58E7EE74E589444DEB16AADEC6E00E4F673641100ED6"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "databar-buffers-retail-negative-ccd1-result.json",
+      "OutcomesFile": "databar-buffers-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "FE939DB4609EB554E6F04B61A5DC4326CCADAF00C35CA0724DB15E0807CCB499"
+    }
+  ],
+  "Contracts": {
+    "net10": 11,
+    "net8": 11,
+    "net472": 11
+  },
+  "ReviewCoverage": {
+    "Base": "7f049e29035a9dcf945dfa44ada1311756da4317",
+    "Head": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+    "BoundaryState": "current",
+    "UnresolvedFindings": [],
+    "ReviewAgent": "databar_recovery_buffers_review",
+    "TargetedConfirmationUsed": false,
+    "Scope": "One fresh strictly read-only independent pass over the new temporary-buffer reuse contract only: dirty pooled prefix initialization and bounds, lazy growth and exception-safe ownership, cancellation returns, sequential run-list reuse, nonescaping observations, unchanged threshold/order/fit/polarity and supported callers. No actionable findings.",
+    "Limits": "Supplied150 focused tests and172-case/366-candidate summaries were precommit artifacts. Exact-core runtime equivalence, framework/corpus/native and comparative timing are separate primary-owned evidence. No cancellation-response or forced exception-injection claim.",
+    "Recommendation": "Accept as shaped for temporary-buffer reuse. Useful internal allocation reduction in the existing owner, no public API/configuration/production dependency added; no maintainer decision needed. This is not publication or merge readiness."
+  },
+  "NativeArm64": {
+    "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+    "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+    "Host": "evomini.ad.evotec.xyz",
+    "OperatingSystem": "27.0.1",
+    "Architecture": "arm64",
+    "Processor": "Apple M4",
+    "SDKVersion": "10.0.402",
+    "SelectedFrameworkVersion": "10.0.13",
+    "FrameworkRollForward": "Disable",
+    "FrameworkSelection": "dotnet exec --fx-version 10.0.13 --roll-forward Disable DataBarNativeDriver.dll",
+    "InputFiles": {
+      "DataBarNativeDriver.dll": "4893374FEBBD18750243F42A8682DFB2B38D28BD094730CE9CBE260FF8AF03BD",
+      "DataBarNativeDriver.deps.json": "9EFB502002876775E53E96E6E11DFC170E74BC348E5D8E41BDDAAC3625D41B68",
+      "DataBarNativeDriver.runtimeconfig.json": "C230A317A54DD960BCBEB5F347F52E18DC665A26F7EFDA2159FCED9A5AC7E097",
+      "CodeGlyphX.dll": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+      "photo.png": "0436CD131A7CACFE5A51FA69B714C5015A5B6A8697BBC7152EC93977E4A5AAB3"
+    },
+    "RemoteRoot": "/Volumes/Samsung/CodeGlyphX-databar-buffers-5a33118f",
+    "Scope": "Exact frozen managed binaries and an unchanged independently sourced photo; native ARM64 public decoding functional check only. No remote build, benchmark or dependency installation.",
+    "DecisionProof": {
+      "Status": "passed",
+      "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+      "CoreInformationalVersion": "3.0.0+5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+      "FixtureSha256": "0436CD131A7CACFE5A51FA69B714C5015A5B6A8697BBC7152EC93977E4A5AAB3",
+      "Cases": 8,
+      "Checks": 32,
+      "PassedChecks": [
+        "photo/vertical=False/inverted=False/typed",
+        "photo/vertical=False/inverted=False/diagnostics",
+        "photo/vertical=False/inverted=False/all",
+        "photo/vertical=False/inverted=False/span",
+        "photo/vertical=False/inverted=False/span-all",
+        "photo/vertical=False/inverted=False/untyped-all",
+        "photo/vertical=False/inverted=False/scanner",
+        "photo/vertical=False/inverted=True/typed",
+        "photo/vertical=False/inverted=True/diagnostics",
+        "photo/vertical=False/inverted=True/all",
+        "photo/vertical=False/inverted=True/span",
+        "photo/vertical=False/inverted=True/span-all",
+        "photo/vertical=False/inverted=True/untyped-all",
+        "photo/vertical=False/inverted=True/scanner",
+        "photo/vertical=True/inverted=False/typed",
+        "photo/vertical=True/inverted=False/diagnostics",
+        "photo/vertical=True/inverted=False/all",
+        "photo/vertical=True/inverted=False/span",
+        "photo/vertical=True/inverted=False/span-all",
+        "photo/vertical=True/inverted=False/untyped-all",
+        "photo/vertical=True/inverted=False/scanner",
+        "photo/vertical=True/inverted=True/typed",
+        "photo/vertical=True/inverted=True/diagnostics",
+        "photo/vertical=True/inverted=True/all",
+        "photo/vertical=True/inverted=True/span",
+        "photo/vertical=True/inverted=True/span-all",
+        "photo/vertical=True/inverted=True/untyped-all",
+        "photo/vertical=True/inverted=True/scanner",
+        "row-support/2",
+        "row-support/3",
+        "misaligned-rows",
+        "bgra-padded"
+      ],
+      "Scope": "Exact managed candidate: four photo orientation/polarity cases across seven public entrypoints, two-row rejection, three-row acceptance, misaligned-row rejection and BGRA/padded input. Functional evidence only; no timing or broad-corpus claim."
+    }
+  },
+  "ContractNote": "The existing eleven DataBar recovery regression cases pass on all three supported test frameworks. Direct actual-collector checks compare 732 located candidates across 344 variants of 43 frozen positive and negative images, including rotation, inversion, packed RGBA and padded BGRA. Integer-pool buckets contain invalid values before every collector call; positions, orientation, fit scores, flags, polarity and all module sequences match the preceding binary. Native ARM64 passes 32 public decoding checks on the same managed binary; its timing remains Windows-only.",
+  "SamplingLimits": "The existing fourteen anchors per axis, guarded four-neighbor refinement, fifteen cutoffs, 32 observations per row, strict character/guard/finder/checksum validation, three adjacent agreeing rows and conflicting-window rejection remain in place. No fixed cancellation-response or memory-capacity guarantee is inferred from these samples.",
+  "BufferEquivalence": {
+    "Status": "passed",
+    "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+    "BaselineCoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+    "CandidateCoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+    "Cases": 344,
+    "LocatedCandidates": 732,
+    "Mismatches": 0,
+    "InputImages": 43,
+    "RotationPolarityVariants": 4,
+    "PixelLayouts": [
+      "PackedRgba32",
+      "PaddedBgra32"
+    ],
+    "PaddedStrideBytes": 12,
+    "DirtyIntPoolBucketsSeededBeforeEveryCall": true,
+    "DirtyValues": "Int32.MinValue plus variant; buckets64 through next supported power of two for the image",
+    "Scope": "Actual production recovery candidates match in modules/order/physical positions/orientation/fit/flags/polarity on43 frozen images across rotation,inversion,packedRGBA and paddedBGRA. Shared integer-pool buckets are prefilled before each real call; returned candidates retain their own module arrays. Direct calls are unbounded; no timing,cancellation-response or forced exception-injection claim."
+  },
+  "CollectorPackets": [
+    {
+      "Kind": "positive",
+      "Cases": 96,
+      "Lanes": {
+        "before": {
+          "File": "databar-buffers-positive-before-candidates.json",
+          "Sha256": "DDCD8210C7418DC2CEA51EDFB6D244F323F3445AC65D28A93A18E1DC39BA0BF3",
+          "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+          "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8"
+        },
+        "final": {
+          "File": "databar-buffers-positive-final-candidates.json",
+          "Sha256": "62822E70E749E0E6F73B1295B84C462BAE4526BC178CBAB0DC905B995B7B1EC8",
+          "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+          "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8"
+        }
+      }
+    },
+    {
+      "Kind": "negative",
+      "Cases": 248,
+      "Lanes": {
+        "before": {
+          "File": "databar-buffers-negative-before-candidates.json",
+          "Sha256": "569F1E768D04824EBC4C41D83F8912789E3548B9B9315C34E4F733AA99EB33FD",
+          "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+          "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F"
+        },
+        "final": {
+          "File": "databar-buffers-negative-final-candidates.json",
+          "Sha256": "4FDAC881E53A645195C48AF4B76FF1243EE7EF95BEC7C5865CC4280443DFA37B",
+          "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+          "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F"
+        }
+      }
+    }
+  ],
+  "AllocationDiagnostic": {
+    "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+    "PreviousCoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+    "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+    "CallsPerBinary": 5,
+    "ImagesPerCall": 31,
+    "CorrectEveryCall": 31,
+    "UnexpectedEveryCall": 0,
+    "BeforeMeanAllocatedBytes": 155957739.2,
+    "CurrentMeanAllocatedBytes": 111201830.4,
+    "AllocationRatio": 0.7130254065647549,
+    "Scope": "Diagnostic direct public corpus adapter calls with tracing enabled; actual allocation counter and sampled inclusive stacks are separate evidence. Stack samples overlap and are not CPU utilization or competitive latency. All raw trace/probe outcomes retained in qualification archive."
+  },
+  "DiagnosticPackets": [
+    {
+      "Lane": "before",
+      "File": "databar-buffers-allocation-before.json",
+      "Sha256": "772CB59E8F922D1CC693EDF23E10AC2700BDA989C6ED7DC6B25ED82F9E1843A1",
+      "ProfileFile": "databar-buffers-allocation-before-profile.json",
+      "ProfileSha256": "8BC0E9F4C01D823511AE193F931350B1668696FD060BC1AD72ABB80B0528B73A",
+      "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5"
+    },
+    {
+      "Lane": "after",
+      "File": "databar-buffers-allocation-after.json",
+      "Sha256": "C7D5AE906B82A14F41ED83C4358CCA1F54056FA58D895F390AFDAEAACA524543",
+      "ProfileFile": "databar-buffers-allocation-after-profile.json",
+      "ProfileSha256": "D6743247D4A8CDEE91517BD86D11B1D90F777F72352B8F6D4730618109F9BEF8",
+      "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578"
+    }
+  ],
+  "DiagnosticRun": {
+    "Status": "passed",
+    "HostSha256": "782116BD36496BA4C6FC847F8CD2E33886D681299FF26048D41EF2CDF54748DB",
+    "Scope": "Four unranked diagnostic scans from exact final and preceding binaries after final comparison timing, with unchanged frozen manifests/options/oracles.",
+    "CompletedUtc": "2026-10-13T20:05:35.7771746Z",
+    "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+    "Outputs": {
+      "negative-baseline": "0D3206958C249A6DBC3D9F4681509ED98FFF33713A1E46470E233C89E0026191",
+      "positive-current": "248F9558CC382D91BBB3BBEB8B8065525B5E45899125EFD0012A4A6319B6575E",
+      "negative-current": "0D3206958C249A6DBC3D9F4681509ED98FFF33713A1E46470E233C89E0026191",
+      "positive-baseline": "248F9558CC382D91BBB3BBEB8B8065525B5E45899125EFD0012A4A6319B6575E"
+    },
+    "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+    "RawOutputs": {
+      "negative-baseline": "47BD71AA64AC4CE6C4D4EB5A145350E0A2759448C4B70E4403BA58C85B2E532F",
+      "positive-current": "FFC33C36387F79ADB01CB63C9CAD8A87ED4ADB14A631B783622554F345DA3EDA",
+      "negative-current": "47BD71AA64AC4CE6C4D4EB5A145350E0A2759448C4B70E4403BA58C85B2E532F",
+      "positive-baseline": "FFC33C36387F79ADB01CB63C9CAD8A87ED4ADB14A631B783622554F345DA3EDA"
+    },
+    "Canonicalization": "UTF-8 JSON, ensure_ascii=False, two-space indent, LF and one final newline; same public report serialization."
+  },
+  "Diagnostics": {
+    "positive": {
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "Lanes": {
+        "baseline": {
+          "Source": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+          "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+          "File": "databar-buffers-databar-positive-baseline.json",
+          "Sha256": "248F9558CC382D91BBB3BBEB8B8065525B5E45899125EFD0012A4A6319B6575E",
+          "RawSha256": "FFC33C36387F79ADB01CB63C9CAD8A87ED4ADB14A631B783622554F345DA3EDA",
+          "Rows": 12
+        },
+        "current": {
+          "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+          "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+          "File": "databar-buffers-databar-positive-current.json",
+          "Sha256": "248F9558CC382D91BBB3BBEB8B8065525B5E45899125EFD0012A4A6319B6575E",
+          "RawSha256": "FFC33C36387F79ADB01CB63C9CAD8A87ED4ADB14A631B783622554F345DA3EDA",
+          "Rows": 12
+        }
+      }
+    },
+    "negative": {
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "Lanes": {
+        "baseline": {
+          "Source": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+          "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+          "File": "databar-buffers-databar-negative-baseline.json",
+          "Sha256": "0D3206958C249A6DBC3D9F4681509ED98FFF33713A1E46470E233C89E0026191",
+          "RawSha256": "47BD71AA64AC4CE6C4D4EB5A145350E0A2759448C4B70E4403BA58C85B2E532F",
+          "Rows": 31
+        },
+        "current": {
+          "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+          "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+          "File": "databar-buffers-databar-negative-current.json",
+          "Sha256": "0D3206958C249A6DBC3D9F4681509ED98FFF33713A1E46470E233C89E0026191",
+          "RawSha256": "47BD71AA64AC4CE6C4D4EB5A145350E0A2759448C4B70E4403BA58C85B2E532F",
+          "Rows": 31
+        }
+      }
+    }
+  },
+  "SupplementalPackets": [
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd0",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-buffers-databar-positive-ccd0-result.json",
+      "OutcomesFile": "databar-buffers-databar-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "CBA09A6C4218ED481E3DEC04DBF8AB436AC680C3869879E3C781791220B7BED9"
+    },
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd1",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-buffers-databar-positive-ccd1-result.json",
+      "OutcomesFile": "databar-buffers-databar-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "169FD45A6F3787EE539B815F0441B9B52E1AA2FA361AE42BF1E2072ECE959A59"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd0",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-buffers-databar-negative-ccd0-result.json",
+      "OutcomesFile": "databar-buffers-databar-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "8469700886F958675EA1C66FD5F25D0C248C45ACA0151EC0111C8249FC29B806"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd1",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-buffers-databar-negative-ccd1-result.json",
+      "OutcomesFile": "databar-buffers-databar-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "D056D2F5D26006630B5EEA53B0DB9860DCA9A8C122F88E4093C1CCF0A306AE8C"
+    }
+  ],
+  "ExploratoryPackets": [
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd0",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-buffers-exploratory-databar-positive-ccd0-result.json",
+      "OutcomesFile": "databar-buffers-exploratory-databar-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "12093B0C09595A4B35A5425E28200A45F6A00E928491DD795EC9F8A6F2C51250"
+    },
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd1",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-buffers-exploratory-databar-positive-ccd1-result.json",
+      "OutcomesFile": "databar-buffers-exploratory-databar-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "F22833B4BAA7C9A3D399BEF5ECE41C6194CDFA7AE2D7399FB97D9C24C187771A"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd0",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-buffers-exploratory-databar-negative-ccd0-result.json",
+      "OutcomesFile": "databar-buffers-exploratory-databar-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "66C04D81831B53F69BBB92AEDE45B6D0ADF381B0D6A14E82ACEB1D0A56E39F88"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd1",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-buffers-exploratory-databar-negative-ccd1-result.json",
+      "OutcomesFile": "databar-buffers-exploratory-databar-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "6B81C03E4EA96E48C0D6D24DB27AE834B8B61632596B5BC19E18EE2E88B08BC3"
+    }
+  ]
+}
