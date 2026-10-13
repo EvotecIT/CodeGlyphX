@@ -139,6 +139,10 @@ internal static partial class QrPixelDecoder {
         bool aggressive,
         bool stylized,
         bool candidatesSorted) {
+        if (!aggressive && accept is null) {
+            CollectIndependentFinderGroups(image, invert, candidates, results, seen, budget, stylized);
+            return;
+        }
         var totalCandidates = candidates.Count;
         if (candidatesSorted || totalCandidates <= 10) {
             if (!candidatesSorted) {
