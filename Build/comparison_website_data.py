@@ -12,6 +12,7 @@ from comparison_decode_deadlines import project_decode_deadlines
 from comparison_qr_finder_groups import project_qr_finder_groups
 from comparison_dpm_gray8 import project_dpm_gray8
 from comparison_dpm_window_means import project_dpm_window_means
+from comparison_retained_contexts import project_retained_contexts
 
 
 def load(path):
@@ -369,6 +370,8 @@ def build_website_data(root):
             "databar_tilted": project_databar_tilted(root, qualification),
             "retail_fine": project_retail_fine(root, qualification),
             "scanner_boundaries": project_scanner_boundaries(root, qualification),
+            "retained_contexts": project_retained_contexts(root, qualification),
+            "paired_decode_scope": qualification.get("PairedDecodeCost", {}).get("Scope", ""),
             "dpm_window_means": project_dpm_window_means(root, qualification),
             "dpm_gray8": project_dpm_gray8(root, qualification),
             "qr_finder_groups": project_qr_finder_groups(root, qualification),

@@ -86,6 +86,14 @@ Invoke-BenchmarkSuite -Path ./Build/decode-corpus.benchmark.ps1 -Variable @{
 
 Use the same verified CPU domain and process priority for every engine on machines with multiple cache domains. Keep source unchanged during a suite: the shared runner rejects changed provenance. It owns warmup, rotated engine order, timing, environment metadata and JSON/CSV/Markdown reports. Retain all samples and outliers. Run unrelated tests and builds before the timing suites.
 
+## Decoder context lifetime
+
+`Build/Invoke-PairedDecodeBenchmark.ps1` owns one separately loaded session for each binary and reuses it across three priming calls and twelve rotated measurements. Loading, scoring, persistence and disposal are outside operation timing. Per-image priming and measured outcomes are retained beneath each run ID, including unfinished negatives. The helper is confined to the non-packable benchmark project.
+
+Archived recipe inspection identifies earlier paired packets that constructed a new decoder context in every setup call. Their priming calls do not warm the instances used for measurement, so the verified packets are labelled fresh-context first-use costs. The evidence inventory lists exactly which sources and recipes support that correction; other historical packets keep their original scope. The main corpus, generation and typed decoding lanes use separate paths. Retained-context timings cannot replace the first-use observations or establish that cold-start negative timeouts are fixed.
+
+PDF417 and GS1 DataBar inner loops capture their current recognition deadline once per synchronous method while retaining live cancellation and expiry checks. Aztec rejected-ring probes check cancellation at every offset and poll the deadline after at most 32 bounded candidates; accepted sampled views retain their existing checks. Search order, payload validation, family allowances and image oracles are unchanged.
+
 ## Decoder regressions covered
 
 The corpus exposed an implicit Data Matrix unlatch that discarded the last ASCII codeword after C40, Text and X12 segments. Those three paths preserve the final character. An invalid EAN first-digit parity now returns a decode failure instead of throwing from a dictionary lookup.

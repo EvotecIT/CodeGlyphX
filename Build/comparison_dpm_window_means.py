@@ -1,16 +1,17 @@
 """Project bounded local-window costs with exact pixel and binary identities."""
 import json
 from comparison_packet_identity import project_paired_cost
+from comparison_qualification_history import resolve_proof_owner
 from comparison_decode_allocations import project_retail_costs
 
 
 def project_dpm_window_means(root, qualification):
-    proof = qualification.get('DpmWindowMeansProof')
+    proof, owner, historical = resolve_proof_owner(root, qualification, 'DpmWindowMeansProof')
     if not proof:
         return None
-    previous = qualification['NegativeRotationSources']['previous']
-    if (proof['Source'] != qualification['MeasurementSource']
-            or proof['CoreSha256'] != qualification['CandidateCoreSha256']
+    previous = owner['NegativeRotationSources']['previous']
+    if (proof['Source'] != owner['MeasurementSource']
+            or proof['CoreSha256'] != owner['CandidateCoreSha256']
             or proof['PreviousSource'] != previous['Source']
             or proof['PreviousCoreSha256'] != previous['CoreSha256']
             or proof['WindowContracts'] != {'net10': 9, 'net8': 9, 'net472': 9}
@@ -34,7 +35,7 @@ def project_dpm_window_means(root, qualification):
         packet = json.loads((root / f'dpm-window-means-{row["Kind"]}-{row["Domain"]}-result.json').read_text(encoding='utf-8-sig'))
         costs.append({'kind': row['Kind'], **project_paired_cost(packet, proof['Source'], proof['CoreSha256'],
             proof['PreviousCoreSha256'], row['Domain'], 1, row['ManifestSha256'])})
-    return {'source': proof['Source'], 'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'],
+    return {'historical': historical, 'source': proof['Source'], 'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'],
         'contracts': 'Nine local-window cases and six DPM scanner cases pass on each of .NET 10, .NET 8 and .NET Framework 4.7.2. Window cases compare both adaptive polarities with output derived from independent clipped-neighborhood enumeration, including narrow images, radii larger than the image, clipped edges and a full-resolution boundary. All 2,025 retries across 675 diagnostic cases preserve the preceding binary’s normalized pixels and order.',
         'costs': costs, 'controls': project_retail_costs(root, {**proof, 'RetailCosts': proof['RetailControlCosts']}, 'dpm-window-means-retail')}
 
@@ -42,7 +43,8 @@ def project_dpm_window_means(root, qualification):
 def append_dpm_window_means_section(lines, proof):
     if not proof:
         return
-    lines += ['', '## DPM local-window means', '', proof['changes'], '', proof['contracts'], '', proof['scope'], '',
+    lines += ['', '## Historical DPM local-window means' if proof['historical'] else '## DPM local-window means', '',
+        f'These local-window measurements belong to source {proof["source"]}. Their paired decoder contexts are recreated per sample; current retained-context costs appear separately.' if proof['historical'] else '', '', proof['changes'], '', proof['contracts'], '', proof['scope'], '',
         '| Image | Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Allocation reduction | Previous → current completed negatives / 1 | Previous → current inconclusive range | Previous → current unexpected range |',
         '| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |']
     for row in proof['costs']:

@@ -65,9 +65,27 @@
             </table>
         </div>
     </section>
+    {{ if comparison.retained_contexts }}
+    <section class="benchmark-section" aria-labelledby="retained-contexts">
+        <h2 id="retained-contexts">Retained decoder sessions and deadline costs</h2>
+        <p>{{ comparison.retained_contexts.changes }}</p>
+        <p>{{ comparison.retained_contexts.scope }}</p>
+        <p>{{ comparison.retained_contexts.history_note }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Retained decoder cost and completion" tabindex="0">
+            <table class="bench-table">
+                <caption>Previous → current · one retained session per binary · every measured outcome included</caption>
+                <thead><tr><th scope="col">Workload</th><th scope="col">Requests</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.retained_contexts.costs }}<tr><th scope="row">{{ row.kind }}</th><td>{{ row.requests }}</td><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.retained_contexts.limits }}</p>
+        <p><a href="/comparisons/evidence/retained-contexts-proof.json">Session and deadline proof</a> · <a href="/comparisons/evidence/retained-contexts-history.json">Historical context inventory</a>. The proof links every packet and its complete priming and measured per-image outcomes.</p>
+    </section>
+    {{ end }}
     {{ if comparison.dpm_window_means }}
     <section class="benchmark-section" aria-labelledby="dpm-window-means">
-        <h2 id="dpm-window-means">DPM local-window means</h2>
+        <h2 id="dpm-window-means">{{ if comparison.dpm_window_means.historical }}Historical DPM local-window means{{ else }}DPM local-window means{{ end }}</h2>
+        {{ if comparison.dpm_window_means.historical }}<p>These measurements retain their original source <code class="comparison-source">{{ comparison.dpm_window_means.source }}</code> and use fresh decoder contexts per sample. Current retained-context costs appear above.</p>{{ end }}
         <p>{{ comparison.dpm_window_means.changes }}</p>
         <p>{{ comparison.dpm_window_means.contracts }}</p>
         <p>{{ comparison.dpm_window_means.scope }}</p>
@@ -608,7 +626,7 @@
     {{ if comparison.paired_decode_cost.size > 0 }}
     <section class="benchmark-section" aria-labelledby="paired-decoding">
         <h2 id="paired-decoding">Paired whole-image decoding cost</h2>
-        <p>The previous and current CodeGlyphX binaries process the same 19 preloaded images with the same options and 1,500 ms allowance. Each cache domain uses three warmups and twelve rotated measurements per binary. Lower current/previous ratios mean lower elapsed time. These shared-host results retain every sample, including incomplete negative searches. Both binaries support the MaxiCode image in this workload.</p>
+        <p>{{ comparison.paired_decode_scope }}</p>
         {{ for note in comparison.paired_decode_notes }}<p>{{ note }}</p>{{ end }}
         <div class="comparison-scroll" role="region" aria-label="Paired decoding cost table" tabindex="0">
             <table class="bench-table">
