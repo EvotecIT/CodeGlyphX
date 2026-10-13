@@ -1,0 +1,375 @@
+{
+  "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+  "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+  "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+  "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+  "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+  "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0",
+  "Changes": "QR pixel decoding on .NET 8 and later scans foreground bounds with hardware vectors when available and a scalar fallback. Threshold equality, adaptive maps, both polarities and cropped regions preserve the same selected pixels. Cancellation and deadline checks retain the previous global 256-pixel polling cadence. Trimming, expansion, version/phase sampling, payload decoding and diagnostics remain unchanged.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are a separate workload from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "qr-foreground-bounds-fabric-ccd0-result.json",
+      "OutcomesFile": "qr-foreground-bounds-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "8766BBFAB35800CCCFBEB33A5AA17B698E25E66077A3DB0D82EC74DFDA4E74C0"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "qr-foreground-bounds-fabric-ccd1-result.json",
+      "OutcomesFile": "qr-foreground-bounds-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "B3F923D137A1D2A34E07A9B7B54F644EC3477172C3DC2170DCC275A5C44AB519"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "qr-foreground-bounds-texture-ccd0-result.json",
+      "OutcomesFile": "qr-foreground-bounds-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "56C6BC1C99AFF85ECA20DEEF810513DAE2C73B2A42D860BDCB8CB89EC8F7CF87"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "qr-foreground-bounds-texture-ccd1-result.json",
+      "OutcomesFile": "qr-foreground-bounds-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "D12EE1A1432121CD76DE47986C64174CAF4B940F720C53DF46E47649C16EA557"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "qr-foreground-bounds-whole-ccd0-result.json",
+      "OutcomesFile": "qr-foreground-bounds-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "683C03571FD8857F4DAE3479F466DE7D46B4CFCCCD9380EF77BE557845D1D490"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "qr-foreground-bounds-whole-ccd1-result.json",
+      "OutcomesFile": "qr-foreground-bounds-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "95510D8D032704A94E77786504C841F524383F5A7E3DD3194E3C489B98617062"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "qr-foreground-bounds-retail-positive-ccd0-result.json",
+      "OutcomesFile": "qr-foreground-bounds-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "889AFC2F9A58D2EE93C42C7DAD8B3FF2405AD1F6F41301DE4BE03206C5766E85"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "qr-foreground-bounds-retail-positive-ccd1-result.json",
+      "OutcomesFile": "qr-foreground-bounds-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "C36388AD26F6E27EC409F6EE3AB1169145BE39EC7F1D9A70B924CDAF02C0A2C1"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "qr-foreground-bounds-retail-negative-ccd0-result.json",
+      "OutcomesFile": "qr-foreground-bounds-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "AC944722877DCBAEC415344E8A24A7169BAC5DEFDE44C13C2D41CD73FF5FE950"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "qr-foreground-bounds-retail-negative-ccd1-result.json",
+      "OutcomesFile": "qr-foreground-bounds-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "A3FAC389EB042D992AD21B63F094AE1AF8259CF7DDBD7CE6B0AE2E1F29C71F2F"
+    }
+  ],
+  "Contracts": {
+    "net10": 5,
+    "net8": 5,
+    "net472": 0
+  },
+  "Equivalence": {
+    "vector256": {
+      "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+      "Vector256HardwareAccelerated": true,
+      "Vector128HardwareAccelerated": true,
+      "Cases": 286720,
+      "PixelClassificationsCompared": 144252928,
+      "Mismatches": 0,
+      "CancelledAndExpiredBoundsStop": true,
+      "Scope": "Actual private foreground bounds versus independent selected-pixel extrema across every byte threshold, global/adaptive maps, both polarities, vector boundary widths, cropped and single-row/column regions, patterned/random masks and unused pooled-array tails. Separate runtime modes verify 256-bit, 128-bit and scalar paths. This is decision proof, not a performance benchmark."
+    },
+    "vector128": {
+      "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+      "Vector256HardwareAccelerated": false,
+      "Vector128HardwareAccelerated": true,
+      "Cases": 286720,
+      "PixelClassificationsCompared": 144252928,
+      "Mismatches": 0,
+      "CancelledAndExpiredBoundsStop": true,
+      "Scope": "Actual private foreground bounds versus independent selected-pixel extrema across every byte threshold, global/adaptive maps, both polarities, vector boundary widths, cropped and single-row/column regions, patterned/random masks and unused pooled-array tails. Separate runtime modes verify 256-bit, 128-bit and scalar paths. This is decision proof, not a performance benchmark."
+    },
+    "scalar": {
+      "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+      "Vector256HardwareAccelerated": false,
+      "Vector128HardwareAccelerated": false,
+      "Cases": 286720,
+      "PixelClassificationsCompared": 144252928,
+      "Mismatches": 0,
+      "CancelledAndExpiredBoundsStop": true,
+      "Scope": "Actual private foreground bounds versus independent selected-pixel extrema across every byte threshold, global/adaptive maps, both polarities, vector boundary widths, cropped and single-row/column regions, patterned/random masks and unused pooled-array tails. Separate runtime modes verify 256-bit, 128-bit and scalar paths. This is decision proof, not a performance benchmark."
+    }
+  },
+  "NativeArm64": {
+    "Host": "evomini.ad.evotec.xyz",
+    "OperatingSystem": "27.0.1",
+    "Architecture": "arm64",
+    "Processor": "Apple M4",
+    "Runtime": "10.0.401",
+    "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+    "Scope": "Exact Windows-qualified portable managed binaries executed by the native ARM64 .NET runtime. Independent foreground bounds decision checks only; no performance comparison or remote source build.",
+    "InputFiles": {
+      "CodeGlyphX.Tests.dll": "CAF94004830881494F87E51A05A9BC10055409DD9D9E734A9785DE20A51044C3",
+      "CodeGlyphX.Tests.deps.json": "E3CDFDE3CBCB4BD98E0449F3123135443DE8B72D819F7A46772A2065DD52D251",
+      "CodeGlyphX.Tests.runtimeconfig.json": "C230A317A54DD960BCBEB5F347F52E18DC665A26F7EFDA2159FCED9A5AC7E097",
+      "CodeGlyphX.dll": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623"
+    },
+    "RemoteRoot": "/Volumes/Samsung/CodeGlyphX-qr-bounds-8178c13b",
+    "DecisionProof": {
+      "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+      "Vector256HardwareAccelerated": false,
+      "Vector128HardwareAccelerated": true,
+      "Cases": 286720,
+      "PixelClassificationsCompared": 144252928,
+      "Mismatches": 0,
+      "CancelledAndExpiredBoundsStop": true,
+      "Scope": "Actual private foreground bounds versus independent selected-pixel extrema across every byte threshold, global/adaptive maps, both polarities, vector boundary widths, cropped and single-row/column regions, patterned/random masks and unused pooled-array tails. Separate runtime modes verify 256-bit, 128-bit and scalar paths. This is decision proof, not a performance benchmark."
+    },
+    "Stdout": "{\"CoreSha256\":\"EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623\",\"Vector256HardwareAccelerated\":false,\"Vector128HardwareAccelerated\":true,\"Cases\":286720,\"PixelClassificationsCompared\":144252928,\"Mismatches\":0,\"CancelledAndExpiredBoundsStop\":true,\"Scope\":\"Actual private foreground bounds versus independent selected-pixel extrema across every byte threshold, global/adaptive maps, both polarities, vector boundary widths, cropped and single-row/column regions, patterned/random masks and unused pooled-array tails. Separate runtime modes verify 256-bit, 128-bit and scalar paths. This is decision proof, not a performance benchmark.\"}"
+  },
+  "SourceExtraction": {
+    "Base": "d4099472eeba67910c650805308af2ba6f095179",
+    "Candidate": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+    "Checks": [
+      {
+        "Responsibility": "MatrixAttempts",
+        "Lines": 124,
+        "Sha256": "88D36B399162EF620593CA50942258CC74D8F34C3B3637A09AB8E0A85B48E109",
+        "VerbatimMoved": true
+      },
+      {
+        "Responsibility": "NeighborhoodVoting",
+        "Lines": 197,
+        "Sha256": "581A2A4CC81E700AC348D6A84DBA3275FC20B35A6D787FFEFFE9EB0D74654E23",
+        "VerbatimMoved": true
+      },
+      {
+        "Responsibility": "BoundingBox",
+        "Lines": 110,
+        "Sha256": "223E2462A9E55972162ED0C65C8273B309F1F056E4762675B6B074014C1AE650",
+        "VerbatimMoved": true
+      },
+      {
+        "Responsibility": "Trimming, expansion, version/phase sampling, decoding and diagnostics",
+        "Lines": 99,
+        "Sha256": "AEAFD55555399FB3A29F2554C07B3B41B93CF5E423F6E17AFB2623E86D4698E1",
+        "VerbatimMoved": true
+      }
+    ],
+    "Scope": "Exact source-body comparison for moved helpers and the unchanged recovery after foreground extrema. New extrema are qualified separately against independent pixel selection."
+  },
+  "ContractNote": "Independent selected-pixel extrema match the actual foreground scan in 286,720 cases and 144,252,928 pixel classifications per execution mode. Windows checks cover 256-bit vectors, 128-bit vectors and scalar execution. The same qualified managed binaries pass on native Apple M4 ARM64 with 128-bit vectors. Cases cover every byte threshold, global/adaptive maps, both polarities, vector boundary widths, cropped and single-row/column regions, patterned/random pixels and unused pooled-array tails. Pre-cancelled and already-expired searches stop. Mid-scan polling equivalence is supported by source inspection, without a response-time guarantee. Framework tests protect the public QR recognition paths.",
+  "ReviewCoverage": {
+    "Base": "d4099472eeba67910c650805308af2ba6f095179",
+    "Head": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+    "BoundaryState": "current",
+    "UnresolvedFindings": [],
+    "Scope": "One fresh strictly read-only independent review of the foreground bounds implementation, threshold equality and unsigned masks, region and pooled-tail bounds, inversion, budget polling cadence, hardware fallback, responsibility extraction and focused contract tests. No actionable findings.",
+    "Limits": "The review covered production source and task-local decision evidence. Full framework/corpus/benchmark and native ARM64 execution are separately recorded validation. Already-expired and pre-cancelled searches are exercised; mid-scan cancellation cadence is inspected statically. Earlier 44 focused tests preceded verbatim source extraction and use a distinct DLL hash; the full current tests provide final artifact proof.",
+    "MovedMethodsVerified": 11,
+    "RemainingMethodsVerified": 7,
+    "ReviewAgent": "qr_foreground_bounds_review"
+  },
+  "Experiments": [
+    {
+      "Label": "foreground-bounds",
+      "Disposition": "Eight exploratory pairs on the same final production binary before full framework and corpus qualification. All latency, allocation and completion outcomes remain included.",
+      "Packets": [
+        {
+          "Kind": "qr",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "9C143F4CD8DBFB5F8E0ED34784A2031E088A282D8181A4EB1D35765A31665A5D",
+          "PacketFile": "qr-foreground-bounds-exploratory-qr-ccd0-result.json",
+          "OutcomesFile": "qr-foreground-bounds-exploratory-qr-ccd0-outcomes.json",
+          "OutcomesSha256": "E778D2DFC4C9CB35C05E3A6FE7F5B21490A4B54937383C4296B0A356EF515630",
+          "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+          "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+          "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+          "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0"
+        },
+        {
+          "Kind": "qr",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "9C143F4CD8DBFB5F8E0ED34784A2031E088A282D8181A4EB1D35765A31665A5D",
+          "PacketFile": "qr-foreground-bounds-exploratory-qr-ccd1-result.json",
+          "OutcomesFile": "qr-foreground-bounds-exploratory-qr-ccd1-outcomes.json",
+          "OutcomesSha256": "912BE0239B183372E7627D821BF5C6272C1D94918BCF56B854CEE9D4520C7D4F",
+          "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+          "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+          "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+          "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "qr-foreground-bounds-exploratory-texture-ccd0-result.json",
+          "OutcomesFile": "qr-foreground-bounds-exploratory-texture-ccd0-outcomes.json",
+          "OutcomesSha256": "D8214960D0C49E2E5B0E96575BA55C8EAEFD53385676429C697DDC947C08DF68",
+          "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+          "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+          "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+          "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "qr-foreground-bounds-exploratory-texture-ccd1-result.json",
+          "OutcomesFile": "qr-foreground-bounds-exploratory-texture-ccd1-outcomes.json",
+          "OutcomesSha256": "41B33A9738C1819C3E79BE8FA3DE8C557FB00CAC8E12ADD7437FCE8B66D1937F",
+          "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+          "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+          "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+          "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd0",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "qr-foreground-bounds-exploratory-whole-ccd0-result.json",
+          "OutcomesFile": "qr-foreground-bounds-exploratory-whole-ccd0-outcomes.json",
+          "OutcomesSha256": "AAC855219ACE635DFF7F38B5B049CCC4BC21B023EA4ECEA9D4075ACF7BAEA61B",
+          "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+          "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+          "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+          "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd1",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "qr-foreground-bounds-exploratory-whole-ccd1-result.json",
+          "OutcomesFile": "qr-foreground-bounds-exploratory-whole-ccd1-outcomes.json",
+          "OutcomesSha256": "DE496A36D21CBB8B9483C53B8E4E617915F092BF7F19CAA4895078E0BC039E45",
+          "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+          "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+          "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+          "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0"
+        },
+        {
+          "Kind": "fabric",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "qr-foreground-bounds-exploratory-fabric-ccd0-result.json",
+          "OutcomesFile": "qr-foreground-bounds-exploratory-fabric-ccd0-outcomes.json",
+          "OutcomesSha256": "C5E85B3852E8EA009C7F136580672BFECDD502225B2F00C60C6B7FD7E17F1B57",
+          "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+          "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+          "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+          "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0"
+        },
+        {
+          "Kind": "fabric",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "qr-foreground-bounds-exploratory-fabric-ccd1-result.json",
+          "OutcomesFile": "qr-foreground-bounds-exploratory-fabric-ccd1-outcomes.json",
+          "OutcomesSha256": "B0B09BF3411A0B66620C3BC333F3E8EE23408B8238498CB946B6A3469512A605",
+          "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+          "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+          "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+          "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0"
+        }
+      ],
+      "Scope": "Three priming calls and twelve grouped rotated measurements per binary and domain; same options, fixed deadlines and per-image oracles. These exploratory calls precede the final matrix.",
+      "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+      "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+      "PreviousSource": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+      "PreviousCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+      "HostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+      "PreviousHostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0"
+    }
+  ],
+  "HistoricalLinkRepair": {
+    "Scope": "Two legacy qualification records previously relied on the default previous-qualification.json filename. That filename later named a newer candidate, making a backward walk cyclic. Explicit links now target their already-retained preceding records after checking both source and core identities. Original byte-for-byte copies remain downloadable; measurements and proof contents are unchanged.",
+    "Changes": [
+      {
+        "File": "historical-qr-finder-groups-previous-qualification.json",
+        "Source": "bfd639a91c1603c302e6204e60bdc7f5383951ba",
+        "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+        "PriorQualificationPacket": "historical-deadline-polling-previous-qualification.json",
+        "PreviousSource": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+        "PreviousCoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+        "OriginalFile": "qr-foreground-bounds-original-historical-qr-finder-groups-previous-qualification.json",
+        "OriginalSha256": "6CB5D1114B691AC72E0B512EBF3393E788853FAB0E6E65F543972B99D41C5B52",
+        "LinkedSha256": "74700BE3A840F66F394736483AFDC8BD9F2986F89D09E1A49395576289DB8ACD",
+        "OnlyAddedField": "PriorQualificationPacket"
+      },
+      {
+        "File": "historical-deadline-polling-previous-qualification.json",
+        "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+        "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+        "PriorQualificationPacket": "historical-decode-allocation-previous-qualification.json",
+        "PreviousSource": "63677a2c11e9561677736cc001a8bf748ca28670",
+        "PreviousCoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+        "OriginalFile": "qr-foreground-bounds-original-historical-deadline-polling-previous-qualification.json",
+        "OriginalSha256": "CBD19C81DD235A95E90F7CBC12CC829C2EEFBE4E03B727515417FE32E8E15BD5",
+        "LinkedSha256": "2C26B0DFDF773E0C4603803D5EEA63B82F3083174F64C90C07DB499BDB0FC700",
+        "OnlyAddedField": "PriorQualificationPacket"
+      }
+    ]
+  }
+}

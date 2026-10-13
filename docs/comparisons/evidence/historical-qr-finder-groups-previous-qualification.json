@@ -15966,5 +15966,6 @@
       "historical-deadline-polling-paired-decode-cost-ccd1-result.json"
     ],
     "Scope": "Previous qualified binary. Renamed current timing and negative-pass packets retain their original measurements; older proof identities remain intact."
-  }
+  },
+  "PriorQualificationPacket": "historical-deadline-polling-previous-qualification.json"
 }

@@ -16,6 +16,7 @@ from comparison_retained_contexts import project_retained_contexts
 from comparison_pdf417_segment_cache import project_pdf417_segment_cache
 from comparison_aztec_probe_cache import project_aztec_probe_cache
 from comparison_qr_component_budget import project_qr_component_budget
+from comparison_qr_foreground_bounds import project_qr_foreground_bounds
 
 
 def load(path):
@@ -373,6 +374,7 @@ def build_website_data(root):
             "databar_tilted": project_databar_tilted(root, qualification),
             "retail_fine": project_retail_fine(root, qualification),
             "scanner_boundaries": project_scanner_boundaries(root, qualification),
+            "qr_foreground_bounds": project_qr_foreground_bounds(root, qualification),
             "qr_component_budget": project_qr_component_budget(root, qualification),
             "aztec_probe_cache": project_aztec_probe_cache(root, qualification),
             "pdf417_segment_cache": project_pdf417_segment_cache(root, qualification),

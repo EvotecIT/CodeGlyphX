@@ -15315,5 +15315,6 @@
       "historical-decode-allocation-paired-decode-cost-ccd1-result.json"
     ],
     "Scope": "Previous qualified binary. Renamed current timing and negative-pass packets retain their original measurements; older proof identities remain intact."
-  }
+  },
+  "PriorQualificationPacket": "historical-decode-allocation-previous-qualification.json"
 }

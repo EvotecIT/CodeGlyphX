@@ -1,0 +1,11 @@
+{
+  "Base": "d4099472eeba67910c650805308af2ba6f095179",
+  "Head": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+  "BoundaryState": "current",
+  "UnresolvedFindings": [],
+  "Scope": "One fresh strictly read-only independent review of the foreground bounds implementation, threshold equality and unsigned masks, region and pooled-tail bounds, inversion, budget polling cadence, hardware fallback, responsibility extraction and focused contract tests. No actionable findings.",
+  "Limits": "The review covered production source and task-local decision evidence. Full framework/corpus/benchmark and native ARM64 execution are separately recorded validation. Already-expired and pre-cancelled searches are exercised; mid-scan cancellation cadence is inspected statically. Earlier 44 focused tests preceded verbatim source extraction and use a distinct DLL hash; the full current tests provide final artifact proof.",
+  "MovedMethodsVerified": 11,
+  "RemainingMethodsVerified": 7,
+  "ReviewAgent": "qr_foreground_bounds_review"
+}

@@ -1,417 +1,417 @@
 {
-  "Samples": [
-    {
-      "Utc": "2026-10-13T12:12:55.4779582Z",
-      "Global": 42.861089425013155,
-      "Ccd0": 57.99465396156582,
-      "Ccd1": 27.727522405003548,
-      "Logical": [
-        {
-          "InstanceName": "0,0",
-          "CookedValue": 68.95678814711562
-        },
-        {
-          "InstanceName": "0,1",
-          "CookedValue": 64.30030636918296
-        },
-        {
-          "InstanceName": "0,10",
-          "CookedValue": 45.67437925745234
-        },
-        {
-          "InstanceName": "0,11",
-          "CookedValue": 73.61326992504827
-        },
-        {
-          "InstanceName": "0,12",
-          "CookedValue": 50.33086103538499
-        },
-        {
-          "InstanceName": "0,13",
-          "CookedValue": 54.98734281331765
-        },
-        {
-          "InstanceName": "0,14",
-          "CookedValue": 53.435182220673425
-        },
-        {
-          "InstanceName": "0,15",
-          "CookedValue": 58.09166399860608
-        },
-        {
-          "InstanceName": "0,16",
-          "CookedValue": 27.0484521457217
-        },
-        {
-          "InstanceName": "0,17",
-          "CookedValue": 31.704933923654366
-        },
-        {
-          "InstanceName": "0,18",
-          "CookedValue": 64.30030636918296
-        },
-        {
-          "InstanceName": "0,19",
-          "CookedValue": 37.913576294231234
-        },
-        {
-          "InstanceName": "0,2",
-          "CookedValue": 59.64382459125031
-        },
-        {
-          "InstanceName": "0,20",
-          "CookedValue": 25.496291553077487
-        },
-        {
-          "InstanceName": "0,21",
-          "CookedValue": 48.77870044274077
-        },
-        {
-          "InstanceName": "0,22",
-          "CookedValue": 30.152773331010142
-        },
-        {
-          "InstanceName": "0,23",
-          "CookedValue": 27.0484521457217
-        },
-        {
-          "InstanceName": "0,24",
-          "CookedValue": 16.18332799721217
-        },
-        {
-          "InstanceName": "0,25",
-          "CookedValue": 22.39197036778905
-        },
-        {
-          "InstanceName": "0,26",
-          "CookedValue": 44.12221866480811
-        },
-        {
-          "InstanceName": "0,27",
-          "CookedValue": 27.0484521457217
-        },
-        {
-          "InstanceName": "0,28",
-          "CookedValue": 8.422525033991079
-        },
-        {
-          "InstanceName": "0,29",
-          "CookedValue": 9.974685626635294
-        },
-        {
-          "InstanceName": "0,3",
-          "CookedValue": 53.435182220673425
-        },
-        {
-          "InstanceName": "0,30",
-          "CookedValue": 9.974685626635294
-        },
-        {
-          "InstanceName": "0,31",
-          "CookedValue": 13.079006811923733
-        },
-        {
-          "InstanceName": "0,4",
-          "CookedValue": 58.09166399860608
-        },
-        {
-          "InstanceName": "0,5",
-          "CookedValue": 59.64382459125031
-        },
-        {
-          "InstanceName": "0,6",
-          "CookedValue": 47.22653985009655
-        },
-        {
-          "InstanceName": "0,7",
-          "CookedValue": 62.74814577653874
-        },
-        {
-          "InstanceName": "0,8",
-          "CookedValue": 67.4046275544714
-        },
-        {
-          "InstanceName": "0,9",
-          "CookedValue": 50.33086103538499
-        }
-      ]
-    },
-    {
-      "Utc": "2026-10-13T12:12:56.4890287Z",
-      "Global": 50.114309213289,
-      "Ccd0": 62.041315368216154,
-      "Ccd1": 38.087743386836046,
-      "Logical": [
-        {
-          "InstanceName": "0,0",
-          "CookedValue": 89.18225781486059
-        },
-        {
-          "InstanceName": "0,1",
-          "CookedValue": 45.91128907430293
-        },
-        {
-          "InstanceName": "0,10",
-          "CookedValue": 61.365206481644954
-        },
-        {
-          "InstanceName": "0,11",
-          "CookedValue": 66.00138170384756
-        },
-        {
-          "InstanceName": "0,12",
-          "CookedValue": 59.81981474091075
-        },
-        {
-          "InstanceName": "0,13",
-          "CookedValue": 55.18363951870815
-        },
-        {
-          "InstanceName": "0,14",
-          "CookedValue": 64.45598996311335
-        },
-        {
-          "InstanceName": "0,15",
-          "CookedValue": 42.82050559283452
-        },
-        {
-          "InstanceName": "0,16",
-          "CookedValue": 39.729722111366115
-        },
-        {
-          "InstanceName": "0,17",
-          "CookedValue": 32.00276340769511
-        },
-        {
-          "InstanceName": "0,18",
-          "CookedValue": 53.638247777973945
-        },
-        {
-          "InstanceName": "0,19",
-          "CookedValue": 49.002072555771335
-        },
-        {
-          "InstanceName": "0,2",
-          "CookedValue": 70.63755692605017
-        },
-        {
-          "InstanceName": "0,20",
-          "CookedValue": 49.002072555771335
-        },
-        {
-          "InstanceName": "0,21",
-          "CookedValue": 39.729722111366115
-        },
-        {
-          "InstanceName": "0,22",
-          "CookedValue": 42.82050559283452
-        },
-        {
-          "InstanceName": "0,23",
-          "CookedValue": 30.45737166696091
-        },
-        {
-          "InstanceName": "0,24",
-          "CookedValue": 38.184330370631926
-        },
-        {
-          "InstanceName": "0,25",
-          "CookedValue": 25.8211964447583
-        },
-        {
-          "InstanceName": "0,26",
-          "CookedValue": 53.638247777973945
-        },
-        {
-          "InstanceName": "0,27",
-          "CookedValue": 42.82050559283452
-        },
-        {
-          "InstanceName": "0,28",
-          "CookedValue": 27.366588185492503
-        },
-        {
-          "InstanceName": "0,29",
-          "CookedValue": 22.730412963289904
-        },
-        {
-          "InstanceName": "0,3",
-          "CookedValue": 50.54746429650554
-        },
-        {
-          "InstanceName": "0,30",
-          "CookedValue": 38.184330370631926
-        },
-        {
-          "InstanceName": "0,31",
-          "CookedValue": 24.275804704024107
-        },
-        {
-          "InstanceName": "0,4",
-          "CookedValue": 69.09216518531596
-        },
-        {
-          "InstanceName": "0,5",
-          "CookedValue": 66.00138170384756
-        },
-        {
-          "InstanceName": "0,6",
-          "CookedValue": 58.27442300017655
-        },
-        {
-          "InstanceName": "0,7",
-          "CookedValue": 61.365206481644954
-        },
-        {
-          "InstanceName": "0,8",
-          "CookedValue": 56.729031259442344
-        },
-        {
-          "InstanceName": "0,9",
-          "CookedValue": 75.27373214825278
-        }
-      ]
-    },
-    {
-      "Utc": "2026-10-13T12:12:57.5037786Z",
-      "Global": 56.16869594896527,
-      "Ccd0": 65.35476376987079,
-      "Ccd1": 47.06977798174703,
-      "Logical": [
-        {
-          "InstanceName": "0,0",
-          "CookedValue": 72.28381101589663
-        },
-        {
-          "InstanceName": "0,1",
-          "CookedValue": 72.28381101589663
-        },
-        {
-          "InstanceName": "0,10",
-          "CookedValue": 69.20423446210737
-        },
-        {
-          "InstanceName": "0,11",
-          "CookedValue": 56.885928246950314
-        },
-        {
-          "InstanceName": "0,12",
-          "CookedValue": 67.66444618521273
-        },
-        {
-          "InstanceName": "0,13",
-          "CookedValue": 47.647198585582515
-        },
-        {
-          "InstanceName": "0,14",
-          "CookedValue": 67.66444618521273
-        },
-        {
-          "InstanceName": "0,15",
-          "CookedValue": 52.26656341626641
-        },
-        {
-          "InstanceName": "0,16",
-          "CookedValue": 53.806351693161034
-        },
-        {
-          "InstanceName": "0,17",
-          "CookedValue": 35.32889237042546
-        },
-        {
-          "InstanceName": "0,18",
-          "CookedValue": 64.58486963142347
-        },
-        {
-          "InstanceName": "0,19",
-          "CookedValue": 58.42571652384494
-        },
-        {
-          "InstanceName": "0,2",
-          "CookedValue": 70.744022739002
-        },
-        {
-          "InstanceName": "0,20",
-          "CookedValue": 52.26656341626641
-        },
-        {
-          "InstanceName": "0,21",
-          "CookedValue": 56.885928246950314
-        },
-        {
-          "InstanceName": "0,22",
-          "CookedValue": 49.18698686247714
-        },
-        {
-          "InstanceName": "0,23",
-          "CookedValue": 38.40846892421472
-        },
-        {
-          "InstanceName": "0,24",
-          "CookedValue": 41.48804547800399
-        },
-        {
-          "InstanceName": "0,25",
-          "CookedValue": 38.40846892421472
-        },
-        {
-          "InstanceName": "0,26",
-          "CookedValue": 66.1246579083181
-        },
-        {
-          "InstanceName": "0,27",
-          "CookedValue": 47.647198585582515
-        },
-        {
-          "InstanceName": "0,28",
-          "CookedValue": 43.02783375489862
-        },
-        {
-          "InstanceName": "0,29",
-          "CookedValue": 33.78910409353083
-        },
-        {
-          "InstanceName": "0,3",
-          "CookedValue": 50.72677513937178
-        },
-        {
-          "InstanceName": "0,30",
-          "CookedValue": 39.948257201109364
-        },
-        {
-          "InstanceName": "0,31",
-          "CookedValue": 33.78910409353083
-        },
-        {
-          "InstanceName": "0,4",
-          "CookedValue": 73.82359929279126
-        },
-        {
-          "InstanceName": "0,5",
-          "CookedValue": 66.1246579083181
-        },
-        {
-          "InstanceName": "0,6",
-          "CookedValue": 76.90317584658052
-        },
-        {
-          "InstanceName": "0,7",
-          "CookedValue": 53.806351693161034
-        },
-        {
-          "InstanceName": "0,8",
-          "CookedValue": 78.44296412347515
-        },
-        {
-          "InstanceName": "0,9",
-          "CookedValue": 69.20423446210737
-        }
-      ]
-    }
-  ],
-  "Scope": "Per-logical-processor utilization sampled before each pass; does not prove the selected domain remains idle during the operation.",
   "Masks": [
     "0xFFFF",
     "0xFFFF0000"
+  ],
+  "Scope": "Per-logical-processor utilization sampled before each pass; does not prove the selected domain remains idle during the operation.",
+  "Samples": [
+    {
+      "Utc": "2026-10-13T14:23:32.6461427Z",
+      "Global": 69.71746535876497,
+      "Ccd0": 76.4378951263045,
+      "Ccd1": 62.58914777196921,
+      "Logical": [
+        {
+          "InstanceName": "0,0",
+          "CookedValue": 86.1512526456647
+        },
+        {
+          "InstanceName": "0,1",
+          "CookedValue": 76.91875440944116
+        },
+        {
+          "InstanceName": "0,10",
+          "CookedValue": 79.99625382151567
+        },
+        {
+          "InstanceName": "0,11",
+          "CookedValue": 70.76375558529213
+        },
+        {
+          "InstanceName": "0,12",
+          "CookedValue": 78.45750411547841
+        },
+        {
+          "InstanceName": "0,13",
+          "CookedValue": 64.6087567611431
+        },
+        {
+          "InstanceName": "0,14",
+          "CookedValue": 76.91875440944116
+        },
+        {
+          "InstanceName": "0,15",
+          "CookedValue": 72.30250529132938
+        },
+        {
+          "InstanceName": "0,16",
+          "CookedValue": 61.53125734906859
+        },
+        {
+          "InstanceName": "0,17",
+          "CookedValue": 63.07000705510586
+        },
+        {
+          "InstanceName": "0,18",
+          "CookedValue": 64.6087567611431
+        },
+        {
+          "InstanceName": "0,19",
+          "CookedValue": 64.6087567611431
+        },
+        {
+          "InstanceName": "0,2",
+          "CookedValue": 72.30250529132938
+        },
+        {
+          "InstanceName": "0,20",
+          "CookedValue": 69.22500587925488
+        },
+        {
+          "InstanceName": "0,21",
+          "CookedValue": 64.6087567611431
+        },
+        {
+          "InstanceName": "0,22",
+          "CookedValue": 49.221259700770545
+        },
+        {
+          "InstanceName": "0,23",
+          "CookedValue": 61.53125734906859
+        },
+        {
+          "InstanceName": "0,24",
+          "CookedValue": 49.221259700770545
+        },
+        {
+          "InstanceName": "0,25",
+          "CookedValue": 55.376258524919564
+        },
+        {
+          "InstanceName": "0,26",
+          "CookedValue": 66.14750646718038
+        },
+        {
+          "InstanceName": "0,27",
+          "CookedValue": 61.53125734906859
+        },
+        {
+          "InstanceName": "0,28",
+          "CookedValue": 81.53500352755293
+        },
+        {
+          "InstanceName": "0,29",
+          "CookedValue": 84.61250293962743
+        },
+        {
+          "InstanceName": "0,3",
+          "CookedValue": 72.30250529132938
+        },
+        {
+          "InstanceName": "0,30",
+          "CookedValue": 56.91500823095683
+        },
+        {
+          "InstanceName": "0,31",
+          "CookedValue": 47.682509994733294
+        },
+        {
+          "InstanceName": "0,4",
+          "CookedValue": 90.76750176377647
+        },
+        {
+          "InstanceName": "0,5",
+          "CookedValue": 70.76375558529213
+        },
+        {
+          "InstanceName": "0,6",
+          "CookedValue": 73.84125499736665
+        },
+        {
+          "InstanceName": "0,7",
+          "CookedValue": 76.91875440944116
+        },
+        {
+          "InstanceName": "0,8",
+          "CookedValue": 87.69000235170195
+        },
+        {
+          "InstanceName": "0,9",
+          "CookedValue": 72.30250529132938
+        }
+      ]
+    },
+    {
+      "Utc": "2026-10-13T14:23:33.6597186Z",
+      "Global": 95.37071008023807,
+      "Ccd0": 96.82050821255716,
+      "Ccd1": 93.93006113306366,
+      "Logical": [
+        {
+          "InstanceName": "0,0",
+          "CookedValue": 98.45842822427014
+        },
+        {
+          "InstanceName": "0,1",
+          "CookedValue": 93.83371289708052
+        },
+        {
+          "InstanceName": "0,10",
+          "CookedValue": 95.3752846728104
+        },
+        {
+          "InstanceName": "0,11",
+          "CookedValue": 98.45842822427014
+        },
+        {
+          "InstanceName": "0,12",
+          "CookedValue": 95.3752846728104
+        },
+        {
+          "InstanceName": "0,13",
+          "CookedValue": 93.83371289708052
+        },
+        {
+          "InstanceName": "0,14",
+          "CookedValue": 100.0
+        },
+        {
+          "InstanceName": "0,15",
+          "CookedValue": 98.45842822427014
+        },
+        {
+          "InstanceName": "0,16",
+          "CookedValue": 90.75056934562079
+        },
+        {
+          "InstanceName": "0,17",
+          "CookedValue": 95.3752846728104
+        },
+        {
+          "InstanceName": "0,18",
+          "CookedValue": 98.45842822427014
+        },
+        {
+          "InstanceName": "0,19",
+          "CookedValue": 89.20899756989091
+        },
+        {
+          "InstanceName": "0,2",
+          "CookedValue": 96.91685644854027
+        },
+        {
+          "InstanceName": "0,20",
+          "CookedValue": 93.83371289708052
+        },
+        {
+          "InstanceName": "0,21",
+          "CookedValue": 93.83371289708052
+        },
+        {
+          "InstanceName": "0,22",
+          "CookedValue": 92.29214112135065
+        },
+        {
+          "InstanceName": "0,23",
+          "CookedValue": 92.29214112135065
+        },
+        {
+          "InstanceName": "0,24",
+          "CookedValue": 96.91685644854027
+        },
+        {
+          "InstanceName": "0,25",
+          "CookedValue": 93.83371289708052
+        },
+        {
+          "InstanceName": "0,26",
+          "CookedValue": 93.83371289708052
+        },
+        {
+          "InstanceName": "0,27",
+          "CookedValue": 95.3752846728104
+        },
+        {
+          "InstanceName": "0,28",
+          "CookedValue": 93.83371289708052
+        },
+        {
+          "InstanceName": "0,29",
+          "CookedValue": 95.3752846728104
+        },
+        {
+          "InstanceName": "0,3",
+          "CookedValue": 92.29214112135065
+        },
+        {
+          "InstanceName": "0,30",
+          "CookedValue": 95.3752846728104
+        },
+        {
+          "InstanceName": "0,31",
+          "CookedValue": 92.29214112135065
+        },
+        {
+          "InstanceName": "0,4",
+          "CookedValue": 100.0
+        },
+        {
+          "InstanceName": "0,5",
+          "CookedValue": 98.45842822427014
+        },
+        {
+          "InstanceName": "0,6",
+          "CookedValue": 95.3752846728104
+        },
+        {
+          "InstanceName": "0,7",
+          "CookedValue": 100.0
+        },
+        {
+          "InstanceName": "0,8",
+          "CookedValue": 95.3752846728104
+        },
+        {
+          "InstanceName": "0,9",
+          "CookedValue": 96.91685644854027
+        }
+      ]
+    },
+    {
+      "Utc": "2026-10-13T14:23:34.6636175Z",
+      "Global": 80.35008058071105,
+      "Ccd0": 86.86760813265161,
+      "Ccd1": 73.83249324209837,
+      "Logical": [
+        {
+          "InstanceName": "0,0",
+          "CookedValue": 92.21784185638614
+        },
+        {
+          "InstanceName": "0,1",
+          "CookedValue": 82.8792520840495
+        },
+        {
+          "InstanceName": "0,10",
+          "CookedValue": 89.10497859894059
+        },
+        {
+          "InstanceName": "0,11",
+          "CookedValue": 90.66141022766337
+        },
+        {
+          "InstanceName": "0,12",
+          "CookedValue": 76.6535255691584
+        },
+        {
+          "InstanceName": "0,13",
+          "CookedValue": 78.20995719788118
+        },
+        {
+          "InstanceName": "0,14",
+          "CookedValue": 84.43568371277227
+        },
+        {
+          "InstanceName": "0,15",
+          "CookedValue": 82.8792520840495
+        },
+        {
+          "InstanceName": "0,16",
+          "CookedValue": 70.42779905426731
+        },
+        {
+          "InstanceName": "0,17",
+          "CookedValue": 76.6535255691584
+        },
+        {
+          "InstanceName": "0,18",
+          "CookedValue": 73.54066231171285
+        },
+        {
+          "InstanceName": "0,19",
+          "CookedValue": 78.20995719788118
+        },
+        {
+          "InstanceName": "0,2",
+          "CookedValue": 82.8792520840495
+        },
+        {
+          "InstanceName": "0,20",
+          "CookedValue": 65.758504168099
+        },
+        {
+          "InstanceName": "0,21",
+          "CookedValue": 79.76638882660396
+        },
+        {
+          "InstanceName": "0,22",
+          "CookedValue": 62.645640910653455
+        },
+        {
+          "InstanceName": "0,23",
+          "CookedValue": 75.09709394043563
+        },
+        {
+          "InstanceName": "0,24",
+          "CookedValue": 65.758504168099
+        },
+        {
+          "InstanceName": "0,25",
+          "CookedValue": 75.09709394043563
+        },
+        {
+          "InstanceName": "0,26",
+          "CookedValue": 79.76638882660396
+        },
+        {
+          "InstanceName": "0,27",
+          "CookedValue": 79.76638882660396
+        },
+        {
+          "InstanceName": "0,28",
+          "CookedValue": 68.87136742554453
+        },
+        {
+          "InstanceName": "0,29",
+          "CookedValue": 78.20995719788118
+        },
+        {
+          "InstanceName": "0,3",
+          "CookedValue": 85.99211534149505
+        },
+        {
+          "InstanceName": "0,30",
+          "CookedValue": 75.09709394043563
+        },
+        {
+          "InstanceName": "0,31",
+          "CookedValue": 76.6535255691584
+        },
+        {
+          "InstanceName": "0,4",
+          "CookedValue": 95.33070511383168
+        },
+        {
+          "InstanceName": "0,5",
+          "CookedValue": 95.33070511383168
+        },
+        {
+          "InstanceName": "0,6",
+          "CookedValue": 90.66141022766337
+        },
+        {
+          "InstanceName": "0,7",
+          "CookedValue": 85.99211534149505
+        },
+        {
+          "InstanceName": "0,8",
+          "CookedValue": 93.7742734851089
+        },
+        {
+          "InstanceName": "0,9",
+          "CookedValue": 82.8792520840495
+        }
+      ]
+    }
   ]
 }
