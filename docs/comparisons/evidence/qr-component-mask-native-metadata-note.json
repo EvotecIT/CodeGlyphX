@@ -1,0 +1,9 @@
+{
+  "CurrentSDKVersion": "10.0.401",
+  "CurrentSelectedFrameworkVersion": "10.0.12",
+  "CurrentFrameworkRollForward": "Disable",
+  "OriginalMaskReceiptFile": "qr-component-mask-original-native-arm64.json",
+  "OriginalMaskReceiptSha256": "A761168C10748AC7FD63729268EE1FAF453AC06BFE225A3696AB712876ECBCC2",
+  "HistoricalForegroundReceiptFile": "qr-foreground-bounds-native-arm64.json",
+  "Correction": "The Runtime field in the earlier foreground-bounds receipt and initial mask receipt contains dotnet --version output, which is the SDK version. Their selected framework runtime was not recorded. The current mask check was rerun with an explicit framework version and roll-forward disabled; the decision proof is unchanged. Original receipts remain retained."
+}

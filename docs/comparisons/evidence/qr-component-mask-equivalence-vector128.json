@@ -1,0 +1,11 @@
+{
+  "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+  "Vector256HardwareAccelerated": false,
+  "Vector128HardwareAccelerated": true,
+  "Cases": 57344,
+  "PixelClassificationsCompared": 72810496,
+  "Mismatches": 0,
+  "UnusedPooledTailPreserved": true,
+  "CancelledAndExpiredMasksStopBeforeWrites": true,
+  "Scope": "Actual private component foreground fill versus independent byte selection across every global byte threshold, varied adaptive maps, both polarities, vector boundary widths, solid/patterned/random images and unused pooled-array tails. Decision proof only; component bounds, areas and order are checked separately."
+}
