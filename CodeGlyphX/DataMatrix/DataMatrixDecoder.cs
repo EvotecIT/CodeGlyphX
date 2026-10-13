@@ -16,6 +16,11 @@ namespace CodeGlyphX.DataMatrix;
 /// <summary>
 /// Decodes Data Matrix (ECC200) symbols.
 /// </summary>
+/// <remarks>
+/// Pixel overloads accept <see cref="PixelFormat.Gray8"/>, <see cref="PixelFormat.Rgba32"/> and
+/// <see cref="PixelFormat.Bgra32"/>. Stride is measured in bytes and may include row padding.
+/// Invalid dimensions, row lengths or unsupported pixel formats return false.
+/// </remarks>
 public static partial class DataMatrixDecoder {
     private enum DataMatrixEncodation {
         Ascii,

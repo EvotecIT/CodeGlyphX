@@ -35,26 +35,36 @@ public sealed class DataMatrixPerspectiveTests {
     }
 
     [Theory]
-    [InlineData(0, false, false)]
-    [InlineData(1, false, false)]
-    [InlineData(2, false, false)]
-    [InlineData(3, false, false)]
-    [InlineData(0, true, false)]
-    [InlineData(0, false, true)]
-    public void ProjectivePixels_PreserveGs1Metadata(int rotation, bool mirrored, bool inverted) {
+    [InlineData(0, false, false, PixelFormat.Rgba32)]
+    [InlineData(1, false, false, PixelFormat.Rgba32)]
+    [InlineData(2, false, false, PixelFormat.Rgba32)]
+    [InlineData(3, false, false, PixelFormat.Rgba32)]
+    [InlineData(0, true, false, PixelFormat.Rgba32)]
+    [InlineData(0, false, true, PixelFormat.Rgba32)]
+    [InlineData(1, false, false, PixelFormat.Gray8)]
+    [InlineData(0, true, false, PixelFormat.Gray8)]
+    [InlineData(0, false, true, PixelFormat.Gray8)]
+    public void ProjectivePixels_PreserveGs1Metadata(int rotation, bool mirrored, bool inverted, PixelFormat format) {
         const string payload = "010123456789012810LOT42";
         var modules = DataMatrixEncoder.Encode(payload, new DataMatrixEncodingOptions {
             Rows = 24, Columns = 24, IsGs1 = true
         });
         var pixels = Warp(Orient(modules, rotation, mirrored), inverted);
-        Assert.True(DataMatrixDecoder.TryDecodeDetailed(pixels, 240, 240, 960, PixelFormat.Rgba32, out var decoded));
+        var stride = 960;
+        if (format == PixelFormat.Gray8) {
+            var gray = new byte[240 * 240];
+            for (var i = 0; i < gray.Length; i++) gray[i] = pixels[i * 4];
+            pixels = gray;
+            stride = 240;
+        }
+        Assert.True(DataMatrixDecoder.TryDecodeDetailed(pixels, 240, 240, stride, format, out var decoded));
         Assert.Equal(payload, decoded.Text);
         Assert.True(decoded.IsGs1);
         Assert.Empty(decoded.EciAssignments);
         Assert.Equal(24, decoded.Rows);
         Assert.Equal(24, decoded.Columns);
         Assert.False(decoded.IsDmre);
-        Assert.True(DataMatrixDecoder.TryDecode(pixels, 240, 240, 960, PixelFormat.Rgba32, out string text, out var diagnostics));
+        Assert.True(DataMatrixDecoder.TryDecode(pixels, 240, 240, stride, format, out string text, out var diagnostics));
         Assert.Equal(payload, text);
         Assert.True(diagnostics.Success);
     }

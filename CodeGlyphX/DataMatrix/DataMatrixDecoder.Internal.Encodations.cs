@@ -227,10 +227,19 @@ public static partial class DataMatrixDecoder {
         return value;
     }
 
+    // Both the axis-aligned and perspective paths sample through IsDarkAt.
+    // Validate complete rows here so malformed raw buffers never reach either sampler.
+    private static bool HasValidPixelLayout(int length, int width, int height, int stride, PixelFormat format) {
+        if (width <= 0 || height <= 0 || stride <= 0) return false;
+        var bytesPerPixel = format == PixelFormat.Gray8 ? 1 : format is PixelFormat.Rgba32 or PixelFormat.Bgra32 ? 4 : 0;
+        var rowBytes = (long)width * bytesPerPixel;
+        return bytesPerPixel != 0 && stride >= rowBytes && (long)(height - 1) * stride + rowBytes <= length;
+    }
+
     private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BitMatrix modules, out ImageSamplingGrid sampling) {
         modules = null!;
         sampling = default;
-        if (width <= 0 || height <= 0 || stride <= 0) return false;
+        if (!HasValidPixelLayout(pixels.Length, width, height, stride, format)) return false;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
         var invert = false;
@@ -369,6 +378,7 @@ public static partial class DataMatrixDecoder {
     }
 
     private static bool IsDarkAt(PixelSpan pixels, int row, int x, PixelFormat format) {
+        if (format == PixelFormat.Gray8) return pixels[row + x] < 128;
         var p = row + x * 4;
         byte r;
         byte g;

@@ -212,7 +212,7 @@ public static partial class SymbolScanner {
         var variants = DirectPartMarkPreprocessor.CreateVariants(rgba, width, height, dpm, deadline.Token);
         foreach (var variant in variants) {
             if (deadline.ShouldStop) return;
-            if (!DataMatrixDecoder.TryDecodeDetailed(variant, width, height, width * 4, PixelFormat.Rgba32, deadline.Token, out decoded)) continue;
+            if (!DataMatrixDecoder.TryDecodeDetailed(variant, width, height, width, PixelFormat.Gray8, deadline.Token, out decoded)) continue;
             Add(results, seen, SymbolResultFactory.From(decoded, searchRegion, dpm.Profile));
             return;
         }

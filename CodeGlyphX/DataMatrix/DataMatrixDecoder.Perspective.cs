@@ -35,7 +35,8 @@ public static partial class DataMatrixDecoder {
         PixelFormat format, CancellationToken cancellationToken, out DataMatrixDecoded decoded,
         DataMatrixDecodeDiagnostics? diagnostics = null) {
         decoded = null!;
-        if (DecodeBudget.ShouldAbort(cancellationToken) || width < 20 || height < 20 || stride <= 0) return false;
+        if (DecodeBudget.ShouldAbort(cancellationToken) || width < 20 || height < 20 ||
+            !HasValidPixelLayout(pixels.Length, width, height, stride, format)) return false;
         var scale = Math.Max(1, (int)Math.Ceiling(Math.Sqrt((double)width * height / 1048576)));
         scale = Math.Max(scale, (int)Math.Ceiling(Math.Max(width, height) / 1024.0));
         var sampleWidth = (width - 1) / scale + 1;

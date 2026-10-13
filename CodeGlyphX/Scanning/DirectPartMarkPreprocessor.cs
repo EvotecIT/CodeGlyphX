@@ -6,6 +6,7 @@ using CodeGlyphX.Internal;
 namespace CodeGlyphX;
 
 internal static class DirectPartMarkPreprocessor {
+    /// <summary>Yields packed Gray8 retries in recognition order, without expanding them to color pixels.</summary>
     internal static IEnumerable<byte[]> CreateVariants(byte[] rgba, int width, int height, DirectPartMarkOptions options, CancellationToken cancellationToken) {
         Validate(options);
         return EnumerateVariants(rgba, width, height, options, cancellationToken);
@@ -19,7 +20,7 @@ internal static class DirectPartMarkPreprocessor {
         var count = 0;
 
         var stretched = ContrastStretch(gray, width, height, cancellationToken);
-        var variant = ToRgba(stretched, width, height, cancellationToken);
+        var variant = ToLuminance(stretched, cancellationToken);
         if (variant is null) yield break;
         yield return variant;
         if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
@@ -30,30 +31,30 @@ internal static class DirectPartMarkPreprocessor {
         var integral = BuildIntegral(gray, width, height, cancellationToken);
         if (DecodeBudget.ShouldAbort(cancellationToken)) yield break;
         var dark = Adaptive(gray, integral, width, height, radius, options.ThresholdBias, lightMarks: false, cancellationToken);
-        variant = ToRgba(dark, width, height, cancellationToken);
+        variant = ToLuminance(dark, cancellationToken);
         if (variant is null) yield break;
         yield return variant;
         if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
 
         var light = Adaptive(gray, integral, width, height, radius, options.ThresholdBias, lightMarks: true, cancellationToken);
-        variant = ToRgba(light, width, height, cancellationToken);
+        variant = ToLuminance(light, cancellationToken);
         if (variant is null) yield break;
         yield return variant;
         if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
 
         if (options.Profile is DirectPartMarkProfile.Auto or DirectPartMarkProfile.DotPeen && options.MorphologyRadius > 0) {
             var closedDark = Close(dark, width, height, options.MorphologyRadius, cancellationToken);
-            variant = ToRgba(closedDark, width, height, cancellationToken);
+            variant = ToLuminance(closedDark, cancellationToken);
             if (variant is null) yield break;
             yield return variant;
             if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
             var dilatedDark = Dilate(dark, width, height, options.MorphologyRadius, cancellationToken);
-            variant = ToRgba(dilatedDark, width, height, cancellationToken);
+            variant = ToLuminance(dilatedDark, cancellationToken);
             if (variant is null) yield break;
             yield return variant;
             if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
             var closedLight = Close(light, width, height, options.MorphologyRadius, cancellationToken);
-            variant = ToRgba(closedLight, width, height, cancellationToken);
+            variant = ToLuminance(closedLight, cancellationToken);
             if (variant is not null) yield return variant;
         }
     }
@@ -174,19 +175,20 @@ internal static class DirectPartMarkPreprocessor {
         return output;
     }
 
-    private static byte[]? ToRgba(byte[] grayOrMask, int width, int height, CancellationToken token) {
+    // Adaptive masks retain their 0/1 representation for later morphology.
+    // Only their decode view needs 0/255 intensities; contrast pixels already
+    // contain intensities and can be passed directly to the decoder.
+    private static byte[]? ToLuminance(byte[] grayOrMask, CancellationToken token) {
         if (DecodeBudget.ShouldAbort(token)) return null;
-        var rgba = new byte[checked(width * height * 4)];
-        var binary = true;
         for (var i = 0; i < grayOrMask.Length; i++) {
             if ((i & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return null;
-            if (grayOrMask[i] > 1) { binary = false; break; }
+            if (grayOrMask[i] > 1) return DecodeBudget.ShouldAbort(token) ? null : grayOrMask;
         }
+        var luminance = new byte[grayOrMask.Length];
         for (var i = 0; i < grayOrMask.Length; i++) {
             if ((i & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return null;
-            var value = binary ? (grayOrMask[i] == 0 ? (byte)255 : (byte)0) : grayOrMask[i];
-            var p = i * 4; rgba[p] = rgba[p + 1] = rgba[p + 2] = value; rgba[p + 3] = 255;
+            luminance[i] = grayOrMask[i] == 0 ? (byte)255 : (byte)0;
         }
-        return rgba;
+        return DecodeBudget.ShouldAbort(token) ? null : luminance;
     }
 }
