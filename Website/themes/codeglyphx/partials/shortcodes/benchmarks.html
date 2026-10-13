@@ -65,6 +65,8 @@
             </table>
         </div>
     </section>
+    {{ session_costs = comparison.qr_component_budget }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
     {{ session_costs = comparison.aztec_probe_cache }}
     {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
     {{ session_costs = comparison.pdf417_segment_cache }}
