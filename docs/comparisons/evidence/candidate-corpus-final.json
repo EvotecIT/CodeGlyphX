@@ -1533,8 +1533,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/15.png",
@@ -1632,8 +1632,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives-2/06.png",
@@ -1643,8 +1643,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "itf-1/15.png",

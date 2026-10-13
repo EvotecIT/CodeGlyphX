@@ -1,0 +1,12 @@
+{
+  "Source": "a94fee87b496128712dd84eeee5cb6b8771d3a96",
+  "CoreSha256": "945839315ABF94D6466A2D9A57663B528F590D416CF75D553EFB011C243E2D67",
+  "PreviousCoreSha256": "0C204227B51A43765CEACB2F58B42E4D5B7F3557CC5350EC0E76855DAC87E7E4",
+  "Images": 9,
+  "PrimingCalls": 9,
+  "MeasuredCalls": 27,
+  "BeforeMeanAllocatedBytes": 44775576.88888889,
+  "CurrentMeanAllocatedBytes": 38302568.2962963,
+  "AllocationRatio": 0.8554343898537492,
+  "Scope": "Traced repetitions of the unchanged nine-image negative workload. Priming is excluded from allocation means; completion and unexpected outputs remain in every call. Diagnostic counters include tracing overhead. Inclusive allocation and thread-time stack samples overlap and do not establish elapsed time, CPU utilization or competitive rankings."
+}
