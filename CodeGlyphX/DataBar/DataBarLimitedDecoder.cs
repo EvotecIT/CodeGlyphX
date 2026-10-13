@@ -2,7 +2,6 @@
 // Licensed under BSD-3-Clause and Apache-2.0; see THIRD-PARTY-NOTICES.md.
 
 using System;
-using System.Collections.Generic;
 
 namespace CodeGlyphX.DataBar;
 
@@ -16,7 +15,7 @@ public static class DataBarLimitedDecoder {
     public static bool TryDecode(Barcode1D barcode, out string content) {
         content = string.Empty;
         if (barcode is null || barcode.Segments.Count != 47 || barcode.Segments[0].IsBar) return false;
-        var widths = new int[47];
+        Span<int> widths = stackalloc int[47];
         for (var i = 0; i < widths.Length; i++) widths[i] = barcode.Segments[i].Modules;
         return TryDecodeWidths(widths, out content);
     }
@@ -27,18 +26,25 @@ public static class DataBarLimitedDecoder {
     public static bool TryDecode(bool[] modules, out string content) {
         content = string.Empty;
         if (modules is null || modules.Length == 0) return false;
-        if (!TryExtractWidths(modules, out var widths)) return false;
+        Span<int> widths = stackalloc int[47];
+        // BarcodeDecoder trims quiet space runs before dispatching. Restore the fixed Limited guards.
+        var leading = modules[0] ? 1 : 0;
+        var trailing = modules[modules.Length - 1] ? 1 : 0;
+        if (!DataBarModuleRuns.TryRead(modules, widths.Slice(leading, 47 - leading - trailing), out var count)
+            || count + leading + trailing != 47) return false;
+        if (leading != 0) widths[0] = 1;
+        if (trailing != 0) widths[46] = 5;
         return TryDecodeWidths(widths, out content);
     }
 
-    private static bool TryDecodeWidths(int[] widths, out string content) {
+    private static bool TryDecodeWidths(ReadOnlySpan<int> widths, out string content) {
         content = string.Empty;
         if (widths.Length != 47 || widths[0] != 1 || widths[1] != 1 ||
             widths[44] != 1 || widths[45] != 1 || widths[46] != 5) return false;
 
-        var leftWidths = new ReadOnlySpan<int>(widths, 2, 14);
-        var finderWidths = new ReadOnlySpan<int>(widths, 16, 14);
-        var rightWidths = new ReadOnlySpan<int>(widths, 30, 14);
+        var leftWidths = widths.Slice(2, 14);
+        var finderWidths = widths.Slice(16, 14);
+        var rightWidths = widths.Slice(30, 14);
         var finderPattern = WidthsToPattern(finderWidths);
         if (finderPattern < 0) return false;
         var checksum = Array.IndexOf(DataBarLimitedTables.CheckPatterns, finderPattern);
@@ -94,27 +100,4 @@ public static class DataBarLimitedDecoder {
         return modules == 18 ? pattern : -1;
     }
 
-    private static bool TryExtractWidths(bool[] modules, out int[] widths) {
-        widths = Array.Empty<int>();
-        var runs = new List<int>(47);
-        var current = modules[0];
-        var count = 1;
-        for (var i = 1; i < modules.Length; i++) {
-            if (modules[i] == current) {
-                count++;
-            } else {
-                runs.Add(count);
-                current = modules[i];
-                count = 1;
-            }
-        }
-        runs.Add(count);
-
-        // BarcodeDecoder trims quiet space runs before dispatching. Restore the fixed Limited guards.
-        if (modules[0]) runs.Insert(0, 1);
-        if (modules[modules.Length - 1]) runs.Add(5);
-        if (runs.Count != 47) return false;
-        widths = runs.ToArray();
-        return true;
-    }
 }
