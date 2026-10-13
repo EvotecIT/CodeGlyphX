@@ -65,6 +65,8 @@
             </table>
         </div>
     </section>
+    {{ session_costs = comparison.databar_character_recovery }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
     {{ session_costs = comparison.qr_component_mask }}
     {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
     {{ session_costs = comparison.qr_foreground_bounds }}

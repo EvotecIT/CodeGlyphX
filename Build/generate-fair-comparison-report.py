@@ -20,6 +20,7 @@ from comparison_aztec_probe_cache import project_aztec_probe_cache
 from comparison_qr_component_budget import project_qr_component_budget
 from comparison_qr_foreground_bounds import project_qr_foreground_bounds
 from comparison_qr_component_mask import project_qr_component_mask
+from comparison_databar_character_recovery import project_databar_character_recovery
 
 
 def read(path):
@@ -72,6 +73,8 @@ def main():
     names += sorted(path.name for path in root.glob("historical-qr-foreground-bounds-*.json"))
     names += sorted(path.name for path in root.glob("qr-component-mask-*.json"))
     names += sorted(path.name for path in root.glob("historical-qr-component-mask-*.json"))
+    names += sorted(path.name for path in root.glob("databar-character-*.json"))
+    names += sorted(path.name for path in root.glob("historical-databar-character-*.json"))
     if qualification.get("DpmWindowMeansProof") or qualification.get("HistoricalDpmWindowMeansProof"):
         names += sorted(path.name for path in root.glob("dpm-window-means-*.json"))
     if qualification.get("DpmGray8Proof") or qualification.get("HistoricalDpmGray8Proof"):
@@ -470,6 +473,7 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    append_retained_context_section(lines, project_databar_character_recovery(root, qualification))
     append_retained_context_section(lines, project_qr_component_mask(root, qualification))
     append_retained_context_section(lines, project_qr_foreground_bounds(root, qualification))
     append_retained_context_section(lines, project_qr_component_budget(root, qualification))
