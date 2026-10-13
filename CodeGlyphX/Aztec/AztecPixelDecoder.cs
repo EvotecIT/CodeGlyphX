@@ -140,7 +140,7 @@ internal static partial class AztecPixelDecoder {
     }
 
     private static bool TryDecodeFromBox(AztecGrayImage image, bool invert, int minX, int minY, int boxW, int boxH, CancellationToken cancellationToken, out string value, AztecDecodeDiagnostics? diagnostics = null) {
-        var probes = new Dictionary<(int Pitch, int X, int Y), bool>();
+        var probes = new BullseyeProbeCache();
         var boxSize = Math.Min(boxW, boxH);
         for (var i = 0; i < Candidates.Length; i++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
@@ -164,7 +164,7 @@ internal static partial class AztecPixelDecoder {
     }
 
     private static bool TryDecodeFromFullFrame(AztecGrayImage image, bool invert, CancellationToken cancellationToken, out string value, AztecDecodeDiagnostics? diagnostics = null) {
-        var probes = new Dictionary<(int Pitch, int X, int Y), bool>();
+        var probes = new BullseyeProbeCache();
         var sizePx = Math.Min(image.Width, image.Height);
         if (sizePx < 11) {
             value = string.Empty;
@@ -232,7 +232,7 @@ internal static partial class AztecPixelDecoder {
     }
 
     private static bool TryDecodeFromCenter(AztecGrayImage image, bool invert, int centerX, int centerY, int moduleSize, CancellationToken cancellationToken, out string value, AztecDecodeDiagnostics? diagnostics = null) {
-        var probes = new Dictionary<(int Pitch, int X, int Y), bool>();
+        var probes = new BullseyeProbeCache();
         for (var i = 0; i < Candidates.Length; i++) {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
             var candidate = Candidates[i];

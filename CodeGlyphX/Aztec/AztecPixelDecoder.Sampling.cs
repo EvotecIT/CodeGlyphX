@@ -1,17 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Aztec;
 
 internal static partial class AztecPixelDecoder {
-    private static bool TrySampleModules(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken, out BitMatrixView modules, Dictionary<(int Pitch, int X, int Y), bool>? probes = null) {
+    private static bool TrySampleModules(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken, out BitMatrixView modules, BullseyeProbeCache? probes = null) {
         modules = default;
         // Probe the required alternating central rings before sampling a full
         // candidate. Leave imperfect probes to the tolerant corner detector.
-        var key = (moduleSize, offsetX + size / 2 * moduleSize, offsetY + size / 2 * moduleSize);
-        if (probes is not null && probes.TryGetValue(key, out var passed)) {
+        var centerX = offsetX + size / 2 * moduleSize;
+        var centerY = offsetY + size / 2 * moduleSize;
+        if (probes is not null && probes.TryRead(moduleSize, centerX, centerY, out var passed)) {
             if (!passed) return false;
         } else {
             var errors = 0;
@@ -22,10 +22,10 @@ internal static partial class AztecPixelDecoder {
                     var x = center + (axis == 0 || axis == 4 || axis == 5 ? ring : axis == 1 || axis == 6 || axis == 7 ? -ring : 0);
                     var y = center + (axis == 2 || axis == 4 || axis == 6 ? ring : axis == 3 || axis == 5 || axis == 7 ? -ring : 0);
                     if (SampleModule(image, offsetX + x * moduleSize + moduleSize / 2,
-                        offsetY + y * moduleSize + moduleSize / 2, moduleSize, invert) != expected && ++errors > 4) { if (probes is not null) probes[key] = false; return false; }
+                        offsetY + y * moduleSize + moduleSize / 2, moduleSize, invert) != expected && ++errors > 4) { probes?.Store(moduleSize, centerX, centerY, false); return false; }
                 }
             }
-            if (probes is not null) probes[key] = true;
+            probes?.Store(moduleSize, centerX, centerY, true);
         }
         modules = CreateSampledView(image, invert, size, moduleSize, offsetX, offsetY, cancellationToken);
         return !DecodeBudget.ShouldAbort(cancellationToken);
@@ -44,7 +44,7 @@ internal static partial class AztecPixelDecoder {
         });
     }
 
-    private static bool TryDecodeWithOffsets(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken, out string value, Dictionary<(int Pitch, int X, int Y), bool>? probes = null, AztecDecodeDiagnostics? diagnostics = null) {
+    private static bool TryDecodeWithOffsets(AztecGrayImage image, bool invert, int size, int moduleSize, int offsetX, int offsetY, CancellationToken cancellationToken, out string value, BullseyeProbeCache? probes = null, AztecDecodeDiagnostics? diagnostics = null) {
         var maxShift = Math.Max(1, moduleSize / 2);
         // A large physical module must not multiply candidate count quadratically
         // by its pixel area. Nine offsets per axis cover the half-module interval.
