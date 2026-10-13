@@ -48,11 +48,15 @@ internal static partial class QrPixelDecoder {
             return false;
         }
 
-        Func<bool>? shouldStop = budget.CanAbort ? () => budget.IsNearDeadline(120) : null;
+        var conversionStopped = false;
+        Func<bool>? shouldStop = budget.CanAbort ? () => conversionStopped = budget.IsNearDeadline(120) : null;
         var pool = new QrGrayImagePool();
         var candidates = RentCandidateList();
         try {
             if (!QrGrayImage.TryCreate(pixels, width, height, stride, fmt, scale, settings.MinContrast, shouldStop, pool, out var baseImage)) {
+                var failure = conversionStopped
+                    ? (budget.IsCancelled ? global::CodeGlyphX.QrDecodeFailure.Cancelled : global::CodeGlyphX.QrDecodeFailure.Payload)
+                    : global::CodeGlyphX.QrDecodeFailure.InvalidInput;
                 diagnostics = new QrPixelDecodeDiagnostics(
                     scale,
                     threshold: 0,
@@ -60,7 +64,7 @@ internal static partial class QrPixelDecoder {
                     candidateCount: 0,
                     candidateTriplesTried: 0,
                     dimension: 0,
-                    moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(global::CodeGlyphX.QrDecodeFailure.InvalidInput));
+                    moduleDiagnostics: new global::CodeGlyphX.QrDecodeDiagnostics(failure));
                 return false;
             }
 
