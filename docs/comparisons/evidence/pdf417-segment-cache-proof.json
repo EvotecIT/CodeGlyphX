@@ -1,0 +1,554 @@
+{
+  "Source": "c3bf421307ef938d48d5fdb9f3956022282691af",
+  "CoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+  "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+  "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+  "HostSha256": "A7559F50ADFB7230C08DB06BBC8C70822930DE93DC27824E0C27956153799EDC",
+  "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A",
+  "Changes": "PDF417 stores sampled scanlines in bounded 128-line segments with value slots instead of one dictionary entry and allocated wrapper per line. Canonical run ordering, polarity, live expiry and cancellation checks remain unchanged. Segment metadata is charged before admission within the existing logical byte and entry allowances. Search order, checksums, payload validation and recognition allowances are unchanged.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative. One additional CCD0 whole-batch pair investigates the original 18% median latency loss. It uses the same fixed settings and retains the original result separately; no further repeat is selected from its outcome.",
+  "Limits": "These retained-context costs are a separate workload from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "pdf417-segment-cache-fabric-ccd0-result.json",
+      "OutcomesFile": "pdf417-segment-cache-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "A5F6711C148718839E4ACA3D8AFB70214FAA136E6D5916A1AC67B50F118CD8A8"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "pdf417-segment-cache-fabric-ccd1-result.json",
+      "OutcomesFile": "pdf417-segment-cache-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "513CEE98ABB83B948A54BE1579B1B44BFB263F72925E3D96591380C0B952871D"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "pdf417-segment-cache-texture-ccd0-result.json",
+      "OutcomesFile": "pdf417-segment-cache-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "DBB34E74407E34277ADF63A346301386B3C7F04B977460AB83822C3649C2D752"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "pdf417-segment-cache-texture-ccd1-result.json",
+      "OutcomesFile": "pdf417-segment-cache-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "472DD24010D44CFE9DCD5CB758C3195440AEF4A7945D160BBC154B60F7C4B215"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "pdf417-segment-cache-whole-ccd0-result.json",
+      "OutcomesFile": "pdf417-segment-cache-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "9991A6642311FE8B87E4A1CB3ABAEF89C206EAA3012B613203314F50DAD4E8FD"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "pdf417-segment-cache-whole-ccd1-result.json",
+      "OutcomesFile": "pdf417-segment-cache-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "FB514D30B84885B9698E97724CE4B2303CE28E2F099F1669761BFADB844C47DB"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "pdf417-segment-cache-retail-positive-ccd0-result.json",
+      "OutcomesFile": "pdf417-segment-cache-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "BF163B10839C4BC44305DBC07551119890DF61A090D81F5E0A39B3642507E230"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "pdf417-segment-cache-retail-positive-ccd1-result.json",
+      "OutcomesFile": "pdf417-segment-cache-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "3791BC8BA61DA7D9E6EDCE76EC5278EB14239112D78FD81E1D7E60D8A5506EB6"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "pdf417-segment-cache-retail-negative-ccd0-result.json",
+      "OutcomesFile": "pdf417-segment-cache-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "582B63E4B6A67F93601EE86CCA1ECF9D3C555F457A2541D5730826BC3B6DA52F"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "pdf417-segment-cache-retail-negative-ccd1-result.json",
+      "OutcomesFile": "pdf417-segment-cache-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "59818B3887247CBBE7F9B16A58CCBE2C053E115FF57534598F7038B4D77445DE"
+    }
+  ],
+  "Contracts": {
+    "net10": 294,
+    "net8": 294,
+    "net472": 256
+  },
+  "RunEquivalence": {
+    "BaselineCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+    "CandidateCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+    "Requests": 95100,
+    "ShapePatternCases": 30,
+    "SegmentBoundaryPositions": [
+      126,
+      127,
+      128,
+      129,
+      254,
+      255,
+      256
+    ],
+    "Mismatches": 0,
+    "PrecisePolarityAndRunWidths": true,
+    "LaterCancellationOnCachedRowsStopped": true,
+    "BaselinePressureBytes": 8382530,
+    "CandidatePressureBytes": 8380858,
+    "ByteAllowance": 8388608,
+    "EntryAllowance": 32768,
+    "BaselineEntryPressureCount": 32768,
+    "CandidateEntryPressureCount": 32768,
+    "Observations": [
+      {
+        "Width": 1,
+        "Height": 257,
+        "Pattern": 0,
+        "BaselineBytes": 9720,
+        "CandidateBytes": 53880
+      },
+      {
+        "Width": 1,
+        "Height": 257,
+        "Pattern": 1,
+        "BaselineBytes": 9736,
+        "CandidateBytes": 53896
+      },
+      {
+        "Width": 1,
+        "Height": 257,
+        "Pattern": 2,
+        "BaselineBytes": 10408,
+        "CandidateBytes": 54568
+      },
+      {
+        "Width": 1,
+        "Height": 257,
+        "Pattern": 3,
+        "BaselineBytes": 9800,
+        "CandidateBytes": 53960
+      },
+      {
+        "Width": 1,
+        "Height": 257,
+        "Pattern": 4,
+        "BaselineBytes": 10034,
+        "CandidateBytes": 54194
+      },
+      {
+        "Width": 257,
+        "Height": 1,
+        "Pattern": 0,
+        "BaselineBytes": 9720,
+        "CandidateBytes": 53880
+      },
+      {
+        "Width": 257,
+        "Height": 1,
+        "Pattern": 1,
+        "BaselineBytes": 9736,
+        "CandidateBytes": 53896
+      },
+      {
+        "Width": 257,
+        "Height": 1,
+        "Pattern": 2,
+        "BaselineBytes": 10408,
+        "CandidateBytes": 54568
+      },
+      {
+        "Width": 257,
+        "Height": 1,
+        "Pattern": 3,
+        "BaselineBytes": 9812,
+        "CandidateBytes": 53972
+      },
+      {
+        "Width": 257,
+        "Height": 1,
+        "Pattern": 4,
+        "BaselineBytes": 10034,
+        "CandidateBytes": 54194
+      },
+      {
+        "Width": 129,
+        "Height": 257,
+        "Pattern": 0,
+        "BaselineBytes": 14580,
+        "CandidateBytes": 69780
+      },
+      {
+        "Width": 129,
+        "Height": 257,
+        "Pattern": 1,
+        "BaselineBytes": 14656,
+        "CandidateBytes": 69856
+      },
+      {
+        "Width": 129,
+        "Height": 257,
+        "Pattern": 2,
+        "BaselineBytes": 38026,
+        "CandidateBytes": 93226
+      },
+      {
+        "Width": 129,
+        "Height": 257,
+        "Pattern": 3,
+        "BaselineBytes": 17778,
+        "CandidateBytes": 72978
+      },
+      {
+        "Width": 129,
+        "Height": 257,
+        "Pattern": 4,
+        "BaselineBytes": 27956,
+        "CandidateBytes": 83156
+      },
+      {
+        "Width": 257,
+        "Height": 129,
+        "Pattern": 0,
+        "BaselineBytes": 14580,
+        "CandidateBytes": 69780
+      },
+      {
+        "Width": 257,
+        "Height": 129,
+        "Pattern": 1,
+        "BaselineBytes": 14656,
+        "CandidateBytes": 69856
+      },
+      {
+        "Width": 257,
+        "Height": 129,
+        "Pattern": 2,
+        "BaselineBytes": 38026,
+        "CandidateBytes": 93226
+      },
+      {
+        "Width": 257,
+        "Height": 129,
+        "Pattern": 3,
+        "BaselineBytes": 17944,
+        "CandidateBytes": 73144
+      },
+      {
+        "Width": 257,
+        "Height": 129,
+        "Pattern": 4,
+        "BaselineBytes": 28016,
+        "CandidateBytes": 83216
+      },
+      {
+        "Width": 65535,
+        "Height": 3,
+        "Pattern": 0,
+        "BaselineBytes": 12960,
+        "CandidateBytes": 68160
+      },
+      {
+        "Width": 65535,
+        "Height": 3,
+        "Pattern": 1,
+        "BaselineBytes": 13008,
+        "CandidateBytes": 68208
+      },
+      {
+        "Width": 65535,
+        "Height": 3,
+        "Pattern": 2,
+        "BaselineBytes": 407936,
+        "CandidateBytes": 463136
+      },
+      {
+        "Width": 65535,
+        "Height": 3,
+        "Pattern": 3,
+        "BaselineBytes": 65606,
+        "CandidateBytes": 120806
+      },
+      {
+        "Width": 65535,
+        "Height": 3,
+        "Pattern": 4,
+        "BaselineBytes": 210534,
+        "CandidateBytes": 265734
+      },
+      {
+        "Width": 65536,
+        "Height": 3,
+        "Pattern": 0,
+        "BaselineBytes": 12990,
+        "CandidateBytes": 68190
+      },
+      {
+        "Width": 65536,
+        "Height": 3,
+        "Pattern": 1,
+        "BaselineBytes": 13086,
+        "CandidateBytes": 68286
+      },
+      {
+        "Width": 65536,
+        "Height": 3,
+        "Pattern": 2,
+        "BaselineBytes": 802710,
+        "CandidateBytes": 857910
+      },
+      {
+        "Width": 65536,
+        "Height": 3,
+        "Pattern": 3,
+        "BaselineBytes": 118294,
+        "CandidateBytes": 173494
+      },
+      {
+        "Width": 65536,
+        "Height": 3,
+        "Pattern": 4,
+        "BaselineBytes": 407962,
+        "CandidateBytes": 463162
+      }
+    ],
+    "Scope": "Diagnostic comparisons against the exact preceding core and direct bitmap run enumeration. Both axis directions, inversion, zero and tilted slopes, segment boundaries, ushort width boundary and byte/entry-pressure fallback are covered. No recognition deadline or performance ranking is inferred."
+  },
+  "ContractNote": "The actual preceding and current private caches agree with independent direct pixel-run enumeration across 95,100 requests and thirty shape/pattern cases. Checks cover segment boundaries, both axes, reversal, inversion, tilted lines, ushort-width boundaries, cached-row cancellation and byte/entry pressure. Cache accounting is a logical charge, not measured allocation or peak memory. PDF417 regression cases pass on all three test frameworks.",
+  "Experiments": [
+    {
+      "Label": "cache",
+      "Disposition": "Segmented storage before the full qualification; allocation savings with mixed latency results.",
+      "Packets": [
+        {
+          "Kind": "fabric",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "pdf417-segment-cache-exploratory-cache-fabric-ccd0-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cache-fabric-ccd0-outcomes.json",
+          "OutcomesSha256": "4C35D246CC374A56AB3F03C532D4C35CA6975DB89AB96D4D12220E327A497403",
+          "Source": "86313ecac55a1cadfbdeea5dadeed66a318b48d7",
+          "CoreSha256": "BA5A1F00CFC21C47E9A2E3F91C969FED97CAA098A6DC65BC784180D5BA71AC00",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "F049891222E8CDDE305B0BCEF5B839B69AA8C74355A32E011968F728F357AA29",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "fabric",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "pdf417-segment-cache-exploratory-cache-fabric-ccd1-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cache-fabric-ccd1-outcomes.json",
+          "OutcomesSha256": "91480594EC40B5A6821747485BC448009932278D854AFD0064E9B573C975A2FC",
+          "Source": "86313ecac55a1cadfbdeea5dadeed66a318b48d7",
+          "CoreSha256": "BA5A1F00CFC21C47E9A2E3F91C969FED97CAA098A6DC65BC784180D5BA71AC00",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "F049891222E8CDDE305B0BCEF5B839B69AA8C74355A32E011968F728F357AA29",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "pdf417-segment-cache-exploratory-cache-texture-ccd0-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cache-texture-ccd0-outcomes.json",
+          "OutcomesSha256": "EA8E25C3D0CD829F95C390D1BCBCAFEC6383401254756474C2B63A43F1B3DF24",
+          "Source": "86313ecac55a1cadfbdeea5dadeed66a318b48d7",
+          "CoreSha256": "BA5A1F00CFC21C47E9A2E3F91C969FED97CAA098A6DC65BC784180D5BA71AC00",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "F049891222E8CDDE305B0BCEF5B839B69AA8C74355A32E011968F728F357AA29",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "pdf417-segment-cache-exploratory-cache-texture-ccd1-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cache-texture-ccd1-outcomes.json",
+          "OutcomesSha256": "17576B7A0010735A408A759F032A74D6E9CF863A9F1C4BB6CE080B830DA27BE8",
+          "Source": "86313ecac55a1cadfbdeea5dadeed66a318b48d7",
+          "CoreSha256": "BA5A1F00CFC21C47E9A2E3F91C969FED97CAA098A6DC65BC784180D5BA71AC00",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "F049891222E8CDDE305B0BCEF5B839B69AA8C74355A32E011968F728F357AA29",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd0",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "pdf417-segment-cache-exploratory-cache-whole-ccd0-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cache-whole-ccd0-outcomes.json",
+          "OutcomesSha256": "B3DD9778980316E2374C831C1C51806C00DCFB6D4BFFF9DC4EBE8E1689B460DD",
+          "Source": "86313ecac55a1cadfbdeea5dadeed66a318b48d7",
+          "CoreSha256": "BA5A1F00CFC21C47E9A2E3F91C969FED97CAA098A6DC65BC784180D5BA71AC00",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "F049891222E8CDDE305B0BCEF5B839B69AA8C74355A32E011968F728F357AA29",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd1",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "pdf417-segment-cache-exploratory-cache-whole-ccd1-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cache-whole-ccd1-outcomes.json",
+          "OutcomesSha256": "73CA2C8669908929F02A67DD6E7C21369CA55437D15C41793E99FA47F58F15A8",
+          "Source": "86313ecac55a1cadfbdeea5dadeed66a318b48d7",
+          "CoreSha256": "BA5A1F00CFC21C47E9A2E3F91C969FED97CAA098A6DC65BC784180D5BA71AC00",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "F049891222E8CDDE305B0BCEF5B839B69AA8C74355A32E011968F728F357AA29",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        }
+      ],
+      "Scope": "Exploratory retained-session pairs, three priming calls and twelve rotated measurements, fixed workload and placement. All outcomes remain included. The cursor exploratory round overlapped a brief private run-equivalence diagnostic and official package verification; these are not the final qualification passes."
+    },
+    {
+      "Label": "cursor",
+      "Disposition": "Rejected recent-segment lookup refinement: no consistent latency benefit, with slower fabric/texture medians and completion losses. The cursor is absent from the qualified source.",
+      "Packets": [
+        {
+          "Kind": "fabric",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "pdf417-segment-cache-exploratory-cursor-fabric-ccd0-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cursor-fabric-ccd0-outcomes.json",
+          "OutcomesSha256": "9D77B55F56EB4EAA46A3E4F762B0781C9F932E7DCD99126CE7EEA322FC4D007A",
+          "Source": "e3fe36ee90751add22b80f8ebec154f4fc3d19e0",
+          "CoreSha256": "6295FE06600D98B8212DCCA811A80EECD85B1EABB91DD5AE2A6FABD6ACC39075",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "864A46AA89DEE3E48F6DE96FDE54DE0FEEC7F3512673BF9D4FDA8AD978A7DD04",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "fabric",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "pdf417-segment-cache-exploratory-cursor-fabric-ccd1-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cursor-fabric-ccd1-outcomes.json",
+          "OutcomesSha256": "1D66F3E7C0C1390DF26BDBA385F0777408C82DB45C208615F45029A62C78442E",
+          "Source": "e3fe36ee90751add22b80f8ebec154f4fc3d19e0",
+          "CoreSha256": "6295FE06600D98B8212DCCA811A80EECD85B1EABB91DD5AE2A6FABD6ACC39075",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "864A46AA89DEE3E48F6DE96FDE54DE0FEEC7F3512673BF9D4FDA8AD978A7DD04",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "pdf417-segment-cache-exploratory-cursor-texture-ccd0-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cursor-texture-ccd0-outcomes.json",
+          "OutcomesSha256": "94EDECE838EC93D0FAC1B8E9AF0317F337982057C5CE4DAD781D86DDF060C6F3",
+          "Source": "e3fe36ee90751add22b80f8ebec154f4fc3d19e0",
+          "CoreSha256": "6295FE06600D98B8212DCCA811A80EECD85B1EABB91DD5AE2A6FABD6ACC39075",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "864A46AA89DEE3E48F6DE96FDE54DE0FEEC7F3512673BF9D4FDA8AD978A7DD04",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "pdf417-segment-cache-exploratory-cursor-texture-ccd1-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cursor-texture-ccd1-outcomes.json",
+          "OutcomesSha256": "6E5BA574977E87C7D88AAC326983266CFA738F564EB5BFDB58B721801C2DA8A0",
+          "Source": "e3fe36ee90751add22b80f8ebec154f4fc3d19e0",
+          "CoreSha256": "6295FE06600D98B8212DCCA811A80EECD85B1EABB91DD5AE2A6FABD6ACC39075",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "864A46AA89DEE3E48F6DE96FDE54DE0FEEC7F3512673BF9D4FDA8AD978A7DD04",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd0",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "pdf417-segment-cache-exploratory-cursor-whole-ccd0-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cursor-whole-ccd0-outcomes.json",
+          "OutcomesSha256": "91941BB17BEBDE123B70E3A4E3117BEB54515EDB2218F8185E66322DC7CA569B",
+          "Source": "e3fe36ee90751add22b80f8ebec154f4fc3d19e0",
+          "CoreSha256": "6295FE06600D98B8212DCCA811A80EECD85B1EABB91DD5AE2A6FABD6ACC39075",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "864A46AA89DEE3E48F6DE96FDE54DE0FEEC7F3512673BF9D4FDA8AD978A7DD04",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd1",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "pdf417-segment-cache-exploratory-cursor-whole-ccd1-result.json",
+          "OutcomesFile": "pdf417-segment-cache-exploratory-cursor-whole-ccd1-outcomes.json",
+          "OutcomesSha256": "B7FDADD1889F6EFFD430DDC2400AAC3003F691701DF868BDE15ECA13A1A9C924",
+          "Source": "e3fe36ee90751add22b80f8ebec154f4fc3d19e0",
+          "CoreSha256": "6295FE06600D98B8212DCCA811A80EECD85B1EABB91DD5AE2A6FABD6ACC39075",
+          "PreviousCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+          "PreviousSource": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+          "HostSha256": "864A46AA89DEE3E48F6DE96FDE54DE0FEEC7F3512673BF9D4FDA8AD978A7DD04",
+          "PreviousHostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A"
+        }
+      ],
+      "Scope": "Exploratory retained-session pairs, three priming calls and twelve rotated measurements, fixed workload and placement. All outcomes remain included. The cursor exploratory round overlapped a brief private run-equivalence diagnostic and official package verification; these are not the final qualification passes."
+    }
+  ],
+  "Followups": [
+    {
+      "Kind": "whole followup",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "pdf417-segment-cache-whole-followup-ccd0-result.json",
+      "OutcomesFile": "pdf417-segment-cache-whole-followup-ccd0-outcomes.json",
+      "OutcomesSha256": "BD3D4B79A550328FCFF1F2EF00245B43202D404BCCE6B2EBD0B8C267C909CA59"
+    }
+  ]
+}

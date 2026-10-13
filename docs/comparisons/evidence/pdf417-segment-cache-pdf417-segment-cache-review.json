@@ -1,0 +1,16 @@
+{
+  "BoundaryState": "current",
+  "Base": "add574a9f3618b83dd644bf6ab71978bc8011ace",
+  "Head": "c3bf421307ef938d48d5fdb9f3956022282691af",
+  "OriginalReviewedHead": "86313ecac55a1cadfbdeea5dadeed66a318b48d7",
+  "TargetedConfirmationHead": "e3fe36ee90751add22b80f8ebec154f4fc3d19e0",
+  "Reviewer": "/root/pdf417_segmented_cache_review",
+  "Scope": "Independent read-only review of segmented PDF417 scanline storage, synchronous retry callers, canonical orientation and polarity, cancellation and live deadline checks, cache admission and memory/entry limits. One targeted confirmation inspected the later recent-segment cursor; measured regressions caused that cursor to be removed. The final cache Git blob equals the originally reviewed source.",
+  "UnresolvedFindings": [],
+  "TechnicalFindings": [],
+  "ProductDisposition": "Accept as shaped: private optimization in the existing PDF417 sampling owner; no public API, production dependency, configuration or deployment requirement.",
+  "ConfirmationUsed": true,
+  "ProofLimits": "Independent review is source evidence. Full framework, corpus and end-to-end performance qualification are separate. The logical 8 MiB cache charge is not a measurement of managed allocation or total memory.",
+  "ExternalReviewState": "No push, PR, release, deployment or hosted review requested.",
+  "ReviewedAndFinalCacheBlob": "bc09c4b32d41dc08227def386fbd93c5cc460b25"
+}

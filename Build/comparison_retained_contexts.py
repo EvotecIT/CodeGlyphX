@@ -2,6 +2,7 @@
 import hashlib
 import json
 from comparison_packet_identity import project_paired_cost, validate_paired_packet
+from comparison_qualification_history import resolve_proof_owner
 
 
 def validate_retained_packet(packet, outcomes, proof, domain, requests, manifest_hash):
@@ -46,21 +47,9 @@ def validate_retained_packet(packet, outcomes, proof, domain, requests, manifest
         raise ValueError('Request oracles differ between priming and measured calls')
 
 
-def project_retained_contexts(root, qualification):
-    proof = qualification.get('RetainedContextProof')
-    if not proof:
-        return None
-    previous = qualification['NegativeRotationSources']['previous']
-    if (proof['Source'] != qualification['MeasurementSource']
-            or proof['CoreSha256'] != qualification['CandidateCoreSha256']
-            or proof['PreviousSource'] != previous['Source'] or proof['PreviousCoreSha256'] != previous['CoreSha256']
-            or len(proof['Packets']) != 10
-            or {(r['Kind'], r['Domain']) for r in proof['Packets']} !=
-               {(kind, domain) for kind in ('fabric', 'texture', 'whole', 'retail-positive', 'retail-negative') for domain in ('ccd0', 'ccd1')}
-            or any(r['Requests'] != {'fabric': 1, 'texture': 1, 'whole': 19, 'retail-positive': 87, 'retail-negative': 9}[r['Kind']] for r in proof['Packets'])):
-        raise ValueError('Retained context proof belongs to another candidate or workload')
+def project_packet_costs(root, proof, packets):
     costs = []
-    for row in proof['Packets']:
+    for row in packets:
         raw = (root / row['OutcomesFile']).read_bytes()
         if hashlib.sha256(raw).hexdigest().upper() != row['OutcomesSha256']:
             raise ValueError('Per-request outcome file changed')
@@ -69,17 +58,44 @@ def project_retained_contexts(root, qualification):
         validate_retained_packet(packet, outcomes, proof, row['Domain'], row['Requests'], row['ManifestSha256'])
         costs.append({'kind': row['Kind'], 'requests': row['Requests'], **project_paired_cost(packet,
             proof['Source'], proof['CoreSha256'], proof['PreviousCoreSha256'], row['Domain'], row['Requests'], row['ManifestSha256'])})
-    return {'source': proof['Source'], 'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'],
-            'history_note': proof['HistoricalContextCorrection'], 'costs': costs}
+    return costs
+
+
+def project_context_costs(root, qualification, key):
+    proof, owner, historical = resolve_proof_owner(root, qualification, key)
+    if not proof:
+        return None
+    previous = owner['NegativeRotationSources']['previous']
+    if (proof['Source'] != owner['MeasurementSource']
+            or proof['CoreSha256'] != owner['CandidateCoreSha256']
+            or proof['PreviousSource'] != previous['Source'] or proof['PreviousCoreSha256'] != previous['CoreSha256']
+            or len(proof['Packets']) != 10
+            or {(r['Kind'], r['Domain']) for r in proof['Packets']} !=
+               {(kind, domain) for kind in ('fabric', 'texture', 'whole', 'retail-positive', 'retail-negative') for domain in ('ccd0', 'ccd1')}
+            or any(r['Requests'] != {'fabric': 1, 'texture': 1, 'whole': 19, 'retail-positive': 87, 'retail-negative': 9}[r['Kind']] for r in proof['Packets'])):
+        raise ValueError('Retained context proof belongs to another candidate or workload')
+    costs = project_packet_costs(root, proof, proof['Packets'])
+    return {'historical': historical, 'source': proof['Source'], 'changes': proof['Changes'], 'scope': proof['Scope'], 'limits': proof['Limits'],
+            'history_note': proof['HistoricalContextCorrection'], 'contracts': '', 'exploration_note': '', 'costs': costs}
+
+
+def project_retained_contexts(root, qualification):
+    proof = project_context_costs(root, qualification, 'RetainedContextProof')
+    if proof:
+        proof.update(title='Historical retained decoder sessions and deadline costs' if proof['historical'] else 'Retained decoder sessions and deadline costs',
+                     anchor='retained-contexts', evidence='retained-contexts-proof.json', evidence_label='Session and deadline proof')
+    return proof
 
 
 def append_retained_context_section(lines, proof):
     if not proof:
         return
-    lines += ['', '## Retained decoder sessions and deadline costs', '', proof['changes'], '', proof['scope'], '',
+    lines += ['', '## ' + proof['title'], '',
+              f'These measurements retain their original source {proof["source"]}.' if proof['historical'] else '', '',
+              proof['changes'], '', proof.get('contracts', ''), '', proof.get('exploration_note', ''), '', proof['scope'], '',
               proof['history_note'], '',
               '| Workload | Requests | Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Previous → current correct range | Previous → current inconclusive range | Previous → current unexpected range |',
               '| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |']
     for row in proof['costs']:
         lines.append(f'| {row["kind"]} | {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_mib"]} → {row["current_mib"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_unexpected"]} → {row["current_unexpected"]} |')
-    lines += ['', proof['limits'], '', '[Session and deadline proof](evidence/retained-contexts-proof.json) · [Historical context inventory](evidence/retained-contexts-history.json). Each listed packet links its complete priming and measured per-image outcomes in the proof.']
+    lines += ['', proof['limits'], '', f'[{proof["evidence_label"]}](evidence/{proof["evidence"]}) · [Historical context inventory](evidence/retained-contexts-history.json). Each listed packet links its complete priming and measured per-image outcomes in the proof.']

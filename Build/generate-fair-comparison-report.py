@@ -15,6 +15,7 @@ from comparison_qr_finder_groups import project_qr_finder_groups, append_qr_find
 from comparison_dpm_gray8 import project_dpm_gray8, append_dpm_gray8_section
 from comparison_dpm_window_means import project_dpm_window_means, append_dpm_window_means_section
 from comparison_retained_contexts import project_retained_contexts, append_retained_context_section
+from comparison_pdf417_segment_cache import project_pdf417_segment_cache
 
 
 def read(path):
@@ -58,6 +59,7 @@ def main():
     names += sorted(path.name for path in root.glob("historical-dpm-window-means-*.json"))
     names += sorted(path.name for path in root.glob("historical-retained-contexts-*.json"))
     names += sorted(path.name for path in root.glob("retained-contexts-*.json"))
+    names += sorted(path.name for path in root.glob("pdf417-segment-cache-*.json"))
     if qualification.get("DpmWindowMeansProof") or qualification.get("HistoricalDpmWindowMeansProof"):
         names += sorted(path.name for path in root.glob("dpm-window-means-*.json"))
     if qualification.get("DpmGray8Proof") or qualification.get("HistoricalDpmGray8Proof"):
@@ -456,6 +458,7 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    append_retained_context_section(lines, project_pdf417_segment_cache(root, qualification))
     append_retained_context_section(lines, project_retained_contexts(root, qualification))
     append_dpm_window_means_section(lines, project_dpm_window_means(root, qualification))
     append_dpm_gray8_section(lines, project_dpm_gray8(root, qualification))
