@@ -1,6 +1,24 @@
 """Reject current comparison packets from another source, binary or CPU placement."""
 
 
+def project_paired_cost(packet, source, core, previous_core, domain, requests, manifest_hash):
+    """Format one validated pair while retaining every recognition outcome range."""
+    validate_paired_packet(packet, source, core, previous_core, domain, requests, manifest_hash)
+    lanes = {r['Engine']: r for r in packet['Summary']}
+    before, current = lanes['Baseline'], lanes['Candidate']
+    def span(engine, metric):
+        values = [s['Metrics'][metric] for s in packet['Samples'] if s['Engine'] == engine and s['Iteration'] >= 0]
+        return f'{min(values):g}' if min(values) == max(values) else f'{min(values):g}–{max(values):g}'
+    return {'domain': domain.upper(), 'before_ms': f'{before["MedianMs"]:.2f}',
+        'current_ms': f'{current["MedianMs"]:.2f}', 'ratio': f'{current["MedianMs"] / before["MedianMs"]:.3f}',
+        'before_mib': f'{before["Metrics"]["AllocatedBytes"] / 1048576:.2f}',
+        'current_mib': f'{current["Metrics"]["AllocatedBytes"] / 1048576:.2f}',
+        'allocation_reduction': f'{(1 - current["Metrics"]["AllocatedBytes"] / before["Metrics"]["AllocatedBytes"]) * 100:.1f}%',
+        **{prefix + '_' + name: span(engine, metric)
+           for prefix, engine in (('before', 'Baseline'), ('current', 'Candidate'))
+           for name, metric in (('correct', 'CorrectImages'), ('inconclusive', 'InconclusiveImages'), ('unexpected', 'UnexpectedImages'))}}
+
+
 def validate_paired_packet(packet, source, core, previous_core, domain, requests, manifest_hash):
     metadata = packet['Metadata']
     if (metadata['benchmark.CandidateSource'] != source

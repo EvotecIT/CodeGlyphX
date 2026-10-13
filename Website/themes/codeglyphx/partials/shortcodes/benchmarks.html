@@ -65,6 +65,33 @@
             </table>
         </div>
     </section>
+    {{ if comparison.dpm_gray8 }}
+    <section class="benchmark-section" aria-labelledby="dpm-gray8">
+        <h2 id="dpm-gray8">Data Matrix grayscale retries</h2>
+        <p>{{ comparison.dpm_gray8.changes }}</p>
+        <p>{{ comparison.dpm_gray8.contracts }}</p>
+        <p>{{ comparison.dpm_gray8.scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Grayscale retry cost and negative completion" tabindex="0">
+            <table class="bench-table">
+                <caption>One frozen texture negative · all measured samples retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Allocation reduction</th><th scope="col">Completed negatives / 1</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.dpm_gray8.costs }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.allocation_reduction }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <details>
+            <summary>Retail controls for grayscale retries</summary>
+            <div class="comparison-scroll" role="region" aria-label="Retail controls for grayscale retries" tabindex="0">
+                <table class="bench-table">
+                    <caption>Original retail requests, hints and oracles</caption>
+                    <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                    <tbody>{{ for row in comparison.dpm_gray8.controls }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+                </table>
+            </div>
+        </details>
+        <p>{{ comparison.dpm_gray8.limits }}</p>
+        <p><a href="/comparisons/evidence/dpm-gray8-proof.json">Grayscale retry proof</a> · <a href="/comparisons/evidence/dpm-gray8-mask-equivalence.json">Pixel equivalence</a> · <a href="/comparisons/evidence/dpm-gray8-texture-ccd0-result.json">CCD0 samples</a> · <a href="/comparisons/evidence/dpm-gray8-texture-ccd1-result.json">CCD1 samples</a></p>
+    </section>
+    {{ end }}
     {{ if comparison.itf_recovery.cases }}
     <section class="benchmark-section" aria-labelledby="itf-run-recovery">
         <h2 id="itf-run-recovery">{{ if comparison.itf_recovery.historical }}Historical {{ end }}ITF complete-symbol recovery</h2>
@@ -394,7 +421,8 @@
     {{ end }}
     {{ if comparison.qr_finder_groups }}
     <section class="benchmark-section" aria-labelledby="qr-finder-groups">
-        <h2 id="qr-finder-groups">Multi-QR finder grouping</h2>
+        <h2 id="qr-finder-groups">{{ if comparison.qr_finder_groups.historical }}Historical multi-QR finder grouping{{ else }}Multi-QR finder grouping{{ end }}</h2>
+        {{ if comparison.qr_finder_groups.historical }}<p>These finder-group measurements belong to source <code class="comparison-source">{{ comparison.qr_finder_groups.source }}</code>. Current decoding costs appear separately.</p>{{ end }}
         <p>{{ comparison.qr_finder_groups.changes }}</p>
         <p>{{ comparison.qr_finder_groups.contracts }}</p>
         <p>{{ comparison.qr_finder_groups.scope }}</p>
@@ -406,7 +434,7 @@
             </table>
         </div>
         <details>
-            <summary>Retail controls on the same current core</summary>
+            <summary>Retail controls on that qualified core</summary>
             <div class="comparison-scroll" role="region" aria-label="Retail control costs for multi-QR changes" tabindex="0">
                 <table class="bench-table">
                     <caption>Original retail requests, hints and oracles</caption>
