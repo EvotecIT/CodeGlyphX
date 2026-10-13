@@ -50,8 +50,8 @@ public sealed class QrFinderGroupTests {
         Assert.True(QrPixelDecoder.TryDecodeAll(pixels, size, size, size * 4, PixelFormat.Rgba32,
             options, accept: null, CancellationToken.None, deduplicate: !repeatedPayload, out var decoded));
         if (repeatedPayload) {
-            Assert.True(decoded.Length >= expected.Length, "Independent symbols with the same payload must remain discoverable.");
             Assert.All(decoded, value => Assert.Equal("SAME", value.Text));
+            Assert.Equal(new[] { 1, 3, 5, 7 }, decoded.Select(value => value.Version).Distinct().OrderBy(value => value));
         } else {
             Assert.Equal(expected.OrderBy(value => value), decoded.Select(value => value.Text).Distinct().OrderBy(value => value));
         }
