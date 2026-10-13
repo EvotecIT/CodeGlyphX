@@ -28,6 +28,11 @@ internal static partial class QrPixelDecoder {
             // consumed pixels; one is unqueued foreground and two is queued.
             if (!TryFillComponentForeground(image, invert, budget, foreground)) return components;
             var useRuns = HasBroadComponentRuns(foreground, width, height);
+            // Pixel traversal stores coordinates in the existing stack when
+            // each coordinate fits sixteen bits. This avoids a division for
+            // every popped pixel without increasing pooled stack storage.
+            var packedPixels = !useRuns && width <= 65536 && height <= 65536;
+            var stackRowStep = packedPixels ? 65536 : width;
             var runCount = 0;
             for (var y = 0; y < height; y++) {
                 if (budget.IsExpired) return components;
@@ -57,13 +62,14 @@ internal static partial class QrPixelDecoder {
                     var area = 0;
                     var count = 0;
                     foreground[first] = 2;
-                    stack[count++] = first;
+                    stack[count++] = packedPixels ? (y << 16) | x : first;
                     while (count > 0) {
                         if ((runCount++ & 63) == 0 && budget.IsExpired) return components;
-                        var seed = stack[--count];
-                        if (foreground[seed] == 0) continue;
-                        var cy = seed / width;
+                        var queued = stack[--count];
+                        var cy = packedPixels ? (int)((uint)queued >> 16) : queued / width;
                         var rowStart = cy * width;
+                        var seed = packedPixels ? rowStart + (queued & 65535) : queued;
+                        if (foreground[seed] == 0) continue;
                         if (!useRuns) {
                             foreground[seed] = 0;
                             var cx = seed - rowStart;
@@ -73,10 +79,10 @@ internal static partial class QrPixelDecoder {
                             minY = Math.Min(minY, cy);
                             maxY = Math.Max(maxY, cy);
                             if (count + 4 > stack.Length) GrowStack(ref stack, count + 4);
-                            if (cx > 0) AddComponentPixel(foreground, seed - 1, stack, ref count);
-                            if (cx + 1 < width) AddComponentPixel(foreground, seed + 1, stack, ref count);
-                            if (cy > 0) AddComponentPixel(foreground, seed - width, stack, ref count);
-                            if (cy + 1 < height) AddComponentPixel(foreground, seed + width, stack, ref count);
+                            if (cx > 0) AddComponentPixel(foreground, seed - 1, unchecked(queued - 1), stack, ref count);
+                            if (cx + 1 < width) AddComponentPixel(foreground, seed + 1, unchecked(queued + 1), stack, ref count);
+                            if (cy > 0) AddComponentPixel(foreground, seed - width, unchecked(queued - stackRowStep), stack, ref count);
+                            if (cy + 1 < height) AddComponentPixel(foreground, seed + width, unchecked(queued + stackRowStep), stack, ref count);
                             continue;
                         }
                         var left = seed;
@@ -152,10 +158,10 @@ internal static partial class QrPixelDecoder {
         return pixels > runs * 2;
     }
 
-    private static void AddComponentPixel(byte[] foreground, int pixel, int[] stack, ref int count) {
+    private static void AddComponentPixel(byte[] foreground, int pixel, int queued, int[] stack, ref int count) {
         if (foreground[pixel] != 1) return;
         foreground[pixel] = 2;
-        stack[count++] = pixel;
+        stack[count++] = queued;
     }
 
     private static void AddComponentRowSeeds(byte[] foreground, int start, int length, ref int[] stack, ref int count) {
