@@ -1522,8 +1522,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/03.png",
@@ -4145,9 +4145,9 @@
     ],
     "Actual": [
       "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
-      "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
       "You get to SIT AT MRS. SIGMON\u0027S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
-      "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let\u0027s boogie!"
+      "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let\u0027s boogie!",
+      "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
     ],
     "Missing": [],
     "Unexpected": [],

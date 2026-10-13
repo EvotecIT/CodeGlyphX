@@ -1,21 +1,13 @@
 """Project exact-core allocation measurements without hiding completion losses."""
 import json
 from comparison_packet_identity import validate_paired_packet
+from comparison_qualification_history import resolve_proof_owner
 
 
 def project_decode_allocations(root, qualification):
-    proof = qualification.get('DecodeAllocationProof') or qualification.get('HistoricalDecodeAllocationProof')
+    proof, owner, historical = resolve_proof_owner(root, qualification, 'DecodeAllocationProof')
     if not proof:
         return None
-    historical = 'DecodeAllocationProof' not in qualification
-    owner = qualification
-    if historical:
-        owner = json.loads((root / 'previous-qualification.json').read_text(encoding='utf-8-sig'))
-        previous = qualification['NegativeRotationSources']['previous']
-        if (proof != owner.get('DecodeAllocationProof')
-                or qualification['PreviousMeasurementSource'] != proof['Source']
-                or previous['Source'] != proof['Source'] or previous['CoreSha256'] != proof['CoreSha256']):
-            raise ValueError('Historical allocation proof differs from its qualified owner')
     if (proof['Source'] != owner['MeasurementSource']
             or proof['CoreSha256'] != owner['CandidateCoreSha256']
             or proof['PreviousSource'] != owner['NegativeRotationSources']['previous']['Source']

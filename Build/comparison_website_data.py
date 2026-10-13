@@ -9,6 +9,7 @@ from comparison_scanner_boundaries import project_scanner_boundaries
 from comparison_packet_identity import validate_current_packet, validate_qualified_whole_image_packet
 from comparison_decode_allocations import project_decode_allocations
 from comparison_decode_deadlines import project_decode_deadlines
+from comparison_qr_finder_groups import project_qr_finder_groups
 
 
 def load(path):
@@ -366,6 +367,7 @@ def build_website_data(root):
             "databar_tilted": project_databar_tilted(root, qualification),
             "retail_fine": project_retail_fine(root, qualification),
             "scanner_boundaries": project_scanner_boundaries(root, qualification),
+            "qr_finder_groups": project_qr_finder_groups(root, qualification),
             "decode_deadlines": project_decode_deadlines(root, qualification),
             "decode_allocations": project_decode_allocations(root, qualification),
             "retail_changes": retail.get("Changes", "") if retail else "",

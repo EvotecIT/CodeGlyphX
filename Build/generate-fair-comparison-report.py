@@ -11,6 +11,7 @@ from comparison_scanner_boundaries import project_scanner_boundaries, append_sca
 from comparison_packet_identity import validate_current_packet, validate_qualified_whole_image_packet
 from comparison_decode_allocations import project_decode_allocations, append_decode_allocation_section
 from comparison_decode_deadlines import project_decode_deadlines, append_decode_deadline_section
+from comparison_qr_finder_groups import project_qr_finder_groups, append_qr_finder_group_section
 
 
 def read(path):
@@ -49,7 +50,10 @@ def main():
     names += sorted(path.name for path in root.glob("historical-scanner-boundary-*.json"))
     names += sorted(path.name for path in root.glob("historical-decode-allocation-*.json"))
     names += sorted(path.name for path in root.glob("historical-deadline-polling-*.json"))
-    if qualification.get("DecodeDeadlineProof"):
+    names += sorted(path.name for path in root.glob("historical-qr-finder-groups-*.json"))
+    if qualification.get("QrFinderGroupProof"):
+        names += sorted(path.name for path in root.glob("qr-finder-groups-*.json"))
+    if qualification.get("DecodeDeadlineProof") or qualification.get("HistoricalDecodeDeadlineProof"):
         names += sorted(path.name for path in root.glob("decode-deadline-*.json"))
     if qualification.get("DecodeAllocationProof") or qualification.get("HistoricalDecodeAllocationProof"):
         names += sorted(path.name for path in root.glob("decode-allocation-*.json"))
@@ -441,6 +445,7 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    append_qr_finder_group_section(lines, project_qr_finder_groups(root, qualification))
     append_decode_deadline_section(lines, project_decode_deadlines(root, qualification))
     append_decode_allocation_section(lines, project_decode_allocations(root, qualification))
     append_scanner_boundary_section(lines, project_scanner_boundaries(root, qualification))

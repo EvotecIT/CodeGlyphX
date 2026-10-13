@@ -68,7 +68,7 @@
     {{ if comparison.itf_recovery.cases }}
     <section class="benchmark-section" aria-labelledby="itf-run-recovery">
         <h2 id="itf-run-recovery">{{ if comparison.itf_recovery.historical }}Historical {{ end }}ITF complete-symbol recovery</h2>
-        {{ if comparison.itf_recovery.historical }}<p>These diagnostics and paired costs belong to source <code>{{ comparison.itf_recovery.source }}</code>. They describe the earlier ITF change; current corpus, retail and whole-image measurements are separate.</p>{{ end }}
+        {{ if comparison.itf_recovery.historical }}<p>These diagnostics and paired costs belong to source <code class="comparison-source">{{ comparison.itf_recovery.source }}</code>. They describe the earlier ITF change; current corpus, retail and whole-image measurements are separate.</p>{{ end }}
         <p>{{ comparison.itf_recovery.changes }}</p>
         <p>{{ comparison.itf_recovery.scope }}</p>
         <p>The actual previous and current Codabar validators agree on {{ comparison.itf_recovery.cases }} decisions and exact fit outputs across printing bias, rounding, framing, direction and cancellation. Two independent ITF images and direction, polarity, framing and ITF-14 checksum regressions pass through public entrypoints.</p>
@@ -94,7 +94,7 @@
     {{ if comparison.code39_recovery.cases }}
     <section class="benchmark-section" aria-labelledby="code39-run-recovery">
         <h2 id="code39-run-recovery">{{ if comparison.code39_recovery.historical }}Historical {{ end }}Code 39 clipped and reversed scanlines</h2>
-        {{ if comparison.code39_recovery.historical }}<p>These diagnostics and paired costs belong to source <code>{{ comparison.code39_recovery.source }}</code>. They describe the earlier Code 39 change; current corpus and whole-image measurements are separate.</p>{{ end }}
+        {{ if comparison.code39_recovery.historical }}<p>These diagnostics and paired costs belong to source <code class="comparison-source">{{ comparison.code39_recovery.source }}</code>. They describe the earlier Code 39 change; current corpus and whole-image measurements are separate.</p>{{ end }}
         <p>{{ comparison.code39_recovery.changes }}</p>
         <p>{{ comparison.code39_recovery.scope }}</p>
         <p>The actual previous and current width normalizers agree on {{ comparison.code39_recovery.cases }} decisions, including reversed run lists. Independent images and direction, polarity, framing and short-checksum regressions pass through public entrypoints.</p>
@@ -120,7 +120,7 @@
     {{ if comparison.datamatrix_spatial.bounds_cases }}
     <section class="benchmark-section" aria-labelledby="datamatrix-spatial-search">
         <h2 id="datamatrix-spatial-search">{{ if comparison.datamatrix_spatial.historical }}Historical Data Matrix image-search cost{{ else }}Data Matrix image-search cost{{ end }}</h2>
-        {{ if comparison.datamatrix_spatial.historical }}<p>These checks and costs belong to source <code>{{ comparison.datamatrix_spatial.source }}</code>. They describe the earlier Data Matrix change. Current corpus and whole-image costs are measured separately on the current binary.</p>{{ end }}
+        {{ if comparison.datamatrix_spatial.historical }}<p>These checks and costs belong to source <code class="comparison-source">{{ comparison.datamatrix_spatial.source }}</code>. They describe the earlier Data Matrix change. Current corpus and whole-image costs are measured separately on the current binary.</p>{{ end }}
         <p>{{ comparison.datamatrix_spatial.changes }}</p>
         <p>The production bounding-box method matches a full-raster reference in {{ comparison.datamatrix_spatial.bounds_cases }} cases. Ordered component areas and corners match the retained binary in {{ comparison.datamatrix_spatial.component_cases }} cases, including equal-area ties. Cancellation and ambient deadline checks also pass.</p>
         <p>{{ comparison.datamatrix_spatial.scope }}</p>
@@ -140,7 +140,7 @@
     {{ if comparison.pdf417_negative_completion.checks }}
     <section class="benchmark-section" aria-labelledby="pdf417-negative-completion">
         <h2 id="pdf417-negative-completion">{{ if comparison.pdf417_negative_completion.historical }}Historical PDF417 negative-search completion{{ else }}PDF417 negative-search completion{{ end }}</h2>
-        {{ if comparison.pdf417_negative_completion.historical }}<p>These measurements belong to source <code>{{ comparison.pdf417_negative_completion.source }}</code>. They describe the earlier PDF417 change. Current corpus, alternating negatives and whole-image costs are measured separately on the current binary.</p>{{ end }}
+        {{ if comparison.pdf417_negative_completion.historical }}<p>These measurements belong to source <code class="comparison-source">{{ comparison.pdf417_negative_completion.source }}</code>. They describe the earlier PDF417 change. Current corpus, alternating negatives and whole-image costs are measured separately on the current binary.</p>{{ end }}
         <p>{{ comparison.pdf417_negative_completion.changes }}</p>
         <p>The cached and uncached fitters agree on {{ comparison.pdf417_negative_completion.checks }} decisions, including failed fits, wide runs and cache capacity pressure. Four module-entrypoint controls preserve offset symbols and macro metadata in both row orders.</p>
         <p>{{ comparison.pdf417_negative_completion.notes }}</p>
@@ -196,7 +196,7 @@
     {{ if comparison.pdf417_cost.size > 0 }}
     <section class="benchmark-section" aria-labelledby="pdf417-search-cost">
         <h2 id="pdf417-search-cost">{{ if comparison.pdf417_cost_historical }}Historical {{ end }}PDF417 search cost</h2>
-        {{ if comparison.pdf417_cost_historical }}<p>These retained measurements qualify the earlier PDF417 optimization at source <code>{{ comparison.pdf417_cost_source }}</code>. They do not measure the current candidate.</p>{{ end }}
+        {{ if comparison.pdf417_cost_historical }}<p>These retained measurements qualify the earlier PDF417 optimization at source <code class="comparison-source">{{ comparison.pdf417_cost_source }}</code>. They do not measure the current candidate.</p>{{ end }}
         <p>These 31 fixed negative images use an explicit PDF417 hint to isolate its search cost. Previous and current binaries receive identical preloaded pixels and options. Three warmups precede twelve rotated measurements on each cache domain; all samples are retained. Loading and result evaluation are excluded.</p>
         <div class="comparison-scroll" role="region" aria-label="PDF417 search cost table" tabindex="0">
             <table class="bench-table">
@@ -212,7 +212,7 @@
     {{ if comparison.retail.size > 0 }}
     <section class="benchmark-section" aria-labelledby="retail-recovery">
         <h2 id="retail-recovery">{{ if comparison.retail_historical }}Historical {{ end }}retail recovery and search cost</h2>
-        {{ if comparison.retail_historical }}<p>Diagnostics and paired costs in this section belong to source <code>{{ comparison.retail_source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
+        {{ if comparison.retail_historical }}<p>Diagnostics and paired costs in this section belong to source <code class="comparison-source">{{ comparison.retail_source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
         {{ if comparison.retail_changes != "" }}<p>{{ comparison.retail_changes }}</p>{{ end }}
         <p>The 87 positive requests reuse the frozen retail images. They isolate the changed recovery behavior and do not add independent images to the recognition ranking. Each of 31 fixed negative images is also scanned with EAN, UPC-A and UPC-E hints: 93 requests, rather than 93 independent images.</p>
         <div class="comparison-scroll" role="region" aria-label="Retail positive diagnostics" tabindex="0">
@@ -261,7 +261,7 @@
     {{ if comparison.databar_tilted }}
     <section class="benchmark-section" aria-labelledby="databar-tilted">
         <h2 id="databar-tilted">{{ if comparison.databar_tilted.historical }}Historical {{ end }}GS1 DataBar tilted photographs</h2>
-        {{ if comparison.databar_tilted.historical }}<p>These retained recovery and paired costs belong to source <code>{{ comparison.databar_tilted.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
+        {{ if comparison.databar_tilted.historical }}<p>These retained recovery and paired costs belong to source <code class="comparison-source">{{ comparison.databar_tilted.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
         <p>{{ comparison.databar_tilted.changes }}</p>
         <p>{{ comparison.databar_tilted.scope }}</p>
         <div class="comparison-scroll" role="region" aria-label="Tilted DataBar recognition results" tabindex="0">
@@ -287,7 +287,7 @@
     {{ if comparison.databar14_recovery }}
     <section class="benchmark-section" aria-labelledby="databar14-recovery">
         <h2 id="databar14-recovery">{{ if comparison.databar14_recovery.historical }}Historical {{ end }}GS1 DataBar-14 character pitch recovery</h2>
-        {{ if comparison.databar14_recovery.historical }}<p>Diagnostics and paired costs in this section belong to source <code>{{ comparison.databar14_recovery.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
+        {{ if comparison.databar14_recovery.historical }}<p>Diagnostics and paired costs in this section belong to source <code class="comparison-source">{{ comparison.databar14_recovery.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
         <p>{{ comparison.databar14_recovery.changes }}</p>
         <p>{{ comparison.databar14_recovery.scope }}</p>
         <div class="comparison-scroll" role="region" aria-label="DataBar-14 positive diagnostics" tabindex="0">
@@ -392,13 +392,41 @@
         <p><a href="/comparisons/evidence/negative-search-cost-proof.json">Decision and allocation diagnostic</a>. The paired measurements below report whole-image cost and recognition together.</p>
     </section>
     {{ end }}
+    {{ if comparison.qr_finder_groups }}
+    <section class="benchmark-section" aria-labelledby="qr-finder-groups">
+        <h2 id="qr-finder-groups">Multi-QR finder grouping</h2>
+        <p>{{ comparison.qr_finder_groups.changes }}</p>
+        <p>{{ comparison.qr_finder_groups.contracts }}</p>
+        <p>{{ comparison.qr_finder_groups.scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Multi-QR decoding costs and complete payload sets" tabindex="0">
+            <table class="bench-table">
+                <caption>One image with four distinct QR payloads · all measured samples retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Complete images / 1</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.qr_finder_groups.costs }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <details>
+            <summary>Retail controls on the same current core</summary>
+            <div class="comparison-scroll" role="region" aria-label="Retail control costs for multi-QR changes" tabindex="0">
+                <table class="bench-table">
+                    <caption>Original retail requests, hints and oracles</caption>
+                    <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                    <tbody>{{ for row in comparison.qr_finder_groups.controls }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+                </table>
+            </div>
+        </details>
+        <p>{{ comparison.qr_finder_groups.limits }}</p>
+        <p><a href="/comparisons/evidence/qr-finder-groups-proof.json">Finder-group proof</a> · <a href="/comparisons/evidence/qr-finder-groups-ccd0-result.json">CCD0 samples</a> · <a href="/comparisons/evidence/qr-finder-groups-ccd1-result.json">CCD1 samples</a></p>
+    </section>
+    {{ end }}
     {{ if comparison.decode_deadlines }}
     <section class="benchmark-section" aria-labelledby="decode-deadlines">
-        <h2 id="decode-deadlines">Recognition deadline polling</h2>
+        <h2 id="decode-deadlines">{{ if comparison.decode_deadlines.historical }}Historical recognition deadline polling{{ else }}Recognition deadline polling{{ end }}</h2>
+        {{ if comparison.decode_deadlines.historical }}<p>These deadline measurements and regression contracts belong to source <code class="comparison-source">{{ comparison.decode_deadlines.source }}</code>. Current decoding costs appear separately.</p>{{ end }}
         <p>{{ comparison.decode_deadlines.changes }}</p>
         <p>{{ comparison.decode_deadlines.contracts }}</p>
         <p>{{ comparison.decode_deadlines.scope }}</p>
-        <div class="comparison-scroll" role="region" aria-label="Current deadline polling and completion costs" tabindex="0">
+        <div class="comparison-scroll" role="region" aria-label="{{ if comparison.decode_deadlines.historical }}Historical{{ else }}Current{{ end }} deadline polling and completion costs" tabindex="0">
             <table class="bench-table">
                 <caption>Paired retail decoding: latency, allocation and recognition</caption>
                 <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
@@ -413,7 +441,7 @@
     {{ if comparison.decode_allocations }}
     <section class="benchmark-section" aria-labelledby="decode-allocations">
         <h2 id="decode-allocations">{{ if comparison.decode_allocations.historical }}Historical linear decoder allocations{{ else }}Linear decoder allocations{{ end }}</h2>
-        {{ if comparison.decode_allocations.historical }}<p>These allocation measurements and regression contracts belong to source {{ comparison.decode_allocations.source }}. Current decoding costs appear separately.</p>{{ end }}
+        {{ if comparison.decode_allocations.historical }}<p>These allocation measurements and regression contracts belong to source <code class="comparison-source">{{ comparison.decode_allocations.source }}</code>. Current decoding costs appear separately.</p>{{ end }}
         <p>{{ comparison.decode_allocations.changes }}</p>
         <p>{{ comparison.decode_allocations.contracts }}</p>
         <p>{{ comparison.decode_allocations.scope }}</p>
@@ -432,7 +460,7 @@
     {{ if comparison.scanner_boundaries }}
     <section class="benchmark-section" aria-labelledby="scanner-boundaries">
         <h2 id="scanner-boundaries">{{ if comparison.scanner_boundaries.historical }}Historical linear barcode margins and neighboring symbols{{ else }}Linear barcode margins and neighboring symbols{{ end }}</h2>
-        {{ if comparison.scanner_boundaries.historical }}<p>These scanner-repair contracts and costs belong to source {{ comparison.scanner_boundaries.source }}. Current decoding costs and regression coverage appear separately.</p>{{ end }}
+        {{ if comparison.scanner_boundaries.historical }}<p>These scanner-repair contracts and costs belong to source <code class="comparison-source">{{ comparison.scanner_boundaries.source }}</code>. Current decoding costs and regression coverage appear separately.</p>{{ end }}
         <p>{{ comparison.scanner_boundaries.changes }}</p>
         <p>{{ comparison.scanner_boundaries.scope }}</p>
         <div class="comparison-scroll" role="region" aria-label="Scanner margin regression contracts" tabindex="0">
@@ -457,7 +485,7 @@
     {{ if comparison.retail_fine }}
     <section class="benchmark-section" aria-labelledby="retail-fine">
         <h2 id="retail-fine">{{ if comparison.retail_fine.historical }}Historical retail photographs and tile boundary safety{{ else }}Retail photographs and tile boundary safety{{ end }}</h2>
-        {{ if comparison.retail_fine.historical }}<p>These retained diagnostics and costs belong to source {{ comparison.retail_fine.source }}; the current scanner contracts and costs appear separately. The current scanner repair above covers the inverted single-digit and joined-Pharmacode gaps described in this historical packet.</p>{{ end }}
+        {{ if comparison.retail_fine.historical }}<p>These retained diagnostics and costs belong to source <code class="comparison-source">{{ comparison.retail_fine.source }}</code>; the current scanner contracts and costs appear separately. The current scanner repair above covers the inverted single-digit and joined-Pharmacode gaps described in this historical packet.</p>{{ end }}
         <p>{{ comparison.retail_fine.changes }}</p>
         <p>{{ comparison.retail_fine.scope }}</p>
         <div class="comparison-scroll" role="region" aria-label="Fine retail contrast recognition results" tabindex="0">
@@ -499,7 +527,7 @@
     {{ if comparison.qr_morphology }}
     <section class="benchmark-section" aria-labelledby="qr-morphology">
         <h2 id="qr-morphology">{{ if comparison.qr_morphology.historical }}Historical {{ end }}QR image cleanup and negative-search cost</h2>
-        {{ if comparison.qr_morphology.historical }}<p>These retained filter and whole-image costs belong to source <code>{{ comparison.qr_morphology.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
+        {{ if comparison.qr_morphology.historical }}<p>These retained filter and whole-image costs belong to source <code class="comparison-source">{{ comparison.qr_morphology.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
         <p>{{ comparison.qr_morphology.changes }}</p>
         <p>{{ comparison.qr_morphology.scope }}</p>
         <p>Every output pixel matches the preceding binary on 24 closing/opening filters over four corpus images. Eight direct-neighborhood cases pass on each modern framework, covering clipped borders, narrow images, solid and mixed pixels, and adaptive thresholds.</p>
