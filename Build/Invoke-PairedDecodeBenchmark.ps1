@@ -1,5 +1,6 @@
 #requires -Version 7.4
 #requires -PSEdition Core
+#requires -Modules PSPublishModule
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][string]$BaselineRoot,
@@ -14,7 +15,6 @@ param(
     [string]$ProcessorAffinityMask
 )
 $ErrorActionPreference='Stop'
-Import-Module PSPublishModule
 Add-Type -Path (Join-Path $PSScriptRoot '../CodeGlyphX.Benchmarks/Compare/IsolatedCorpusSession.cs')
 $baselinePath=$ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($BaselineRoot)
 $candidatePath=$ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($CandidateRoot)
