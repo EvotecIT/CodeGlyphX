@@ -25,18 +25,17 @@ internal static class DirectPartMarkPreprocessor {
         yield return variant;
         if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
 
-        // Both adaptive polarities use the same source pixels and local means.
-        // Keep one summed-area table across the lazy retries instead of building
-        // the identical image-sized table again for light marks.
-        var integral = BuildIntegral(gray, width, height, cancellationToken);
+        // Both polarities use the same clipped-window means. Keep those means
+        // as bytes instead of retaining an image-sized Int64 summed-area table.
+        var means = BuildLocalMeans(gray, width, height, radius, cancellationToken);
         if (DecodeBudget.ShouldAbort(cancellationToken)) yield break;
-        var dark = Adaptive(gray, integral, width, height, radius, options.ThresholdBias, lightMarks: false, cancellationToken);
+        var dark = Adaptive(gray, means, width, height, options.ThresholdBias, lightMarks: false, cancellationToken);
         variant = ToLuminance(dark, cancellationToken);
         if (variant is null) yield break;
         yield return variant;
         if (DecodeBudget.ShouldAbort(cancellationToken) || ++count >= options.MaxAttempts) yield break;
 
-        var light = Adaptive(gray, integral, width, height, radius, options.ThresholdBias, lightMarks: true, cancellationToken);
+        var light = Adaptive(gray, means, width, height, options.ThresholdBias, lightMarks: true, cancellationToken);
         variant = ToLuminance(light, cancellationToken);
         if (variant is null) yield break;
         yield return variant;
@@ -109,27 +108,57 @@ internal static class DirectPartMarkPreprocessor {
         return output;
     }
 
-    private static long[] BuildIntegral(byte[] gray, int width, int height, CancellationToken token) {
-        var stride = width + 1;
-        var integral = new long[checked((width + 1) * (height + 1))];
-        for (var y = 0; y < height; y++) {
-            if (DecodeBudget.ShouldAbort(token)) return integral;
-            long row = 0;
-            for (var x = 0; x < width; x++) { row += gray[y * width + x]; integral[(y + 1) * stride + x + 1] = integral[y * stride + x + 1] + row; }
+    private static byte[] BuildLocalMeans(byte[] gray, int width, int height, int radius, CancellationToken token) {
+        var means = new byte[gray.Length];
+        var columns = new int[width];
+        var budget = DecodeBudget.Capture();
+        // Radius is at most 128: columns sum at most 257 bytes, and each
+        // clipped window sums at most 257 * 257 * 255 = 16,842,495.
+        // Only local sums use Int32; the complete image sum can be larger.
+        for (var y = 0; y <= Math.Min(radius, height - 1); y++) {
+            if (budget.ShouldAbort(token)) return means;
+            var offset = y * width;
+            for (var x = 0; x < width; x++) {
+                if ((x & 4095) == 0 && budget.ShouldAbort(token)) return means;
+                columns[x] += gray[offset + x];
+            }
         }
-        return integral;
+        for (var y = 0; y < height; y++) {
+            if (budget.ShouldAbort(token)) return means;
+            var offset = y * width;
+            var rowCount = Math.Min(height - 1, y + radius) - Math.Max(0, y - radius) + 1;
+            var removeRow = y > radius ? (y - radius - 1) * width : -1;
+            var addRow = y > 0 && y + radius < height ? (y + radius) * width : -1;
+            var sum = 0;
+            for (var x = 0; x <= Math.Min(radius, width - 1); x++) {
+                if (removeRow >= 0) columns[x] -= gray[removeRow + x];
+                if (addRow >= 0) columns[x] += gray[addRow + x];
+                sum += columns[x];
+            }
+            for (var x = 0; x < width; x++) {
+                if ((x & 4095) == 0 && budget.ShouldAbort(token)) return means;
+                var columnCount = Math.Min(width - 1, x + radius) - Math.Max(0, x - radius) + 1;
+                means[offset + x] = (byte)(sum / (rowCount * columnCount));
+                if (x >= radius) sum -= columns[x - radius];
+                var entering = x + radius + 1;
+                if (entering < width) {
+                    // Advance each vertical sum once, as that column enters
+                    // this row's horizontal window; avoid a separate full pass.
+                    if (removeRow >= 0) columns[entering] -= gray[removeRow + entering];
+                    if (addRow >= 0) columns[entering] += gray[addRow + entering];
+                    sum += columns[entering];
+                }
+            }
+        }
+        return means;
     }
 
-    private static byte[] Adaptive(byte[] gray, long[] integral, int width, int height, int radius, int bias, bool lightMarks, CancellationToken token) {
-        var stride = width + 1;
+    private static byte[] Adaptive(byte[] gray, byte[] means, int width, int height, int bias, bool lightMarks, CancellationToken token) {
         var mask = new byte[gray.Length];
         for (var y = 0; y < height; y++) {
             if (DecodeBudget.ShouldAbort(token)) return mask;
-            var top = Math.Max(0, y - radius); var bottom = Math.Min(height - 1, y + radius);
             for (var x = 0; x < width; x++) {
-                var left = Math.Max(0, x - radius); var right = Math.Min(width - 1, x + radius);
-                var sum = integral[(bottom + 1) * stride + right + 1] - integral[top * stride + right + 1] - integral[(bottom + 1) * stride + left] + integral[top * stride + left];
-                var mean = (int)(sum / ((right - left + 1) * (bottom - top + 1)));
+                var mean = means[y * width + x];
                 var value = gray[y * width + x];
                 var dark = lightMarks ? value > mean + bias : value < mean - bias;
                 mask[y * width + x] = dark ? (byte)1 : (byte)0;
