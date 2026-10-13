@@ -23,6 +23,10 @@ public static partial class Pdf417Decoder {
         private readonly int _width;
         private readonly int _height;
         private readonly Dictionary<(int Axis, int Segment, double Slope), CachedRuns[]> _segments = new();
+        private bool _hasRecent;
+        private int _recentAxis, _recentIndex;
+        private double _recentSlope;
+        private CachedRuns[]? _recentSegment;
         private int _bytes;
         private int _entries;
         internal readonly PixelCodewordCache Codewords = new();
@@ -42,9 +46,19 @@ public static partial class Pdf417Decoder {
             first = false;
             var budget = DecodeBudget.Capture();
             if (budget.ShouldAbort(token)) return false;
-            var key = (axis, line >> SegmentShift, slope);
+            var segmentIndex = line >> SegmentShift;
             var slot = line & (SegmentLength - 1);
-            _segments.TryGetValue(key, out var segment);
+            CachedRuns[]? segment;
+            // Callers traverse adjacent lines. Reuse both found and absent
+            // segments until the axis, slope or segment index changes.
+            if (_hasRecent && _recentAxis == axis && _recentIndex == segmentIndex && _recentSlope.Equals(slope)) {
+                segment = _recentSegment;
+            } else {
+                _segments.TryGetValue((axis, segmentIndex, slope), out segment);
+                _hasRecent = true;
+                _recentAxis = axis; _recentIndex = segmentIndex; _recentSlope = slope;
+                _recentSegment = segment;
+            }
             var cached = segment is null ? default : segment[slot];
             if (cached.Widths is not null) {
                 runs.Clear();
@@ -94,7 +108,8 @@ public static partial class Pdf417Decoder {
             if (reverse && (stored.Length & 1) == 0) canonicalFirst = !canonicalFirst;
             if (segment is null) {
                 segment = new CachedRuns[SegmentLength];
-                _segments.Add(key, segment);
+                _segments.Add((axis, segmentIndex, slope), segment);
+                _recentSegment = segment;
             }
             segment[slot] = new CachedRuns(stored, canonicalFirst);
             _entries++;
