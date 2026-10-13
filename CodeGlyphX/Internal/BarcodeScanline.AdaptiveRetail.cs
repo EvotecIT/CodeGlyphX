@@ -65,13 +65,14 @@ internal static partial class BarcodeScanline {
 
     private static bool TryBinarizeRetailRow(ReadOnlySpan<byte> luminance, int radius, byte[] binary,
         int[] minima, int[] maxima, CancellationToken cancellationToken, int bias = 0, bool invertLuminance = false, ushort[]? extrema = null) {
+        var budget = DecodeBudget.Capture();
         var minHead = 0;
         var minTail = 0;
         var maxHead = 0;
         var maxTail = 0;
         var right = -1;
         for (var x = 0; x < luminance.Length; x++) {
-            if ((x & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if ((x & 127) == 0 && budget.ShouldAbort(cancellationToken)) return false;
             var last = Math.Min(luminance.Length - 1, x + radius);
             while (right < last) {
                 right++;
@@ -94,8 +95,9 @@ internal static partial class BarcodeScanline {
     /// <summary>Reuses a completed window without changing its cutoff arithmetic or abort checks.</summary>
     private static bool TryBinarizeRetailRowFromExtrema(ReadOnlySpan<byte> luminance, ushort[] extrema,
         byte[] binary, CancellationToken cancellationToken, int bias, bool invertLuminance) {
+        var budget = DecodeBudget.Capture();
         for (var x = 0; x < luminance.Length; x++) {
-            if ((x & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if ((x & 127) == 0 && budget.ShouldAbort(cancellationToken)) return false;
             var packed = extrema[x];
             binary[x] = GetRetailBinaryPixel(luminance[x], packed & 255, packed >> 8, bias, invertLuminance);
         }
@@ -105,8 +107,9 @@ internal static partial class BarcodeScanline {
     /// <summary>Reuses the completed middle window for two complementary 9/16 cutoffs.</summary>
     private static bool TryBinarizeFineRetailRowFromExtrema(ReadOnlySpan<byte> luminance, ushort[] extrema,
         byte[] binary, CancellationToken cancellationToken, bool invertLuminance) {
+        var budget = DecodeBudget.Capture();
         for (var x = 0; x < luminance.Length; x++) {
-            if ((x & 127) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
+            if ((x & 127) == 0 && budget.ShouldAbort(cancellationToken)) return false;
             var min = extrema[x] & 255;
             var max = extrema[x] >> 8;
             var cutoff = (max - min) * 9 / 16;

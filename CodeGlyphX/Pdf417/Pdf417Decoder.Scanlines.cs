@@ -79,7 +79,8 @@ public static partial class Pdf417Decoder {
                         var unframedSets = new Dictionary<(int Columns, int StartBin), PixelRowSet>();
                         var runs = new List<int>();
                         for (var y = 0; y < down; y++) {
-                            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                            // TryRead checks cancellation and the recognition clock
+                            // before accessing either cached or fresh pixels.
                             if (!runCache.TryRead(axis, reverse != 0, invert != 0, y, slope,
                                 runs, cancellationToken, out var first)) return false;
                             // Compact framing needs only start, left indicator,

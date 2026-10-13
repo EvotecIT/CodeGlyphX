@@ -22,6 +22,7 @@ public static partial class BarcodeDecoder {
         bool retailOnly = false,
         IReadOnlyList<BarcodeDecoded>? ordinaryHits = null,
         BarcodeDecoded? requiredDecoded = null) {
+        var budget = DecodeBudget.Capture();
         BarcodeDecoded bestDecoded = null!;
         BarcodeScanlineCandidate bestScanline = default;
         var first = candidates[index];
@@ -35,7 +36,7 @@ public static partial class BarcodeDecoder {
         while (end < candidates.Length && candidates[end].Position == first.Position && candidates[end].IsVertical == first.IsVertical) end++;
         for (var i = index; i < end; i++) {
             var candidate = candidates[i];
-            if (DecodeBudget.ShouldAbort(cancellationToken)) break;
+            if (budget.ShouldAbort(cancellationToken)) break;
             // Preserve an ordinary validated interpretation before considering
             // parity-constrained recovery. Within either group, local illumination
             // remains a fallback for the same physical row or column.
@@ -46,7 +47,7 @@ public static partial class BarcodeDecoder {
             if (candidate.IsRetailParityFallback && expectedType.HasValue &&
                 expectedType != BarcodeType.EAN && expectedType != BarcodeType.UPCA) continue;
             Consider(candidate.Modules, candidate.FitError, candidate);
-            if (candidate.AlternativeModules.Length > 0 && !DecodeBudget.ShouldAbort(cancellationToken)) {
+            if (candidate.AlternativeModules.Length > 0 && !budget.ShouldAbort(cancellationToken)) {
                 Consider(candidate.AlternativeModules, candidate.AlternativeFitError, candidate);
             }
         }

@@ -26,6 +26,9 @@ internal static partial class BarcodeScanline {
         CancellationToken cancellationToken, List<BarcodeScanlineCandidate> candidates, int position, bool isVertical, bool localThreshold = false,
         bool retailOnly = false, bool includeParityRecovery = false, bool fullLengthRetailOnly = false) {
         if (luminance.Length < 51) return default;
+        // This synchronous row search does not change the ambient budget. Read
+        // its deadline once while retaining every clock and cancellation check.
+        var budget = DecodeBudget.Capture();
         var hasRetailGuards = false;
         var hasNormalizedBase = false;
         var rentedRuns = ArrayPool<int>.Shared.Rent(luminance.Length);
@@ -35,7 +38,7 @@ internal static partial class BarcodeScanline {
             var current = firstIsBar;
             var length = 1;
             for (var i = 1; i < luminance.Length; i++) {
-                if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return default;
+                if ((i & 255) == 0 && budget.ShouldAbort(cancellationToken)) return default;
                 var bar = luminance[i] < threshold;
                 if (bar == current) length++;
                 else { rentedRuns[runCount++] = length; current = bar; length = 1; }
@@ -48,7 +51,7 @@ internal static partial class BarcodeScanline {
                 // the bounded pooled runs directly, including rejected fits.
                 var otherRuns = new List<int>(runCount);
                 for (var i = 0; i < runCount; i++) {
-                    if ((i & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return default;
+                    if ((i & 255) == 0 && budget.ShouldAbort(cancellationToken)) return default;
                     otherRuns.Add(runs[i]);
                 }
                 TryCollectCode128RunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
@@ -60,7 +63,11 @@ internal static partial class BarcodeScanline {
                 TryCollectDataBar14RunCandidates(otherRuns, firstIsBar, cancellationToken, candidates, position, isVertical);
             }
             for (var start = 0; start + 33 <= runs.Length; start++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return default;
+                // A candidate has at most twelve digits and a fixed number of
+                // parity hypotheses. Poll the clock every 32 candidates, as the
+                // pixel loops already do in bounded blocks. Keep cancellation
+                // at every candidate and check the clock again before returning.
+                if (cancellationToken.IsCancellationRequested || ((start & 31) == 0 && budget.IsExpired)) return default;
                 // Also locate inverted symbols; the normal transform path resolves polarity.
                 var pitch = (runs[start] + runs[start + 1] + runs[start + 2]) / 3.0;
                 if (!RetailGuardMatches(runs, start, 3, pitch) || (start > 0 && runs[start - 1] < pitch * 3)) continue;
@@ -145,7 +152,7 @@ internal static partial class BarcodeScanline {
                         isLocalThreshold: localThreshold, isRetailParityFallback: leftParity >= 0 || rightParity >= 0));
                 }
             }
-            return new RetailRowEvidence(hasRetailGuards, hasNormalizedBase);
+            return budget.ShouldAbort(cancellationToken) ? default : new RetailRowEvidence(hasRetailGuards, hasNormalizedBase);
         } finally {
             ArrayPool<int>.Shared.Return(rentedRuns);
         }

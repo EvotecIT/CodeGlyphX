@@ -34,7 +34,8 @@ public static partial class Pdf417Decoder {
         internal bool TryRead(int axis, bool reverse, bool invert, int line, double slope,
             List<int> runs, CancellationToken token, out bool first) {
             first = false;
-            if (DecodeBudget.ShouldAbort(token)) return false;
+            var budget = DecodeBudget.Capture();
+            if (budget.ShouldAbort(token)) return false;
             var key = (axis, line, slope);
             if (_lines.TryGetValue(key, out var cached)) {
                 runs.Clear();
@@ -43,13 +44,13 @@ public static partial class Pdf417Decoder {
                 if (invert) first = !first;
                 if (cached.Widths is ushort[] compact) {
                     for (var i = 0; i < compact.Length; i++) {
-                        if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                        if (i != 0 && (i & 255) == 0 && budget.ShouldAbort(token)) return false;
                         runs.Add(compact[reverse ? compact.Length - 1 - i : i]);
                     }
                 } else {
                     var widths = (int[])cached.Widths;
                     for (var i = 0; i < widths.Length; i++) {
-                        if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                        if (i != 0 && (i & 255) == 0 && budget.ShouldAbort(token)) return false;
                         runs.Add(widths[reverse ? widths.Length - 1 - i : i]);
                     }
                 }
@@ -65,14 +66,14 @@ public static partial class Pdf417Decoder {
             if (useCompact) {
                 var widths = new ushort[runs.Count];
                 for (var i = 0; i < widths.Length; i++) {
-                    if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                    if ((i & 255) == 0 && budget.ShouldAbort(token)) return false;
                     widths[i] = (ushort)runs[reverse ? widths.Length - 1 - i : i];
                 }
                 stored = widths;
             } else {
                 var widths = new int[runs.Count];
                 for (var i = 0; i < widths.Length; i++) {
-                    if ((i & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                    if ((i & 255) == 0 && budget.ShouldAbort(token)) return false;
                     widths[i] = runs[reverse ? widths.Length - 1 - i : i];
                 }
                 stored = widths;
