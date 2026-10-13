@@ -8,21 +8,27 @@ namespace CodeGlyphX.Pdf417;
 public static partial class Pdf417Decoder {
     // Sampling the same thresholded line again changes only run order or color.
     // Keep a bounded, per-image cache across orientations and the print-gain retry.
+    // Segmented value slots avoid a dictionary entry and wrapper for every line.
     private sealed class PixelRunCache {
         private const int MaximumCacheBytes = 8 * 1024 * 1024;
         // Let tilted lines share the byte allowance instead of exhausting the
         // entry limit while most of that allowance is still unused.
         private const int MaximumEntries = 32768;
         private const int EntryOverheadBytes = 160;
+        private const int SegmentShift = 7;
+        private const int SegmentLength = 1 << SegmentShift;
+        // Include the slot array and dictionary bookkeeping before allocating it.
+        private const int SegmentOverheadBytes = SegmentLength * 16 + 160;
         private readonly bool[] _pixels;
         private readonly int _width;
         private readonly int _height;
-        private readonly Dictionary<(int Axis, int Line, double Slope), CachedRuns> _lines = new();
+        private readonly Dictionary<(int Axis, int Segment, double Slope), CachedRuns[]> _segments = new();
         private int _bytes;
+        private int _entries;
         internal readonly PixelCodewordCache Codewords = new();
 
-        private sealed class CachedRuns {
-            internal readonly Array Widths;
+        private readonly struct CachedRuns {
+            internal readonly Array? Widths;
             internal readonly bool First;
             internal CachedRuns(Array widths, bool first) { Widths = widths; First = first; }
         }
@@ -36,8 +42,11 @@ public static partial class Pdf417Decoder {
             first = false;
             var budget = DecodeBudget.Capture();
             if (budget.ShouldAbort(token)) return false;
-            var key = (axis, line, slope);
-            if (_lines.TryGetValue(key, out var cached)) {
+            var key = (axis, line >> SegmentShift, slope);
+            var slot = line & (SegmentLength - 1);
+            _segments.TryGetValue(key, out var segment);
+            var cached = segment is null ? default : segment[slot];
+            if (cached.Widths is not null) {
                 runs.Clear();
                 first = cached.First;
                 if (reverse && (cached.Widths.Length & 1) == 0) first = !first;
@@ -61,7 +70,8 @@ public static partial class Pdf417Decoder {
             // padded with light pixels. Keep full widths for larger images.
             var useCompact = (axis == 0 ? _width : _height) <= ushort.MaxValue;
             var bytes = (long)runs.Count * (useCompact ? sizeof(ushort) : sizeof(int)) + EntryOverheadBytes;
-            if (_lines.Count >= MaximumEntries || bytes > MaximumCacheBytes - _bytes) return true;
+            if (segment is null) bytes += SegmentOverheadBytes;
+            if (_entries >= MaximumEntries || bytes > MaximumCacheBytes - _bytes) return true;
             Array stored;
             if (useCompact) {
                 var widths = new ushort[runs.Count];
@@ -82,7 +92,12 @@ public static partial class Pdf417Decoder {
             // out-of-bounds light pixels on tilted lines.
             var canonicalFirst = invert ? !first : first;
             if (reverse && (stored.Length & 1) == 0) canonicalFirst = !canonicalFirst;
-            _lines.Add(key, new CachedRuns(stored, canonicalFirst));
+            if (segment is null) {
+                segment = new CachedRuns[SegmentLength];
+                _segments.Add(key, segment);
+            }
+            segment[slot] = new CachedRuns(stored, canonicalFirst);
+            _entries++;
             _bytes += (int)bytes;
             return true;
         }
