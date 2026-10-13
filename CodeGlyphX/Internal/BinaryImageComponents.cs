@@ -14,6 +14,8 @@ internal static class BinaryImageComponents {
     internal static bool Visit(byte[] mask, int width, int height, bool invert,
         CancellationToken cancellationToken, Func<int[], int, bool, bool> visitor) {
         var count = width * height;
+        if (count == 0) return false;
+        var coordinates = new ImageCoordinateDivider(width);
         var queue = ArrayPool<int>.Shared.Rent(count);
         try {
             for (var at = 0; at < count; at++) {
@@ -26,8 +28,7 @@ internal static class BinaryImageComponents {
                 for (var head = 0; head < length; head++) {
                     if ((head & 511) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return false;
                     var current = queue[head];
-                    var x = current % width;
-                    var y = current / width;
+                    coordinates.GetCoordinates(current, out var x, out var y);
                     if (x == 0 || y == 0 || x == width - 1 || y == height - 1) touchesEdge = true;
                     if (x > 0) Enqueue(mask, current - 1, invert, queue, ref length);
                     if (x + 1 < width) Enqueue(mask, current + 1, invert, queue, ref length);

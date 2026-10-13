@@ -17,6 +17,7 @@ internal static partial class QrPixelDecoder {
         var components = new PooledList<Component>(8);
         if (width <= 0 || height <= 0) return components;
         var total = checked(width * height);
+        var coordinates = new global::CodeGlyphX.Internal.ImageCoordinateDivider(width);
         if (minAreaDivisor <= 0) minAreaDivisor = 400;
         if (minComponentSize < 6) minComponentSize = 6;
         var minArea = Math.Max(16, total / minAreaDivisor);
@@ -62,11 +63,10 @@ internal static partial class QrPixelDecoder {
                         if ((runCount++ & 63) == 0 && budget.IsExpired) return components;
                         var seed = stack[--count];
                         if (foreground[seed] == 0) continue;
-                        var cy = seed / width;
-                        var rowStart = cy * width;
+                        coordinates.GetCoordinates(seed, out var cx, out var cy);
+                        var rowStart = seed - cx;
                         if (!useRuns) {
                             foreground[seed] = 0;
-                            var cx = seed - rowStart;
                             area++;
                             minX = Math.Min(minX, cx);
                             maxX = Math.Max(maxX, cx);
