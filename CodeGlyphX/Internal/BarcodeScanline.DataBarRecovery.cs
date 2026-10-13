@@ -52,17 +52,7 @@ internal static partial class BarcodeScanline {
                         if (position + distance < across) Sample(pixels, position + distance);
                     }
                 }
-                foreach (var row in rows) foreach (var observation in row.Value) {
-                    if (DecodeBudget.ShouldAbort(token)) return;
-                    if (!HasSupport(row.Key, observation)) continue;
-                    var conflict = false;
-                    foreach (var other in row.Value) {
-                        if (other.Content != observation.Content && Aligned(observation, other) && HasSupport(row.Key, other)) {
-                            conflict = true; break;
-                        }
-                    }
-                    if (!conflict) AddUniqueLocatedCandidate(candidates, observation.Candidate);
-                }
+                CollectCorroboratedDataBarRows(rows, token, candidates);
 
                 bool Sample(PixelSpan input, int position) {
                     if (sampled.TryGetValue(position, out var existing)) return existing;
@@ -127,19 +117,40 @@ internal static partial class BarcodeScanline {
                     sampled[position] = guarded;
                     return guarded;
                 }
-
-                bool HasSupport(int position, DataBarRowObservation observation) =>
-                    HasMatchingRow(position - 1, observation) && HasMatchingRow(position + 1, observation);
-
-                bool HasMatchingRow(int position, DataBarRowObservation observation) {
-                    if (!rows.TryGetValue(position, out var adjacent)) return false;
-                    foreach (var other in adjacent)
-                        if (other.Content == observation.Content && other.Reverse == observation.Reverse &&
-                            other.Inverted == observation.Inverted && Aligned(observation, other)) return true;
-                    return false;
-                }
             }
         } finally { ArrayPool<byte>.Shared.Return(buffer); }
+    }
+
+    // Keep selection shared by every pixel entrypoint and both scan axes.
+    private static void CollectCorroboratedDataBarRows(Dictionary<int, List<DataBarRowObservation>> rows,
+        CancellationToken token, List<BarcodeScanlineCandidate> candidates) {
+        foreach (var row in rows) foreach (var observation in row.Value) {
+            if (DecodeBudget.ShouldAbort(token)) return;
+            if (!HasSupport(row.Key, observation)) continue;
+            var conflict = false;
+            // Three-row windows overlap when their centers are at most two
+            // physical rows apart, even if only one center contains both fits.
+            for (var offset = -2; offset <= 2 && !conflict; offset++) {
+                var center = (long)row.Key + offset;
+                if (center < 0 || center > int.MaxValue || !rows.TryGetValue((int)center, out var alternatives)) continue;
+                foreach (var other in alternatives) {
+                    if (other.Content != observation.Content && Aligned(observation, other) && HasSupport((int)center, other)) {
+                        conflict = true; break;
+                    }
+                }
+            }
+            if (!conflict) AddUniqueLocatedCandidate(candidates, observation.Candidate);
+        }
+        bool HasSupport(int position, DataBarRowObservation observation) =>
+            HasMatchingRow((long)position - 1, observation) && HasMatchingRow((long)position + 1, observation);
+
+        bool HasMatchingRow(long position, DataBarRowObservation observation) {
+            if (position < 0 || position > int.MaxValue || !rows.TryGetValue((int)position, out var adjacent)) return false;
+            foreach (var other in adjacent)
+                if (other.Content == observation.Content && other.Reverse == observation.Reverse &&
+                    other.Inverted == observation.Inverted && Aligned(observation, other)) return true;
+            return false;
+        }
     }
 
     private static bool Aligned(DataBarRowObservation left, DataBarRowObservation right) =>

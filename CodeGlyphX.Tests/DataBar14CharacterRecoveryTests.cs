@@ -1,5 +1,11 @@
 using System;
 using System.IO;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Threading;
+using CodeGlyphX.DataBar;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Rendering;
 using Xunit;
 
@@ -90,6 +96,49 @@ public sealed class DataBar14CharacterRecoveryTests {
         Assert.True(BarcodeDecoder.TryDecode(pixels, width, height, stride, PixelFormat.Bgra32,
             BarcodeType.GS1DataBarOmni, out var decoded));
         AssertPayload(decoded);
+    }
+
+    [Theory]
+    [InlineData(1, false)]
+    [InlineData(2, false)]
+    [InlineData(3, true)]
+    public void Recovery_RejectsConflictingOverlappingWindowsButKeepsSeparateBands(int centerDistance, bool expected) {
+        // Each observation has already passed the complete DataBar decoder.
+        // Exercise selection directly because threshold ambiguity can produce
+        // different valid payloads at the same physical bounds in shared rows.
+        var observationType = typeof(BarcodeScanline).GetNestedType("DataBarRowObservation", BindingFlags.NonPublic)!;
+        var rowType = typeof(List<>).MakeGenericType(observationType);
+        var rows = (IDictionary)Activator.CreateInstance(typeof(Dictionary<,>).MakeGenericType(typeof(int), rowType))!;
+        AddBand(100, "0200123456789");
+        AddBand(100 + centerDistance, "0001234567890");
+        var candidates = new List<BarcodeScanlineCandidate>();
+        var select = typeof(BarcodeScanline).GetMethod("CollectCorroboratedDataBarRows", BindingFlags.NonPublic | BindingFlags.Static)!;
+        select.Invoke(null, new object[] { rows, CancellationToken.None, candidates });
+        if (!expected) { Assert.Empty(candidates); return; }
+        Assert.Equal(2, candidates.Count);
+        var payloads = new List<string>();
+        foreach (var candidate in candidates) {
+            Assert.True(DataBar14Decoder.TryDecodeOmnidirectional(candidate.Modules, out var content));
+            payloads.Add(content);
+        }
+        Assert.Contains("0200123456789", payloads);
+        Assert.Contains("0001234567890", payloads);
+
+        void AddBand(int center, string content) {
+            var barcode = DataBar14Encoder.EncodeOmnidirectional(content);
+            var modules = new bool[barcode.TotalModules]; var at = 0;
+            foreach (var segment in barcode.Segments)
+                for (var i = 0; i < segment.Modules; i++) modules[at++] = segment.IsBar;
+            Assert.True(DataBar14Decoder.TryDecodeOmnidirectional(modules, out var verified));
+            Assert.Equal(content, verified);
+            for (var position = center - 1; position <= center + 1; position++) {
+                if (!rows.Contains(position)) rows.Add(position, Activator.CreateInstance(rowType));
+                var candidate = new BarcodeScanlineCandidate(modules, position, false);
+                var observation = Activator.CreateInstance(observationType, BindingFlags.NonPublic | BindingFlags.Instance,
+                    null, new object[] { candidate, content, 10.0, 106.0, 1.0, false, false }, null)!;
+                ((IList)rows[position]!).Add(observation);
+            }
+        }
     }
 
     private static byte[] Load(out int width, out int height) {
