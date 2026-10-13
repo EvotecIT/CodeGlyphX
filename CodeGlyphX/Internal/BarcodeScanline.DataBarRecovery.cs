@@ -33,7 +33,9 @@ internal static partial class BarcodeScanline {
     private static void CollectDataBarRecoveryRows(PixelSpan pixels, int width, int height, int stride, PixelFormat format,
         CancellationToken token, List<BarcodeScanlineCandidate> candidates) {
         var buffer = ArrayPool<byte>.Shared.Rent(Math.Max(width, height));
+        int[]? offsets = null;
         try {
+            var runs = new List<int>();
             for (var axis = 0; axis < 2; axis++) {
                 var vertical = axis != 0;
                 var length = vertical ? height : width;
@@ -77,7 +79,9 @@ internal static partial class BarcodeScanline {
                         previousThreshold = threshold;
                         var firstDark = buffer[0] < threshold;
                         var current = firstDark; var count = 1;
-                        var runs = new List<int>();
+                        // Sampling is sequential; returned observations own their
+                        // modules and never retain these temporary work buffers.
+                        runs.Clear();
                         for (var at = 1; at < length; at++) {
                             if ((at & 255) == 0 && DecodeBudget.ShouldAbort(token)) return false;
                             var dark = buffer[at] < threshold;
@@ -85,9 +89,15 @@ internal static partial class BarcodeScanline {
                             else { runs.Add(count); current = dark; count = 1; }
                         }
                         runs.Add(count);
+                        if (runs.Count < 46) continue;
+                        if (offsets is null || offsets.Length < runs.Count + 1) {
+                            var replacement = ArrayPool<int>.Shared.Rent(runs.Count + 1);
+                            if (offsets is not null) ArrayPool<int>.Shared.Return(offsets);
+                            offsets = replacement;
+                        }
                         for (var reverse = 0; reverse < 2; reverse++) {
                             if (reverse != 0) { runs.Reverse(); firstDark = firstDark == ((runs.Count & 1) != 0); }
-                            var offsets = new int[runs.Count + 1];
+                            offsets[0] = 0;
                             for (var i = 0; i < runs.Count; i++) offsets[i + 1] = offsets[i] + runs[i];
                             for (var start = 0; start + 46 <= runs.Count; start++) {
                                 if (DecodeBudget.ShouldAbort(token)) return false;
@@ -118,7 +128,10 @@ internal static partial class BarcodeScanline {
                     return guarded;
                 }
             }
-        } finally { ArrayPool<byte>.Shared.Return(buffer); }
+        } finally {
+            if (offsets is not null) ArrayPool<int>.Shared.Return(offsets);
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
     }
 
     // Keep selection shared by every pixel entrypoint and both scan axes.
