@@ -26,17 +26,7 @@ internal static partial class QrPixelDecoder {
             stack = ArrayPool<int>.Shared.Rent(Math.Max(64, Math.Min(4096, total / 16)));
             // Every byte is written before traversal. Zero marks background or
             // consumed pixels; one is unqueued foreground and two is queued.
-            for (var y = 0; y < height; y++) {
-                if (budget.IsExpired) return components;
-                var end = (y + 1) * width;
-                if (image.ThresholdMap is null) {
-                    for (var at = y * width; at < end; at++)
-                        foreground[at] = (byte)((image.Gray[at] <= image.Threshold) != invert ? 1 : 0);
-                } else {
-                    for (var at = y * width; at < end; at++)
-                        foreground[at] = (byte)((image.Gray[at] <= image.ThresholdMap[at]) != invert ? 1 : 0);
-                }
-            }
+            if (!TryFillComponentForeground(image, invert, budget, foreground)) return components;
             var useRuns = HasBroadComponentRuns(foreground, width, height);
             var runCount = 0;
             for (var y = 0; y < height; y++) {
