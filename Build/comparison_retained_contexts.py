@@ -92,7 +92,8 @@ def append_retained_context_section(lines, proof):
         return
     lines += ['', '## ' + proof['title'], '',
               f'These measurements retain their original source {proof["source"]}.' if proof['historical'] else '', '',
-              proof['changes'], '', proof.get('contracts', ''), '', proof.get('exploration_note', ''), '', proof['scope'], '',
+              proof['changes'], '', proof.get('contracts', ''), '', proof.get('exploration_note', ''), '',
+              proof.get('completion_note', ''), '', proof['scope'], '',
               proof['history_note'], '',
               '| Workload | Requests | Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Previous → current correct range | Previous → current inconclusive range | Previous → current unexpected range |',
               '| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |']

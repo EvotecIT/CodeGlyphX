@@ -14,6 +14,7 @@ from comparison_dpm_gray8 import project_dpm_gray8
 from comparison_dpm_window_means import project_dpm_window_means
 from comparison_retained_contexts import project_retained_contexts
 from comparison_pdf417_segment_cache import project_pdf417_segment_cache
+from comparison_aztec_probe_cache import project_aztec_probe_cache
 
 
 def load(path):
@@ -371,6 +372,7 @@ def build_website_data(root):
             "databar_tilted": project_databar_tilted(root, qualification),
             "retail_fine": project_retail_fine(root, qualification),
             "scanner_boundaries": project_scanner_boundaries(root, qualification),
+            "aztec_probe_cache": project_aztec_probe_cache(root, qualification),
             "pdf417_segment_cache": project_pdf417_segment_cache(root, qualification),
             "retained_contexts": project_retained_contexts(root, qualification),
             "paired_decode_scope": qualification.get("PairedDecodeCost", {}).get("Scope", ""),

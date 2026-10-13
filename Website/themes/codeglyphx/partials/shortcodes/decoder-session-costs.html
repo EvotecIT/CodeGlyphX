@@ -3,6 +3,7 @@
         {{ if session_costs.historical }}<p>These measurements retain their original source <code class="comparison-source">{{ session_costs.source }}</code>.</p>{{ end }}
         {{ if session_costs.contracts }}<p>{{ session_costs.contracts }}</p>{{ end }}
         {{ if session_costs.exploration_note }}<p>{{ session_costs.exploration_note }}</p>{{ end }}
+        {{ if session_costs.completion_note }}<p>{{ session_costs.completion_note }}</p>{{ end }}
         <p>{{ session_costs.changes }}</p>
         <p>{{ session_costs.scope }}</p>
         <p>{{ session_costs.history_note }}</p>
