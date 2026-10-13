@@ -87,16 +87,31 @@ def project_retained_contexts(root, qualification):
     return proof
 
 
+def _append_scan_cost_table(lines, costs):
+    lines += ['| Workload | Requests | Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Previous → current correct range | Previous → current inconclusive range | Previous → current unexpected range |',
+              '| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |']
+    for row in costs:
+        lines.append(f'| {row["kind"]} | {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_mib"]} → {row["current_mib"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_unexpected"]} → {row["current_unexpected"]} |')
+
+
 def append_retained_context_section(lines, proof):
     if not proof:
         return
     lines += ['', '## ' + proof['title'], '',
               f'These measurements retain their original source {proof["source"]}.' if proof['historical'] else '', '',
               proof['changes'], '', proof.get('contracts', ''), '', proof.get('exploration_note', ''), '',
-              proof.get('completion_note', ''), '', proof['scope'], '',
-              proof['history_note'], '',
-              '| Workload | Requests | Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Previous → current correct range | Previous → current inconclusive range | Previous → current unexpected range |',
-              '| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |']
-    for row in proof['costs']:
-        lines.append(f'| {row["kind"]} | {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_mib"]} → {row["current_mib"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_unexpected"]} → {row["current_unexpected"]} |')
+              proof.get('completion_note', ''), '', proof['scope'], '', proof['history_note'], '']
+    if proof.get('completion_notes'):
+        lines += [''] + ['- ' + note for note in proof['completion_notes']] + ['']
+    if proof.get('kernel_costs'):
+        lines += ['### Component collection only', '', proof['kernel_note'], '',
+                  '| Domain | Input variants | Identical components | Previous → current median ms | Current / previous | Previous → current mean managed MiB |',
+                  '| --- | ---: | ---: | ---: | ---: | ---: |']
+        for row in proof['kernel_costs']:
+            lines.append(f'| {row["domain"]} | {row["variants"]} | {row["components"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_mib"]} → {row["current_mib"]} |')
+        lines += ['', '### Complete scans', '']
+    _append_scan_cost_table(lines, proof['costs'])
+    if proof.get('exploratory_costs'):
+        lines += ['', '### Exploratory complete scans', '', 'Every exploratory public-scan pass remains separate from the final table, with all priming and measured outcomes retained.', '']
+        _append_scan_cost_table(lines, proof['exploratory_costs'])
     lines += ['', proof['limits'], '', f'[{proof["evidence_label"]}](evidence/{proof["evidence"]}) · [Historical context inventory](evidence/retained-contexts-history.json). Each listed packet links its complete priming and measured per-image outcomes in the proof.']

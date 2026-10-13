@@ -1,0 +1,2615 @@
+{
+  "RunId": "20261013-204104-ec3bd323",
+  "Calls": [
+    {
+      "Engine": "Baseline",
+      "Iteration": 0,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 1,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 10,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/10/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 11,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/11/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 2,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/2/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 3,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/3/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 4,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/4/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 5,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/5/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 6,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/6/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 7,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/7/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 8,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/8/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 9,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Baseline/Collect/matrix/9/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 0,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 1,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 10,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/10/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 11,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/11/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 2,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/2/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 3,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/3/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 4,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/4/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 5,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/5/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 6,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/6/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 7,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/7/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 8,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/8/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 9,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/FixedComponentInputs/Candidate/Collect/matrix/9/outcomes.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -1,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/warmup-outcomes/Baseline--1.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -2,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/warmup-outcomes/Baseline--2.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -3,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/warmup-outcomes/Baseline--3.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -1,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/warmup-outcomes/Candidate--1.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -2,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/warmup-outcomes/Candidate--2.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -3,
+      "Path": "coordinate-kernel-ccd0/20261013-204104-ec3bd323/warmup-outcomes/Candidate--3.json",
+      "Outcomes": [
+        {
+          "Variant": 0,
+          "Components": 52,
+          "DescriptorSha256": "C3918DEB923FD4CE4DA451A9E6E2057917CDCF780404C780D14D8C5BE1007921"
+        },
+        {
+          "Variant": 1,
+          "Components": 1,
+          "DescriptorSha256": "416DA978E7435C9DBC85BD59DB6E32F1AFAC9BA48B39BB7DF830969F6E0DC8B3"
+        },
+        {
+          "Variant": 2,
+          "Components": 32,
+          "DescriptorSha256": "5967903DB392D0A71E593A9EE0BD4675CCBDADB5070CE2A18FDFC493EB255C3F"
+        },
+        {
+          "Variant": 3,
+          "Components": 6,
+          "DescriptorSha256": "66081850E374BCD08D196BA9F7754022721640F2A31451EB397E37D311602B8D"
+        },
+        {
+          "Variant": 4,
+          "Components": 13,
+          "DescriptorSha256": "A6639D15933885A1F9F82DBFED87FD5E457655AE16A58AA6CF86693099E4ADE5"
+        },
+        {
+          "Variant": 5,
+          "Components": 2,
+          "DescriptorSha256": "575A09D3CB2F85BCA0BEC15E47E4CA7DE813312A6252B5255F77323F510D0F11"
+        },
+        {
+          "Variant": 6,
+          "Components": 1,
+          "DescriptorSha256": "0189B137212A736D32F8A62DA56CE3D71B01F0A2E233BA65ADABA816933EF861"
+        },
+        {
+          "Variant": 7,
+          "Components": 3,
+          "DescriptorSha256": "BDE456419C269082C3DEF1AF6EA9EEF839F51A139D22EF3594E895128BFE2018"
+        },
+        {
+          "Variant": 8,
+          "Components": 1,
+          "DescriptorSha256": "3D88EAFA1193FD37A5DBCF22545B6E10C40CC0F484F047BF1B7BB0D6BFD54B70"
+        },
+        {
+          "Variant": 9,
+          "Components": 1,
+          "DescriptorSha256": "ABD809AA572B573765C735BE3F0E80EA49AC4B81B6EA1701DB4373865183A26D"
+        },
+        {
+          "Variant": 10,
+          "Components": 1,
+          "DescriptorSha256": "DE213BF017A8FCC18DE7DA45358BF4C7C6DE1F0ADE9ED6173B9EC227E6BFD122"
+        },
+        {
+          "Variant": 11,
+          "Components": 0,
+          "DescriptorSha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+        },
+        {
+          "Variant": 12,
+          "Components": 21,
+          "DescriptorSha256": "9DAB29158C72F702081ABBCCAD7E01EDDBDF94A7C2089D6AA783D02552F93705"
+        },
+        {
+          "Variant": 13,
+          "Components": 5,
+          "DescriptorSha256": "7F880CB6008D3595D66085DF3824589291FB94F09A4D123137A1A05DE8961C58"
+        },
+        {
+          "Variant": 14,
+          "Components": 10,
+          "DescriptorSha256": "624033B7D34920FF068DAFA0F40A6EF0493A838B7A15E4F16EEC04C261C06607"
+        },
+        {
+          "Variant": 15,
+          "Components": 14,
+          "DescriptorSha256": "0E754721426389E0D8DE49BF61FEC9A2C949C864AFA48EA121280D21C6367141"
+        }
+      ]
+    }
+  ]
+}
