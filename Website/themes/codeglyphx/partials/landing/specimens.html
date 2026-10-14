@@ -1,0 +1,19 @@
+<section class="cgx-section cgx-specimens" aria-labelledby="cgx-specimens-title">
+  <div class="cgx-section__head">
+    <h2 id="cgx-specimens-title">{{ data.specimens.count }} symbologies, drawn by CodeGlyphX</h2>
+    <p>Every tile below is SVG output from the current library, with the value it encodes. MaxiCode and GS1 Composite are supported too, through their dedicated encoders.</p>
+  </div>
+  <div class="cgx-filters" role="group" aria-label="Filter symbologies" data-cgx-filters>
+    <button type="button" aria-pressed="true" data-filter="all">All</button>
+    {{~ for f in data.landing.families ~}}<button type="button" aria-pressed="false" data-filter="{{ f.id }}">{{ f.label }}</button>{{~ end ~}}
+  </div>
+  <ul class="cgx-specimen-grid" data-cgx-specimens>
+    {{~ for s in data.specimens.specimens ~}}
+    <li class="cgx-specimen cgx-specimen--{{ s.family | string.downcase }}" data-family="{{ s.family }}">
+      <span class="cgx-specimen__art"><img src="{{ s.file }}" loading="lazy" decoding="async" alt="{{ s.name }} encoding {{ s.value }}" /></span>
+      <strong>{{ s.name }}</strong>
+      <code>{{ s.value }}</code>
+    </li>
+    {{~ end ~}}
+  </ul>
+</section>

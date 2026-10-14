@@ -151,12 +151,13 @@
   "AssetRegistry": {
     "CssStrategy": "blocking",
     "Bundles": [
+      { "Name": "landing", "Css": ["/css/landing.css"] },
       { "Name": "global", "Css": ["/css/fonts.css", "/css/app.css", "/css/prism-theme.css"], "Js": ["/js/site.js"] },
       { "Name": "docs", "Css": ["/css/fonts.css", "/css/app.css", "/css/prism-theme.css", "/css/api.css"], "Js": ["/js/site.js"] }
     ],
     "RouteBundles": [
       { "Match": "/api/**", "Bundles": ["docs"] },
-      { "Match": "/", "Bundles": ["global"] },
+      { "Match": "/", "Bundles": ["global", "landing"] },
       { "Match": "/benchmarks/**", "Bundles": ["global"] },
       { "Match": "/faq/**", "Bundles": ["global"] },
       { "Match": "/showcase/**", "Bundles": ["global"] },

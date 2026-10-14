@@ -243,3 +243,23 @@
   });
 
     </script>
+
+<script>
+(function () {
+  // Specimen filter on the home page.
+  var filters = document.querySelector('[data-cgx-filters]');
+  var grid = document.querySelector('[data-cgx-specimens]');
+  if (!filters || !grid) return;
+  filters.querySelectorAll('button').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var value = button.getAttribute('data-filter');
+      filters.querySelectorAll('button').forEach(function (other) {
+        other.setAttribute('aria-pressed', other === button ? 'true' : 'false');
+      });
+      grid.querySelectorAll('[data-family]').forEach(function (tile) {
+        tile.hidden = value !== 'all' && tile.getAttribute('data-family') !== value;
+      });
+    });
+  });
+})();
+</script>

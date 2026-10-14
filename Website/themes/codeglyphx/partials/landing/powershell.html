@@ -1,0 +1,21 @@
+{{~ ip = data.imageplayground; ps = data.landing.powershell ~}}
+<section class="cgx-ps" id="powershell" aria-labelledby="cgx-ps-title">
+  <div class="cgx-ps__inner">
+    <div class="cgx-ps__head">
+      <h2 id="cgx-ps-title">CodeGlyphX in PowerShell</h2>
+      <p>{{ ps.intro }} ImagePlayground {{ ip.module.version }} exports {{ ip.module.codeGlyphXCommandCount }} of these commands for {{ ip.module.powerShell }}.</p>
+      <ul class="cgx-ps__families">{{ for f in ip.families }}<li><strong>{{ f.commandCount }}</strong><span>{{ f.title }}</span></li>{{ end }}</ul>
+      <div class="cgx-install cgx-install--ps"><code><span aria-hidden="true">PS&gt;</span> {{ ip.module.install }}</code><button type="button" class="copy-btn cgx-copy" data-copy="{{ ip.module.install }}">Copy</button></div>
+    </div>
+    <div class="cgx-ps__grid">
+      {{~ for e in ps.examples ~}}
+      <article class="cgx-ps__item">
+        <span class="cgx-ps__img"><img src="{{ e.image }}" loading="lazy" decoding="async" alt="Output of {{ e.script }}: {{ e.title | string.downcase }}." /></span>
+        <h3>{{ e.title }}</h3>
+        <pre><code class="language-powershell">{{ e.code | html.escape }}</code></pre>
+        <a class="cgx-link" href="https://github.com/EvotecIT/ImagePlayground/blob/master/{{ e.script }}">{{ e.script }}</a>
+      </article>
+      {{~ end ~}}
+    </div>
+  </div>
+</section>

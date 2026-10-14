@@ -1,0 +1,23 @@
+{{~ a = data.landing.art ~}}
+<section class="cgx-art" aria-labelledby="cgx-art-title">
+  <div class="cgx-art__inner">
+    <div class="cgx-art__head">
+      <h2 id="cgx-art-title">{{ a.title }}</h2>
+      <p>{{ a.body }}</p>
+    </div>
+    <div class="cgx-art__grid">
+      {{~ for g in a.gallery ~}}
+      <figure class="cgx-art__item"><img src="{{ g.image }}" width="{{ g.width }}" height="{{ g.height }}" loading="lazy" decoding="async" alt="{{ g.alt }}" /><figcaption>{{ g.title }}</figcaption></figure>
+      {{~ end ~}}
+    </div>
+    <div class="cgx-art__row">
+      <pre class="cgx-code"><code class="language-csharp">{{ a.code | html.escape }}</code></pre>
+      <p class="cgx-art__proof">{{ a.proof }}</p>
+    </div>
+    <h3 class="cgx-art__board-title">Style board</h3>
+    <div class="style-board-grid" data-style-board data-style-board-src="/data/style-board.json" data-style-board-base="/assets/style-board/">
+      <div class="style-board-fallback">Loading style board</div>
+    </div>
+    <p class="cgx-art__more"><a class="cgx-link" href="/showcase/">See every style in the showcase</a></p>
+  </div>
+</section>

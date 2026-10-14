@@ -1,0 +1,66 @@
+{
+  "generatedBy": "Website/build/Sync-ImagePlayground.ps1",
+  "module": {
+    "name": "ImagePlayground",
+    "version": "3.2.8",
+    "commit": "98468bc",
+    "commandCount": 131,
+    "codeGlyphXCommandCount": 20,
+    "install": "Install-Module -Name ImagePlayground -Scope CurrentUser",
+    "powerShell": "Windows PowerShell 5.1 and PowerShell 7+"
+  },
+  "families": [
+    {
+      "id": "qr",
+      "title": "QR codes",
+      "description": "QR codes from text, URLs or contact details, with styling options.",
+      "commandCount": 2,
+      "commands": [
+        "New-ImageQRCode",
+        "New-ImageQRContact"
+      ]
+    },
+    {
+      "id": "payloads",
+      "title": "QR payloads",
+      "description": "Wi-Fi, calendar, email, OTP, payments, cryptocurrency, phone, SMS and location payloads.",
+      "commandCount": 15,
+      "commands": [
+        "New-ImageQRCodeBezahlCode",
+        "New-ImageQRCodeBitcoin",
+        "New-ImageQRCodeCalendar",
+        "New-ImageQRCodeEmail",
+        "New-ImageQRCodeGeoLocation",
+        "New-ImageQRCodeGirocode",
+        "New-ImageQRCodeMonero",
+        "New-ImageQRCodeOtp",
+        "New-ImageQRCodePhoneNumber",
+        "New-ImageQRCodeShadowSocks",
+        "New-ImageQRCodeSkypeCall",
+        "New-ImageQRCodeSlovenianUpnQr",
+        "New-ImageQRCodeSms",
+        "New-ImageQRCodeSwiss",
+        "New-ImageQRCodeWiFi"
+      ]
+    },
+    {
+      "id": "barcodes",
+      "title": "Barcodes",
+      "description": "EAN, UPC, Code 128, Data Matrix, PDF417 and the other CodeGlyphX symbologies.",
+      "commandCount": 1,
+      "commands": [
+        "New-ImageBarCode"
+      ]
+    },
+    {
+      "id": "decode",
+      "title": "Decoding",
+      "description": "Read QR codes and barcodes back from image files.",
+      "commandCount": 2,
+      "commands": [
+        "Get-ImageBarCode",
+        "Get-ImageQRCode"
+      ]
+    }
+  ]
+}

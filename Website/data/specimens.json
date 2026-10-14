@@ -1,0 +1,301 @@
+{
+  "generatedBy": "Website/tools/SiteSpecimens",
+  "count": 37,
+  "specimens": [
+    {
+      "name": "QR Code",
+      "family": "2D",
+      "value": "https://codeglyphx.com",
+      "file": "/specimens/qrcode.svg"
+    },
+    {
+      "name": "Micro QR",
+      "family": "2D",
+      "value": "CGX2026",
+      "file": "/specimens/microqrcode.svg"
+    },
+    {
+      "name": "rMQR",
+      "family": "2D",
+      "value": "CODEGLYPHX",
+      "file": "/specimens/rmqrcode.svg"
+    },
+    {
+      "name": "Data Matrix",
+      "family": "2D",
+      "value": "LOT-2026-0042",
+      "file": "/specimens/datamatrix.svg"
+    },
+    {
+      "name": "Aztec",
+      "family": "2D",
+      "value": "TICKET-2026-0042",
+      "file": "/specimens/aztec.svg"
+    },
+    {
+      "name": "PDF417",
+      "family": "2D",
+      "value": "DOCUMENT-2026-0042",
+      "file": "/specimens/pdf417.svg"
+    },
+    {
+      "name": "MicroPDF417",
+      "family": "2D",
+      "value": "INV-0042",
+      "file": "/specimens/micropdf417.svg"
+    },
+    {
+      "name": "DotCode",
+      "family": "2D",
+      "value": "CGX-0042",
+      "file": "/specimens/dotcode.svg"
+    },
+    {
+      "name": "Han Xin",
+      "family": "2D",
+      "value": "CodeGlyphX",
+      "file": "/specimens/hanxin.svg"
+    },
+    {
+      "name": "Code 128",
+      "family": "Linear",
+      "value": "CODEGLYPHX-2026",
+      "file": "/specimens/code128.svg"
+    },
+    {
+      "name": "GS1-128",
+      "family": "Linear",
+      "value": "(01)09501101530003",
+      "file": "/specimens/gs1code128.svg"
+    },
+    {
+      "name": "Code 39",
+      "family": "Linear",
+      "value": "CGX-2026",
+      "file": "/specimens/code39.svg"
+    },
+    {
+      "name": "Code 93",
+      "family": "Linear",
+      "value": "CGX-2026",
+      "file": "/specimens/code93.svg"
+    },
+    {
+      "name": "Code 11",
+      "family": "Linear",
+      "value": "123-45",
+      "file": "/specimens/code11.svg"
+    },
+    {
+      "name": "Codabar",
+      "family": "Linear",
+      "value": "A40156B",
+      "file": "/specimens/codabar.svg"
+    },
+    {
+      "name": "MSI",
+      "family": "Linear",
+      "value": "1234567",
+      "file": "/specimens/msi.svg"
+    },
+    {
+      "name": "Plessey",
+      "family": "Linear",
+      "value": "1234ABCD",
+      "file": "/specimens/plessey.svg"
+    },
+    {
+      "name": "Telepen",
+      "family": "Linear",
+      "value": "CGX",
+      "file": "/specimens/telepen.svg"
+    },
+    {
+      "name": "Code 32",
+      "family": "Linear",
+      "value": "12345678",
+      "file": "/specimens/code32.svg"
+    },
+    {
+      "name": "Pharmacode",
+      "family": "Linear",
+      "value": "1234",
+      "file": "/specimens/pharmacode.svg"
+    },
+    {
+      "name": "EAN-13",
+      "family": "Retail",
+      "value": "5901234123457",
+      "file": "/specimens/ean.svg"
+    },
+    {
+      "name": "UPC-A",
+      "family": "Retail",
+      "value": "036000291452",
+      "file": "/specimens/upca.svg"
+    },
+    {
+      "name": "UPC-E",
+      "family": "Retail",
+      "value": "123456",
+      "file": "/specimens/upce.svg"
+    },
+    {
+      "name": "ITF-14",
+      "family": "Retail",
+      "value": "15400141288763",
+      "file": "/specimens/itf14.svg"
+    },
+    {
+      "name": "Interleaved 2 of 5",
+      "family": "Linear",
+      "value": "12345678",
+      "file": "/specimens/itf.svg"
+    },
+    {
+      "name": "Industrial 2 of 5",
+      "family": "Linear",
+      "value": "12345",
+      "file": "/specimens/industrial2of5.svg"
+    },
+    {
+      "name": "Matrix 2 of 5",
+      "family": "Linear",
+      "value": "12345",
+      "file": "/specimens/matrix2of5.svg"
+    },
+    {
+      "name": "IATA 2 of 5",
+      "family": "Linear",
+      "value": "12345",
+      "file": "/specimens/iata2of5.svg"
+    },
+    {
+      "name": "GS1 DataBar",
+      "family": "GS1",
+      "value": "0950110153000",
+      "file": "/specimens/gs1databaromnidirectional.svg"
+    },
+    {
+      "name": "GS1 DataBar Limited",
+      "family": "GS1",
+      "value": "(01)09501101530003",
+      "file": "/specimens/gs1databarlimited.svg"
+    },
+    {
+      "name": "GS1 DataBar Expanded",
+      "family": "GS1",
+      "value": "(01)09501101530003(17)261231",
+      "file": "/specimens/gs1databarexpanded.svg"
+    },
+    {
+      "name": "GS1 DataBar Stacked",
+      "family": "GS1",
+      "value": "0950110153000",
+      "file": "/specimens/gs1databarstacked.svg"
+    },
+    {
+      "name": "POSTNET",
+      "family": "Postal",
+      "value": "12345",
+      "file": "/specimens/postnet.svg"
+    },
+    {
+      "name": "PLANET",
+      "family": "Postal",
+      "value": "12345678901",
+      "file": "/specimens/planet.svg"
+    },
+    {
+      "name": "KIX",
+      "family": "Postal",
+      "value": "1231FZ13XHS",
+      "file": "/specimens/kixcode.svg"
+    },
+    {
+      "name": "Royal Mail 4-State",
+      "family": "Postal",
+      "value": "LU178XE1A",
+      "file": "/specimens/royalmail4state.svg"
+    },
+    {
+      "name": "USPS Intelligent Mail",
+      "family": "Postal",
+      "value": "01234567094987654321",
+      "file": "/specimens/uspsintelligentmail.svg"
+    }
+  ],
+  "payloads": [
+    {
+      "id": "wifi",
+      "name": "Wi-Fi network",
+      "code": "QrPayloads.Wifi(\u0022Evotec-Guest\u0022,\n    \u0022correct-horse-battery\u0022)",
+      "file": "/specimens/payload-wifi.svg"
+    },
+    {
+      "id": "otp",
+      "name": "Authenticator (TOTP)",
+      "code": "QrPayloads.OneTimePassword(\n    OtpAuthType.Totp,\n    \u0022JBSWY3DPEHPK3PXP\u0022,\n    label: \u0022ava@example.com\u0022,\n    issuer: \u0022CodeGlyphX\u0022)",
+      "file": "/specimens/payload-otp.svg"
+    },
+    {
+      "id": "vcard",
+      "name": "Contact card",
+      "code": "QrPayload.VCard(\n    firstName: \u0022Ava\u0022,\n    lastName: \u0022Stone\u0022,\n    phone: \u0022\u002B14155550198\u0022,\n    email: \u0022ava@example.com\u0022)",
+      "file": "/specimens/payload-vcard.svg"
+    },
+    {
+      "id": "girocode",
+      "name": "SEPA payment",
+      "code": "QrPayloads.Girocode(\n    iban: \u0022DE89370400440532013000\u0022,\n    bic: \u0022COBADEFFXXX\u0022,\n    name: \u0022Evotec Services\u0022,\n    amount: 99.99m)",
+      "file": "/specimens/payload-girocode.svg"
+    }
+  ],
+  "decoded": [
+    {
+      "file": "/images/art/qr-colorful-gallery.png",
+      "decoded": true,
+      "text": "https://codeglyphx.com"
+    },
+    {
+      "file": "/images/art/qr-expressive-botanical.png",
+      "decoded": true,
+      "text": "https://example.com/art"
+    },
+    {
+      "file": "/images/art/qr-expressive-citrus.png",
+      "decoded": true,
+      "text": "https://example.com/art"
+    },
+    {
+      "file": "/images/art/qr-expressive-earth.png",
+      "decoded": true,
+      "text": "https://example.com/art"
+    },
+    {
+      "file": "/images/art/qr-expressive-geometric.png",
+      "decoded": true,
+      "text": "https://example.com/art"
+    },
+    {
+      "file": "/images/art/qr-expressive-landscape.png",
+      "decoded": true,
+      "text": "https://example.com/art"
+    },
+    {
+      "file": "/images/art/qr-expressive-waves.png",
+      "decoded": true,
+      "text": "https://example.com/art"
+    },
+    {
+      "file": "/images/art/qr-illustrated-compositions.png",
+      "decoded": true,
+      "text": "https://example.com/art"
+    },
+    {
+      "file": "/images/art/qr-procedural-art-gallery.png",
+      "decoded": true,
+      "text": "https://codeglyphx.com"
+    }
+  ]
+}

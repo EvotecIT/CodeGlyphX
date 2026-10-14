@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Renders the codeglyphx.com specimen sheet and payload codes, and decodes the hero artwork, with CodeGlyphX itself. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\CodeGlyphX\CodeGlyphX.csproj" />
+  </ItemGroup>
+</Project>

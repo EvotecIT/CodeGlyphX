@@ -31,6 +31,17 @@ If you don't have the engine repo next to this repo, set:
     - `navContextPath: "/"` (keeps API header nav consistent with non-API pages)
 - Theme: `themes/codeglyphx/theme.manifest.json`
 
+## Home Page Data
+
+The home page (`content/pages/index.md`, layout `landing`) reads committed data. Regenerate it when the library or ImagePlayground changes, then review the diff:
+
+- Copy and examples: `data/landing.json` (hand-edited).
+- Specimen sheet, payload codes and hero decode results: `data/specimens.json` and `static/specimens/*.svg`, produced by CodeGlyphX itself:
+  - `dotnet run --project ./tools/SiteSpecimens -c Release -- .`
+  - The hero and gallery art in `static/images/art/` comes from `Assets/Examples`. The tool decodes each image, so the page only claims what CodeGlyphX reads back.
+- PowerShell section: `data/imageplayground.json` and `static/powershell/*.png`:
+  - `pwsh ./build/Sync-ImagePlayground.ps1 -ImagePlaygroundRoot <ImagePlayground checkout> -SamplesPath <folder with example outputs>`
+
 ## Deploy + Recovery
 
 - Production pull timer: `../deploy/linux/systemd/codeglyphx-site-pull.timer`
