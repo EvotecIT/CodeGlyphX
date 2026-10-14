@@ -54,7 +54,7 @@ internal static partial class BarcodeScanline {
         }
     }
 
-    private static bool ExpandedFinderMatches(List<int> runs, int start, int[] pattern) {
+    private static bool ExpandedFinderMatches(List<int> runs, int start, ReadOnlySpan<int> pattern) {
         if (start + 5 > runs.Count) return false;
         var total = 0;
         for (var i = 0; i < 5; i++) total += runs[start + i];
@@ -69,11 +69,18 @@ internal static partial class BarcodeScanline {
     }
 
     private static bool NormalizeExpandedCharacter(List<int> runs, int start, List<int> widths, ref double fit) {
+        Span<int> normalized = stackalloc int[8];
+        if (!NormalizeExpandedCharacter(runs, start, normalized, ref fit)) return false;
+        for (var i = 0; i < 8; i++) widths.Add(normalized[i]);
+        return true;
+    }
+
+    // Every successful call fills eight elements before the caller consumes them.
+    private static bool NormalizeExpandedCharacter(List<int> runs, int start, Span<int> normalized, ref double fit) {
         if (start + 8 > runs.Count) return false;
         var total = 0;
         for (var i = 0; i < 8; i++) total += runs[start + i];
         var pitch = total / 17.0;
-        var normalized = new int[8];
         var sum = 0;
         for (var i = 0; i < 8; i++) { normalized[i] = Math.Max(1, (int)Math.Round(runs[start + i] / pitch)); sum += normalized[i]; }
         // Correct pixel-rounding error using the element nearest the missing boundary.
@@ -95,7 +102,6 @@ internal static partial class BarcodeScanline {
             if (Math.Abs(residual) > 0.85) return false;
             fit += residual * residual;
         }
-        widths.AddRange(normalized);
         return true;
     }
 }

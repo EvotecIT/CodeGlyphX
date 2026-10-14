@@ -7,6 +7,9 @@ using CodeGlyphX.DataBar;
 namespace CodeGlyphX.Internal;
 
 internal static partial class BarcodeScanline {
+    // At most 22 characters, 11 finders and four boundary elements.
+    private const int MaximumExpandedRowWidths = 4 + 22 * 8 + 11 * 5;
+
     private sealed class ExpandedRowObservation {
         internal readonly int[] Widths;
         internal readonly int Start;
@@ -25,7 +28,10 @@ internal static partial class BarcodeScanline {
         content = string.Empty;
         if (width < 1 || height < 1 || (width < 20 && height < 20) || DecodeBudget.ShouldAbort(token)) return false;
         var rented = ArrayPool<byte>.Shared.Rent(Math.Max(width, height));
+        int[]? offsets = null;
         try {
+            var runs = new List<int>();
+            var starts = new List<int>();
             for (var vertical = 0; vertical < 2; vertical++) {
                 var length = vertical == 0 ? width : height;
                 var across = vertical == 0 ? height : width;
@@ -50,20 +56,26 @@ internal static partial class BarcodeScanline {
                         // Separate cutoffs let gray edges vary without changing the character decoder.
                         for (var thresholdIndex = 0; thresholdIndex < 3; thresholdIndex++) {
                             var threshold = min + (max - min) * (thresholdIndex + 1) / 4;
-                            CollectExpandedStackedRows(rented.AsSpan(0, length), threshold, position, step, observations, token);
+                            CollectExpandedStackedRows(rented.AsSpan(0, length), threshold, position, step, observations, token,
+                                runs, ref offsets, starts);
                         }
                     }
                     if (TryAssembleExpandedRows(observations, allowSingleRow, token, out content)) return true;
                 }
             }
             return false;
-        } finally { ArrayPool<byte>.Shared.Return(rented); }
+        } finally {
+            if (offsets is not null) ArrayPool<int>.Shared.Return(offsets);
+            ArrayPool<byte>.Shared.Return(rented);
+        }
     }
 
     private static void CollectExpandedStackedRows(ReadOnlySpan<byte> luminance, int threshold, int position, int step,
-        List<ExpandedRowObservation>[] observations, CancellationToken token) {
+        List<ExpandedRowObservation>[] observations, CancellationToken token, List<int> runs, ref int[]? offsets,
+        List<int> starts) {
         // Empty edge runs preserve a light guard clipped at the image boundary.
-        var runs = new List<int> { 0 };
+        runs.Clear();
+        runs.Add(0);
         var budget = DecodeBudget.Capture();
         var first = luminance[0] < threshold;
         var current = first;
@@ -75,9 +87,14 @@ internal static partial class BarcodeScanline {
             else { runs.Add(count); current = bar; count = 1; }
         }
         runs.Add(count); runs.Add(0);
-        var offsets = new int[runs.Count + 1];
+        if (offsets is null || offsets.Length < runs.Count + 1) {
+            var replacement = ArrayPool<int>.Shared.Rent(runs.Count + 1);
+            if (offsets is not null) ArrayPool<int>.Shared.Return(offsets);
+            offsets = replacement;
+        }
+        offsets[0] = 0;
         for (var i = 0; i < runs.Count; i++) offsets[i + 1] = offsets[i] + runs[i];
-        var starts = new List<int>();
+        Span<int> widths = stackalloc int[MaximumExpandedRowWidths];
         foreach (var group in ExpandedStackedPatterns.FinderGroups) {
             if (budget.ShouldAbort(token)) return;
             starts.Clear();
@@ -96,18 +113,18 @@ internal static partial class BarcodeScanline {
                     if (start + pattern.Widths.Length > runs.Count) break;
                     var firstIsBar = !first == ((start & 1) == 0);
                     var inverted = firstIsBar != pattern.FirstIsBar;
-                    var widths = new List<int>(pattern.Widths.Length) { pattern.Widths[0], 1 };
+                    widths[0] = pattern.Widths[0];
+                    widths[1] = 1;
                     var fit = 0.0;
                     var at = 2;
                     while (at < pattern.Widths.Length - 2) {
                         if (pattern.Widths[at] == 0) {
-                            if (!NormalizeExpandedCharacter(runs, start + at, widths, ref fit)) break;
+                            if (!NormalizeExpandedCharacter(runs, start + at, widths.Slice(at, 8), ref fit)) break;
                             at += 8;
                         } else {
-                            var finder = new int[5];
-                            Array.Copy(pattern.Widths, at, finder, 0, 5);
+                            var finder = pattern.Widths.AsSpan(at, 5);
                             if (!ExpandedFinderMatches(runs, start + at, finder)) break;
-                            widths.AddRange(finder); at += 5;
+                            finder.CopyTo(widths.Slice(at, 5)); at += 5;
                         }
                     }
                     if (at != pattern.Widths.Length - 2) continue;
@@ -120,7 +137,8 @@ internal static partial class BarcodeScanline {
                     if (Math.Abs(runs[start + firstDark] / pitch - pattern.Widths[firstDark]) > 0.85) continue;
                     var lastDark = pattern.FirstIsBar == ((pattern.Widths.Length & 1) != 0) ? at + 1 : at;
                     if (Math.Abs(runs[start + lastDark] / pitch - 1) > 0.85) continue;
-                    widths.Add(1); widths.Add(1);
+                    widths[at] = 1; widths[at + 1] = 1;
+                    var rowWidths = widths.Slice(0, at + 2);
                     var rowStart = offsets[start + 2] - (int)Math.Round((pattern.Widths[0] + 1) * pitch);
                     var rowEnd = offsets[start + at] + (int)Math.Round(2 * pitch);
                     var list = observations[patternIndex] ??= new List<ExpandedRowObservation>();
@@ -128,19 +146,19 @@ internal static partial class BarcodeScanline {
                     foreach (var existing in list) {
                         if (existing.Inverted != inverted || Math.Abs(existing.Start - rowStart) > pitch * 2 ||
                             Math.Abs(existing.End - rowEnd) > pitch * 2 || position > existing.LastPosition + step * 2 ||
-                            !ExpandedWidthsEqual(existing.Widths, widths)) continue;
+                            !ExpandedWidthsEqual(existing.Widths, rowWidths)) continue;
                         existing.LastPosition = position; match = true; break;
                     }
                     // The bounded observation set avoids unbounded noisy-image work.
                     if (!match && list.Count < 64)
-                        list.Add(new ExpandedRowObservation(widths.ToArray(), rowStart, rowEnd, inverted, position));
+                        list.Add(new ExpandedRowObservation(rowWidths.ToArray(), rowStart, rowEnd, inverted, position));
                 }
             }
         }
     }
 
-    private static bool ExpandedWidthsEqual(int[] left, List<int> right) {
-        if (left.Length != right.Count) return false;
+    private static bool ExpandedWidthsEqual(int[] left, ReadOnlySpan<int> right) {
+        if (left.Length != right.Length) return false;
         for (var i = 0; i < left.Length; i++) if (left[i] != right[i]) return false;
         return true;
     }

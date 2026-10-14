@@ -48,6 +48,7 @@
     <Compile Include="DataBar14CharacterRecoveryTests.cs" />
     <Compile Include="DataBarModuleRunTests.cs" />
     <Compile Include="DataBar14WorkspaceTests.cs" />
+    <Compile Include="DataBarExpandedWorkspaceTests.cs" />
     <Compile Include="Code128ReaderInitializationTests.cs" />
     <Compile Include="BarcodePixelSamplingTests.cs" />
     <Compile Include="QrImageDecodeParityData.cs" />
