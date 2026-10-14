@@ -1,0 +1,348 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "All PNG images with UTF-8 text oracles in pdf417-1, pdf417-2 and pdf417-3, excluding the 18 frozen comparison images. The 38-image selection was fixed before the first supplemental outcomes. One revealed regression informed the final correction and permanent fixture; the final set is supplemental regression evidence, not an unseen holdout.",
+  "Samples": [
+    {
+      "Id": "pdf417-1/01.png",
+      "File": "pdf417-1/01.png",
+      "Sha256": "c849c7f70faea84083d428aae543ea577900f7f3da2e2aaa22c83fad2d013fe2",
+      "Format": "Pdf417",
+      "Expected": [
+        "This is PDF417"
+      ]
+    },
+    {
+      "Id": "pdf417-1/03.png",
+      "File": "pdf417-1/03.png",
+      "Sha256": "1d03e522f060265b4d62b4578a3225c04cc171a38439bf768e298db9b162ec8f",
+      "Format": "Pdf417",
+      "Expected": [
+        "ActiveBarcode"
+      ]
+    },
+    {
+      "Id": "pdf417-1/07.png",
+      "File": "pdf417-1/07.png",
+      "Sha256": "32c315169cf8816bf2764aadfe31897196e1469da2f5ce95c7b6a7a5d58b4315",
+      "Format": "Pdf417",
+      "Expected": [
+        "-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-1/10.png",
+      "File": "pdf417-1/10.png",
+      "Sha256": "373e4daac838c13ac88ce8c9573473a413b5225419ba3d440734825732cf3919",
+      "Format": "Pdf417",
+      "Expected": [
+        "PDF-417"
+      ]
+    },
+    {
+      "Id": "pdf417-1/11.png",
+      "File": "pdf417-1/11.png",
+      "Sha256": "91291783ede92eed6b3769e1ab06606510c0158cd2b4422c17a5d05adb69b633",
+      "Format": "Pdf417",
+      "Expected": [
+        "This is just a test."
+      ]
+    },
+    {
+      "Id": "pdf417-1/12.png",
+      "File": "pdf417-1/12.png",
+      "Sha256": "edfb8feab8092be99c2a59853b2a62de2d178dff77c20351c0f865d6769df47a",
+      "Format": "Pdf417",
+      "Expected": [
+        "+A+CDMEABCDEFGHIJABCDFEFGH"
+      ]
+    },
+    {
+      "Id": "pdf417-1/13.png",
+      "File": "pdf417-1/13.png",
+      "Sha256": "5350c14e34d8c45996f6e1d155f0bd9d06ff317bfe4e53fca7c2cdeca634cc49",
+      "Format": "Pdf417",
+      "Expected": [
+        "+ABCDEFGHIJABCDEFGHIJABCDEFGHIJABBCDEV"
+      ]
+    },
+    {
+      "Id": "pdf417-2/01.png",
+      "File": "pdf417-2/01.png",
+      "Sha256": "b036c6b9d6c1d36cc44651975004226fb16b5d1bdded83d6461ef473b3c978f1",
+      "Format": "Pdf417",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-2/02.png",
+      "File": "pdf417-2/02.png",
+      "Sha256": "be515ae895752d508502df3a4264ff6a83a12bae566826cd58a54bb6f3cf25b1",
+      "Format": "Pdf417",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-2/03.png",
+      "File": "pdf417-2/03.png",
+      "Sha256": "003dbae90264881d9e3ff45dc58ff7357a9702d32f9d2face2192f2d9138ec57",
+      "Format": "Pdf417",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-2/04.png",
+      "File": "pdf417-2/04.png",
+      "Sha256": "ac73a3e9af43611028b2ea0d77843a18a46088029f6274572ddde9b9857ec0f6",
+      "Format": "Pdf417",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-2/06.png",
+      "File": "pdf417-2/06.png",
+      "Sha256": "a6758ac83f41d9418f3b7b6750b1d9de0181a76e0e22a51e4b2ea1d676876f42",
+      "Format": "Pdf417",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-2/07.png",
+      "File": "pdf417-2/07.png",
+      "Sha256": "941364cccfcf2877b9e4f8f492f3e0464d487d6cf65d4288b3eea93aa09ab766",
+      "Format": "Pdf417",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-2/08.png",
+      "File": "pdf417-2/08.png",
+      "Sha256": "98454d87ebaf740d136e786be1cd3d97a3b8621f40f917b2d0ce64fbf5d36044",
+      "Format": "Pdf417",
+      "Expected": [
+        "A PDF 417 barcode with ASCII text"
+      ]
+    },
+    {
+      "Id": "pdf417-2/09.png",
+      "File": "pdf417-2/09.png",
+      "Sha256": "a8d89f6c3399bdb402d38db4bcebd51f4dbe0133d52bdc9c182dd2e379d76e2c",
+      "Format": "Pdf417",
+      "Expected": [
+        "A PDF 417 barcode with ASCII text"
+      ]
+    },
+    {
+      "Id": "pdf417-2/10.png",
+      "File": "pdf417-2/10.png",
+      "Sha256": "45865ca529137684a27e56add868ec649f0cd607091ac47f3fefaeac4c8b25f9",
+      "Format": "Pdf417",
+      "Expected": [
+        "A PDF 417 barcode with ASCII text"
+      ]
+    },
+    {
+      "Id": "pdf417-2/11.png",
+      "File": "pdf417-2/11.png",
+      "Sha256": "5f02e73c8ba4e98bdc466e29088d2b3d99468a5a18fdacb0eed72326d4e19a96",
+      "Format": "Pdf417",
+      "Expected": [
+        "A PDF 417 barcode with ASCII text"
+      ]
+    },
+    {
+      "Id": "pdf417-2/12.png",
+      "File": "pdf417-2/12.png",
+      "Sha256": "84d54346bc2347edb670350f0e7b59cd3b19aa8008aa991e68b58e3a4d6b9c61",
+      "Format": "Pdf417",
+      "Expected": [
+        "A PDF 417 barcode with ASCII text"
+      ]
+    },
+    {
+      "Id": "pdf417-2/13.png",
+      "File": "pdf417-2/13.png",
+      "Sha256": "27bc0b558cfddb20ca8524b6c29963c5ebc143826397eb3e5a4ee4472b23c318",
+      "Format": "Pdf417",
+      "Expected": [
+        "A PDF 417 barcode with ASCII text"
+      ]
+    },
+    {
+      "Id": "pdf417-2/16.png",
+      "File": "pdf417-2/16.png",
+      "Sha256": "e33a9ff2781ef1c4f3bd711ceb05cbb8b5351e9f444a24d4fca3470a4a5ac0a0",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
+      ]
+    },
+    {
+      "Id": "pdf417-2/18.png",
+      "File": "pdf417-2/18.png",
+      "Sha256": "b6647b08a272835ef0a11e3fd0598293b4ad5aa28e86aac50ccf8d08f8b9e7ae",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
+      ]
+    },
+    {
+      "Id": "pdf417-2/20.png",
+      "File": "pdf417-2/20.png",
+      "Sha256": "8d0b8a7d00b24cb6fb3ee3d6cf2e20c9050920435d85c3a042724becbaab2455",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
+      ]
+    },
+    {
+      "Id": "pdf417-2/21.png",
+      "File": "pdf417-2/21.png",
+      "Sha256": "f9fb23f8967cf14ce247efa4edd2b5921f4a183f0c6ac82ff58b273eebf1c212",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
+      ]
+    },
+    {
+      "Id": "pdf417-2/23.png",
+      "File": "pdf417-2/23.png",
+      "Sha256": "78c280cebc3cddd7faf94808c278dba2584be89d85751393be128f68f975b395",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
+      ]
+    },
+    {
+      "Id": "pdf417-2/25.png",
+      "File": "pdf417-2/25.png",
+      "Sha256": "5423cc32edd13dbf62bebfe90f4a2f4e49e310e15c51656f2d2e197e690ff1ef",
+      "Format": "Pdf417",
+      "Expected": [
+        "This is PDF417"
+      ]
+    },
+    {
+      "Id": "pdf417-3/01.png",
+      "File": "pdf417-3/01.png",
+      "Sha256": "7fa10d5031c113e19cacf7c304796e4ae90e4e217ebd08100ae5f44ba1d73789",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/02.png",
+      "File": "pdf417-3/02.png",
+      "Sha256": "e2523fbc8480e08acae39984cb7e8c77e542270132abbcb4cd97a2904290a0a4",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/05.png",
+      "File": "pdf417-3/05.png",
+      "Sha256": "a2bbfbf616ba55ecd4f4ffdef99cf5f9ea19dee009850ef8caff89575ccfa1f9",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/07.png",
+      "File": "pdf417-3/07.png",
+      "Sha256": "8bfd8dd64aa0348b04bd3898efb12122b43d9a20235767ac96d8e9b9e3efad9d",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 4."
+      ]
+    },
+    {
+      "Id": "pdf417-3/10.png",
+      "File": "pdf417-3/10.png",
+      "Sha256": "1f79b6340831607715b3cb3c2da2420fe05a8930538902dcc966181104d3245a",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 4."
+      ]
+    },
+    {
+      "Id": "pdf417-3/11.png",
+      "File": "pdf417-3/11.png",
+      "Sha256": "f05ec40cdd209b77618d0cf3c689040d0fcccd4bec9b9b5cf0618bd365b12fb3",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 4."
+      ]
+    },
+    {
+      "Id": "pdf417-3/12.png",
+      "File": "pdf417-3/12.png",
+      "Sha256": "eca74998a90e59336e7d0354d7a1bacc0ff57ef5929c1e5e21c7ef247caa3bbd",
+      "Format": "Pdf417",
+      "Expected": [
+        "[)>\u001e01\u001d0210011\u001d840\u001d53\u001d9080122327430201\u001dFDE\u001d238351251\u001d289\u001d \u001d1/1\u001d3.0LB\u001dY\u001d76 NINTH AVENUE\u001dNEW YORK CITY\u001dNY\u001dSUSAN ZOLEZZI\u001e06\u001d10ZED004\u001d11ZGOOGLE\u001d12Z2125654186\u001d30Z31001192000001\u001c\u001d14Z4TH FLOOR\u001d15Z397957\u001d20Z0.00\u001c0.00\u001d28Z9080122327430201\u001dK533 PROGRAMS\u001d26Z584a\u001c\u001d\u001e\u0004"
+      ]
+    },
+    {
+      "Id": "pdf417-3/13.png",
+      "File": "pdf417-3/13.png",
+      "Sha256": "4f9917e3b93139d4081c3b9969e0946d9795a93e9b1f2e58235afadddb7b67dd",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/14.png",
+      "File": "pdf417-3/14.png",
+      "Sha256": "5f6361c870fab9a2c9a51afb3a98c0a5934e0e8a40850b9358fd7a41f1820249",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/15.png",
+      "File": "pdf417-3/15.png",
+      "Sha256": "ba537cbf00281bb1c159ce5a620fbc8031157f5f61ef3f2c9a9e498de70ef306",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/16.png",
+      "File": "pdf417-3/16.png",
+      "Sha256": "a1fa9b6955470ab53621cfae9535c505675d2cbfeb9f92b20ab96acd63a767e1",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/17.png",
+      "File": "pdf417-3/17.png",
+      "Sha256": "a1ea0ef8b7cdd8b4867906293a692d62a4696217724db311f86d854c4f3afd8b",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/19.png",
+      "File": "pdf417-3/19.png",
+      "Sha256": "93fb9088200c5aa736bf7838dd38f30e9a05a32b34d4d757124294dce66cd182",
+      "Format": "Pdf417",
+      "Expected": [
+        "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123"
+      ]
+    }
+  ]
+}

@@ -99,6 +99,7 @@ def append_retained_context_section(lines, proof):
         return
     lines += ['', '## ' + proof['title'], '',
               f'These measurements retain their original source {proof["source"]}.' if proof['historical'] else '', '',
+              proof.get('summary', ''), '',
               proof['changes'], '', proof.get('contracts', ''), '', proof.get('exploration_note', ''), '',
               proof.get('completion_note', ''), '', proof['scope'], '', proof['history_note'], '']
     if proof.get('completion_notes'):

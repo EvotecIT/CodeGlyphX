@@ -24,7 +24,8 @@ def project_photograph_recovery(root, qualification, proof_key, prefix, contract
             raise ValueError('Photograph recovery evidence bytes differ')
         return json.loads(raw.decode('utf-8-sig'))
 
-    if read('proof') != proof or proof['Contracts'] != {target:contract_count for target in ('net10','net8','net472')}:
+    expected_contracts = contract_count if isinstance(contract_count, dict) else {target:contract_count for target in ('net10','net8','net472')}
+    if read('proof') != proof or proof['Contracts'] != expected_contracts:
         raise ValueError('Photograph recovery download or framework contracts differ')
     review = proof['ReviewCoverage']
     if review['Head'] != proof['Source'] or review['BoundaryState'] not in ('current', 'candidate-reviewed') or review['UnresolvedFindings']:

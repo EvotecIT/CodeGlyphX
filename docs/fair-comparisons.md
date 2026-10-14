@@ -1,5 +1,7 @@
 # Barcode comparison methodology
 
+PDF417 candidate grids sample cells as they are read and reuse those samples across crops and orientation retries. The regular, fitted, sheared and perspective paths preserve their existing pixel arithmetic and framing tolerance; row-aligned grids keep eager sampling. The report separates the nine PDF417-only negative requests from default all-format completion, and retains 38 valid PDF417 images, multi-QR controls and every measured slowdown. Exact sampling, composed-coordinate, cancellation and Macro contracts pass across the supported frameworks, with native ARM64 functional proof for the same managed core.
+
 CodeGlyphX's current comparison uses matched QR generation settings and a frozen, externally sourced image corpus. Historical QR-pack percentages used different result cardinalities across engines and do not establish a competitive ranking.
 
 The [current results and complete evidence](comparisons/results.md) compare the repaired source with the original source and the previous decoding pass. They report every miss, completed negative scan, inconclusive search and timing sample across both cache domains. Recognition, latency and managed allocation are separate results. These are shared-host measurements with all outliers retained.
