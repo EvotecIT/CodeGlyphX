@@ -71,10 +71,11 @@ static string MarkCurrent(string header, string url) {
     // Edit from the end so earlier offsets stay valid.
     sb.Insert(link + linkTag.Length, " aria-current=\"true\"");
     sb.Insert(li + "<li class=\"cgx-navitem".Length, " is-current");
-    var here = sb.ToString().IndexOf("data-cgx-here hidden>", group, StringComparison.Ordinal);
-    if (here >= 0 && here < li) sb.Remove(here + "data-cgx-here".Length, " hidden".Length);
-    var slot = sb.ToString().IndexOf("<span data-cgx-here-title></span>", group, StringComparison.Ordinal);
-    if (slot >= 0 && slot < li) sb.Insert(slot + "<span data-cgx-here-title>".Length, title);
+    // The chip after the group buttons: shown, with the destination's title.
+    var slot = sb.ToString().IndexOf("<span data-cgx-here-title></span>", link, StringComparison.Ordinal);
+    if (slot >= 0) sb.Insert(slot + "<span data-cgx-here-title>".Length, title);
+    var here = sb.ToString().IndexOf(" aria-hidden=\"true\" hidden>", link, StringComparison.Ordinal);
+    if (here >= 0 && here < slot) sb.Remove(here + " aria-hidden=\"true\"".Length, " hidden".Length);
     sb.Insert(group + "<li class=\"cgx-navgroup".Length, " is-current");
     return sb.ToString();
 }

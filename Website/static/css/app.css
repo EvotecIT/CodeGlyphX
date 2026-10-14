@@ -135,18 +135,18 @@ main > .nova-app-link, main > p { width: var(--cgx-width); margin-inline: auto; 
 .brand:hover { color: var(--ink); }
 .brand-icon { flex: none; width: 32px; height: 32px; overflow: hidden; border-radius: 8px; box-shadow: 0 0 0 1px var(--line); }
 .brand-icon img { display: block; width: 100%; height: 100%; }
-.cgx-nav__sheet { display: flex; flex: 1; align-items: center; justify-content: space-between; gap: 18px; min-width: 0; height: 100%; }
+.cgx-nav__sheet { display: flex; flex: 1; align-items: center; justify-content: flex-start; gap: 18px; min-width: 0; height: 100%; }
+.cgx-nav__sheet > .nav-actions { margin-left: auto; }
 .cgx-nav__groups { display: flex; align-items: center; gap: 4px; height: 100%; margin: 0; padding: 0; list-style: none; }
 .cgx-navgroup { display: flex; align-items: center; height: 100%; }
 .cgx-navgroup__trigger { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; color: var(--ink-muted); font-size: .9063rem; font-weight: 550; cursor: pointer; }
 .cgx-navgroup__trigger:hover, .cgx-navgroup__trigger[aria-expanded="true"] { background: var(--surface-2); color: var(--ink); }
-.cgx-navgroup.is-current .cgx-navgroup__trigger { color: var(--ink); }
 .cgx-navgroup__chevron { flex: none; width: 12px; height: 12px; color: var(--ink-dim); transition: transform .15s ease; }
 .cgx-navgroup__trigger[aria-expanded="true"] .cgx-navgroup__chevron { transform: rotate(180deg); }
-/* The current destination in the trigger: its name inside four small viewfinder corners. */
-.cgx-navgroup__here { position: relative; padding: 1px 8px; color: var(--ink); font-family: var(--cgx-mono); font-size: .75rem; font-weight: 500; }
-.cgx-navgroup__here[hidden] { display: none; }
-.cgx-navgroup__here::before, .cgx-viewfinder-frame::before, .cgx-navitem.is-current .cgx-navitem__thumb::before {
+/* The current destination: its name inside four small viewfinder corners, after the group buttons so they never move. */
+.cgx-nav__here { position: relative; margin-right: auto; padding: 2px 9px; color: var(--ink); font-family: var(--cgx-mono); font-size: .75rem; font-weight: 500; white-space: nowrap; }
+.cgx-nav__here[hidden] { display: none; }
+.cgx-nav__here::before, .cgx-viewfinder-frame::before, .cgx-navitem.is-current .cgx-navitem__thumb::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -156,7 +156,7 @@ main > .nova-app-link, main > p { width: var(--cgx-width); margin-inline: auto; 
     -webkit-mask: conic-gradient(at var(--vf, 7px) var(--vf, 7px), transparent 75%, #000 0) 0 0 / calc(100% - var(--vf, 7px)) calc(100% - var(--vf, 7px));
     mask: conic-gradient(at var(--vf, 7px) var(--vf, 7px), transparent 75%, #000 0) 0 0 / calc(100% - var(--vf, 7px)) calc(100% - var(--vf, 7px));
 }
-.cgx-navgroup__here::before { border-width: 1.5px; border-radius: 4px; --vf: 5px; }
+.cgx-nav__here::before { border-width: 1.5px; border-radius: 4px; --vf: 5px; }
 
 /* The panel is a night surface in both themes: the scanner screen the codes are shown on. */
 .cgx-navpanel {
@@ -244,7 +244,8 @@ main > .nova-app-link, main > p { width: var(--cgx-width); margin-inline: auto; 
     .cgx-navgroup__trigger:hover, .cgx-navgroup__trigger[aria-expanded="true"] { background: none; color: #fff; }
     .cgx-navgroup.is-current .cgx-navgroup__trigger { color: #fff; }
     .cgx-navgroup__chevron { display: none; }
-    .cgx-navgroup__here { color: var(--cgx-cyan); --mark: var(--cgx-cyan); }
+    .cgx-nav__here { display: none; }
+    .cgx-nav__sheet > .nav-actions { margin-left: 0; }
     .cgx-navpanel, .cgx-navgroup__trigger[aria-expanded] + .cgx-navpanel { position: static; width: auto; max-width: none; padding: 6px 0 0; border: 0; border-radius: 0; background: none; box-shadow: none; visibility: inherit; }
     .cgx-navpanel__lede { display: none; }
     .cgx-navpanel__items, .cgx-navpanel[data-count="5"] .cgx-navpanel__items { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }

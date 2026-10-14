@@ -19,7 +19,6 @@
         <li class="cgx-navgroup{{ if current }} is-current{{ end }}" data-cgx-navgroup>
           <button type="button" class="cgx-navgroup__trigger" id="cgx-nav-{{ g.id }}-trigger" aria-expanded="false" aria-controls="cgx-nav-{{ g.id }}">
             <span class="cgx-navgroup__label">{{ g.title }}</span>
-            <span class="cgx-navgroup__here" data-cgx-here{{ if !current }} hidden{{ end }}><span class="cgx-visually-hidden">, current: </span><span data-cgx-here-title>{{ if current }}{{ current.title }}{{ end }}</span></span>
             <svg class="cgx-navgroup__chevron" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <div class="cgx-navpanel" id="cgx-nav-{{ g.id }}" data-count="{{ g.items.size }}">
@@ -38,6 +37,9 @@
         </li>
         {{~ end ~}}
       </ul>
+      {{~ ## The current destination, after both group buttons so they sit at the same place on every page. ## ~}}
+      {{~ here_item = null; for g in navmenu.items; for it in g.items; if it.is_active || it.is_ancestor; here_item = it; end; end; end ~}}
+      <span class="cgx-nav__here" data-cgx-here aria-hidden="true"{{ if !here_item }} hidden{{ end }}><span data-cgx-here-title>{{ if here_item }}{{ here_item.title }}{{ end }}</span></span>
       <div class="nav-actions">
         {{ pf.nav_actions }}
       </div>

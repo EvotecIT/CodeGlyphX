@@ -839,8 +839,8 @@ globalThis.CodeGlyphX.setupDropZone = function(dropZoneElement, inputFileElement
             if (link) link.setAttribute('aria-current', path === best.getAttribute('data-cgx-navitem') ? 'page' : 'true');
             if (group) {
                 group.classList.add('is-current');
-                var here = group.querySelector('[data-cgx-here]');
-                var title = group.querySelector('[data-cgx-here-title]');
+                var here = header.querySelector('[data-cgx-here]');
+                var title = header.querySelector('[data-cgx-here-title]');
                 if (title && link) title.textContent = link.textContent;
                 if (here) here.hidden = false;
             }

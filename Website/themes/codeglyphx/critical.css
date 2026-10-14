@@ -23,10 +23,11 @@ svg { max-width: 100%; height: auto; }
 .brand { display: flex; flex: none; align-items: center; gap: 10px; color: var(--ink); font-weight: 700; text-decoration: none; }
 .brand-icon, .brand-icon img { width: 32px; height: 32px; }
 .header svg { width: 19px; height: 19px; flex-shrink: 0; }
-.cgx-nav__sheet { display: flex; flex: 1; align-items: center; justify-content: space-between; }
+.cgx-nav__sheet { display: flex; flex: 1; align-items: center; gap: 18px; }
+.cgx-nav__sheet > .nav-actions { margin-left: auto; }
 .cgx-nav__groups { display: flex; margin: 0; padding: 0; list-style: none; }
 .cgx-navgroup__trigger { border: 0; background: transparent; color: var(--ink-muted); }
-.cgx-navgroup__here[hidden] { display: none; }
+.cgx-nav__here[hidden] { display: none; }
 .cgx-navpanel { position: absolute; visibility: hidden; }
 .nav-actions { display: flex; align-items: center; gap: 4px; }
 .nav-toggle-checkbox { position: absolute; opacity: 0; }
