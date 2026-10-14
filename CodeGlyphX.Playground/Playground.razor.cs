@@ -181,6 +181,10 @@ public partial class Playground {
     // Component keys for forcing re-render
     internal int _exampleKey = 0;
 
+    // The example component is re-created after each generation; its tab choices live here.
+    internal string ExamplePlatform { get; set; } = "Console";
+    internal CodeLanguage ExampleLanguage { get; set; } = CodeLanguage.CSharp;
+
     // Output
     internal string? ImageDataUri { get; set; }
     internal string? SvgDataUri { get; set; }
@@ -338,7 +342,7 @@ public partial class Playground {
                 break;
             case "Code32":
                 BarcodeHint = "9 digits for Italian pharmaceutical codes";
-                BarcodeContent = "123456789";
+                BarcodeContent = "123456788";
                 break;
             case "GS1128":
                 BarcodeHint = "GS1 AI format, e.g. (01)09506000134352(10)ABC123";

@@ -39,9 +39,11 @@ globalThis.setTheme = setTheme;
             callback?.();
             return;
         }
+        // Resolve against <base href> so the app's own copies load when it is published under /playground/.
+        const vendor = (file) => new URL('vendor/prism/' + file, document.baseURI).href;
         const css = document.createElement('link');
         css.rel = 'stylesheet';
-        css.href = '/vendor/prism/prism-tomorrow.min.css';
+        css.href = vendor('prism-tomorrow.min.css');
         document.head.appendChild(css);
 
         const loadScript = (src, done) => {
@@ -52,14 +54,20 @@ globalThis.setTheme = setTheme;
         };
 
         const script = document.createElement('script');
-        script.src = '/vendor/prism/prism.min.js';
+        script.src = vendor('prism.min.js');
         script.onload = () => {
-            loadScript('/vendor/prism/prism-csharp.min.js', () => {
+            loadScript(vendor('prism-csharp.min.js'), () => {
                 // VB.NET grammar depends on the BASIC grammar.
-                loadScript('/vendor/prism/prism-basic.min.js', () => {
-                    loadScript('/vendor/prism/prism-vbnet.min.js', () => {
-                        globalThis.__codeGlyphPrismLoaded = true;
-                        callback?.();
+                loadScript(vendor('prism-basic.min.js'), () => {
+                    loadScript(vendor('prism-vbnet.min.js'), () => {
+                        loadScript(vendor('prism-powershell.min.js'), () => {
+                            // Highlight -Parameter names; the stock grammar leaves them as plain text.
+                            globalThis.Prism?.languages?.insertBefore?.('powershell', 'operator', {
+                                parameter: { pattern: /(^|[\s(@])-[a-z][\w]*/i, lookbehind: true }
+                            });
+                            globalThis.__codeGlyphPrismLoaded = true;
+                            callback?.();
+                        });
                     });
                 });
             });

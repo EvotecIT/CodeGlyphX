@@ -12,23 +12,36 @@ else
 {
     <div class="card" style="margin-top: 2rem;">
         <h2>Code Example</h2>
-        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.9rem;">
-            Start with this example in your .NET application, then apply the additional styling options you need:
+        <p class="pg-example-intro">
+            @if (IsPowerShell)
+            {
+                <text>Run the same code from PowerShell with the <a href="https://www.powershellgallery.com/packages/ImagePlayground" target="_blank" rel="noopener">ImagePlayground</a> module, which is built on CodeGlyphX:</text>
+            }
+            else
+            {
+                <text>Start with this example in your .NET application, then apply the additional styling options you need:</text>
+            }
         </p>
 
-        <div class="code-tabs">
-            <button class="code-tab @(SelectedPlatform == "Console" ? "active" : "")" @onclick="@(() => SetPlatform("Console"))">Console</button>
-            <button class="code-tab @(SelectedPlatform == "AspNet" ? "active" : "")" @onclick="@(() => SetPlatform("AspNet"))">ASP.NET</button>
-            <button class="code-tab @(SelectedPlatform == "Blazor" ? "active" : "")" @onclick="@(() => SetPlatform("Blazor"))">Blazor</button>
-            <button class="code-tab @(SelectedPlatform == "Maui" ? "active" : "")" @onclick="@(() => SetPlatform("Maui"))">MAUI</button>
+        <div class="code-tabs" role="group" aria-label="Platform">
+            @foreach (var (value, label) in Platforms)
+            {
+                <button type="button" class="code-tab @(SelectedPlatform == value ? "active" : "")" aria-pressed="@(SelectedPlatform == value ? "true" : "false")" @onclick="@(() => SetPlatform(value))">@label</button>
+            }
         </div>
 
-        <div class="code-tabs">
-            <button class="code-tab @(SelectedLanguage == Playground.CodeLanguage.CSharp ? "active" : "")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.CSharp))">C#</button>
-            <button class="code-tab @(SelectedLanguage == Playground.CodeLanguage.Vb ? "active" : "")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.Vb))">VB.NET</button>
-        </div>
+        @if (!IsPowerShell)
+        {
+            <div class="code-tabs" role="group" aria-label="Language">
+                <button type="button" class="code-tab @(SelectedLanguage == Playground.CodeLanguage.CSharp ? "active" : "")" aria-pressed="@(SelectedLanguage == Playground.CodeLanguage.CSharp ? "true" : "false")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.CSharp))">C#</button>
+                <button type="button" class="code-tab @(SelectedLanguage == Playground.CodeLanguage.Vb ? "active" : "")" aria-pressed="@(SelectedLanguage == Playground.CodeLanguage.Vb ? "true" : "false")" @onclick="@(() => SetLanguage(Playground.CodeLanguage.Vb))">VB.NET</button>
+            </div>
+        }
 
-        <pre class="code-block @GetLanguageCssClass()" @key="@_codeBlockKey">@GetPlatformExample()</pre>
+        <figure class="pg-code">
+            <figcaption><i class="pg-code__dot @(IsPowerShell ? "pg-code__dot--ps" : string.Empty)" aria-hidden="true"></i>@GetExampleFileName()</figcaption>
+            <pre class="code-block @GetLanguageCssClass()" @key="@_codeBlockKey">@GetPlatformExample()</pre>
+        </figure>
     </div>
 }
 
@@ -36,8 +49,6 @@ else
     [CascadingParameter]
     public Playground? Host { get; set; }
 
-    private string SelectedPlatform { get; set; } = "Console";
-    private Playground.CodeLanguage SelectedLanguage { get; set; } = Playground.CodeLanguage.CSharp;
     private int _codeBlockKey = 0;
 
     private void SetPlatform(string platform)
@@ -62,6 +73,8 @@ else
     private string GetPlatformExample()
     {
         if (Host is null) return "";
+
+        if (IsPowerShell) return GetPowerShellExample();
 
         var baseCode = Host.GetCodeExample(SelectedLanguage);
 
@@ -461,6 +474,8 @@ else
 
     private string GetLanguageCssClass()
     {
+        if (IsPowerShell) return "language-powershell";
+
         if (Host?.SelectedMode == "Decode")
         {
             return SelectedLanguage == Playground.CodeLanguage.Vb ? "language-vbnet" : "language-csharp";

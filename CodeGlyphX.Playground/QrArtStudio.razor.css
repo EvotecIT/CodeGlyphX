@@ -13,7 +13,7 @@
 .art-studio button { display: inline-block; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); border-radius: 7px; padding: .55rem .75rem; margin: .25rem .3rem .25rem 0; font-size: .85rem; cursor: pointer; }
 .art-studio button:disabled { opacity: .55; cursor: wait; }
 .art-studio .art-primary { background: var(--primary); color: #fff; }
-.art-studio :focus-visible { outline: 3px solid #d18b24; outline-offset: 3px; }
+.art-studio :focus-visible { outline: 2px solid var(--pg-focus, #8b5cf6); outline-offset: 3px; }
 .art-hint, .art-source figcaption { font-size: .8rem; color: var(--text-muted); line-height: 1.5; }
 .art-source { margin: 0 0 1.5rem; }
 .art-source-frame { display: inline-block; position: relative; max-width: 100%; max-height: 140px; overflow: hidden; line-height: 0; }
