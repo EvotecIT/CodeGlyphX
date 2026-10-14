@@ -2,8 +2,7 @@
   "generatedBy": "Website/build/Sync-ImagePlayground.ps1",
   "module": {
     "name": "ImagePlayground",
-    "version": "3.2.8",
-    "commit": "98468bc",
+    "version": "3.2.7",
     "commandCount": 131,
     "codeGlyphXCommandCount": 20,
     "install": "Install-Module -Name ImagePlayground -Scope CurrentUser",
@@ -13,7 +12,7 @@
     {
       "id": "qr",
       "title": "QR codes",
-      "description": "QR codes from text, URLs or contact details, with styling options.",
+      "description": "QR codes from text, URLs or contact details, with colours and a logo.",
       "commandCount": 2,
       "commands": [
         "New-ImageQRCode",
@@ -46,7 +45,7 @@
     {
       "id": "barcodes",
       "title": "Barcodes",
-      "description": "EAN, UPC, Code 128, Data Matrix, PDF417 and the other CodeGlyphX symbologies.",
+      "description": "EAN, UPC, Code 128, Data Matrix, PDF417 and other linear and 2D symbologies.",
       "commandCount": 1,
       "commands": [
         "New-ImageBarCode"

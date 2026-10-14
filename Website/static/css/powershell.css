@@ -1,0 +1,108 @@
+/* CodeGlyphX in PowerShell (/powershell/). Builds on landing.css tokens; every script and output comes from data/powershell-examples.json. */
+
+/* Hero: the label sheet the flagship script writes, with its console output underneath. */
+.cgx-psh__stage { width: min(100%, 560px); }
+.cgx-psh .cgx-install { max-width: 540px; margin-top: 22px; }
+.cgx-psh__sheet img { background: #fff; }
+.cgx-term { margin: 18px 0 0; overflow: hidden; border: 1px solid rgba(255, 255, 255, .12); border-radius: 12px; background: #0c0a14; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .9); }
+.cgx-term figcaption { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-bottom: 1px solid rgba(255, 255, 255, .08); color: #a29dbb; font-family: var(--cgx-mono); font-size: .75rem; }
+.cgx-term pre { margin: 0; padding: 12px 14px; overflow-x: auto; background: none; border: 0; color: #ece9f8; font-family: var(--cgx-mono); font-size: .72rem; line-height: 1.6; white-space: pre; }
+
+/* Script beside what it produced. */
+.cgx-psp .cgx-section { border-top: 1px solid var(--border); }
+.cgx-psp .cgx-flag { border-top: 0; }
+.cgx-flag__grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+.cgx-flag__grid + .cgx-flag__grid { margin-top: clamp(56px, 7vw, 96px); }
+.cgx-flag__copy h2, .cgx-brand h2 { font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem); font-weight: 800; line-height: 1.1; }
+.cgx-flag__copy > p { margin-top: 12px; color: var(--text-muted); }
+.cgx-flag__copy > p code { padding: 1px 6px; border-radius: 6px; background: var(--bg-card); font-family: var(--cgx-mono); font-size: .875em; }
+.cgx-body-ps pre.cgx-ps-code { margin: 18px 0 0 !important; padding: 16px 18px !important; font-size: .8125rem !important; line-height: 1.65 !important; }
+.cgx-flag__labels h3, .cgx-flag__side h3 { margin-bottom: 14px; font-size: 1rem; }
+.cgx-flag__side .cgx-term { margin-top: 16px; }
+
+.cgx-labels { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.cgx-label { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 14px; align-items: center; padding: 12px; border: 1px solid var(--border); border-radius: 14px; background: #fff; color: #1e1b4b; }
+.cgx-label__qr { display: block; width: 96px; height: 96px; }
+.cgx-label__side { display: grid; gap: 8px; min-width: 0; }
+.cgx-label__side strong { font-family: var(--cgx-mono); font-size: .875rem; letter-spacing: .02em; }
+.cgx-label__bar { display: block; width: 100%; max-width: 220px; height: 44px; object-fit: fill; image-rendering: pixelated; }
+.cgx-muted { margin-top: 14px; color: var(--text-muted); font-size: .8125rem; }
+
+/* Payload cards. */
+.cgx-pscards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.cgx-pscard { display: flex; flex-direction: column; min-width: 0; padding: 18px; border: 1px solid var(--border); border-radius: 18px; background: var(--bg-card); }
+.cgx-pscard__head { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 16px; align-items: center; }
+.cgx-pscard__code { display: grid; place-items: center; width: 112px; height: 112px; padding: 6px; border-radius: 12px; background: #fff; box-shadow: 0 0 0 1px var(--border); }
+.cgx-pscard__code img { display: block; width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.cgx-pscard h3 { font-size: 1.0625rem; }
+.cgx-pscard__head p { margin-top: 4px; color: var(--text-muted); font-size: .875rem; line-height: 1.5; }
+.cgx-pscard pre.cgx-ps-code { flex: none; }
+.cgx-readback__label { margin-top: 14px; color: var(--text-muted); font-size: .75rem; font-weight: 600; }
+.cgx-readback { margin: 6px 0 0; padding: 10px 12px; overflow-x: auto; border-radius: 10px; background: #0c0a14; color: #a7f3d0; font-family: var(--cgx-mono); font-size: .72rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* Barcodes and styling. */
+.cgx-bargrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.cgx-bargrid li, .cgx-brandgrid li { display: grid; gap: 6px; min-width: 0; }
+.cgx-bargrid span { display: grid; place-items: center; height: 96px; padding: 10px; border-radius: 12px; background: #fff; box-shadow: 0 0 0 1px var(--border); }
+.cgx-bargrid img { display: block; max-width: 100%; max-height: 76px; width: auto; height: auto; }
+.cgx-bargrid code, .cgx-brandgrid code { overflow: hidden; color: var(--text-muted); font-family: var(--cgx-mono); font-size: .75rem; text-overflow: ellipsis; white-space: nowrap; background: none; padding: 0; }
+.cgx-brandgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.cgx-brandgrid span { display: grid; place-items: center; aspect-ratio: 1; padding: 12px; border-radius: 14px; background: #fff; box-shadow: 0 0 0 1px var(--border); }
+.cgx-brandgrid img { display: block; width: 100%; height: 100%; object-fit: contain; }
+/* A checkerboard shows that the transparent file really has no background. */
+.cgx-brandgrid__item--transparent-png span { background: repeating-conic-gradient(#e5e7eb 0 25%, #fff 0 50%) 50% / 18px 18px; }
+
+/* Commands. */
+.cgx-cmds__grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; align-items: start; }
+.cgx-cmds__family--wide { grid-column: span 2; }
+.cgx-cmds__family--wide ul { display: block; columns: 2; column-gap: 20px; }
+.cgx-cmds__family--wide li { break-inside: avoid; padding-block: 1px; }
+.cgx-cmds__family { padding: 18px; border: 1px solid var(--border); border-radius: 16px; background: var(--bg-card); }
+.cgx-cmds__family h3 { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; font-size: 1rem; }
+.cgx-cmds__family h3 span { color: var(--primary); font-family: var(--cgx-display); font-size: 1.25rem; }
+.cgx-cmds__family > p { margin-top: 6px; color: var(--text-muted); font-size: .8125rem; line-height: 1.5; }
+.cgx-cmds__family ul { display: grid; gap: 2px; margin: 12px 0 0; padding: 0; list-style: none; }
+.cgx-cmds__family a, .cgx-roadmap__cmds a { color: var(--text); font-family: var(--cgx-mono); font-size: .75rem; text-decoration: none; overflow-wrap: anywhere; }
+.cgx-cmds__family a:hover, .cgx-cmds__family a:focus-visible { color: var(--primary); text-decoration: underline; }
+
+/* Coverage and roadmap, on the dark band. */
+.cgx-roadmap .cgx-ipg { margin-top: 0; }
+.cgx-roadmap__legend { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 0 0 22px; padding: 0; list-style: none; color: var(--cgx-night-muted); font-size: .8125rem; }
+.cgx-roadmap__legend li { display: flex; align-items: center; gap: 8px; }
+.cgx-status { display: inline-flex; align-items: center; justify-content: center; min-width: 76px; padding: 3px 10px; border: 1px solid; border-radius: 999px; font-size: .6875rem; font-style: normal; font-weight: 700; letter-spacing: .02em; }
+.cgx-status--available { border-color: rgba(74, 222, 128, .45); background: rgba(74, 222, 128, .1); color: #86efac; }
+.cgx-status--partial { border-color: rgba(250, 204, 21, .45); background: rgba(250, 204, 21, .08); color: #fde68a; }
+.cgx-status--planned { border-color: rgba(196, 181, 253, .4); background: rgba(196, 181, 253, .08); color: #c4b5fd; }
+.cgx-roadmap__groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.cgx-roadmap__group { padding: 20px; border: 1px solid var(--cgx-night-line); border-radius: 16px; background: rgba(255, 255, 255, .03); }
+.cgx-roadmap__group h3 { color: #fff; font-family: var(--cgx-display); font-size: 1rem; font-weight: 700; }
+.cgx-roadmap__group ul { display: grid; gap: 0; margin: 12px 0 0; padding: 0; list-style: none; }
+.cgx-roadmap__row { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px 0; border-top: 1px solid var(--cgx-night-line); }
+.cgx-roadmap__row:first-child { border-top: 0; }
+.cgx-roadmap__row p { color: #ece9f8; font-size: .875rem; line-height: 1.5; }
+.cgx-roadmap__cmds { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; }
+.cgx-roadmap__cmds a { color: #a5c8ff; }
+.cgx-roadmap__cmds a:hover, .cgx-roadmap__cmds a:focus-visible { text-decoration: underline; }
+.cgx-roadmap .cgx-roadmap__note { margin-top: 4px; color: var(--cgx-night-muted); font-size: .8125rem; }
+.cgx-roadmap__track { margin-top: 22px; }
+.cgx-roadmap .cgx-link { color: #c4b5fd; font-size: .9375rem; }
+
+@media (max-width: 1100px) {
+  .cgx-flag__grid { grid-template-columns: minmax(0, 1fr); }
+  .cgx-cmds__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cgx-roadmap__groups { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .cgx-pscards { grid-template-columns: minmax(0, 1fr); }
+  .cgx-bargrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .cgx-cmds__grid { grid-template-columns: minmax(0, 1fr); }
+  .cgx-cmds__family--wide { grid-column: auto; }
+  .cgx-cmds__family--wide ul { columns: 1; }
+  .cgx-pscard__head { grid-template-columns: 84px minmax(0, 1fr); }
+  .cgx-pscard__code { width: 84px; height: 84px; }
+  .cgx-roadmap__row { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .cgx-roadmap__row .cgx-status { justify-self: start; }
+  .cgx-brandgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

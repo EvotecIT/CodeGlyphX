@@ -1,0 +1,16 @@
+{{~ ip = data.imageplayground ~}}
+<section class="cgx-section cgx-cmds" id="commands" aria-labelledby="cgx-cmds-title">
+  <div class="cgx-section__head">
+    <h2 id="cgx-cmds-title">Every command for codes</h2>
+    <p>ImagePlayground exports {{ ip.module.codeGlyphXCommandCount }} commands built on CodeGlyphX. Each name opens its reference page with parameters and examples.</p>
+  </div>
+  <div class="cgx-cmds__grid">
+    {{~ for f in ip.families ~}}
+    <section class="cgx-cmds__family{{ if f.commandCount > 6 }} cgx-cmds__family--wide{{ end }}" aria-labelledby="cgx-cmds-{{ f.id }}">
+      <h3 id="cgx-cmds-{{ f.id }}">{{ f.title }} <span>{{ f.commandCount }}</span></h3>
+      <p>{{ f.description }}</p>
+      <ul>{{~ for c in f.commands ~}}<li><a href="https://evotec.xyz/projects/imageplayground/api/{{ c | string.downcase }}/">{{ c }}</a></li>{{~ end ~}}</ul>
+    </section>
+    {{~ end ~}}
+  </div>
+</section>

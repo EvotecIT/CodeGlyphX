@@ -1,0 +1,39 @@
+{{~ bars = ex["barcodes"]; brand = ex["branded"] ~}}
+<section class="cgx-section cgx-psp-bars" id="barcodes" aria-labelledby="cgx-psp-bars-title">
+  <div class="cgx-flag__grid">
+    <div class="cgx-flag__copy">
+      <h2 id="cgx-psp-bars-title">{{ bars.title }}</h2>
+      <p>{{ bars.body }}</p>
+      <pre class="code-block cgx-ps-code"><code class="language-powershell">{{ bars.script | html.escape }}</code></pre>
+    </div>
+    <div class="cgx-flag__side">
+      <ul class="cgx-bargrid" aria-label="Generated barcodes">
+        {{~ for o in bars.outputs ~}}
+        <li><span><img src="{{ o.url }}" width="{{ o.width }}" height="{{ o.height }}" loading="lazy" decoding="async" alt="{{ o.file | string.replace ".png" "" }} barcode" /></span><code>{{ o.file | string.replace ".png" "" }}</code></li>
+        {{~ end ~}}
+      </ul>
+      <figure class="cgx-term">
+        <figcaption><i class="cgx-float__dot cgx-float__dot--ps" aria-hidden="true"></i>Output</figcaption>
+        <pre>{{ bars.console | html.escape }}</pre>
+      </figure>
+    </div>
+  </div>
+  <div class="cgx-flag__grid cgx-brand">
+    <div class="cgx-flag__copy">
+      <h2>{{ brand.title }}</h2>
+      <p>{{ brand.body }}</p>
+      <pre class="code-block cgx-ps-code"><code class="language-powershell">{{ brand.script | html.escape }}</code></pre>
+    </div>
+    <div class="cgx-flag__side">
+      <ul class="cgx-brandgrid" aria-label="Styled output">
+        {{~ for o in brand.outputs ~}}
+        <li class="cgx-brandgrid__item cgx-brandgrid__item--{{ o.file | string.replace "." "-" }}"><span><img src="{{ o.url }}" loading="lazy" decoding="async" alt="QR code saved as {{ o.file }}" /></span><code>{{ o.file }}</code></li>
+        {{~ end ~}}
+      </ul>
+      <figure class="cgx-term">
+        <figcaption><i class="cgx-float__dot cgx-float__dot--ps" aria-hidden="true"></i>Output</figcaption>
+        <pre>{{ brand.console | html.escape }}</pre>
+      </figure>
+    </div>
+  </div>
+</section>

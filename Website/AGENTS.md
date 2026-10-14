@@ -39,8 +39,10 @@ The home page (`content/pages/index.md`, layout `landing`) reads committed data.
 - Specimen sheet, payload codes and hero decode results: `data/specimens.json` and `static/specimens/*.svg`, produced by CodeGlyphX itself:
   - `dotnet run --project ./tools/SiteSpecimens -c Release -- .`
   - The hero and gallery art in `static/images/art/` comes from `Assets/Examples`. The tool decodes each image, so the page only claims what CodeGlyphX reads back.
-- PowerShell section: `data/imageplayground.json` and `static/powershell/*.png`:
-  - `pwsh ./build/Sync-ImagePlayground.ps1 -ImagePlaygroundRoot <ImagePlayground checkout> -SamplesPath <folder with example outputs>`
+- PowerShell (home section and `/powershell/`): run both scripts against the same published ImagePlayground version, so the command list and the examples describe one release:
+  - `pwsh ./build/Sync-ImagePlayground.ps1 [-ModulePath <ImagePlayground.psd1>]` writes `data/imageplayground.json`.
+  - `pwsh ./build/Render-PowerShellExamples.ps1 [-ModulePath <ImagePlayground.psd1>] [-Id wifi,barcodes]` runs every `powershell/<id>.ps1` listed in `powershell/examples.json` and writes the files each one produced to `static/powershell/examples/<id>/`, plus `data/powershell-examples.json` (script text, console output, output files). Pages show scripts exactly as they ran; do not link to example files on GitHub.
+  - `data/powershell-roadmap.json` is hand-maintained: what CodeGlyphX can do and whether ImagePlayground exposes it (`available`, `partial`, `planned`). Update it when ImagePlayground ships new commands, and test anything marked available.
 
 ## Deploy + Recovery
 

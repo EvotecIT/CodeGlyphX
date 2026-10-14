@@ -1,0 +1,23 @@
+<section class="cgx-section cgx-psp-payloads" id="payloads" aria-labelledby="cgx-psp-payloads-title">
+  <div class="cgx-section__head">
+    <h2 id="cgx-psp-payloads-title">One command per payload</h2>
+    <p>Each command writes the exact string a phone, authenticator or banking app expects. The last line of every script reads the file back, and the text under it is what came out.</p>
+  </div>
+  <div class="cgx-pscards">
+    {{~ for e in psx.examples ~}}{{~ if e.family == "payloads" ~}}
+    {{~ img = e.outputs[0] ~}}
+    <article class="cgx-pscard" id="{{ e.id }}">
+      <div class="cgx-pscard__head">
+        <span class="cgx-pscard__code"><img src="{{ img.url }}" width="{{ img.width }}" height="{{ img.height }}" loading="lazy" decoding="async" alt="QR code for {{ e.title | string.downcase }}" /></span>
+        <div>
+          <h3>{{ e.title }}</h3>
+          <p>{{ e.body }}</p>
+        </div>
+      </div>
+      <pre class="code-block cgx-ps-code"><code class="language-powershell">{{ e.script | html.escape }}</code></pre>
+      <p class="cgx-readback__label">Reads back as</p>
+      <pre class="cgx-readback">{{ e.console | html.escape }}</pre>
+    </article>
+    {{~ end ~}}{{~ end ~}}
+  </div>
+</section>

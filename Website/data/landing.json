@@ -34,8 +34,8 @@
     {
       "name": "PowerShell",
       "body": "ImagePlayground brings QR codes, payloads, barcodes and decoding to PowerShell.",
-      "action": "See PowerShell examples",
-      "url": "#powershell"
+      "action": "See the PowerShell page",
+      "url": "/powershell/"
     },
     {
       "name": "Windows",
@@ -140,31 +140,11 @@
         }
       ]
     },
-    "examples": [
-      {
-        "title": "A QR code",
-        "script": "Examples/QrCode.ps1",
-        "image": "/powershell/QRCode.png",
-        "code": "New-ImageQRCode `\n    -Content 'https://evotec.xyz' `\n    -FilePath QRCode.png `\n    -Transparent"
-      },
-      {
-        "title": "A Wi-Fi network",
-        "script": "Examples/QRCode.Read.ps1",
-        "image": "/powershell/QRCodeWiFi.png",
-        "code": "New-ImageQRCodeWiFi -SSID 'Evotec' `\n    -Password 'EvotecPassword' `\n    -FilePath QRCodeWiFi.png"
-      },
-      {
-        "title": "A contact, read back",
-        "script": "Examples/QRCode.Read.ps1",
-        "image": "/powershell/QRCodeContact.png",
-        "code": "New-ImageQRContact `\n    -FilePath QRCodeContact.png `\n    -OutputType VCard4 `\n    -Firstname 'Przemek' `\n    -Lastname 'Klys' `\n    -MobilePhone '+48 500 000 000'\n$message = Get-ImageQRCode `\n    -FilePath QRCodeContact.png"
-      },
-      {
-        "title": "An EAN-13 barcode",
-        "script": "Examples/Barcode.Create.ps1",
-        "image": "/powershell/BarcodeEAN13.png",
-        "code": "New-ImageBarCode -Type EAN `\n    -Value '5901234123457' `\n    -FilePath BarcodeEAN13.png\nGet-ImageBarCode `\n    -FilePath BarcodeEAN13.png"
-      }
+    "featured": [
+      "wifi",
+      "contact",
+      "otp",
+      "girocode"
     ]
   }
 }

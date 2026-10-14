@@ -63,8 +63,10 @@ globalThis.setTheme = setTheme;
                 // VB.NET grammar depends on the BASIC grammar.
                 loadScript('/vendor/prism/prism-basic.min.js', () => {
                     loadScript('/vendor/prism/prism-vbnet.min.js', () => {
-                        globalThis.__codeGlyphPrismLoaded = true;
-                        callback?.();
+                        loadScript('/vendor/prism/prism-powershell.min.js', () => {
+                            globalThis.__codeGlyphPrismLoaded = true;
+                            callback?.();
+                        });
                     });
                 });
             });

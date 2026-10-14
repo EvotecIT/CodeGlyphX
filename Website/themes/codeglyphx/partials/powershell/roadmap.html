@@ -1,0 +1,35 @@
+{{~ coverage = data["powershell-roadmap"] ~}}
+<section class="cgx-ps cgx-roadmap" id="roadmap" aria-labelledby="cgx-roadmap-title">
+  <div class="cgx-ps__inner">
+    <div class="cgx-ps__head">
+      <h2 id="cgx-roadmap-title">Coverage and roadmap</h2>
+      <p>{{ coverage.intro }}</p>
+    </div>
+    {{ include "landing/imageplayground-about" }}
+    <ul class="cgx-roadmap__legend" aria-label="Status">
+      <li><i class="cgx-status cgx-status--available">Available</i> works in ImagePlayground {{ psx.module.version }}</li>
+      <li><i class="cgx-status cgx-status--partial">Partial</i> works with limits</li>
+      <li><i class="cgx-status cgx-status--planned">Planned</i> in CodeGlyphX, not yet a command</li>
+    </ul>
+    <div class="cgx-roadmap__groups">
+      {{~ for g in coverage.groups ~}}
+      <section class="cgx-roadmap__group" aria-label="{{ g.title }}">
+        <h3>{{ g.title }}</h3>
+        <ul>
+          {{~ for r in g.rows ~}}
+          <li class="cgx-roadmap__row">
+            <i class="cgx-status cgx-status--{{ r.status }}">{{ r.status | string.capitalize }}</i>
+            <div>
+              <p>{{ r.capability }}</p>
+              {{~ if r.commands && r.commands.size > 0 ~}}<p class="cgx-roadmap__cmds">{{~ for c in r.commands ~}}<a href="https://evotec.xyz/projects/imageplayground/api/{{ c | string.downcase }}/">{{ c }}</a>{{~ end ~}}</p>{{~ end ~}}
+              {{~ if r.note ~}}<p class="cgx-roadmap__note">{{ r.note }}</p>{{~ end ~}}
+            </div>
+          </li>
+          {{~ end ~}}
+        </ul>
+      </section>
+      {{~ end ~}}
+    </div>
+    <p class="cgx-roadmap__track"><a class="cgx-link" href="{{ coverage.tracking.url }}">{{ coverage.tracking.title }}</a></p>
+  </div>
+</section>

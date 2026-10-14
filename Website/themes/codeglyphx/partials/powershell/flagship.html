@@ -1,0 +1,26 @@
+{{~ flag = ex["asset-labels"] ~}}
+<section class="cgx-section cgx-flag" id="labels" aria-labelledby="cgx-flag-title">
+  <div class="cgx-flag__grid">
+    <div class="cgx-flag__copy">
+      <h2 id="cgx-flag-title">{{ flag.title }}</h2>
+      <p>{{ flag.body }}</p>
+      <pre class="code-block cgx-ps-code"><code class="language-powershell">{{ flag.script | html.escape }}</code></pre>
+    </div>
+    <div class="cgx-flag__labels">
+      <h3>What it wrote</h3>
+      <ul class="cgx-labels" aria-label="Generated labels">
+        {{~ for o in flag.outputs ~}}{{~ if o.file | string.ends_with ".qr.png" ~}}
+        {{~ tag = o.file | string.replace ".qr.png" "" ~}}
+        <li class="cgx-label">
+          <img class="cgx-label__qr" src="{{ o.url }}" width="{{ o.width }}" height="{{ o.height }}" loading="lazy" decoding="async" alt="QR code linking to the inventory record for {{ tag }}" />
+          <div class="cgx-label__side">
+            <strong>{{ tag }}</strong>
+            <img class="cgx-label__bar" src="{{ o.url | string.replace ".qr.png" ".barcode.png" }}" loading="lazy" decoding="async" alt="Code 128 barcode for {{ tag }}" />
+          </div>
+        </li>
+        {{~ end ~}}{{~ end ~}}
+      </ul>
+      <p class="cgx-muted">These PNG files are the script's own output from ImagePlayground {{ psx.module.version }}. The table at the top of the page is its console output.</p>
+    </div>
+  </div>
+</section>

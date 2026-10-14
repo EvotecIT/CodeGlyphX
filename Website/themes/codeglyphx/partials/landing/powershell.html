@@ -1,22 +1,23 @@
-{{~ ip = data.imageplayground; ps = data.landing.powershell ~}}
+{{~ ip = data.imageplayground; ps = data.landing.powershell; psx = data["powershell-examples"] ~}}
 <section class="cgx-ps" id="powershell" aria-labelledby="cgx-ps-title">
   <div class="cgx-ps__inner">
     <div class="cgx-ps__head">
       <h2 id="cgx-ps-title">CodeGlyphX in PowerShell</h2>
-      <p>{{ ps.intro }} ImagePlayground exports {{ ip.module.codeGlyphXCommandCount }} of these commands for {{ ip.module.powerShell }}.</p>
+      <p>{{ ps.intro }} ImagePlayground {{ psx.module.version }} exports {{ ip.module.codeGlyphXCommandCount }} of these commands for {{ ip.module.powerShell }}.</p>
       <ul class="cgx-ps__families">{{ for f in ip.families }}<li><strong>{{ f.commandCount }}</strong><span>{{ f.title }}</span></li>{{ end }}</ul>
       <div class="cgx-install cgx-install--ps"><code><span aria-hidden="true">PS&gt;</span> {{ ip.module.install }}</code><button type="button" class="copy-btn cgx-copy" data-copy="{{ ip.module.install }}">Copy</button></div>
     </div>
     {{ include "landing/imageplayground-about" }}
     <div class="cgx-ps__grid">
-      {{~ for e in ps.examples ~}}
+      {{~ for id in ps.featured ~}}{{~ for e in psx.examples ~}}{{~ if e.id == id ~}}
       <article class="cgx-ps__item">
-        <span class="cgx-ps__img"><img src="{{ e.image }}" loading="lazy" decoding="async" alt="Output of {{ e.script }}: {{ e.title | string.downcase }}." /></span>
+        <span class="cgx-ps__img"><img src="{{ e.outputs[0].url }}" loading="lazy" decoding="async" alt="QR code written by the {{ e.title | string.downcase }} script." /></span>
         <h3>{{ e.title }}</h3>
-        <pre><code class="language-powershell">{{ e.code | html.escape }}</code></pre>
-        <a class="cgx-link" href="https://github.com/EvotecIT/ImagePlayground/blob/master/{{ e.script }}">{{ e.script }}</a>
+        <pre><code class="language-powershell">{{ e.script | html.escape }}</code></pre>
+        <a class="cgx-link" href="/powershell/#{{ e.id }}">Output and read-back</a>
       </article>
-      {{~ end ~}}
+      {{~ end ~}}{{~ end ~}}{{~ end ~}}
     </div>
+    <p class="cgx-ps__more"><a class="cgx-btn cgx-btn--ghost" href="/powershell/">See every example, the command list and the roadmap</a></p>
   </div>
 </section>

@@ -1,0 +1,193 @@
+{
+  "intro": "CodeGlyphX ships features first; ImagePlayground exposes them as commands. This table tracks what you can already do from PowerShell and what is still planned, so scripts can rely on the first column today.",
+  "tracking": {
+    "title": "Request a command or vote on the roadmap",
+    "url": "https://github.com/EvotecIT/ImagePlayground/issues"
+  },
+  "groups": [
+    {
+      "title": "QR codes",
+      "rows": [
+        {
+          "capability": "QR codes from any text or URL",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCode"
+          ]
+        },
+        {
+          "capability": "Colours, module size, transparent background and a centre logo",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCode"
+          ]
+        },
+        {
+          "capability": "PNG, JPEG, SVG and PDF output, chosen by file extension",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCode",
+            "New-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "Error-correction level, quiet zone and exact output size",
+          "status": "planned",
+          "note": "Parameters on New-ImageQRCode."
+        },
+        {
+          "capability": "Module shapes, gradients, palettes and custom finder eyes",
+          "status": "planned",
+          "note": "The styling the playground shows today."
+        },
+        {
+          "capability": "QR artwork: theme presets, procedural patterns and image composition",
+          "status": "planned"
+        },
+        {
+          "capability": "Micro QR and rMQR",
+          "status": "planned"
+        },
+        {
+          "capability": "Static scan-readiness report for styled codes",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "title": "Payloads",
+      "rows": [
+        {
+          "capability": "Wi-Fi, contact cards, email, phone and SMS",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCodeWiFi",
+            "New-ImageQRContact",
+            "New-ImageQRCodeEmail",
+            "New-ImageQRCodePhoneNumber",
+            "New-ImageQRCodeSms"
+          ]
+        },
+        {
+          "capability": "Authenticator secrets, calendar events and locations",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCodeOtp",
+            "New-ImageQRCodeCalendar",
+            "New-ImageQRCodeGeoLocation"
+          ]
+        },
+        {
+          "capability": "Payments: GiroCode, BezahlCode, Swiss QR bill and Slovenian UPN",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCodeGirocode",
+            "New-ImageQRCodeBezahlCode",
+            "New-ImageQRCodeSwiss",
+            "New-ImageQRCodeSlovenianUpnQr"
+          ]
+        },
+        {
+          "capability": "Bitcoin, Monero, ShadowSocks and Skype calls",
+          "status": "available",
+          "commands": [
+            "New-ImageQRCodeBitcoin",
+            "New-ImageQRCodeMonero",
+            "New-ImageQRCodeShadowSocks",
+            "New-ImageQRCodeSkypeCall"
+          ]
+        },
+        {
+          "capability": "UPI and PayPal.Me payments",
+          "status": "planned"
+        },
+        {
+          "capability": "WhatsApp messages, MMS and bookmarks",
+          "status": "planned"
+        },
+        {
+          "capability": "App store links and social profiles (LinkedIn, X, Facebook, TikTok)",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "title": "Barcodes",
+      "rows": [
+        {
+          "capability": "Retail and logistics: EAN, UPC, ITF-14, Code 128 and GS1-128",
+          "status": "available",
+          "commands": [
+            "New-ImageBarCode",
+            "Get-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "Industrial linear codes: Code 39, Code 93, Code 11, Codabar, MSI, Plessey, Telepen, 2 of 5 variants, Pharmacode and Code 32",
+          "status": "available",
+          "commands": [
+            "New-ImageBarCode",
+            "Get-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "Data Matrix and PDF417",
+          "status": "available",
+          "commands": [
+            "New-ImageBarCode",
+            "Get-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "GS1 DataBar, MicroPDF417 and postal codes (POSTNET, PLANET, Royal Mail, Japan Post, USPS IMb, KIX)",
+          "status": "partial",
+          "commands": [
+            "New-ImageBarCode"
+          ],
+          "note": "They encode today; reading them back with Get-ImageBarCode is not reliable yet."
+        },
+        {
+          "capability": "Aztec, DotCode, Han Xin, MaxiCode and the full CodeGlyphX symbology list",
+          "status": "planned",
+          "note": "New-ImageBarCode moves to the CodeGlyphX SymbolFormat list in the next release."
+        },
+        {
+          "capability": "Bar height, module width, colours and human-readable text",
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "title": "Decoding",
+      "rows": [
+        {
+          "capability": "Read a QR code from an image file",
+          "status": "available",
+          "commands": [
+            "Get-ImageQRCode"
+          ]
+        },
+        {
+          "capability": "Read linear and 2D barcodes from an image file",
+          "status": "available",
+          "commands": [
+            "Get-ImageBarCode"
+          ]
+        },
+        {
+          "capability": "Scan budgets and detailed results for untrusted images",
+          "status": "partial",
+          "commands": [
+            "Get-ImageQRCode",
+            "Get-ImageBarCode"
+          ],
+          "note": "Pass -DecodeOptions or -ScanOptions objects; friendlier parameters are planned."
+        },
+        {
+          "capability": "Several codes in one image, and decoding from the clipboard or screen",
+          "status": "planned"
+        }
+      ]
+    }
+  ]
+}
