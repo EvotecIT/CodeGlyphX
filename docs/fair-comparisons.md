@@ -4,6 +4,8 @@ CodeGlyphX's current comparison uses matched QR generation settings and an indep
 
 The [current results and complete evidence](comparisons/results.md) compare the repaired source with the original source and the previous decoding pass. They report every miss, completed negative scan, inconclusive search and timing sample across both cache domains. Recognition, latency and managed allocation are separate results. These are shared-host measurements with all outliers retained.
 
+Expanded Stacked image scanning reuses run, offset and candidate-width storage within each scan. Retained physical rows own their widths, and the shared linear/stacked fitter uses the same character arithmetic. Current comparisons preserve exact ordered row observations and show complete scan costs, including every deadline miss.
+
 DataBar-14 reuses stack workspaces for exact widths, character values and stacked row assembly. Its image scanner reuses run and offset storage within each scan while each retained row owns its widths. Current scan comparisons preserve the same candidate order, deadlines, images and oracles. Ordered row observations and public decoding outcomes are checked against the preceding binary.
 
 DataBar Limited and Expanded extract exact module runs into bounded stack buffers. Expanded restores trimmed light guards from those widths and avoids rebuilding module arrays for each retry. Checksums, supported character counts, stacked assembly and public decoding outcomes stay unchanged. The current comparison reruns the full corpus and complete image scans; earlier component-only timings retain their original binary identity.

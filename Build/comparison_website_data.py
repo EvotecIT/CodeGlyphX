@@ -23,6 +23,7 @@ from comparison_databar_recovery_buffers import project_databar_recovery_buffers
 from comparison_component_coordinates import project_component_coordinates
 from comparison_databar_module_runs import project_databar_module_runs
 from comparison_databar14_workspace import project_databar14_workspace
+from comparison_databar_expanded_workspace import project_databar_expanded_workspace
 
 
 def load(path):
@@ -380,6 +381,7 @@ def build_website_data(root):
             "databar_tilted": project_databar_tilted(root, qualification),
             "retail_fine": project_retail_fine(root, qualification),
             "scanner_boundaries": project_scanner_boundaries(root, qualification),
+            "databar_expanded_workspace": project_databar_expanded_workspace(root, qualification),
             "databar14_workspace": project_databar14_workspace(root, qualification),
             "databar_module_runs": project_databar_module_runs(root, qualification),
             "component_coordinates": project_component_coordinates(root, qualification),
