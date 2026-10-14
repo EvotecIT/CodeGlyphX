@@ -1,4 +1,114 @@
 /* CodeGlyphX site styles.
+   One token layer for every page. Colors use light-dark(), so a surface only has to set color-scheme:
+   the page follows data-theme (auto, light, dark) and the night bands (home hero, art and PowerShell bands,
+   inner page headers) force dark. landing.css and powershell.css build on these tokens. */
+
+/* ---------- Tokens ---------- */
+:root {
+    color-scheme: dark;
+
+    --header-height: 64px;
+    --cgx-display: "Unbounded", "Inter", system-ui, sans-serif;
+    --cgx-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --cgx-mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+    --cgx-width: min(100% - 2 * clamp(16px, 4vw, 40px), 1240px);
+    --cgx-measure: 72ch;
+    --cgx-radius: 14px;
+    --cgx-radius-sm: 10px;
+    --cgx-section: clamp(56px, 7vw, 96px);
+
+    /* Brand: the home page night band and its three accents. */
+    --cgx-night: #07060c;
+    --cgx-night-ink: #f5f3ff;
+    --cgx-night-muted: #b9b4cf;
+    --cgx-night-line: rgba(255, 255, 255, .1);
+    --cgx-violet: #8b5cf6;
+    --cgx-pink: #f472b6;
+    --cgx-cyan: #67e8f9;
+
+    /* Surfaces and ink: light value first, dark second. */
+    --bg: light-dark(#f7f6fa, #0b0a11);
+    --surface: light-dark(#ffffff, #13121b);
+    --surface-2: light-dark(#efedf5, #1b1a25);
+    --line: light-dark(#e2dfeb, #25232f);
+    --line-strong: light-dark(#cbc6da, #3a3746);
+    --ink: light-dark(#16131f, #f4f2fa);
+    --ink-2: light-dark(#2e2a3c, #d9d5e5);
+    --ink-muted: light-dark(#4b4660, #bcb7cc);
+    --ink-dim: light-dark(#5f5973, #948fa8);
+    --accent: light-dark(#6d28d9, #8b5cf6);
+    --accent-ink: light-dark(#6d28d9, #c4b5fd);
+    --accent-fill: light-dark(#6d28d9, #7c3aed);
+    --accent-fill-hover: light-dark(#5b21b6, #6d28d9);
+    --accent-soft: light-dark(rgba(109, 40, 217, .08), rgba(139, 92, 246, .12));
+    --mark: light-dark(#0e7490, #67e8f9);
+    --focus: light-dark(#6d28d9, #a78bfa);
+    --good: light-dark(#047857, #34d399);
+    --warn: light-dark(#92400e, #fbbf24);
+    --bad: light-dark(#b91c1c, #f87171);
+
+    /* Code: one block component everywhere, matching the playground. */
+    --code-bg: light-dark(#fcfbff, #0e0d15);
+    --code-bar: light-dark(#f3f1f9, #15141e);
+    --code-line: light-dark(#e2dfeb, #25232f);
+    --tok-text: light-dark(#24292e, #e4e4e7);
+    --tok-comment: light-dark(#57606a, #9aa4b2);
+    --tok-punct: light-dark(#57606a, #b4b4c0);
+    --tok-str: light-dark(#0a6b35, #86d9a6);
+    --tok-fn: light-dark(#0550ae, #f5a76c);
+    --tok-kw: light-dark(#c41d3a, #d4a5f5);
+    --tok-type: light-dark(#8250df, #f8c555);
+    --tok-num: light-dark(#0550ae, #f5a76c);
+    --tok-var: light-dark(#b35900, #7dd3fc);
+
+    /* Names used by landing.css, powershell.css and api.css. */
+    --primary: var(--accent);
+    --primary-light: var(--accent-ink);
+    --primary-dark: var(--accent-fill-hover);
+    --secondary: var(--mark);
+    --success: var(--good);
+    --warning: var(--warn);
+    --error: var(--bad);
+    --bg-dark: var(--bg);
+    --bg-card: var(--surface);
+    --bg-card-hover: var(--surface-2);
+    --bg-input: var(--surface-2);
+    --bg-code: var(--code-bg);
+    --text: var(--ink);
+    --text-muted: var(--ink-muted);
+    --text-dim: var(--ink-dim);
+    --border: var(--line);
+    --border-light: var(--line-strong);
+    --radius: var(--cgx-radius-sm);
+    --radius-lg: 20px;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="auto"] { color-scheme: light dark; }
+
+/* Surfaces that stay dark in both themes. */
+.cgx-pagehead, .cgx-hero, .cgx-art, .cgx-ps, .cgx-night { color-scheme: dark; }
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; overflow-x: clip; scroll-padding-top: calc(var(--header-height) + 16px); -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { min-height: 100vh; overflow-x: clip; background: var(--bg); color: var(--ink); font-family: var(--cgx-body); font-size: 1rem; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+img, svg, video { max-width: 100%; }
+h1, h2, h3, h4 { color: var(--ink); font-weight: 650; line-height: 1.2; letter-spacing: -.015em; }
+a { color: var(--accent-ink); text-decoration: none; }
+a:hover { color: var(--ink); }
+button { font: inherit; }
+::selection { background: color-mix(in srgb, var(--cgx-violet) 35%, transparent); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+:focus:not(:focus-visible) { outline: none; }
+/* Headings take programmatic focus for screen readers; they are not controls. */
+h1:focus { outline: none; }
+
+.page { display: flex; flex-direction: column; min-height: 100vh; width: 100%; }
+main { flex: 1; min-width: 0; padding-top: var(--header-height); }
+main > .nova-app-link, main > p { width: var(--cgx-width); margin-inline: auto; }
+.container { width: var(--cgx-width); margin-inline: auto; }
 
 /* ---------- Header ---------- */
 /* One header on every page (static pages, the API reference, the playground), built from the site.json "main"
@@ -200,185 +310,6 @@
 .cgx-tabs--column .cgx-tab { justify-content: flex-start; white-space: normal; }
 .cgx-tabs--column .cgx-tab__count { margin-left: auto; }
 .cgx-tabs-label { color: var(--ink-dim); font-size: .8125rem; font-weight: 600; }
-
-/* CodeGlyphX site styles.
-   One token layer for every page. Colors use light-dark(), so a surface only has to set color-scheme:
-   the page follows data-theme (auto, light, dark) and the night bands (home hero, art and PowerShell bands,
-   inner page headers) force dark. landing.css and powershell.css build on these tokens. */
-
-/* ---------- Tokens ---------- */
-:root {
-    color-scheme: dark;
-
-    --header-height: 64px;
-    --cgx-display: "Unbounded", "Inter", system-ui, sans-serif;
-    --cgx-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --cgx-mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
-    --cgx-width: min(100% - 2 * clamp(16px, 4vw, 40px), 1240px);
-    --cgx-measure: 72ch;
-    --cgx-radius: 14px;
-    --cgx-radius-sm: 10px;
-    --cgx-section: clamp(56px, 7vw, 96px);
-
-    /* Brand: the home page night band and its three accents. */
-    --cgx-night: #07060c;
-    --cgx-night-ink: #f5f3ff;
-    --cgx-night-muted: #b9b4cf;
-    --cgx-night-line: rgba(255, 255, 255, .1);
-    --cgx-violet: #8b5cf6;
-    --cgx-pink: #f472b6;
-    --cgx-cyan: #67e8f9;
-
-    /* Surfaces and ink: light value first, dark second. */
-    --bg: light-dark(#f7f6fa, #0b0a11);
-    --surface: light-dark(#ffffff, #13121b);
-    --surface-2: light-dark(#efedf5, #1b1a25);
-    --line: light-dark(#e2dfeb, #25232f);
-    --line-strong: light-dark(#cbc6da, #3a3746);
-    --ink: light-dark(#16131f, #f4f2fa);
-    --ink-2: light-dark(#2e2a3c, #d9d5e5);
-    --ink-muted: light-dark(#4b4660, #bcb7cc);
-    --ink-dim: light-dark(#5f5973, #948fa8);
-    --accent: light-dark(#6d28d9, #8b5cf6);
-    --accent-ink: light-dark(#6d28d9, #c4b5fd);
-    --accent-fill: light-dark(#6d28d9, #7c3aed);
-    --accent-fill-hover: light-dark(#5b21b6, #6d28d9);
-    --accent-soft: light-dark(rgba(109, 40, 217, .08), rgba(139, 92, 246, .12));
-    --mark: light-dark(#0e7490, #67e8f9);
-    --focus: light-dark(#6d28d9, #a78bfa);
-    --good: light-dark(#047857, #34d399);
-    --warn: light-dark(#92400e, #fbbf24);
-    --bad: light-dark(#b91c1c, #f87171);
-
-    /* Code: one block component everywhere, matching the playground. */
-    --code-bg: light-dark(#fcfbff, #0e0d15);
-    --code-bar: light-dark(#f3f1f9, #15141e);
-    --code-line: light-dark(#e2dfeb, #25232f);
-    --tok-text: light-dark(#24292e, #e4e4e7);
-    --tok-comment: light-dark(#57606a, #9aa4b2);
-    --tok-punct: light-dark(#57606a, #b4b4c0);
-    --tok-str: light-dark(#0a6b35, #86d9a6);
-    --tok-fn: light-dark(#0550ae, #f5a76c);
-    --tok-kw: light-dark(#c41d3a, #d4a5f5);
-    --tok-type: light-dark(#8250df, #f8c555);
-    --tok-num: light-dark(#0550ae, #f5a76c);
-    --tok-var: light-dark(#b35900, #7dd3fc);
-
-    /* Names used by landing.css, powershell.css and api.css. */
-    --primary: var(--accent);
-    --primary-light: var(--accent-ink);
-    --primary-dark: var(--accent-fill-hover);
-    --secondary: var(--mark);
-    --success: var(--good);
-    --warning: var(--warn);
-    --error: var(--bad);
-    --bg-dark: var(--bg);
-    --bg-card: var(--surface);
-    --bg-card-hover: var(--surface-2);
-    --bg-input: var(--surface-2);
-    --bg-code: var(--code-bg);
-    --text: var(--ink);
-    --text-muted: var(--ink-muted);
-    --text-dim: var(--ink-dim);
-    --border: var(--line);
-    --border-light: var(--line-strong);
-    --radius: var(--cgx-radius-sm);
-    --radius-lg: 20px;
-}
-:root[data-theme="light"] { color-scheme: light; }
-:root[data-theme="auto"] { color-scheme: light dark; }
-
-/* Surfaces that stay dark in both themes. */
-.cgx-pagehead, .cgx-hero, .cgx-art, .cgx-ps, .cgx-night { color-scheme: dark; }
-
-/* ---------- Base ---------- */
-*, *::before, *::after { box-sizing: border-box; }
-* { margin: 0; padding: 0; }
-html { scroll-behavior: smooth; overflow-x: clip; scroll-padding-top: calc(var(--header-height) + 16px); -webkit-text-size-adjust: 100%; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body { min-height: 100vh; overflow-x: clip; background: var(--bg); color: var(--ink); font-family: var(--cgx-body); font-size: 1rem; line-height: 1.65; -webkit-font-smoothing: antialiased; }
-img, svg, video { max-width: 100%; }
-h1, h2, h3, h4 { color: var(--ink); font-weight: 650; line-height: 1.2; letter-spacing: -.015em; }
-a { color: var(--accent-ink); text-decoration: none; }
-a:hover { color: var(--ink); }
-button { font: inherit; }
-::selection { background: color-mix(in srgb, var(--cgx-violet) 35%, transparent); }
-:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
-:focus:not(:focus-visible) { outline: none; }
-/* Headings take programmatic focus for screen readers; they are not controls. */
-h1:focus { outline: none; }
-
-.page { display: flex; flex-direction: column; min-height: 100vh; width: 100%; }
-main { flex: 1; min-width: 0; padding-top: var(--header-height); }
-main > .nova-app-link, main > p { width: var(--cgx-width); margin-inline: auto; }
-.container { width: var(--cgx-width); margin-inline: auto; }
-
-/* ---------- Header ---------- */
-.header {
-    position: fixed;
-    inset: 0 0 auto;
-    z-index: 1000;
-    height: var(--header-height);
-    padding: 0 clamp(16px, 4vw, 40px);
-    border-bottom: 1px solid var(--line);
-    background: color-mix(in srgb, var(--bg) 84%, transparent);
-    backdrop-filter: saturate(150%) blur(16px);
-    -webkit-backdrop-filter: saturate(150%) blur(16px);
-}
-.header-content { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 100%; max-width: 1240px; margin: 0 auto; }
-.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); font-family: var(--cgx-display); font-size: 1.0625rem; font-weight: 700; letter-spacing: -.01em; text-decoration: none; }
-.brand:hover { color: var(--ink); }
-.brand-icon { flex: none; width: 32px; height: 32px; overflow: hidden; border-radius: 8px; box-shadow: 0 0 0 1px var(--line); }
-.brand-icon img { display: block; width: 100%; height: 100%; }
-.nav { display: flex; align-items: center; gap: 18px; }
-.nav-links { display: flex; align-items: center; }
-.nav-links a { position: relative; padding: 8px 11px; border-radius: 8px; color: var(--ink-muted); font-size: .875rem; font-weight: 500; text-decoration: none; }
-.nav-links a:hover { color: var(--ink); }
-.nav-links a:is(.is-active, .is-current, .is-ancestor, [aria-current="page"]) { color: var(--ink); }
-.nav-links a:is(.is-active, .is-current, .is-ancestor, [aria-current="page"])::after { content: ""; position: absolute; left: 11px; right: 11px; bottom: 1px; height: 2px; border-radius: 2px; background: var(--accent); }
-.nav-actions { display: flex; align-items: center; gap: 4px; }
-.nav-icon { display: inline-grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 9px; background: transparent; color: var(--ink-muted); cursor: pointer; }
-.nav-icon:hover { background: var(--surface-2); color: var(--ink); }
-.nav-icon svg, .header svg { width: 19px; height: 19px; flex-shrink: 0; }
-.nav-cta { display: inline-flex; align-items: center; gap: 8px; height: 36px; margin-left: 8px; padding: 0 14px; border-radius: 10px; background: var(--accent-fill); color: #fff; font-size: .875rem; font-weight: 600; white-space: nowrap; text-decoration: none; }
-.nav-cta:hover { background: var(--accent-fill-hover); color: #fff; }
-.header .nav-cta svg, .nav-cta-icon { width: 15px; height: 15px; stroke-linecap: round; stroke-linejoin: round; }
-.nav-toggle-checkbox { position: absolute; opacity: 0; pointer-events: none; }
-.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 40px; height: 40px; padding: 9px; border-radius: 9px; cursor: pointer; }
-.nav-toggle:hover { background: var(--surface-2); }
-.nav-toggle span { display: block; width: 22px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .2s ease, opacity .2s ease; }
-.nav-toggle-checkbox:focus-visible + .nav-toggle { outline: 2px solid var(--focus); outline-offset: 2px; }
-.nav-toggle-checkbox:checked + .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.nav-toggle-checkbox:checked + .nav-toggle span:nth-child(2) { opacity: 0; }
-.nav-toggle-checkbox:checked + .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-@media (max-width: 960px) {
-    .nav-toggle { display: flex; }
-    .nav {
-        position: fixed;
-        top: var(--header-height);
-        left: 0;
-        right: 0;
-        height: calc(100dvh - var(--header-height));
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-        padding: 12px clamp(16px, 4vw, 40px) 24px;
-        overflow-y: auto;
-        border-top: 1px solid var(--line);
-        background: var(--bg);
-        visibility: hidden;
-        transform: translateX(-100%);
-        transition: transform .25s ease, visibility 0s linear .25s;
-    }
-    .nav-toggle-checkbox:checked ~ .nav { visibility: visible; transform: none; transition: transform .25s ease; }
-    .nav-links { flex-direction: column; align-items: stretch; }
-    .nav-links a { padding: 14px 4px; border-bottom: 1px solid var(--line); border-radius: 0; color: var(--ink); font-size: 1.0625rem; }
-    .nav-links a:is(.is-active, .is-current, .is-ancestor)::after { left: auto; right: 4px; top: 50%; bottom: auto; width: 8px; height: 8px; border-radius: 2px; transform: translateY(-50%); }
-    .nav-actions { flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: auto; padding-top: 24px; }
-    .nav-cta { order: -1; width: 100%; height: 46px; margin: 0 0 8px; justify-content: center; font-size: 1rem; }
-}
-@media (max-width: 420px) { .brand { font-size: .9375rem; } }
 
 /* ---------- Footer ---------- */
 .footer { padding: clamp(48px, 6vw, 72px) clamp(16px, 4vw, 40px) 32px; border-top: 1px solid var(--line); background: var(--bg); }
