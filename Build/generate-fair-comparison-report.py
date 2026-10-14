@@ -29,6 +29,7 @@ from comparison_databar_expanded_workspace import project_databar_expanded_works
 from comparison_linear_run_workspace import project_linear_run_workspace
 from comparison_code128_photos import project_code128_photos
 from comparison_databar_separator_geometry import project_databar_separator_geometry
+from comparison_png_output import project_png_output, append_png_output_section
 from comparison_code128_photo_set import append_photograph_section
 from comparison_dpm_workspace import project_dpm_workspace
 
@@ -87,6 +88,8 @@ def main():
     names += sorted(path.name for path in root.glob("historical-databar-character-*.json"))
     names += sorted(path.name for path in root.glob("databar-buffers-*.json"))
     names += sorted(path.name for path in root.glob("historical-databar-buffers-*.json"))
+    names += sorted(path.name for path in root.glob("png-output-*.json"))
+    names += sorted(path.name for path in root.glob("historical-png-output-*.json"))
     names += sorted(path.name for path in root.glob("databar-separator-*.json"))
     names += sorted(path.name for path in root.glob("historical-databar-separator-*.json"))
     names += sorted(path.name for path in root.glob("code128-photo-*.json"))
@@ -186,7 +189,7 @@ def main():
                         if unsupported else "Every positive format has a CodeGlyphX image scanner.")
     lines = ["# Current barcode comparisons", "", "Generated from the complete result packets by `Build/generate-fair-comparison-report.py`.", "",
              "See [methodology](../fair-comparisons.md) for versions, adapter boundaries, settings, corpus selection, scoring and proof limits.", "",
-             qualification.get("CurrentHostLoadNote", ""), "", "## Recognition", "", f"The 279-image corpus includes twelve negative images. {scanner_coverage} Exact payload sets are checked after the documented physical representation rules.", "",
+             qualification.get("CurrentHostLoadNote", ""), "", qualification.get("ExecutionEnvironmentNote", ""), "", "## Recognition", "", f"The 279-image corpus includes twelve negative images. {scanner_coverage} Exact payload sets are checked after the documented physical representation rules.", "",
              "| Engine | Original source: positive correct | Current: positive correct | Unsupported positive images | Unexpected-output images | Negative-image false positives | Inconclusive negative images |",
              "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for engine in engines:
@@ -501,6 +504,10 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    png_output = project_png_output(root, qualification)
+    append_png_output_section(lines, png_output)
+    append_photograph_section(lines, png_output)
+    append_retained_context_section(lines, png_output)
     separator_recovery = project_databar_separator_geometry(root, qualification)
     append_photograph_section(lines, separator_recovery)
     append_retained_context_section(lines, separator_recovery)

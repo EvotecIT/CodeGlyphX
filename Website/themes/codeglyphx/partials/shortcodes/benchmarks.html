@@ -3,7 +3,7 @@
     <section class="benchmark-hero">
         <h1>{{ copy.hero.title }}</h1>
         <p class="benchmark-intro">{{ copy.hero.intro }}</p>
-        <p>Measured <time datetime="{{ comparison.date }}">{{ comparison.date }}</time> · Windows · .NET {{ comparison.versions.DotnetRuntime }}</p>
+        <p>Measured <time datetime="{{ comparison.date }}">{{ comparison.date }}</time> · Windows · timing .NET {{ comparison.versions.DotnetRuntime }}{{ if comparison.versions.StandaloneDotnetRuntime }} · corpus .NET {{ comparison.versions.StandaloneDotnetRuntime }}{{ end }}</p>
         <p class="comparison-limit">{{ copy.sharedHost }}</p>
         {{ if comparison.host_load_note }}<p class="comparison-limit">{{ comparison.host_load_note }}</p>{{ end }}
     </section>
@@ -65,8 +65,8 @@
             </table>
         </div>
     </section>
-    {{ if comparison.databar_separator_geometry }}
-    {{ photo_set = comparison.databar_separator_geometry.photographs }}
+    {{ if comparison.additional_photographs }}
+    {{ photo_set = comparison.additional_photographs }}
     <section class="benchmark-section" aria-labelledby="code128-photographs">
         <h2 id="code128-photographs">Additional Code128 and DataBar photographs</h2>
         <p>{{ photo_set.scope }}</p><p>{{ photo_set.limits }}</p>
@@ -80,6 +80,13 @@
         <p>CodeGlyphX gains {{ photo_set.gained.size }} images, loses {{ photo_set.lost.size }}, and adds unexpected outputs on {{ photo_set.new_unexpected.size }} images in this set.</p>
         <p><a href="/comparisons/evidence/{{ photo_set.manifest }}">Inputs</a> · <a href="/comparisons/evidence/{{ photo_set.before_file }}">Previous outcomes</a> · <a href="/comparisons/evidence/{{ photo_set.current_file }}">Current outcomes</a></p>
     </section>
+    {{ end }}
+    {{ if comparison.png_output }}
+    {{ include "shortcodes/png-output" }}
+    {{ session_costs = comparison.png_output }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
+    {{ if comparison.databar_separator_geometry }}
     {{ session_costs = comparison.databar_separator_geometry }}
     {{ include "shortcodes/decoder-session-costs" }}
     {{ end }}

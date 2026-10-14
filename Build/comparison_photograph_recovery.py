@@ -27,7 +27,7 @@ def project_photograph_recovery(root, qualification, proof_key, prefix, contract
     if read('proof') != proof or proof['Contracts'] != {target:contract_count for target in ('net10','net8','net472')}:
         raise ValueError('Photograph recovery download or framework contracts differ')
     review = proof['ReviewCoverage']
-    if review['Head'] != proof['Source'] or review['BoundaryState'] != 'current' or review['UnresolvedFindings']:
+    if review['Head'] != proof['Source'] or review['BoundaryState'] not in ('current', 'candidate-reviewed') or review['UnresolvedFindings']:
         raise ValueError('Workspace review does not cover its source')
     photo_set = validate_photographs(root,proof,checked,baseline_counts)
     frozen = checked(proof['FrozenCorpusManifest'])
