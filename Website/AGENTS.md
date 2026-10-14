@@ -31,6 +31,19 @@ If you don't have the engine repo next to this repo, set:
     - `navContextPath: "/"` (keeps API header nav consistent with non-API pages)
 - Theme: `themes/codeglyphx/theme.manifest.json`
 
+## One Header and Footer
+
+Every page shares `themes/codeglyphx/partials/header.html` and `footer.html`; do not add another copy.
+
+- The header is built from the `site.json` `main` menu: groups with `Id`, `Title`, `Description` and `Items`. Each item needs an `Id` with a thumbnail in `data/visuals.json` (`nav.thumbs`, drawn by SiteSpecimens). The top-level `Home` item keeps the verify check happy; the brand link carries it.
+- API reference and `/powershell/commands/`: the `export-site-chrome` step runs `dotnet run build/SiteChrome.cs -- export ./_site ./_temp/chrome` after the site build, copying the header and footer from the rendered home page; the apidocs steps pass them as `headerHtml`/`footerHtml`. `partials/api-header.html` and `api-footer.html` are only fallbacks for the theme contract.
+- Playground: `layouts/playground.html` renders `/playground/` with the site chrome around `#app`. The overlay copies only the Blazor app's `_framework`, `_content` and playground stylesheets, and `compose-playground-shell` (`SiteChrome.cs playground`) fills the import map and fingerprinted `blazor.webassembly` script from the published `index.html`. `CodeGlyphX.Website/Layout/MainLayout.razor` renders only the playground.
+- Tabs, filters and toggles use the `.cgx-tabs`/`.cgx-tab` component in `static/css/app.css` (module-dot key, tabular count, viewfinder corners on the selected option); do not add another segmented-control style.
+
+## Inner Page Visuals
+
+Docs figures, the docs map, benchmark charts, navigation thumbnails and the product-page codes are CodeGlyphX output too: `dotnet run --project ./tools/SiteSpecimens -c Release -- .` also writes `static/visuals/**` and `data/visuals.json` (deterministic; commit both). Docs pages place figures with `{{< cgx-figure id="qr-ecc" caption="..." >}}` (ids under `docs.figures`). Hand-maintained inputs: `data/docs-map.json` (the `/docs/` map) and `data/release-highlights.json` (what each release drew, shown on the changelog). Captions only state decoded values that the tool decoded from the rendered image.
+
 ## Home Page Data
 
 The home page (`content/pages/index.md`, layout `landing`) reads committed data. Regenerate it when the library or ImagePlayground changes, then review the diff:
