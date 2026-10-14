@@ -1,8 +1,4 @@
 {
-  "hero": {
-    "title": "Performance Benchmarks",
-    "intro": "Benchmarks measure specific scenarios under controlled, ideal lab conditions. Real-world performance varies based on input size, hardware, runtime, and many other factors. Treat these numbers as directional, not definitive."
-  },
   "about": {
     "title": "About These Benchmarks",
     "cards": [

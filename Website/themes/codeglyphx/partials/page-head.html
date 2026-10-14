@@ -1,0 +1,22 @@
+{{~ # Page header band for inner pages. Set ph_title, ph_lede, ph_glyph (a specimen file name) and optionally ph_crumb/ph_crumb_url before including. ~}}
+{{~ ph_spec = null ~}}
+{{~ if ph_glyph && data.specimens ~}}{{~ for s in data.specimens.specimens ~}}{{~ if s.file == "/specimens/" + ph_glyph + ".svg" ~}}{{~ ph_spec = s ~}}{{~ end ~}}{{~ end ~}}{{~ end ~}}
+<header class="cgx-pagehead">
+  <div class="cgx-pagehead__inner">
+    <div class="cgx-pagehead__copy">
+      {{~ if ph_crumb_url ~}}
+      <a class="cgx-pagehead__crumb" href="{{ ph_crumb_url }}">{{ ph_crumb }}</a>
+      {{~ end ~}}
+      <h1>{{ ph_title }}</h1>
+      {{~ if ph_lede && ph_lede != "" ~}}
+      <p class="cgx-pagehead__lede">{{ ph_lede }}</p>
+      {{~ end ~}}
+    </div>
+    {{~ if ph_spec ~}}
+    <figure class="cgx-pagehead__glyph">
+      <span class="cgx-pagehead__frame"><img src="{{ ph_spec.file }}" alt="{{ ph_spec.name }} encoding {{ ph_spec.value }}, drawn by CodeGlyphX" loading="eager" decoding="async" /></span>
+      <figcaption>{{ ph_spec.name }} <code>{{ ph_spec.value }}</code></figcaption>
+    </figure>
+    {{~ end ~}}
+  </div>
+</header>

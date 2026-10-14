@@ -1,33 +1,23 @@
-<div class="faq-page">
-    <div class="faq-hero">
-        {{ if data.faq && data.faq.hero }}
-            {{ if data.faq.hero.label }}<span class="section-label">{{ data.faq.hero.label }}</span>{{ end }}
-            {{ if data.faq.hero.title }}<h1>{{ data.faq.hero.title }}</h1>{{ end }}
-            {{ if data.faq.hero.description }}<p>{{ data.faq.hero.description }}</p>{{ end }}
-        {{ end }}
-    </div>
-
-    <div class="faq-content">
-        {{ if shortcode.data }}
-            {{ for section in shortcode.data }}
-                <div class="faq-section">
-                    {{ if section.title }}<h2>{{ section.title }}</h2>{{ end }}
-                    {{ if section.items }}
-                        {{ for item in section.items }}
-                            <div class="faq-item"{{ if item.id }} id="{{ item.id }}"{{ end }}>
-                                {{ if item.question }}<h3>{{ item.question }}</h3>{{ end }}
-                                {{ if item.answer }}
-                                    {{ if item.answer.size && item.answer.size > 0 }}
-                                        {{ for block in item.answer }}{{ block }}{{ end }}
-                                    {{ else }}
-                                        {{ item.answer }}
-                                    {{ end }}
-                                {{ end }}
-                            </div>
-                        {{ end }}
-                    {{ end }}
+{{~ # FAQ body from data/faq.json. The page header comes from the page layout; each answer is a native disclosure. ~}}
+<div class="cgx-faq">
+    <nav class="cgx-faq__index" aria-label="FAQ sections">
+        {{~ for section in shortcode.data ~}}
+        <a href="#faq-{{ section.title | string.handleize }}">{{ section.title }}</a>
+        {{~ end ~}}
+    </nav>
+    <div class="cgx-faq__body">
+        {{~ for section in shortcode.data ~}}
+        <section class="cgx-faq__section" id="faq-{{ section.title | string.handleize }}" aria-labelledby="faq-{{ section.title | string.handleize }}-title">
+            <h2 id="faq-{{ section.title | string.handleize }}-title">{{ section.title }}</h2>
+            {{~ for item in section.items ~}}
+            <details class="cgx-faq__item"{{ if item.id }} id="{{ item.id }}"{{ end }}>
+                <summary><h3>{{ item.question }}</h3></summary>
+                <div class="cgx-faq__answer cgx-prose">
+                    {{~ if item.answer.size && item.answer.size > 0 ~}}{{ for block in item.answer }}{{ block }}{{ end }}{{~ else ~}}{{ item.answer }}{{~ end ~}}
                 </div>
-            {{ end }}
-        {{ end }}
+            </details>
+            {{~ end ~}}
+        </section>
+        {{~ end ~}}
     </div>
 </div>

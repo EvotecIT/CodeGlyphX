@@ -1,126 +1,106 @@
+{{~ # Benchmark body from data/benchmarks.json; the tables and charts are filled by benchmarks.scripts.html. ~}}
+{{~ b = shortcode.data ~}}
 <div class="benchmark-page">
-    <section class="benchmark-hero">
-        {{ if data.benchmarks && data.benchmarks.hero }}
-            {{ if data.benchmarks.hero.title }}<h1>{{ data.benchmarks.hero.title }}</h1>{{ end }}
-            {{ if data.benchmarks.hero.intro }}<p class="benchmark-intro">{{ data.benchmarks.hero.intro }}</p>{{ end }}
-        {{ end }}
+    <div class="cgx-bench-bar">
+        <div class="cgx-bench-controls">
+            <div class="cgx-seg">
+                <span class="cgx-seg__label" id="bench-mode-label">{{ b.runMode.title }}</span>
+                <div class="benchmark-mode-selector" role="group" aria-labelledby="bench-mode-label">
+                    {{~ for button in b.runMode.buttons ~}}<button type="button" class="benchmark-mode-btn{{ if button.active }} active{{ end }}" data-mode="{{ button.mode }}">{{ button.label }}</button>{{~ end ~}}
+                </div>
+            </div>
+            <div class="cgx-seg">
+                <span class="cgx-seg__label" id="bench-os-label">{{ b.runOs.title }}</span>
+                <div class="benchmark-os-selector" role="group" aria-labelledby="bench-os-label">
+                    {{~ for button in b.runOs.buttons ~}}<button type="button" class="benchmark-os-btn{{ if button.active }} active{{ end }}" data-os="{{ button.os }}">{{ button.label }}</button>{{~ end ~}}
+                </div>
+            </div>
+        </div>
         <div class="benchmark-meta" data-benchmark-meta></div>
-    </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.about }}
-            {{ if data.benchmarks.about.title }}<h2>{{ data.benchmarks.about.title }}</h2>{{ end }}
-            <div class="benchmark-info-grid">
-                {{ for card in data.benchmarks.about.cards }}
-                    <div class="benchmark-info-card">
-                        {{ if card.title }}<h3>{{ card.title }}</h3>{{ end }}
-                        {{ if card.paragraphs }}
-                            {{ for paragraph in card.paragraphs }}{{ paragraph }}{{ end }}
-                        {{ end }}
-                        {{ if card.list }}
-                            <ul>
-                                {{ for item in card.list }}<li>{{ item }}</li>{{ end }}
-                            </ul>
-                        {{ end }}
-                    </div>
-                {{ end }}
-            </div>
-        {{ end }}
-    </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.runMode }}
-            {{ if data.benchmarks.runMode.title }}<h2>{{ data.benchmarks.runMode.title }}</h2>{{ end }}
-            <div class="benchmark-mode-selector">
-                {{ for button in data.benchmarks.runMode.buttons }}
-                    <button class="benchmark-mode-btn{{ if button.active }} active{{ end }}" data-mode="{{ button.mode }}">{{ button.label }}</button>
-                {{ end }}
-            </div>
-        {{ end }}
+    </div>
+    <div class="cgx-bench-notes">
         <p class="benchmark-mode-note" data-mode-note></p>
-    </section>
-
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.runOs }}
-            {{ if data.benchmarks.runOs.title }}<h2>{{ data.benchmarks.runOs.title }}</h2>{{ end }}
-            <div class="benchmark-os-selector">
-                {{ for button in data.benchmarks.runOs.buttons }}
-                    <button class="benchmark-os-btn{{ if button.active }} active{{ end }}" data-os="{{ button.os }}">{{ button.label }}</button>
-                {{ end }}
-            </div>
-        {{ end }}
         <p class="benchmark-os-note" data-os-note></p>
-    </section>
+    </div>
 
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.summary }}
-            <h2>{{ data.benchmarks.sections.summary.title }}</h2>
-            <p class="section-description">{{ data.benchmarks.sections.summary.description }}</p>
-        {{ end }}
+    <section class="cgx-section" aria-labelledby="bench-summary">
+        <div class="cgx-section__head">
+            <h2 id="bench-summary">{{ b.sections.summary.title }}</h2>
+            <p>{{ b.sections.summary.description }}</p>
+        </div>
         <div class="benchmark-table-container" data-benchmark-summary>
             <p class="loading-text">Loading benchmark data...</p>
         </div>
     </section>
 
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.charts }}
-            <h2>{{ data.benchmarks.sections.charts.title }}</h2>
-            <p class="section-description">{{ data.benchmarks.sections.charts.description }}</p>
-        {{ end }}
+    <section class="cgx-section" aria-labelledby="bench-charts">
+        <div class="cgx-section__head">
+            <h2 id="bench-charts">{{ b.sections.charts.title }}</h2>
+            <p>{{ b.sections.charts.description }}</p>
+        </div>
         <div class="benchmark-charts" data-benchmark-charts>
             <p class="loading-text">Loading chart data...</p>
         </div>
     </section>
 
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.details }}
-            <h2>{{ data.benchmarks.sections.details.title }}</h2>
-            <p class="section-description">{{ data.benchmarks.sections.details.description }}</p>
-        {{ end }}
+    <section class="cgx-section" aria-labelledby="bench-details">
+        <div class="cgx-section__head">
+            <h2 id="bench-details">{{ b.sections.details.title }}</h2>
+            <p>{{ b.sections.details.description }}</p>
+        </div>
         <div class="benchmark-details" data-benchmark-details>
             <p class="loading-text">Loading detailed results...</p>
         </div>
     </section>
 
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.baseline }}
-            <h2>{{ data.benchmarks.sections.baseline.title }}</h2>
-            <p class="section-description">{{ data.benchmarks.sections.baseline.description }}</p>
-        {{ end }}
+    <section class="cgx-section" aria-labelledby="bench-baseline">
+        <div class="cgx-section__head">
+            <h2 id="bench-baseline">{{ b.sections.baseline.title }}</h2>
+            <p>{{ b.sections.baseline.description }}</p>
+        </div>
         <div class="benchmark-baseline" data-benchmark-baseline>
             <p class="loading-text">Loading baseline data...</p>
         </div>
     </section>
 
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.sections && data.benchmarks.sections.environment }}
-            <h2>{{ data.benchmarks.sections.environment.title }}</h2>
-        {{ end }}
+    <section class="cgx-section" aria-labelledby="bench-env">
+        <div class="cgx-section__head">
+            <h2 id="bench-env">{{ b.sections.environment.title }}</h2>
+        </div>
         <div class="benchmark-environment" data-benchmark-environment>
             <p class="loading-text">Loading environment info...</p>
         </div>
     </section>
 
-    <section class="benchmark-section benchmark-notes">
-        {{ if data.benchmarks && data.benchmarks.notes }}
-            {{ if data.benchmarks.notes.title }}<h2>{{ data.benchmarks.notes.title }}</h2>{{ end }}
-            <div data-benchmark-notes>
-                <ul>
-                    {{ for item in data.benchmarks.notes.items }}
-                        <li>{{ item }}</li>
-                    {{ end }}
-                </ul>
+    <section class="cgx-section" aria-labelledby="bench-about">
+        <div class="cgx-section__head">
+            <h2 id="bench-about">{{ b.about.title }}</h2>
+        </div>
+        <div class="cgx-method">
+            {{~ for card in b.about.cards ~}}
+            <div class="cgx-method__item">
+                <h3>{{ card.title }}</h3>
+                {{~ if card.paragraphs ~}}{{ for paragraph in card.paragraphs }}{{ paragraph }}{{ end }}{{~ end ~}}
+                {{~ if card.list ~}}<ul>{{ for item in card.list }}<li>{{ item }}</li>{{ end }}</ul>{{~ end ~}}
             </div>
-        {{ end }}
+            {{~ end ~}}
+        </div>
     </section>
 
-    <section class="benchmark-section">
-        {{ if data.benchmarks && data.benchmarks.run }}
-            {{ if data.benchmarks.run.title }}<h2>{{ data.benchmarks.run.title }}</h2>{{ end }}
-            {{ if data.benchmarks.run.intro }}<p>{{ data.benchmarks.run.intro }}</p>{{ end }}
-            {{ if data.benchmarks.run.commands }}
-                <pre class="code-block"><code>{{ data.benchmarks.run.commands }}</code></pre>
-            {{ end }}
-        {{ end }}
+    <section class="cgx-section benchmark-notes" aria-labelledby="bench-notes">
+        <div class="cgx-section__head">
+            <h2 id="bench-notes">{{ b.notes.title }}</h2>
+        </div>
+        <div class="cgx-prose" data-benchmark-notes>
+            <ul>{{~ for item in b.notes.items ~}}<li>{{ item }}</li>{{~ end ~}}</ul>
+        </div>
+    </section>
+
+    <section class="cgx-section" aria-labelledby="bench-run">
+        <div class="cgx-section__head">
+            <h2 id="bench-run">{{ b.run.title }}</h2>
+            <p>{{ b.run.intro }}</p>
+        </div>
+        <pre class="code-block" data-label="Run-Benchmarks-Compare.ps1"><code class="language-powershell">{{ b.run.commands | html.escape }}</code></pre>
     </section>
 </div>

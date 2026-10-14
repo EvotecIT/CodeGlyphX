@@ -1,52 +1,42 @@
-<section class="pricing-page">
-    <div class="pricing-hero">
-        {{ if data.pricing && data.pricing.hero }}
-            {{ if data.pricing.hero.label }}<span class="section-label">{{ data.pricing.hero.label }}</span>{{ end }}
-            {{ if data.pricing.hero.title }}<h1>{{ data.pricing.hero.title }}</h1>{{ end }}
-            {{ if data.pricing.hero.description }}<p>{{ data.pricing.hero.description }}</p>{{ end }}
-        {{ end }}
+{{~ # Pricing body from data/pricing.json: one free plan, then the optional ways to support it. ~}}
+{{~ plan = shortcode.data.plan; support = shortcode.data.support; note = shortcode.data.note ~}}
+<section class="cgx-section cgx-plan" aria-labelledby="plan-amount">
+    <div class="cgx-plan__main">
+        <h2 class="cgx-plan__amount" id="plan-amount">{{ plan.amount }}</h2>
+        <p class="cgx-plan__summary">{{ plan.summary }}</p>
+        <p class="cgx-plan__desc">{{ plan.description }}</p>
+        <div class="cgx-install"><code><span aria-hidden="true">&gt;</span> {{ plan.install }}</code><button type="button" class="copy-btn cgx-copy" data-copy="{{ plan.install }}">Copy</button></div>
+        <div class="cgx-plan__actions">
+            <a class="cgx-btn cgx-btn--solid" href="{{ plan.cta.href }}">{{ plan.cta.label }}</a>
+            <a class="cgx-btn cgx-btn--quiet" href="/docs/quickstart/">Quick start</a>
+        </div>
     </div>
+    <ul class="cgx-checklist" aria-label="Included">
+        {{~ for f in plan.features ~}}<li>{{ f }}</li>{{~ end ~}}
+    </ul>
+</section>
 
-    <div class="pricing-grid">
-        {{ if shortcode.data }}
-            {{ for card in shortcode.data }}
-                <div class="{{ if card.class }}{{ card.class }}{{ else }}pricing-card{{ end }}">
-                    {{ if card.badge }}<div class="pricing-card-badge">{{ card.badge }}</div>{{ end }}
-                    <div class="pricing-card-icon{{ if card.icon_class }} {{ card.icon_class }}{{ end }}">
-                        {{ if card.icon_svg }}{{ card.icon_svg }}{{ end }}
-                    </div>
-                    {{ if card.title }}<h2>{{ card.title }}</h2>{{ end }}
-                    {{ if card.tag }}<div class="pricing-tag">{{ card.tag }}</div>{{ end }}
-                    <div class="pricing-amount">
-                        {{ if card.amount }}<span class="pricing-currency{{ if card.amount_class }} {{ card.amount_class }}{{ end }}">{{ card.amount }}</span>{{ end }}
-                    </div>
-                    {{ if card.description }}<p class="pricing-desc">{{ card.description }}</p>{{ end }}
-                    {{ if card.features }}
-                        <ul class="pricing-features">
-                            {{ for feature in card.features }}
-                                <li>{{ feature }}</li>
-                            {{ end }}
-                        </ul>
-                    {{ end }}
-                    {{ if card.cta }}
-                        <a href="{{ card.cta.href }}"{{ if card.cta.target }} target="{{ card.cta.target }}"{{ end }}{{ if card.cta.rel }} rel="{{ card.cta.rel }}"{{ end }} class="{{ card.cta.class }}">
-                            {{ if card.cta.icon_svg }}{{ card.cta.icon_svg }}{{ end }}
-                            {{ if card.cta.label }}{{ card.cta.label }}{{ end }}
-                        </a>
-                    {{ end }}
-                </div>
-            {{ end }}
-        {{ end }}
+<section class="cgx-section cgx-support" aria-labelledby="support-title">
+    <div class="cgx-section__head">
+        <h2 id="support-title">{{ support.title }}</h2>
+        <p>{{ support.description }}</p>
     </div>
-
-    <div class="pricing-note">
-        {{ if data.pricing && data.pricing.note }}
-            {{ if data.pricing.note.title }}<h3>{{ data.pricing.note.title }}</h3>{{ end }}
-            {{ if data.pricing.note.paragraphs }}
-                {{ for paragraph in data.pricing.note.paragraphs }}
-                    {{ paragraph }}
-                {{ end }}
-            {{ end }}
-        {{ end }}
+    <div class="cgx-support__options">
+        {{~ for o in shortcode.data.cards ~}}
+        <article class="cgx-support__option">
+            <h3>{{ o.title }}</h3>
+            <p class="cgx-support__via">{{ o.via }}</p>
+            <p>{{ o.description }}</p>
+            <ul class="cgx-checklist">{{~ for f in o.features ~}}<li>{{ f }}</li>{{~ end ~}}</ul>
+            <a class="cgx-btn cgx-btn--quiet" href="{{ o.cta.href }}">{{ o.cta.label }}</a>
+        </article>
+        {{~ end ~}}
     </div>
 </section>
+
+{{~ if note ~}}
+<section class="cgx-section cgx-pricing-note cgx-prose" aria-labelledby="note-title">
+    <h2 id="note-title">{{ note.title }}</h2>
+    {{~ for p in note.paragraphs ~}}{{ p }}{{~ end ~}}
+</section>
+{{~ end ~}}
