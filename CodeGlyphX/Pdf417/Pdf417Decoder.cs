@@ -46,6 +46,10 @@ public static partial class Pdf417Decoder {
     /// </summary>
     public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
+        return TryDecodeGrid(new ModuleGrid(modules), cancellationToken, out value);
+    }
+
+    private static bool TryDecodeGrid(ModuleGrid modules, CancellationToken cancellationToken, out string value) {
         if (cancellationToken.IsCancellationRequested) { value = string.Empty; return false; }
 
         if (TryDecodeCore(modules, cancellationToken, out value)) return true;
@@ -66,6 +70,10 @@ public static partial class Pdf417Decoder {
     /// </summary>
     public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
         if (modules is null) throw new ArgumentNullException(nameof(modules));
+        return TryDecodeGrid(new ModuleGrid(modules), cancellationToken, out decoded);
+    }
+
+    private static bool TryDecodeGrid(ModuleGrid modules, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
 
         if (TryDecodeCore(modules, cancellationToken, out var value, out var macro)) {
@@ -105,6 +113,7 @@ public static partial class Pdf417Decoder {
     /// </summary>
     public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value, out Pdf417DecodeDiagnostics diagnostics) {
         diagnostics = new Pdf417DecodeDiagnostics();
+        if (modules is null) throw new ArgumentNullException(nameof(modules));
         return TryDecodeInternal(modules, cancellationToken, diagnostics, out value);
     }
 }

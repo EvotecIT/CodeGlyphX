@@ -257,10 +257,10 @@ public static partial class Pdf417Decoder {
         return max >= min;
     }
 
-    private static BitMatrix Rotate90(BitMatrix matrix) => BitMatrixTransforms.Rotate90(matrix);
-    private static BitMatrix Rotate180(BitMatrix matrix) => BitMatrixTransforms.Rotate180(matrix);
-    private static BitMatrix Rotate270(BitMatrix matrix) => BitMatrixTransforms.Rotate270(matrix);
-    private static BitMatrix MirrorX(BitMatrix matrix) => BitMatrixTransforms.MirrorHorizontal(matrix);
+    private static ModuleGrid Rotate90(ModuleGrid matrix) => matrix.Rotate(1);
+    private static ModuleGrid Rotate180(ModuleGrid matrix) => matrix.Rotate(2);
+    private static ModuleGrid Rotate270(ModuleGrid matrix) => matrix.Rotate(3);
+    private static ModuleGrid MirrorX(ModuleGrid matrix) => matrix.Mirror();
 
     private static int Clamp(int value, int min, int max) {
         if (value < min) return min;

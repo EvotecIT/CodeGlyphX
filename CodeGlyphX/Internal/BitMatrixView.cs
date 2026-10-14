@@ -11,6 +11,7 @@ internal readonly struct BitMatrixView {
     private readonly int _height;
     private readonly int _rotation;
     private readonly bool _mirrored;
+    private readonly BitMatrixRegion _region;
 
     internal BitMatrixView(BitMatrix source, int rotation = 0, bool mirrored = false) {
         _source = source;
@@ -19,6 +20,7 @@ internal readonly struct BitMatrixView {
         _height = source.Height;
         _rotation = rotation & 3;
         _mirrored = mirrored;
+        _region = CreateRegion(_width, _height, _rotation, mirrored);
     }
 
     internal BitMatrixView(int width, int height, Func<int, int, bool> sample) {
@@ -28,6 +30,7 @@ internal readonly struct BitMatrixView {
         _height = height;
         _rotation = 0;
         _mirrored = false;
+        _region = new BitMatrixRegion(width, height);
     }
 
     private BitMatrixView(BitMatrixView source, int rotation, bool mirrored) {
@@ -37,6 +40,7 @@ internal readonly struct BitMatrixView {
         _height = source._height;
         _rotation = rotation & 3;
         _mirrored = mirrored;
+        _region = CreateRegion(_width, _height, _rotation, mirrored);
     }
 
     internal BitMatrixView Orient(int rotation, bool mirrored) => new(this, rotation, mirrored);
@@ -45,17 +49,13 @@ internal readonly struct BitMatrixView {
     internal int Height => (_rotation & 1) == 0 ? _height : _width;
 
     internal bool Get(int x, int y) {
-        if ((uint)x >= (uint)Width) throw new ArgumentOutOfRangeException(nameof(x));
-        if ((uint)y >= (uint)Height) throw new ArgumentOutOfRangeException(nameof(y));
-        var sx = x;
-        var sy = y;
-        switch (_rotation) {
-            case 1: sx = y; sy = _height - 1 - x; break;
-            case 2: sx = _width - 1 - x; sy = _height - 1 - y; break;
-            case 3: sx = _width - 1 - y; sy = x; break;
-        }
-        if (_mirrored) sx = _width - 1 - sx;
+        _region.GetCoordinates(x, y, out var sx, out var sy);
         return _source is not null ? _source.Get(sx, sy) : _sample!(sx, sy);
+    }
+
+    private static BitMatrixRegion CreateRegion(int width, int height, int rotation, bool mirrored) {
+        var region = new BitMatrixRegion(width, height);
+        return (mirrored ? region.Mirror() : region).Rotate(rotation);
     }
 
     internal BitMatrix ToMatrix() {

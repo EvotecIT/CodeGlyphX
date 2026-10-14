@@ -7,8 +7,7 @@ using CodeGlyphX.Pdf417.Ec;
 namespace CodeGlyphX.Pdf417;
 
 public static partial class Pdf417Decoder {
-    private static bool TryDecodeInternal(BitMatrix modules, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
-        if (modules is null) throw new ArgumentNullException(nameof(modules));
+    private static bool TryDecodeInternal(ModuleGrid modules, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
 
         if (TryDecodeCore(modules, cancellationToken, diagnostics, out value)) return MarkSuccessful(diagnostics);
@@ -32,18 +31,18 @@ public static partial class Pdf417Decoder {
         return true;
     }
 
-    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+    private static bool TryDecodeCore(ModuleGrid modules, CancellationToken cancellationToken, out string value) {
         return TryDecodeCore(modules, cancellationToken, out value, out _);
     }
 
-    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value, out Pdf417MacroMetadata? macro) {
+    private static bool TryDecodeCore(ModuleGrid modules, CancellationToken cancellationToken, out string value, out Pdf417MacroMetadata? macro) {
         if (TryDecodeCore(modules, cancellationToken, topDown: true, out value, out macro)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return FailDecode(out value);
         // Retain decoding of bottom-up symbols emitted by earlier library versions.
         return TryDecodeCore(modules, cancellationToken, topDown: false, out value, out macro);
     }
 
-    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, bool topDown, out string value, out Pdf417MacroMetadata? macro) {
+    private static bool TryDecodeCore(ModuleGrid modules, CancellationToken cancellationToken, bool topDown, out string value, out Pdf417MacroMetadata? macro) {
         macro = null;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         var width = modules.Width;
@@ -60,7 +59,7 @@ public static partial class Pdf417Decoder {
         return FailDecode(out value);
     }
 
-    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, bool topDown, int cols, bool compact,
+    private static bool TryDecodeCore(ModuleGrid modules, CancellationToken cancellationToken, bool topDown, int cols, bool compact,
         out string value, out Pdf417MacroMetadata? macro) {
         macro = null;
         var budget = DecodeBudget.Capture();
@@ -159,7 +158,7 @@ public static partial class Pdf417Decoder {
         }
     }
 
-    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
+    private static bool TryDecodeCore(ModuleGrid modules, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         diagnostics.AttemptCount++;
         var success = TryDecodeCore(modules, cancellationToken, out value, out var macro);
         if (success) diagnostics.Macro = macro;

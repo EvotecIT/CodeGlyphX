@@ -77,6 +77,7 @@
     <Compile Include="Pdf417FractionalSamplingTests.cs" />
     <Compile Include="Pdf417ScanlineImageTests.cs" />
     <Compile Include="Pdf417GridEvidenceTests.cs" />
+    <Compile Include="Pdf417ModuleGridTests.cs" />
     <Compile Include="Pdf417ErasureImageTests.cs" />
     <Compile Include="Pdf417RightFramingTests.cs" />
     <Compile Include="Pdf417ErrorCorrectionTests.cs" />

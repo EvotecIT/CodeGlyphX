@@ -183,7 +183,7 @@ public static partial class Pdf417Decoder {
         if (TryExtractModules(pixels, width, height, stride, format, threshold, out var modules)) {
             if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
         }
 
         value = string.Empty;
@@ -211,7 +211,7 @@ public static partial class Pdf417Decoder {
         if (TryExtractModules(pixels, width, height, stride, format, threshold, out var modules)) {
             if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) return true;
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
         }
 
         value = string.Empty;
@@ -238,7 +238,7 @@ public static partial class Pdf417Decoder {
         if (TryExtractModules(pixels, width, height, stride, format, threshold, out var modules)) {
             if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
         }
 
         decoded = null!;
@@ -253,7 +253,7 @@ public static partial class Pdf417Decoder {
             if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
 
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
 
             if (TryDecodeWithShear(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, out value)) return true;
 
@@ -278,7 +278,7 @@ public static partial class Pdf417Decoder {
             if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
 
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
 
             if (TryDecodeWithShear(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, out decoded)) return true;
 
@@ -298,7 +298,7 @@ public static partial class Pdf417Decoder {
             if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) return true;
 
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
 
             if (TryDecodeWithShear(pixels, width, height, stride, format, box, candidate, threshold, invert, cancellationToken, diagnostics, out value)) return true;
 
@@ -342,7 +342,7 @@ public static partial class Pdf417Decoder {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
         }
 
         value = string.Empty;
@@ -376,7 +376,7 @@ public static partial class Pdf417Decoder {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
         }
 
         decoded = null!;
@@ -410,7 +410,7 @@ public static partial class Pdf417Decoder {
             if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
             if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) return true;
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
         }
 
         value = string.Empty;
@@ -423,7 +423,7 @@ public static partial class Pdf417Decoder {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
         var trimmed = TrimModuleBorder(modules);
-        if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
+        if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
         value = string.Empty;
         return false;
     }
@@ -434,7 +434,7 @@ public static partial class Pdf417Decoder {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
         if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
         var trimmed = TrimModuleBorder(modules);
-        if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+        if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
         decoded = null!;
         return false;
     }
@@ -445,7 +445,7 @@ public static partial class Pdf417Decoder {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) return true;
         var trimmed = TrimModuleBorder(modules);
-        if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
+        if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
         value = string.Empty;
         return false;
     }
@@ -582,7 +582,7 @@ public static partial class Pdf417Decoder {
             if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
 
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out value)) return true;
         }
 
         value = string.Empty;
