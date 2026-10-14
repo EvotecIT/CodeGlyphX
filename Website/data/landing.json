@@ -11,21 +11,66 @@
       "/images/art/qr-expressive-waves.png",
       "/images/art/qr-expressive-geometric.png"
     ],
-    "badges": ["Apache 2.0", "No native dependencies", ".NET Framework 4.7.2 to .NET 10", "Native AOT tested"]
+    "badges": [
+      "Apache 2.0",
+      "No native dependencies",
+      ".NET Framework 4.7.2 to .NET 10",
+      "Native AOT tested"
+    ]
   },
   "surfaces": [
-    { "name": ".NET", "body": "One NuGet package for .NET Framework 4.7.2, .NET Standard 2.0, .NET 8 and .NET 10.", "action": "Read the quickstart", "url": "/docs/" },
-    { "name": "Playground", "body": "Generate, style and decode codes in your browser, running CodeGlyphX in WebAssembly.", "action": "Open the playground", "url": "/playground/" },
-    { "name": "PowerShell", "body": "ImagePlayground brings QR codes, payloads, barcodes and decoding to PowerShell.", "action": "See PowerShell examples", "url": "#powershell" },
-    { "name": "Windows", "body": "WPF controls and example applications for desktop scanning and generation.", "action": "Download the apps", "url": "/downloads/" },
-    { "name": "API reference", "body": "Every public type and member, generated from the current release.", "action": "Browse the API", "url": "/api/" }
+    {
+      "name": ".NET",
+      "body": "One NuGet package for .NET Framework 4.7.2, .NET Standard 2.0, .NET 8 and .NET 10.",
+      "action": "Read the quickstart",
+      "url": "/docs/"
+    },
+    {
+      "name": "Playground",
+      "body": "Generate, style and decode codes in your browser, running CodeGlyphX in WebAssembly.",
+      "action": "Open the playground",
+      "url": "/playground/"
+    },
+    {
+      "name": "PowerShell",
+      "body": "ImagePlayground brings QR codes, payloads, barcodes and decoding to PowerShell.",
+      "action": "See PowerShell examples",
+      "url": "#powershell"
+    },
+    {
+      "name": "Windows",
+      "body": "WPF controls and example applications for desktop scanning and generation.",
+      "action": "Download the apps",
+      "url": "/downloads/"
+    },
+    {
+      "name": "API reference",
+      "body": "Every public type and member, generated from the current release.",
+      "action": "Browse the API",
+      "url": "/api/"
+    }
   ],
   "families": [
-    { "id": "2D", "label": "2D matrix" },
-    { "id": "Linear", "label": "Linear" },
-    { "id": "Retail", "label": "Retail" },
-    { "id": "GS1", "label": "GS1 DataBar" },
-    { "id": "Postal", "label": "Postal" }
+    {
+      "id": "2D",
+      "label": "2D matrix"
+    },
+    {
+      "id": "Linear",
+      "label": "Linear"
+    },
+    {
+      "id": "Retail",
+      "label": "Retail"
+    },
+    {
+      "id": "GS1",
+      "label": "GS1 DataBar"
+    },
+    {
+      "id": "Postal",
+      "label": "Postal"
+    }
   ],
   "art": {
     "title": "Artwork that still scans",
@@ -33,8 +78,20 @@
     "proof": "Each design in the colorful gallery must decode back to https://codeglyphx.com from the original pixels, a half-size copy and a lightly blurred copy before the example completes. Test your delivery size and target readers before printing.",
     "code": "var options = new QrRenderOptions {\n    Art = QrArt.Theme(QrArtTheme.NeonGlow, QrArtVariant.Conservative, intensity: 60)\n};\n\nQR.Save(\"https://codeglyphx.com\", \"styled.png\", options,\n    new QrEncodingOptions { ErrorCorrectionLevel = QrErrorCorrectionLevel.H });",
     "gallery": [
-      { "image": "/images/art/qr-procedural-art-gallery.png", "width": 1356, "height": 912, "title": "Procedural art", "alt": "Six procedurally patterned QR codes with swirls, stripes and tiles around intact finder patterns." },
-      { "image": "/images/art/qr-colorful-gallery.png", "width": 1376, "height": 924, "title": "Colorful gallery", "alt": "Six colorful QR designs with gradients, confetti and illustrations woven into the data area." }
+      {
+        "image": "/images/art/qr-procedural-art-gallery.png",
+        "width": 1356,
+        "height": 912,
+        "title": "Procedural art",
+        "alt": "Six procedurally patterned QR codes with swirls, stripes and tiles around intact finder patterns."
+      },
+      {
+        "image": "/images/art/qr-colorful-gallery.png",
+        "width": 1376,
+        "height": 924,
+        "title": "Colorful gallery",
+        "alt": "Six colorful QR designs with gradients, confetti and illustrations woven into the data area."
+      }
     ]
   },
   "decode": {
@@ -44,11 +101,70 @@
   },
   "powershell": {
     "intro": "ImagePlayground, the Evotec PowerShell module for visual automation, uses CodeGlyphX for QR codes, typed payloads, barcodes and decoding.",
+    "about": {
+      "title": "One module, three libraries",
+      "body": "A single Install-Module gives scripts the same .NET libraries that applications reference directly, so charts, QR codes and photo edits come from one toolset.",
+      "libraries": [
+        {
+          "name": "ChartForgeX",
+          "role": "Charts, topology, dashboards, canvases and animated stories",
+          "url": "https://chartforgex.com/"
+        },
+        {
+          "name": "CodeGlyphX",
+          "role": "QR codes, barcodes and decoding",
+          "url": "https://codeglyphx.com/"
+        },
+        {
+          "name": "OfficeIMO",
+          "role": "Image processing, metadata and pixel comparison",
+          "url": "https://officeimo.com/"
+        }
+      ],
+      "links": [
+        {
+          "title": "PowerShell Gallery",
+          "url": "https://www.powershellgallery.com/packages/ImagePlayground"
+        },
+        {
+          "title": "Source and examples",
+          "url": "https://github.com/EvotecIT/ImagePlayground"
+        },
+        {
+          "title": "Command reference",
+          "url": "https://evotec.xyz/projects/imageplayground/api/"
+        },
+        {
+          "title": "Project overview",
+          "url": "https://evotec.xyz/projects/imageplayground/"
+        }
+      ]
+    },
     "examples": [
-      { "title": "A QR code", "script": "Examples/QrCode.ps1", "image": "/powershell/QRCode.png", "code": "New-ImageQRCode `\n    -Content 'https://evotec.xyz' `\n    -FilePath QRCode.png `\n    -Transparent" },
-      { "title": "A Wi-Fi network", "script": "Examples/QRCode.Read.ps1", "image": "/powershell/QRCodeWiFi.png", "code": "New-ImageQRCodeWiFi -SSID 'Evotec' `\n    -Password 'EvotecPassword' `\n    -FilePath QRCodeWiFi.png" },
-      { "title": "A contact, read back", "script": "Examples/QRCode.Read.ps1", "image": "/powershell/QRCodeContact.png", "code": "New-ImageQRContact `\n    -FilePath QRCodeContact.png `\n    -OutputType VCard4 `\n    -Firstname 'Przemek' `\n    -Lastname 'Klys' `\n    -MobilePhone '+48 500 000 000'\n$message = Get-ImageQRCode `\n    -FilePath QRCodeContact.png" },
-      { "title": "An EAN-13 barcode", "script": "Examples/Barcode.Create.ps1", "image": "/powershell/BarcodeEAN13.png", "code": "New-ImageBarCode -Type EAN `\n    -Value '5901234123457' `\n    -FilePath BarcodeEAN13.png\nGet-ImageBarCode `\n    -FilePath BarcodeEAN13.png" }
+      {
+        "title": "A QR code",
+        "script": "Examples/QrCode.ps1",
+        "image": "/powershell/QRCode.png",
+        "code": "New-ImageQRCode `\n    -Content 'https://evotec.xyz' `\n    -FilePath QRCode.png `\n    -Transparent"
+      },
+      {
+        "title": "A Wi-Fi network",
+        "script": "Examples/QRCode.Read.ps1",
+        "image": "/powershell/QRCodeWiFi.png",
+        "code": "New-ImageQRCodeWiFi -SSID 'Evotec' `\n    -Password 'EvotecPassword' `\n    -FilePath QRCodeWiFi.png"
+      },
+      {
+        "title": "A contact, read back",
+        "script": "Examples/QRCode.Read.ps1",
+        "image": "/powershell/QRCodeContact.png",
+        "code": "New-ImageQRContact `\n    -FilePath QRCodeContact.png `\n    -OutputType VCard4 `\n    -Firstname 'Przemek' `\n    -Lastname 'Klys' `\n    -MobilePhone '+48 500 000 000'\n$message = Get-ImageQRCode `\n    -FilePath QRCodeContact.png"
+      },
+      {
+        "title": "An EAN-13 barcode",
+        "script": "Examples/Barcode.Create.ps1",
+        "image": "/powershell/BarcodeEAN13.png",
+        "code": "New-ImageBarCode -Type EAN `\n    -Value '5901234123457' `\n    -FilePath BarcodeEAN13.png\nGet-ImageBarCode `\n    -FilePath BarcodeEAN13.png"
+      }
     ]
   }
 }

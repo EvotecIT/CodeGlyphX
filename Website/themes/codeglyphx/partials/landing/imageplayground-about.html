@@ -1,0 +1,17 @@
+{{~ about = data.landing.powershell.about ~}}
+<aside class="cgx-ipg" aria-labelledby="cgx-ipg-title">
+  <div class="cgx-ipg__intro">
+    <h3 id="cgx-ipg-title">{{ about.title }}</h3>
+    <p>{{ about.body }}</p>
+    <p class="cgx-ipg__links">{{~ for l in about.links ~}}<a href="{{ l.url }}">{{ l.title }}</a>{{~ end ~}}</p>
+  </div>
+  <ul class="cgx-ipg__libs" aria-label="Libraries in ImagePlayground">
+    {{~ for lib in about.libraries ~}}
+    {{~ if lib.name == "CodeGlyphX" ~}}
+    <li class="is-current"><div><strong>{{ lib.name }}</strong><span>{{ lib.role }}</span><em>You are here</em></div></li>
+    {{~ else ~}}
+    <li><a href="{{ lib.url }}"><strong>{{ lib.name }}</strong><span>{{ lib.role }}</span></a></li>
+    {{~ end ~}}
+    {{~ end ~}}
+  </ul>
+</aside>

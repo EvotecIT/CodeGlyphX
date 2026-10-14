@@ -3,10 +3,11 @@
   <div class="cgx-ps__inner">
     <div class="cgx-ps__head">
       <h2 id="cgx-ps-title">CodeGlyphX in PowerShell</h2>
-      <p>{{ ps.intro }} ImagePlayground {{ ip.module.version }} exports {{ ip.module.codeGlyphXCommandCount }} of these commands for {{ ip.module.powerShell }}.</p>
+      <p>{{ ps.intro }} ImagePlayground exports {{ ip.module.codeGlyphXCommandCount }} of these commands for {{ ip.module.powerShell }}.</p>
       <ul class="cgx-ps__families">{{ for f in ip.families }}<li><strong>{{ f.commandCount }}</strong><span>{{ f.title }}</span></li>{{ end }}</ul>
       <div class="cgx-install cgx-install--ps"><code><span aria-hidden="true">PS&gt;</span> {{ ip.module.install }}</code><button type="button" class="copy-btn cgx-copy" data-copy="{{ ip.module.install }}">Copy</button></div>
     </div>
+    {{ include "landing/imageplayground-about" }}
     <div class="cgx-ps__grid">
       {{~ for e in ps.examples ~}}
       <article class="cgx-ps__item">
