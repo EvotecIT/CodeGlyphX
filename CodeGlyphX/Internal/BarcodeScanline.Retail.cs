@@ -170,18 +170,27 @@ internal static partial class BarcodeScanline {
         // Reversing a row changes floating-point addition order. Keep the same
         // digit for equal constrained fits instead of letting rounding pick a tie.
         var tieTolerance = parity < 0 ? 0 : pitch * pitch * 1e-12;
+        // Every retail digit uses widths of one through four modules. Reuse
+        // each residual across the odd/even patterns, preserving the original
+        // arithmetic and fit order, including constrained-family ties.
+        Span<double> residuals = stackalloc double[16];
+        var limit = pitch * 0.7 + 0.5;
+        for (var i = 0; i < 4; i++) {
+            for (var modules = 1; modules <= 4; modules++) {
+                var residual = Math.Abs(runs[start + i] - modules * pitch);
+                residuals[i * 4 + modules - 1] = residual > limit
+                    ? double.PositiveInfinity : residual * residual;
+            }
+        }
         // BuildRetailDigitRuns interleaves odd and even patterns for every digit.
         // A fixed family narrows the search without increasing any fit tolerance.
         for (var index = Math.Max(0, parity); index < RetailDigitRuns.Length; index += parity < 0 ? 1 : 2) {
             var candidate = RetailDigitRuns[index];
             var error = 0.0;
-            var valid = true;
             for (var i = 0; i < 4; i++) {
-                var residual = Math.Abs(runs[start + i] - candidate[i] * pitch);
-                if (residual > pitch * 0.7 + 0.5) { valid = false; break; }
-                error += residual * residual;
+                error += residuals[i * 4 + candidate[i] - 1];
             }
-            if (valid && error + tieTolerance < fit) { pattern = candidate; fit = error; }
+            if (error + tieTolerance < fit) { pattern = candidate; fit = error; }
         }
         return pattern.Length != 0 && fit / (pitch * pitch) < 1.0;
     }
