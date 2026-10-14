@@ -1,0 +1,2346 @@
+[
+  {
+    "Id": "code128-2/39.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/05.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/3.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/13.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "0200123456789"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/15.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/12.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/10.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/03.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "005-3379497200006"
+    ],
+    "Actual": [
+      "005-3379497200006"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/08.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/2.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/23.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/15.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/34.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/35.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/37.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/40.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/11.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/26.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "31001171800000017989625355702636"
+    ],
+    "Actual": [
+      "31001171800000017989625355702636"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/9.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "0200123456789"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/4.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/36.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/23.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "0001234567890"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/09.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/14.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/1.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/31.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "42094043"
+    ],
+    "Actual": [
+      "42094043"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/21.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/6.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "0200123456789"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/5.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/8.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "0200123456789"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/32.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "42094043"
+    ],
+    "Actual": [
+      "42094043"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/07.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/20.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "FW727"
+    ],
+    "Actual": [
+      "FW727"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/16.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/01.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "005-3379497200006"
+    ],
+    "Actual": [
+      "005-3379497200006"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/21.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "0001234567890"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/29.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "42094043"
+    ],
+    "Actual": [
+      "42094043"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/33.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/06.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/13.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/17.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/14.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "0200123456789"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/22.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/25.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "31001171800000017989625355702636"
+    ],
+    "Actual": [
+      "31001171800000017989625355702636"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/24.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/38.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/10.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/20.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "0001234567890"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "rss14-2/16.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/27.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "31001171800000017989625355702636"
+    ],
+    "Actual": [
+      "31001171800000017989625355702636"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/12.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/17.png",
+    "Format": "Code128",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "FW727"
+    ],
+    "Actual": [
+      "FW727"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "code128-2/39.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/05.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/3.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/13.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "02001234567893"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/15.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/12.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/10.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/03.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "005-3379497200006"
+    ],
+    "Actual": [
+      "005-3379497200006"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/08.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/2.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/23.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/15.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/34.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/35.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/37.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/40.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/11.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/26.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "31001171800000017989625355702636"
+    ],
+    "Actual": [
+      "31001171800000017989625355702636"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/9.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/4.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/36.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/23.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/09.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/14.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/1.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/31.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "42094043"
+    ],
+    "Actual": [
+      "42094043"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/21.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/6.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "02001234567893"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/5.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/8.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "02001234567893"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/32.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "42094043"
+    ],
+    "Actual": [
+      "42094043"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/07.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/20.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "FW727"
+    ],
+    "Actual": [
+      "FW727"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/16.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/01.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "005-3379497200006"
+    ],
+    "Actual": [
+      "005-3379497200006"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/21.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [],
+    "Missing": [
+      "00012345678905"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/29.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "42094043"
+    ],
+    "Actual": [
+      "42094043"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/33.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/06.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/13.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/17.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/14.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/22.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/25.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "31001171800000017989625355702636"
+    ],
+    "Actual": [
+      "31001171800000017989625355702636"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/24.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/38.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/10.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/20.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/16.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/27.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "31001171800000017989625355702636"
+    ],
+    "Actual": [
+      "31001171800000017989625355702636"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/12.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/17.png",
+    "Format": "Code128",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "FW727"
+    ],
+    "Actual": [
+      "FW727"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/39.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/05.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/3.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/13.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "(01)02001234567893"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/15.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/12.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/10.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/03.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "005-3379497200006"
+    ],
+    "Actual": [
+      "005-3379497200006"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/08.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/2.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/23.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/15.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/34.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/35.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/37.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/40.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/11.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/26.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "31001171800000017989625355702636"
+    ],
+    "Actual": [
+      "31001171800000017989625355702636"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/9.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "(01)02001234567893"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/4.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/36.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/23.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "(01)00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/09.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/14.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/1.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "04412345678909"
+    ],
+    "Actual": [],
+    "Missing": [
+      "04412345678909"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/31.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "42094043"
+    ],
+    "Actual": [
+      "42094043"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/21.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/6.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "(01)02001234567893"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/5.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/8.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "(01)02001234567893"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/32.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "42094043"
+    ],
+    "Actual": [
+      "42094043"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/07.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/20.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "FW727"
+    ],
+    "Actual": [
+      "FW727"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/16.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/01.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "005-3379497200006"
+    ],
+    "Actual": [
+      "005-3379497200006"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/21.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "(01)00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/29.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "42094043"
+    ],
+    "Actual": [
+      "42094043"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/33.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "30885909173823"
+    ],
+    "Actual": [
+      "30885909173823"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/06.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "15182881"
+    ],
+    "Actual": [
+      "15182881"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/13.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "1PEF224A4"
+    ],
+    "Actual": [
+      "1PEF224A4"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/17.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/14.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "(01)02001234567893"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/22.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/25.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "31001171800000017989625355702636"
+    ],
+    "Actual": [
+      "31001171800000017989625355702636"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/24.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "005-3354174500018"
+    ],
+    "Actual": [
+      "005-3354174500018"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/38.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "FGGQ6D1"
+    ],
+    "Actual": [
+      "FGGQ6D1"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/10.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/20.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "00012345678905"
+    ],
+    "Actual": [
+      "(01)00012345678905"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "rss14-2/16.png",
+    "Format": "Gs1DataBarOmnidirectional",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "02001234567893"
+    ],
+    "Actual": [
+      "(01)01234567890128"
+    ],
+    "Missing": [
+      "02001234567893"
+    ],
+    "Unexpected": [
+      "01234567890128"
+    ],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/27.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "31001171800000017989625355702636"
+    ],
+    "Actual": [
+      "31001171800000017989625355702636"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/12.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "CNK8181G2C"
+    ],
+    "Actual": [
+      "CNK8181G2C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "code128-2/17.png",
+    "Format": "Code128",
+    "Engine": "ZXing-C++",
+    "Expected": [
+      "FW727"
+    ],
+    "Actual": [
+      "FW727"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  }
+]

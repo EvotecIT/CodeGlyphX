@@ -81,6 +81,10 @@
         <p><a href="/comparisons/evidence/{{ photo_set.manifest }}">Inputs</a> · <a href="/comparisons/evidence/{{ photo_set.before_file }}">Previous outcomes</a> · <a href="/comparisons/evidence/{{ photo_set.current_file }}">Current outcomes</a></p>
     </section>
     {{ end }}
+    {{ if comparison.retail_digit_fits }}
+    {{ session_costs = comparison.retail_digit_fits }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
     {{ if comparison.png_output }}
     {{ include "shortcodes/png-output" }}
     {{ session_costs = comparison.png_output }}

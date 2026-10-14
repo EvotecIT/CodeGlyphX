@@ -1,4 +1,20 @@
 """Reject current comparison packets from another source, binary or CPU placement."""
+import math
+import statistics
+
+
+def _validate_summary_measurements(summary, samples, allocation_metric='AllocatedBytes'):
+    if (len(samples) != 12 or {r['Iteration'] for r in samples} != set(range(12))
+            or any(r['Status'] not in (0, 'Succeeded') for r in samples)):
+        raise ValueError('Missing, duplicated or failed measured sample')
+    median = statistics.median(r['DurationMs'] for r in samples)
+    # PowerForge records its own allocation counter on the sample. Explicit
+    # generation counters live in Metrics and cover only the public operation.
+    allocated = statistics.mean(r['AllocatedBytes'] if allocation_metric == 'AllocatedBytes'
+        else r['Metrics'][allocation_metric] for r in samples)
+    if (not math.isclose(summary['MedianMs'], median, rel_tol=1e-10, abs_tol=1e-9)
+            or not math.isclose(summary['Metrics'][allocation_metric], allocated, rel_tol=1e-10, abs_tol=1e-7)):
+        raise ValueError('Packet summary differs from retained measurements')
 
 
 def project_paired_cost(packet, source, core, previous_core, domain, requests, manifest_hash):
@@ -36,6 +52,8 @@ def validate_paired_packet(packet, source, core, previous_core, domain, requests
         samples = [r for r in packet['Samples'] if r['Engine'] == engine and r['Iteration'] >= 0]
         if len(samples) != 12 or any(r['Metrics']['Requests'] != requests for r in samples):
             raise ValueError('Paired packet request samples differ')
+        summary = next(r for r in packet['Summary'] if r['Engine'] == engine)
+        _validate_summary_measurements(summary, samples)
 
 
 def validate_qualified_whole_image_packet(packet, qualification, domain):
@@ -65,3 +83,8 @@ def validate_current_packet(packet, qualification, kind, domain):
             raise ValueError('Generation host differs from the qualified comparison host')
     elif metadata['benchmark.ManifestSha256'] != qualification['LatencyManifestSha256']:
         raise ValueError('Decode requests differ from the qualified latency manifest')
+    for summary in packet['Summary']:
+        samples = [r for r in packet['Samples'] if r['Iteration'] >= 0
+            and all(r[key] == summary[key] for key in ('Engine', 'Scenario', 'Operation'))]
+        _validate_summary_measurements(summary, samples,
+            'ManagedAllocatedBytes' if kind == 'generation' else 'AllocatedBytes')

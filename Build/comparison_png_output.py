@@ -128,7 +128,8 @@ def project_png_buffers_and_generation(root, proof, owner):
 def append_png_output_section(lines, projected):
     if not projected:
         return
-    lines += ['', '## PNG output allocation and stream correctness', '', projected['changes'], '', projected['contracts'], '',
+    lines += ['', ('## Historical PNG output allocation and stream correctness' if projected['historical'] else '## PNG output allocation and stream correctness'), '',
+        (f'This PNG study retains its original source {projected["source"]} and binary identities.' if projected['historical'] else ''), '', projected['changes'], '', projected['contracts'], '',
         'Seven public rendering probes preserve identical PNG bytes and decoded pixels against the preceding binary. Allocation counters cover 100 outputs after five priming calls; these probes do not rank elapsed time.', '',
         '| Public path | Previous managed KiB / 100 outputs | Current managed KiB / 100 outputs | Reduction |',
         '| --- | ---: | ---: | ---: |']

@@ -1,5 +1,6 @@
 <section class="benchmark-section" aria-labelledby="png-output-buffers">
-    <h2 id="png-output-buffers">PNG output allocation and stream correctness</h2>
+    <h2 id="png-output-buffers">{{ if comparison.png_output.historical }}Retained PNG study: {{ end }}PNG output allocation and stream correctness</h2>
+    {{ if comparison.png_output.historical }}<p>This PNG study retains its original binaries, measurements and test results.</p>{{ end }}
     <p>{{ comparison.png_output.changes }}</p>
     <p>{{ comparison.png_output.contracts }}</p>
     <p>Seven public rendering probes produce identical PNG bytes and decoded pixels with fewer managed allocations. Each probe creates 100 outputs after five priming calls. These counters do not rank elapsed time.</p>

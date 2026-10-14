@@ -29,6 +29,7 @@ from comparison_databar_expanded_workspace import project_databar_expanded_works
 from comparison_linear_run_workspace import project_linear_run_workspace
 from comparison_code128_photos import project_code128_photos
 from comparison_databar_separator_geometry import project_databar_separator_geometry
+from comparison_retail_digit_fits import project_retail_digit_fits
 from comparison_png_output import project_png_output, append_png_output_section
 from comparison_code128_photo_set import append_photograph_section
 from comparison_dpm_workspace import project_dpm_workspace
@@ -88,6 +89,8 @@ def main():
     names += sorted(path.name for path in root.glob("historical-databar-character-*.json"))
     names += sorted(path.name for path in root.glob("databar-buffers-*.json"))
     names += sorted(path.name for path in root.glob("historical-databar-buffers-*.json"))
+    names += sorted(path.name for path in root.glob("retail-digit-*.json"))
+    names += sorted(path.name for path in root.glob("historical-retail-digit-*.json"))
     names += sorted(path.name for path in root.glob("png-output-*.json"))
     names += sorted(path.name for path in root.glob("historical-png-output-*.json"))
     names += sorted(path.name for path in root.glob("databar-separator-*.json"))
@@ -504,6 +507,9 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    retail_digit_fits = project_retail_digit_fits(root, qualification)
+    append_retained_context_section(lines, retail_digit_fits)
+    append_photograph_section(lines, retail_digit_fits)
     png_output = project_png_output(root, qualification)
     append_png_output_section(lines, png_output)
     append_photograph_section(lines, png_output)
