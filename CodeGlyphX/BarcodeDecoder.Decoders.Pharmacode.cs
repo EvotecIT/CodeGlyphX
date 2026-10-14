@@ -3,9 +3,9 @@ using CodeGlyphX.Pharmacode;
 namespace CodeGlyphX;
 
 public static partial class BarcodeDecoder {
-    private static bool TryDecodePharmacodeWithBackground(bool[] modules, bool[] physicalModules,
+    private static bool TryDecodePharmacodeWithBackground(ref ModuleRunWorkspace runWorkspace, bool[] physicalModules,
         bool? backgroundIsDark, bool allowPharmacode, out string text) {
-        if (!TryDecodePharmacode(modules, out text)) return false;
+        if (!TryDecodePharmacode(ref runWorkspace, out text)) return false;
         // Perform the additional image check only for a valid interpretation
         // that conflicts with the proposed endpoint polarity. Other formats and
         // ordinary successful Pharmacodes retain their existing search cost.
@@ -28,41 +28,56 @@ public static partial class BarcodeDecoder {
         if (last < first) return false;
         var foreground = new bool[last - first + 1];
         for (var i = 0; i < foreground.Length; i++) foreground[i] = modules[first + i] != backgroundIsDark;
-        var runs = GetRuns(foreground);
-        var minimumBar = int.MaxValue;
-        for (var i = 0; i < runs.Length; i += 2) {
-            minimumBar = System.Math.Min(minimumBar, runs[i]);
-        }
-        if (first == 0 && last == modules.Length - 1) return false;
-        if (first > 0 && (long)first < (long)minimumBar * 2) return false;
-        if (last < modules.Length - 1 && (long)modules.Length - last - 1 < (long)minimumBar * 2) return false;
-        if (TryDecodePharmacode(foreground, out _)) return true;
-        var partStart = 0;
-        var offset = 0;
-        var parts = 0;
-        for (var i = 0; i < runs.Length; i++) {
-            var gap = runs[i];
-            if ((i & 1) != 0 && (long)gap >= (long)minimumBar * 4) {
-                if (!ValidPart(partStart, offset)) return false;
-                partStart = offset + gap;
-                parts++;
+        var runWorkspace = new ModuleRunWorkspace(foreground);
+        try {
+            var runs = runWorkspace.Runs;
+            var minimumBar = int.MaxValue;
+            for (var i = 0; i < runs.Length; i += 2) {
+                minimumBar = System.Math.Min(minimumBar, runs[i]);
             }
-            offset += gap;
-        }
-        return parts > 0 && ValidPart(partStart, foreground.Length);
+            if (first == 0 && last == modules.Length - 1) return false;
+            if (first > 0 && (long)first < (long)minimumBar * 2) return false;
+            if (last < modules.Length - 1 && (long)modules.Length - last - 1 < (long)minimumBar * 2) return false;
+            if (TryDecodePharmacode(ref runWorkspace, out _)) return true;
+            var partStart = 0;
+            var offset = 0;
+            var parts = 0;
+            for (var i = 0; i < runs.Length; i++) {
+                var gap = runs[i];
+                if ((i & 1) != 0 && (long)gap >= (long)minimumBar * 4) {
+                    if (!ValidPart(partStart, offset)) return false;
+                    partStart = offset + gap;
+                    parts++;
+                }
+                offset += gap;
+            }
+            return parts > 0 && ValidPart(partStart, foreground.Length);
 
-        bool ValidPart(int start, int end) {
-            var part = new bool[end - start];
-            System.Array.Copy(foreground, start, part, 0, part.Length);
-            return TryDecodePharmacode(part, out _);
+            bool ValidPart(int start, int end) {
+                var part = new bool[end - start];
+                System.Array.Copy(foreground, start, part, 0, part.Length);
+                return TryDecodePharmacode(part, out _);
+            }
+        } finally {
+            runWorkspace.Dispose();
         }
     }
 
     private static bool TryDecodePharmacode(bool[] modules, out string text) {
+        var runWorkspace = new ModuleRunWorkspace(modules);
+        try {
+            return TryDecodePharmacode(ref runWorkspace, out text);
+        } finally {
+            runWorkspace.Dispose();
+        }
+    }
+
+    private static bool TryDecodePharmacode(ref ModuleRunWorkspace runWorkspace, out string text) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         if (modules.Length < 3 || !modules[0]) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if ((runs.Length & 1) == 0) return false;
         var barCount = (runs.Length + 1) / 2;
         if (barCount < PharmacodeEncoder.MinBars || barCount > PharmacodeEncoder.MaxBars) return false;

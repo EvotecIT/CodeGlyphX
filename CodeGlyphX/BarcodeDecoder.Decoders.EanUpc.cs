@@ -495,7 +495,7 @@ public static partial class BarcodeDecoder {
         return key;
     }
 
-    private static int PatternKey(int[] runs, int offset, int count) {
+    private static int PatternKey(ReadOnlySpan<int> runs, int offset, int count) {
         var key = 0;
         for (var i = 0; i < count; i++) {
             key = key * 10 + runs[offset + i];

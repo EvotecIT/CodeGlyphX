@@ -36,6 +36,7 @@
     <Compile Include="CodabarRunLocalizationTests.cs" />
     <Compile Include="BarcodeGrayBoundaryTests.cs" />
     <Compile Include="BarcodeModuleOwnershipTests.cs" />
+    <Compile Include="ModuleRunWorkspaceTests.cs" />
     <Compile Include="DecodeBudgetSnapshotTests.cs" />
     <Compile Include="ImageComponentCoordinateTests.cs" />
     <Compile Include="DirectPartMarkWindowTests.cs" />

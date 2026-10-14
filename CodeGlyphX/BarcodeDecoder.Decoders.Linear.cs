@@ -16,7 +16,6 @@ using CodeGlyphX.Internal;
 using CodeGlyphX.Msi;
 using CodeGlyphX.PatchCode;
 using CodeGlyphX.Plessey;
-using CodeGlyphX.Telepen;
 using CodeGlyphX.UpcA;
 using CodeGlyphX.UpcE;
 
@@ -92,12 +91,13 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryDecodeCodabar(bool[] modules, out string text) {
+    private static bool TryDecodeCodabar(ref ModuleRunWorkspace runWorkspace, out string text) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         if (modules.Length < 7) return false;
         if (!modules[0]) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if (runs.Length < 7) return false;
 
         var maxSymbols = (runs.Length + 1) / 8;
@@ -177,12 +177,13 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryDecodeCode11(bool[] modules, BarcodeDecodeOptions? options, out string text) {
+    private static bool TryDecodeCode11(ref ModuleRunWorkspace runWorkspace, BarcodeDecodeOptions? options, out string text) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         if (modules.Length < 7) return false;
         if (!modules[0]) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if (runs.Length < 5) return false;
 
         var maxSymbols = (runs.Length + 1) / 6;
@@ -239,19 +240,26 @@ public static partial class BarcodeDecoder {
         }
     }
 
-    private static bool TryDecodePlessey(bool[] modules, BarcodeDecodeOptions? options, out string text) {
-        if (TryDecodePlesseyInternal(modules, options, out text)) return true;
+    private static bool TryDecodePlessey(ref ModuleRunWorkspace runWorkspace, BarcodeDecodeOptions? options, out string text) {
+        var modules = runWorkspace.Modules;
+        if (TryDecodePlesseyInternal(ref runWorkspace, options, out text)) return true;
         var reversed = new bool[modules.Length];
         for (var i = 0; i < modules.Length; i++) reversed[i] = modules[modules.Length - 1 - i];
-        return TryDecodePlesseyInternal(reversed, options, out text);
+        var reversedWorkspace = new ModuleRunWorkspace(reversed);
+        try {
+            return TryDecodePlesseyInternal(ref reversedWorkspace, options, out text);
+        } finally {
+            reversedWorkspace.Dispose();
+        }
     }
 
-    private static bool TryDecodePlesseyInternal(bool[] modules, BarcodeDecodeOptions? options, out string text) {
+    private static bool TryDecodePlesseyInternal(ref ModuleRunWorkspace runWorkspace, BarcodeDecodeOptions? options, out string text) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         if (modules.Length < 24) return false;
         if (!modules[0]) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if (runs.Length < 13) return false;
         if ((runs.Length & 1) == 0) return false;
 
@@ -325,12 +333,13 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryDecodePatchCode(bool[] modules, out string text) {
+    private static bool TryDecodePatchCode(ref ModuleRunWorkspace runWorkspace, out string text) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         if (modules.Length < 7) return false;
         if (!modules[0]) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if (runs.Length != 7) return false;
 
         if (!TryGetRunThreshold(runs, startIndex: 0, step: 1, out var threshold)) return false;
@@ -344,152 +353,13 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryDecodeTelepen(bool[] modules, out string text) {
-        text = string.Empty;
-        if (modules.Length < 8) return false;
-        if (!modules[0]) return false;
-
-        var runs = GetRuns(modules);
-        if (!TryNormalizeTelepenRuns(runs, out var normalized)) return false;
-        if (!TryGetRunThreshold(normalized, startIndex: 0, step: 1, out var threshold)) return false;
-
-        var pairKinds = BuildTelepenPairKinds(normalized, threshold);
-        if (!TryBuildTelepenBits(pairKinds, out var bits)) return false;
-        if (!TryBuildTelepenValues(bits, out var values)) return false;
-        if (!TryValidateTelepenValues(values, out var dataLen)) return false;
-
-        var chars = new char[dataLen];
-        for (var i = 0; i < dataLen; i++) {
-            chars[i] = (char)values[i + 1];
-        }
-
-        text = new string(chars);
-        return true;
-    }
-
-    private static bool TryNormalizeTelepenRuns(int[] runs, out int[] normalized) {
-        normalized = runs;
-        if ((runs.Length & 1) == 0) return true;
-
-        // Telepen ends with a space; TrimModules removes trailing spaces, so pad with a narrow space run.
-        var min = int.MaxValue;
-        for (var i = 0; i < runs.Length; i++) {
-            if (runs[i] < min) min = runs[i];
-        }
-        if (min <= 0) return false;
-
-        var padded = new int[runs.Length + 1];
-        Array.Copy(runs, padded, runs.Length);
-        padded[padded.Length - 1] = min;
-        normalized = padded;
-        return (normalized.Length & 1) == 0;
-    }
-
-    private static TelepenPairKind[] BuildTelepenPairKinds(int[] runs, double threshold) {
-        var pairs = runs.Length / 2;
-        var pairKinds = new TelepenPairKind[pairs];
-        for (var i = 0; i < pairs; i++) {
-            var barWide = runs[i * 2] > threshold;
-            var spaceWide = runs[i * 2 + 1] > threshold;
-            pairKinds[i] = GetTelepenPairKind(barWide, spaceWide);
-        }
-        return pairKinds;
-    }
-
-    private static bool TryBuildTelepenBits(TelepenPairKind[] pairKinds, out List<bool> bits) {
-        bits = new List<bool>(pairKinds.Length * 2);
-        var skipUntil = 0;
-        for (var i = 0; i < pairKinds.Length; i++) {
-            if (i < skipUntil) continue;
-            switch (pairKinds[i]) {
-                case TelepenPairKind.NarrowNarrow:
-                    bits.Add(true);
-                    break;
-                case TelepenPairKind.WideNarrow:
-                    bits.Add(false);
-                    bits.Add(false);
-                    break;
-                case TelepenPairKind.WideWide:
-                    bits.Add(false);
-                    bits.Add(true);
-                    bits.Add(false);
-                    break;
-                case TelepenPairKind.NarrowWide: {
-                    var j = i + 1;
-                    var middle = 0;
-                    while (j < pairKinds.Length && pairKinds[j] == TelepenPairKind.NarrowNarrow) {
-                        middle++;
-                        j++;
-                    }
-                    if (j >= pairKinds.Length || pairKinds[j] != TelepenPairKind.NarrowWide) return false;
-                    bits.Add(false);
-                    for (var k = 0; k < middle + 2; k++) bits.Add(true);
-                    bits.Add(false);
-                    skipUntil = j + 1;
-                    break;
-                }
-                default:
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    private static bool TryBuildTelepenValues(List<bool> bits, out byte[] values) {
-        values = Array.Empty<byte>();
-        if ((bits.Count & 7) != 0) return false;
-        var byteCount = bits.Count / 8;
-        if (byteCount < 3) return false;
-
-        var result = new byte[byteCount];
-        var bitIndex = 0;
-        for (var i = 0; i < byteCount; i++) {
-            var value = 0;
-            for (var b = 0; b < 8; b++) {
-                if (bits[bitIndex++]) value |= 1 << b;
-            }
-            var full = (byte)value;
-            if (!TelepenTables.HasEvenParity(full)) return false;
-            result[i] = (byte)(full & 0x7F);
-        }
-
-        values = result;
-        return true;
-    }
-
-    private static bool TryValidateTelepenValues(byte[] values, out int dataLen) {
-        dataLen = 0;
-        if (values[0] != TelepenTables.StartValue) return false;
-        if (values[values.Length - 1] != TelepenTables.StopValue) return false;
-
-        var checkIndex = values.Length - 2;
-        if (checkIndex <= 0) return false;
-
-        var checksum = TelepenTables.CalcChecksum(values, 1, checkIndex - 1);
-        if (values[checkIndex] != checksum) return false;
-
-        dataLen = checkIndex - 1;
-        return true;
-    }
-
-    private enum TelepenPairKind {
-        NarrowNarrow,
-        WideNarrow,
-        WideWide,
-        NarrowWide
-    }
-
-    private static TelepenPairKind GetTelepenPairKind(bool barWide, bool spaceWide) {
-        if (barWide) return spaceWide ? TelepenPairKind.WideWide : TelepenPairKind.WideNarrow;
-        return spaceWide ? TelepenPairKind.NarrowWide : TelepenPairKind.NarrowNarrow;
-    }
-
-    private static bool TryDecodeItf14(bool[] modules, out string text) {
+    private static bool TryDecodeItf14(ref ModuleRunWorkspace runWorkspace, out string text) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         if (modules.Length < 15) return false;
         if (!modules[0]) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if (runs.Length < 7) return false;
 
         var minRun = int.MaxValue;
@@ -560,12 +430,13 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryDecodeItf(bool[] modules, out string text) {
+    private static bool TryDecodeItf(ref ModuleRunWorkspace runWorkspace, out string text) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         if (modules.Length < 15) return false;
         if (!modules[0]) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if (runs.Length < 7) return false;
         if (!TryGetRunThreshold(runs, startIndex: 0, step: 1, out var threshold)) return false;
         if (!TryValidateItfStart(runs, threshold)) return false;
@@ -576,24 +447,25 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryDecodeMatrix2of5(bool[] modules, out string text) {
-        return TryDecodeDiscrete2of5(modules, Matrix2of5StartBars, Matrix2of5StopBars, out text);
+    private static bool TryDecodeMatrix2of5(ref ModuleRunWorkspace runWorkspace, out string text) {
+        return TryDecodeDiscrete2of5(ref runWorkspace, Matrix2of5StartBars, Matrix2of5StopBars, out text);
     }
 
-    private static bool TryDecodeIndustrial2of5(bool[] modules, out string text) {
-        return TryDecodeDiscrete2of5(modules, Industrial2of5StartBars, Industrial2of5StopBars, out text);
+    private static bool TryDecodeIndustrial2of5(ref ModuleRunWorkspace runWorkspace, out string text) {
+        return TryDecodeDiscrete2of5(ref runWorkspace, Industrial2of5StartBars, Industrial2of5StopBars, out text);
     }
 
-    private static bool TryDecodeIata2of5(bool[] modules, out string text) {
-        return TryDecodeDiscrete2of5(modules, Iata2of5StartBars, Iata2of5StopBars, out text);
+    private static bool TryDecodeIata2of5(ref ModuleRunWorkspace runWorkspace, out string text) {
+        return TryDecodeDiscrete2of5(ref runWorkspace, Iata2of5StartBars, Iata2of5StopBars, out text);
     }
 
-    private static bool TryDecodeDiscrete2of5(bool[] modules, int[] startBars, int[] stopBars, out string text) {
+    private static bool TryDecodeDiscrete2of5(ref ModuleRunWorkspace runWorkspace, int[] startBars, int[] stopBars, out string text) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         if (modules.Length < 15) return false;
         if (!modules[0]) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if (runs.Length < startBars.Length * 2 + stopBars.Length * 2) return false;
         if (!TryGetRunThreshold(runs, startIndex: 0, step: 1, out var threshold)) return false;
         if (!AreRunsBelowThreshold(runs, startIndex: 1, step: 2, threshold)) return false;
@@ -604,7 +476,7 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryValidateItfStart(int[] runs, double threshold) {
+    private static bool TryValidateItfStart(ReadOnlySpan<int> runs, double threshold) {
         if (runs.Length < 4) return false;
         for (var i = 0; i < 4; i++) {
             if (runs[i] > threshold) return false;
@@ -612,7 +484,7 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryValidateItfStop(int[] runs, double threshold, int pos) {
+    private static bool TryValidateItfStop(ReadOnlySpan<int> runs, double threshold, int pos) {
         if (pos + 2 >= runs.Length) return false;
         if (runs[pos] <= threshold) return false;
         if (runs[pos + 1] > threshold) return false;
@@ -620,7 +492,7 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool TryDecodeItfPairs(int[] runs, double threshold, int startIndex, out char[] digits, out int stopPos) {
+    private static bool TryDecodeItfPairs(ReadOnlySpan<int> runs, double threshold, int startIndex, out char[] digits, out int stopPos) {
         digits = Array.Empty<char>();
         stopPos = 0;
 
@@ -649,7 +521,7 @@ public static partial class BarcodeDecoder {
     }
 
     private static bool TryBuildDiscrete2of5Bars(
-        int[] runs,
+        ReadOnlySpan<int> runs,
         double threshold,
         int[] startBars,
         int[] stopBars,
@@ -702,7 +574,7 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static int PatternKey(int[] runs, int start, double threshold) {
+    private static int PatternKey(ReadOnlySpan<int> runs, int start, double threshold) {
         var key = 0;
         var idx = start;
         for (var i = 0; i < 5; i++) {
@@ -713,7 +585,7 @@ public static partial class BarcodeDecoder {
         return key;
     }
 
-    private static bool TryGetRunThreshold(int[] runs, int startIndex, int step, out double threshold) {
+    private static bool TryGetRunThreshold(ReadOnlySpan<int> runs, int startIndex, int step, out double threshold) {
         threshold = 0;
         if (runs.Length == 0 || step <= 0 || startIndex < 0 || startIndex >= runs.Length) return false;
         var min = int.MaxValue;
@@ -728,14 +600,14 @@ public static partial class BarcodeDecoder {
         return true;
     }
 
-    private static bool AreRunsBelowThreshold(int[] runs, int startIndex, int step, double threshold) {
+    private static bool AreRunsBelowThreshold(ReadOnlySpan<int> runs, int startIndex, int step, double threshold) {
         for (var i = startIndex; i < runs.Length; i += step) {
             if (runs[i] > threshold) return false;
         }
         return true;
     }
 
-    private static int BuildPatchKey(int[] runs, double threshold) {
+    private static int BuildPatchKey(ReadOnlySpan<int> runs, double threshold) {
         var key = 0;
         for (var i = 0; i < 4; i++) {
             if (runs[i * 2] > threshold) key |= 1 << (3 - i);

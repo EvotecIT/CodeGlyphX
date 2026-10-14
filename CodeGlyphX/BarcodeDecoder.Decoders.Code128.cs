@@ -4,25 +4,31 @@ using CodeGlyphX.Code128;
 namespace CodeGlyphX;
 
 public static partial class BarcodeDecoder {
-    private static bool TryDecodeCode128(bool[] modules, out string text, out bool isGs1, out bool readerInitialization) {
-        return TryDecodeCode128(modules, out text, out isGs1, out readerInitialization, out _);
+    private static bool TryDecodeCode128(ref ModuleRunWorkspace runWorkspace, out string text, out bool isGs1, out bool readerInitialization) {
+        return TryDecodeCode128(ref runWorkspace, out text, out isGs1, out readerInitialization, out _);
     }
 
     internal static bool TryDecodeGs1CompositeCarrier(bool[] modules, out string text, out int compositeLinkage) {
-        return TryDecodeCode128(modules, out text, out var isGs1, out var readerInitialization, out compositeLinkage)
-            && isGs1
-            && !readerInitialization
-            && compositeLinkage != 0;
+        var runWorkspace = new ModuleRunWorkspace(modules);
+        try {
+            return TryDecodeCode128(ref runWorkspace, out text, out var isGs1, out var readerInitialization, out compositeLinkage)
+                && isGs1
+                && !readerInitialization
+                && compositeLinkage != 0;
+        } finally {
+            runWorkspace.Dispose();
+        }
     }
 
-    private static bool TryDecodeCode128(bool[] modules, out string text, out bool isGs1, out bool readerInitialization, out int compositeLinkage) {
+    private static bool TryDecodeCode128(ref ModuleRunWorkspace runWorkspace, out string text, out bool isGs1, out bool readerInitialization, out int compositeLinkage) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         isGs1 = false;
         readerInitialization = false;
         compositeLinkage = 0;
         if (modules.Length < 24) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if (runs.Length < 6) return false;
         if (runs[0] == 0) return false;
 
