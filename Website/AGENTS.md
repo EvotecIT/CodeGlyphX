@@ -42,6 +42,7 @@ The home page (`content/pages/index.md`, layout `landing`) reads committed data.
 - PowerShell (home section and `/powershell/`): run both scripts against the same published ImagePlayground version, so the command list and the examples describe one release:
   - `pwsh ./build/Sync-ImagePlayground.ps1 [-ModulePath <ImagePlayground.psd1>]` writes `data/imageplayground.json`.
   - `pwsh ./build/Render-PowerShellExamples.ps1 [-ModulePath <ImagePlayground.psd1>] [-Id wifi,barcodes]` runs every `powershell/<id>.ps1` listed in `powershell/examples.json` and writes the files each one produced to `static/powershell/examples/<id>/`, plus `data/powershell-examples.json` (script text, console output, output files). Pages show scripts exactly as they ran; do not link to example files on GitHub.
+  - To preview a release before it reaches the PowerShell Gallery, point `-ModulePath` at an ImagePlayground checkout with `IMAGEPLAYGROUND_DEVELOPMENT=1` and pass `-ModuleVersion` with the version it will ship as. Do not publish pages rendered that way until that version is on the Gallery.
   - `data/powershell-roadmap.json` is hand-maintained: what CodeGlyphX can do and whether ImagePlayground exposes it (`available`, `partial`, `planned`). Update it when ImagePlayground ships new commands, and test anything marked available.
 
 ## Deploy + Recovery

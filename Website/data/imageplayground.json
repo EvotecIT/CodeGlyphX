@@ -2,8 +2,8 @@
   "generatedBy": "Website/build/Sync-ImagePlayground.ps1",
   "module": {
     "name": "ImagePlayground",
-    "version": "3.2.7",
-    "commandCount": 131,
+    "version": "3.3.0",
+    "commandCount": 132,
     "codeGlyphXCommandCount": 20,
     "install": "Install-Module -Name ImagePlayground -Scope CurrentUser",
     "powerShell": "Windows PowerShell 5.1 and PowerShell 7+"

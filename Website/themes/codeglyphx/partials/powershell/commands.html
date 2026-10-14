@@ -9,7 +9,7 @@
     <section class="cgx-cmds__family{{ if f.commandCount > 6 }} cgx-cmds__family--wide{{ end }}" aria-labelledby="cgx-cmds-{{ f.id }}">
       <h3 id="cgx-cmds-{{ f.id }}">{{ f.title }} <span>{{ f.commandCount }}</span></h3>
       <p>{{ f.description }}</p>
-      <ul>{{~ for c in f.commands ~}}<li><a href="https://evotec.xyz/projects/imageplayground/api/{{ c | string.downcase }}/">{{ c }}</a></li>{{~ end ~}}</ul>
+      <ul>{{~ for c in f.commands ~}}<li><a href="/powershell/commands/{{ c | string.downcase }}/">{{ c }}</a></li>{{~ end ~}}</ul>
     </section>
     {{~ end ~}}
   </div>

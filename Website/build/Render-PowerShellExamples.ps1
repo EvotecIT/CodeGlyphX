@@ -20,7 +20,9 @@
 [CmdletBinding()]
 param(
     [string] $ModulePath,
-    [string[]] $Id
+    [string[]] $Id,
+    # Version to show on the pages when rendering a pre-release build, for example 3.3.0.
+    [string] $ModuleVersion
 )
 
 $ErrorActionPreference = 'Stop'
@@ -38,7 +40,8 @@ if (-not $ModulePath) {
     $ModulePath = $installed.Path
 }
 $ModulePath = (Resolve-Path -LiteralPath $ModulePath).Path
-$moduleVersion = (Import-PowerShellDataFile -LiteralPath $ModulePath).ModuleVersion
+if (-not $ModuleVersion) { $ModuleVersion = (Import-PowerShellDataFile -LiteralPath $ModulePath).ModuleVersion }
+$moduleVersion = $ModuleVersion
 
 function Get-ImageSize([string] $path) {
     $bytes = [IO.File]::ReadAllBytes($path)
@@ -72,6 +75,10 @@ $results = foreach ($example in $manifest.examples) {
     # ImagePlayground resolves relative paths against the process directory, so pin both locations.
     $command = @"
 `$ErrorActionPreference = 'Stop'
+# en-US keeps number formatting in the console output independent of the machine that renders it.
+`$culture = [System.Globalization.CultureInfo]::GetCultureInfo('en-US')
+[System.Threading.Thread]::CurrentThread.CurrentCulture = `$culture
+[System.Threading.Thread]::CurrentThread.CurrentUICulture = `$culture
 Import-Module '$($ModulePath.Replace("'", "''"))'
 Set-Location -LiteralPath '$($outputDirectory.Replace("'", "''"))'
 [Environment]::CurrentDirectory = (Get-Location).Path
