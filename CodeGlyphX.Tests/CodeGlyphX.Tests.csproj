@@ -49,6 +49,7 @@
     <Compile Include="RetailFineContrastTests.cs" />
     <Compile Include="DataBar14RunLocalizationTests.cs" />
     <Compile Include="DataBar14CharacterRecoveryTests.cs" />
+    <Compile Include="ScanlineThresholdTests.cs" />
     <Compile Include="DataBarModuleRunTests.cs" />
     <Compile Include="DataBar14WorkspaceTests.cs" />
     <Compile Include="DataBarExpandedWorkspaceTests.cs" />

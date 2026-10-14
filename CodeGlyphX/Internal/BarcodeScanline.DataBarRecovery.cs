@@ -71,12 +71,15 @@ internal static partial class BarcodeScanline {
                     var observations = new List<DataBarRowObservation>();
                     rows[position] = observations;
                     var guarded = false;
-                    var previousThreshold = -1;
-                    for (var cutoff = 1; max - min >= 8 && cutoff < 16; cutoff++) {
+                    Span<int> thresholds = stackalloc int[15];
+                    var thresholdCount = 0;
+                    if (max - min >= 8) {
+                        for (var cutoff = 1; cutoff < 16; cutoff++) thresholds[thresholdCount++] = min + (max - min) * cutoff / 16;
+                        thresholdCount = ScanlineThresholds.RetainDistinct(buffer.AsSpan(0, length), token, thresholds, thresholdCount);
+                    }
+                    for (var cutoff = 0; cutoff < thresholdCount; cutoff++) {
                         if (DecodeBudget.ShouldAbort(token)) return false;
-                        var threshold = min + (max - min) * cutoff / 16;
-                        if (threshold == previousThreshold) continue;
-                        previousThreshold = threshold;
+                        var threshold = thresholds[cutoff];
                         var firstDark = buffer[0] < threshold;
                         var current = firstDark; var count = 1;
                         // Sampling is sequential; returned observations own their

@@ -518,30 +518,7 @@ internal static partial class BarcodeScanline {
             thresholds[count++] = min + range * 9 / 16;
         }
 
-        Span<int> darkCounts = stackalloc int[256];
-        darkCounts.Clear();
-        for (var x = 0; x < luminance.Length; x++) {
-            if ((x & 255) == 0 && DecodeBudget.ShouldAbort(cancellationToken)) return 0;
-            darkCounts[luminance[x]]++;
-        }
-        var below = 0;
-        for (var value = 0; value < darkCounts.Length; value++) {
-            var atValue = darkCounts[value];
-            darkCounts[value] = below;
-            below += atValue;
-        }
-        var distinct = 0;
-        for (var i = 0; i < count; i++) {
-            var threshold = thresholds[i];
-            var duplicate = false;
-            for (var previous = 0; previous < distinct; previous++) {
-                if (darkCounts[thresholds[previous]] != darkCounts[threshold]) continue;
-                duplicate = true;
-                break;
-            }
-            if (!duplicate) thresholds[distinct++] = threshold;
-        }
-        return distinct;
+        return ScanlineThresholds.RetainDistinct(luminance, cancellationToken, thresholds, count);
     }
     private static void AddUniqueLocatedCandidate(List<BarcodeScanlineCandidate> candidates, BarcodeScanlineCandidate candidate) {
         for (var i = 0; i < candidates.Count; i++) {
