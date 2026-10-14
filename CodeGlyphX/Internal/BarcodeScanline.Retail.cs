@@ -170,26 +170,30 @@ internal static partial class BarcodeScanline {
         // Reversing a row changes floating-point addition order. Keep the same
         // digit for equal constrained fits instead of letting rounding pick a tie.
         var tieTolerance = parity < 0 ? 0 : pitch * pitch * 1e-12;
-        // Every retail digit uses widths of one through four modules. Reuse
-        // each residual across the odd/even patterns, preserving the original
-        // arithmetic and fit order, including constrained-family ties.
-        Span<double> residuals = stackalloc double[16];
+        // Keep the four sampled widths and residual limit outside the pattern
+        // loop. Early rejection and the order of squared-error additions stay
+        // the same, including constrained-family ties.
+        var first = runs[start];
+        var second = runs[start + 1];
+        var third = runs[start + 2];
+        var fourth = runs[start + 3];
         var limit = pitch * 0.7 + 0.5;
-        for (var i = 0; i < 4; i++) {
-            for (var modules = 1; modules <= 4; modules++) {
-                var residual = Math.Abs(runs[start + i] - modules * pitch);
-                residuals[i * 4 + modules - 1] = residual > limit
-                    ? double.PositiveInfinity : residual * residual;
-            }
-        }
         // BuildRetailDigitRuns interleaves odd and even patterns for every digit.
         // A fixed family narrows the search without increasing any fit tolerance.
         for (var index = Math.Max(0, parity); index < RetailDigitRuns.Length; index += parity < 0 ? 1 : 2) {
             var candidate = RetailDigitRuns[index];
-            var error = 0.0;
-            for (var i = 0; i < 4; i++) {
-                error += residuals[i * 4 + candidate[i] - 1];
-            }
+            var a = Math.Abs(first - candidate[0] * pitch);
+            if (a > limit) continue;
+            var b = Math.Abs(second - candidate[1] * pitch);
+            if (b > limit) continue;
+            var c = Math.Abs(third - candidate[2] * pitch);
+            if (c > limit) continue;
+            var d = Math.Abs(fourth - candidate[3] * pitch);
+            if (d > limit) continue;
+            var error = a * a;
+            error += b * b;
+            error += c * c;
+            error += d * d;
             if (error + tieTolerance < fit) { pattern = candidate; fit = error; }
         }
         return pattern.Length != 0 && fit / (pitch * pitch) < 1.0;
