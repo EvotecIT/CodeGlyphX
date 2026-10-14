@@ -2554,50 +2554,6 @@
     "notFound": {
       "count": 30,
       "index": "/visuals/notfound/index.json"
-    },
-    "api": [
-      {
-        "type": "QR",
-        "url": "/api/codeglyphx.qr/",
-        "summary": "Encode, render and save QR codes.",
-        "src": "/specimens/qrcode.svg"
-      },
-      {
-        "type": "Barcode",
-        "url": "/api/codeglyphx.barcode/",
-        "summary": "Linear symbologies from Code 128 to postal.",
-        "src": "/specimens/code128.svg"
-      },
-      {
-        "type": "DataMatrixCode",
-        "url": "/api/codeglyphx.datamatrixcode/",
-        "summary": "Data Matrix, square and rectangular.",
-        "src": "/specimens/datamatrix.svg"
-      },
-      {
-        "type": "Pdf417Code",
-        "url": "/api/codeglyphx.pdf417code/",
-        "summary": "PDF417 and MicroPDF417.",
-        "src": "/specimens/pdf417.svg"
-      },
-      {
-        "type": "AztecCode",
-        "url": "/api/codeglyphx.azteccode/",
-        "summary": "Aztec, compact and full range.",
-        "src": "/specimens/aztec.svg"
-      },
-      {
-        "type": "QrPayloads",
-        "url": "/api/codeglyphx.payloads.qrpayloads/",
-        "summary": "Wi-Fi, contacts, OTP, payments.",
-        "src": "/specimens/payload-wifi.svg"
-      },
-      {
-        "type": "SymbolScanner",
-        "url": "/api/codeglyphx.symbolscanner/",
-        "summary": "Find and decode codes in images.",
-        "src": "/images/art/qr-expressive-waves.png"
-      }
-    ]
+    }
   }
 }

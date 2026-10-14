@@ -1,11 +1,8 @@
 ---
-title: Playground
-description: Try CodeGlyphX features interactively in your browser.
+title: Playground - CodeGlyphX
+description: Generate, style and decode QR codes and barcodes in your browser with CodeGlyphX running in WebAssembly.
 slug: playground
 layout: playground
-meta.eyebrow: Playground
 ---
 
-Generate and decode QR codes and barcodes in your browser. The playground runs the CodeGlyphX library through WebAssembly, so nothing you enter leaves your device.
-
-{{< app src="/playground/" label="Launch Playground" title="CodeGlyphX Playground" >}}
+<!-- The playground layout renders the page shell; the Blazor app (CodeGlyphX.Website) mounts into it. -->

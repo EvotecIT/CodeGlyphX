@@ -110,12 +110,11 @@ html, html:hover { scrollbar-color: var(--pg-scroll-thumb) var(--bg-dark); }
 html::-webkit-scrollbar-track { background: var(--bg-dark); }
 
 /* Page frame: the band runs edge to edge, the tool keeps the site gutter. */
-.page-playground .main { padding: var(--header-height) 0 0; }
 
 .pg-hero {
     position: relative;
     isolation: isolate;
-    margin-top: 14px;
+    margin-top: 0;
     padding: clamp(36px, 5vw, 64px) 0 clamp(32px, 4.5vw, 52px);
     border-bottom: 1px solid var(--cgx-night-line);
     background:
@@ -159,7 +158,7 @@ html::-webkit-scrollbar-track { background: var(--bg-dark); }
 .pg-hero__badges li { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px; border: 1px solid var(--cgx-night-line); border-radius: 999px; color: var(--cgx-night-muted); font-size: .8125rem; line-height: 1.4; }
 .pg-hero__badges li::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 1px; background: var(--cgx-pink); box-shadow: 0 0 8px var(--cgx-pink); }
 
-.page-playground .main > .playground {
+#app > .playground {
     width: var(--pg-width);
     max-width: none;
     margin: 0 auto;
@@ -346,7 +345,7 @@ html::-webkit-scrollbar-track { background: var(--bg-dark); }
 .page :is(a, button, summary, [tabindex]:not([tabindex="-1"])):focus-visible { outline: 2px solid var(--pg-focus); outline-offset: 2px; }
 
 @media (max-width: 640px) {
-    .page-playground .main > .playground { padding-top: 20px; }
+    #app > .playground { padding-top: 20px; }
     .pg-hero__lede { font-size: 1rem; }
     .playground .card h2 { font-size: 1rem; }
     .pg-viewfinder { padding: 10px; }

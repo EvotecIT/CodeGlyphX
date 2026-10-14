@@ -3,28 +3,122 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {{~ ## The /playground/ page: the site's own head, header and footer around the Blazor WebAssembly app
+       (CodeGlyphX.Website), which mounts into #app. The pipeline overlays the published app's _framework and
+       stylesheets next to this page without replacing it, and Website/build/SiteChrome.cs fills the import map and
+       the fingerprinted Blazor script from the published index.html. ## ~}}
+  <base href="/playground/" />
   <title>{{ title_html }}</title>
   {{ description_meta_html }}
   {{ canonical_html }}
   {{ head_html }}
   <script>(function(){let t='auto';try{t=localStorage.getItem('theme')||'auto';}catch(e){}document.documentElement.dataset.theme=t;})();</script>
+  <script type="importmap" data-cgx-importmap>{"imports":{}}</script>
   {{ assets.preloads_html }}
   {{ assets.critical_css_html }}
   {{ include "theme-tokens" }}
   {{ extra_css_html }}
   {{ assets.css_html }}
+  <link rel="stylesheet" href="/playground/css/playground-base.css" />
+  <link rel="stylesheet" href="/playground/css/playground.css" />
+  <link rel="stylesheet" href="/playground/CodeGlyphX.Website.styles.css" />
   {{ opengraph_html }}
   {{ structured_data_html }}
 </head>
-<body{{ if body_class != "" }} class="{{ body_class }}"{{ end }}{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
-  <div class="page">
+<body class="cgx-body-playground{{ if body_class != "" }} {{ body_class }}{{ end }}"{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
+  <div class="page page-playground">
 {{ include "header" -}}
-<main id="main">
-{{ content }}
+<main id="main" class="main">
+  <div id="app">
+    {{~ ## Shown until the app renders the same band, so nothing moves when it starts. ## ~}}
+    <section class="pg-hero" aria-labelledby="pg-title">
+      <div class="pg-hero__inner">
+        <h1 id="pg-title" tabindex="-1">Code <span class="pg-hero__accent">playground</span></h1>
+        <p class="pg-hero__lede">Make a QR code, barcode or 2D matrix code, style it or turn it into artwork, then decode it back. The page runs the CodeGlyphX library itself through WebAssembly, so nothing you enter leaves your device.</p>
+        <ul class="pg-hero__badges" aria-label="Highlights">
+          <li>Runs in your browser</li>
+          <li>Generate and decode</li>
+          <li>C#, VB.NET and PowerShell examples</li>
+        </ul>
+      </div>
+    </section>
+    <div class="playground">
+      <div class="card loading-content" role="status">
+        <h2>Loading playground...</h2>
+        <p data-cgx-boot-message>Downloading the CodeGlyphX engine. This is only required the first time you open the playground.</p>
+        <noscript><p>The playground runs CodeGlyphX in your browser and needs JavaScript. The <a href="/docs/quickstart/">quick start</a> shows the same library from .NET.</p></noscript>
+      </div>
+    </div>
+  </div>
+  <div id="blazor-error-ui" role="alert">
+    <span>Something went wrong.</span>
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">×</a>
+  </div>
 </main>
 {{ include "footer" -}}
   </div>
   {{ assets.js_html }}
   {{ extra_scripts_html }}
+  <script>
+    // Retry transient failures for the WebAssembly framework files.
+    (function () {
+      if (typeof window.fetch !== 'function') return;
+      var originalFetch = window.fetch.bind(window);
+      var isFramework = function (input, init) {
+        var method = ((init && init.method) || 'GET').toString().toUpperCase();
+        if (method !== 'GET') return false;
+        var raw = typeof input === 'string' ? input : (input && typeof input.url === 'string' ? input.url : '');
+        try { return new URL(raw, window.location.href).pathname.indexOf('/_framework/') >= 0; } catch (e) { return raw.indexOf('/_framework/') >= 0; }
+      };
+      var retryUrl = function (url, attempt) {
+        try { var u = new URL(url, window.location.href); u.searchParams.set('_pfretry', String(attempt)); return u.toString(); } catch (e) { return url; }
+      };
+      window.fetch = async function (input, init) {
+        if (!isFramework(input, init)) return originalFetch(input, init);
+        var lastError = null;
+        for (var attempt = 1; attempt <= 4; attempt++) {
+          try {
+            var request = input;
+            if (attempt > 1) {
+              if (typeof input === 'string') request = retryUrl(input, attempt);
+              else if (input instanceof Request) request = new Request(retryUrl(input.url, attempt), input);
+              else if (input && typeof input.url === 'string') request = retryUrl(input.url, attempt);
+            }
+            var response = await originalFetch(request, init);
+            if (response.status < 500 || response.status >= 600) return response;
+            lastError = new Error('Framework resource returned HTTP ' + response.status + '.');
+          } catch (error) { lastError = error; }
+          if (attempt < 4) await new Promise(function (resolve) { setTimeout(resolve, Math.min(250 * Math.pow(2, attempt - 1), 2000)); });
+        }
+        if (lastError) throw lastError;
+        return originalFetch(input, init);
+      };
+    })();
+  </script>
+  <script src="_framework/blazor.webassembly.js" data-cgx-blazor autostart="false"></script>
+  <script>
+    (function () {
+      function showStartupFailure() {
+        var message = document.querySelector('[data-cgx-boot-message]');
+        if (message) message.textContent = 'The playground could not start. Reload to try again.';
+        var errorUi = document.getElementById('blazor-error-ui');
+        if (errorUi) errorUi.style.display = 'block';
+      }
+      // A platform-load failure can reject inside Blazor's startup executor while the returned startup promise
+      // remains pending. Keep this limited to that failure.
+      function onStartupRejection(event) {
+        if (event.reason && event.reason.message && event.reason.message.indexOf('Failed to start platform.') === 0) showStartupFailure();
+      }
+      window.addEventListener('unhandledrejection', onStartupRejection);
+      if (window.Blazor) {
+        window.Blazor.start()
+          .then(function () { window.removeEventListener('unhandledrejection', onStartupRejection); })
+          .catch(showStartupFailure);
+      } else {
+        showStartupFailure();
+      }
+    })();
+  </script>
 </body>
 </html>

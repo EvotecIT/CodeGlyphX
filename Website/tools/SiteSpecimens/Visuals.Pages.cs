@@ -50,7 +50,7 @@ internal static partial class SiteVisuals {
             zipCode = Obj(SaveSvg("pages/download-zip.svg", Barcode.Render(SymbolFormat.Code128, zip, OutputFormat.Svg, new BarcodeOptions { ModuleSize = 2, QuietZone = 0, HeightModules = 30, Foreground = Ink, Background = Clear }).GetText())),
         };
 
-        return new { showcase, pricing, downloads, changelog = BuildChangelog(), notFound = BuildNotFound(), api = BuildApi() };
+        return new { showcase, pricing, downloads, changelog = BuildChangelog(), notFound = BuildNotFound() };
     }
 
     /// <summary>
@@ -157,19 +157,5 @@ internal static partial class SiteVisuals {
         Add("/powershell/commands/", "ImagePlayground commands", "Reference");
         WriteVisual("notfound/index.json", System.Text.Json.JsonSerializer.Serialize(new { pages }) + "\n");
         return new { count = pages.Count, index = "/visuals/notfound/index.json" };
-    }
-
-    /// <summary>Entry points of the API, each with the code it produces.</summary>
-    static object BuildApi() {
-        var list = new (string Type, string Url, string Summary, string Visual)[] {
-            ("QR", "/api/codeglyphx.qr/", "Encode, render and save QR codes.", "/specimens/qrcode.svg"),
-            ("Barcode", "/api/codeglyphx.barcode/", "Linear symbologies from Code 128 to postal.", "/specimens/code128.svg"),
-            ("DataMatrixCode", "/api/codeglyphx.datamatrixcode/", "Data Matrix, square and rectangular.", "/specimens/datamatrix.svg"),
-            ("Pdf417Code", "/api/codeglyphx.pdf417code/", "PDF417 and MicroPDF417.", "/specimens/pdf417.svg"),
-            ("AztecCode", "/api/codeglyphx.azteccode/", "Aztec, compact and full range.", "/specimens/aztec.svg"),
-            ("QrPayloads", "/api/codeglyphx.payloads.qrpayloads/", "Wi-Fi, contacts, OTP, payments.", "/specimens/payload-wifi.svg"),
-            ("SymbolScanner", "/api/codeglyphx.symbolscanner/", "Find and decode codes in images.", "/images/art/qr-expressive-waves.png"),
-        };
-        return list.Select(x => new { type = x.Type, url = x.Url, summary = x.Summary, src = x.Visual }).ToList();
     }
 }

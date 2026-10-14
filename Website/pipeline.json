@@ -90,6 +90,22 @@
       "clean": true
     },
     {
+      "task": "exec",
+      "id": "export-site-chrome",
+      "dependsOn": "build-site",
+      "command": "dotnet",
+      "argsList": [
+        "run",
+        "build/SiteChrome.cs",
+        "--",
+        "export",
+        "./_site",
+        "./_temp/chrome"
+      ],
+      "workingDirectory": ".",
+      "timeoutSeconds": 300
+    },
+    {
       "task": "verify",
       "id": "verify-site",
       "dependsOn": "build-site",
@@ -121,7 +137,10 @@
     {
       "task": "apidocs",
       "id": "build-apidocs",
-      "dependsOn": "build-library",
+      "dependsOn": [
+        "build-library",
+        "export-site-chrome"
+      ],
       "config": "./site.json",
       "xml": "../CodeGlyphX/bin/Release/net10.0/CodeGlyphX.xml",
       "assembly": "../CodeGlyphX/bin/Release/net10.0/CodeGlyphX.dll",
@@ -130,11 +149,13 @@
       "baseUrl": "/api",
       "format": "both",
       "legacyAliasMode": "omit",
-      "css": "/css/fonts.css,/css/app.css,/css/prism-theme.css,/css/api.css,/css/scrollbars.css",
+      "css": "/css/fonts.css,/css/app.css,/css/prism-theme.css,/css/pages.css,/css/api.css,/css/scrollbars.css",
       "template": "docs",
       "injectPrism": false,
       "templateDocsIndex": "./themes/codeglyphx/apidocs/docs-index.html",
       "templateDocsType": "./themes/codeglyphx/apidocs/docs-type.html",
+      "headerHtml": "./_temp/chrome/api-header.html",
+      "footerHtml": "./_temp/chrome/footer.html",
       "injectCriticalCss": true,
       "nav": "./site.json",
       "navContextPath": "/",
@@ -156,7 +177,10 @@
     {
       "task": "apidocs",
       "id": "build-powershell-commands",
-      "dependsOn": "build-library",
+      "dependsOn": [
+        "build-library",
+        "export-site-chrome"
+      ],
       "type": "PowerShell",
       "config": "./site.json",
       "help": "./powershell/imageplayground-help.xml",
@@ -165,10 +189,12 @@
       "title": "ImagePlayground commands for CodeGlyphX",
       "format": "both",
       "legacyAliasMode": "omit",
-      "css": "/css/fonts.css,/css/app.css,/css/prism-theme.css,/css/api.css,/css/scrollbars.css",
+      "css": "/css/fonts.css,/css/app.css,/css/prism-theme.css,/css/pages.css,/css/api.css,/css/scrollbars.css",
       "template": "docs",
-      "templateDocsIndex": "./themes/codeglyphx/apidocs/docs-index.html",
+      "templateDocsIndex": "./themes/codeglyphx/apidocs/ps-index.html",
       "templateDocsType": "./themes/codeglyphx/apidocs/docs-type.html",
+      "headerHtml": "./_temp/chrome/ps-header.html",
+      "footerHtml": "./_temp/chrome/footer.html",
       "injectCriticalCss": true,
       "nav": "./site.json",
       "navContextPath": "/",
@@ -314,13 +340,29 @@
       ],
       "source": "./_temp/playground/wwwroot",
       "destination": "./_site/playground",
-      "clean": true,
-      "include": "**/*, *"
+      "clean": false,
+      "include": "_framework/**, _content/**, css/playground*.css*, CodeGlyphX.Website.styles*"
+    },
+    {
+      "task": "exec",
+      "id": "compose-playground-shell",
+      "dependsOn": "overlay-playground",
+      "command": "dotnet",
+      "argsList": [
+        "run",
+        "build/SiteChrome.cs",
+        "--",
+        "playground",
+        "./_temp/playground/wwwroot/index.html",
+        "./_site/playground/index.html"
+      ],
+      "workingDirectory": ".",
+      "timeoutSeconds": 300
     },
     {
       "task": "verify",
       "id": "verify-ci-final",
-      "dependsOn": "overlay-playground",
+      "dependsOn": "compose-playground-shell",
       "modes": [
         "ci"
       ],
@@ -336,7 +378,7 @@
       "task": "agent-ready",
       "id": "agent-ready",
       "dependsOn": [
-        "overlay-playground",
+        "compose-playground-shell",
         "verify-ci-final"
       ],
       "skipModes": [
