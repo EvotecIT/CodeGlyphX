@@ -14,7 +14,7 @@
           <p>{{ e.body }}</p>
         </div>
       </div>
-      <pre class="code-block cgx-ps-code"><code class="language-powershell">{{ e.script | html.escape }}</code></pre>
+      <pre class="code-block cgx-ps-code" data-label="{{ e.id }}.ps1"><code class="language-powershell">{{ e.script | html.escape }}</code></pre>
       <p class="cgx-readback__label">Reads back as</p>
       <pre class="cgx-readback">{{ e.console | html.escape }}</pre>
     </article>

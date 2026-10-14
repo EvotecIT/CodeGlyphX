@@ -8,7 +8,7 @@
     <article class="cgx-payload">
       <span class="cgx-payload__code"><img src="{{ p.file }}" loading="lazy" decoding="async" alt="QR code for a {{ p.name | string.downcase }} payload" /></span>
       <h3>{{ p.name }}</h3>
-      <pre><code class="language-csharp">{{ p.code | html.escape }}</code></pre>
+      <pre class="code-block"><code class="language-csharp">{{ p.code | html.escape }}</code></pre>
     </article>
     {{~ end ~}}
   </div>

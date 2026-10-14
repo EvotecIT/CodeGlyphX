@@ -13,7 +13,7 @@
       <article class="cgx-ps__item">
         <span class="cgx-ps__img"><img src="{{ e.outputs[0].url }}" loading="lazy" decoding="async" alt="QR code written by the {{ e.title | string.downcase }} script." /></span>
         <h3>{{ e.title }}</h3>
-        <pre><code class="language-powershell">{{ e.script | html.escape }}</code></pre>
+        <pre class="code-block" data-label="{{ e.id }}.ps1"><code class="language-powershell">{{ e.script | html.escape }}</code></pre>
         <a class="cgx-link" href="/powershell/#{{ e.id }}">Output and read-back</a>
       </article>
       {{~ end ~}}{{~ end ~}}{{~ end ~}}

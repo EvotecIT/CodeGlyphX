@@ -4,9 +4,7 @@
 .cgx-psh__stage { width: min(100%, 560px); }
 .cgx-psh .cgx-install { max-width: 540px; margin-top: 22px; }
 .cgx-psh__sheet img { background: #fff; }
-.cgx-term { margin: 18px 0 0; overflow: hidden; border: 1px solid rgba(255, 255, 255, .12); border-radius: 12px; background: #0c0a14; box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .9); }
-.cgx-term figcaption { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-bottom: 1px solid rgba(255, 255, 255, .08); color: #a29dbb; font-family: var(--cgx-mono); font-size: .75rem; }
-.cgx-term pre { margin: 0; padding: 12px 14px; overflow-x: auto; background: none; border: 0; color: #ece9f8; font-family: var(--cgx-mono); font-size: .72rem; line-height: 1.6; white-space: pre; }
+.cgx-term { margin: 18px 0 0; }
 
 /* Script beside what it produced. */
 .cgx-psp .cgx-section { border-top: 1px solid var(--border); }
@@ -15,8 +13,7 @@
 .cgx-flag__grid + .cgx-flag__grid { margin-top: clamp(56px, 7vw, 96px); }
 .cgx-flag__copy h2, .cgx-brand h2 { font-size: clamp(1.5rem, 1rem + 1.6vw, 2.25rem); font-weight: 800; line-height: 1.1; }
 .cgx-flag__copy > p { margin-top: 12px; color: var(--text-muted); }
-.cgx-flag__copy > p code { padding: 1px 6px; border-radius: 6px; background: var(--bg-card); font-family: var(--cgx-mono); font-size: .875em; }
-.cgx-body-ps pre.cgx-ps-code { margin: 18px 0 0 !important; padding: 16px 18px !important; font-size: .8125rem !important; line-height: 1.65 !important; }
+.cgx-psp pre.cgx-ps-code { margin: 18px 0 0; }
 .cgx-flag__labels h3, .cgx-flag__side h3 { margin-bottom: 14px; font-size: 1rem; }
 .cgx-flag__side .cgx-term { margin-top: 16px; }
 
@@ -38,7 +35,7 @@
 .cgx-pscard__head p { margin-top: 4px; color: var(--text-muted); font-size: .875rem; line-height: 1.5; }
 .cgx-pscard pre.cgx-ps-code { flex: none; }
 .cgx-readback__label { margin-top: 14px; color: var(--text-muted); font-size: .75rem; font-weight: 600; }
-.cgx-readback { margin: 6px 0 0; padding: 10px 12px; overflow-x: auto; border-radius: 10px; background: #0c0a14; color: #a7f3d0; font-family: var(--cgx-mono); font-size: .72rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cgx-readback { margin: 6px 0 0; padding: 10px 12px; overflow-x: auto; border: 1px solid var(--code-line); border-radius: 10px; background: var(--code-bg); color: var(--tok-str); font-family: var(--cgx-mono); font-size: .75rem; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* Barcodes and styling. */
 .cgx-bargrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }

@@ -4,7 +4,7 @@
     <div class="cgx-flag__copy">
       <h2 id="cgx-flag-title">{{ flag.title }}</h2>
       <p>{{ flag.body }}</p>
-      <pre class="code-block cgx-ps-code"><code class="language-powershell">{{ flag.script | html.escape }}</code></pre>
+      <pre class="code-block cgx-ps-code" data-label="{{ flag.id }}.ps1"><code class="language-powershell">{{ flag.script | html.escape }}</code></pre>
     </div>
     <div class="cgx-flag__labels">
       <h3>What it wrote</h3>

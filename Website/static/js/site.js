@@ -108,13 +108,7 @@ globalThis.setTheme = setTheme;
         return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     }
 
-    function getCssVar(name, fallback) {
-        const value = getComputedStyle(document.documentElement).getPropertyValue(name);
-        if (!value) return fallback;
-        const trimmed = value.trim();
-        return trimmed || fallback;
-    }
-
+    // Site colors are light-dark() pairs, which Mermaid cannot parse, so it gets the resolved values here.
     function getMermaidConfig() {
         const isLight = resolveThemeKind() === 'light';
         return {
@@ -123,16 +117,16 @@ globalThis.setTheme = setTheme;
             theme: 'base',
             flowchart: { curve: 'basis' },
             themeVariables: {
-                background: getCssVar('--bg-code', isLight ? '#f6f8fa' : '#0d0d12'),
-                primaryColor: getCssVar('--bg-card', isLight ? '#ffffff' : '#12121a'),
-                primaryTextColor: getCssVar('--text', isLight ? '#1e293b' : '#f4f4f5'),
-                primaryBorderColor: getCssVar('--primary', isLight ? '#6d28d9' : '#8b5cf6'),
-                lineColor: getCssVar('--text-muted', isLight ? '#475569' : '#c1c7d6'),
-                secondaryColor: getCssVar('--bg-input', isLight ? '#f1f5f9' : '#1e1e2a'),
-                tertiaryColor: getCssVar('--bg-card-hover', isLight ? '#e2e8f0' : '#1a1a25'),
-                clusterBkg: getCssVar('--bg-input', isLight ? '#f1f5f9' : '#1e1e2a'),
-                clusterBorder: getCssVar('--border', isLight ? '#e2e8f0' : '#27272a'),
-                fontFamily: getCssVar('--font-body', 'Inter, Segoe UI, sans-serif'),
+                background: isLight ? '#fcfbff' : '#0e0d15',
+                primaryColor: isLight ? '#ffffff' : '#13121b',
+                primaryTextColor: isLight ? '#16131f' : '#f4f2fa',
+                primaryBorderColor: isLight ? '#6d28d9' : '#8b5cf6',
+                lineColor: isLight ? '#4b4660' : '#bcb7cc',
+                secondaryColor: isLight ? '#efedf5' : '#1b1a25',
+                tertiaryColor: isLight ? '#e2dfeb' : '#25232f',
+                clusterBkg: isLight ? '#efedf5' : '#1b1a25',
+                clusterBorder: isLight ? '#e2dfeb' : '#25232f',
+                fontFamily: 'Inter, Segoe UI, sans-serif',
                 fontSize: '15px'
             }
         };
@@ -210,14 +204,20 @@ globalThis.setTheme = setTheme;
         btn.className = options?.className || 'copy-btn';
         btn.title = options?.title || 'Copy to clipboard';
         btn.setAttribute('aria-label', options?.title || 'Copy to clipboard');
-        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+        const copyIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+        const doneIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+        // Code blocks show a text label in their caption bar; inline signatures keep the icon only.
+        const render = (done) => {
+            btn.innerHTML = (done ? doneIcon : copyIcon) + (options?.text ? `<span>${done ? 'Copied' : 'Copy'}</span>` : '');
+        };
+        render(false);
         btn.addEventListener('click', () => {
             const code = textProvider() || '';
             copyText(code);
-            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+            render(true);
             btn.classList.add('copied');
             setTimeout(() => {
-                btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+                render(false);
                 btn.classList.remove('copied');
             }, 2000);
         });
@@ -225,13 +225,68 @@ globalThis.setTheme = setTheme;
     }
 
     function addCopyButton(block) {
-        if (block.querySelector('.copy-btn')) return;
+        if (block.querySelector(':scope > .copy-btn')) return;
         block.classList.add('copyable');
-        block.style.position = 'relative';
         const codeEl = block.querySelector('code');
         const rawText = (codeEl ? codeEl.textContent : block.textContent) || '';
-        const btn = createCopyButton(() => rawText);
+        const btn = createCopyButton(() => rawText, { text: true });
         block.appendChild(btn);
+    }
+
+    // Markdown tables scroll inside their own frame instead of widening the page.
+    function initTables() {
+        document.querySelectorAll('.markdown-body > table').forEach((table) => {
+            const wrap = document.createElement('div');
+            wrap.className = 'table-scroll';
+            table.replaceWith(wrap);
+            wrap.appendChild(table);
+        });
+    }
+
+    // FAQ answers are <details>; open the one a link points at.
+    function openTargetedDetails() {
+        const id = decodeURIComponent((window.location.hash || '').slice(1));
+        if (!id) return;
+        const target = document.getElementById(id);
+        if (target instanceof HTMLDetailsElement && !target.open) target.open = true;
+    }
+
+    // Style board: the preset gallery on the home page and the showcase.
+    function initStyleBoards() {
+        document.querySelectorAll('[data-style-board]').forEach((board) => {
+            if (board.dataset.loaded) return;
+            board.dataset.loaded = 'true';
+            const src = board.dataset.styleBoardSrc || '/data/style-board.json';
+            const base = board.dataset.styleBoardBase || '/assets/style-board/';
+            fetch(src)
+                .then((res) => {
+                    if (!res.ok) throw new Error('Failed to load style board');
+                    return res.json();
+                })
+                .then((items) => {
+                    if (!Array.isArray(items)) return;
+                    const cards = items.map((item) => {
+                        const card = document.createElement('figure');
+                        card.className = 'style-board-card';
+                        const img = document.createElement('img');
+                        img.loading = 'lazy';
+                        img.decoding = 'async';
+                        img.alt = item.name || 'QR style';
+                        img.width = item.width || 400;
+                        img.height = item.height || 400;
+                        img.src = base + item.file;
+                        const label = document.createElement('figcaption');
+                        label.className = 'style-board-label';
+                        label.textContent = item.name || 'QR style';
+                        card.append(img, label);
+                        return card;
+                    });
+                    board.replaceChildren(...cards);
+                })
+                .catch(() => {
+                    board.innerHTML = '<div class="style-board-fallback">Style board assets are not available yet.</div>';
+                });
+        });
     }
 
     function initCodeBlocks() {
@@ -314,147 +369,6 @@ globalThis.setTheme = setTheme;
                 });
             });
         }
-    }
-
-    let benchSummaryPromise = null;
-    function loadBenchmarkSummary() {
-        if (!benchSummaryPromise) {
-            benchSummaryPromise = fetch('/data/benchmark-summary.json', { cache: 'no-store' })
-                .then((res) => (res.ok ? res.json() : null))
-                .catch(() => null);
-        }
-        return benchSummaryPromise;
-    }
-
-    function pickBenchmarkSummary(data) {
-        if (!data) return null;
-        const order = [
-            ['windows', 'quick'],
-            ['windows', 'full'],
-            ['linux', 'quick'],
-            ['linux', 'full'],
-            ['macos', 'quick'],
-            ['macos', 'full'],
-        ];
-        for (const [os, mode] of order) {
-            const entry = data?.[os]?.[mode];
-            if (entry?.summary?.length) return entry;
-        }
-        for (const osKey of Object.keys(data)) {
-            const osEntry = data[osKey];
-            for (const modeKey of Object.keys(osEntry || {})) {
-                const entry = osEntry?.[modeKey];
-                if (entry?.summary?.length) return entry;
-            }
-        }
-        return null;
-    }
-
-    function appendVendorCell(td, vendor, delta) {
-        if (!vendor) return;
-        if (vendor.mean) {
-            const mean = document.createElement('div');
-            mean.textContent = vendor.mean;
-            td.appendChild(mean);
-        }
-        if (vendor.allocated) {
-            const alloc = document.createElement('div');
-            alloc.className = 'bench-dim';
-            alloc.textContent = vendor.allocated;
-            td.appendChild(alloc);
-        }
-        if (delta) {
-            const d = document.createElement('div');
-            d.className = 'bench-delta';
-            d.textContent = delta;
-            td.appendChild(d);
-        }
-    }
-
-    function renderBenchmarkSummary() {
-        const container = document.querySelector('[data-benchmark-summary]');
-        if (!container || container.dataset.loaded === 'true') return;
-
-        loadBenchmarkSummary().then((data) => {
-            const entry = pickBenchmarkSummary(data);
-            if (!entry || !entry.summary?.length) {
-                container.textContent = 'Benchmark summary unavailable.';
-                container.dataset.loaded = 'true';
-                return;
-            }
-
-            const table = document.createElement('table');
-            table.className = 'bench-table bench-summary-table';
-
-            const thead = document.createElement('thead');
-            thead.innerHTML = '<tr>' +
-                '<th>Benchmark</th>' +
-                '<th>Scenario</th>' +
-                '<th>Fastest</th>' +
-                '<th>CodeGlyphX</th>' +
-                '<th>ZXing.Net</th>' +
-                '<th>QRCoder</th>' +
-                '<th>Barcoder</th>' +
-                '<th>CodeGlyphX vs Fastest</th>' +
-                '<th>Alloc vs Fastest</th>' +
-                '<th>Rating</th>' +
-                '</tr>';
-            table.appendChild(thead);
-
-            const tbody = document.createElement('tbody');
-            entry.summary.forEach((item) => {
-                const row = document.createElement('tr');
-                const vendors = item.vendors || {};
-                const deltas = item.deltas || {};
-
-                const cells = [
-                    item.benchmark || '',
-                    item.scenario || '',
-                    item.fastestVendor ? `${item.fastestVendor} ${item.fastestMean || ''}`.trim() : (item.fastestMean || ''),
-                ];
-
-                cells.forEach((text) => {
-                    const td = document.createElement('td');
-                    td.textContent = text;
-                    row.appendChild(td);
-                });
-
-                const cgxTd = document.createElement('td');
-                appendVendorCell(cgxTd, vendors['CodeGlyphX'], '');
-                row.appendChild(cgxTd);
-
-                const zxTd = document.createElement('td');
-                appendVendorCell(zxTd, vendors['ZXing.Net'], deltas['ZXing.Net']);
-                row.appendChild(zxTd);
-
-                const qrcTd = document.createElement('td');
-                appendVendorCell(qrcTd, vendors['QRCoder'], deltas['QRCoder']);
-                row.appendChild(qrcTd);
-
-                const barTd = document.createElement('td');
-                appendVendorCell(barTd, vendors['Barcoder'], deltas['Barcoder']);
-                row.appendChild(barTd);
-
-                const ratioTd = document.createElement('td');
-                ratioTd.textContent = item.codeGlyphXVsFastestText || '';
-                row.appendChild(ratioTd);
-
-                const allocTd = document.createElement('td');
-                allocTd.textContent = item.codeGlyphXAllocVsFastestText || '';
-                row.appendChild(allocTd);
-
-                const ratingTd = document.createElement('td');
-                ratingTd.textContent = item.rating || '';
-                row.appendChild(ratingTd);
-
-                tbody.appendChild(row);
-            });
-            table.appendChild(tbody);
-
-            container.innerHTML = '';
-            container.appendChild(table);
-            container.dataset.loaded = 'true';
-        });
     }
 
     function initDocsNav() {
@@ -740,7 +654,13 @@ globalThis.setTheme = setTheme;
         const text = button.dataset.copy;
         if (!text) return;
         copyText(text);
+        if (button.textContent.trim() === 'Copy') {
+            button.textContent = 'Copied';
+            setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+        }
     });
+
+    globalThis.addEventListener('hashchange', openTargetedDetails);
 
     let initTimer = 0;
     function scheduleInit() {
@@ -749,9 +669,11 @@ globalThis.setTheme = setTheme;
             initTimer = 0;
             renderMermaidDiagrams();
             initCodeBlocks();
+            initTables();
+            openTargetedDetails();
+            initStyleBoards();
             initDocsNav();
             initShowcaseCarousel();
-            renderBenchmarkSummary();
             linkifyReleaseBodyUrls();
         }, 100);
     }
@@ -781,7 +703,6 @@ globalThis.setTheme = setTheme;
 
     globalThis.CodeGlyphX = globalThis.CodeGlyphX || {};
     globalThis.CodeGlyphX.initCodeBlocks = initCodeBlocks;
-    globalThis.CodeGlyphX.renderBenchmarkSummary = renderBenchmarkSummary;
     globalThis.CodeGlyphX.renderMermaidDiagrams = renderMermaidDiagrams;
 })();
 

@@ -4,7 +4,7 @@
     <div class="cgx-flag__copy">
       <h2 id="cgx-psp-bars-title">{{ bars.title }}</h2>
       <p>{{ bars.body }}</p>
-      <pre class="code-block cgx-ps-code"><code class="language-powershell">{{ bars.script | html.escape }}</code></pre>
+      <pre class="code-block cgx-ps-code" data-label="{{ bars.id }}.ps1"><code class="language-powershell">{{ bars.script | html.escape }}</code></pre>
     </div>
     <div class="cgx-flag__side">
       <ul class="cgx-bargrid" aria-label="Generated barcodes">
@@ -22,7 +22,7 @@
     <div class="cgx-flag__copy">
       <h2>{{ brand.title }}</h2>
       <p>{{ brand.body }}</p>
-      <pre class="code-block cgx-ps-code"><code class="language-powershell">{{ brand.script | html.escape }}</code></pre>
+      <pre class="code-block cgx-ps-code" data-label="{{ brand.id }}.ps1"><code class="language-powershell">{{ brand.script | html.escape }}</code></pre>
     </div>
     <div class="cgx-flag__side">
       <ul class="cgx-brandgrid" aria-label="Styled output">

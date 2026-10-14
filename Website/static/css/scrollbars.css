@@ -1,23 +1,8 @@
-/* Scrollbars that belong to the theme: thin, a track that blends into the surface, and a muted thumb that brightens on hover. */
+/* Scrollbars that belong to the theme: thin, a track that blends into the surface, and a muted thumb that brightens on hover.
+   light-dark() resolves per element, so the night bands (color-scheme: dark) keep the light thumb in either theme. */
 :root {
-    --cgx-scroll-thumb: rgba(196, 190, 224, .28);
-    --cgx-scroll-thumb-hover: rgba(167, 139, 250, .65);
-}
-[data-theme="light"] {
-    --cgx-scroll-thumb: rgba(71, 85, 105, .3);
-    --cgx-scroll-thumb-hover: rgba(109, 40, 217, .55);
-}
-@media (prefers-color-scheme: light) {
-    [data-theme="auto"] {
-        --cgx-scroll-thumb: rgba(71, 85, 105, .3);
-        --cgx-scroll-thumb-hover: rgba(109, 40, 217, .55);
-    }
-}
-
-/* Surfaces that stay dark in both themes keep the light thumb. */
-.cgx-hero, .cgx-art, .cgx-ps, .cgx-term, .cgx-readback, .cgx-float, .cgx-code, .cgx-payload pre, .cgx-ps__item pre {
-    --cgx-scroll-thumb: rgba(196, 190, 224, .28);
-    --cgx-scroll-thumb-hover: rgba(167, 139, 250, .65);
+    --cgx-scroll-thumb: light-dark(rgba(71, 85, 105, .3), rgba(196, 190, 224, .28));
+    --cgx-scroll-thumb-hover: light-dark(rgba(109, 40, 217, .55), rgba(167, 139, 250, .65));
 }
 
 * {
