@@ -88,19 +88,25 @@ internal static class PngWriter {
 
         var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
         if (normalizedLevel <= 0) {
-            var idatLength = GetZlibStoredLength(length);
+            // The streaming callback starts a new stored block for each row.
+            var blocksPerRow = ((long)rowLength + 65534) / 65535;
+            var idatLength = RenderGuards.EnsureOutputBytes(6L + length + height * blocksPerRow * 5, PngOutputLimitMessage);
             WriteChunk(stream, "IDAT", idatLength, (Stream s, ref uint crc) => WriteZlibStoredRows(s, height, rowLength, fillRow, ref crc));
         } else {
             var scanlines = ArrayPool<byte>.Shared.Rent(length);
+            byte[]? rowBuffer = null;
             try {
+                rowBuffer = ArrayPool<byte>.Shared.Rent(rowLength);
                 for (var y = 0; y < height; y++) {
-                    fillRow(y, scanlines, rowLength);
+                    fillRow(y, rowBuffer, rowLength);
+                    Buffer.BlockCopy(rowBuffer, 0, scanlines, y * rowLength, rowLength);
                 }
                 // Apply a lightweight adaptive filter pass before deflate to improve compression.
                 PngRenderHelpers.ApplyAdaptiveFilterHeuristic(scanlines, height, stride);
                 var compressed = ZlibCompress(scanlines, length, normalizedLevel);
                 WriteChunk(stream, "IDAT", compressed);
             } finally {
+                if (rowBuffer is not null) ArrayPool<byte>.Shared.Return(rowBuffer);
                 ArrayPool<byte>.Shared.Return(scanlines);
             }
         }

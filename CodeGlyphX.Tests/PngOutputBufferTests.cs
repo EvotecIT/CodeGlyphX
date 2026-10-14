@@ -1,3 +1,5 @@
+using System;
+using System.Buffers;
 using System.IO;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Png;
@@ -6,6 +8,48 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class PngOutputBufferTests {
+    [Theory]
+    [InlineData(0)]
+    [InlineData(6)]
+    public void QrStream_TranslucentPixelsMatchArrayAfterDirtyPool(int compression) {
+        var modules = QR.Encode("PNG-TRANSLUCENT-STREAM").Modules;
+        var options = new QrPngRenderOptions {
+            ModuleSize = 3, QuietZone = 4, PngCompressionLevel = compression,
+            Foreground = new Rgba32(10, 20, 30, 140), Background = new Rgba32(220, 235, 245, 170)
+        };
+        var expected = ImageReader.DecodeRgba32(QrPngRenderer.Render(modules, options), out var width, out var height);
+        var dirty = ArrayPool<byte>.Shared.Rent(height * (width * 4 + 1));
+        for (var i = 0; i < dirty.Length; i++) dirty[i] = 83;
+        ArrayPool<byte>.Shared.Return(dirty);
+
+        using var stream = new MemoryStream();
+        QrPngRenderer.RenderToStream(modules, options, stream);
+        Assert.True(stream.CanWrite);
+        Assert.Equal(expected, ImageReader.DecodeRgba32(stream.ToArray(), out var actualWidth, out var actualHeight));
+        Assert.Equal(width, actualWidth);
+        Assert.Equal(height, actualHeight);
+    }
+
+    [Theory]
+    [InlineData(16384, 2, 0)]
+    [InlineData(17, 5, 6)]
+    public void RowWriter_PreservesEveryPixelAcrossRowsAndStoredBlockBoundaries(int width, int height, int compression) {
+        var rowLength = width * 4 + 1;
+        var expected = new byte[width * height * 4];
+        using var stream = new MemoryStream();
+        PngWriter.WriteRgba8(stream, width, height, (y, row, length) => {
+            row[0] = 0;
+            for (var x = 1; x < length; x++) {
+                var value = (byte)(x * 17 + y * 43);
+                row[x] = value;
+                expected[y * (rowLength - 1) + x - 1] = value;
+            }
+        }, compression);
+        Assert.Equal(expected, ImageReader.DecodeRgba32(stream.ToArray(), out var actualWidth, out var actualHeight));
+        Assert.Equal(width, actualWidth);
+        Assert.Equal(height, actualHeight);
+    }
+
     [Theory]
     [InlineData(1, 1, 0, 0)]
     [InlineData(17, 5, 0, 300)]
