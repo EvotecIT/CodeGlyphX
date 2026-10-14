@@ -65,6 +65,8 @@
             </table>
         </div>
     </section>
+    {{ session_costs = comparison.dpm_workspace }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
     {{ session_costs = comparison.linear_run_workspace }}
     {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
     {{ session_costs = comparison.databar_expanded_workspace }}

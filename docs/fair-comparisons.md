@@ -4,6 +4,8 @@ CodeGlyphX's current comparison uses matched QR generation settings and an indep
 
 The [current results and complete evidence](comparisons/results.md) compare the repaired source with the original source and the previous decoding pass. They report every miss, completed negative scan, inconclusive search and timing sample across both cache domains. Recognition, latency and managed allocation are separate results. These are shared-host measurements with all outliers retained.
 
+DPM preprocessing reuses private buffers while returning independently owned retry images. Its rolling square filter also serves QR preprocessing, preserving the different border rules of both callers. Current comparisons retain exact preprocessing results, cancellation and disposal checks, and complete scan outcomes and costs.
+
 Linear module decoding shares lazily computed run widths across format attempts. Each input owns its pooled storage, including nested and reversed retries. Current comparisons retain complete scan outcomes and costs alongside exact run and public module decision checks.
 
 Expanded Stacked image scanning reuses run, offset and candidate-width storage within each scan. Retained physical rows own their widths, and the shared linear/stacked fitter uses the same character arithmetic. Current comparisons preserve exact ordered row observations and show complete scan costs, including every deadline miss.

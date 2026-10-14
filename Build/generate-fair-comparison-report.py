@@ -27,6 +27,7 @@ from comparison_databar_module_runs import project_databar_module_runs
 from comparison_databar14_workspace import project_databar14_workspace
 from comparison_databar_expanded_workspace import project_databar_expanded_workspace
 from comparison_linear_run_workspace import project_linear_run_workspace
+from comparison_dpm_workspace import project_dpm_workspace
 
 
 def read(path):
@@ -83,6 +84,8 @@ def main():
     names += sorted(path.name for path in root.glob("historical-databar-character-*.json"))
     names += sorted(path.name for path in root.glob("databar-buffers-*.json"))
     names += sorted(path.name for path in root.glob("historical-databar-buffers-*.json"))
+    names += sorted(path.name for path in root.glob("dpm-workspace-*.json"))
+    names += sorted(path.name for path in root.glob("historical-dpm-workspace-*.json"))
     names += sorted(path.name for path in root.glob("linear-run-workspace-*.json"))
     names += sorted(path.name for path in root.glob("historical-linear-run-workspace-*.json"))
     names += sorted(path.name for path in root.glob("databar-expanded-workspace-*.json"))
@@ -491,6 +494,7 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    append_retained_context_section(lines, project_dpm_workspace(root, qualification))
     append_retained_context_section(lines, project_linear_run_workspace(root, qualification))
     append_retained_context_section(lines, project_databar_expanded_workspace(root, qualification))
     append_retained_context_section(lines, project_databar14_workspace(root, qualification))
