@@ -19,24 +19,30 @@ internal static class PngWriter {
 
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter) {
         var idatLength = GetZlibStoredLength(scanlinesWithFilter.Length);
-        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
+        using var ms = CreateOutputBuffer(EstimateTotalLength(idatLength, hasPlte: false), out var output);
         WriteRgba8(ms, width, height, scanlinesWithFilter, scanlinesWithFilter.Length, compressionLevel: 0);
-        return ms.ToArray();
+        return FinishOutputBuffer(ms, output);
     }
 
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter, int length) {
         var idatLength = GetZlibStoredLength(length);
-        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
+        using var ms = CreateOutputBuffer(EstimateTotalLength(idatLength, hasPlte: false), out var output);
         WriteRgba8(ms, width, height, scanlinesWithFilter, length, compressionLevel: 0);
-        return ms.ToArray();
+        return FinishOutputBuffer(ms, output);
     }
 
     public static byte[] WriteRgba8(int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel, int dpi = 0) {
         var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
-        var idatLength = normalizedLevel <= 0 ? GetZlibStoredLength(length) : Math.Max(length, 0);
-        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
+        if (normalizedLevel > 0) {
+            ValidateScanlines(width, height, scanlinesWithFilter, length, rgba: true);
+            return WriteCompressedOutput(width, height, ZlibCompress(scanlinesWithFilter, length, normalizedLevel), 8, 6, palette: null, dpi);
+        }
+        var idatLength = GetZlibStoredLength(length);
+        var capacity = EstimateTotalLength(idatLength, hasPlte: false);
+        if (dpi > 0) capacity = checked(capacity + 21);
+        using var ms = CreateOutputBuffer(capacity, out var output);
         WriteRgba8(ms, width, height, scanlinesWithFilter, length, normalizedLevel, dpi);
-        return ms.ToArray();
+        return FinishOutputBuffer(ms, output);
     }
 
     public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter) {
@@ -48,27 +54,9 @@ internal static class PngWriter {
     }
 
     public static void WriteRgba8(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel, int dpi = 0) {
-        if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
-        if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-        _ = RenderGuards.EnsureOutputPixels(width, height, PngOutputLimitMessage);
-        if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
-        if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
-        var stride = RenderGuards.EnsureOutputBytes((long)width * 4, PngOutputLimitMessage);
-        var expectedLength = RenderGuards.EnsureOutputBytes((long)height * (stride + 1), PngOutputLimitMessage);
-        if (length != expectedLength)
-            throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
-
+        ValidateScanlines(width, height, scanlinesWithFilter, length, rgba: true);
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-
-        stream.Write(Signature, 0, Signature.Length);
-        WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 8, colorType: 6));
-        if (dpi > 0) {
-            var physical = new byte[9];
-            var ppm = (uint)Math.Round(dpi / 0.0254);
-            for (var i = 0; i < 4; i++) physical[i] = physical[i + 4] = (byte)(ppm >> (24 - i * 8));
-            physical[8] = 1;
-            WriteChunk(stream, "pHYs", physical);
-        }
+        WriteImageHeader(stream, width, height, 8, 6, palette: null, dpi);
 
         var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
         if (normalizedLevel <= 0) {
@@ -120,17 +108,21 @@ internal static class PngWriter {
     }
     public static byte[] WriteGray1(int width, int height, byte[] scanlinesWithFilter, int length) {
         var idatLength = GetZlibStoredLength(length);
-        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
+        using var ms = CreateOutputBuffer(EstimateTotalLength(idatLength, hasPlte: false), out var output);
         WriteGray1(ms, width, height, scanlinesWithFilter, length, compressionLevel: 0);
-        return ms.ToArray();
+        return FinishOutputBuffer(ms, output);
     }
 
     public static byte[] WriteGray1(int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
         var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
-        var idatLength = normalizedLevel <= 0 ? GetZlibStoredLength(length) : Math.Max(length, 0);
-        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: false));
+        if (normalizedLevel > 0) {
+            ValidateScanlines(width, height, scanlinesWithFilter, length, rgba: false);
+            return WriteCompressedOutput(width, height, ZlibCompress(scanlinesWithFilter, length, normalizedLevel), 1, 0, palette: null, dpi: 0);
+        }
+        var idatLength = GetZlibStoredLength(length);
+        using var ms = CreateOutputBuffer(EstimateTotalLength(idatLength, hasPlte: false), out var output);
         WriteGray1(ms, width, height, scanlinesWithFilter, length, normalizedLevel);
-        return ms.ToArray();
+        return FinishOutputBuffer(ms, output);
     }
 
     public static void WriteGray1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length) {
@@ -138,20 +130,9 @@ internal static class PngWriter {
     }
 
     public static void WriteGray1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, int compressionLevel) {
-        if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
-        if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-        _ = RenderGuards.EnsureOutputPixels(width, height, PngOutputLimitMessage);
-        if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
-        if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
-        var rowBytes = RenderGuards.EnsureOutputBytes(((long)width + 7) / 8, PngOutputLimitMessage);
-        var expectedLength = RenderGuards.EnsureOutputBytes((long)height * (rowBytes + 1), PngOutputLimitMessage);
-        if (length != expectedLength)
-            throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
-
+        ValidateScanlines(width, height, scanlinesWithFilter, length, rgba: false);
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-
-        stream.Write(Signature, 0, Signature.Length);
-        WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 1, colorType: 0));
+        WriteImageHeader(stream, width, height, 1, 0, palette: null, dpi: 0);
 
         var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
         if (normalizedLevel <= 0) {
@@ -166,17 +147,21 @@ internal static class PngWriter {
 
     public static byte[] WriteIndexed1(int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette) {
         var idatLength = GetZlibStoredLength(length);
-        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: true));
+        using var ms = CreateOutputBuffer(EstimateTotalLength(idatLength, hasPlte: true), out var output);
         WriteIndexed1(ms, width, height, scanlinesWithFilter, length, palette, compressionLevel: 0);
-        return ms.ToArray();
+        return FinishOutputBuffer(ms, output);
     }
 
     public static byte[] WriteIndexed1(int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette, int compressionLevel) {
         var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
-        var idatLength = normalizedLevel <= 0 ? GetZlibStoredLength(length) : Math.Max(length, 0);
-        using var ms = new MemoryStream(EstimateTotalLength(idatLength, hasPlte: true));
+        if (normalizedLevel > 0) {
+            ValidateScanlines(width, height, scanlinesWithFilter, length, rgba: false, indexed: true, palette);
+            return WriteCompressedOutput(width, height, ZlibCompress(scanlinesWithFilter, length, normalizedLevel), 1, 3, palette, dpi: 0);
+        }
+        var idatLength = GetZlibStoredLength(length);
+        using var ms = CreateOutputBuffer(EstimateTotalLength(idatLength, hasPlte: true), out var output);
         WriteIndexed1(ms, width, height, scanlinesWithFilter, length, palette, normalizedLevel);
-        return ms.ToArray();
+        return FinishOutputBuffer(ms, output);
     }
 
     public static void WriteIndexed1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette) {
@@ -184,23 +169,9 @@ internal static class PngWriter {
     }
 
     public static void WriteIndexed1(Stream stream, int width, int height, byte[] scanlinesWithFilter, int length, byte[] palette, int compressionLevel) {
-        if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
-        if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-        _ = RenderGuards.EnsureOutputPixels(width, height, PngOutputLimitMessage);
-        if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
-        if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
-        if (palette is null) throw new ArgumentNullException(nameof(palette));
-        if (palette.Length != 6) throw new ArgumentException("Palette must contain exactly two RGB entries (6 bytes).", nameof(palette));
-        var rowBytes = RenderGuards.EnsureOutputBytes(((long)width + 7) / 8, PngOutputLimitMessage);
-        var expectedLength = RenderGuards.EnsureOutputBytes((long)height * (rowBytes + 1), PngOutputLimitMessage);
-        if (length != expectedLength)
-            throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
-
+        ValidateScanlines(width, height, scanlinesWithFilter, length, rgba: false, indexed: true, palette);
         if (stream is null) throw new ArgumentNullException(nameof(stream));
-
-        stream.Write(Signature, 0, Signature.Length);
-        WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth: 1, colorType: 3));
-        WriteChunk(stream, "PLTE", palette);
+        WriteImageHeader(stream, width, height, 1, 3, palette, dpi: 0);
 
         var normalizedLevel = NormalizeCompressionLevel(compressionLevel);
         if (normalizedLevel <= 0) {
@@ -292,6 +263,57 @@ internal static class PngWriter {
         var total = 57 + idatLength;
         if (hasPlte) total += 18;
         return total;
+    }
+
+    private static void ValidateScanlines(int width, int height, byte[] scanlinesWithFilter, int length, bool rgba, bool indexed = false, byte[]? palette = null) {
+        if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+        if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+        _ = RenderGuards.EnsureOutputPixels(width, height, PngOutputLimitMessage);
+        if (scanlinesWithFilter is null) throw new ArgumentNullException(nameof(scanlinesWithFilter));
+        if (length < 0 || length > scanlinesWithFilter.Length) throw new ArgumentOutOfRangeException(nameof(length));
+        if (indexed) {
+            if (palette is null) throw new ArgumentNullException(nameof(palette));
+            if (palette.Length != 6) throw new ArgumentException("Palette must contain exactly two RGB entries (6 bytes).", nameof(palette));
+        }
+        var rowBytes = RenderGuards.EnsureOutputBytes(rgba ? (long)width * 4 : ((long)width + 7) / 8, PngOutputLimitMessage);
+        var expectedLength = RenderGuards.EnsureOutputBytes((long)height * (rowBytes + 1), PngOutputLimitMessage);
+        if (length != expectedLength)
+            throw new ArgumentException("Invalid scanline buffer length.", nameof(scanlinesWithFilter));
+    }
+
+    private static void WriteImageHeader(Stream stream, int width, int height, byte bitDepth, byte colorType, byte[]? palette, int dpi) {
+        stream.Write(Signature, 0, Signature.Length);
+        WriteChunk(stream, "IHDR", BuildIHDR(width, height, bitDepth, colorType));
+        if (palette is not null) WriteChunk(stream, "PLTE", palette);
+        if (dpi > 0) {
+            var physical = new byte[9];
+            var ppm = (uint)Math.Round(dpi / 0.0254);
+            for (var i = 0; i < 4; i++) physical[i] = physical[i + 4] = (byte)(ppm >> (24 - i * 8));
+            physical[8] = 1;
+            WriteChunk(stream, "pHYs", physical);
+        }
+    }
+
+    private static byte[] WriteCompressedOutput(int width, int height, byte[] compressed, byte bitDepth, byte colorType, byte[]? palette, int dpi) {
+        var capacity = EstimateTotalLength(compressed.Length, hasPlte: palette is not null);
+        if (dpi > 0) capacity = checked(capacity + 21);
+        using var ms = CreateOutputBuffer(capacity, out var output);
+        WriteImageHeader(ms, width, height, bitDepth, colorType, palette, dpi);
+        WriteChunk(ms, "IDAT", compressed);
+        WriteChunk(ms, "IEND", Array.Empty<byte>());
+        return FinishOutputBuffer(ms, output);
+    }
+
+    /// <summary>Writes a PNG directly into its exclusively owned, exact-sized result buffer.</summary>
+    private static MemoryStream CreateOutputBuffer(int capacity, out byte[] output) {
+        output = new byte[capacity];
+        return new MemoryStream(output, 0, capacity, writable: true, publiclyVisible: false);
+    }
+
+    private static byte[] FinishOutputBuffer(MemoryStream stream, byte[] output) {
+        // A sizing error must not expose unwritten bytes or truncate the PNG.
+        if (stream.Position != output.Length) throw new InvalidOperationException("PNG output length differs from its reserved buffer.");
+        return output;
     }
 
     private static void WriteZlibStored(Stream stream, byte[] uncompressed, int length, ref uint crc) {
