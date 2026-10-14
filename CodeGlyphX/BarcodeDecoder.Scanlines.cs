@@ -21,7 +21,8 @@ public static partial class BarcodeDecoder {
         out BarcodeScanlineCandidate selected,
         bool retailOnly = false,
         IReadOnlyList<BarcodeDecoded>? ordinaryHits = null,
-        BarcodeDecoded? requiredDecoded = null) {
+        BarcodeDecoded? requiredDecoded = null,
+        bool code128Only = false) {
         var budget = DecodeBudget.Capture();
         BarcodeDecoded bestDecoded = null!;
         BarcodeScanlineCandidate bestScanline = default;
@@ -57,7 +58,8 @@ public static partial class BarcodeDecoder {
         return decoded is not null;
 
         void Consider(bool[] modules, double error, BarcodeScanlineCandidate candidate) {
-            if (!TryDecodeWithTransforms(modules, expectedType, options, cancellationToken, diagnostics, out var hit, out var priority,
+            var hint = code128Only ? expectedType ?? BarcodeType.Code128 : expectedType;
+            if (!TryDecodeWithTransforms(modules, hint, options, cancellationToken, diagnostics, out var hit, out var priority,
                     backgroundIsDark: candidate.BackgroundIsDark)) return;
             if (retailOnly && hit.Type != BarcodeType.EAN && hit.Type != BarcodeType.UPCA && hit.Type != BarcodeType.UPCE) return;
             // Confirmation looks for this payload even when another symbol has
@@ -120,14 +122,21 @@ public static partial class BarcodeDecoder {
     private static bool ShouldTryDataBarRecovery(BarcodeType? expectedType) =>
         !expectedType.HasValue || expectedType == BarcodeType.GS1DataBarOmni || expectedType == BarcodeType.GS1DataBarTruncated;
 
+    private static bool ShouldTryCode128Recovery(BarcodeType? expectedType) =>
+        !expectedType.HasValue || expectedType == BarcodeType.Code128 || expectedType == BarcodeType.GS1_128;
+
     private static int PixelPassCount(BarcodeType? expectedType) =>
-        1 + (ShouldTryRetailRecovery(expectedType) ? 1 : 0) + (ShouldTryDataBarRecovery(expectedType) ? 1 : 0);
+        1 + (ShouldTryRetailRecovery(expectedType) ? 1 : 0) + (ShouldTryDataBarRecovery(expectedType) ? 1 : 0)
+        + (ShouldTryCode128Recovery(expectedType) ? 1 : 0);
 
     private static bool IsRetailRecoveryPass(BarcodeType? expectedType, int pass) =>
         pass == 1 && ShouldTryRetailRecovery(expectedType);
 
     private static bool IsDataBarRecoveryPass(BarcodeType? expectedType, int pass) =>
-        pass > 0 && pass == PixelPassCount(expectedType) - 1 && ShouldTryDataBarRecovery(expectedType);
+        pass > 0 && ShouldTryDataBarRecovery(expectedType) && pass == 1 + (ShouldTryRetailRecovery(expectedType) ? 1 : 0);
+
+    private static bool IsCode128RecoveryPass(BarcodeType? expectedType, int pass) =>
+        pass > 0 && ShouldTryCode128Recovery(expectedType) && pass == PixelPassCount(expectedType) - 1;
 
     private static bool IsCompleteLocalRetailPayload(BarcodeDecoded decoded, int moduleCount) {
         // A local run candidate already has the complete guards for one base

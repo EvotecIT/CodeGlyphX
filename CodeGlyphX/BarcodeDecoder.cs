@@ -57,10 +57,10 @@ public static partial class BarcodeDecoder {
         decoded = null!;
         if (cancellationToken.IsCancellationRequested) return false;
         for (var pass = 0; pass < PixelPassCount(expectedType); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass))) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass), code128Recovery: IsCode128RecoveryPass(expectedType, pass))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out decoded, out var selected, retailOnly: IsRetailRecoveryPass(expectedType, pass))) {
+                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out decoded, out var selected, code128Only: IsCode128RecoveryPass(expectedType, pass), retailOnly: IsRetailRecoveryPass(expectedType, pass))) {
                     if (IsCorroboratedRetailRecovery(pixels, width, height, stride, format, expectedType, options, cancellationToken, decoded, selected)) return true;
                     decoded = null!;
                 }
@@ -77,11 +77,11 @@ public static partial class BarcodeDecoder {
         diagnostics = new BarcodeDecodeDiagnostics();
         if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
         for (var pass = 0; pass < PixelPassCount(expectedType); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass))) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass), code128Recovery: IsCode128RecoveryPass(expectedType, pass))) continue;
             diagnostics.CandidateCount += candidates.Length;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) { diagnostics.Failure = "Cancelled."; return false; }
-                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, diagnostics, out decoded, out var selected, retailOnly: IsRetailRecoveryPass(expectedType, pass))) {
+                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, diagnostics, out decoded, out var selected, code128Only: IsCode128RecoveryPass(expectedType, pass), retailOnly: IsRetailRecoveryPass(expectedType, pass))) {
                     if (IsCorroboratedRetailRecovery(pixels, width, height, stride, format, expectedType, options, cancellationToken, decoded, selected)) {
                         diagnostics.Success = true;
                         return true;
@@ -120,10 +120,10 @@ public static partial class BarcodeDecoder {
         }
 
         for (var pass = 0; pass < PixelPassCount(expectedType) && (pass == 0 || recoverAfterHit || list.Count == 0); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass))) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass), code128Recovery: IsCode128RecoveryPass(expectedType, pass))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) break;
-                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out var hit, out var selected, retailOnly: IsRetailRecoveryPass(expectedType, pass), ordinaryHits: IsRetailRecoveryPass(expectedType, pass) ? ordinaryHits : null)) {
+                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out var hit, out var selected, code128Only: IsCode128RecoveryPass(expectedType, pass), retailOnly: IsRetailRecoveryPass(expectedType, pass), ordinaryHits: IsRetailRecoveryPass(expectedType, pass) ? ordinaryHits : null)) {
                     if (IsCorroboratedRetailRecovery(pixels, width, height, stride, format, expectedType, options, cancellationToken, hit, selected)) {
                         AddUnique(list, seen, hit);
                         if (pass == 0) ordinaryHits.Add(hit);
@@ -228,10 +228,10 @@ public static partial class BarcodeDecoder {
         decoded = null!;
         if (cancellationToken.IsCancellationRequested) return false;
         for (var pass = 0; pass < PixelPassCount(expectedType); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass))) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass), code128Recovery: IsCode128RecoveryPass(expectedType, pass))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out decoded, out var selected, retailOnly: IsRetailRecoveryPass(expectedType, pass))) {
+                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out decoded, out var selected, code128Only: IsCode128RecoveryPass(expectedType, pass), retailOnly: IsRetailRecoveryPass(expectedType, pass))) {
                     if (IsCorroboratedRetailRecovery(pixels, width, height, stride, format, expectedType, options, cancellationToken, decoded, selected)) return true;
                     decoded = null!;
                 }
@@ -248,11 +248,11 @@ public static partial class BarcodeDecoder {
         diagnostics = new BarcodeDecodeDiagnostics();
         if (cancellationToken.IsCancellationRequested) { diagnostics.Failure = "Cancelled."; return false; }
         for (var pass = 0; pass < PixelPassCount(expectedType); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass))) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass), code128Recovery: IsCode128RecoveryPass(expectedType, pass))) continue;
             diagnostics.CandidateCount += candidates.Length;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) { diagnostics.Failure = "Cancelled."; return false; }
-                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, diagnostics, out decoded, out var selected, retailOnly: IsRetailRecoveryPass(expectedType, pass))) {
+                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, diagnostics, out decoded, out var selected, code128Only: IsCode128RecoveryPass(expectedType, pass), retailOnly: IsRetailRecoveryPass(expectedType, pass))) {
                     if (IsCorroboratedRetailRecovery(pixels, width, height, stride, format, expectedType, options, cancellationToken, decoded, selected)) {
                         diagnostics.Success = true;
                         return true;
@@ -282,10 +282,10 @@ public static partial class BarcodeDecoder {
         var ordinaryHits = new List<BarcodeDecoded>(4);
         var seen = new HashSet<string>(StringComparer.Ordinal);
         for (var pass = 0; pass < PixelPassCount(expectedType); pass++) {
-            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass))) continue;
+            if (!BarcodeScanline.TryGetModuleCandidates(pixels, width, height, stride, format, cancellationToken, out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass), code128Recovery: IsCode128RecoveryPass(expectedType, pass))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) break;
-                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out var hit, out var selected, retailOnly: IsRetailRecoveryPass(expectedType, pass), ordinaryHits: IsRetailRecoveryPass(expectedType, pass) ? ordinaryHits : null)) {
+                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out var hit, out var selected, code128Only: IsCode128RecoveryPass(expectedType, pass), retailOnly: IsRetailRecoveryPass(expectedType, pass), ordinaryHits: IsRetailRecoveryPass(expectedType, pass) ? ordinaryHits : null)) {
                     if (IsCorroboratedRetailRecovery(pixels, width, height, stride, format, expectedType, options, cancellationToken, hit, selected)) {
                         AddUnique(list, seen, hit);
                         if (pass == 0) ordinaryHits.Add(hit);
@@ -361,10 +361,10 @@ public static partial class BarcodeDecoder {
         for (var pass = 0; pass < PixelPassCount(expectedType) && (pass == 0 || recoverAfterHit || decoded.Count == originalCount); pass++) {
             if (!BarcodeScanline.TryGetLocatedModuleCandidates(
                     pixels, width, height, stride, format, cancellationToken,
-                    out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass))) continue;
+                    out var candidates, retailRecovery: IsRetailRecoveryPass(expectedType, pass), retailHint: IsRetailBarcodeType(expectedType), dataBarRecovery: IsDataBarRecoveryPass(expectedType, pass), code128Recovery: IsCode128RecoveryPass(expectedType, pass))) continue;
             for (var i = 0; i < candidates.Length;) {
                 if (DecodeBudget.ShouldAbort(cancellationToken)) return;
-                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out var hit, out var selected, retailOnly: IsRetailRecoveryPass(expectedType, pass), ordinaryHits: IsRetailRecoveryPass(expectedType, pass) ? ordinaryHits : null)) {
+                if (TryDecodeScanline(candidates, ref i, expectedType, options, cancellationToken, null, out var hit, out var selected, code128Only: IsCode128RecoveryPass(expectedType, pass), retailOnly: IsRetailRecoveryPass(expectedType, pass), ordinaryHits: IsRetailRecoveryPass(expectedType, pass) ? ordinaryHits : null)) {
                     if (IsCorroboratedRetailRecovery(pixels, width, height, stride, format, expectedType, options, cancellationToken, hit, selected)) {
                         decoded.Add(new BarcodeImageCandidate(hit, selected, region));
                         if (pass == 0) ordinaryHits.Add(hit);

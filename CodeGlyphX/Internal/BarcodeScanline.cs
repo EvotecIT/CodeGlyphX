@@ -90,8 +90,8 @@ internal static partial class BarcodeScanline {
         return TryGetModuleCandidates(pixels, width, height, stride, format, CancellationToken.None, out candidates);
     }
 
-    public static bool TryGetModuleCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BarcodeScanlineCandidate[] candidates, bool retailRecovery = false, bool retailHint = false, bool dataBarRecovery = false) {
-        return TryGetLocatedModuleCandidates(pixels, width, height, stride, format, cancellationToken, out candidates, retailRecovery, retailHint, dataBarRecovery);
+    public static bool TryGetModuleCandidates(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BarcodeScanlineCandidate[] candidates, bool retailRecovery = false, bool retailHint = false, bool dataBarRecovery = false, bool code128Recovery = false) {
+        return TryGetLocatedModuleCandidates(pixels, width, height, stride, format, cancellationToken, out candidates, retailRecovery, retailHint, dataBarRecovery, code128Recovery);
     }
 
     internal static bool TryGetLocatedModuleCandidates(
@@ -104,7 +104,8 @@ internal static partial class BarcodeScanline {
         out BarcodeScanlineCandidate[] candidates,
         bool retailRecovery = false,
         bool retailHint = false,
-        bool dataBarRecovery = false) {
+        bool dataBarRecovery = false,
+        bool code128Recovery = false) {
         candidates = Array.Empty<BarcodeScanlineCandidate>();
 #if !NET8_0_OR_GREATER
         if (pixels is null) throw new ArgumentNullException(nameof(pixels));
@@ -114,7 +115,9 @@ internal static partial class BarcodeScanline {
         if (width <= 0 || height <= 0 || stride < width * 4 || DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
         var list = new List<BarcodeScanlineCandidate>(8);
-        if (dataBarRecovery) {
+        if (code128Recovery) {
+            CollectCode128RecoveryRows(pixels, width, height, stride, format, cancellationToken, list);
+        } else if (dataBarRecovery) {
             CollectDataBarRecoveryRows(pixels, width, height, stride, format, cancellationToken, list);
         } else if (retailRecovery) {
             CollectRetailRecoveryRows(pixels, width, height, stride, format, cancellationToken, list);
@@ -496,9 +499,11 @@ internal static partial class BarcodeScanline {
     /// luminance is monotone, so equal dark-pixel counts imply identical pixels,
     /// run widths and fit errors. Adjacent gray cutoffs remain distinct whenever
     /// even one pixel changes, including a base's gray add-on.
+    /// Code 128 recovery can add complementary eighth- and sixteenth-step
+    /// cutoffs while retaining the ordinary four hypotheses for other callers.
     /// </summary>
     private static int GetDistinctScanlineThresholds(ReadOnlySpan<byte> luminance, int min, int max,
-        CancellationToken cancellationToken, Span<int> thresholds) {
+        CancellationToken cancellationToken, Span<int> thresholds, bool includeIntermediate = false) {
         var range = max - min;
         var midpoint = (min + max) / 2;
         var count = 0;
@@ -506,6 +511,12 @@ internal static partial class BarcodeScanline {
         if (((min + max) & 1) != 0) thresholds[count++] = midpoint + 1;
         thresholds[count++] = min + range / 3;
         thresholds[count++] = min + (range * 2) / 3;
+        if (includeIntermediate) {
+            thresholds[count++] = min + range * 3 / 8;
+            thresholds[count++] = min + range * 5 / 8;
+            thresholds[count++] = min + range * 7 / 16;
+            thresholds[count++] = min + range * 9 / 16;
+        }
 
         Span<int> darkCounts = stackalloc int[256];
         darkCounts.Clear();
