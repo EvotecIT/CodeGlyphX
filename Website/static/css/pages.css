@@ -113,7 +113,7 @@
 .cgx-fig__decoded > li { display: grid; grid-template-rows: auto auto 1fr; gap: 8px; min-width: 0; margin: 0; }
 .cgx-fig__decoded .cgx-fig__plate { aspect-ratio: 1; }
 .cgx-fig__decoded .cgx-fig__plate img { max-height: 100%; width: auto; }
-.cgx-fig__text { margin: 0; padding: 10px 12px; overflow-x: auto; border: 1px solid var(--code-line); border-radius: 10px; background: var(--code-bg); color: var(--tok-text); font-family: var(--cgx-mono); font-size: .6875rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.cgx-fig__text { max-width: none; margin: 0; padding: 10px 12px; overflow-x: auto; border: 1px solid var(--code-line); border-radius: 10px; background: var(--code-bg); color: var(--tok-text); font-family: var(--cgx-mono); font-size: .6875rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* scan: input image, then what SymbolScanner returned. */
 .cgx-fig__scan { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 8px 8px 0; list-style: none; }

@@ -42,7 +42,7 @@
     <li>
       <span class="cgx-fig__plate"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" loading="lazy" decoding="async" alt="{{ it.label }} QR code" /></span>
       <span class="cgx-fig__label">{{ it.label }}</span>
-      {{~ if it.decoded ~}}<pre class="cgx-fig__text" aria-label="Text decoded from the {{ it.label }} code"><code>{{ it.decoded | html.escape }}</code></pre>{{~ end ~}}
+      {{~ if it.decoded ~}}<p class="cgx-fig__text"><span class="cgx-visually-hidden">Decoded text: </span>{{ it.decoded | html.escape }}</p>{{~ end ~}}
     </li>
     {{~ end ~}}
   </ul>
