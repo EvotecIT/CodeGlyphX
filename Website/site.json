@@ -165,9 +165,13 @@
       { "Match": "/faq/**", "Bundles": ["global", "pages"] },
       { "Match": "/showcase/**", "Bundles": ["global", "pages"] },
       { "Match": "/docs/**", "Bundles": ["global", "pages"] },
-      { "Match": "/playground/**", "Bundles": ["global", "pages"] },
+      { "Match": "/playground/**", "Bundles": ["global"] },
       { "Match": "/pricing/**", "Bundles": ["global", "pages"] },
-      { "Match": "/**", "Bundles": ["global", "pages"] }
+      { "Match": "/downloads/**", "Bundles": ["global", "pages"] },
+      { "Match": "/changelog/**", "Bundles": ["global", "pages"] },
+      { "Match": "/404/**", "Bundles": ["global", "pages"] },
+      { "Match": "/404.html", "Bundles": ["global", "pages"] },
+      { "Match": "/**", "Bundles": ["global"] }
     ],
     "Preloads": [
       { "Rel": "preload", "Href": "/fonts/inter/Inter-400-latin.woff2", "As": "font", "Type": "font/woff2", "Crossorigin": "anonymous" },

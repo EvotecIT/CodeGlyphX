@@ -39,7 +39,7 @@
         <ul class="cgx-run__out" aria-label="Files written">
           {{~ for it in qs ~}}
           <li class="cgx-run__file{{ if for.first }} cgx-run__file--qr{{ end }}">
-            <span class="cgx-run__plate"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" fetchpriority="{{ if for.first }}high{{ else }}auto{{ end }}" decoding="async" alt="{{ it.label }}, {{ it.note }}" /></span>
+            <span class="cgx-run__plate"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" {{ if for.first }}fetchpriority="high" loading="eager"{{ else }}loading="lazy"{{ end }} decoding="async" alt="{{ it.label }}, {{ it.note }}" /></span>
             <span class="cgx-run__name">{{ it.label }}</span>
           </li>
           {{~ end ~}}
