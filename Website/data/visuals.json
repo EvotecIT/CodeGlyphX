@@ -1,0 +1,2603 @@
+{
+  "generatedBy": "Website/tools/SiteSpecimens",
+  "version": "3.0.0",
+  "nav": {
+    "thumbs": {
+      "playground": {
+        "src": "/visuals/nav/playground.svg",
+        "w": 160,
+        "h": 100
+      },
+      "powershell": {
+        "src": "/visuals/nav/powershell.svg",
+        "w": 160,
+        "h": 100
+      },
+      "showcase": {
+        "src": "/visuals/nav/showcase.svg",
+        "w": 160,
+        "h": 100
+      },
+      "pricing": {
+        "src": "/visuals/nav/pricing.svg",
+        "w": 160,
+        "h": 100
+      },
+      "docs": {
+        "src": "/visuals/nav/docs.svg",
+        "w": 160,
+        "h": 100
+      },
+      "api": {
+        "src": "/visuals/nav/api.svg",
+        "w": 160,
+        "h": 100
+      },
+      "benchmarks": {
+        "src": "/visuals/nav/benchmarks.svg",
+        "w": 160,
+        "h": 100
+      },
+      "downloads": {
+        "src": "/visuals/nav/downloads.svg",
+        "w": 160,
+        "h": 100
+      },
+      "changelog": {
+        "src": "/visuals/nav/changelog.svg",
+        "w": 160,
+        "h": 100
+      }
+    }
+  },
+  "docs": {
+    "cards": {
+      "installation": {
+        "src": "/visuals/docs/card-installation.svg",
+        "w": 198,
+        "h": 198
+      },
+      "quickstart": {
+        "src": "/visuals/docs/quickstart-hello.svg",
+        "w": 150,
+        "h": 150
+      },
+      "migration-3": {
+        "src": "/visuals/docs/card-migration-3.svg",
+        "w": 120,
+        "h": 120
+      },
+      "qr": {
+        "src": "/specimens/qrcode.svg",
+        "w": 198,
+        "h": 198
+      },
+      "microqr": {
+        "src": "/specimens/microqrcode.svg",
+        "w": 138,
+        "h": 138
+      },
+      "datamatrix": {
+        "src": "/specimens/datamatrix.svg",
+        "w": 144,
+        "h": 144
+      },
+      "pdf417": {
+        "src": "/specimens/pdf417.svg",
+        "w": 564,
+        "h": 162
+      },
+      "aztec": {
+        "src": "/specimens/aztec.svg",
+        "w": 162,
+        "h": 162
+      },
+      "code128": {
+        "src": "/specimens/code128.svg",
+        "w": 418,
+        "h": 80
+      },
+      "code39": {
+        "src": "/specimens/code39.svg",
+        "w": 324,
+        "h": 80
+      },
+      "ean-upc": {
+        "src": "/specimens/ean.svg",
+        "w": 230,
+        "h": 80
+      },
+      "other-1d": {
+        "src": "/specimens/royalmail4state.svg",
+        "w": 546,
+        "h": 96
+      },
+      "gs1": {
+        "src": "/visuals/docs/gs1-datamatrix.svg",
+        "w": 156,
+        "h": 156
+      },
+      "payloads": {
+        "src": "/specimens/payload-wifi.svg",
+        "w": 246,
+        "h": 246
+      },
+      "decoding": {
+        "src": "/images/art/qr-expressive-waves.png",
+        "w": 912,
+        "h": 912
+      },
+      "renderers": {
+        "src": "/visuals/docs/formats-svg.svg",
+        "w": 174,
+        "h": 174
+      },
+      "styling": {
+        "src": "/visuals/docs/qr-eye-target.png",
+        "w": 232,
+        "h": 232
+      },
+      "symbol-capabilities": {
+        "src": "/specimens/hanxin.svg",
+        "w": 186,
+        "h": 186
+      }
+    },
+    "figures": {
+      "qr-ecc": {
+        "layout": "compare",
+        "items": [
+          {
+            "src": "/visuals/docs/qr-ecc-l.svg",
+            "w": 174,
+            "h": 174,
+            "label": "L",
+            "note": "recovers ~7% · version 2, 25 × 25",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-ecc-m.svg",
+            "w": 198,
+            "h": 198,
+            "label": "M",
+            "note": "recovers ~15% · version 3, 29 × 29",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-ecc-q.svg",
+            "w": 198,
+            "h": 198,
+            "label": "Q",
+            "note": "recovers ~25% · version 3, 29 × 29",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-ecc-h.svg",
+            "w": 222,
+            "h": 222,
+            "label": "H",
+            "note": "recovers ~30% · version 4, 33 × 33",
+            "decoded": null,
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "qr-shapes": {
+        "layout": "row",
+        "items": [
+          {
+            "src": "/visuals/docs/qr-shape-square.png",
+            "w": 232,
+            "h": 232,
+            "label": "Square",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-shape-rounded.png",
+            "w": 232,
+            "h": 232,
+            "label": "Rounded",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-shape-circle.png",
+            "w": 232,
+            "h": 232,
+            "label": "Circle",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-shape-dot.png",
+            "w": 232,
+            "h": 232,
+            "label": "Dot",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-shape-squircle.png",
+            "w": 232,
+            "h": 232,
+            "label": "Squircle",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-shape-diamond.png",
+            "w": 232,
+            "h": 232,
+            "label": "Diamond",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-shape-leaf.png",
+            "w": 232,
+            "h": 232,
+            "label": "Leaf",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-shape-connectedrounded.png",
+            "w": 232,
+            "h": 232,
+            "label": "ConnectedRounded",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "qr-eyes": {
+        "layout": "row",
+        "items": [
+          {
+            "src": "/visuals/docs/qr-eye-single.png",
+            "w": 232,
+            "h": 232,
+            "label": "Single",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-eye-doublering.png",
+            "w": 232,
+            "h": 232,
+            "label": "DoubleRing",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-eye-target.png",
+            "w": 232,
+            "h": 232,
+            "label": "Target",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-eye-bracket.png",
+            "w": 232,
+            "h": 232,
+            "label": "Bracket",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-eye-badge.png",
+            "w": 232,
+            "h": 232,
+            "label": "Badge",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/qr-eye-cutcorner.png",
+            "w": 232,
+            "h": 232,
+            "label": "CutCorner",
+            "note": "decodes",
+            "decoded": null,
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "microqr-sizes": {
+        "layout": "compare",
+        "items": [
+          {
+            "src": "/visuals/docs/microqr-m1.svg",
+            "w": 90,
+            "h": 90,
+            "label": "M1",
+            "note": "11 × 11",
+            "decoded": "12345",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/microqr-m2.svg",
+            "w": 102,
+            "h": 102,
+            "label": "M2",
+            "note": "13 × 13",
+            "decoded": "CGX26",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/microqr-m3.svg",
+            "w": 114,
+            "h": 114,
+            "label": "M3",
+            "note": "15 × 15",
+            "decoded": "CGX-2026",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/microqr-m4.svg",
+            "w": 126,
+            "h": 126,
+            "label": "M4",
+            "note": "17 × 17",
+            "decoded": "CODEGLYPHX-2026",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/microqr-vs-qr.svg",
+            "w": 174,
+            "h": 174,
+            "label": "QR version 1",
+            "note": "21 × 21, wider quiet zone",
+            "decoded": "CODEGLYPHX-2026",
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "datamatrix-shapes": {
+        "layout": "compare",
+        "items": [
+          {
+            "src": "/visuals/docs/datamatrix-square.svg",
+            "w": 120,
+            "h": 120,
+            "label": "Square",
+            "note": "16 × 16 modules",
+            "decoded": "SERIAL-12345",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/datamatrix-rectangular.svg",
+            "w": 216,
+            "h": 72,
+            "label": "Rectangular",
+            "note": "8 × 32 modules",
+            "decoded": "SERIAL-12345",
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "pdf417-ecc": {
+        "layout": "compare",
+        "items": [
+          {
+            "src": "/visuals/docs/pdf417-ecc2.svg",
+            "w": 180,
+            "h": 46,
+            "label": "Level 2",
+            "note": "19 rows × 1 columns",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/pdf417-ecc4.svg",
+            "w": 214,
+            "h": 52,
+            "label": "Level 4",
+            "note": "22 rows × 2 columns",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/pdf417-ecc6.svg",
+            "w": 282,
+            "h": 78,
+            "label": "Level 6",
+            "note": "35 rows × 4 columns",
+            "decoded": null,
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "aztec-ecc": {
+        "layout": "compare",
+        "items": [
+          {
+            "src": "/visuals/docs/aztec-ecc23.svg",
+            "w": 138,
+            "h": 138,
+            "label": "23% (default)",
+            "note": "compact, 2 layers, 19 × 19",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/aztec-ecc50.svg",
+            "w": 138,
+            "h": 138,
+            "label": "50%",
+            "note": "compact, 2 layers, 19 × 19",
+            "decoded": null,
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "code128": {
+        "layout": "linear",
+        "items": [
+          {
+            "src": "/visuals/docs/code128-1-code128.svg",
+            "w": 374,
+            "h": 72,
+            "label": "Code 128",
+            "note": "167 modules wide",
+            "decoded": "PRODUCT-12345",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/code128-2-gs1code128.svg",
+            "w": 396,
+            "h": 72,
+            "label": "GS1-128",
+            "note": "178 modules wide",
+            "decoded": "010950110153000317261231",
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "code39-93": {
+        "layout": "linear",
+        "items": [
+          {
+            "src": "/visuals/docs/code39-1-code39.svg",
+            "w": 350,
+            "h": 72,
+            "label": "Code 39",
+            "note": "155 modules wide, check character A",
+            "decoded": "HELLO-123A",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/code39-2-code93.svg",
+            "w": 276,
+            "h": 72,
+            "label": "Code 93",
+            "note": "118 modules wide",
+            "decoded": "HELLO-123",
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "ean-upc": {
+        "layout": "linear",
+        "items": [
+          {
+            "src": "/visuals/docs/retail-1-ean.svg",
+            "w": 230,
+            "h": 72,
+            "label": "EAN-13",
+            "note": "95 modules wide",
+            "decoded": "5901234123457",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/retail-2-ean.svg",
+            "w": 174,
+            "h": 72,
+            "label": "EAN-8",
+            "note": "67 modules wide",
+            "decoded": "96385074",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/retail-3-upca.svg",
+            "w": 230,
+            "h": 72,
+            "label": "UPC-A",
+            "note": "95 modules wide",
+            "decoded": "036000291452",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/retail-4-upce.svg",
+            "w": 142,
+            "h": 72,
+            "label": "UPC-E",
+            "note": "51 modules wide",
+            "decoded": "01234565",
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "other-1d": {
+        "layout": "row",
+        "items": [
+          {
+            "src": "/specimens/itf14.svg",
+            "w": 310,
+            "h": 80,
+            "label": "ITF-14",
+            "note": null,
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/specimens/codabar.svg",
+            "w": 182,
+            "h": 80,
+            "label": "Codabar",
+            "note": null,
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/specimens/telepen.svg",
+            "w": 232,
+            "h": 80,
+            "label": "Telepen",
+            "note": null,
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/specimens/msi.svg",
+            "w": 246,
+            "h": 80,
+            "label": "MSI",
+            "note": null,
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/specimens/pharmacode.svg",
+            "w": 88,
+            "h": 80,
+            "label": "Pharmacode",
+            "note": null,
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/specimens/postnet.svg",
+            "w": 426,
+            "h": 60,
+            "label": "POSTNET",
+            "note": null,
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/specimens/royalmail4state.svg",
+            "w": 546,
+            "h": 96,
+            "label": "Royal Mail 4-State",
+            "note": null,
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/specimens/uspsintelligentmail.svg",
+            "w": 822,
+            "h": 96,
+            "label": "USPS Intelligent Mail",
+            "note": null,
+            "decoded": null,
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "gs1": {
+        "layout": "compare",
+        "items": [
+          {
+            "src": "/visuals/docs/gs1-128.svg",
+            "w": 572,
+            "h": 72,
+            "label": "GS1-128",
+            "note": "linear carrier",
+            "decoded": "010952012345678810ABC1\u001D17261231",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/gs1-datamatrix.svg",
+            "w": 156,
+            "h": 156,
+            "label": "GS1 DataMatrix",
+            "note": "2D carrier",
+            "decoded": "(01)09520123456788(10)ABC1(17)261231",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/gs1-digital-link.svg",
+            "w": 222,
+            "h": 222,
+            "label": "Digital Link QR",
+            "note": "web URI carrier",
+            "decoded": "https://id.gs1.org/01/09520123456788/10/ABC1?17=261231",
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "payloads": {
+        "layout": "decoded",
+        "items": [
+          {
+            "src": "/specimens/payload-wifi.svg",
+            "w": 246,
+            "h": 246,
+            "label": "Wi-Fi network",
+            "note": null,
+            "decoded": "WIFI:T:WPA;S:Evotec-Guest;P:correct-horse-battery;;",
+            "text": null
+          },
+          {
+            "src": "/specimens/payload-otp.svg",
+            "w": 270,
+            "h": 270,
+            "label": "Authenticator (TOTP)",
+            "note": null,
+            "decoded": "otpauth://totp/CodeGlyphX:ava%40example.com?secret=JBSWY3DPEHPK3PXP&issuer=CodeGlyphX",
+            "text": null
+          },
+          {
+            "src": "/specimens/payload-vcard.svg",
+            "w": 318,
+            "h": 318,
+            "label": "Contact card",
+            "note": null,
+            "decoded": "BEGIN:VCARD\r\nVERSION:3.0\r\nN:Stone;Ava;;;\r\nFN:Ava Stone\r\nTEL;TYPE=CELL:+14155550198\r\nEMAIL:ava@example.com\r\nEND:VCARD",
+            "text": null
+          },
+          {
+            "src": "/specimens/payload-girocode.svg",
+            "w": 270,
+            "h": 270,
+            "label": "SEPA payment",
+            "note": null,
+            "decoded": "BCD\n001\n2\nSCT\nCOBADEFFXXX\nEvotec Services\nDE89370400440532013000\nEUR99.99\n\n\n\n",
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "decoding": {
+        "layout": "scan",
+        "items": [
+          {
+            "src": "/images/art/qr-expressive-waves.png",
+            "w": 912,
+            "h": 912,
+            "label": "qr-expressive-waves.png",
+            "note": "QrCode",
+            "decoded": "https://example.com/art",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/scan-datamatrix.png",
+            "w": 176,
+            "h": 176,
+            "label": "label-lot.png",
+            "note": "DataMatrix",
+            "decoded": "LOT-2026-0042",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/scan-code128.png",
+            "w": 426,
+            "h": 80,
+            "label": "carton.png",
+            "note": "Code128",
+            "decoded": "CODEGLYPHX-2026",
+            "text": null
+          }
+        ],
+        "extra": null
+      },
+      "renderers": {
+        "layout": "formats",
+        "items": [
+          {
+            "src": "/visuals/docs/formats-svg.svg",
+            "w": 174,
+            "h": 174,
+            "label": "SVG",
+            "note": "vector paths",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/formats-png.png",
+            "w": 174,
+            "h": 174,
+            "label": "PNG",
+            "note": "raster, 1 px = 1/6 module",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/formats-ascii.svg",
+            "w": 332,
+            "h": 332,
+            "label": "ASCII",
+            "note": "text for consoles and logs, set in a monospaced font",
+            "decoded": null,
+            "text": null
+          }
+        ],
+        "extra": {
+          "payload": "https://codeglyphx.com",
+          "sizes": [
+            {
+              "format": "SVG",
+              "bytes": 2313,
+              "kb": "2.3 KB",
+              "mime": "image/svg+xml"
+            },
+            {
+              "format": "SVGZ",
+              "bytes": 642,
+              "kb": "642 B",
+              "mime": "image/svg+xml"
+            },
+            {
+              "format": "PNG",
+              "bytes": 4070,
+              "kb": "4.0 KB",
+              "mime": "image/png"
+            },
+            {
+              "format": "WEBP",
+              "bytes": 4276,
+              "kb": "4.2 KB",
+              "mime": "image/webp"
+            },
+            {
+              "format": "GIF",
+              "bytes": 41629,
+              "kb": "41 KB",
+              "mime": "image/gif"
+            },
+            {
+              "format": "BMP",
+              "bytes": 121226,
+              "kb": "118 KB",
+              "mime": "image/bmp"
+            },
+            {
+              "format": "JPEG",
+              "bytes": 11393,
+              "kb": "11 KB",
+              "mime": "image/jpeg"
+            },
+            {
+              "format": "TIFF",
+              "bytes": 1393,
+              "kb": "1.4 KB",
+              "mime": "image/tiff"
+            },
+            {
+              "format": "PDF",
+              "bytes": 5756,
+              "kb": "5.6 KB",
+              "mime": "application/pdf"
+            },
+            {
+              "format": "EPS",
+              "bytes": 7104,
+              "kb": "6.9 KB",
+              "mime": "application/postscript"
+            },
+            {
+              "format": "HTML",
+              "bytes": 24841,
+              "kb": "24 KB",
+              "mime": "text/html"
+            },
+            {
+              "format": "ASCII",
+              "bytes": 1738,
+              "kb": "1.7 KB",
+              "mime": "text/plain"
+            }
+          ]
+        }
+      },
+      "quickstart": {
+        "layout": "row",
+        "items": [
+          {
+            "src": "/visuals/docs/quickstart-hello.svg",
+            "w": 150,
+            "h": 150,
+            "label": "hello.png",
+            "note": "QR.Save(\"Hello, World!\", ...)",
+            "decoded": "Hello, World!",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/quickstart-code128.svg",
+            "w": 374,
+            "h": 72,
+            "label": "barcode.png",
+            "note": "Code 128",
+            "decoded": null,
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/quickstart-ean.svg",
+            "w": 230,
+            "h": 72,
+            "label": "ean.png",
+            "note": "EAN-13",
+            "decoded": null,
+            "text": null
+          }
+        ],
+        "extra": null
+      }
+    }
+  },
+  "bench": {
+    "initial": "windows-full",
+    "sets": [
+      {
+        "id": "windows-full",
+        "os": "windows",
+        "mode": "full",
+        "generated": "2026-01-24T10:49:40.7910358Z",
+        "count": 11,
+        "wins": 11,
+        "median": "56×",
+        "ticks": [
+          {
+            "label": "1×",
+            "pos": 0
+          },
+          {
+            "label": "10×",
+            "pos": 50
+          },
+          {
+            "label": "100×",
+            "pos": 100
+          }
+        ],
+        "headline": [
+          {
+            "scenario": "Code128 PNG",
+            "runner": "ZXing.Net",
+            "factor": "65×",
+            "pos": 90.62,
+            "slower": false
+          },
+          {
+            "scenario": "Code39 PNG",
+            "runner": "ZXing.Net",
+            "factor": "60×",
+            "pos": 89.01,
+            "slower": false
+          },
+          {
+            "scenario": "PDF417 PNG",
+            "runner": "ZXing.Net",
+            "factor": "58×",
+            "pos": 88.35,
+            "slower": false
+          },
+          {
+            "scenario": "EAN-13 PNG",
+            "runner": "ZXing.Net",
+            "factor": "57×",
+            "pos": 87.62,
+            "slower": false
+          },
+          {
+            "scenario": "Code93 PNG",
+            "runner": "ZXing.Net",
+            "factor": "56×",
+            "pos": 87.55,
+            "slower": false
+          },
+          {
+            "scenario": "UPC-A PNG",
+            "runner": "ZXing.Net",
+            "factor": "56×",
+            "pos": 87.31,
+            "slower": false
+          },
+          {
+            "scenario": "Aztec PNG",
+            "runner": "ZXing.Net",
+            "factor": "26×",
+            "pos": 70.96,
+            "slower": false
+          },
+          {
+            "scenario": "Data Matrix PNG (medium)",
+            "runner": "ZXing.Net",
+            "factor": "25×",
+            "pos": 70.18,
+            "slower": false
+          },
+          {
+            "scenario": "QR PNG (medium)",
+            "runner": "QRCoder",
+            "factor": "2.5×",
+            "pos": 19.89,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (clean)",
+            "runner": "ZXing.Net",
+            "factor": "1.5×",
+            "pos": 8.19,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (noisy)",
+            "runner": "ZXing.Net",
+            "factor": "1.2×",
+            "pos": 4.29,
+            "slower": false
+          }
+        ],
+        "scenarios": [
+          {
+            "scenario": "Aztec PNG",
+            "benchmark": "Aztec (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "21.18 μs",
+                "alloc": "61.34 KB",
+                "pct": 1.58,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "556.01 μs",
+                "alloc": "61.38 KB",
+                "pct": 41.56,
+                "factor": "26×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "1,337.96 μs",
+                "alloc": "642.4 KB",
+                "pct": 100,
+                "factor": "63×"
+              }
+            ]
+          },
+          {
+            "scenario": "Code128 PNG",
+            "benchmark": "Code 128 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "10.76 μs",
+                "alloc": "14.43 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "698.57 μs",
+                "alloc": "15.7 KB",
+                "pct": 8.62,
+                "factor": "65×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "8,099.55 μs",
+                "alloc": "2034.97 KB",
+                "pct": 100,
+                "factor": "753×"
+              }
+            ]
+          },
+          {
+            "scenario": "Code39 PNG",
+            "benchmark": "Code 39 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "8.167 μs",
+                "alloc": "10.02 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "492.240 μs",
+                "alloc": "12.23 KB",
+                "pct": 8.66,
+                "factor": "60×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "5,682.405 μs",
+                "alloc": "1448.41 KB",
+                "pct": 100,
+                "factor": "696×"
+              }
+            ]
+          },
+          {
+            "scenario": "Code93 PNG",
+            "benchmark": "Code 93 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "6.548 μs",
+                "alloc": "8.13 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "369.068 μs",
+                "alloc": "11.66 KB",
+                "pct": 10.18,
+                "factor": "56×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "3,626.355 μs",
+                "alloc": "957.22 KB",
+                "pct": 100,
+                "factor": "554×"
+              }
+            ]
+          },
+          {
+            "scenario": "Data Matrix PNG (medium)",
+            "benchmark": "Data Matrix (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "21.02 μs",
+                "alloc": "15.52 KB",
+                "pct": 1.49,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "532.46 μs",
+                "alloc": "21.2 KB",
+                "pct": 37.64,
+                "factor": "25×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "1,414.52 μs",
+                "alloc": "644.93 KB",
+                "pct": 100,
+                "factor": "67×"
+              }
+            ]
+          },
+          {
+            "scenario": "EAN-13 PNG",
+            "benchmark": "EAN-13 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "5.243 μs",
+                "alloc": "6.75 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "296.403 μs",
+                "alloc": "11.63 KB",
+                "pct": 8.27,
+                "factor": "57×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "3,583.869 μs",
+                "alloc": "850.63 KB",
+                "pct": 100,
+                "factor": "684×"
+              }
+            ]
+          },
+          {
+            "scenario": "PDF417 PNG",
+            "benchmark": "PDF417 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "52.67 μs",
+                "alloc": "49.9 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "3,079.46 μs",
+                "alloc": "207.59 KB",
+                "pct": 30.27,
+                "factor": "58×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "10,174.70 μs",
+                "alloc": "5003.67 KB",
+                "pct": 100,
+                "factor": "193×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR PNG (medium)",
+            "benchmark": "QR (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "97.86 μs",
+                "alloc": "14.19 KB",
+                "pct": 3.24,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,202.59 μs",
+                "alloc": "79.37 KB",
+                "pct": 39.77,
+                "factor": "12×"
+              },
+              {
+                "vendor": "QRCoder",
+                "cgx": false,
+                "mean": "244.56 μs",
+                "alloc": "7.31 KB",
+                "pct": 8.09,
+                "factor": "2.5×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "3,024.08 μs",
+                "alloc": "1545.71 KB",
+                "pct": 100,
+                "factor": "31×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (clean)",
+            "benchmark": "QR Decode (Clean)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "322.1 μs",
+                "alloc": "5.27 KB",
+                "pct": 68.58,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "469.7 μs",
+                "alloc": "127.69 KB",
+                "pct": 100,
+                "factor": "1.5×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (noisy)",
+            "benchmark": "QR Decode (Noisy)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "1.595 ms",
+                "alloc": "5.45 KB",
+                "pct": 82.09,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1.943 ms",
+                "alloc": "706.98 KB",
+                "pct": 100,
+                "factor": "1.2×"
+              }
+            ]
+          },
+          {
+            "scenario": "UPC-A PNG",
+            "benchmark": "UPC-A (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "5.766 μs",
+                "alloc": "7.05 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "321.472 μs",
+                "alloc": "11.7 KB",
+                "pct": 10.71,
+                "factor": "56×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "3,002.774 μs",
+                "alloc": "765.7 KB",
+                "pct": 100,
+                "factor": "521×"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "windows-quick",
+        "os": "windows",
+        "mode": "quick",
+        "generated": "2026-01-30T09:22:51.7369607Z",
+        "count": 14,
+        "wins": 12,
+        "median": "6.4×",
+        "ticks": [
+          {
+            "label": "1×",
+            "pos": 0
+          },
+          {
+            "label": "10×",
+            "pos": 50
+          },
+          {
+            "label": "100×",
+            "pos": 100
+          }
+        ],
+        "headline": [
+          {
+            "scenario": "Code128 PNG",
+            "runner": "ZXing.Net",
+            "factor": "11×",
+            "pos": 52.73,
+            "slower": false
+          },
+          {
+            "scenario": "Code39 PNG",
+            "runner": "ZXing.Net",
+            "factor": "11×",
+            "pos": 52.31,
+            "slower": false
+          },
+          {
+            "scenario": "Code93 PNG",
+            "runner": "ZXing.Net",
+            "factor": "9.8×",
+            "pos": 49.56,
+            "slower": false
+          },
+          {
+            "scenario": "Data Matrix PNG (medium)",
+            "runner": "ZXing.Net",
+            "factor": "9.7×",
+            "pos": 49.41,
+            "slower": false
+          },
+          {
+            "scenario": "UPC-A PNG",
+            "runner": "ZXing.Net",
+            "factor": "8.9×",
+            "pos": 47.59,
+            "slower": false
+          },
+          {
+            "scenario": "EAN-13 PNG",
+            "runner": "ZXing.Net",
+            "factor": "8.9×",
+            "pos": 47.43,
+            "slower": false
+          },
+          {
+            "scenario": "PDF417 PNG",
+            "runner": "ZXing.Net",
+            "factor": "6.4×",
+            "pos": 40.25,
+            "slower": false
+          },
+          {
+            "scenario": "Aztec PNG",
+            "runner": "ZXing.Net",
+            "factor": "6.3×",
+            "pos": 40.08,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (fancy)",
+            "runner": "ZXing.Net",
+            "factor": "1.9×",
+            "pos": 14.22,
+            "slower": false
+          },
+          {
+            "scenario": "QR PNG (medium)",
+            "runner": "QRCoder",
+            "factor": "1.7×",
+            "pos": 11,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (clean)",
+            "runner": "ZXing.Net",
+            "factor": "1.2×",
+            "pos": 3.88,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (resampled)",
+            "runner": "ZXing.Net",
+            "factor": "1.1×",
+            "pos": 2.7,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (no quiet zone)",
+            "runner": "ZXing.Net",
+            "factor": "0.1×",
+            "pos": 0.8,
+            "slower": true
+          },
+          {
+            "scenario": "QR Decode (noisy)",
+            "runner": "ZXing.Net",
+            "factor": "0.1×",
+            "pos": 0.8,
+            "slower": true
+          }
+        ],
+        "scenarios": [
+          {
+            "scenario": "Aztec PNG",
+            "benchmark": "Aztec (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "235.3 μs",
+                "alloc": "61.39 KB",
+                "pct": 3.66,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,489.9 μs",
+                "alloc": "61.42 KB",
+                "pct": 23.19,
+                "factor": "6.3×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "6,423.4 μs",
+                "alloc": "642.64 KB",
+                "pct": 100,
+                "factor": "27×"
+              }
+            ]
+          },
+          {
+            "scenario": "Code128 PNG",
+            "benchmark": "Code 128 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "136.0 μs",
+                "alloc": "14.48 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,542.0 μs",
+                "alloc": "15.74 KB",
+                "pct": 2.82,
+                "factor": "11×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "54,673.4 μs",
+                "alloc": "2035.16 KB",
+                "pct": 100,
+                "factor": "402×"
+              }
+            ]
+          },
+          {
+            "scenario": "Code39 PNG",
+            "benchmark": "Code 39 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "146.0 μs",
+                "alloc": "10.07 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,624.1 μs",
+                "alloc": "12.28 KB",
+                "pct": 3.88,
+                "factor": "11×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "41,847.8 μs",
+                "alloc": "1448.45 KB",
+                "pct": 100,
+                "factor": "287×"
+              }
+            ]
+          },
+          {
+            "scenario": "Code93 PNG",
+            "benchmark": "Code 93 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "137.0 μs",
+                "alloc": "8.19 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,342.3 μs",
+                "alloc": "11.7 KB",
+                "pct": 5.6,
+                "factor": "9.8×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "23,990.6 μs",
+                "alloc": "957.41 KB",
+                "pct": 100,
+                "factor": "175×"
+              }
+            ]
+          },
+          {
+            "scenario": "Data Matrix PNG (medium)",
+            "benchmark": "Data Matrix (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "179.0 μs",
+                "alloc": "15.58 KB",
+                "pct": 2.3,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,742.2 μs",
+                "alloc": "22.31 KB",
+                "pct": 22.43,
+                "factor": "9.7×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "7,767.3 μs",
+                "alloc": "645.2 KB",
+                "pct": 100,
+                "factor": "43×"
+              }
+            ]
+          },
+          {
+            "scenario": "EAN-13 PNG",
+            "benchmark": "EAN-13 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "141.8 μs",
+                "alloc": "6.9 KB",
+                "pct": 0.73,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,259.9 μs",
+                "alloc": "11.68 KB",
+                "pct": 6.5,
+                "factor": "8.9×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "19,383.1 μs",
+                "alloc": "850.83 KB",
+                "pct": 100,
+                "factor": "137×"
+              }
+            ]
+          },
+          {
+            "scenario": "PDF417 PNG",
+            "benchmark": "PDF417 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "1.071 ms",
+                "alloc": "49.95 KB",
+                "pct": 2.65,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "6.837 ms",
+                "alloc": "207.63 KB",
+                "pct": 16.91,
+                "factor": "6.4×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "40.422 ms",
+                "alloc": "5004.02 KB",
+                "pct": 100,
+                "factor": "38×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR PNG (medium)",
+            "benchmark": "QR (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "541.5 μs",
+                "alloc": "14.88 KB",
+                "pct": 3.97,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "4,175.6 μs",
+                "alloc": "79.41 KB",
+                "pct": 30.62,
+                "factor": "7.7×"
+              },
+              {
+                "vendor": "QRCoder",
+                "cgx": false,
+                "mean": "898.6 μs",
+                "alloc": "7.31 KB",
+                "pct": 6.59,
+                "factor": "1.7×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "13,638.9 μs",
+                "alloc": "1547.52 KB",
+                "pct": 100,
+                "factor": "25×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (clean)",
+            "benchmark": "QR Decode (Clean)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "1.256 ms",
+                "alloc": "3.91 KB",
+                "pct": 83.62,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1.502 ms",
+                "alloc": "127.67 KB",
+                "pct": 100,
+                "factor": "1.2×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (noisy)",
+            "benchmark": "QR Decode (Noisy)",
+            "fastest": "ZXing.Net",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "48.186 ms",
+                "alloc": "160.77 KB",
+                "pct": 100,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "3.394 ms",
+                "alloc": "706.89 KB",
+                "pct": 7.04,
+                "factor": "0.1×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (fancy)",
+            "benchmark": "QR Decode (Stress)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "349.8 μs",
+                "alloc": "2.68 KB",
+                "pct": 51.96,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "673.2 μs",
+                "alloc": "63.25 KB",
+                "pct": 100,
+                "factor": "1.9×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (no quiet zone)",
+            "benchmark": "QR Decode (Stress)",
+            "fastest": "ZXing.Net",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "11,920.2 μs",
+                "alloc": "45.09 KB",
+                "pct": 100,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "954.0 μs",
+                "alloc": "65.78 KB",
+                "pct": 8,
+                "factor": "0.1×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (resampled)",
+            "benchmark": "QR Decode (Stress)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "643.9 μs",
+                "alloc": "1.88 KB",
+                "pct": 88.33,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "729.0 μs",
+                "alloc": "135.23 KB",
+                "pct": 100,
+                "factor": "1.1×"
+              }
+            ]
+          },
+          {
+            "scenario": "UPC-A PNG",
+            "benchmark": "UPC-A (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "130.3 μs",
+                "alloc": "7.2 KB",
+                "pct": 0.68,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,166.1 μs",
+                "alloc": "11.75 KB",
+                "pct": 6.07,
+                "factor": "8.9×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "19,200.6 μs",
+                "alloc": "765.91 KB",
+                "pct": 100,
+                "factor": "147×"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "linux-quick",
+        "os": "linux",
+        "mode": "quick",
+        "generated": "2026-01-30T09:35:58.1045639Z",
+        "count": 14,
+        "wins": 12,
+        "median": "5.7×",
+        "ticks": [
+          {
+            "label": "1×",
+            "pos": 0
+          },
+          {
+            "label": "10×",
+            "pos": 50
+          },
+          {
+            "label": "100×",
+            "pos": 100
+          }
+        ],
+        "headline": [
+          {
+            "scenario": "Code128 PNG",
+            "runner": "ZXing.Net",
+            "factor": "12×",
+            "pos": 53.53,
+            "slower": false
+          },
+          {
+            "scenario": "Code39 PNG",
+            "runner": "ZXing.Net",
+            "factor": "9.1×",
+            "pos": 48.02,
+            "slower": false
+          },
+          {
+            "scenario": "EAN-13 PNG",
+            "runner": "ZXing.Net",
+            "factor": "8.0×",
+            "pos": 45.03,
+            "slower": false
+          },
+          {
+            "scenario": "Data Matrix PNG (medium)",
+            "runner": "ZXing.Net",
+            "factor": "7.7×",
+            "pos": 44.27,
+            "slower": false
+          },
+          {
+            "scenario": "Aztec PNG",
+            "runner": "ZXing.Net",
+            "factor": "7.0×",
+            "pos": 42.33,
+            "slower": false
+          },
+          {
+            "scenario": "UPC-A PNG",
+            "runner": "ZXing.Net",
+            "factor": "6.1×",
+            "pos": 39.25,
+            "slower": false
+          },
+          {
+            "scenario": "Code93 PNG",
+            "runner": "ZXing.Net",
+            "factor": "5.9×",
+            "pos": 38.71,
+            "slower": false
+          },
+          {
+            "scenario": "PDF417 PNG",
+            "runner": "ZXing.Net",
+            "factor": "5.5×",
+            "pos": 37.02,
+            "slower": false
+          },
+          {
+            "scenario": "QR PNG (medium)",
+            "runner": "QRCoder",
+            "factor": "1.8×",
+            "pos": 13.04,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (clean)",
+            "runner": "ZXing.Net",
+            "factor": "1.7×",
+            "pos": 11.05,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (fancy)",
+            "runner": "ZXing.Net",
+            "factor": "1.6×",
+            "pos": 9.93,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (resampled)",
+            "runner": "ZXing.Net",
+            "factor": "1.1×",
+            "pos": 1.68,
+            "slower": false
+          },
+          {
+            "scenario": "QR Decode (no quiet zone)",
+            "runner": "ZXing.Net",
+            "factor": "0.1×",
+            "pos": 0.8,
+            "slower": true
+          },
+          {
+            "scenario": "QR Decode (noisy)",
+            "runner": "ZXing.Net",
+            "factor": "0.1×",
+            "pos": 0.8,
+            "slower": true
+          }
+        ],
+        "scenarios": [
+          {
+            "scenario": "Aztec PNG",
+            "benchmark": "Aztec (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "216.3 μs",
+                "alloc": "61.39 KB",
+                "pct": 3.17,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,519.3 μs",
+                "alloc": "61.42 KB",
+                "pct": 22.26,
+                "factor": "7.0×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "6,825.7 μs",
+                "alloc": "642.46 KB",
+                "pct": 100,
+                "factor": "32×"
+              }
+            ]
+          },
+          {
+            "scenario": "Code128 PNG",
+            "benchmark": "Code 128 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "133.4 μs",
+                "alloc": "14.48 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,569.4 μs",
+                "alloc": "15.74 KB",
+                "pct": 2.96,
+                "factor": "12×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "53,033.3 μs",
+                "alloc": "2035.13 KB",
+                "pct": 100,
+                "factor": "398×"
+              }
+            ]
+          },
+          {
+            "scenario": "Code39 PNG",
+            "benchmark": "Code 39 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "151.6 μs",
+                "alloc": "10.07 KB",
+                "pct": 0.6,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,383.8 μs",
+                "alloc": "12.28 KB",
+                "pct": 3.56,
+                "factor": "9.1×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "38,828.4 μs",
+                "alloc": "1448.58 KB",
+                "pct": 100,
+                "factor": "256×"
+              }
+            ]
+          },
+          {
+            "scenario": "Code93 PNG",
+            "benchmark": "Code 93 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "189.9 μs",
+                "alloc": "8.19 KB",
+                "pct": 0.74,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,129.0 μs",
+                "alloc": "11.7 KB",
+                "pct": 4.4,
+                "factor": "5.9×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "25,633.9 μs",
+                "alloc": "957.3 KB",
+                "pct": 100,
+                "factor": "135×"
+              }
+            ]
+          },
+          {
+            "scenario": "Data Matrix PNG (medium)",
+            "benchmark": "Data Matrix (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "207.7 μs",
+                "alloc": "15.58 KB",
+                "pct": 2.66,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,595.3 μs",
+                "alloc": "22.31 KB",
+                "pct": 20.47,
+                "factor": "7.7×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "7,793.7 μs",
+                "alloc": "644.93 KB",
+                "pct": 100,
+                "factor": "38×"
+              }
+            ]
+          },
+          {
+            "scenario": "EAN-13 PNG",
+            "benchmark": "EAN-13 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "139.0 μs",
+                "alloc": "6.8 KB",
+                "pct": 0.61,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,105.7 μs",
+                "alloc": "11.68 KB",
+                "pct": 4.84,
+                "factor": "8.0×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "22,834.6 μs",
+                "alloc": "850.8 KB",
+                "pct": 100,
+                "factor": "164×"
+              }
+            ]
+          },
+          {
+            "scenario": "PDF417 PNG",
+            "benchmark": "PDF417 (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "1.025 ms",
+                "alloc": "49.95 KB",
+                "pct": 2.04,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "5.639 ms",
+                "alloc": "207.63 KB",
+                "pct": 11.2,
+                "factor": "5.5×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "50.328 ms",
+                "alloc": "5003.8 KB",
+                "pct": 100,
+                "factor": "49×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR PNG (medium)",
+            "benchmark": "QR (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "578.6 μs",
+                "alloc": "14.88 KB",
+                "pct": 3.7,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "3,515.6 μs",
+                "alloc": "79.41 KB",
+                "pct": 22.46,
+                "factor": "6.1×"
+              },
+              {
+                "vendor": "QRCoder",
+                "cgx": false,
+                "mean": "1,055.0 μs",
+                "alloc": "7.28 KB",
+                "pct": 6.74,
+                "factor": "1.8×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "15,654.6 μs",
+                "alloc": "1547.27 KB",
+                "pct": 100,
+                "factor": "27×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (clean)",
+            "benchmark": "QR Decode (Clean)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "1.120 ms",
+                "alloc": "3.91 KB",
+                "pct": 60.12,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1.863 ms",
+                "alloc": "127.67 KB",
+                "pct": 100,
+                "factor": "1.7×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (noisy)",
+            "benchmark": "QR Decode (Noisy)",
+            "fastest": "ZXing.Net",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "42.635 ms",
+                "alloc": "160.77 KB",
+                "pct": 100,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "3.381 ms",
+                "alloc": "706.89 KB",
+                "pct": 7.93,
+                "factor": "0.1×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (fancy)",
+            "benchmark": "QR Decode (Stress)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "396.8 μs",
+                "alloc": "2.68 KB",
+                "pct": 63.3,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "626.9 μs",
+                "alloc": "63.25 KB",
+                "pct": 100,
+                "factor": "1.6×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (no quiet zone)",
+            "benchmark": "QR Decode (Stress)",
+            "fastest": "ZXing.Net",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "10,629.6 μs",
+                "alloc": "45.09 KB",
+                "pct": 100,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "1,020.6 μs",
+                "alloc": "65.78 KB",
+                "pct": 9.6,
+                "factor": "0.1×"
+              }
+            ]
+          },
+          {
+            "scenario": "QR Decode (resampled)",
+            "benchmark": "QR Decode (Stress)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "545.8 μs",
+                "alloc": "1.88 KB",
+                "pct": 92.56,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "589.7 μs",
+                "alloc": "135.23 KB",
+                "pct": 100,
+                "factor": "1.1×"
+              }
+            ]
+          },
+          {
+            "scenario": "UPC-A PNG",
+            "benchmark": "UPC-A (Encode)",
+            "fastest": "CodeGlyphX",
+            "bars": [
+              {
+                "vendor": "CodeGlyphX",
+                "cgx": true,
+                "mean": "163.9 μs",
+                "alloc": "7.11 KB",
+                "pct": 0.83,
+                "factor": ""
+              },
+              {
+                "vendor": "ZXing.Net",
+                "cgx": false,
+                "mean": "998.9 μs",
+                "alloc": "11.75 KB",
+                "pct": 5.04,
+                "factor": "6.1×"
+              },
+              {
+                "vendor": "Barcoder",
+                "cgx": false,
+                "mean": "19,815.3 μs",
+                "alloc": "765.86 KB",
+                "pct": 100,
+                "factor": "121×"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "pages": {
+    "showcase": {
+      "informationbox": {
+        "src": "/visuals/pages/showcase-otp.png",
+        "w": 270,
+        "h": 270,
+        "label": "Enrollment code for an authenticator",
+        "decoded": "otpauth://totp/Contoso:ava@contoso.com?secret=JBSWY3DPEHPK3PXP&issuer=Contoso&digits=6&period=30",
+        "href": null
+      }
+    },
+    "pricing": {
+      "sponsor": {
+        "src": "/visuals/pages/pricing-sponsor.png",
+        "w": 198,
+        "h": 198,
+        "label": "GitHub Sponsors",
+        "decoded": "https://github.com/sponsors/PrzemyslawKlys",
+        "href": "https://github.com/sponsors/PrzemyslawKlys"
+      },
+      "paypal": {
+        "src": "/visuals/pages/pricing-paypal.png",
+        "w": 198,
+        "h": 198,
+        "label": "PayPal",
+        "decoded": "https://paypal.me/PrzemyslawKlys",
+        "href": "https://paypal.me/PrzemyslawKlys"
+      },
+      "license": {
+        "src": "/visuals/pages/pricing-license.svg",
+        "w": 144,
+        "h": 144
+      }
+    },
+    "downloads": {
+      "version": "3.0.0",
+      "nuget": {
+        "src": "/visuals/pages/download-nuget.png",
+        "w": 198,
+        "h": 198,
+        "label": "nuget.org/packages/CodeGlyphX",
+        "decoded": "https://www.nuget.org/packages/CodeGlyphX",
+        "href": "https://www.nuget.org/packages/CodeGlyphX"
+      },
+      "gallery": {
+        "src": "/visuals/pages/download-psgallery.png",
+        "w": 222,
+        "h": 222,
+        "label": "PowerShell Gallery",
+        "decoded": "https://www.powershellgallery.com/packages/ImagePlayground",
+        "href": "https://www.powershellgallery.com/packages/ImagePlayground"
+      },
+      "releases": {
+        "src": "/visuals/pages/download-releases.png",
+        "w": 222,
+        "h": 222,
+        "label": "GitHub Releases",
+        "decoded": "https://github.com/EvotecIT/CodeGlyphX/releases",
+        "href": "https://github.com/EvotecIT/CodeGlyphX/releases"
+      },
+      "zip": "CodeGlyphX.3.0.0.zip",
+      "zipCode": {
+        "src": "/visuals/pages/download-zip.svg",
+        "w": 510,
+        "h": 60
+      }
+    },
+    "changelog": [
+      {
+        "tag": "CodeGlyphX-v3.0.0",
+        "version": "3.0.0",
+        "title": "QR artwork with styled modules and finders",
+        "summary": "Module shapes, finder frames and palettes configured apart from encoding, with scan heuristics.",
+        "api": "QrRenderOptions",
+        "src": "/visuals/changelog/qr-art.png",
+        "w": 232,
+        "h": 232
+      },
+      {
+        "tag": "CodeGlyphX-v3.0.0",
+        "version": "3.0.0",
+        "title": "One scanner for every family",
+        "summary": "SymbolScanner finds QR, Data Matrix, Aztec and linear codes in one image, with limits and status.",
+        "api": "SymbolScanner.Scan",
+        "src": "/images/art/qr-expressive-waves.png",
+        "w": 912,
+        "h": 912
+      },
+      {
+        "tag": "CodeGlyphX-v2.1.0",
+        "version": "2.1.0",
+        "title": "Code 39 character patterns corrected",
+        "summary": "Standard Code 39 bars now match the specification for every character.",
+        "api": "SymbolFormat.Code39",
+        "src": "/visuals/changelog/code39.svg",
+        "w": 290,
+        "h": 72
+      },
+      {
+        "tag": "CodeGlyphX-v2.0.0",
+        "version": "2.0.0",
+        "title": "GS1 DataBar Expanded, reimplemented",
+        "summary": "Rewritten encoder with better SVG interoperability.",
+        "api": "SymbolFormat.Gs1DataBarExpanded",
+        "src": "/visuals/changelog/databar-expanded.svg",
+        "w": 440,
+        "h": 80
+      },
+      {
+        "tag": "CodeGlyphX-v2.0.0",
+        "version": "2.0.0",
+        "title": "Micro QR, complete",
+        "summary": "All M1 to M4 sizes, encoded and recognized from images.",
+        "api": "MicroQrCodeEncoder",
+        "src": "/visuals/changelog/microqr.svg",
+        "w": 114,
+        "h": 114
+      },
+      {
+        "tag": "CodeGlyphX-v2.0.0",
+        "version": "2.0.0",
+        "title": "Industrial and logistics barcodes",
+        "summary": "ITF-14 and the 2 of 5 family for cartons and pallets.",
+        "api": "SymbolFormat.Itf14",
+        "src": "/visuals/changelog/industrial.svg",
+        "w": 302,
+        "h": 72
+      },
+      {
+        "tag": "CodeGlyphX-v1.5.0",
+        "version": "1.5.0",
+        "title": "Data Matrix generation fixed",
+        "summary": "Correct symbols across sizes, plus matrix render helpers.",
+        "api": "DataMatrixCode",
+        "src": "/visuals/changelog/datamatrix.svg",
+        "w": 120,
+        "h": 120
+      },
+      {
+        "tag": "CodeGlyphX-v1.3.0",
+        "version": "1.3.0",
+        "title": "Transparent backgrounds",
+        "summary": "QR codes on a transparent background composite correctly.",
+        "api": "QrRenderOptions.Background",
+        "src": "/visuals/changelog/transparent.png",
+        "w": 232,
+        "h": 232
+      },
+      {
+        "tag": "CodeGlyphX-v1.2.0",
+        "version": "1.2.0",
+        "title": "QR codes in the console",
+        "summary": "ASCII output that terminals and logs can show.",
+        "api": "OutputFormat.Ascii",
+        "src": "/visuals/changelog/ascii.svg",
+        "w": 284,
+        "h": 284
+      },
+      {
+        "tag": "v1.1.0",
+        "version": "1.1.0",
+        "title": "Connected modules and the QR art API",
+        "summary": "ConnectedSquircle modules, art presets and canvas frames.",
+        "api": "QrModuleShape.ConnectedSquircle",
+        "src": "/visuals/changelog/connected.png",
+        "w": 232,
+        "h": 232
+      },
+      {
+        "tag": "v1.0.0",
+        "version": "1.0.0",
+        "title": "First release",
+        "summary": "QR, linear and 2D codes in pure managed .NET.",
+        "api": "QR.Save",
+        "src": "/visuals/changelog/first.svg",
+        "w": 174,
+        "h": 174
+      }
+    ],
+    "notFound": {
+      "count": 30,
+      "index": "/visuals/notfound/index.json"
+    },
+    "api": [
+      {
+        "type": "QR",
+        "url": "/api/codeglyphx.qr/",
+        "summary": "Encode, render and save QR codes.",
+        "src": "/specimens/qrcode.svg"
+      },
+      {
+        "type": "Barcode",
+        "url": "/api/codeglyphx.barcode/",
+        "summary": "Linear symbologies from Code 128 to postal.",
+        "src": "/specimens/code128.svg"
+      },
+      {
+        "type": "DataMatrixCode",
+        "url": "/api/codeglyphx.datamatrixcode/",
+        "summary": "Data Matrix, square and rectangular.",
+        "src": "/specimens/datamatrix.svg"
+      },
+      {
+        "type": "Pdf417Code",
+        "url": "/api/codeglyphx.pdf417code/",
+        "summary": "PDF417 and MicroPDF417.",
+        "src": "/specimens/pdf417.svg"
+      },
+      {
+        "type": "AztecCode",
+        "url": "/api/codeglyphx.azteccode/",
+        "summary": "Aztec, compact and full range.",
+        "src": "/specimens/aztec.svg"
+      },
+      {
+        "type": "QrPayloads",
+        "url": "/api/codeglyphx.payloads.qrpayloads/",
+        "summary": "Wi-Fi, contacts, OTP, payments.",
+        "src": "/specimens/payload-wifi.svg"
+      },
+      {
+        "type": "SymbolScanner",
+        "url": "/api/codeglyphx.symbolscanner/",
+        "summary": "Find and decode codes in images.",
+        "src": "/images/art/qr-expressive-waves.png"
+      }
+    ]
+  }
+}

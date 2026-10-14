@@ -107,6 +107,9 @@ foreach (var line in skipped) {
     Console.WriteLine("Skipped " + line);
 }
 
+// Inner pages: navigation thumbnails, docs figures, benchmark charts and product-page codes (Visuals*.cs).
+SiteVisuals.Run(website);
+
 static string? TryRender(SymbolFormat format, string value, out string? error) {
     error = null;
     try {

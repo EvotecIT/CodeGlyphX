@@ -1,0 +1,16 @@
+{
+  "about": "Hand-maintained: the visible capability each release added or fixed. Website/tools/SiteSpecimens draws each 'visual' with CodeGlyphX and records it in data/visuals.json; the changelog shows it beside the release notes for 'tag'.",
+  "highlights": [
+    { "tag": "CodeGlyphX-v3.0.0", "version": "3.0.0", "visual": "qr-art", "title": "QR artwork with styled modules and finders", "summary": "Module shapes, finder frames and palettes configured apart from encoding, with scan heuristics.", "api": "QrRenderOptions" },
+    { "tag": "CodeGlyphX-v3.0.0", "version": "3.0.0", "visual": "scanner", "title": "One scanner for every family", "summary": "SymbolScanner finds QR, Data Matrix, Aztec and linear codes in one image, with limits and status.", "api": "SymbolScanner.Scan" },
+    { "tag": "CodeGlyphX-v2.1.0", "version": "2.1.0", "visual": "code39", "title": "Code 39 character patterns corrected", "summary": "Standard Code 39 bars now match the specification for every character.", "api": "SymbolFormat.Code39" },
+    { "tag": "CodeGlyphX-v2.0.0", "version": "2.0.0", "visual": "databar-expanded", "title": "GS1 DataBar Expanded, reimplemented", "summary": "Rewritten encoder with better SVG interoperability.", "api": "SymbolFormat.Gs1DataBarExpanded" },
+    { "tag": "CodeGlyphX-v2.0.0", "version": "2.0.0", "visual": "microqr", "title": "Micro QR, complete", "summary": "All M1 to M4 sizes, encoded and recognized from images.", "api": "MicroQrCodeEncoder" },
+    { "tag": "CodeGlyphX-v2.0.0", "version": "2.0.0", "visual": "industrial", "title": "Industrial and logistics barcodes", "summary": "ITF-14 and the 2 of 5 family for cartons and pallets.", "api": "SymbolFormat.Itf14" },
+    { "tag": "CodeGlyphX-v1.5.0", "version": "1.5.0", "visual": "datamatrix", "title": "Data Matrix generation fixed", "summary": "Correct symbols across sizes, plus matrix render helpers.", "api": "DataMatrixCode" },
+    { "tag": "CodeGlyphX-v1.3.0", "version": "1.3.0", "visual": "transparent", "title": "Transparent backgrounds", "summary": "QR codes on a transparent background composite correctly.", "api": "QrRenderOptions.Background" },
+    { "tag": "CodeGlyphX-v1.2.0", "version": "1.2.0", "visual": "ascii", "title": "QR codes in the console", "summary": "ASCII output that terminals and logs can show.", "api": "OutputFormat.Ascii" },
+    { "tag": "v1.1.0", "version": "1.1.0", "visual": "connected", "title": "Connected modules and the QR art API", "summary": "ConnectedSquircle modules, art presets and canvas frames.", "api": "QrModuleShape.ConnectedSquircle" },
+    { "tag": "v1.0.0", "version": "1.0.0", "visual": "first", "title": "First release", "summary": "QR, linear and 2D codes in pure managed .NET.", "api": "QR.Save" }
+  ]
+}
