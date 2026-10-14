@@ -54,9 +54,22 @@ internal static partial class DataBar14ImageDecoder {
         internal readonly bool Inverted;
         internal readonly int First;
         internal int Last, Threshold;
+        // Admission stays anchored to the first observation. Separator fitting
+        // uses all matching samples, so reversing the row traversal does not
+        // select a different edge observation as the physical geometry.
+        internal double SampleStart, SampleEnd, SampleThreshold;
+        private int _samples = 1;
         internal Row(int[] widths, double start, double end, bool inverted, int position, int threshold) {
             Widths = widths; Start = start; End = end; Inverted = inverted;
             First = Last = position; Threshold = threshold;
+            SampleStart = start; SampleEnd = end; SampleThreshold = threshold;
+        }
+        internal void AddSample(int position, double start, double end, int threshold) {
+            Last = position; Threshold = threshold;
+            _samples++;
+            SampleStart += (start - SampleStart) / _samples;
+            SampleEnd += (end - SampleEnd) / _samples;
+            SampleThreshold += (threshold - SampleThreshold) / _samples;
         }
     }
 
@@ -160,7 +173,7 @@ internal static partial class DataBar14ImageDecoder {
                         if (prior.Inverted != inverted || position > prior.Last + step * 2 ||
                             Math.Abs(prior.Start - rowStart) > pitch * 1.5 || Math.Abs(prior.End - rowEnd) > pitch * 1.5 ||
                             !EqualWidths(prior.Widths, widths)) continue;
-                        prior.Last = position; prior.Threshold = threshold; matched = true; break;
+                        prior.AddSample(position, rowStart, rowEnd, threshold); matched = true; break;
                     }
                     if (!matched && list.Count < 64) list.Add(new Row(widths, rowStart, rowEnd, inverted, position, threshold));
                 }
@@ -243,6 +256,11 @@ internal static partial class DataBar14ImageDecoder {
                 content = decoded; omni = omniError < stackedError; return true;
 
                 double SeparatorError(BitMatrix expected, Row first, Row second) {
+                    var legacy = ExistingSeparatorError(expected, first, second);
+                    if (legacy <= 0.16 || DecodeBudget.ShouldAbort(token)) return legacy;
+                    return Math.Min(legacy, FitSeparatorBand(rgba, width, length, vertical, reverse != 0, expected, first, second, token));
+                }
+                double ExistingSeparatorError(BitMatrix expected, Row first, Row second) {
                     var firstCenter = (first.First + first.Last) / 2;
                     var secondCenter = (second.First + second.Last) / 2;
                     var direction = Math.Sign(secondCenter - firstCenter);

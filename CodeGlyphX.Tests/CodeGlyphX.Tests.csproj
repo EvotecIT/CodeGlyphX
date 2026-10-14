@@ -54,6 +54,7 @@
     <Compile Include="DataBarExpandedWorkspaceTests.cs" />
     <Compile Include="Code128ReaderInitializationTests.cs" />
     <Compile Include="Code128PhotographRecoveryTests.cs" />
+    <Compile Include="DataBarSeparatorGeometryTests.cs" />
     <Compile Include="BarcodePixelSamplingTests.cs" />
     <Compile Include="QrImageDecodeParityData.cs" />
     <Compile Include="QrImageDecodeParitySharedTests.cs" />
