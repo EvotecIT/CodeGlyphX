@@ -39,6 +39,9 @@ SVG, SVGZ and HTML reject explicit raster-only effects with `NotSupportedExcepti
 | `Q` | ~25% | Higher reliability |
 | `H` | ~30% | Maximum error correction |
 
+{{< cgx-figure id="qr-ecc" caption="The same URL at each level, drawn to one scale by CodeGlyphX. More recovery data means a higher version and more modules." >}}
+
+
 ## Styling Options
 
 ```csharp
@@ -76,6 +79,11 @@ QR.Save("https://example.com", "styled-qr.png", options, encoding);
 ```
 
 `PassesHeuristics` checks configuration properties such as contrast, quiet zone, module scale, functional-pattern protection, and logo coverage. It is not a decode test and cannot guarantee interoperability. Test the final artifact on every scanner, authenticator, camera, display, print process, and device class your product supports.
+
+
+{{< cgx-figure id="qr-shapes" caption="QrModuleShape values on one payload. Each tile notes whether CodeGlyphX decodes its own PNG; check every style on the scanners your users have." >}}
+
+{{< cgx-figure id="qr-eyes" caption="QrEyeFrameStyle values with rounded modules and coloured finders, rendered and read back by CodeGlyphX." >}}
 
 ### Fluent Builder (logo + styling)
 

@@ -18,6 +18,17 @@
             <h3>{{ card.details.title }}</h3>
             <ul class="cgx-project__features">{{~ for item in card.details.items ~}}<li>{{ item }}</li>{{~ end ~}}</ul>
             {{~ end ~}}
+            {{~ if card.id == "informationbox"; sc = data.visuals.pages.showcase.informationbox ~}}
+            <figure class="cgx-project__code">
+                <span class="cgx-codecard__plate"><img src="{{ sc.src }}" width="{{ sc.w }}" height="{{ sc.h }}" loading="lazy" decoding="async" alt="An authenticator enrollment QR code drawn by CodeGlyphX" /></span>
+                <figcaption><p><strong>The code it draws</strong>Information Box renders enrollment codes like this one with CodeGlyphX. Decoded:</p><code>{{ sc.decoded }}</code></figcaption>
+            </figure>
+            {{~ else if card.id == "authimo"; otp = null; for it in data.visuals.docs.figures.payloads.items; if it.label == "Authenticator (TOTP)"; otp = it; end; end; if otp ~}}
+            <figure class="cgx-project__code">
+                <span class="cgx-codecard__plate cgx-viewfinder-frame"><img src="{{ otp.src }}" width="{{ otp.w }}" height="{{ otp.h }}" loading="lazy" decoding="async" alt="An authenticator QR code" /></span>
+                <figcaption><p><strong>The code it reads</strong>AuthIMO captures the screen and decodes enrollment codes with CodeGlyphX. From this one it reads:</p><code>{{ otp.decoded }}</code></figcaption>
+            </figure>
+            {{~ end; end ~}}
             {{~ if card.actions && card.actions.size > 0 ~}}
             <div class="cgx-project__actions">
                 {{~ for action in card.actions ~}}
@@ -29,9 +40,9 @@
 
         {{~ if card.gallery ~}}
         <div class="showcase-gallery" data-carousel="{{ card.gallery.id }}">
-            <div class="showcase-gallery-tabs" role="group" aria-label="Theme">
+            <div class="showcase-gallery-tabs cgx-tabs" role="group" aria-label="Screenshot theme">
                 {{~ for theme in card.gallery.themes ~}}
-                <button type="button" class="showcase-gallery-tab{{ if theme.active }} active{{ end }}" data-theme="{{ theme.name }}">{{ theme.label }}</button>
+                <button type="button" class="showcase-gallery-tab cgx-tab{{ if theme.active }} active{{ end }}" aria-pressed="{{ if theme.active }}true{{ else }}false{{ end }}" data-theme="{{ theme.name }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ theme.label }} <span class="cgx-tab__count">{{ theme.slides.size }}</span></button>
                 {{~ end ~}}
             </div>
             <div class="showcase-carousel">
@@ -68,7 +79,7 @@
     </article>
     {{~ end ~}}
 
-    <section class="cgx-section cgx-styles" id="styles" aria-labelledby="styles-title">
+    <section class="cgx-section cgx-styles cgx-atlas" id="styles" aria-labelledby="styles-title">
         <div class="cgx-section__head">
             <h2 id="styles-title">Every QR style preset</h2>
             <p>Each tile is a style preset rendered by CodeGlyphX. Use one as it is, or as the starting point for your own.</p>

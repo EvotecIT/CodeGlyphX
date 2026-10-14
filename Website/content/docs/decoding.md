@@ -12,6 +12,9 @@ layout: docs
 
 Use `QrImageDecoder` when only QR is expected, or `MicroQrDecoder` for direct Micro QR recognition. Use `SymbolScanner` for a unified result model across QR, Micro QR, linear barcodes, Data Matrix, PDF417, and Aztec. The [capability matrix](/docs/symbol-capabilities/) distinguishes pixel recognition from module-only decoding for every format.
 
+
+{{< cgx-figure id="decoding" caption="Three inputs passed to SymbolScanner.Scan with ScanOptions.Balanced: QR artwork from the home page, a Data Matrix label and a Code 128 carton label. Each line is the scanner's result." >}}
+
 ## QR-only decoding
 
 ```csharp

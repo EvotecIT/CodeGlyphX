@@ -1,0 +1,87 @@
+{{~ ## Docs figure shortcode (cgx-figure with id and caption): shows a figure from data/visuals.json (docs.figures),
+     rendered by Website/tools/SiteSpecimens with CodeGlyphX. Layouts: compare (plates scaled together, so sizes can be
+     compared), row (equal tiles), linear (bars at one module width), decoded (code and the text read back), scan
+     (input and scanner result), formats (one code in several outputs, with file sizes). ## ~}}
+{{~ a = shortcode.attrs; fig = data.visuals.docs.figures[a.id]; items = fig.items ~}}
+{{~ maxw = 1; for it in items; if it.w > maxw; maxw = it.w; end; end ~}}
+<figure class="cgx-fig cgx-fig--{{ fig.layout }}">
+  {{~ if fig.layout == "compare" ~}}
+  <div class="cgx-fig__compare">
+    {{~ for it in items ~}}
+    <div class="cgx-fig__cell" style="flex-grow: {{ it.w }}">
+      <span class="cgx-fig__plate"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" loading="lazy" decoding="async" alt="{{ it.label }}{{ if it.decoded }} encoding {{ it.decoded }}{{ end }}{{ if it.note }}, {{ it.note }}{{ end }}" /></span>
+      <span class="cgx-fig__label">{{ it.label }}</span>
+      {{~ if it.note ~}}<span class="cgx-fig__note">{{ it.note }}</span>{{~ end ~}}
+      {{~ if it.decoded ~}}<code class="cgx-fig__value">{{ it.decoded }}</code>{{~ end ~}}
+    </div>
+    {{~ end ~}}
+  </div>
+  {{~ else if fig.layout == "row" ~}}
+  <ul class="cgx-fig__row">
+    {{~ for it in items ~}}
+    <li>
+      <span class="cgx-fig__plate"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" loading="lazy" decoding="async" alt="{{ it.label }}" /></span>
+      <span class="cgx-fig__label">{{ it.label }}</span>
+      {{~ if it.note ~}}<span class="cgx-fig__note{{ if it.note == "does not decode" }} cgx-fig__note--warn{{ end }}">{{ it.note }}</span>{{~ end ~}}
+    </li>
+    {{~ end ~}}
+  </ul>
+  {{~ else if fig.layout == "linear" ~}}
+  <ul class="cgx-fig__linear">
+    {{~ for it in items ~}}
+    <li>
+      <span class="cgx-fig__label">{{ it.label }}<span class="cgx-fig__note">{{ it.note }}</span></span>
+      <span class="cgx-fig__bars"><span class="cgx-fig__plate" style="width: {{ (it.w * 100.0 / maxw) | math.round 2 }}%"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" loading="lazy" decoding="async" alt="{{ it.label }}{{ if it.decoded }} encoding {{ it.decoded }}{{ end }}" /></span></span>
+      {{~ if it.decoded ~}}<span class="cgx-fig__read"><span class="cgx-fig__dot" aria-hidden="true"></span>reads <code>{{ it.decoded }}</code></span>{{~ end ~}}
+    </li>
+    {{~ end ~}}
+  </ul>
+  {{~ else if fig.layout == "decoded" ~}}
+  <ul class="cgx-fig__decoded">
+    {{~ for it in items ~}}
+    <li>
+      <span class="cgx-fig__plate"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" loading="lazy" decoding="async" alt="{{ it.label }} QR code" /></span>
+      <span class="cgx-fig__label">{{ it.label }}</span>
+      {{~ if it.decoded ~}}<pre class="cgx-fig__text" aria-label="Text decoded from the {{ it.label }} code"><code>{{ it.decoded | html.escape }}</code></pre>{{~ end ~}}
+    </li>
+    {{~ end ~}}
+  </ul>
+  {{~ else if fig.layout == "scan" ~}}
+  <ol class="cgx-fig__scan">
+    {{~ for it in items ~}}
+    <li>
+      <span class="cgx-fig__plate cgx-viewfinder-frame"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" loading="lazy" decoding="async" alt="Input image {{ it.label }}" /></span>
+      <span class="cgx-fig__file">{{ it.label }}</span>
+      <span class="cgx-fig__result">{{ if it.decoded }}<span class="cgx-fig__format">{{ it.note }}</span><code>{{ it.decoded }}</code>{{ else }}<span class="cgx-fig__format">no symbol</span>{{ end }}</span>
+    </li>
+    {{~ end ~}}
+  </ol>
+  {{~ else if fig.layout == "formats" ~}}
+  {{~ x = fig.extra; maxb = 1; for s in x.sizes; if s.bytes > maxb; maxb = s.bytes; end; end ~}}
+  <div class="cgx-fig__formats">
+    <ul class="cgx-fig__outputs">
+      {{~ for it in items ~}}
+      <li>
+        {{~ if it.text ~}}
+        <pre class="cgx-fig__ascii" aria-label="ASCII output"><code>{{ it.text | html.escape }}</code></pre>
+        {{~ else ~}}
+        <span class="cgx-fig__plate"><img src="{{ it.src }}" width="{{ it.w }}" height="{{ it.h }}" loading="lazy" decoding="async" alt="{{ it.label }} output of a QR code for {{ x.payload }}" /></span>
+        {{~ end ~}}
+        <span class="cgx-fig__label">{{ it.label }}</span>
+        <span class="cgx-fig__note">{{ it.note }}</span>
+      </li>
+      {{~ end ~}}
+    </ul>
+    <table class="cgx-fig__sizes">
+      <caption>File size of the same QR code ({{ x.payload }}) in each format</caption>
+      <thead><tr><th scope="col">Format</th><th scope="col">Size</th><th scope="col"><span class="cgx-visually-hidden">Relative size</span></th></tr></thead>
+      <tbody>
+        {{~ for s in x.sizes ~}}
+        <tr><th scope="row">{{ s.format }}</th><td>{{ s.kb }}</td><td><span class="cgx-fig__bar" style="width: {{ (s.bytes * 100.0 / maxb) | math.round 2 }}%"></span></td></tr>
+        {{~ end ~}}
+      </tbody>
+    </table>
+  </div>
+  {{~ end ~}}
+  {{~ if a.caption ~}}<figcaption>{{ a.caption }}</figcaption>{{~ end ~}}
+</figure>

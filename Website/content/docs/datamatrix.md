@@ -37,3 +37,6 @@ DataMatrixCode.Save("SERIAL-12345", "datamatrix.svg", options: new MatrixOptions
 ## Features
 
 CodeGlyphX supports all standard Data Matrix sizes from 10x10 to 144x144 modules, including rectangular variants.
+
+{{< cgx-figure id="datamatrix-shapes" caption="One serial number as a square and as a rectangular symbol, at the same module size." >}}
+

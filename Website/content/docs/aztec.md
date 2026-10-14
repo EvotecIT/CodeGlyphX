@@ -38,6 +38,9 @@ var png = AztecCode.Render(payload, OutputFormat.Png).ToArray();
 AztecCode.Save(payload, "binary-ticket.svg");
 ```
 
+
+{{< cgx-figure id="aztec-ecc" caption="One ticket at the default 23% error correction and at 50%. Aztec grows by layers around the central bullseye and needs no quiet zone." >}}
+
 ## Use Cases
 
 - **Transportation** - Train and airline tickets

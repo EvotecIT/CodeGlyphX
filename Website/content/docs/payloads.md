@@ -12,6 +12,9 @@ layout: docs
 
 CodeGlyphX includes built-in helpers for generating QR codes with structured payloads that mobile devices can interpret.
 
+
+{{< cgx-figure id="payloads" caption="Each helper's output and the exact string CodeGlyphX decodes from it, which is what a phone camera receives." >}}
+
 ## WiFi Configuration
 
 ```csharp

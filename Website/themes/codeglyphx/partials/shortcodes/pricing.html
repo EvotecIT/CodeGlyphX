@@ -1,5 +1,6 @@
-{{~ # Pricing body from data/pricing.json: one free plan, then the optional ways to support it. ~}}
-{{~ plan = shortcode.data.plan; support = shortcode.data.support; note = shortcode.data.note ~}}
+{{~ ## Pricing body from data/pricing.json: one free plan, then the optional ways to support it. The license and the
+       support links are also codes CodeGlyphX drew (data/visuals.json pages.pricing), so they can be scanned.  ## ~}}
+{{~ plan = shortcode.data.plan; support = shortcode.data.support; note = shortcode.data.note; pv = data.visuals.pages.pricing ~}}
 <section class="cgx-section cgx-plan" aria-labelledby="plan-amount">
     <div class="cgx-plan__main">
         <h2 class="cgx-plan__amount" id="plan-amount">{{ plan.amount }}</h2>
@@ -11,9 +12,15 @@
             <a class="cgx-btn cgx-btn--quiet" href="/docs/quickstart/">Quick start</a>
         </div>
     </div>
-    <ul class="cgx-checklist" aria-label="Included">
-        {{~ for f in plan.features ~}}<li>{{ f }}</li>{{~ end ~}}
-    </ul>
+    <div class="cgx-plan__aside">
+        <div class="cgx-license">
+            <img src="{{ pv.license.src }}" width="{{ pv.license.w }}" height="{{ pv.license.h }}" loading="lazy" decoding="async" alt="Data Matrix code encoding Apache-2.0" />
+            <p><strong>Apache-2.0</strong><br /><span class="cgx-plan__desc">The license, as a Data Matrix code drawn by CodeGlyphX.</span></p>
+        </div>
+        <ul class="cgx-checklist" aria-label="Included">
+            {{~ for f in plan.features ~}}<li>{{ f }}</li>{{~ end ~}}
+        </ul>
+    </div>
 </section>
 
 <section class="cgx-section cgx-support" aria-labelledby="support-title">
@@ -22,11 +29,15 @@
         <p>{{ support.description }}</p>
     </div>
     <div class="cgx-support__options">
-        {{~ for o in shortcode.data.cards ~}}
+        {{~ for o in shortcode.data.cards; qr = for.first ? pv.sponsor : pv.paypal ~}}
         <article class="cgx-support__option">
             <h3>{{ o.title }}</h3>
             <p class="cgx-support__via">{{ o.via }}</p>
             <p>{{ o.description }}</p>
+            <div class="cgx-support__code">
+                <img src="{{ qr.src }}" width="{{ qr.w }}" height="{{ qr.h }}" loading="lazy" decoding="async" alt="QR code for {{ qr.label }}" />
+                <p>Scan to open {{ qr.label }}. Decodes to <code>{{ qr.decoded }}</code></p>
+            </div>
             <ul class="cgx-checklist">{{~ for f in o.features ~}}<li>{{ f }}</li>{{~ end ~}}</ul>
             <a class="cgx-btn cgx-btn--quiet" href="{{ o.cta.href }}">{{ o.cta.label }}</a>
         </article>

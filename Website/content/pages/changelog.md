@@ -20,6 +20,14 @@ canonical: https://codeglyphx.com/changelog/
   <p>Looking for binaries only? See <a class="cgx-link" href="/downloads/">Downloads</a>.</p>
 </div>
 
+<section class="cgx-section" aria-labelledby="cl-drawn">
+  <div class="cgx-section__head">
+    <h2 id="cl-drawn">What the releases drew</h2>
+    <p>The visible capability each release added or fixed, rendered with the API it names. Full notes follow below.</p>
+  </div>
+{{< cgx-drawn >}}
+</section>
+
 <section class="cgx-section cgx-release-log" aria-label="Releases">
 {{< release-changelog placement="changelog.timeline" >}}
 </section>

@@ -20,6 +20,14 @@ canonical: https://codeglyphx.com/downloads/
   <p>Release notes are in the <a class="cgx-link" href="/changelog/">changelog</a>; every asset also lives on <a class="cgx-link" href="https://github.com/EvotecIT/CodeGlyphX/releases">GitHub Releases</a>.</p>
 </div>
 
+<section class="cgx-section" aria-labelledby="dl-ways">
+  <div class="cgx-section__head">
+    <h2 id="dl-ways">Four ways in</h2>
+    <p>Each code below was drawn by CodeGlyphX and opens the place it names.</p>
+  </div>
+{{< cgx-channels >}}
+</section>
+
 <section class="cgx-section" aria-labelledby="dl-release">
   <div class="cgx-section__head">
     <h2 id="dl-release">By release</h2>

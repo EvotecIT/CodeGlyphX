@@ -1,0 +1,51 @@
+{
+  "about": "Hand-maintained map of the documentation for /docs/. Each topic's card shows the code in data/visuals.json docs.cards[card], rendered by Website/tools/SiteSpecimens.",
+  "groups": [
+    {
+      "id": "start",
+      "title": "Start",
+      "key": "var(--cgx-violet)",
+      "topics": [
+        { "card": "installation", "title": "Installation", "url": "/docs/installation/", "summary": "One NuGet package for .NET 8, 10, Standard 2.0 and Framework 4.7.2.", "value": "https://www.nuget.org/packages/CodeGlyphX" },
+        { "card": "quickstart", "title": "Quick start", "url": "/docs/quickstart/", "summary": "Your first QR code, barcode and decode in a few lines.", "value": "Hello, World!" },
+        { "card": "migration-3", "title": "Migrate to 3.0", "url": "/docs/migration-3/", "summary": "Encoding apart from appearance, unified scanning, stable results.", "value": "CODEGLYPHX 3.0" }
+      ]
+    },
+    {
+      "id": "matrix",
+      "title": "2D codes",
+      "key": "var(--cgx-pink)",
+      "topics": [
+        { "card": "qr", "title": "QR Code", "url": "/docs/qr/", "summary": "Error correction, versions, styling and art presets.", "value": "https://codeglyphx.com" },
+        { "card": "microqr", "title": "Micro QR", "url": "/docs/microqr/", "summary": "Four small sizes for labels and boards, encoded and recognized.", "value": "CGX2026" },
+        { "card": "datamatrix", "title": "Data Matrix", "url": "/docs/datamatrix/", "summary": "Square and rectangular symbols for part marking.", "value": "LOT-2026-0042" },
+        { "card": "pdf417", "title": "PDF417", "url": "/docs/pdf417/", "summary": "Stacked rows for IDs, boarding passes and labels.", "value": "DOCUMENT-2026-0042" },
+        { "card": "aztec", "title": "Aztec", "url": "/docs/aztec/", "summary": "A central bullseye and no quiet zone, for tickets.", "value": "TICKET-2026-0042" }
+      ]
+    },
+    {
+      "id": "linear",
+      "title": "Linear and postal",
+      "key": "var(--mark)",
+      "topics": [
+        { "card": "code128", "title": "Code 128 and GS1-128", "url": "/docs/code128/", "summary": "Full ASCII at high density, with Application Identifiers.", "value": "CODEGLYPHX-2026" },
+        { "card": "code39", "title": "Code 39 and 93", "url": "/docs/code39/", "summary": "Automotive and logistics staples, basic and full ASCII.", "value": "CGX-2026" },
+        { "card": "ean-upc", "title": "EAN and UPC", "url": "/docs/ean-upc/", "summary": "Retail product codes from EAN-13 to UPC-E.", "value": "5901234123457" },
+        { "card": "other-1d", "title": "Other linear and postal", "url": "/docs/other-1d/", "summary": "ITF, Codabar, Telepen, Pharmacode and mail barcodes.", "value": "LU178XE1A" }
+      ]
+    },
+    {
+      "id": "features",
+      "title": "Payloads, reading and output",
+      "key": "#f59e0b",
+      "topics": [
+        { "card": "gs1", "title": "GS1 data and Digital Link", "url": "/docs/gs1/", "summary": "Validate element strings and build Digital Link URIs.", "value": "(01)09520123456788(10)ABC1(17)261231" },
+        { "card": "payloads", "title": "Payload helpers", "url": "/docs/payloads/", "summary": "Wi-Fi, contacts, authenticators and payments that phones understand.", "value": "WIFI:T:WPA;S:Evotec-Guest;P:correct-horse-battery;;" },
+        { "card": "decoding", "title": "Image decoding", "url": "/docs/decoding/", "summary": "Find and read codes in screenshots, photos and artwork.", "value": "https://example.com/art" },
+        { "card": "styling", "title": "Styling", "url": "/docs/qr/#styling-options", "summary": "Module shapes, finder frames, palettes and logos.", "value": "https://codeglyphx.com" },
+        { "card": "renderers", "title": "Output formats", "url": "/docs/renderers/", "summary": "PNG, SVG, PDF, WebP, ASCII and a dozen more.", "value": "https://codeglyphx.com" },
+        { "card": "symbol-capabilities", "title": "Symbol capabilities", "url": "/docs/symbol-capabilities/", "summary": "What each format can encode, decode and scan.", "value": "CodeGlyphX" }
+      ]
+    }
+  ]
+}

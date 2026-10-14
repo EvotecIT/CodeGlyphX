@@ -1,8 +1,8 @@
 {{~ # FAQ body from data/faq.json. The page header comes from the page layout; each answer is a native disclosure. ~}}
 <div class="cgx-faq">
-    <nav class="cgx-faq__index" aria-label="FAQ sections">
+    <nav class="cgx-faq__index cgx-tabs cgx-tabs--column" aria-label="FAQ sections">
         {{~ for section in shortcode.data ~}}
-        <a href="#faq-{{ section.title | string.handleize }}">{{ section.title }}</a>
+        <a class="cgx-tab" href="#faq-{{ section.title | string.handleize }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ section.title }}<span class="cgx-tab__count" aria-label="{{ section.items.size }} questions">{{ section.items.size }}</span></a>
         {{~ end ~}}
     </nav>
     <div class="cgx-faq__body">

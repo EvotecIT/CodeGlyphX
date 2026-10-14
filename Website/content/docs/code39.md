@@ -24,6 +24,9 @@ Barcode.Save(SymbolFormat.Code39, "HELLO-123", "code39.png");
 Barcode.Save(SymbolFormat.Code93, "HELLO-123", "code93.png");
 ```
 
+
+{{< cgx-figure id="code39-93" caption="The same nine characters at the same module width: Code 93 is shorter and carries two check characters." >}}
+
 ## Valid Characters
 
 Code 39 supports: `A-Z`, `0-9`, `-`, `.`, `$`, `/`, `+`, `%`, `SPACE`

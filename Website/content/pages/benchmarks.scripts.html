@@ -106,6 +106,7 @@
 
         btn.disabled = !hasData;
         btn.classList.toggle('active', mode === currentMode);
+        btn.setAttribute('aria-pressed', mode === currentMode ? 'true' : 'false');
 
         if (!hasData) {
           btn.title = 'No ' + mode + ' benchmark data available yet';
@@ -116,7 +117,7 @@
         btn.onclick = function() {
           if (this.disabled) return;
           currentMode = mode;
-          buttons.forEach(function(b) { b.classList.toggle('active', b.dataset.mode === mode); });
+          buttons.forEach(function(b) { b.classList.toggle('active', b.dataset.mode === mode); b.setAttribute('aria-pressed', b.dataset.mode === mode ? 'true' : 'false'); });
           renderAll();
         };
       });
@@ -165,6 +166,7 @@
 
         btn.disabled = !hasData;
         btn.classList.toggle('active', os === currentOs);
+        btn.setAttribute('aria-pressed', os === currentOs ? 'true' : 'false');
 
         if (!hasData) {
           btn.title = 'No ' + os + ' benchmark data available yet';
@@ -175,7 +177,7 @@
         btn.onclick = function() {
           if (this.disabled) return;
           currentOs = os;
-          buttons.forEach(function(b) { b.classList.toggle('active', b.dataset.os === os); });
+          buttons.forEach(function(b) { b.classList.toggle('active', b.dataset.os === os); b.setAttribute('aria-pressed', b.dataset.os === os ? 'true' : 'false'); });
           renderAll();
         };
       });
@@ -552,6 +554,10 @@
       const detailEntry = getEntry(detailData, currentOs, currentMode);
       const entry = summaryEntry || detailEntry;
 
+      // The charts are rendered with the page, one set per platform and run mode; show the selected one.
+      document.querySelectorAll('[data-bench-set]').forEach(function(set) {
+        set.hidden = set.getAttribute('data-bench-set') !== currentOs + '-' + currentMode;
+      });
       renderMeta(entry);
       renderOsSelector(summaryData, detailData);
       renderModeSelector(summaryData, detailData);

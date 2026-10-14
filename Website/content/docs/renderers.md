@@ -12,6 +12,9 @@ layout: docs
 
 CodeGlyphX supports a wide variety of output formats. The format is automatically determined by the file extension.
 
+
+{{< cgx-figure id="renderers" caption="One QR code written by CodeGlyphX to SVG, PNG and ASCII, and the size of the same code in each output format." >}}
+
 ## Format Matrix (Encode + Decode)
 
 | Format | Extensions | Encode | Decode | Notes |

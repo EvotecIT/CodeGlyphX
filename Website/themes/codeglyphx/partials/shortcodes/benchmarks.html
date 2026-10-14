@@ -5,14 +5,14 @@
         <div class="cgx-bench-controls">
             <div class="cgx-seg">
                 <span class="cgx-seg__label" id="bench-mode-label">{{ b.runMode.title }}</span>
-                <div class="benchmark-mode-selector" role="group" aria-labelledby="bench-mode-label">
-                    {{~ for button in b.runMode.buttons ~}}<button type="button" class="benchmark-mode-btn{{ if button.active }} active{{ end }}" data-mode="{{ button.mode }}">{{ button.label }}</button>{{~ end ~}}
+                <div class="benchmark-mode-selector cgx-tabs" role="group" aria-labelledby="bench-mode-label">
+                    {{~ for button in b.runMode.buttons ~}}<button type="button" class="benchmark-mode-btn cgx-tab{{ if button.active }} active{{ end }}" aria-pressed="{{ if button.active }}true{{ else }}false{{ end }}" data-mode="{{ button.mode }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ button.label }}</button>{{~ end ~}}
                 </div>
             </div>
             <div class="cgx-seg">
                 <span class="cgx-seg__label" id="bench-os-label">{{ b.runOs.title }}</span>
-                <div class="benchmark-os-selector" role="group" aria-labelledby="bench-os-label">
-                    {{~ for button in b.runOs.buttons ~}}<button type="button" class="benchmark-os-btn{{ if button.active }} active{{ end }}" data-os="{{ button.os }}">{{ button.label }}</button>{{~ end ~}}
+                <div class="benchmark-os-selector cgx-tabs" role="group" aria-labelledby="bench-os-label">
+                    {{~ for button in b.runOs.buttons ~}}<button type="button" class="benchmark-os-btn cgx-tab{{ if button.active }} active{{ end }}" aria-pressed="{{ if button.active }}true{{ else }}false{{ end }}" data-os="{{ button.os }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ button.label }}</button>{{~ end ~}}
                 </div>
             </div>
         </div>
@@ -23,6 +23,48 @@
         <p class="benchmark-os-note" data-os-note></p>
     </div>
 
+    {{~ bench = data.visuals.bench ~}}
+    <div class="cgx-bench-sets">
+    {{~ for set in bench.sets ~}}
+    <div data-bench-set="{{ set.id }}"{{ if set.id != bench.initial }} hidden{{ end }}>
+      <section class="cgx-section cgx-bench-hero" aria-labelledby="bench-glance-{{ set.id }}">
+        <div class="cgx-bench-hero__stats">
+          <h2 class="cgx-visually-hidden" id="bench-glance-{{ set.id }}">At a glance</h2>
+          <p class="cgx-bench-hero__stat"><span class="cgx-bench-hero__num">{{ set.wins }}<em>/{{ set.count }}</em></span><span class="cgx-bench-hero__label">scenarios where CodeGlyphX is the fastest library measured</span></p>
+          <p class="cgx-bench-hero__stat"><span class="cgx-bench-hero__num">{{ set.median }}</span><span class="cgx-bench-hero__label">median speed-up over the next fastest library</span></p>
+        </div>
+        <figure class="cgx-speedup-figure">
+          <ul class="cgx-speedup" style="--decades: {{ set.ticks.size - 1 }}" aria-label="Speed-up over the next fastest library, per scenario (logarithmic scale)">
+            <li class="cgx-speedup__axis" aria-hidden="true">{{ for t in set.ticks }}<span style="--p: {{ t.pos }}">{{ t.label }}</span>{{ end }}</li>
+            {{~ for h in set.headline ~}}
+            <li class="cgx-speedup__row"><span class="cgx-speedup__name">{{ h.scenario }}</span><span class="cgx-speedup__track"><span class="cgx-speedup__bar{{ if h.slower || h.pos < 12 }} cgx-speedup__bar--small{{ end }}" style="--p: {{ h.pos }}"></span><span class="cgx-speedup__value" style="--p: {{ h.pos }}">{{ h.factor }} <span>vs {{ h.runner }}</span></span></span></li>
+            {{~ end ~}}
+          </ul>
+          <figcaption class="cgx-speedup__note">Next fastest library's mean time divided by CodeGlyphX's, per scenario. The axis is logarithmic: each grid line is ten times the last.</figcaption>
+        </figure>
+      </section>
+      <section class="cgx-section" aria-labelledby="bench-per-{{ set.id }}">
+        <div class="cgx-section__head">
+          <h2 id="bench-per-{{ set.id }}">Per scenario</h2>
+          <p>Mean time per operation for every library measured, on a linear scale per scenario. Shorter is faster.</p>
+        </div>
+        <div class="cgx-bench-grid">
+          {{~ for s in set.scenarios ~}}
+          <article class="cgx-bench-card">
+            <h3>{{ s.scenario }} <span>{{ s.benchmark }}</span></h3>
+            <ul class="cgx-bench-bars">
+              {{~ for b in s.bars ~}}
+              <li{{ if b.cgx }} class="is-cgx"{{ end }}><span class="cgx-bench-bars__vendor">{{ b.vendor }}</span><span class="cgx-bench-bars__track"><span class="cgx-bench-bars__lane"><span class="cgx-bench-bars__bar" style="width: {{ b.pct }}%"></span></span><span class="cgx-bench-bars__time">{{ b.mean }}{{ if b.factor != "" }} <em>{{ b.factor }}</em>{{ end }}</span></span></li>
+              {{~ end ~}}
+            </ul>
+          </article>
+          {{~ end ~}}
+        </div>
+        <p class="cgx-bench-legend"><span><i class="is-cgx" aria-hidden="true"></i>CodeGlyphX</span><span><i aria-hidden="true"></i>Other libraries, with their time as a multiple of CodeGlyphX's</span></p>
+      </section>
+    </div>
+    {{~ end ~}}
+    </div>
     <section class="cgx-section" aria-labelledby="bench-summary">
         <div class="cgx-section__head">
             <h2 id="bench-summary">{{ b.sections.summary.title }}</h2>
@@ -30,16 +72,6 @@
         </div>
         <div class="benchmark-table-container" data-benchmark-summary>
             <p class="loading-text">Loading benchmark data...</p>
-        </div>
-    </section>
-
-    <section class="cgx-section" aria-labelledby="bench-charts">
-        <div class="cgx-section__head">
-            <h2 id="bench-charts">{{ b.sections.charts.title }}</h2>
-            <p>{{ b.sections.charts.description }}</p>
-        </div>
-        <div class="benchmark-charts" data-benchmark-charts>
-            <p class="loading-text">Loading chart data...</p>
         </div>
     </section>
 

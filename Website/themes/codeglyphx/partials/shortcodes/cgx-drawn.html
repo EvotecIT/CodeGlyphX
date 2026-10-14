@@ -1,0 +1,13 @@
+{{~ ## What each release drew: hand-maintained highlights (data/release-highlights.json) with the code CodeGlyphX
+       rendered for each (data/visuals.json pages.changelog). site.js also adds each code to its release entry below.  ## ~}}
+<ol class="cgx-drawn" aria-label="Release highlights" data-cgx-drawn>
+  {{~ for h in data.visuals.pages.changelog ~}}
+  <li data-release-tag="{{ h.tag }}">
+    <span class="cgx-drawn__plate"><img src="{{ h.src }}" width="{{ h.w }}" height="{{ h.h }}" loading="lazy" decoding="async" alt="{{ h.title }}, drawn by CodeGlyphX" /></span>
+    <span class="cgx-drawn__version">v{{ h.version }}</span>
+    <strong>{{ h.title }}</strong>
+    <p>{{ h.summary }}</p>
+    {{~ if h.api ~}}<code>{{ h.api }}</code>{{~ end ~}}
+  </li>
+  {{~ end ~}}
+</ol>

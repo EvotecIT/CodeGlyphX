@@ -57,6 +57,9 @@ Barcode.Save(SymbolFormat.Code128, "PRODUCT-12345", "barcode.png");
 Barcode.Save(SymbolFormat.Ean, "5901234123457", "ean.png");
 ```
 
+
+{{< cgx-figure id="quickstart" caption="The files the steps above write, rendered by CodeGlyphX. hello.png decodes back to its text." >}}
+
 ## 4. Decode Images
 
 ```csharp

@@ -24,6 +24,9 @@ Barcode.Save(SymbolFormat.Code128, "PRODUCT-12345", "code128.png");
 Barcode.Save(SymbolFormat.Gs1Code128, "(01)09501101530003(17)250101", "gs1.png");
 ```
 
+
+{{< cgx-figure id="code128" caption="Both symbols at a 2-pixel module. Each was decoded back from its PNG by CodeGlyphX; GS1-128 returns its element string: each Application Identifier followed by its data." >}}
+
 ## Character Sets
 
 | Set | Characters | Best For |

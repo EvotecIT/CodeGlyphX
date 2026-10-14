@@ -24,6 +24,9 @@ CodeGlyphX supports a wide range of additional 1D symbologies beyond the most co
 | Postal | POSTNET, PLANET, Royal Mail 4-State, Australia Post, Japan Post, USPS IMB | Matrix encoder required |
 | GS1 DataBar | DataBar Truncated, Omni, Stacked, Expanded, Expanded Stacked | Omni/Stacked/Expanded Stacked use matrix encoder |
 
+
+{{< cgx-figure id="other-1d" caption="A selection from the specimen sheet: linear, pharmaceutical and postal symbologies drawn by CodeGlyphX." >}}
+
 ## Examples
 
 ```csharp
