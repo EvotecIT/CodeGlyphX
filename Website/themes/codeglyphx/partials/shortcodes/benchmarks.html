@@ -65,8 +65,8 @@
             </table>
         </div>
     </section>
-    {{ if comparison.code128_photos }}
-    {{ photo_set = comparison.code128_photos.photographs }}
+    {{ if comparison.databar_separator_geometry }}
+    {{ photo_set = comparison.databar_separator_geometry.photographs }}
     <section class="benchmark-section" aria-labelledby="code128-photographs">
         <h2 id="code128-photographs">Additional Code128 and DataBar photographs</h2>
         <p>{{ photo_set.scope }}</p><p>{{ photo_set.limits }}</p>
@@ -80,6 +80,10 @@
         <p>CodeGlyphX gains {{ photo_set.gained.size }} images, loses {{ photo_set.lost.size }}, and adds unexpected outputs on {{ photo_set.new_unexpected.size }} images in this set.</p>
         <p><a href="/comparisons/evidence/{{ photo_set.manifest }}">Inputs</a> · <a href="/comparisons/evidence/{{ photo_set.before_file }}">Previous outcomes</a> · <a href="/comparisons/evidence/{{ photo_set.current_file }}">Current outcomes</a></p>
     </section>
+    {{ session_costs = comparison.databar_separator_geometry }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
+    {{ if comparison.code128_photos }}
     {{ session_costs = comparison.code128_photos }}
     {{ include "shortcodes/decoder-session-costs" }}
     {{ end }}

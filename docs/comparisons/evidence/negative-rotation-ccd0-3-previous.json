@@ -205,8 +205,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives-2/20.png",
@@ -304,8 +304,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/15.png",
@@ -326,8 +326,8 @@
     "Actual": [],
     "Missing": [],
     "Unexpected": [],
-    "Status": "Correct",
-    "Completion": "Completed"
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
   },
   {
     "Id": "falsepositives/19.png",

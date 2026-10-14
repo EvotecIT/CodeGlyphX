@@ -12,7 +12,7 @@ def _physical_payload(text,format):
             text+=str((10-total%10)%10)
     return text
 
-def validate_photographs(root,proof,checked):
+def validate_photographs(root,proof,checked,baseline_counts=(20,15,5)):
     photo=proof['PhotographSet']
     if any(photo[key]!=proof[key] for key in ('Source','CoreSha256','PreviousSource','PreviousCoreSha256')):
         raise ValueError('Photograph binary identity differs')
@@ -54,7 +54,8 @@ def validate_photographs(root,proof,checked):
                 raise ValueError('Photograph oracle, hints or scored outcome differs')
     regression=checked(proof['BaselineRegressions'])
     cases=regression['Cases']
-    if regression['CoreSha256']!=proof['PreviousCoreSha256'] or len(cases)!=20 or len({r['Name'] for r in cases})!=20 or sum(r['Outcome']=='Failed' for r in cases)!=15 or sum(r['Outcome']=='Passed' for r in cases)!=5 or (regression['Total'],regression['Failed'],regression['Passed'])!=(20,15,5):
+    total,failed,passed=baseline_counts
+    if regression['CoreSha256']!=proof['PreviousCoreSha256'] or len(cases)!=total or len({r['Name'] for r in cases})!=total or sum(r['Outcome']=='Failed' for r in cases)!=failed or sum(r['Outcome']=='Passed' for r in cases)!=passed or (regression['Total'],regression['Failed'],regression['Passed'])!=baseline_counts:
         raise ValueError('Baseline photo regression evidence differs')
     table=[]
     for family,hint,count in [('Code128','Code128',34),('DataBar','Gs1DataBarOmnidirectional',18),('Combined',None,52)]:
@@ -67,7 +68,7 @@ def validate_photographs(root,proof,checked):
     return {'rows':table,'scope':photo['Scope'],'limits':photo['Limits'],'gained':[id for id,r in b.items() if r['Status']=='Correct' and a[id]['Status']!='Correct'],'lost':[id for id,r in a.items() if r['Status']=='Correct' and b[id]['Status']!='Correct'],'new_unexpected':[id for id,r in b.items() if r['Unexpected'] and not a[id]['Unexpected']],'manifest':photo['Manifest']['File'],'before_file':photo['Before']['File'],'current_file':photo['Current']['File']}
 
 def append_photograph_section(lines,projected):
-    if not projected:return
+    if not projected or projected['historical']:return
     photos=projected['photographs']
     lines += ['', '## Additional Code128 and DataBar photographs', '', photos['scope'], '', photos['limits'], '',
         '| Family | Reader | Previous correct | Current correct | Images | Current unexpected | Current inconclusive |',
