@@ -40,6 +40,8 @@
     <Compile Include="DecodeBudgetSnapshotTests.cs" />
     <Compile Include="ImageComponentCoordinateTests.cs" />
     <Compile Include="DirectPartMarkWindowTests.cs" />
+    <Compile Include="DirectPartMarkWorkspaceTests.cs" />
+    <Compile Include="BinaryMaskMorphologyTests.cs" />
     <Compile Include="IndustrialTileBoundaryTests.cs" />
     <Compile Include="RetailIlluminationTests.cs" />
     <Compile Include="RetailParityRecoveryTests.cs" />

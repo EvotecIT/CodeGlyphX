@@ -1,6 +1,7 @@
 #if NET8_0_OR_GREATER
 using System;
-using System.Buffers;
+using System.Threading;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Qr;
 
@@ -99,49 +100,11 @@ internal readonly partial struct QrGrayImage {
     private static void Erode(ReadOnlySpan<byte> src, Span<byte> dst, int width, int height, int radius) =>
         FilterBinarySquare(src, dst, width, height, radius, erode: true);
 
-    /// <summary>Counts set pixels in a moving, clipped square without rescanning its interior.</summary>
+    /// <summary>Uses the shared square filter with the QR decoder's clipped edges and existing unbudgeted transform scope.</summary>
     private static void FilterBinarySquare(ReadOnlySpan<byte> src, Span<byte> dst,
         int width, int height, int radius, bool erode) {
-        // Each column holds the number of set pixels in the current vertical window.
-        // Rent only one row of integers; the input and output buffers remain distinct.
-        var columns = ArrayPool<int>.Shared.Rent(width);
-        try {
-            Array.Clear(columns, 0, width);
-            var verticalRadius = Math.Min(radius, height - 1);
-            var horizontalRadius = Math.Min(radius, width - 1);
-            for (var y = 0; y <= verticalRadius; y++) {
-                var row = y * width;
-                for (var x = 0; x < width; x++) columns[x] += src[row + x] != 0 ? 1 : 0;
-            }
-
-            for (var y = 0; y < height; y++) {
-                if (y > 0) {
-                    var leaving = y - verticalRadius - 1;
-                    if (leaving >= 0) {
-                        var row = leaving * width;
-                        for (var x = 0; x < width; x++) columns[x] -= src[row + x] != 0 ? 1 : 0;
-                    }
-                    if (verticalRadius < height - y) {
-                        var row = (y + verticalRadius) * width;
-                        for (var x = 0; x < width; x++) columns[x] += src[row + x] != 0 ? 1 : 0;
-                    }
-                }
-
-                var windowHeight = Math.Min(verticalRadius, y) + Math.Min(verticalRadius, height - y - 1) + 1;
-                var count = 0;
-                for (var x = 0; x <= horizontalRadius; x++) count += columns[x];
-                var outputRow = y * width;
-                for (var x = 0; x < width; x++) {
-                    var windowWidth = Math.Min(horizontalRadius, x) + Math.Min(horizontalRadius, width - x - 1) + 1;
-                    dst[outputRow + x] = (erode ? count == windowWidth * windowHeight : count != 0) ? (byte)1 : (byte)0;
-                    var leaving = x - horizontalRadius;
-                    if (leaving >= 0) count -= columns[leaving];
-                    if (horizontalRadius < width - x - 1) count += columns[x + horizontalRadius + 1];
-                }
-            }
-        } finally {
-            ArrayPool<int>.Shared.Return(columns);
-        }
+        BinaryMaskMorphology.FilterSquare(src, dst, width, height, radius, erode, zeroOutside: false,
+            CancellationToken.None, default);
     }
 }
 #endif
