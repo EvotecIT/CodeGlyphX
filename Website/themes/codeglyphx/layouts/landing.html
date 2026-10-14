@@ -19,7 +19,7 @@
 <body class="cgx-body-landing{{ if body_class != "" }} {{ body_class }}{{ end }}"{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
   <div class="page">
 {{ include "header" -}}
-<main class="cgx-landing">
+<main id="main" class="cgx-landing">
 {{ include "landing/hero" }}
 {{ include "landing/surfaces" }}
 {{ include "landing/specimens" }}

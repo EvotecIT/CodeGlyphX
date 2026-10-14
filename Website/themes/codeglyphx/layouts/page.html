@@ -19,7 +19,7 @@
 <body class="cgx-body-page{{ if body_class != "" }} {{ body_class }}{{ end }}"{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
   <div class="page">
 {{ include "header" -}}
-<main class="cgx-main">
+<main id="main" class="cgx-main">
 {{~ ph_title = page.meta.heading ?? page.title; ph_lede = page.meta.lede ?? page.description; ph_glyph = page.meta.glyph ~}}
 {{ include "page-head" }}
 <div class="cgx-page cgx-page--{{ page.slug }}">

@@ -17,16 +17,20 @@ body { background: var(--bg); color: var(--ink); font-family: 'Inter', -apple-sy
 svg { max-width: 100%; height: auto; }
 
 /* Header frame, so the page does not jump while app.css loads. */
+.cgx-skip { position: absolute; top: -60px; }
 .header { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: var(--header-height); padding: 0 clamp(16px, 4vw, 40px); border-bottom: 1px solid var(--line); background: var(--bg); }
-.header-content { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: 1240px; margin: 0 auto; }
-.brand { display: flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 700; text-decoration: none; }
+.cgx-nav { display: flex; align-items: center; gap: clamp(16px, 3vw, 36px); height: 100%; max-width: 1240px; margin: 0 auto; }
+.brand { display: flex; flex: none; align-items: center; gap: 10px; color: var(--ink); font-weight: 700; text-decoration: none; }
 .brand-icon, .brand-icon img { width: 32px; height: 32px; }
 .header svg { width: 19px; height: 19px; flex-shrink: 0; }
-.nav { display: flex; align-items: center; gap: 18px; }
-.nav-links { display: flex; }
-.nav-links a { padding: 8px 11px; color: var(--ink-muted); font-size: .875rem; text-decoration: none; }
+.cgx-nav__sheet { display: flex; flex: 1; align-items: center; justify-content: space-between; }
+.cgx-nav__groups { display: flex; margin: 0; padding: 0; list-style: none; }
+.cgx-navgroup__trigger { border: 0; background: transparent; color: var(--ink-muted); }
+.cgx-navgroup__here[hidden] { display: none; }
+.cgx-navpanel { position: absolute; visibility: hidden; }
 .nav-actions { display: flex; align-items: center; gap: 4px; }
 .nav-toggle-checkbox { position: absolute; opacity: 0; }
 .nav-toggle { display: none; }
 .theme-cycle-btn { border: 0; background: transparent; color: var(--ink-muted); }
 .cgx-pagehead { background: var(--cgx-night); }
+@media (max-width: 960px) { .cgx-nav__sheet { position: fixed; visibility: hidden; } .nav-toggle { display: flex; margin-left: auto; } }

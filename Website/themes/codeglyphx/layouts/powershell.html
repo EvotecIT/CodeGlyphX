@@ -19,7 +19,7 @@
 <body class="cgx-body-landing cgx-body-ps{{ if body_class != "" }} {{ body_class }}{{ end }}"{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
   <div class="page">
 {{ include "header" -}}
-<main class="cgx-landing cgx-psp">
+<main id="main" class="cgx-landing cgx-psp">
 {{~ psx = data["powershell-examples"]; ex = {}; for e in psx.examples; ex[e.id] = e; end ~}}
 {{ include "powershell/hero" }}
 {{ include "powershell/flagship" }}

@@ -90,9 +90,8 @@ main.cgx-landing { padding: var(--header-height) 0 0; overflow-x: clip; }
 .cgx-art__head h2, .cgx-ps__head h2, .cgx-decode h2, .cgx-closing h2 { font-size: clamp(1.75rem, 1rem + 2.2vw, 2.75rem); font-weight: 800; line-height: 1.08; }
 
 /* Specimen sheet */
-.cgx-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
-.cgx-filters button { min-height: 36px; padding: 0 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-card); color: var(--text-muted); font: inherit; font-size: .875rem; font-weight: 600; cursor: pointer; }
-.cgx-filters button[aria-pressed="true"] { border-color: var(--primary); background: var(--primary); color: #fff; }
+/* Family filter: the shared tab component from app.css. */
+.cgx-filters { margin-bottom: 24px; }
 .cgx-specimen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(196px, 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
 .cgx-specimen { display: grid; gap: 4px; padding: 12px 12px 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg-card); }
 .cgx-specimen[hidden] { display: none; }

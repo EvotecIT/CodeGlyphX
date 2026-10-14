@@ -297,7 +297,7 @@ globalThis.setTheme = setTheme;
             defaultCodeLanguage = `language-${defaultCodeLanguage}`;
         }
         const blocks = Array.from(document.querySelectorAll('pre.code-block, .docs-content pre, .docs-static pre, .type-detail pre'))
-            .filter((block) => !block.classList.contains('initialized'))
+            .filter((block) => !block.classList.contains('initialized') && !block.closest('.cgx-fig, .cgx-run'))
             .filter((block) => !block.querySelector('code.language-mermaid'));
         const signatures = Array.from(document.querySelectorAll('code.signature'))
             .filter((sig) => !sig.classList.contains('initialized'));
@@ -487,8 +487,7 @@ globalThis.setTheme = setTheme;
                 tab.addEventListener('click', () => {
                     currentTheme = tab.dataset.theme || currentTheme;
                     currentSlide = 0;
-                    themeTabs.forEach((t) => t.classList.remove('active'));
-                    tab.classList.add('active');
+                    themeTabs.forEach((t) => { t.classList.toggle('active', t === tab); t.setAttribute('aria-pressed', t === tab ? 'true' : 'false'); });
                     updateCarousel();
                 });
             });
@@ -811,4 +810,220 @@ globalThis.CodeGlyphX.setupDropZone = function(dropZoneElement, inputFileElement
             setThemeLocal(next);
         });
     }
+})();
+
+// Header navigation. Each group button discloses its night panel; one panel is open at a time on wide screens, and
+// Escape, a click outside or tabbing out of the group closes it. The phone sheet lists every group open. Pages the
+// site generator did not render (the API reference) get their current destination marked here from the address.
+(function () {
+    var header = document.querySelector('[data-cgx-header]');
+    if (!header) return;
+    var nav = header.querySelector('.cgx-nav');
+    var toggle = document.getElementById('nav-toggle');
+    var compact = window.matchMedia('(max-width: 960px)');
+    var groups = Array.prototype.slice.call(header.querySelectorAll('[data-cgx-navgroup]'));
+    var triggerOf = function (group) { return group.querySelector('.cgx-navgroup__trigger'); };
+
+    if (!header.querySelector('.cgx-navitem.is-current')) {
+        var path = window.location.pathname;
+        var best = null;
+        header.querySelectorAll('[data-cgx-navitem]').forEach(function (item) {
+            var url = item.getAttribute('data-cgx-navitem');
+            if (!url || url === '/' || path.indexOf(url) !== 0) return;
+            if (!best || url.length > best.getAttribute('data-cgx-navitem').length) best = item;
+        });
+        if (best) {
+            var link = best.querySelector('.cgx-navitem__link');
+            var group = best.closest('[data-cgx-navgroup]');
+            best.classList.add('is-current');
+            if (link) link.setAttribute('aria-current', path === best.getAttribute('data-cgx-navitem') ? 'page' : 'true');
+            if (group) {
+                group.classList.add('is-current');
+                var here = group.querySelector('[data-cgx-here]');
+                var title = group.querySelector('[data-cgx-here-title]');
+                if (title && link) title.textContent = link.textContent;
+                if (here) here.hidden = false;
+            }
+        }
+    }
+
+    var setOpen = function (group, open) { triggerOf(group).setAttribute('aria-expanded', open ? 'true' : 'false'); };
+    var closeAll = function (except) { groups.forEach(function (group) { if (group !== except) setOpen(group, false); }); };
+
+    groups.forEach(function (group) {
+        var trigger = triggerOf(group);
+        var links = Array.prototype.slice.call(group.querySelectorAll('.cgx-navitem__link'));
+        trigger.addEventListener('click', function () {
+            if (compact.matches) return;
+            var open = trigger.getAttribute('aria-expanded') !== 'true';
+            closeAll(group);
+            setOpen(group, open);
+        });
+        trigger.addEventListener('keydown', function (event) {
+            if (event.key !== 'ArrowDown' || compact.matches || !links.length) return;
+            event.preventDefault();
+            closeAll(group);
+            setOpen(group, true);
+            links[0].focus();
+        });
+        group.addEventListener('keydown', function (event) {
+            if (compact.matches) return;
+            var index = links.indexOf(document.activeElement);
+            if (event.key === 'Escape' && trigger.getAttribute('aria-expanded') === 'true') {
+                setOpen(group, false);
+                trigger.focus();
+            } else if (index >= 0 && /^Arrow(Left|Right|Up|Down)$/.test(event.key)) {
+                event.preventDefault();
+                var step = event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 1;
+                links[(index + step + links.length) % links.length].focus();
+            }
+        });
+        group.addEventListener('focusout', function (event) {
+            if (!compact.matches && event.relatedTarget && !group.contains(event.relatedTarget)) setOpen(group, false);
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!compact.matches && !header.contains(event.target)) closeAll(null);
+    });
+    var reset = function () {
+        if (compact.matches) groups.forEach(function (group) { setOpen(group, true); });
+        else closeAll(null);
+    };
+    if (compact.addEventListener) compact.addEventListener('change', reset);
+    reset();
+    if (nav) nav.setAttribute('data-cgx-wired', '');
+
+    if (toggle) {
+        var sync = function () { document.documentElement.classList.toggle('cgx-nav-open', toggle.checked && compact.matches); };
+        toggle.addEventListener('change', sync);
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && toggle.checked) { toggle.checked = false; sync(); toggle.focus(); }
+        });
+        header.addEventListener('click', function (event) {
+            if (toggle.checked && event.target.closest && event.target.closest('.cgx-navitem__link')) { toggle.checked = false; sync(); }
+        });
+    }
+})();
+
+// Tab sets ([data-cgx-tabs]): arrow keys move between tabs, Home and End jump to the ends, and each tab shows the
+// panel named by aria-controls.
+(function () {
+    document.querySelectorAll('[data-cgx-tabs]').forEach(function (set) {
+        var tabs = Array.prototype.slice.call(set.querySelectorAll('[role="tab"]'));
+        var select = function (active) {
+            tabs.forEach(function (tab) {
+                var on = tab === active;
+                tab.setAttribute('aria-selected', on ? 'true' : 'false');
+                tab.tabIndex = on ? 0 : -1;
+                var panel = document.getElementById(tab.getAttribute('aria-controls'));
+                if (panel) panel.hidden = !on;
+            });
+        };
+        tabs.forEach(function (tab, index) {
+            tab.addEventListener('click', function () { select(tab); });
+            tab.addEventListener('keydown', function (event) {
+                var next = null;
+                if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = tabs[(index + 1) % tabs.length];
+                if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = tabs[(index - 1 + tabs.length) % tabs.length];
+                if (event.key === 'Home') next = tabs[0];
+                if (event.key === 'End') next = tabs[tabs.length - 1];
+                if (next) { event.preventDefault(); next.focus(); select(next); }
+            });
+        });
+    });
+
+    // Filter sets ([data-cgx-filter-set]): toggle buttons that show the items whose data-family matches.
+    document.querySelectorAll('[data-cgx-filter-set]').forEach(function (set) {
+        var target = document.querySelector(set.getAttribute('data-cgx-filter-set'));
+        if (!target) return;
+        set.querySelectorAll('button[data-filter]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var value = button.getAttribute('data-filter');
+                set.querySelectorAll('button[data-filter]').forEach(function (other) {
+                    other.setAttribute('aria-pressed', other === button ? 'true' : 'false');
+                });
+                target.querySelectorAll('[data-family]').forEach(function (item) {
+                    item.hidden = value !== 'all' && item.getAttribute('data-family') !== value;
+                });
+            });
+        });
+    });
+})();
+
+// Changelog: put each release highlight's code beside that release's notes.
+(function () {
+    var drawn = document.querySelector('[data-cgx-drawn]');
+    if (!drawn) return;
+    drawn.querySelectorAll('li[data-release-tag]').forEach(function (item) {
+        var tag = item.getAttribute('data-release-tag');
+        var entry = document.querySelector('.pf-release-entry[data-release-tag="' + tag + '"] .pf-release-entry-header');
+        var img = item.querySelector('img');
+        if (!entry || !img) return;
+        var holder = entry.querySelector('.cgx-entry-codes');
+        if (!holder) {
+            holder = document.createElement('div');
+            holder.className = 'cgx-entry-codes';
+            entry.appendChild(holder);
+        }
+        var copy = img.cloneNode(false);
+        copy.alt = item.querySelector('strong') ? item.querySelector('strong').textContent : img.alt;
+        copy.title = copy.alt;
+        holder.appendChild(copy);
+    });
+})();
+
+// Not found: show the address that failed and the closest page, with the QR code CodeGlyphX drew for that page.
+(function () {
+    var lost = document.querySelector('[data-cgx-lost]');
+    if (!lost || !window.fetch) return;
+    var path = decodeURIComponent(window.location.pathname || '/');
+    var pathEl = lost.querySelector('[data-cgx-lost-path]');
+    if (pathEl && path !== '/404/' && path !== '/404.html') pathEl.textContent = path;
+    var tokens = function (value) { return value.toLowerCase().split(/[^a-z0-9]+/).filter(function (t) { return t.length > 1; }); };
+    var wanted = tokens(path);
+    fetch(lost.getAttribute('data-index')).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (index) {
+        var best = null, bestScore = 0;
+        index.pages.forEach(function (page) {
+            var have = tokens(page.url + ' ' + page.title);
+            var score = 0;
+            wanted.forEach(function (w) {
+                have.forEach(function (h) {
+                    if (h === w) score += 3;
+                    else if (h.indexOf(w) === 0 || w.indexOf(h) === 0) score += 1;
+                });
+            });
+            if (path.indexOf(page.url) === 0 && page.url !== '/') score += 2;
+            if (score > bestScore || (score === bestScore && best && score > 0 && page.url.length < best.url.length)) { best = page; bestScore = score; }
+        });
+        if (!best) best = index.pages.filter(function (p) { return p.url === '/'; })[0];
+        if (!best) return;
+        var full = 'https://codeglyphx.com' + best.url;
+        var match = lost.querySelector('[data-cgx-lost-match]');
+        var url = lost.querySelector('[data-cgx-lost-url]');
+        var img = lost.querySelector('[data-cgx-lost-img]');
+        var caption = lost.querySelector('[data-cgx-lost-caption]');
+        var link = '<a href="' + best.url + '">' + best.title.replace(/[&<>"]/g, '') + '</a>';
+        if (match) match.innerHTML = (best.section && best.section !== 'Pages' && best.section !== 'CodeGlyphX' ? best.section + ': ' : '') + link;
+        if (url) url.textContent = full;
+        if (img) { img.src = best.src; img.alt = 'QR code that opens ' + full; }
+        if (caption) caption.innerHTML = 'Scan, or open ' + link;
+    }, function () { /* the default suggestion stays */ });
+})();
+
+// FAQ: the section in view is marked in the index.
+(function () {
+    var index = document.querySelector('.cgx-faq__index');
+    if (!index || !('IntersectionObserver' in window)) return;
+    var links = Array.prototype.slice.call(index.querySelectorAll('a[href^="#"]'));
+    var sections = links.map(function (link) { return document.getElementById(link.getAttribute('href').slice(1)); });
+    var visible = new Map();
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) { visible.set(entry.target, entry.isIntersecting); });
+        var active = null;
+        sections.forEach(function (section, i) { if (!active && section && visible.get(section)) active = links[i]; });
+        if (!active) return;
+        links.forEach(function (link) { if (link === active) link.setAttribute('aria-current', 'true'); else link.removeAttribute('aria-current'); });
+    }, { rootMargin: '-80px 0px -55% 0px' });
+    sections.forEach(function (section) { if (section) observer.observe(section); });
 })();

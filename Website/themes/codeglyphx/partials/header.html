@@ -1,58 +1,46 @@
-<header class="header">
-    <div class="header-content">
-        <a href="/" class="brand">
-            <div class="brand-icon">
-                <img src="/codeglyphx-qr-icon.png" alt="{{ site.name }} logo" width="28" height="28" loading="eager" decoding="async" />
-            </div>
-            <span>{{ site.name }}</span>
-        </a>
-
-        <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox" />
-        <label for="nav-toggle" class="nav-toggle" aria-label="Toggle navigation">
-            <span></span>
-            <span></span>
-            <span></span>
-        </label>
-
-        <nav class="nav" aria-label="Main navigation">
-            <div class="nav-links">
-                {{~ if pf && pf.nav_links ~}}
-                {{ pf.nav_links "main" }}
-                {{~ else ~}}
-                {{~ for menu in navigation.menus ~}}
-                {{~ if menu.name == "main" ~}}
-                {{~ for item in menu.items ~}}
-                {{~ if item.url ~}}
-                <a href="{{ item.url }}"{{ if item.target }} target="{{ item.target }}"{{ end }}{{ if item.rel }} rel="{{ item.rel }}"{{ end }}>{{ item.title }}</a>
-                {{~ end ~}}
-                {{~ end ~}}
-                {{~ end ~}}
-                {{~ end ~}}
-                {{~ end ~}}
-            </div>
-            <div class="nav-actions">
-                {{~ if pf && pf.nav_actions ~}}
-                {{ pf.nav_actions }}
-                {{~ else ~}}
-                {{~ if navigation.actions && navigation.actions.size > 0 ~}}
-                {{~ for action in navigation.actions ~}}
-                {{~ if action.kind && action.kind == "button" ~}}
-                <button type="button"{{ if action.css_class }} class="{{ action.css_class }}"{{ end }}{{ if action.title }} title="{{ action.title }}"{{ end }}{{ if action.aria_label }} aria-label="{{ action.aria_label }}"{{ else if action.title }} aria-label="{{ action.title }}"{{ end }}>
-                    {{ if action.icon_html && action.icon_html != "" }}{{ action.icon_html }}{{ else if action.icon && action.icon != "" }}{{ action.icon }}{{ end }}
-                    {{ if action.text && action.text != "" }} {{ action.text }}{{ else if (!action.icon_html && !action.icon) && action.title && action.title != "" }} {{ action.title }}{{ end }}
-                </button>
-                {{~ else ~}}
-                {{~ if action.url ~}}
-                <a href="{{ action.url }}"{{ if action.css_class }} class="{{ action.css_class }}"{{ end }}{{ if action.target }} target="{{ action.target }}"{{ end }}{{ if action.rel }} rel="{{ action.rel }}"{{ end }}{{ if action.title }} title="{{ action.title }}"{{ end }}{{ if action.aria_label }} aria-label="{{ action.aria_label }}"{{ else if action.title }} aria-label="{{ action.title }}"{{ end }}>
-                    {{ if action.icon_html && action.icon_html != "" }}{{ action.icon_html }}{{ else if action.icon && action.icon != "" }}{{ action.icon }}{{ end }}
-                    {{ if action.text && action.text != "" }} {{ action.text }}{{ else if (!action.icon_html && !action.icon) && action.title && action.title != "" }} {{ action.title }}{{ end }}
-                </a>
-                {{~ end ~}}
-                {{~ end ~}}
-                {{~ end ~}}
-                {{~ end ~}}
-                {{~ end ~}}
-            </div>
-        </nav>
+{{~ ## The one site header, built from the site.json "main" menu. Groups open a night panel of destinations, each with a
+     one-line description and a thumbnail CodeGlyphX drew for it (data.visuals.nav.thumbs, keyed by menu item Id). The
+     current destination wears the cyan viewfinder corners. Without JavaScript the panels open on hover and focus and
+     every destination stays a plain link. The API reference reuses this markup (see Website/AGENTS.md). ## ~}}
+{{~ navmenu = pf.menu "main"; thumbs = data.visuals.nav.thumbs ~}}
+<a class="cgx-skip" href="#main">Skip to content</a>
+<header class="header cgx-header" data-cgx-header>
+  <nav class="nav cgx-nav" aria-label="Main">
+    <a href="/" class="brand" aria-label="{{ site.name }} home">
+      <span class="brand-icon"><img src="/codeglyphx-qr-icon.png" alt="" width="32" height="32" loading="eager" decoding="async" /></span>
+      <span>{{ site.name }}</span>
+    </a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox" aria-label="Show navigation" />
+    <label for="nav-toggle" class="nav-toggle" aria-hidden="true"><span></span><span></span></label>
+    <div class="cgx-nav__sheet">
+      <ul class="cgx-nav__groups">
+        {{~ for g in navmenu.items; if g.items.size == 0; continue; end ~}}
+        {{~ current = null; for it in g.items; if it.is_active || it.is_ancestor; current = it; end; end ~}}
+        <li class="cgx-navgroup{{ if current }} is-current{{ end }}" data-cgx-navgroup>
+          <button type="button" class="cgx-navgroup__trigger" id="cgx-nav-{{ g.id }}-trigger" aria-expanded="false" aria-controls="cgx-nav-{{ g.id }}">
+            <span class="cgx-navgroup__label">{{ g.title }}</span>
+            <span class="cgx-navgroup__here" data-cgx-here{{ if !current }} hidden{{ end }}><span class="cgx-visually-hidden">, current: </span><span data-cgx-here-title>{{ if current }}{{ current.title }}{{ end }}</span></span>
+            <svg class="cgx-navgroup__chevron" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false"><path d="M3 4.5 6 7.5l3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="cgx-navpanel" id="cgx-nav-{{ g.id }}" data-count="{{ g.items.size }}">
+            <p class="cgx-navpanel__lede">{{ g.description }}</p>
+            <ul class="cgx-navpanel__items">
+              {{~ for item in g.items ~}}
+              {{~ t = thumbs[item.id]; here = item.is_active || item.is_ancestor ~}}
+              <li class="cgx-navitem{{ if here }} is-current{{ end }}" data-cgx-navitem="{{ item.url }}">
+                <span class="cgx-navitem__thumb" aria-hidden="true">{{ if t }}<img src="{{ t.src }}" width="{{ t.w }}" height="{{ t.h }}" loading="lazy" decoding="async" alt="" />{{ end }}</span>
+                <a class="cgx-navitem__link" href="{{ item.url }}" aria-describedby="cgx-nav-{{ item.id }}-desc"{{ if here }} aria-current="{{ if item.is_active }}page{{ else }}true{{ end }}"{{ end }}>{{ item.title }}</a>
+                <span class="cgx-navitem__desc" id="cgx-nav-{{ item.id }}-desc">{{ item.description }}</span>
+              </li>
+              {{~ end ~}}
+            </ul>
+          </div>
+        </li>
+        {{~ end ~}}
+      </ul>
+      <div class="nav-actions">
+        {{ pf.nav_actions }}
+      </div>
     </div>
+  </nav>
 </header>

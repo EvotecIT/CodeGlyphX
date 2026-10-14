@@ -19,7 +19,7 @@
 <body class="cgx-body-docs{{ if body_class != "" }} {{ body_class }}{{ end }}"{{ if site.prism && site.prism.default_language != "" }} data-code-language="{{ site.prism.default_language }}"{{ end }}>
   <div class="page">
 {{ include "header" -}}
-<main class="cgx-main cgx-main--docs">
+<main id="main" class="cgx-main cgx-main--docs">
 {{~ # The band shows the page's own H1; each guide is headed by the symbology it covers. ~}}
 {{~ docs_h1 = content | regex.match `<h1[^>]*>([\s\S]*?)</h1>` ~}}
 {{~ docs_glyphs = { qr: "qrcode", microqr: "microqrcode", datamatrix: "datamatrix", pdf417: "pdf417", aztec: "aztec", code128: "code128", code39: "code39", "ean-upc": "ean", "other-1d": "kixcode", gs1: "gs1code128", payloads: "payload-wifi", decoding: "qrcode", renderers: "dotcode", "symbol-capabilities": "hanxin", installation: "datamatrix", quickstart: "qrcode", "migration-2": "rmqrcode", "migration-3": "rmqrcode", index: "datamatrix" } ~}}

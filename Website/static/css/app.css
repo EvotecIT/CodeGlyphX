@@ -1,4 +1,207 @@
 /* CodeGlyphX site styles.
+
+/* ---------- Header ---------- */
+/* One header on every page (static pages, the API reference, the playground), built from the site.json "main"
+   menu. Groups open a night panel: a description and a CodeGlyphX-drawn thumbnail per destination. The current
+   destination is framed by the cyan viewfinder corners, and its name sits in the group trigger. */
+.cgx-skip { position: absolute; left: 12px; top: -60px; z-index: 1100; padding: 10px 14px; border-radius: 10px; background: var(--accent-fill); color: #fff; font-weight: 650; text-decoration: none; }
+.cgx-skip:focus { top: 10px; color: #fff; }
+.cgx-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 1000;
+    height: var(--header-height);
+    padding: 0 clamp(16px, 4vw, 40px);
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: saturate(150%) blur(16px);
+    -webkit-backdrop-filter: saturate(150%) blur(16px);
+    font-family: var(--cgx-body);
+    line-height: 1.5;
+}
+.cgx-nav { display: flex; align-items: center; gap: clamp(16px, 3vw, 36px); height: 100%; max-width: 1240px; margin: 0 auto; }
+.brand { display: flex; flex: none; align-items: center; gap: 10px; color: var(--ink); font-family: var(--cgx-display); font-size: 1.0625rem; font-weight: 700; letter-spacing: -.01em; text-decoration: none; }
+.brand:hover { color: var(--ink); }
+.brand-icon { flex: none; width: 32px; height: 32px; overflow: hidden; border-radius: 8px; box-shadow: 0 0 0 1px var(--line); }
+.brand-icon img { display: block; width: 100%; height: 100%; }
+.cgx-nav__sheet { display: flex; flex: 1; align-items: center; justify-content: space-between; gap: 18px; min-width: 0; height: 100%; }
+.cgx-nav__groups { display: flex; align-items: center; gap: 4px; height: 100%; margin: 0; padding: 0; list-style: none; }
+.cgx-navgroup { position: relative; display: flex; align-items: center; height: 100%; }
+.cgx-navgroup__trigger { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; color: var(--ink-muted); font-size: .9063rem; font-weight: 550; cursor: pointer; }
+.cgx-navgroup__trigger:hover, .cgx-navgroup__trigger[aria-expanded="true"] { background: var(--surface-2); color: var(--ink); }
+.cgx-navgroup.is-current .cgx-navgroup__trigger { color: var(--ink); }
+.cgx-navgroup__chevron { flex: none; width: 12px; height: 12px; color: var(--ink-dim); transition: transform .15s ease; }
+.cgx-navgroup__trigger[aria-expanded="true"] .cgx-navgroup__chevron { transform: rotate(180deg); }
+/* The current destination in the trigger: its name inside four small viewfinder corners. */
+.cgx-navgroup__here { position: relative; padding: 1px 8px; color: var(--ink); font-family: var(--cgx-mono); font-size: .75rem; font-weight: 500; }
+.cgx-navgroup__here[hidden] { display: none; }
+.cgx-navgroup__here::before, .cgx-viewfinder-frame::before, .cgx-navitem.is-current .cgx-navitem__thumb::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--mark);
+    border-radius: 6px;
+    pointer-events: none;
+    -webkit-mask: conic-gradient(at var(--vf, 7px) var(--vf, 7px), transparent 75%, #000 0) 0 0 / calc(100% - var(--vf, 7px)) calc(100% - var(--vf, 7px));
+    mask: conic-gradient(at var(--vf, 7px) var(--vf, 7px), transparent 75%, #000 0) 0 0 / calc(100% - var(--vf, 7px)) calc(100% - var(--vf, 7px));
+}
+.cgx-navgroup__here::before { border-width: 1.5px; border-radius: 4px; --vf: 5px; }
+
+/* The panel is a night surface in both themes: the scanner screen the codes are shown on. */
+.cgx-navpanel {
+    position: absolute;
+    top: calc(100% - 6px);
+    left: -8px;
+    z-index: 2;
+    width: max-content;
+    max-width: min(940px, calc(100vw - 32px));
+    padding: 16px 18px 18px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 18px;
+    background: radial-gradient(rgba(255, 255, 255, .055) 1px, transparent 1.4px) 0 0 / 18px 18px, #0d0b16;
+    box-shadow: 0 30px 70px -24px rgba(5, 4, 10, .75), 0 0 0 1px rgba(5, 4, 10, .4);
+    color: var(--cgx-night-ink);
+    color-scheme: dark;
+    visibility: hidden;
+}
+.cgx-navgroup__trigger[aria-expanded="true"] + .cgx-navpanel,
+.cgx-nav:not([data-cgx-wired]) .cgx-navgroup:is(:hover, :focus-within) .cgx-navpanel { visibility: visible; }
+.cgx-navpanel__lede { margin: 0 0 14px; padding: 0 2px 12px; border-bottom: 1px solid rgba(255, 255, 255, .08); color: var(--cgx-night-muted); font-size: .8125rem; }
+.cgx-navpanel__items { display: grid; grid-template-columns: repeat(var(--cols, 4), 176px); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.cgx-navpanel[data-count="5"] .cgx-navpanel__items { --cols: 5; }
+.cgx-navitem { position: relative; display: grid; align-content: start; gap: 4px; padding: 8px 8px 10px; border-radius: 12px; }
+.cgx-navitem:hover { background: rgba(255, 255, 255, .045); }
+.cgx-navitem__thumb { position: relative; display: block; margin-bottom: 6px; border-radius: 10px; background: #16131f; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); aspect-ratio: 160 / 100; }
+.cgx-navitem__thumb img { display: block; width: 100%; height: 100%; }
+.cgx-navitem.is-current .cgx-navitem__thumb::before { inset: -5px; border-radius: 13px; --vf: 16px; border-color: var(--cgx-cyan); filter: drop-shadow(0 0 6px rgba(103, 232, 249, .55)); }
+.cgx-navitem__link { color: #fff; font-size: .9375rem; font-weight: 650; text-decoration: none; }
+.cgx-navitem__link::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
+.cgx-navitem__link:hover { color: #fff; }
+.cgx-navitem__link:focus-visible { outline: none; }
+.cgx-navitem__link:focus-visible::after { outline: 2px solid #a78bfa; outline-offset: 2px; }
+.cgx-navitem__desc { color: var(--cgx-night-muted); font-size: .8125rem; line-height: 1.45; }
+.cgx-navitem.is-current .cgx-navitem__link { color: var(--cgx-cyan); }
+
+.nav-actions { display: flex; align-items: center; gap: 4px; }
+.nav-icon { display: inline-grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 10px; background: transparent; color: var(--ink-muted); cursor: pointer; }
+.nav-icon:hover { background: var(--surface-2); color: var(--ink); }
+.nav-icon svg, .header svg { width: 19px; height: 19px; flex-shrink: 0; }
+.header .cgx-navgroup__chevron { width: 12px; height: 12px; }
+.nav-cta { display: inline-flex; align-items: center; gap: 8px; height: 38px; margin-left: 8px; padding: 0 15px; border-radius: 10px; background: var(--accent-fill); color: #fff; font-size: .875rem; font-weight: 600; white-space: nowrap; text-decoration: none; }
+.nav-cta:hover { background: var(--accent-fill-hover); color: #fff; }
+.header .nav-cta svg, .nav-cta-icon { width: 15px; height: 15px; stroke-linecap: round; stroke-linejoin: round; }
+.nav-toggle-checkbox { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 6px; width: 44px; height: 44px; margin-left: auto; padding: 11px; border-radius: 10px; cursor: pointer; }
+.nav-toggle:hover { background: var(--surface-2); }
+.nav-toggle span { display: block; width: 22px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .2s ease; }
+.nav-toggle-checkbox:focus-visible + .nav-toggle { outline: 2px solid var(--focus); outline-offset: 2px; }
+.nav-toggle-checkbox:checked + .nav-toggle span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+.nav-toggle-checkbox:checked + .nav-toggle span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
+@media (prefers-reduced-motion: reduce) { .nav-toggle span, .cgx-navgroup__chevron { transition: none; } }
+
+@media (max-width: 1100px) and (min-width: 961px) {
+    .cgx-navpanel__items { grid-template-columns: repeat(3, 176px); }
+    .cgx-navpanel[data-count="5"] .cgx-navpanel__items { --cols: 3; }
+}
+/* Phones and small tablets: one night sheet with every group open. */
+@media (max-width: 960px) {
+    .nav-toggle { display: flex; }
+    .cgx-nav__sheet {
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        height: calc(100dvh - var(--header-height));
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 0;
+        padding: 8px clamp(16px, 4vw, 40px) 28px;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border-top: 1px solid rgba(255, 255, 255, .08);
+        background: radial-gradient(rgba(255, 255, 255, .05) 1px, transparent 1.4px) 0 0 / 18px 18px, #0d0b16;
+        color: var(--cgx-night-ink);
+        color-scheme: dark;
+        visibility: hidden;
+    }
+    .nav-toggle-checkbox:checked ~ .cgx-nav__sheet { visibility: visible; }
+    .cgx-nav__groups { flex-direction: column; align-items: stretch; height: auto; gap: 0; }
+    .cgx-navgroup { display: block; height: auto; padding: 14px 0 6px; }
+    .cgx-navgroup + .cgx-navgroup { border-top: 1px solid rgba(255, 255, 255, .08); }
+    .cgx-navgroup__trigger { min-height: 32px; padding: 0; background: none; color: #fff; font-family: var(--cgx-display); font-size: 1.0625rem; font-weight: 700; pointer-events: none; }
+    .cgx-navgroup__trigger:hover, .cgx-navgroup__trigger[aria-expanded="true"] { background: none; color: #fff; }
+    .cgx-navgroup.is-current .cgx-navgroup__trigger { color: #fff; }
+    .cgx-navgroup__chevron { display: none; }
+    .cgx-navgroup__here { color: var(--cgx-cyan); --mark: var(--cgx-cyan); }
+    .cgx-navpanel, .cgx-navgroup__trigger[aria-expanded] + .cgx-navpanel { position: static; width: auto; max-width: none; padding: 6px 0 0; border: 0; border-radius: 0; background: none; box-shadow: none; visibility: inherit; }
+    .cgx-navpanel__lede { display: none; }
+    .cgx-navpanel__items, .cgx-navpanel[data-count="5"] .cgx-navpanel__items { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+    .cgx-navitem { padding: 8px; }
+    .cgx-navitem__desc { font-size: .75rem; }
+    .nav-actions { flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: auto; padding-top: 22px; }
+    .nav-actions .nav-icon { color: var(--cgx-night-muted); }
+    .nav-actions .nav-icon:hover { background: rgba(255, 255, 255, .08); color: #fff; }
+    .nav-cta { order: -1; width: 100%; height: 48px; margin: 0 0 8px; justify-content: center; font-size: 1rem; }
+    html.cgx-nav-open { overflow: hidden; }
+}
+@media (max-width: 420px) {
+    .brand { font-size: .9375rem; }
+    .cgx-navitem__desc { display: none; }
+}
+
+/* ---------- Tabs and segmented controls ---------- */
+/* One control for every filter, toggle and tab set: a module-dot key per option, counts in tabular figures, and the
+   selected option framed by the viewfinder corners. Corners settle in when the selection changes; nothing else moves. */
+.cgx-tabs { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 2px; max-width: 100%; padding: 4px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.cgx-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ink-muted);
+    font: inherit;
+    font-size: .875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.cgx-tab:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.cgx-tab:disabled { color: var(--ink-dim); opacity: .55; cursor: not-allowed; }
+.cgx-tab__key { flex: none; width: 8px; height: 8px; border-radius: 2px; background: var(--key, var(--line-strong)); }
+.cgx-tab__count { color: var(--ink-dim); font-family: var(--cgx-mono); font-size: .75rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+.cgx-tab:is([aria-selected="true"], [aria-pressed="true"], [aria-current="true"], .active) { background: var(--surface-2); color: var(--ink); }
+.cgx-tab:is([aria-selected="true"], [aria-pressed="true"], [aria-current="true"], .active) .cgx-tab__key { background: var(--key, var(--mark)); }
+.cgx-tab:is([aria-selected="true"], [aria-pressed="true"], [aria-current="true"], .active) .cgx-tab__count { color: var(--ink-muted); }
+.cgx-tab:is([aria-selected="true"], [aria-pressed="true"], [aria-current="true"], .active)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--mark);
+    border-radius: 10px;
+    pointer-events: none;
+    -webkit-mask: conic-gradient(at 9px 9px, transparent 75%, #000 0) 0 0 / calc(100% - 9px) calc(100% - 9px);
+    mask: conic-gradient(at 9px 9px, transparent 75%, #000 0) 0 0 / calc(100% - 9px) calc(100% - 9px);
+}
+@media (prefers-reduced-motion: no-preference) {
+    .cgx-tab:is([aria-selected="true"], [aria-pressed="true"], [aria-current="true"], .active)::before { animation: cgx-lock .18s ease-out; }
+}
+@keyframes cgx-lock { from { transform: scale(1.12); opacity: 0; } to { transform: none; opacity: 1; } }
+.cgx-tabs--night { border-color: rgba(255, 255, 255, .12); background: rgba(255, 255, 255, .04); color-scheme: dark; }
+.cgx-tabs--column { display: grid; justify-items: stretch; gap: 2px; border: 0; padding: 0; background: none; }
+.cgx-tabs--column .cgx-tab { justify-content: flex-start; white-space: normal; }
+.cgx-tabs--column .cgx-tab__count { margin-left: auto; }
+.cgx-tabs-label { color: var(--ink-dim); font-size: .8125rem; font-weight: 600; }
+
+/* CodeGlyphX site styles.
    One token layer for every page. Colors use light-dark(), so a surface only has to set color-scheme:
    the page follows data-theme (auto, light, dark) and the night bands (home hero, art and PowerShell bands,
    inner page headers) force dark. landing.css and powershell.css build on these tokens. */
@@ -229,7 +432,7 @@ main > .nova-app-link, main > p { width: var(--cgx-width); margin-inline: auto; 
 
 /* Install line with a copy button. */
 .cgx-install { display: flex; align-items: center; gap: 12px; max-width: 460px; margin-top: 18px; padding: 8px 8px 8px 16px; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--ink) 4%, transparent); }
-.cgx-install code { flex: 1; min-width: 0; overflow-x: auto; padding: 0; background: none; color: var(--ink); font-family: var(--cgx-mono); font-size: .9375rem; white-space: nowrap; }
+.cgx-install code { flex: 1; min-width: 0; overflow-x: auto; padding: 0; border: 0; background: none; color: var(--ink); font-family: var(--cgx-mono); font-size: .9375rem; white-space: nowrap; }
 .cgx-install code span { color: var(--cgx-pink); font-weight: 700; }
 .cgx-copy { flex: none; min-height: 32px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: 8px; background: transparent; color: var(--ink); font-size: .8125rem; font-weight: 600; cursor: pointer; }
 .cgx-copy:hover { border-color: var(--accent-ink); }
@@ -468,10 +671,8 @@ pre.code-block > .copy-btn.copied { color: var(--good); }
 .mermaid-diagram svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
 
 /* ---------- FAQ ---------- */
-.cgx-faq { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); }
+.cgx-faq { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); }
 .cgx-faq__index { position: sticky; top: calc(var(--header-height) + 28px); align-self: start; display: grid; }
-.cgx-faq__index a { padding: 6px 0 6px 14px; border-left: 1px solid var(--line); color: var(--ink-muted); font-size: .875rem; text-decoration: none; }
-.cgx-faq__index a:hover { border-left-color: var(--accent); color: var(--ink); }
 .cgx-faq__body { display: grid; gap: clamp(40px, 5vw, 64px); max-width: 860px; }
 .cgx-faq__section h2 { margin-bottom: 8px; font-family: var(--cgx-display); font-size: clamp(1.25rem, 1rem + .8vw, 1.5rem); font-weight: 700; }
 .cgx-faq__item { border-bottom: 1px solid var(--line); }
@@ -488,8 +689,7 @@ pre.code-block > .copy-btn.copied { color: var(--good); }
 .cgx-faq__answer pre.code-block { margin: 1rem 0 0; }
 @media (max-width: 860px) {
     .cgx-faq { grid-template-columns: minmax(0, 1fr); }
-    .cgx-faq__index { position: static; display: flex; flex-wrap: wrap; gap: 8px; }
-    .cgx-faq__index a { padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; }
+    .cgx-faq__index { position: static; display: flex; flex-wrap: wrap; gap: 4px; }
 }
 
 /* ---------- Pricing ---------- */
@@ -525,10 +725,6 @@ pre.code-block > .copy-btn.copied { color: var(--good); }
 .cgx-bench-controls { display: flex; flex-wrap: wrap; gap: 12px 24px; }
 .cgx-seg { display: flex; align-items: center; gap: 10px; }
 .cgx-seg__label { color: var(--ink-dim); font-size: .8125rem; font-weight: 600; }
-.benchmark-mode-selector, .benchmark-os-selector { display: inline-flex; padding: 3px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
-.benchmark-mode-btn, .benchmark-os-btn { min-height: 32px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-muted); font-size: .875rem; font-weight: 600; cursor: pointer; }
-.benchmark-mode-btn:hover, .benchmark-os-btn:hover { color: var(--ink); }
-.benchmark-mode-btn.active, .benchmark-os-btn.active { background: var(--accent-fill); color: #fff; }
 .benchmark-mode-note, .benchmark-os-note { color: var(--ink-dim); font-size: .8125rem; }
 .benchmark-mode-note:empty, .benchmark-os-note:empty { display: none; }
 .cgx-bench-notes { display: grid; gap: 4px; margin-top: 10px; }
@@ -618,10 +814,7 @@ td:is(.rating-good, .rating-ok, .rating-bad) { text-align: center; }
 .cgx-project__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 
 .showcase-gallery { display: grid; gap: 12px; }
-.showcase-gallery-tabs { display: inline-flex; justify-self: start; padding: 3px; border: 1px solid var(--line); border-radius: 11px; background: var(--surface); }
-.showcase-gallery-tab { min-height: 32px; padding: 0 14px; border: 0; border-radius: 8px; background: transparent; color: var(--ink-muted); font-size: .875rem; font-weight: 600; cursor: pointer; }
-.showcase-gallery-tab:hover { color: var(--ink); }
-.showcase-gallery-tab.active { background: var(--accent-fill); color: #fff; }
+.showcase-gallery-tabs { justify-self: start; }
 .showcase-carousel { display: grid; gap: 12px; }
 .showcase-carousel-viewport { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: var(--cgx-radius); background: var(--surface-2); aspect-ratio: 16 / 10; }
 .showcase-carousel-slide { position: absolute; inset: 0; display: grid; place-items: center; padding: clamp(10px, 2vw, 24px); visibility: hidden; }

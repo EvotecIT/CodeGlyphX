@@ -3,9 +3,10 @@
     <h2 id="cgx-specimens-title">{{ data.specimens.count }} symbologies, drawn by CodeGlyphX</h2>
     <p>Every tile below is SVG output from the current library, with the value it encodes. MaxiCode and GS1 Composite are supported too, through their dedicated encoders.</p>
   </div>
-  <div class="cgx-filters" role="group" aria-label="Filter symbologies" data-cgx-filters>
-    <button type="button" aria-pressed="true" data-filter="all">All</button>
-    {{~ for f in data.landing.families ~}}<button type="button" aria-pressed="false" data-filter="{{ f.id }}">{{ f.label }}</button>{{~ end ~}}
+  {{~ family_keys = { "2D": "var(--cgx-violet)", Linear: "var(--mark)", Retail: "var(--cgx-pink)", GS1: "#f59e0b", Postal: "#34d399" } ~}}
+  <div class="cgx-tabs cgx-filters" role="group" aria-label="Filter symbologies" data-cgx-filter-set="[data-cgx-specimens]">
+    <button type="button" class="cgx-tab" aria-pressed="true" data-filter="all"><span class="cgx-tab__key" aria-hidden="true"></span>All <span class="cgx-tab__count">{{ data.specimens.specimens.size }}</span></button>
+    {{~ for f in data.landing.families; n = 0; for s in data.specimens.specimens; if s.family == f.id; n = n + 1; end; end ~}}<button type="button" class="cgx-tab" aria-pressed="false" data-filter="{{ f.id }}" style="--key: {{ family_keys[f.id] }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ f.label }} <span class="cgx-tab__count">{{ n }}</span></button>{{~ end ~}}
   </div>
   <ul class="cgx-specimen-grid" data-cgx-specimens>
     {{~ for s in data.specimens.specimens ~}}

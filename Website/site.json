@@ -152,6 +152,7 @@
     "CssStrategy": "blocking",
     "Bundles": [
       { "Name": "landing", "Css": ["/css/landing.css"] },
+      { "Name": "pages", "Css": ["/css/pages.css"] },
       { "Name": "powershell", "Css": ["/css/powershell.css"] },
       { "Name": "global", "Css": ["/css/fonts.css", "/css/app.css", "/css/prism-theme.css", "/css/scrollbars.css"], "Js": ["/js/site.js"] },
       { "Name": "docs", "Css": ["/css/fonts.css", "/css/app.css", "/css/prism-theme.css", "/css/api.css", "/css/scrollbars.css"], "Js": ["/js/site.js"] }
@@ -160,13 +161,13 @@
       { "Match": "/api/**", "Bundles": ["docs"] },
       { "Match": "/", "Bundles": ["global", "landing"] },
       { "Match": "/powershell/**", "Bundles": ["global", "landing", "powershell"] },
-      { "Match": "/benchmarks/**", "Bundles": ["global"] },
-      { "Match": "/faq/**", "Bundles": ["global"] },
-      { "Match": "/showcase/**", "Bundles": ["global"] },
-      { "Match": "/docs/**", "Bundles": ["global"] },
-      { "Match": "/playground/**", "Bundles": ["global"] },
-      { "Match": "/pricing/**", "Bundles": ["global"] },
-      { "Match": "/**", "Bundles": ["global"] }
+      { "Match": "/benchmarks/**", "Bundles": ["global", "pages"] },
+      { "Match": "/faq/**", "Bundles": ["global", "pages"] },
+      { "Match": "/showcase/**", "Bundles": ["global", "pages"] },
+      { "Match": "/docs/**", "Bundles": ["global", "pages"] },
+      { "Match": "/playground/**", "Bundles": ["global", "pages"] },
+      { "Match": "/pricing/**", "Bundles": ["global", "pages"] },
+      { "Match": "/**", "Bundles": ["global", "pages"] }
     ],
     "Preloads": [
       { "Rel": "preload", "Href": "/fonts/inter/Inter-400-latin.woff2", "As": "font", "Type": "font/woff2", "Crossorigin": "anonymous" },
@@ -221,13 +222,30 @@
       {
         "Name": "main",
         "Items": [
-          { "Title": "Home", "Url": "/" },
-          { "Title": "Playground", "Url": "/playground/" },
-          { "Title": "PowerShell", "Url": "/powershell/" },
-          { "Title": "Docs", "Url": "/docs/" },
-          { "Title": "Benchmarks", "Url": "/benchmarks/" },
-          { "Title": "Showcase", "Url": "/showcase/" },
-          { "Title": "Pricing", "Url": "/pricing/" }
+          { "Id": "home", "Title": "Home", "Url": "/", "Description": "The CodeGlyphX home page." },
+          {
+            "Id": "product",
+            "Title": "Product",
+            "Description": "What CodeGlyphX draws, and where you can try it.",
+            "Items": [
+              { "Id": "playground", "Title": "Playground", "Url": "/playground/", "Description": "Generate, style and decode codes in your browser." },
+              { "Id": "powershell", "Title": "PowerShell", "Url": "/powershell/", "Description": "ImagePlayground scripts beside the files they wrote." },
+              { "Id": "showcase", "Title": "Showcase", "Url": "/showcase/", "Description": "Apps that ship CodeGlyphX, and every QR style preset." },
+              { "Id": "pricing", "Title": "Pricing", "Url": "/pricing/", "Description": "Free under Apache 2.0; sponsorship keeps it maintained." }
+            ]
+          },
+          {
+            "Id": "developers",
+            "Title": "Developers",
+            "Description": "Build with the .NET package.",
+            "Items": [
+              { "Id": "docs", "Title": "Docs", "Url": "/docs/", "Description": "Every symbology, payloads, decoding and output formats." },
+              { "Id": "api", "Title": "API", "Url": "/api/", "Description": "Every public type and member in the package." },
+              { "Id": "benchmarks", "Title": "Benchmarks", "Url": "/benchmarks/", "Description": "Encode, render and decode timings beside other libraries." },
+              { "Id": "downloads", "Title": "Downloads", "Url": "/downloads/", "Description": "ZIP builds of every release, and the NuGet package." },
+              { "Id": "changelog", "Title": "Changelog", "Url": "/changelog/", "Description": "What each release added, with the codes it drew." }
+            ]
+          }
         ]
       },
       {
