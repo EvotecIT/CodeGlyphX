@@ -1,6 +1,6 @@
 {
   "date": "2026-10-14",
-  "source": "490c16e586d21be460d4c04494c7580cc078327c",
+  "source": "6c0c27e55b330f384e3abc278aa693e59a9854fa",
   "versions": {
     "SDK": "10.0.401",
     "PowerShell": "7.6.6",
@@ -12,10 +12,10 @@
     "ZXingCpp": "0.5.3"
   },
   "cpu": "AMD Ryzen 9 9950X3D2 16-Core Processor",
-  "host_load_note": "Host CPU sampled before the current corpus and timing passes ranged from 13.3% to 100.0%. These initial readings do not describe load throughout each operation. Shared-host contention limits timing comparisons and can change completion under the fixed deadline.",
-  "png_wins": 1,
+  "host_load_note": "Host CPU sampled before the current corpus and timing passes ranged from 19.9% to 98.2%. These initial readings do not describe load throughout each operation. Shared-host contention limits timing comparisons and can change completion under the fixed deadline.",
+  "png_wins": 3,
   "png_cases": 6,
-  "module_cpp_wins": 4,
+  "module_cpp_wins": 5,
   "png_qrc_allocation_wins": 6,
   "recognition": [
     {
@@ -25,12 +25,12 @@
       "positives": 267,
       "percent": "91.0",
       "unsupported": 0,
-      "rejected": 24,
+      "rejected": 25,
       "unexpected": 0,
-      "inconclusive": 1,
-      "main_rejected": 10,
+      "inconclusive": 0,
+      "main_rejected": 11,
       "main_unexpected": 0,
-      "main_inconclusive": 2
+      "main_inconclusive": 1
     },
     {
       "engine": "ZXing.Net",
@@ -228,35 +228,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "192.97",
-              "p95": "298.73",
-              "min": "141.50",
-              "max": "319.70",
-              "bytes": "60,283"
+              "median": "227.15",
+              "p95": "266.76",
+              "min": "137.22",
+              "max": "279.47",
+              "bytes": "60,307"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1501.95",
-              "p95": "1735.35",
-              "min": "1349.45",
-              "max": "1849.65",
-              "bytes": "1,377,489"
+              "median": "1693.38",
+              "p95": "1768.61",
+              "min": "1499.65",
+              "max": "1770.99",
+              "bytes": "1,377,490"
             },
             {
               "engine": "ZXing-C++",
-              "median": "1363.59",
-              "p95": "1612.56",
-              "min": "1274.02",
-              "max": "1639.31",
-              "bytes": "1,309,030"
+              "median": "1493.79",
+              "p95": "1692.27",
+              "min": "1356.75",
+              "max": "1777.34",
+              "bytes": "1,308,986"
             },
             {
               "engine": "QRCoder",
-              "median": "233.39",
-              "p95": "312.79",
-              "min": "167.32",
-              "max": "353.63",
-              "bytes": "5,816"
+              "median": "234.56",
+              "p95": "262.35",
+              "min": "205.67",
+              "max": "273.38",
+              "bytes": "5,817"
             }
           ]
         },
@@ -266,35 +266,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "114.70",
-              "p95": "137.16",
-              "min": "86.04",
-              "max": "151.78",
-              "bytes": "40,312"
+              "median": "159.56",
+              "p95": "196.40",
+              "min": "99.00",
+              "max": "203.28",
+              "bytes": "40,326"
             },
             {
               "engine": "ZXing.Net",
-              "median": "835.65",
-              "p95": "1274.02",
-              "min": "737.17",
-              "max": "1498.07",
-              "bytes": "877,587"
+              "median": "1056.14",
+              "p95": "1606.20",
+              "min": "953.38",
+              "max": "2078.85",
+              "bytes": "877,620"
             },
             {
               "engine": "ZXing-C++",
-              "median": "834.08",
-              "p95": "970.79",
-              "min": "753.03",
-              "max": "989.24",
-              "bytes": "848,306"
+              "median": "1062.07",
+              "p95": "1410.27",
+              "min": "989.42",
+              "max": "1740.65",
+              "bytes": "848,340"
             },
             {
               "engine": "QRCoder",
-              "median": "107.45",
-              "p95": "127.40",
-              "min": "97.03",
-              "max": "131.85",
-              "bytes": "4,760"
+              "median": "147.89",
+              "p95": "224.73",
+              "min": "132.09",
+              "max": "246.55",
+              "bytes": "4,803"
             }
           ]
         },
@@ -304,35 +304,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "1855.70",
-              "p95": "2055.89",
-              "min": "1664.32",
-              "max": "2057.78",
-              "bytes": "274,832"
+              "median": "2102.80",
+              "p95": "3343.55",
+              "min": "1949.32",
+              "max": "3979.49",
+              "bytes": "274,942"
             },
             {
               "engine": "ZXing.Net",
-              "median": "9079.12",
-              "p95": "10719.55",
-              "min": "7926.81",
-              "max": "10834.82",
-              "bytes": "6,798,139"
+              "median": "10707.00",
+              "p95": "14521.75",
+              "min": "9612.66",
+              "max": "17540.08",
+              "bytes": "6,798,355"
             },
             {
               "engine": "ZXing-C++",
-              "median": "7821.48",
-              "p95": "8751.78",
-              "min": "6909.76",
-              "max": "8841.97",
-              "bytes": "6,206,783"
+              "median": "8779.52",
+              "p95": "10677.37",
+              "min": "8165.48",
+              "max": "11482.52",
+              "bytes": "6,207,096"
             },
             {
               "engine": "QRCoder",
-              "median": "1680.22",
-              "p95": "1919.73",
-              "min": "1484.53",
-              "max": "1934.91",
-              "bytes": "19,624"
+              "median": "1829.88",
+              "p95": "3308.69",
+              "min": "1642.41",
+              "max": "3468.04",
+              "bytes": "20,345"
             }
           ]
         },
@@ -342,35 +342,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "1118.49",
-              "p95": "1740.27",
-              "min": "274.70",
-              "max": "2294.37",
-              "bytes": "5,063"
+              "median": "995.49",
+              "p95": "1285.13",
+              "min": "789.80",
+              "max": "1295.14",
+              "bytes": "5,057"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1063.64",
-              "p95": "1905.78",
-              "min": "251.94",
-              "max": "2109.29",
-              "bytes": "71,143"
+              "median": "955.07",
+              "p95": "1259.09",
+              "min": "784.11",
+              "max": "1334.92",
+              "bytes": "71,146"
             },
             {
               "engine": "ZXing-C++",
-              "median": "214.76",
-              "p95": "276.33",
-              "min": "150.84",
-              "max": "296.94",
-              "bytes": "2,709"
+              "median": "192.01",
+              "p95": "311.58",
+              "min": "104.82",
+              "max": "312.16",
+              "bytes": "2,711"
             },
             {
               "engine": "QRCoder",
-              "median": "761.27",
-              "p95": "1370.43",
-              "min": "544.23",
-              "max": "1928.12",
-              "bytes": "5,025"
+              "median": "675.93",
+              "p95": "817.48",
+              "min": "553.39",
+              "max": "906.65",
+              "bytes": "5,031"
             }
           ]
         },
@@ -380,34 +380,34 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "103.87",
-              "p95": "419.69",
-              "min": "62.71",
-              "max": "710.64",
+              "median": "108.88",
+              "p95": "135.11",
+              "min": "67.10",
+              "max": "139.51",
               "bytes": "3,832"
             },
             {
               "engine": "ZXing.Net",
-              "median": "83.76",
-              "p95": "195.24",
-              "min": "67.14",
-              "max": "288.86",
+              "median": "70.61",
+              "p95": "108.38",
+              "min": "50.27",
+              "max": "111.41",
               "bytes": "31,304"
             },
             {
               "engine": "ZXing-C++",
-              "median": "52.64",
-              "p95": "89.87",
-              "min": "35.82",
-              "max": "98.00",
+              "median": "47.43",
+              "p95": "81.46",
+              "min": "35.52",
+              "max": "90.59",
               "bytes": "1,696"
             },
             {
               "engine": "QRCoder",
-              "median": "46.12",
-              "p95": "78.84",
-              "min": "41.22",
-              "max": "83.98",
+              "median": "49.21",
+              "p95": "79.79",
+              "min": "30.73",
+              "max": "86.47",
               "bytes": "3,760"
             }
           ]
@@ -418,35 +418,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "1761.81",
-              "p95": "1923.73",
-              "min": "1491.86",
-              "max": "1931.31",
+              "median": "2209.61",
+              "p95": "2618.10",
+              "min": "1832.81",
+              "max": "2731.06",
               "bytes": "23,872"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1788.58",
-              "p95": "2015.75",
-              "min": "1513.42",
-              "max": "2100.77",
+              "median": "2196.81",
+              "p95": "2587.43",
+              "min": "1859.02",
+              "max": "2791.14",
               "bytes": "606,585"
             },
             {
               "engine": "ZXing-C++",
-              "median": "1206.87",
-              "p95": "1363.57",
-              "min": "1006.75",
-              "max": "1367.99",
+              "median": "1421.93",
+              "p95": "1799.77",
+              "min": "1203.90",
+              "max": "1918.00",
               "bytes": "14,648"
             },
             {
               "engine": "QRCoder",
-              "median": "1263.42",
-              "p95": "1387.57",
-              "min": "1179.72",
-              "max": "1391.25",
-              "bytes": "16,728"
+              "median": "1698.96",
+              "p95": "2269.48",
+              "min": "1315.50",
+              "max": "2284.58",
+              "bytes": "16,731"
             }
           ]
         }
@@ -454,29 +454,29 @@
       "decoding": [
         {
           "engine": "CodeGlyphX",
-          "median": "688.12",
-          "p95": "1345.10",
-          "min": "608.13",
-          "max": "1656.00",
-          "managed_mib": "26.77",
+          "median": "719.13",
+          "p95": "1149.86",
+          "min": "683.98",
+          "max": "1612.72",
+          "managed_mib": "32.39",
           "correct": "18–19"
         },
         {
           "engine": "ZXing.Net",
-          "median": "185.18",
-          "p95": "352.85",
-          "min": "176.11",
-          "max": "402.95",
-          "managed_mib": "12.98",
+          "median": "202.70",
+          "p95": "247.89",
+          "min": "196.21",
+          "max": "269.46",
+          "managed_mib": "13.02",
           "correct": "19"
         },
         {
           "engine": "ZXing-C++",
-          "median": "27.75",
-          "p95": "37.51",
-          "min": "23.31",
-          "max": "40.13",
-          "managed_mib": "2.22",
+          "median": "27.90",
+          "p95": "30.60",
+          "min": "25.21",
+          "max": "32.30",
+          "managed_mib": "2.23",
           "correct": "19"
         }
       ]
@@ -492,35 +492,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "198.74",
-              "p95": "668.84",
-              "min": "143.43",
-              "max": "868.37",
-              "bytes": "60,283"
+              "median": "218.27",
+              "p95": "665.90",
+              "min": "136.78",
+              "max": "691.15",
+              "bytes": "60,352"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1527.92",
-              "p95": "2237.13",
-              "min": "1405.94",
-              "max": "2389.07",
-              "bytes": "1,377,472"
+              "median": "1495.47",
+              "p95": "1978.57",
+              "min": "1339.13",
+              "max": "1990.28",
+              "bytes": "1,377,633"
             },
             {
               "engine": "ZXing-C++",
-              "median": "1401.85",
-              "p95": "2538.67",
-              "min": "1238.93",
-              "max": "2966.07",
-              "bytes": "1,309,030"
+              "median": "1546.08",
+              "p95": "2724.05",
+              "min": "1305.14",
+              "max": "3703.58",
+              "bytes": "1,309,222"
             },
             {
               "engine": "QRCoder",
-              "median": "195.82",
-              "p95": "332.24",
-              "min": "160.36",
-              "max": "335.23",
-              "bytes": "5,816"
+              "median": "277.89",
+              "p95": "355.70",
+              "min": "191.79",
+              "max": "403.37",
+              "bytes": "5,994"
             }
           ]
         },
@@ -530,35 +530,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "137.29",
-              "p95": "517.58",
-              "min": "84.44",
-              "max": "653.10",
-              "bytes": "40,312"
+              "median": "103.11",
+              "p95": "145.42",
+              "min": "90.69",
+              "max": "155.77",
+              "bytes": "40,353"
             },
             {
               "engine": "ZXing.Net",
-              "median": "969.65",
-              "p95": "2009.63",
-              "min": "891.35",
-              "max": "2716.90",
-              "bytes": "877,602"
+              "median": "1044.96",
+              "p95": "1365.21",
+              "min": "858.75",
+              "max": "1404.26",
+              "bytes": "877,725"
             },
             {
               "engine": "ZXing-C++",
-              "median": "993.26",
-              "p95": "1977.21",
-              "min": "831.21",
-              "max": "2192.12",
-              "bytes": "848,315"
+              "median": "1027.32",
+              "p95": "1329.42",
+              "min": "851.58",
+              "max": "1349.24",
+              "bytes": "848,490"
             },
             {
               "engine": "QRCoder",
-              "median": "121.42",
-              "p95": "536.32",
-              "min": "99.83",
-              "max": "851.53",
-              "bytes": "4,760"
+              "median": "126.59",
+              "p95": "369.06",
+              "min": "107.06",
+              "max": "543.45",
+              "bytes": "4,931"
             }
           ]
         },
@@ -568,35 +568,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "1778.00",
-              "p95": "1873.63",
-              "min": "1585.78",
-              "max": "1889.10",
-              "bytes": "274,832"
+              "median": "1856.09",
+              "p95": "2657.83",
+              "min": "1703.21",
+              "max": "3035.74",
+              "bytes": "274,942"
             },
             {
               "engine": "ZXing.Net",
-              "median": "8349.79",
-              "p95": "9352.03",
-              "min": "7109.35",
-              "max": "9553.69",
-              "bytes": "6,798,218"
+              "median": "9008.50",
+              "p95": "11979.87",
+              "min": "7587.56",
+              "max": "13048.28",
+              "bytes": "6,798,711"
             },
             {
               "engine": "ZXing-C++",
-              "median": "7343.06",
-              "p95": "8026.78",
-              "min": "6099.10",
-              "max": "8080.27",
-              "bytes": "6,206,753"
+              "median": "7534.70",
+              "p95": "10837.19",
+              "min": "6911.89",
+              "max": "11926.13",
+              "bytes": "6,207,352"
             },
             {
               "engine": "QRCoder",
-              "median": "1599.59",
-              "p95": "1772.31",
-              "min": "1448.21",
-              "max": "1858.63",
-              "bytes": "19,625"
+              "median": "1674.64",
+              "p95": "2350.08",
+              "min": "1480.78",
+              "max": "2589.23",
+              "bytes": "20,322"
             }
           ]
         },
@@ -606,35 +606,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "1064.77",
-              "p95": "1560.41",
-              "min": "796.88",
-              "max": "1814.50",
-              "bytes": "5,057"
+              "median": "874.51",
+              "p95": "1239.14",
+              "min": "706.79",
+              "max": "1328.52",
+              "bytes": "5,058"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1104.59",
-              "p95": "1389.03",
-              "min": "822.95",
-              "max": "1407.57",
-              "bytes": "71,146"
+              "median": "865.12",
+              "p95": "1047.80",
+              "min": "657.98",
+              "max": "1066.92",
+              "bytes": "71,130"
             },
             {
               "engine": "ZXing-C++",
-              "median": "225.30",
-              "p95": "388.92",
-              "min": "153.45",
-              "max": "416.37",
-              "bytes": "2,711"
+              "median": "164.28",
+              "p95": "294.87",
+              "min": "120.45",
+              "max": "379.16",
+              "bytes": "2,707"
             },
             {
               "engine": "QRCoder",
-              "median": "846.94",
-              "p95": "1551.71",
-              "min": "683.72",
-              "max": "1787.21",
-              "bytes": "5,031"
+              "median": "622.09",
+              "p95": "840.51",
+              "min": "503.34",
+              "max": "881.11",
+              "bytes": "5,027"
             }
           ]
         },
@@ -644,35 +644,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "96.02",
-              "p95": "130.28",
-              "min": "67.15",
-              "max": "133.62",
+              "median": "99.30",
+              "p95": "136.79",
+              "min": "61.47",
+              "max": "136.85",
               "bytes": "3,832"
             },
             {
               "engine": "ZXing.Net",
-              "median": "76.55",
-              "p95": "154.52",
-              "min": "42.64",
-              "max": "225.47",
+              "median": "78.33",
+              "p95": "202.66",
+              "min": "45.19",
+              "max": "231.47",
               "bytes": "31,304"
             },
             {
               "engine": "ZXing-C++",
-              "median": "47.66",
-              "p95": "76.93",
-              "min": "31.76",
-              "max": "77.05",
+              "median": "47.89",
+              "p95": "75.85",
+              "min": "31.09",
+              "max": "81.01",
               "bytes": "1,696"
             },
             {
               "engine": "QRCoder",
-              "median": "45.36",
-              "p95": "79.77",
-              "min": "28.00",
-              "max": "83.59",
-              "bytes": "3,760"
+              "median": "40.21",
+              "p95": "115.16",
+              "min": "28.26",
+              "max": "117.53",
+              "bytes": "3,761"
             }
           ]
         },
@@ -682,35 +682,35 @@
           "cells": [
             {
               "engine": "CodeGlyphX",
-              "median": "2079.69",
-              "p95": "3437.54",
-              "min": "1629.90",
-              "max": "4102.50",
-              "bytes": "23,873"
+              "median": "1735.94",
+              "p95": "1845.44",
+              "min": "1612.28",
+              "max": "1931.79",
+              "bytes": "23,872"
             },
             {
               "engine": "ZXing.Net",
-              "median": "1920.21",
-              "p95": "2563.18",
-              "min": "1691.55",
-              "max": "2569.86",
+              "median": "1731.39",
+              "p95": "1779.96",
+              "min": "1610.18",
+              "max": "1789.47",
               "bytes": "606,585"
             },
             {
               "engine": "ZXing-C++",
-              "median": "1269.70",
-              "p95": "1412.91",
-              "min": "1080.31",
-              "max": "1421.34",
+              "median": "1125.45",
+              "p95": "1205.88",
+              "min": "1096.85",
+              "max": "1216.01",
               "bytes": "14,648"
             },
             {
               "engine": "QRCoder",
-              "median": "1433.46",
-              "p95": "2072.07",
-              "min": "1210.50",
-              "max": "2439.69",
-              "bytes": "16,728"
+              "median": "1276.45",
+              "p95": "1501.41",
+              "min": "1175.20",
+              "max": "1718.46",
+              "bytes": "16,735"
             }
           ]
         }
@@ -718,29 +718,29 @@
       "decoding": [
         {
           "engine": "CodeGlyphX",
-          "median": "578.67",
-          "p95": "937.56",
-          "min": "553.01",
-          "max": "1266.30",
-          "managed_mib": "26.89",
-          "correct": "19"
+          "median": "713.35",
+          "p95": "1282.32",
+          "min": "643.89",
+          "max": "1661.08",
+          "managed_mib": "32.78",
+          "correct": "18–19"
         },
         {
           "engine": "ZXing.Net",
-          "median": "171.82",
-          "p95": "185.57",
-          "min": "165.27",
-          "max": "194.71",
-          "managed_mib": "12.98",
+          "median": "211.22",
+          "p95": "236.60",
+          "min": "191.80",
+          "max": "240.95",
+          "managed_mib": "13.00",
           "correct": "19"
         },
         {
           "engine": "ZXing-C++",
-          "median": "22.69",
-          "p95": "24.28",
-          "min": "20.63",
-          "max": "24.43",
-          "managed_mib": "2.22",
+          "median": "29.60",
+          "p95": "39.52",
+          "min": "24.40",
+          "max": "45.17",
+          "managed_mib": "2.24",
           "correct": "19"
         }
       ]
@@ -749,7 +749,7 @@
   "format_scope_notes": [
     "RSS-14 results include linear, Stacked and Stacked Omnidirectional images. Each engine receives its full RSS-14 family hint. CodeGlyphX validates stacked data rows and separator layouts; these stacked image paths return one symbol. Arbitrary perspective and multiple-symbol localization are not established."
   ],
-  "negative_followup": "Compared with the previous decoding pass, CodeGlyphX completes 24/25 supplementary negatives versus 21/25. Alternating scans reuse the same 31 distinct negative IDs. CCD0: current 30–31/31, previous 25–31/31. CCD1: current 31–31/31, previous 28–29/31. Every pass is retained in the downloadable report; unfinished scans remain inconclusive.",
+  "negative_followup": "Compared with the previous decoding pass, CodeGlyphX completes 25/25 supplementary negatives versus 24/25. Alternating scans reuse the same 31 distinct negative IDs. CCD0: current 29–30/31, previous 30–31/31. CCD1: current 31–31/31, previous 27–31/31. Every pass is retained in the downloadable report; unfinished scans remain inconclusive.",
   "supplemental_pdf417": [
     {
       "engine": "CodeGlyphX",
@@ -1230,8 +1230,443 @@
       }
     ]
   },
-  "dpm_workspace": {
+  "code128_photos": {
     "historical": false,
+    "source": "6c0c27e55b330f384e3abc278aa693e59a9854fa",
+    "changes": "Code128 photo decoding locates complete frames in both physical directions and recovers bounded neighboring rows with complementary threshold cuts. Recovery requires three adjacent rows with the same checksum-verified payload, type and reader-initialization state. Existing pixel APIs use this internal pass without a new public option or runtime dependency.",
+    "scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+    "limits": "These retained-context costs are separate from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+    "history_note": "These tables retain one decoder session per binary. Earlier fresh-context costs remain separate in the historical context inventory.",
+    "contracts": "Twenty photograph and row-recovery regression cases pass on each framework. Fifteen of these 20 cases fail against the exact preceding core. Public checks cover transformed images, three adjacent matching rows, checksum rejection and reader-initialization identity. The exact core and test assembly pass 125 native ARM64 checks. The separate 52-photo development set is reported above and is excluded from the headline 267-image ranking.",
+    "exploration_note": "The separate traced nine-image diagnostic records 27/27 to 27/27 correct rejections after priming, with mean managed allocation 19.04 to 19.14 MiB per call. Every completion and unexpected output is retained. Diagnostic counters include tracing overhead; overlapping stack samples do not establish CPU utilization or comparative latency.",
+    "costs": [
+      {
+        "kind": "fabric",
+        "requests": 1,
+        "domain": "CCD0",
+        "before_ms": "989.58",
+        "current_ms": "993.36",
+        "ratio": "1.004",
+        "before_mib": "33.21",
+        "current_mib": "32.62",
+        "allocation_reduction": "1.8%",
+        "before_correct": "0–1",
+        "before_inconclusive": "0–1",
+        "before_unexpected": "0",
+        "current_correct": "0–1",
+        "current_inconclusive": "0–1",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "fabric",
+        "requests": 1,
+        "domain": "CCD1",
+        "before_ms": "926.70",
+        "current_ms": "906.88",
+        "ratio": "0.979",
+        "before_mib": "33.89",
+        "current_mib": "34.11",
+        "allocation_reduction": "-0.6%",
+        "before_correct": "0–1",
+        "before_inconclusive": "0–1",
+        "before_unexpected": "0",
+        "current_correct": "0–1",
+        "current_inconclusive": "0–1",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "texture",
+        "requests": 1,
+        "domain": "CCD0",
+        "before_ms": "578.12",
+        "current_ms": "572.38",
+        "ratio": "0.990",
+        "before_mib": "17.93",
+        "current_mib": "18.00",
+        "allocation_reduction": "-0.4%",
+        "before_correct": "1",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "1",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "texture",
+        "requests": 1,
+        "domain": "CCD1",
+        "before_ms": "491.62",
+        "current_ms": "499.21",
+        "ratio": "1.015",
+        "before_mib": "17.93",
+        "current_mib": "18.00",
+        "allocation_reduction": "-0.4%",
+        "before_correct": "1",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "1",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "whole",
+        "requests": 19,
+        "domain": "CCD0",
+        "before_ms": "771.91",
+        "current_ms": "777.46",
+        "ratio": "1.007",
+        "before_mib": "26.98",
+        "current_mib": "27.19",
+        "allocation_reduction": "-0.8%",
+        "before_correct": "19",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "19",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "whole",
+        "requests": 19,
+        "domain": "CCD1",
+        "before_ms": "683.40",
+        "current_ms": "680.67",
+        "ratio": "0.996",
+        "before_mib": "27.00",
+        "current_mib": "27.20",
+        "allocation_reduction": "-0.8%",
+        "before_correct": "19",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "19",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "retail-positive",
+        "requests": 87,
+        "domain": "CCD0",
+        "before_ms": "998.72",
+        "current_ms": "919.47",
+        "ratio": "0.921",
+        "before_mib": "91.09",
+        "current_mib": "91.08",
+        "allocation_reduction": "0.0%",
+        "before_correct": "70",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "70",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "retail-positive",
+        "requests": 87,
+        "domain": "CCD1",
+        "before_ms": "776.42",
+        "current_ms": "724.69",
+        "ratio": "0.933",
+        "before_mib": "91.08",
+        "current_mib": "91.09",
+        "allocation_reduction": "-0.0%",
+        "before_correct": "70",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "70",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "retail-negative",
+        "requests": 9,
+        "domain": "CCD0",
+        "before_ms": "559.65",
+        "current_ms": "559.00",
+        "ratio": "0.999",
+        "before_mib": "32.64",
+        "current_mib": "32.64",
+        "allocation_reduction": "0.0%",
+        "before_correct": "9",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "9",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "retail-negative",
+        "requests": 9,
+        "domain": "CCD1",
+        "before_ms": "425.89",
+        "current_ms": "440.98",
+        "ratio": "1.035",
+        "before_mib": "32.65",
+        "current_mib": "32.65",
+        "allocation_reduction": "-0.0%",
+        "before_correct": "9",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "9",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "databar-positive",
+        "requests": 12,
+        "domain": "CCD0",
+        "before_ms": "44.11",
+        "current_ms": "41.36",
+        "ratio": "0.938",
+        "before_mib": "13.30",
+        "current_mib": "13.29",
+        "allocation_reduction": "0.1%",
+        "before_correct": "10",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "10",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "databar-positive",
+        "requests": 12,
+        "domain": "CCD1",
+        "before_ms": "30.12",
+        "current_ms": "27.99",
+        "ratio": "0.929",
+        "before_mib": "13.29",
+        "current_mib": "13.28",
+        "allocation_reduction": "0.1%",
+        "before_correct": "10",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "10",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "databar-negative",
+        "requests": 31,
+        "domain": "CCD0",
+        "before_ms": "404.83",
+        "current_ms": "412.48",
+        "ratio": "1.019",
+        "before_mib": "54.69",
+        "current_mib": "54.66",
+        "allocation_reduction": "0.1%",
+        "before_correct": "31",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "31",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "databar-negative",
+        "requests": 31,
+        "domain": "CCD1",
+        "before_ms": "355.33",
+        "current_ms": "352.39",
+        "ratio": "0.992",
+        "before_mib": "54.67",
+        "current_mib": "54.64",
+        "allocation_reduction": "0.1%",
+        "before_correct": "31",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "31",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "expanded-positive",
+        "requests": 30,
+        "domain": "CCD0",
+        "before_ms": "67.47",
+        "current_ms": "60.53",
+        "ratio": "0.897",
+        "before_mib": "31.86",
+        "current_mib": "31.85",
+        "allocation_reduction": "0.0%",
+        "before_correct": "29",
+        "before_inconclusive": "0",
+        "before_unexpected": "1",
+        "current_correct": "29",
+        "current_inconclusive": "0",
+        "current_unexpected": "1"
+      },
+      {
+        "kind": "expanded-positive",
+        "requests": 30,
+        "domain": "CCD1",
+        "before_ms": "70.91",
+        "current_ms": "74.13",
+        "ratio": "1.045",
+        "before_mib": "31.86",
+        "current_mib": "31.85",
+        "allocation_reduction": "0.0%",
+        "before_correct": "29",
+        "before_inconclusive": "0",
+        "before_unexpected": "1",
+        "current_correct": "29",
+        "current_inconclusive": "0",
+        "current_unexpected": "1"
+      },
+      {
+        "kind": "expanded-negative",
+        "requests": 31,
+        "domain": "CCD0",
+        "before_ms": "708.18",
+        "current_ms": "723.17",
+        "ratio": "1.021",
+        "before_mib": "4.62",
+        "current_mib": "4.61",
+        "allocation_reduction": "0.0%",
+        "before_correct": "31",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "31",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      },
+      {
+        "kind": "expanded-negative",
+        "requests": 31,
+        "domain": "CCD1",
+        "before_ms": "659.40",
+        "current_ms": "638.73",
+        "ratio": "0.969",
+        "before_mib": "4.61",
+        "current_mib": "4.61",
+        "allocation_reduction": "0.0%",
+        "before_correct": "31",
+        "before_inconclusive": "0",
+        "before_unexpected": "0",
+        "current_correct": "31",
+        "current_inconclusive": "0",
+        "current_unexpected": "0"
+      }
+    ],
+    "title": "Code128 photo recovery and complete scan costs",
+    "anchor": "code128-photo",
+    "evidence": "code128-photo-proof.json",
+    "evidence_label": "Code128 photo recovery proof",
+    "completion_note": "",
+    "completion_notes": [],
+    "photographs": {
+      "rows": [
+        {
+          "family": "Code128",
+          "engine": "CodeGlyphX",
+          "images": 34,
+          "before": 17,
+          "correct": 34,
+          "unexpected": 0,
+          "inconclusive": 0
+        },
+        {
+          "family": "Code128",
+          "engine": "ZXing.Net",
+          "images": 34,
+          "before": 34,
+          "correct": 34,
+          "unexpected": 0,
+          "inconclusive": 0
+        },
+        {
+          "family": "Code128",
+          "engine": "ZXing-C++",
+          "images": 34,
+          "before": 34,
+          "correct": 34,
+          "unexpected": 0,
+          "inconclusive": 0
+        },
+        {
+          "family": "DataBar",
+          "engine": "CodeGlyphX",
+          "images": 18,
+          "before": 6,
+          "correct": 6,
+          "unexpected": 0,
+          "inconclusive": 0
+        },
+        {
+          "family": "DataBar",
+          "engine": "ZXing.Net",
+          "images": 18,
+          "before": 5,
+          "correct": 5,
+          "unexpected": 0,
+          "inconclusive": 0
+        },
+        {
+          "family": "DataBar",
+          "engine": "ZXing-C++",
+          "images": 18,
+          "before": 8,
+          "correct": 8,
+          "unexpected": 1,
+          "inconclusive": 0
+        },
+        {
+          "family": "Combined",
+          "engine": "CodeGlyphX",
+          "images": 52,
+          "before": 23,
+          "correct": 40,
+          "unexpected": 0,
+          "inconclusive": 0
+        },
+        {
+          "family": "Combined",
+          "engine": "ZXing.Net",
+          "images": 52,
+          "before": 39,
+          "correct": 39,
+          "unexpected": 0,
+          "inconclusive": 0
+        },
+        {
+          "family": "Combined",
+          "engine": "ZXing-C++",
+          "images": 52,
+          "before": 42,
+          "correct": 42,
+          "unexpected": 1,
+          "inconclusive": 0
+        }
+      ],
+      "scope": "Every eligible image with a UTF-8 text oracle in upstream code128-2 and rss14-2, excluding the unchanged main corpus IDs, sorted by SHA256 of source path. Selected before decoding; all misses retained. Separate diagnostic qualification set, not an independent post-development accuracy estimate.",
+      "limits": "This externally sourced set guided development. It is a diagnostic and regression set, not a held-out accuracy estimate. Its 52 images remain separate from the 267-positive headline ranking. Original oracles, all misses, inconclusive scans and unexpected outputs are retained. Unexpected counts are positive-image payload mismatches against the locked text oracles; they do not establish a negative-image false-positive rate. QRCoder generates QR symbols and is excluded from decoding comparisons.",
+      "gained": [
+        "code128-2/39.png",
+        "code128-2/10.png",
+        "code128-2/03.png",
+        "code128-2/34.png",
+        "code128-2/35.png",
+        "code128-2/37.png",
+        "code128-2/11.png",
+        "code128-2/36.png",
+        "code128-2/09.png",
+        "code128-2/14.png",
+        "code128-2/31.png",
+        "code128-2/32.png",
+        "code128-2/16.png",
+        "code128-2/29.png",
+        "code128-2/33.png",
+        "code128-2/27.png",
+        "code128-2/12.png"
+      ],
+      "lost": [],
+      "new_unexpected": [],
+      "manifest": "code128-photo-additional-inputs.json",
+      "before_file": "code128-photo-additional-before.json",
+      "current_file": "code128-photo-additional-current.json"
+    }
+  },
+  "dpm_workspace": {
+    "historical": true,
     "source": "490c16e586d21be460d4c04494c7580cc078327c",
     "changes": "DPM preprocessing reuses private gray, local mean, mask and morphology storage for each retry enumeration. Its returned images remain independently owned. QR and DPM share a rolling square filter with explicit clipped and zero-outside erosion policies. Retry order, thresholds, attempts, pixels, cancellation and output ownership retain their existing behavior.",
     "scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
@@ -1547,7 +1982,7 @@
         "current_unexpected": "0"
       }
     ],
-    "title": "DPM preprocessing storage and scan costs",
+    "title": "Historical DPM preprocessing storage and scan costs",
     "anchor": "dpm-workspace",
     "evidence": "dpm-workspace-proof.json",
     "evidence_label": "DPM workspace proof",
@@ -5374,31 +5809,31 @@
   "paired_decode_cost": [
     {
       "domain": "CCD0",
-      "previous_ms": "767.88",
-      "current_ms": "779.92",
-      "ratio": "1.016",
+      "previous_ms": "771.91",
+      "current_ms": "777.46",
+      "ratio": "1.007",
       "previous_correct": "19",
       "previous_unexpected": "0",
       "previous_inconclusive": "0",
-      "previous_managed_mib": "32.49",
+      "previous_managed_mib": "26.98",
       "current_correct": "19",
       "current_unexpected": "0",
       "current_inconclusive": "0",
-      "current_managed_mib": "26.98"
+      "current_managed_mib": "27.19"
     },
     {
       "domain": "CCD1",
-      "previous_ms": "718.71",
-      "current_ms": "731.77",
-      "ratio": "1.018",
+      "previous_ms": "683.40",
+      "current_ms": "680.67",
+      "ratio": "0.996",
       "previous_correct": "19",
       "previous_unexpected": "0",
       "previous_inconclusive": "0",
-      "previous_managed_mib": "32.50",
+      "previous_managed_mib": "27.00",
       "current_correct": "19",
       "current_unexpected": "0",
       "current_inconclusive": "0",
-      "current_managed_mib": "26.98"
+      "current_managed_mib": "27.20"
     }
   ],
   "pdf417_cost": [

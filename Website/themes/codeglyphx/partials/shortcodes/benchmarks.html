@@ -65,6 +65,24 @@
             </table>
         </div>
     </section>
+    {{ if comparison.code128_photos }}
+    {{ photo_set = comparison.code128_photos.photographs }}
+    <section class="benchmark-section" aria-labelledby="code128-photographs">
+        <h2 id="code128-photographs">Additional Code128 and DataBar photographs</h2>
+        <p>{{ photo_set.scope }}</p><p>{{ photo_set.limits }}</p>
+        <div class="comparison-scroll" role="region" aria-label="Additional photograph results" tabindex="0">
+            <table class="bench-table">
+                <caption>Separate 52-photo development and regression set</caption>
+                <thead><tr><th scope="col">Family</th><th scope="col">Reader</th><th scope="col">Previous correct</th><th scope="col">Current correct</th><th scope="col">Images</th><th scope="col">Unexpected</th><th scope="col">Inconclusive</th></tr></thead>
+                <tbody>{{ for row in photo_set.rows }}<tr><th scope="row">{{ row.family }}</th><td>{{ row.engine }}</td><td>{{ row.before }}</td><td>{{ row.correct }}</td><td>{{ row.images }}</td><td>{{ row.unexpected }}</td><td>{{ row.inconclusive }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>CodeGlyphX gains {{ photo_set.gained.size }} images, loses {{ photo_set.lost.size }}, and adds unexpected outputs on {{ photo_set.new_unexpected.size }} images in this set.</p>
+        <p><a href="/comparisons/evidence/{{ photo_set.manifest }}">Inputs</a> · <a href="/comparisons/evidence/{{ photo_set.before_file }}">Previous outcomes</a> · <a href="/comparisons/evidence/{{ photo_set.current_file }}">Current outcomes</a></p>
+    </section>
+    {{ session_costs = comparison.code128_photos }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
     {{ session_costs = comparison.dpm_workspace }}
     {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
     {{ session_costs = comparison.linear_run_workspace }}

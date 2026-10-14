@@ -25,6 +25,7 @@ from comparison_databar_module_runs import project_databar_module_runs
 from comparison_databar14_workspace import project_databar14_workspace
 from comparison_databar_expanded_workspace import project_databar_expanded_workspace
 from comparison_linear_run_workspace import project_linear_run_workspace
+from comparison_code128_photos import project_code128_photos
 from comparison_dpm_workspace import project_dpm_workspace
 
 
@@ -383,6 +384,7 @@ def build_website_data(root):
             "databar_tilted": project_databar_tilted(root, qualification),
             "retail_fine": project_retail_fine(root, qualification),
             "scanner_boundaries": project_scanner_boundaries(root, qualification),
+            "code128_photos": project_code128_photos(root, qualification),
             "dpm_workspace": project_dpm_workspace(root, qualification),
             "linear_run_workspace": project_linear_run_workspace(root, qualification),
             "databar_expanded_workspace": project_databar_expanded_workspace(root, qualification),
