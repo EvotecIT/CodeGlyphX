@@ -31,6 +31,7 @@ from comparison_code128_photos import project_code128_photos
 from comparison_databar_separator_geometry import project_databar_separator_geometry
 from comparison_pdf417_grids import project_pdf417_grids
 from comparison_databar_thresholds import project_databar_thresholds
+from comparison_qr_finder_runs import project_qr_finder_runs
 from comparison_retail_digit_fits import project_retail_digit_fits
 from comparison_png_output import project_png_output, append_png_output_section
 from comparison_code128_photo_set import append_photograph_section
@@ -65,6 +66,7 @@ def main():
              "negative-baseline-corpus.json", "negative-candidate-corpus.json", "negative-manifest.json",
              "qualification.json"]
     names += sorted(path.name for path in root.glob("databar-threshold-*.json"))
+    names += sorted(path.name for path in root.glob("qr-finder-runs-*.json"))
     names += [f"{kind}-final-{domain}-result.json" for kind, domain in runs]
     names += [name for name in ("previous-candidate-corpus.json", "previous-negative-corpus.json", "previous-qualification.json") if (root / name).exists()]
     names += sorted(path.name for path in root.glob("negative-rotation-*.json"))
@@ -513,6 +515,7 @@ def main():
         for row in tilted["costs"]:
             lines.append(f'| {row["kind"]}: {row["requests"]} | {row["domain"]} | {row["before_ms"]} → {row["current_ms"]} | {row["ratio"]} | {row["before_correct"]} → {row["current_correct"]} | {row["before_inconclusive"]} → {row["current_inconclusive"]} | {row["before_mib"]} → {row["current_mib"]} |')
         lines += ["", tilted["limits"], "", "[Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json)."]
+    append_retained_context_section(lines, project_qr_finder_runs(root, qualification))
     append_retained_context_section(lines, project_databar_thresholds(root, qualification))
     pdf417_grids = project_pdf417_grids(root, qualification)
     append_retained_context_section(lines, pdf417_grids)

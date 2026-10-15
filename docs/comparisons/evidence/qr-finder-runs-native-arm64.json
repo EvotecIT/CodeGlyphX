@@ -1,0 +1,903 @@
+{
+  "Source": "089aab4524899d9e7a385c9973598263a7cd96b6",
+  "CoreSha256": "089C5278416ADCFC35F83A20DDB9F727C429118DC3FAEB0452DD927A1FB7E596",
+  "TestAssemblySha256": "536BDF4128D87546310A1DC4D81E955062D4379C896EAAE866728EA038FB62B8",
+  "Host": "evomini.ad.evotec.xyz",
+  "OperatingSystem": "27.0.1",
+  "Architecture": "arm64",
+  "Processor": "Apple M4",
+  "SDKVersion": "10.0.402",
+  "SelectedFrameworkVersion": "10.0.13",
+  "FrameworkRollForward": "Disable",
+  "InputFiles": {
+    "CodeGlyphX.dll": "089C5278416ADCFC35F83A20DDB9F727C429118DC3FAEB0452DD927A1FB7E596",
+    "CodeGlyphX.Playground.dll": "50CAFA124B3871E0ED8EE197A13CB4C9323A939858000AE98CF2052EE608B683",
+    "CodeGlyphX.Tests.dll": "536BDF4128D87546310A1DC4D81E955062D4379C896EAAE866728EA038FB62B8",
+    "Microsoft.TestPlatform.CoreUtilities.dll": "CA8CD4A0C394AF3CC03C8E83B0377ECF14E6A8C68E4B0B50F732B1370950D7DF",
+    "Microsoft.TestPlatform.PlatformAbstractions.dll": "8BC7FAEC348A71336AF3BFBEECAD564AD0F97A8216835ED90CD2CEFF621A3697",
+    "Microsoft.VisualStudio.TestPlatform.ObjectModel.dll": "FF730C68BEBE827F74E2BDCFB571400AB328C00BE11C7FE3A1FE01143B483BC6",
+    "NativeModuleDriver.deps.json": "284CFDEDEE7C2930311EAEB7F65811BECE6CB69FA658B44D0C9A02FD0E70CBB7",
+    "NativeModuleDriver.dll": "121EFBE143A0CB9C0404BBE611FEF22516E700A5BA37F79CEC25A20910B7B1F2",
+    "NativeModuleDriver.runtimeconfig.json": "C230A317A54DD960BCBEB5F347F52E18DC665A26F7EFDA2159FCED9A5AC7E097",
+    "xunit.abstractions.dll": "3166DC70323FB30CCF1CEDB0FE86F2AD122C46D254542342D90386EFC4C9285C",
+    "xunit.assert.dll": "BCD9711B22D227AC8CD4C1568E72433A0F576D2EC8AAE64AC508081892015B1D",
+    "xunit.core.dll": "2F7FEEEC8C6DEC7DF684C25FB80AADB292B963D09723460F03D53C5AD2088ACC",
+    "xunit.execution.dotnet.dll": "E70FEBE547C15F8155DB3E2D95C3BA4445A59CBC21A3E7541AB22ED49D3DCF7B",
+    "xunit.runner.visualstudio.testadapter.dll": "A5DD2A0765F3891208189261CFE09171F875FF44FD5AF99EA56E890085FB7F30",
+    "cs/Microsoft.TestPlatform.CoreUtilities.resources.dll": "5F5501B18F65687CEBD354196F563C520B4575E58ECA474F3B3D1BD3247B9B46",
+    "cs/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "A24D277E98D3DC7986741FF0C72E628ACA9814556D6D64B5E3992BACF07C6F17",
+    "de/Microsoft.TestPlatform.CoreUtilities.resources.dll": "CF94A0635173D6D868A90161757CB9484E559FEDFDE6E7EA50DD935E1D9B6666",
+    "de/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "EDFDF3CB64553DA8E229463948AA7B962E96E4037D510FB7FAD4F26DA9E7C8B5",
+    "es/Microsoft.TestPlatform.CoreUtilities.resources.dll": "6DE8B0FD082756F612D4C8B3B06E3558E2321BCB910D5A70769050F308B96641",
+    "es/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "EB966BE23882A9E11459D283241A67E7C0265F271E98603F13CABAADD8F7EE64",
+    "fr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "BEC57046F616616913FD1416F013635A41A06C1C4D8AD67A8EE31F6098A3444B",
+    "fr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "07614B2D790A3B6AD93B41961566B84E4AD56CC86F5BF39658C06A13F2613DB4",
+    "it/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2AF9B70D68F3AB2BBAA609E5E556811C7F68869CE2C3CC6D7209B3D6722E0968",
+    "it/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5202A294A2B02C741BA292BA802F12B9473836A81CE61CB42F462EEAD6DC4DFA",
+    "ja/Microsoft.TestPlatform.CoreUtilities.resources.dll": "63D61001CDF7C501E253ADEACE734B32023CF617C04785937525FC0F202C3E21",
+    "ja/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "D2A679CC9CF0B0E5C865BD937EC90E45ECB434289C6B017992F417E34BAE646C",
+    "ko/Microsoft.TestPlatform.CoreUtilities.resources.dll": "E7528A92A6EC0E1684537DD550CDB016ECC8DF62A55C85294E608358E28A560D",
+    "ko/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "DC7B27E609E842EEEA5DA50EA172F288479B652EA779072E5DBBDE045418819D",
+    "pl/Microsoft.TestPlatform.CoreUtilities.resources.dll": "CB997C46356BE42B346682B3A1B6825CB6F70A30C92403048F7DBDF25065F6AB",
+    "pl/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "48F6BB8C551179DA07D5E136A0C781DD6433F23312F3CE9241DCEC29D8412F3E",
+    "pt-BR/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2BB0340569343F0C3288F35A5CFA947D9495DE55D04E93F2C380B75B45D681A9",
+    "pt-BR/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3944ADC8B9C09A7007AAEA3C86EE7666DDF3E7328B16EDCC72F7E6DCC1FF1DE8",
+    "ru/Microsoft.TestPlatform.CoreUtilities.resources.dll": "089D9052B2FA1EF63F2BD1F0F0F8161FE6D1D02721FC39D4B48C333D26826306",
+    "ru/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "515C96257715A3CCD56AF8ACD9460E72E57DDA825FF16824D2912271BECA0749",
+    "tr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "1FEE9A7A6AF5EF00D7FDD4F3BF265645C7984224352E95347C2F082F64D8ADE2",
+    "tr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5B39C999CCF72EB01BA387C8A0D72814D68A7120E623ACCBD2DA544EE04BA5DC",
+    "zh-Hans/Microsoft.TestPlatform.CoreUtilities.resources.dll": "DB896AC2579F5D5773F940BD278852C689799A3E0ACC51BB30E46EEF99FC76FB",
+    "zh-Hans/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3F370C15663359C40BCEE2A7D15CD386F01980BE753F7AB1505783649D70DCAF",
+    "zh-Hant/Microsoft.TestPlatform.CoreUtilities.resources.dll": "FE732572A93C216282C0EF0A8762246735C8885873E03FFE9FD287D202F0D806",
+    "zh-Hant/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "335D5FA4C5575CEB8F4FFB58FDA53C1813A0C725A17F68219D012D390DDF978F",
+    "Fixtures/Qr/perspective-bookmark.png": "8E6D85FF2F01FC79CDD53EAE7099504FBF0C8E208C2868868ECDDF68AE2F7A9D"
+  },
+  "RemoteRoot": "/Volumes/Samsung/Development/Scratch/CodeGlyphX-qr-finder-runs-089aab45",
+  "Scope": "Exact Windows-compiled managed core/test binaries. 208 functional checks: preceding 199 plus nine QR finder run geometry, polarity, adaptive and cancellation/limit contracts; 20 additional Code128 pixel API calls. Native ARM64 functional qualification, not native timing or full-corpus qualification.",
+  "DecisionProof": {
+    "Status": "passed",
+    "Checks": 208,
+    "Cases": [
+      {
+        "Case": "Distinct threshold masks 15,31,63,127,191,239",
+        "Status": "passed"
+      },
+      {
+        "Case": "Distinct threshold masks 128,127,129,128,0,255",
+        "Status": "passed"
+      },
+      {
+        "Case": "Distinct threshold masks 255,254,2,1,0,128",
+        "Status": "passed"
+      },
+      {
+        "Case": "Distinct threshold masks 17,18,16,19",
+        "Status": "passed"
+      },
+      {
+        "Case": "Distinct threshold masks 0,127,255",
+        "Status": "passed"
+      },
+      {
+        "Case": "Distinct threshold cancellation",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR finder runs (1, False, False)",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR finder runs (1, True, False)",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR finder runs (3, False, False)",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR finder runs (3, True, False)",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR finder runs (1, False, True)",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR finder runs (1, True, True)",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR finder runs (3, False, True)",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR finder runs (3, True, True)",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR finder run stop/limit",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 composed region (1, 65)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 composed region (65, 1)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 composed region (19, 23)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 composed region (33, 31)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 scalar sample bgra=False invert=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 projected sample bgra=False invert=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 scalar sample bgra=False invert=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 projected sample bgra=False invert=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 scalar sample bgra=True invert=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 projected sample bgra=True invert=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 scalar sample bgra=True invert=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 projected sample bgra=True invert=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 undefined perspective invert=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 undefined perspective invert=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 cached view cancellation",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 offset Macro (False, 1, False)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 offset Macro (False, 4, True)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 offset Macro (True, 1, True)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PDF417 offset Macro (True, 4, False)",
+        "Status": "passed"
+      },
+      {
+        "Case": "Retail digit scalar parity=-1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Retail digit scalar parity=0",
+        "Status": "passed"
+      },
+      {
+        "Case": "Retail digit scalar parity=1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Int32 coordinate boundaries",
+        "Status": "passed"
+      },
+      {
+        "Case": "Binary queue invert=False stop=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Binary queue invert=False stop=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Binary queue invert=True stop=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Binary queue invert=True stop=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR components adaptive=False invert=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR components adaptive=False invert=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR components adaptive=True invert=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR components adaptive=True invert=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix invalid stride 0",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix invalid stride -80",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix rotation 0",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix rotation 1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix rotation 2",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix rotation 3",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix RGBA mirrored",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix RGBA inverted",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix Gray8 rotated",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix Gray8 mirrored",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix Gray8 inverted",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix ECI metadata",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix DMRE metadata",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix damaged clock rejection",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix photo zxing-perspective-20.png",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix photo zxing-perspective-40.png",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix photo zxing-perspective-lowcontrast.png",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec pitch 1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec pitch 2",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec pitch 3",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec independent small symbol",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 10",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 13",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 14",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 15",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 17",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 19",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec mirrored photo",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec inverted photo",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR perspective single",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR perspective all",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR perspective scanner",
+        "Status": "passed"
+      },
+      {
+        "Case": "Bounded module runs capacity 0",
+        "Status": "passed"
+      },
+      {
+        "Case": "Bounded module runs capacity 1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Bounded module runs capacity 47",
+        "Status": "passed"
+      },
+      {
+        "Case": "Bounded module runs capacity 235",
+        "Status": "passed"
+      },
+      {
+        "Case": "Limited independent guard restoration 1234567890123",
+        "Status": "passed"
+      },
+      {
+        "Case": "Limited independent guard restoration 0000000000000",
+        "Status": "passed"
+      },
+      {
+        "Case": "Limited independent guard restoration 1999999999999",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded all 19 supported character counts and guards",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded maximum stacked symbol columns 1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded maximum stacked symbol columns 2",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded maximum stacked symbol columns 3",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded maximum stacked symbol columns 10",
+        "Status": "passed"
+      },
+      {
+        "Case": "Malformed run capacity boundary 1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Malformed run capacity boundary 46",
+        "Status": "passed"
+      },
+      {
+        "Case": "Malformed run capacity boundary 47",
+        "Status": "passed"
+      },
+      {
+        "Case": "Malformed run capacity boundary 235",
+        "Status": "passed"
+      },
+      {
+        "Case": "Malformed run capacity boundary 237",
+        "Status": "passed"
+      },
+      {
+        "Case": "Malformed run capacity boundary 238",
+        "Status": "passed"
+      },
+      {
+        "Case": "Malformed run capacity boundary 8192",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 module polarity=False trimmed=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 module polarity=False trimmed=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 module polarity=True trimmed=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 module polarity=True trimmed=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 stacked width order omni=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 stacked width order omni=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 incomplete sampled rows",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 invalid run boundary 0",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 invalid run boundary 1",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 invalid run boundary 44",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 invalid run boundary 45",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 invalid run boundary 46",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 invalid run boundary 47",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 invalid run boundary 8192",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 dirty-pool image omni=False inverted=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 dirty-pool image omni=False inverted=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 dirty-pool image omni=True inverted=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar14 dirty-pool image omni=True inverted=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded workspace columns=1 turns=0 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded workspace columns=2 turns=1 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded workspace columns=3 turns=2 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded workspace columns=10 turns=3 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Expanded workspace columns=0 turns=0 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared linear runs Code128",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared linear runs Codabar",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared linear runs Code11",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared linear runs Plessey",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared linear runs Telepen",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared linear runs ITF",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared linear runs concurrent and cancellation",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared morphology 1x1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared morphology 1x9",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared morphology 9x1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared morphology 3x3",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared morphology 17x9",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared morphology 257x3",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared morphology cancellation expired=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Shared morphology cancellation expired=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DPM independent retained retries",
+        "Status": "passed"
+      },
+      {
+        "Case": "DPM consumer output mutation",
+        "Status": "passed"
+      },
+      {
+        "Case": "DPM cancellation after retry 1",
+        "Status": "passed"
+      },
+      {
+        "Case": "DPM cancellation after retry 3",
+        "Status": "passed"
+      },
+      {
+        "Case": "DPM cancellation after retry 4",
+        "Status": "passed"
+      },
+      {
+        "Case": "DPM cancellation after retry 5",
+        "Status": "passed"
+      },
+      {
+        "Case": "DPM concurrent input ownership",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo reversed-postal rotated/inverted=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo reversed-postal rotated/inverted=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo offcentre-label rotated/inverted=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo offcentre-label rotated/inverted=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo cutoff-label rotated/inverted=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo cutoff-label rotated/inverted=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo cutoff-reversed rotated/inverted=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo cutoff-reversed rotated/inverted=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo long-postal rotated/inverted=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 photo long-postal rotated/inverted=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 adjacent band turns=0 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 adjacent band turns=0 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 adjacent band turns=1 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 adjacent band turns=1 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 adjacent band turns=2 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 adjacent band turns=2 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 adjacent band turns=3 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 adjacent band turns=3 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 invalid checksum band",
+        "Status": "passed"
+      },
+      {
+        "Case": "Code128 reader initialization identity",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 20 turns=0 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 20 turns=0 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 20 turns=1 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 20 turns=1 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 20 turns=2 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 20 turns=2 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 20 turns=3 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 20 turns=3 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 21 turns=0 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 21 turns=0 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 21 turns=1 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 21 turns=1 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 21 turns=2 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 21 turns=2 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 21 turns=3 inversion=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar separator photo 21 turns=3 inversion=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar coherent separator 0001234567890 omni=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar coherent separator 0001234567890 omni=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar coherent separator 0082193510642 omni=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar coherent separator 0082193510642 omni=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar coherent separator 1234567890123 omni=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "DataBar coherent separator 1234567890123 omni=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG RGBA (1, 1, 0, 0)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG RGBA (17, 5, 0, 300)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG RGBA (128, 128, 0, 0)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG RGBA (128, 128, 0, 300)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG RGBA (17, 5, 1, 300)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG RGBA (17, 5, 9, 0)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG packed (False, 17, 5, 0)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG packed (True, 17, 5, 0)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG packed (False, 513, 1024, 0)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG packed (True, 513, 1024, 0)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG packed (False, 17, 5, 1)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG packed (True, 17, 5, 1)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG packed (False, 17, 5, 9)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG packed (True, 17, 5, 9)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG ownership 0/0",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG ownership 0/6",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG ownership 1/0",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG ownership 1/6",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG ownership 2/0",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG ownership 2/6",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG translucent stream 0",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG translucent stream 6",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG callback rows (16384, 2, 0)",
+        "Status": "passed"
+      },
+      {
+        "Case": "PNG callback rows (17, 5, 6)",
+        "Status": "passed"
+      }
+    ],
+    "AdditionalDiagnosticAndAllResultPhotoCalls": 20,
+    "Architecture": "Arm64",
+    "OS": "macOS 27.0.1",
+    "Runtime": ".NET 10.0.13",
+    "CoreSha256": "089C5278416ADCFC35F83A20DDB9F727C429118DC3FAEB0452DD927A1FB7E596",
+    "TestAssemblySha256": "536BDF4128D87546310A1DC4D81E955062D4379C896EAAE866728EA038FB62B8",
+    "CoreInformationalVersion": "3.0.0+089aab4524899d9e7a385c9973598263a7cd96b6",
+    "Scope": "Twenty four PNG output/stream/ownership contracts, twenty two actual DataBar separator geometry contracts, twenty actual Code128 photograph and adjacent-row recovery contracts, fifteen actual DPM workspace and shared morphology contracts, seven actual shared linear workspace contracts, five actual Expanded workspace contracts, eighteen DataBar-14 workspace contracts, nineteen DataBar module-run contracts, nine coordinate/component contracts and 32 public QR, Data Matrix and Aztec decoding checks on the exact Windows-qualified managed binaries. Functional qualification only; no native timing or full native corpus claim."
+  }
+}

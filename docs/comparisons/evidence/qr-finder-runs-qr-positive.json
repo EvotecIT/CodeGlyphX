@@ -1,0 +1,342 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "Frozen main QR positive subset; original hints, payload oracle, order and allowance retained.",
+  "Samples": [
+    {
+      "Id": "qrcode-1/6.png",
+      "File": "qrcode-1/6.png",
+      "Sha256": "8e6d85ff2f01fc79cdd53eae7099504fbf0c8e208c2868868ecddf68ae2f7a9d",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-1/10.png",
+      "File": "qrcode-1/10.png",
+      "Sha256": "b3c9b39028835558a3e44f3aba37b49fa0985ab47fc0642bbda5fb0631a979b2",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-1/9.png",
+      "File": "qrcode-1/9.png",
+      "Sha256": "32fe0d4c809d3ae57ac2f8f874fc8cd2f9e44d24a561d4c39603ff7a25805cff",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-1/17.png",
+      "File": "qrcode-1/17.png",
+      "Sha256": "67bda038848ab12ad6b847b5137d78d562a72f31a48e768ad448372f8b75807f",
+      "Format": "QrCode",
+      "Expected": [
+        "Sean Owen\r\nsrowen@google.com\r\n917-364-2918\r\nhttp://awesome-thoughts.com"
+      ]
+    },
+    {
+      "Id": "qrcode-1/12.png",
+      "File": "qrcode-1/12.png",
+      "Sha256": "d75ee7ce5affe4bd5d7fad486739fc6affa4ca616ee67f6864b07eb3b078fda9",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-1/7.png",
+      "File": "qrcode-1/7.png",
+      "Sha256": "562aa4152b1291535132409f53d24bd5bbc2c01d4920062c96dcec27f3484f71",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-2/35.png",
+      "File": "qrcode-2/35.png",
+      "Sha256": "6d1961fbb37515ee61af08036e961290f6f159cfe26e5379771f9ce61044faeb",
+      "Format": "QrCode",
+      "Expected": [
+        "http://www.google.com/"
+      ]
+    },
+    {
+      "Id": "qrcode-2/16.png",
+      "File": "qrcode-2/16.png",
+      "Sha256": "24fef8babbb2862f2f37fe05b74b45daaa87f1b0c5d7610c0f40eb63becfe9e1",
+      "Format": "QrCode",
+      "Expected": [
+        "[\u5916\u5074QR\u30b3\u30fc\u30c9]\r\n \r\n*\uff80\uff9e\uff8c\uff9e\uff99QR*\r\nhttp://d-qr.net/ex/"
+      ]
+    },
+    {
+      "Id": "qrcode-2/15.png",
+      "File": "qrcode-2/15.png",
+      "Sha256": "cb3dca9deed3d7c08ec43b48dcc53af171a425a6b1e9217fca5db8d060f61db8",
+      "Format": "QrCode",
+      "Expected": [
+        "In 25 words or less in the comments, below, tell us how QR codes will make the world less ordinary."
+      ]
+    },
+    {
+      "Id": "qrcode-2/7.png",
+      "File": "qrcode-2/7.png",
+      "Sha256": "488d966bd052dda0c5cfa0f8d097f5646cec37c67df7391408cb42077c8a47f3",
+      "Format": "QrCode",
+      "Expected": [
+        "BIZCARD:N:Todd;X:Ogasawara;T:Tech Geek;C:MobileViews.com;A:MobileTown USA;E:editor@mobileviews.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-2/10.png",
+      "File": "qrcode-2/10.png",
+      "Sha256": "92723a6b541e0b08db1c5233b8768c227288ae5cab61b7bc01611d37ee827ae8",
+      "Format": "QrCode",
+      "Expected": [
+        "Google \u30e2\u30d0\u30a4\u30eb\r\nhttp://google.jp"
+      ]
+    },
+    {
+      "Id": "qrcode-2/23.png",
+      "File": "qrcode-2/23.png",
+      "Sha256": "5678f4be08abe4685c8d34883db162187459c9c097b2a6023b287a6e90a0f6ab",
+      "Format": "QrCode",
+      "Expected": [
+        "http://aniful.jp/pr/  "
+      ]
+    },
+    {
+      "Id": "qrcode-3/13.png",
+      "File": "qrcode-3/13.png",
+      "Sha256": "d9754f9f9171d3f401cf44897f1ddea51bac3e8f6bae08f321b712f5288fb73f",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Google 411,;TEL:18665881077;;"
+      ]
+    },
+    {
+      "Id": "qrcode-3/05.png",
+      "File": "qrcode-3/05.png",
+      "Sha256": "16ce3f4c727012f8c667e49b5b70ef13cf5818d990e6245f29d183cb50804f02",
+      "Format": "QrCode",
+      "Expected": [
+        "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+      ]
+    },
+    {
+      "Id": "qrcode-3/32.png",
+      "File": "qrcode-3/32.png",
+      "Sha256": "23a259ea9307ac61367f7396bb970d18dfe96a268299a5da3c836066dfccbc65",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-3/11.png",
+      "File": "qrcode-3/11.png",
+      "Sha256": "3eab0098a500a9b50a1f02d0a91dd6d7feed2d27406f9adc73d7306a2bb1910d",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Google 411,;TEL:18665881077;;"
+      ]
+    },
+    {
+      "Id": "qrcode-3/35.png",
+      "File": "qrcode-3/35.png",
+      "Sha256": "3d0b0f84a315ade3c1927ca1d95671500065c1657028ac31d8b22d66b846c91b",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-3/03.png",
+      "File": "qrcode-3/03.png",
+      "Sha256": "747dda4f1e660a1f6477c9dd63db84e2d0b99e86212771d4c0b86a40db6c8bad",
+      "Format": "QrCode",
+      "Expected": [
+        "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+      ]
+    },
+    {
+      "Id": "qrcode-4/40.png",
+      "File": "qrcode-4/40.png",
+      "Sha256": "400c2c46c33c006aae007caf5af95369df0d5c7849bfb0c95f99a8339965e13a",
+      "Format": "QrCode",
+      "Expected": [
+        "http://code.google.com/p/zxing/"
+      ]
+    },
+    {
+      "Id": "qrcode-4/31.png",
+      "File": "qrcode-4/31.png",
+      "Sha256": "c2395defce58101af85930cec1869bff2bf7e7a802bc7710cb4f793c1675db66",
+      "Format": "QrCode",
+      "Expected": [
+        "http://code.google.com"
+      ]
+    },
+    {
+      "Id": "qrcode-4/01.png",
+      "File": "qrcode-4/01.png",
+      "Sha256": "3e0f7c10d182bc52644d81c1dc4fc760e6d0dc8febff6725039dc4ebe85de06a",
+      "Format": "QrCode",
+      "Expected": [
+        "Google Print Ads - T.G.I.A.F. - January 31, 2008"
+      ]
+    },
+    {
+      "Id": "qrcode-4/29.png",
+      "File": "qrcode-4/29.png",
+      "Sha256": "aad52f8cd3d77b89b2d68c6ace5acef5f4a44a2986a0740ea8883c19670924b1",
+      "Format": "QrCode",
+      "Expected": [
+        "http://code.google.com"
+      ]
+    },
+    {
+      "Id": "qrcode-4/15.png",
+      "File": "qrcode-4/15.png",
+      "Sha256": "798c028bc0eb2a4b1055c7d8e22d0635d3100961947be3cdf20d32d1b82c20f4",
+      "Format": "QrCode",
+      "Expected": [
+        "http://code.google.com"
+      ]
+    },
+    {
+      "Id": "qrcode-4/09.png",
+      "File": "qrcode-4/09.png",
+      "Sha256": "63b74438ac1bec2b277fd9b490338f1b08016f5c8c0f1cde2334da2380d52f63",
+      "Format": "QrCode",
+      "Expected": [
+        "Google Print Ads - T.G.I.A.F. - January 31, 2008"
+      ]
+    },
+    {
+      "Id": "qrcode-5/04.png",
+      "File": "qrcode-5/04.png",
+      "Sha256": "913bbe648c013a5df65e3a6aa8c017db1aaf014ddf4ae931d9cbdc7a4c70df85",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-5/18.png",
+      "File": "qrcode-5/18.png",
+      "Sha256": "3b63f527f1c4999b14d93d741b88699e5ab42922eaf4259c3e77d062249ddc97",
+      "Format": "QrCode",
+      "Expected": [
+        "THROUGH THE LOOKING-GLASS\n\nBy Lewis Carroll\n\n\nCHAPTER I. Looking-Glass house\n\nOne thing was certain, that the WHITE kitten had had nothing to do with\nit:--it was the black kitten's fault entirely. For the white kitten had\nbeen having its face washed by the old cat for the last quarter of\nan hour (and bearing it pretty well, considering); so you see that it\nCOULDN'T have had any hand in the mischief.\n\nThe way Dinah washed her children's faces was this: first she held the\npoor thing down by its ear with one paw, and then with the other paw she\nrubbed its face all over, the wrong way, beginning at the nose: and\njust now, as I said, she was hard at work on the white kitten, which was\nlying quite still and trying to purr--no doubt feeling that it was all\nmeant for its good.\n\nBut the black kitten had been finished with earlier in the afternoon,\nand so, while Alice was sitting curled up in a corner of the great\narm-chair, half talking to herself and half asleep, the kitten had been\nhaving a grand game of romps with the ball of worsted Alice had been\ntrying to wind up, and had been rolling it up and down till it had all\ncome undone again; and there it was, spread over the hearth-rug, all\nknots and tangles, with the kitten running after its own tail in the\nmiddle.\n\n'Oh, you wicked little thing!' cried Alice, catching up the kitten, and\ngiving it a little kiss to make it understand that it was in disgrace.\n'Really, Dinah ought to have taught you better manners! You OUGHT,\nDinah, you know you ought!' she added, looking reproachfully at the old\ncat, and speaking in as cross a voice as she could manage--and then she\nscrambled back into the arm-ch\n\n"
+      ]
+    },
+    {
+      "Id": "qrcode-5/11.png",
+      "File": "qrcode-5/11.png",
+      "Sha256": "3cd672dc6460441433f6edb61a6b6a2261404f8fbaf13b4ed1824805dec18d2a",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-5/09.png",
+      "File": "qrcode-5/09.png",
+      "Sha256": "b40afb7a18b66c9dd585c01dc0f587997912c32d91c973adce43609c77279265",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-5/14.png",
+      "File": "qrcode-5/14.png",
+      "Sha256": "e33a47aa7f0e93922b385b590013638456aa1f6ebd33091d7e9bfacf106e2785",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-5/19.png",
+      "File": "qrcode-5/19.png",
+      "Sha256": "ed8890b9e31698774de78572738c1b91930887c802b2a8c32d18e49340a8975b",
+      "Format": "QrCode",
+      "Expected": [
+        "THROUGH THE LOOKING-GLASS\n\nBy Lewis Carroll\n\n\nCHAPTER I. Looking-Glass house\n\nOne thing was certain, that the WHITE kitten had had nothing to do with\nit:--it was the black kitten's fault entirely. For the white kitten had\nbeen having its face washed by the old cat for the last quarter of\nan hour (and bearing it pretty well, considering); so you see that it\nCOULDN'T have had any hand in the mischief.\n\nThe way Dinah washed her children's faces was this: first she held the\npoor thing down by its ear with one paw, and then with the other paw she\nrubbed its face all over, the wrong way, beginning at the nose: and\njust now, as I said, she was hard at work on the white kitten, which was\nlying quite still and trying to purr--no doubt feeling that it was all\nmeant for its good.\n\nBut the black kitten had been finished with earlier in the afternoon,\nand so, while Alice was sitting curled up in a corner of the great\narm-chair, half talking to herself and half asleep, the kitten had been\nhaving a grand game of romps with the ball of worsted Alice had been\ntrying to wind up, and had been rolling it up and down till it had all\ncome undone again; and there it was, spread over the hearth-rug, all\nknots and tangles, with the kitten running after its own tail in the\nmidd\n"
+      ]
+    },
+    {
+      "Id": "qrcode-6/10.png",
+      "File": "qrcode-6/10.png",
+      "Sha256": "da6ed6f97173939d77c27efe8243bc0cb83667665d4db82d248d247912bfda0a",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/13.png",
+      "File": "qrcode-6/13.png",
+      "Sha256": "8f1b358cd934f95d326abd89a55ba7609478060d455b271c3f1b35ddd0e98039",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/4.png",
+      "File": "qrcode-6/4.png",
+      "Sha256": "377f5af257be03b80fb52971f1e280d14b7a43fe392c269092b4f2a971601173",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/2.png",
+      "File": "qrcode-6/2.png",
+      "Sha256": "bad3d9337995633a583a9ee789bfb3bc450ca2f46fff29773e1eb75707cdbee8",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/7.png",
+      "File": "qrcode-6/7.png",
+      "Sha256": "c32be7f134a927159edceb63eec1c7ed186823c2dfeea71db184ce414790a941",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/12.png",
+      "File": "qrcode-6/12.png",
+      "Sha256": "e9d97c47629bc2560f860c376abf4e7aa838b826f9e880550fa4f47dcba1adba",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "multi-qrcode-1/1.png",
+      "File": "multi-qrcode-1/1.png",
+      "Sha256": "22aa7015f341ee8ecb8219e7790df7cb21814daf05c56e86953f24f09c87ea56",
+      "Format": "QrCode",
+      "Expected": [
+        "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+        "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+        "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+        "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+      ]
+    }
+  ]
+}

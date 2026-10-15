@@ -354,9 +354,40 @@ The remaining three main-corpus DataBar misses and inverted versions of the reco
 
 [Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json).
 
+## QR finder run follow-up
+
+
+
+The 31-image QR-only negative batch takes 5.9–18.6% less median time. Positive QR timing and default all-format negative completion are mixed; every result remains included.
+
+QR finder scanning counts each contiguous binary run once. Finder and component traversal share unsigned row classification in QrGrayImage. Every distinct threshold, interpolated sampling, cross-check, candidate order/limit, observation count, row-end check and live cancellation boundary is retained. The row workspace is returned on all exits. No public API, production dependency or recognition-allowance changes.
+
+All 6,681 distinct framework tests pass. Nine finder contracts pass on each modern framework; eighteen focused cases also pass with hardware intrinsics disabled. The exact managed core and test assembly pass 208 native ARM64 functional checks plus twenty additional Code128 pixel-API calls. All 2,400 prior/current detector snapshots match.
+
+Three preceding two-sample CCD0 smoke packets remain separate from the final twelve-sample table, with all 18 priming and measured per-image outcomes retained. The smoke fabric case is 8.4% slower. Private bounded/unbounded stage traces guided the change; their reflection/tracing overhead and different unbounded search depth prevent competitive timing claims.
+
+CCD0: 9/12 → 10/12 completed fabric rejections; CCD1: 11/12 → 9/12 completed fabric rejections. The frozen main rerun records 243/267 → 243/267 correct positives and 3 → 3 unexpected positive-image outputs. Main negative rejections: 12/12 → 12/12; supplementary rejections: 25/25 → 25/25. These runs do not establish a reliability gain.
+
+Decoder-only follow-up on the exact later core. Six paired workload/domain packets use separate retained decoder contexts, three priming calls and twelve grouped rotated measurements per binary. The positive subset contains 37 original QR images; 31 existing negative controls use the same explicit QR-only hint in both lanes. The fabric workload retains default all-format scanning. Identical verified RGBA32 pixels, payload sets and the 1500 ms robust allowance are fixed. All 180 priming and measured calls retain per-image outcomes. Loading, evaluation, persistence and disposal are outside timing. The unchanged adapter retains its preceding source and hash.
+
+This decoder follow-up does not replace or relabel the preceding full generation/mixed-format comparison, the DataBar follow-up, first-use results or their incomplete scans. Fresh frozen main and supplementary passes include all three decoding engines. QRCoder remains generation-only. The 25/25 supplementary completion observed for both binaries in this rerun does not establish a code-driven reliability gain.
+
+| Workload | Requests | Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Previous → current correct range | Previous → current inconclusive range | Previous → current unexpected range |
+| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| qr-positive | 37 | CCD0 | 2879.21 → 2844.75 | 0.988 | 10.15 → 10.17 | 34 → 34 | 0 → 0 | 2 → 2 |
+| qr-positive | 37 | CCD1 | 2385.38 → 2430.64 | 1.019 | 12.15 → 12.23 | 34 → 34 | 0 → 0 | 2 → 2 |
+| qr-negative | 31 | CCD0 | 9913.09 → 8065.30 | 0.814 | 8.17 → 8.20 | 31 → 30–31 | 0 → 0–1 | 0 → 0 |
+| qr-negative | 31 | CCD1 | 8360.91 → 7865.43 | 0.941 | 8.77 → 8.92 | 31 → 31 | 0 → 0 | 0 → 0 |
+| fabric | 1 | CCD0 | 972.16 → 812.32 | 0.836 | 29.04 → 30.16 | 0–1 → 0–1 | 0–1 → 0–1 | 0 → 0 |
+| fabric | 1 | CCD1 | 971.22 → 1087.82 | 1.120 | 29.68 → 28.88 | 0–1 → 0–1 | 0–1 → 0–1 | 0 → 0 |
+
+The shared Windows host has no exclusive quiet reservation. Initial load observations do not establish load throughout every operation or the cause of latency differences. The positive QR batch is 1.2% faster on CCD0 and 1.9% slower on CCD1. Default fabric scans are 16.4% faster on CCD0 but 12.0% slower on CCD1; completed rejections change from 9/12 to 10/12 and from 11/12 to 9/12, respectively. One measured QR-only candidate request is incomplete on CCD0 while every baseline request completes; all complete on CCD1. All losses are retained. Managed allocation excludes native memory. This proves neither a default timeout fix, lower CPU use, throughput/capacity nor overall superiority. Strict QR text and GS1 validation policies remain unchanged.
+
+[QR finder run proof](evidence/qr-finder-runs-proof.json) · [Historical context inventory](evidence/retained-contexts-history.json). Each listed packet links its complete priming and measured per-image outcomes in the proof.
+
 ## DataBar recovery threshold follow-up
 
-
+These measurements retain their original source 0d74cff21a0c39cc6f1fbf0aface3a2662077e2b.
 
 The twelve-image DataBar positive batch takes 5.1–22.5% less median time in this paired run. Every measured call retains 10/12 decoded images. The default negative-image workload is slower on both CPU domains and completes fewer times.
 

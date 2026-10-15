@@ -1,0 +1,239 @@
+{
+  "Source": "089aab4524899d9e7a385c9973598263a7cd96b6",
+  "CoreSha256": "089C5278416ADCFC35F83A20DDB9F727C429118DC3FAEB0452DD927A1FB7E596",
+  "PreviousSource": "0d74cff21a0c39cc6f1fbf0aface3a2662077e2b",
+  "PreviousCoreSha256": "A9511D51D4A9ED2E27CD6EB6619B17C84075C33A7560B252B2A8AA9EC01BF9CE",
+  "HostSha256": "E1690E5CEAC23904C8C7BA6DB1E4A43AEF6193599E445EE001D12305D82EBD1F",
+  "PreviousHostSha256": "E1690E5CEAC23904C8C7BA6DB1E4A43AEF6193599E445EE001D12305D82EBD1F",
+  "TestAssemblySha256": "536BDF4128D87546310A1DC4D81E955062D4379C896EAAE866728EA038FB62B8",
+  "BaselineQualification": {
+    "File": "databar-threshold-proof.json",
+    "Sha256": "D10923A4355176DC146732B8971BA1AE0D6E985D69CA0B2184CAB668DD075DE1"
+  },
+  "ReviewCoverage": {
+    "Head": "089aab4524899d9e7a385c9973598263a7cd96b6",
+    "Base": "dea75557270ec505c7bdd0cb95c56f2cf10a853e",
+    "Task": "qr_finder_run_review",
+    "Mode": "Fresh independent strictly read-only pass",
+    "BoundaryState": "current",
+    "UnresolvedFindings": [],
+    "Scope": "Five-file QR finder run/classifier/component/test boundary. State transitions, ignored first white pixel, final row, limits/order, live cancellation, pooled lifetime, adaptive/inverted unsigned equality and framework guards.",
+    "TechnicalResult": "No actionable P0-P3 findings",
+    "ProductApiDisposition": "Accept as shaped; canonical QR owner and two consumers; no public API, dependencies, budgets or comparison-input changes.",
+    "ConfirmationUsed": false,
+    "Limits": "Static independent inspection; primary owns tests, exact-binary snapshots, scalar/alternate architecture execution and performance proof. No hosted review, publication or GitHub approval."
+  },
+  "Changes": "QR finder scanning counts each contiguous binary run once. Finder and component traversal share unsigned row classification in QrGrayImage. Every distinct threshold, interpolated sampling, cross-check, candidate order/limit, observation count, row-end check and live cancellation boundary is retained. The row workspace is returned on all exits. No public API, production dependency or recognition-allowance changes.",
+  "Scope": "Decoder-only follow-up on the exact later core. Six paired workload/domain packets use separate retained decoder contexts, three priming calls and twelve grouped rotated measurements per binary. The positive subset contains 37 original QR images; 31 existing negative controls use the same explicit QR-only hint in both lanes. The fabric workload retains default all-format scanning. Identical verified RGBA32 pixels, payload sets and the 1500 ms robust allowance are fixed. All 180 priming and measured calls retain per-image outcomes. Loading, evaluation, persistence and disposal are outside timing. The unchanged adapter retains its preceding source and hash.",
+  "HistoryNote": "This decoder follow-up does not replace or relabel the preceding full generation/mixed-format comparison, the DataBar follow-up, first-use results or their incomplete scans. Fresh frozen main and supplementary passes include all three decoding engines. QRCoder remains generation-only. The 25/25 supplementary completion observed for both binaries in this rerun does not establish a code-driven reliability gain.",
+  "Limits": "The shared Windows host has no exclusive quiet reservation. Initial load observations do not establish load throughout every operation or the cause of latency differences. The positive QR batch is 1.2% faster on CCD0 and 1.9% slower on CCD1. Default fabric scans are 16.4% faster on CCD0 but 12.0% slower on CCD1; completed rejections change from 9/12 to 10/12 and from 11/12 to 9/12, respectively. One measured QR-only candidate request is incomplete on CCD0 while every baseline request completes; all complete on CCD1. All losses are retained. Managed allocation excludes native memory. This proves neither a default timeout fix, lower CPU use, throughput/capacity nor overall superiority. Strict QR text and GS1 validation policies remain unchanged.",
+  "ExplorationNote": "Three preceding two-sample CCD0 smoke packets remain separate from the final twelve-sample table, with all 18 priming and measured per-image outcomes retained. The smoke fabric case is 8.4% slower. Private bounded/unbounded stage traces guided the change; their reflection/tracing overhead and different unbounded search depth prevent competitive timing claims.",
+  "NativeArm64": {
+    "File": "qr-finder-runs-native-arm64.json",
+    "Sha256": "DBC158754ABE629BC86910B674E725A994F39C15EEFA539CFC22C89D5203924D"
+  },
+  "Tests": {
+    "File": "qr-finder-runs-tests.json",
+    "Sha256": "CBA664C5872552D148FD7FE2771FBB9774A4FDDAA205B742B76C318FFE7ACE6E"
+  },
+  "DetectorEquivalence": {
+    "File": "qr-finder-runs-detector-equivalence.json",
+    "Sha256": "A2DFC7F45E7CF214C17DE3C3CE66A161E5A52A3B839D7393544E170DE4CAB8BB"
+  },
+  "ScalarContracts": {
+    "File": "qr-finder-runs-scalar-contracts.json",
+    "Sha256": "A482CFF352FEA87031AFEF1A334F679F24253115A73010E3E10FE00F2BA3B461"
+  },
+  "Manifests": {
+    "qr-positive": {
+      "File": "qr-finder-runs-qr-positive.json",
+      "Sha256": "E73892FCCB56F2ACA597DBC089DE679CE51793CB4EB5167D45820DB695A84526",
+      "OriginalInputSha256": "048D0D3C483798FB9D97B356416FD5BF5800459AEFFF52F3EFF7DD0EAFA8160B"
+    },
+    "qr-negative": {
+      "File": "qr-finder-runs-qr-negative.json",
+      "Sha256": "E4682651F15A06E5EA75DE34B3123395941F4FD900F7D2A6D86685C4516C7A84",
+      "OriginalInputSha256": "FF89F388F09579854ECE19792F055724A503D3696B1AEC48D6130E829C50FAA8"
+    },
+    "fabric": {
+      "File": "qr-finder-runs-profile-falsepositives-15.json",
+      "Sha256": "D8D92985BBF038D89FA3E6D40E600C2C709CE84747E1DB6FD0F77EC507AB1047",
+      "OriginalInputSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42"
+    }
+  },
+  "Packets": [
+    {
+      "Kind": "qr-positive",
+      "Domain": "ccd0",
+      "Requests": 37,
+      "ManifestSha256": "048D0D3C483798FB9D97B356416FD5BF5800459AEFFF52F3EFF7DD0EAFA8160B",
+      "PacketFile": "qr-finder-runs-qr-positive-ccd0-result.json",
+      "PacketSha256": "551772F04CC4B13BB4F3A807F09766A46F533704BB09DD4BAD2AC13E9BC30A79",
+      "OutcomesFile": "qr-finder-runs-qr-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "20D3120FD6A7848CDA3433711CFA53BD8312017714318384728C025B70BBA088"
+    },
+    {
+      "Kind": "qr-positive",
+      "Domain": "ccd1",
+      "Requests": 37,
+      "ManifestSha256": "048D0D3C483798FB9D97B356416FD5BF5800459AEFFF52F3EFF7DD0EAFA8160B",
+      "PacketFile": "qr-finder-runs-qr-positive-ccd1-result.json",
+      "PacketSha256": "779A63258B42FDC780A9941E09E6A77B962832140784EC6C815199CC05929EE4",
+      "OutcomesFile": "qr-finder-runs-qr-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "733472E3F0A6E5D3DE052CBCC223989EBCCCA5FA2FAAC90CA47CD76BCC1FD001"
+    },
+    {
+      "Kind": "qr-negative",
+      "Domain": "ccd0",
+      "Requests": 31,
+      "ManifestSha256": "FF89F388F09579854ECE19792F055724A503D3696B1AEC48D6130E829C50FAA8",
+      "PacketFile": "qr-finder-runs-qr-negative-ccd0-result.json",
+      "PacketSha256": "1399D37EC938C2D791D68499E534EE329C4D515896A98A35F3F70DC3EC14271F",
+      "OutcomesFile": "qr-finder-runs-qr-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "E030B9AD2D9D74579F56854DE4D95D7AB88F5D1442776F13197F8DFAF2E74A46"
+    },
+    {
+      "Kind": "qr-negative",
+      "Domain": "ccd1",
+      "Requests": 31,
+      "ManifestSha256": "FF89F388F09579854ECE19792F055724A503D3696B1AEC48D6130E829C50FAA8",
+      "PacketFile": "qr-finder-runs-qr-negative-ccd1-result.json",
+      "PacketSha256": "A689D94BC99526CAFDADDC3B02680353D23421169A865E05321C64BF2A0BED24",
+      "OutcomesFile": "qr-finder-runs-qr-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "0F6417710149A581544C7C55B8C58C4C192890EA8BE34D06B767C5FBD29E7135"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "qr-finder-runs-fabric-ccd0-result.json",
+      "PacketSha256": "4D3261F16C6E2A85B8BA6C380B8B914AB4554618A4334700BA0EC51C9AF7E7EE",
+      "OutcomesFile": "qr-finder-runs-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "2EA67C3EAD795B6B7B2B3261F022165E006850EA81B6275E810B4AF2B92897B2"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "qr-finder-runs-fabric-ccd1-result.json",
+      "PacketSha256": "198D0A65557EA7FF9E4A7C3AA7B259ABEFEA8EF7A55328D017F391BC44139964",
+      "OutcomesFile": "qr-finder-runs-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "68E4D467270BB80FB4F418C38C6CB6455DF7047311A0872A83A2DF924D41CD62"
+    }
+  ],
+  "HostLoads": [
+    {
+      "File": "qr-finder-runs-qr-runs-qr-positive-ccd0-12-host-load.json",
+      "Sha256": "25B2450CE93C595BE9C202219A1AB029C927827B9CF7E67B4F41355DFDF92E35"
+    },
+    {
+      "File": "qr-finder-runs-qr-runs-qr-positive-ccd1-12-host-load.json",
+      "Sha256": "68B0707AC710491A3D19CCFB1783E92D317E9CCC4E508A8E596ACC963542459F"
+    },
+    {
+      "File": "qr-finder-runs-qr-runs-qr-negative-ccd0-12-host-load.json",
+      "Sha256": "6126F5F6D997D96A3903858257887091E9C1CD4F31FE466935298D850A822E03"
+    },
+    {
+      "File": "qr-finder-runs-qr-runs-qr-negative-ccd1-12-host-load.json",
+      "Sha256": "1DDEC6A750883C6DA4C7BE46154FC9700E68C2D3F6E04A0F8D0309F886DBF09F"
+    },
+    {
+      "File": "qr-finder-runs-qr-runs-fabric-ccd0-12-host-load.json",
+      "Sha256": "4278EFCFC7F0F1954AFC463E8C2C73C302A8A60204ACA073005D1E93E5B6EA11"
+    },
+    {
+      "File": "qr-finder-runs-qr-runs-fabric-ccd1-12-host-load.json",
+      "Sha256": "01CBD376BF9092BBF4D1776112B0C479153B76FF1CC798A8E88E7D99AFC19204"
+    }
+  ],
+  "ExploratoryPackets": [
+    {
+      "Kind": "qr-positive",
+      "Packet": {
+        "File": "qr-finder-runs-qr-runs-qr-positive-ccd0-2-result.json",
+        "Sha256": "484F3BBD89975047415A6F63DB2A9F717214F9E6C1B3752B9FBFF96EB131432E"
+      },
+      "Outcomes": {
+        "File": "qr-finder-runs-smoke-qr-positive-outcomes.json",
+        "Sha256": "A5DFF8A49328EDB55AC99A674C5BCC18C4BF4C29C81F2063AE8F017777C2A52F"
+      }
+    },
+    {
+      "Kind": "qr-negative",
+      "Packet": {
+        "File": "qr-finder-runs-qr-runs-qr-negative-ccd0-2-result.json",
+        "Sha256": "07E21BA59F9E7593DCF4C90E930D9729F4C411A477D32D7FF194476B421D0183"
+      },
+      "Outcomes": {
+        "File": "qr-finder-runs-smoke-qr-negative-outcomes.json",
+        "Sha256": "B921B6863EC9A35DC748619DB07994398BFAF294A435DA679F53F2E3C53783F3"
+      }
+    },
+    {
+      "Kind": "fabric",
+      "Packet": {
+        "File": "qr-finder-runs-qr-runs-fabric-ccd0-2-result.json",
+        "Sha256": "4F467FF573D6C7600E9ECD7934BA9C36019F2F48DFEBFAEC885F89B1EBCB3467"
+      },
+      "Outcomes": {
+        "File": "qr-finder-runs-smoke-fabric-outcomes.json",
+        "Sha256": "3947EC86744F7755E9E3574B5DF32C600662B656F3DF608AA6E5B505CBBF667A"
+      }
+    }
+  ],
+  "FrozenManifests": {
+    "main": {
+      "File": "qr-finder-runs-corpus-manifest.json",
+      "Sha256": "D30B25BD492FC6D66BB2E1FED20265D07DDCEACDCA3A2949857A09C940F871BF",
+      "OriginalInputSha256": "3714951ED16A82C1BD9B7A94543590DD609312EF3A39EFDD462F6C7F5BE7DD28"
+    },
+    "negative": {
+      "File": "qr-finder-runs-negative-manifest.json",
+      "Sha256": "6B8DCAEE1BB7A39C6A989A7ED58F998C9EC2FB7E609011C751F162ECA89B8751",
+      "OriginalInputSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D"
+    }
+  },
+  "Corpus": {
+    "main-before": {
+      "File": "qr-finder-runs-corpus-main-baseline.json",
+      "Sha256": "FFCE8A4C33096AA2D0F4B362F8E24020BB9B82362AA881EDC5468771C3125992",
+      "OriginalOutputSha256": "B245BDD72B7DAFD5D4049A0E7FF73AFA18AE238C1DFEC4B5F6FABA22FA9F6B4F"
+    },
+    "main-current": {
+      "File": "qr-finder-runs-corpus-main-candidate.json",
+      "Sha256": "FFCE8A4C33096AA2D0F4B362F8E24020BB9B82362AA881EDC5468771C3125992",
+      "OriginalOutputSha256": "B245BDD72B7DAFD5D4049A0E7FF73AFA18AE238C1DFEC4B5F6FABA22FA9F6B4F"
+    },
+    "negative-before": {
+      "File": "qr-finder-runs-corpus-supplemental-negative-baseline.json",
+      "Sha256": "3D491F79AD1F825D07644D217B088CDCB71FA13127D5E5855D33E6EF35C80D8E",
+      "OriginalOutputSha256": "7B32A6A42F8C894186A3ECA7AA0B8EBD889F7B4D7BFB331CD294B7FC2E60BB9D"
+    },
+    "negative-current": {
+      "File": "qr-finder-runs-corpus-supplemental-negative-candidate.json",
+      "Sha256": "3D491F79AD1F825D07644D217B088CDCB71FA13127D5E5855D33E6EF35C80D8E",
+      "OriginalOutputSha256": "7B32A6A42F8C894186A3ECA7AA0B8EBD889F7B4D7BFB331CD294B7FC2E60BB9D"
+    }
+  },
+  "CorpusReceipts": {
+    "main-before": {
+      "File": "qr-finder-runs-corpus-main-baseline-receipt.json",
+      "Sha256": "5E737104DF3BD7AC99D475856405FFB4BF2B5F558C49B73CAA20EBF577B1DF5F"
+    },
+    "main-current": {
+      "File": "qr-finder-runs-corpus-main-candidate-receipt.json",
+      "Sha256": "E94BEE10584F19C50D045AF7A2F5142E1775DA5D92AC9DB709A273D3A0819DBC"
+    },
+    "negative-before": {
+      "File": "qr-finder-runs-corpus-supplemental-negative-baseline-receipt.json",
+      "Sha256": "92B0A5F7EA97B9D12E677D8C423AA021718F453962C54EB4825EB636FF2ADA0A"
+    },
+    "negative-current": {
+      "File": "qr-finder-runs-corpus-supplemental-negative-candidate-receipt.json",
+      "Sha256": "5D7F1B4132D3881CC6C384F101430F6B290FF60892410A82C9D24EB7C7D4B232"
+    }
+  }
+}

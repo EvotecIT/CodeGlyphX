@@ -81,6 +81,10 @@
         <p><a href="/comparisons/evidence/{{ photo_set.manifest }}">Inputs</a> · <a href="/comparisons/evidence/{{ photo_set.before_file }}">Previous outcomes</a> · <a href="/comparisons/evidence/{{ photo_set.current_file }}">Current outcomes</a></p>
     </section>
     {{ end }}
+    {{ if comparison.qr_finder_runs }}
+    {{ session_costs = comparison.qr_finder_runs }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
     {{ if comparison.databar_thresholds }}
     {{ session_costs = comparison.databar_thresholds }}
     {{ include "shortcodes/decoder-session-costs" }}

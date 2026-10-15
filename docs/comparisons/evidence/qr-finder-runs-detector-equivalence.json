@@ -1,0 +1,13 @@
+{
+  "Cases": 2400,
+  "Mismatches": 0,
+  "NonEmptyCases": 1062,
+  "Baseline": {
+    "File": "qr-finder-runs-finder-baseline.json",
+    "Sha256": "D63D98017F6EBF9D864A34B02B808086584D7EFECBE57489511FD5F60FC6547E"
+  },
+  "Candidate": {
+    "File": "qr-finder-runs-finder-candidate-final.json",
+    "Sha256": "05077B1C81434D05AB56068A6DC9D656EB0CF278057DE0E2494286DB83DFED47"
+  }
+}
