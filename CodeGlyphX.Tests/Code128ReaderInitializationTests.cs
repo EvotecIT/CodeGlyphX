@@ -8,6 +8,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class Code128ReaderInitializationTests {
     [Theory]
     [InlineData("abcdef", true, new[] { 104, 96, 65, 66, 67, 68, 69, 70 })]

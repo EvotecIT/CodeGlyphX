@@ -9,6 +9,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class StreamContractTests {
     private const int PrefixLength = 5;
     private const string Payload = "STREAM-CONTRACT";

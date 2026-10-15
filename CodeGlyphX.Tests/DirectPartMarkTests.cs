@@ -5,6 +5,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class DirectPartMarkTests {
     [Theory]
     [InlineData(false)]

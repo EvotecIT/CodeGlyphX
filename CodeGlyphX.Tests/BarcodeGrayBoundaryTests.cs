@@ -7,6 +7,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class BarcodeGrayBoundaryTests {
     [Theory]
     [InlineData("91", false, false)]

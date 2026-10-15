@@ -3,6 +3,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class MicroQrValidationTests {
     [Theory]
     [InlineData(10, 10)] // First data bit.
@@ -74,7 +75,7 @@ public sealed class MicroQrValidationTests {
     [InlineData(1)]
     [InlineData(32)]
     public void DefaultScanner_ReturnsOnlyTheAztecPayload(int maxSymbols) {
-        var options = ScanOptions.Robust(5000);
+        var options = ScanOptions.Robust(TestBudget.Adjust(5000));
         options.MaxSymbols = maxSymbols;
 
         var result = SymbolScanner.Scan(ReadAztecFixture(), options);

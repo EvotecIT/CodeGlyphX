@@ -6,6 +6,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class PhysicalRowDecodingTests {
     [Theory]
     [InlineData(false, 9)]
