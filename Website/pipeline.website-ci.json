@@ -184,7 +184,7 @@
     {
       "task": "build",
       "id": "build-site-xref-refresh",
-      "dependsOn": "merge-xref",
+      "dependsOn": ["merge-xref", "build-powershell-commands"],
       "config": "./site.json",
       "out": "./_site",
       "clean": false

@@ -158,7 +158,7 @@ public partial class PlaygroundExample {
             return;
         }
 
-        var value = host.SelectedBarcodeType is "Code39" or "Code93" ? host.BarcodeContent.ToUpperInvariant() : host.BarcodeContent;
+        var value = host.GetNormalizedBarcodeContent();
         AppendCommand(script, "New-ImageBarCode", new List<(string, string)> {
             ("Type", Quote(type)), ("Value", Quote(value)), ("FilePath", "'barcode.png'")
         });

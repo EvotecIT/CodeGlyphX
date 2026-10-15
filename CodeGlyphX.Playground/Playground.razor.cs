@@ -499,4 +499,32 @@ public partial class Playground {
     internal static string NormalizeDigits(string content)
         => new string(content.Where(char.IsDigit).ToArray());
 
+    /// <summary>Uses the same case and retail digit normalization for previews and executable examples.</summary>
+    internal string GetNormalizedBarcodeContent()
+    {
+        var content = BarcodeContent;
+        switch (SelectedBarcodeType)
+        {
+            case "Code39":
+            case "Code93":
+            case "Code11":
+            case "Plessey":
+            case "Codabar":
+                return content.ToUpperInvariant();
+            case "EAN":
+                content = NormalizeDigits(content);
+                return content.Length <= 8 ? content.PadLeft(8, '0') : content.PadLeft(13, '0');
+            case "UPCA":
+                return NormalizeDigits(content).PadLeft(12, '0');
+            case "UPCE":
+                return NormalizeDigits(content).PadLeft(6, '0');
+            case "ITF14":
+                return NormalizeDigits(content).PadLeft(14, '0');
+            case "MSI":
+                return NormalizeDigits(content);
+            default:
+                return content;
+        }
+    }
+
 }

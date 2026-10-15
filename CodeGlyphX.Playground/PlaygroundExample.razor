@@ -251,7 +251,7 @@ else
                 + "    private string _barcodeDataUri = \"\";" + nl + nl
                 + "    protected override void OnInitialized()" + nl
                 + "    {" + nl
-                + "        var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
+                + "        var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.GetNormalizedBarcodeContent() ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
                 + "        _barcodeDataUri = $\"data:image/png;base64,{Convert.ToBase64String(png)}\";" + nl
                 + "    }" + nl
                 + "}";
@@ -341,7 +341,7 @@ else
                 + "using CodeGlyphX;" + nl
                 + "using CodeGlyphX.Rendering;" + nl + nl
                 + "// In your ViewModel or code-behind:" + nl
-                + "var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
+                + "var png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForComment(Host?.GetNormalizedBarcodeContent() ?? "12345") + "\", OutputFormat.Png).ToArray();" + nl
                 + "BarcodeImage.Source = ImageSource.FromStream(() => new MemoryStream(png));" + nl + nl
                 + "// XAML:" + nl
                 + "// <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";
@@ -447,7 +447,7 @@ else
                 + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.BarcodeContent ?? "12345") + "\", OutputFormat.Png).ToArray()" + nl
+                + "Dim png = Barcode.Render(SymbolFormat." + (Host?.GetBarcodeTypeEnumName() ?? "Code128") + ", \"" + EscapeForVbString(Host?.GetNormalizedBarcodeContent() ?? "12345") + "\", OutputFormat.Png).ToArray()" + nl
                 + "BarcodeImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"BarcodeImage\" WidthRequest=\"300\" HeightRequest=\"100\" />";

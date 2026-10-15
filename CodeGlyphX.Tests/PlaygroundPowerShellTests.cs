@@ -7,6 +7,31 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed partial class PlaygroundLivePreviewTests {
+    [Theory]
+    [InlineData("EAN", "12-3", "00000123")]
+    [InlineData("EAN", "123 456 784", "0000123456784")]
+    [InlineData("UPCA", "12-3", "000000000123")]
+    [InlineData("UPCE", "12-3", "000123")]
+    [InlineData("ITF14", "12-3", "00000000000123")]
+    [InlineData("MSI", "12-3", "123")]
+    [InlineData("Plessey", "a1b2", "A1B2")]
+    [InlineData("Codabar", "a123b", "A123B")]
+    public async Task BarcodeExamplesUseTheValueRenderedByThePreview(string type, string input, string expected) {
+        await using var renderer = new PlaygroundRenderer();
+        await renderer.Start();
+        await renderer.Change("onchange", e => e.Tag == "select" && e.Attribute("value") == "QR", "Barcode");
+        await renderer.Change("onchange", e => e.Tag == "select" && e.Attribute("value") == "Code128", type);
+        await renderer.Change("oninput", e => e.Tag == "input" && e.Attributes.ContainsKey("placeholder"), input);
+        Assert.NotNull(renderer.PreviewUri());
+        foreach (var language in new[] { "C#", "VB.NET", "PowerShell" }) {
+            await renderer.Click(language);
+            var script = renderer.Elements().Single(e => e.Tag == "pre" && e.Attribute("class")!.Contains("language-", StringComparison.Ordinal)).Text;
+            Assert.Contains(expected, script);
+            Assert.DoesNotContain(input, script);
+        }
+        Assert.Empty(renderer.Errors);
+    }
+
     [Fact]
     public async Task PowerShellQrExamplePreservesCorrectionAndOutputSize() {
         await using var renderer = new PlaygroundRenderer();

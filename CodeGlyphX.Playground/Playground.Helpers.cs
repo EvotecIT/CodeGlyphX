@@ -326,11 +326,7 @@ public partial class Playground {
         }
         else if (SelectedCategory == "Barcode")
         {
-            var content = SelectedBarcodeType switch
-            {
-                "Code39" or "Code93" => EscapeString(BarcodeContent.ToUpperInvariant()),
-                _ => EscapeString(BarcodeContent)
-            };
+            var content = EscapeString(GetNormalizedBarcodeContent());
             return "using CodeGlyphX;" + nl + nl + "Barcode.Save(SymbolFormat." + GetBarcodeTypeEnumName() + ", \"" + content + "\", \"barcode.png\");";
         }
         else if (SelectedCategory == "Matrix")
@@ -484,11 +480,7 @@ public partial class Playground {
         }
         else if (SelectedCategory == "Barcode")
         {
-            var content = SelectedBarcodeType switch
-            {
-                "Code39" or "Code93" => EscapeStringVb(BarcodeContent.ToUpperInvariant()),
-                _ => EscapeStringVb(BarcodeContent)
-            };
+            var content = EscapeStringVb(GetNormalizedBarcodeContent());
             return "Imports CodeGlyphX" + nl + nl + "Barcode.Save(SymbolFormat." + GetBarcodeTypeEnumName() + ", \"" + content + "\", \"barcode.png\")";
         }
         else if (SelectedCategory == "Matrix")
