@@ -6,18 +6,17 @@ namespace CodeGlyphX.ChannelCode;
 
 /// <summary>Encodes Channel Code numbers using three through eight channels.</summary>
 public static class ChannelCodeEncoder {
-    /// <summary>Encodes up to seven digits, retaining leading zeros by selecting a sufficient channel count.</summary>
-    /// <param name="value">Decimal digits in the range 0 through 7742862.</param>
-    /// <param name="channels">An explicit channel count from three through eight, or null for automatic selection.</param>
+    /// <summary>Encodes two through seven digits. Automatic channel selection preserves the supplied digit width.</summary>
+    /// <param name="value">Two through seven decimal digits whose number fits the selected channel capacity.</param>
+    /// <param name="channels">Three through eight channels, or null to select the digit count plus one. An explicitly wider channel count decodes with leading zeros to that count minus one.</param>
     public static Barcode1D Encode(string value, int? channels = null) {
         if (value is null) throw new ArgumentNullException(nameof(value));
-        if (value.Length == 0 || value.Length > 7) throw new ArgumentException("Channel Code accepts one through seven decimal digits.", nameof(value));
+        if (value.Length < 2 || value.Length > 7) throw new ArgumentException("Channel Code accepts two through seven decimal digits.", nameof(value));
         for (var i = 0; i < value.Length; i++)
             if ((uint)(value[i] - '0') > 9) throw new ArgumentException("Channel Code accepts decimal digits only.", nameof(value));
         var number = int.Parse(value, CultureInfo.InvariantCulture);
         var count = channels ?? Math.Max(3, value.Length + 1);
         if (count < 3 || count > 8) throw new ArgumentOutOfRangeException(nameof(channels));
-        while (!channels.HasValue && count < 8 && number > ChannelCodeRank.Capacities[count - 3]) count++;
         if (value.Length >= count || number > ChannelCodeRank.Capacities[count - 3])
             throw new ArgumentException("The value exceeds the selected Channel Code capacity.", nameof(value));
         var body = new ChannelCodeRank(count).Unrank(number);

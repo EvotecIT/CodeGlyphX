@@ -8,6 +8,45 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class MailmarkConformanceTests {
+    [Theory]
+    [InlineData("A19XY1A", "A19XY")]
+    [InlineData("AB19XY1A", "AB19XY")]
+    [InlineData("A129XY1A", "A129XY")]
+    [InlineData("AB129XY1A", "AB129XY")]
+    [InlineData("A1B9XY1A", "A1B9XY")]
+    [InlineData("AB1C9XY1A", "AB1C9XY")]
+    [InlineData("AB19XY9Z", "")]
+    [InlineData("AB1", "")]
+    [InlineData("NE", "")]
+    [InlineData("XY11", "")]
+    [InlineData("XY991AA", "")]
+    [InlineData("", "")]
+    public void TwoDimensionalPostcodes_AcceptFullPartialAndAbsentDestinationInformation(string destination, string returnPostcode) {
+        var text = Mailmark2D.Prepare("1001234", "12345678", destination, returnPostcode: returnPostcode);
+        Assert.True(Mailmark2D.TryDecode(Mailmark2D.Encode(text).Modules, out var data, out _));
+        Assert.Equal(destination, data.Destination);
+        Assert.Equal(returnPostcode, data.ReturnPostcode);
+    }
+
+    [Theory]
+    [InlineData("AAAAAAAAA", "")]
+    [InlineData("AB19XY1A", "AAAAAAA")]
+    [InlineData("AB1 9XY1A", "")]
+    [InlineData("AB19XY1A", "AB1 9XY")]
+    [InlineData("AB19XY", "")]
+    [InlineData("AB19XY1A", "AB1")]
+    [InlineData("ABC", "")]
+    [InlineData("AB19CI1A", "")]
+    public void MalformedPostcodes_AreRejectedAtPreparationParsingEncodingAndDecode(string destination, string returnPostcode) {
+        Assert.Throws<ArgumentException>(() => Mailmark2D.Prepare("1001234", "12345678", destination, returnPostcode: returnPostcode));
+        var text = Mailmark2D.Prepare("1001234", "12345678", "AB19XY1A");
+        text = text.Substring(0, 22) + destination.PadRight(9) + text[31] + returnPostcode.PadRight(7) + text.Substring(39);
+        Assert.False(Mailmark2D.TryParse(text, out _));
+        Assert.Throws<ArgumentException>(() => Mailmark2D.Encode(text));
+        var carrier = DataMatrixEncoder.EncodeSymbol(text, new DataMatrixEncodingOptions { Rows = 16, Columns = 48, C40BasicHeaderLength = 45 });
+        Assert.False(Mailmark2D.TryDecode(carrier.Modules, out _, out _));
+    }
+
     [Fact]
     public void All2DSizes_DecodeIndependentHeadersAndRespectBasicC40AndCapacity() {
         using var stream = typeof(MailmarkConformanceTests).Assembly.GetManifestResourceStream(

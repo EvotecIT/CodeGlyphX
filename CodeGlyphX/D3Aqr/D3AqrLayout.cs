@@ -5,10 +5,13 @@ namespace CodeGlyphX.D3Aqr;
 /// <summary>The draft category frame in half-D3-module cells measured from the bottom right.</summary>
 internal static class D3AqrLayout {
     internal static void GetPitch(double ratio, out int half, out int host) {
-        if (ratio == 2) { half = 1; host = 1; }
-        else if (ratio == 2.5) { half = 5; host = 4; }
-        else if (ratio == 3) { half = 3; host = 2; }
-        else throw new ArgumentOutOfRangeException(nameof(ratio), "The D3 to host pitch ratio must be 2, 2.5 or 3.");
+        // These are discrete configuration choices, not approximate measured ratios.
+        (half, host) = ratio switch {
+            2 => (1, 1),
+            2.5 => (5, 4),
+            3 => (3, 2),
+            _ => throw new ArgumentOutOfRangeException(nameof(ratio), "The D3 to host pitch ratio must be 2, 2.5 or 3.")
+        };
     }
 
     internal static int GetSize(int hostSize, int half, int hostPitch, out int offset) {

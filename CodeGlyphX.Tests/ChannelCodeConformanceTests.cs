@@ -31,7 +31,22 @@ public sealed class ChannelCodeConformanceTests {
     [InlineData("12345678")]
     [InlineData("-1")]
     [InlineData("")]
+    [InlineData("0")]
+    [InlineData("5")]
+    [InlineData("27")]
+    [InlineData("293")]
+    [InlineData("3494")]
+    [InlineData("44073")]
+    [InlineData("576689")]
     public void ChannelCapacity_RejectsOverflowAndNonNumericValues(string value) {
         Assert.Throws<ArgumentException>(() => ChannelCodeEncoder.Encode(value));
+    }
+
+    [Fact]
+    public void ExplicitWiderChannels_DecodeWithTheirDocumentedLeadingZeros() {
+        var encoded = ChannelCodeEncoder.Encode("05", channels: 4);
+        var modules = encoded.Segments.SelectMany(run => Enumerable.Repeat(run.IsBar, run.Modules)).ToArray();
+        Assert.True(ChannelCodeDecoder.TryDecode(modules, out var text));
+        Assert.Equal("005", text);
     }
 }

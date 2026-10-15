@@ -7,6 +7,16 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class D3AqrConformanceTests {
+    [Theory]
+    [InlineData(2.0000000000000004)]
+    [InlineData(2.4999999999999996)]
+    [InlineData(3.0000000000000004)]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    public void PitchIsADiscreteChoice_RejectsNearbyAndNonFiniteRatios(double ratio) {
+        Assert.Throws<ArgumentOutOfRangeException>(() => D3AqrEncoder.EncodeText("HELLO", 1, ratio));
+    }
+
     [Fact]
     public void DraftCategoryFrameAndQrHost_ConformToIndependentBwipp() {
         using var stream = typeof(D3AqrConformanceTests).Assembly.GetManifestResourceStream(

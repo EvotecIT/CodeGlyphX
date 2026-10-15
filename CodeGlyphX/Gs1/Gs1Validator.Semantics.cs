@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CodeGlyphX.Internal;
 
 namespace CodeGlyphX.Gs1Data;
 
@@ -52,7 +53,7 @@ public static partial class Gs1Validator {
             case "importeridx": valid = value.Length == 1 && IsImporterIndexCharacter(value[0]); break;
             case "iso3166": valid = IsIso3166Numeric(value); break;
             case "iso3166999": valid = value == "999" || IsIso3166Numeric(value); break;
-            case "iso3166alpha2": valid = IsIso3166Alpha2(value); break;
+            case "iso3166alpha2": valid = IsoCountryCodes.ContainsAlpha2(value); break;
             case "iso4217": valid = IsIso4217Numeric(value); break;
             case "mediatype": valid = IsMediaType(value); break;
             case "packagetype": valid = Array.BinarySearch(PackageTypes, value, StringComparer.Ordinal) >= 0; break;
@@ -199,7 +200,7 @@ public static partial class Gs1Validator {
     }
 
     private static bool IsValidIban(string value) {
-        if (value.Length <= 10 || value.Length > 34 || !IsIso3166Alpha2(value.Substring(0, Math.Min(2, value.Length)))) return false;
+        if (value.Length <= 10 || value.Length > 34 || !IsoCountryCodes.ContainsAlpha2(value.Substring(0, Math.Min(2, value.Length)))) return false;
         var remainder = 0;
         for (var i = 4; i < value.Length + 4; i++) {
             var character = value[i < value.Length ? i : i - value.Length];

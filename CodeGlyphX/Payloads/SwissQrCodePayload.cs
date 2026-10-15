@@ -261,7 +261,8 @@ public sealed partial class SwissQrCodePayload {
         private Contact(string name, string? zipCode, string? city, string country, string? streetOrAddressLine1, string? houseNumberOrAddressLine2, SwissQrAddressType addressType) {
             if (string.IsNullOrEmpty(name)) throw new ArgumentException("Name must not be empty.", nameof(name));
             if (name.Length > 70) throw new ArgumentException("Name must be shorter than 71 chars.", nameof(name));
-            if (!IsTwoLetterCode(country)) throw new ArgumentException("Country must be a valid two-letter code.", nameof(country));
+            if (country is null || !IsoCountryCodes.ContainsAlpha2(country, ignoreCase: true))
+                throw new ArgumentException("Country must be an assigned ISO 3166-1 two-letter code.", nameof(country));
 
             _name = CleanField(name, 70, nameof(name))!;
             if (_name.Length == 0) throw new ArgumentException("Name must not be empty.", nameof(name));
@@ -300,8 +301,5 @@ public sealed partial class SwissQrCodePayload {
             return sb.ToString();
         }
 
-        private static bool IsTwoLetterCode(string code) {
-            return RegexCache.CountryCode().IsMatch(code ?? string.Empty);
-        }
     }
 }

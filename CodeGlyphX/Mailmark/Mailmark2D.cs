@@ -65,6 +65,8 @@ public static class Mailmark2D {
             if (value[i] != ' ' && (value[i] < '0' || value[i] > '9') && (value[i] < 'A' || value[i] > 'Z')) return false;
         if ("012ABC".IndexOf(value[4]) < 0 || value[5] != '1' || value[6] == ' ' || value[31] < '0' || value[31] > '4') return false;
         for (var i = 7; i < 22; i++) if (value[i] < '0' || value[i] > '9') return false;
+        if (!MailmarkDestination.IsValid2DDestination(value.AsSpan(22, 9))
+            || !MailmarkDestination.IsValid2DReturn(value.AsSpan(32, 7))) return false;
         for (var i = 39; i < 45; i++) if (value[i] != ' ') return false;
         for (var i = 45; i < value.Length; i++) if (value[i] > 255) return false;
         data = new Mailmark2DData(value);

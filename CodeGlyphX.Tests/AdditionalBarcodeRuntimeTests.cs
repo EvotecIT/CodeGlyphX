@@ -1,6 +1,7 @@
 using CodeGlyphX.Mailmark;
 using CodeGlyphX.Postal;
 using CodeGlyphX.Code16K;
+using CodeGlyphX.ChannelCode;
 using CodeGlyphX.Payloads;
 using Xunit;
 
@@ -9,6 +10,16 @@ namespace CodeGlyphX.Tests;
 // These vectors also run in the explicit .NET Framework test target, without
 // adding a JSON runtime dependency to its compatibility qualification.
 public sealed class AdditionalBarcodeRuntimeTests {
+    [Fact]
+    public void CheckedApplicationFields_RejectMalformedValuesOnEveryRuntime() {
+        Assert.Throws<ArgumentException>(() => SwissQrCodePayload.Contact.CreateStructured("Test", "Street", "1", "8000", "Town", "AA"));
+        Assert.Throws<ArgumentException>(() => Mailmark2D.Prepare("1001234", "12345678", "AAAAAAAAA"));
+        Assert.Throws<ArgumentException>(() => ChannelCodeEncoder.Encode("5"));
+        var partialDestination = Mailmark2D.Prepare("1001234", "12345678", "NE");
+        Assert.True(Mailmark2D.TryDecode(Mailmark2D.Encode(partialDestination).Modules, out var mail, out _));
+        Assert.Equal("NE", mail.Destination);
+    }
+
     [Fact]
     public void SwissPaymentAndExtendedSequence_PreserveRuntimeTextAndMetadata() {
         var payment = new SwissQrCodePayload(

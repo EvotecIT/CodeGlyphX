@@ -3,13 +3,52 @@ using System.Numerics;
 
 namespace CodeGlyphX.Mailmark;
 
-/// <summary>The ranked destination postcode and delivery point suffix used by Mailmark four-state symbols.</summary>
+/// <summary>Mailmark postcode alphabets, 2D field validation and four-state destination ranking.</summary>
 internal static class MailmarkDestination {
     private static readonly string[] Patterns = { "FNFNLLNLS", "FFNNLLNLS", "FFNNNLLNL", "FFNFNLLNL", "FNNLLNLSS", "FNNNLLNLS" };
+    private static readonly string[] OutwardPatterns = { "FN", "FFN", "FNN", "FFNN", "FNF", "FFNF" };
     private const string Full = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private const string Limited = "ABDEFGHJLNPQRSTUWXYZ";
     private const string Digits = "0123456789";
     private const string International = "XY11     ";
+
+    /// <summary>Checks Appendix A's full, outward-only, blank and designated special 2D destinations.</summary>
+    internal static bool IsValid2DDestination(ReadOnlySpan<char> value) {
+        if (value.Length != 9) return false;
+        value = TrimPadding(value);
+        if (value.IsEmpty || value.SequenceEqual("XY11".AsSpan()) || value.SequenceEqual("XY991AA".AsSpan())) return true;
+        // The field definition also permits area-only information, for example NE.
+        if (value.Length <= 2 && Matches(value, value.Length == 1 ? "F" : "FF")) return true;
+        foreach (var outward in OutwardPatterns) {
+            if (value.Length == outward.Length && Matches(value, outward)) return true;
+            if (value.Length == outward.Length + 5 && Matches(value.Slice(0, outward.Length), outward)
+                && Matches(value.Slice(outward.Length), "NLLNL")) return true;
+        }
+        return false;
+    }
+
+    /// <summary>Checks a blank return field or a complete postcode without a delivery point suffix.</summary>
+    internal static bool IsValid2DReturn(ReadOnlySpan<char> value) {
+        if (value.Length != 7) return false;
+        value = TrimPadding(value);
+        if (value.IsEmpty) return true;
+        foreach (var outward in OutwardPatterns)
+            if (value.Length == outward.Length + 3 && Matches(value.Slice(0, outward.Length), outward)
+                && Matches(value.Slice(outward.Length), "NLL")) return true;
+        return false;
+    }
+
+    private static ReadOnlySpan<char> TrimPadding(ReadOnlySpan<char> value) {
+        var length = value.Length;
+        while (length > 0 && value[length - 1] == ' ') length--;
+        return value.Slice(0, length);
+    }
+
+    private static bool Matches(ReadOnlySpan<char> value, string pattern) {
+        if (value.Length != pattern.Length) return false;
+        for (var i = 0; i < value.Length; i++) if (Alphabet(pattern[i]).IndexOf(value[i]) < 0) return false;
+        return true;
+    }
 
     internal static bool TryRank(string value, out BigInteger rank) {
         rank = BigInteger.Zero;

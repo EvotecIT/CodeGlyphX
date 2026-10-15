@@ -84,6 +84,42 @@ public sealed class SwissQrConformanceTests {
         Assert.Equal(0, pixels[blackArm]);
     }
 
+    [Theory]
+    [InlineData("AA")]
+    [InlineData("ZZ")]
+    [InlineData("UK")]
+    [InlineData("XK")]
+    [InlineData("EU")]
+    [InlineData("AN")]
+    [InlineData("ſG")]
+    public void UnassignedCountries_AreRejectedForBothAddressKindsAndDecodedContacts(string country) {
+        Assert.Throws<ArgumentException>(() => SwissQrCodePayload.Contact.CreateStructured("Test", "Street", "1", "8000", "Zurich", country));
+        Assert.Throws<ArgumentException>(() => SwissQrCodePayload.Contact.CreateCombined("Test", "Street 1", "8000 Zurich", country));
+        foreach (var countryField in new[] { 10, 26 }) {
+            var fields = Create().ToString().Split('\n');
+            Array.Copy(fields, 4, fields, 20, 7);
+            fields[countryField] = country;
+            var text = string.Join("\n", fields);
+            Assert.False(SwissQrCodePayload.TryParse(text, out _));
+            Assert.False(SwissQrCode.TryDecode(QR.Encode(text).Modules, out _));
+        }
+    }
+
+    [Theory]
+    [InlineData("ch", "CH")]
+    [InlineData("LI", "LI")]
+    [InlineData("GB", "GB")]
+    [InlineData("SS", "SS")]
+    [InlineData("BQ", "BQ")]
+    public void AssignedCountries_RemainValidAndNormalizeToUppercase(string country, string expected) {
+        var contact = SwissQrCodePayload.Contact.CreateStructured("Test", "Street", "1", "8000", "Town", country);
+        Assert.Equal(expected, contact.Country);
+        var fields = Create().ToString().Split('\n');
+        Array.Copy(contact.ToString().TrimEnd('\n').Split('\n'), 0, fields, 20, 7);
+        Assert.True(SwissQrCodePayload.TryParse(string.Join("\n", fields), out var parsed));
+        Assert.Equal(expected, parsed.Debtor!.Country);
+    }
+
     internal static SwissQrCodePayload Create(string? alternative2 = null, decimal amount = 50) => new(
         new SwissQrCodePayload.Iban("CH9300762011623852957", SwissQrIbanType.Iban), SwissQrCurrency.CHF,
         SwissQrCodePayload.Contact.CreateStructured("Max Muster & Söhne", "Musterstrasse", "123", "8000", "Seldwyla", "CH"),

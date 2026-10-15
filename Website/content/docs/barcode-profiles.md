@@ -47,7 +47,7 @@ The helper validates HIBC transport framing. Assignment of labeler identifiers a
 | --- | --- |
 | `IntelligentMailPackage` | GS1-128 with checked USPS PIC, optional ZIP routing and typed commercial, online, retail and legacy structures. `Render` prints the grouped PIC without the routing ZIP. |
 | `NorthAmericanCoupon` | GS1 AI 8110 validation and DataBar Expanded Stacked encoding. `Prepare` builds mandatory fields and validates optional groups. `Render` adds the company-prefix/offer caption. |
-| `Mailmark2D` | Mailmark types 7, 9 and 29 with the required basic-C40 header. The detailed result retains the header encodation evidence. |
+| `Mailmark2D` | Mailmark types 7, 9 and 29 with positionally checked destination/return postcodes and the required basic-C40 header. The detailed result retains the header encodation evidence. |
 | `MailmarkFourState` | Mailmark C/L fields and checked four-state bar grids. |
 
 ```csharp
@@ -79,7 +79,7 @@ swiss.Save("payment.svg");
 bool valid = SwissQrCode.TryDecode(swiss.Modules, out var parsedPayment);
 ```
 
-Current structured addresses are the default. Legacy combined addresses require explicit opt-in in both the encoder and parser. Optional billing and alternative-procedure fields retain their defined positions. The common QR result recognizes validated Swiss UTF-8 payloads without requiring an ECI.
+Current structured addresses are the default, and contact countries must be assigned ISO 3166-1 two-letter codes. Legacy combined addresses require explicit opt-in in both the encoder and parser. Optional billing and alternative-procedure fields retain their defined positions. The common QR result recognizes validated Swiss UTF-8 payloads without requiring an ECI.
 
 For printing, scale the QR area to 46 by 46 mm, with its proportional 7 mm cross and an adequate quiet zone. The helper supplies the symbol; a complete Swiss payment part and receipt need their own layout and qualification under the [SIX QR-bill guidelines](https://www.six-group.com/dam/download/banking-services/standardization/qr-bill/ig-qr-bill-v2.3-en.pdf).
 
@@ -89,6 +89,7 @@ For printing, scale the QR area to 46 by 46 mm, with its proportional 7 mm cross
 - `Code49EncodingOptions` selects GS1, continuation or an ordered group of up to nine symbols. The decoder retains these modes; FNC2 separates fields and reserved FNC3 is rejected.
 - `PosiCodeEncoder` selects A/B or Limited A/B variants, two through five linked rows, GS1 and reader/message controls. Limited variants use their restricted alphabet and have no function characters.
 - `Bc412Encoder` defaults to framed SEMI T1 identifiers. IBM mode permits optional trailing checks and guards. Raw IBM decoding requires exact module bounds and explicit check/guard choices; the generic image decoder supports framed, checked input.
+- `ChannelCodeEncoder` accepts two through seven digits within the capacity of their digit width. Automatic selection preserves that width; an explicitly wider channel count adds leading zeros to the decoded value. For example, `"05"` in four channels decodes as `"005"`.
 - `TelepenNumeric` requires a format hint because its bars also have a valid Telepen ASCII interpretation. DAFT and Flattermarken are raw mark encodings and also require explicit selection.
 - `D3AqrEncoder` wraps a QR host in the provisional Rev C category frame. Its decoder retains the category and QR host metadata. The category is required when encoding; this is provisional-format support.
 
