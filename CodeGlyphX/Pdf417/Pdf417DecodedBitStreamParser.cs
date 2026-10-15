@@ -46,21 +46,21 @@ internal static class Pdf417DecodedBitStreamParser {
         return Decode(codewords, out _);
     }
 
-    public static string? Decode(int[] codewords, out Pdf417MacroMetadata? macro) {
+    public static string? Decode(int[] codewords, out Pdf417MacroMetadata? macro, bool initialByteMode = false) {
         if (codewords is null) throw new ArgumentNullException(nameof(codewords));
         try {
-            return DecodeCore(codewords, out macro);
+            return DecodeCore(codewords, out macro, initialByteMode);
         } catch (DecoderFallbackException) {
             macro = null;
             return null;
         }
     }
 
-    private static string? DecodeCore(int[] codewords, out Pdf417MacroMetadata? macro) {
+    private static string? DecodeCore(int[] codewords, out Pdf417MacroMetadata? macro, bool initialByteMode) {
         macro = null;
         var result = new DecodedText(codewords.Length * 2);
         var index = 0;
-        var mode = TextCompactionLatch;
+        var mode = initialByteMode ? ByteCompactionLatch : TextCompactionLatch;
         var textMode = Mode.Alpha;
 
         while (index < codewords.Length) {
@@ -111,6 +111,12 @@ internal static class Pdf417DecodedBitStreamParser {
             }
 
             if (code < 0 || code >= TextCompactionLatch) return null;
+            if (mode == ByteCompactionLatch) {
+                index = DecodeByteCompaction(ByteCompactionLatch, codewords, index - 1, result);
+                if (index < 0) return null;
+                mode = TextCompactionLatch;
+                continue;
+            }
             if (mode == TextCompactionLatch) {
                 index--;
                 index = DecodeTextCompaction(codewords, index, result, ref textMode);

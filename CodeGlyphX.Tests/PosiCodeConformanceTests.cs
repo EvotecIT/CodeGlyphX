@@ -19,6 +19,8 @@ public sealed class PosiCodeConformanceTests {
             var variant = Enum.Parse<PosiCodeVariant>(fixture.GetProperty("version").GetString()!, true);
             var rows = fixture.GetProperty("rows").GetInt32();
             var gs1 = fixture.TryGetProperty("gs1", out var flag) && flag.GetBoolean();
+            var readerInitialization = fixture.TryGetProperty("readerInitialization", out flag) && flag.GetBoolean();
+            var messageAppend = fixture.TryGetProperty("messageAppend", out flag) && flag.GetBoolean();
             var bits = fixture.GetProperty("modules").GetString()!;
             var matrix = new BitMatrix(fixture.GetProperty("width").GetInt32(), fixture.GetProperty("height").GetInt32());
             for (var y = 0; y < matrix.Height; y++)
@@ -28,16 +30,24 @@ public sealed class PosiCodeConformanceTests {
             Assert.Equal(value, decoded.Text);
             Assert.Equal(variant, decoded.Variant);
             Assert.Equal(gs1, decoded.IsGs1);
+            Assert.Equal(readerInitialization, decoded.ReaderInitialization);
+            Assert.Equal(messageAppend, decoded.MessageAppend);
             BitMatrix encoded;
             if (rows == 1) {
-                var barcode = PosiCodeEncoder.Encode(value, variant, gs1);
+                var barcode = PosiCodeEncoder.Encode(value, variant, gs1, readerInitialization, messageAppend);
                 var modules = barcode.Segments.SelectMany(s => Enumerable.Repeat(s.IsBar, s.Modules)).ToArray();
                 Assert.True(PosiCodeDecoder.TryDecode(modules, out decoded), context);
                 encoded = new BitMatrix(modules.Length, 1);
                 for (var x = 0; x < modules.Length; x++) encoded[x, 0] = modules[x];
-            } else encoded = PosiCodeEncoder.EncodeStacked(value, rows, variant, gs1, rowHeight: 1).Modules;
+            } else encoded = PosiCodeEncoder.EncodeStacked(value, rows, variant, gs1, rowHeight: 1,
+                readerInitialization: readerInitialization, messageAppend: messageAppend).Modules;
             Assert.True(PosiCodeDecoder.TryDecode(encoded, out decoded), context);
             Assert.Equal(value, decoded.Text);
+            Assert.True(SymbolDecoder.TryDecode(encoded, out var common, SymbolFormat.PosiCode));
+            var metadata = Assert.IsType<PosiCodeSymbolMetadata>(common.Metadata);
+            Assert.Equal(readerInitialization, metadata.ReaderInitialization);
+            Assert.Equal(messageAppend, metadata.MessageAppend);
+            Assert.Equal(gs1 ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None, common.PayloadProfile);
             if (fixture.GetProperty("exact").GetBoolean()) {
                 Assert.Equal(matrix.Width, encoded.Width);
                 Assert.Equal(matrix.Height, encoded.Height);
@@ -46,7 +56,7 @@ public sealed class PosiCodeConformanceTests {
             }
             count++;
         }
-        Assert.Equal(46, count);
+        Assert.Equal(54, count);
     }
 
     [Fact]

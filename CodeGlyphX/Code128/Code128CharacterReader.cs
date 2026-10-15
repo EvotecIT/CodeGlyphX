@@ -6,8 +6,15 @@ namespace CodeGlyphX.Code128;
 /// <summary>Reads the shared A/B/C character sets, Latin-1 shifts, and temporary shifts used by stacked Code 128 relatives.</summary>
 internal static class Code128CharacterReader {
     internal static bool TryRead(List<int> words, int start, int end, char initialSet,
-        char temporarySet, int temporaryCount, out string text, out char finalSet) {
+        char temporarySet, int temporaryCount, out string text, out char finalSet) =>
+        TryRead(words, start, end, initialSet, temporarySet, temporaryCount, out text, out finalSet, out _, out _);
+
+    internal static bool TryRead(List<int> words, int start, int end, char initialSet,
+        char temporarySet, int temporaryCount, out string text, out char finalSet,
+        out bool readerInitialization, out bool messageAppend) {
         text = string.Empty;
+        readerInitialization = false;
+        messageAppend = false;
         var set = initialSet;
         var temporary = temporarySet;
         var remaining = temporaryCount;
@@ -30,13 +37,15 @@ internal static class Code128CharacterReader {
                 if (remaining > 0) remaining--;
                 continue;
             }
-            if (remaining > 0 || upperShift) { finalSet = set; return false; }
+            if (remaining > 0) { finalSet = set; return false; }
             if (code == 102) { result.Append(Gs1.GroupSeparator); continue; }
-            if (active != 'C' && (code == 96 || code == 97)) continue;
+            if (active != 'C' && code == 96) { readerInitialization = true; continue; }
+            if (active != 'C' && code == 97) { messageAppend = true; continue; }
             if (code == 99 && active != 'C') { set = 'C'; continue; }
             if (code == 100 && active != 'B') { set = 'B'; continue; }
             if (code == 101 && active != 'A') { set = 'A'; continue; }
             if ((active == 'A' && code == 101) || (active == 'B' && code == 100)) {
+                if (upperShift) { finalSet = set; return false; }
                 if (i + 1 < end && words[i + 1] == code) { upperMode = !upperMode; i++; }
                 else upperShift = true;
                 continue;

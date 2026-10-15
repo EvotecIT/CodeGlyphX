@@ -5,6 +5,19 @@ using CodeGlyphX.Internal;
 namespace CodeGlyphX.Payloads;
 
 internal static class QrPayloadValidation {
+    internal static bool IsValidCreditorReference(string? reference) {
+        if (reference is null || reference.Length < 5 || reference.Length > 25) return false;
+        var text = reference.ToUpperInvariant();
+        if (!text.StartsWith("RF", StringComparison.Ordinal) || text[2] < '0' || text[2] > '9' || text[3] < '0' || text[3] > '9') return false;
+        var remainder = 0;
+        for (var i = 0; i < text.Length; i++) {
+            var c = text[(i + 4) % text.Length];
+            if (c >= '0' && c <= '9') remainder = (remainder * 10 + c - '0') % 97;
+            else if (c >= 'A' && c <= 'Z') remainder = (remainder * 100 + c - 'A' + 10) % 97;
+            else return false;
+        }
+        return remainder == 1;
+    }
     public static bool IsValidIban(string iban) {
         if (string.IsNullOrEmpty(iban)) return false;
         var text = iban.ToUpperInvariant().Replace(" ", "").Replace("-", "");

@@ -13,6 +13,8 @@ CodeGlyphX is a pure-managed .NET toolkit for QR codes, industrial and retail ba
 - Common 1D symbologies including Code 128/GS1-128, Code 39/93/11, EAN/UPC, ITF, Codabar, MSI, Plessey, postal, and GS1 DataBar variants
 - Industrial and logistics formats including MaxiCode, DotCode, Han Xin Code, GS1 DataBar Limited/Stacked Omnidirectional, and GS1-128 Composite CC-A/CC-B/CC-C
 - Data Matrix ECC 200 and DMRE encoding/decoding, plus PDF417/MicroPDF417 and Aztec
+- Code 16K, Code 49, Codablock F, Channel Code, BC412, PosiCode, Mailmark, EAN supplements, Telepen Numeric, COOP/Datalogic 2 of 5, FIM, DAFT and Flattermarken
+- Checked ISBN/ISMN/ISSN/PZN and postal identifier profiles, HIBC carriers, USPS package data, North American coupons and complete Swiss QR symbols
 - QR payload builders for Wi-Fi, contacts, calendar events, OTP, payments, social profiles, and app links
 - PNG, JPEG, WebP, GIF, TIFF, BMP, Netpbm, TGA, ICO, XBM, XPM, SVG/SVGZ, HTML, PDF, EPS, and ASCII output
 - Managed raster decoding with explicit byte, pixel, dimension, animation, cancellation, and recognition-budget controls, plus opt-in laser-etch and dot-peen preprocessing
@@ -74,6 +76,30 @@ qr.Save("hello.png", new QrRenderOptions { ModuleSize = 6, QuietZone = 4 });
 ```
 
 `RenderedOutput.Data` is read-only; use `ToArray()` when a mutable byte array is required. Encoded symbols retain their format metadata and their own module data. Rendering cannot change payload, version or error correction.
+
+## Specialist barcodes and application profiles
+
+The runtime catalog covers 62 physical formats. [Symbol capabilities](https://codeglyphx.com/docs/symbol-capabilities/) lists encoding, sampled-module decoding and image recognition separately. Code 16K, Code 49, Codablock F, Mailmark 4-state and D3 AQR decode module grids; their encoding support does not imply photograph recognition.
+
+```csharp
+using CodeGlyphX;
+using CodeGlyphX.Code16K;
+using CodeGlyphX.Rendering;
+
+var part = Code16KEncoder.Encode("ORDER-123", new Code16KEncodingOptions {
+    StructuredAppend = new Code16KStructuredAppend(index: 1, total: 2)
+});
+part.Save("order-part.svg", new MatrixOptions { LabelText = "Part 1 of 2" });
+
+var book = BarcodeProfiles.Render(LinearBarcodeProfile.Isbn, "9781565812314", OutputFormat.Png);
+OutputWriter.Write("book.png", book);
+var coupon = NorthAmericanCoupon.Render("(8110)012345612345611110123", OutputFormat.Png);
+OutputWriter.Write("coupon.png", coupon);
+```
+
+[Barcode profiles and controls](https://codeglyphx.com/docs/barcode-profiles/) describes HIBC carriers, checked book/pharmacy/postal identifiers, USPS package fields, coupons, Mailmark 2D and Swiss QR payments. `SwissQrCode` validates the payment, selects QR error correction M and renders the recognition cross. Postal and payment helpers validate data and produce symbols; complete mailpieces, payment parts and printed acceptance require their own layout and qualification.
+
+The [specialist example](https://github.com/EvotecIT/CodeGlyphX/blob/master/CodeGlyphX.Examples/SpecialistBarcodeExample.cs) exports the formats and profile captions and checks the decoded module payloads. Run it with `CODEGLYPHX_SPECIALIST_BARCODES=1`; `CODEGLYPHX_OUTPUT_DIR` selects the output folder. It also runs in the public API NativeAOT smoke test.
 
 ## QR styling
 

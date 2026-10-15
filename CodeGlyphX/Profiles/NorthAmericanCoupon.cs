@@ -1,5 +1,6 @@
 using System;
 using CodeGlyphX.DataBar;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX;
 
@@ -33,6 +34,15 @@ public static class NorthAmericanCoupon {
         if (value is null) throw new ArgumentNullException(nameof(value));
         if (!TryParse(value, out var coupon)) throw new ArgumentException("A coupon requires one valid AI 8110 element.", nameof(value));
         return new MatrixSymbol(SymbolFormat.Gs1DataBarExpandedStacked, DataBarExpandedEncoder.EncodeExpandedStacked(coupon.ElementString, columns));
+    }
+
+    /// <summary>Renders the checked coupon carrier with its company-prefix and offer-code caption.</summary>
+    public static RenderedOutput Render(string value, OutputFormat format, int columns = 2,
+        MatrixOptions? options = null, OutputOptions? outputOptions = null) {
+        if (!TryParse(value, out var coupon)) throw new ArgumentException("A coupon requires one valid AI 8110 element.", nameof(value));
+        var render = options?.Clone() ?? new MatrixOptions();
+        render.LabelText ??= coupon.HumanReadable;
+        return Encode(value, columns).Render(format, render, outputOptions);
     }
 
     /// <summary>Decodes a DataBar Expanded Stacked symbol and validates its coupon fields.</summary>

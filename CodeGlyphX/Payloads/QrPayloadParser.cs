@@ -16,6 +16,10 @@ public static class QrPayloadParser {
     public static bool TryParse(string payload, out QrParsedPayload parsed) {
         parsed = null!;
         if (payload is null) return false;
+        if (SwissQrCodePayload.TryParse(payload, out var swiss)) {
+            parsed = new QrParsedPayload(QrPayloadType.SwissQr, payload, swiss);
+            return true;
+        }
         var raw = payload.Trim();
         if (raw.Length == 0) return false;
 

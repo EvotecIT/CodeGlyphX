@@ -40,6 +40,37 @@ public sealed class Bc412ConformanceTests {
         Assert.Equal("BRC412AB", Assert.Single(scan.Symbols).Text);
     }
 
+    [Fact]
+    public void IbmIdentifiers_MatchIndependentBwippWithExplicitChecksAndGuards() {
+        using var stream = typeof(Bc412ConformanceTests).Assembly.GetManifestResourceStream(
+            "CodeGlyphX.Tests.Fixtures.Conformance.bwipp-current.json");
+        using var document = JsonDocument.Parse(stream!);
+        var count = 0;
+        foreach (var fixture in document.RootElement.GetProperty("fixtures").EnumerateArray()) {
+            if (fixture.GetProperty("bcid").GetString() != "bc412ibm") continue;
+            var value = fixture.GetProperty("text").GetString()!;
+            var check = fixture.GetProperty("checksum").GetBoolean();
+            var guards = fixture.GetProperty("guards").GetBoolean();
+            var bits = fixture.GetProperty("modules").GetString()!;
+            var barcode = Bc412Encoder.Encode(value, Bc412Variant.Ibm, check, guards);
+            Assert.Equal(bits, string.Concat(barcode.Segments.Select(s => new string(s.IsBar ? '1' : '0', s.Modules))));
+            var modules = bits.Select(c => c == '1').ToArray();
+            Assert.True(Bc412Decoder.TryDecode(modules, out var text, Bc412Variant.Ibm, check, guards));
+            Assert.Equal(value, text);
+            if (guards && check) {
+                var options = new BarcodeDecodeOptions { Bc412Variant = Bc412Variant.Ibm };
+                Assert.True(BarcodeDecoder.TryDecode(modules, BarcodeType.Bc412, options, out var decoded));
+                Assert.Equal(value, decoded.Text);
+                var result = SymbolScanner.Scan(barcode.Render(OutputFormat.Png).ToArray(), new ScanOptions {
+                    Formats = new[] { SymbolFormat.Bc412 }, Barcode = options, EnableTileScan = false
+                });
+                Assert.Equal(value, Assert.Single(result.Symbols).Text);
+            }
+            count++;
+        }
+        Assert.Equal(12, count);
+    }
+
     [Theory]
     [InlineData("123456")]
     [InlineData("1234567890123456789")]

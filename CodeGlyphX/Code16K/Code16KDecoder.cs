@@ -25,8 +25,6 @@ public static class Code16KDecoder {
         for (var row = 0; row < dataRows.Count; row++) {
             var y = dataRows[row];
             if (!Match(modules, offset, y, Code16KPatterns.Starts[row % 8], true) || !modules[offset + 7, y]) return false;
-            if (!Match(modules, offset + 63, y, Code16KPatterns.Stops[row], false)
-                && !Match(modules, offset + 63, y, Code16KPatterns.EvenStops[row], false)) return false;
             for (var at = 0; at < 5; at++) {
                 var found = false;
                 for (var value = 0; value < 107; value++) {
@@ -48,19 +46,47 @@ public static class Code16KDecoder {
         firstCheck %= 107;
         secondCheck = (secondCheck + firstCheck * (bodyCount + 1)) % 107;
         if (words[bodyCount] != firstCheck || words[bodyCount + 1] != secondCheck) return false;
-        var mode = words[0] - (dataRows.Count - 2) * 7;
-        if (mode < 0 || mode > 7) return false;
+        var extended = words[0] == 105;
+        if (extended && dataRows.Count != 16) return false;
+        var mode = extended ? 7 : words[0] - (dataRows.Count - 2) * 7;
+        if (mode < 0 || !extended && mode > 6) return false;
         while (bodyCount > 1 && words[bodyCount - 1] == 103) bodyCount--;
-        if (!TryReadPayload(words, bodyCount, mode, out var text)) return false;
-        decoded = new Code16KDecoded(text, mode == 3 || mode == 4, dataRows.Count, mode == 7);
+        var start = 1;
+        Code16KStructuredAppend? append = null;
+        var messageAppend = false;
+        if (extended) {
+            if (bodyCount < 4) return false;
+            append = new Code16KStructuredAppend(words[1] + 1, words[2] + 1);
+            start = 3;
+        } else if ((mode == 0 || mode == 1) && bodyCount > 2 && words[2] == 97) {
+            append = new Code16KStructuredAppend(words[1] / 10, words[1] % 10, false);
+            start = 3;
+        } else if ((mode == 0 || mode == 1) && bodyCount > 1 && words[1] == 97) {
+            messageAppend = true;
+            start = 2;
+        }
+        if (append.HasValue && !append.Value.IsValid) return false;
+        var stops = extended && append!.Value.Index % 2 == 0 ? Code16KPatterns.EvenStops : Code16KPatterns.Stops;
+        for (var row = 0; row < dataRows.Count; row++)
+            if (!Match(modules, offset + 63, dataRows[row], stops[row], false)) return false;
+        if (!TryReadPayload(words, start, bodyCount, mode, out var text, out var readerInitialization, out var otherAppend)) return false;
+        if (otherAppend) return false; // FNC2 in any other position is reserved.
+        var gs1 = mode == 3 || mode == 4;
+        if (!gs1 && start < bodyCount && words[start] == 102) {
+            gs1 = true;
+            text = text.Substring(1);
+        }
+        decoded = new Code16KDecoded(text, gs1, dataRows.Count, readerInitialization, messageAppend, append);
         return true;
     }
 
-    private static bool TryReadPayload(List<int> words, int end, int mode, out string text) {
+    private static bool TryReadPayload(List<int> words, int start, int end, int mode, out string text,
+        out bool readerInitialization, out bool messageAppend) {
         var set = mode == 0 ? 'A' : mode == 2 || mode >= 4 && mode <= 6 ? 'C' : 'B';
         var temporary = mode == 5 || mode == 6 ? 'B' : '\0';
         var remaining = mode == 5 ? 1 : mode == 6 ? 2 : 0;
-        return Code128CharacterReader.TryRead(words, 1, end, set, temporary, remaining, out text, out _);
+        return Code128CharacterReader.TryRead(words, start, end, set, temporary, remaining, out text, out _,
+            out readerInitialization, out messageAppend);
     }
 
     private static bool SameRow(BitMatrix modules, int first, int second) {

@@ -4,6 +4,8 @@ namespace CodeGlyphX;
 /// Options controlling how 1D barcode decoding behaves.
 /// </summary>
 public sealed partial class BarcodeDecodeOptions {
+    /// <summary>Gets or sets the convention for framed, checked BC412 symbols. Raw IBM modules use the specialist decoder.</summary>
+    public Bc412.Bc412Variant Bc412Variant { get; set; } = Bc412.Bc412Variant.Semi;
     /// <summary>Interprets Code 39 shift pairs as Full ASCII (default). Set false for literal Code 39 application payloads such as HIBC.</summary>
     public bool Code39FullAscii { get; set; } = true;
     /// <summary>

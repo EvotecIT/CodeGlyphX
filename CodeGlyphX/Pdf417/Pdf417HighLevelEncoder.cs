@@ -35,15 +35,19 @@ internal static class Pdf417HighLevelEncoder {
         Mixed
     }
 
-    public static List<int> Encode(string msg, Pdf417Compaction compaction, Encoding? encoding) {
+    public static List<int> Encode(string msg, Pdf417Compaction compaction, Encoding? encoding, bool initialByteMode = false) {
         if (msg is null) throw new ArgumentNullException(nameof(msg));
-        if (compaction == Pdf417Compaction.Text) return EncodeTextMode(msg);
+        if (compaction == Pdf417Compaction.Text) {
+            var text = EncodeTextMode(msg);
+            if (initialByteMode) text.Insert(0, TextCompactionLatch);
+            return text;
+        }
         if (compaction == Pdf417Compaction.Numeric) return EncodeNumericMode(msg);
 
         // Preserve the UTF-8 default, while declaring the charset for independent readers.
         encoding = EncodingUtils.ResolveTextEncoding(msg, encoding ?? EncodingUtils.Utf8Strict, null, "PDF417", out var eci);
         var bytes = EncodingUtils.GetBytesStrict(encoding, msg, nameof(msg));
-        var result = compaction == Pdf417Compaction.Byte ? EncodeByteMode(bytes) : EncodeAuto(msg, encoding);
+        var result = compaction == Pdf417Compaction.Byte ? EncodeByteMode(bytes) : EncodeAuto(msg, encoding, initialByteMode);
         if (eci.HasValue && NeedsCharsetDeclaration(msg, bytes, result)) {
             result.Insert(0, eci.Value);
             result.Insert(0, CharsetEci);
@@ -60,10 +64,10 @@ internal static class Pdf417HighLevelEncoder {
         return false;
     }
 
-    private static List<int> EncodeAuto(string msg, Encoding encoding) {
+    private static List<int> EncodeAuto(string msg, Encoding encoding, bool initialByteMode) {
         var result = new List<int>(msg.Length);
         var idx = 0;
-        var mode = Pdf417Compaction.Text;
+        var mode = initialByteMode ? Pdf417Compaction.Byte : Pdf417Compaction.Text;
 
         while (idx < msg.Length) {
             var digitCount = CountConsecutiveDigits(msg, idx);

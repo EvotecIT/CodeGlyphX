@@ -96,6 +96,7 @@ internal static class FlagshipApiExample {
             dataBarDecoded.Text != "1234567890123") {
             throw new System.InvalidOperationException("The industrial/logistics NativeAOT smoke test failed.");
         }
+        SpecialistBarcodeExample.Run(outputDir);
     }
 
     private static bool[] ExpandModules(Barcode1D barcode) {

@@ -6,17 +6,18 @@ namespace CodeGlyphX.PosiCode;
 /// <summary>Encodes normal, limited and stacked PosiCode symbols.</summary>
 public static class PosiCodeEncoder {
     /// <summary>Encodes Latin-1 text, or the limited character alphabet, with a mandatory check character.</summary>
-    public static Barcode1D Encode(string value, PosiCodeVariant variant = PosiCodeVariant.A, bool isGs1 = false) {
-        var words = EncodeWords(value, variant, isGs1);
+    public static Barcode1D Encode(string value, PosiCodeVariant variant = PosiCodeVariant.A, bool isGs1 = false,
+        bool readerInitialization = false, bool messageAppend = false) {
+        var words = EncodeWords(value, variant, isGs1, readerInitialization, messageAppend);
         return EncodeRow(words, 0, words.Count, variant, 0);
     }
 
     /// <summary>Encodes two through five linked rows. Character-set and upper-shift state continues across rows.</summary>
     public static MatrixSymbol EncodeStacked(string value, int rows = 2, PosiCodeVariant variant = PosiCodeVariant.A,
-        bool isGs1 = false, int? rowHeight = null) {
+        bool isGs1 = false, int? rowHeight = null, bool readerInitialization = false, bool messageAppend = false) {
         if (rows < 2 || rows > 5) throw new ArgumentOutOfRangeException(nameof(rows));
         if (rowHeight.HasValue && rowHeight.Value < 1) throw new ArgumentOutOfRangeException(nameof(rowHeight));
-        var words = EncodeWords(value, variant, isGs1);
+        var words = EncodeWords(value, variant, isGs1, readerInitialization, messageAppend);
         if (words.Count < rows) throw new ArgumentException("Each stacked PosiCode row requires a codeword.", nameof(value));
         var encoded = new Barcode1D[rows];
         var width = 0;
@@ -38,9 +39,13 @@ public static class PosiCodeEncoder {
         return new MatrixSymbol(SymbolFormat.PosiCode, matrix);
     }
 
-    private static List<int> EncodeWords(string value, PosiCodeVariant variant, bool gs1) {
+    private static List<int> EncodeWords(string value, PosiCodeVariant variant, bool gs1, bool readerInitialization, bool messageAppend) {
         if (value is null) throw new ArgumentNullException(nameof(value));
         PosiCodeTables.Validate(variant);
+        if ((gs1 ? 1 : 0) + (readerInitialization ? 1 : 0) + (messageAppend ? 1 : 0) > 1)
+            throw new ArgumentException("GS1, reader initialization and message append are separate PosiCode modes.");
+        if ((int)variant >= 2 && (readerInitialization || messageAppend))
+            throw new ArgumentException("Limited PosiCode has no function characters.", nameof(variant));
         if (gs1) {
             if ((int)variant >= 2) throw new ArgumentException("Limited PosiCode has no FNC1 character.", nameof(variant));
             value = Gs1.ElementString(value);
@@ -49,6 +54,8 @@ public static class PosiCodeEncoder {
         // Function tokens are negative so they cannot collide with Latin-1 data.
         var tokens = new List<int>(value.Length * 2 + 1);
         if (gs1) tokens.Add(-1);
+        if (readerInitialization) tokens.Add(-3);
+        if (messageAppend) tokens.Add(-2);
         foreach (var c in value) {
             if (c > 255) throw new ArgumentException("PosiCode text must contain Latin-1 characters.", nameof(value));
             if (gs1 && c == Gs1.GroupSeparator) { tokens.Add(-1); continue; }

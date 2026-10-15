@@ -19,6 +19,9 @@ using CodeGlyphX.UpcE;
 namespace CodeGlyphX;
 
 public static partial class BarcodeDecoder {
+    private static readonly BarcodeType[] AdditionalGuardedLinearTypes = {
+        BarcodeType.Bc412, BarcodeType.ChannelCode, BarcodeType.PosiCode, BarcodeType.EAN2, BarcodeType.EAN5
+    };
     private static bool TryDecodeWithTransforms(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
         return TryDecodeWithTransforms(modules, expectedType, options, CancellationToken.None, null, out decoded);
     }
@@ -119,6 +122,11 @@ public static partial class BarcodeDecoder {
             decoded = new BarcodeDecoded(BarcodeType.UPCE, upce);
             return true;
         }
+        foreach (var type in AdditionalGuardedLinearTypes) {
+            if (cancellationToken.IsCancellationRequested) return false;
+            priority++;
+            if (TryDecodeType(type, ref runWorkspace, options, out decoded)) return true;
+        }
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
         if (TryDecodeItf14(ref runWorkspace, out var itf14)) {
@@ -149,6 +157,12 @@ public static partial class BarcodeDecoder {
             decoded = new BarcodeDecoded(BarcodeType.IATA2of5, iata25);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
+        if (TryDecodeType(BarcodeType.Coop2of5, ref runWorkspace, options, out decoded)) return true;
+        if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
+        if (TryDecodeType(BarcodeType.Datalogic2of5, ref runWorkspace, options, out decoded)) return true;
 
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
@@ -244,7 +258,8 @@ public static partial class BarcodeDecoder {
         switch (type) {
             case BarcodeType.PosiCode:
                 if (PosiCode.PosiCodeDecoder.TryDecode(modules, out var posi)) {
-                    decoded = new BarcodeDecoded(type, posi.Text, readerInitialization: posi.ReaderInitialization);
+                    decoded = new BarcodeDecoded(type, posi.Text, readerInitialization: posi.ReaderInitialization,
+                        metadata: new PosiCodeSymbolMetadata(posi));
                     return true;
                 }
                 return false;
@@ -261,7 +276,7 @@ public static partial class BarcodeDecoder {
                 }
                 return false;
             case BarcodeType.Bc412:
-                if (Bc412.Bc412Decoder.TryDecode(modules, out var waferIdentifier)) {
+                if (Bc412.Bc412Decoder.TryDecode(modules, out var waferIdentifier, options?.Bc412Variant ?? Bc412.Bc412Variant.Semi)) {
                     decoded = new BarcodeDecoded(type, waferIdentifier);
                     return true;
                 }

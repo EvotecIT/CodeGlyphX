@@ -53,12 +53,14 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Flattermarken, "Flattermarken", SymbolFamily.Linear, BarcodeType.Flattermarken, Standard),
         Legacy(SymbolFormat.ChannelCode, "Channel Code", SymbolFamily.Linear, BarcodeType.ChannelCode, ImageMulti),
         Legacy(SymbolFormat.PosiCode, "PosiCode", SymbolFamily.Linear, BarcodeType.PosiCode,
-            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+            ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Mailmark4State, "Mailmark 4-State", SymbolFamily.Postal, BarcodeType.Mailmark4State, Standard),
         Legacy(SymbolFormat.Code16K, "Code 16K", SymbolFamily.Stacked, BarcodeType.Code16K,
-            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
+            SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
         Legacy(SymbolFormat.Code49, "Code 49", SymbolFamily.Stacked, BarcodeType.Code49,
-            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
+            SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
         Legacy(SymbolFormat.CodablockF, "Codablock F", SymbolFamily.Stacked, BarcodeType.CodablockF,
             Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Plessey, "Plessey", SymbolFamily.Linear, BarcodeType.Plessey, ImageMulti),

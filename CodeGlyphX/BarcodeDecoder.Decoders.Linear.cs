@@ -481,23 +481,6 @@ public static partial class BarcodeDecoder {
         return Code25.Discrete2Of5Encoder.TryDecode(runWorkspace.Runs, SymbolFormat.Iata2Of5, out text);
     }
 
-    private static bool TryDecodeDiscrete2of5(ref ModuleRunWorkspace runWorkspace, int[] startBars, int[] stopBars, out string text) {
-        var modules = runWorkspace.Modules;
-        text = string.Empty;
-        if (modules.Length < 15) return false;
-        if (!modules[0]) return false;
-
-        var runs = runWorkspace.Runs;
-        if (runs.Length < startBars.Length * 2 + stopBars.Length * 2) return false;
-        if (!TryGetRunThreshold(runs, startIndex: 0, step: 1, out var threshold)) return false;
-        if (!AreRunsBelowThreshold(runs, startIndex: 1, step: 2, threshold)) return false;
-        if (!TryBuildDiscrete2of5Bars(runs, threshold, startBars, stopBars, out var barWide, out var startIndex, out var endIndex)) return false;
-        if (!TryDecodeDiscrete2of5Digits(barWide, startIndex, endIndex, out var digits)) return false;
-
-        text = new string(digits);
-        return true;
-    }
-
     private static bool TryValidateItfStart(ReadOnlySpan<int> runs, double threshold) {
         if (runs.Length < 4) return false;
         for (var i = 0; i < 4; i++) {
@@ -539,60 +522,6 @@ public static partial class BarcodeDecoder {
 
         digits = decoded;
         stopPos = pos;
-        return true;
-    }
-
-    private static bool TryBuildDiscrete2of5Bars(
-        ReadOnlySpan<int> runs,
-        double threshold,
-        int[] startBars,
-        int[] stopBars,
-        out bool[] barWide,
-        out int startIndex,
-        out int endIndex) {
-        barWide = Array.Empty<bool>();
-        startIndex = 0;
-        endIndex = 0;
-
-        var barCount = (runs.Length + 1) / 2;
-        if (barCount < startBars.Length + stopBars.Length + 5) return false;
-
-        var bars = new bool[barCount];
-        for (var i = 0; i < barCount; i++) {
-            bars[i] = runs[i * 2] > threshold;
-        }
-
-        for (var i = 0; i < startBars.Length; i++) {
-            if (bars[i] != (startBars[i] > 1)) return false;
-        }
-
-        for (var i = 0; i < stopBars.Length; i++) {
-            if (bars[barCount - stopBars.Length + i] != (stopBars[i] > 1)) return false;
-        }
-
-        barWide = bars;
-        startIndex = startBars.Length;
-        endIndex = barCount - stopBars.Length;
-        return true;
-    }
-
-    private static bool TryDecodeDiscrete2of5Digits(bool[] barWide, int startIndex, int endIndex, out char[] digits) {
-        digits = Array.Empty<char>();
-        var barDigits = endIndex - startIndex;
-        if (barDigits <= 0 || (barDigits % 5) != 0) return false;
-
-        var digitCount = barDigits / 5;
-        var decoded = new char[digitCount];
-        for (var d = 0; d < digitCount; d++) {
-            var key = 0;
-            for (var i = 0; i < 5; i++) {
-                if (barWide[startIndex + d * 5 + i]) key |= 1 << (4 - i);
-            }
-            if (!Itf14PatternMap.Value.TryGetValue(key, out var digit)) return false;
-            decoded[d] = (char)('0' + digit);
-        }
-
-        digits = decoded;
         return true;
     }
 

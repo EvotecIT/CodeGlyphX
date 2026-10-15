@@ -28,9 +28,10 @@ public sealed class SymbolCapability {
     /// Pharmacode and Patch Code patterns provide insufficient evidence for reliable unrestricted
     /// recognition. Request them explicitly when the application knows they may be present.
     /// Module-only formats never participate in default image scanning.
+    /// Telepen Numeric requires explicit selection because its bars also have a valid Telepen ASCII interpretation.
     /// </remarks>
     public bool IsDefaultScanFormat => CanScanImages && Format != SymbolFormat.Pharmacode &&
-        Format != SymbolFormat.PharmacodeTwoTrack && Format != SymbolFormat.PatchCode;
+        Format != SymbolFormat.PharmacodeTwoTrack && Format != SymbolFormat.PatchCode && Format != SymbolFormat.TelepenNumeric;
     /// <summary>Gets whether one image scan can return multiple instances.</summary>
     public bool CanScanMultiple => Has(SymbolCapabilityFlags.ScanMultiple);
     /// <summary>Gets whether image recognition reports symbol geometry.</summary>

@@ -18,6 +18,7 @@ internal static class Program {
     }
 
     private static bool TryRunRequestedExample(ExampleRunner runner) {
+        if (RunWhenEnabled(runner, "CODEGLYPHX_SPECIALIST_BARCODES", "Specialist barcodes and profiles", SpecialistBarcodeExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_SCENE_DELIVERY", "QR (scene delivery exports)", QrSceneDeliveryExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_SCENE_GALLERY", "QR (scene gallery)", QrSceneGalleryExample.Run)) return true;
         if (RunWhenEnabled(runner, "CODEGLYPHX_COLORFUL_GALLERY", "QR (colorful gallery)", QrColorfulGalleryExample.Run)) return true;

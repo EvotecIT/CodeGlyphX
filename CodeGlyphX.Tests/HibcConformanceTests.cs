@@ -2,11 +2,52 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using CodeGlyphX.DataMatrix;
+using CodeGlyphX.Pdf417;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
 
 public sealed class HibcConformanceTests {
+    [Fact]
+    public void HibcMicroPdfEncoding_MatchesIndependentZintForEveryColumnCount() {
+        using var stream = typeof(HibcConformanceTests).Assembly.GetManifestResourceStream(
+            "CodeGlyphX.Tests.Fixtures.Conformance.zint-micropdf.json");
+        using var document = JsonDocument.Parse(stream!);
+        var count = 0;
+        foreach (var fixture in document.RootElement.GetProperty("fixtures").EnumerateArray()) {
+            var text = fixture.GetProperty("text").GetString()!;
+            var matrix = MicroPdf417Encoder.Encode(Hibc.Prepare(text), new MicroPdf417EncodeOptions {
+                Columns = fixture.GetProperty("columns").GetInt32(), Rows = fixture.GetProperty("height").GetInt32(),
+                Compaction = Pdf417Compaction.Text
+            });
+            Assert.Equal(fixture.GetProperty("width").GetInt32(), matrix.Width);
+            Assert.Equal(fixture.GetProperty("modules").GetString(), string.Concat(Enumerable.Range(0, matrix.Height)
+                .SelectMany(y => Enumerable.Range(0, matrix.Width).Select(x => matrix[x, y] ? '1' : '0'))));
+            Assert.True(Hibc.TryDecodeMatrix(SymbolFormat.MicroPdf417, matrix, out var decoded));
+            Assert.Equal(text, decoded);
+            count++;
+        }
+        Assert.Equal(12, count);
+    }
+
+    [Fact]
+    public void MicroPdfInitialMode_DecodesIndependentImplicitByteSymbols() {
+        using var stream = typeof(HibcConformanceTests).Assembly.GetManifestResourceStream(
+            "CodeGlyphX.Tests.Fixtures.Conformance.bwipp-current.json");
+        using var document = JsonDocument.Parse(stream!);
+        var count = 0;
+        foreach (var fixture in document.RootElement.GetProperty("fixtures").EnumerateArray()) {
+            if (fixture.GetProperty("bcid").GetString() != "micropdf417-default-byte") continue;
+            var modules = new BitMatrix(fixture.GetProperty("width").GetInt32(), fixture.GetProperty("height").GetInt32());
+            var bits = fixture.GetProperty("modules").GetString()!;
+            for (var y = 0; y < modules.Height; y++) for (var x = 0; x < modules.Width; x++) modules[x, y] = bits[y * modules.Width + x] == '1';
+            Assert.True(MicroPdf417Decoder.TryDecode(modules, out var text), fixture.GetProperty("text").GetString());
+            Assert.Equal(fixture.GetProperty("text").GetString(), text);
+            count++;
+        }
+        Assert.Equal(2, count);
+    }
+
     [Fact]
     public void HibcCarriers_DecodeIndependentBwippPayloadsWithCheckedFraming() {
         using var stream = typeof(HibcConformanceTests).Assembly.GetManifestResourceStream(

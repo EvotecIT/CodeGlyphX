@@ -69,9 +69,10 @@ internal static class Code49DataCodec {
             } else if (word < Alphabet.Length) result.Append(Alphabet[word]);
             else if (word == 43 || word == 44) shift = word;
             else if (word == 45) {
-                if (i == 1) gs1 = true;
+                if (i == (mode == 3 ? 2 : 1)) gs1 = true;
                 else result.Append(Gs1.GroupSeparator);
-            } else if (word == 46 || word == 47) { }
+            } else if (word == 46) result.Append('\u001c');
+            else if (word == 47) return false; // FNC3 is reserved by USS-49.
             else if (word == 48) numeric = true;
             else return false;
         }

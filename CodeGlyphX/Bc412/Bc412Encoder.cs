@@ -3,11 +3,17 @@ using System.Collections.Generic;
 
 namespace CodeGlyphX.Bc412;
 
-/// <summary>Encodes SEMI BC412 wafer identifiers with framing and a second-position check character.</summary>
+/// <summary>Encodes SEMI and IBM BC412 identifiers.</summary>
 public static class Bc412Encoder {
-    /// <summary>Encodes 7 through 18 uppercase alphanumeric characters. The letter O is not permitted.</summary>
-    public static Barcode1D Encode(string value) {
+    /// <summary>Encodes uppercase letters and digits, excluding O, using the selected check and guard convention.</summary>
+    /// <remarks>SEMI requires 7..18 data characters, its check character and guards. IBM accepts 1..500 characters.
+    /// Unframed IBM modules require explicit bounds and checksum information when decoding.</remarks>
+    public static Barcode1D Encode(string value, Bc412Variant variant = Bc412Variant.Semi,
+        bool includeChecksum = true, bool includeStartStop = true) {
         if (value is null) throw new ArgumentNullException(nameof(value));
+        if (variant != Bc412Variant.Semi && variant != Bc412Variant.Ibm) throw new ArgumentOutOfRangeException(nameof(variant));
+        if (variant == Bc412Variant.Ibm) return EncodeIbm(value, includeChecksum, includeStartStop);
+        if (!includeChecksum || !includeStartStop) throw new ArgumentException("SEMI BC412 requires its check character and start/stop guards.");
         if (value.Length < 7 || value.Length > 18)
             throw new ArgumentException("SEMI BC412 requires 7 through 18 data characters.", nameof(value));
         var data = new char[value.Length + 1];
@@ -25,6 +31,22 @@ public static class Bc412Encoder {
         Append(runs, "12");
         foreach (var character in data) Append(runs, Bc412Tables.Patterns[Bc412Tables.Alphabet.IndexOf(character)]);
         Append(runs, "111");
+        return new Barcode1D(runs, SymbolFormat.Bc412);
+    }
+
+    private static Barcode1D EncodeIbm(string value, bool checksum, bool guards) {
+        if (value.Length == 0 || value.Length > 500) throw new ArgumentException("IBM BC412 requires 1 through 500 data characters.", nameof(value));
+        var runs = new List<BarSegment>(value.Length * 8 + 13);
+        if (guards) Append(runs, "12");
+        var sum = 0;
+        foreach (var character in value) {
+            var digit = Bc412Tables.Alphabet.IndexOf(character);
+            if (digit < 0) throw new ArgumentException("BC412 requires digits and uppercase letters other than O.", nameof(value));
+            sum += digit;
+            Append(runs, Bc412Tables.Patterns[digit]);
+        }
+        if (checksum) Append(runs, Bc412Tables.Patterns[sum % 35]);
+        if (guards) Append(runs, "111");
         return new Barcode1D(runs, SymbolFormat.Bc412);
     }
 

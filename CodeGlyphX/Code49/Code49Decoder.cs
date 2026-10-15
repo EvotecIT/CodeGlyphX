@@ -46,8 +46,13 @@ public static class Code49Decoder {
             for (var at = 0; at < 7; at++) data.Add(words[row, at]);
         if (rows.Count <= 6) { data.Add(words[rows.Count - 1, 0]); data.Add(words[rows.Count - 1, 1]); }
         while (data.Count > 0 && data[data.Count - 1] == 48) data.RemoveAt(data.Count - 1);
+        Code49StructuredAppend? append = null;
+        if (mode == 3) {
+            if (data.Count < 2 || !Code49StructuredAppend.TryRead(data[0], out var sequence)) return false;
+            append = sequence;
+        }
         if (!Code49DataCodec.TryDecode(data, mode, out var text, out var gs1)) return false;
-        decoded = new Code49Decoded(text, gs1, rows.Count, mode);
+        decoded = new Code49Decoded(text, gs1, rows.Count, mode, append);
         return true;
     }
 
@@ -67,5 +72,11 @@ public sealed class Code49Decoded {
     public int Rows { get; }
     /// <summary>Gets the symbol's start mode, including concatenation modes.</summary>
     public int Mode { get; }
-    internal Code49Decoded(string text, bool gs1, int rows, int mode) { Text = text; IsGs1 = gs1; Rows = rows; Mode = mode; }
+    /// <summary>Gets whether mode 1 marks this as a continuation symbol.</summary>
+    public bool IsContinuation => Mode == 1;
+    /// <summary>Gets the ordered-group position and total when present.</summary>
+    public Code49StructuredAppend? StructuredAppend { get; }
+    internal Code49Decoded(string text, bool gs1, int rows, int mode, Code49StructuredAppend? append) {
+        Text = text; IsGs1 = gs1; Rows = rows; Mode = mode; StructuredAppend = append;
+    }
 }

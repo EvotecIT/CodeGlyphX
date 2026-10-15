@@ -470,6 +470,7 @@ public static partial class SymbolScanner {
     private static BarcodeDecodeOptions? CloneBarcodeOptions(BarcodeDecodeOptions? source) {
         if (source is null) return null;
         return new BarcodeDecodeOptions {
+            Bc412Variant = source.Bc412Variant,
             Code39Checksum = source.Code39Checksum,
             Code39FullAscii = source.Code39FullAscii,
             MsiChecksum = source.MsiChecksum,
@@ -545,12 +546,15 @@ public static partial class SymbolScanner {
         var bytes = symbol.HasRawBytes ? Convert.ToBase64String(symbol.RawBytes.ToArray()) : string.Empty;
         var readerInitialization = symbol.Metadata switch {
             Code128SymbolMetadata value => value.ReaderInitialization,
+            PosiCodeSymbolMetadata value => value.ReaderInitialization,
             DotCodeSymbolMetadata value => value.ReaderInitialization,
             DataMatrixSymbolMetadata value => value.ReaderProgramming,
             MaxiCodeSymbolMetadata value => value.IsReaderProgramming,
             _ => false
         };
-        return symbol.Format + "\u001f" + readerInitialization + "\u001f" + symbol.Text + "\u001f" + bytes;
+        var controls = symbol.Metadata is PosiCodeSymbolMetadata posi
+            ? "\u001f" + posi.Variant + "\u001f" + posi.IsGs1 + "\u001f" + posi.MessageAppend : string.Empty;
+        return symbol.Format + "\u001f" + readerInitialization + "\u001f" + symbol.Text + "\u001f" + bytes + controls;
     }
 
     private static bool ShouldStop(ScanOptions options, ScanDeadline deadline, List<DetectedSymbol> results) {

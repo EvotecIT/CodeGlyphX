@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CodeGlyphX.Code128;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX;
 
@@ -54,6 +55,17 @@ public static class IntelligentMailPackage {
 
     /// <summary>Encodes the checked PIC and optional routing field, including the routing FNC1 separator.</summary>
     public static Barcode1D Encode(string trackingNumber, string? routingZip = null) => Code128Encoder.EncodeGs1(Prepare(trackingNumber, routingZip));
+
+    /// <summary>Renders the carrier with its grouped PIC caption, excluding the routing ZIP from that caption.</summary>
+    /// <remarks>This produces the symbol and human-readable PIC, not a complete USPS shipping label.</remarks>
+    public static RenderedOutput Render(string trackingNumber, OutputFormat format, string? routingZip = null,
+        BarcodeOptions? options = null, OutputOptions? outputOptions = null) {
+        var value = Prepare(trackingNumber, routingZip);
+        TryParse(value, out var data);
+        var render = options?.Clone() ?? new BarcodeOptions();
+        render.LabelText ??= data.HumanReadable;
+        return Code128Encoder.EncodeGs1(value).Render(format, render, outputOptions);
+    }
 
     /// <summary>Decodes a known GS1-128 carrier and validates the USPS application payload.</summary>
     public static bool TryDecode(bool[] modules, out IntelligentMailPackageData data) {

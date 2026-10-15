@@ -8,12 +8,38 @@ namespace CodeGlyphX.Code16K;
 public static class Code16KEncoder {
     /// <summary>Encodes Latin-1 characters, with optional GS1 semantics and an explicit data-row count.</summary>
     /// <remarks>Each data row is eight modules high, separated by a one-module bar. Unicode outside Latin-1 is rejected.</remarks>
-    public static MatrixSymbol Encode(string value, bool isGs1 = false, int? rows = null) {
+    public static MatrixSymbol Encode(string value, bool isGs1 = false, int? rows = null) =>
+        Encode(value, new Code16KEncodingOptions { IsGs1 = isGs1, Rows = rows });
+
+    /// <summary>Encodes Latin-1 text with GS1, reader, or message-sequence controls.</summary>
+    public static MatrixSymbol Encode(string value, Code16KEncodingOptions options) {
         if (value is null) throw new ArgumentNullException(nameof(value));
+        if (options is null) throw new ArgumentNullException(nameof(options));
         if (value.Length == 0) throw new ArgumentException("Code 16K requires a nonempty value.", nameof(value));
+        var isGs1 = options.IsGs1;
+        var rows = options.Rows;
+        var append = options.StructuredAppend;
+        if (append.HasValue && !append.Value.IsValid) throw new ArgumentException("Invalid Code 16K sequence position or total.", nameof(options));
+        var controls = (isGs1 ? 1 : 0) + (options.ReaderInitialization ? 1 : 0)
+            + (options.MessageAppend ? 1 : 0) + (append.HasValue ? 1 : 0);
+        if (controls > 1) throw new ArgumentException("GS1, reader initialization, message append and ordered sequences are separate Code 16K modes.", nameof(options));
+        var extended = append.HasValue && append.Value.IsExtendedDataLength;
+        if (extended && rows.HasValue && rows != 16) throw new ArgumentException("Extended Code 16K blocks require sixteen rows.", nameof(options));
         if (isGs1) value = Gs1.ElementString(value);
         var data = EncodeData(value, isGs1, out var mode);
-        var count = rows ?? Math.Max(2, (data.Count + 7) / 5);
+        // Controls use Set B so their numeric values cannot become digit pairs.
+        if (options.ReaderInitialization || options.MessageAppend || append.HasValue) {
+            if (mode != 1) data.Insert(0, mode == 0 ? 101 : 99);
+            mode = 1;
+            if (append.HasValue) {
+                var sequence = append.Value;
+                if (extended) {
+                    data.InsertRange(0, new[] { sequence.Index - 1, sequence.Total - 1 });
+                    mode = 7;
+                } else data.InsertRange(0, new[] { sequence.Index * 10 + sequence.Total, 97 });
+            } else data.Insert(0, options.ReaderInitialization ? 96 : 97);
+        }
+        var count = extended ? 16 : rows ?? Math.Max(2, (data.Count + 7) / 5);
         if (count < 2 || count > 16) throw new ArgumentOutOfRangeException(nameof(rows));
         if (data.Count > count * 5 - 3) throw new ArgumentException("The value exceeds the selected Code 16K capacity.", nameof(value));
         var words = new List<int>(count * 5) { (count - 2) * 7 + mode };
@@ -38,7 +64,8 @@ public static class Code16KEncoder {
             bits.Add(true);
             for (var word = 0; word < 5; word++)
                 Code16KPatterns.Append(bits, Code16KPatterns.Codeword(words[row * 5 + word]), false);
-            Code16KPatterns.Append(bits, Code16KPatterns.Stops[row], false);
+            var stops = extended && append!.Value.Index % 2 == 0 ? Code16KPatterns.EvenStops : Code16KPatterns.Stops;
+            Code16KPatterns.Append(bits, stops[row], false);
             for (var repeat = 0; repeat < 8; repeat++)
                 for (var x = 0; x < bits.Count; x++) matrix[x, row * 9 + 1 + repeat] = bits[x];
         }
@@ -83,8 +110,8 @@ internal static class Code16KPatterns {
         "1132", "1231", "1114", "3112", "3211", "2221", "2122", "1411"
     };
     internal static readonly string[] EvenStops = {
-        "2122", "1411", "1132", "1231", "1114", "3112", "1132", "1231",
-        "1114", "3112", "3211", "2221", "2122", "1411", "3211", "2221"
+        "2122", "1411", "1132", "1231", "1114", "3112", "3211", "2221",
+        "1114", "3112", "3211", "2221", "2122", "1411", "1132", "1231"
     };
 
     internal static string Codeword(int value) => value == 106 ? "211133" : Code128Tables.GetPattern(value).ToString("X6");

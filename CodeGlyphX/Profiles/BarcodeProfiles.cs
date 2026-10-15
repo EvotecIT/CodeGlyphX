@@ -2,6 +2,7 @@ using System;
 using CodeGlyphX.Code39;
 using CodeGlyphX.Ean;
 using CodeGlyphX.Itf;
+using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX;
 
@@ -39,6 +40,30 @@ public static class BarcodeProfiles {
             LinearBarcodeProfile.Identcode or LinearBarcodeProfile.Leitcode => ItfEncoder.Encode(identifier),
             _ => throw new ArgumentOutOfRangeException(nameof(profile))
         };
+    }
+
+    /// <summary>Returns a readable caption for a checked application identifier.</summary>
+    public static string HumanReadable(LinearBarcodeProfile profile, string value) {
+        var identifier = Prepare(profile, value);
+        return profile switch {
+            LinearBarcodeProfile.Ean14 => "(01)" + identifier,
+            LinearBarcodeProfile.Sscc18 => "(00)" + identifier,
+            LinearBarcodeProfile.Isbn => "ISBN " + identifier,
+            LinearBarcodeProfile.Ismn => "ISMN " + identifier,
+            LinearBarcodeProfile.Issn => "ISSN " + identifier.Substring(0, 4) + "-" + identifier.Substring(4),
+            LinearBarcodeProfile.Pzn7 or LinearBarcodeProfile.Pzn8 => "PZN " + identifier,
+            LinearBarcodeProfile.MarksAndSpencer => "M " + identifier.Substring(1) + " S",
+            _ => identifier
+        };
+    }
+
+    /// <summary>Renders a checked identifier with its application caption through the standard barcode renderer.</summary>
+    /// <remarks>A caller-supplied label replaces the default caption. This is a symbol and caption, not a complete commercial label template.</remarks>
+    public static RenderedOutput Render(LinearBarcodeProfile profile, string value, OutputFormat format,
+        BarcodeOptions? options = null, OutputOptions? outputOptions = null) {
+        var render = options?.Clone() ?? new BarcodeOptions();
+        render.LabelText ??= HumanReadable(profile, value);
+        return Encode(profile, value).Render(format, render, outputOptions);
     }
 
     /// <summary>Decodes a known carrier and validates its application identifier before returning a canonical value.</summary>
