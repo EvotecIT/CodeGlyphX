@@ -14,6 +14,13 @@ internal readonly struct DecodeBudgetState {
     }
 
     public bool IsExpired => Enabled && Stopwatch.GetTimestamp() >= DeadlineTicks;
+
+    /// <summary>
+    /// Checks a deadline captured for one synchronous operation. The clock and
+    /// cancellation remain live; callers must capture again after changing scope
+    /// or resuming asynchronously.
+    /// </summary>
+    internal bool ShouldAbort(CancellationToken token) => token.IsCancellationRequested || IsExpired;
 }
 
 internal static class DecodeBudget {

@@ -1,0 +1,227 @@
+{
+  "Source": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+  "CoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+  "PreviousSource": "c3bf421307ef938d48d5fdb9f3956022282691af",
+  "PreviousCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+  "HostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1",
+  "PreviousHostSha256": "A7559F50ADFB7230C08DB06BBC8C70822930DE93DC27824E0C27956153799EDC",
+  "Changes": "Aztec stores repeated bullseye-probe decisions in compact per-pitch windows instead of one dictionary entry per offset. Each image, threshold and polarity keeps its own cache, bounded to 256 windows with at most 81 state cells each. Off-grid requests and requests after capacity use the ordinary pixel probe. Ring voting, sampled views, search order, cancellation, live deadlines and recognition allowances remain unchanged.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are a separate workload from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "aztec-probe-cache-fabric-ccd0-result.json",
+      "OutcomesFile": "aztec-probe-cache-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "757398878282B0D11201757F78D0B73A13D65AB32CA3488F3CE4F8B7141C2005"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "aztec-probe-cache-fabric-ccd1-result.json",
+      "OutcomesFile": "aztec-probe-cache-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "43A9205B7573287F7C378C014820BA8D77D2DA57C4B131AACA2C9B265920A6B6"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "aztec-probe-cache-texture-ccd0-result.json",
+      "OutcomesFile": "aztec-probe-cache-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "67481C64D302D0CE82224C0146C42EBC8CF9683797859D3390C726DE32D8DC12"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "aztec-probe-cache-texture-ccd1-result.json",
+      "OutcomesFile": "aztec-probe-cache-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "A90C6DB775184BD97144A896BCEF4806049ECEE9BC210151C3F05262D3604DBB"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "aztec-probe-cache-whole-ccd0-result.json",
+      "OutcomesFile": "aztec-probe-cache-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "1F369878AFDC2F28952D80F879C36EB9608116887BF2450E77EEE3F3FCB2EFA9"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "aztec-probe-cache-whole-ccd1-result.json",
+      "OutcomesFile": "aztec-probe-cache-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "CD334CBEFC2DBBE4F12587180DE5A21090FE2600BC7C1E8D8FA178AB68E97616"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "aztec-probe-cache-retail-positive-ccd0-result.json",
+      "OutcomesFile": "aztec-probe-cache-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "6ED66C6AE01D7BC9B92E5CC9E1EF1F0F595951C3B14B52E06ED0B61C4D51B181"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "aztec-probe-cache-retail-positive-ccd1-result.json",
+      "OutcomesFile": "aztec-probe-cache-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "C479A68C6FD50771D9E77EBAC6B1C3260502BD7FE091D62427096BC135AFBB0D"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "aztec-probe-cache-retail-negative-ccd0-result.json",
+      "OutcomesFile": "aztec-probe-cache-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "190E5549B5A12C469E5CBA46C6BBB23E9FFB4E565557F1BC5E531C3153D086A8"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "aztec-probe-cache-retail-negative-ccd1-result.json",
+      "OutcomesFile": "aztec-probe-cache-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "44F4EBB67E9FF0B9E7B4A6A371E648AB58D4756B1EEDEFDCB6C77C97A0AE017C"
+    }
+  ],
+  "Contracts": {
+    "net10": 60,
+    "net8": 60,
+    "net472": 24
+  },
+  "ProbeEquivalence": {
+    "BaselineCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+    "CandidateCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+    "Cases": 100,
+    "Requests": 194168,
+    "AcceptedProbes": 5848,
+    "AcceptedViewsCompared": 457,
+    "Mismatches": 0,
+    "LaterCancellationOnCachedAcceptedProbesStopped": true,
+    "PressureWindows": 256,
+    "PressureStateCells": 16976,
+    "MaximumWindows": 256,
+    "MaximumCellsPerWindow": 81,
+    "UncachedAcceptedProbesAfterCapacity": 2,
+    "LaterClockExpiryOnCachedAcceptedProbesStopped": true,
+    "ClockScopeDisposalRestoresAcceptance": true,
+    "Scope": "Actual preceding and current ring probes versus independent 33-point voting, and accepted sampled pixels. Includes both polarities, small modules, clamped edges, noise, acceptance-boundary rings, reused dimensions, off-grid origins and bounded admission. Diagnostic requests are not an independent accuracy corpus or performance benchmark."
+  },
+  "ContractNote": "The actual preceding and current ring probes agree with independent 33-point pixel voting across 194,168 requests and 100 image/polarity cases, including 5,848 accepted probes and 457 accepted sampled views. Both polarities, small pitches, clamped edges, noise, the acceptance boundary, reused dimensions, off-grid origins and capacity pressure are covered. Cached accepted probes stop after later cancellation and real clock expiry; disposing the deadline scope restores ordinary acceptance. This diagnostic is separate from corpus accuracy and performance. Full validation includes sixty Aztec cases on each modern framework and twenty-four on .NET Framework.",
+  "Experiments": [
+    {
+      "Label": "probe",
+      "Disposition": "Compact probe windows before full qualification. All allocation, latency and completion outcomes remain included.",
+      "Packets": [
+        {
+          "Kind": "fabric",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "aztec-probe-cache-exploratory-fabric-ccd0-result.json",
+          "OutcomesFile": "aztec-probe-cache-exploratory-fabric-ccd0-outcomes.json",
+          "OutcomesSha256": "086D9EF1D0351DD6D238E0EB40B0E082C9AFE01529213810995A5F8616E19A64",
+          "Source": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "CoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+          "PreviousSource": "c3bf421307ef938d48d5fdb9f3956022282691af",
+          "HostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1",
+          "PreviousHostSha256": "A7559F50ADFB7230C08DB06BBC8C70822930DE93DC27824E0C27956153799EDC"
+        },
+        {
+          "Kind": "fabric",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "aztec-probe-cache-exploratory-fabric-ccd1-result.json",
+          "OutcomesFile": "aztec-probe-cache-exploratory-fabric-ccd1-outcomes.json",
+          "OutcomesSha256": "78D95BC988308EB65127BC4C7361727C7D14733C55A9FF101B144F31C63B615E",
+          "Source": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "CoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+          "PreviousSource": "c3bf421307ef938d48d5fdb9f3956022282691af",
+          "HostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1",
+          "PreviousHostSha256": "A7559F50ADFB7230C08DB06BBC8C70822930DE93DC27824E0C27956153799EDC"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "aztec-probe-cache-exploratory-texture-ccd0-result.json",
+          "OutcomesFile": "aztec-probe-cache-exploratory-texture-ccd0-outcomes.json",
+          "OutcomesSha256": "3219A6B74371841F3BBCA6BEC90F9725219A78E218810AE87A4C13221E01581A",
+          "Source": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "CoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+          "PreviousSource": "c3bf421307ef938d48d5fdb9f3956022282691af",
+          "HostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1",
+          "PreviousHostSha256": "A7559F50ADFB7230C08DB06BBC8C70822930DE93DC27824E0C27956153799EDC"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "aztec-probe-cache-exploratory-texture-ccd1-result.json",
+          "OutcomesFile": "aztec-probe-cache-exploratory-texture-ccd1-outcomes.json",
+          "OutcomesSha256": "01107D5C990472631CAA57489EFC42E53DBB8665C091B2CC05921FA54387D580",
+          "Source": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "CoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+          "PreviousSource": "c3bf421307ef938d48d5fdb9f3956022282691af",
+          "HostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1",
+          "PreviousHostSha256": "A7559F50ADFB7230C08DB06BBC8C70822930DE93DC27824E0C27956153799EDC"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd0",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "aztec-probe-cache-exploratory-whole-ccd0-result.json",
+          "OutcomesFile": "aztec-probe-cache-exploratory-whole-ccd0-outcomes.json",
+          "OutcomesSha256": "98135F5E141EF1575C6EABD436BA1D463DC16E0083F244A629C6BF9FE57EB251",
+          "Source": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "CoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+          "PreviousSource": "c3bf421307ef938d48d5fdb9f3956022282691af",
+          "HostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1",
+          "PreviousHostSha256": "A7559F50ADFB7230C08DB06BBC8C70822930DE93DC27824E0C27956153799EDC"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd1",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "aztec-probe-cache-exploratory-whole-ccd1-result.json",
+          "OutcomesFile": "aztec-probe-cache-exploratory-whole-ccd1-outcomes.json",
+          "OutcomesSha256": "D88B9136F0FCC4C3BAF884B5A490F2D4FC555BD80C96B9ED91A4620691197BDD",
+          "Source": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "CoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+          "PreviousSource": "c3bf421307ef938d48d5fdb9f3956022282691af",
+          "HostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1",
+          "PreviousHostSha256": "A7559F50ADFB7230C08DB06BBC8C70822930DE93DC27824E0C27956153799EDC"
+        }
+      ],
+      "Scope": "Exploratory retained-session pairs, three priming calls and twelve rotated measurements, fixed workload and placement. These runs precede the final qualification passes and have no overlapping diagnostic work."
+    }
+  ]
+}

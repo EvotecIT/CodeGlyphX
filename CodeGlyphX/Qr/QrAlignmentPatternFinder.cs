@@ -4,6 +4,8 @@ using System;
 namespace CodeGlyphX.Qr;
 
 internal static class QrAlignmentPatternFinder {
+    private const int MinimumScore = 22;
+
     public static bool TryFind(
         QrGrayImage image,
         bool invert,
@@ -54,7 +56,7 @@ internal static class QrAlignmentPatternFinder {
         }
 
         // Accept a near-perfect match; allow a few errors for anti-aliasing.
-        if (bestScore < 22) return false;
+        if (bestScore < MinimumScore) return false;
 
         centerX = bestX;
         centerY = bestY;
@@ -71,6 +73,7 @@ internal static class QrAlignmentPatternFinder {
         double vyX,
         double vyY) {
         var score = 0;
+        var mismatches = 0;
         var vxX2 = vxX + vxX;
         var vxY2 = vxY + vxY;
 
@@ -89,6 +92,8 @@ internal static class QrAlignmentPatternFinder {
 
                 var isBlack = QrPixelSampling.IsBlackBilinear(image, sx, sy, invert);
                 if (isBlack == expectedBlack) score++;
+                // Four mismatches cannot reach the required score in this 5x5 pattern.
+                else if (++mismatches > 25 - MinimumScore) return -1;
 
                 sx += vxX;
                 sy += vxY;

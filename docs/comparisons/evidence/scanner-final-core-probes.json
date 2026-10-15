@@ -1,0 +1,353 @@
+{
+  "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+  "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+  "NeighborControls": [
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Pharmacode",
+      "Inverted": false,
+      "Vertical": false,
+      "Typed": true,
+      "Actual": [
+        "123",
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Pharmacode",
+      "Inverted": false,
+      "Vertical": true,
+      "Typed": true,
+      "Actual": [
+        "123",
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Pharmacode",
+      "Inverted": true,
+      "Vertical": false,
+      "Typed": true,
+      "Actual": [
+        "123",
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Pharmacode",
+      "Inverted": true,
+      "Vertical": true,
+      "Typed": true,
+      "Actual": [
+        "123",
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Industrial2of5",
+      "Inverted": false,
+      "Vertical": false,
+      "Typed": false,
+      "Actual": [
+        "2",
+        "8"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Industrial2of5",
+      "Inverted": false,
+      "Vertical": false,
+      "Typed": true,
+      "Actual": [
+        "2",
+        "8"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Industrial2of5",
+      "Inverted": false,
+      "Vertical": true,
+      "Typed": false,
+      "Actual": [
+        "2",
+        "8"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Industrial2of5",
+      "Inverted": false,
+      "Vertical": true,
+      "Typed": true,
+      "Actual": [
+        "2",
+        "8"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Industrial2of5",
+      "Inverted": true,
+      "Vertical": false,
+      "Typed": false,
+      "Actual": [
+        "2",
+        "8"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Industrial2of5",
+      "Inverted": true,
+      "Vertical": false,
+      "Typed": true,
+      "Actual": [
+        "2",
+        "8"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Industrial2of5",
+      "Inverted": true,
+      "Vertical": true,
+      "Typed": false,
+      "Actual": [
+        "2",
+        "8"
+      ]
+    },
+    {
+      "Input": "scanner-final-neighbors.json",
+      "Type": "Industrial2of5",
+      "Inverted": true,
+      "Vertical": true,
+      "Typed": true,
+      "Actual": [
+        "2",
+        "8"
+      ]
+    },
+    {
+      "Input": "scanner-final-wide-neighbors.json",
+      "Type": "Pharmacode",
+      "Inverted": false,
+      "Vertical": false,
+      "Typed": true,
+      "Actual": [
+        "123",
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-wide-neighbors.json",
+      "Type": "Pharmacode",
+      "Inverted": false,
+      "Vertical": true,
+      "Typed": true,
+      "Actual": [
+        "123",
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-wide-neighbors.json",
+      "Type": "Pharmacode",
+      "Inverted": true,
+      "Vertical": false,
+      "Typed": true,
+      "Actual": [
+        "123",
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-wide-neighbors.json",
+      "Type": "Pharmacode",
+      "Inverted": true,
+      "Vertical": true,
+      "Typed": true,
+      "Actual": [
+        "123",
+        "91"
+      ]
+    }
+  ],
+  "CropControls": [
+    {
+      "Input": "scanner-final-crops.json",
+      "Inverted": false,
+      "Vertical": false,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-crops.json",
+      "Inverted": false,
+      "Vertical": true,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-crops.json",
+      "Inverted": true,
+      "Vertical": false,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-crops.json",
+      "Inverted": true,
+      "Vertical": true,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-right-margin.json",
+      "Inverted": false,
+      "Vertical": false,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-right-margin.json",
+      "Inverted": false,
+      "Vertical": true,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-right-margin.json",
+      "Inverted": true,
+      "Vertical": false,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-right-margin.json",
+      "Inverted": true,
+      "Vertical": true,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-left-margin.json",
+      "Inverted": false,
+      "Vertical": false,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-left-margin.json",
+      "Inverted": false,
+      "Vertical": true,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-left-margin.json",
+      "Inverted": true,
+      "Vertical": false,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    },
+    {
+      "Input": "scanner-final-left-margin.json",
+      "Inverted": true,
+      "Vertical": true,
+      "Single": true,
+      "Text": "91",
+      "Multi": true,
+      "Texts": [
+        "91"
+      ],
+      "Scanner": [
+        "91"
+      ]
+    }
+  ],
+  "Scope": "Fresh diagnostic hosts load the exact fully tested/measured core. Neighbor controls exhaust typed Pharmacode and typed/default Industrial searches; crop controls compare array single/multi-result decoding and typed scanner. Span and wider-edge crop contracts are in the full tests."
+}

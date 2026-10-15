@@ -1,0 +1,107 @@
+{
+  "CoreSha256": "34898C54D1390AD994B0C5D1CCC87B7507D597B14725EED27DE16640CD700565",
+  "TestAssemblySha256": "1BF88740C3620AFFB887A29946FB9A4DFAE7A5C4C9B034D550D12A92DD211164",
+  "TrxSha256": "B6D2AEF462F5B49B6C16BBFCEDE4F0266949C70C498DF776E66A01AF2474A34A",
+  "Cases": [
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.RgbaArrayOutput_PreservesStreamBytesPixelsAndPhysicalMetadata(width: 128, height: 128, compression: 0, dpi: 300)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.RgbaArrayOutput_PreservesStreamBytesPixelsAndPhysicalMetadata(width: 128, height: 128, compression: 0, dpi: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.BinaryArrayOutput_PreservesStreamBytesPackedRowsAndPalette(indexed: False, width: 513, height: 1024, compression: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.RenderedOutputOwnershipTests.PngResults_OwnTheirBytesAcrossSubsequentRendersAndMutableCopies(family: 2, compression: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.BinaryArrayOutput_PreservesStreamBytesPackedRowsAndPalette(indexed: False, width: 17, height: 5, compression: 9)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.RenderedOutputOwnershipTests.PngResults_OwnTheirBytesAcrossSubsequentRendersAndMutableCopies(family: 1, compression: 6)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.BinaryArrayOutput_PreservesStreamBytesPackedRowsAndPalette(indexed: False, width: 17, height: 5, compression: 1)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.RgbaArrayOutput_PreservesStreamBytesPixelsAndPhysicalMetadata(width: 17, height: 5, compression: 9, dpi: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.BinaryArrayOutput_PreservesStreamBytesPackedRowsAndPalette(indexed: False, width: 17, height: 5, compression: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.RowWriter_PreservesEveryPixelAcrossRowsAndStoredBlockBoundaries(width: 17, height: 5, compression: 6)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.RowWriter_PreservesEveryPixelAcrossRowsAndStoredBlockBoundaries(width: 16384, height: 2, compression: 0)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.BinaryArrayOutput_PreservesStreamBytesPackedRowsAndPalette(indexed: True, width: 17, height: 5, compression: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.BinaryArrayOutput_PreservesStreamBytesPackedRowsAndPalette(indexed: True, width: 513, height: 1024, compression: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.QrStream_TranslucentPixelsMatchArrayAfterDirtyPool(compression: 6)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.BinaryArrayOutput_PreservesStreamBytesPackedRowsAndPalette(indexed: True, width: 17, height: 5, compression: 9)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.RenderedOutputOwnershipTests.PngResults_OwnTheirBytesAcrossSubsequentRendersAndMutableCopies(family: 0, compression: 6)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.RgbaArrayOutput_PreservesStreamBytesPixelsAndPhysicalMetadata(width: 17, height: 5, compression: 1, dpi: 300)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.RenderedOutputOwnershipTests.PngResults_OwnTheirBytesAcrossSubsequentRendersAndMutableCopies(family: 1, compression: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.QrStream_TranslucentPixelsMatchArrayAfterDirtyPool(compression: 0)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.RgbaArrayOutput_PreservesStreamBytesPixelsAndPhysicalMetadata(width: 17, height: 5, compression: 0, dpi: 300)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.RenderedOutputOwnershipTests.PngResults_OwnTheirBytesAcrossSubsequentRendersAndMutableCopies(family: 2, compression: 6)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.RenderedOutputOwnershipTests.PngResults_OwnTheirBytesAcrossSubsequentRendersAndMutableCopies(family: 0, compression: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.RgbaArrayOutput_PreservesStreamBytesPixelsAndPhysicalMetadata(width: 1, height: 1, compression: 0, dpi: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.PngOutputBufferTests.BinaryArrayOutput_PreservesStreamBytesPackedRowsAndPalette(indexed: True, width: 17, height: 5, compression: 1)",
+      "Outcome": "Passed"
+    }
+  ],
+  "Total": 24,
+  "Failed": 4,
+  "Passed": 20,
+  "Scope": "The24 current PNG output/ownership/stream contracts executed against the exact preceding34898C core in an isolated copied test host. Twenty pass and four stream regressions fail; no cases aborted or skipped."
+}

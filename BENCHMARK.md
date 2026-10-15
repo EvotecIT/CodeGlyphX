@@ -1,5 +1,7 @@
 # Benchmarks
 
+> Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md.
+
 **Data locations**
 - Generated files are overwritten on each run (do not edit by hand).
 - Human-readable report: `BENCHMARK.md`

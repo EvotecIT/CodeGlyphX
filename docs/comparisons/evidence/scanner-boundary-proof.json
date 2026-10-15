@@ -1,0 +1,571 @@
+{
+  "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+  "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+  "PreviousSource": "63677a2c11e9561677736cc001a8bf748ca28670",
+  "PreviousCoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+  "Changes": "Cropped and inverted Pharmacodes preserve their complete payloads, including independently rounded and wider bars. Closely spaced Pharmacodes return the two original payloads without a combined extra result. Pixel multi-result APIs and the scanner share margin checks, including transparent margins. Default-format scans also recover inverted single-digit Industrial 2 of 5 symbols.",
+  "Scope": "Fifty-eight targeted contracts use the exact previous qualified binary and current committed core. They cover both axes and polarities, alpha 0/128 margins, compact neighbors with ordinary and wider bars, independently rounded bar widths, and crops with zero or one quiet margin. The current full framework suites include these contracts.",
+  "Limits": "These generated and independent-raster regression controls informed the fixes; they are separate from the frozen photograph ranking. Pharmacode has no guards or mandatory checksum and remains an explicitly requested format. The controls do not establish unseen accuracy or universal rejection of barcode-like textures.",
+  "BaselineCases": 58,
+  "BaselinePassed": 27,
+  "BaselineFailed": 31,
+  "CurrentTargetedCases": {
+    "net10": 58,
+    "net8": 58,
+    "net472": 58
+  },
+  "FocusedCasesInFullSuites": {
+    "net10": 157,
+    "net8": 157,
+    "net472": 102
+  },
+  "Contracts": [
+    {
+      "Contract": "Scan_CompleteSingleDigitSymbols_PreservesTypedAndDefaultTileResults",
+      "Cases": 8,
+      "PreviousPassed": 6,
+      "CurrentPassed": 8
+    },
+    {
+      "Contract": "TransparentTileMargins_PreserveBothOriginalPayloads",
+      "Cases": 24,
+      "PreviousPassed": 8,
+      "CurrentPassed": 24
+    },
+    {
+      "Contract": "PharmacodePixelRoundedWideBars_PreserveCompletePayload",
+      "Cases": 4,
+      "PreviousPassed": 2,
+      "CurrentPassed": 4
+    },
+    {
+      "Contract": "PharmacodeWidthRatios_PreserveCompletePayload",
+      "Cases": 6,
+      "PreviousPassed": 3,
+      "CurrentPassed": 6
+    },
+    {
+      "Contract": "PharmacodeWithoutQuietMargin_PreservesCompletePayload",
+      "Cases": 16,
+      "PreviousPassed": 8,
+      "CurrentPassed": 16
+    }
+  ],
+  "BaselineTrxSha256": "E97DE60186F963B92B15E8570B129FC72230654748E7DC40FAE76788F1587C2B",
+  "CurrentCoreProbe": {
+    "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+    "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+    "NeighborControls": [
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Pharmacode",
+        "Inverted": false,
+        "Vertical": false,
+        "Typed": true,
+        "Actual": [
+          "123",
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Pharmacode",
+        "Inverted": false,
+        "Vertical": true,
+        "Typed": true,
+        "Actual": [
+          "123",
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Pharmacode",
+        "Inverted": true,
+        "Vertical": false,
+        "Typed": true,
+        "Actual": [
+          "123",
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Pharmacode",
+        "Inverted": true,
+        "Vertical": true,
+        "Typed": true,
+        "Actual": [
+          "123",
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Industrial2of5",
+        "Inverted": false,
+        "Vertical": false,
+        "Typed": false,
+        "Actual": [
+          "2",
+          "8"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Industrial2of5",
+        "Inverted": false,
+        "Vertical": false,
+        "Typed": true,
+        "Actual": [
+          "2",
+          "8"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Industrial2of5",
+        "Inverted": false,
+        "Vertical": true,
+        "Typed": false,
+        "Actual": [
+          "2",
+          "8"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Industrial2of5",
+        "Inverted": false,
+        "Vertical": true,
+        "Typed": true,
+        "Actual": [
+          "2",
+          "8"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Industrial2of5",
+        "Inverted": true,
+        "Vertical": false,
+        "Typed": false,
+        "Actual": [
+          "2",
+          "8"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Industrial2of5",
+        "Inverted": true,
+        "Vertical": false,
+        "Typed": true,
+        "Actual": [
+          "2",
+          "8"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Industrial2of5",
+        "Inverted": true,
+        "Vertical": true,
+        "Typed": false,
+        "Actual": [
+          "2",
+          "8"
+        ]
+      },
+      {
+        "Input": "scanner-final-neighbors.json",
+        "Type": "Industrial2of5",
+        "Inverted": true,
+        "Vertical": true,
+        "Typed": true,
+        "Actual": [
+          "2",
+          "8"
+        ]
+      },
+      {
+        "Input": "scanner-final-wide-neighbors.json",
+        "Type": "Pharmacode",
+        "Inverted": false,
+        "Vertical": false,
+        "Typed": true,
+        "Actual": [
+          "123",
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-wide-neighbors.json",
+        "Type": "Pharmacode",
+        "Inverted": false,
+        "Vertical": true,
+        "Typed": true,
+        "Actual": [
+          "123",
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-wide-neighbors.json",
+        "Type": "Pharmacode",
+        "Inverted": true,
+        "Vertical": false,
+        "Typed": true,
+        "Actual": [
+          "123",
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-wide-neighbors.json",
+        "Type": "Pharmacode",
+        "Inverted": true,
+        "Vertical": true,
+        "Typed": true,
+        "Actual": [
+          "123",
+          "91"
+        ]
+      }
+    ],
+    "CropControls": [
+      {
+        "Input": "scanner-final-crops.json",
+        "Inverted": false,
+        "Vertical": false,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-crops.json",
+        "Inverted": false,
+        "Vertical": true,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-crops.json",
+        "Inverted": true,
+        "Vertical": false,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-crops.json",
+        "Inverted": true,
+        "Vertical": true,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-right-margin.json",
+        "Inverted": false,
+        "Vertical": false,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-right-margin.json",
+        "Inverted": false,
+        "Vertical": true,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-right-margin.json",
+        "Inverted": true,
+        "Vertical": false,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-right-margin.json",
+        "Inverted": true,
+        "Vertical": true,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-left-margin.json",
+        "Inverted": false,
+        "Vertical": false,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-left-margin.json",
+        "Inverted": false,
+        "Vertical": true,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-left-margin.json",
+        "Inverted": true,
+        "Vertical": false,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      },
+      {
+        "Input": "scanner-final-left-margin.json",
+        "Inverted": true,
+        "Vertical": true,
+        "Single": true,
+        "Text": "91",
+        "Multi": true,
+        "Texts": [
+          "91"
+        ],
+        "Scanner": [
+          "91"
+        ]
+      }
+    ],
+    "Scope": "Fresh diagnostic hosts load the exact fully tested/measured core. Neighbor controls exhaust typed Pharmacode and typed/default Industrial searches; crop controls compare array single/multi-result decoding and typed scanner. Span and wider-edge crop contracts are in the full tests."
+  },
+  "RetailCosts": [
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd0",
+      "BaselineMedianMs": 1093.0489499999999,
+      "CurrentMedianMs": 1084.10135,
+      "LatencyRatio": 0.9918140903021773,
+      "BaselineAllocatedBytes": 96094971.33333333,
+      "CurrentAllocatedBytes": 100862012.66666667,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd1",
+      "BaselineMedianMs": 1014.5228999999999,
+      "CurrentMedianMs": 1010.8339,
+      "LatencyRatio": 0.9963638080520411,
+      "BaselineAllocatedBytes": 96117390.66666667,
+      "CurrentAllocatedBytes": 100869476.66666667,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd0",
+      "BaselineMedianMs": 878.345,
+      "CurrentMedianMs": 841.4599000000001,
+      "LatencyRatio": 0.9580061365408808,
+      "BaselineAllocatedBytes": 36215233.333333336,
+      "CurrentAllocatedBytes": 36674150.666666664,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd1",
+      "BaselineMedianMs": 745.39815,
+      "CurrentMedianMs": 731.9585999999999,
+      "LatencyRatio": 0.9819699713502106,
+      "BaselineAllocatedBytes": 36220044.666666664,
+      "CurrentAllocatedBytes": 36683644.0,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "CostScope": "Shared scanline sampling also affects retail inputs. The same 87 positive requests and nine typed negative requests are compared with the exact preceding binary, using three warmups and twelve rotated measurements on each fixed cache domain. Every latency, allocation, correctness and inconclusive sample is retained."
+}

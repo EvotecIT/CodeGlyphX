@@ -35,8 +35,12 @@ public static partial class DataMatrixDecoder {
                 if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
                 if (TryDecodeWithRotations(modules, cancellationToken, out value)) return true;
                 if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-                if (TryDecodeWithRotations(MirrorX(modules), cancellationToken, out value)) return true;
+                if (TryDecodeWithRotations(modules, cancellationToken, out value, mirrored: true)) return true;
             }
+        }
+        if (TryDecodePerspective(pixels, width, height, stride, format, cancellationToken, out var perspectiveDecoded)) {
+            value = perspectiveDecoded.Text;
+            return true;
         }
         value = string.Empty;
         return false;
@@ -55,7 +59,7 @@ public static partial class DataMatrixDecoder {
                 }
                 if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
                 diagnostics.MirroredTried = true;
-                if (TryDecodeWithRotations(MirrorX(modules), cancellationToken, diagnostics, out value)) {
+                if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value, mirrored: true)) {
                     diagnostics.Success = true;
                     diagnostics.Failure = null;
                     return true;
@@ -64,37 +68,45 @@ public static partial class DataMatrixDecoder {
         } else {
             diagnostics.Failure ??= "Failed to extract Data Matrix modules.";
         }
+        if (TryDecodePerspective(pixels, width, height, stride, format, cancellationToken, out var perspectiveDecoded, diagnostics)) {
+            value = perspectiveDecoded.Text;
+            diagnostics.Success = true;
+            diagnostics.Failure = null;
+            return true;
+        }
         value = string.Empty;
         if (DecodeBudget.ShouldAbort(cancellationToken)) diagnostics.Failure = "Cancelled.";
         diagnostics.Failure ??= "No Data Matrix decoded.";
         return false;
     }
 
-    private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+    private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, out string value, bool mirrored = false) {
+        // Reject unsupported sizes and invalid borders through an oriented view.
+        // Only a validated candidate's data region needs to be copied for ECC.
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecodeCore(modules, cancellationToken, out value)) return true;
+        if (TryDecodeCore(new BitMatrixView(modules, mirrored: mirrored), cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecodeCore(Rotate90(modules), cancellationToken, out value)) return true;
+        if (TryDecodeCore(new BitMatrixView(modules, 1, mirrored), cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecodeCore(Rotate180(modules), cancellationToken, out value)) return true;
+        if (TryDecodeCore(new BitMatrixView(modules, 2, mirrored), cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecodeCore(Rotate270(modules), cancellationToken, out value)) return true;
+        if (TryDecodeCore(new BitMatrixView(modules, 3, mirrored), cancellationToken, out value)) return true;
         return false;
     }
 
-    private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, DataMatrixDecodeDiagnostics diagnostics, out string value) {
+    private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, DataMatrixDecodeDiagnostics diagnostics, out string value, bool mirrored = false) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeCore(modules, cancellationToken, diagnostics, out value)) return true;
+        if (TryDecodeCore(new BitMatrixView(modules, mirrored: mirrored), cancellationToken, diagnostics, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeCore(Rotate90(modules), cancellationToken, diagnostics, out value)) return true;
+        if (TryDecodeCore(new BitMatrixView(modules, 1, mirrored), cancellationToken, diagnostics, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeCore(Rotate180(modules), cancellationToken, diagnostics, out value)) return true;
+        if (TryDecodeCore(new BitMatrixView(modules, 2, mirrored), cancellationToken, diagnostics, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeCore(Rotate270(modules), cancellationToken, diagnostics, out value)) return true;
+        if (TryDecodeCore(new BitMatrixView(modules, 3, mirrored), cancellationToken, diagnostics, out value)) return true;
         return false;
     }
 
-    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+    private static bool TryDecodeCore(BitMatrixView modules, CancellationToken cancellationToken, out string value) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
         if (!DataMatrixSymbolInfo.TryGetForSize(modules.Height, modules.Width, out var symbol)) {
             value = string.Empty;
@@ -116,7 +128,7 @@ public static partial class DataMatrixDecoder {
         return true;
     }
 
-    private static bool TryDecodeDetailedCore(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
+    private static bool TryDecodeDetailedCore(BitMatrixView modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
         if (diagnostics is not null) diagnostics.AttemptCount++;
         decoded = null!;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
@@ -142,7 +154,7 @@ public static partial class DataMatrixDecoder {
         return true;
     }
 
-    private static bool TryDecodeCore(BitMatrix modules, CancellationToken cancellationToken, DataMatrixDecodeDiagnostics diagnostics, out string value) {
+    private static bool TryDecodeCore(BitMatrixView modules, CancellationToken cancellationToken, DataMatrixDecodeDiagnostics diagnostics, out string value) {
         diagnostics.AttemptCount++;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (!DataMatrixSymbolInfo.TryGetForSize(modules.Height, modules.Width, out var symbol)) {
@@ -169,7 +181,7 @@ public static partial class DataMatrixDecoder {
         return true;
     }
 
-    private static BitMatrix? ExtractDataRegion(BitMatrix modules, DataMatrixSymbolInfo symbol, CancellationToken cancellationToken) {
+    private static BitMatrix? ExtractDataRegion(BitMatrixView modules, DataMatrixSymbolInfo symbol, CancellationToken cancellationToken) {
         if (!HasValidRegionBorders(modules, symbol, cancellationToken)) return null;
         var dataRegion = new BitMatrix(symbol.DataRegionCols, symbol.DataRegionRows);
         var regionRows = symbol.RegionRows;
@@ -189,7 +201,7 @@ public static partial class DataMatrixDecoder {
                     for (var x = 0; x < regionDataCols; x++) {
                         var dataRow = regionRow * regionDataRows + y;
                         var dataCol = regionCol * regionDataCols + x;
-                        dataRegion[dataCol, dataRow] = modules[startCol + 1 + x, startRow + 1 + y];
+                        dataRegion[dataCol, dataRow] = modules.Get(startCol + 1 + x, startRow + 1 + y);
                     }
                 }
             }
@@ -491,28 +503,28 @@ public static partial class DataMatrixDecoder {
         out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
         decoded = null!;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-        if (!TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) return false;
-        for (var attempt = 0; attempt < 2; attempt++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
-            if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
-            if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics)) return true;
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-            if (diagnostics is not null) diagnostics.MirroredTried = true;
-            if (TryDecodeDetailedWithRotations(MirrorX(modules), cancellationToken, out decoded, diagnostics)) return true;
+        if (TryExtractModules(pixels, width, height, stride, format, cancellationToken, out var modules, out var sampling)) {
+            for (var attempt = 0; attempt < 2; attempt++) {
+                if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
+                if (attempt == 1 && !TryExtractClockModules(pixels, width, height, stride, format, sampling, cancellationToken, out modules)) break;
+                if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics)) return true;
+                if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
+                if (diagnostics is not null) diagnostics.MirroredTried = true;
+                if (TryDecodeDetailedWithRotations(modules, cancellationToken, out decoded, diagnostics, mirrored: true)) return true;
+            }
         }
-        decoded = null!;
-        return false;
+        return TryDecodePerspective(pixels, width, height, stride, format, cancellationToken, out decoded, diagnostics);
     }
 
-    private static bool TryDecodeDetailedWithRotations(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null) {
+    private static bool TryDecodeDetailedWithRotations(BitMatrix modules, CancellationToken cancellationToken, out DataMatrixDecoded decoded, DataMatrixDecodeDiagnostics? diagnostics = null, bool mirrored = false) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecodeDetailedCore(modules, cancellationToken, out decoded, diagnostics)) return true;
+        if (TryDecodeDetailedCore(new BitMatrixView(modules, mirrored: mirrored), cancellationToken, out decoded, diagnostics)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecodeDetailedCore(Rotate90(modules), cancellationToken, out decoded, diagnostics)) return true;
+        if (TryDecodeDetailedCore(new BitMatrixView(modules, 1, mirrored), cancellationToken, out decoded, diagnostics)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecodeDetailedCore(Rotate180(modules), cancellationToken, out decoded, diagnostics)) return true;
+        if (TryDecodeDetailedCore(new BitMatrixView(modules, 2, mirrored), cancellationToken, out decoded, diagnostics)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        return TryDecodeDetailedCore(Rotate270(modules), cancellationToken, out decoded, diagnostics);
+        return TryDecodeDetailedCore(new BitMatrixView(modules, 3, mirrored), cancellationToken, out decoded, diagnostics);
     }
 
     private static DataMatrixEncodation DecodeC40TextSegment(
@@ -531,7 +543,8 @@ public static partial class DataMatrixDecoder {
             }
 
             if (index + 1 >= data.Length) {
-                index = data.Length;
+                // ECC200 implicitly returns to ASCII when one data codeword remains.
+                // Leave that byte for the ASCII decoder instead of dropping the last character.
                 return DataMatrixEncodation.Ascii;
             }
 

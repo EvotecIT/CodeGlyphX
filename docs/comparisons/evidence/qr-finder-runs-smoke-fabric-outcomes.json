@@ -1,0 +1,113 @@
+{
+  "RunId": "20261015-101753-afbbb09f",
+  "Calls": [
+    {
+      "Engine": "Baseline",
+      "Iteration": 0,
+      "Path": "qr-runs-fabric-ccd0-2/20261015-101753-afbbb09f/FixedImageCorpus/Baseline/Decode/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 1,
+      "Path": "qr-runs-fabric-ccd0-2/20261015-101753-afbbb09f/FixedImageCorpus/Baseline/Decode/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 0,
+      "Path": "qr-runs-fabric-ccd0-2/20261015-101753-afbbb09f/FixedImageCorpus/Candidate/Decode/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 1,
+      "Path": "qr-runs-fabric-ccd0-2/20261015-101753-afbbb09f/FixedImageCorpus/Candidate/Decode/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "DeadlineExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -1,
+      "Path": "qr-runs-fabric-ccd0-2/20261015-101753-afbbb09f/warmup-outcomes/Baseline--1.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -1,
+      "Path": "qr-runs-fabric-ccd0-2/20261015-101753-afbbb09f/warmup-outcomes/Candidate--1.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    }
+  ]
+}

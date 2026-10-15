@@ -11,8 +11,7 @@ meta.data_mode: override
 meta.social: true
 meta.social_description: Performance benchmarks comparing CodeGlyphX with other .NET barcode libraries.
 meta.structured_data: true
-meta.extra_scripts_file: benchmarks.scripts.html
 canonical: https://codeglyphx.com/benchmarks/
 ---
 
-<!-- Benchmarks body is generated from data/benchmarks.json -->
+<!-- Body uses the benchmarks shortcode, data/benchmarks.json copy and generated data/comparisons.json evidence. -->

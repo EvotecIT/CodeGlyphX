@@ -15,6 +15,14 @@ public abstract class SymbolMetadata {
     }
 }
 
+/// <summary>Code 128 payload control information.</summary>
+public sealed class Code128SymbolMetadata : SymbolMetadata {
+    /// <summary>Gets whether FNC3 marks the content as reader configuration.</summary>
+    /// <remarks>The content is available for inspection; the library does not apply reader settings.</remarks>
+    public bool ReaderInitialization { get; }
+    internal Code128SymbolMetadata(BarcodeDecoded value) { ReaderInitialization = value.ReaderInitialization; }
+}
+
 /// <summary>QR Code version, error correction, and control information.</summary>
 public sealed class QrSymbolMetadata : SymbolMetadata {
     /// <summary>Gets the version from 1 through 40.</summary>

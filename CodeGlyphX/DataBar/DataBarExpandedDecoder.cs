@@ -7,7 +7,7 @@ namespace CodeGlyphX.DataBar;
 /// <summary>
 /// Decodes GS1 DataBar Expanded symbols (linear and stacked).
 /// </summary>
-public static class DataBarExpandedDecoder {
+public static partial class DataBarExpandedDecoder {
     private const char GroupSeparator = Gs1.GroupSeparator;
 
     /// <summary>
@@ -16,8 +16,11 @@ public static class DataBarExpandedDecoder {
     public static bool TryDecodeExpanded(Barcode1D barcode, out string content) {
         content = string.Empty;
         if (barcode is null) return false;
-        if (!TryExtractWidths(barcode, out var widths)) return false;
-        return TryDecodeFromWidths(widths, out content);
+        var count = barcode.Segments.Count;
+        if (!TryGetTotalCharacters(count, out _)) return false;
+        Span<int> widths = stackalloc int[MaximumPatternElements];
+        for (var i = 0; i < count; i++) widths[i] = barcode.Segments[i].Modules;
+        return TryDecodeFromWidths(widths.Slice(0, count), out content);
     }
 
     /// <summary>
@@ -26,8 +29,7 @@ public static class DataBarExpandedDecoder {
     public static bool TryDecodeExpanded(bool[] modules, out string content) {
         content = string.Empty;
         if (modules is null || modules.Length == 0) return false;
-        if (!TryExtractWidths(modules, out var widths)) return false;
-        return TryDecodeFromWidths(widths, out content);
+        return TryDecodeModules(modules, out content);
     }
 
     /// <summary>
@@ -39,46 +41,7 @@ public static class DataBarExpandedDecoder {
         if ((modules.Height - 1) % 4 != 0) return false;
 
         if (!TryExtractStackedRows(modules, out var rowRuns, out var maxBlocks)) return false;
-        if (!TryBuildStackedElements(rowRuns, maxBlocks, out var elements)) return false;
-        if (!TryTrimElements(elements, out var trimmed)) return false;
-        return TryDecodeFromWidths(trimmed, out content);
-    }
-
-    private static bool TryDecodeFromWidths(int[] widths, out string content) {
-        content = string.Empty;
-        if (widths.Length < 20) return false;
-
-        var candidates = GetTotalCharsCandidates(widths.Length);
-        if (candidates.Count == 0) return false;
-
-        foreach (var totalChars in candidates) {
-            if (TryDecodeWithTotalChars(widths, totalChars, out content)) return true;
-        }
-        return false;
-    }
-
-    private static List<int> GetTotalCharsCandidates(int patternWidth) {
-        var candidates = new List<int>(2);
-        for (var totalChars = 4; totalChars <= 22; totalChars++) {
-            var finderCount = (totalChars / 2) + (totalChars & 1);
-            var expectedWidth = (finderCount * 5) + (totalChars * 8) + 4;
-            if (expectedWidth == patternWidth) candidates.Add(totalChars);
-        }
-        return candidates;
-    }
-
-    private static bool TryDecodeWithTotalChars(int[] elements, int totalChars, out string content) {
-        content = string.Empty;
-        var dataChars = totalChars - 1;
-        if (dataChars <= 0) return false;
-
-        if (!HasValidGuards(elements)) return false;
-        if (!TryBuildDataWidths(elements, dataChars, out var dataWidths, out var checkWidths)) return false;
-        if (!TryDecodeDataValues(dataWidths, out var dataValues)) return false;
-        if (!TryDecodeDataCharacter(checkWidths, out var checkChar)) return false;
-        if (!DataBarExpandedSpecification.HasValidCheckCharacter(dataWidths, totalChars, checkChar)) return false;
-        var bits = BuildDataBits(dataValues);
-        return TryDecodePayload(bits, out content);
+        return TryDecodeExpandedStackedRows(rowRuns, maxBlocks, out content);
     }
 
     private static bool TryDecodePayload(bool[] bits, out string content) {
@@ -347,38 +310,6 @@ public static class DataBarExpandedDecoder {
             if (elements[i] != 0) return i;
         }
         return -1;
-    }
-
-    private static bool HasValidGuards(int[] elements) {
-        return elements.Length >= 10
-            && elements[0] == 1
-            && elements[1] == 1
-            && elements[elements.Length - 1] == 1
-            && elements[elements.Length - 2] == 1;
-    }
-
-    private static bool TryBuildDataWidths(int[] elements, int dataChars, out int[][] dataWidths, out int[] checkWidths) {
-        dataWidths = new int[dataChars][];
-        for (var i = 0; i < dataChars; i++) dataWidths[i] = new int[8];
-        checkWidths = new int[8];
-        for (var i = 0; i < 8; i++) checkWidths[i] = elements[i + 2];
-
-        for (var i = 1; i < dataChars; i += 2) {
-            var baseIndex = (((i - 1) / 2) * 21) + 23;
-            if (baseIndex + 7 >= elements.Length) return false;
-            for (var j = 0; j < 8; j++) {
-                dataWidths[i][j] = elements[baseIndex + j];
-            }
-        }
-
-        for (var i = 0; i < dataChars; i += 2) {
-            var baseIndex = ((i / 2) * 21) + 15;
-            if (baseIndex + 7 >= elements.Length) return false;
-            for (var j = 0; j < 8; j++) {
-                dataWidths[i][j] = elements[baseIndex + (7 - j)];
-            }
-        }
-        return true;
     }
 
     private static bool TryDecodeDataValues(int[][] dataWidths, out int[] dataValues) {
@@ -730,40 +661,6 @@ public static class DataBarExpandedDecoder {
         Numeric,
         Alpha,
         Iso
-    }
-
-    private static bool TryDecodeDataCharacter(int[] widths, out int value) {
-        return DataBarExpandedSpecification.TryGetDataCharacterValue(widths, out value);
-    }
-
-    private static bool TryExtractWidths(Barcode1D barcode, out int[] widths) {
-        widths = Array.Empty<int>();
-        if (barcode.Segments.Count < 10) return false;
-        widths = new int[barcode.Segments.Count];
-        for (var i = 0; i < barcode.Segments.Count; i++) {
-            widths[i] = barcode.Segments[i].Modules;
-        }
-        return true;
-    }
-
-    private static bool TryExtractWidths(bool[] modules, out int[] widths) {
-        widths = Array.Empty<int>();
-        if (modules.Length < 2) return false;
-        var runs = new List<int>();
-        var current = modules[0];
-        var count = 1;
-        for (var i = 1; i < modules.Length; i++) {
-            if (modules[i] == current) {
-                count++;
-            } else {
-                runs.Add(count);
-                current = modules[i];
-                count = 1;
-            }
-        }
-        runs.Add(count);
-        widths = runs.ToArray();
-        return true;
     }
 
     private static bool[] GetRow(BitMatrix matrix, int row) {

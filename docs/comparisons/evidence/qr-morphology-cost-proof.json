@@ -1,0 +1,130 @@
+{
+  "Source": "418fc0728d2d5fa5e29247de4bc5bacfdafd5f70",
+  "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+  "PreviousSource": "5f41d326a8c332853096d888059504677cada46e",
+  "PreviousCoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+  "Changes": "QR closing, opening and edge filters use moving column counts instead of rescanning each square. Clipped borders, thresholds and output pixels remain unchanged.",
+  "PixelEquivalence": {
+    "ManifestSha256": "6A4A3C0712380D379A614454B7078DC251B5389B98AE51ACE0C68E95278000FB",
+    "Rows": [
+      {
+        "Binary": "baseline",
+        "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+        "Images": 4,
+        "Filters": 24,
+        "OutputSha256": "900CC11261649338B4940542008447784781C773EBC868EE63AC5E54A0143CE7"
+      },
+      {
+        "Binary": "candidate",
+        "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+        "Images": 4,
+        "Filters": 24,
+        "OutputSha256": "900CC11261649338B4940542008447784781C773EBC868EE63AC5E54A0143CE7"
+      }
+    ],
+    "Scope": "Actual private closing/opening paths at radii 1/2/3, four unchanged negative corpus RGBA images converted once with matching luminance and hybrid threshold setup. Fingerprint covers every output pixel, excluding unused pooled capacity. Independent direct-neighborhood definitions are separately tested on borders, narrow images, threshold maps, solid and mixed input.",
+    "Mismatches": 0
+  },
+  "PixelContractCases": {
+    "net10": 8,
+    "net8": 8
+  },
+  "KernelCosts": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 140.39780000000002,
+      "CurrentMedianMs": 59.7786,
+      "LatencyRatio": 0.42578017604264445,
+      "BaselineAllocatedBytes": 2282018.0,
+      "CurrentAllocatedBytes": 2217790.6666666665
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 118.3614,
+      "CurrentMedianMs": 50.2869,
+      "LatencyRatio": 0.42485894894788334,
+      "BaselineAllocatedBytes": 2203487.3333333335,
+      "CurrentAllocatedBytes": 2207352.6666666665
+    }
+  ],
+  "NegativeCosts": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 2801.2464499999996,
+      "CurrentMedianMs": 2991.4377999999997,
+      "LatencyRatio": 1.0678952578413798,
+      "BaselineAllocatedBytes": 369665494.6666667,
+      "CurrentAllocatedBytes": 369297568.6666667,
+      "PreviousCorrectImagesRange": [
+        2.0,
+        4.0
+      ],
+      "PreviousCorrectImagesMean": 3.6666666666666665,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        2.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.3333333333333333,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        3.0,
+        4.0
+      ],
+      "CurrentCorrectImagesMean": 3.4166666666666665,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        1.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.5833333333333334,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 2776.71345,
+      "CurrentMedianMs": 2748.80435,
+      "LatencyRatio": 0.9899488728302158,
+      "BaselineAllocatedBytes": 366902421.3333333,
+      "CurrentAllocatedBytes": 368215396.6666667,
+      "PreviousCorrectImagesRange": [
+        3.0,
+        4.0
+      ],
+      "PreviousCorrectImagesMean": 3.6666666666666665,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        1.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.3333333333333333,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        3.0,
+        4.0
+      ],
+      "CurrentCorrectImagesMean": 3.9166666666666665,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        1.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.08333333333333333,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "Scope": "Four unchanged negative images that reached deadlines in the preceding qualification. Kernel measurements apply closing and opening at radii 1, 2 and 3 to hybrid-threshold images. Whole-image measurements use the same RGBA32, format hints and 1500 ms robust allowance. Three warmups, twelve rotated measurements per binary/domain, Normal priority, no outlier removal. Setup, hashes and scoring are outside measurement.",
+  "Limits": "Kernel speed does not establish equal whole-image improvement or eliminate timeouts. Every inconclusive result remains visible. These four images informed this optimization and are regression evidence; shared-host timing is not a portable ranking."
+}

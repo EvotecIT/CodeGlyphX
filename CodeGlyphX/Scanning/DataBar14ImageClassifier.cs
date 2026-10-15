@@ -90,6 +90,6 @@ internal static class DataBar14ImageClassifier {
 
     private static int GetLuminance(byte[] rgba, int width, int x, int y) {
         var pixel = (y * width + x) * 4;
-        return (rgba[pixel] * 54 + rgba[pixel + 1] * 183 + rgba[pixel + 2] * 19) >> 8;
+        return BarcodeScanline.GetLuminance(rgba[pixel], rgba[pixel + 1], rgba[pixel + 2], rgba[pixel + 3]);
     }
 }

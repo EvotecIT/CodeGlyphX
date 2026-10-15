@@ -1,0 +1,255 @@
+{
+  "Source": "63677a2c11e9561677736cc001a8bf748ca28670",
+  "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+  "PreviousSource": "01832f81c81289094b11c32bb3434df302f3efd9",
+  "PreviousCoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+  "Changes": "Retail recovery adds two complementary 9/16 local-contrast masks after the original masks establish complete retail guard geometry. The added masks admit only full-length EAN-13/UPC-A geometry; EAN-8 and UPC-E retain their original masks. It reuses the completed middle window without adding buffers. The original eight masks, digit fitting, parity, checksums and nearby-row confirmation remain unchanged.",
+  "Scope": "Eighty-seven unchanged EAN/UPC positive requests from the main corpus. The tilted EAN photograph ean13-4/13.png informed the repair and is regression evidence. Four right-angle rotations in both polarities pass on all supported test frameworks; all eight cases fail with the exact preceding qualified core.",
+  "Limits": "This photograph informed the repair and does not establish unseen accuracy or general superiority. Blur, undeclared encoding policies and other remaining misses are retained. Wall-clock deadlines and shared-host contention affect completion.",
+  "Photograph": {
+    "Id": "ean13-4/13.png",
+    "Sha256": "6236CBF62DB69D073FBC3845CCD8A3FEA5917BE40E97868476B9F647EC221F98",
+    "Oracle": "9780441014989"
+  },
+  "RegressionBefore": {
+    "BaselineSource": "01832f81c81289094b11c32bb3434df302f3efd9",
+    "BaselineCoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+    "RegressionFixtureSha256": "6236cbf62db69d073fbc3845ccd8a3fea5917be40e97868476b9f647ec221f98",
+    "Expected": "9780441014989",
+    "Contracts": 8,
+    "Failed": 8,
+    "Passed": 0,
+    "TrxSha256": "5f5530c923bf3c6368de24171ba4255f48fdd668cd83a3aa495116055f53ecb9",
+    "Boundary": "New embedded fixture tests with the exact previously qualified core copied into the isolated test output; all four right-angle rotations and both polarities fail before the repair."
+  },
+  "SafetyRegressionBefore": {
+    "RejectedSource": "ec38af27998ca9febe4bae87537a2ceceac9d426",
+    "RejectedCoreSha256": "9358E8C32421376A6171C9CC27724B56C8ABF3D1C17009E4DE3B81E53D5428FE",
+    "FixtureSha256": "8ED198F523B6881AEE9AF81BFF855C74CE67D5939952887D39AD0C1B5331DF95",
+    "Failed": 8,
+    "Passed": 0,
+    "TrxSha256": "3856FEC4029EFD6B6F2F5ED7113BAB3BA2EFC9CCC03A6142F886E03200A64958",
+    "Boundary": "The final safety contracts run with the exact rejected core. All eight fail because default tile scanning returns an EAN payload, independently of whether an unrelated format exhausts its recognition attempt. The corrected contracts additionally exhaust typed retail tile paths.",
+    "TrxFile": "retail-safety-before-final-contract-net10.trx",
+    "TestSourceSha256": "406F4B7C5A31CC4B671F8B84F34BB7F75760C7A52F91307B96ED2DAB96074DF5"
+  },
+  "PhotographCases": {
+    "net10": 8,
+    "net8": 8,
+    "net472": 8
+  },
+  "TextureCases": {
+    "net10": 8,
+    "net8": 8,
+    "net472": 8
+  },
+  "Engines": {
+    "CodeGlyphX": {
+      "PreviousCorrect": 69,
+      "Correct": 70,
+      "Unexpected": 0
+    },
+    "ZXing.Net": {
+      "PreviousCorrect": 55,
+      "Correct": 55,
+      "Unexpected": 2
+    },
+    "ZXing-C++": {
+      "PreviousCorrect": 54,
+      "Correct": 54,
+      "Unexpected": 1
+    }
+  },
+  "PositiveCosts": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 878.0759499999999,
+      "CurrentMedianMs": 996.5275,
+      "LatencyRatio": 1.1348989799800349,
+      "BaselineAllocatedBytes": 95094993.33333333,
+      "CurrentAllocatedBytes": 96087778.0,
+      "PreviousCorrectImagesRange": [
+        69.0,
+        69.0
+      ],
+      "PreviousCorrectImagesMean": 69.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 786.9419499999999,
+      "CurrentMedianMs": 848.2726,
+      "LatencyRatio": 1.0779354182351064,
+      "BaselineAllocatedBytes": 95098222.0,
+      "CurrentAllocatedBytes": 96088360.0,
+      "PreviousCorrectImagesRange": [
+        69.0,
+        69.0
+      ],
+      "PreviousCorrectImagesMean": 69.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "NegativeCosts": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 765.7576,
+      "CurrentMedianMs": 783.85505,
+      "LatencyRatio": 1.0236333926036123,
+      "BaselineAllocatedBytes": 35642350.0,
+      "CurrentAllocatedBytes": 36221774.666666664,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 641.97145,
+      "CurrentMedianMs": 684.8138,
+      "LatencyRatio": 1.0667356001579198,
+      "BaselineAllocatedBytes": 35642419.333333336,
+      "CurrentAllocatedBytes": 36221218.0,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "CostScope": "Three warmups and twelve grouped rotated measurements per binary and affinity domain. Eighty-seven fixed positive EAN/UPC requests and nine prespecified negative requests (three images with EAN, UPC-A and UPC-E hints) are preloaded as RGBA32 with the unchanged 1500 ms robust allowance. Input loading, hashes and scoring are excluded. Every sample, managed allocation, unexpected payload and inconclusive outcome is retained. Shared-host timings are local evidence.",
+  "HintedNegativeDiagnostic": {
+    "Requests": 93,
+    "DistinctImages": 31,
+    "Hints": [
+      "Ean",
+      "UpcA",
+      "UpcE"
+    ],
+    "Engines": {
+      "CodeGlyphX": {
+        "Completed": 93,
+        "Inconclusive": 0,
+        "Unexpected": 0
+      },
+      "ZXing.Net": {
+        "Completed": 89,
+        "Inconclusive": 0,
+        "Unexpected": 4
+      },
+      "ZXing-C++": {
+        "Completed": 93,
+        "Inconclusive": 0,
+        "Unexpected": 0
+      }
+    }
+  },
+  "Gained": [
+    "ean13-4/13.png"
+  ],
+  "Lost": [],
+  "AdditionalNegativeVariants": {
+    "Scope": "Eight rotations and polarities of falsepositives-2/13.png, outside the unchanged ranking. New retail false acceptance from the initial candidate is removed. The existing tile-boundary check now also rejects Industrial 2 of 5 fragments, removing the pre-existing one-digit outputs exposed by the inverted variants. The current core returns no payload in these eight informed regressions. Full raw old/current outcomes retain completion, format and text; these cases do not establish general false-positive rates.",
+    "BaselineCoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+    "CurrentCoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203"
+  }
+}

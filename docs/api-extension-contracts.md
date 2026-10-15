@@ -33,7 +33,9 @@ Art themes, procedural patterns, image treatments and scene styles have separate
 
 Scan success means at least one symbol was recovered. Inspect `CompletionReason` and `IsPartial` separately. The total deadline covers reading, codec work and recognition. A shorter family allowance may stop one recognizer while later families continue; `RecognitionBudgetExceeded` reports that incomplete recognition without claiming that the total deadline elapsed.
 
-`MaxSymbols` limits returned observations. With `Deduplicate = true`, equivalent format-and-payload results are collapsed. With it disabled, retries can observe the same physical symbol more than once. These APIs do not provide an exhaustive physical-instance count.
+`MaxSymbols` limits returned observations. With `Deduplicate = true`, equivalent format-and-payload results are collapsed. Reader configuration remains distinct from ordinary data with identical contents. With it disabled, retries can observe the same physical symbol more than once. These APIs do not provide an exhaustive physical-instance count.
+
+Code 128 FNC3 is represented by `BarcodeDecoded.ReaderInitialization` and by `Code128SymbolMetadata.ReaderInitialization` on unified results. Inspect the flag before treating `Text` as ordinary application data. The text exposes the configuration contents; decoding does not apply reader settings. Existing Data Matrix, DotCode and MaxiCode programming metadata follows the same configuration distinction.
 
 ## Proof for an extension
 

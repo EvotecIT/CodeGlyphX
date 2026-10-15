@@ -1,0 +1,215 @@
+{
+  "Source": "01832f81c81289094b11c32bb3434df302f3efd9",
+  "CoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+  "PreviousSource": "418fc0728d2d5fa5e29247de4bc5bacfdafd5f70",
+  "PreviousCoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+  "Changes": "GS1 DataBar-14 edge guards use their adjacent character pitch and reject malformed guards before allocating character widths. Stacked separator validation first samples the existing flat path, then tries four bounded slopes inside the verified data-row gap. Finder, character, checksum, geometry and separator error limits remain unchanged.",
+  "Scope": "Twelve unchanged RSS-14 family images from the main corpus. One tilted photograph informed this repair and is regression evidence. Four right-angle rotations pass on every supported framework; the same four tests fail with the exact previous core.",
+  "Limits": "The remaining three main-corpus DataBar misses and inverted versions of the recovered photograph remain open. This photograph informed the fix; it does not establish unseen accuracy or general superiority. Wall-clock deadlines and shared-host contention can affect completion.",
+  "Photograph": {
+    "Id": "rss14-2/22.png",
+    "Sha256": "EC31E2BB6F05CEB3BD7D1169D16746BD84093CB496CBD8E33419E9179A7D3A5C",
+    "Oracle": "00012345678905",
+    "DecodedBody": "0001234567890",
+    "PhysicalVariantOracleDeclared": false
+  },
+  "RegressionBefore": {
+    "PreviousCoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+    "PreviousPassed": 0,
+    "CurrentCoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+    "PreviousFailed": 4,
+    "Scope": "Same four current photograph tests, exact archived previous core; task-local test output replacement only."
+  },
+  "PhotographCases": {
+    "net10": 4,
+    "net8": 4,
+    "net472": 4
+  },
+  "FocusedCases": 46,
+  "Engines": {
+    "CodeGlyphX": {
+      "PreviousCorrect": 8,
+      "Correct": 9,
+      "Unexpected": 0
+    },
+    "ZXing.Net": {
+      "PreviousCorrect": 8,
+      "Correct": 8,
+      "Unexpected": 0
+    },
+    "ZXing-C++": {
+      "PreviousCorrect": 8,
+      "Correct": 8,
+      "Unexpected": 0
+    }
+  },
+  "PositiveCosts": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 146.29065,
+      "CurrentMedianMs": 149.4407,
+      "LatencyRatio": 1.0215328183995354,
+      "BaselineAllocatedBytes": 16444074.0,
+      "CurrentAllocatedBytes": 16353009.333333334,
+      "PreviousCorrectImagesRange": [
+        8.0,
+        8.0
+      ],
+      "PreviousCorrectImagesMean": 8.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 167.15075000000002,
+      "CurrentMedianMs": 161.06054999999998,
+      "LatencyRatio": 0.963564626542208,
+      "BaselineAllocatedBytes": 16393647.333333334,
+      "CurrentAllocatedBytes": 16292051.333333334,
+      "PreviousCorrectImagesRange": [
+        8.0,
+        8.0
+      ],
+      "PreviousCorrectImagesMean": 8.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "NegativeCosts": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 547.26165,
+      "CurrentMedianMs": 573.67875,
+      "LatencyRatio": 1.048271425560333,
+      "BaselineAllocatedBytes": 112985104.0,
+      "CurrentAllocatedBytes": 113322922.0,
+      "PreviousCorrectImagesRange": [
+        31.0,
+        31.0
+      ],
+      "PreviousCorrectImagesMean": 31.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        31.0,
+        31.0
+      ],
+      "CurrentCorrectImagesMean": 31.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 422.76685,
+      "CurrentMedianMs": 425.83145,
+      "LatencyRatio": 1.0072489127281385,
+      "BaselineAllocatedBytes": 112964571.33333333,
+      "CurrentAllocatedBytes": 113288152.0,
+      "PreviousCorrectImagesRange": [
+        31.0,
+        31.0
+      ],
+      "PreviousCorrectImagesMean": 31.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        31.0,
+        31.0
+      ],
+      "CurrentCorrectImagesMean": 31.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "CostScope": "Three warmups and twelve grouped rotated measurements per binary and affinity domain. Twelve fixed positive requests and thirty-one fixed negative requests are preloaded as RGBA32, using unchanged hints and 1500 ms robust allowance. Input loading, hashes and scoring are excluded; every sample, allocation and inconclusive outcome is retained. Shared-host timings are local evidence.",
+  "Gained": [
+    "rss14-2/22.png"
+  ],
+  "Lost": [],
+  "InitialCandidate": {
+    "Source": "70aaab3f08ae81526ffbcdd2b8ffa9e05190e60f",
+    "CoreSha256": "CDBE9A3313389DB14C6A2773648D46A8B24737981CA4F430175F52EEBAD0752B",
+    "ArchiveBytes": 24191747,
+    "ArchiveSha256": "b91543be5c3f9763952723b33005937195f5535f8ba39eb6c15c4c0930c0050d",
+    "EveryEntryHashVerified": true,
+    "Reason": "Initial candidate recovers one photograph but allocates width arrays before rejecting malformed guards; retain the complete run and observed negative costs."
+  }
+}

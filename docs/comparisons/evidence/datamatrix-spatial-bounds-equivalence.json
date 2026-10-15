@@ -1,0 +1,8 @@
+{
+  "Cases": 8800,
+  "Mismatches": 0,
+  "CanceledCases": 8800,
+  "AmbientBudgetCases": 2,
+  "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+  "Scope": "Private production bounding-box method against independent full raster oracle; RGBA/BGRA, both polarities, random alpha and padded stride, uniform and sparse frames."
+}

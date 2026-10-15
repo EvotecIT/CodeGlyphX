@@ -1,0 +1,291 @@
+{
+  "Source": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+  "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+  "PreviousSource": "023a9382680bc029515093c1de1bc6ed50accc27",
+  "PreviousCoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+  "Changes": "Ordinary multi-QR decoding ranks geometrically consistent finder groups from up to 24 candidates and avoids mixing finders already used by a decoded symbol in the same pass. The permissive and acceptance-predicate searches retain their existing traversal. Payload validation, polarity passes, caller deadlines and recognition allowances are unchanged.",
+  "Scope": "The same frozen four-symbol QR image is decoded by the exact preceding and current qualified cores. Each fixed cache domain uses three warmups and twelve rotated measured iterations. Complete four-payload sets, unexpected output, inconclusive requests, latency and managed allocation remain visible. The complete nineteen-image batch is measured separately.",
+  "Limits": "This optimization groups spatially independent symbols. It does not establish reliable recovery of deliberately overlapping codes that reuse finder patterns. The permissive search remains available. These finite image workloads do not establish overall superiority, portable latency, lower CPU use or lower memory capacity.",
+  "Contracts": {
+    "net10": 4,
+    "net8": 4
+  },
+  "Costs": [
+    {
+      "Requests": 1,
+      "Domain": "ccd0",
+      "ManifestSha256": "9C143F4CD8DBFB5F8E0ED34784A2031E088A282D8181A4EB1D35765A31665A5D",
+      "BaselineMedianMs": 1042.6747500000001,
+      "CurrentMedianMs": 407.71915,
+      "LatencyRatio": 0.3910319589114438,
+      "BaselineAllocatedBytes": 6427050.0,
+      "CurrentAllocatedBytes": 2614838.6666666665,
+      "PreviousCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "PreviousCorrectImagesMean": 1.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "CurrentCorrectImagesMean": 1.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Requests": 1,
+      "Domain": "ccd1",
+      "ManifestSha256": "9C143F4CD8DBFB5F8E0ED34784A2031E088A282D8181A4EB1D35765A31665A5D",
+      "BaselineMedianMs": 1048.9126999999999,
+      "CurrentMedianMs": 411.50480000000005,
+      "LatencyRatio": 0.39231558546292755,
+      "BaselineAllocatedBytes": 6535995.333333333,
+      "CurrentAllocatedBytes": 2615038.6666666665,
+      "PreviousCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "PreviousCorrectImagesMean": 1.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "CurrentCorrectImagesMean": 1.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "RetailControlCosts": [
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd0",
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "BaselineMedianMs": 1058.2537,
+      "CurrentMedianMs": 1077.68025,
+      "LatencyRatio": 1.018357176544717,
+      "BaselineAllocatedBytes": 95702578.66666667,
+      "CurrentAllocatedBytes": 95695804.66666667,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd1",
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "BaselineMedianMs": 978.7288,
+      "CurrentMedianMs": 961.1777,
+      "LatencyRatio": 0.9820674532107362,
+      "BaselineAllocatedBytes": 95712951.33333333,
+      "CurrentAllocatedBytes": 95699180.66666667,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd0",
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "BaselineMedianMs": 718.1006500000001,
+      "CurrentMedianMs": 730.5907,
+      "LatencyRatio": 1.0173931746197415,
+      "BaselineAllocatedBytes": 34149411.333333336,
+      "CurrentAllocatedBytes": 34148226.666666664,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd1",
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "BaselineMedianMs": 627.14915,
+      "CurrentMedianMs": 622.44055,
+      "LatencyRatio": 0.99249205711273,
+      "BaselineAllocatedBytes": 34117592.666666664,
+      "CurrentAllocatedBytes": 34122223.333333336,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "Profiles": {
+    "before": {
+      "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+      "AllocatedBytes": [
+        6715944,
+        10123736,
+        6615912
+      ],
+      "CorrectImages": [
+        1,
+        1,
+        1
+      ],
+      "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+    },
+    "after": {
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "AllocatedBytes": [
+        12670576,
+        319968,
+        319040
+      ],
+      "CorrectImages": [
+        1,
+        1,
+        1
+      ],
+      "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+    }
+  }
+}

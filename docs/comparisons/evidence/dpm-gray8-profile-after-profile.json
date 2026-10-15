@@ -1,0 +1,1776 @@
+{
+  "Scope": "Sampled allocation amounts and managed thread-time stacks on the decoding thread between probe markers. Inclusive stacks overlap; these are not CPU utilization or competitive timings.",
+  "Markers": [
+    {
+      "EventName": "Begin",
+      "Id": 1,
+      "ThreadID": 90772,
+      "TimeStampRelativeMSec": 227.0917
+    },
+    {
+      "EventName": "End",
+      "Id": 2,
+      "ThreadID": 90772,
+      "TimeStampRelativeMSec": 1453.3525
+    },
+    {
+      "EventName": "Begin",
+      "Id": 1,
+      "ThreadID": 90772,
+      "TimeStampRelativeMSec": 1454.4208
+    },
+    {
+      "EventName": "End",
+      "Id": 2,
+      "ThreadID": 90772,
+      "TimeStampRelativeMSec": 2150.2879
+    },
+    {
+      "EventName": "Begin",
+      "Id": 1,
+      "ThreadID": 90772,
+      "TimeStampRelativeMSec": 2150.3406
+    },
+    {
+      "EventName": "End",
+      "Id": 2,
+      "ThreadID": 90772,
+      "TimeStampRelativeMSec": 2766.9742
+    }
+  ],
+  "AllocationTicks": 1141,
+  "SampledAllocationBytes": 180813880,
+  "ThreadTimeSamples": 1294,
+  "AllocationTypes": [
+    {
+      "Key": "System.Int32[]",
+      "Value": 61130704
+    },
+    {
+      "Key": "System.Byte[]",
+      "Value": 56544496
+    },
+    {
+      "Key": "System.Int64[]",
+      "Value": 15487968
+    },
+    {
+      "Key": "System.Boolean[]",
+      "Value": 15374320
+    },
+    {
+      "Key": "Entry[System.ValueTuple\u00603[System.Int32,System.Int32,System.Int32],System.Boolean][]",
+      "Value": 15339568
+    },
+    {
+      "Key": "Entry[System.ValueTuple\u00603[System.Int32,System.Int32,System.Double],CodeGlyphX.Pdf417.Pdf417Decoder\u002BPixelRunCache\u002BCachedRuns][]",
+      "Value": 6755448
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[System.Int32]",
+      "Value": 2872312
+    },
+    {
+      "Key": "System.UInt16[]",
+      "Value": 2641888
+    },
+    {
+      "Key": "CachedRuns",
+      "Value": 940768
+    },
+    {
+      "Key": "RingPoint[]",
+      "Value": 742424
+    },
+    {
+      "Key": "System.String",
+      "Value": 425288
+    },
+    {
+      "Key": "\u003C\u003Ec__DisplayClass62_0",
+      "Value": 323480
+    },
+    {
+      "Key": "RingLineFit[]",
+      "Value": 319328
+    },
+    {
+      "Key": "TelepenPairKind[]",
+      "Value": 213200
+    },
+    {
+      "Key": "ExpandedRowObservation",
+      "Value": 212688
+    }
+  ],
+  "InclusiveAllocationStacks": [
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanFrame(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline)",
+      "Value": 180813880
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.Scan(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions)",
+      "Value": 180813880
+    },
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusReaders.Decode(unsigned int8[],int32,int32,class System.String,class System.String,bool,bool,class System.String\u0026)",
+      "Value": 180813880
+    },
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusSession.Decode(class System.String,bool)",
+      "Value": 180813880
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanMatrixTiles(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E)",
+      "Value": 53665128
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanDataMatrix(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 45815768
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor\u002B\u003CEnumerateVariants\u003Ed__1.MoveNext()",
+      "Value": 42563968
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeAllLocated(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.Internal.BarcodeImageCandidate[]\u0026,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,bool)",
+      "Value": 33365496
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanLocatedLinear(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E)",
+      "Value": 33365496
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanLinear(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 33365496
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.DecodeLocatedRegion(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,int32,int32,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.Internal.BarcodeImageCandidate\u003E,bool)",
+      "Value": 29349336
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeWithTransforms(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,value class System.Nullable\u00601\u003Cbool\u003E)",
+      "Value": 28180048
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.\u003CTryDecodeScanline\u003Eg__Consider|147_0(bool[],float64,value class CodeGlyphX.Internal.BarcodeScanlineCandidate,value class \u003C\u003Ec__DisplayClass147_0\u0026)",
+      "Value": 28180048
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeScanline(value class CodeGlyphX.Internal.BarcodeScanlineCandidate[],int32\u0026,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,value class CodeGlyphX.Internal.BarcodeScanlineCandidate\u0026,bool,class System.Collections.Generic.IReadOnlyList\u00601\u003Cclass CodeGlyphX.BarcodeDecoded\u003E,class CodeGlyphX.BarcodeDecoded)",
+      "Value": 28180048
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCoreTrimmed(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool)",
+      "Value": 27328920
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCore(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool)",
+      "Value": 26796688
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,bool,bool,class CodeGlyphX.QrDecoded[]\u0026,value class System.Nullable\u00601\u003Cvalue class DecodeBudget\u003E)",
+      "Value": 25122792
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,bool,class CodeGlyphX.QrDecoded[]\u0026)",
+      "Value": 25122792
+    },
+    {
+      "Key": "CodeGlyphX.QrImageDecoder.TryDecodeAll(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,value class System.Threading.CancellationToken,bool,class CodeGlyphX.QrDecoded[]\u0026)",
+      "Value": 25122792
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanQr(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 25122792
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllFromImageCore(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 24341904
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllFromImage(int32,value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 24341904
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryDecodeExpandedStacked(unsigned int8[],int32,int32,bool,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 22563544
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanExpandedStacked(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 22563544
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.\u003CScanTiles\u003Eg__ScanBarcodeRegion|34_0(value class CodeGlyphX.ImageRegion,value class \u003C\u003Ec__DisplayClass34_0\u0026)",
+      "Value": 22197480
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ScanTiles(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeOptions,class System.Func\u00607\u003Cunsigned int8[],int32,int32,int32,int32,int32,bool\u003E,bool)",
+      "Value": 22197480
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.CollectExpandedStackedRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,class System.Collections.Generic.List\u00601\u003Cclass ExpandedRowObservation\u003E[],value class System.Threading.CancellationToken)",
+      "Value": 22138424
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryDecodePixelRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026,bool\u0026)",
+      "Value": 21020384
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryDecodePixels(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026)",
+      "Value": 21020384
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026)",
+      "Value": 21020384
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanPdf417(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 21020384
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecode(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 20033784
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecDecoder.TryDecode(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 20033784
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanAztec(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 20033784
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder\u002B\u003C\u003Ec__DisplayClass19_0.\u003CTryDecodeAllLocated\u003Eb__0(unsigned int8[],int32,int32,int32,int32,int32)",
+      "Value": 18181320
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeAllOrientations(value class AztecGrayImage,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 17692344
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeWithThresholds(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 16525112
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.BuildIntegral(unsigned int8[],int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 15487968
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeWithOffsets(value class AztecGrayImage,bool,int32,int32,int32,int32,value class System.Threading.CancellationToken,class System.String\u0026,class System.Collections.Generic.Dictionary\u00602\u003Cvalue class System.ValueTuple\u00603\u003Cint32,int32,int32\u003E,bool\u003E,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 15343928
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectHybridThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 12616328
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadPixelRows(int32,int32,class PixelRunCache,value class System.Threading.CancellationToken,bool,bool,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026,bool\u0026,class System.Collections.Generic.List\u00601\u003Cvalue class PixelFramingCandidate\u003E)",
+      "Value": 11282472
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.GetRuns(bool[])",
+      "Value": 10106128
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAdaptiveThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 10024120
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromImage(value class CodeGlyphX.Qr.QrGrayImage,bool,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class DecodeBudget,bool,bool)",
+      "Value": 9926192
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarExpandedDecoder.TryDecodeExpanded(bool[],class System.String\u0026)",
+      "Value": 9776760
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeGs1DataBarExpanded(bool[],class System.String\u0026)",
+      "Value": 9776760
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget)",
+      "Value": 9602712
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromBox(value class AztecGrayImage,bool,int32,int32,int32,int32,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 9467408
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.FindComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Func\u00601\u003Cbool\u003E,int32,int32)",
+      "Value": 9394992
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.ToLuminance(unsigned int8[],value class System.Threading.CancellationToken)",
+      "Value": 9181320
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImagePool.Rent(int32)",
+      "Value": 7856400
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Close(unsigned int8[],int32,int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 7798184
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithAdaptiveThreshold(int32,int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 7340200
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.RentBuffer(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 7075512
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TrySampleModules(value class AztecGrayImage,bool,int32,int32,int32,int32,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BitMatrixView\u0026,class System.Collections.Generic.Dictionary\u00602\u003Cvalue class System.ValueTuple\u00603\u003Cint32,int32,int32\u003E,bool\u003E)",
+      "Value": 7040784
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14ImageDecoder.Collect(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,class System.Collections.Generic.List\u00601\u003Cclass Row\u003E[],value class System.Threading.CancellationToken)",
+      "Value": 6925384
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14ImageDecoder.TryDecode(unsigned int8[],int32,int32,bool,bool,value class System.Threading.CancellationToken,class System.String\u0026,bool\u0026)",
+      "Value": 6925384
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanDataBarStacked(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 6925384
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarExpandedDecoder.TryExtractWidths(bool[],int32[]\u0026)",
+      "Value": 6689888
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllAtScale(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class QrProfileSettings,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 5745392
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Dilate(unsigned int8[],int32,int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 5347712
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Adaptive(unsigned int8[],int64[],int32,int32,int32,int32,bool,value class System.Threading.CancellationToken)",
+      "Value": 4931592
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromFullFrame(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 4898760
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Erode(unsigned int8[],int32,int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 3896640
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass43_0.\u003CTryDecodeAll\u003Eg__ScanGrid|1(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class DecodeBudget,value class \u003C\u003Ec__DisplayClass43_1\u0026,value class \u003C\u003Ec__DisplayClass43_2\u0026)",
+      "Value": 3548648
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithBinaryOpen(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 3541408
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithBinaryClose(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 3534104
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.NormalizeExpandedCharacter(class System.Collections.Generic.List\u00601\u003Cint32\u003E,int32,class System.Collections.Generic.List\u00601\u003Cint32\u003E,float64\u0026)",
+      "Value": 3300952
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecodePerspective(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.DataMatrix.DataMatrixDecoded\u0026,class CodeGlyphX.DataMatrixDecodeDiagnostics)",
+      "Value": 3251800
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecodePixelsDetailed(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.DataMatrix.DataMatrixDecoded\u0026,class CodeGlyphX.DataMatrixDecodeDiagnostics)",
+      "Value": 3251800
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecodeDetailed(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.DataMatrix.DataMatrixDecoded\u0026)",
+      "Value": 3251800
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BinaryImageComponents.Visit(unsigned int8[],int32,int32,bool,value class System.Threading.CancellationToken,class System.Func\u00604\u003Cint32[],int32,bool,bool\u003E)",
+      "Value": 3145800
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePlessey(bool[],class CodeGlyphX.BarcodeDecodeOptions,class System.String\u0026)",
+      "Value": 2448216
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder\u002BAztecGrayImage.TryCreate(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class AztecGrayImage\u0026)",
+      "Value": 2341440
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.ToGray(unsigned int8[],int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 2270336
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeDiscrete2of5(bool[],int32[],int32[],class System.String\u0026)",
+      "Value": 2237064
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromCenter(value class AztecGrayImage,bool,int32,int32,int32,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 2158944
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromBullseye(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 2158944
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectGlobalThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class System.Span\u00601\u003Cunsigned int8\u003E,int32)",
+      "Value": 1701456
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarLimitedDecoder.TryExtractWidths(bool[],int32[]\u0026)",
+      "Value": 1700736
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarLimitedDecoder.TryDecode(bool[],class System.String\u0026)",
+      "Value": 1700736
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeGs1DataBarLimited(bool[],class System.String\u0026)",
+      "Value": 1700736
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14Decoder.TryExtractWidths(bool[],int32[]\u0026)",
+      "Value": 1596176
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeTruncated(bool[],class System.String\u0026)",
+      "Value": 1596176
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeGs1DataBarTruncated(bool[],class System.String\u0026)",
+      "Value": 1596176
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePlesseyInternal(bool[],class CodeGlyphX.BarcodeDecodeOptions,class System.String\u0026)",
+      "Value": 1490352
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.ContrastStretch(unsigned int8[],int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 1448400
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCode128(bool[],class System.String\u0026,bool\u0026,bool\u0026,int32\u0026)",
+      "Value": 1382216
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCode128(bool[],class System.String\u0026,bool\u0026,bool\u0026)",
+      "Value": 1382216
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeTelepen(bool[],class System.String\u0026)",
+      "Value": 1277920
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCode11(bool[],class CodeGlyphX.BarcodeDecodeOptions,class System.String\u0026)",
+      "Value": 1273520
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePharmacode(bool[],class System.String\u0026)",
+      "Value": 1170040
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePharmacodeWithBackground(bool[],bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool,class System.String\u0026)",
+      "Value": 1170040
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryGetLocatedModuleCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BarcodeScanlineCandidate[]\u0026,bool,bool)",
+      "Value": 1169288
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryFitRing(int32[],int32,int32,int32,int32[],value class System.Threading.CancellationToken,value class RingPoint[]\u0026)",
+      "Value": 1167232
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder\u002B\u003C\u003Ec__DisplayClass26_0.\u003CFindBullseyeGrids\u003Eb__0(int32[],int32,bool)",
+      "Value": 1167232
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodePerspective(value class AztecGrayImage,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 1167232
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarExpandedDecoder.GetTotalCharsCandidates(int32)",
+      "Value": 1064720
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarExpandedDecoder.TryDecodeFromWidths(int32[],class System.String\u0026)",
+      "Value": 1064720
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool,bool)",
+      "Value": 1062688
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder\u002BGrayImage.TryCreate(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class GrayImage\u0026)",
+      "Value": 1028896
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryDecode(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 1028896
+    },
+    {
+      "Key": "CodeGlyphX.MicroQrDecoder.TryDecode(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 1028896
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanMicroQr(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 1028896
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCodabar(bool[],class System.String\u0026)",
+      "Value": 956840
+    },
+    {
+      "Key": "CodeGlyphX.MaxiCode.MaxiCodeImageDecoder.TryCreateGray(unsigned int8[],int32,int32,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.DecodeBudgetState,value class GrayImage\u0026)",
+      "Value": 921672
+    },
+    {
+      "Key": "CodeGlyphX.MaxiCode.MaxiCodeImageDecoder.TryDecode(unsigned int8[],int32,int32,value class System.Threading.CancellationToken,class CodeGlyphX.MaxiCodeDecoded\u0026,bool\u0026)",
+      "Value": 921672
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanMaxiCode(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 921672
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeMatrix2of5(bool[],class System.String\u0026)",
+      "Value": 854080
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryNormalizeModules(bool[],int32,bool[]\u0026)",
+      "Value": 849984
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder\u002BPixelRunCache.TryRead(int32,bool,bool,int32,float64,class System.Collections.Generic.List\u00601\u003Cint32\u003E,value class System.Threading.CancellationToken,bool\u0026)",
+      "Value": 840960
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.TryCreate(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,int32,class System.Func\u00601\u003Cbool\u003E,class CodeGlyphX.Qr.QrGrayImagePool,value class CodeGlyphX.Qr.QrGrayImage\u0026)",
+      "Value": 780888
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectRetailRunCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool,bool,bool,bool)",
+      "Value": 745984
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeIata2of5(bool[],class System.String\u0026)",
+      "Value": 744408
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryPrepareModules(bool[],int32,bool[],bool[]\u0026,bool[]\u0026)",
+      "Value": 743896
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromHorizontal(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 743400
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeItf14(bool[],class System.String\u0026)",
+      "Value": 639344
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeIndustrial2of5(bool[],class System.String\u0026)",
+      "Value": 638576
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryNormalizeTelepenRuns(int32[],int32[]\u0026)",
+      "Value": 532488
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TrimModules(bool[])",
+      "Value": 532232
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.InvertModules(bool[])",
+      "Value": 531840
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeItf(bool[],class System.String\u0026)",
+      "Value": 531208
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeUpcA(bool[],class System.String\u0026)",
+      "Value": 424864
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePatchCode(bool[],class System.String\u0026)",
+      "Value": 424776
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromVertical(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 319288
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ReverseModules(bool[])",
+      "Value": 319288
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ParityKey(value class Parity[])",
+      "Value": 319200
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeUpcE(bool[],class System.String\u0026)",
+      "Value": 319200
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeEan13(bool[],class System.String\u0026)",
+      "Value": 319032
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder..cctor()",
+      "Value": 318592
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline\u002BExpandedPatternCatalog..ctor()",
+      "Value": 318520
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline\u002BExpandedStackedPatternCache..cctor()",
+      "Value": 318520
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.get_ExpandedStackedPatterns()",
+      "Value": 318520
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TrySampleRuns(int32[],bool[],int32,int32,float64,value class System.Threading.CancellationToken,bool[]\u0026,float64\u0026,int32,int32)",
+      "Value": 316704
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryDecodeRuns(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,bool[]\u0026,bool[]\u0026,float64\u0026,float64\u0026)",
+      "Value": 316704
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.BuildTelepenPairKinds(int32[],float64)",
+      "Value": 213200
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.CollectRetailRecoveryRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E)",
+      "Value": 212944
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectExpandedRunCandidates(class System.Collections.Generic.List\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 212920
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.BuildPixelCodewordRuns()",
+      "Value": 212504
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline\u002B\u003C\u003Ec.\u003C.cctor\u003Eb__77_2(int32)",
+      "Value": 109760
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline..cctor()",
+      "Value": 109760
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.MatchCode128(class System.Collections.Generic.List\u00601\u003Cint32\u003E,int32,int32,int32,float64\u0026)",
+      "Value": 109760
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCode128RunCandidates(class System.Collections.Generic.List\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 109760
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectItfRunCandidates(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryBuildTelepenBits(value class TelepenPairKind[],class System.Collections.Generic.List\u00601\u003Cbool\u003E\u0026)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14ImageDecoder.FitFinder(class System.Collections.Generic.List\u00601\u003Cint32\u003E,int32,bool,int32[]\u0026,float64\u0026)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CTryCollectRetailRunCandidates\u003Eg__Collect|65_0(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,int32,int32,bool,int32,int32,value class \u003C\u003Ec__DisplayClass65_0\u0026,value class \u003C\u003Ec__DisplayClass65_1\u0026,value class \u003C\u003Ec__DisplayClass65_2\u0026)",
+      "Value": 106344
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectAdaptiveRetailCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool)",
+      "Value": 106344
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CCollectRetailRecoveryRows\u003Eg__CollectVertical|70_1(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class \u003C\u003Ec__DisplayClass70_0\u0026)",
+      "Value": 106344
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeItfPairs(int32[],float64,int32,wchar[]\u0026,int32\u0026)",
+      "Value": 106344
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.BuildPixelCodewordBuckets()",
+      "Value": 106088
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder\u002B\u003C\u003Ec.\u003C.cctor\u003Eb__151_4()",
+      "Value": 106088
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCode93(bool[],class System.String\u0026)",
+      "Value": 106088
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarExpandedStacking.BuildRow(int32[],int32,int32,int32,bool,bool)",
+      "Value": 106088
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeEan8(bool[],class System.String\u0026)",
+      "Value": 106088
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCodabarRunCandidates(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 104016
+    }
+  ],
+  "InclusiveThreadTimeStacks": [
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusSession.Decode(class System.String,bool)",
+      "Value": 1294
+    },
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusReaders.Decode(unsigned int8[],int32,int32,class System.String,class System.String,bool,bool,class System.String\u0026)",
+      "Value": 1274
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.Scan(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions)",
+      "Value": 1271
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanFrame(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline)",
+      "Value": 1270
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,bool,class CodeGlyphX.QrDecoded[]\u0026)",
+      "Value": 304
+    },
+    {
+      "Key": "CodeGlyphX.QrImageDecoder.TryDecodeAll(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,value class System.Threading.CancellationToken,bool,class CodeGlyphX.QrDecoded[]\u0026)",
+      "Value": 304
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanQr(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 304
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,bool,bool,class CodeGlyphX.QrDecoded[]\u0026,value class System.Nullable\u00601\u003Cvalue class DecodeBudget\u003E)",
+      "Value": 303
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllFromImage(int32,value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 296
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanMatrixTiles(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E)",
+      "Value": 284
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllFromImageCore(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 283
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanDataMatrix(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 261
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromImage(value class CodeGlyphX.Qr.QrGrayImage,bool,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class DecodeBudget,bool,bool)",
+      "Value": 233
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanLinear(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 218
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeAllLocated(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.Internal.BarcodeImageCandidate[]\u0026,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,bool)",
+      "Value": 217
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanLocatedLinear(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E)",
+      "Value": 217
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.DecodeLocatedRegion(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,int32,int32,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.Internal.BarcodeImageCandidate\u003E,bool)",
+      "Value": 214
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecodeDetailed(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.DataMatrix.DataMatrixDecoded\u0026)",
+      "Value": 208
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecodePixelsDetailed(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.DataMatrix.DataMatrixDecoded\u0026,class CodeGlyphX.DataMatrixDecodeDiagnostics)",
+      "Value": 207
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget)",
+      "Value": 190
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecodePerspective(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.DataMatrix.DataMatrixDecoded\u0026,class CodeGlyphX.DataMatrixDecodeDiagnostics)",
+      "Value": 190
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudget.ShouldAbort(value class System.Threading.CancellationToken)",
+      "Value": 185
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecode(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 183
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecDecoder.TryDecode(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 183
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanAztec(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 183
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeAllOrientations(value class AztecGrayImage,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 180
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudgetState.get_IsExpired()",
+      "Value": 163
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectHybridThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 138
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudget.get_IsExpired()",
+      "Value": 137
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryGetLocatedModuleCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BarcodeScanlineCandidate[]\u0026,bool,bool)",
+      "Value": 130
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool,bool)",
+      "Value": 125
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass43_0.\u003CTryDecodeAll\u003Eg__ScanGrid|1(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class DecodeBudget,value class \u003C\u003Ec__DisplayClass43_1\u0026,value class \u003C\u003Ec__DisplayClass43_2\u0026)",
+      "Value": 122
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.FindComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Func\u00601\u003Cbool\u003E,int32,int32)",
+      "Value": 112
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryDecodeExpandedStacked(unsigned int8[],int32,int32,bool,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 110
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanExpandedStacked(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 110
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ScanTiles(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeOptions,class System.Func\u00607\u003Cunsigned int8[],int32,int32,int32,int32,int32,bool\u003E,bool)",
+      "Value": 104
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.CollectExpandedStackedRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,class System.Collections.Generic.List\u00601\u003Cclass ExpandedRowObservation\u003E[],value class System.Threading.CancellationToken)",
+      "Value": 104
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.\u003CScanTiles\u003Eg__ScanBarcodeRegion|34_0(value class CodeGlyphX.ImageRegion,value class \u003C\u003Ec__DisplayClass34_0\u0026)",
+      "Value": 103
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectAdaptiveRetailCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool)",
+      "Value": 102
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.CollectRetailRecoveryRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E)",
+      "Value": 102
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder\u002B\u003C\u003Ec__DisplayClass19_0.\u003CTryDecodeAllLocated\u003Eb__0(unsigned int8[],int32,int32,int32,int32,int32)",
+      "Value": 102
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002BDecodeBudget.get_IsExpired()",
+      "Value": 101
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryDecodePixels(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026)",
+      "Value": 99
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryDecode(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026)",
+      "Value": 99
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanPdf417(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 99
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryDecodePixelRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026,bool\u0026)",
+      "Value": 98
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BinaryImageComponents.Visit(unsigned int8[],int32,int32,bool,value class System.Threading.CancellationToken,class System.Func\u00604\u003Cint32[],int32,bool,bool\u003E)",
+      "Value": 97
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeWithThresholds(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,class System.String\u0026)",
+      "Value": 90
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodePerspective(value class AztecGrayImage,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 90
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromHorizontal(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 83
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeScanline(value class CodeGlyphX.Internal.BarcodeScanlineCandidate[],int32\u0026,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,value class CodeGlyphX.Internal.BarcodeScanlineCandidate\u0026,bool,class System.Collections.Generic.IReadOnlyList\u00601\u003Cclass CodeGlyphX.BarcodeDecoded\u003E,class CodeGlyphX.BarcodeDecoded)",
+      "Value": 82
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCore(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool)",
+      "Value": 81
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCoreTrimmed(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool)",
+      "Value": 81
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeWithTransforms(bool[],value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,int32\u0026,value class System.Nullable\u00601\u003Cbool\u003E)",
+      "Value": 81
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.\u003CTryDecodeScanline\u003Eg__Consider|147_0(bool[],float64,value class CodeGlyphX.Internal.BarcodeScanlineCandidate,value class \u003C\u003Ec__DisplayClass147_0\u0026)",
+      "Value": 81
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass65_0.\u003CCollectFromComponents\u003Eb__0()",
+      "Value": 80
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeByBoundingBox(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,int32,int32,int32,int32,int32,int32)",
+      "Value": 76
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllAtScale(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class QrProfileSettings,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 73
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAdaptiveThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 72
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectGlobalThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class System.Span\u00601\u003Cunsigned int8\u003E,int32)",
+      "Value": 71
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CCollectRetailRecoveryRows\u003Eg__CollectHorizontal|70_0(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class \u003C\u003Ec__DisplayClass70_0\u0026)",
+      "Value": 63
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.FindPerspectiveGrids(unsigned int8[],int32,int32,value class ImagePoint,value class ImagePoint,value class ImagePoint,bool,value class System.Threading.CancellationToken)",
+      "Value": 58
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeWithOffsets(value class AztecGrayImage,bool,int32,int32,int32,int32,value class System.Threading.CancellationToken,class System.String\u0026,class System.Collections.Generic.Dictionary\u00602\u003Cvalue class System.ValueTuple\u00603\u003Cint32,int32,int32\u003E,bool\u003E,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 55
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryBinarizeRetailRow(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,unsigned int8[],int32[],int32[],value class System.Threading.CancellationToken,int32,bool,unsigned int16[])",
+      "Value": 55
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor\u002B\u003CEnumerateVariants\u003Ed__1.MoveNext()",
+      "Value": 53
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectRetailRunCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool,bool,bool,bool)",
+      "Value": 50
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarLimitedDecoder.TryExtractWidths(bool[],int32[]\u0026)",
+      "Value": 50
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarLimitedDecoder.TryDecode(bool[],class System.String\u0026)",
+      "Value": 50
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeGs1DataBarLimited(bool[],class System.String\u0026)",
+      "Value": 50
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrFinderPatternDetector.FindCandidates(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,bool,class System.Func\u00601\u003Cbool\u003E,int32,int32,bool,bool)",
+      "Value": 49
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrFinderPatternDetector.FindCandidatesWithStep(value class CodeGlyphX.Qr.QrGrayImage,bool,int32,class PooledList\u00601\u003Cvalue class FinderPattern\u003E,bool,class System.Func\u00601\u003Cbool\u003E,int32,bool)",
+      "Value": 48
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadPixelRows(int32,int32,class PixelRunCache,value class System.Threading.CancellationToken,bool,bool,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026,bool\u0026,class System.Collections.Generic.List\u00601\u003Cvalue class PixelFramingCandidate\u003E)",
+      "Value": 47
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromVertical(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 44
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14ImageDecoder.TryDecode(unsigned int8[],int32,int32,bool,bool,value class System.Threading.CancellationToken,class System.String\u0026,bool\u0026)",
+      "Value": 43
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanDataBarStacked(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 43
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryDecode(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 42
+    },
+    {
+      "Key": "CodeGlyphX.MicroQrDecoder.TryDecode(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 42
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanMicroQr(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 42
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadRightFramedRows(int32,int32,class PixelRunCache,value class System.Threading.CancellationToken,bool,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026,bool\u0026)",
+      "Value": 42
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudgetState.ShouldAbort(value class System.Threading.CancellationToken)",
+      "Value": 41
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder\u002B\u003C\u003Ec__DisplayClass26_0.\u003CFindBullseyeGrids\u003Eb__0(int32[],int32,bool)",
+      "Value": 40
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14ImageDecoder.Collect(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,class System.Collections.Generic.List\u00601\u003Cclass Row\u003E[],value class System.Threading.CancellationToken)",
+      "Value": 40
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CCollectRetailRecoveryRows\u003Eg__CollectVertical|70_1(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class \u003C\u003Ec__DisplayClass70_0\u0026)",
+      "Value": 39
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromBullseye(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 37
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromCenter(value class AztecGrayImage,bool,int32,int32,int32,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 36
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryFitRing(int32[],int32,int32,int32,int32[],value class System.Threading.CancellationToken,value class RingPoint[]\u0026)",
+      "Value": 33
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.HasPlausibleBoundingFinders(value class CodeGlyphX.Qr.QrGrayImage,int32,int32,int32,float64,float64,float64,bool,bool,float64,value class DecodeBudget)",
+      "Value": 31
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryDecodeFromFinderPatterns(value class GrayImage,unsigned int8,bool,value class System.Threading.CancellationToken,bool\u0026,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 24
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Close(unsigned int8[],int32,int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 22
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryFindBoundingBox(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,int32\u0026,int32\u0026,int32\u0026,int32\u0026)",
+      "Value": 21
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithBinaryOpen(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 20
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Dilate(unsigned int8[],int32,int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 18
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.MatchesFunctionPatterns(value class GrayImage,unsigned int8,bool,float64,float64,float64,float64,float64,float64,float64,int32)",
+      "Value": 16
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TrySampleAndDecode(value class GrayImage,unsigned int8,bool,float64,float64,float64,float64,float64,float64,float64,int32,bool,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 16
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromBox(value class AztecGrayImage,bool,int32,int32,int32,int32,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 16
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromFullFrame(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 16
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithBinaryClose(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 15
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryExtractModules(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.BitMatrix\u0026,value class ImageSamplingGrid\u0026)",
+      "Value": 15
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass62_0.\u003CCollectFromImage\u003Eb__0()",
+      "Value": 14
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryDecodeFromForegroundBounds(value class GrayImage,unsigned int8,bool,value class System.Threading.CancellationToken,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 14
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder\u002B\u003C\u003Ec__DisplayClass26_0.\u003CFindImageComponents\u003Eb__0(int32[],int32,bool)",
+      "Value": 12
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.ToLuminance(unsigned int8[],value class System.Threading.CancellationToken)",
+      "Value": 11
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryBinarizeRetailRowFromExtrema(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,unsigned int16[],unsigned int8[],value class System.Threading.CancellationToken,int32,bool)",
+      "Value": 11
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryDecodeBoundsHypothesis(value class GrayImage,unsigned int8,bool,value class PixelBounds,int32,int32,bool,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 10
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Erode(unsigned int8[],int32,int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 10
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryFindBoundingBox(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,bool,value class System.Threading.CancellationToken,value class BoundingBox\u0026)",
+      "Value": 9
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeFromGray(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026)",
+      "Value": 8
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithAdaptiveThreshold(int32,int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 8
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.GetRuns(bool[])",
+      "Value": 8
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder\u002BPixelRunCache.TryRead(int32,bool,bool,int32,float64,class System.Collections.Generic.List\u00601\u003Cint32\u003E,value class System.Threading.CancellationToken,bool\u0026)",
+      "Value": 7
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCode128RunCandidates(class System.Collections.Generic.List\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 7
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeUpcE(bool[],class System.String\u0026)",
+      "Value": 7
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TrySampleModuleFast(value class GrayImage,unsigned int8,bool,float64,float64,float64,float64,float64,float64,float64,int32,int32,bool\u0026)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Adaptive(unsigned int8[],int64[],int32,int32,int32,int32,bool,value class System.Threading.CancellationToken)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.MaxiCode.MaxiCodeImageDecoder.TryDecode(unsigned int8[],int32,int32,value class System.Threading.CancellationToken,class CodeGlyphX.MaxiCodeDecoded\u0026,bool\u0026)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanMaxiCode(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline..cctor()",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.MatchCode128(class System.Collections.Generic.List\u00601\u003Cint32\u003E,int32,int32,int32,float64\u0026)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeTelepen(bool[],class System.String\u0026)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.TryCreate(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,int32,class System.Func\u00601\u003Cbool\u003E,class CodeGlyphX.Qr.QrGrayImagePool,value class CodeGlyphX.Qr.QrGrayImage\u0026)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithHybridThreshold(int32,int32,int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CreateHybridThresholdImage(value class CodeGlyphX.Qr.QrGrayImage,bool,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.BuildIntegral(unsigned int8[],int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.CountEdgeRuns(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,int32,int32,bool,bool,value class System.Threading.CancellationToken)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryResolveTimingGrid(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class BoundingBox,bool,int32,value class System.Threading.CancellationToken,int32\u0026,int32\u0026)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAtScale(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class QrProfileSettings,value class DecodeBudget,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeCore(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,value class System.Nullable\u00601\u003Cvalue class DecodeBudget\u003E)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.ToGray(unsigned int8[],int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder\u002BAztecGrayImage.TryCreate(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class AztecGrayImage\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePatchCode(bool[],class System.String\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryBinarizeFineRetailRowFromExtrema(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,unsigned int16[],unsigned int8[],value class System.Threading.CancellationToken,bool)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryMatchUpcEDigit(bool[],int32,value class Parity,wchar\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithLocalNormalize(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder\u002BGrayImage.TryCreate(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class GrayImage\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.FindFinderCandidates(value class GrayImage,unsigned int8,bool,value class System.Threading.CancellationToken)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.ContrastStretch(unsigned int8[],int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.MaxiCode.MaxiCodeImageDecoder.TryCreateGray(unsigned int8[],int32,int32,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.DecodeBudgetState,value class GrayImage\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.MaxiCode.MaxiCodeImageDecoder.FindFinders(value class GrayImage,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.DecodeBudgetState)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCode39RunCandidates(class System.Collections.Generic.List\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectItfRunCandidates(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectDataBar14RunCandidates(class System.Collections.Generic.List\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14Decoder.TryExtractWidths(bool[],int32[]\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14Decoder.TryDecodeTruncated(bool[],class System.String\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeGs1DataBarTruncated(bool[],class System.String\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.UpcE.UpcETables..cctor()",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.IsValidUpcE(class System.String)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline\u002BExpandedPatternCatalog..ctor()",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline\u002BExpandedStackedPatternCache..cctor()",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.get_ExpandedStackedPatterns()",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryPerspectiveGrid(unsigned int8[],int32,int32,class PerspectiveGrid,bool,value class System.Threading.CancellationToken,class CodeGlyphX.DataMatrix.DataMatrixDecoded\u0026,class CodeGlyphX.DataMatrixDecodeDiagnostics)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryFindMinRun(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,int32,int32,bool,bool,value class System.Threading.CancellationToken,int32\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryEstimateModuleSize(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class BoundingBox,bool,value class System.Threading.CancellationToken,int32\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadPixelRuns(bool[],int32,int32,int32,bool,bool,int32,float64,class System.Collections.Generic.List\u00601\u003Cint32\u003E,value class System.Threading.CancellationToken,bool\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass43_0.\u003CTryDecodeAll\u003Eb__0()",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryDecodeRuns(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,bool[]\u0026,bool[]\u0026,float64\u0026,float64\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.DataMatrix.DataMatrixDecoder\u002BImageComponent].Insert(int32,!0)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCode11(bool[],class CodeGlyphX.BarcodeDecodeOptions,class System.String\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.ImageFrame..ctor(value class System.ReadOnlyMemory\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class CodeGlyphX.ImageRowOrder)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.ImageFrame.Packed(value class System.ReadOnlyMemory\u00601\u003Cunsigned int8\u003E,int32,int32,value class CodeGlyphX.PixelFormat,value class CodeGlyphX.ImageRowOrder)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.ScanDeadline..ctor(value class System.Threading.CancellationToken,int32,class CodeGlyphX.ScanDeadline)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.ScanDeadline..ctor(value class System.Threading.CancellationToken,int32)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.ScanDeadline.get_ShouldStop()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ResolveRequestedFormats(value class CodeGlyphX.SymbolFormat[],class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.HashSet\u00601[CodeGlyphX.SymbolFormat].UnionWith(class System.Collections.Generic.IEnumerable\u00601\u003C!0\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.HashSet\u00601[CodeGlyphX.SymbolFormat]..ctor(class System.Collections.Generic.IEnumerable\u00601\u003C!0\u003E,class System.Collections.Generic.IEqualityComparer\u00601\u003C!0\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.HashSet\u00601[CodeGlyphX.SymbolFormat]..ctor(class System.Collections.Generic.IEnumerable\u00601\u003C!0\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.HasBroadComponentRuns(unsigned int8[],int32,int32)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TrimBoundingBox(value class CodeGlyphX.Qr.QrGrayImage,bool,int32\u0026,int32\u0026,int32\u0026,int32\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.AddPercentileThresholds(value class CodeGlyphX.Qr.QrGrayImage,value class System.Span\u00601\u003Cunsigned int8\u003E\u0026,int32\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.BuildThresholdCandidates(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class DecodeBudget,value class System.Span\u00601\u003Cunsigned int8\u003E\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeWithImage(int32,value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class DecodeBudget,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,class CodeGlyphX.Qr.QrGrayImagePool,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TrySampleModules(value class AztecGrayImage,bool,int32,int32,int32,int32,value class System.Threading.CancellationToken,value class CodeGlyphX.Internal.BitMatrixView\u0026,class System.Collections.Generic.Dictionary\u00602\u003Cvalue class System.ValueTuple\u00603\u003Cint32,int32,int32\u003E,bool\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.BuildPixelCodewordBuckets()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder..cctor()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder\u002BPixelCodewordCache.Read(class System.Collections.Generic.List\u00601\u003Cint32\u003E,int32,int32,int32\u0026,bool,bool)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.BarcodeType].IndexOf(!0)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.List\u00601[CodeGlyphX.BarcodeType].Contains(!0)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Code93.Code93Tables..cctor()",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[System.Char,CodeGlyphX.Ean.EanTables\u002BEncodedNumber].Add(!0,!1)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Ean.EanTables..cctor()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.BuildRetailDigitRuns()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.IsCode39Asterisk(int32[])",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Codabar.CodabarTables..cctor()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryReadCodabarCharacter(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,int32,bool,int32\u0026,wchar\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCodabarRunCandidates(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14ImageDecoder.TryNormalizeUnstackedRow(class System.Collections.Generic.List\u00601\u003Cint32\u003E,int32,int32[]\u0026,float64\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.\u003CTryCollectRetailRunCandidates\u003Eg__Collect|65_0(value class System.ReadOnlySpan\u00601\u003Cint32\u003E,int32,int32,bool,int32,int32,value class \u003C\u003Ec__DisplayClass65_0\u0026,value class \u003C\u003Ec__DisplayClass65_1\u0026,value class \u003C\u003Ec__DisplayClass65_2\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder\u002B\u003C\u003Ec.\u003C.cctor\u003Eb__151_0()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCode39(bool[],class CodeGlyphX.BarcodeDecodeOptions,class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCode32(bool[],class CodeGlyphX.BarcodeDecodeOptions,class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePlesseyInternal(bool[],class CodeGlyphX.BarcodeDecodeOptions,class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePlessey(bool[],class CodeGlyphX.BarcodeDecodeOptions,class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder\u002B\u003C\u003Ec.\u003C.cctor\u003Eb__151_4()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeCode93(bool[],class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder\u002B\u003C\u003Ec.\u003C.cctor\u003Eb__151_9()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeItfPairs(int32[],float64,int32,wchar[]\u0026,int32\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeItf(bool[],class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[System.Char,CodeGlyphX.UpcE.UpcETables\u002BParityPatterns]..ctor()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarExpandedDecoder.TryDecodeWithTotalChars(int32[],int32,class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarExpandedDecoder.TryDecodeFromWidths(int32[],class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarExpandedDecoder.TryDecodeExpanded(bool[],class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeGs1DataBarExpanded(bool[],class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[System.Char,CodeGlyphX.UpcA.UpcATables\u002BEncodedNumber].get_Item(!0)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryMatchUpcDigit(bool[],int32,bool,wchar\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeUpcA(bool[],class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[System.Char,CodeGlyphX.Ean.EanTables\u002BEncodedNumber].FindValue(!0)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.Dictionary\u00602[System.Char,CodeGlyphX.Ean.EanTables\u002BEncodedNumber].get_Item(!0)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryMatchEanDigit(bool[],int32,value class EanDigitKind,wchar\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeEanRightDigits(bool[],wchar[]\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeEan13(bool[],class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCode93RunCandidates(class System.Collections.Generic.List\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryEstimateCenter(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,int32\u0026,int32\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.ScorePerspectiveClock(unsigned int8[],int32,int32,value class CodeGlyphX.Qr.QrPerspectiveTransform,value class CodeGlyphX.DataMatrix.DataMatrixSymbolInfo,bool)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002BDecodeBudget.IsNearDeadline(int32)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass52_0.\u003CTryDecodeAtScale\u003Eb__0()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryFindForegroundBounds(value class GrayImage,unsigned int8,bool,value class System.Threading.CancellationToken,value class PixelBounds\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.BuildTelepenPairKinds(int32[],float64)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePharmacode(bool[],class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodePharmacodeWithBackground(bool[],bool[],value class System.Nullable\u00601\u003Cbool\u003E,bool,class System.String\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryBuildTelepenValues(class System.Collections.Generic.List\u00601\u003Cbool\u003E,unsigned int8[]\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.GetDistinctScanlineThresholds(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,value class System.Threading.CancellationToken,value class System.Span\u00601\u003Cint32\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.ExpandUpcEToUpcA(class System.String)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TrySampleRuns(int32[],bool[],int32,int32,float64,value class System.Threading.CancellationToken,bool[]\u0026,float64\u0026,int32,int32)",
+      "Value": 1
+    }
+  ],
+  "DeadlineCallers": [
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeWithOffsets(value class AztecGrayImage,bool,int32,int32,int32,int32,value class System.Threading.CancellationToken,class System.String\u0026,class System.Collections.Generic.Dictionary\u00602\u003Cvalue class System.ValueTuple\u00603\u003Cint32,int32,int32\u003E,bool\u003E,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 44
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.CollectExpandedStackedRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,class System.Collections.Generic.List\u00601\u003Cclass ExpandedRowObservation\u003E[],value class System.Threading.CancellationToken)",
+      "Value": 44
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.FindPerspectiveGrids(unsigned int8[],int32,int32,value class ImagePoint,value class ImagePoint,value class ImagePoint,bool,value class System.Threading.CancellationToken)",
+      "Value": 37
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectRetailRunCandidates(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool,bool,bool,bool,bool)",
+      "Value": 32
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBar14ImageDecoder.Collect(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,class System.Collections.Generic.List\u00601\u003Cclass Row\u003E[],value class System.Threading.CancellationToken)",
+      "Value": 17
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryBinarizeRetailRowFromExtrema(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,unsigned int16[],unsigned int8[],value class System.Threading.CancellationToken,int32,bool)",
+      "Value": 11
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder\u002B\u003C\u003Ec__DisplayClass26_0.\u003CFindImageComponents\u003Eb__0(int32[],int32,bool)",
+      "Value": 10
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder\u002B\u003C\u003Ec__DisplayClass26_0.\u003CFindBullseyeGrids\u003Eb__0(int32[],int32,bool)",
+      "Value": 6
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryDecodeFromFinderPatterns(value class GrayImage,unsigned int8,bool,value class System.Threading.CancellationToken,bool\u0026,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder\u002BAztecGrayImage.TryCreate(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,value class AztecGrayImage\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryFitRing(int32[],int32,int32,int32,int32[],value class System.Threading.CancellationToken,value class RingPoint[]\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder\u002BPixelRunCache.TryRead(int32,bool,bool,int32,float64,class System.Collections.Generic.List\u00601\u003Cint32\u003E,value class System.Threading.CancellationToken,bool\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryBinarizeFineRetailRowFromExtrema(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,unsigned int16[],unsigned int8[],value class System.Threading.CancellationToken,bool)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryFindBoundingBox(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,bool,value class System.Threading.CancellationToken,value class BoundingBox\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromFullFrame(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadPixelRuns(bool[],int32,int32,int32,bool,bool,int32,float64,class System.Collections.Generic.List\u00601\u003Cint32\u003E,value class System.Threading.CancellationToken,bool\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.CountEdgeRuns(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,int32,int32,bool,bool,value class System.Threading.CancellationToken)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryFindBoundingBox(value class AztecGrayImage,bool,value class System.Threading.CancellationToken,int32\u0026,int32\u0026,int32\u0026,int32\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.DecodeLocatedRegion(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,int32,int32,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.Internal.BarcodeImageCandidate\u003E,bool)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BinaryImageComponents.Visit(unsigned int8[],int32,int32,bool,value class System.Threading.CancellationToken,class System.Func\u00604\u003Cint32[],int32,bool,bool\u003E)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectDataBar14RunCandidates(class System.Collections.Generic.List\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromHorizontal(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCode93RunCandidates(class System.Collections.Generic.List\u00601\u003Cint32\u003E,bool,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,int32,bool)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryDecodePixelRows(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026,bool\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadRightFramedRows(int32,int32,class PixelRunCache,value class System.Threading.CancellationToken,bool,class CodeGlyphX.Pdf417.Pdf417Decoded\u0026,bool\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryFindMinRun(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,int32,int32,bool,bool,value class System.Threading.CancellationToken,int32\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.TryDecodePerspective(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,value class System.Threading.CancellationToken,class CodeGlyphX.DataMatrix.DataMatrixDecoded\u0026,class CodeGlyphX.DataMatrixDecodeDiagnostics)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002BDecodeBudget.IsNearDeadline(int32)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromCenter(value class AztecGrayImage,bool,int32,int32,int32,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryDecodeRuns(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class System.Threading.CancellationToken,bool[]\u0026,bool[]\u0026,float64\u0026,float64\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.\u003CScanTiles\u003Eg__ScanBarcodeRegion|34_0(value class CodeGlyphX.ImageRegion,value class \u003C\u003Ec__DisplayClass34_0\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.GetDistinctScanlineThresholds(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,value class System.Threading.CancellationToken,value class System.Span\u00601\u003Cint32\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.BarcodeDecoder.TryDecodeScanline(value class CodeGlyphX.Internal.BarcodeScanlineCandidate[],int32\u0026,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.BarcodeType\u003E,class CodeGlyphX.BarcodeDecodeOptions,value class System.Threading.CancellationToken,class CodeGlyphX.BarcodeDecodeDiagnostics,class CodeGlyphX.BarcodeDecoded\u0026,value class CodeGlyphX.Internal.BarcodeScanlineCandidate\u0026,bool,class System.Collections.Generic.IReadOnlyList\u00601\u003Cclass CodeGlyphX.BarcodeDecoded\u003E,class CodeGlyphX.BarcodeDecoded)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodeFromBox(value class AztecGrayImage,bool,int32,int32,int32,int32,value class System.Threading.CancellationToken,class System.String\u0026,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryDecodeFromForegroundBounds(value class GrayImage,unsigned int8,bool,value class System.Threading.CancellationToken,class CodeGlyphX.MicroQrDecoded\u0026,class CodeGlyphX.MicroQrPixelDecodeInfo\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectCandidatesFromVertical(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.Internal.BarcodeScanlineCandidate\u003E,bool,bool)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TrySampleRuns(int32[],bool[],int32,int32,float64,value class System.Threading.CancellationToken,bool[]\u0026,float64\u0026,int32,int32)",
+      "Value": 1
+    }
+  ]
+}

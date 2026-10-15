@@ -1,0 +1,51 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "All five upstream codabar-1 fixtures excluded from the fixed six-image main selection; original UTF-8 oracle bytes preserved; first evaluation after the two-photo fix",
+  "Samples": [
+    {
+      "Id": "codabar-1/02.png",
+      "File": "codabar-1/02.png",
+      "Sha256": "e1d4f52b1a0f22ba9b46367f1d5a0e8ea6d97462694b448c440d3b9bf48b2393",
+      "Format": "Codabar",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "codabar-1/03.png",
+      "File": "codabar-1/03.png",
+      "Sha256": "c669f3cd2f3edf8bb5f92115bbb21bd08b59d8c25e94d521fa462f77578dc8ea",
+      "Format": "Codabar",
+      "Expected": [
+        "294/586"
+      ]
+    },
+    {
+      "Id": "codabar-1/10.png",
+      "File": "codabar-1/10.png",
+      "Sha256": "3472ccb1554f414f5cbd9451374f71879f761cebe616004cf126f5f6a8078aa9",
+      "Format": "Codabar",
+      "Expected": [
+        "123456"
+      ]
+    },
+    {
+      "Id": "codabar-1/14.png",
+      "File": "codabar-1/14.png",
+      "Sha256": "4f84f8842b2dc976ab8d13cbba88d5f44ae36a23d430093cf83071a9a19507aa",
+      "Format": "Codabar",
+      "Expected": [
+        "31117013206375"
+      ]
+    },
+    {
+      "Id": "codabar-1/15.png",
+      "File": "codabar-1/15.png",
+      "Sha256": "1b1e882d4417eff4de4f307a7c29e3f64dac50c52045ccee5507ce7a27b8be94",
+      "Format": "Codabar",
+      "Expected": [
+        "123456789012"
+      ]
+    }
+  ]
+}

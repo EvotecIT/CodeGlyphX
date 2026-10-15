@@ -1,0 +1,1051 @@
+[
+  {
+    "Id": "falsepositives-2/01.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/02.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/03.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/04.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/05.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/06.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/07.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/08.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/09.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
+  },
+  {
+    "Id": "falsepositives-2/10.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/11.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/12.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/13.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/14.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/15.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/16.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/17.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/18.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/19.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
+  },
+  {
+    "Id": "falsepositives-2/20.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/21.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/22.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/23.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/24.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/25.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/01.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/03.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/04.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/15.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Inconclusive",
+    "Completion": "RecognitionBudgetExceeded"
+  },
+  {
+    "Id": "falsepositives/16.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/19.png",
+    "Format": "All",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/01.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/02.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/03.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [
+      "8$"
+    ],
+    "Missing": [],
+    "Unexpected": [
+      "8$"
+    ],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/04.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/05.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/06.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/07.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/08.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/09.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/10.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [
+      "12178384",
+      "12251117"
+    ],
+    "Missing": [],
+    "Unexpected": [
+      "12178384",
+      "12251117"
+    ],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/11.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/12.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/13.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [
+      "T"
+    ],
+    "Missing": [],
+    "Unexpected": [
+      "T"
+    ],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/14.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/15.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/16.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/17.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/18.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/19.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/20.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [
+      "06182218"
+    ],
+    "Missing": [],
+    "Unexpected": [
+      "06182218"
+    ],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/21.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/22.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/23.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/24.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/25.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/01.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [
+      "1858176738383"
+    ],
+    "Missing": [],
+    "Unexpected": [
+      "1858176738383"
+    ],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/03.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/04.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/15.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/16.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [
+      "19758226"
+    ],
+    "Missing": [],
+    "Unexpected": [
+      "19758226"
+    ],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/19.png",
+    "Format": "All",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/01.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/02.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/03.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/04.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/05.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/06.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/07.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/08.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/09.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/10.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/11.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/12.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/13.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/14.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/15.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/16.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/17.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/18.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/19.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/20.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/21.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/22.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/23.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/24.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/25.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/01.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/03.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/04.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/15.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/16.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/19.png",
+    "Format": "All",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  }
+]

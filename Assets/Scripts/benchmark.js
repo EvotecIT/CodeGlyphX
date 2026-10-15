@@ -154,6 +154,12 @@
     html += '<div class="meta-item"><span class="meta-label">Framework</span><span class="meta-value">' + escapeHtml(entry.framework || 'unknown') + '</span></div>';
     html += '</div>';
     container.innerHTML = html;
+    if (entry.qualification === 'historical-unqualified') {
+      const notice = document.createElement('p');
+      notice.className = 'benchmark-warning';
+      notice.textContent = 'Historical, unqualified results. These rankings do not establish current performance or recognition quality. Read the qualified comparisons at /benchmarks/.';
+      container.prepend(notice);
+    }
   }
 
   function renderOsSelector(summaryData, detailData) {

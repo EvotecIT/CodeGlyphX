@@ -1,0 +1,609 @@
+{
+  "Source": "2e2915a4b218c89dba8c126a1e32dec410c4958e",
+  "CoreSha256": "3474E8726755DB88512FB4EEA5B97473E0AF57B57ED587ABB33EE8ABA1306E9B",
+  "PreviousSource": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+  "PreviousCoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+  "HostSha256": "22C93B910B08C5E94CF5086E28E871AF6609BB02F319599300F8E706CD6C4684",
+  "PreviousHostSha256": "782116BD36496BA4C6FC847F8CD2E33886D681299FF26048D41EF2CDF54748DB",
+  "Changes": "Image component searches prepare one exact integer reciprocal for the image width. QR traversal and the shared Data Matrix/Aztec visitor use multiplication and one remainder correction for row and column coordinates. The queues, four-connected neighbours, row-major seeds, component filters, result ordering, tied extrema and deadline polling keep their existing behavior.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are a separate workload from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "component-coordinates-fabric-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "A579A30CF108473A1F89C6DE54897EBF2182596C499492FC3F26E365F770B2E4"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "component-coordinates-fabric-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "D0A0A2BEC9DCD89ABDA2F211378698E0B87EF0704EFD8EE757B28601426B7774"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "component-coordinates-texture-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "19FC40DB91388B37636165B948FE76CE860185C6EAD037D0A198AE33BE31AA8E"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "component-coordinates-texture-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "2FEFB6608B0E09E6961AA531A4537CE285347259A9BFF02F60437C3AB15D5049"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "component-coordinates-whole-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "6BEA7E24C8F9BDC50A1DFB3C19B7DC7F71DF462AC642158F4FC449A5CB240C07"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "component-coordinates-whole-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "D25B91192CF6814FD143CC896E4C75DA7CFBE4FAD78B20D88480829E7EAA9F16"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "component-coordinates-retail-positive-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "1CA3148746203508EE05B656412EDA3F3E349370FF50B7F12ECA802C13AEBBD3"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "component-coordinates-retail-positive-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "14C17FB9EC9FF0D11CA6E51F86DA6551F0C27503771ED798F58D0E8E801C5C51"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "component-coordinates-retail-negative-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "1CC7291955278C5B18ABF338AFFFA4CBFE308128D0405F9A1F0ADE7EA89939B3"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "component-coordinates-retail-negative-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "28972A7594F5161BAE94CEFDF4A3BA5AD106F267ECAA0D10C0FE312B1C3B58C1"
+    }
+  ],
+  "Contracts": {
+    "net10": 9,
+    "net8": 9,
+    "net472": 5
+  },
+  "ReviewCoverage": {
+    "Base": "62c681824d0e0e56ab14f211f73d2481be9ff9cf",
+    "Head": "2e2915a4b218c89dba8c126a1e32dec410c4958e",
+    "BoundaryState": "current",
+    "UnresolvedFindings": [],
+    "ReviewAgent": "component_coordinate_division_review",
+    "TargetedConfirmationUsed": false,
+    "Scope": "One fresh independent read-only review of exact reciprocal coordinate arithmetic across nonnegative Int32 offsets and positive image widths, reachable QR/Data Matrix/Aztec consumers, seed and queue order, tied extrema, cancellation/deadline polling, resource ownership and older-framework compatibility. No actionable findings.",
+    "Recommendation": "Accept as shaped for the arithmetic contract: useful internal capability in the existing image engine, no new public API, configuration, production dependency or maintained toolchain. Performance utility remains subject to current comparisons.",
+    "Limits": "Reviewer verified 69 exact-source net10 focused tests and matching measured core. The separate 69 net10, 69 net8 and 45 net472 tests are precommit implementation evidence. Full corpus, broader exact-source frameworks, native execution and comparative performance were not established by this read-only pass.",
+    "VerifiedUtc": "2026-10-13T20:35:53.459448+00:00"
+  },
+  "TestAssemblySha256": "7FE7C5BFCB4375933CA674A6B5C57DC71509396CA19B59F7406A11722825E12A",
+  "NativeArm64": {
+    "Status": "passed",
+    "Architecture": "arm64",
+    "OSVersion": "27.0.1",
+    "SDKVersion": "10.0.402",
+    "SelectedFrameworkVersion": "10.0.13",
+    "FrameworkRollForward": "Disable",
+    "Source": "2e2915a4b218c89dba8c126a1e32dec410c4958e",
+    "CoreSha256": "3474E8726755DB88512FB4EEA5B97473E0AF57B57ED587ABB33EE8ABA1306E9B",
+    "InputFiles": {
+      "CodeGlyphX.dll": "3474e8726755db88512fb4eea5b97473e0af57b57ed587abb33ee8aba1306e9b",
+      "CodeGlyphX.Playground.dll": "db8443be858d2655328f3783ca4cc9051eaca7f5bcbfa55c3fcd843b542a09a7",
+      "CodeGlyphX.Tests.dll": "7fe7c5bfcb4375933ca674a6b5c57dc71509396ca19b59f7406a11722825e12a",
+      "Microsoft.TestPlatform.CoreUtilities.dll": "ca8cd4a0c394af3cc03c8e83b0377ecf14e6a8c68e4b0b50f732b1370950d7df",
+      "Microsoft.TestPlatform.PlatformAbstractions.dll": "8bc7faec348a71336af3bfbeecad564ad0f97a8216835ed90cd2ceff621a3697",
+      "Microsoft.VisualStudio.TestPlatform.ObjectModel.dll": "ff730c68bebe827f74e2bdcfb571400ab328c00be11c7fe3a1fe01143b483bc6",
+      "NativeCoordinateDriver.deps.json": "9d772ef7ea173762cb08e4492040602a57a1b4b0e1f7b421d29bd2818c1b8c3f",
+      "NativeCoordinateDriver.dll": "ae7b30a27cd58ae3618515c3f10ff3b63b2e448695a5b8127d3244bd45a24bd4",
+      "NativeCoordinateDriver.runtimeconfig.json": "c230a317a54dd960bcbeb5f347f52e18dc665a26f7efda2159fced9a5ac7e097",
+      "xunit.abstractions.dll": "3166dc70323fb30ccf1cedb0fe86f2ad122c46d254542342d90386efc4c9285c",
+      "xunit.assert.dll": "bcd9711b22d227ac8cd4c1568e72433a0f576d2ec8aae64ac508081892015b1d",
+      "xunit.core.dll": "2f7feeec8c6dec7df684c25fb80aadb292b963d09723460f03d53c5ad2088acc",
+      "xunit.execution.dotnet.dll": "e70febe547c15f8155db3e2d95c3ba4445a59cbc21a3e7541ab22ed49d3dcf7b",
+      "xunit.runner.visualstudio.testadapter.dll": "a5dd2a0765f3891208189261cfe09171f875ff44fd5af99ea56e890085fb7f30",
+      "cs/Microsoft.TestPlatform.CoreUtilities.resources.dll": "5f5501b18f65687cebd354196f563c520b4575e58eca474f3b3d1bd3247b9b46",
+      "cs/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "a24d277e98d3dc7986741ff0c72e628aca9814556d6d64b5e3992bacf07c6f17",
+      "de/Microsoft.TestPlatform.CoreUtilities.resources.dll": "cf94a0635173d6d868a90161757cb9484e559fedfde6e7ea50dd935e1d9b6666",
+      "de/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "edfdf3cb64553da8e229463948aa7b962e96e4037d510fb7fad4f26da9e7c8b5",
+      "es/Microsoft.TestPlatform.CoreUtilities.resources.dll": "6de8b0fd082756f612d4c8b3b06e3558e2321bcb910d5a70769050f308b96641",
+      "es/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "eb966be23882a9e11459d283241a67e7c0265f271e98603f13cabaadd8f7ee64",
+      "fr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "bec57046f616616913fd1416f013635a41a06c1c4d8ad67a8ee31f6098a3444b",
+      "fr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "07614b2d790a3b6ad93b41961566b84e4ad56cc86f5bf39658c06a13f2613db4",
+      "it/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2af9b70d68f3ab2bbaa609e5e556811c7f68869ce2c3cc6d7209b3d6722e0968",
+      "it/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5202a294a2b02c741ba292ba802f12b9473836a81ce61cb42f462eead6dc4dfa",
+      "ja/Microsoft.TestPlatform.CoreUtilities.resources.dll": "63d61001cdf7c501e253adeace734b32023cf617c04785937525fc0f202c3e21",
+      "ja/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "d2a679cc9cf0b0e5c865bd937ec90e45ecb434289c6b017992f417e34bae646c",
+      "ko/Microsoft.TestPlatform.CoreUtilities.resources.dll": "e7528a92a6ec0e1684537dd550cdb016ecc8df62a55c85294e608358e28a560d",
+      "ko/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "dc7b27e609e842eeea5da50ea172f288479b652ea779072e5dbbde045418819d",
+      "pl/Microsoft.TestPlatform.CoreUtilities.resources.dll": "cb997c46356be42b346682b3a1b6825cb6f70a30c92403048f7dbdf25065f6ab",
+      "pl/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "48f6bb8c551179da07d5e136a0c781dd6433f23312f3ce9241dcec29d8412f3e",
+      "pt-BR/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2bb0340569343f0c3288f35a5cfa947d9495de55d04e93f2c380b75b45d681a9",
+      "pt-BR/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3944adc8b9c09a7007aaea3c86ee7666ddf3e7328b16edcc72f7e6dcc1ff1de8",
+      "ru/Microsoft.TestPlatform.CoreUtilities.resources.dll": "089d9052b2fa1ef63f2bd1f0f0f8161fe6d1d02721fc39d4b48c333d26826306",
+      "ru/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "515c96257715a3ccd56af8acd9460e72e57dda825ff16824d2912271beca0749",
+      "tr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "1fee9a7a6af5ef00d7fdd4f3bf265645c7984224352e95347c2f082f64d8ade2",
+      "tr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5b39c999ccf72eb01ba387c8a0d72814d68a7120e623accbd2da544ee04ba5dc",
+      "zh-Hans/Microsoft.TestPlatform.CoreUtilities.resources.dll": "db896ac2579f5d5773f940bd278852c689799a3e0acc51bb30e46eef99fc76fb",
+      "zh-Hans/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3f370c15663359c40bcee2a7d15cd386f01980be753f7ab1505783649d70dcaf",
+      "zh-Hant/Microsoft.TestPlatform.CoreUtilities.resources.dll": "fe732572a93c216282c0ef0a8762246735c8885873e03ffe9fd287d202f0d806",
+      "zh-Hant/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "335d5fa4c5575ceb8f4ffb58fda53c1813a0c725a17f68219d012d390ddf978f",
+      "Fixtures/Qr/perspective-bookmark.png": "8e6d85ff2f01fc79cdd53eae7099504fbf0c8e208c2868868ecddf68ae2f7a9d"
+    },
+    "DecisionProof": {
+      "Status": "passed",
+      "Checks": 41,
+      "Cases": [
+        {
+          "Case": "Int32 coordinate boundaries",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=False stop=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=False stop=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=True stop=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=True stop=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=False invert=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=False invert=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=True invert=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=True invert=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix invalid stride 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix invalid stride -80",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 2",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix RGBA mirrored",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix RGBA inverted",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix Gray8 rotated",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix Gray8 mirrored",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix Gray8 inverted",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix ECI metadata",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix DMRE metadata",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix damaged clock rejection",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix photo zxing-perspective-20.png",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix photo zxing-perspective-40.png",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix photo zxing-perspective-lowcontrast.png",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec pitch 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec pitch 2",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec pitch 3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec independent small symbol",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 10",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 13",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 14",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 15",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 17",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 19",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec mirrored photo",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec inverted photo",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR perspective single",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR perspective all",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR perspective scanner",
+          "Status": "passed"
+        }
+      ],
+      "Architecture": "Arm64",
+      "OS": "macOS 27.0.1",
+      "Runtime": ".NET 10.0.13",
+      "CoreSha256": "3474E8726755DB88512FB4EEA5B97473E0AF57B57ED587ABB33EE8ABA1306E9B",
+      "TestAssemblySha256": "7FE7C5BFCB4375933CA674A6B5C57DC71509396CA19B59F7406A11722825E12A",
+      "CoreInformationalVersion": "3.0.0+2e2915a4b218c89dba8c126a1e32dec410c4958e",
+      "Scope": "Nine actual coordinate/component contracts and 32 public QR, Data Matrix and Aztec decoding checks on the exact Windows-qualified managed binaries. Functional qualification only; no native timing or full native corpus claim."
+    },
+    "Scope": "Exact managed core and test binary, native ARM64 functional execution only; not native timing or full-corpus qualification."
+  },
+  "NativeFixtureSha256": "8E6D85FF2F01FC79CDD53EAE7099504FBF0C8E208C2868868ECDDF68AE2F7A9D",
+  "ContractNote": "Exact coordinate arithmetic, binary visitor queue order and edge/stop behavior, and QR component bounds, areas and order match independent integer and graph references. The new contracts pass nine cases on .NET 10 and .NET 8 and five on .NET Framework. Native ARM64 passes the same nine coordinate/component cases and 32 public QR, Data Matrix and Aztec decoding cases on the exact managed core and test assembly.",
+  "SamplingLimits": "Image widths, pixel offsets, four-connectivity, candidate limits, queue representation, polarity and cancellation/deadline polling retain their existing domain and behavior. No complete-scan speed, reliable deadline completion, CPU, throughput or memory-capacity guarantee follows from the component-only experiment.",
+  "ProfileDiagnostic": {
+    "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+    "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+    "TraceSha256": "d0be5dc2d9309d5d6d98c5cf4a789d41617569391c9252cac3e72629e6c7a790",
+    "DiagnosticSha256": "a91aef25e1df5d6d0ae5e775f671b1fdb3cbc40525dd2f78db8966761ff3e4e8",
+    "Images": 9,
+    "PrimingCalls": 9,
+    "MeasuredDiagnosticCalls": 27,
+    "MeasuredCorrect": 27,
+    "Scope": "Sampled allocation amounts and managed thread-time stacks on the decoding thread between probe markers. Inclusive stacks overlap; these are not CPU utilization or competitive timings.",
+    "TopProductThreadTimeStacks": [
+      {
+        "Key": "CodeGlyphX.Qr.QrPixelDecoder.FindComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,value class DecodeBudget,int32,int32)",
+        "Value": 791
+      },
+      {
+        "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.FindImageComponents(unsigned int8[],int32,int32,bool,value class System.Threading.CancellationToken)",
+        "Value": 679
+      },
+      {
+        "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodePerspective(value class AztecGrayImage,value class System.Threading.CancellationToken,class System.String&,class CodeGlyphX.AztecDecodeDiagnostics)",
+        "Value": 525
+      },
+      {
+        "Key": "CodeGlyphX.DataBar.DataBarLimitedDecoder.TryExtractWidths(bool[],int32[]&)",
+        "Value": 512
+      },
+      {
+        "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectRetailRunCandidates(value class System.ReadOnlySpan`1<unsigned int8>,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List`1<value class CodeGlyphX.Internal.BarcodeScanlineCandidate>,int32,bool,bool,bool,bool,bool)",
+        "Value": 500
+      },
+      {
+        "Key": "CodeGlyphX.Internal.BarcodeScanline.CollectExpandedStackedRows(value class System.ReadOnlySpan`1<unsigned int8>,int32,int32,int32,class System.Collections.Generic.List`1<class ExpandedRowObservation>[],value class System.Threading.CancellationToken)",
+        "Value": 473
+      },
+      {
+        "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadPixelRows(int32,int32,class PixelRunCache,value class System.Threading.CancellationToken,bool,bool,class CodeGlyphX.Pdf417.Pdf417Decoded&,bool&,class System.Collections.Generic.List`1<value class PixelFramingCandidate>)",
+        "Value": 425
+      },
+      {
+        "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryDecodeFromFinderPatterns(value class GrayImage,unsigned int8,bool,value class System.Threading.CancellationToken,bool&,class CodeGlyphX.MicroQrDecoded&,class CodeGlyphX.MicroQrPixelDecodeInfo&)",
+        "Value": 376
+      },
+      {
+        "Key": "CodeGlyphX.Internal.DecodeBudgetState.get_IsExpired()",
+        "Value": 328
+      },
+      {
+        "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectAdaptiveRetailCandidates(value class System.ReadOnlySpan`1<unsigned int8>,value class System.Threading.CancellationToken,class System.Collections.Generic.List`1<value class CodeGlyphX.Internal.BarcodeScanlineCandidate>,int32,bool,bool)",
+        "Value": 321
+      },
+      {
+        "Key": "CodeGlyphX.Qr.QrFinderPatternDetector.FindCandidatesWithStep(value class CodeGlyphX.Qr.QrGrayImage,bool,int32,class PooledList`1<value class FinderPattern>,bool,class System.Func`1<bool>,int32,bool)",
+        "Value": 310
+      },
+      {
+        "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadRightFramedRows(int32,int32,class PixelRunCache,value class System.Threading.CancellationToken,bool,class CodeGlyphX.Pdf417.Pdf417Decoded&,bool&)",
+        "Value": 287
+      },
+      {
+        "Key": "CodeGlyphX.Internal.DecodeBudget.ShouldAbort(value class System.Threading.CancellationToken)",
+        "Value": 261
+      },
+      {
+        "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Dilate(unsigned int8[],int32,int32,int32,value class System.Threading.CancellationToken)",
+        "Value": 202
+      },
+      {
+        "Key": "CodeGlyphX.Qr.QrPixelDecoder+<>c__DisplayClass107_0.<TrySampleWithCornersInternal>b__0()",
+        "Value": 171
+      },
+      {
+        "Key": "CodeGlyphX.Internal.BinaryImageComponents.Visit(unsigned int8[],int32,int32,bool,value class System.Threading.CancellationToken,class System.Func`4<int32[],int32,bool,bool>)",
+        "Value": 157
+      }
+    ],
+    "Decision": "Prototype exact reciprocal row-coordinate division in the existing shared component visitor and QR traversal. Keep the existing queues, seeds, area filters, ordering and polling cadence. Reject if balanced comparisons do not show useful gains.",
+    "Limits": "All 27 diagnostic repetitions completed on this run, although the same unchanged images had inconclusive outcomes in the preceding qualification. Samples locate work; they do not establish CPU utilization, ranked latency or a reliable deadline-completion guarantee."
+  },
+  "ProfileFiles": [
+    {
+      "File": "component-coordinates-negative-timeouts-before.json",
+      "Sha256": "34133828CA2931A7220C1D7CC7B1E15EFA4139D9E4A072BF6DF6BE3277A930F4"
+    },
+    {
+      "File": "component-coordinates-negative-timeouts-before-profile.json",
+      "Sha256": "2FD48200A84C73D59B8F71059ED24FB87532B22C7FDFB00C762D672CC5A0DE2C"
+    }
+  ],
+  "ReferenceContractsFile": "component-coordinates-reference-contracts.json",
+  "ReferenceContractsSha256": "215C3620745F6E5413754CA68830431932FF85A3EB39F9F7EF2648C6CC938828",
+  "SupplementalPackets": [
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd0",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "component-coordinates-databar-positive-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-databar-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "2399F6F6146A95F69B0F0DC9A16A7C42C2CE8AD5E4D12E9F1B8D6D7201834647"
+    },
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd1",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "component-coordinates-databar-positive-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-databar-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "E28D0354CCDFF3BAD1364482CD3807DB0A1DF7DDD3D27F8F417B46646D443C40"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd0",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "component-coordinates-databar-negative-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-databar-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "A22F35EA79D9985F23DE3492AAF0BD43441F54A07C0A591635368C3990BA3BE0"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd1",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "component-coordinates-databar-negative-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-databar-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "C38489D8F9D729FB65569E23CDD85F1D516CC44F646A6E469AE96564055F69C3"
+    }
+  ],
+  "ExploratoryPackets": [
+    {
+      "Kind": "qr",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "9C143F4CD8DBFB5F8E0ED34784A2031E088A282D8181A4EB1D35765A31665A5D",
+      "PacketFile": "component-coordinates-exploratory-qr-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-exploratory-qr-ccd0-outcomes.json",
+      "OutcomesSha256": "FAB93589F83CAED8E09B2A66E2D4EDAFDF29B6BE392F767709FBCAD235FF4D83"
+    },
+    {
+      "Kind": "qr",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "9C143F4CD8DBFB5F8E0ED34784A2031E088A282D8181A4EB1D35765A31665A5D",
+      "PacketFile": "component-coordinates-exploratory-qr-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-exploratory-qr-ccd1-outcomes.json",
+      "OutcomesSha256": "64644059FA4B0ED40477CCE0B4E44B7B5120E30C1EF76F4F2768ABBFB8688B54"
+    },
+    {
+      "Kind": "negative15",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "component-coordinates-exploratory-negative15-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-exploratory-negative15-ccd0-outcomes.json",
+      "OutcomesSha256": "852D378B84807E657CD8A42851AD9D17545385AFEF69A701C817587402EAEE1F"
+    },
+    {
+      "Kind": "negative15",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "component-coordinates-exploratory-negative15-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-exploratory-negative15-ccd1-outcomes.json",
+      "OutcomesSha256": "28E32E84C806CB856489E8BCE927546870FC0DED4061BE9834734F57505B0547"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "component-coordinates-exploratory-texture-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-exploratory-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "0EF404107BCC8FE6FB021AD9B93AB1594FB14E564CFF3C1DA4D536E7888E91E0"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "component-coordinates-exploratory-texture-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-exploratory-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "F40F5E7AF2425585842AC321E7BF937CA276EC2E441A7521B0C8FC2904D6A2FA"
+    },
+    {
+      "Kind": "timeout9",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "245DD9AE6EEBF9DBE2AC138486BEEF7DEE923FA55D01FD9DA87DED24296A1B86",
+      "PacketFile": "component-coordinates-exploratory-timeout9-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-exploratory-timeout9-ccd0-outcomes.json",
+      "OutcomesSha256": "EAC7A335132B81C6BA8DC246B864A84AB5A61BCEE70A42A86EE4B0FB7BFCB503"
+    },
+    {
+      "Kind": "timeout9",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "245DD9AE6EEBF9DBE2AC138486BEEF7DEE923FA55D01FD9DA87DED24296A1B86",
+      "PacketFile": "component-coordinates-exploratory-timeout9-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-exploratory-timeout9-ccd1-outcomes.json",
+      "OutcomesSha256": "ADD659272F50C88A04C66B70C4353B4452849086349B7D78D1B56A02E7BDC220"
+    }
+  ],
+  "KernelRecipe": {
+    "Role": "ActualPrivateComponentCollectionV1",
+    "Method": "QrPixelDecoder.FindComponents",
+    "Images": 4,
+    "Variants": 16,
+    "Thresholds": [
+      96,
+      160
+    ],
+    "Polarities": [
+      false,
+      true
+    ],
+    "BudgetMilliseconds": 0,
+    "Luminance": "(299*r + 587*g + 114*b + 500) / 1000",
+    "ClassSource": "#nullable enable\nusing System;\nusing System.Collections.Generic;\nusing System.IO;\nusing System.Linq;\nusing System.Reflection;\nusing System.Runtime.Loader;\nusing System.Security.Cryptography;\nusing System.Text;\nusing System.Threading;\nusing CodeGlyphX.Benchmarks.Tools;\n\npublic sealed class CoordinateKernelSession : IDisposable {\n    private readonly IsolatedCorpusSession _owner;\n    private readonly MethodInfo _find;\n    private readonly object _budget;\n    private readonly List<object[]> _inputs = new();\n    private readonly List<object> _results = new();\n    public string CoreSha256 => _owner.CoreSha256;\n    public string CoreInformationalVersion => _owner.CoreInformationalVersion;\n    public int Count => _inputs.Count;\n    public bool HasResult => _results.Count != 0;\n    public CoordinateKernelSession(string root, string manifest, string imageRoot) {\n        _owner = new IsolatedCorpusSession(root, manifest, imageRoot);\n        try {\n            var flags = BindingFlags.NonPublic | BindingFlags.Instance;\n            var context = (AssemblyLoadContext)typeof(IsolatedCorpusSession).GetField(\"_context\", flags)!.GetValue(_owner)!;\n            var adapter = typeof(IsolatedCorpusSession).GetField(\"_session\", flags)!.GetValue(_owner)!;\n            var core = context.Assemblies.Single(x => x.GetName().Name == \"CodeGlyphX\");\n            var grayType = core.GetType(\"CodeGlyphX.Qr.QrGrayImage\", true)!;\n            var pixels = (byte[][])adapter.GetType().GetField(\"_pixels\", flags)!.GetValue(adapter)!;\n            var widths = (int[])adapter.GetType().GetField(\"_widths\", flags)!.GetValue(adapter)!;\n            var heights = (int[])adapter.GetType().GetField(\"_heights\", flags)!.GetValue(adapter)!;\n            var ctor = grayType.GetConstructor(flags, null, new[] { typeof(int), typeof(int), typeof(byte[]), typeof(byte), typeof(byte), typeof(byte), typeof(byte[]) }, null)!;\n            var decoder = core.GetType(\"CodeGlyphX.Qr.QrPixelDecoder\", true)!;\n            _find = decoder.GetMethod(\"FindComponents\", BindingFlags.NonPublic | BindingFlags.Static)!;\n            _budget = Activator.CreateInstance(decoder.GetNestedType(\"DecodeBudget\", BindingFlags.NonPublic)!, new object?[] { 0, CancellationToken.None, null })!;\n            for (var i = 0; i < pixels.Length; i++) {\n                var gray = new byte[widths[i] * heights[i]];\n                for (var at = 0; at < gray.Length; at++) {\n                    var p = at * 4;\n                    gray[at] = (byte)((299 * pixels[i][p] + 587 * pixels[i][p + 1] + 114 * pixels[i][p + 2] + 500) / 1000);\n                }\n                foreach (byte threshold in new byte[] { 96, 160 }) {\n                    var image = ctor.Invoke(new object?[] { widths[i], heights[i], gray, (byte)0, (byte)255, threshold, null });\n                    foreach (var invert in new[] { false, true }) _inputs.Add(new object[] { image, invert, _budget, 400, 6 });\n                }\n            }\n        } catch { _owner.Dispose(); throw; }\n    }\n    public void Reset() {\n        foreach (IDisposable result in _results) result.Dispose();\n        _results.Clear();\n    }\n    public void Collect() {\n        if (HasResult) throw new InvalidOperationException(\"Reset before the measured collection.\");\n        foreach (var input in _inputs) _results.Add(_find.Invoke(null, input)!);\n    }\n    public CoordinateKernelOutcome[] Evaluate() {\n        if (_results.Count != Count) throw new InvalidOperationException(\"Incomplete component input coverage.\");\n        var output = new CoordinateKernelOutcome[Count];\n        for (var i = 0; i < Count; i++) {\n            var result = _results[i];\n            var count = (int)result.GetType().GetProperty(\"Count\")!.GetValue(result)!;\n            var item = result.GetType().GetProperty(\"Item\")!;\n            var text = new StringBuilder();\n            for (var at = 0; at < count; at++) {\n                var component = item.GetValue(result, new object[] { at })!;\n                foreach (var field in new[] { \"MinX\", \"MinY\", \"MaxX\", \"MaxY\", \"Area\" })\n                    text.Append((int)component.GetType().GetProperty(field)!.GetValue(component)!).Append(',');\n                text.Append(';');\n            }\n            output[i] = new CoordinateKernelOutcome { Variant = i, Components = count,\n                DescriptorSha256 = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(text.ToString()))) };\n        }\n        return output;\n    }\n    public void Dispose() { Reset(); _owner.Dispose(); }\n}\npublic sealed class CoordinateKernelOutcome {\n    public int Variant { get; set; }\n    public int Components { get; set; }\n    public string DescriptorSha256 { get; set; } = \"\";\n}\n",
+    "ClassSha256": "A289EC640F22E1A5244506F4EFBF24177C90D997D271316DFCB9C3D7D783687F",
+    "SpecificationSource": "$outputRoot=Get-BenchmarkInput OutputRoot\n$manifest=Get-BenchmarkInput ManifestPath\n$source=Get-BenchmarkInput Source\nNew-BenchmarkSuite 'coordinate-component-kernel' -OutputRoot $outputRoot {\n    Set-BenchmarkProfile Current\n    Set-BenchmarkPolicy -Warmup 3 -Iterations 12 -Order GroupedRotated -OutlierMode None\n    Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\n    Add-BenchmarkMetadata BaselineCoreSha256 $sessions.Baseline.CoreSha256\n    Add-BenchmarkMetadata CandidateCoreSha256 $sessions.Candidate.CoreSha256\n    Add-BenchmarkMetadata BaselineCoreInformationalVersion $sessions.Baseline.CoreInformationalVersion\n    Add-BenchmarkMetadata CandidateCoreInformationalVersion $sessions.Candidate.CoreInformationalVersion\n    Add-BenchmarkMetadata CandidateSource $source\n    Add-BenchmarkMetadata Scope 'Actual private QR FindComponents only, unbounded budget, four preloaded images, two fixed grayscale thresholds and two polarities. Explicit identical integer luminance preparation is outside timing; these are kernel inputs, not the complete public scan pipeline. Input loading, outcome evaluation and pooled-result disposal are excluded. Every priming and measured component descriptor is retained.'\n    Add-BenchmarkCases { Add-BenchmarkCase FixedComponentInputs @{} }\n    Set-BenchmarkSetup {\n        param($case,$run)\n        $run.Session=$sessions[$case.Engine]\n        if($run.Session.HasResult -and $lastIterations.ContainsKey($case.Engine) -and $lastIterations[$case.Engine] -lt 0){\n            $outcomes=$run.Session.Evaluate()\n            Assert-KernelOutcomes $outcomes\n            $folder=Join-Path (Join-Path $run.OutputRoot $run.RunId) 'warmup-outcomes'\n            [IO.Directory]::CreateDirectory($folder)|Out-Null\n            [IO.File]::WriteAllText((Join-Path $folder (\"{0}-{1}.json\" -f $case.Engine,$lastIterations[$case.Engine])),(ConvertTo-Json -InputObject @($outcomes) -Depth 10))\n        }\n        $lastIterations[$case.Engine]=$run.Iteration\n        $run.Session.Reset()\n    }\n    foreach($engineName in @('Baseline','Candidate')){\n        Add-BenchmarkEngine $engineName { Add-BenchmarkOperation Collect { param($case,$run) $run.Session.Collect() } }\n    }\n    Add-BenchmarkValidation {\n        param($case,$run)\n        $run.Outcomes=$run.Session.Evaluate()\n        Assert-KernelOutcomes $run.Outcomes\n        [IO.File]::WriteAllText((Join-Path $run.OutputDirectory 'outcomes.json'),(ConvertTo-Json -InputObject @($run.Outcomes) -Depth 10))\n    }\n    Add-BenchmarkMetric Variants { param($case,$run) $run.Outcomes.Length }\n    Add-BenchmarkMetric Components { param($case,$run) ($run.Outcomes|Measure-Object Components -Sum).Sum }\n    Set-BenchmarkArtifacts Json, Csv, Markdown\n}\n",
+    "SpecificationSha256": "18412F6012F9D0313A81EF616AED38F5577F0A96CD072D10B4CBB852F1E3399A",
+    "WrapperSha256": "F20BB6FA87CA6478949C9282034BF3CAAFD7F90BBCCECA8D5273EC43FA1F6CAD",
+    "Scope": "Actual QR component collection only. Identical explicitly prepared grayscale inputs, two fixed thresholds and both polarities, unbounded budget. Loading, preparation, outcome evaluation and pooled-result disposal are outside timing. This is separate from complete public scans and competitive rankings."
+  },
+  "KernelPackets": [
+    {
+      "Domain": "ccd0",
+      "Variants": 16,
+      "ManifestSha256": "3FDB1863B805F067DCC50FDD8B796C40CFADA08C28044BE16F90B7DFEBDE56C8",
+      "PacketFile": "component-coordinates-kernel-ccd0-result.json",
+      "OutcomesFile": "component-coordinates-kernel-ccd0-outcomes.json",
+      "OutcomesSha256": "F5C03C5092C916755D92B99792F5D22FAD7F9559359C153C7E67F5247BEDDE7F"
+    },
+    {
+      "Domain": "ccd1",
+      "Variants": 16,
+      "ManifestSha256": "3FDB1863B805F067DCC50FDD8B796C40CFADA08C28044BE16F90B7DFEBDE56C8",
+      "PacketFile": "component-coordinates-kernel-ccd1-result.json",
+      "OutcomesFile": "component-coordinates-kernel-ccd1-outcomes.json",
+      "OutcomesSha256": "3EE5D157E350563DB51679DF28588DC156E26810BA2F98A44CF7990114A0D516"
+    }
+  ],
+  "FrozenCorpusManifest": {
+    "File": "component-coordinates-frozen-corpus-manifest.json",
+    "OriginalInputSha256": "3714951ED16A82C1BD9B7A94543590DD609312EF3A39EFDD462F6C7F5BE7DD28",
+    "Sha256": "FC5347DB7554A5E719D0744F2BEC6E06A230C1174D803FB9679E008A7A7B9A93"
+  },
+  "KernelInputManifest": {
+    "File": "component-coordinates-coordinate-kernel-inputs.json",
+    "OriginalInputSha256": "3FDB1863B805F067DCC50FDD8B796C40CFADA08C28044BE16F90B7DFEBDE56C8",
+    "Sha256": "704625C51C46A1B13BFAED7467F4101186280E4500C639D9D8FCB0CA0171F450"
+  }
+}

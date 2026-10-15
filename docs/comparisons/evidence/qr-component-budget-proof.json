@@ -1,0 +1,496 @@
+{
+  "Source": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+  "CoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+  "PreviousSource": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+  "PreviousCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+  "HostSha256": "92005B5A8DFB52DB0B5DD012BBD0286A89D00EB6705BC922288D62C1FEFE06E0",
+  "PreviousHostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1",
+  "Changes": "QR recognition polls live caller cancellation and the captured enclosing deadline even when its local timeout is disabled. Component traversal reads the existing budget directly at its previous polling points. Grayscale conversion distinguishes a budget stop from invalid input. Pixel classification, component bounds and order, accepted payloads, hints and recognition allowances remain unchanged.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are a separate workload from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "qr-component-budget-fabric-ccd0-result.json",
+      "OutcomesFile": "qr-component-budget-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "638E9162C3D78D63D24E6F46E04210E04A3C9A49D92E9254D5FCF9DA71C09A8C"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "qr-component-budget-fabric-ccd1-result.json",
+      "OutcomesFile": "qr-component-budget-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "5A667F082E10CDD2435D421DEAA35474F3A395BB2E3EF327A29CA376369FD2C1"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "qr-component-budget-texture-ccd0-result.json",
+      "OutcomesFile": "qr-component-budget-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "B18D67D799F8A03C09AD0D842EB9260C4AF754272336B5F7DEF64FC2C217A219"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "qr-component-budget-texture-ccd1-result.json",
+      "OutcomesFile": "qr-component-budget-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "CF23988D91C3AE4D58249D760B3CFD779BA6CA99BC9FE6DF1ED0A9E705B567CF"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "qr-component-budget-whole-ccd0-result.json",
+      "OutcomesFile": "qr-component-budget-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "A8A1E1B3A388A86711B00476B519D7C488579F9F9C76CFCD1B4BBC685CBF0029"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "qr-component-budget-whole-ccd1-result.json",
+      "OutcomesFile": "qr-component-budget-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "90D210A6A6BD245C19BCB761B1FA60C8B1C8DF733D15CA1EECFEEC852D26BE2B"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "qr-component-budget-retail-positive-ccd0-result.json",
+      "OutcomesFile": "qr-component-budget-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "8D826765F62FF5711372C72D2E41CC03C4912A6E94A18347455E6638E7EE7016"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "qr-component-budget-retail-positive-ccd1-result.json",
+      "OutcomesFile": "qr-component-budget-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "33F2F37634411B21484712E66531B8964EC97CADB5A32738520D03D4FC6D2861"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "qr-component-budget-retail-negative-ccd0-result.json",
+      "OutcomesFile": "qr-component-budget-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "D6D6DB9E9CB7B586B5A63C01612A3702BB9C6038E6D36F4427B8118341F0571F"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "qr-component-budget-retail-negative-ccd1-result.json",
+      "OutcomesFile": "qr-component-budget-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "2AB2ABEE94D75082C6000395D37FE7C04DF977F09AA28FEDDEA1EF011B700F47"
+    }
+  ],
+  "Contracts": {
+    "net10": 11,
+    "net8": 11,
+    "net472": 0
+  },
+  "ComponentEquivalence": {
+    "BaselineCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+    "CandidateCoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+    "ImagePolarityThresholdCases": 288,
+    "PixelClassificationsCompared": 12279996,
+    "AcceptedComponentsCompared": 133,
+    "Mismatches": 0,
+    "CancelledAndExpiredTraversalStops": true,
+    "UnboundedTraversalPreserved": true,
+    "Scope": "Actual baseline and current private component searches versus independent row-major four-connected breadth-first traversal. Includes narrow images, both polarities, global/adaptive thresholds, solid/noisy masks, corner contact, narrow bridges, bounds, areas and order. Pre-cancelled/expired calls and ordinary unbounded calls are checked. This diagnostic is separate from public corpus accuracy and timing."
+  },
+  "ContractNote": "Actual preceding and current component searches match an independent four-connected traversal across 288 image/polarity/threshold cases and 12,279,996 pixel classifications, including 133 accepted components and their bounds, areas and order. Cancelled and expired traversal stops are checked separately. Public untimed cancellation diagnostics and a real enclosing-deadline reproduction are retained without a timing threshold. Full tests cover nested deadlines and an independently retained partial multi-symbol result after cancellation.",
+  "DeadlineDiagnosticBefore": {
+    "CoreSha256": "628C3FFA7151CFBD788D6AB3ED79BC9C41F5EDC3F2A91CE1A3DB80F60A24C582",
+    "LocalBudgetMilliseconds": 0,
+    "AmbientDeadlineMilliseconds": 10,
+    "InvalidBufferFailure": "InvalidInput",
+    "Rows": [
+      {
+        "Attempt": 0,
+        "Found": false,
+        "Expired": true,
+        "Failure": "InvalidInput",
+        "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+      },
+      {
+        "Attempt": 1,
+        "Found": false,
+        "Expired": true,
+        "Failure": "InvalidInput",
+        "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+      },
+      {
+        "Attempt": 2,
+        "Found": false,
+        "Expired": true,
+        "Failure": "InvalidInput",
+        "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+      },
+      {
+        "Attempt": 3,
+        "Found": false,
+        "Expired": true,
+        "Failure": "InvalidInput",
+        "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+      },
+      {
+        "Attempt": 4,
+        "Found": false,
+        "Expired": true,
+        "Failure": "InvalidInput",
+        "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+      },
+      {
+        "Attempt": 5,
+        "Found": false,
+        "Expired": true,
+        "Failure": "InvalidInput",
+        "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+      }
+    ],
+    "Scope": "Supported public QR pixel decoding with the real enclosing recognition deadline, no cancellation token. Repeated valid buffers allow expiry during grayscale conversion. The task-only friend assembly establishes the existing internal image-wrapper deadline; no production hooks or timing thresholds are introduced."
+  },
+  "DeadlineDiagnosticCurrent": {
+    "CoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+    "LocalBudgetMilliseconds": 0,
+    "AmbientDeadlineMilliseconds": 10,
+    "InvalidBufferFailure": "InvalidInput",
+    "Rows": [
+      {
+        "Attempt": 0,
+        "Found": false,
+        "Expired": true,
+        "Failure": "Payload",
+        "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+      },
+      {
+        "Attempt": 1,
+        "Found": false,
+        "Expired": true,
+        "Failure": "Payload",
+        "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+      },
+      {
+        "Attempt": 2,
+        "Found": false,
+        "Expired": true,
+        "Failure": "Payload",
+        "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+      },
+      {
+        "Attempt": 3,
+        "Found": false,
+        "Expired": true,
+        "Failure": "Payload",
+        "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+      },
+      {
+        "Attempt": 4,
+        "Found": false,
+        "Expired": true,
+        "Failure": "Payload",
+        "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+      },
+      {
+        "Attempt": 5,
+        "Found": false,
+        "Expired": true,
+        "Failure": "Payload",
+        "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+      }
+    ],
+    "Scope": "Supported public QR pixel decoding with the real enclosing recognition deadline, no cancellation token. Repeated valid buffers allow expiry during grayscale conversion. The task-only friend assembly establishes the existing internal image-wrapper deadline; no production hooks or timing thresholds are introduced."
+  },
+  "CancellationDiagnostics": {
+    "single": {
+      "CoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+      "CallKind": "single",
+      "Scope": "Diagnostic supported public QrDecoder.TryDecode/TryDecodeAll calls on synthetic block noise, with the documented zero local budget and a live cancellation token. Request time is recorded immediately before Cancel; calls that finish before the request are identified explicitly. Timer/tracing overhead and host load affect response time; no timing threshold or competitive performance claim.",
+      "Rows": [
+        {
+          "Side": 2048,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 5,
+          "CancelledAtMs": 15.6518,
+          "FinishedAtMs": 16.1403,
+          "PostCancellationMs": 0.48850000000000016,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "s1 t0 norm cand0 tri0 cancelled"
+        },
+        {
+          "Side": 2048,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 40,
+          "CancelledAtMs": 45.2038,
+          "FinishedAtMs": 45.2195,
+          "PostCancellationMs": 0.015699999999995384,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "s1 t0 norm cand0 tri0 cancelled"
+        },
+        {
+          "Side": 2048,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 120,
+          "CancelledAtMs": 123.1408,
+          "FinishedAtMs": 123.1718,
+          "PostCancellationMs": 0.03100000000000591,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "s1 t0 norm cand0 tri0 cancelled"
+        },
+        {
+          "Side": 4096,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 5,
+          "CancelledAtMs": 8.4689,
+          "FinishedAtMs": 8.4987,
+          "PostCancellationMs": 0.029799999999999827,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "s1 t0 norm cand0 tri0 cancelled"
+        },
+        {
+          "Side": 4096,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 40,
+          "CancelledAtMs": 46.2145,
+          "FinishedAtMs": 46.2278,
+          "PostCancellationMs": 0.013300000000000978,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "s1 t0 norm cand0 tri0 cancelled"
+        },
+        {
+          "Side": 4096,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 120,
+          "CancelledAtMs": 125.3372,
+          "FinishedAtMs": 128.136,
+          "PostCancellationMs": 2.7988,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "s1 t0 norm cand0 tri0 cancelled"
+        }
+      ]
+    },
+    "all": {
+      "CoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+      "CallKind": "all",
+      "Scope": "Diagnostic supported public QrDecoder.TryDecode/TryDecodeAll calls on synthetic block noise, with the documented zero local budget and a live cancellation token. Request time is recorded immediately before Cancel; calls that finish before the request are identified explicitly. Timer/tracing overhead and host load affect response time; no timing threshold or competitive performance claim.",
+      "Rows": [
+        {
+          "Side": 2048,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 5,
+          "CancelledAtMs": 19.9722,
+          "FinishedAtMs": 20.0507,
+          "PostCancellationMs": 0.07849999999999824,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "Multi-symbol negative returned no payloads."
+        },
+        {
+          "Side": 2048,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 40,
+          "CancelledAtMs": 44.6337,
+          "FinishedAtMs": 44.9174,
+          "PostCancellationMs": 0.28370000000000317,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "Multi-symbol negative returned no payloads."
+        },
+        {
+          "Side": 2048,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 120,
+          "CancelledAtMs": 125.2264,
+          "FinishedAtMs": 125.3142,
+          "PostCancellationMs": 0.08780000000000143,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "Multi-symbol negative returned no payloads."
+        },
+        {
+          "Side": 4096,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 5,
+          "CancelledAtMs": 18.3154,
+          "FinishedAtMs": 18.3245,
+          "PostCancellationMs": 0.009100000000000108,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "Multi-symbol negative returned no payloads."
+        },
+        {
+          "Side": 4096,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 40,
+          "CancelledAtMs": 45.3117,
+          "FinishedAtMs": 45.3304,
+          "PostCancellationMs": 0.018699999999995498,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "Multi-symbol negative returned no payloads."
+        },
+        {
+          "Side": 4096,
+          "LocalBudgetMilliseconds": 0,
+          "DelayMilliseconds": 120,
+          "CancelledAtMs": 137.1113,
+          "FinishedAtMs": 138.734,
+          "PostCancellationMs": 1.622700000000009,
+          "CancellationRequestedBeforeReturn": true,
+          "Found": false,
+          "Info": "Multi-symbol negative returned no payloads."
+        }
+      ]
+    }
+  },
+  "Experiments": [
+    {
+      "Label": "component",
+      "Disposition": "Direct component budget checks before the conversion diagnostic correction and full qualification. All allocation, latency and completion outcomes remain included.",
+      "Packets": [
+        {
+          "Kind": "fabric",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "qr-component-budget-exploratory-fabric-ccd0-result.json",
+          "OutcomesFile": "qr-component-budget-exploratory-fabric-ccd0-outcomes.json",
+          "OutcomesSha256": "A8F231218B999AC0831000EE78783DA709BD09731DC435ECF0E1F771A5A34BB1",
+          "Source": "5e00fb8f25afeca2fd88d10a32e6ef347b8dee81",
+          "CoreSha256": "628C3FFA7151CFBD788D6AB3ED79BC9C41F5EDC3F2A91CE1A3DB80F60A24C582",
+          "PreviousCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousSource": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "HostSha256": "77C0DABA15D9287124F3F641254A22A44FE96BDF2E25E525E7A5177BFC7F6275",
+          "PreviousHostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1"
+        },
+        {
+          "Kind": "fabric",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "qr-component-budget-exploratory-fabric-ccd1-result.json",
+          "OutcomesFile": "qr-component-budget-exploratory-fabric-ccd1-outcomes.json",
+          "OutcomesSha256": "1581CCDADDCD7ED5EA0EFB09B6695DC184955E093B41CA3C6B4B1125B0B5C049",
+          "Source": "5e00fb8f25afeca2fd88d10a32e6ef347b8dee81",
+          "CoreSha256": "628C3FFA7151CFBD788D6AB3ED79BC9C41F5EDC3F2A91CE1A3DB80F60A24C582",
+          "PreviousCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousSource": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "HostSha256": "77C0DABA15D9287124F3F641254A22A44FE96BDF2E25E525E7A5177BFC7F6275",
+          "PreviousHostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "qr-component-budget-exploratory-texture-ccd0-result.json",
+          "OutcomesFile": "qr-component-budget-exploratory-texture-ccd0-outcomes.json",
+          "OutcomesSha256": "E2745E53857D0C05D488F8D80AA41D6ECD83FFB772EDC4551FF689B01CB3090F",
+          "Source": "5e00fb8f25afeca2fd88d10a32e6ef347b8dee81",
+          "CoreSha256": "628C3FFA7151CFBD788D6AB3ED79BC9C41F5EDC3F2A91CE1A3DB80F60A24C582",
+          "PreviousCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousSource": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "HostSha256": "77C0DABA15D9287124F3F641254A22A44FE96BDF2E25E525E7A5177BFC7F6275",
+          "PreviousHostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "qr-component-budget-exploratory-texture-ccd1-result.json",
+          "OutcomesFile": "qr-component-budget-exploratory-texture-ccd1-outcomes.json",
+          "OutcomesSha256": "57D865D1E981FCE7FC3D7F6D1EEE57327E8F3B273C998DE74B423A0DA4CAFC2A",
+          "Source": "5e00fb8f25afeca2fd88d10a32e6ef347b8dee81",
+          "CoreSha256": "628C3FFA7151CFBD788D6AB3ED79BC9C41F5EDC3F2A91CE1A3DB80F60A24C582",
+          "PreviousCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousSource": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "HostSha256": "77C0DABA15D9287124F3F641254A22A44FE96BDF2E25E525E7A5177BFC7F6275",
+          "PreviousHostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd0",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "qr-component-budget-exploratory-whole-ccd0-result.json",
+          "OutcomesFile": "qr-component-budget-exploratory-whole-ccd0-outcomes.json",
+          "OutcomesSha256": "9A755C24CAB088C98BA9C02F34F5968379360E24A00641D601E6874454D770A1",
+          "Source": "5e00fb8f25afeca2fd88d10a32e6ef347b8dee81",
+          "CoreSha256": "628C3FFA7151CFBD788D6AB3ED79BC9C41F5EDC3F2A91CE1A3DB80F60A24C582",
+          "PreviousCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousSource": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "HostSha256": "77C0DABA15D9287124F3F641254A22A44FE96BDF2E25E525E7A5177BFC7F6275",
+          "PreviousHostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd1",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "qr-component-budget-exploratory-whole-ccd1-result.json",
+          "OutcomesFile": "qr-component-budget-exploratory-whole-ccd1-outcomes.json",
+          "OutcomesSha256": "4C6572AF75738A91EA0E8CFAEA05E2C3B6B609FAE884CD1AB74410522EFF1A2E",
+          "Source": "5e00fb8f25afeca2fd88d10a32e6ef347b8dee81",
+          "CoreSha256": "628C3FFA7151CFBD788D6AB3ED79BC9C41F5EDC3F2A91CE1A3DB80F60A24C582",
+          "PreviousCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+          "PreviousSource": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+          "HostSha256": "77C0DABA15D9287124F3F641254A22A44FE96BDF2E25E525E7A5177BFC7F6275",
+          "PreviousHostSha256": "C7A0B38651024C1E3616B849496370DEEAE484F07F5CF7A1407596E1DCC817D1"
+        }
+      ],
+      "Scope": "Exploratory retained-session pairs, three priming calls and twelve rotated measurements, fixed workload and placement. These runs precede the final qualification passes and have no overlapping diagnostic work.",
+      "Source": "5e00fb8f25afeca2fd88d10a32e6ef347b8dee81",
+      "CoreSha256": "628C3FFA7151CFBD788D6AB3ED79BC9C41F5EDC3F2A91CE1A3DB80F60A24C582",
+      "HostSha256": "77C0DABA15D9287124F3F641254A22A44FE96BDF2E25E525E7A5177BFC7F6275"
+    }
+  ],
+  "ReviewCoverage": {
+    "Base": "f47fc3abd30a6d8dbf82f702aff87ddd6c828be9",
+    "OriginalReviewHead": "5e00fb8f25afeca2fd88d10a32e6ef347b8dee81",
+    "Head": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+    "BoundaryState": "current",
+    "ConfirmationBoundaryState": "candidate-reviewed",
+    "FullReadOnlyPasses": 1,
+    "TargetedConfirmations": 1,
+    "UnresolvedFindings": [],
+    "ResolvedFindings": [
+      {
+        "Priority": "P3",
+        "Classification": "Existing conversion classifier newly reachable with ambient-only deadline polling",
+        "Issue": "Valid buffers stopped during grayscale conversion were reported as invalid input.",
+        "Reproduction": "Six real enclosing-deadline public pixel calls reported InvalidInput at the reviewed prototype; six reported Payload after the fix, with InvalidInput retained for the malformed-buffer control.",
+        "Fix": "Record the actual stop callback result and distinguish Cancelled/Payload from other conversion failure.",
+        "Confirmation": "Independent strictly read-only targeted confirmation found the issue fixed and no new actionable defects."
+      }
+    ],
+    "Disposition": "Accept as shaped; existing QR engine, no new public API, production dependency or maintained toolchain.",
+    "Scope": "One fresh read-only pass covered the nine-file QR component/cancellation change and supported callers. One targeted confirmation covered the conversion classifier and completed partial-result ownership regression. The source review boundary is current; full framework/corpus validation and performance acceptance remain separate proof. No tests, builds, mutations, installations or external actions were performed by the reviewer.",
+    "PartialResultProofLimit": "The deterministic acceptance-callback regression exercises representative storage reuse; it does not force a particular pool buffer reuse."
+  }
+}

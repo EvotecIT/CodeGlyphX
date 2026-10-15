@@ -5,7 +5,25 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class DirectPartMarkTests {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void RobustPreprocessing_DoesNotRevealFullyTransparentMarks(bool encoded) {
+        var frame = RenderLowContrast(DataMatrixEncoder.Encode("INVISIBLE-DPM-1042"), scale: 4, quiet: 4);
+        var pixels = frame.Pixels.ToArray();
+        for (var at = 3; at < pixels.Length; at += 4) pixels[at] = 0;
+        var options = ScanOptions.Robust(timeoutMilliseconds: 0);
+        options.Formats = new[] { SymbolFormat.DataMatrix };
+        var result = encoded
+            ? SymbolScanner.Scan(EncodePng(pixels, frame.Width, frame.Height, frame.Stride), options)
+            : SymbolScanner.Scan(ImageFrame.Packed(pixels, frame.Width, frame.Height, PixelFormat.Rgba32), options);
+        Assert.Empty(result.Symbols);
+        Assert.Equal(ScanStatus.NoSymbolFound, result.Status);
+        Assert.Equal(ScanCompletionReason.Completed, result.CompletionReason);
+    }
+
     [Fact]
     public void Scanner_RecoversLowContrastLaserEtch_AndReportsPreprocessing() {
         var modules = DataMatrixEncoder.Encode("DPM-LASER-ETCH-42");

@@ -52,6 +52,17 @@ internal static class MicroQrTables {
         return GetEccLength(version, ecc) > 0;
     }
 
+    /// <summary>Gets the symbol's substitution-error capacity after reserving misdecode protection.</summary>
+    internal static int GetMaxCorrectableErrors(int version, QrErrorCorrectionLevel ecc) {
+        // ISO/IEC 18004 reserves detection codewords for the smaller Micro QR symbols.
+        var protection = (version, ecc) switch {
+            (2, QrErrorCorrectionLevel.L) => 3,
+            (1, _) or (2, QrErrorCorrectionLevel.M) or (3, QrErrorCorrectionLevel.L) or (4, QrErrorCorrectionLevel.L) => 2,
+            _ => 0
+        };
+        return Math.Max(0, (GetEccLength(version, ecc) - protection) / 2);
+    }
+
     internal static int GetDataLengthBits(int version, QrErrorCorrectionLevel ecc) {
         var eccLen = GetEccLength(version, ecc);
         if (eccLen == 0) return 0;

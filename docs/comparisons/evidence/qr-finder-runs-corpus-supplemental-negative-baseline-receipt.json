@@ -1,0 +1,10 @@
+{
+  "FrameworkVersion": "10.0.13",
+  "FrameworkRollForward": "Disable",
+  "ManifestSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
+  "OutputSha256": "7B32A6A42F8C894186A3ECA7AA0B8EBD889F7B4D7BFB331CD294B7FC2E60BB9D",
+  "HostSha256": "E1690E5CEAC23904C8C7BA6DB1E4A43AEF6193599E445EE001D12305D82EBD1F",
+  "Scope": "All three frozen reader adapters on the same Windows host. Exact binary hashes checked before and after standalone execution. Recognition allowances, hints, oracles and order unchanged.",
+  "Source": "0d74cff21a0c39cc6f1fbf0aface3a2662077e2b",
+  "CoreSha256": "A9511D51D4A9ED2E27CD6EB6619B17C84075C33A7560B252B2A8AA9EC01BF9CE"
+}

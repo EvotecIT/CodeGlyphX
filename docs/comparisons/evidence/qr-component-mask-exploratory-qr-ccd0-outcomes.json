@@ -1,0 +1,845 @@
+{
+  "RunId": "20261013-161225-11252c1b",
+  "Calls": [
+    {
+      "Engine": "Baseline",
+      "Iteration": 0,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 1,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 10,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/10/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 11,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/11/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 2,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/2/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 3,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/3/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 4,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/4/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 5,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/5/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 6,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/6/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 7,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/7/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 8,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/8/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 9,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Baseline/Decode/matrix/9/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 0,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 1,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 10,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/10/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 11,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/11/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 2,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/2/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 3,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/3/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 4,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/4/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 5,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/5/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 6,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/6/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 7,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/7/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 8,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/8/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 9,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/FixedImageCorpus/Candidate/Decode/matrix/9/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -1,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/warmup-outcomes/Baseline--1.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -2,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/warmup-outcomes/Baseline--2.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -3,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/warmup-outcomes/Baseline--3.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -1,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/warmup-outcomes/Candidate--1.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -2,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/warmup-outcomes/Candidate--2.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -3,
+      "Path": "mask-paired-qr-ccd0-12/20261013-161225-11252c1b/warmup-outcomes/Candidate--3.json",
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    }
+  ]
+}

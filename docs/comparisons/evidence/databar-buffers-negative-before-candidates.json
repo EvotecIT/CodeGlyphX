@@ -1,0 +1,1496 @@
+{
+  "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+  "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+  "Mode": "candidates",
+  "Scope": "Private non-packable friend driver; actual production normalizer determines guarded-row sampling, or actual production recovery collector supplies complete located candidates. Candidate mode seeds dirty integer-pool buckets before every collector call. No test-only production hook or timing claim.",
+  "Rows": [
+    {
+      "Id": "falsepositives/19.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "Variant": 0,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "Variant": 1,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "Variant": 2,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "Variant": 3,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "Variant": 4,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "Variant": 5,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "Variant": 6,
+      "Found": false,
+      "Candidates": []
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "Variant": 7,
+      "Found": false,
+      "Candidates": []
+    }
+  ]
+}

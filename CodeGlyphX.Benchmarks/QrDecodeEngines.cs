@@ -26,6 +26,9 @@ internal static class QrDecodeEngines {
 #if COMPARE_ZXING
         engines.Add(new ZXingEngine());
 #endif
+#if COMPARE_ZXINGCPP
+        engines.Add(new ZXingCppEngine());
+#endif
         return engines;
     }
 
@@ -50,10 +53,9 @@ internal static class QrDecodeEngines {
 
             var texts = decoded
                 .Select(d => d.Text)
-                .Where(t => !string.IsNullOrWhiteSpace(t))
                 .Distinct(StringComparer.Ordinal)
                 .ToArray();
-            return new DecodeEngineResult(texts.Length > 0, decoded.Length, texts, null);
+            return new DecodeEngineResult(texts.Length > 0, texts.Length, texts, null);
         }
     }
 
@@ -71,12 +73,27 @@ internal static class QrDecodeEngines {
                 PossibleFormats = new[] { BarcodeFormat.QR_CODE },
                 TryHarder = tryHarder
             };
-            var result = _reader.Decode(data.Rgba, data.Width, data.Height, RGBLuminanceSource.BitmapFormat.RGBA32);
-            if (result is null || string.IsNullOrWhiteSpace(result.Text)) {
+            _reader.AutoRotate = true;
+            _reader.Options.TryInverted = true;
+            var results = _reader.DecodeMultiple(data.Rgba, data.Width, data.Height, RGBLuminanceSource.BitmapFormat.RGBA32);
+            if (results is null || results.Length == 0) {
                 return new DecodeEngineResult(false, 0, Array.Empty<string>(), null);
             }
+            var texts = results.Select(result => result.Text).Distinct(StringComparer.Ordinal).ToArray();
+            return new DecodeEngineResult(true, texts.Length, texts, null);
+        }
+    }
+#endif
 
-            return new DecodeEngineResult(true, 1, new[] { result.Text }, null);
+#if COMPARE_ZXINGCPP
+    private sealed class ZXingCppEngine : IQrDecodeEngine {
+        public string Name => "ZXing-C++";
+        public bool IsExternal => true;
+        public IReadOnlyList<string> Aliases { get; } = new[] { "zxingcpp", "zxing-cpp", "zxing-c++" };
+
+        public DecodeEngineResult Decode(QrDecodeScenarioData data, QrPixelDecodeOptions options) {
+            var texts = CorpusReaders.DecodeCpp(data.Rgba, data.Width, data.Height, "QrCode", WantsTryHarder(options));
+            return new DecodeEngineResult(texts.Length > 0, texts.Length, texts, null);
         }
     }
 #endif

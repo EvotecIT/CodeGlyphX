@@ -1,0 +1,12 @@
+{
+  "Source": "16883574248837975511de59cdd336026b35b66f",
+  "CoreSha256": "88430AB519945F27D5940426CDF1D923DF811C0C9F031523F6ED0EF2F5A3F32E",
+  "Contracts": 8,
+  "Failed": 6,
+  "Passed": 2,
+  "PositiveContractsPassed": 6,
+  "TrxFile": "industrial-tile-before-final-contract-net10.trx",
+  "TrxSha256": "2D74682B12A78AFCD2E3AC8DD8DA131FBE73682DDE8B34D495E752EA997CE558",
+  "TestSourceSha256": "65D960BB63A7E040CC5476C14411FE7E9955CCC6042BF31BF075B1F9F4CA467F",
+  "Scope": "Negative contracts cover four inverted orientations with default and explicit Industrial formats. Default scans fail in two orientations; explicit-format scans fail in all four. Six positive contracts pass, covering normal default/typed and inverted typed scans in both axes. Default inverted single-digit misses are separately retained as a pre-existing gap."
+}

@@ -1,0 +1,220 @@
+{
+  "Source": "7dc89ae6ba182b0868ef6d983f9737f07316cd5c",
+  "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+  "PreviousSource": "84e37687c8fc9e46bd34047c72e56a8262db13e4",
+  "PreviousCoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E",
+  "BoundsEquivalence": {
+    "Cases": 8800,
+    "Mismatches": 0,
+    "CanceledCases": 8800,
+    "AmbientBudgetCases": 2,
+    "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+    "Scope": "Private production bounding-box method against independent full raster oracle; RGBA/BGRA, both polarities, random alpha and padded stride, uniform and sparse frames."
+  },
+  "ComponentEquivalence": {
+    "Cases": 2400,
+    "Mismatches": 0,
+    "GeometrySha256": "9B106A1FEEEB98C30CE3DF07303563A483E0FD6BDE79EA11B256EDE74C452BB6",
+    "Scope": "Ordered top-eight component area and corner coordinates; reproducible random masks plus disconnected equal-area components, both polarities. Compare the retained baseline and candidate fingerprints."
+  },
+  "Changes": "Data Matrix bounds use each row first dark pixel and only search beyond the current right bound. Components too small to enter the ordered top-eight candidate list skip corner accumulation. Pixel classification, candidate selection, payload validation and scanner allowances are unchanged.",
+  "Cost": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 1105.94755,
+      "CurrentMedianMs": 984.88,
+      "LatencyRatio": 0.8905304776885666,
+      "BaselineAllocatedBytes": 72208004.66666667,
+      "CurrentAllocatedBytes": 72299182.0,
+      "PreviousCorrectRequests": 1.0,
+      "CurrentCorrectRequests": 1.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 856.10695,
+      "CurrentMedianMs": 814.77705,
+      "LatencyRatio": 0.9517234382923769,
+      "BaselineAllocatedBytes": 69469938.0,
+      "CurrentAllocatedBytes": 69473016.66666667,
+      "PreviousCorrectRequests": 1.0,
+      "CurrentCorrectRequests": 1.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0
+    }
+  ],
+  "SelectedNegativeCost": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 2826.1504,
+      "CurrentMedianMs": 2665.37295,
+      "LatencyRatio": 0.9431107948112032,
+      "BaselineAllocatedBytes": 241158572.66666666,
+      "CurrentAllocatedBytes": 238273228.66666666,
+      "PreviousCorrectRequests": 2.0833333333333335,
+      "CurrentCorrectRequests": 2.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.9166666666666666,
+      "CurrentInconclusiveRequests": 1.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 2375.3219,
+      "CurrentMedianMs": 2191.31005,
+      "LatencyRatio": 0.9225318261074426,
+      "BaselineAllocatedBytes": 237903109.33333334,
+      "CurrentAllocatedBytes": 239241852.0,
+      "PreviousCorrectRequests": 2.8333333333333335,
+      "CurrentCorrectRequests": 2.6666666666666665,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.16666666666666666,
+      "CurrentInconclusiveRequests": 0.3333333333333333
+    }
+  ],
+  "CostScope": "One prespecified unrestricted texture negative, falsepositives/19.png, from the unchanged nineteen-image decoding workload. Both binaries receive the same preloaded RGBA32 pixels and 1500 ms scanner allowance. PowerForge runs 3 warmups and 12 rotated measurements per engine on each verified affinity domain. Input loading and outcome evaluation are excluded.",
+  "Limits": "This isolates one texture image and does not establish performance on other images. Wall-clock allowances and shared-host load affect latency and completion. Managed allocation is measured separately; sustained throughput, capacity and portable performance are unproved. All warmups, measurements, unfinished searches and losses remain available. The full nineteen-image comparison is reported separately.",
+  "RawCostPackets": [
+    "datamatrix-texture-cost-ccd0-result.json",
+    "datamatrix-texture-cost-ccd1-result.json"
+  ],
+  "RawSelectedNegativePackets": [
+    "datamatrix-selected-negative-cost-ccd0-result.json",
+    "datamatrix-selected-negative-cost-ccd1-result.json"
+  ],
+  "NegativePasses": {
+    "ccd0": [
+      {
+        "Unexpected": 0,
+        "Index": 0,
+        "Completed": 31,
+        "Cpu": [
+          24.675323775768256,
+          18.85730357205837,
+          23.190853999205796
+        ],
+        "File": "historical-datamatrix-negative-rotation-ccd0-0-previous.json",
+        "Source": "previous",
+        "Inconclusive": 0,
+        "Domain": "ccd0",
+        "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E"
+      },
+      {
+        "Unexpected": 0,
+        "Index": 1,
+        "Completed": 30,
+        "Cpu": [
+          31.92118832020666,
+          22.992301016438788,
+          13.964373312191858
+        ],
+        "File": "historical-datamatrix-negative-rotation-ccd0-1-current.json",
+        "Source": "current",
+        "Inconclusive": 1,
+        "Domain": "ccd0",
+        "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4"
+      },
+      {
+        "Unexpected": 0,
+        "Index": 2,
+        "Completed": 31,
+        "Cpu": [
+          20.19283923032742,
+          25.218856580982717,
+          29.836765036453162
+        ],
+        "File": "historical-datamatrix-negative-rotation-ccd0-2-current.json",
+        "Source": "current",
+        "Inconclusive": 0,
+        "Domain": "ccd0",
+        "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4"
+      },
+      {
+        "Unexpected": 0,
+        "Index": 3,
+        "Completed": 31,
+        "Cpu": [
+          13.437490022456123,
+          12.180956079539119,
+          12.218864998511448
+        ],
+        "File": "historical-datamatrix-negative-rotation-ccd0-3-previous.json",
+        "Source": "previous",
+        "Inconclusive": 0,
+        "Domain": "ccd0",
+        "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E"
+      }
+    ],
+    "ccd1": [
+      {
+        "Inconclusive": 0,
+        "Index": 0,
+        "Completed": 31,
+        "File": "historical-datamatrix-negative-rotation-ccd1-0-current.json",
+        "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+        "Domain": "ccd1",
+        "Unexpected": 0,
+        "Cpu": [
+          29.410951187105915,
+          30.858603151539842,
+          35.209943299887634
+        ],
+        "Source": "current"
+      },
+      {
+        "Inconclusive": 0,
+        "Index": 1,
+        "Completed": 31,
+        "File": "historical-datamatrix-negative-rotation-ccd1-1-previous.json",
+        "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E",
+        "Domain": "ccd1",
+        "Unexpected": 0,
+        "Cpu": [
+          18.985807527521903,
+          14.194963019892748,
+          17.42069569742005
+        ],
+        "Source": "previous"
+      },
+      {
+        "Inconclusive": 0,
+        "Index": 2,
+        "Completed": 31,
+        "File": "historical-datamatrix-negative-rotation-ccd1-2-previous.json",
+        "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E",
+        "Domain": "ccd1",
+        "Unexpected": 0,
+        "Cpu": [
+          13.649772550467942,
+          8.217444634273585,
+          20.989594305050264
+        ],
+        "Source": "previous"
+      },
+      {
+        "Inconclusive": 1,
+        "Index": 3,
+        "Completed": 30,
+        "File": "historical-datamatrix-negative-rotation-ccd1-3-current.json",
+        "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+        "Domain": "ccd1",
+        "Unexpected": 0,
+        "Cpu": [
+          37.68754786218954,
+          53.00885348961024,
+          41.49801348986388
+        ],
+        "Source": "current"
+      }
+    ]
+  },
+  "SelectedNegativeScope": "The additional paired control uses three unchanged unrestricted negatives: falsepositives-2/01.png, falsepositives-2/09.png and falsepositives/15.png. The same 3 warmups, 12 rotated measurements, preloaded pixels and 1500 ms scanner allowance apply.",
+  "TextureManifestSha256": "A254082B49290F1A11A06353D4D6725E197DB0DF500796D10F54663BBE89BC8A",
+  "SelectedNegativeManifestSha256": "8767D304AF535A3BB2507E12CBFD6565D801540E5D8EDA1B8EB7B90728BD5B70"
+}

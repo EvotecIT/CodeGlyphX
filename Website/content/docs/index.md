@@ -12,6 +12,12 @@ layout: docs
 
 CodeGlyphX is a pure-managed .NET library for generating and decoding QR codes, linear barcodes, and 2D matrix codes. It does not require native graphics libraries.
 
+## Performance and recognition
+
+For measured generation speed and image recognition quality, read the [current comparisons](/benchmarks/). The summary below includes the remaining decoding gaps.
+
+{{< comparison-summary >}}
+
 ## Key Features
 
 - **No native graphics dependencies** - No System.Drawing, SkiaSharp, or ImageSharp required

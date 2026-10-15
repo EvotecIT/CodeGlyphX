@@ -1,0 +1,334 @@
+{
+  "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+  "InputSha256": "8ED198F523B6881AEE9AF81BFF855C74CE67D5939952887D39AD0C1B5331DF95",
+  "Rows": [
+    {
+      "Turns": 0,
+      "Inverted": false,
+      "Type": "EAN",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 0,
+      "Inverted": false,
+      "Type": "UPCA",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 0,
+      "Inverted": false,
+      "Type": "UPCE",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 0,
+      "Inverted": false,
+      "Scanner": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 0,
+      "Inverted": false,
+      "AllFormats": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 0,
+      "Inverted": true,
+      "Type": "EAN",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 0,
+      "Inverted": true,
+      "Type": "UPCA",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 0,
+      "Inverted": true,
+      "Type": "UPCE",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 0,
+      "Inverted": true,
+      "Scanner": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 0,
+      "Inverted": true,
+      "AllFormats": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": false,
+      "Type": "EAN",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": false,
+      "Type": "UPCA",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": false,
+      "Type": "UPCE",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": false,
+      "Scanner": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": false,
+      "AllFormats": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": true,
+      "Type": "EAN",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": true,
+      "Type": "UPCA",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": true,
+      "Type": "UPCE",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": true,
+      "Scanner": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 1,
+      "Inverted": true,
+      "AllFormats": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": false,
+      "Type": "EAN",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": false,
+      "Type": "UPCA",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": false,
+      "Type": "UPCE",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": false,
+      "Scanner": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": false,
+      "AllFormats": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": true,
+      "Type": "EAN",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": true,
+      "Type": "UPCA",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": true,
+      "Type": "UPCE",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": true,
+      "Scanner": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 2,
+      "Inverted": true,
+      "AllFormats": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": false,
+      "Type": "EAN",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": false,
+      "Type": "UPCA",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": false,
+      "Type": "UPCE",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": false,
+      "Scanner": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": false,
+      "AllFormats": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": true,
+      "Type": "EAN",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": true,
+      "Type": "UPCA",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": true,
+      "Type": "UPCE",
+      "Single": false,
+      "Text": null,
+      "Multi": false,
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": true,
+      "Scanner": true,
+      "Completion": "Completed",
+      "Payloads": []
+    },
+    {
+      "Turns": 3,
+      "Inverted": true,
+      "AllFormats": true,
+      "Completion": "Completed",
+      "Payloads": []
+    }
+  ]
+}

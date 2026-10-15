@@ -1,0 +1,11 @@
+{
+  "BaselineSource": "01832f81c81289094b11c32bb3434df302f3efd9",
+  "BaselineCoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+  "RegressionFixtureSha256": "6236cbf62db69d073fbc3845ccd8a3fea5917be40e97868476b9f647ec221f98",
+  "Expected": "9780441014989",
+  "Contracts": 8,
+  "Failed": 8,
+  "Passed": 0,
+  "TrxSha256": "5f5530c923bf3c6368de24171ba4255f48fdd668cd83a3aa495116055f53ecb9",
+  "Boundary": "New embedded fixture tests with the exact previously qualified core copied into the isolated test output; all four right-angle rotations and both polarities fail before the repair."
+}

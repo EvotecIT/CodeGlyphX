@@ -1,0 +1,39 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "Four frozen image files for a diagnostic QR component kernel comparison; two explicitly prepared grayscale thresholds and two polarities per image. Unbounded component collection only; no complete-scan or competitor ranking claim.",
+  "Samples": [
+    {
+      "Id": "falsepositives/19.png",
+      "File": "falsepositives/19.png",
+      "Sha256": "342fdb2e223f3a41144aaa1029dc3ce7dc4d278a07e7e47dc885c874b1e57c77",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "File": "falsepositives/03.png",
+      "Sha256": "bb9cada0e2cee198bc652c6a0a53650f40c2fd9e6b2ec17cfa00f86ec5ceee22",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "File": "falsepositives/15.png",
+      "Sha256": "acc5cd8ddb6c29324cbdb8fcd0dbe35cbd8847cd877399186fee566b98993270",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "multi-qrcode-1/1.png",
+      "File": "multi-qrcode-1/1.png",
+      "Sha256": "22aa7015f341ee8ecb8219e7790df7cb21814daf05c56e86953f24f09c87ea56",
+      "Format": "QrCode",
+      "Expected": [
+        "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+        "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+        "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+        "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+      ]
+    }
+  ]
+}

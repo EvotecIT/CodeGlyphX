@@ -1,0 +1,1181 @@
+{
+  "Source": "39818c152763091f748ead4477d5ec0653663a8d",
+  "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+  "PreviousSource": "e32694849a97ac05932f6bf8c9b9c3b232684368",
+  "PreviousCoreSha256": "34898C54D1390AD994B0C5D1CCC87B7507D597B14725EED27DE16640CD700565",
+  "HostSha256": "3B1ADF12C29BDC634FEDC2107AB20B964CA8375DB403675FE31C06EF92EC4318",
+  "PreviousHostSha256": "1D103CEFCA4C7A2C865FB22A6E2FC25BE6939A957238030C89B1F3348E63DBE5",
+  "Changes": "PNG byte-array writers allocate the final container once, using the actual compressed length when compression is enabled. QR, barcode and matrix result facades adopt fresh renderer buffers while public input and mutable-output copies remain protected. Translucent streamed QR output initializes every compressed row and declares the exact stored-row chunk length. No public API, compression default or dependency is added.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are separate from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "ReviewCoverage": {
+    "Head": "39818c152763091f748ead4477d5ec0653663a8d",
+    "Base": "7bc6e970e2c61ba85365693ee82305037359813f",
+    "BoundaryState": "candidate-reviewed",
+    "UnresolvedFindings": [],
+    "Reviewer": "Independent read-only png_output_ownership_review",
+    "Scope": "Full eight-file PNG allocation/ownership review and one targeted two-file stream-remediation confirmation. Exact buffers, compressed/stored chunks, DPI/palette, public defensive copies, exclusive renderer ownership, pool initialization/lifetime, bounds, compatibility, owner/API/dependencies assessed. Two pre-existing stream defects independently reproduced and repaired; no introduced or remaining actionable findings.",
+    "Limits": "Static independent review; reviewer ran no tests or measurements. Runtime proof and all platform qualifications are owned separately."
+  },
+  "Contracts": {
+    "net10": 24,
+    "net8": 24,
+    "net472": 24
+  },
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "png-output-fabric-ccd0-result.json",
+      "OutcomesFile": "png-output-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "3F3C40CF3538200986BD40852C527EC6C93367F71915C0C44825D9A17596A886"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "png-output-fabric-ccd1-result.json",
+      "OutcomesFile": "png-output-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "2B96FF458573DA103149DAD33D5D0E3231953840117D288BA3DCFC8FC962924E"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "png-output-texture-ccd0-result.json",
+      "OutcomesFile": "png-output-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "A3D6170C48673582D6B7CF3179DD2AE16102509B0F3004258FAF88BBB44F289E"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "png-output-texture-ccd1-result.json",
+      "OutcomesFile": "png-output-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "F441F4D1B82DBDD1D0BC284049261E070BD495911D0C8E9E714F0BC68B14F5DA"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "png-output-whole-ccd0-result.json",
+      "OutcomesFile": "png-output-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "41C6694C70C1E65C12443972A2ADAC6D88400A32C232989E8ECAFC693CBA0E90"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "png-output-whole-ccd1-result.json",
+      "OutcomesFile": "png-output-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "EB5C367116068525A7B479514D9E7C0443A13ECA1A33CDB84A78B58C12DC3416"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "png-output-retail-positive-ccd0-result.json",
+      "OutcomesFile": "png-output-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "B93A185351FDC20077822F0F1ACB6008EDA879DCDDACB70CAE0C52914146F248"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "png-output-retail-positive-ccd1-result.json",
+      "OutcomesFile": "png-output-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "AC44122F62AE65259DE7582A883AD36E2816275438474D29880D53BC5DFC61C4"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "png-output-retail-negative-ccd0-result.json",
+      "OutcomesFile": "png-output-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "3B26C22BEA7C37F6643C6E72164D4A15AC96663851F3CED10C358DB814B16EA7"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "png-output-retail-negative-ccd1-result.json",
+      "OutcomesFile": "png-output-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "AD30E2604BAB279D191559F5758D32829C893D1464D08E2EBC86B6017EE89FB3"
+    }
+  ],
+  "TestAssemblySha256": "1BF88740C3620AFFB887A29946FB9A4DFAE7A5C4C9B034D550D12A92DD211164",
+  "NativeArm64": {
+    "Source": "39818c152763091f748ead4477d5ec0653663a8d",
+    "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+    "Host": "evomini.ad.evotec.xyz",
+    "OperatingSystem": "27.0.1",
+    "Architecture": "arm64",
+    "Processor": "Apple M4",
+    "SDKVersion": "10.0.402",
+    "SelectedFrameworkVersion": "10.0.13",
+    "FrameworkRollForward": "Disable",
+    "InputFiles": {
+      "CodeGlyphX.dll": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+      "CodeGlyphX.Playground.dll": "944A4A3F5CB153D4B95EE83EA5B475E8F4ECA65FDE13823E1DDEB9FC8D2336BD",
+      "CodeGlyphX.Tests.dll": "1BF88740C3620AFFB887A29946FB9A4DFAE7A5C4C9B034D550D12A92DD211164",
+      "Microsoft.TestPlatform.CoreUtilities.dll": "CA8CD4A0C394AF3CC03C8E83B0377ECF14E6A8C68E4B0B50F732B1370950D7DF",
+      "Microsoft.TestPlatform.PlatformAbstractions.dll": "8BC7FAEC348A71336AF3BFBEECAD564AD0F97A8216835ED90CD2CEFF621A3697",
+      "Microsoft.VisualStudio.TestPlatform.ObjectModel.dll": "FF730C68BEBE827F74E2BDCFB571400AB328C00BE11C7FE3A1FE01143B483BC6",
+      "NativeModuleDriver.deps.json": "284CFDEDEE7C2930311EAEB7F65811BECE6CB69FA658B44D0C9A02FD0E70CBB7",
+      "NativeModuleDriver.dll": "28F07A463F8C2B9D1DBCEBF462B1F2626F1AD407270A1C15919FC069960259C7",
+      "NativeModuleDriver.runtimeconfig.json": "C230A317A54DD960BCBEB5F347F52E18DC665A26F7EFDA2159FCED9A5AC7E097",
+      "xunit.abstractions.dll": "3166DC70323FB30CCF1CEDB0FE86F2AD122C46D254542342D90386EFC4C9285C",
+      "xunit.assert.dll": "BCD9711B22D227AC8CD4C1568E72433A0F576D2EC8AAE64AC508081892015B1D",
+      "xunit.core.dll": "2F7FEEEC8C6DEC7DF684C25FB80AADB292B963D09723460F03D53C5AD2088ACC",
+      "xunit.execution.dotnet.dll": "E70FEBE547C15F8155DB3E2D95C3BA4445A59CBC21A3E7541AB22ED49D3DCF7B",
+      "xunit.runner.visualstudio.testadapter.dll": "A5DD2A0765F3891208189261CFE09171F875FF44FD5AF99EA56E890085FB7F30",
+      "cs/Microsoft.TestPlatform.CoreUtilities.resources.dll": "5F5501B18F65687CEBD354196F563C520B4575E58ECA474F3B3D1BD3247B9B46",
+      "cs/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "A24D277E98D3DC7986741FF0C72E628ACA9814556D6D64B5E3992BACF07C6F17",
+      "de/Microsoft.TestPlatform.CoreUtilities.resources.dll": "CF94A0635173D6D868A90161757CB9484E559FEDFDE6E7EA50DD935E1D9B6666",
+      "de/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "EDFDF3CB64553DA8E229463948AA7B962E96E4037D510FB7FAD4F26DA9E7C8B5",
+      "es/Microsoft.TestPlatform.CoreUtilities.resources.dll": "6DE8B0FD082756F612D4C8B3B06E3558E2321BCB910D5A70769050F308B96641",
+      "es/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "EB966BE23882A9E11459D283241A67E7C0265F271E98603F13CABAADD8F7EE64",
+      "fr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "BEC57046F616616913FD1416F013635A41A06C1C4D8AD67A8EE31F6098A3444B",
+      "fr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "07614B2D790A3B6AD93B41961566B84E4AD56CC86F5BF39658C06A13F2613DB4",
+      "it/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2AF9B70D68F3AB2BBAA609E5E556811C7F68869CE2C3CC6D7209B3D6722E0968",
+      "it/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5202A294A2B02C741BA292BA802F12B9473836A81CE61CB42F462EEAD6DC4DFA",
+      "ja/Microsoft.TestPlatform.CoreUtilities.resources.dll": "63D61001CDF7C501E253ADEACE734B32023CF617C04785937525FC0F202C3E21",
+      "ja/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "D2A679CC9CF0B0E5C865BD937EC90E45ECB434289C6B017992F417E34BAE646C",
+      "ko/Microsoft.TestPlatform.CoreUtilities.resources.dll": "E7528A92A6EC0E1684537DD550CDB016ECC8DF62A55C85294E608358E28A560D",
+      "ko/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "DC7B27E609E842EEEA5DA50EA172F288479B652EA779072E5DBBDE045418819D",
+      "pl/Microsoft.TestPlatform.CoreUtilities.resources.dll": "CB997C46356BE42B346682B3A1B6825CB6F70A30C92403048F7DBDF25065F6AB",
+      "pl/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "48F6BB8C551179DA07D5E136A0C781DD6433F23312F3CE9241DCEC29D8412F3E",
+      "pt-BR/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2BB0340569343F0C3288F35A5CFA947D9495DE55D04E93F2C380B75B45D681A9",
+      "pt-BR/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3944ADC8B9C09A7007AAEA3C86EE7666DDF3E7328B16EDCC72F7E6DCC1FF1DE8",
+      "ru/Microsoft.TestPlatform.CoreUtilities.resources.dll": "089D9052B2FA1EF63F2BD1F0F0F8161FE6D1D02721FC39D4B48C333D26826306",
+      "ru/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "515C96257715A3CCD56AF8ACD9460E72E57DDA825FF16824D2912271BECA0749",
+      "tr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "1FEE9A7A6AF5EF00D7FDD4F3BF265645C7984224352E95347C2F082F64D8ADE2",
+      "tr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5B39C999CCF72EB01BA387C8A0D72814D68A7120E623ACCBD2DA544EE04BA5DC",
+      "zh-Hans/Microsoft.TestPlatform.CoreUtilities.resources.dll": "DB896AC2579F5D5773F940BD278852C689799A3E0ACC51BB30E46EEF99FC76FB",
+      "zh-Hans/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3F370C15663359C40BCEE2A7D15CD386F01980BE753F7AB1505783649D70DCAF",
+      "zh-Hant/Microsoft.TestPlatform.CoreUtilities.resources.dll": "FE732572A93C216282C0EF0A8762246735C8885873E03FFE9FD287D202F0D806",
+      "zh-Hant/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "335D5FA4C5575CEB8F4FFB58FDA53C1813A0C725A17F68219D012D390DDF978F",
+      "Fixtures/Qr/perspective-bookmark.png": "8E6D85FF2F01FC79CDD53EAE7099504FBF0C8E208C2868868ECDDF68AE2F7A9D"
+    },
+    "RemoteRoot": "/Volumes/Samsung/CodeGlyphX-png-output-39818c1",
+    "Scope": "Exact frozen Windows-compiled managed core/test binaries. One hundred seventy one native ARM64 functional checks, including twenty four PNG output, stream and ownership contracts, including twenty Code128 photo/row-recovery cases and all preceding105 cases, including five Expanded workspace, eighteen DataBar-14 workspace and nineteen bounded-run DataBar contracts. Functional qualification only; no native timing or full native corpus claim.",
+    "DecisionProof": {
+      "Status": "passed",
+      "Checks": 171,
+      "Cases": [
+        {
+          "Case": "Int32 coordinate boundaries",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=False stop=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=False stop=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=True stop=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=True stop=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=False invert=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=False invert=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=True invert=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=True invert=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix invalid stride 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix invalid stride -80",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 2",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix RGBA mirrored",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix RGBA inverted",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix Gray8 rotated",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix Gray8 mirrored",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix Gray8 inverted",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix ECI metadata",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix DMRE metadata",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix damaged clock rejection",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix photo zxing-perspective-20.png",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix photo zxing-perspective-40.png",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix photo zxing-perspective-lowcontrast.png",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec pitch 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec pitch 2",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec pitch 3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec independent small symbol",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 10",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 13",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 14",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 15",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 17",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 19",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec mirrored photo",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec inverted photo",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR perspective single",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR perspective all",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR perspective scanner",
+          "Status": "passed"
+        },
+        {
+          "Case": "Bounded module runs capacity 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "Bounded module runs capacity 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Bounded module runs capacity 47",
+          "Status": "passed"
+        },
+        {
+          "Case": "Bounded module runs capacity 235",
+          "Status": "passed"
+        },
+        {
+          "Case": "Limited independent guard restoration 1234567890123",
+          "Status": "passed"
+        },
+        {
+          "Case": "Limited independent guard restoration 0000000000000",
+          "Status": "passed"
+        },
+        {
+          "Case": "Limited independent guard restoration 1999999999999",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded all 19 supported character counts and guards",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded maximum stacked symbol columns 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded maximum stacked symbol columns 2",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded maximum stacked symbol columns 3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded maximum stacked symbol columns 10",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 46",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 47",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 235",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 237",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 238",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 8192",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 module polarity=False trimmed=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 module polarity=False trimmed=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 module polarity=True trimmed=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 module polarity=True trimmed=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 stacked width order omni=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 stacked width order omni=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 incomplete sampled rows",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 invalid run boundary 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 invalid run boundary 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 invalid run boundary 44",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 invalid run boundary 45",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 invalid run boundary 46",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 invalid run boundary 47",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 invalid run boundary 8192",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 dirty-pool image omni=False inverted=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 dirty-pool image omni=False inverted=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 dirty-pool image omni=True inverted=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar14 dirty-pool image omni=True inverted=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded workspace columns=1 turns=0 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded workspace columns=2 turns=1 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded workspace columns=3 turns=2 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded workspace columns=10 turns=3 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded workspace columns=0 turns=0 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared linear runs Code128",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared linear runs Codabar",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared linear runs Code11",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared linear runs Plessey",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared linear runs Telepen",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared linear runs ITF",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared linear runs concurrent and cancellation",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared morphology 1x1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared morphology 1x9",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared morphology 9x1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared morphology 3x3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared morphology 17x9",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared morphology 257x3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared morphology cancellation expired=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Shared morphology cancellation expired=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DPM independent retained retries",
+          "Status": "passed"
+        },
+        {
+          "Case": "DPM consumer output mutation",
+          "Status": "passed"
+        },
+        {
+          "Case": "DPM cancellation after retry 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "DPM cancellation after retry 3",
+          "Status": "passed"
+        },
+        {
+          "Case": "DPM cancellation after retry 4",
+          "Status": "passed"
+        },
+        {
+          "Case": "DPM cancellation after retry 5",
+          "Status": "passed"
+        },
+        {
+          "Case": "DPM concurrent input ownership",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo reversed-postal rotated/inverted=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo reversed-postal rotated/inverted=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo offcentre-label rotated/inverted=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo offcentre-label rotated/inverted=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo cutoff-label rotated/inverted=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo cutoff-label rotated/inverted=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo cutoff-reversed rotated/inverted=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo cutoff-reversed rotated/inverted=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo long-postal rotated/inverted=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 photo long-postal rotated/inverted=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 adjacent band turns=0 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 adjacent band turns=0 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 adjacent band turns=1 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 adjacent band turns=1 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 adjacent band turns=2 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 adjacent band turns=2 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 adjacent band turns=3 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 adjacent band turns=3 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 invalid checksum band",
+          "Status": "passed"
+        },
+        {
+          "Case": "Code128 reader initialization identity",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 20 turns=0 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 20 turns=0 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 20 turns=1 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 20 turns=1 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 20 turns=2 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 20 turns=2 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 20 turns=3 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 20 turns=3 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 21 turns=0 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 21 turns=0 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 21 turns=1 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 21 turns=1 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 21 turns=2 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 21 turns=2 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 21 turns=3 inversion=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar separator photo 21 turns=3 inversion=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar coherent separator 0001234567890 omni=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar coherent separator 0001234567890 omni=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar coherent separator 0082193510642 omni=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar coherent separator 0082193510642 omni=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar coherent separator 1234567890123 omni=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "DataBar coherent separator 1234567890123 omni=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG RGBA (1, 1, 0, 0)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG RGBA (17, 5, 0, 300)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG RGBA (128, 128, 0, 0)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG RGBA (128, 128, 0, 300)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG RGBA (17, 5, 1, 300)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG RGBA (17, 5, 9, 0)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG packed (False, 17, 5, 0)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG packed (True, 17, 5, 0)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG packed (False, 513, 1024, 0)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG packed (True, 513, 1024, 0)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG packed (False, 17, 5, 1)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG packed (True, 17, 5, 1)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG packed (False, 17, 5, 9)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG packed (True, 17, 5, 9)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG ownership 0/0",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG ownership 0/6",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG ownership 1/0",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG ownership 1/6",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG ownership 2/0",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG ownership 2/6",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG translucent stream 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG translucent stream 6",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG callback rows (16384, 2, 0)",
+          "Status": "passed"
+        },
+        {
+          "Case": "PNG callback rows (17, 5, 6)",
+          "Status": "passed"
+        }
+      ],
+      "AdditionalDiagnosticAndAllResultPhotoCalls": 20,
+      "Architecture": "Arm64",
+      "OS": "macOS 27.0.1",
+      "Runtime": ".NET 10.0.13",
+      "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+      "TestAssemblySha256": "1BF88740C3620AFFB887A29946FB9A4DFAE7A5C4C9B034D550D12A92DD211164",
+      "CoreInformationalVersion": "3.0.0+39818c152763091f748ead4477d5ec0653663a8d",
+      "Scope": "Twenty four PNG output/stream/ownership contracts, twenty two actual DataBar separator geometry contracts, twenty actual Code128 photograph and adjacent-row recovery contracts, fifteen actual DPM workspace and shared morphology contracts, seven actual shared linear workspace contracts, five actual Expanded workspace contracts, eighteen DataBar-14 workspace contracts, nineteen DataBar module-run contracts, nine coordinate/component contracts and 32 public QR, Data Matrix and Aztec decoding checks on the exact Windows-qualified managed binaries. Functional qualification only; no native timing or full native corpus claim."
+    }
+  },
+  "DiagnosticPackets": [
+    {
+      "Lane": "before",
+      "Source": "e32694849a97ac05932f6bf8c9b9c3b232684368",
+      "CoreSha256": "34898C54D1390AD994B0C5D1CCC87B7507D597B14725EED27DE16640CD700565",
+      "File": "png-output-negative-timeouts-before.json",
+      "Sha256": "42C24C8EB59CB00EF4D70EDCD37E1A57161DB47FC73CA33736ACF5B1047B7D0C",
+      "ProfileFile": "png-output-negative-timeouts-before-profile.json",
+      "ProfileSha256": "E51DF5B84AC79BD618BF86609FCF8424B38C77ADD9235D569B013003D07709BD"
+    },
+    {
+      "Lane": "after",
+      "Source": "39818c152763091f748ead4477d5ec0653663a8d",
+      "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+      "File": "png-output-negative-timeouts-after.json",
+      "Sha256": "F606055056AA03DBB38B4BC1CA0815D843B1D74B673263A6D59702E6DBD1EA16",
+      "ProfileFile": "png-output-negative-timeouts-after-profile.json",
+      "ProfileSha256": "489BB946AF94083DA8E4ABE07A1AD8AA38F7B79702DC9A8AE8B88662E8E21AB2"
+    }
+  ],
+  "AllocationDiagnostic": {
+    "Source": "39818c152763091f748ead4477d5ec0653663a8d",
+    "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+    "PreviousCoreSha256": "34898C54D1390AD994B0C5D1CCC87B7507D597B14725EED27DE16640CD700565",
+    "Images": 9,
+    "PrimingCalls": 9,
+    "MeasuredCalls": 27,
+    "BeforeMeanAllocatedBytes": 20092775.407407407,
+    "CurrentMeanAllocatedBytes": 20077778.962962963,
+    "AllocationRatio": 0.9992536399705679,
+    "Scope": "Traced repetitions of the unchanged nine-image negative workload. Priming is excluded from allocation means; completion and unexpected outputs remain in every call. Diagnostic counters include tracing overhead. Inclusive allocation and thread-time stack samples overlap and do not establish elapsed time, CPU utilization or competitive rankings."
+  },
+  "ProfileManifest": {
+    "File": "png-output-profile-inputs.json",
+    "OriginalInputSha256": "245DD9AE6EEBF9DBE2AC138486BEEF7DEE923FA55D01FD9DA87DED24296A1B86",
+    "Sha256": "633B4F0C1ABC01AACEC45C9C0871744F7904F629035CFE68F3FD635E32E8D4BE"
+  },
+  "FrozenNegativeManifest": {
+    "File": "png-output-frozen-negative-manifest.json",
+    "OriginalInputSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
+    "Sha256": "E8DCD4D8B29711283868BCC642913B970EA2388521853D52F23258D013E487CA"
+  },
+  "SupplementalPackets": [
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd0",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "png-output-databar-positive-ccd0-result.json",
+      "OutcomesFile": "png-output-databar-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "1F4A08F629AD622C79296F48B5EB2777044786DF2B840804FFC06B3AD45A5680"
+    },
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd1",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "png-output-databar-positive-ccd1-result.json",
+      "OutcomesFile": "png-output-databar-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "F8CA433B1573095A195592B14A16810612138FB92BB5786078E004B077EF723C"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd0",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "png-output-databar-negative-ccd0-result.json",
+      "OutcomesFile": "png-output-databar-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "1C03EF61CD2BBC017E7791731FBC90051C95869EFFCF57482FC892114940E26C"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd1",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "png-output-databar-negative-ccd1-result.json",
+      "OutcomesFile": "png-output-databar-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "24D854FDAE5DA55F7B29DE1199DF5152CE6F6E3A5D1D860760AED5B32E496D29"
+    },
+    {
+      "Kind": "expanded-positive",
+      "Domain": "ccd0",
+      "Requests": 30,
+      "ManifestSha256": "9B9895990ED7B367DF1199075138D00CCD572609B6A6D01B58F7FEF8BD9A5246",
+      "PacketFile": "png-output-expanded-positive-ccd0-result.json",
+      "OutcomesFile": "png-output-expanded-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "6FB5318A193E00D22A9F45A91D8B2B0FC68D9997D02E72F678AE9215F99449CC"
+    },
+    {
+      "Kind": "expanded-positive",
+      "Domain": "ccd1",
+      "Requests": 30,
+      "ManifestSha256": "9B9895990ED7B367DF1199075138D00CCD572609B6A6D01B58F7FEF8BD9A5246",
+      "PacketFile": "png-output-expanded-positive-ccd1-result.json",
+      "OutcomesFile": "png-output-expanded-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "A5E97D9E22035D039A43CB1E87007AC89A024F033FED4C206C8B1E70FE9F5D00"
+    },
+    {
+      "Kind": "expanded-negative",
+      "Domain": "ccd0",
+      "Requests": 31,
+      "ManifestSha256": "49CC18BBACDA1618875B205C6CC9639B9F6886FF1A37E281987123AAD83F51D9",
+      "PacketFile": "png-output-expanded-negative-ccd0-result.json",
+      "OutcomesFile": "png-output-expanded-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "675F4ED8A0B1BD44CD0B6DCEF880BDF8C0DAA14646A81AADF318DD5CA4A4C303"
+    },
+    {
+      "Kind": "expanded-negative",
+      "Domain": "ccd1",
+      "Requests": 31,
+      "ManifestSha256": "49CC18BBACDA1618875B205C6CC9639B9F6886FF1A37E281987123AAD83F51D9",
+      "PacketFile": "png-output-expanded-negative-ccd1-result.json",
+      "OutcomesFile": "png-output-expanded-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "61C55CDED3A64784504FF064E31DF2F4F0E91C0BC2CA35DFC20ED10D12694406"
+    }
+  ],
+  "Diagnostics": {
+    "positive": {
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8"
+    },
+    "negative": {
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F"
+    }
+  },
+  "ExpandedDiagnostics": {
+    "positive": {
+      "ManifestSha256": "9B9895990ED7B367DF1199075138D00CCD572609B6A6D01B58F7FEF8BD9A5246"
+    },
+    "negative": {
+      "ManifestSha256": "49CC18BBACDA1618875B205C6CC9639B9F6886FF1A37E281987123AAD83F51D9"
+    }
+  },
+  "ExpandedManifests": {
+    "positive": {
+      "File": "png-output-expanded-positive-inputs.json",
+      "OriginalInputSha256": "9B9895990ED7B367DF1199075138D00CCD572609B6A6D01B58F7FEF8BD9A5246",
+      "Sha256": "737EC717479323295B4859112FE47D7A4938C01875A91F84E343BA78E23AD938"
+    },
+    "negative": {
+      "File": "png-output-expanded-negative-inputs.json",
+      "OriginalInputSha256": "49CC18BBACDA1618875B205C6CC9639B9F6886FF1A37E281987123AAD83F51D9",
+      "Sha256": "2137B13C17B93417E89EF00FD3B5D7951A1D53922261AA6F6C6C64C8F46E7A5B"
+    }
+  },
+  "FrozenCorpusManifest": {
+    "File": "png-output-frozen-corpus-manifest.json",
+    "OriginalInputSha256": "3714951ED16A82C1BD9B7A94543590DD609312EF3A39EFDD462F6C7F5BE7DD28",
+    "Sha256": "FC5347DB7554A5E719D0744F2BEC6E06A230C1174D803FB9679E008A7A7B9A93"
+  },
+  "PhotographSet": {
+    "Source": "39818c152763091f748ead4477d5ec0653663a8d",
+    "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+    "PreviousSource": "e32694849a97ac05932f6bf8c9b9c3b232684368",
+    "PreviousCoreSha256": "34898C54D1390AD994B0C5D1CCC87B7507D597B14725EED27DE16640CD700565",
+    "Manifest": {
+      "File": "png-output-additional-inputs.json",
+      "Sha256": "F44B6E84BB23CE5153723E443D1D987BBE6CBFF92094960249074AC1BE4B7DC7",
+      "OriginalInputSha256": "CB95CE443561B90E4DBD9463175737401D2539B839EEDC570FEA5CC3E2E85071"
+    },
+    "Provenance": {
+      "File": "png-output-additional-provenance.json",
+      "Sha256": "32B9C26772DA768DBC44EB515B60753B0F4C58F2D38BF2A1B05787FFFD94B506",
+      "OriginalInputSha256": "C9F79D3A1BA4710B9AEFBE00DC4A63ABC098D847E9D3AF0A8F428D68781ED032"
+    },
+    "Before": {
+      "File": "png-output-additional-before.json",
+      "Sha256": "217560CEE096980048A42FEB762C8522FDB56206AC82676EDC51B943060E3163",
+      "OriginalInputSha256": "B38FD19124DAA368B1AF605F0EDDAC673F2520B7F0B3AB94616BBBBC010831A7"
+    },
+    "Current": {
+      "File": "png-output-additional-current.json",
+      "Sha256": "217560CEE096980048A42FEB762C8522FDB56206AC82676EDC51B943060E3163",
+      "OriginalInputSha256": "B38FD19124DAA368B1AF605F0EDDAC673F2520B7F0B3AB94616BBBBC010831A7"
+    },
+    "Scope": "Every eligible image with a UTF-8 text oracle in upstream code128-2 and rss14-2, excluding the unchanged main corpus IDs, sorted by SHA256 of source path. Selected before decoding; all misses retained. Separate diagnostic qualification set, not an independent post-development accuracy estimate.",
+    "Limits": "This externally sourced set guided development. It is a diagnostic and regression set, not a held-out accuracy estimate. Its 52 images remain separate from the 267-positive headline ranking. Original oracles, all misses, inconclusive scans and unexpected outputs are retained. Unexpected counts are positive-image payload mismatches against the locked text oracles; they do not establish a negative-image false-positive rate. QRCoder generates QR symbols and is excluded from decoding comparisons."
+  },
+  "BaselineRegressions": {
+    "File": "png-output-baseline-regressions.json",
+    "Sha256": "092BF424A176C26F5D6409B859B4E3FAA8478CACA5AB427ACCCCDBE48B92C120"
+  },
+  "OutputBuffers": {
+    "Before": {
+      "File": "png-output-public-before.json",
+      "Sha256": "FC0AAE55F10688656210C9A81C262F835F1AA00481223FEBC835A1AEEBCBAFC5",
+      "OriginalInputSha256": "A4D8623B2D5D6CBC834E65F58246DC07E0F9106283A13B3131522DF47A6FF94D"
+    },
+    "Current": {
+      "File": "png-output-public-current.json",
+      "Sha256": "6A7A065FDB1B3C88E2FB6881B1C806E89A736F0515FFA439945614753293CB82",
+      "OriginalInputSha256": "1F7487F112032022719D0513F5AF3988C45F117076923A984BD1559D15891E36"
+    },
+    "Rows": [
+      {
+        "Case": "qr-gray1-direct",
+        "BeforeAllocatedBytes": 1465600,
+        "CurrentAllocatedBytes": 760000,
+        "ReductionPercent": 48.14410480349345
+      },
+      {
+        "Case": "qr-indexed1-direct",
+        "BeforeAllocatedBytes": 575200,
+        "CurrentAllocatedBytes": 320800,
+        "ReductionPercent": 44.22809457579972
+      },
+      {
+        "Case": "qr-rgba-direct",
+        "BeforeAllocatedBytes": 4588800,
+        "CurrentAllocatedBytes": 2321600,
+        "ReductionPercent": 49.407252440725244
+      },
+      {
+        "Case": "qr-facade-owned-array",
+        "BeforeAllocatedBytes": 3161600,
+        "CurrentAllocatedBytes": 1750400,
+        "ReductionPercent": 44.635627530364374
+      },
+      {
+        "Case": "barcode-facade-owned-array",
+        "BeforeAllocatedBytes": 3869600,
+        "CurrentAllocatedBytes": 1962400,
+        "ReductionPercent": 49.286747984287786
+      },
+      {
+        "Case": "matrix-facade-owned-array",
+        "BeforeAllocatedBytes": 1182400,
+        "CurrentAllocatedBytes": 872000,
+        "ReductionPercent": 26.251691474966165
+      },
+      {
+        "Case": "rgba-image-direct",
+        "BeforeAllocatedBytes": 818400,
+        "CurrentAllocatedBytes": 524000,
+        "ReductionPercent": 35.97262952101662
+      }
+    ],
+    "Scope": "Public-output allocation and exact encoded/pixel-byte diagnostic. Five priming calls and100 outputs per case. No elapsed-time ranking; complete fair generation comparison remains a separate qualification."
+  },
+  "StreamRepair": {
+    "Before": {
+      "File": "png-output-stream-before.json",
+      "Sha256": "509EA0D451A335FDF6C017D44DEF8A80A12656128FA9B3A2099E9D48D351E1DA",
+      "OriginalInputSha256": "A84E568F96E6629F47D4F1BCE1270A7611D10E3E9C1E8638BE577B9AFD4B4F59"
+    },
+    "Current": {
+      "File": "png-output-stream-current.json",
+      "Sha256": "160A863E1C556AAD1188031631D3534A3FC7DB2EE1BFEF51F55FABE9D43C79EA",
+      "OriginalInputSha256": "0EFC1D9AD17A446485047FF9F5D03CE77E974ED758C7FDA77AC73D1A454ED069"
+    },
+    "Scope": "Public translucent QR stream after controlled synthetic pool contamination. Both compression 0 and 6 now preserve exact array-rendered pixels. No user data is captured."
+  },
+  "GenerationBeforeCurrent": {
+    "RecipeSha256": "763F78219C3FDB44D39AC62F7A82F03C44BDD16A88A2332C0C3BF452518C5FAB",
+    "Packets": [
+      {
+        "Domain": "ccd0",
+        "Lane": "before",
+        "Source": "e32694849a97ac05932f6bf8c9b9c3b232684368",
+        "CoreSha256": "34898C54D1390AD994B0C5D1CCC87B7507D597B14725EED27DE16640CD700565",
+        "HostSha256": "1D103CEFCA4C7A2C865FB22A6E2FC25BE6939A957238030C89B1F3348E63DBE5",
+        "File": "png-output-generation-before-ccd0.json",
+        "Sha256": "CC9C7B1236146804A4D07BC91EBA19EFD23D546F2345F7CBD5A6F47A4D64A0FD",
+        "OriginalInputSha256": "7D7215E76A20B37860D0F8181F799B12714C5D5D4AC8BE94E7E7820F22D02FBB"
+      },
+      {
+        "Domain": "ccd0",
+        "Lane": "current",
+        "Source": "39818c152763091f748ead4477d5ec0653663a8d",
+        "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+        "HostSha256": "3B1ADF12C29BDC634FEDC2107AB20B964CA8375DB403675FE31C06EF92EC4318",
+        "File": "png-output-generation-current-ccd0.json",
+        "Sha256": "8A30F7471C1B5D117B862AB981DF18EA465894A4EB580914382163CB01EF082C",
+        "OriginalInputSha256": "161922C2F7D65D33CF3787C22EC94E45EDE67E4845D511381A6843B18DE353B8"
+      },
+      {
+        "Domain": "ccd1",
+        "Lane": "before",
+        "Source": "e32694849a97ac05932f6bf8c9b9c3b232684368",
+        "CoreSha256": "34898C54D1390AD994B0C5D1CCC87B7507D597B14725EED27DE16640CD700565",
+        "HostSha256": "1D103CEFCA4C7A2C865FB22A6E2FC25BE6939A957238030C89B1F3348E63DBE5",
+        "File": "png-output-generation-before-ccd1.json",
+        "Sha256": "F336A175891B92F875298754AD3CD3A77604B1B332FC67289E8CAC13451782C2",
+        "OriginalInputSha256": "D0AD4AD0F946E6B80CB2BD8493C3685F6C3EEAD22F4B201F164ABCB54296F5FD"
+      },
+      {
+        "Domain": "ccd1",
+        "Lane": "current",
+        "Source": "39818c152763091f748ead4477d5ec0653663a8d",
+        "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+        "HostSha256": "3B1ADF12C29BDC634FEDC2107AB20B964CA8375DB403675FE31C06EF92EC4318",
+        "File": "png-output-generation-current-ccd1.json",
+        "Sha256": "D1D54F3706F80219144B593969E05A6BAB56987C65CA682A1AF20157659FE3F4",
+        "OriginalInputSha256": "39EC2F3BD53B5D401E54C4E3705B843D617D3A65156F2BA8E1CF07B48EFDFCC0"
+      }
+    ],
+    "SourceOrder": {
+      "ccd0": [
+        "before",
+        "current"
+      ],
+      "ccd1": [
+        "current",
+        "before"
+      ]
+    },
+    "Scope": "Fresh PowerForge generation comparisons cover all 24 cases for each binary on both CPU domains. Each call validates 100 outputs. The runs use three warmups, twelve grouped rotated measurements, Normal priority and no outlier removal. The metadata gitSha identifies the frozen recipe checkout; actual core/host hashes and explicit Source fields identify each measured binary.",
+    "Limits": "Shared host load and separate process launches limit causal latency claims. The PNG codec also serves the ZXing PNG adapters, so their allocation changes are retained. Module encoding is unchanged. Native allocation, CPU use, throughput and capacity are not established."
+  }
+}

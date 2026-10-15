@@ -1,0 +1,363 @@
+{
+  "Source": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+  "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+  "PreviousSource": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+  "PreviousCoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+  "HostSha256": "A9268D6B8D8088B3DD2B0DCF807ED3E6B01D19EEB11AC177462E788181295094",
+  "PreviousHostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+  "Changes": "Photographed DataBar-14 rows can recover an invalid independently rounded character through a bounded one-module transfer that preserves the character sum and measured residual limit. Complete guards, both finders, all character constraints and the symbol checksum must validate. The same payload and aligned physical bounds must appear in three adjacent rows. Different payloads in overlapping three-row windows reject. Ordinary decoding and format priority retain their earlier behavior.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are a separate workload from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "databar-character-fabric-ccd0-result.json",
+      "OutcomesFile": "databar-character-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "D72B95021477192C775D4F53420CF99743533D42C86E40CCFBE8328295F4B3A2"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "databar-character-fabric-ccd1-result.json",
+      "OutcomesFile": "databar-character-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "8DFD0C209F839F7A1EAD21E04B166B0B819B6EFE77141CED4D1D8B4B501FCBE4"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "databar-character-texture-ccd0-result.json",
+      "OutcomesFile": "databar-character-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "BA8C9F9EA2E136CD9A118503D664E38B26BD3DD10B7B460AD2FFE1E9A86FE2DA"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "databar-character-texture-ccd1-result.json",
+      "OutcomesFile": "databar-character-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "367E3ED6A114B2256708AB0AC8ECF0F97E5B990D33933F6F9839CF886CC04DA8"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "databar-character-whole-ccd0-result.json",
+      "OutcomesFile": "databar-character-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "118FD732D9EF7D138B3FB985EEE27590D0B4B5438F6D026A6AC912B18D10CE4F"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "databar-character-whole-ccd1-result.json",
+      "OutcomesFile": "databar-character-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "1A1B2C9AA9B72A2431437873B40DFA1A2D44ACD2C65B08C604BC4F07819D1F73"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "databar-character-retail-positive-ccd0-result.json",
+      "OutcomesFile": "databar-character-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "7260B8F44DC9CA86EE72FC1242B460E28AC167D25C5BE2E29327BDF4427BC80D"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "databar-character-retail-positive-ccd1-result.json",
+      "OutcomesFile": "databar-character-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "4F9A343B0D70010742C8762A861ECF1D81CDEA897CA9FB1EAA6601560B3BFDE0"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "databar-character-retail-negative-ccd0-result.json",
+      "OutcomesFile": "databar-character-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "3597E51C932FDF8E2DD23CA5F4DC7536621F5759455C57376EF6893A5505686C"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "databar-character-retail-negative-ccd1-result.json",
+      "OutcomesFile": "databar-character-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "7777CF878D07F8B9BBE55A0DE00B349417A1581778C06F1CD43EE934F6A47529"
+    }
+  ],
+  "Contracts": {
+    "net10": 11,
+    "net8": 11,
+    "net472": 11
+  },
+  "ReviewCoverage": {
+    "Base": "1f8ff132a75de3b718e895208432a7dcc9aae043",
+    "InitialHead": "85ea93b9767e3857d3bdab20599003abc1311d73",
+    "Head": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+    "BoundaryState": "candidate-reviewed",
+    "UnresolvedFindings": [],
+    "Scope": "One fresh strictly read-only independent review of bounded DataBar character repair, physical-row corroboration and conflicts, scanline integration, pixel entrypoints, cancellation/resource lifetime, platform compatibility, tests and dependency boundaries. One P2 in overlapping support windows was reproduced and fixed. The single targeted confirmation covers that guard, directly affected sibling selector paths and regression proof at the final source.",
+    "FindingDisposition": [
+      {
+        "Priority": "P2",
+        "Classification": "remediation-introduced in new fallback",
+        "Finding": "Different valid payloads with aligned bounds in three-row windows centered one or two rows apart could both be admitted.",
+        "Disposition": "Reproduced in actual selector, fixed across every overlapping window; disjoint bands retained. Before 2 failures/1 pass; after all 150 focused cases pass.",
+        "Confirmation": "Addressed; no remaining actionable defect in the guard invariant or directly affected selection paths."
+      }
+    ],
+    "Limits": "Overlapping-payload counterexample uses the actual private production selector with complete canonical decoder-validated observations; it is not a pixel-level reproduction. Initial 147-case and repaired 150-case focused results precede the final source rebuild; final full framework and exact binary corpus/native proof are separate. Review does not establish performance or publication readiness.",
+    "Recommendation": "Accept the internal implementation and remediation shape; broader qualification remains a separate gate. No public API or production dependency added.",
+    "ReviewAgent": "databar_character_recovery_review",
+    "TargetedConfirmationUsed": true
+  },
+  "NativeArm64": {
+    "Source": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+    "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+    "Host": "evomini.ad.evotec.xyz",
+    "OperatingSystem": "27.0.1",
+    "Architecture": "arm64",
+    "Processor": "Apple M4",
+    "SDKVersion": "10.0.401",
+    "SelectedFrameworkVersion": "10.0.12",
+    "FrameworkRollForward": "Disable",
+    "FrameworkSelection": "dotnet exec --fx-version 10.0.12 --roll-forward Disable DataBarNativeDriver.dll",
+    "InputFiles": {
+      "DataBarNativeDriver.dll": "F41890AA6E523FD8D0B7738D308820DAD17001FC39F5AE36AC9148C65D2CA52F",
+      "DataBarNativeDriver.deps.json": "9EFB502002876775E53E96E6E11DFC170E74BC348E5D8E41BDDAAC3625D41B68",
+      "DataBarNativeDriver.runtimeconfig.json": "C230A317A54DD960BCBEB5F347F52E18DC665A26F7EFDA2159FCED9A5AC7E097",
+      "CodeGlyphX.dll": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+      "photo.png": "0436CD131A7CACFE5A51FA69B714C5015A5B6A8697BBC7152EC93977E4A5AAB3"
+    },
+    "RemoteRoot": "/Volumes/Samsung/CodeGlyphX-databar-photo-217a30ff",
+    "Scope": "Exact frozen managed binaries and an unchanged independently sourced photo; native ARM64 public decoding functional check only. No remote build, benchmark or dependency installation.",
+    "DecisionProof": {
+      "Status": "passed",
+      "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+      "CoreInformationalVersion": "3.0.0+217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+      "FixtureSha256": "0436CD131A7CACFE5A51FA69B714C5015A5B6A8697BBC7152EC93977E4A5AAB3",
+      "Cases": 8,
+      "Checks": 32,
+      "PassedChecks": [
+        "photo/vertical=False/inverted=False/typed",
+        "photo/vertical=False/inverted=False/diagnostics",
+        "photo/vertical=False/inverted=False/all",
+        "photo/vertical=False/inverted=False/span",
+        "photo/vertical=False/inverted=False/span-all",
+        "photo/vertical=False/inverted=False/untyped-all",
+        "photo/vertical=False/inverted=False/scanner",
+        "photo/vertical=False/inverted=True/typed",
+        "photo/vertical=False/inverted=True/diagnostics",
+        "photo/vertical=False/inverted=True/all",
+        "photo/vertical=False/inverted=True/span",
+        "photo/vertical=False/inverted=True/span-all",
+        "photo/vertical=False/inverted=True/untyped-all",
+        "photo/vertical=False/inverted=True/scanner",
+        "photo/vertical=True/inverted=False/typed",
+        "photo/vertical=True/inverted=False/diagnostics",
+        "photo/vertical=True/inverted=False/all",
+        "photo/vertical=True/inverted=False/span",
+        "photo/vertical=True/inverted=False/span-all",
+        "photo/vertical=True/inverted=False/untyped-all",
+        "photo/vertical=True/inverted=False/scanner",
+        "photo/vertical=True/inverted=True/typed",
+        "photo/vertical=True/inverted=True/diagnostics",
+        "photo/vertical=True/inverted=True/all",
+        "photo/vertical=True/inverted=True/span",
+        "photo/vertical=True/inverted=True/span-all",
+        "photo/vertical=True/inverted=True/untyped-all",
+        "photo/vertical=True/inverted=True/scanner",
+        "row-support/2",
+        "row-support/3",
+        "misaligned-rows",
+        "bgra-padded"
+      ],
+      "Scope": "Exact managed candidate: four photo orientation/polarity cases across seven public entrypoints, two-row rejection, three-row acceptance, misaligned-row rejection and BGRA/padded input. Functional evidence only; no timing or broad-corpus claim."
+    }
+  },
+  "ContractNote": "Eleven regression cases pass on each of .NET 10, .NET 8 and .NET Framework 4.7.2: the independently sourced photo across rotation and inversion, array, diagnostic, all-result and scanner paths, span paths on modern targets, padded BGRA, two-row rejection, three-row acceptance, misaligned-row rejection and conflicting overlapping support windows with disjoint-band preservation. A baseline control fails six of the original eight regression cases. The overlapping-window regression fails both ambiguous cases before its repair and retains the separate-band case. Native ARM64 passes 32 public decoding checks on the exact managed binary; timing remains Windows-only.",
+  "SamplingLimits": "Fallback searches fourteen anchors per axis and at most four physical neighbors on each side of guarded anchors, with fifteen local cutoffs and at most 32 distinct complete-symbol observations per row. Three adjacent rows must agree in payload, polarity, direction and physical bounds. Polling uses the existing cancellation/deadline owner. This does not provide a fixed response-time guarantee or cover every photograph.",
+  "Fixture": {
+    "Path": "CodeGlyphX.Tests/Fixtures/Linear/zxing-databar14-character-recovery.png",
+    "Sha256": "0436CD131A7CACFE5A51FA69B714C5015A5B6A8697BBC7152EC93977E4A5AAB3",
+    "UpstreamRevision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+    "SourceImage": "core/src/test/resources/blackbox/rss14-2/11.png",
+    "ExpectedCorpusText": "02001234567893",
+    "ExpectedCoreText": "0200123456789",
+    "License": "Apache-2.0 test fixture only"
+  },
+  "BaselineRegression": {
+    "Scope": "Current public-entrypoint regression tests with the exact preceding qualified core substituted in an isolated host. Four photo cases, BGRA/padded input and three-row acceptance fail; two-row rejection and misaligned-row rejection pass.",
+    "TestAssemblySha256": "EF9ECABB572EBD7B723F1FCBA0C6C5EFAE394D8EADF45CAF2B6720D3A616E138",
+    "BaselineCoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+    "Failed": 6,
+    "Passed": 2
+  },
+  "OverlapRemediation": {
+    "Contract": "Different payloads with aligned physical bounds reject when their three-row support windows overlap; disjoint bands remain separately decodable.",
+    "After": {
+      "Failed": 0,
+      "Passed": 150,
+      "Trx": "tests/focused/databar-overlap-fixed-net10.trx"
+    },
+    "OriginalSource": "85ea93b9767e3857d3bdab20599003abc1311d73",
+    "FinalSource": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+    "Status": "Validated selector regression",
+    "Before": {
+      "Failed": 2,
+      "Passed": 1,
+      "Trx": "tests/before/databar-overlap-before.trx"
+    },
+    "Scope": "Direct actual production selector with canonical complete-symbol observations; no test-only production hook. Public photo/row/polarity/stride regressions included in focused suite."
+  },
+  "OracleVerification": {
+    "Status": "passed",
+    "UpstreamRevision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+    "Checks": [
+      {
+        "Image": "11.png",
+        "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/11.txt",
+        "Text": "02001234567893",
+        "OracleSha256": "EA3059E21ED26E11A6FE902ACC434CEEA213D5FD3117EE02C46586B1540C18CF"
+      },
+      {
+        "Image": "18.png",
+        "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/18.txt",
+        "Text": "02001234567893",
+        "OracleSha256": "EA3059E21ED26E11A6FE902ACC434CEEA213D5FD3117EE02C46586B1540C18CF"
+      },
+      {
+        "Image": "19.png",
+        "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/19.txt",
+        "Text": "02001234567893",
+        "OracleSha256": "EA3059E21ED26E11A6FE902ACC434CEEA213D5FD3117EE02C46586B1540C18CF"
+      },
+      {
+        "Image": "7.png",
+        "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/7.txt",
+        "Text": "02001234567893",
+        "OracleSha256": "EA3059E21ED26E11A6FE902ACC434CEEA213D5FD3117EE02C46586B1540C18CF"
+      }
+    ],
+    "Scope": "Immutable primary-source text oracles checked independently; existing corpus mappings unchanged."
+  },
+  "DiagnosticRun": {
+    "Source": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+    "Status": "passed",
+    "Scope": "Four unranked diagnostic scans from exact final and preceding binaries after final comparison timing, with unchanged frozen manifests/options/oracles.",
+    "HostSha256": "A9268D6B8D8088B3DD2B0DCF807ED3E6B01D19EEB11AC177462E788181295094",
+    "Outputs": {
+      "positive-current": "248F9558CC382D91BBB3BBEB8B8065525B5E45899125EFD0012A4A6319B6575E",
+      "positive-baseline": "B28FFEE5C87CB886147AE712505B0C04898128874403C70CAE34164497C2A635",
+      "negative-baseline": "0D3206958C249A6DBC3D9F4681509ED98FFF33713A1E46470E233C89E0026191",
+      "negative-current": "0D3206958C249A6DBC3D9F4681509ED98FFF33713A1E46470E233C89E0026191"
+    },
+    "CompletedUtc": "2026-10-13T19:04:04.7575602Z",
+    "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+    "RawOutputs": {
+      "positive-current": "FFC33C36387F79ADB01CB63C9CAD8A87ED4ADB14A631B783622554F345DA3EDA",
+      "positive-baseline": "29A335C60DD10DE890BDAB0FB1EB76F897280FC326FE3B22C22F5E21A321A8BD",
+      "negative-baseline": "47BD71AA64AC4CE6C4D4EB5A145350E0A2759448C4B70E4403BA58C85B2E532F",
+      "negative-current": "47BD71AA64AC4CE6C4D4EB5A145350E0A2759448C4B70E4403BA58C85B2E532F"
+    },
+    "Canonicalization": "UTF-8 JSON, ensure_ascii=False, two-space indent, LF and one final newline; same public report serialization."
+  },
+  "Diagnostics": {
+    "positive": {
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "Lanes": {
+        "baseline": {
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "File": "databar-character-databar-positive-baseline.json",
+          "Sha256": "B28FFEE5C87CB886147AE712505B0C04898128874403C70CAE34164497C2A635",
+          "Rows": 12,
+          "RawSha256": "29A335C60DD10DE890BDAB0FB1EB76F897280FC326FE3B22C22F5E21A321A8BD"
+        },
+        "current": {
+          "Source": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+          "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+          "File": "databar-character-databar-positive-current.json",
+          "Sha256": "248F9558CC382D91BBB3BBEB8B8065525B5E45899125EFD0012A4A6319B6575E",
+          "Rows": 12,
+          "RawSha256": "FFC33C36387F79ADB01CB63C9CAD8A87ED4ADB14A631B783622554F345DA3EDA"
+        }
+      }
+    },
+    "negative": {
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "Lanes": {
+        "baseline": {
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "File": "databar-character-databar-negative-baseline.json",
+          "Sha256": "0D3206958C249A6DBC3D9F4681509ED98FFF33713A1E46470E233C89E0026191",
+          "Rows": 31,
+          "RawSha256": "47BD71AA64AC4CE6C4D4EB5A145350E0A2759448C4B70E4403BA58C85B2E532F"
+        },
+        "current": {
+          "Source": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+          "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+          "File": "databar-character-databar-negative-current.json",
+          "Sha256": "0D3206958C249A6DBC3D9F4681509ED98FFF33713A1E46470E233C89E0026191",
+          "Rows": 31,
+          "RawSha256": "47BD71AA64AC4CE6C4D4EB5A145350E0A2759448C4B70E4403BA58C85B2E532F"
+        }
+      }
+    }
+  },
+  "SupplementalPackets": [
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd0",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-character-databar-positive-ccd0-result.json",
+      "OutcomesFile": "databar-character-databar-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "94D7C7E2ECD27777E67CABC74311D970BAB3C5ACA91A63920FAADAC6A63B923E"
+    },
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd1",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-character-databar-positive-ccd1-result.json",
+      "OutcomesFile": "databar-character-databar-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "E5772F31787B1934515AA3357134FEE796916EB58E163ED91624D8BDF6695D82"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd0",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-character-databar-negative-ccd0-result.json",
+      "OutcomesFile": "databar-character-databar-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "4A85D8C2534C66BD22A59E9EF97286CAEDA4575EEDAC7745A4832B410EBA9D17"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd1",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-character-databar-negative-ccd1-result.json",
+      "OutcomesFile": "databar-character-databar-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "93E45ABAE0D77A63F5603444FF20BA462ABF5387B8E538C48599CCE465D2A55C"
+    }
+  ]
+}

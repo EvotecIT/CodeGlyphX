@@ -1,0 +1,21 @@
+{
+  "Base": "1f8ff132a75de3b718e895208432a7dcc9aae043",
+  "InitialHead": "85ea93b9767e3857d3bdab20599003abc1311d73",
+  "Head": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+  "BoundaryState": "candidate-reviewed",
+  "UnresolvedFindings": [],
+  "Scope": "One fresh strictly read-only independent review of bounded DataBar character repair, physical-row corroboration and conflicts, scanline integration, pixel entrypoints, cancellation/resource lifetime, platform compatibility, tests and dependency boundaries. One P2 in overlapping support windows was reproduced and fixed. The single targeted confirmation covers that guard, directly affected sibling selector paths and regression proof at the final source.",
+  "FindingDisposition": [
+    {
+      "Priority": "P2",
+      "Classification": "remediation-introduced in new fallback",
+      "Finding": "Different valid payloads with aligned bounds in three-row windows centered one or two rows apart could both be admitted.",
+      "Disposition": "Reproduced in actual selector, fixed across every overlapping window; disjoint bands retained. Before 2 failures/1 pass; after all 150 focused cases pass.",
+      "Confirmation": "Addressed; no remaining actionable defect in the guard invariant or directly affected selection paths."
+    }
+  ],
+  "Limits": "Overlapping-payload counterexample uses the actual private production selector with complete canonical decoder-validated observations; it is not a pixel-level reproduction. Initial 147-case and repaired 150-case focused results precede the final source rebuild; final full framework and exact binary corpus/native proof are separate. Review does not establish performance or publication readiness.",
+  "Recommendation": "Accept the internal implementation and remediation shape; broader qualification remains a separate gate. No public API or production dependency added.",
+  "ReviewAgent": "databar_character_recovery_review",
+  "TargetedConfirmationUsed": true
+}

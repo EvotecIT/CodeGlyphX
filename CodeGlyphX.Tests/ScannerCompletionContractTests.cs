@@ -8,6 +8,21 @@ namespace CodeGlyphX.Tests;
 [Collection("ImageScannerSerial")]
 public sealed class ScannerCompletionContractTests {
     [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DirectPartMarkPreprocessingStopsAtMonotonicDeadline(bool afterFirstVariant) {
+        var pixels = new byte[] { 255, 255, 255, 255 };
+        using var variants = DirectPartMarkPreprocessor.CreateVariants(pixels, 1, 1,
+            new DirectPartMarkOptions(), CancellationToken.None).GetEnumerator();
+        if (afterFirstVariant) Assert.True(variants.MoveNext());
+        // A single-threaded host cannot rely on timer callbacks cancelling a token.
+        // Check the recognition clock before starting or continuing preprocessing.
+        using var budget = CodeGlyphX.Internal.DecodeBudget.Begin(1);
+        Assert.True(SpinWait.SpinUntil(() => CodeGlyphX.Internal.DecodeBudget.IsExpired, 1000));
+        Assert.False(variants.MoveNext());
+    }
+
+    [Theory]
     [InlineData(1)]
     [InlineData(32)]
     public void ShortQrAllowanceStillAttemptsReadableSymbol(int maximum) {
@@ -38,6 +53,19 @@ public sealed class ScannerCompletionContractTests {
         var scan = SymbolScanner.Scan(frame, ScanOptions.Fast());
         Assert.Contains(scan.Symbols, symbol => symbol.Text == text);
 #endif
+    }
+
+    [Fact]
+    public void WeightedRecognitionSharesRetainExplicitLimitsAndSiblingTime() {
+        using var complete = new ScanDeadline(CancellationToken.None, 60000);
+        using (var qr = complete.CreateAttempt(10, weight: 3))
+            Assert.InRange(qr.TimeoutMilliseconds, 17000, 18000);
+        using (var matrix = complete.CreateAttempt(7, recognitionBudgetMilliseconds: 2000, weight: 2))
+            Assert.Equal(2000, matrix.TimeoutMilliseconds);
+        using (var sibling = complete.CreateAttempt(5))
+            Assert.InRange(sibling.TimeoutMilliseconds, 11000, 12000);
+        Assert.False(complete.ShouldStop);
+        Assert.False(complete.RecognitionBudgetExceeded);
     }
 
     [Fact]

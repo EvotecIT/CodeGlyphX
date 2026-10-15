@@ -1,0 +1,11 @@
+{
+  "BaselineCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+  "CandidateCoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+  "ImagePolarityThresholdCases": 288,
+  "PixelClassificationsCompared": 12279996,
+  "AcceptedComponentsCompared": 133,
+  "Mismatches": 0,
+  "CancelledAndExpiredTraversalStops": true,
+  "UnboundedTraversalPreserved": true,
+  "Scope": "Actual baseline and current private component searches versus independent row-major four-connected breadth-first traversal. Includes narrow images, both polarities, global/adaptive thresholds, solid/noisy masks, corner contact, narrow bridges, bounds, areas and order. Pre-cancelled/expired calls and ordinary unbounded calls are checked. This diagnostic is separate from public corpus accuracy and timing."
+}

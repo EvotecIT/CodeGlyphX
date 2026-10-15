@@ -1,0 +1,6 @@
+{
+  "Cases": 2400,
+  "GeometrySha256": "9B106A1FEEEB98C30CE3DF07303563A483E0FD6BDE79EA11B256EDE74C452BB6",
+  "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E",
+  "Scope": "Ordered top-eight component area and corner coordinates; reproducible random masks plus disconnected equal-area components, both polarities. Compare the retained baseline and candidate fingerprints."
+}

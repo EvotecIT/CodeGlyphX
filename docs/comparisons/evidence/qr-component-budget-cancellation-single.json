@@ -1,0 +1,73 @@
+{
+  "CoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+  "CallKind": "single",
+  "Scope": "Diagnostic supported public QrDecoder.TryDecode/TryDecodeAll calls on synthetic block noise, with the documented zero local budget and a live cancellation token. Request time is recorded immediately before Cancel; calls that finish before the request are identified explicitly. Timer/tracing overhead and host load affect response time; no timing threshold or competitive performance claim.",
+  "Rows": [
+    {
+      "Side": 2048,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 5,
+      "CancelledAtMs": 15.6518,
+      "FinishedAtMs": 16.1403,
+      "PostCancellationMs": 0.48850000000000016,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "s1 t0 norm cand0 tri0 cancelled"
+    },
+    {
+      "Side": 2048,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 40,
+      "CancelledAtMs": 45.2038,
+      "FinishedAtMs": 45.2195,
+      "PostCancellationMs": 0.015699999999995384,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "s1 t0 norm cand0 tri0 cancelled"
+    },
+    {
+      "Side": 2048,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 120,
+      "CancelledAtMs": 123.1408,
+      "FinishedAtMs": 123.1718,
+      "PostCancellationMs": 0.03100000000000591,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "s1 t0 norm cand0 tri0 cancelled"
+    },
+    {
+      "Side": 4096,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 5,
+      "CancelledAtMs": 8.4689,
+      "FinishedAtMs": 8.4987,
+      "PostCancellationMs": 0.029799999999999827,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "s1 t0 norm cand0 tri0 cancelled"
+    },
+    {
+      "Side": 4096,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 40,
+      "CancelledAtMs": 46.2145,
+      "FinishedAtMs": 46.2278,
+      "PostCancellationMs": 0.013300000000000978,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "s1 t0 norm cand0 tri0 cancelled"
+    },
+    {
+      "Side": 4096,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 120,
+      "CancelledAtMs": 125.3372,
+      "FinishedAtMs": 128.136,
+      "PostCancellationMs": 2.7988,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "s1 t0 norm cand0 tri0 cancelled"
+    }
+  ]
+}

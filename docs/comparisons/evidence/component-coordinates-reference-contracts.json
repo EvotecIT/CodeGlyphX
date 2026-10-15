@@ -1,0 +1,15 @@
+{
+  "Source": "2e2915a4b218c89dba8c126a1e32dec410c4958e",
+  "CoreSha256": "3474E8726755DB88512FB4EEA5B97473E0AF57B57ED587ABB33EE8ABA1306E9B",
+  "TestAssemblySha256": "7FE7C5BFCB4375933CA674A6B5C57DC71509396CA19B59F7406A11722825E12A",
+  "FrameworkCases": {
+    "net10": 9,
+    "net8": 9,
+    "net472": 5
+  },
+  "CoordinateWidths": 1023,
+  "BinaryGraphVariantsPerFullFramework": 128,
+  "QrGraphVariantsPerFullFramework": 128,
+  "Scope": "Exact coordinate arithmetic, binary visitor queue order and edge/stop behavior, and QR component bounds, areas and order match independent integer and graph references. The new contracts pass nine cases on .NET 10 and .NET 8 and five on .NET Framework. Native ARM64 passes the same nine coordinate/component cases and 32 public QR, Data Matrix and Aztec decoding cases on the exact managed core and test assembly.",
+  "Limits": "Image widths, pixel offsets, four-connectivity, candidate limits, queue representation, polarity and cancellation/deadline polling retain their existing domain and behavior. No complete-scan speed, reliable deadline completion, CPU, throughput or memory-capacity guarantee follows from the component-only experiment."
+}

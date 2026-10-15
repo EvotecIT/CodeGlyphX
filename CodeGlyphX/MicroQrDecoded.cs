@@ -14,6 +14,7 @@ public sealed class MicroQrDecoded {
     /// <summary>
     /// Gets the decoded error correction level.
     /// </summary>
+    /// <remarks>Version M1 reports L for its detection-only parity; it does not correct damaged codewords.</remarks>
     public QrErrorCorrectionLevel ErrorCorrectionLevel { get; }
 
     /// <summary>

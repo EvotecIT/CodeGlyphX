@@ -26,7 +26,7 @@ public static partial class BarcodeDecoder {
         if (!TryDecodeEanLeftDigits(normalized, out var leftDigits, out var parity)) return false;
         if (!TryDecodeEanRightDigits(normalized, out var rightDigits)) return false;
 
-        var firstDigit = EanParityMap.Value[ParityKey(parity)];
+        if (!EanParityMap.Value.TryGetValue(ParityKey(parity), out var firstDigit)) return false;
         var raw = firstDigit + new string(leftDigits) + new string(rightDigits);
         if (!IsValidEanChecksum(raw)) return false;
         SetTextWithAddOn(raw, source, 95, GuardStart, out text);
@@ -495,7 +495,7 @@ public static partial class BarcodeDecoder {
         return key;
     }
 
-    private static int PatternKey(int[] runs, int offset, int count) {
+    private static int PatternKey(ReadOnlySpan<int> runs, int offset, int count) {
         var key = 0;
         for (var i = 0; i < count; i++) {
             key = key * 10 + runs[offset + i];
@@ -530,22 +530,6 @@ public static partial class BarcodeDecoder {
             if (kvp.Value.value == sum) return kvp.Key;
         }
         return '#';
-    }
-
-    private static char GetCode93Checksum(string content, int maxWeight) {
-        var weight = 1;
-        var sum = 0;
-        for (var i = content.Length - 1; i >= 0; i--) {
-            var ch = content[i];
-            if (!Code93Tables.EncodingTable.TryGetValue(ch, out var entry)) return ' ';
-            sum += entry.value * weight;
-            if (++weight > maxWeight) weight = 1;
-        }
-        sum %= 47;
-        foreach (var kvp in Code93Tables.EncodingTable) {
-            if (kvp.Value.value == sum) return kvp.Key;
-        }
-        return ' ';
     }
 
     private static bool TryStripMsiChecksum(string raw, out string stripped) {
@@ -668,14 +652,6 @@ public static partial class BarcodeDecoder {
                 key = (key << 1) | (data[i] ? 1u : 0u);
             }
             dict[key] = kvp.Key;
-        }
-        return dict;
-    });
-
-    private static readonly Lazy<Dictionary<int, char>> CodabarPatternMap = new(() => {
-        var dict = new Dictionary<int, char>();
-        foreach (var kvp in CodabarTables.EncodingTable) {
-            dict[PatternBitsFromString(kvp.Value)] = kvp.Key;
         }
         return dict;
     });

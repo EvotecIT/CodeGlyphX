@@ -1,0 +1,91 @@
+{
+  "CoreSha256": "44579400C4405E99D15CCFC17EF224C1E2B8A5275296FD321918CBF8B7EDD662",
+  "TestAssemblySha256": "486DC1376E731E7099481FE2813D73CB5D3E406D0A04B1F78EF8B3259FC37B45",
+  "TrxSha256": "EC1C783373A2CF35A9FCDC1C2F65AE4AD14ED7AD1F776F8BF63285794B7EA411",
+  "Cases": [
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"cutoff-reversed\", expected: \"CNK8181G2C\", turns: 1, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_RequiresThreeAdjacentRows(turns: 2, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_DoesNotCombineReaderInitializationWithOrdinaryData",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"reversed-postal\", expected: \"42094043\", turns: 1, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_RequiresThreeAdjacentRows(turns: 2, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_RequiresThreeAdjacentRows(turns: 3, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_RequiresThreeAdjacentRows(turns: 3, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_RequiresThreeAdjacentRows(turns: 1, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_RequiresThreeAdjacentRows(turns: 0, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"cutoff-label\", expected: \"1PEF224A4\", turns: 0, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"offcentre-label\", expected: \"FGGQ6D1\", turns: 1, inverted: True)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"long-postal\", expected: \"31001171800000017989625355702636\", turns: 0, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_RejectsIncorrectChecksum",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"cutoff-reversed\", expected: \"CNK8181G2C\", turns: 0, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"cutoff-label\", expected: \"1PEF224A4\", turns: 1, inverted: True)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_RequiresThreeAdjacentRows(turns: 0, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_RecoveryBand_RequiresThreeAdjacentRows(turns: 1, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"offcentre-label\", expected: \"FGGQ6D1\", turns: 0, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"long-postal\", expected: \"31001171800000017989625355702636\", turns: 1, inverted: True)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Code128PhotographRecoveryTests.Decode_PhotographRecovery_PreservesPayloadAcrossPixelApis(fixture: \"reversed-postal\", expected: \"42094043\", turns: 0, inverted: False)",
+      "Outcome": "Failed"
+    }
+  ],
+  "Total": 20,
+  "Failed": 15,
+  "Passed": 5,
+  "Scope": "The20 current regression cases executed against the exact preceding445794 core in an isolated copied test host. Fifteen fail, five pass; no cases aborted or skipped."
+}

@@ -1,0 +1,137 @@
+{
+  "Source": "7c907b2c9f64b622fac80fde24d9a2f421035b39",
+  "CoreSha256": "3FCE2A04CDD023B164AE723CE8FE5DE6E596F847C6C090E572FCBF8E50FA804E",
+  "Scope": "Supplementary contract diagnostics, not a representative accuracy or negative-rate survey. Thirty-one fixed negative IDs are each requested with three explicit retail-family hints (93 requests).",
+  "PositiveRequests": 87,
+  "NegativeRequests": 93,
+  "Engines": {
+    "CodeGlyphX": {
+      "positive": {
+        "PreviousCorrect": 64,
+        "Correct": 69,
+        "Unexpected": 0,
+        "Inconclusive": 0
+      },
+      "negative": {
+        "PreviousCorrect": 93,
+        "Correct": 93,
+        "Unexpected": 0,
+        "Inconclusive": 0
+      }
+    },
+    "ZXing.Net": {
+      "positive": {
+        "PreviousCorrect": 55,
+        "Correct": 55,
+        "Unexpected": 2,
+        "Inconclusive": 0
+      },
+      "negative": {
+        "PreviousCorrect": 89,
+        "Correct": 89,
+        "Unexpected": 4,
+        "Inconclusive": 0
+      }
+    },
+    "ZXing-C++": {
+      "positive": {
+        "PreviousCorrect": 54,
+        "Correct": 54,
+        "Unexpected": 1,
+        "Inconclusive": 0
+      },
+      "negative": {
+        "PreviousCorrect": 93,
+        "Correct": 93,
+        "Unexpected": 0,
+        "Inconclusive": 0
+      }
+    }
+  },
+  "Cost": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 244.99235,
+      "CurrentMedianMs": 763.6408,
+      "LatencyRatio": 3.1169985511792513,
+      "BaselineAllocatedBytes": 22379163.333333332,
+      "CurrentAllocatedBytes": 35558370.0,
+      "AllocationRatio": 1.588905245042673,
+      "PreviousCorrectRequests": 9.0,
+      "CurrentCorrectRequests": 9.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0,
+      "Requests": 9
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 224.18439999999998,
+      "CurrentMedianMs": 681.31475,
+      "LatencyRatio": 3.0390818897300615,
+      "BaselineAllocatedBytes": 22379712.0,
+      "CurrentAllocatedBytes": 35567357.333333336,
+      "AllocationRatio": 1.589267874999166,
+      "PreviousCorrectRequests": 9.0,
+      "CurrentCorrectRequests": 9.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0,
+      "Requests": 9
+    }
+  ],
+  "CostLimits": "Nine prespecified requests: noise 03, stripes 14 and texture 19, each with EAN, UPC-A and UPC-E hints. PowerForge owns timing: 3 warmups, 12 grouped rotated measurements, no outlier removal, fixed Normal priority/affinity. Baseline and candidate use separate assembly contexts with identical preloaded RGBA32 and options. Loading and validation are excluded. Costs and correctness are measured together; all samples and losses are retained. Shared-host contention prevents portable latency claims.",
+  "CostProvenance": {
+    "SourceKeys": [
+      "benchmark.CandidateSource",
+      "benchmark.CandidateWorktreeClean"
+    ],
+    "Control": "The suite lives in task scratch outside Git. Its wrapper verifies the frozen clean repository before and after timing; the suite records the exact baseline/current core hashes and frozen candidate source.",
+    "PreviousSource": "56f04ae35ce5e98ecc596ad85dcb391e9d0fc204",
+    "HistoricalRawPackets": "Previous qualification and prior raw cost packets remain historical; their correctness and cost differences are not attributed to the current baseline."
+  },
+  "Changes": "Retail recovery refines guarded anchors by at most three rows in either direction and uses four additional bounded contrast hypotheses for fine bars and glare. Inverted fine bars are normalized before low-contrast padding is classified. Full framing, digit-fit bounds, parity, checksums and independent neighboring-row confirmation remain enforced.",
+  "FocusedCases": 16,
+  "ExactBaselineFailures": 10,
+  "PositiveCost": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 447.0248,
+      "CurrentMedianMs": 1144.5410000000002,
+      "LatencyRatio": 2.5603523562898527,
+      "BaselineAllocatedBytes": 76284684.0,
+      "CurrentAllocatedBytes": 95012206.66666667,
+      "AllocationRatio": 1.2454951857264909,
+      "PreviousCorrectRequests": 64.0,
+      "CurrentCorrectRequests": 69.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 362.37615,
+      "CurrentMedianMs": 921.0013,
+      "LatencyRatio": 2.541561579038797,
+      "BaselineAllocatedBytes": 76290250.0,
+      "CurrentAllocatedBytes": 95014525.33333333,
+      "AllocationRatio": 1.2454347093282998,
+      "PreviousCorrectRequests": 64.0,
+      "CurrentCorrectRequests": 69.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0
+    }
+  ],
+  "PositiveCostScope": "Same 87 preloaded retail positives with identical hints, payload validation and 1500 ms allowance. Separate contexts, 3 warmups and 12 rotated measurements per binary/domain, Normal priority and fixed affinity; no outlier removal. Loading and evaluation are excluded. More successful decodes change completed work. Managed allocation excludes native costs. All measured samples and failed warmups are retained; successful warmup samples are not retained by PowerForge.",
+  "RawCostPackets": [
+    "historical-retail-cost-ccd0-result.json",
+    "historical-retail-cost-ccd1-result.json",
+    "historical-retail-positive-cost-ccd0-result.json",
+    "historical-retail-positive-cost-ccd1-result.json"
+  ]
+}

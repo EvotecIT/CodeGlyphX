@@ -1,0 +1,18 @@
+{
+  "ManifestSha256": {
+    "manifests/corpus-manifest.json": "3714951ed16a82c1bd9b7a94543590dd609312ef3a39efdd462f6c7f5be7dd28",
+    "manifests/latency-manifest.json": "2404e0397d8a7ca2b3ef0da2ebe1c5516f25565b909f5817777dc9f955769594",
+    "manifests/negative-manifest.json": "58774cb9e4c9bdb79b49d11a1c83f8f15d0fde5214487ed16abe0d2b5063ff4d",
+    "manifests/negative-rotation-manifest.json": "a2ffa645de5cc4390b719e64ade632cb4f4c1bbd0c2862964f03c27498b6637f",
+    "manifests/retail-negative-diagnostic.json": "a4a6445043c13502a94d0b4afe75b7ef9002fc6a0331f16b298e9cc1509dd5d4",
+    "manifests/retail-positive-diagnostic.json": "771ae903475bb556af7cc7e63883ef32d39940a4e34ac4b622f9b3085fd7a06a",
+    "manifests/retail-cost-manifest.json": "05e712eebd060234c84385ea6ec28181702686fbd5a0a1c5ada1ab48a287b517",
+    "manifests/qr-exact-grid-manifest.json": "2fbaab5c600bc5209947b0e78e2468ad9339921e3f55d875edbaf8225ae434cb",
+    "manifests/profile-multi-qr.json": "9c143f4cd8dbfb5f8e0ed34784a2031e088a282d8181a4eb1d35765a31665a5d",
+    "manifests/profile-texture-negative.json": "2ac8c1c6786412147c31ac6b8f8ef1d009499052d37acc797cecf2747d7053f2",
+    "report-evidence/pdf417-supplemental-manifest.json": "afd60628cf743ecd3bef7f97cb4583500c705cfed33ec0a7ac61af3022b48406"
+  },
+  "UniqueMainImagesVerified": 298,
+  "Pdf417SupplementImagesVerified": 38,
+  "Scope": "Every manifest used in this qualification retains its frozen image hashes; primary manifests match previous qualification. Other retained manifests belong to historical diagnostics."
+}

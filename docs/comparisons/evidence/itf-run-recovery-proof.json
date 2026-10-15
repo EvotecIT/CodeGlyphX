@@ -1,0 +1,135 @@
+{
+  "Source": "56f04ae35ce5e98ecc596ad85dcb391e9d0fc204",
+  "CoreSha256": "EAF7AFDB8F9480956F7193466D21D6E1ED96934131D9B986F928EA6904E2551F",
+  "PreviousSource": "417f25c101aada2148f1d9f7ebdc8a8f505f7a29",
+  "PreviousCoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18",
+  "Changes": "ITF locates complete start/data/stop runs in either scanline direction and fits narrow and wide bars separately from spaces. Both recovered independent images pass through pixel and image entrypoints. Interior quiet zones, digit structure, ITF-14 checksums and clipped-region checks remain enforced. Codabar shares the unchanged width-fitting calculation.",
+  "WidthModelEquivalence": {
+    "Cases": 20000,
+    "Accepted": 6170,
+    "Cancelled": 208,
+    "Mismatches": 0,
+    "PreviousCoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18",
+    "CoreSha256": "EAF7AFDB8F9480956F7193466D21D6E1ED96934131D9B986F928EA6904E2551F",
+    "Scope": "Actual previous/current Codabar validators in isolated assembly contexts. Seeded width, gain, rounding, payload, framing, quiet-zone, direction and cancellation cases compare decisions and exact fit outputs. No production hooks.",
+    "FirstMismatches": []
+  },
+  "FocusedCases": 15,
+  "Engines": {
+    "CodeGlyphX": {
+      "positive": {
+        "previous": {
+          "Correct": 10,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      },
+      "negative": {
+        "previous": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      }
+    },
+    "ZXing.Net": {
+      "positive": {
+        "previous": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      },
+      "negative": {
+        "previous": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      }
+    },
+    "ZXing-C++": {
+      "positive": {
+        "previous": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      },
+      "negative": {
+        "previous": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      }
+    }
+  },
+  "Cost": [
+    {
+      "Domain": "ccd0",
+      "PreviousMedianMs": 141.4207,
+      "CurrentMedianMs": 147.78255000000001,
+      "LatencyRatio": 1.0449852815040515,
+      "PreviousAllocatedBytes": 8916962.666666666,
+      "CurrentAllocatedBytes": 9169788.666666666,
+      "PreviousCorrect": 10.0,
+      "CurrentCorrect": 12.0,
+      "PreviousUnexpected": 0.0,
+      "CurrentUnexpected": 0.0,
+      "PreviousInconclusive": 0.0,
+      "CurrentInconclusive": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "PreviousMedianMs": 192.0531,
+      "CurrentMedianMs": 186.94115,
+      "LatencyRatio": 0.9733826217853291,
+      "PreviousAllocatedBytes": 8924966.0,
+      "CurrentAllocatedBytes": 9180326.0,
+      "PreviousCorrect": 10.0,
+      "CurrentCorrect": 12.0,
+      "PreviousUnexpected": 0.0,
+      "CurrentUnexpected": 0.0,
+      "PreviousInconclusive": 0.0,
+      "CurrentInconclusive": 0.0
+    }
+  ],
+  "Scope": "Twelve unchanged ITF positives from the main corpus and the same thirty-one negative image IDs with an explicit ITF hint. These supplementary checks do not establish a general recognition or false-positive rate.",
+  "Limits": "Both binaries receive identical hints, pixels, validation and allowances. The earlier binary reads fewer positives, so latency ratios include different completed recognition work. Managed allocation excludes native costs; shared-host measurements do not establish portable speed, throughput or capacity. Every measured sample, warmup failure, completion and unexpected payload is retained; successful warmup samples are not retained.",
+  "RawCostPackets": [
+    "itf-cost-ccd0-result.json",
+    "itf-cost-ccd1-result.json"
+  ],
+  "WarmupRetentionClarification": "PowerForge executes three warmups. Successful warmup samples are not retained; failed warmups and all measured samples are retained. This corrects descriptive retention wording only; outcomes, raw measurements, source identities and historical attribution are unchanged. Original historical wording remains in the preceding verification archives."
+}

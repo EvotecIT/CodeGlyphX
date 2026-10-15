@@ -1,0 +1,15 @@
+{
+  "Base": "aa6b103b387adc335d9b1018de7c77090bd518ca",
+  "Head": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+  "BoundaryState": "current",
+  "Scope": "One fresh independent read-only review of five synchronous decoder deadline files and three benchmark lifetime/persistence files; one targeted confirmation of the run-scoped priming-retention fix. No additional actionable findings. Full tests and performance evidence are assessed separately.",
+  "UnresolvedFindings": [],
+  "ResolvedFindings": [
+    {
+      "Priority": "P2",
+      "Finding": "Repeated output-root use overwrote priming outcomes.",
+      "Fix": "RunId-scoped warmup-outcomes directories.",
+      "Proof": "Two runs retain four priming files and four measured files, with request counts 19,19,1,1 and verified file hashes."
+    }
+  ]
+}

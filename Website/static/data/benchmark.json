@@ -918,6 +918,7 @@
       },
       "runModeDetails": "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
       "notes": [
+        "Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md.",
         "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
         "Comparisons target PNG output and include encode+render (not encode-only).",
         "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
@@ -1455,7 +1456,8 @@
           "codeGlyphXLeadOverRunnerUpText": "8.95 x vs ZXing.Net",
           "benchmark": "UPC-A (Encode)"
         }
-      ]
+      ],
+      "qualification": "historical-unqualified"
     },
     "full": {
       "framework": "net8.0",
@@ -2518,6 +2520,7 @@
       ],
       "missingComparisonIds": [],
       "notes": [
+        "Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md.",
         "Run mode: Full (BenchmarkDotNet default job settings).",
         "Comparisons target PNG output and include encode+render (not encode-only).",
         "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
@@ -2530,7 +2533,8 @@
       "missingComparisons": [],
       "runMode": "Full",
       "publish": true,
-      "artifacts": "Build/BenchmarkResults/windows-20260124-091830"
+      "artifacts": "Build/BenchmarkResults/windows-20260124-091830",
+      "qualification": "historical-unqualified"
     }
   },
   "linux": {
@@ -2539,6 +2543,7 @@
       "artifacts": "/mnt/c/Support/GitHub/CodeMatrix/Build/BenchmarkResults/linux-20260130-103211",
       "generatedUtc": "2026-01-30T09:35:58.1045639Z",
       "notes": [
+        "Historical results are not a current competitive ranking. Older QR-pack runs used different single/multiple result APIs. See docs/fair-comparisons.md.",
         "Run mode: Quick (warmupCount=1, iterationCount=3, invocationCount=1).",
         "Comparisons target PNG output and include encode+render (not encode-only).",
         "Module size and quiet zone are matched to CodeGlyphX defaults where possible; image size is derived from CodeGlyphX modules.",
@@ -3989,7 +3994,8 @@
         "processArchitecture": "X64",
         "machineName": "EVOMAGIC",
         "processorCount": 32
-      }
+      },
+      "qualification": "historical-unqualified"
     },
     "full": null
   },

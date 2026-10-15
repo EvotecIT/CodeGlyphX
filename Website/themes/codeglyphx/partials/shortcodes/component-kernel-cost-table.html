@@ -1,0 +1,9 @@
+        <h3>Component collection only</h3>
+        <p>{{ session_costs.kernel_note }}</p>
+        <div class="comparison-scroll" role="region" aria-label="{{ session_costs.title }}: component collection" tabindex="0">
+            <table class="bench-table">
+                <caption>Actual QR component traversal · sixteen prepared input variants per call · every sample retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Input variants</th><th scope="col">Identical components</th><th scope="col">Previous → current median ms</th><th scope="col">Current / previous</th><th scope="col">Previous → current mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in session_costs.kernel_costs }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.variants }}</td><td>{{ row.components }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>

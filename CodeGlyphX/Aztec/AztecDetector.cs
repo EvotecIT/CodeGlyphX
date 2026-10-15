@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Internal;
 using CodeGlyphX.Internal.ReedSolomon;
 
 namespace CodeGlyphX.Aztec;
@@ -7,20 +8,25 @@ internal sealed class AztecDetector {
     private const int MaxLayers = 32;
     private const int MaxCompactLayers = 4;
 
-    private readonly BitMatrix _matrix;
+    private readonly BitMatrixView _matrix;
     private bool _compact;
     private int _nbLayers;
     private int _nbDataBlocks;
     private int _nbCenterLayers;
     private int _shift;
 
-    private AztecDetector(BitMatrix matrix) {
+    private AztecDetector(BitMatrixView matrix) {
         _matrix = matrix;
     }
 
     public static bool TryDetect(BitMatrix matrix, out AztecDetectorResult result) {
         result = null!;
         if (matrix is null) return false;
+        return TryDetect(new BitMatrixView(matrix), out result);
+    }
+
+    internal static bool TryDetect(BitMatrixView matrix, out AztecDetectorResult result) {
+        result = null!;
         if (matrix.Width != matrix.Height) return false;
 
         try {
@@ -41,7 +47,7 @@ internal sealed class AztecDetector {
         if (!TryGetBullsEyeCorners(centerX, centerY, out var bullsEyeCorners)) return false;
         if (!ExtractParameters(bullsEyeCorners)) return false;
 
-        var bits = _matrix;
+        var bits = _matrix.ToMatrix();
         if (_shift != 0) {
             bits = Rotate(bits, _shift);
         }
@@ -65,7 +71,7 @@ internal sealed class AztecDetector {
                 if (!TryReadModeMessage(size, compact, out var modeBits)) continue;
                 if (!TryDecodeParameters(modeBits, compact, out var nbLayers, out var nbDataBlocks)) continue;
                 if (nbLayers != layers) continue;
-                result = new AztecDetectorResult(_matrix, compact, nbDataBlocks, nbLayers);
+                result = new AztecDetectorResult(_matrix.ToMatrix(), compact, nbDataBlocks, nbLayers);
                 return true;
             }
         }
@@ -144,15 +150,7 @@ internal sealed class AztecDetector {
             return false;
         }
 
-        if (_compact) {
-            _nbLayers = (parameterWords[0] >> 2) + 1;
-            _nbDataBlocks = ((parameterWords[0] & 0x3) << 4) + parameterWords[1] + 1;
-        } else {
-            _nbLayers = (parameterWords[0] << 1) + (parameterWords[1] >> 3) + 1;
-            _nbDataBlocks = ((parameterWords[1] & 0x7) << 8) + (parameterWords[2] << 4) + parameterWords[3] + 1;
-        }
-
-        return true;
+        return ReadCorrectedParameters(parameterWords, _compact, out _nbLayers, out _nbDataBlocks);
     }
 
     private bool TryReadModeMessage(int matrixSize, bool compact, out bool[] modeBits) {
@@ -206,15 +204,27 @@ internal sealed class AztecDetector {
             return false;
         }
 
-        if (compact) {
-            layers = (parameterWords[0] >> 2) + 1;
-            dataBlocks = ((parameterWords[0] & 0x3) << 4) + parameterWords[1] + 1;
-        } else {
-            layers = (parameterWords[0] << 1) + (parameterWords[1] >> 3) + 1;
-            dataBlocks = ((parameterWords[1] & 0x7) << 8) + (parameterWords[2] << 4) + parameterWords[3] + 1;
-        }
+        return ReadCorrectedParameters(parameterWords, compact, out layers, out dataBlocks);
+    }
 
-        return true;
+    /// <summary>Interprets an ECC-verified mode message, including the reader initialization flag.</summary>
+    private static bool ReadCorrectedParameters(int[] words, bool compact, out int layers, out int dataBlocks) {
+        layers = compact ? (words[0] >> 2) + 1 : (words[0] << 1) + (words[1] >> 3) + 1;
+        var countMinusOne = compact
+            ? ((words[0] & 3) << 4) + words[1]
+            : ((words[1] & 7) << 8) + (words[2] << 4) + words[3];
+        var capacity = ((compact ? 88 : 112) + 16 * layers) * layers / AztecCommon.WordSize[layers];
+        var flag = compact ? 0x20 : 0x400;
+        // ISO/IEC 24778 section 9 reserves this bit for initialization in compact
+        // layer 1 and full layers 1..22, where that count cannot fit. It remains
+        // an ordinary count bit in larger symbols. Decode the payload without
+        // applying any reader configuration.
+        if ((compact ? layers == 1 : layers <= 22) &&
+            (countMinusOne & flag) != 0 && countMinusOne + 1 > capacity) {
+            countMinusOne &= ~flag;
+        }
+        dataBlocks = countMinusOne + 1;
+        return dataBlocks <= capacity;
     }
 
     private bool HasBullseye(bool compact) {
