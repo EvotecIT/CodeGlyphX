@@ -8,6 +8,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class RetailIlluminationTests {
     [Theory]
     [InlineData(BarcodeType.EAN, "590123412345", "5901234123457", false, false)]
