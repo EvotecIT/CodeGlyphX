@@ -28,6 +28,7 @@ from comparison_linear_run_workspace import project_linear_run_workspace
 from comparison_code128_photos import project_code128_photos
 from comparison_databar_separator_geometry import project_databar_separator_geometry
 from comparison_pdf417_grids import project_pdf417_grids
+from comparison_databar_thresholds import project_databar_thresholds
 from comparison_retail_digit_fits import project_retail_digit_fits
 from comparison_png_output import project_png_output
 from comparison_dpm_workspace import project_dpm_workspace
@@ -373,7 +374,8 @@ def build_website_data(root):
                       "ratio": f'{row["LatencyRatio"]:.3f}', "previous_mib": f'{row["BaselineAllocatedBytes"]/1048576:.2f}', "current_mib": f'{row["CurrentAllocatedBytes"]/1048576:.2f}',
                       "previous_correct": f'{row["PreviousCorrectRequests"]:.3f}', "current_correct": f'{row["CurrentCorrectRequests"]:.3f}'} for row in spatial["Cost"]],
             "selected_notes": [f'{row["Domain"].upper()}: the three additional negatives take {row["BaselineMedianMs"]:.3f} → {row["CurrentMedianMs"]:.3f} ms (ratio {row["LatencyRatio"]:.3f}), with mean completed images {row["PreviousCorrectRequests"]:.3f} → {row["CurrentCorrectRequests"]:.3f}/3 and managed allocation {row["BaselineAllocatedBytes"]/1048576:.2f} → {row["CurrentAllocatedBytes"]/1048576:.2f} MiB.' for row in spatial["SelectedNegativeCost"]]}
-    current_projections = {"pdf417_grids": project_pdf417_grids(root, qualification),
+    current_projections = {"databar_thresholds": project_databar_thresholds(root, qualification),
+                           "pdf417_grids": project_pdf417_grids(root, qualification),
         "retail_digit_fits": project_retail_digit_fits(root, qualification),
         "png_output": project_png_output(root, qualification),
         "databar_separator_geometry": project_databar_separator_geometry(root, qualification),

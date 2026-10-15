@@ -1,0 +1,2496 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "First six images per upstream blackbox directory ordered by SHA256 of source path, with UTF-8 .txt oracle; six negatives per directory; independently specified multi-QR fixture. No decoded-result selection.",
+  "Samples": [
+    {
+      "Id": "aztec-1/Historico.png",
+      "File": "aztec-1/Historico.png",
+      "Sha256": "2db5c6fa97f0dd6d72f9e600c843abb77178d0452a5345d0647adcde9822b5c7",
+      "Format": "Aztec",
+      "Expected": [
+        "Histórico"
+      ]
+    },
+    {
+      "Id": "aztec-1/abc-37x37.png",
+      "File": "aztec-1/abc-37x37.png",
+      "Sha256": "2a87a0fb4de0ed0ed1e7331591cef8479973e32ded451fcdc1bc43d72205ee0f",
+      "Format": "Aztec",
+      "Expected": [
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      ]
+    },
+    {
+      "Id": "aztec-1/tableShifts.png",
+      "File": "aztec-1/tableShifts.png",
+      "Sha256": "7f6930f847f68951d4851bc5a1a2949ced1d69fc1503e490223be3d73195bf53",
+      "Format": "Aztec",
+      "Expected": [
+        "AhUUDgdy672;..:8KjHH776JHHn3g. 8lm/%22Nn873R2897ks4JKDJ9JJaza2323!::;09UJRrhDQSKJDKdSJSdskjdslkEdjseze:ze"
+      ]
+    },
+    {
+      "Id": "aztec-1/dlusbs.png",
+      "File": "aztec-1/dlusbs.png",
+      "Sha256": "9549457445725dfea43a4af239fc4c509ddfc711ab7bbd5a48b7bad826be98e0",
+      "Format": "Aztec",
+      "Expected": [
+        "3333h3i3jITIT"
+      ]
+    },
+    {
+      "Id": "aztec-1/7.png",
+      "File": "aztec-1/7.png",
+      "Sha256": "60e470e448449629174f605a0a05c273d158d0548ec6070e49ad25dd9e1fa60f",
+      "Format": "Aztec",
+      "Expected": [
+        "Code 2D!"
+      ]
+    },
+    {
+      "Id": "aztec-1/reader-init.png",
+      "File": "aztec-1/reader-init.png",
+      "Sha256": "db4596e4e246f37eaa2a1daf0d401da70c2b65375ded564a5c47cf8995a555ca",
+      "Format": "Aztec",
+      "Expected": [
+        "init-test"
+      ]
+    },
+    {
+      "Id": "aztec-2/19.png",
+      "File": "aztec-2/19.png",
+      "Sha256": "05fbdf44b35b1f08f9ab7fd35de71d6abe753e03b01b3205817a14f6f96a08d6",
+      "Format": "Aztec",
+      "Expected": [
+        "http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/result/URIResultHandler.java"
+      ]
+    },
+    {
+      "Id": "aztec-2/15.png",
+      "File": "aztec-2/15.png",
+      "Sha256": "4d4de88e15c1e1961d9da95e9efd71060d67d2cdadf1cecf52271eb00fbf5201",
+      "Format": "Aztec",
+      "Expected": [
+        "mailto:zxing@googlegroups.com"
+      ]
+    },
+    {
+      "Id": "aztec-2/13.png",
+      "File": "aztec-2/13.png",
+      "Sha256": "b085dc5376db22b4b92692de0200bf01186c27f25ee9bf3289758f58af41bdfe",
+      "Format": "Aztec",
+      "Expected": [
+        "mailto:zxing@googlegroups.com"
+      ]
+    },
+    {
+      "Id": "aztec-2/14.png",
+      "File": "aztec-2/14.png",
+      "Sha256": "44ed7f11cbe4ca16b462c957a64e265be2c1cdc0b1879d7c9e12490f4dda0092",
+      "Format": "Aztec",
+      "Expected": [
+        "mailto:zxing@googlegroups.com"
+      ]
+    },
+    {
+      "Id": "aztec-2/17.png",
+      "File": "aztec-2/17.png",
+      "Sha256": "8959e45d3e27ea775c7a7fd6310733ae54798dba07b8dcf68e0ff7d500ebbed6",
+      "Format": "Aztec",
+      "Expected": [
+        "http://code.google.com/p/zxing/source/browse/trunk/android/src/com/google/zxing/client/android/result/URIResultHandler.java"
+      ]
+    },
+    {
+      "Id": "aztec-2/10.png",
+      "File": "aztec-2/10.png",
+      "Sha256": "4515ca80e8176cc51239947420d835ec37c33a8bf779bf13028f361c1c6af31a",
+      "Format": "Aztec",
+      "Expected": [
+        "mailto:zxing@googlegroups.com"
+      ]
+    },
+    {
+      "Id": "codabar-1/09.png",
+      "File": "codabar-1/09.png",
+      "Sha256": "5fd6c62f13c8278203a0ad1aea9d3f7acfa0d7be4f11d4b7861b1c89f9aef851",
+      "Format": "Codabar",
+      "Expected": [
+        "12345"
+      ]
+    },
+    {
+      "Id": "codabar-1/12.png",
+      "File": "codabar-1/12.png",
+      "Sha256": "a5bd5e5b7e72cf3d5cf0ea23b5d32601064ba6855922ae0ab4585736aba4728b",
+      "Format": "Codabar",
+      "Expected": [
+        "31117013206375"
+      ]
+    },
+    {
+      "Id": "codabar-1/13.png",
+      "File": "codabar-1/13.png",
+      "Sha256": "c4aa7a7188b0a6d70aeb0f6b8dfcd90fa75bafabeccbc285ec0d07ce30fd897c",
+      "Format": "Codabar",
+      "Expected": [
+        "12345"
+      ]
+    },
+    {
+      "Id": "codabar-1/11.png",
+      "File": "codabar-1/11.png",
+      "Sha256": "cb87f0737514801e3f7fcae3e63e6db4888fd9aa91e14da5587f9fafcb956b2b",
+      "Format": "Codabar",
+      "Expected": [
+        "3419500"
+      ]
+    },
+    {
+      "Id": "codabar-1/01.png",
+      "File": "codabar-1/01.png",
+      "Sha256": "abbb32aaa836fa05726931ac0ebf02d1d27ac7bf4c9bdbab8eafc0f49a1e2d17",
+      "Format": "Codabar",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "codabar-1/04.png",
+      "File": "codabar-1/04.png",
+      "Sha256": "2fb7ad891423ab931c26e384a13f9f8e4d3530a1f638148ffb814544660b4c0a",
+      "Format": "Codabar",
+      "Expected": [
+        "123455"
+      ]
+    },
+    {
+      "Id": "code128-1/2.png",
+      "File": "code128-1/2.png",
+      "Sha256": "75ffa82278a6e4411ca251c9b1a30cf33ea0faafe3b2cf815e92157af434006f",
+      "Format": "Code128",
+      "Expected": [
+        "Code 128"
+      ]
+    },
+    {
+      "Id": "code128-1/1.png",
+      "File": "code128-1/1.png",
+      "Sha256": "ebe2f2b91bd1fd4c77f4f5f64c30d8ae5f2e31fd4e126e2f6e0005b1d7c1e530",
+      "Format": "Code128",
+      "Expected": [
+        "168901"
+      ]
+    },
+    {
+      "Id": "code128-1/6.png",
+      "File": "code128-1/6.png",
+      "Sha256": "4d53014ad5600e04f680a1f3ed38da360ec1c7c4ba779b5f1d20d0677403033c",
+      "Format": "Code128",
+      "Expected": [
+        "óóóó1234óóabózz"
+      ]
+    },
+    {
+      "Id": "code128-1/3.png",
+      "File": "code128-1/3.png",
+      "Sha256": "752d1501305bc73e113ee58428d31bf8355a9c8bb3f7849bc1db75d17c14bbcc",
+      "Format": "Code128",
+      "Expected": [
+        "102030405060708090"
+      ]
+    },
+    {
+      "Id": "code128-1/7.png",
+      "File": "code128-1/7.png",
+      "Sha256": "e2e80ed37575dd0b80c2e82243c0ce81073440f29f906f7df38f0ef032d13ae3",
+      "Format": "Code128",
+      "Expected": [
+        "abcdef"
+      ]
+    },
+    {
+      "Id": "code128-1/5.png",
+      "File": "code128-1/5.png",
+      "Sha256": "f426523177c01fb10e5f2b945df50d49dffd14523e5f70196f4d27486859a4e3",
+      "Format": "Code128",
+      "Expected": [
+        "8101054321120021123456"
+      ]
+    },
+    {
+      "Id": "code128-2/30.png",
+      "File": "code128-2/30.png",
+      "Sha256": "5f9189866bdc839a1896b27507cb186282d2a7a285a7ef8a31e0e9c11100c85c",
+      "Format": "Code128",
+      "Expected": [
+        "42094043"
+      ]
+    },
+    {
+      "Id": "code128-2/02.png",
+      "File": "code128-2/02.png",
+      "Sha256": "df86b0ab5f5e8be6da6b3b6e9986cbfdf7f0f77326de260549964f99debe93c2",
+      "Format": "Code128",
+      "Expected": [
+        "005-3379497200006"
+      ]
+    },
+    {
+      "Id": "code128-2/28.png",
+      "File": "code128-2/28.png",
+      "Sha256": "b81cfc1aa25d3765af8704ce84cfee75fc8451b33f78fa44c2d85c54deb872b9",
+      "Format": "Code128",
+      "Expected": [
+        "31001171800000017989625355702636"
+      ]
+    },
+    {
+      "Id": "code128-2/19.png",
+      "File": "code128-2/19.png",
+      "Sha256": "f9ae2cb64e818bd3ab62030f212608c5b03848d5e247191a8d0626a844426e6b",
+      "Format": "Code128",
+      "Expected": [
+        "FW727"
+      ]
+    },
+    {
+      "Id": "code128-2/18.png",
+      "File": "code128-2/18.png",
+      "Sha256": "111b69def55c079700d3750d8ba4ede5eb857ebe83c08dbf7ce4d93844af2f36",
+      "Format": "Code128",
+      "Expected": [
+        "FW727"
+      ]
+    },
+    {
+      "Id": "code128-2/04.png",
+      "File": "code128-2/04.png",
+      "Sha256": "83499767abeb56d4fd4fa90a8c0260a8afe3c3777e143e87160f5096a520db1f",
+      "Format": "Code128",
+      "Expected": [
+        "005-3379497200006"
+      ]
+    },
+    {
+      "Id": "code128-3/2.png",
+      "File": "code128-3/2.png",
+      "Sha256": "aaef7015da33b2c06c5e198e737b73152635b1e908e8ace5b429d0ee4f68cb3b",
+      "Format": "Code128",
+      "Expected": [
+        "10068408"
+      ]
+    },
+    {
+      "Id": "code128-3/1.png",
+      "File": "code128-3/1.png",
+      "Sha256": "12a87b8dae3e9d229507867ede5a627af14a18a6fd960ad053c1d4f090edda81",
+      "Format": "Code128",
+      "Expected": [
+        "10064908"
+      ]
+    },
+    {
+      "Id": "code39-1/4.png",
+      "File": "code39-1/4.png",
+      "Sha256": "b7f7dd951b5f13d70c2d4472a3e5e162c0908b7889537e0ed36a1e06466a50c5",
+      "Format": "Code39",
+      "Expected": [
+        "ABC123"
+      ]
+    },
+    {
+      "Id": "code39-1/3.png",
+      "File": "code39-1/3.png",
+      "Sha256": "dc06d76a28db293e8bcc574246c110f75934432d9fba80a1ff2a387f57b46009",
+      "Format": "Code39",
+      "Expected": [
+        "MOROVIA"
+      ]
+    },
+    {
+      "Id": "code39-1/2.png",
+      "File": "code39-1/2.png",
+      "Sha256": "da37008b78f688f9583942676f3727407e46a7030ea04cc651fda49510d2d9af",
+      "Format": "Code39",
+      "Expected": [
+        " WWW.CITRONSOFT.COM "
+      ]
+    },
+    {
+      "Id": "code39-1/1.png",
+      "File": "code39-1/1.png",
+      "Sha256": "1480b3894f1b930e8562c2676366149fb7dccba32d01c34fee6a77d57e16868e",
+      "Format": "Code39",
+      "Expected": [
+        "TEST-SHEET"
+      ]
+    },
+    {
+      "Id": "code39-2/1.png",
+      "File": "code39-2/1.png",
+      "Sha256": "515dc352e25c80d98fd37e3c5b284266262fec5d8a0466fe87e50a2fd9fece27",
+      "Format": "Code39",
+      "Expected": [
+        "Extended !?*#"
+      ]
+    },
+    {
+      "Id": "code39-2/2.png",
+      "File": "code39-2/2.png",
+      "Sha256": "1233387958b247e35d56a6d59d69f6588e111e660a99b7b092f44ceefcf93946",
+      "Format": "Code39",
+      "Expected": [
+        "12ab"
+      ]
+    },
+    {
+      "Id": "code39-3/01.png",
+      "File": "code39-3/01.png",
+      "Sha256": "0b12e2937e8e5142f567af2735196a1af5f4ff9aff96aea03f007140ed96c218",
+      "Format": "Code39",
+      "Expected": [
+        "165627"
+      ]
+    },
+    {
+      "Id": "code39-3/11.png",
+      "File": "code39-3/11.png",
+      "Sha256": "6018d721b57be4fd261de4e4da081bd9190b70c63ba5409c90628de77e573e17",
+      "Format": "Code39",
+      "Expected": [
+        "001EC94767E0"
+      ]
+    },
+    {
+      "Id": "code39-3/04.png",
+      "File": "code39-3/04.png",
+      "Sha256": "75981925456aca83906d62dc472a97f185b9e5fe3635012e7729c24732459492",
+      "Format": "Code39",
+      "Expected": [
+        "001EC947D49B"
+      ]
+    },
+    {
+      "Id": "code39-3/17.png",
+      "File": "code39-3/17.png",
+      "Sha256": "5e6e311dce7ada0f3f6d17875b4fcc7aa22fb4efefabfb9e87ed5380b82e6a0d",
+      "Format": "Code39",
+      "Expected": [
+        "404785"
+      ]
+    },
+    {
+      "Id": "code39-3/02.png",
+      "File": "code39-3/02.png",
+      "Sha256": "21cc285faef95c499f18505e675009b4c7dfbffdbacdb1ce9f3990b7824840db",
+      "Format": "Code39",
+      "Expected": [
+        "165627"
+      ]
+    },
+    {
+      "Id": "code39-3/06.png",
+      "File": "code39-3/06.png",
+      "Sha256": "e17cc693ed803a1deffc15d84369f322e4e4cf80b12e021e77c90a4f593b6a19",
+      "Format": "Code39",
+      "Expected": [
+        "165340"
+      ]
+    },
+    {
+      "Id": "code93-1/2.png",
+      "File": "code93-1/2.png",
+      "Sha256": "f1cc65906b0b0cb922c56e045584d5e0e0270817b67602c0b8ff2d2938bbc351",
+      "Format": "Code93",
+      "Expected": [
+        "CODE 93"
+      ]
+    },
+    {
+      "Id": "code93-1/1.png",
+      "File": "code93-1/1.png",
+      "Sha256": "6c99838fa4abaf32c4aba6ef761ca77b72c87bee3f934dc972b074661f794f39",
+      "Format": "Code93",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "code93-1/3.png",
+      "File": "code93-1/3.png",
+      "Sha256": "5d5a2ef27b7558cbd07849e3f160bf75ed77242f59f7499415d09189f950de01",
+      "Format": "Code93",
+      "Expected": [
+        "DATA"
+      ]
+    },
+    {
+      "Id": "datamatrix-1/HelloWorld_Text_L_Kaywa_2_error_byte.png",
+      "File": "datamatrix-1/HelloWorld_Text_L_Kaywa_2_error_byte.png",
+      "Sha256": "4d8404b43eccdd5efa34b92a5ad2b5ef28516119b976d8e4dc288785d5678405",
+      "Format": "DataMatrix",
+      "Expected": [
+        "Hello World"
+      ]
+    },
+    {
+      "Id": "datamatrix-1/HelloWorld_Text_L_Kaywa_1_error_byte.png",
+      "File": "datamatrix-1/HelloWorld_Text_L_Kaywa_1_error_byte.png",
+      "Sha256": "8f9c62cd052951f0a8000c9d7834d437431d64d8b88ca8401fb36cb854515714",
+      "Format": "DataMatrix",
+      "Expected": [
+        "Hello World"
+      ]
+    },
+    {
+      "Id": "datamatrix-1/HelloWorld_Text_L_Kaywa.png",
+      "File": "datamatrix-1/HelloWorld_Text_L_Kaywa.png",
+      "Sha256": "07a1a8f734dc7a63041593f4477b2053275280e6c393a7a73dc87d744bf2425b",
+      "Format": "DataMatrix",
+      "Expected": [
+        "Hello World"
+      ]
+    },
+    {
+      "Id": "datamatrix-1/abcd-32x8.png",
+      "File": "datamatrix-1/abcd-32x8.png",
+      "Sha256": "0f3d4b8324a929cb8cb2204e080b2b37e7edb692b1d7fe63402c73b292c2d775",
+      "Format": "DataMatrix",
+      "Expected": [
+        "abcdef"
+      ]
+    },
+    {
+      "Id": "datamatrix-1/abcd-18x8.png",
+      "File": "datamatrix-1/abcd-18x8.png",
+      "Sha256": "6c38906ce858b59051cee17a9a0665866e61ef9b675b19ee8b0e04ec5bfc66de",
+      "Format": "DataMatrix",
+      "Expected": [
+        "abcde"
+      ]
+    },
+    {
+      "Id": "datamatrix-1/HelloWorld_Text_L_Kaywa_4_error_byte.png",
+      "File": "datamatrix-1/HelloWorld_Text_L_Kaywa_4_error_byte.png",
+      "Sha256": "20d1338c8caa4a50bdab8dd087cab3774077021f5f200d0792706794f390fe0b",
+      "Format": "DataMatrix",
+      "Expected": [
+        "Hello World"
+      ]
+    },
+    {
+      "Id": "datamatrix-2/18.png",
+      "File": "datamatrix-2/18.png",
+      "Sha256": "e7222e1631af381c97a0e90eac7f7e4092936291729db09615537720cb0e6fa8",
+      "Format": "DataMatrix",
+      "Expected": [
+        "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
+      ]
+    },
+    {
+      "Id": "datamatrix-2/03.png",
+      "File": "datamatrix-2/03.png",
+      "Sha256": "22dc1a5d67a0e70d672450a4463cf8a1881943b885a8c0999bb8d8c862330dee",
+      "Format": "DataMatrix",
+      "Expected": [
+        "http://google.com/m"
+      ]
+    },
+    {
+      "Id": "datamatrix-2/04.png",
+      "File": "datamatrix-2/04.png",
+      "Sha256": "e080e9347b9a3e3bdea7618c71a86e8b8e4d81fd38b4623a685fb656b5720831",
+      "Format": "DataMatrix",
+      "Expected": [
+        "http://google.com/m"
+      ]
+    },
+    {
+      "Id": "datamatrix-2/12.png",
+      "File": "datamatrix-2/12.png",
+      "Sha256": "4bf88ed3d9918cd1a0a978d1f0aa5c9aee58a34edbc97fcedc63af649a8f6645",
+      "Format": "DataMatrix",
+      "Expected": [
+        "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
+      ]
+    },
+    {
+      "Id": "datamatrix-2/13.png",
+      "File": "datamatrix-2/13.png",
+      "Sha256": "173fd43660800973ffd5c6c1e359b6fe3b6d480df1304114798295e7a25ec65b",
+      "Format": "DataMatrix",
+      "Expected": [
+        "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
+      ]
+    },
+    {
+      "Id": "datamatrix-2/11.png",
+      "File": "datamatrix-2/11.png",
+      "Sha256": "4b097a3a815cb21e1d4e28b958bd113000970fe644b7fe847a618f77da733fa7",
+      "Format": "DataMatrix",
+      "Expected": [
+        "This is a test of our DataMatrix support using a longer piece of text, and therefore a more dense barcode."
+      ]
+    },
+    {
+      "Id": "datamatrix-3/abcd-144x8.png",
+      "File": "datamatrix-3/abcd-144x8.png",
+      "Sha256": "16dbcce5908cf7e33b397c1f578106ab42ca4fac3f17d873434e569acd3bf085",
+      "Format": "DataMatrix",
+      "Expected": [
+        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmno"
+      ]
+    },
+    {
+      "Id": "datamatrix-3/abcd-48x24.png",
+      "File": "datamatrix-3/abcd-48x24.png",
+      "Sha256": "ed7a355fe264a07fd47aa8dc93996557d9388c092e99556d320522abf67a4cd7",
+      "Format": "DataMatrix",
+      "Expected": [
+        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmn"
+      ]
+    },
+    {
+      "Id": "datamatrix-3/abcd-48x22.png",
+      "File": "datamatrix-3/abcd-48x22.png",
+      "Sha256": "654d9c90c3c530248b7a8613b5b74bac2a59997e78328e7a2c64d574b44a16c2",
+      "Format": "DataMatrix",
+      "Expected": [
+        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzab"
+      ]
+    },
+    {
+      "Id": "datamatrix-3/abcd-120x8.png",
+      "File": "datamatrix-3/abcd-120x8.png",
+      "Sha256": "2011e271dd4a0b2f980158fa5e1f6683ccd53f277d95ac10be1529a3d0777eb3",
+      "Format": "DataMatrix",
+      "Expected": [
+        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrst"
+      ]
+    },
+    {
+      "Id": "datamatrix-3/abcd-80x8.png",
+      "File": "datamatrix-3/abcd-80x8.png",
+      "Sha256": "3690bf61ac3100918a63f6d3eb80132100d73c57c7442380973abed628b32a14",
+      "Format": "DataMatrix",
+      "Expected": [
+        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrst"
+      ]
+    },
+    {
+      "Id": "datamatrix-3/abcd-96x8.png",
+      "File": "datamatrix-3/abcd-96x8.png",
+      "Sha256": "aa5376d3028c6eaea6c45684570ce48966e1be521a3ed39ad94ca4c40caa8533",
+      "Format": "DataMatrix",
+      "Expected": [
+        "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabc"
+      ]
+    },
+    {
+      "Id": "ean13-1/31.png",
+      "File": "ean13-1/31.png",
+      "Sha256": "ce6ab8c0e6cc722b6e660f5bb333ee39bd917081030f81386ed5145ed138bd2f",
+      "Format": "Ean",
+      "Expected": [
+        "9780393058673"
+      ]
+    },
+    {
+      "Id": "ean13-1/12.png",
+      "File": "ean13-1/12.png",
+      "Sha256": "fa9f8925ca9dc3acc65ab1ece0f65adfb9036b1f11dcb9702e933206ed984b94",
+      "Format": "Ean",
+      "Expected": [
+        "5201815331227"
+      ]
+    },
+    {
+      "Id": "ean13-1/34.png",
+      "File": "ean13-1/34.png",
+      "Sha256": "3c49595a715535cdc59674a5ad36a4221165e33c7e5a0d4200450344953548b6",
+      "Format": "Ean",
+      "Expected": [
+        "9781558604971"
+      ]
+    },
+    {
+      "Id": "ean13-1/4.png",
+      "File": "ean13-1/4.png",
+      "Sha256": "e4c845dbcf20d33636c3bca42e207e0bdd471cf3ed65a1045e1b8ea3463d32b4",
+      "Format": "Ean",
+      "Expected": [
+        "5449000039231"
+      ]
+    },
+    {
+      "Id": "ean13-1/8.png",
+      "File": "ean13-1/8.png",
+      "Sha256": "e0435d1cd369733a9a383fa5a6a741e921219bae14a31f81de00948c0c2e20dd",
+      "Format": "Ean",
+      "Expected": [
+        "8480017507990"
+      ]
+    },
+    {
+      "Id": "ean13-1/23.png",
+      "File": "ean13-1/23.png",
+      "Sha256": "c5f90abbb290d193e7a0ff30a4b9f5ac94d0740bf92e39a82b0067ee1e375c01",
+      "Format": "Ean",
+      "Expected": [
+        "7622400791949"
+      ]
+    },
+    {
+      "Id": "ean13-2/15.png",
+      "File": "ean13-2/15.png",
+      "Sha256": "49932dae5e2c59190199c0c484c7cdccc8f7fe4ec846c36d3efd5933dc206919",
+      "Format": "Ean",
+      "Expected": [
+        "9784872348880"
+      ]
+    },
+    {
+      "Id": "ean13-2/12.png",
+      "File": "ean13-2/12.png",
+      "Sha256": "319a1b4cba8ae29101820b92d14de1d7497ef8dfe94b222323d76224550fe20f",
+      "Format": "Ean",
+      "Expected": [
+        "9780345348036"
+      ]
+    },
+    {
+      "Id": "ean13-2/07.png",
+      "File": "ean13-2/07.png",
+      "Sha256": "449dc5aeddd91d7223ea63e0ff0380c9ae115771fe13827917895f9e56b30e00",
+      "Format": "Ean",
+      "Expected": [
+        "9780804816632"
+      ]
+    },
+    {
+      "Id": "ean13-2/18.png",
+      "File": "ean13-2/18.png",
+      "Sha256": "8ac3ef148d8bba003f1e8e4cc641501bccc46780981742c3b853997a1ca2447e",
+      "Format": "Ean",
+      "Expected": [
+        "9784872348880"
+      ]
+    },
+    {
+      "Id": "ean13-2/24.png",
+      "File": "ean13-2/24.png",
+      "Sha256": "d4b843f708c2429de8841e477c623ec72bbce45a4c1f410916d71635ba98429c",
+      "Format": "Ean",
+      "Expected": [
+        "9784872348880"
+      ]
+    },
+    {
+      "Id": "ean13-2/08.png",
+      "File": "ean13-2/08.png",
+      "Sha256": "564acc0ffac4889a1d153e82938bb3702b9ca29258593ecebc0fcaee8f608949",
+      "Format": "Ean",
+      "Expected": [
+        "9780345348036"
+      ]
+    },
+    {
+      "Id": "ean13-3/36.png",
+      "File": "ean13-3/36.png",
+      "Sha256": "c60ca4acafcdf673bc2a0a25c40f397ac4f8fa76b76083b373cf06ff4eda4707",
+      "Format": "Ean",
+      "Expected": [
+        "9781585730575"
+      ]
+    },
+    {
+      "Id": "ean13-3/11.png",
+      "File": "ean13-3/11.png",
+      "Sha256": "ebcb3c42c4ce7a085c5b2d84961cc54e291c6986d90299bec842e3017b913a96",
+      "Format": "Ean",
+      "Expected": [
+        "9780596008574"
+      ]
+    },
+    {
+      "Id": "ean13-3/27.png",
+      "File": "ean13-3/27.png",
+      "Sha256": "d9beaeff6a51d6e8cdd977db2311154b6444e9dce10e010bbf024072ee9e645e",
+      "Format": "Ean",
+      "Expected": [
+        "9780201310054"
+      ]
+    },
+    {
+      "Id": "ean13-3/07.png",
+      "File": "ean13-3/07.png",
+      "Sha256": "9a541888b47538a5c5587076b24730449f53256c0b6e1a325c5f7211cbac9d43",
+      "Format": "Ean",
+      "Expected": [
+        "9780764544200"
+      ]
+    },
+    {
+      "Id": "ean13-3/33.png",
+      "File": "ean13-3/33.png",
+      "Sha256": "e7a53545921b63f40e4bc437d79951cd0d22869e9cc06727bcba01ef53a03637",
+      "Format": "Ean",
+      "Expected": [
+        "9780201310054"
+      ]
+    },
+    {
+      "Id": "ean13-3/52.png",
+      "File": "ean13-3/52.png",
+      "Sha256": "28b593c8c5c9bdd3b773bd99f593eb96e2c2866420712ed294b9f93e91c54465",
+      "Format": "Ean",
+      "Expected": [
+        "9780735619937"
+      ]
+    },
+    {
+      "Id": "ean13-4/04.png",
+      "File": "ean13-4/04.png",
+      "Sha256": "f9b1cfddf180ff28ad2bff4b455384a736459acd1bdd125d4aa15430a68e5876",
+      "Format": "Ean",
+      "Expected": [
+        "9780441014989"
+      ]
+    },
+    {
+      "Id": "ean13-4/07.png",
+      "File": "ean13-4/07.png",
+      "Sha256": "97a1419f249ebe988babe96751aaad8b1a1898d0a32e3dc0402720cdc02d70a6",
+      "Format": "Ean",
+      "Expected": [
+        "9780441014989"
+      ]
+    },
+    {
+      "Id": "ean13-4/22.png",
+      "File": "ean13-4/22.png",
+      "Sha256": "c072c713f69ed09cd47a5db2c3d876a9ec650c3e722ed035264baa7b34f13036",
+      "Format": "Ean",
+      "Expected": [
+        "9780441014989"
+      ]
+    },
+    {
+      "Id": "ean13-4/09.png",
+      "File": "ean13-4/09.png",
+      "Sha256": "40acdfe9a8a512a2af09f3e409e63f1861433b35b483ad1d1821e5c54eb63df0",
+      "Format": "Ean",
+      "Expected": [
+        "9780441014989"
+      ]
+    },
+    {
+      "Id": "ean13-4/13.png",
+      "File": "ean13-4/13.png",
+      "Sha256": "6236cbf62db69d073fbc3845ccd8a3fea5917be40e97868476b9f647ec221f98",
+      "Format": "Ean",
+      "Expected": [
+        "9780441014989"
+      ]
+    },
+    {
+      "Id": "ean13-4/19.png",
+      "File": "ean13-4/19.png",
+      "Sha256": "a340bac00b9261e7dd92876ab05ca61bcaefc4fe7f051d0429ed5199c5ffff29",
+      "Format": "Ean",
+      "Expected": [
+        "9780441014989"
+      ]
+    },
+    {
+      "Id": "ean13-5/17.png",
+      "File": "ean13-5/17.png",
+      "Sha256": "f9ac53e621cfcf851fe1e56cc0e1080206a2757e6908568befc1d88ee60f0195",
+      "Format": "Ean",
+      "Expected": [
+        "9780446579803"
+      ]
+    },
+    {
+      "Id": "ean13-5/07.png",
+      "File": "ean13-5/07.png",
+      "Sha256": "4732e392deaa0fac6f0e1cee460c60f6368e6697dabd32876ecba408e1baca59",
+      "Format": "Ean",
+      "Expected": [
+        "9780345460950"
+      ]
+    },
+    {
+      "Id": "ean13-5/06.png",
+      "File": "ean13-5/06.png",
+      "Sha256": "4178b0066b0d3f42594dc94bf019b43698c68af3407bb80818712cca9101c29f",
+      "Format": "Ean",
+      "Expected": [
+        "9780345460950"
+      ]
+    },
+    {
+      "Id": "ean13-5/02.png",
+      "File": "ean13-5/02.png",
+      "Sha256": "1baee953f424ef2ea814849c446b0ca7f2bb5cf053acf5ae8de09b1bb934e65b",
+      "Format": "Ean",
+      "Expected": [
+        "9780679601050"
+      ]
+    },
+    {
+      "Id": "ean13-5/15.png",
+      "File": "ean13-5/15.png",
+      "Sha256": "13a1f734559d8e2503b3c9ad55e4c17002a7e716be62718db6b0c898bce16189",
+      "Format": "Ean",
+      "Expected": [
+        "9780446579803"
+      ]
+    },
+    {
+      "Id": "ean13-5/09.png",
+      "File": "ean13-5/09.png",
+      "Sha256": "4043f3ca2739eb7cf21ddd014ba6ae5c8af1e65b477cb57e71ef5497d17bf383",
+      "Format": "Ean",
+      "Expected": [
+        "9780345460950"
+      ]
+    },
+    {
+      "Id": "ean8-1/8.png",
+      "File": "ean8-1/8.png",
+      "Sha256": "a32b3a89c61ccd8d07f6b2dd28328d5d5e83db6b05b4fed20a3592aa98fa2f51",
+      "Format": "Ean8",
+      "Expected": [
+        "55123457"
+      ]
+    },
+    {
+      "Id": "ean8-1/2.png",
+      "File": "ean8-1/2.png",
+      "Sha256": "3dd7494d2193aff8ca58e943c3ec7d9852cffe62ee916a7204f498ad8e838107",
+      "Format": "Ean8",
+      "Expected": [
+        "12345670"
+      ]
+    },
+    {
+      "Id": "ean8-1/7.png",
+      "File": "ean8-1/7.png",
+      "Sha256": "dcadca4f565e794a26f956aa48acb684145bbaca717ac00f87b6aa80300f68c5",
+      "Format": "Ean8",
+      "Expected": [
+        "50487066"
+      ]
+    },
+    {
+      "Id": "ean8-1/3.png",
+      "File": "ean8-1/3.png",
+      "Sha256": "79231ac206b80489019d7343e79d1efd418a44bd7f10150bf60efbb34b857d0e",
+      "Format": "Ean8",
+      "Expected": [
+        "12345670"
+      ]
+    },
+    {
+      "Id": "ean8-1/4.png",
+      "File": "ean8-1/4.png",
+      "Sha256": "adf5d25079ee2c863056cb42f7f5e44b6b37094178715d3f530c24c58ec02a5d",
+      "Format": "Ean8",
+      "Expected": [
+        "67678983"
+      ]
+    },
+    {
+      "Id": "ean8-1/1.png",
+      "File": "ean8-1/1.png",
+      "Sha256": "9bebf1e2bb501c27b517b66db51b92eff7c051e72f3265d92b294b1b6290febd",
+      "Format": "Ean8",
+      "Expected": [
+        "48512343"
+      ]
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "File": "falsepositives/19.png",
+      "Sha256": "342fdb2e223f3a41144aaa1029dc3ce7dc4d278a07e7e47dc885c874b1e57c77",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "File": "falsepositives/03.png",
+      "Sha256": "bb9cada0e2cee198bc652c6a0a53650f40c2fd9e6b2ec17cfa00f86ec5ceee22",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "File": "falsepositives/15.png",
+      "Sha256": "acc5cd8ddb6c29324cbdb8fcd0dbe35cbd8847cd877399186fee566b98993270",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "File": "falsepositives/16.png",
+      "Sha256": "044706ba8dc800a5ad0a71e33c10c238ee6e3a4a3e5a77f9538f76d117ea2c0b",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "File": "falsepositives/04.png",
+      "Sha256": "bfcd333d527da6beb0c0b3cf715388e13555976eb9388b888d859543d009fc64",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "File": "falsepositives/01.png",
+      "Sha256": "351fc204817fae136f77412dd38d22c6e8bd1aac0306d75323f73ecf8e6e8bff",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "File": "falsepositives-2/14.png",
+      "Sha256": "99e0b792b5f60108ee6ea0171fec974cf6f55cc9f994ab953b0586de78d20857",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "File": "falsepositives-2/17.png",
+      "Sha256": "0b866f0309e78b1ced8f8f370e3f4b406836e816f3098fc6b54f1286b2740132",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "File": "falsepositives-2/16.png",
+      "Sha256": "7e9887b8f6bbe008a019f742869475d6d4a138b88553cb8466a830e2e79ec991",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "File": "falsepositives-2/18.png",
+      "Sha256": "f56fa7648b39a4cdb8c163c608640d6885c8c165cd710f6298b59561a57f70ef",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "File": "falsepositives-2/15.png",
+      "Sha256": "88e5db884184cce74def2337b627e3e25cf4d49eceab89262755f4c3a9aac10c",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "File": "falsepositives-2/06.png",
+      "Sha256": "877ca6a982fd2b74cea72b5b5db5bb9cd99b640f88b858a913233546849d75ee",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "itf-1/15.png",
+      "File": "itf-1/15.png",
+      "Sha256": "e1b618dfef3da35c1216f8b3e55e334c6e5182438ca6ca7cd388c855a32648bd",
+      "Format": "Itf",
+      "Expected": [
+        "0829220875"
+      ]
+    },
+    {
+      "Id": "itf-1/2.png",
+      "File": "itf-1/2.png",
+      "Sha256": "a07aa9f8c29c1155c4968a527db6790bdf6eb33e061e9add4cebc9421cbd05b7",
+      "Format": "Itf",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "itf-1/7.png",
+      "File": "itf-1/7.png",
+      "Sha256": "8cb1ec5c43ec21aad8f9e0649f272a906d09f2b31f1483a47602c203b9186d22",
+      "Format": "Itf",
+      "Expected": [
+        "0817605453"
+      ]
+    },
+    {
+      "Id": "itf-1/1.png",
+      "File": "itf-1/1.png",
+      "Sha256": "b5e77ebf242658012777405b7e3e4f73d796bef2c1b6758692ef1baf03ae4eff",
+      "Format": "Itf",
+      "Expected": [
+        "30712345000010"
+      ]
+    },
+    {
+      "Id": "itf-1/8.png",
+      "File": "itf-1/8.png",
+      "Sha256": "567b6de1b662e4486abce30b4de34f6f8254d59599bc984b67a97be783696ea4",
+      "Format": "Itf",
+      "Expected": [
+        "0829220874"
+      ]
+    },
+    {
+      "Id": "itf-1/14.png",
+      "File": "itf-1/14.png",
+      "Sha256": "e4bdabb393aaecdb843270719535549f47c020fc33b782d65bb21905b7463220",
+      "Format": "Itf",
+      "Expected": [
+        "0829220875"
+      ]
+    },
+    {
+      "Id": "itf-2/08.png",
+      "File": "itf-2/08.png",
+      "Sha256": "40b26a7271ff3b584e8b5ee156cf4c0a119a9ec8e0bf883c1d5701b0641dffd0",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    },
+    {
+      "Id": "itf-2/05.png",
+      "File": "itf-2/05.png",
+      "Sha256": "1c54d2a5890f20b96167c028fde32822d9566c75e107173e040e101c5d73aa08",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    },
+    {
+      "Id": "itf-2/14.png",
+      "File": "itf-2/14.png",
+      "Sha256": "5e5fde5d68e2f717fab70666755f24139591e08d777f837ede4873593211a617",
+      "Format": "Itf",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "itf-2/09.png",
+      "File": "itf-2/09.png",
+      "Sha256": "9728e78fdacd32f072250f0094f6ab89693673030c42a33555218e704bf16f7a",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    },
+    {
+      "Id": "itf-2/13.png",
+      "File": "itf-2/13.png",
+      "Sha256": "8f26eb556a248bcf463b2f7ab9723ea56247c4cd6acb8d50a2b5fdfdf0857ce2",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    },
+    {
+      "Id": "itf-2/03.png",
+      "File": "itf-2/03.png",
+      "Sha256": "fdb4c3925e3621601899bb84969bcc01a17059a4c62e15c86c17b08d7a80764d",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    },
+    {
+      "Id": "maxicode-1/with-errors.png",
+      "File": "maxicode-1/with-errors.png",
+      "Sha256": "be292b7d992357b4fd93b02ccc0aa90e73cf16c1ac1556bcb68ea08928d2a2e4",
+      "Format": "MaxiCode",
+      "Expected": [
+        "\rABCDEFGHIJKLMNOPQRSTUVWXYZ\u001c\u001d\u001e \"#$%&'()*+,-./01234:56789"
+      ]
+    },
+    {
+      "Id": "maxicode-1/1.png",
+      "File": "maxicode-1/1.png",
+      "Sha256": "18b4e96048561e5ba48c8da2f7167d629a63fc8a21fd47d1ac024c222194a054",
+      "Format": "MaxiCode",
+      "Expected": [
+        "\rABCDEFGHIJKLMNOPQRSTUVWXYZ\u001c\u001d\u001e \"#$%&'()*+,-./01234:56789"
+      ]
+    },
+    {
+      "Id": "maxicode-1/MODE6.png",
+      "File": "maxicode-1/MODE6.png",
+      "Sha256": "4972e959261d0e2c91c1629d2a12266cc5e1950decee0af0864ec606798e6750",
+      "Format": "MaxiCode",
+      "Expected": [
+        "[)>\u001e01\u001d96123450000\u001d222\u001d111\u001dMODE6"
+      ]
+    },
+    {
+      "Id": "maxicode-1/MODE3.png",
+      "File": "maxicode-1/MODE3.png",
+      "Sha256": "118debb8878a8d871c27abf99c72a075148ad05dffdaeb52f42c3ce1ddab49dc",
+      "Format": "MaxiCode",
+      "Expected": [
+        "[)>\u001e01\u001d96123450000\u001d222\u001d111\u001dMODE3"
+      ]
+    },
+    {
+      "Id": "maxicode-1/mode4-mixed-sets.png",
+      "File": "maxicode-1/mode4-mixed-sets.png",
+      "Sha256": "6a6a9a50a6a0ae46e50a2f9167934ad3cd2732c640d82e1e3ad368190f38c603",
+      "Format": "MaxiCode",
+      "Expected": [
+        "ABCDE12abcde1ÀÁÂÃ¢£¤¥1àáâãabcde123A123456789àáâã¢£¤¥abcdÚÛÜÝ123456789¾"
+      ]
+    },
+    {
+      "Id": "maxicode-1/MODE5.png",
+      "File": "maxicode-1/MODE5.png",
+      "Sha256": "5b37b44931955bd71758047ad9de9e7ef1a2a76aa706084920e291db27eee798",
+      "Format": "MaxiCode",
+      "Expected": [
+        "[)>\u001e01\u001d96123450000\u001d222\u001d111\u001dMODE5"
+      ]
+    },
+    {
+      "Id": "pdf417-1/05.png",
+      "File": "pdf417-1/05.png",
+      "Sha256": "f88b2a2e07d692d68f409f7c1966b97f0ab59cb13e706e971ca1d94d330e8792",
+      "Format": "Pdf417",
+      "Expected": [
+        "-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-1/08.png",
+      "File": "pdf417-1/08.png",
+      "Sha256": "caed0e4c308c98ab9f81e828498bf50aa5cb51cbf1688a96766bef57a77e07bb",
+      "Format": "Pdf417",
+      "Expected": [
+        "TESTINGTESTING"
+      ]
+    },
+    {
+      "Id": "pdf417-1/14.png",
+      "File": "pdf417-1/14.png",
+      "Sha256": "995bbb7acbd800335cfe1b776a0d97f84953c447dc58076e45a87665a22b7a69",
+      "Format": "Pdf417",
+      "Expected": [
+        "This is PDF417"
+      ]
+    },
+    {
+      "Id": "pdf417-1/02.png",
+      "File": "pdf417-1/02.png",
+      "Sha256": "0e012d9cbc1f023a1622f2963ef434bc91210b54fba4f2a1b494391bd029aaa2",
+      "Format": "Pdf417",
+      "Expected": [
+        "12345678"
+      ]
+    },
+    {
+      "Id": "pdf417-1/06.png",
+      "File": "pdf417-1/06.png",
+      "Sha256": "4937c1486ce12d21e30e9eecfbe0884a25d9a994685b5fb345e3cee393178970",
+      "Format": "Pdf417",
+      "Expected": [
+        "-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-1/04.png",
+      "File": "pdf417-1/04.png",
+      "Sha256": "c0e2e4a2981ca507cf6dffb3e4f812a2fef7bbbec7256dce1c82a0bc83e0b126",
+      "Format": "Pdf417",
+      "Expected": [
+        "-ActiveBarcode-ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      ]
+    },
+    {
+      "Id": "pdf417-2/14.png",
+      "File": "pdf417-2/14.png",
+      "Sha256": "4d32a842458b41de39b5c0cf1543da26bff955c49c9e04bab8928d415dd5793d",
+      "Format": "Pdf417",
+      "Expected": [
+        "A PDF 417 barcode with ASCII text"
+      ]
+    },
+    {
+      "Id": "pdf417-2/17.png",
+      "File": "pdf417-2/17.png",
+      "Sha256": "997a8fd751e64bcb861cf37612ce7d54abe512c37659375db7a1cc93053210b3",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
+      ]
+    },
+    {
+      "Id": "pdf417-2/22.png",
+      "File": "pdf417-2/22.png",
+      "Sha256": "af0248c68426d8fcd65ac8c5aae6c9de615b8a6f9ac8a147a23264a8e15473b9",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
+      ]
+    },
+    {
+      "Id": "pdf417-2/15.png",
+      "File": "pdf417-2/15.png",
+      "Sha256": "87361268a00a130c7563a0b9ccc49a4a67cab4e5b709aa4c76c438ff57acc9a4",
+      "Format": "Pdf417",
+      "Expected": [
+        "A PDF 417 barcode with ASCII text"
+      ]
+    },
+    {
+      "Id": "pdf417-2/05.png",
+      "File": "pdf417-2/05.png",
+      "Sha256": "7d8d671fcd1808cce971dbbcd2abdc9029c38ef66997f383e9275b7864cfc497",
+      "Format": "Pdf417",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "pdf417-2/19.png",
+      "File": "pdf417-2/19.png",
+      "Sha256": "2e5f7ec3149477abe82a802dea5b2cf895cdd4b8e783787ebaa56a53cdcd437b",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF 417 barcode with a greater amount of text. This is a more difficult test for mobile devices to resolve."
+      ]
+    },
+    {
+      "Id": "pdf417-3/04.png",
+      "File": "pdf417-3/04.png",
+      "Sha256": "691f7ca8080067051c9d8e88b1770f0838fe36e2ccca7a967b423d71ed576d77",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/18.png",
+      "File": "pdf417-3/18.png",
+      "Sha256": "adbc7e3d75104af727b0e0382b74175d5f64e0815484c3dec4a50e0dd807ae14",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/08.png",
+      "File": "pdf417-3/08.png",
+      "Sha256": "94a0bfc87fefa16aca6c6b918ac131045cb9c7d4e8c621a05b6711583e3e0261",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 4."
+      ]
+    },
+    {
+      "Id": "pdf417-3/09.png",
+      "File": "pdf417-3/09.png",
+      "Sha256": "dc1c6388742bdcc316f3d37c2915f8262ce741d1d9c86decf93756b92d767a3f",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 4."
+      ]
+    },
+    {
+      "Id": "pdf417-3/03.png",
+      "File": "pdf417-3/03.png",
+      "Sha256": "d8f717f7144cc972825b77eedcf74a857a18549a522450c33f1de245eaf77ca5",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/06.png",
+      "File": "pdf417-3/06.png",
+      "Sha256": "90773fc0ef3eda9b448fb78db2d24e51fcaa013bca4714a70317d8bcddbe0430",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "qrcode-1/6.png",
+      "File": "qrcode-1/6.png",
+      "Sha256": "8e6d85ff2f01fc79cdd53eae7099504fbf0c8e208c2868868ecddf68ae2f7a9d",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-1/10.png",
+      "File": "qrcode-1/10.png",
+      "Sha256": "b3c9b39028835558a3e44f3aba37b49fa0985ab47fc0642bbda5fb0631a979b2",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-1/9.png",
+      "File": "qrcode-1/9.png",
+      "Sha256": "32fe0d4c809d3ae57ac2f8f874fc8cd2f9e44d24a561d4c39603ff7a25805cff",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-1/17.png",
+      "File": "qrcode-1/17.png",
+      "Sha256": "67bda038848ab12ad6b847b5137d78d562a72f31a48e768ad448372f8b75807f",
+      "Format": "QrCode",
+      "Expected": [
+        "Sean Owen\r\nsrowen@google.com\r\n917-364-2918\r\nhttp://awesome-thoughts.com"
+      ]
+    },
+    {
+      "Id": "qrcode-1/12.png",
+      "File": "qrcode-1/12.png",
+      "Sha256": "d75ee7ce5affe4bd5d7fad486739fc6affa4ca616ee67f6864b07eb3b078fda9",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-1/7.png",
+      "File": "qrcode-1/7.png",
+      "Sha256": "562aa4152b1291535132409f53d24bd5bbc2c01d4920062c96dcec27f3484f71",
+      "Format": "QrCode",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "Id": "qrcode-2/35.png",
+      "File": "qrcode-2/35.png",
+      "Sha256": "6d1961fbb37515ee61af08036e961290f6f159cfe26e5379771f9ce61044faeb",
+      "Format": "QrCode",
+      "Expected": [
+        "http://www.google.com/"
+      ]
+    },
+    {
+      "Id": "qrcode-2/16.png",
+      "File": "qrcode-2/16.png",
+      "Sha256": "24fef8babbb2862f2f37fe05b74b45daaa87f1b0c5d7610c0f40eb63becfe9e1",
+      "Format": "QrCode",
+      "Expected": [
+        "[外側QRコード]\r\n \r\n*ﾀﾞﾌﾞﾙQR*\r\nhttp://d-qr.net/ex/"
+      ]
+    },
+    {
+      "Id": "qrcode-2/15.png",
+      "File": "qrcode-2/15.png",
+      "Sha256": "cb3dca9deed3d7c08ec43b48dcc53af171a425a6b1e9217fca5db8d060f61db8",
+      "Format": "QrCode",
+      "Expected": [
+        "In 25 words or less in the comments, below, tell us how QR codes will make the world less ordinary."
+      ]
+    },
+    {
+      "Id": "qrcode-2/7.png",
+      "File": "qrcode-2/7.png",
+      "Sha256": "488d966bd052dda0c5cfa0f8d097f5646cec37c67df7391408cb42077c8a47f3",
+      "Format": "QrCode",
+      "Expected": [
+        "BIZCARD:N:Todd;X:Ogasawara;T:Tech Geek;C:MobileViews.com;A:MobileTown USA;E:editor@mobileviews.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-2/10.png",
+      "File": "qrcode-2/10.png",
+      "Sha256": "92723a6b541e0b08db1c5233b8768c227288ae5cab61b7bc01611d37ee827ae8",
+      "Format": "QrCode",
+      "Expected": [
+        "Google モバイル\r\nhttp://google.jp"
+      ]
+    },
+    {
+      "Id": "qrcode-2/23.png",
+      "File": "qrcode-2/23.png",
+      "Sha256": "5678f4be08abe4685c8d34883db162187459c9c097b2a6023b287a6e90a0f6ab",
+      "Format": "QrCode",
+      "Expected": [
+        "http://aniful.jp/pr/  "
+      ]
+    },
+    {
+      "Id": "qrcode-3/13.png",
+      "File": "qrcode-3/13.png",
+      "Sha256": "d9754f9f9171d3f401cf44897f1ddea51bac3e8f6bae08f321b712f5288fb73f",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Google 411,;TEL:18665881077;;"
+      ]
+    },
+    {
+      "Id": "qrcode-3/05.png",
+      "File": "qrcode-3/05.png",
+      "Sha256": "16ce3f4c727012f8c667e49b5b70ef13cf5818d990e6245f29d183cb50804f02",
+      "Format": "QrCode",
+      "Expected": [
+        "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+      ]
+    },
+    {
+      "Id": "qrcode-3/32.png",
+      "File": "qrcode-3/32.png",
+      "Sha256": "23a259ea9307ac61367f7396bb970d18dfe96a268299a5da3c836066dfccbc65",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-3/11.png",
+      "File": "qrcode-3/11.png",
+      "Sha256": "3eab0098a500a9b50a1f02d0a91dd6d7feed2d27406f9adc73d7306a2bb1910d",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Google 411,;TEL:18665881077;;"
+      ]
+    },
+    {
+      "Id": "qrcode-3/35.png",
+      "File": "qrcode-3/35.png",
+      "Sha256": "3d0b0f84a315ade3c1927ca1d95671500065c1657028ac31d8b22d66b846c91b",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-3/03.png",
+      "File": "qrcode-3/03.png",
+      "Sha256": "747dda4f1e660a1f6477c9dd63db84e2d0b99e86212771d4c0b86a40db6c8bad",
+      "Format": "QrCode",
+      "Expected": [
+        "http://arnaud.sahuguet.com/graffiti/test.php?ll=-74.00309961503218,40.74102573163046,0"
+      ]
+    },
+    {
+      "Id": "qrcode-4/40.png",
+      "File": "qrcode-4/40.png",
+      "Sha256": "400c2c46c33c006aae007caf5af95369df0d5c7849bfb0c95f99a8339965e13a",
+      "Format": "QrCode",
+      "Expected": [
+        "http://code.google.com/p/zxing/"
+      ]
+    },
+    {
+      "Id": "qrcode-4/31.png",
+      "File": "qrcode-4/31.png",
+      "Sha256": "c2395defce58101af85930cec1869bff2bf7e7a802bc7710cb4f793c1675db66",
+      "Format": "QrCode",
+      "Expected": [
+        "http://code.google.com"
+      ]
+    },
+    {
+      "Id": "qrcode-4/01.png",
+      "File": "qrcode-4/01.png",
+      "Sha256": "3e0f7c10d182bc52644d81c1dc4fc760e6d0dc8febff6725039dc4ebe85de06a",
+      "Format": "QrCode",
+      "Expected": [
+        "Google Print Ads - T.G.I.A.F. - January 31, 2008"
+      ]
+    },
+    {
+      "Id": "qrcode-4/29.png",
+      "File": "qrcode-4/29.png",
+      "Sha256": "aad52f8cd3d77b89b2d68c6ace5acef5f4a44a2986a0740ea8883c19670924b1",
+      "Format": "QrCode",
+      "Expected": [
+        "http://code.google.com"
+      ]
+    },
+    {
+      "Id": "qrcode-4/15.png",
+      "File": "qrcode-4/15.png",
+      "Sha256": "798c028bc0eb2a4b1055c7d8e22d0635d3100961947be3cdf20d32d1b82c20f4",
+      "Format": "QrCode",
+      "Expected": [
+        "http://code.google.com"
+      ]
+    },
+    {
+      "Id": "qrcode-4/09.png",
+      "File": "qrcode-4/09.png",
+      "Sha256": "63b74438ac1bec2b277fd9b490338f1b08016f5c8c0f1cde2334da2380d52f63",
+      "Format": "QrCode",
+      "Expected": [
+        "Google Print Ads - T.G.I.A.F. - January 31, 2008"
+      ]
+    },
+    {
+      "Id": "qrcode-5/04.png",
+      "File": "qrcode-5/04.png",
+      "Sha256": "913bbe648c013a5df65e3a6aa8c017db1aaf014ddf4ae931d9cbdc7a4c70df85",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-5/18.png",
+      "File": "qrcode-5/18.png",
+      "Sha256": "3b63f527f1c4999b14d93d741b88699e5ab42922eaf4259c3e77d062249ddc97",
+      "Format": "QrCode",
+      "Expected": [
+        "THROUGH THE LOOKING-GLASS\n\nBy Lewis Carroll\n\n\nCHAPTER I. Looking-Glass house\n\nOne thing was certain, that the WHITE kitten had had nothing to do with\nit:--it was the black kitten's fault entirely. For the white kitten had\nbeen having its face washed by the old cat for the last quarter of\nan hour (and bearing it pretty well, considering); so you see that it\nCOULDN'T have had any hand in the mischief.\n\nThe way Dinah washed her children's faces was this: first she held the\npoor thing down by its ear with one paw, and then with the other paw she\nrubbed its face all over, the wrong way, beginning at the nose: and\njust now, as I said, she was hard at work on the white kitten, which was\nlying quite still and trying to purr--no doubt feeling that it was all\nmeant for its good.\n\nBut the black kitten had been finished with earlier in the afternoon,\nand so, while Alice was sitting curled up in a corner of the great\narm-chair, half talking to herself and half asleep, the kitten had been\nhaving a grand game of romps with the ball of worsted Alice had been\ntrying to wind up, and had been rolling it up and down till it had all\ncome undone again; and there it was, spread over the hearth-rug, all\nknots and tangles, with the kitten running after its own tail in the\nmiddle.\n\n'Oh, you wicked little thing!' cried Alice, catching up the kitten, and\ngiving it a little kiss to make it understand that it was in disgrace.\n'Really, Dinah ought to have taught you better manners! You OUGHT,\nDinah, you know you ought!' she added, looking reproachfully at the old\ncat, and speaking in as cross a voice as she could manage--and then she\nscrambled back into the arm-ch\n\n"
+      ]
+    },
+    {
+      "Id": "qrcode-5/11.png",
+      "File": "qrcode-5/11.png",
+      "Sha256": "3cd672dc6460441433f6edb61a6b6a2261404f8fbaf13b4ed1824805dec18d2a",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-5/09.png",
+      "File": "qrcode-5/09.png",
+      "Sha256": "b40afb7a18b66c9dd585c01dc0f587997912c32d91c973adce43609c77279265",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-5/14.png",
+      "File": "qrcode-5/14.png",
+      "Sha256": "e33a47aa7f0e93922b385b590013638456aa1f6ebd33091d7e9bfacf106e2785",
+      "Format": "QrCode",
+      "Expected": [
+        "MECARD:N:Sean Owen;TEL:+12125658770;EMAIL:srowen@google.com;;"
+      ]
+    },
+    {
+      "Id": "qrcode-5/19.png",
+      "File": "qrcode-5/19.png",
+      "Sha256": "ed8890b9e31698774de78572738c1b91930887c802b2a8c32d18e49340a8975b",
+      "Format": "QrCode",
+      "Expected": [
+        "THROUGH THE LOOKING-GLASS\n\nBy Lewis Carroll\n\n\nCHAPTER I. Looking-Glass house\n\nOne thing was certain, that the WHITE kitten had had nothing to do with\nit:--it was the black kitten's fault entirely. For the white kitten had\nbeen having its face washed by the old cat for the last quarter of\nan hour (and bearing it pretty well, considering); so you see that it\nCOULDN'T have had any hand in the mischief.\n\nThe way Dinah washed her children's faces was this: first she held the\npoor thing down by its ear with one paw, and then with the other paw she\nrubbed its face all over, the wrong way, beginning at the nose: and\njust now, as I said, she was hard at work on the white kitten, which was\nlying quite still and trying to purr--no doubt feeling that it was all\nmeant for its good.\n\nBut the black kitten had been finished with earlier in the afternoon,\nand so, while Alice was sitting curled up in a corner of the great\narm-chair, half talking to herself and half asleep, the kitten had been\nhaving a grand game of romps with the ball of worsted Alice had been\ntrying to wind up, and had been rolling it up and down till it had all\ncome undone again; and there it was, spread over the hearth-rug, all\nknots and tangles, with the kitten running after its own tail in the\nmidd\n"
+      ]
+    },
+    {
+      "Id": "qrcode-6/10.png",
+      "File": "qrcode-6/10.png",
+      "Sha256": "da6ed6f97173939d77c27efe8243bc0cb83667665d4db82d248d247912bfda0a",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/13.png",
+      "File": "qrcode-6/13.png",
+      "Sha256": "8f1b358cd934f95d326abd89a55ba7609478060d455b271c3f1b35ddd0e98039",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/4.png",
+      "File": "qrcode-6/4.png",
+      "Sha256": "377f5af257be03b80fb52971f1e280d14b7a43fe392c269092b4f2a971601173",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/2.png",
+      "File": "qrcode-6/2.png",
+      "Sha256": "bad3d9337995633a583a9ee789bfb3bc450ca2f46fff29773e1eb75707cdbee8",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/7.png",
+      "File": "qrcode-6/7.png",
+      "Sha256": "c32be7f134a927159edceb63eec1c7ed186823c2dfeea71db184ce414790a941",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "qrcode-6/12.png",
+      "File": "qrcode-6/12.png",
+      "Sha256": "e9d97c47629bc2560f860c376abf4e7aa838b826f9e880550fa4f47dcba1adba",
+      "Format": "QrCode",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "rss14-1/4.png",
+      "File": "rss14-1/4.png",
+      "Sha256": "c1443144e3ea6c68f97c3eb003ad712a99e9a6f2b8bc07d06b88e5ea5e124bed",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "20012345678909"
+      ]
+    },
+    {
+      "Id": "rss14-1/6.png",
+      "File": "rss14-1/6.png",
+      "Sha256": "710dda5104e381f0971c1b9b81de297c93c70424bf40e6bd2fb64dcd047597d7",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "rss14-1/3.png",
+      "File": "rss14-1/3.png",
+      "Sha256": "7a077e771bd3c4c95e99bcf94219c68a14da6de9f13b9c70a1c57879450da31b",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00075678164125"
+      ]
+    },
+    {
+      "Id": "rss14-1/5.png",
+      "File": "rss14-1/5.png",
+      "Sha256": "7a8fa3382c7335fde0ee1fc03efb749b8bd2a0a09158b9128aee75319385454e",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00034567890125"
+      ]
+    },
+    {
+      "Id": "rss14-1/2.png",
+      "File": "rss14-1/2.png",
+      "Sha256": "b29f386c51ceeacd770c292c21e7c237da13490710a61b8e590f78d636425be3",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00821935106427"
+      ]
+    },
+    {
+      "Id": "rss14-1/1.png",
+      "File": "rss14-1/1.png",
+      "Sha256": "7f19fe1962e05f5d889d8f5a988bd19aeec1e2d689f58ce72ae86a52d42f1153",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "04412345678909"
+      ]
+    },
+    {
+      "Id": "rss14-2/11.png",
+      "File": "rss14-2/11.png",
+      "Sha256": "0436cd131a7cacfe5a51fa69b714c5015a5b6a8697bbc7152ec93977e4a5aab3",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/22.png",
+      "File": "rss14-2/22.png",
+      "Sha256": "ec31e2bb6f05ceb3bd7d1169d16746bd84093cb496cbd8e33419e9179a7d3a5c",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "rss14-2/18.png",
+      "File": "rss14-2/18.png",
+      "Sha256": "3277288ae96e011807d2d156118e29826940bb91e991babade6e041ee7337003",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/19.png",
+      "File": "rss14-2/19.png",
+      "Sha256": "7f05f84567c29984c81f1f5e75c165ae2223fa98a0a0012e56d078959f5d92bd",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/24.png",
+      "File": "rss14-2/24.png",
+      "Sha256": "68f49ccf7e84b5e334f7b3e6ea43f95d201cf134259d9facfa453bef8c951402",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "rss14-2/7.png",
+      "File": "rss14-2/7.png",
+      "Sha256": "2045a611e4c53abc354d3c7aef4f27c787cbd2468ed867d720884ef0c8f5a0a5",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/15.png",
+      "File": "rssexpanded-1/15.png",
+      "Sha256": "e49855bb21033198dbb7f4dc65470c22cda2090f762eb02df324d22781f0ba31",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)90012345678908(3102)001750(11)100312"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/29.png",
+      "File": "rssexpanded-1/29.png",
+      "Sha256": "f8410dadeb758ed7166d693ec59d5a6eda9329ef7001794cffeb90f98a9017fb",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098.1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/6.png",
+      "File": "rssexpanded-1/6.png",
+      "Sha256": "0c7136916a78066d767bb0de0ac89f115e21892b87a8fe760d437b6b8f325c65",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)567(01)90012345678908(11)010101"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/2.png",
+      "File": "rssexpanded-1/2.png",
+      "Sha256": "4ab06b733da9846e737e181e5b4da5e056492402b86db174f00d078db26a52a2",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)90012345678908(3103)001750"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/23.png",
+      "File": "rssexpanded-1/23.png",
+      "Sha256": "3ffbbbbca6f72f14555b231627f426e51051cec2fe48c8eeecab66c433eb7119",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)56789(11)010101"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/9.png",
+      "File": "rssexpanded-1/9.png",
+      "Sha256": "3ba48f8a98a00666361d3888cd0cb6f58e4d02b753eb5889cd2dc14c62231853",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)567(3102)123456"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/3_02.png",
+      "File": "rssexpanded-2/3_02.png",
+      "Sha256": "670104b5e90fa42b2973d0879deca34782786c14df396018b80c4cc187c070f3",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)12A"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/4_02.png",
+      "File": "rssexpanded-2/4_02.png",
+      "Sha256": "876ea3e91d3ae768d1b707b63a124474107b585a928be779519c25cbdbb4f9bf",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)98898765432106(3202)012345(15)991231"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/3_03.png",
+      "File": "rssexpanded-2/3_03.png",
+      "Sha256": "58670b20aea00ad21e20f2f8794a28fcb958334fea06dc28c135648a70d7832a",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)12A"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/4_05.png",
+      "File": "rssexpanded-2/4_05.png",
+      "Sha256": "0cccfe4526ac6810d5231a165d323f16cf3e06005b93da5d79fa8f801d8c4cce",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)98898765432106(3202)012345(15)991231"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/4_01.png",
+      "File": "rssexpanded-2/4_01.png",
+      "Sha256": "610f4479eabc0660bac80e0d21904b5dd81824fa2c8904ce7f202c249cab57b7",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)98898765432106(3202)012345(15)991231"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/3_09.png",
+      "File": "rssexpanded-2/3_09.png",
+      "Sha256": "dda79ff983e9bc5411f35dbc9edb903a421c7323c676d73834edfa2875ecd3ce",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)12A"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/29.png",
+      "File": "rssexpanded-3/29.png",
+      "Sha256": "6126246090bbbd7ccb1ef67c26995fcfdd822cebcb10d27b1cd7837d76117bfb",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098!1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/24.png",
+      "File": "rssexpanded-3/24.png",
+      "Sha256": "723ea7490003f6fcc1b6b523a86b11f7ff128bbbcbcd689418202b8f6f63b83d",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098,1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/41.png",
+      "File": "rssexpanded-3/41.png",
+      "Sha256": "1d5207a319caaa9b6353170b028ce99c5e15d05856cc5c78de265d3d11d2d6d9",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098_1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/99.png",
+      "File": "rssexpanded-3/99.png",
+      "Sha256": "e612fe856184a4044d296f754ab2678a2f1ee9b4e30a7d0ed27d26de1092591c",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098_1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/87.png",
+      "File": "rssexpanded-3/87.png",
+      "Sha256": "165e021513087b6a073810354ee2332090d95f04a335ac27a0858205a196d0a8",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098!1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/20.png",
+      "File": "rssexpanded-3/20.png",
+      "Sha256": "71732c57df631a6525b824f7e49117a08aa461b1313c7f2d738aff44a716491d",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)5678(11)001010"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/64.png",
+      "File": "rssexpandedstacked-1/64.png",
+      "Sha256": "491b308289ace592e5187953bd0d7f3d45a3ffe9f9c090c35980ae77c2038f95",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(10)123"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/59.png",
+      "File": "rssexpandedstacked-1/59.png",
+      "Sha256": "c2a49663b1f7322629190cade2b300e5802f6523783116be5f4f17f55870c917",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(10)1;:/0123456789012"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/34.png",
+      "File": "rssexpandedstacked-1/34.png",
+      "Sha256": "2d427ba8e2fa82b8b567d443aee69c991eac29dff3b9a3988a81c326c6de64c1",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(10)1098!1234"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/14.png",
+      "File": "rssexpandedstacked-1/14.png",
+      "Sha256": "eb67759bb9d6cf7d9aa350b5232d1e925a4a3cc5a3bd444786052da516784fb4",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)90012345678908(3932)0401234"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/20.png",
+      "File": "rssexpandedstacked-1/20.png",
+      "Sha256": "7545a3028bc7eee68fd3d4942d4bb8295b53111e3ca5776f968241344647da0d",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)12345678901231(10)PIRAMIDE-PROJECT"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/23.png",
+      "File": "rssexpandedstacked-1/23.png",
+      "Sha256": "97dbd9a3394c2052af42f687fc9d6cc624ede57fc69825696bd84353040d25f8",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(15)991231(3103)001750(10)12A(422)123(21)123456(423)0123456789012"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/1.png",
+      "File": "rssexpandedstacked-2/1.png",
+      "Sha256": "6f9a75e5de88b3f9cae574b36ff73de911acfacc884a6d2122c153657030788c",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(8110)10014141012345290110100"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/22.png",
+      "File": "rssexpandedstacked-2/22.png",
+      "Sha256": "07db77f65504ff63db29a5280131fb59c01df5e11e46fa52af15cae20a926357",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)98898765432106(15)991231(3103)001750(10)12A(422)123(21)123456(423)012345678901"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/1000.png",
+      "File": "rssexpandedstacked-2/1000.png",
+      "Sha256": "f77d056739793e517ef4d8fc4596d6917b1fb9d1d12c73fabadcaf9a00c11010",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)98898765432106(3202)012345(15)991231"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/19.png",
+      "File": "rssexpandedstacked-2/19.png",
+      "Sha256": "e7699c01139c4c0517e68b3b29971c10b24aa69f15667322eb3fcf43bf1fdd9a",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)12345678901231(10)UNIVERSITY-OF-DEUSTO"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/23.png",
+      "File": "rssexpandedstacked-2/23.png",
+      "Sha256": "97dbd9a3394c2052af42f687fc9d6cc624ede57fc69825696bd84353040d25f8",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(15)991231(3103)001750(10)12A(422)123(21)123456(423)0123456789012"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/13.png",
+      "File": "rssexpandedstacked-2/13.png",
+      "Sha256": "6295170bd4e838233707b10e19b7ec94274463e52422ac148757ee0650e09ead",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)90012345678908(3922)795888888888888888888888888888888888888888888888888888"
+      ]
+    },
+    {
+      "Id": "upca-1/9.png",
+      "File": "upca-1/9.png",
+      "Sha256": "83bef066741199c7437a5e22396f713651b62fc10adada68d5a260fafebcfe8c",
+      "Format": "UpcA",
+      "Expected": [
+        "071831007995"
+      ]
+    },
+    {
+      "Id": "upca-1/35.png",
+      "File": "upca-1/35.png",
+      "Sha256": "a6af0f525610b39ba54770f5273ffc10289768e33572477d0f18544ee576c497",
+      "Format": "UpcA",
+      "Expected": [
+        "045496442736"
+      ]
+    },
+    {
+      "Id": "upca-1/13.png",
+      "File": "upca-1/13.png",
+      "Sha256": "c7b3bd84822fd7c610938d3667850ae10c3749cc0721438e2fd65fb70846f595",
+      "Format": "UpcA",
+      "Expected": [
+        "781735802045"
+      ]
+    },
+    {
+      "Id": "upca-1/8.png",
+      "File": "upca-1/8.png",
+      "Sha256": "149f81a381d78a16d433dee2e750bd8a2a3ec24ec0e775f2ef2d61d1223a8f8b",
+      "Format": "UpcA",
+      "Expected": [
+        "071831007995"
+      ]
+    },
+    {
+      "Id": "upca-1/21.png",
+      "File": "upca-1/21.png",
+      "Sha256": "7296289230b05fc8598292c33e7e4660b2306d5a4a94dd4f204dfa34598dadf6",
+      "Format": "UpcA",
+      "Expected": [
+        "752919460009"
+      ]
+    },
+    {
+      "Id": "upca-1/4.png",
+      "File": "upca-1/4.png",
+      "Sha256": "6a8f5eaf010e2b44d8c1c9598433619cc895b9057e3dceae4a6aeadc7713db73",
+      "Format": "UpcA",
+      "Expected": [
+        "070097025088"
+      ]
+    },
+    {
+      "Id": "upca-2/46.png",
+      "File": "upca-2/46.png",
+      "Sha256": "34ea9c3405aed9233876e7f1bcd34494a1f97d37bd5f9b511877b7c0f49a0684",
+      "Format": "UpcA",
+      "Expected": [
+        "075720003259"
+      ]
+    },
+    {
+      "Id": "upca-2/07.png",
+      "File": "upca-2/07.png",
+      "Sha256": "9a905b56131007c37fe13636a641dff10c3462e207850d685e73f43116e97ceb",
+      "Format": "UpcA",
+      "Expected": [
+        "890444000335"
+      ]
+    },
+    {
+      "Id": "upca-2/01.png",
+      "File": "upca-2/01.png",
+      "Sha256": "2b578b811e182e2b1ff65155b00c3d7ad05fc9e76d779e8fd1dcabc6aa632911",
+      "Format": "UpcA",
+      "Expected": [
+        "890444000335"
+      ]
+    },
+    {
+      "Id": "upca-2/13.png",
+      "File": "upca-2/13.png",
+      "Sha256": "3a7fc7f72d0186c5c896259a05cffd8cac47693199fe3ec8a6a541442f45a9f0",
+      "Format": "UpcA",
+      "Expected": [
+        "181497000879"
+      ]
+    },
+    {
+      "Id": "upca-2/24.png",
+      "File": "upca-2/24.png",
+      "Sha256": "eeef4043019ecc72892ba89c53aa3e9fd6d283c132f6c4d1b172eeb7f348d26d",
+      "Format": "UpcA",
+      "Expected": [
+        "752050200137"
+      ]
+    },
+    {
+      "Id": "upca-2/27.png",
+      "File": "upca-2/27.png",
+      "Sha256": "05c77190644e2e5ae8f213ede78db5e1bbb7bf8582b7d4ef02673499f9d692a1",
+      "Format": "UpcA",
+      "Expected": [
+        "752050200137"
+      ]
+    },
+    {
+      "Id": "upca-3/06.png",
+      "File": "upca-3/06.png",
+      "Sha256": "a6f55c15b29e17fabead49876ec191fa9c50a38c248794e08abb73fec825cb9f",
+      "Format": "UpcA",
+      "Expected": [
+        "049000042566"
+      ]
+    },
+    {
+      "Id": "upca-3/17.png",
+      "File": "upca-3/17.png",
+      "Sha256": "d6f7df1d847cb460568c53853aca8d6c669df3dc9b7a0f7014c3d957018e28d7",
+      "Format": "UpcA",
+      "Expected": [
+        "854818000116"
+      ]
+    },
+    {
+      "Id": "upca-3/05.png",
+      "File": "upca-3/05.png",
+      "Sha256": "a92387365d8629d57dca5c8c240a3e827ca833d0556bcbc02ab10a9fe8c29dc5",
+      "Format": "UpcA",
+      "Expected": [
+        "049000042566"
+      ]
+    },
+    {
+      "Id": "upca-3/03.png",
+      "File": "upca-3/03.png",
+      "Sha256": "6d353f38faff5f461806d229860c164fc862c863b47e6d1f5f7f3810fa0afca4",
+      "Format": "UpcA",
+      "Expected": [
+        "049000042566"
+      ]
+    },
+    {
+      "Id": "upca-3/04.png",
+      "File": "upca-3/04.png",
+      "Sha256": "5db96921bdc06b68e530545688be48119fca09eab56a8c16b9f57db877cfb749",
+      "Format": "UpcA",
+      "Expected": [
+        "049000042566"
+      ]
+    },
+    {
+      "Id": "upca-3/01.png",
+      "File": "upca-3/01.png",
+      "Sha256": "7c4ca779db9d2ba8a450924a093c176bdff4ca09a8af4b46a064b873474095fb",
+      "Format": "UpcA",
+      "Expected": [
+        "049000042566"
+      ]
+    },
+    {
+      "Id": "upca-4/14.png",
+      "File": "upca-4/14.png",
+      "Sha256": "27f77e43d26c0c9fa77afd0902e5f539935bf14f14020745095513a695b95ba8",
+      "Format": "UpcA",
+      "Expected": [
+        "066721017185"
+      ]
+    },
+    {
+      "Id": "upca-4/4.png",
+      "File": "upca-4/4.png",
+      "Sha256": "e0a0f5a412f85e47ddff526b18a44258cfbbd7c342204ddb53c6cd307d50308d",
+      "Format": "UpcA",
+      "Expected": [
+        "023942431015"
+      ]
+    },
+    {
+      "Id": "upca-4/3.png",
+      "File": "upca-4/3.png",
+      "Sha256": "ff7ffd8715d73090b18f8e68a712919e9bbe44cda6715b5d0a5af521a07d61fd",
+      "Format": "UpcA",
+      "Expected": [
+        "023942431015"
+      ]
+    },
+    {
+      "Id": "upca-4/9.png",
+      "File": "upca-4/9.png",
+      "Sha256": "d403b7de447519d6dc36958476603d68aad9086ccac4b5d039f7ba00ba7365df",
+      "Format": "UpcA",
+      "Expected": [
+        "060410049235"
+      ]
+    },
+    {
+      "Id": "upca-4/19.png",
+      "File": "upca-4/19.png",
+      "Sha256": "6d05a2587ae5d9ba7a11e6ad9956ad99e25a945a4bc3bccd1f4758897412abd5",
+      "Format": "UpcA",
+      "Expected": [
+        "807648011401"
+      ]
+    },
+    {
+      "Id": "upca-4/7.png",
+      "File": "upca-4/7.png",
+      "Sha256": "72c53684cf949797348d15d97af741d7325af7d21f9ed7e6130636013055ac3c",
+      "Format": "UpcA",
+      "Expected": [
+        "023942431015"
+      ]
+    },
+    {
+      "Id": "upca-5/29.png",
+      "File": "upca-5/29.png",
+      "Sha256": "2fc72cc333da9608324d7f80ac1fabb1972ead2c35e3e7f03e9efb55255eca64",
+      "Format": "UpcA",
+      "Expected": [
+        "625034201058"
+      ]
+    },
+    {
+      "Id": "upca-5/12.png",
+      "File": "upca-5/12.png",
+      "Sha256": "4956a12bb874dcd6dd13cb45c074ee2bbc1c6498d462d405ead44f13e1e4776a",
+      "Format": "UpcA",
+      "Expected": [
+        "312547701310"
+      ]
+    },
+    {
+      "Id": "upca-5/27.png",
+      "File": "upca-5/27.png",
+      "Sha256": "2bfa8976271e6ebedd008aa71363834547a7cb3ce29f3f218698357a3c9bb860",
+      "Format": "UpcA",
+      "Expected": [
+        "625034201058"
+      ]
+    },
+    {
+      "Id": "upca-5/17.png",
+      "File": "upca-5/17.png",
+      "Sha256": "f8fe5e991c72fd6605c309f0651053437ed8c2456ddb354e8b4712ed1e67ef4a",
+      "Format": "UpcA",
+      "Expected": [
+        "312547701310"
+      ]
+    },
+    {
+      "Id": "upca-5/09.png",
+      "File": "upca-5/09.png",
+      "Sha256": "21501ba670794a905be99a7935080c7962d2ec5c5cb85bf5b490ccd9336015db",
+      "Format": "UpcA",
+      "Expected": [
+        "312547701310"
+      ]
+    },
+    {
+      "Id": "upca-5/33.png",
+      "File": "upca-5/33.png",
+      "Sha256": "5e58260fc536531d8048e6295c661601877d9bfdea1a2efe2d00ef54f7f8c294",
+      "Format": "UpcA",
+      "Expected": [
+        "625034201058"
+      ]
+    },
+    {
+      "Id": "upca-6/02.png",
+      "File": "upca-6/02.png",
+      "Sha256": "608316743db17b1bb2646635811df5cc95a68c1444b96843fe09193ef2267ea5",
+      "Format": "UpcA",
+      "Expected": [
+        "071831007995"
+      ]
+    },
+    {
+      "Id": "upca-6/11.png",
+      "File": "upca-6/11.png",
+      "Sha256": "96f1facd14f398773f8ae7a66d0f305dcbda5f164b8b1e47ac06ddc00da16c15",
+      "Format": "UpcA",
+      "Expected": [
+        "605482330012"
+      ]
+    },
+    {
+      "Id": "upca-6/12.png",
+      "File": "upca-6/12.png",
+      "Sha256": "2c0ed73c47360f768028552958cc85c5971ab91f339904b485cec434af4d947a",
+      "Format": "UpcA",
+      "Expected": [
+        "605482330012"
+      ]
+    },
+    {
+      "Id": "upca-6/16.png",
+      "File": "upca-6/16.png",
+      "Sha256": "4d10e4bb38755ab09e0ff8c7b32f16ca06e22746b6dc61010c55557076cbd3dd",
+      "Format": "UpcA",
+      "Expected": [
+        "073333531084"
+      ]
+    },
+    {
+      "Id": "upca-6/14.png",
+      "File": "upca-6/14.png",
+      "Sha256": "a54c04e64b0a6f67ad16dd4f2e8ce7f2a5de412b0d9b1f1f87a0e6b846adf836",
+      "Format": "UpcA",
+      "Expected": [
+        "073333531084"
+      ]
+    },
+    {
+      "Id": "upca-6/01.png",
+      "File": "upca-6/01.png",
+      "Sha256": "a9def94119bf169a22f115b5c8a92620b17f3bd8c0feae81ed8d9d685aec4b6c",
+      "Format": "UpcA",
+      "Expected": [
+        "071831007995"
+      ]
+    },
+    {
+      "Id": "upce-1/1.png",
+      "File": "upce-1/1.png",
+      "Sha256": "5614ac7795e7d596dc8ccc5e7629b569c27f39a2e364530b67cbc837bcb8f88a",
+      "Format": "UpcE",
+      "Expected": [
+        "01234565"
+      ]
+    },
+    {
+      "Id": "upce-1/2.png",
+      "File": "upce-1/2.png",
+      "Sha256": "dea97a22a0412c59a8b6f15995602005dccbcfa420c3999cc7bfcf8658daaf85",
+      "Format": "UpcE",
+      "Expected": [
+        "00123457"
+      ]
+    },
+    {
+      "Id": "upce-1/4.png",
+      "File": "upce-1/4.png",
+      "Sha256": "c0937b2ca2be6619acbb42c06922fdd09aed0a47065d27ffd3e38f0aa2bb4ce6",
+      "Format": "UpcE",
+      "Expected": [
+        "01234531"
+      ]
+    },
+    {
+      "Id": "upce-2/41.png",
+      "File": "upce-2/41.png",
+      "Sha256": "446260baaca842998350722eb96aff9c4ed3dd116a9665aa6ba0c02813466d9f",
+      "Format": "UpcE",
+      "Expected": [
+        "01264904"
+      ]
+    },
+    {
+      "Id": "upce-2/34.png",
+      "File": "upce-2/34.png",
+      "Sha256": "339e7fcd88e9bb21d44e1ea613a2a9438a7e9b499845649f1ec68ccd9d102e78",
+      "Format": "UpcE",
+      "Expected": [
+        "01264904"
+      ]
+    },
+    {
+      "Id": "upce-2/17.png",
+      "File": "upce-2/17.png",
+      "Sha256": "7a8a6da8e4c64be282f8ca4c1668f8b1cba57c46ce7ce635c1eb117b0fa0f3f5",
+      "Format": "UpcE",
+      "Expected": [
+        "04124498"
+      ]
+    },
+    {
+      "Id": "upce-2/08.png",
+      "File": "upce-2/08.png",
+      "Sha256": "e90844b7c61a630cb617c054d4dbce8479b501d6ca782cb16b81bbba8fccb5b9",
+      "Format": "UpcE",
+      "Expected": [
+        "04963406"
+      ]
+    },
+    {
+      "Id": "upce-2/35.png",
+      "File": "upce-2/35.png",
+      "Sha256": "2964f440aa1e9abeb4437b65498d8ba5e2c789e47f4047000ddf006b41024e02",
+      "Format": "UpcE",
+      "Expected": [
+        "01264904"
+      ]
+    },
+    {
+      "Id": "upce-2/13.png",
+      "File": "upce-2/13.png",
+      "Sha256": "b0d851316255ead2d0394bb628fc6ceb88db8d80043af03de6b2b74fd9114b95",
+      "Format": "UpcE",
+      "Expected": [
+        "04963406"
+      ]
+    },
+    {
+      "Id": "upce-3/08.png",
+      "File": "upce-3/08.png",
+      "Sha256": "3c8867ba8a5278906028f478b2696e4f7b6c1c065b628a936c6c6ccc2cb797b4",
+      "Format": "UpcE",
+      "Expected": [
+        "04965802"
+      ]
+    },
+    {
+      "Id": "upce-3/03.png",
+      "File": "upce-3/03.png",
+      "Sha256": "966d4e673ec68b6d7f4995f0adf88b5059ff734a5922a38ea5f60dd80d57dbe5",
+      "Format": "UpcE",
+      "Expected": [
+        "04965802"
+      ]
+    },
+    {
+      "Id": "upce-3/06.png",
+      "File": "upce-3/06.png",
+      "Sha256": "ba2525928b02033225cf1ef1ba5f9abc3e4860dabe21a1b18f87e491c6b193fe",
+      "Format": "UpcE",
+      "Expected": [
+        "04965802"
+      ]
+    },
+    {
+      "Id": "upce-3/10.png",
+      "File": "upce-3/10.png",
+      "Sha256": "56de01c499893352bf44c27964ae543191b228424d89e6edd9443e602a08dfc1",
+      "Format": "UpcE",
+      "Expected": [
+        "04965802"
+      ]
+    },
+    {
+      "Id": "upce-3/11.png",
+      "File": "upce-3/11.png",
+      "Sha256": "f361b809d6a3c0d81750867931531b2369ff60bc01abe896371eb4f3b5238249",
+      "Format": "UpcE",
+      "Expected": [
+        "04965802"
+      ]
+    },
+    {
+      "Id": "upce-3/05.png",
+      "File": "upce-3/05.png",
+      "Sha256": "4b2305a6dc09bccc527c876890c1fc47d71a85971ef69184fea9835346596916",
+      "Format": "UpcE",
+      "Expected": [
+        "04965802"
+      ]
+    },
+    {
+      "Id": "multi-qrcode-1/1.png",
+      "File": "multi-qrcode-1/1.png",
+      "Sha256": "22aa7015f341ee8ecb8219e7790df7cb21814daf05c56e86953f24f09c87ea56",
+      "Format": "QrCode",
+      "Expected": [
+        "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+        "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+        "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+        "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+      ]
+    }
+  ]
+}

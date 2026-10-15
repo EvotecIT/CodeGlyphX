@@ -354,6 +354,37 @@ The remaining three main-corpus DataBar misses and inverted versions of the reco
 
 [Recovery and regression proof](evidence/databar-tilted-separator-proof.json) · [Positive inputs](evidence/databar14-positive-manifest.json) · [Negative inputs](evidence/databar14-negative-manifest.json) · [CCD0 positive samples](evidence/databar-tilted-positive-ccd0-result.json) · [CCD1 positive samples](evidence/databar-tilted-positive-ccd1-result.json) · [CCD0 negative samples](evidence/databar-tilted-negative-ccd0-result.json) · [CCD1 negative samples](evidence/databar-tilted-negative-ccd1-result.json).
 
+## DataBar recovery threshold follow-up
+
+
+
+The twelve-image DataBar positive batch takes 5.1–22.5% less median time in this paired run. Every measured call retains 10/12 decoded images. The default negative-image workload is slower on both CPU domains and completes fewer times.
+
+DataBar recovery retains the first cutoff for each distinct binary row before fitting runs. The ordinary and Code128 paths use the same existing histogram rule through one internal owner. Cutoff order, every changed pixel hypothesis, finder rules, checksum validation and three-row corroboration remain intact. No public API or production dependency changes.
+
+All 6,663 distinct framework tests pass, including eighteen fixture-dependent reruns after correcting scratch fixture lookup. Six threshold contracts pass per framework; the exact core and test assembly also pass 199 native ARM64 functional checks and twenty additional Code128 pixel-API calls.
+
+
+
+CCD0: 11/12 to 10/12 completed rejections; CCD1: 7/12 to 5/12 completed rejections. The separate frozen corpus rerun retains 243/267 → 243/267 correct positives and 3 → 3 unexpected positive-image outputs. Main negative rejections are 9/12 → 12/12; supplementary rejections are 21/25 → 18/25. These conflicting completion changes do not establish a reliability gain.
+
+Decoder-only follow-up on the exact later core. The earlier full generation and mixed-format comparison retains its original qualified core. Six paired workload/domain packets use separate retained decoder contexts, three priming calls and twelve grouped rotated measurements per binary. Identical verified RGBA32 pixels, format hints, payload sets and 1500 ms robust allowance are fixed. All 180 priming and measured calls retain per-image outcomes. Loading, evaluation and persistence are outside timing. The unchanged comparison adapter retains its preceding source and hash.
+
+This follow-up does not replace or relabel the preceding full comparison, its first-use results or its incomplete negative scans. Both binaries use the same frozen corpus and adapters. The separate main and supplementary passes include all three decoding engines; QRCoder remains generation-only.
+
+| Workload | Requests | Domain | Previous → current median ms | Current / previous | Previous → current mean managed MiB | Previous → current correct range | Previous → current inconclusive range | Previous → current unexpected range |
+| --- | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| databar-positive | 12 | CCD0 | 40.74 → 31.56 | 0.775 | 13.41 → 13.41 | 10 → 10 | 0 → 0 | 0 → 0 |
+| databar-positive | 12 | CCD1 | 29.96 → 28.43 | 0.949 | 13.43 → 13.43 | 10 → 10 | 0 → 0 | 0 → 0 |
+| databar-negative | 31 | CCD0 | 501.30 → 476.96 | 0.951 | 54.79 → 54.78 | 31 → 31 | 0 → 0 | 0 → 0 |
+| databar-negative | 31 | CCD1 | 416.65 → 417.38 | 1.002 | 54.81 → 54.81 | 31 → 31 | 0 → 0 | 0 → 0 |
+| fabric | 1 | CCD0 | 879.13 → 954.98 | 1.086 | 29.08 → 30.16 | 0–1 → 0–1 | 0–1 → 0–1 | 0 → 0 |
+| fabric | 1 | CCD1 | 1098.69 → 1275.02 | 1.160 | 27.01 → 27.46 | 0–1 → 0–1 | 0–1 → 0–1 | 0 → 0 |
+
+Initial observed CPU load reached 94-100 percent on the shared Windows host. These observations do not prove load throughout each operation or establish the cause of a latency difference. All slower results and incomplete searches remain included. Managed allocation excludes native memory. A faster DataBar batch does not establish improved negative completion, lower CPU use, throughput, capacity or overall superiority. The Expanded Stacked13 raw payload matches its oracle after removing parentheses, but its 54-digit AI3922 price exceeds the GS1 maximum of fifteen; the locked failed score remains unchanged.
+
+[Decoder follow-up proof](evidence/databar-threshold-proof.json) · [Historical context inventory](evidence/retained-contexts-history.json). Each listed packet links its complete priming and measured per-image outcomes in the proof.
+
 ## PDF417 sampled grids and complete scan costs
 
 
