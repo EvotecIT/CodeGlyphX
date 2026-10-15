@@ -124,6 +124,7 @@
       "navContextPath": "/",
       "sourceRoot": "..",
       "sourceUrl": "https://github.com/EvotecIT/CodeGlyphX/blob/master/{path}#L{line}",
+      "sourceMemberCoverageScope": "assembly",
       "includeNamespace": "CodeGlyphX",
       "coverageReport": "./_reports/apidocs-coverage.json",
       "minTypeSourceUrlPercent": 95,
