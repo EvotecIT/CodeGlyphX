@@ -1145,7 +1145,7 @@ html::-webkit-scrollbar-track { background: var(--bg-dark); }
     font-size: .8438rem !important;
     line-height: 1.7 !important;
 }
-.pg-code .copy-btn { top: .6rem; right: .6rem; }
+.pg-code .copy-btn { top: .6rem; right: .6rem; width: auto; }
 .pg-code .code-block { color: var(--pg-tok-text); }
 .pg-code .code-block .token:is(.comment, .prolog, .doctype, .cdata) { color: var(--pg-tok-comment); }
 .pg-code .code-block .token:is(.punctuation, .operator) { color: var(--pg-tok-punct); }
