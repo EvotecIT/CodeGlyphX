@@ -87,7 +87,7 @@ main.cgx-landing { padding: var(--header-height) 0 0; overflow-x: clip; }
 .cgx-surface em { margin-top: 6px; color: var(--primary-light); font-style: normal; font-size: .875rem; font-weight: 650; }
 
 /* Sections */
-.cgx-art__head h2, .cgx-ps__head h2, .cgx-decode h2, .cgx-closing h2 { font-size: clamp(1.75rem, 1rem + 2.2vw, 2.75rem); font-weight: 800; line-height: 1.08; }
+.cgx-art__head h2, .cgx-ps__head h2, .cgx-decode h2, .cgx-measured h2, .cgx-closing h2 { font-size: clamp(1.75rem, 1rem + 2.2vw, 2.75rem); font-weight: 800; line-height: 1.08; }
 
 /* Specimen sheet */
 /* Family filter: the shared tab component from app.css. */
@@ -128,6 +128,10 @@ main.cgx-landing { padding: var(--header-height) 0 0; overflow-x: clip; }
 .cgx-decode { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(24px, 4vw, 56px); align-items: center; border-top: 1px solid var(--border); }
 .cgx-decode p { margin-top: 14px; color: var(--text-muted); }
 
+/* Measured performance and recognition: the comparison summary beside the recognition chart. */
+.cgx-measured { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 56px); align-items: center; border-top: 1px solid var(--border); }
+.cgx-measured .comparison-summary { margin-top: 20px; }
+
 /* PowerShell band */
 .cgx-ps { padding-block: clamp(64px, 8vw, 112px); background: radial-gradient(45% 50% at 85% 15%, rgba(83, 145, 254, .22), transparent 70%), radial-gradient(40% 50% at 10% 90%, rgba(139, 92, 246, .18), transparent 72%), var(--cgx-night); color: var(--cgx-night-ink); }
 .cgx-ps__inner { width: var(--cgx-width); margin-inline: auto; }
@@ -161,7 +165,7 @@ main.cgx-landing { padding: var(--header-height) 0 0; overflow-x: clip; }
   .cgx-float { position: relative; inset: auto; width: auto; margin-top: 14px; }
   .cgx-surfaces { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cgx-surface:last-child { grid-column: 1 / -1; }
-  .cgx-art__head, .cgx-art__row, .cgx-ps__head, .cgx-decode { grid-template-columns: minmax(0, 1fr); }
+  .cgx-art__head, .cgx-art__row, .cgx-ps__head, .cgx-decode, .cgx-measured { grid-template-columns: minmax(0, 1fr); }
   .cgx-payload-grid, .cgx-ps__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 640px) {
