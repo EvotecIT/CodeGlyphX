@@ -9,6 +9,7 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class QrMultiDecodeTests {
     [Fact]
     public void DecodeAll_CancellationAfterAcceptancePreservesAnIndependentPartialResult() {
@@ -78,7 +79,7 @@ public sealed class QrMultiDecodeTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 3200,
-            BudgetMilliseconds = 8000,
+            BudgetMilliseconds = TestBudget.Adjust(8000),
             AggressiveSampling = true,
             StylizedSampling = true,
             EnableTileScan = true,
@@ -109,7 +110,7 @@ public sealed class QrMultiDecodeTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2800,
-            BudgetMilliseconds = 8000,
+            BudgetMilliseconds = TestBudget.Adjust(8000),
             AggressiveSampling = true,
             StylizedSampling = true,
             EnableTileScan = true,
@@ -146,7 +147,7 @@ public sealed class QrMultiDecodeTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 3600,
-            BudgetMilliseconds = 18000,
+            BudgetMilliseconds = TestBudget.Adjust(18000),
             AutoCrop = true,
             AggressiveSampling = true,
             StylizedSampling = true,
