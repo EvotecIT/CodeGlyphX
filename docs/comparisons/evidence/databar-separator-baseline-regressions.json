@@ -1,0 +1,99 @@
+{
+  "CoreSha256": "5CE2358FA210E8D9979643DB20A9C7783BAEB7EF1B0F658150A6F122693040FB",
+  "TestAssemblySha256": "F4E813BABE3CA1D16CFAA0CDDF3963186FB092FABF166A27E159BB474FD8D3D0",
+  "TrxSha256": "20395420CD49324E8968CF588DA33054C1E644074F69B54A8C3DC5DFA8411A25",
+  "Cases": [
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"21\", turns: 3, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"21\", turns: 1, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"20\", turns: 2, inverted: False)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"20\", turns: 0, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"21\", turns: 0, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"21\", turns: 2, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"21\", turns: 0, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_SlopedSeparator_PreservesBothLayoutsAndRejectsMissingEvidence(text: \"0001234567890\", omni: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_SlopedSeparator_PreservesBothLayoutsAndRejectsMissingEvidence(text: \"0001234567890\", omni: False)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"20\", turns: 1, inverted: True)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"21\", turns: 1, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"20\", turns: 1, inverted: False)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"21\", turns: 3, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_SlopedSeparator_PreservesBothLayoutsAndRejectsMissingEvidence(text: \"0082193510642\", omni: False)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"21\", turns: 2, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"20\", turns: 2, inverted: True)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"20\", turns: 3, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"20\", turns: 0, inverted: False)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_SlopedSeparator_PreservesBothLayoutsAndRejectsMissingEvidence(text: \"1234567890123\", omni: False)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_PhotographedSeparator_PreservesPayloadAndPhysicalVariant(fixture: \"20\", turns: 3, inverted: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_SlopedSeparator_PreservesBothLayoutsAndRejectsMissingEvidence(text: \"1234567890123\", omni: True)",
+      "Outcome": "Failed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.DataBarSeparatorGeometryTests.Scanner_SlopedSeparator_PreservesBothLayoutsAndRejectsMissingEvidence(text: \"0082193510642\", omni: True)",
+      "Outcome": "Failed"
+    }
+  ],
+  "Total": 22,
+  "Failed": 15,
+  "Passed": 7,
+  "Scope": "The22 current separator geometry regression cases executed against the exact preceding5CE235 core in an isolated copied test host. Fifteen fail, seven pass; no cases aborted or skipped."
+}

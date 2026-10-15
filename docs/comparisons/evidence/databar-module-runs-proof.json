@@ -1,0 +1,533 @@
+{
+  "Source": "307101715324909086610d7765637117df310c68",
+  "CoreSha256": "0C204227B51A43765CEACB2F58B42E4D5B7F3557CC5350EC0E76855DAC87E7E4",
+  "PreviousSource": "2e2915a4b218c89dba8c126a1e32dec410c4958e",
+  "PreviousCoreSha256": "3474E8726755DB88512FB4EEA5B97473E0AF57B57ED587ABB33EE8ABA1306E9B",
+  "HostSha256": "FC0D8925EF6ED761AAC44C9E51AEBBD18C90EB876E31C270F8FC23ADAB5EFFFB",
+  "PreviousHostSha256": "22C93B910B08C5E94CF5086E28E871AF6609BB02F319599300F8E706CD6C4684",
+  "Changes": "DataBar Limited and Expanded read exact module runs into bounded stack buffers before validating symbol widths. Expanded reuses the collected widths for both light-guard restoration retries and chooses its unique character count without a temporary candidate list. Physical stacked rows retain their existing assembly and checksum rules.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are separate from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "ReviewCoverage": {
+    "ReviewedUtc": "2026-10-13T22:00:47.620331Z",
+    "FindingsDisposition": "No actionable P0-P3 findings; accept as shaped within the DataBar module-run contract",
+    "Head": "307101715324909086610d7765637117df310c68",
+    "ConfirmationUsed": false,
+    "PublicApi": "Signatures unchanged",
+    "BoundaryState": "current",
+    "UnresolvedFindings": [],
+    "Dependencies": "Existing System.Memory compatibility dependency only; no new or expanded role",
+    "ReviewerTask": "/root/databar_module_runs_review",
+    "Reason": "New exact module-run parser capacity, stack buffers, span aliases, guard retries and framework compatibility warrant independent inspection",
+    "Validation": "Reviewer read source and provisional equivalence evidence; full frozen-candidate and native validation are primary-owned and recorded separately",
+    "Scope": "One fresh independent read-only review of exact DataBar module-run capacity, stack initialization, alias-safe guard restoration, all Expanded character counts, stacked rows, failure outcomes, pure-managed dependency boundary and framework compatibility. No actionable findings; no confirmation used."
+  },
+  "Contracts": {
+    "net10": 19,
+    "net8": 19,
+    "net472": 19
+  },
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "databar-module-runs-fabric-ccd0-result.json",
+      "OutcomesFile": "databar-module-runs-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "6389B7BD142A217E00B96D8A861496BABD96BE3A75F94D4A44154E3E96CBA984"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "databar-module-runs-fabric-ccd1-result.json",
+      "OutcomesFile": "databar-module-runs-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "91C05238D167730F0BFC44BA6C7B1D2699AC3713A9050109B61278A12E81E426"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "databar-module-runs-texture-ccd0-result.json",
+      "OutcomesFile": "databar-module-runs-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "24069525D50A7CD7A26E0FA42401C32B70E052EC15BAE3515CAEC3C42F778124"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "databar-module-runs-texture-ccd1-result.json",
+      "OutcomesFile": "databar-module-runs-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "B718DCEF8D48D1DEB04AAD8E3376E0F0F0D242CBF203ADE5D4608CD7941F2CAC"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "databar-module-runs-whole-ccd0-result.json",
+      "OutcomesFile": "databar-module-runs-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "AE5D2EA1FC8F484C3A8DA289AA0C6D3489B8B4397D49AF7E476A449F75F35B82"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "databar-module-runs-whole-ccd1-result.json",
+      "OutcomesFile": "databar-module-runs-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "3E266BB10F7DC0A00E5A2868D76DFFEB54BC34E7A650BEEF721AF9EEAF74554D"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "databar-module-runs-retail-positive-ccd0-result.json",
+      "OutcomesFile": "databar-module-runs-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "80073AE44ED994F142201B1D19A52A3F143F072AC98043A54F4B0E0EEEE6C54C"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "databar-module-runs-retail-positive-ccd1-result.json",
+      "OutcomesFile": "databar-module-runs-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "7799241628FE43113A1418B82B4C9CB150F0136F8BA104EE8B3842889775C4E7"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "databar-module-runs-retail-negative-ccd0-result.json",
+      "OutcomesFile": "databar-module-runs-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "7C4EB36735F98593E8E87B333721FDAA10FB53DDF2CC969F42078A19039470F4"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "databar-module-runs-retail-negative-ccd1-result.json",
+      "OutcomesFile": "databar-module-runs-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "BBA72A9E14067DAE350BA36A938E867D4296191D029FD935DA3A2CE854BB90AF"
+    }
+  ],
+  "TestAssemblySha256": "489F845327362838C9D4F0BDA43DAEE4FFAF7E3439760C73E03B224A1B6FB5D9",
+  "ModuleEquivalence": {
+    "File": "databar-module-runs-equivalence.json",
+    "Sha256": "3A284BEA8D87DA61880A2FB587E75FE28DDC2394BC0A14F0B1F10C5068AA8309",
+    "Cases": 16985,
+    "Accepted": 1004,
+    "Rejected": 15981
+  },
+  "NativeArm64": {
+    "Source": "307101715324909086610d7765637117df310c68",
+    "CoreSha256": "0C204227B51A43765CEACB2F58B42E4D5B7F3557CC5350EC0E76855DAC87E7E4",
+    "Host": "evomini.ad.evotec.xyz",
+    "OperatingSystem": "27.0.1",
+    "Architecture": "arm64",
+    "Processor": "Apple M4",
+    "SDKVersion": "10.0.402",
+    "SelectedFrameworkVersion": "10.0.13",
+    "FrameworkRollForward": "Disable",
+    "InputFiles": {
+      "CodeGlyphX.dll": "0C204227B51A43765CEACB2F58B42E4D5B7F3557CC5350EC0E76855DAC87E7E4",
+      "CodeGlyphX.Playground.dll": "C2C4013DE6537A55D44F49676FFA2DF1B6E446E225693E8D574A94852CDED032",
+      "CodeGlyphX.Tests.dll": "489F845327362838C9D4F0BDA43DAEE4FFAF7E3439760C73E03B224A1B6FB5D9",
+      "Microsoft.TestPlatform.CoreUtilities.dll": "CA8CD4A0C394AF3CC03C8E83B0377ECF14E6A8C68E4B0B50F732B1370950D7DF",
+      "Microsoft.TestPlatform.PlatformAbstractions.dll": "8BC7FAEC348A71336AF3BFBEECAD564AD0F97A8216835ED90CD2CEFF621A3697",
+      "Microsoft.VisualStudio.TestPlatform.ObjectModel.dll": "FF730C68BEBE827F74E2BDCFB571400AB328C00BE11C7FE3A1FE01143B483BC6",
+      "NativeModuleDriver.deps.json": "284CFDEDEE7C2930311EAEB7F65811BECE6CB69FA658B44D0C9A02FD0E70CBB7",
+      "NativeModuleDriver.dll": "421E2249B6FB9122CF9BE726D6F08CA4C16CCF518A7ADF5A8FB9B3147C185A8E",
+      "NativeModuleDriver.runtimeconfig.json": "C230A317A54DD960BCBEB5F347F52E18DC665A26F7EFDA2159FCED9A5AC7E097",
+      "xunit.abstractions.dll": "3166DC70323FB30CCF1CEDB0FE86F2AD122C46D254542342D90386EFC4C9285C",
+      "xunit.assert.dll": "BCD9711B22D227AC8CD4C1568E72433A0F576D2EC8AAE64AC508081892015B1D",
+      "xunit.core.dll": "2F7FEEEC8C6DEC7DF684C25FB80AADB292B963D09723460F03D53C5AD2088ACC",
+      "xunit.execution.dotnet.dll": "E70FEBE547C15F8155DB3E2D95C3BA4445A59CBC21A3E7541AB22ED49D3DCF7B",
+      "xunit.runner.visualstudio.testadapter.dll": "A5DD2A0765F3891208189261CFE09171F875FF44FD5AF99EA56E890085FB7F30",
+      "cs/Microsoft.TestPlatform.CoreUtilities.resources.dll": "5F5501B18F65687CEBD354196F563C520B4575E58ECA474F3B3D1BD3247B9B46",
+      "cs/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "A24D277E98D3DC7986741FF0C72E628ACA9814556D6D64B5E3992BACF07C6F17",
+      "de/Microsoft.TestPlatform.CoreUtilities.resources.dll": "CF94A0635173D6D868A90161757CB9484E559FEDFDE6E7EA50DD935E1D9B6666",
+      "de/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "EDFDF3CB64553DA8E229463948AA7B962E96E4037D510FB7FAD4F26DA9E7C8B5",
+      "es/Microsoft.TestPlatform.CoreUtilities.resources.dll": "6DE8B0FD082756F612D4C8B3B06E3558E2321BCB910D5A70769050F308B96641",
+      "es/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "EB966BE23882A9E11459D283241A67E7C0265F271E98603F13CABAADD8F7EE64",
+      "fr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "BEC57046F616616913FD1416F013635A41A06C1C4D8AD67A8EE31F6098A3444B",
+      "fr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "07614B2D790A3B6AD93B41961566B84E4AD56CC86F5BF39658C06A13F2613DB4",
+      "it/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2AF9B70D68F3AB2BBAA609E5E556811C7F68869CE2C3CC6D7209B3D6722E0968",
+      "it/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5202A294A2B02C741BA292BA802F12B9473836A81CE61CB42F462EEAD6DC4DFA",
+      "ja/Microsoft.TestPlatform.CoreUtilities.resources.dll": "63D61001CDF7C501E253ADEACE734B32023CF617C04785937525FC0F202C3E21",
+      "ja/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "D2A679CC9CF0B0E5C865BD937EC90E45ECB434289C6B017992F417E34BAE646C",
+      "ko/Microsoft.TestPlatform.CoreUtilities.resources.dll": "E7528A92A6EC0E1684537DD550CDB016ECC8DF62A55C85294E608358E28A560D",
+      "ko/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "DC7B27E609E842EEEA5DA50EA172F288479B652EA779072E5DBBDE045418819D",
+      "pl/Microsoft.TestPlatform.CoreUtilities.resources.dll": "CB997C46356BE42B346682B3A1B6825CB6F70A30C92403048F7DBDF25065F6AB",
+      "pl/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "48F6BB8C551179DA07D5E136A0C781DD6433F23312F3CE9241DCEC29D8412F3E",
+      "pt-BR/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2BB0340569343F0C3288F35A5CFA947D9495DE55D04E93F2C380B75B45D681A9",
+      "pt-BR/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3944ADC8B9C09A7007AAEA3C86EE7666DDF3E7328B16EDCC72F7E6DCC1FF1DE8",
+      "ru/Microsoft.TestPlatform.CoreUtilities.resources.dll": "089D9052B2FA1EF63F2BD1F0F0F8161FE6D1D02721FC39D4B48C333D26826306",
+      "ru/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "515C96257715A3CCD56AF8ACD9460E72E57DDA825FF16824D2912271BECA0749",
+      "tr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "1FEE9A7A6AF5EF00D7FDD4F3BF265645C7984224352E95347C2F082F64D8ADE2",
+      "tr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5B39C999CCF72EB01BA387C8A0D72814D68A7120E623ACCBD2DA544EE04BA5DC",
+      "zh-Hans/Microsoft.TestPlatform.CoreUtilities.resources.dll": "DB896AC2579F5D5773F940BD278852C689799A3E0ACC51BB30E46EEF99FC76FB",
+      "zh-Hans/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3F370C15663359C40BCEE2A7D15CD386F01980BE753F7AB1505783649D70DCAF",
+      "zh-Hant/Microsoft.TestPlatform.CoreUtilities.resources.dll": "FE732572A93C216282C0EF0A8762246735C8885873E03FFE9FD287D202F0D806",
+      "zh-Hant/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "335D5FA4C5575CEB8F4FFB58FDA53C1813A0C725A17F68219D012D390DDF978F",
+      "Fixtures/Qr/perspective-bookmark.png": "8E6D85FF2F01FC79CDD53EAE7099504FBF0C8E208C2868868ECDDF68AE2F7A9D"
+    },
+    "RemoteRoot": "/Volumes/Samsung/CodeGlyphX-databar-module-runs-30710171",
+    "Scope": "Exact frozen Windows-compiled managed core/test binaries. Sixty native ARM64 decoding and run-boundary checks, including nineteen DataBar contracts. Functional qualification only; no native timing or full native corpus claim.",
+    "DecisionProof": {
+      "Status": "passed",
+      "Checks": 60,
+      "Cases": [
+        {
+          "Case": "Int32 coordinate boundaries",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=False stop=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=False stop=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=True stop=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "Binary queue invert=True stop=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=False invert=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=False invert=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=True invert=False",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR components adaptive=True invert=True",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix invalid stride 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix invalid stride -80",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 2",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix rotation 3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix RGBA mirrored",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix RGBA inverted",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix Gray8 rotated",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix Gray8 mirrored",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix Gray8 inverted",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix ECI metadata",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix DMRE metadata",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix damaged clock rejection",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix photo zxing-perspective-20.png",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix photo zxing-perspective-40.png",
+          "Status": "passed"
+        },
+        {
+          "Case": "Data Matrix photo zxing-perspective-lowcontrast.png",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec pitch 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec pitch 2",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec pitch 3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec independent small symbol",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 10",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 13",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 14",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 15",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 17",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec photo 19",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec mirrored photo",
+          "Status": "passed"
+        },
+        {
+          "Case": "Aztec inverted photo",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR perspective single",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR perspective all",
+          "Status": "passed"
+        },
+        {
+          "Case": "QR perspective scanner",
+          "Status": "passed"
+        },
+        {
+          "Case": "Bounded module runs capacity 0",
+          "Status": "passed"
+        },
+        {
+          "Case": "Bounded module runs capacity 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Bounded module runs capacity 47",
+          "Status": "passed"
+        },
+        {
+          "Case": "Bounded module runs capacity 235",
+          "Status": "passed"
+        },
+        {
+          "Case": "Limited independent guard restoration 1234567890123",
+          "Status": "passed"
+        },
+        {
+          "Case": "Limited independent guard restoration 0000000000000",
+          "Status": "passed"
+        },
+        {
+          "Case": "Limited independent guard restoration 1999999999999",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded all 19 supported character counts and guards",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded maximum stacked symbol columns 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded maximum stacked symbol columns 2",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded maximum stacked symbol columns 3",
+          "Status": "passed"
+        },
+        {
+          "Case": "Expanded maximum stacked symbol columns 10",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 1",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 46",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 47",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 235",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 237",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 238",
+          "Status": "passed"
+        },
+        {
+          "Case": "Malformed run capacity boundary 8192",
+          "Status": "passed"
+        }
+      ],
+      "Architecture": "Arm64",
+      "OS": "macOS 27.0.1",
+      "Runtime": ".NET 10.0.13",
+      "CoreSha256": "0C204227B51A43765CEACB2F58B42E4D5B7F3557CC5350EC0E76855DAC87E7E4",
+      "TestAssemblySha256": "489F845327362838C9D4F0BDA43DAEE4FFAF7E3439760C73E03B224A1B6FB5D9",
+      "CoreInformationalVersion": "3.0.0+307101715324909086610d7765637117df310c68",
+      "Scope": "Nineteen actual DataBar module-run contracts, nine coordinate/component contracts and 32 public QR, Data Matrix and Aztec decoding checks on the exact Windows-qualified managed binaries. Functional qualification only; no native timing or full native corpus claim."
+    }
+  },
+  "DiagnosticPackets": [
+    {
+      "Lane": "before",
+      "Source": "2e2915a4b218c89dba8c126a1e32dec410c4958e",
+      "CoreSha256": "3474E8726755DB88512FB4EEA5B97473E0AF57B57ED587ABB33EE8ABA1306E9B",
+      "File": "databar-module-runs-negative-timeouts-before.json",
+      "Sha256": "20D1DE0D78CB236AD2C75034D82F8490D7DCC159073CDE43672614558B78A931",
+      "ProfileFile": "databar-module-runs-negative-timeouts-before-profile.json",
+      "ProfileSha256": "E950AB6E116ECC8CC9C1CECEDE51926183F4866B1D02B0B1A5F8BB29EBAA68BB"
+    },
+    {
+      "Lane": "after",
+      "Source": "307101715324909086610d7765637117df310c68",
+      "CoreSha256": "0C204227B51A43765CEACB2F58B42E4D5B7F3557CC5350EC0E76855DAC87E7E4",
+      "File": "databar-module-runs-negative-timeouts-after.json",
+      "Sha256": "856CA3521B65CEAF84690423EEA92D4675B057F2FA838D3DF19819B958CC1FE4",
+      "ProfileFile": "databar-module-runs-negative-timeouts-after-profile.json",
+      "ProfileSha256": "36007E81F824B02F034E3F267447921B1B75B020B1F5716F46C822ABF0DBC89E"
+    }
+  ],
+  "AllocationDiagnostic": {
+    "Source": "307101715324909086610d7765637117df310c68",
+    "CoreSha256": "0C204227B51A43765CEACB2F58B42E4D5B7F3557CC5350EC0E76855DAC87E7E4",
+    "PreviousCoreSha256": "3474E8726755DB88512FB4EEA5B97473E0AF57B57ED587ABB33EE8ABA1306E9B",
+    "Images": 9,
+    "PrimingCalls": 9,
+    "MeasuredCalls": 27,
+    "BeforeMeanAllocatedBytes": 51072725.925925925,
+    "CurrentMeanAllocatedBytes": 44001067.25925926,
+    "AllocationRatio": 0.8615374735054646,
+    "Scope": "Traced repetitions of the unchanged nine-image negative workload. Priming is excluded from allocation means; completion and unexpected outputs remain in every call. Diagnostic counters include tracing overhead. Inclusive allocation and thread-time stack samples overlap and do not establish elapsed time, CPU utilization or competitive rankings."
+  },
+  "ProfileManifest": {
+    "File": "databar-module-runs-profile-inputs.json",
+    "OriginalInputSha256": "245DD9AE6EEBF9DBE2AC138486BEEF7DEE923FA55D01FD9DA87DED24296A1B86",
+    "Sha256": "633B4F0C1ABC01AACEC45C9C0871744F7904F629035CFE68F3FD635E32E8D4BE"
+  },
+  "FrozenNegativeManifest": {
+    "File": "databar-module-runs-frozen-negative-manifest.json",
+    "OriginalInputSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D",
+    "Sha256": "E8DCD4D8B29711283868BCC642913B970EA2388521853D52F23258D013E487CA"
+  },
+  "SupplementalPackets": [
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd0",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-module-runs-databar-positive-ccd0-result.json",
+      "OutcomesFile": "databar-module-runs-databar-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "75A4216A6D4AFDB4D2B1267B5B36F6C72B29CA42A3E82D0FB03EC6FE5BD40A9F"
+    },
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd1",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-module-runs-databar-positive-ccd1-result.json",
+      "OutcomesFile": "databar-module-runs-databar-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "F105E6C439CEF7C4215B8E671659AF0FC46A81E3E1A2A69C5861D741AF5F5FE0"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd0",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-module-runs-databar-negative-ccd0-result.json",
+      "OutcomesFile": "databar-module-runs-databar-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "873D89DAF121643973A489F17D04D246DFA9329047F27607E5F9A671BEDE4EE0"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd1",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-module-runs-databar-negative-ccd1-result.json",
+      "OutcomesFile": "databar-module-runs-databar-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "DDF0E50FB9FB2920CC4D90C3CB73702E25BD868C2597C36DE684C0CD71968BDB"
+    }
+  ],
+  "Diagnostics": {
+    "positive": {
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8"
+    },
+    "negative": {
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F"
+    }
+  },
+  "FrozenCorpusManifest": {
+    "File": "databar-module-runs-frozen-corpus-manifest.json",
+    "OriginalInputSha256": "3714951ED16A82C1BD9B7A94543590DD609312EF3A39EFDD462F6C7F5BE7DD28",
+    "Sha256": "FC5347DB7554A5E719D0744F2BEC6E06A230C1174D803FB9679E008A7A7B9A93"
+  }
+}

@@ -1,138 +1,766 @@
-{{~ # Benchmark body from data/benchmarks.json; the tables and charts are filled by benchmarks.scripts.html. ~}}
-{{~ b = shortcode.data ~}}
+{{~ # Benchmarks page: qualified comparison evidence (data/comparisons.json, data/benchmarks.json copy) in the site's
+   # section, tab, table and chart components. Charts come from data/visuals.json bench, drawn from the same data. ~}}
+{{~ comparison = data.comparisons; copy = data.benchmarks; bench = data.visuals.bench ~}}
 <div class="benchmark-page">
     <div class="cgx-bench-bar">
-        <div class="cgx-bench-controls">
-            <div class="cgx-seg">
-                <span class="cgx-seg__label" id="bench-mode-label">{{ b.runMode.title }}</span>
-                <div class="benchmark-mode-selector cgx-tabs" role="group" aria-labelledby="bench-mode-label">
-                    {{~ for button in b.runMode.buttons ~}}<button type="button" class="benchmark-mode-btn cgx-tab{{ if button.active }} active{{ end }}" aria-pressed="{{ if button.active }}true{{ else }}false{{ end }}" data-mode="{{ button.mode }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ button.label }}</button>{{~ end ~}}
-                </div>
-            </div>
-            <div class="cgx-seg">
-                <span class="cgx-seg__label" id="bench-os-label">{{ b.runOs.title }}</span>
-                <div class="benchmark-os-selector cgx-tabs" role="group" aria-labelledby="bench-os-label">
-                    {{~ for button in b.runOs.buttons ~}}<button type="button" class="benchmark-os-btn cgx-tab{{ if button.active }} active{{ end }}" aria-pressed="{{ if button.active }}true{{ else }}false{{ end }}" data-os="{{ button.os }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ button.label }}</button>{{~ end ~}}
-                </div>
-            </div>
-        </div>
-        <div class="benchmark-meta" data-benchmark-meta></div>
+        <p class="cgx-bench-measured">Measured <time datetime="{{ comparison.date }}">{{ comparison.date }}</time> · Windows · timing .NET {{ comparison.versions.DotnetRuntime }}{{ if comparison.versions.StandaloneDotnetRuntime }} · corpus .NET {{ comparison.versions.StandaloneDotnetRuntime }}{{ end }}</p>
+        <nav class="cgx-bench-jump" aria-label="On this page"><a href="#comparison-overview">Results</a><a href="#recognition">Recognition</a><a href="#generation">Generation and decoding</a><a href="#decoder-followups">Decoder follow-ups</a><a href="#methodology">Method and evidence</a></nav>
     </div>
     <div class="cgx-bench-notes">
-        <p class="benchmark-mode-note" data-mode-note></p>
-        <p class="benchmark-os-note" data-os-note></p>
+        <p class="cgx-bench-note">{{ copy.sharedHost }}</p>
+        {{ if comparison.host_load_note }}<p class="cgx-bench-note">{{ comparison.host_load_note }}</p>{{ end }}
     </div>
-
-    {{~ bench = data.visuals.bench ~}}
-    <div class="cgx-bench-sets">
-    {{~ for set in bench.sets ~}}
-    <div data-bench-set="{{ set.id }}"{{ if set.id != bench.initial }} hidden{{ end }}>
-      <section class="cgx-section cgx-bench-hero" aria-labelledby="bench-glance-{{ set.id }}">
-        <div class="cgx-bench-hero__stats">
-          <h2 class="cgx-visually-hidden" id="bench-glance-{{ set.id }}">At a glance</h2>
-          <p class="cgx-bench-hero__stat"><span class="cgx-bench-hero__num">{{ set.wins }}<em>/{{ set.count }}</em></span><span class="cgx-bench-hero__label">scenarios where CodeGlyphX is the fastest library measured</span></p>
-          <p class="cgx-bench-hero__stat"><span class="cgx-bench-hero__num">{{ set.median }}</span><span class="cgx-bench-hero__label">median speed-up over the next fastest library</span></p>
-        </div>
-        <figure class="cgx-speedup-figure">
-          <ul class="cgx-speedup" style="--decades: {{ set.ticks.size - 1 }}" aria-label="Speed-up over the next fastest library, per scenario (logarithmic scale)">
-            <li class="cgx-speedup__axis" aria-hidden="true">{{ for t in set.ticks }}<span style="--p: {{ t.pos }}">{{ t.label }}</span>{{ end }}</li>
-            {{~ for h in set.headline ~}}
-            <li class="cgx-speedup__row"><span class="cgx-speedup__name">{{ h.scenario }}</span><span class="cgx-speedup__track"><span class="cgx-speedup__bar{{ if h.slower || h.pos < 12 }} cgx-speedup__bar--small{{ end }}" style="--p: {{ h.pos }}"></span><span class="cgx-speedup__value" style="--p: {{ h.pos }}">{{ h.factor }} <span>vs {{ h.runner }}</span></span></span></li>
-            {{~ end ~}}
-          </ul>
-          <figcaption class="cgx-speedup__note">Next fastest library's mean time divided by CodeGlyphX's, per scenario. The axis is logarithmic: each grid line is ten times the last.</figcaption>
-        </figure>
-      </section>
-      <section class="cgx-section" aria-labelledby="bench-per-{{ set.id }}">
+    <section class="cgx-section" aria-labelledby="comparison-overview">
         <div class="cgx-section__head">
-          <h2 id="bench-per-{{ set.id }}">Per scenario</h2>
-          <p>Mean time per operation for every library measured, on a linear scale per scenario. Shorter is faster.</p>
+            <h2 id="comparison-overview">What the results show</h2>
         </div>
-        <div class="cgx-bench-grid">
-          {{~ for s in set.scenarios ~}}
-          <article class="cgx-bench-card">
-            <h3>{{ s.scenario }} <span>{{ s.benchmark }}</span></h3>
-            <ul class="cgx-bench-bars">
-              {{~ for b in s.bars ~}}
-              <li{{ if b.cgx }} class="is-cgx"{{ end }}><span class="cgx-bench-bars__vendor">{{ b.vendor }}</span><span class="cgx-bench-bars__track"><span class="cgx-bench-bars__lane"><span class="cgx-bench-bars__bar" style="width: {{ b.pct }}%"></span></span><span class="cgx-bench-bars__time">{{ b.mean }}{{ if b.factor != "" }} <em>{{ b.factor }}</em>{{ end }}</span></span></li>
-              {{~ end ~}}
-            </ul>
-          </article>
-          {{~ end ~}}
-        </div>
-        <p class="cgx-bench-legend"><span><i class="is-cgx" aria-hidden="true"></i>CodeGlyphX</span><span><i aria-hidden="true"></i>Other libraries, with their time as a multiple of CodeGlyphX's</span></p>
-      </section>
-    </div>
-    {{~ end ~}}
-    </div>
-    <section class="cgx-section" aria-labelledby="bench-summary">
-        <div class="cgx-section__head">
-            <h2 id="bench-summary">{{ b.sections.summary.title }}</h2>
-            <p>{{ b.sections.summary.description }}</p>
-        </div>
-        <div class="benchmark-table-container" data-benchmark-summary>
-            <p class="loading-text">Loading benchmark data...</p>
-        </div>
-    </section>
-
-    <section class="cgx-section" aria-labelledby="bench-details">
-        <div class="cgx-section__head">
-            <h2 id="bench-details">{{ b.sections.details.title }}</h2>
-            <p>{{ b.sections.details.description }}</p>
-        </div>
-        <div class="benchmark-details" data-benchmark-details>
-            <p class="loading-text">Loading detailed results...</p>
-        </div>
-    </section>
-
-    <section class="cgx-section" aria-labelledby="bench-baseline">
-        <div class="cgx-section__head">
-            <h2 id="bench-baseline">{{ b.sections.baseline.title }}</h2>
-            <p>{{ b.sections.baseline.description }}</p>
-        </div>
-        <div class="benchmark-baseline" data-benchmark-baseline>
-            <p class="loading-text">Loading baseline data...</p>
-        </div>
-    </section>
-
-    <section class="cgx-section" aria-labelledby="bench-env">
-        <div class="cgx-section__head">
-            <h2 id="bench-env">{{ b.sections.environment.title }}</h2>
-        </div>
-        <div class="benchmark-environment" data-benchmark-environment>
-            <p class="loading-text">Loading environment info...</p>
-        </div>
-    </section>
-
-    <section class="cgx-section" aria-labelledby="bench-about">
-        <div class="cgx-section__head">
-            <h2 id="bench-about">{{ b.about.title }}</h2>
-        </div>
-        <div class="cgx-method">
-            {{~ for card in b.about.cards ~}}
-            <div class="cgx-method__item">
-                <h3>{{ card.title }}</h3>
-                {{~ if card.paragraphs ~}}{{ for paragraph in card.paragraphs }}{{ paragraph }}{{ end }}{{~ end ~}}
-                {{~ if card.list ~}}<ul>{{ for item in card.list }}<li>{{ item }}</li>{{ end }}</ul>{{~ end ~}}
+        <div class="cgx-bench-overview">
+            <div class="cgx-bench-overview__text">
+                {{ include "shortcodes/comparison-summary" }}
+                <p>The January reports use older versions and different QR result APIs. Their rankings do not support a current comparison. This page uses the qualified October evidence.</p>
             </div>
-            {{~ end ~}}
+            {{ include "bench-recognition" }}
         </div>
     </section>
-
-    <section class="cgx-section benchmark-notes" aria-labelledby="bench-notes">
+    <section class="cgx-section" aria-labelledby="recognition">
         <div class="cgx-section__head">
-            <h2 id="bench-notes">{{ b.notes.title }}</h2>
+            <h2 id="recognition">Image recognition</h2>
+            <p>{{ copy.recognition }}</p>
         </div>
-        <div class="cgx-prose" data-benchmark-notes>
-            <ul>{{~ for item in b.notes.items ~}}<li>{{ item }}</li>{{~ end ~}}</ul>
+        <div class="table-scroll" role="region" aria-label="Image recognition results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Exact payload sets on 267 positive images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Original source</th><th scope="col">Current</th><th scope="col">Correct</th><th scope="col">Unsupported images</th></tr></thead>
+                <tbody>{{ for row in comparison.recognition }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }}/{{ row.positives }}</td><td>{{ row.correct }}/{{ row.positives }}</td><td>{{ row.percent }}%</td><td>{{ row.unsupported }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ copy.recognitionLimit }}</p>
+        <details class="cgx-disclosure">
+            <summary>Recognition by format</summary>
+            <div class="table-scroll" role="region" aria-label="Recognition by format" tabindex="0">
+                <table class="cgx-table">
+                    <caption>Correct images by format, including unsupported formats</caption>
+                    <thead><tr><th scope="col">Format</th><th scope="col">Images</th><th scope="col">CodeGlyphX</th><th scope="col">ZXing.Net</th><th scope="col">ZXing-C++</th></tr></thead>
+                    <tbody>{{ for row in comparison.formats }}<tr><th scope="row">{{ row.format }}</th><td>{{ row.images }}</td>{{ for count in row.correct }}<td>{{ count }}</td>{{ end }}</tr>{{ end }}</tbody>
+                </table>
+            </div>
+            {{ for note in comparison.format_scope_notes }}<p>{{ note }}</p>{{ end }}
+        </details>
+        {{ if comparison.supplemental_pdf417.size > 0 }}
+        <h3>Supplemental PDF417 images</h3>
+        <p>A separate check uses all 38 PNG images with text oracles from the same three upstream PDF417 folders outside the 18 frozen cases. The selection was fixed before the first supplemental outcomes. {{ comparison.supplemental_pdf417_limit }} It does not replace the 267-positive-image ranking or establish performance on an independent dataset.</p>
+        <div class="table-scroll" role="region" aria-label="Supplemental PDF417 results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Exact payload sets on 38 additional PDF417 images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Previous pass</th><th scope="col">Current pass</th><th scope="col">Unexpected-output images</th></tr></thead>
+                <tbody>{{ for row in comparison.supplemental_pdf417 }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }}/{{ row.images }}</td><td>{{ row.correct }}/{{ row.images }}</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        {{ if comparison.supplemental_pdf417_timing_changes != "" }}<p>Timing-sensitive changes: {{ comparison.supplemental_pdf417_timing_changes }}. The previous scan exhausted its recognition budget, so the changed outcome does not establish a decoder accuracy gain.</p>{{ end }}
+        <p><a href="/comparisons/evidence/pdf417-supplemental-manifest.json">Image manifest</a> · <a href="/comparisons/evidence/pdf417-supplemental-current.json">Current outcomes</a> · <a href="/comparisons/evidence/pdf417-supplemental-previous.json">Previous outcomes</a></p>
+        {{ end }}
+        <h3>Negative images and completed scans</h3>
+        <p>{{ copy.negatives }}</p>
+        {{ if comparison.negative_followup }}<p>{{ comparison.negative_followup }}</p>{{ end }}
+        <div class="table-scroll" role="region" aria-label="Main corpus negative results" tabindex="0">
+            <table class="cgx-table">
+                <caption>The 12 main-corpus negative images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Correct rejections</th><th scope="col">Unexpected output</th><th scope="col">Inconclusive</th></tr></thead>
+                <tbody>{{ for row in comparison.recognition }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.main_rejected }}/12</td><td>{{ row.main_unexpected }}</td><td>{{ row.main_inconclusive }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <div class="table-scroll" role="region" aria-label="Negative image results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Supplementary 25-image negative corpus; six overlap with the 12 main-corpus negatives</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Correct rejections</th><th scope="col">Unexpected output</th><th scope="col">Inconclusive</th></tr></thead>
+                <tbody>{{ for row in comparison.recognition }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.rejected }}/25</td><td>{{ row.unexpected }}</td><td>{{ row.inconclusive }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+    {{ if comparison.additional_photographs }}
+    {{ photo_set = comparison.additional_photographs }}
+    <section class="cgx-bench-study" aria-labelledby="code128-photographs">
+        <h3 id="code128-photographs">Additional Code128 and DataBar photographs</h3>
+        <p>{{ photo_set.scope }}</p><p>{{ photo_set.limits }}</p>
+        <div class="table-scroll" role="region" aria-label="Additional photograph results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Separate 52-photo development and regression set</caption>
+                <thead><tr><th scope="col">Family</th><th scope="col">Reader</th><th scope="col">Previous correct</th><th scope="col">Current correct</th><th scope="col">Images</th><th scope="col">Unexpected</th><th scope="col">Inconclusive</th></tr></thead>
+                <tbody>{{ for row in photo_set.rows }}<tr><th scope="row">{{ row.family }}</th><td>{{ row.engine }}</td><td>{{ row.before }}</td><td>{{ row.correct }}</td><td>{{ row.images }}</td><td>{{ row.unexpected }}</td><td>{{ row.inconclusive }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>CodeGlyphX gains {{ photo_set.gained.size }} images, loses {{ photo_set.lost.size }}, and adds unexpected outputs on {{ photo_set.new_unexpected.size }} images in this set.</p>
+        <p><a href="/comparisons/evidence/{{ photo_set.manifest }}">Inputs</a> · <a href="/comparisons/evidence/{{ photo_set.before_file }}">Previous outcomes</a> · <a href="/comparisons/evidence/{{ photo_set.current_file }}">Current outcomes</a></p>
+    </section>
+    {{ end }}
+    </section>
+    <section class="cgx-section" aria-labelledby="generation">
+        <div class="cgx-section__head">
+            <h2 id="generation">QR generation and decode timing</h2>
+            <p>{{ copy.generation }}</p>
+        </div>
+        <p>{{ copy.adapters }}</p>
+        <p>{{ copy.allocation }}</p>
+        <div class="cgx-bench-domains">
+            <span class="cgx-tabs-label" id="bench-domain-label">CPU cache domain</span>
+            <div class="cgx-tabs" role="tablist" aria-labelledby="bench-domain-label" data-cgx-tabs>
+                {{~ for domain in comparison.domains ~}}<button type="button" class="cgx-tab" role="tab" id="bench-tab-{{ domain.id }}" aria-controls="bench-domain-{{ domain.id }}" aria-selected="{{ if for.first }}true{{ else }}false{{ end }}" tabindex="{{ if for.first }}0{{ else }}-1{{ end }}"><span class="cgx-tab__key" aria-hidden="true"></span>{{ domain.label }} <span class="cgx-tab__count">{{ domain.affinity }}</span></button>{{~ end ~}}
+            </div>
+        </div>
+        {{~ for domain in comparison.domains; chart = bench.domains[for.index] ~}}
+        <div class="cgx-bench-domain" role="tabpanel" id="bench-domain-{{ domain.id }}" aria-labelledby="bench-tab-{{ domain.id }}" tabindex="0">
+            <p class="cgx-bench-domain__meta">{{ domain.label }} · affinity {{ domain.affinity }} · 96 MiB L3</p>
+            <h3>{{ domain.label }} generation</h3>
+            <p>Median µs per output for each engine, on a linear scale per output and payload; shorter is faster. Each value normalizes a 100-output batch.</p>
+            <div class="cgx-bench-grid">
+                {{~ for s in chart.generation ~}}
+                <article class="cgx-bench-card">
+                    <h4>{{ s.operation }} <span>{{ s.payload }}</span></h4>
+                    <ul class="cgx-bench-bars">
+                        {{~ for b in s.bars ~}}
+                        <li{{ if b.cgx }} class="is-cgx"{{ end }}><span class="cgx-bench-bars__vendor">{{ b.engine }}</span><span class="cgx-bench-bars__track"><span class="cgx-bench-bars__lane"><span class="cgx-bench-bars__bar" style="width: {{ b.pct }}%"></span></span><span class="cgx-bench-bars__time">{{ b.median }} µs</span></span></li>
+                        {{~ end ~}}
+                    </ul>
+                </article>
+                {{~ end ~}}
+            </div>
+            <p class="cgx-bench-legend"><span><i class="is-cgx" aria-hidden="true"></i>CodeGlyphX</span><span><i aria-hidden="true"></i>ZXing.Net, ZXing-C++ and QRCoder</span></p>
+            <p>Generation cells show median µs/output, P95 and min–max µs/output, then managed bytes/output. Each value normalizes a 100-output batch; it is not an individual-call latency distribution.</p>
+            <div class="table-scroll" role="region" aria-label="{{ domain.label }} generation results" tabindex="0">
+                <table class="cgx-table cgx-table--generation">
+                    <caption>{{ domain.label }} generation · 12 samples per lane · 3 warmups · all outliers retained</caption>
+                    <thead><tr><th scope="col">Output / payload</th><th scope="col">CodeGlyphX</th><th scope="col">ZXing.Net</th><th scope="col">ZXing-C++</th><th scope="col">QRCoder</th></tr></thead>
+                    <tbody>{{ for row in domain.generation }}<tr><th scope="row">{{ row.operation }}<br>{{ row.payload }}</th>{{ for cell in row.cells }}<td><strong>{{ cell.median }} µs</strong><br><span>P95 {{ cell.p95 }}</span><br><span>{{ cell.min }}–{{ cell.max }}</span><br><span>{{ cell.bytes }} B managed</span></td>{{ end }}</tr>{{ end }}</tbody>
+                </table>
+            </div>
+            <h3>{{ domain.label }} decoding</h3>
+            <p>{{ copy.decoding }}</p>
+            <figure class="cgx-bench-figure cgx-bench-figure--wide">
+                <figcaption class="cgx-bench-figure__title">Median ms per 19-image batch<span>Correct images shown beside each reader · shorter is faster</span></figcaption>
+                <ul class="cgx-bench-bars">
+                    {{~ for b in chart.decoding ~}}
+                    <li{{ if b.cgx }} class="is-cgx"{{ end }}><span class="cgx-bench-bars__vendor">{{ b.engine }}</span><span class="cgx-bench-bars__track"><span class="cgx-bench-bars__lane"><span class="cgx-bench-bars__bar" style="width: {{ b.pct }}%"></span></span><span class="cgx-bench-bars__time">{{ b.median }} ms <em>{{ b.correct }}/19</em></span></span></li>
+                    {{~ end ~}}
+                </ul>
+            </figure>
+            <div class="table-scroll" role="region" aria-label="{{ domain.label }} decode timing" tabindex="0">
+                <table class="cgx-table">
+                    <caption>{{ domain.label }} · milliseconds per 19-image batch · all samples retained</caption>
+                    <thead><tr><th scope="col">Reader</th><th scope="col">Median ms</th><th scope="col">P95 ms</th><th scope="col">Min–max ms</th><th scope="col">Mean managed MiB</th><th scope="col">Correct images</th></tr></thead>
+                    <tbody>{{ for row in domain.decoding }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.median }}</td><td>{{ row.p95 }}</td><td>{{ row.min }}–{{ row.max }}</td><td>{{ row.managed_mib }}</td><td>{{ row.correct }}/19</td></tr>{{ end }}</tbody>
+                </table>
+            </div>
+        </div>
+        {{~ end ~}}
+    </section>
+    <section class="cgx-section" aria-labelledby="decoder-followups">
+        <div class="cgx-section__head">
+            <h2 id="decoder-followups">Decoder follow-ups</h2>
+            <p>Decoder changes measured after the full comparison, each with its own previous and current results, limits and evidence. Sections marked historical or retained keep the source they were measured on.</p>
+        </div>
+        {{~ capture followups ~}}
+    {{ if comparison.qr_finder_runs }}
+    {{ session_costs = comparison.qr_finder_runs }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
+    {{ if comparison.databar_thresholds }}
+    {{ session_costs = comparison.databar_thresholds }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
+    {{ if comparison.pdf417_grids }}
+    {{ session_costs = comparison.pdf417_grids }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
+    {{ if comparison.retail_digit_fits }}
+    {{ session_costs = comparison.retail_digit_fits }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
+    {{ if comparison.png_output }}
+    {{ include "shortcodes/png-output" }}
+    {{ session_costs = comparison.png_output }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
+    {{ if comparison.databar_separator_geometry }}
+    {{ session_costs = comparison.databar_separator_geometry }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
+    {{ if comparison.code128_photos }}
+    {{ session_costs = comparison.code128_photos }}
+    {{ include "shortcodes/decoder-session-costs" }}
+    {{ end }}
+    {{ session_costs = comparison.dpm_workspace }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.linear_run_workspace }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.databar_expanded_workspace }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.databar14_workspace }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.databar_module_runs }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.component_coordinates }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.databar_recovery_buffers }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.databar_character_recovery }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.qr_component_mask }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.qr_foreground_bounds }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.qr_component_budget }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.aztec_probe_cache }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.pdf417_segment_cache }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ session_costs = comparison.retained_contexts }}
+    {{ if session_costs }}{{ include "shortcodes/decoder-session-costs" }}{{ end }}
+    {{ if comparison.dpm_window_means }}
+    <section class="cgx-bench-study" aria-labelledby="dpm-window-means">
+        <h3 id="dpm-window-means">{{ if comparison.dpm_window_means.historical }}Historical DPM local-window means{{ else }}DPM local-window means{{ end }}</h3>
+        {{ if comparison.dpm_window_means.historical }}<p>These measurements retain their original source <code class="cgx-bench-source">{{ comparison.dpm_window_means.source }}</code> and use fresh decoder contexts per sample. Current retained-context costs appear above.</p>{{ end }}
+        <p>{{ comparison.dpm_window_means.changes }}</p>
+        <p>{{ comparison.dpm_window_means.contracts }}</p>
+        <p>{{ comparison.dpm_window_means.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="DPM window cost and negative completion" tabindex="0">
+            <table class="cgx-table">
+                <caption>Frozen fabric and texture negatives · all measured samples retained</caption>
+                <thead><tr><th scope="col">Image</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Allocation reduction</th><th scope="col">Completed negatives / 1</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.dpm_window_means.costs }}<tr><th scope="row">{{ row.kind }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.allocation_reduction }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <details class="cgx-disclosure">
+            <summary>Retail controls for DPM window means</summary>
+            <div class="table-scroll" role="region" aria-label="Retail controls for DPM window means" tabindex="0">
+                <table class="cgx-table">
+                    <caption>Original retail requests, hints and oracles</caption>
+                    <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                    <tbody>{{ for row in comparison.dpm_window_means.controls }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+                </table>
+            </div>
+        </details>
+        <p>{{ comparison.dpm_window_means.limits }}</p>
+        <p><a href="/comparisons/evidence/dpm-window-means-proof.json">Local-window proof</a> · <a href="/comparisons/evidence/dpm-window-means-mask-equivalence.json">Pixel equivalence</a> · <a href="/comparisons/evidence/dpm-window-means-fabric-ccd0-result.json">Fabric CCD0 samples</a> · <a href="/comparisons/evidence/dpm-window-means-fabric-ccd1-result.json">Fabric CCD1 samples</a> · <a href="/comparisons/evidence/dpm-window-means-texture-ccd0-result.json">Texture CCD0 samples</a> · <a href="/comparisons/evidence/dpm-window-means-texture-ccd1-result.json">Texture CCD1 samples</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.dpm_gray8 }}
+    <section class="cgx-bench-study" aria-labelledby="dpm-gray8">
+        <h3 id="dpm-gray8">{{ if comparison.dpm_gray8.historical }}Historical Data Matrix grayscale retries{{ else }}Data Matrix grayscale retries{{ end }}</h3>
+        {{ if comparison.dpm_gray8.historical }}<p>These grayscale retry measurements belong to source <code class="cgx-bench-source">{{ comparison.dpm_gray8.source }}</code>. Current decoding costs appear separately.</p>{{ end }}
+        <p>{{ comparison.dpm_gray8.changes }}</p>
+        <p>{{ comparison.dpm_gray8.contracts }}</p>
+        <p>{{ comparison.dpm_gray8.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Grayscale retry cost and negative completion" tabindex="0">
+            <table class="cgx-table">
+                <caption>One frozen texture negative · all measured samples retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Allocation reduction</th><th scope="col">Completed negatives / 1</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.dpm_gray8.costs }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.allocation_reduction }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <details class="cgx-disclosure">
+            <summary>Retail controls for grayscale retries</summary>
+            <div class="table-scroll" role="region" aria-label="Retail controls for grayscale retries" tabindex="0">
+                <table class="cgx-table">
+                    <caption>Original retail requests, hints and oracles</caption>
+                    <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                    <tbody>{{ for row in comparison.dpm_gray8.controls }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+                </table>
+            </div>
+        </details>
+        <p>{{ comparison.dpm_gray8.limits }}</p>
+        <p><a href="/comparisons/evidence/dpm-gray8-proof.json">Grayscale retry proof</a> · <a href="/comparisons/evidence/dpm-gray8-mask-equivalence.json">Pixel equivalence</a> · <a href="/comparisons/evidence/dpm-gray8-texture-ccd0-result.json">CCD0 samples</a> · <a href="/comparisons/evidence/dpm-gray8-texture-ccd1-result.json">CCD1 samples</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.itf_recovery.cases }}
+    <section class="cgx-bench-study" aria-labelledby="itf-run-recovery">
+        <h3 id="itf-run-recovery">{{ if comparison.itf_recovery.historical }}Historical {{ end }}ITF complete-symbol recovery</h3>
+        {{ if comparison.itf_recovery.historical }}<p>These diagnostics and paired costs belong to source <code class="cgx-bench-source">{{ comparison.itf_recovery.source }}</code>. They describe the earlier ITF change; current corpus, retail and whole-image measurements are separate.</p>{{ end }}
+        <p>{{ comparison.itf_recovery.changes }}</p>
+        <p>{{ comparison.itf_recovery.scope }}</p>
+        <p>The actual previous and current Codabar validators agree on {{ comparison.itf_recovery.cases }} decisions and exact fit outputs across printing bias, rounding, framing, direction and cancellation. Two independent ITF images and direction, polarity, framing and ITF-14 checksum regressions pass through public entrypoints.</p>
+        <div class="table-scroll" role="region" aria-label="ITF recognition results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Same twelve ITF positives and thirty-one negative images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Previous → current positives / 12</th><th scope="col">Previous → current negative rejections / 31</th><th scope="col">Current unexpected negatives</th></tr></thead>
+                <tbody>{{ for row in comparison.itf_recovery.outcomes }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.previous_positive }} → {{ row.current_positive }}</td><td>{{ row.previous_negative }} → {{ row.current_negative }}</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>Paired cost for the same twelve ITF images. Both binaries use preloaded RGBA32, identical hints and 1500 ms allowances; 3 warmups and 12 rotated samples per engine and domain. Input loading and outcome evaluation are excluded.</p>
+        <div class="table-scroll" role="region" aria-label="ITF paired image cost results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Previous → current · every sample retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Mean correct / 12</th></tr></thead>
+                <tbody>{{ for row in comparison.itf_recovery.cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_mib }} → {{ row.current_mib }}</td><td>{{ row.previous_correct }} → {{ row.current_correct }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.itf_recovery.limits }}</p>
+        <p><a href="/comparisons/evidence/itf-run-recovery-proof.json">ITF proof, outcomes and every timing sample</a> · <a href="/comparisons/evidence/itf-codabar-model-equivalence.json">Codabar width-model compatibility</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.code39_recovery.cases }}
+    <section class="cgx-bench-study" aria-labelledby="code39-run-recovery">
+        <h3 id="code39-run-recovery">{{ if comparison.code39_recovery.historical }}Historical {{ end }}Code 39 clipped and reversed scanlines</h3>
+        {{ if comparison.code39_recovery.historical }}<p>These diagnostics and paired costs belong to source <code class="cgx-bench-source">{{ comparison.code39_recovery.source }}</code>. They describe the earlier Code 39 change; current corpus and whole-image measurements are separate.</p>{{ end }}
+        <p>{{ comparison.code39_recovery.changes }}</p>
+        <p>{{ comparison.code39_recovery.scope }}</p>
+        <p>The actual previous and current width normalizers agree on {{ comparison.code39_recovery.cases }} decisions, including reversed run lists. Independent images and direction, polarity, framing and short-checksum regressions pass through public entrypoints.</p>
+        <div class="table-scroll" role="region" aria-label="Code 39 recognition results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Same twelve Code 39 positives and thirty-one negative images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Previous → current positives / 12</th><th scope="col">Previous → current negative rejections / 31</th><th scope="col">Current unexpected negatives</th></tr></thead>
+                <tbody>{{ for row in comparison.code39_recovery.outcomes }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.previous_positive }} → {{ row.current_positive }}</td><td>{{ row.previous_negative }} → {{ row.current_negative }}</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>Paired cost for the same twelve Code 39 images. Both binaries use preloaded RGBA32, identical hints and 1500 ms allowances; 3 warmups and 12 rotated samples per engine and domain. Input loading and outcome evaluation are excluded.</p>
+        <div class="table-scroll" role="region" aria-label="Code 39 paired image cost results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Previous → current · every sample retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Mean correct / 12</th></tr></thead>
+                <tbody>{{ for row in comparison.code39_recovery.cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_mib }} → {{ row.current_mib }}</td><td>{{ row.previous_correct }} → {{ row.current_correct }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.code39_recovery.limits }}</p>
+        <p><a href="/comparisons/evidence/code39-run-recovery-proof.json">Code 39 proof, outcomes and every timing sample</a> · <a href="/comparisons/evidence/code39-normalizer-equivalence.json">Normalizer equivalence</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.datamatrix_spatial.bounds_cases }}
+    <section class="cgx-bench-study" aria-labelledby="datamatrix-spatial-search">
+        <h3 id="datamatrix-spatial-search">{{ if comparison.datamatrix_spatial.historical }}Historical Data Matrix image-search cost{{ else }}Data Matrix image-search cost{{ end }}</h3>
+        {{ if comparison.datamatrix_spatial.historical }}<p>These checks and costs belong to source <code class="cgx-bench-source">{{ comparison.datamatrix_spatial.source }}</code>. They describe the earlier Data Matrix change. Current corpus and whole-image costs are measured separately on the current binary.</p>{{ end }}
+        <p>{{ comparison.datamatrix_spatial.changes }}</p>
+        <p>The production bounding-box method matches a full-raster reference in {{ comparison.datamatrix_spatial.bounds_cases }} cases. Ordered component areas and corners match the retained binary in {{ comparison.datamatrix_spatial.component_cases }} cases, including equal-area ties. Cancellation and ambient deadline checks also pass.</p>
+        <p>{{ comparison.datamatrix_spatial.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Data Matrix texture image cost results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Previous → current · one unchanged texture negative · all measured samples retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Mean completed / 1</th></tr></thead>
+                <tbody>{{ for row in comparison.datamatrix_spatial.cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_mib }} → {{ row.current_mib }}</td><td>{{ row.previous_correct }} → {{ row.current_correct }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.datamatrix_spatial.selected_scope }}</p>
+        {{ for note in comparison.datamatrix_spatial.selected_notes }}<p>{{ note }}</p>{{ end }}
+        <p>{{ comparison.datamatrix_spatial.limits }}</p>
+        <p><a href="/comparisons/evidence/datamatrix-spatial-search-proof.json">Search proof and every measured outcome</a> · <a href="/comparisons/evidence/datamatrix-spatial-bounds-equivalence.json">Bounds equivalence</a> · <a href="/comparisons/evidence/datamatrix-components-current.json">Ordered component checks</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.pdf417_negative_completion.checks }}
+    <section class="cgx-bench-study" aria-labelledby="pdf417-negative-completion">
+        <h3 id="pdf417-negative-completion">{{ if comparison.pdf417_negative_completion.historical }}Historical PDF417 negative-search completion{{ else }}PDF417 negative-search completion{{ end }}</h3>
+        {{ if comparison.pdf417_negative_completion.historical }}<p>These measurements belong to source <code class="cgx-bench-source">{{ comparison.pdf417_negative_completion.source }}</code>. They describe the earlier PDF417 change. Current corpus, alternating negatives and whole-image costs are measured separately on the current binary.</p>{{ end }}
+        <p>{{ comparison.pdf417_negative_completion.changes }}</p>
+        <p>The cached and uncached fitters agree on {{ comparison.pdf417_negative_completion.checks }} decisions, including failed fits, wide runs and cache capacity pressure. Four module-entrypoint controls preserve offset symbols and macro metadata in both row orders.</p>
+        <p>{{ comparison.pdf417_negative_completion.notes }}</p>
+        <p>{{ comparison.pdf417_negative_completion.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="PDF417 negative-search cost results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Previous → current · three unchanged negatives · all measured samples retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Mean completed / 3</th></tr></thead>
+                <tbody>{{ for row in comparison.pdf417_negative_completion.cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_mib }} → {{ row.current_mib }}</td><td>{{ row.previous_correct }} → {{ row.current_correct }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.pdf417_negative_completion.limits }}</p>
+        <p><a href="/comparisons/evidence/pdf417-negative-completion-proof.json">Completion proof and every measured outcome</a> · <a href="/comparisons/evidence/pdf417-codeword-cache-equivalence.json">Fitter equivalence</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.maxicode_image.images }}
+    <section class="cgx-bench-study" aria-labelledby="maxicode-image-recognition">
+        <h3 id="maxicode-image-recognition">MaxiCode image recognition</h3>
+        <p>{{ if comparison.maxicode_image.correct == comparison.maxicode_image.before }}Both previous and current binaries decode the same six images correctly ({{ comparison.maxicode_image.correct }}/{{ comparison.maxicode_image.images }}).{{ else }}The same six images decode correctly: {{ comparison.maxicode_image.correct }}/{{ comparison.maxicode_image.images }}, versus {{ comparison.maxicode_image.before }}/{{ comparison.maxicode_image.images }} previously.{{ end }} Image bytes, format hints, payload oracles and the per-image deadline are unchanged.</p>
+        <p>The scanner verifies circular finder bands, samples the staggered module grid and uses the existing primary and secondary error correction. Focused checks cover planar rotation on a larger label, inverse polarity, damaged fixed markers and cropped bottom-up frames. The capability catalog reports one-symbol scanning without geometry.</p>
+        <p>{{ comparison.maxicode_image.text_contract }}</p>
+        <p>{{ comparison.maxicode_image.evidence }}</p>
+        <p>{{ comparison.maxicode_image.limits }} Fixture filenames do not establish coverage of every numeric encoding mode.</p>
+        <p><a href="/comparisons/evidence/maxicode-image-proof.json">Source hashes and search bounds</a> · <a href="/docs/symbol-capabilities/">Capability catalog</a> · <a href="/comparisons/evidence/candidate-corpus-final.json">Complete image outcomes</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.datamatrix_deadline.cases }}
+    <section class="cgx-bench-study" aria-labelledby="datamatrix-deadline-cost">
+        <h3 id="datamatrix-deadline-cost">Data Matrix deadline lookup</h3>
+        <p>Bounding-box search captures its fixed enclosing deadline once per synchronous call. Caller cancellation and the monotonic clock remain checked at every original row and pixel position. Pixel arithmetic, polarity, bounds, recognition allowances, format hints, payload oracles and scoring are unchanged.</p>
+        <p>The actual previous and current private methods agree on {{ comparison.datamatrix_deadline.cases }} cases, with zero mismatches. The diagnostic covers RGBA and BGRA pixels, transparency, padded strides, inversion, blank, solid and random images, live and expired ambient clocks, and cancelled tokens.</p>
+        <p>{{ comparison.datamatrix_deadline.limits }}</p>
+        <p><a href="/comparisons/evidence/datamatrix-box-equivalence.json">Download the decision diagnostic</a>. Current whole-image timings and completion counts are reported below.</p>
+        <p>{{ comparison.datamatrix_deadline.cost_scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Data Matrix bounding-box kernel cost table" tabindex="0">
+            <table class="cgx-table">
+                <caption>Isolated bounding-box kernel diagnostic</caption>
+                <thead><tr><th>Domain</th><th>Previous ms</th><th>Current ms</th><th>Current / previous</th><th>Previous managed bytes</th><th>Current managed bytes</th></tr></thead>
+                <tbody>{{ for row in comparison.datamatrix_deadline.cost }}<tr><td>{{ row.domain }}</td><td>{{ row.previous_ms }}</td><td>{{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_bytes }}</td><td>{{ row.current_bytes }}</td></tr>{{ end }}</tbody>
+            </table>
         </div>
     </section>
-
-    <section class="cgx-section" aria-labelledby="bench-run">
-        <div class="cgx-section__head">
-            <h2 id="bench-run">{{ b.run.title }}</h2>
-            <p>{{ b.run.intro }}</p>
+    {{ end }}
+    {{ if comparison.qr_alignment.score_cases }}
+    <section class="cgx-bench-study" aria-labelledby="qr-alignment-scoring">
+        <h3 id="qr-alignment-scoring">QR alignment scoring</h3>
+        <p>On .NET 8 and later, alignment scoring stops after four mismatches in its 25-position pattern because that candidate cannot reach the existing 22/25 acceptance threshold. Accepted scores, candidate order, selected centers and first-best ties remain unchanged. Recognition allowances, format hints, payload oracles and scoring are unchanged.</p>
+        <p>The actual previous and current private methods agree on {{ comparison.qr_alignment.score_cases }} scoring cases, including {{ comparison.qr_alignment.accepted_scores }} accepted scores, and {{ comparison.qr_alignment.finder_cases }} complete finder searches, including {{ comparison.qr_alignment.accepted_finders }} successful searches. There are zero decision or selected-center mismatches. The diagnostic includes acceptance-boundary patterns, inversion, global and adaptive thresholds, fractional coordinates, transformed and edge patterns, noise and first-perfect ties.</p>
+        <p>{{ comparison.qr_alignment.limits }}</p>
+        <p><a href="/comparisons/evidence/qr-alignment-equivalence.json">Decision diagnostic and exact core hashes</a>. Current whole-image timings and completion counts appear in the <a href="#paired-decoding">paired decoding comparison</a>.</p>
+    </section>
+    {{ end }}
+    {{ if comparison.pdf417_cost.size > 0 }}
+    <section class="cgx-bench-study" aria-labelledby="pdf417-search-cost">
+        <h3 id="pdf417-search-cost">{{ if comparison.pdf417_cost_historical }}Historical {{ end }}PDF417 search cost</h3>
+        {{ if comparison.pdf417_cost_historical }}<p>These retained measurements qualify the earlier PDF417 optimization at source <code class="cgx-bench-source">{{ comparison.pdf417_cost_source }}</code>. They do not measure the current candidate.</p>{{ end }}
+        <p>These 31 fixed negative images use an explicit PDF417 hint to isolate its search cost. Previous and current binaries receive identical preloaded pixels and options. Three warmups precede twelve rotated measurements on each cache domain; all samples are retained. Loading and result evaluation are excluded.</p>
+        <div class="table-scroll" role="region" aria-label="PDF417 search cost table" tabindex="0">
+            <table class="cgx-table">
+                <caption>{{ if comparison.pdf417_cost_historical }}Earlier {{ end }}paired PDF417 negative-search batch: 31 requests</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Before ms</th><th scope="col">After ms</th><th scope="col">After / before</th><th scope="col">Before completed</th><th scope="col">After completed</th><th scope="col">Before managed MiB</th><th scope="col">After managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.pdf417_cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }}</td><td>{{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_correct }}/31; {{ row.previous_unfinished }}/12 batches unfinished</td><td>{{ row.current_correct }}/31; {{ row.current_unfinished }}/12 batches unfinished</td><td>{{ row.previous_managed_mib }}</td><td>{{ row.current_managed_mib }}</td></tr>{{ end }}</tbody>
+            </table>
         </div>
-        <pre class="code-block" data-label="Run-Benchmarks-Compare.ps1"><code class="language-powershell">{{ b.run.commands | html.escape }}</code></pre>
+        <p>Completed counts show the range across measured batches. Neither binary returns a false positive here. Unfinished searches remain inconclusive. This diagnostic does not replace all-format negative completion. Shared-host measurements do not establish portable latency; managed allocation excludes native memory.</p>
+        <p><a href="/comparisons/evidence/pdf417-cost-ccd0-result.json">CCD0 samples</a> · <a href="/comparisons/evidence/pdf417-cost-ccd1-result.json">CCD1 samples</a> · <a href="/comparisons/evidence/pdf417-cost-negative-manifest.json">Unchanged inputs</a> · <a href="/comparisons/evidence/pdf417-cost-negative-outcomes.json">Separate diagnostic outcomes</a>.</p>
+    </section>
+    {{ end }}
+    {{ if comparison.retail.size > 0 }}
+    <section class="cgx-bench-study" aria-labelledby="retail-recovery">
+        <h3 id="retail-recovery">{{ if comparison.retail_historical }}Historical {{ end }}retail recovery and search cost</h3>
+        {{ if comparison.retail_historical }}<p>Diagnostics and paired costs in this section belong to source <code class="cgx-bench-source">{{ comparison.retail_source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
+        {{ if comparison.retail_changes != "" }}<p>{{ comparison.retail_changes }}</p>{{ end }}
+        <p>The 87 positive requests reuse the frozen retail images. They isolate the changed recovery behavior and do not add independent images to the recognition ranking. Each of 31 fixed negative images is also scanned with EAN, UPC-A and UPC-E hints: 93 requests, rather than 93 independent images.</p>
+        <div class="table-scroll" role="region" aria-label="Retail positive diagnostics" tabindex="0">
+            <table class="cgx-table">
+                <caption>Exact payload sets on 87 retail requests</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Previous</th><th scope="col">Current</th><th scope="col">Current unexpected-output images</th></tr></thead>
+                <tbody>{{ for row in comparison.retail }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.positive_before }}/87</td><td>{{ row.positive }}/87</td><td>{{ row.positive_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <div class="table-scroll" role="region" aria-label="Retail negative diagnostics" tabindex="0">
+            <table class="cgx-table">
+                <caption>Completed rejection on 93 requests across 31 negative images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Previous</th><th scope="col">Current</th><th scope="col">Current unexpected output</th><th scope="col">Current inconclusive</th></tr></thead>
+                <tbody>{{ for row in comparison.retail }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.negative_before }}/93</td><td>{{ row.negative }}/93</td><td>{{ row.negative_unexpected }}</td><td>{{ row.inconclusive }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>A separate measurement records the search cost of nine prespecified requests: noise 03, stripes 14 and texture 19, each with three retail-family hints. Previous and current binaries receive identical preloaded pixels and options in separate assembly contexts. Loading and result evaluation are excluded. Three warmups precede twelve rotated samples, with Normal priority, fixed affinity and all outliers retained.</p>
+        <div class="table-scroll" role="region" aria-label="Retail recovery cost" tabindex="0">
+            <table class="cgx-table">
+                <caption>Nine-request batches; mean managed allocation excludes native memory</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Previous / current median ms</th><th scope="col">Latency ratio</th><th scope="col">Previous / current managed MiB</th><th scope="col">Allocation ratio</th><th scope="col">Previous / current correct</th></tr></thead>
+                <tbody>{{ for row in comparison.retail_cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} / {{ row.current_ms }}</td><td>{{ row.latency_ratio }}×</td><td>{{ row.before_mib }} / {{ row.current_mib }}</td><td>{{ row.allocation_ratio }}×</td><td>{{ row.before_correct }}/9 / {{ row.current_correct }}/9</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>Correct-request counts accompany these costs. Unexpected outputs and unfinished scans remain in the raw samples. Shared-host measurements do not establish portable speed or a population false-positive rate.</p>
+        {{ if comparison.retail_positive_cost.size > 0 }}
+        <p>{{ comparison.retail_positive_cost_scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Retail positive paired image cost results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Same 87 retail positives · previous → current · every measured sample retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Mean correct / 87</th></tr></thead>
+                <tbody>{{ for row in comparison.retail_positive_cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.latency_ratio }}×</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        {{ if comparison.retail_extrema_reuse }}
+        <p>Retail thresholding reuses sliding minima and maxima across adjacent cutoffs while preserving all eight binary hypotheses and their order. The actual previous and current binarizers agree on {{ comparison.retail_extrema_reuse.masks }} masks and {{ comparison.retail_extrema_reuse.pixels }} pixel decisions across {{ comparison.retail_extrema_reuse.rows }} fixed-image and seeded diagnostic rows. Precancelled and expired-budget calls abort. This is deterministic equivalence evidence on those inputs.</p>
+        <p><a href="/comparisons/evidence/retail-extrema-equivalence.json">Extrema equivalence proof</a> · <a href="/comparisons/evidence/historical-retail-row-recovery-proof.json">Earlier photograph-recovery proof</a>. The earlier photograph gains belong to their recorded source.</p>
+        {{ else }}
+        <p>Three independent EAN photographs pass in both orientations and polarities. Lone-row and invalid-checksum inputs remain rejected. These fixtures informed the changes and are part of the frozen corpus.</p>
+        {{ end }}
+        <p><a href="/comparisons/evidence/retail-row-recovery-proof.json">Retail recovery and cost proof</a> · <a href="/comparisons/evidence/retail-positive-cost-ccd0-result.json">CCD0 positive cost samples</a> · <a href="/comparisons/evidence/retail-positive-cost-ccd1-result.json">CCD1 positive cost samples</a></p>
+        {{ end }}
+        <p><a href="/comparisons/evidence/retail-positive-diagnostic.json">Positive requests</a> · <a href="/comparisons/evidence/retail-negative-diagnostic.json">Negative requests</a> · <a href="/comparisons/evidence/retail-negative-current.json">Current negative outcomes</a> · <a href="/comparisons/evidence/retail-cost-ccd0-result.json">CCD0 raw cost samples</a> · <a href="/comparisons/evidence/retail-cost-ccd1-result.json">CCD1 raw cost samples</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.databar_tilted }}
+    <section class="cgx-bench-study" aria-labelledby="databar-tilted">
+        <h3 id="databar-tilted">{{ if comparison.databar_tilted.historical }}Historical {{ end }}GS1 DataBar tilted photographs</h3>
+        {{ if comparison.databar_tilted.historical }}<p>These retained recovery and paired costs belong to source <code class="cgx-bench-source">{{ comparison.databar_tilted.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
+        <p>{{ comparison.databar_tilted.changes }}</p>
+        <p>{{ comparison.databar_tilted.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Tilted DataBar recognition results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Unchanged RSS-14 family corpus: 12 images</caption>
+                <thead><tr><th scope="col">Engine</th><th scope="col">Previous correct</th><th scope="col">Current correct</th><th scope="col">Unexpected images</th></tr></thead>
+                <tbody>{{ for row in comparison.databar_tilted.engines }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }}/12</td><td>{{ row.correct }}/12</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.databar_tilted.cost_scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Tilted DataBar paired search costs" tabindex="0">
+            <table class="cgx-table">
+                <caption>Paired DataBar search costs: previous → current; every measured outcome retained</caption>
+                <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.databar_tilted.costs }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.databar_tilted.limits }}</p>
+        <p><a href="/comparisons/evidence/databar-tilted-separator-proof.json">Recovery and regression proof</a> · <a href="/comparisons/evidence/databar14-positive-manifest.json">Positive inputs</a> · <a href="/comparisons/evidence/databar14-negative-manifest.json">Negative inputs</a> · <a href="/comparisons/evidence/databar-tilted-positive-ccd0-result.json">CCD0 positive samples</a> · <a href="/comparisons/evidence/databar-tilted-positive-ccd1-result.json">CCD1 positive samples</a> · <a href="/comparisons/evidence/databar-tilted-negative-ccd0-result.json">CCD0 negative samples</a> · <a href="/comparisons/evidence/databar-tilted-negative-ccd1-result.json">CCD1 negative samples</a></p>
+    </section>
+    {{ end }}
+
+    {{ if comparison.databar14_recovery }}
+    <section class="cgx-bench-study" aria-labelledby="databar14-recovery">
+        <h3 id="databar14-recovery">{{ if comparison.databar14_recovery.historical }}Historical {{ end }}GS1 DataBar-14 character pitch recovery</h3>
+        {{ if comparison.databar14_recovery.historical }}<p>Diagnostics and paired costs in this section belong to source <code class="cgx-bench-source">{{ comparison.databar14_recovery.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
+        <p>{{ comparison.databar14_recovery.changes }}</p>
+        <p>{{ comparison.databar14_recovery.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="DataBar-14 positive diagnostics" tabindex="0">
+            <table class="cgx-table"><caption>Same twelve DataBar-14 images</caption>
+                <thead><tr><th scope="col">Reader</th><th scope="col">Previous correct / 12</th><th scope="col">Current correct / 12</th><th scope="col">Current unexpected output</th></tr></thead>
+                <tbody>{{ for row in comparison.databar14_recovery.rows }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }}</td><td>{{ row.current }}</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.databar14_recovery.cost_scope }}</p>
+        <div class="table-scroll" role="region" aria-label="DataBar-14 paired decoding cost" tabindex="0">
+            <table class="cgx-table"><caption>Previous → current · twelve-image batches · every measured sample retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Correct / 12</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.databar14_recovery.cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}×</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p><a href="/comparisons/evidence/databar14-run-recovery-proof.json">DataBar-14 recovery proof</a> · <a href="/comparisons/evidence/databar14-positive-manifest.json">Positive requests</a> · <a href="/comparisons/evidence/databar14-negative-manifest.json">Negative requests</a> · <a href="/comparisons/evidence/databar14-cost-ccd0-result.json">CCD0 samples</a> · <a href="/comparisons/evidence/databar14-cost-ccd1-result.json">CCD1 samples</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.qr_exact_grid.images }}
+    <section class="cgx-bench-study" aria-labelledby="qr-exact-grid-recovery">
+        <h3 id="qr-exact-grid-recovery">{{ if comparison.qr_exact_grid.historical }}Historical {{ end }}exact QR raster recovery</h3>
+        {{ if comparison.qr_exact_grid.historical }}<p>The discovery and focused checks below belong to source <code class="cgx-bench-source" title="{{ comparison.qr_exact_grid.source }}">{{ comparison.qr_exact_grid.source_short }}</code>. The current corpus recheck preserves {{ comparison.qr_exact_grid.rechecked }}/2 correct payloads on the current core.</p>{{ end }}
+        <p>The two dense version-40 images decode correctly ({{ comparison.qr_exact_grid.correct }}/{{ comparison.qr_exact_grid.images }}), versus {{ comparison.qr_exact_grid.before }}/{{ comparison.qr_exact_grid.images }} previously. Both have one pixel per module. The single-image API and unrestricted unified scanner preserve their exact payloads.</p>
+        <p>Integer finder borders determine the grid before neighborhood sampling. Three recognizable finder patterns and uniform pixel blocks are required; existing format, error-correction and payload validation decide whether it decodes.</p>
+        <p>Four independent image-entrypoint regressions fail before the fix. {{ comparison.qr_exact_grid.focused_cases }} focused cases cover spacing, padding, rotations, inversion, cancellation, inherited deadlines, damaged codewords and acceptance filtering.</p>
+        <p>{{ comparison.qr_exact_grid.legacy_scope }}</p>
+        <p>{{ comparison.qr_exact_grid.limits }}</p>
+        <p><a href="/comparisons/evidence/qr-exact-grid-recovery-proof.json">QR raster proof and provenance</a>.</p>
+    </section>
+    {{ end }}
+    {{ if comparison.codabar_run_recovery.images }}
+    <section class="cgx-bench-study" aria-labelledby="codabar-run-recovery">
+        <h3 id="codabar-run-recovery">{{ if comparison.codabar_run_recovery.historical }}Historical {{ end }}Codabar pixel-run recovery</h3>
+        {{ if comparison.codabar_run_recovery.historical }}<p>This discovery belongs to source <code class="cgx-bench-source" title="{{ comparison.codabar_run_recovery.source }}">{{ comparison.codabar_run_recovery.source_short }}</code>. Its gain and diagnostic table describe that earlier change. Current corpus results and costs are measured separately on the current core.</p>{{ end }}
+        <p>The same six Codabar images decode correctly ({{ comparison.codabar_run_recovery.correct }}/{{ comparison.codabar_run_recovery.images }}), versus {{ comparison.codabar_run_recovery.before }}/{{ comparison.codabar_run_recovery.images }} previously. Two previously failing photographs now pass the hinted decoder, unrestricted decoder and unified scanner.</p>
+        <p>Recovery uses exact pixel runs before module rounding, with separate bar and space width checks and a consistent print-gain model. Candidates require valid framing, intercharacter gaps and quiet zones. Sixteen regression cases per framework cover these images, punctuation, orientation, polarity and malformed symbols.</p>
+        <div class="table-scroll" role="region" aria-label="Codabar recovery diagnostics" tabindex="0">
+            <table class="cgx-table">
+                <caption>Previous → current · explicit Codabar hints · supplemental results remain separate</caption>
+                <thead><tr><th scope="col">Engine</th><th scope="col">Positive / 6</th><th scope="col">Negative / 31</th><th scope="col">Supplemental / 5</th><th scope="col">Current unexpected diagnostic / supplemental</th></tr></thead>
+                <tbody>{{ for row in comparison.codabar_run_recovery.rows }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }} → {{ row.correct }}</td><td>{{ row.negative_before }} → {{ row.negative_correct }}</td><td>{{ row.supplemental_before }} → {{ row.supplemental_correct }}</td><td>{{ row.unexpected }} / {{ row.supplemental_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.codabar_run_recovery.limits }}</p>
+        <p><a href="/comparisons/evidence/codabar-run-recovery-proof.json">Codabar recovery proof</a> · <a href="/comparisons/evidence/codabar-supplemental-provenance.json">Supplemental input provenance</a>.</p>
+    </section>
+    {{ end }}
+    {{ if comparison.pdf417_cache.cases }}
+    <section class="cgx-bench-study" aria-labelledby="pdf417-scanline-reuse">
+        <h3 id="pdf417-scanline-reuse">PDF417 scanline reuse</h3>
+        {{ if comparison.pdf417_cache.historical }}<p>Historical diagnostics and paired controls from source <code class="cgx-bench-source" title="{{ comparison.pdf417_cache.source }}">{{ comparison.pdf417_cache.source_short }}</code>. These counts and costs were not rerun for the current candidate. The current corpus and whole-image measurements below are rerun separately.</p>{{ end }}
+        <p>PDF417 stores short scanline runs in 16-bit arrays and retains full widths for longer lines. More tilted lines fit within the same 8 MiB estimated cache allowance. Search order, acceptance rules and recognition deadlines are unchanged.</p>
+        <p>All {{ comparison.pdf417_cache.cases }} cache reads match independently sampled pixels, including reversed, inverted and tilted lines, width boundaries and capacity pressure. Checks also cover pre-cancelled and expired calls.</p>
+        <p>For the existing difficult negative image, the instrumented PDF417 search retains {{ comparison.pdf417_cache.current_lines }} lines instead of {{ comparison.pdf417_cache.previous_lines }}. It avoids {{ comparison.pdf417_cache.previous_rejections }} capacity rejections and samples {{ comparison.pdf417_cache.current_pixels }} pixels instead of {{ comparison.pdf417_cache.previous_pixels }}. These diagnostic counts use a longer allowance to finish all work; they do not establish completion within the normal scanner deadline.</p>
+        <p><a href="/comparisons/evidence/pdf417-cache-cost-proof.json">Cache checks and paired negative-image costs</a>. The whole-image measurements below report cost and recognition together.</p>
+        <details class="cgx-disclosure">
+            <summary>Paired negative-image controls</summary>
+            <p>The same two negative images are requested with PDF417-only and all-format hints: four requests with the original 1,500 ms allowance. Each domain uses three warmups and twelve rotated measurements per binary. Correct and unfinished counts are means per four-request batch.</p>
+            <div class="table-scroll" role="region" aria-label="PDF417 cache control costs" tabindex="0">
+                <table class="cgx-table">
+                    <caption>Previous → current · four requests · all measured samples retained</caption>
+                    <thead><tr><th scope="col">Domain</th><th scope="col">Previous ms</th><th scope="col">Current ms</th><th scope="col">Current/previous</th><th scope="col">Managed MiB</th><th scope="col">Correct / 4</th><th scope="col">Unfinished / 4</th></tr></thead>
+                    <tbody>{{ for row in comparison.pdf417_cache.cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }}</td><td>{{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_mib }} → {{ row.current_mib }}</td><td>{{ row.previous_correct }} → {{ row.current_correct }}</td><td>{{ row.previous_unfinished }} → {{ row.current_unfinished }}</td></tr>{{ end }}</tbody>
+                </table>
+            </div>
+        </details>
+    </section>
+    {{ end }}
+    {{ if comparison.negative_search_cost.outputs }}
+    <section class="cgx-bench-study" aria-labelledby="negative-decoding-work">
+        <h3 id="negative-decoding-work">Negative-image decoding work</h3>
+        <p>Direct-mark retries reuse a local-intensity table across dark and light adaptive masks. PDF417 scanlines reject guard ratios that cannot satisfy the existing fit. Search bounds, variant order, cancellation checks, recognition allowances and payload scoring are unchanged.</p>
+        <p>The previous and current routines produce identical bytes for {{ comparison.negative_search_cost.outputs }} preprocessing outputs across {{ comparison.negative_search_cost.configurations }} configurations. All {{ comparison.negative_search_cost.guard_cases }} guard decisions match, including {{ comparison.negative_search_cost.accepted_guards }} accepted fits. These diagnostics preserve behavior; allocation savings alone do not establish faster decoding or completed negative searches.</p>
+        <p><a href="/comparisons/evidence/negative-search-cost-proof.json">Decision and allocation diagnostic</a>. The paired measurements below report whole-image cost and recognition together.</p>
+    </section>
+    {{ end }}
+    {{ if comparison.qr_finder_groups }}
+    <section class="cgx-bench-study" aria-labelledby="qr-finder-groups">
+        <h3 id="qr-finder-groups">{{ if comparison.qr_finder_groups.historical }}Historical multi-QR finder grouping{{ else }}Multi-QR finder grouping{{ end }}</h3>
+        {{ if comparison.qr_finder_groups.historical }}<p>These finder-group measurements belong to source <code class="cgx-bench-source">{{ comparison.qr_finder_groups.source }}</code>. Current decoding costs appear separately.</p>{{ end }}
+        <p>{{ comparison.qr_finder_groups.changes }}</p>
+        <p>{{ comparison.qr_finder_groups.contracts }}</p>
+        <p>{{ comparison.qr_finder_groups.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Multi-QR decoding costs and complete payload sets" tabindex="0">
+            <table class="cgx-table">
+                <caption>One image with four distinct QR payloads · all measured samples retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Complete images / 1</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.qr_finder_groups.costs }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <details class="cgx-disclosure">
+            <summary>Retail controls on that qualified core</summary>
+            <div class="table-scroll" role="region" aria-label="Retail control costs for multi-QR changes" tabindex="0">
+                <table class="cgx-table">
+                    <caption>Original retail requests, hints and oracles</caption>
+                    <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                    <tbody>{{ for row in comparison.qr_finder_groups.controls }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+                </table>
+            </div>
+        </details>
+        <p>{{ comparison.qr_finder_groups.limits }}</p>
+        <p><a href="/comparisons/evidence/qr-finder-groups-proof.json">Finder-group proof</a> · <a href="/comparisons/evidence/qr-finder-groups-ccd0-result.json">CCD0 samples</a> · <a href="/comparisons/evidence/qr-finder-groups-ccd1-result.json">CCD1 samples</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.decode_deadlines }}
+    <section class="cgx-bench-study" aria-labelledby="decode-deadlines">
+        <h3 id="decode-deadlines">{{ if comparison.decode_deadlines.historical }}Historical recognition deadline polling{{ else }}Recognition deadline polling{{ end }}</h3>
+        {{ if comparison.decode_deadlines.historical }}<p>These deadline measurements and regression contracts belong to source <code class="cgx-bench-source">{{ comparison.decode_deadlines.source }}</code>. Current decoding costs appear separately.</p>{{ end }}
+        <p>{{ comparison.decode_deadlines.changes }}</p>
+        <p>{{ comparison.decode_deadlines.contracts }}</p>
+        <p>{{ comparison.decode_deadlines.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="{{ if comparison.decode_deadlines.historical }}Historical{{ else }}Current{{ end }} deadline polling and completion costs" tabindex="0">
+            <table class="cgx-table">
+                <caption>Paired retail decoding: latency, allocation and recognition</caption>
+                <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.decode_deadlines.costs }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.decode_deadlines.limits }}</p>
+        <p>{{ comparison.decode_deadlines.profile_scope }}</p>
+        <p><a href="/comparisons/evidence/decode-deadline-proof.json">Deadline and regression proof</a> · <a href="/comparisons/evidence/decode-deadline-positive-ccd0-result.json">Positive CCD0 samples</a> · <a href="/comparisons/evidence/decode-deadline-positive-ccd1-result.json">Positive CCD1 samples</a> · <a href="/comparisons/evidence/decode-deadline-negative-ccd0-result.json">Negative CCD0 samples</a> · <a href="/comparisons/evidence/decode-deadline-negative-ccd1-result.json">Negative CCD1 samples</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.decode_allocations }}
+    <section class="cgx-bench-study" aria-labelledby="decode-allocations">
+        <h3 id="decode-allocations">{{ if comparison.decode_allocations.historical }}Historical linear decoder allocations{{ else }}Linear decoder allocations{{ end }}</h3>
+        {{ if comparison.decode_allocations.historical }}<p>These allocation measurements and regression contracts belong to source <code class="cgx-bench-source">{{ comparison.decode_allocations.source }}</code>. Current decoding costs appear separately.</p>{{ end }}
+        <p>{{ comparison.decode_allocations.changes }}</p>
+        <p>{{ comparison.decode_allocations.contracts }}</p>
+        <p>{{ comparison.decode_allocations.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="{{ if comparison.decode_allocations.historical }}Historical{{ else }}Current{{ end }} linear decoder allocation and completion costs" tabindex="0">
+            <table class="cgx-table">
+                <caption>Paired retail decoding: allocation, latency and recognition</caption>
+                <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Allocation reduction</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in comparison.decode_allocations.costs }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.allocation_reduction }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.decode_allocations.limits }}</p>
+        <p>{{ comparison.decode_allocations.profile_scope }}</p>
+        <p><a href="/comparisons/evidence/decode-allocation-proof.json">Allocation and regression proof</a> · <a href="/comparisons/evidence/decode-allocation-positive-ccd0-result.json">Positive CCD0 samples</a> · <a href="/comparisons/evidence/decode-allocation-positive-ccd1-result.json">Positive CCD1 samples</a> · <a href="/comparisons/evidence/decode-allocation-negative-ccd0-result.json">Negative CCD0 samples</a> · <a href="/comparisons/evidence/decode-allocation-negative-ccd1-result.json">Negative CCD1 samples</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.scanner_boundaries }}
+    <section class="cgx-bench-study" aria-labelledby="scanner-boundaries">
+        <h3 id="scanner-boundaries">{{ if comparison.scanner_boundaries.historical }}Historical linear barcode margins and neighboring symbols{{ else }}Linear barcode margins and neighboring symbols{{ end }}</h3>
+        {{ if comparison.scanner_boundaries.historical }}<p>These scanner-repair contracts and costs belong to source <code class="cgx-bench-source">{{ comparison.scanner_boundaries.source }}</code>. Current decoding costs and regression coverage appear separately.</p>{{ end }}
+        <p>{{ comparison.scanner_boundaries.changes }}</p>
+        <p>{{ comparison.scanner_boundaries.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Scanner margin regression contracts" tabindex="0">
+            <table class="cgx-table">
+                <caption>Targeted regressions: {{ comparison.scanner_boundaries.before }} → {{ comparison.scanner_boundaries.current }} passed out of {{ comparison.scanner_boundaries.cases }}</caption>
+                <thead><tr><th scope="col">Contract</th><th scope="col">Previous passed</th><th scope="col">Current passed</th><th scope="col">Cases</th></tr></thead>
+                <tbody>{{ for row in comparison.scanner_boundaries.contracts }}<tr><th scope="row">{{ row.name }}</th><td>{{ row.before }}</td><td>{{ row.current }}</td><td>{{ row.cases }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.scanner_boundaries.cost_scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Scanner repair paired retail costs" tabindex="0">
+            <table class="cgx-table">
+                <caption>Scanner repair pass: paired retail search costs</caption>
+                <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.scanner_boundaries.costs }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.scanner_boundaries.limits }}</p>
+        <p><a href="/comparisons/evidence/scanner-boundary-proof.json">Regression and binary proof</a> · <a href="/comparisons/evidence/scanner-final-core-probes.json">Exact-core diagnostics</a> · <a href="/comparisons/evidence/scanner-retail-negative-diagnostic.json">Typed retail negatives from this scanner-repair pass</a> · <a href="/comparisons/evidence/scanner-boundary-positive-ccd0-result.json">Positive CCD0 samples</a> · <a href="/comparisons/evidence/scanner-boundary-positive-ccd1-result.json">Positive CCD1 samples</a> · <a href="/comparisons/evidence/scanner-boundary-negative-ccd0-result.json">Negative CCD0 samples</a> · <a href="/comparisons/evidence/scanner-boundary-negative-ccd1-result.json">Negative CCD1 samples</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.retail_fine }}
+    <section class="cgx-bench-study" aria-labelledby="retail-fine">
+        <h3 id="retail-fine">{{ if comparison.retail_fine.historical }}Historical retail photographs and tile boundary safety{{ else }}Retail photographs and tile boundary safety{{ end }}</h3>
+        {{ if comparison.retail_fine.historical }}<p>These retained diagnostics and costs belong to source <code class="cgx-bench-source">{{ comparison.retail_fine.source }}</code>; the current scanner contracts and costs appear separately. The current scanner repair above covers the inverted single-digit and joined-Pharmacode gaps described in this historical packet.</p>{{ end }}
+        <p>{{ comparison.retail_fine.changes }}</p>
+        <p>{{ comparison.retail_fine.scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Fine retail contrast recognition results" tabindex="0">
+            <table class="cgx-table">
+                <caption>Unchanged EAN and UPC corpus: 87 positive requests</caption>
+                <thead><tr><th scope="col">Engine</th><th scope="col">Previous correct</th><th scope="col">Current correct</th><th scope="col">Unexpected images</th></tr></thead>
+                <tbody>{{ for row in comparison.retail_fine.engines }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.before }}/87</td><td>{{ row.correct }}/87</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.retail_fine.cost_scope }}</p>
+        <div class="table-scroll" role="region" aria-label="Fine retail contrast paired search costs" tabindex="0">
+            <table class="cgx-table">
+                <caption>Paired retail search costs: previous → current; every measured outcome retained</caption>
+                <thead><tr><th scope="col">Batch</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.retail_fine.costs }}<tr><th scope="row">{{ row.kind }}: {{ row.requests }}</th><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>The same 31 distinct negative images are also scanned with each retail hint: 93 requests. This diagnostic does not replace all-format negative completion.</p>
+        <div class="table-scroll" role="region" aria-label="Fine retail contrast hinted negative diagnostic" tabindex="0">
+            <table class="cgx-table">
+                <caption>Retail hinted negative requests</caption>
+                <thead><tr><th scope="col">Engine</th><th scope="col">Completed / 93</th><th scope="col">Inconclusive</th><th scope="col">Unexpected requests</th></tr></thead>
+                <tbody>{{ for row in comparison.retail_fine.negative_diagnostic }}<tr><th scope="row">{{ row.engine }}</th><td>{{ row.completed }}</td><td>{{ row.inconclusive }}</td><td>{{ row.unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>Eight default all-format tile-scanner cases prohibit retail payloads on the perforated negative fixture in four rotations and both polarities. Each case also exhausts typed EAN/UPC tile decoding. An unrelated format can reach its recognition limit on a legacy runtime, so safety and completion remain separate. All eight fail with the exact initial candidate before the full-length restriction.</p>
+        <p>{{ comparison.retail_fine.negative_variant_limits }}</p>
+        <p><a href="/comparisons/evidence/retail-fine-negative-variants-baseline.json">Additional negative variants before</a> · <a href="/comparisons/evidence/retail-fine-negative-variants-current.json">Additional negative variants current</a></p>
+        <h4>Complete margins for Industrial 2 of 5 tiles</h4>
+        <p>{{ comparison.retail_fine.industrial.changes }}</p>
+        <p>{{ comparison.retail_fine.industrial.scope }}</p>
+        <p>{{ comparison.retail_fine.industrial.limits }}</p>
+        <p><a href="/comparisons/evidence/industrial-tile-boundary-proof.json">Tile boundary and single-digit regression proof</a> · <a href="/comparisons/evidence/industrial-tile-boundary-diagnosis.json">Before-fix tile geometry</a> · <a href="/comparisons/evidence/industrial-tile-before-proof.json">Before-fix safety contracts</a> · <a href="/comparisons/evidence/industrial-tile-boundary-current-diagnostic.json">Current short-symbol diagnostic</a> · <a href="/comparisons/evidence/industrial-tile-alpha-before-proof.json">Transparent-margin contracts before correction</a> · <a href="/comparisons/evidence/industrial-tile-alpha-current-diagnostic.json">Current transparent-margin diagnostic</a></p>
+        <p>{{ comparison.retail_fine.limits }}</p>
+        <p><a href="/comparisons/evidence/retail-fine-contrast-proof.json">Recovery and regression proof</a> · <a href="/comparisons/evidence/retail-fine-positive-manifest.json">Positive requests</a> · <a href="/comparisons/evidence/retail-fine-negative-manifest.json">Negative cost requests</a> · <a href="/comparisons/evidence/retail-fine-negative-diagnostic.json">Hinted negative outcomes</a> · <a href="/comparisons/evidence/retail-fine-positive-ccd0-result.json">CCD0 positive samples</a> · <a href="/comparisons/evidence/retail-fine-positive-ccd1-result.json">CCD1 positive samples</a> · <a href="/comparisons/evidence/retail-fine-negative-ccd0-result.json">CCD0 negative samples</a> · <a href="/comparisons/evidence/retail-fine-negative-ccd1-result.json">CCD1 negative samples</a></p>
+    </section>
+    {{ end }}
+
+    {{ if comparison.qr_morphology }}
+    <section class="cgx-bench-study" aria-labelledby="qr-morphology">
+        <h3 id="qr-morphology">{{ if comparison.qr_morphology.historical }}Historical {{ end }}QR image cleanup and negative-search cost</h3>
+        {{ if comparison.qr_morphology.historical }}<p>These retained filter and whole-image costs belong to source <code class="cgx-bench-source">{{ comparison.qr_morphology.source }}</code>. Current whole-image qualification appears separately.</p>{{ end }}
+        <p>{{ comparison.qr_morphology.changes }}</p>
+        <p>{{ comparison.qr_morphology.scope }}</p>
+        <p>Every output pixel matches the preceding binary on 24 closing/opening filters over four corpus images. Eight direct-neighborhood cases pass on each modern framework, covering clipped borders, narrow images, solid and mixed pixels, and adaptive thresholds.</p>
+        <div class="table-scroll" role="region" aria-label="QR image cleanup filter costs" tabindex="0">
+            <table class="cgx-table">
+                <caption>24 QR filters · previous → current · every sample retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.qr_morphology.kernel }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <div class="table-scroll" role="region" aria-label="Difficult negative complete-image costs" tabindex="0">
+            <table class="cgx-table">
+                <caption>Same four difficult negatives · previous → current · range (mean) across all twelve measured batches</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Completed / 4 range (mean)</th><th scope="col">Inconclusive range (mean)</th><th scope="col">Mean managed MiB</th></tr></thead>
+                <tbody>{{ for row in comparison.qr_morphology.negatives }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_correct }} ({{ row.before_correct_mean }}) → {{ row.current_correct }} ({{ row.current_correct_mean }})</td><td>{{ row.before_inconclusive }} ({{ row.before_inconclusive_mean }}) → {{ row.current_inconclusive }} ({{ row.current_inconclusive_mean }})</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>{{ comparison.qr_morphology.limits }}</p>
+        <p><a href="/comparisons/evidence/qr-morphology-cost-proof.json">Proof and output hashes</a> · <a href="/comparisons/evidence/qr-morphology-negative-manifest.json">Unchanged inputs</a> · <a href="/comparisons/evidence/qr-morphology-cost-ccd0-result.json">CCD0 filter samples</a> · <a href="/comparisons/evidence/qr-morphology-cost-ccd1-result.json">CCD1 filter samples</a> · <a href="/comparisons/evidence/qr-negative-cost-ccd0-result.json">CCD0 image samples</a> · <a href="/comparisons/evidence/qr-negative-cost-ccd1-result.json">CCD1 image samples</a></p>
+    </section>
+    {{ end }}
+    {{ if comparison.paired_decode_cost.size > 0 }}
+    <section class="cgx-bench-study" aria-labelledby="paired-decoding">
+        <h3 id="paired-decoding">Paired whole-image decoding cost</h3>
+        <p>{{ comparison.paired_decode_scope }}</p>
+        {{ for note in comparison.paired_decode_notes }}<p>{{ note }}</p>{{ end }}
+        <div class="table-scroll" role="region" aria-label="Paired decoding cost table" tabindex="0">
+            <table class="cgx-table">
+                <caption>Previous → current · 19-image batches · ranges include every measured sample</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct / 19</th><th scope="col">Unexpected</th><th scope="col">Inconclusive</th></tr></thead>
+                <tbody>{{ for row in comparison.paired_decode_cost }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.previous_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.previous_managed_mib }} → {{ row.current_managed_mib }}</td><td>{{ row.previous_correct }} → {{ row.current_correct }}</td><td>{{ row.previous_unexpected }} → {{ row.current_unexpected }}</td><td>{{ row.previous_inconclusive }} → {{ row.current_inconclusive }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+        <p>A faster incomplete search does not count as a successful negative scan. <a href="/comparisons/evidence/paired-decode-cost-ccd0-result.json">CCD0 paired samples</a> · <a href="/comparisons/evidence/paired-decode-cost-ccd1-result.json">CCD1 paired samples</a>.</p>
+    </section>
+    {{ end }}
+        {{~ end ~}}
+        <ol class="cgx-bench-index">{{ for m in (followups | regex.matches `<h3 id="([^"]+)">([\s\S]*?)</h3>`) }}<li><a href="#{{ m[1] }}">{{ m[2] }}</a></li>{{ end }}</ol>
+        {{ followups }}
+    </section>
+    <section class="cgx-section" aria-labelledby="methodology">
+        <div class="cgx-section__head">
+            <h2 id="methodology">Versions, method and evidence</h2>
+        </div>
+        <ul class="cgx-bench-method">
+            <li>CodeGlyphX local source: <code class="cgx-bench-source">{{ comparison.source }}</code>.</li>
+            <li>ZXing.Net {{ comparison.versions.ZXingNet }} · ZXingCpp {{ comparison.versions.ZXingCpp }} (native {{ comparison.versions.NativeZXingCpp }}) · QRCoder {{ comparison.versions.QRCoder }}. QRCoder generates QR codes and has no decoder.</li>
+            <li>{{ comparison.cpu }} · 16 cores / 32 logical processors · two cache domains · High performance power plan · Normal process priority.</li>
+            <li>SDK {{ comparison.versions.SDK }} · .NET {{ comparison.versions.DotnetRuntime }} · PowerShell {{ comparison.versions.PowerShell }} · shared benchmark runner {{ comparison.versions.SharedBenchmarkRunner }}.</li>
+            {{~ for note in copy.methodology ~}}<li>{{ note }}</li>{{~ end ~}}
+        </ul>
+        <p class="cgx-bench-links"><a href="/comparisons/results.md">Download the results report</a><a href="/fair-comparisons.md">Methodology and reproduction</a><a href="/comparisons/evidence/sha256.json">Evidence hashes</a><a href="/comparisons/evidence/candidate-corpus-final.json">Every image outcome</a><a href="/comparisons/evidence/qualification.json">Qualification and provenance</a></p>
+        <p class="cgx-bench-links"><span>Raw samples</span><a href="/comparisons/evidence/generation-final-ccd0-result.json">CCD0 generation</a><a href="/comparisons/evidence/generation-final-ccd1-result.json">CCD1 generation</a><a href="/comparisons/evidence/decoding-final-ccd0-result.json">CCD0 decoding</a><a href="/comparisons/evidence/decoding-final-ccd1-result.json">CCD1 decoding</a></p>
+        <p>{{ copy.reproduce }}</p>
+        <p><a class="cgx-link" href="https://github.com/EvotecIT/CodeGlyphX">Repository and reproducible comparison scripts</a></p>
     </section>
 </div>

@@ -4,8 +4,8 @@ description: Performance benchmarks comparing CodeGlyphX with other .NET barcode
 slug: benchmarks
 collection: pages
 layout: page
-meta.heading: Benchmarks
-meta.lede: CodeGlyphX against ZXing.Net, QRCoder and Barcoder, encode and render to PNG, measured with BenchmarkDotNet. Treat the numbers as directional: they come from one machine under lab conditions.
+meta.heading: Barcode benchmarks and image recognition
+meta.lede: Matched QR generation workflows and a frozen image corpus compare CodeGlyphX, ZXing.Net, ZXing-C++ and QRCoder. Speed, managed allocation and recognition quality are reported separately. The full comparison and the later decoder follow-ups retain separate qualified sources.
 meta.glyph: code128
 meta.raw_html: true
 meta.data_shortcode: benchmarks
@@ -14,8 +14,7 @@ meta.data_mode: override
 meta.social: true
 meta.social_description: Performance benchmarks comparing CodeGlyphX with other .NET barcode libraries.
 meta.structured_data: true
-meta.extra_scripts_file: benchmarks.scripts.html
 canonical: https://codeglyphx.com/benchmarks/
 ---
 
-<!-- Benchmarks body is generated from data/benchmarks.json -->
+<!-- Body uses the benchmarks shortcode, data/benchmarks.json copy and generated data/comparisons.json evidence; the charts come from data/visuals.json (SiteSpecimens). The heading and lede repeat data/benchmarks.json hero. -->

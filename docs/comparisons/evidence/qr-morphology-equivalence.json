@@ -1,0 +1,21 @@
+{
+  "ManifestSha256": "6A4A3C0712380D379A614454B7078DC251B5389B98AE51ACE0C68E95278000FB",
+  "Rows": [
+    {
+      "Binary": "baseline",
+      "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+      "Images": 4,
+      "Filters": 24,
+      "OutputSha256": "900CC11261649338B4940542008447784781C773EBC868EE63AC5E54A0143CE7"
+    },
+    {
+      "Binary": "candidate",
+      "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+      "Images": 4,
+      "Filters": 24,
+      "OutputSha256": "900CC11261649338B4940542008447784781C773EBC868EE63AC5E54A0143CE7"
+    }
+  ],
+  "Scope": "Actual private closing/opening paths at radii 1/2/3, four unchanged negative corpus RGBA images converted once with matching luminance and hybrid threshold setup. Fingerprint covers every output pixel, excluding unused pooled capacity. Independent direct-neighborhood definitions are separately tested on borders, narrow images, threshold maps, solid and mixed input.",
+  "Mismatches": 0
+}

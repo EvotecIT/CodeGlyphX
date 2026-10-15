@@ -1,0 +1,36 @@
+[
+  {
+    "Manifest": "latency-manifest.json",
+    "MeasuredFiles": 2,
+    "Warmups": [
+      {
+        "Requests": 19,
+        "Sha256": "7AA2F468972F257981475FC3A9CFE157E39284E7C5F3734792B4E0A1C88AC9FF",
+        "Path": "D:\\Dev\\Scratch\\CodeGlyphX-fair-comparisons\\negative-search-aa6b103b\\warmup-retention-before\\warmup-outcomes\\Baseline--1.json"
+      },
+      {
+        "Requests": 19,
+        "Sha256": "7AA2F468972F257981475FC3A9CFE157E39284E7C5F3734792B4E0A1C88AC9FF",
+        "Path": "D:\\Dev\\Scratch\\CodeGlyphX-fair-comparisons\\negative-search-aa6b103b\\warmup-retention-before\\warmup-outcomes\\Candidate--1.json"
+      }
+    ],
+    "RunId": "20261013-063945-56bdf884"
+  },
+  {
+    "Manifest": "profile-texture-negative.json",
+    "MeasuredFiles": 4,
+    "Warmups": [
+      {
+        "Requests": 1,
+        "Sha256": "36EACABE1FB76D57CE4B03FBA6765146C00E502E9C0D859587ECB4FABC092571",
+        "Path": "D:\\Dev\\Scratch\\CodeGlyphX-fair-comparisons\\negative-search-aa6b103b\\warmup-retention-before\\warmup-outcomes\\Baseline--1.json"
+      },
+      {
+        "Requests": 1,
+        "Sha256": "36EACABE1FB76D57CE4B03FBA6765146C00E502E9C0D859587ECB4FABC092571",
+        "Path": "D:\\Dev\\Scratch\\CodeGlyphX-fair-comparisons\\negative-search-aa6b103b\\warmup-retention-before\\warmup-outcomes\\Candidate--1.json"
+      }
+    ],
+    "RunId": "20261013-063950-46984cca"
+  }
+]

@@ -1,0 +1,313 @@
+{
+  "Source": "6fb1250566eae8ad74fb464354c47795175f28bd",
+  "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+  "PreviousSource": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+  "PreviousCoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+  "Changes": "Data Matrix reads Gray8 pixels directly through its existing pixel APIs. Direct-part-mark retries keep packed luminance buffers instead of expanding them to RGBA. Adaptive masks keep their original representation for morphology; retry pixels, order, attempts and recognition allowances are unchanged. Both axis-aligned and perspective sampling reject malformed layouts before accessing pixels.",
+  "Scope": "One prespecified texture negative, falsepositives/19.png, from the unchanged nineteen-image workload receives the same unrestricted scan and 1500 ms allowance. Exact preceding and tested binaries are compared with three warmups and twelve rotated measurements on each fixed cache domain. Completed negatives, inconclusive requests, unexpected output, latency and managed allocation are retained together. The full nineteen-image workload and retail controls are measured separately.",
+  "Limits": "Smaller retry buffers do not establish reliable negative completion, lower CPU use, throughput or memory capacity on unseen workloads. Managed allocation excludes native allocations. Shared-host contention can change timing and completion under fixed deadlines. All losses and slower controls are retained; these finite workloads do not establish overall superiority.",
+  "GrayPixelContracts": {
+    "net10": 10,
+    "net8": 10,
+    "net472": 10
+  },
+  "PerspectiveGrayContracts": {
+    "net10": 3,
+    "net8": 3,
+    "net472": 3
+  },
+  "DpmContracts": {
+    "net10": 6,
+    "net8": 6,
+    "net472": 6
+  },
+  "Costs": [
+    {
+      "Requests": 1,
+      "Domain": "ccd0",
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "BaselineMedianMs": 1019.4902,
+      "CurrentMedianMs": 1004.413,
+      "LatencyRatio": 0.9852110397922413,
+      "BaselineAllocatedBytes": 68462508.0,
+      "CurrentAllocatedBytes": 56019915.333333336,
+      "PreviousCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "PreviousCorrectImagesMean": 1.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        0.0,
+        1.0
+      ],
+      "CurrentCorrectImagesMean": 0.9166666666666666,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        1.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.08333333333333333,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Requests": 1,
+      "Domain": "ccd1",
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "BaselineMedianMs": 989.2908,
+      "CurrentMedianMs": 971.11885,
+      "LatencyRatio": 0.9816313363067765,
+      "BaselineAllocatedBytes": 68610412.66666667,
+      "CurrentAllocatedBytes": 56397194.666666664,
+      "PreviousCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "PreviousCorrectImagesMean": 1.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        1.0,
+        1.0
+      ],
+      "CurrentCorrectImagesMean": 1.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "RetailControlCosts": [
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd0",
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "BaselineMedianMs": 1000.0428999999999,
+      "CurrentMedianMs": 985.0829000000001,
+      "LatencyRatio": 0.9850406417564689,
+      "BaselineAllocatedBytes": 95745987.33333333,
+      "CurrentAllocatedBytes": 95728362.66666667,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd1",
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "BaselineMedianMs": 958.7092,
+      "CurrentMedianMs": 962.8467,
+      "LatencyRatio": 1.0043156986498096,
+      "BaselineAllocatedBytes": 95751336.0,
+      "CurrentAllocatedBytes": 95745969.33333333,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd0",
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "BaselineMedianMs": 660.2873,
+      "CurrentMedianMs": 655.75725,
+      "LatencyRatio": 0.9931392743734433,
+      "BaselineAllocatedBytes": 34163849.333333336,
+      "CurrentAllocatedBytes": 34155179.333333336,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd1",
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "BaselineMedianMs": 660.1939,
+      "CurrentMedianMs": 659.6077,
+      "LatencyRatio": 0.999112079042233,
+      "BaselineAllocatedBytes": 34170446.0,
+      "CurrentAllocatedBytes": 34158494.666666664,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "Profiles": {
+    "before": {
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "AllocatedBytes": [
+        86119976,
+        68705344,
+        71995736
+      ],
+      "CompletedNegatives": [
+        1,
+        1,
+        1
+      ],
+      "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+    },
+    "after": {
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "AllocatedBytes": [
+        72432776,
+        55036008,
+        53242336
+      ],
+      "CompletedNegatives": [
+        0,
+        1,
+        1
+      ],
+      "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+    }
+  },
+  "MaskEquivalence": {
+    "Cases": 225,
+    "Variants": 675,
+    "IdenticalNormalizedPixelHashesAndOrder": true,
+    "PreCancelledAndLaterCancelledStopped": true,
+    "BaselineCoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+    "CandidateCoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+    "BaselineVariantBytes": 6268860,
+    "CandidateVariantBytes": 1567215,
+    "Scope": "Exact retry output equivalence; retained array lengths do not measure total allocation or latency."
+  }
+}

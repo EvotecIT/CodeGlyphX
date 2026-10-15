@@ -1,0 +1,64 @@
+{
+  "net10.0": {
+    "Source": "089aab4524899d9e7a385c9973598263a7cd96b6",
+    "Total": 2763,
+    "DistinctPassed": 2763,
+    "InitialMissingFixtureFailures": 0,
+    "FixtureRerunPassed": 0,
+    "UnresolvedFailures": 0,
+    "Skipped": 0,
+    "ContractsPassed": 9,
+    "ContractCases": [
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 1, invert: False, adaptive: False)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_StopAtRowBoundaryAndKeepCandidateLimit",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 1, invert: False, adaptive: True)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 3, invert: True, adaptive: False)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 1, invert: True, adaptive: False)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 1, invert: True, adaptive: True)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 3, invert: False, adaptive: True)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 3, invert: True, adaptive: True)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 3, invert: False, adaptive: False)"
+    ],
+    "FullTrxSha256": "9EA254B6E3EC4900670FF586F6031337489072940EC4A88B2AAF7D2441EF63C5",
+    "FixtureRerunSha256": null,
+    "CoreSha256": "089C5278416ADCFC35F83A20DDB9F727C429118DC3FAEB0452DD927A1FB7E596"
+  },
+  "net8.0": {
+    "Source": "089aab4524899d9e7a385c9973598263a7cd96b6",
+    "Total": 2741,
+    "DistinctPassed": 2741,
+    "InitialMissingFixtureFailures": 0,
+    "FixtureRerunPassed": 0,
+    "UnresolvedFailures": 0,
+    "Skipped": 0,
+    "ContractsPassed": 9,
+    "ContractCases": [
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 1, invert: True, adaptive: False)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 3, invert: True, adaptive: True)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 1, invert: True, adaptive: True)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 3, invert: False, adaptive: True)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 1, invert: False, adaptive: True)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 1, invert: False, adaptive: False)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 3, invert: False, adaptive: False)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_PreserveCroppedGeometryAndObservationCounts(moduleSize: 3, invert: True, adaptive: False)",
+      "CodeGlyphX.Tests.QrFinderRunTests.FinderRuns_StopAtRowBoundaryAndKeepCandidateLimit"
+    ],
+    "FullTrxSha256": "0E23DE91FC7D086CC435D6E14DBE052E30DF11AC9A1FA0DC6170BD816955F26A",
+    "FixtureRerunSha256": null,
+    "CoreSha256": "B2F5C24626FE3C1E2CAB8BBA0BCFD50C09746A3F38BF9E08F94B5C4D4DE362F3"
+  },
+  "net472": {
+    "Source": "089aab4524899d9e7a385c9973598263a7cd96b6",
+    "Total": 1177,
+    "DistinctPassed": 1177,
+    "InitialMissingFixtureFailures": 0,
+    "FixtureRerunPassed": 0,
+    "UnresolvedFailures": 0,
+    "Skipped": 0,
+    "ContractsPassed": 0,
+    "ContractCases": [],
+    "FullTrxSha256": "E9B9CCF588E5A8B79E4D4A5EB976BFB2D693B19A50B13E9D862E32F3895C817B",
+    "FixtureRerunSha256": null,
+    "CoreSha256": "2212552B87BF6A100006530F3364D7730C87F727F176ADA2EF7EF798CDD148BA"
+  }
+}

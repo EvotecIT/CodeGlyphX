@@ -1,0 +1,29 @@
+{
+  "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+  "Source": "3.0.0+39818c152763091f748ead4477d5ec0653663a8d",
+  "Rows": [
+    {
+      "Compression": 0,
+      "Decoded": true,
+      "Width": 99,
+      "Height": 99,
+      "ExactPixels": true,
+      "MismatchedBytes": 0,
+      "SyntheticSentinelBytes": 0,
+      "ExpectedSha256": "8CDE05AD03D2698EB3AB3032C2DA1ED22EDC81814A099C50B1AB10B2F63268FA",
+      "ActualSha256": "8CDE05AD03D2698EB3AB3032C2DA1ED22EDC81814A099C50B1AB10B2F63268FA"
+    },
+    {
+      "Compression": 6,
+      "Decoded": true,
+      "Width": 99,
+      "Height": 99,
+      "ExactPixels": true,
+      "MismatchedBytes": 0,
+      "SyntheticSentinelBytes": 0,
+      "ExpectedSha256": "8CDE05AD03D2698EB3AB3032C2DA1ED22EDC81814A099C50B1AB10B2F63268FA",
+      "ActualSha256": "8CDE05AD03D2698EB3AB3032C2DA1ED22EDC81814A099C50B1AB10B2F63268FA"
+    }
+  ],
+  "Scope": "Public translucent QR stream correctness after synthetic83pool contamination; no user data. PNG and decoded pixel results, no timing claim."
+}

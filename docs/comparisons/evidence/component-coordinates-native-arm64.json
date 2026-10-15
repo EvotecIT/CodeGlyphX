@@ -1,0 +1,231 @@
+{
+  "Status": "passed",
+  "Architecture": "arm64",
+  "OSVersion": "27.0.1",
+  "SDKVersion": "10.0.402",
+  "SelectedFrameworkVersion": "10.0.13",
+  "FrameworkRollForward": "Disable",
+  "Source": "2e2915a4b218c89dba8c126a1e32dec410c4958e",
+  "CoreSha256": "3474E8726755DB88512FB4EEA5B97473E0AF57B57ED587ABB33EE8ABA1306E9B",
+  "InputFiles": {
+    "CodeGlyphX.dll": "3474e8726755db88512fb4eea5b97473e0af57b57ed587abb33ee8aba1306e9b",
+    "CodeGlyphX.Playground.dll": "db8443be858d2655328f3783ca4cc9051eaca7f5bcbfa55c3fcd843b542a09a7",
+    "CodeGlyphX.Tests.dll": "7fe7c5bfcb4375933ca674a6b5c57dc71509396ca19b59f7406a11722825e12a",
+    "Microsoft.TestPlatform.CoreUtilities.dll": "ca8cd4a0c394af3cc03c8e83b0377ecf14e6a8c68e4b0b50f732b1370950d7df",
+    "Microsoft.TestPlatform.PlatformAbstractions.dll": "8bc7faec348a71336af3bfbeecad564ad0f97a8216835ed90cd2ceff621a3697",
+    "Microsoft.VisualStudio.TestPlatform.ObjectModel.dll": "ff730c68bebe827f74e2bdcfb571400ab328c00be11c7fe3a1fe01143b483bc6",
+    "NativeCoordinateDriver.deps.json": "9d772ef7ea173762cb08e4492040602a57a1b4b0e1f7b421d29bd2818c1b8c3f",
+    "NativeCoordinateDriver.dll": "ae7b30a27cd58ae3618515c3f10ff3b63b2e448695a5b8127d3244bd45a24bd4",
+    "NativeCoordinateDriver.runtimeconfig.json": "c230a317a54dd960bcbeb5f347f52e18dc665a26f7efda2159fced9a5ac7e097",
+    "xunit.abstractions.dll": "3166dc70323fb30ccf1cedb0fe86f2ad122c46d254542342d90386efc4c9285c",
+    "xunit.assert.dll": "bcd9711b22d227ac8cd4c1568e72433a0f576d2ec8aae64ac508081892015b1d",
+    "xunit.core.dll": "2f7feeec8c6dec7df684c25fb80aadb292b963d09723460f03d53c5ad2088acc",
+    "xunit.execution.dotnet.dll": "e70febe547c15f8155db3e2d95c3ba4445a59cbc21a3e7541ab22ed49d3dcf7b",
+    "xunit.runner.visualstudio.testadapter.dll": "a5dd2a0765f3891208189261cfe09171f875ff44fd5af99ea56e890085fb7f30",
+    "cs/Microsoft.TestPlatform.CoreUtilities.resources.dll": "5f5501b18f65687cebd354196f563c520b4575e58eca474f3b3d1bd3247b9b46",
+    "cs/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "a24d277e98d3dc7986741ff0c72e628aca9814556d6d64b5e3992bacf07c6f17",
+    "de/Microsoft.TestPlatform.CoreUtilities.resources.dll": "cf94a0635173d6d868a90161757cb9484e559fedfde6e7ea50dd935e1d9b6666",
+    "de/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "edfdf3cb64553da8e229463948aa7b962e96e4037d510fb7fad4f26da9e7c8b5",
+    "es/Microsoft.TestPlatform.CoreUtilities.resources.dll": "6de8b0fd082756f612d4c8b3b06e3558e2321bcb910d5a70769050f308b96641",
+    "es/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "eb966be23882a9e11459d283241a67e7c0265f271e98603f13cabaadd8f7ee64",
+    "fr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "bec57046f616616913fd1416f013635a41a06c1c4d8ad67a8ee31f6098a3444b",
+    "fr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "07614b2d790a3b6ad93b41961566b84e4ad56cc86f5bf39658c06a13f2613db4",
+    "it/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2af9b70d68f3ab2bbaa609e5e556811c7f68869ce2c3cc6d7209b3d6722e0968",
+    "it/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5202a294a2b02c741ba292ba802f12b9473836a81ce61cb42f462eead6dc4dfa",
+    "ja/Microsoft.TestPlatform.CoreUtilities.resources.dll": "63d61001cdf7c501e253adeace734b32023cf617c04785937525fc0f202c3e21",
+    "ja/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "d2a679cc9cf0b0e5c865bd937ec90e45ecb434289c6b017992f417e34bae646c",
+    "ko/Microsoft.TestPlatform.CoreUtilities.resources.dll": "e7528a92a6ec0e1684537dd550cdb016ecc8df62a55c85294e608358e28a560d",
+    "ko/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "dc7b27e609e842eeea5da50ea172f288479b652ea779072e5dbbde045418819d",
+    "pl/Microsoft.TestPlatform.CoreUtilities.resources.dll": "cb997c46356be42b346682b3a1b6825cb6f70a30c92403048f7dbdf25065f6ab",
+    "pl/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "48f6bb8c551179da07d5e136a0c781dd6433f23312f3ce9241dcec29d8412f3e",
+    "pt-BR/Microsoft.TestPlatform.CoreUtilities.resources.dll": "2bb0340569343f0c3288f35a5cfa947d9495de55d04e93f2c380b75b45d681a9",
+    "pt-BR/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3944adc8b9c09a7007aaea3c86ee7666ddf3e7328b16edcc72f7e6dcc1ff1de8",
+    "ru/Microsoft.TestPlatform.CoreUtilities.resources.dll": "089d9052b2fa1ef63f2bd1f0f0f8161fe6d1d02721fc39d4b48c333d26826306",
+    "ru/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "515c96257715a3ccd56af8acd9460e72e57dda825ff16824d2912271beca0749",
+    "tr/Microsoft.TestPlatform.CoreUtilities.resources.dll": "1fee9a7a6af5ef00d7fdd4f3bf265645c7984224352e95347c2f082f64d8ade2",
+    "tr/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "5b39c999ccf72eb01ba387c8a0d72814d68a7120e623accbd2da544ee04ba5dc",
+    "zh-Hans/Microsoft.TestPlatform.CoreUtilities.resources.dll": "db896ac2579f5d5773f940bd278852c689799a3e0acc51bb30e46eef99fc76fb",
+    "zh-Hans/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "3f370c15663359c40bcee2a7d15cd386f01980be753f7ab1505783649d70dcaf",
+    "zh-Hant/Microsoft.TestPlatform.CoreUtilities.resources.dll": "fe732572a93c216282c0ef0a8762246735c8885873e03ffe9fd287d202f0d806",
+    "zh-Hant/Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll": "335d5fa4c5575ceb8f4ffb58fda53c1813a0c725a17f68219d012d390ddf978f",
+    "Fixtures/Qr/perspective-bookmark.png": "8e6d85ff2f01fc79cdd53eae7099504fbf0c8e208c2868868ecddf68ae2f7a9d"
+  },
+  "DecisionProof": {
+    "Status": "passed",
+    "Checks": 41,
+    "Cases": [
+      {
+        "Case": "Int32 coordinate boundaries",
+        "Status": "passed"
+      },
+      {
+        "Case": "Binary queue invert=False stop=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Binary queue invert=False stop=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Binary queue invert=True stop=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "Binary queue invert=True stop=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR components adaptive=False invert=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR components adaptive=False invert=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR components adaptive=True invert=False",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR components adaptive=True invert=True",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix invalid stride 0",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix invalid stride -80",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix rotation 0",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix rotation 1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix rotation 2",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix rotation 3",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix RGBA mirrored",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix RGBA inverted",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix Gray8 rotated",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix Gray8 mirrored",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix Gray8 inverted",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix ECI metadata",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix DMRE metadata",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix damaged clock rejection",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix photo zxing-perspective-20.png",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix photo zxing-perspective-40.png",
+        "Status": "passed"
+      },
+      {
+        "Case": "Data Matrix photo zxing-perspective-lowcontrast.png",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec pitch 1",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec pitch 2",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec pitch 3",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec independent small symbol",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 10",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 13",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 14",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 15",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 17",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec photo 19",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec mirrored photo",
+        "Status": "passed"
+      },
+      {
+        "Case": "Aztec inverted photo",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR perspective single",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR perspective all",
+        "Status": "passed"
+      },
+      {
+        "Case": "QR perspective scanner",
+        "Status": "passed"
+      }
+    ],
+    "Architecture": "Arm64",
+    "OS": "macOS 27.0.1",
+    "Runtime": ".NET 10.0.13",
+    "CoreSha256": "3474E8726755DB88512FB4EEA5B97473E0AF57B57ED587ABB33EE8ABA1306E9B",
+    "TestAssemblySha256": "7FE7C5BFCB4375933CA674A6B5C57DC71509396CA19B59F7406A11722825E12A",
+    "CoreInformationalVersion": "3.0.0+2e2915a4b218c89dba8c126a1e32dec410c4958e",
+    "Scope": "Nine actual coordinate/component contracts and 32 public QR, Data Matrix and Aztec decoding checks on the exact Windows-qualified managed binaries. Functional qualification only; no native timing or full native corpus claim."
+  },
+  "Scope": "Exact managed core and test binary, native ARM64 functional execution only; not native timing or full-corpus qualification."
+}

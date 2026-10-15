@@ -1,0 +1,276 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "Supplemental Expanded workspace diagnostic; original frozen image hashes and oracles. Positive format hints stay original; all distinct frozen negatives use the explicit Expanded Stacked format to isolate this decoder. Main corpus and allowances are unchanged.",
+  "Samples": [
+    {
+      "Id": "rssexpanded-1/15.png",
+      "File": "rssexpanded-1/15.png",
+      "Sha256": "e49855bb21033198dbb7f4dc65470c22cda2090f762eb02df324d22781f0ba31",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)90012345678908(3102)001750(11)100312"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/29.png",
+      "File": "rssexpanded-1/29.png",
+      "Sha256": "f8410dadeb758ed7166d693ec59d5a6eda9329ef7001794cffeb90f98a9017fb",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098.1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/6.png",
+      "File": "rssexpanded-1/6.png",
+      "Sha256": "0c7136916a78066d767bb0de0ac89f115e21892b87a8fe760d437b6b8f325c65",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)567(01)90012345678908(11)010101"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/2.png",
+      "File": "rssexpanded-1/2.png",
+      "Sha256": "4ab06b733da9846e737e181e5b4da5e056492402b86db174f00d078db26a52a2",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)90012345678908(3103)001750"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/23.png",
+      "File": "rssexpanded-1/23.png",
+      "Sha256": "3ffbbbbca6f72f14555b231627f426e51051cec2fe48c8eeecab66c433eb7119",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)56789(11)010101"
+      ]
+    },
+    {
+      "Id": "rssexpanded-1/9.png",
+      "File": "rssexpanded-1/9.png",
+      "Sha256": "3ba48f8a98a00666361d3888cd0cb6f58e4d02b753eb5889cd2dc14c62231853",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)567(3102)123456"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/3_02.png",
+      "File": "rssexpanded-2/3_02.png",
+      "Sha256": "670104b5e90fa42b2973d0879deca34782786c14df396018b80c4cc187c070f3",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)12A"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/4_02.png",
+      "File": "rssexpanded-2/4_02.png",
+      "Sha256": "876ea3e91d3ae768d1b707b63a124474107b585a928be779519c25cbdbb4f9bf",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)98898765432106(3202)012345(15)991231"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/3_03.png",
+      "File": "rssexpanded-2/3_03.png",
+      "Sha256": "58670b20aea00ad21e20f2f8794a28fcb958334fea06dc28c135648a70d7832a",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)12A"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/4_05.png",
+      "File": "rssexpanded-2/4_05.png",
+      "Sha256": "0cccfe4526ac6810d5231a165d323f16cf3e06005b93da5d79fa8f801d8c4cce",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)98898765432106(3202)012345(15)991231"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/4_01.png",
+      "File": "rssexpanded-2/4_01.png",
+      "Sha256": "610f4479eabc0660bac80e0d21904b5dd81824fa2c8904ce7f202c249cab57b7",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(01)98898765432106(3202)012345(15)991231"
+      ]
+    },
+    {
+      "Id": "rssexpanded-2/3_09.png",
+      "File": "rssexpanded-2/3_09.png",
+      "Sha256": "dda79ff983e9bc5411f35dbc9edb903a421c7323c676d73834edfa2875ecd3ce",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)12A"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/29.png",
+      "File": "rssexpanded-3/29.png",
+      "Sha256": "6126246090bbbd7ccb1ef67c26995fcfdd822cebcb10d27b1cd7837d76117bfb",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098!1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/24.png",
+      "File": "rssexpanded-3/24.png",
+      "Sha256": "723ea7490003f6fcc1b6b523a86b11f7ff128bbbcbcd689418202b8f6f63b83d",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098,1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/41.png",
+      "File": "rssexpanded-3/41.png",
+      "Sha256": "1d5207a319caaa9b6353170b028ce99c5e15d05856cc5c78de265d3d11d2d6d9",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098_1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/99.png",
+      "File": "rssexpanded-3/99.png",
+      "Sha256": "e612fe856184a4044d296f754ab2678a2f1ee9b4e30a7d0ed27d26de1092591c",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098_1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/87.png",
+      "File": "rssexpanded-3/87.png",
+      "Sha256": "165e021513087b6a073810354ee2332090d95f04a335ac27a0858205a196d0a8",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)1098!1234"
+      ]
+    },
+    {
+      "Id": "rssexpanded-3/20.png",
+      "File": "rssexpanded-3/20.png",
+      "Sha256": "71732c57df631a6525b824f7e49117a08aa461b1313c7f2d738aff44a716491d",
+      "Format": "Gs1DataBarExpanded",
+      "Expected": [
+        "(10)5678(11)001010"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/64.png",
+      "File": "rssexpandedstacked-1/64.png",
+      "Sha256": "491b308289ace592e5187953bd0d7f3d45a3ffe9f9c090c35980ae77c2038f95",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(10)123"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/59.png",
+      "File": "rssexpandedstacked-1/59.png",
+      "Sha256": "c2a49663b1f7322629190cade2b300e5802f6523783116be5f4f17f55870c917",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(10)1;:/0123456789012"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/34.png",
+      "File": "rssexpandedstacked-1/34.png",
+      "Sha256": "2d427ba8e2fa82b8b567d443aee69c991eac29dff3b9a3988a81c326c6de64c1",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(10)1098!1234"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/14.png",
+      "File": "rssexpandedstacked-1/14.png",
+      "Sha256": "eb67759bb9d6cf7d9aa350b5232d1e925a4a3cc5a3bd444786052da516784fb4",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)90012345678908(3932)0401234"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/20.png",
+      "File": "rssexpandedstacked-1/20.png",
+      "Sha256": "7545a3028bc7eee68fd3d4942d4bb8295b53111e3ca5776f968241344647da0d",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)12345678901231(10)PIRAMIDE-PROJECT"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-1/23.png",
+      "File": "rssexpandedstacked-1/23.png",
+      "Sha256": "97dbd9a3394c2052af42f687fc9d6cc624ede57fc69825696bd84353040d25f8",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(15)991231(3103)001750(10)12A(422)123(21)123456(423)0123456789012"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/1.png",
+      "File": "rssexpandedstacked-2/1.png",
+      "Sha256": "6f9a75e5de88b3f9cae574b36ff73de911acfacc884a6d2122c153657030788c",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(8110)10014141012345290110100"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/22.png",
+      "File": "rssexpandedstacked-2/22.png",
+      "Sha256": "07db77f65504ff63db29a5280131fb59c01df5e11e46fa52af15cae20a926357",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)98898765432106(15)991231(3103)001750(10)12A(422)123(21)123456(423)012345678901"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/1000.png",
+      "File": "rssexpandedstacked-2/1000.png",
+      "Sha256": "f77d056739793e517ef4d8fc4596d6917b1fb9d1d12c73fabadcaf9a00c11010",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)98898765432106(3202)012345(15)991231"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/19.png",
+      "File": "rssexpandedstacked-2/19.png",
+      "Sha256": "e7699c01139c4c0517e68b3b29971c10b24aa69f15667322eb3fcf43bf1fdd9a",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)12345678901231(10)UNIVERSITY-OF-DEUSTO"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/23.png",
+      "File": "rssexpandedstacked-2/23.png",
+      "Sha256": "97dbd9a3394c2052af42f687fc9d6cc624ede57fc69825696bd84353040d25f8",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(15)991231(3103)001750(10)12A(422)123(21)123456(423)0123456789012"
+      ]
+    },
+    {
+      "Id": "rssexpandedstacked-2/13.png",
+      "File": "rssexpandedstacked-2/13.png",
+      "Sha256": "6295170bd4e838233707b10e19b7ec94274463e52422ac148757ee0650e09ead",
+      "Format": "Gs1DataBarExpandedStacked",
+      "Expected": [
+        "(01)90012345678908(3922)795888888888888888888888888888888888888888888888888888"
+      ]
+    }
+  ]
+}

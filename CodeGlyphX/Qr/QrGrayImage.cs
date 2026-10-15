@@ -6,7 +6,7 @@ using CodeGlyphX.Rendering;
 
 namespace CodeGlyphX.Qr;
 
-internal readonly struct QrGrayImage {
+internal readonly partial struct QrGrayImage {
     public readonly int Width;
     public readonly int Height;
     public readonly byte[] Gray;
@@ -367,94 +367,6 @@ internal readonly struct QrGrayImage {
         }
 
         return new QrGrayImage(rotW, rotH, rotated, Min, Max, Threshold, null);
-    }
-
-    public QrGrayImage WithBinaryClose(int radius) => WithBinaryClose(radius, pool: null);
-
-    public QrGrayImage WithBinaryClose(int radius, QrGrayImagePool? pool) {
-        if (radius <= 0) return this;
-
-        var w = Width;
-        var h = Height;
-        var total = w * h;
-        var mask = RentBuffer(total, pool);
-        var temp = RentBuffer(total, pool);
-        var gray = RentBuffer(total, pool);
-
-        var thresholds = ThresholdMap;
-        var threshold = Threshold;
-        for (var i = 0; i < total; i++) {
-            var t = thresholds is null ? threshold : thresholds[i];
-            mask[i] = Gray[i] <= t ? (byte)1 : (byte)0;
-        }
-
-        Dilate(mask, temp, w, h, radius);
-        Erode(temp, mask, w, h, radius);
-
-        for (var i = 0; i < total; i++) {
-            gray[i] = mask[i] == 1 ? (byte)0 : (byte)255;
-        }
-
-        return new QrGrayImage(w, h, gray, min: 0, max: 255, threshold: 127, thresholdMap: null);
-    }
-
-    public QrGrayImage WithBinaryOpen(int radius) => WithBinaryOpen(radius, pool: null);
-
-    public QrGrayImage WithBinaryOpen(int radius, QrGrayImagePool? pool) {
-        if (radius <= 0) return this;
-
-        var w = Width;
-        var h = Height;
-        var total = w * h;
-        var mask = RentBuffer(total, pool);
-        var temp = RentBuffer(total, pool);
-        var gray = RentBuffer(total, pool);
-
-        var thresholds = ThresholdMap;
-        var threshold = Threshold;
-        for (var i = 0; i < total; i++) {
-            var t = thresholds is null ? threshold : thresholds[i];
-            mask[i] = Gray[i] <= t ? (byte)1 : (byte)0;
-        }
-
-        Erode(mask, temp, w, h, radius);
-        Dilate(temp, mask, w, h, radius);
-
-        for (var i = 0; i < total; i++) {
-            gray[i] = mask[i] == 1 ? (byte)0 : (byte)255;
-        }
-
-        return new QrGrayImage(w, h, gray, min: 0, max: 255, threshold: 127, thresholdMap: null);
-    }
-
-    public QrGrayImage WithBinaryEdge(int radius) => WithBinaryEdge(radius, pool: null);
-
-    public QrGrayImage WithBinaryEdge(int radius, QrGrayImagePool? pool) {
-        if (radius <= 0) return this;
-
-        var w = Width;
-        var h = Height;
-        var total = w * h;
-        var mask = RentBuffer(total, pool);
-        var dilated = RentBuffer(total, pool);
-        var eroded = RentBuffer(total, pool);
-        var gray = RentBuffer(total, pool);
-
-        var thresholds = ThresholdMap;
-        var threshold = Threshold;
-        for (var i = 0; i < total; i++) {
-            var t = thresholds is null ? threshold : thresholds[i];
-            mask[i] = Gray[i] <= t ? (byte)1 : (byte)0;
-        }
-
-        Dilate(mask, dilated, w, h, radius);
-        Erode(mask, eroded, w, h, radius);
-
-        for (var i = 0; i < total; i++) {
-            gray[i] = dilated[i] != eroded[i] ? (byte)0 : (byte)255;
-        }
-
-        return new QrGrayImage(w, h, gray, min: 0, max: 255, threshold: 127, thresholdMap: null);
     }
 
     public QrGrayImage Rotate180() => Rotate180(pool: null);
@@ -1423,66 +1335,6 @@ internal readonly struct QrGrayImage {
 
     private static byte[] RentBuffer(int size, QrGrayImagePool? pool) {
         return pool is null ? new byte[size] : pool.Rent(size);
-    }
-
-    private static void Dilate(ReadOnlySpan<byte> src, Span<byte> dst, int width, int height, int radius) {
-        for (var y = 0; y < height; y++) {
-            var y0 = y - radius;
-            var y1 = y + radius;
-            if (y0 < 0) y0 = 0;
-            if (y1 >= height) y1 = height - 1;
-
-            var rowIndex = y * width;
-            for (var x = 0; x < width; x++) {
-                var x0 = x - radius;
-                var x1 = x + radius;
-                if (x0 < 0) x0 = 0;
-                if (x1 >= width) x1 = width - 1;
-
-                var on = false;
-                for (var yy = y0; yy <= y1 && !on; yy++) {
-                    var offset = yy * width;
-                    for (var xx = x0; xx <= x1; xx++) {
-                        if (src[offset + xx] != 0) {
-                            on = true;
-                            break;
-                        }
-                    }
-                }
-
-                dst[rowIndex + x] = on ? (byte)1 : (byte)0;
-            }
-        }
-    }
-
-    private static void Erode(ReadOnlySpan<byte> src, Span<byte> dst, int width, int height, int radius) {
-        for (var y = 0; y < height; y++) {
-            var y0 = y - radius;
-            var y1 = y + radius;
-            if (y0 < 0) y0 = 0;
-            if (y1 >= height) y1 = height - 1;
-
-            var rowIndex = y * width;
-            for (var x = 0; x < width; x++) {
-                var x0 = x - radius;
-                var x1 = x + radius;
-                if (x0 < 0) x0 = 0;
-                if (x1 >= width) x1 = width - 1;
-
-                var on = true;
-                for (var yy = y0; yy <= y1 && on; yy++) {
-                    var offset = yy * width;
-                    for (var xx = x0; xx <= x1; xx++) {
-                        if (src[offset + xx] == 0) {
-                            on = false;
-                            break;
-                        }
-                    }
-                }
-
-                dst[rowIndex + x] = on ? (byte)1 : (byte)0;
-            }
-        }
     }
 
     private static byte ComputeOtsuThreshold(ReadOnlySpan<int> hist, int total) {

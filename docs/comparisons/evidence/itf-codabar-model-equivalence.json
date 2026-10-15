@@ -1,0 +1,10 @@
+{
+  "Cases": 20000,
+  "Accepted": 6170,
+  "Cancelled": 208,
+  "Mismatches": 0,
+  "PreviousCoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18",
+  "CoreSha256": "EAF7AFDB8F9480956F7193466D21D6E1ED96934131D9B986F928EA6904E2551F",
+  "Scope": "Actual previous/current Codabar validators in isolated assembly contexts. Seeded width, gain, rounding, payload, framing, quiet-zone, direction and cancellation cases compare decisions and exact fit outputs. No production hooks.",
+  "FirstMismatches": []
+}

@@ -1,0 +1,23 @@
+{
+  "CoreSha256": "3E5DEB506CA96876A98BFEE302EE84EA2A806EF7AC5BC78F3C26D5D1EAE96A39",
+  "TestAssemblySha256": "01E3EA6063550D2552E4869E18D0C5925C6E35983352966CCDFEFC5112200BB2",
+  "TrxSha256": "0661F0E16B67450472074EA37C8A999C8E35CE1B84FD6A8EE974E0C70E82F6F9",
+  "Cases": [
+    {
+      "Name": "CodeGlyphX.Tests.RetailDigitFitTests.DigitFitsPreserveResidualLimitsParityTiesAndRejectedWidths(parity: 0)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.RetailDigitFitTests.DigitFitsPreserveResidualLimitsParityTiesAndRejectedWidths(parity: -1)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.RetailDigitFitTests.DigitFitsPreserveResidualLimitsParityTiesAndRejectedWidths(parity: 1)",
+      "Outcome": "Passed"
+    }
+  ],
+  "Total": 3,
+  "Failed": 0,
+  "Passed": 3,
+  "Scope": "The three current scalar-reference parity cases pass against the exact preceding 3E5DEB core in an isolated copied test host. This is behavior-preservation proof; the preceding implementation is expected to pass. No cases aborted or skipped."
+}

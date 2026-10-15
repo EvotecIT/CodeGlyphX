@@ -20,6 +20,12 @@ CodeGlyphX is a pure-managed .NET library for generating and decoding QR codes, 
 
 The [capability matrix](/docs/symbol-capabilities/) lists what each format supports, and the [API reference](/api/) documents every public type. Upgrading? Read the [3.0 migration guide](/docs/migration-3/); the [2.0 guide](/docs/migration-2/) is kept for earlier upgrades.
 
+## Performance and recognition
+
+For measured generation speed and image recognition quality, read the [current comparisons](/benchmarks/). The summary below includes the remaining decoding gaps.
+
+{{< comparison-summary >}}
+
 ## Getting Help
 
 If you encounter issues or have questions, visit the

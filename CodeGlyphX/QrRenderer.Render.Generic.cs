@@ -36,7 +36,7 @@ internal static partial class QrRenderer {
             case OutputFormat.Png: {
                 var render = BuildPngOptions(opts, qr);
                 if (outputOptions is not null) render.PngCompressionLevel = outputOptions.ResolvePngCompression(render.PngCompressionLevel);
-                return RenderedOutput.FromBinary(format, QrPngRenderer.Render(qr.Modules, render));
+                return RenderedOutput.FromOwnedBinary(format, QrPngRenderer.Render(qr.Modules, render));
             }
             case OutputFormat.Svg: {
                 var render = BuildSvgOptions(opts, qr);

@@ -1,0 +1,28 @@
+{
+  "WarmupsPerEngine": 3,
+  "MeasuredIterationsPerEngine": 2,
+  "Samples": [
+    {
+      "Engine": "Baseline",
+      "Iteration": 0,
+      "Identity": 1.0
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 0,
+      "Identity": 2.0
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 1,
+      "Identity": 2.0
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 1,
+      "Identity": 1.0
+    }
+  ],
+  "InstancesCreated": 2,
+  "Conclusion": "Declared suite variables retain object references across per-iteration setup, warmups and measurements. No new runner lifecycle feature is required."
+}

@@ -1,0 +1,2 @@
+# Preserve result packet bytes so their SHA-256 hashes survive checkout.
+*.json text eol=lf

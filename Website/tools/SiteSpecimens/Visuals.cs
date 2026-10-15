@@ -20,8 +20,8 @@ internal static partial class SiteVisuals {
         var version = Regex.Match(csproj, "<VersionPrefix>([^<]+)</VersionPrefix>").Groups[1].Value;
 
         var docs = BuildDocs(out var cards);
-        var bench = BuildBench(out var speedups);
-        var nav = BuildNav(site, version, speedups);
+        var bench = BuildBench(out var recognition);
+        var nav = BuildNav(site, version, recognition);
         var pages = BuildPages(version);
 
         var model = new {

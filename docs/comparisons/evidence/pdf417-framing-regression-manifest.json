@@ -1,0 +1,42 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "All PNG images with UTF-8 text oracles in pdf417-1, pdf417-2 and pdf417-3, excluding the 18 frozen comparison images. The 38-image selection was fixed before the first supplemental outcomes. One revealed regression informed the final correction and permanent fixture; the final set is supplemental regression evidence, not an unseen holdout.",
+  "Samples": [
+    {
+      "Id": "pdf417-2/25.png",
+      "File": "pdf417-2/25.png",
+      "Sha256": "5423cc32edd13dbf62bebfe90f4a2f4e49e310e15c51656f2d2e197e690ff1ef",
+      "Format": "Pdf417",
+      "Expected": [
+        "This is PDF417"
+      ]
+    },
+    {
+      "Id": "pdf417-3/13.png",
+      "File": "pdf417-3/13.png",
+      "Sha256": "4f9917e3b93139d4081c3b9969e0946d9795a93e9b1f2e58235afadddb7b67dd",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/14.png",
+      "File": "pdf417-3/14.png",
+      "Sha256": "5f6361c870fab9a2c9a51afb3a98c0a5934e0e8a40850b9358fd7a41f1820249",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    },
+    {
+      "Id": "pdf417-3/15.png",
+      "File": "pdf417-3/15.png",
+      "Sha256": "ba537cbf00281bb1c159ce5a620fbc8031157f5f61ef3f2c9a9e498de70ef306",
+      "Format": "Pdf417",
+      "Expected": [
+        "A larger PDF417 barcode with text and error correction level 8."
+      ]
+    }
+  ]
+}

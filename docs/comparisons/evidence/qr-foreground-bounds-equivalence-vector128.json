@@ -1,0 +1,10 @@
+{
+  "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+  "Vector256HardwareAccelerated": false,
+  "Vector128HardwareAccelerated": true,
+  "Cases": 286720,
+  "PixelClassificationsCompared": 144252928,
+  "Mismatches": 0,
+  "CancelledAndExpiredBoundsStop": true,
+  "Scope": "Actual private foreground bounds versus independent selected-pixel extrema across every byte threshold, global/adaptive maps, both polarities, vector boundary widths, cropped and single-row/column regions, patterned/random masks and unused pooled-array tails. Separate runtime modes verify 256-bit, 128-bit and scalar paths. This is decision proof, not a performance benchmark."
+}

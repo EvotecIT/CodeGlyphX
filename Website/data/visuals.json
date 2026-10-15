@@ -877,1498 +877,626 @@
     }
   },
   "bench": {
-    "initial": "windows-full",
-    "sets": [
+    "date": "2026-10-14",
+    "positives": 267,
+    "recognition": [
       {
-        "id": "windows-full",
-        "os": "windows",
-        "mode": "full",
-        "generated": "2026-01-24T10:49:40.7910358Z",
-        "count": 11,
-        "wins": 11,
-        "median": "56×",
-        "ticks": [
+        "engine": "CodeGlyphX",
+        "cgx": true,
+        "before": 73,
+        "correct": 243,
+        "positives": 267,
+        "percent": "91.0",
+        "before_pct": 27.34,
+        "pct": 91.01
+      },
+      {
+        "engine": "ZXing.Net",
+        "cgx": false,
+        "before": 220,
+        "correct": 220,
+        "positives": 267,
+        "percent": "82.4",
+        "before_pct": 82.4,
+        "pct": 82.4
+      },
+      {
+        "engine": "ZXing-C++",
+        "cgx": false,
+        "before": 224,
+        "correct": 224,
+        "positives": 267,
+        "percent": "83.9",
+        "before_pct": 83.9,
+        "pct": 83.9
+      }
+    ],
+    "domains": [
+      {
+        "id": "ccd0",
+        "label": "CCD0",
+        "affinity": "0xFFFF",
+        "generation": [
           {
-            "label": "1×",
-            "pos": 0
+            "operation": "PNG",
+            "payload": "URL",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "209.58",
+                "p95": "318.74",
+                "bytes": "32,592",
+                "pct": 13.16
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "1592.69",
+                "p95": "1765.38",
+                "bytes": "946,584",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "1513.46",
+                "p95": "1715.73",
+                "bytes": "878,176",
+                "pct": 95.03
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "217.91",
+                "p95": "372.05",
+                "bytes": "5,816",
+                "pct": 13.68
+              }
+            ]
           },
           {
-            "label": "10×",
-            "pos": 50
+            "operation": "PNG",
+            "payload": "32 digits",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "107.77",
+                "p95": "128.31",
+                "bytes": "22,232",
+                "pct": 12.72
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "847.03",
+                "p95": "892.81",
+                "bytes": "598,385",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "815.25",
+                "p95": "897.05",
+                "bytes": "569,061",
+                "pct": 96.25
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "120.58",
+                "p95": "130.01",
+                "bytes": "4,760",
+                "pct": 14.24
+              }
+            ]
           },
           {
-            "label": "100×",
-            "pos": 100
+            "operation": "PNG",
+            "payload": "Multilingual text",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "1863.88",
+                "p95": "2087.65",
+                "bytes": "146,544",
+                "pct": 21.65
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "8607.95",
+                "p95": "10185.21",
+                "bytes": "4,769,177",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "7542.74",
+                "p95": "8387.12",
+                "bytes": "4,177,697",
+                "pct": 87.63
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "1672.68",
+                "p95": "1829.93",
+                "bytes": "19,624",
+                "pct": 19.43
+              }
+            ]
+          },
+          {
+            "operation": "Modules",
+            "payload": "URL",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "916.40",
+                "p95": "1145.01",
+                "bytes": "5,057",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "892.64",
+                "p95": "1127.33",
+                "bytes": "71,127",
+                "pct": 97.41
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "158.92",
+                "p95": "254.86",
+                "bytes": "2,709",
+                "pct": 17.34
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "712.81",
+                "p95": "859.87",
+                "bytes": "5,032",
+                "pct": 77.78
+              }
+            ]
+          },
+          {
+            "operation": "Modules",
+            "payload": "32 digits",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "84.20",
+                "p95": "108.19",
+                "bytes": "3,832",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "62.71",
+                "p95": "91.00",
+                "bytes": "31,304",
+                "pct": 74.48
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "39.04",
+                "p95": "64.90",
+                "bytes": "1,696",
+                "pct": 46.37
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "40.74",
+                "p95": "68.86",
+                "bytes": "3,760",
+                "pct": 48.38
+              }
+            ]
+          },
+          {
+            "operation": "Modules",
+            "payload": "Multilingual text",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "1744.84",
+                "p95": "1792.65",
+                "bytes": "23,872",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "1711.15",
+                "p95": "1897.16",
+                "bytes": "606,593",
+                "pct": 98.07
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "1121.87",
+                "p95": "1200.46",
+                "bytes": "14,648",
+                "pct": 64.3
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "1282.26",
+                "p95": "1320.95",
+                "bytes": "16,728",
+                "pct": 73.49
+              }
+            ]
           }
         ],
-        "headline": [
+        "decoding": [
           {
-            "scenario": "Code128 PNG",
-            "runner": "ZXing.Net",
-            "factor": "65×",
-            "pos": 90.62,
-            "slower": false
+            "engine": "CodeGlyphX",
+            "cgx": true,
+            "median": "705.57",
+            "p95": "952.13",
+            "managed_mib": "27.09",
+            "correct": "19",
+            "pct": 100
           },
           {
-            "scenario": "Code39 PNG",
-            "runner": "ZXing.Net",
-            "factor": "60×",
-            "pos": 89.01,
-            "slower": false
+            "engine": "ZXing.Net",
+            "cgx": false,
+            "median": "198.54",
+            "p95": "233.79",
+            "managed_mib": "13.26",
+            "correct": "19",
+            "pct": 28.14
           },
           {
-            "scenario": "PDF417 PNG",
-            "runner": "ZXing.Net",
-            "factor": "58×",
-            "pos": 88.35,
-            "slower": false
-          },
-          {
-            "scenario": "EAN-13 PNG",
-            "runner": "ZXing.Net",
-            "factor": "57×",
-            "pos": 87.62,
-            "slower": false
-          },
-          {
-            "scenario": "Code93 PNG",
-            "runner": "ZXing.Net",
-            "factor": "56×",
-            "pos": 87.55,
-            "slower": false
-          },
-          {
-            "scenario": "UPC-A PNG",
-            "runner": "ZXing.Net",
-            "factor": "56×",
-            "pos": 87.31,
-            "slower": false
-          },
-          {
-            "scenario": "Aztec PNG",
-            "runner": "ZXing.Net",
-            "factor": "26×",
-            "pos": 70.96,
-            "slower": false
-          },
-          {
-            "scenario": "Data Matrix PNG (medium)",
-            "runner": "ZXing.Net",
-            "factor": "25×",
-            "pos": 70.18,
-            "slower": false
-          },
-          {
-            "scenario": "QR PNG (medium)",
-            "runner": "QRCoder",
-            "factor": "2.5×",
-            "pos": 19.89,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (clean)",
-            "runner": "ZXing.Net",
-            "factor": "1.5×",
-            "pos": 8.19,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (noisy)",
-            "runner": "ZXing.Net",
-            "factor": "1.2×",
-            "pos": 4.29,
-            "slower": false
-          }
-        ],
-        "scenarios": [
-          {
-            "scenario": "Aztec PNG",
-            "benchmark": "Aztec (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "21.18 μs",
-                "alloc": "61.34 KB",
-                "pct": 1.58,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "556.01 μs",
-                "alloc": "61.38 KB",
-                "pct": 41.56,
-                "factor": "26×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "1,337.96 μs",
-                "alloc": "642.4 KB",
-                "pct": 100,
-                "factor": "63×"
-              }
-            ]
-          },
-          {
-            "scenario": "Code128 PNG",
-            "benchmark": "Code 128 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "10.76 μs",
-                "alloc": "14.43 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "698.57 μs",
-                "alloc": "15.7 KB",
-                "pct": 8.62,
-                "factor": "65×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "8,099.55 μs",
-                "alloc": "2034.97 KB",
-                "pct": 100,
-                "factor": "753×"
-              }
-            ]
-          },
-          {
-            "scenario": "Code39 PNG",
-            "benchmark": "Code 39 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "8.167 μs",
-                "alloc": "10.02 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "492.240 μs",
-                "alloc": "12.23 KB",
-                "pct": 8.66,
-                "factor": "60×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "5,682.405 μs",
-                "alloc": "1448.41 KB",
-                "pct": 100,
-                "factor": "696×"
-              }
-            ]
-          },
-          {
-            "scenario": "Code93 PNG",
-            "benchmark": "Code 93 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "6.548 μs",
-                "alloc": "8.13 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "369.068 μs",
-                "alloc": "11.66 KB",
-                "pct": 10.18,
-                "factor": "56×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "3,626.355 μs",
-                "alloc": "957.22 KB",
-                "pct": 100,
-                "factor": "554×"
-              }
-            ]
-          },
-          {
-            "scenario": "Data Matrix PNG (medium)",
-            "benchmark": "Data Matrix (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "21.02 μs",
-                "alloc": "15.52 KB",
-                "pct": 1.49,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "532.46 μs",
-                "alloc": "21.2 KB",
-                "pct": 37.64,
-                "factor": "25×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "1,414.52 μs",
-                "alloc": "644.93 KB",
-                "pct": 100,
-                "factor": "67×"
-              }
-            ]
-          },
-          {
-            "scenario": "EAN-13 PNG",
-            "benchmark": "EAN-13 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "5.243 μs",
-                "alloc": "6.75 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "296.403 μs",
-                "alloc": "11.63 KB",
-                "pct": 8.27,
-                "factor": "57×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "3,583.869 μs",
-                "alloc": "850.63 KB",
-                "pct": 100,
-                "factor": "684×"
-              }
-            ]
-          },
-          {
-            "scenario": "PDF417 PNG",
-            "benchmark": "PDF417 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "52.67 μs",
-                "alloc": "49.9 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "3,079.46 μs",
-                "alloc": "207.59 KB",
-                "pct": 30.27,
-                "factor": "58×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "10,174.70 μs",
-                "alloc": "5003.67 KB",
-                "pct": 100,
-                "factor": "193×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR PNG (medium)",
-            "benchmark": "QR (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "97.86 μs",
-                "alloc": "14.19 KB",
-                "pct": 3.24,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,202.59 μs",
-                "alloc": "79.37 KB",
-                "pct": 39.77,
-                "factor": "12×"
-              },
-              {
-                "vendor": "QRCoder",
-                "cgx": false,
-                "mean": "244.56 μs",
-                "alloc": "7.31 KB",
-                "pct": 8.09,
-                "factor": "2.5×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "3,024.08 μs",
-                "alloc": "1545.71 KB",
-                "pct": 100,
-                "factor": "31×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (clean)",
-            "benchmark": "QR Decode (Clean)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "322.1 μs",
-                "alloc": "5.27 KB",
-                "pct": 68.58,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "469.7 μs",
-                "alloc": "127.69 KB",
-                "pct": 100,
-                "factor": "1.5×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (noisy)",
-            "benchmark": "QR Decode (Noisy)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "1.595 ms",
-                "alloc": "5.45 KB",
-                "pct": 82.09,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1.943 ms",
-                "alloc": "706.98 KB",
-                "pct": 100,
-                "factor": "1.2×"
-              }
-            ]
-          },
-          {
-            "scenario": "UPC-A PNG",
-            "benchmark": "UPC-A (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "5.766 μs",
-                "alloc": "7.05 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "321.472 μs",
-                "alloc": "11.7 KB",
-                "pct": 10.71,
-                "factor": "56×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "3,002.774 μs",
-                "alloc": "765.7 KB",
-                "pct": 100,
-                "factor": "521×"
-              }
-            ]
+            "engine": "ZXing-C++",
+            "cgx": false,
+            "median": "25.84",
+            "p95": "30.81",
+            "managed_mib": "2.21",
+            "correct": "19",
+            "pct": 3.66
           }
         ]
       },
       {
-        "id": "windows-quick",
-        "os": "windows",
-        "mode": "quick",
-        "generated": "2026-01-30T09:22:51.7369607Z",
-        "count": 14,
-        "wins": 12,
-        "median": "6.4×",
-        "ticks": [
+        "id": "ccd1",
+        "label": "CCD1",
+        "affinity": "0xFFFF0000",
+        "generation": [
           {
-            "label": "1×",
-            "pos": 0
+            "operation": "PNG",
+            "payload": "URL",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "208.45",
+                "p95": "234.55",
+                "bytes": "32,603",
+                "pct": 14.56
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "1431.43",
+                "p95": "1743.51",
+                "bytes": "946,586",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "1330.72",
+                "p95": "1503.35",
+                "bytes": "878,223",
+                "pct": 92.96
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "175.38",
+                "p95": "268.26",
+                "bytes": "5,816",
+                "pct": 12.25
+              }
+            ]
           },
           {
-            "label": "10×",
-            "pos": 50
+            "operation": "PNG",
+            "payload": "32 digits",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "90.14",
+                "p95": "125.22",
+                "bytes": "22,232",
+                "pct": 11.48
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "785.02",
+                "p95": "853.21",
+                "bytes": "598,362",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "780.25",
+                "p95": "886.81",
+                "bytes": "569,094",
+                "pct": 99.39
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "108.55",
+                "p95": "116.67",
+                "bytes": "4,760",
+                "pct": 13.83
+              }
+            ]
           },
           {
-            "label": "100×",
-            "pos": 100
+            "operation": "PNG",
+            "payload": "Multilingual text",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "1785.52",
+                "p95": "2000.30",
+                "bytes": "146,544",
+                "pct": 22.97
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "7774.40",
+                "p95": "10219.83",
+                "bytes": "4,769,197",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "7016.28",
+                "p95": "7329.06",
+                "bytes": "4,177,691",
+                "pct": 90.25
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "1526.80",
+                "p95": "1771.69",
+                "bytes": "19,624",
+                "pct": 19.64
+              }
+            ]
+          },
+          {
+            "operation": "Modules",
+            "payload": "URL",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "867.35",
+                "p95": "1029.13",
+                "bytes": "5,057",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "804.39",
+                "p95": "1044.37",
+                "bytes": "71,147",
+                "pct": 92.74
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "139.56",
+                "p95": "227.17",
+                "bytes": "2,715",
+                "pct": 16.09
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "596.49",
+                "p95": "775.19",
+                "bytes": "5,025",
+                "pct": 68.77
+              }
+            ]
+          },
+          {
+            "operation": "Modules",
+            "payload": "32 digits",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "89.66",
+                "p95": "135.20",
+                "bytes": "3,832",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "62.87",
+                "p95": "127.44",
+                "bytes": "31,304",
+                "pct": 70.12
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "44.27",
+                "p95": "78.37",
+                "bytes": "1,696",
+                "pct": 49.38
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "38.92",
+                "p95": "74.82",
+                "bytes": "3,760",
+                "pct": 43.41
+              }
+            ]
+          },
+          {
+            "operation": "Modules",
+            "payload": "Multilingual text",
+            "bars": [
+              {
+                "engine": "CodeGlyphX",
+                "cgx": true,
+                "median": "1507.22",
+                "p95": "1683.48",
+                "bytes": "23,872",
+                "pct": 100
+              },
+              {
+                "engine": "ZXing.Net",
+                "cgx": false,
+                "median": "1460.81",
+                "p95": "1673.16",
+                "bytes": "606,584",
+                "pct": 96.92
+              },
+              {
+                "engine": "ZXing-C++",
+                "cgx": false,
+                "median": "991.76",
+                "p95": "1130.86",
+                "bytes": "14,648",
+                "pct": 65.8
+              },
+              {
+                "engine": "QRCoder",
+                "cgx": false,
+                "median": "1099.28",
+                "p95": "1219.71",
+                "bytes": "16,728",
+                "pct": 72.93
+              }
+            ]
           }
         ],
-        "headline": [
+        "decoding": [
           {
-            "scenario": "Code128 PNG",
-            "runner": "ZXing.Net",
-            "factor": "11×",
-            "pos": 52.73,
-            "slower": false
+            "engine": "CodeGlyphX",
+            "cgx": true,
+            "median": "598.88",
+            "p95": "919.20",
+            "managed_mib": "27.11",
+            "correct": "19",
+            "pct": 100
           },
           {
-            "scenario": "Code39 PNG",
-            "runner": "ZXing.Net",
-            "factor": "11×",
-            "pos": 52.31,
-            "slower": false
+            "engine": "ZXing.Net",
+            "cgx": false,
+            "median": "175.57",
+            "p95": "217.98",
+            "managed_mib": "13.27",
+            "correct": "19",
+            "pct": 29.32
           },
           {
-            "scenario": "Code93 PNG",
-            "runner": "ZXing.Net",
-            "factor": "9.8×",
-            "pos": 49.56,
-            "slower": false
-          },
-          {
-            "scenario": "Data Matrix PNG (medium)",
-            "runner": "ZXing.Net",
-            "factor": "9.7×",
-            "pos": 49.41,
-            "slower": false
-          },
-          {
-            "scenario": "UPC-A PNG",
-            "runner": "ZXing.Net",
-            "factor": "8.9×",
-            "pos": 47.59,
-            "slower": false
-          },
-          {
-            "scenario": "EAN-13 PNG",
-            "runner": "ZXing.Net",
-            "factor": "8.9×",
-            "pos": 47.43,
-            "slower": false
-          },
-          {
-            "scenario": "PDF417 PNG",
-            "runner": "ZXing.Net",
-            "factor": "6.4×",
-            "pos": 40.25,
-            "slower": false
-          },
-          {
-            "scenario": "Aztec PNG",
-            "runner": "ZXing.Net",
-            "factor": "6.3×",
-            "pos": 40.08,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (fancy)",
-            "runner": "ZXing.Net",
-            "factor": "1.9×",
-            "pos": 14.22,
-            "slower": false
-          },
-          {
-            "scenario": "QR PNG (medium)",
-            "runner": "QRCoder",
-            "factor": "1.7×",
-            "pos": 11,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (clean)",
-            "runner": "ZXing.Net",
-            "factor": "1.2×",
-            "pos": 3.88,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (resampled)",
-            "runner": "ZXing.Net",
-            "factor": "1.1×",
-            "pos": 2.7,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (no quiet zone)",
-            "runner": "ZXing.Net",
-            "factor": "0.1×",
-            "pos": 0.8,
-            "slower": true
-          },
-          {
-            "scenario": "QR Decode (noisy)",
-            "runner": "ZXing.Net",
-            "factor": "0.1×",
-            "pos": 0.8,
-            "slower": true
-          }
-        ],
-        "scenarios": [
-          {
-            "scenario": "Aztec PNG",
-            "benchmark": "Aztec (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "235.3 μs",
-                "alloc": "61.39 KB",
-                "pct": 3.66,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,489.9 μs",
-                "alloc": "61.42 KB",
-                "pct": 23.19,
-                "factor": "6.3×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "6,423.4 μs",
-                "alloc": "642.64 KB",
-                "pct": 100,
-                "factor": "27×"
-              }
-            ]
-          },
-          {
-            "scenario": "Code128 PNG",
-            "benchmark": "Code 128 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "136.0 μs",
-                "alloc": "14.48 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,542.0 μs",
-                "alloc": "15.74 KB",
-                "pct": 2.82,
-                "factor": "11×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "54,673.4 μs",
-                "alloc": "2035.16 KB",
-                "pct": 100,
-                "factor": "402×"
-              }
-            ]
-          },
-          {
-            "scenario": "Code39 PNG",
-            "benchmark": "Code 39 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "146.0 μs",
-                "alloc": "10.07 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,624.1 μs",
-                "alloc": "12.28 KB",
-                "pct": 3.88,
-                "factor": "11×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "41,847.8 μs",
-                "alloc": "1448.45 KB",
-                "pct": 100,
-                "factor": "287×"
-              }
-            ]
-          },
-          {
-            "scenario": "Code93 PNG",
-            "benchmark": "Code 93 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "137.0 μs",
-                "alloc": "8.19 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,342.3 μs",
-                "alloc": "11.7 KB",
-                "pct": 5.6,
-                "factor": "9.8×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "23,990.6 μs",
-                "alloc": "957.41 KB",
-                "pct": 100,
-                "factor": "175×"
-              }
-            ]
-          },
-          {
-            "scenario": "Data Matrix PNG (medium)",
-            "benchmark": "Data Matrix (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "179.0 μs",
-                "alloc": "15.58 KB",
-                "pct": 2.3,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,742.2 μs",
-                "alloc": "22.31 KB",
-                "pct": 22.43,
-                "factor": "9.7×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "7,767.3 μs",
-                "alloc": "645.2 KB",
-                "pct": 100,
-                "factor": "43×"
-              }
-            ]
-          },
-          {
-            "scenario": "EAN-13 PNG",
-            "benchmark": "EAN-13 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "141.8 μs",
-                "alloc": "6.9 KB",
-                "pct": 0.73,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,259.9 μs",
-                "alloc": "11.68 KB",
-                "pct": 6.5,
-                "factor": "8.9×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "19,383.1 μs",
-                "alloc": "850.83 KB",
-                "pct": 100,
-                "factor": "137×"
-              }
-            ]
-          },
-          {
-            "scenario": "PDF417 PNG",
-            "benchmark": "PDF417 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "1.071 ms",
-                "alloc": "49.95 KB",
-                "pct": 2.65,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "6.837 ms",
-                "alloc": "207.63 KB",
-                "pct": 16.91,
-                "factor": "6.4×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "40.422 ms",
-                "alloc": "5004.02 KB",
-                "pct": 100,
-                "factor": "38×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR PNG (medium)",
-            "benchmark": "QR (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "541.5 μs",
-                "alloc": "14.88 KB",
-                "pct": 3.97,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "4,175.6 μs",
-                "alloc": "79.41 KB",
-                "pct": 30.62,
-                "factor": "7.7×"
-              },
-              {
-                "vendor": "QRCoder",
-                "cgx": false,
-                "mean": "898.6 μs",
-                "alloc": "7.31 KB",
-                "pct": 6.59,
-                "factor": "1.7×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "13,638.9 μs",
-                "alloc": "1547.52 KB",
-                "pct": 100,
-                "factor": "25×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (clean)",
-            "benchmark": "QR Decode (Clean)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "1.256 ms",
-                "alloc": "3.91 KB",
-                "pct": 83.62,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1.502 ms",
-                "alloc": "127.67 KB",
-                "pct": 100,
-                "factor": "1.2×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (noisy)",
-            "benchmark": "QR Decode (Noisy)",
-            "fastest": "ZXing.Net",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "48.186 ms",
-                "alloc": "160.77 KB",
-                "pct": 100,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "3.394 ms",
-                "alloc": "706.89 KB",
-                "pct": 7.04,
-                "factor": "0.1×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (fancy)",
-            "benchmark": "QR Decode (Stress)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "349.8 μs",
-                "alloc": "2.68 KB",
-                "pct": 51.96,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "673.2 μs",
-                "alloc": "63.25 KB",
-                "pct": 100,
-                "factor": "1.9×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (no quiet zone)",
-            "benchmark": "QR Decode (Stress)",
-            "fastest": "ZXing.Net",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "11,920.2 μs",
-                "alloc": "45.09 KB",
-                "pct": 100,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "954.0 μs",
-                "alloc": "65.78 KB",
-                "pct": 8,
-                "factor": "0.1×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (resampled)",
-            "benchmark": "QR Decode (Stress)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "643.9 μs",
-                "alloc": "1.88 KB",
-                "pct": 88.33,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "729.0 μs",
-                "alloc": "135.23 KB",
-                "pct": 100,
-                "factor": "1.1×"
-              }
-            ]
-          },
-          {
-            "scenario": "UPC-A PNG",
-            "benchmark": "UPC-A (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "130.3 μs",
-                "alloc": "7.2 KB",
-                "pct": 0.68,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,166.1 μs",
-                "alloc": "11.75 KB",
-                "pct": 6.07,
-                "factor": "8.9×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "19,200.6 μs",
-                "alloc": "765.91 KB",
-                "pct": 100,
-                "factor": "147×"
-              }
-            ]
+            "engine": "ZXing-C++",
+            "cgx": false,
+            "median": "24.61",
+            "p95": "27.82",
+            "managed_mib": "2.23",
+            "correct": "19",
+            "pct": 4.11
           }
         ]
+      }
+    ],
+    "png": [
+      {
+        "path": "qr-gray1-direct",
+        "before": "1431.25",
+        "current": "742.19",
+        "reduction": "48.1%",
+        "before_pct": 31.94,
+        "pct": 16.56
       },
       {
-        "id": "linux-quick",
-        "os": "linux",
-        "mode": "quick",
-        "generated": "2026-01-30T09:35:58.1045639Z",
-        "count": 14,
-        "wins": 12,
-        "median": "5.7×",
-        "ticks": [
-          {
-            "label": "1×",
-            "pos": 0
-          },
-          {
-            "label": "10×",
-            "pos": 50
-          },
-          {
-            "label": "100×",
-            "pos": 100
-          }
-        ],
-        "headline": [
-          {
-            "scenario": "Code128 PNG",
-            "runner": "ZXing.Net",
-            "factor": "12×",
-            "pos": 53.53,
-            "slower": false
-          },
-          {
-            "scenario": "Code39 PNG",
-            "runner": "ZXing.Net",
-            "factor": "9.1×",
-            "pos": 48.02,
-            "slower": false
-          },
-          {
-            "scenario": "EAN-13 PNG",
-            "runner": "ZXing.Net",
-            "factor": "8.0×",
-            "pos": 45.03,
-            "slower": false
-          },
-          {
-            "scenario": "Data Matrix PNG (medium)",
-            "runner": "ZXing.Net",
-            "factor": "7.7×",
-            "pos": 44.27,
-            "slower": false
-          },
-          {
-            "scenario": "Aztec PNG",
-            "runner": "ZXing.Net",
-            "factor": "7.0×",
-            "pos": 42.33,
-            "slower": false
-          },
-          {
-            "scenario": "UPC-A PNG",
-            "runner": "ZXing.Net",
-            "factor": "6.1×",
-            "pos": 39.25,
-            "slower": false
-          },
-          {
-            "scenario": "Code93 PNG",
-            "runner": "ZXing.Net",
-            "factor": "5.9×",
-            "pos": 38.71,
-            "slower": false
-          },
-          {
-            "scenario": "PDF417 PNG",
-            "runner": "ZXing.Net",
-            "factor": "5.5×",
-            "pos": 37.02,
-            "slower": false
-          },
-          {
-            "scenario": "QR PNG (medium)",
-            "runner": "QRCoder",
-            "factor": "1.8×",
-            "pos": 13.04,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (clean)",
-            "runner": "ZXing.Net",
-            "factor": "1.7×",
-            "pos": 11.05,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (fancy)",
-            "runner": "ZXing.Net",
-            "factor": "1.6×",
-            "pos": 9.93,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (resampled)",
-            "runner": "ZXing.Net",
-            "factor": "1.1×",
-            "pos": 1.68,
-            "slower": false
-          },
-          {
-            "scenario": "QR Decode (no quiet zone)",
-            "runner": "ZXing.Net",
-            "factor": "0.1×",
-            "pos": 0.8,
-            "slower": true
-          },
-          {
-            "scenario": "QR Decode (noisy)",
-            "runner": "ZXing.Net",
-            "factor": "0.1×",
-            "pos": 0.8,
-            "slower": true
-          }
-        ],
-        "scenarios": [
-          {
-            "scenario": "Aztec PNG",
-            "benchmark": "Aztec (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "216.3 μs",
-                "alloc": "61.39 KB",
-                "pct": 3.17,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,519.3 μs",
-                "alloc": "61.42 KB",
-                "pct": 22.26,
-                "factor": "7.0×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "6,825.7 μs",
-                "alloc": "642.46 KB",
-                "pct": 100,
-                "factor": "32×"
-              }
-            ]
-          },
-          {
-            "scenario": "Code128 PNG",
-            "benchmark": "Code 128 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "133.4 μs",
-                "alloc": "14.48 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,569.4 μs",
-                "alloc": "15.74 KB",
-                "pct": 2.96,
-                "factor": "12×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "53,033.3 μs",
-                "alloc": "2035.13 KB",
-                "pct": 100,
-                "factor": "398×"
-              }
-            ]
-          },
-          {
-            "scenario": "Code39 PNG",
-            "benchmark": "Code 39 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "151.6 μs",
-                "alloc": "10.07 KB",
-                "pct": 0.6,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,383.8 μs",
-                "alloc": "12.28 KB",
-                "pct": 3.56,
-                "factor": "9.1×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "38,828.4 μs",
-                "alloc": "1448.58 KB",
-                "pct": 100,
-                "factor": "256×"
-              }
-            ]
-          },
-          {
-            "scenario": "Code93 PNG",
-            "benchmark": "Code 93 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "189.9 μs",
-                "alloc": "8.19 KB",
-                "pct": 0.74,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,129.0 μs",
-                "alloc": "11.7 KB",
-                "pct": 4.4,
-                "factor": "5.9×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "25,633.9 μs",
-                "alloc": "957.3 KB",
-                "pct": 100,
-                "factor": "135×"
-              }
-            ]
-          },
-          {
-            "scenario": "Data Matrix PNG (medium)",
-            "benchmark": "Data Matrix (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "207.7 μs",
-                "alloc": "15.58 KB",
-                "pct": 2.66,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,595.3 μs",
-                "alloc": "22.31 KB",
-                "pct": 20.47,
-                "factor": "7.7×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "7,793.7 μs",
-                "alloc": "644.93 KB",
-                "pct": 100,
-                "factor": "38×"
-              }
-            ]
-          },
-          {
-            "scenario": "EAN-13 PNG",
-            "benchmark": "EAN-13 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "139.0 μs",
-                "alloc": "6.8 KB",
-                "pct": 0.61,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,105.7 μs",
-                "alloc": "11.68 KB",
-                "pct": 4.84,
-                "factor": "8.0×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "22,834.6 μs",
-                "alloc": "850.8 KB",
-                "pct": 100,
-                "factor": "164×"
-              }
-            ]
-          },
-          {
-            "scenario": "PDF417 PNG",
-            "benchmark": "PDF417 (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "1.025 ms",
-                "alloc": "49.95 KB",
-                "pct": 2.04,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "5.639 ms",
-                "alloc": "207.63 KB",
-                "pct": 11.2,
-                "factor": "5.5×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "50.328 ms",
-                "alloc": "5003.8 KB",
-                "pct": 100,
-                "factor": "49×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR PNG (medium)",
-            "benchmark": "QR (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "578.6 μs",
-                "alloc": "14.88 KB",
-                "pct": 3.7,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "3,515.6 μs",
-                "alloc": "79.41 KB",
-                "pct": 22.46,
-                "factor": "6.1×"
-              },
-              {
-                "vendor": "QRCoder",
-                "cgx": false,
-                "mean": "1,055.0 μs",
-                "alloc": "7.28 KB",
-                "pct": 6.74,
-                "factor": "1.8×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "15,654.6 μs",
-                "alloc": "1547.27 KB",
-                "pct": 100,
-                "factor": "27×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (clean)",
-            "benchmark": "QR Decode (Clean)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "1.120 ms",
-                "alloc": "3.91 KB",
-                "pct": 60.12,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1.863 ms",
-                "alloc": "127.67 KB",
-                "pct": 100,
-                "factor": "1.7×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (noisy)",
-            "benchmark": "QR Decode (Noisy)",
-            "fastest": "ZXing.Net",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "42.635 ms",
-                "alloc": "160.77 KB",
-                "pct": 100,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "3.381 ms",
-                "alloc": "706.89 KB",
-                "pct": 7.93,
-                "factor": "0.1×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (fancy)",
-            "benchmark": "QR Decode (Stress)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "396.8 μs",
-                "alloc": "2.68 KB",
-                "pct": 63.3,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "626.9 μs",
-                "alloc": "63.25 KB",
-                "pct": 100,
-                "factor": "1.6×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (no quiet zone)",
-            "benchmark": "QR Decode (Stress)",
-            "fastest": "ZXing.Net",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "10,629.6 μs",
-                "alloc": "45.09 KB",
-                "pct": 100,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "1,020.6 μs",
-                "alloc": "65.78 KB",
-                "pct": 9.6,
-                "factor": "0.1×"
-              }
-            ]
-          },
-          {
-            "scenario": "QR Decode (resampled)",
-            "benchmark": "QR Decode (Stress)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "545.8 μs",
-                "alloc": "1.88 KB",
-                "pct": 92.56,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "589.7 μs",
-                "alloc": "135.23 KB",
-                "pct": 100,
-                "factor": "1.1×"
-              }
-            ]
-          },
-          {
-            "scenario": "UPC-A PNG",
-            "benchmark": "UPC-A (Encode)",
-            "fastest": "CodeGlyphX",
-            "bars": [
-              {
-                "vendor": "CodeGlyphX",
-                "cgx": true,
-                "mean": "163.9 μs",
-                "alloc": "7.11 KB",
-                "pct": 0.83,
-                "factor": ""
-              },
-              {
-                "vendor": "ZXing.Net",
-                "cgx": false,
-                "mean": "998.9 μs",
-                "alloc": "11.75 KB",
-                "pct": 5.04,
-                "factor": "6.1×"
-              },
-              {
-                "vendor": "Barcoder",
-                "cgx": false,
-                "mean": "19,815.3 μs",
-                "alloc": "765.86 KB",
-                "pct": 100,
-                "factor": "121×"
-              }
-            ]
-          }
-        ]
+        "path": "qr-indexed1-direct",
+        "before": "561.72",
+        "current": "313.28",
+        "reduction": "44.2%",
+        "before_pct": 12.53,
+        "pct": 6.99
+      },
+      {
+        "path": "qr-rgba-direct",
+        "before": "4481.25",
+        "current": "2267.19",
+        "reduction": "49.4%",
+        "before_pct": 100,
+        "pct": 50.59
+      },
+      {
+        "path": "qr-facade-owned-array",
+        "before": "3087.50",
+        "current": "1709.38",
+        "reduction": "44.6%",
+        "before_pct": 68.9,
+        "pct": 38.15
+      },
+      {
+        "path": "barcode-facade-owned-array",
+        "before": "3778.91",
+        "current": "1916.41",
+        "reduction": "49.3%",
+        "before_pct": 84.33,
+        "pct": 42.77
+      },
+      {
+        "path": "matrix-facade-owned-array",
+        "before": "1154.69",
+        "current": "851.56",
+        "reduction": "26.3%",
+        "before_pct": 25.77,
+        "pct": 19
+      },
+      {
+        "path": "rgba-image-direct",
+        "before": "799.22",
+        "current": "511.72",
+        "reduction": "36.0%",
+        "before_pct": 17.83,
+        "pct": 11.42
       }
     ]
   },

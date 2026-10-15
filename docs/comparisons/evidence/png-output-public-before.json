@@ -1,0 +1,77 @@
+{
+  "CoreSha256": "34898C54D1390AD994B0C5D1CCC87B7507D597B14725EED27DE16640CD700565",
+  "Source": "3.0.0+e32694849a97ac05932f6bf8c9b9c3b232684368",
+  "Rows": [
+    {
+      "Name": "qr-gray1-direct",
+      "Outputs": 100,
+      "ManagedAllocatedBytes": 1465600,
+      "PngBytes": 7028,
+      "PngSha256": "F12F7E4F56473D943E3E077F8685E23AD5CD27DBA6890CCD41B81CA60FBED6ED",
+      "PixelsSha256": "213F57C5E2692F7159D1E630EB8F828E4DA97653C8F7039F6982AD4636E995B4",
+      "Width": 232,
+      "Height": 232
+    },
+    {
+      "Name": "qr-indexed1-direct",
+      "Outputs": 100,
+      "ManagedAllocatedBytes": 575200,
+      "PngBytes": 2516,
+      "PngSha256": "FE9354FBBF28DFD162F04AEC0ABA560BF00728F8C33406059A1EF62130DD1B58",
+      "PixelsSha256": "73BA333FA0474A210F0A6F58FCCD1DA22345E8A861BFEB54DB8B4B15B62A4C46",
+      "Width": 135,
+      "Height": 135
+    },
+    {
+      "Name": "qr-rgba-direct",
+      "Outputs": 100,
+      "ManagedAllocatedBytes": 4588800,
+      "PngBytes": 22643,
+      "PngSha256": "0457F1FB01D67AA43D14DCDEDC41EF02362227B17CE80E3968A67C81518A94DA",
+      "PixelsSha256": "F476C3F3080F91DA34EB15A0F702C4781520914763027CEE913F803EDEA10340",
+      "Width": 75,
+      "Height": 75
+    },
+    {
+      "Name": "qr-facade-owned-array",
+      "Outputs": 100,
+      "ManagedAllocatedBytes": 3161600,
+      "PngBytes": 7028,
+      "PngSha256": "F12F7E4F56473D943E3E077F8685E23AD5CD27DBA6890CCD41B81CA60FBED6ED",
+      "PixelsSha256": "213F57C5E2692F7159D1E630EB8F828E4DA97653C8F7039F6982AD4636E995B4",
+      "Width": 232,
+      "Height": 232
+    },
+    {
+      "Name": "barcode-facade-owned-array",
+      "Outputs": 100,
+      "ManagedAllocatedBytes": 3869600,
+      "PngBytes": 9508,
+      "PngSha256": "A84EC397C9A000165BD55F4F914A606A3D5BB6058001E958046B9674D5D5450A",
+      "PixelsSha256": "11AA63EE41508EE6659CB224C414E31D51B83AEA68D937A807CCEA0047507804",
+      "Width": 464,
+      "Height": 160
+    },
+    {
+      "Name": "matrix-facade-owned-array",
+      "Outputs": 100,
+      "ManagedAllocatedBytes": 1182400,
+      "PngBytes": 1524,
+      "PngSha256": "1562E39C1579822F77E3971B7C99BC51A4028EBC6078ED20BCD596CA0AF82BC4",
+      "PixelsSha256": "0F47A42F34E69EB875F5E461FFDE6876ABEFC371F7F8434ABBA473220DA2E1E0",
+      "Width": 104,
+      "Height": 104
+    },
+    {
+      "Name": "rgba-image-direct",
+      "Outputs": 100,
+      "ManagedAllocatedBytes": 818400,
+      "PngBytes": 455,
+      "PngSha256": "6ACF5F5635638787BAE5755472C3FE5D314A72CB8C07BBFBD815FAB1B0F4923D",
+      "PixelsSha256": "D37F1E4C52C60196DBE7CD8CF20A055ECD4F915F3D6FA8D65596E450DA0D8283",
+      "Width": 37,
+      "Height": 19
+    }
+  ],
+  "Scope": "Public-output allocation and exact encoded/pixel-byte diagnostic. Five priming calls and100 outputs per case. No elapsed-time ranking; complete fair generation comparison remains a separate qualification."
+}

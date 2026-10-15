@@ -1,0 +1,142 @@
+{
+  "Source": "5f41d326a8c332853096d888059504677cada46e",
+  "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+  "Scope": "Supplementary contract diagnostics, not a representative accuracy or negative-rate survey. Thirty-one fixed negative IDs are each requested with three explicit retail-family hints (93 requests).",
+  "PositiveRequests": 87,
+  "NegativeRequests": 93,
+  "Engines": {
+    "CodeGlyphX": {
+      "positive": {
+        "PreviousCorrect": 69,
+        "Correct": 69,
+        "Unexpected": 0,
+        "Inconclusive": 0
+      },
+      "negative": {
+        "PreviousCorrect": 93,
+        "Correct": 93,
+        "Unexpected": 0,
+        "Inconclusive": 0
+      }
+    },
+    "ZXing.Net": {
+      "positive": {
+        "PreviousCorrect": 55,
+        "Correct": 55,
+        "Unexpected": 2,
+        "Inconclusive": 0
+      },
+      "negative": {
+        "PreviousCorrect": 89,
+        "Correct": 89,
+        "Unexpected": 4,
+        "Inconclusive": 0
+      }
+    },
+    "ZXing-C++": {
+      "positive": {
+        "PreviousCorrect": 54,
+        "Correct": 54,
+        "Unexpected": 1,
+        "Inconclusive": 0
+      },
+      "negative": {
+        "PreviousCorrect": 93,
+        "Correct": 93,
+        "Unexpected": 0,
+        "Inconclusive": 0
+      }
+    }
+  },
+  "Cost": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 655.09635,
+      "CurrentMedianMs": 638.4094,
+      "LatencyRatio": 0.9745274874451674,
+      "BaselineAllocatedBytes": 35545728.0,
+      "CurrentAllocatedBytes": 35547810.666666664,
+      "AllocationRatio": 1.000058591194606,
+      "PreviousCorrectRequests": 9.0,
+      "CurrentCorrectRequests": 9.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0,
+      "Requests": 9
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 546.6406,
+      "CurrentMedianMs": 534.12285,
+      "LatencyRatio": 0.9771005849181346,
+      "BaselineAllocatedBytes": 35561226.0,
+      "CurrentAllocatedBytes": 35564544.0,
+      "AllocationRatio": 1.0000933038697821,
+      "PreviousCorrectRequests": 9.0,
+      "CurrentCorrectRequests": 9.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0,
+      "Requests": 9
+    }
+  ],
+  "CostLimits": "Nine prespecified requests: noise 03, stripes 14 and texture 19, each with EAN, UPC-A and UPC-E hints. PowerForge owns timing: 3 warmups, 12 grouped rotated measurements, no outlier removal, fixed Normal priority/affinity. Baseline and candidate use separate assembly contexts with identical preloaded RGBA32 and options. Loading and validation are excluded. Costs and correctness are measured together; all samples and losses are retained. Shared-host contention prevents portable latency claims.",
+  "CostProvenance": {
+    "SourceKeys": [
+      "benchmark.CandidateSource",
+      "benchmark.CandidateWorktreeClean"
+    ],
+    "Control": "The suite lives in task scratch outside Git. Its wrapper verifies the frozen clean repository before and after timing; the suite records the exact baseline/current core hashes and frozen candidate source.",
+    "PreviousSource": "5145edfb766f1ced33dfc6427b65cfdbd2aa7eb3",
+    "HistoricalRawPackets": "Previous qualification and prior raw cost packets remain historical; their correctness and cost differences are not attributed to the current baseline."
+  },
+  "Changes": "Retail contrast recovery is unchanged in this pass. Current-core diagnostics and paired costs preserve all hypotheses, independent neighboring-row confirmation and prior image gains.",
+  "HistoricalRowRecoverySource": "7c907b2c9f64b622fac80fde24d9a2f421035b39",
+  "PositiveCost": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 1013.177,
+      "CurrentMedianMs": 985.13015,
+      "LatencyRatio": 0.9723179168101921,
+      "BaselineAllocatedBytes": 95023699.33333333,
+      "CurrentAllocatedBytes": 95012374.0,
+      "AllocationRatio": 0.999880815697423,
+      "PreviousCorrectRequests": 69.0,
+      "CurrentCorrectRequests": 69.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 822.7718,
+      "CurrentMedianMs": 814.0135499999999,
+      "LatencyRatio": 0.9893551893732866,
+      "BaselineAllocatedBytes": 95030094.66666667,
+      "CurrentAllocatedBytes": 95015898.0,
+      "AllocationRatio": 0.9998506087285668,
+      "PreviousCorrectRequests": 69.0,
+      "CurrentCorrectRequests": 69.0,
+      "PreviousUnexpectedRequests": 0.0,
+      "CurrentUnexpectedRequests": 0.0,
+      "PreviousInconclusiveRequests": 0.0,
+      "CurrentInconclusiveRequests": 0.0
+    }
+  ],
+  "PositiveCostScope": "Same 87 preloaded retail positives with identical hints, payload validation and 1500 ms allowance. Separate contexts, 3 warmups and 12 rotated measurements per binary/domain, Normal priority and fixed affinity; no outlier removal. Loading and evaluation are excluded. Correctness is recorded with cost; successful decode counts must be read alongside the timing. Managed allocation excludes native costs. All measured samples and failed warmups are retained; successful warmup samples are not retained by PowerForge.",
+  "ExtremaReuse": {
+    "Rows": 3982,
+    "Masks": 39820,
+    "PixelDecisions": 23593100,
+    "IndependentExtremaPoints": 270776,
+    "Mismatches": 0,
+    "PreCancelled": true,
+    "Expired": true,
+    "BeforeCoreSha256": "DFDDE80285429E278828398F62EFE78659647C8BF164015592A1773EB18DC609",
+    "CandidateCoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+    "Scope": "Actual old/new private binarizers; eight production passes, unchanged ordinary no-storage path; 1024 seeded rows and 17 rows per axis of every one of the 87 fixed retail requests. Every output pixel compared; representative extrema checked against independent direct min/max. No production instrumentation or test hook."
+  }
+}

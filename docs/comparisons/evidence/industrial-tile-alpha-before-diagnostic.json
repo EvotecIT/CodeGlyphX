@@ -1,0 +1,362 @@
+{
+  "CoreSha256": "8E577665B8BF5EDF48FCB176C7FEE8122545F0C945B59269451D84E8CCA335AF",
+  "Scope": "Twelve typed public-scanner tile scans, two axes and transparent or half-transparent black backgrounds across Industrial 2 of 5, ITF and Pharmacode; no deadline. Correct requires both original tile payloads, and exactly those two for Industrial/ITF. Pharmacode\u0027s pre-existing extra full-frame concatenation remains an open gap and is retained separately as AdditionalPayloads.",
+  "Rows": [
+    {
+      "Type": "Industrial2of5",
+      "Alpha": 0,
+      "Vertical": false,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "2",
+        "8"
+      ],
+      "AdditionalPayloads": [],
+      "AdditionalCandidates": [],
+      "Payloads": [],
+      "Formats": []
+    },
+    {
+      "Type": "Industrial2of5",
+      "Alpha": 0,
+      "Vertical": true,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "2",
+        "8"
+      ],
+      "AdditionalPayloads": [],
+      "AdditionalCandidates": [],
+      "Payloads": [],
+      "Formats": []
+    },
+    {
+      "Type": "Industrial2of5",
+      "Alpha": 128,
+      "Vertical": false,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "2",
+        "8"
+      ],
+      "AdditionalPayloads": [],
+      "AdditionalCandidates": [],
+      "Payloads": [],
+      "Formats": []
+    },
+    {
+      "Type": "Industrial2of5",
+      "Alpha": 128,
+      "Vertical": true,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "2",
+        "8"
+      ],
+      "AdditionalPayloads": [],
+      "AdditionalCandidates": [],
+      "Payloads": [],
+      "Formats": []
+    },
+    {
+      "Type": "ITF",
+      "Alpha": 0,
+      "Vertical": false,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "12345678",
+        "87654321"
+      ],
+      "AdditionalPayloads": [],
+      "AdditionalCandidates": [],
+      "Payloads": [
+        "12345678"
+      ],
+      "Formats": [
+        "Itf"
+      ]
+    },
+    {
+      "Type": "ITF",
+      "Alpha": 0,
+      "Vertical": true,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "12345678",
+        "87654321"
+      ],
+      "AdditionalPayloads": [],
+      "AdditionalCandidates": [],
+      "Payloads": [
+        "12345678"
+      ],
+      "Formats": [
+        "Itf"
+      ]
+    },
+    {
+      "Type": "ITF",
+      "Alpha": 128,
+      "Vertical": false,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "12345678",
+        "87654321"
+      ],
+      "AdditionalPayloads": [],
+      "AdditionalCandidates": [],
+      "Payloads": [
+        "12345678"
+      ],
+      "Formats": [
+        "Itf"
+      ]
+    },
+    {
+      "Type": "ITF",
+      "Alpha": 128,
+      "Vertical": true,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "12345678",
+        "87654321"
+      ],
+      "AdditionalPayloads": [],
+      "AdditionalCandidates": [],
+      "Payloads": [
+        "12345678"
+      ],
+      "Formats": [
+        "Itf"
+      ]
+    },
+    {
+      "Type": "Pharmacode",
+      "Alpha": 0,
+      "Vertical": false,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "91",
+        "123"
+      ],
+      "AdditionalPayloads": [
+        "2079"
+      ],
+      "AdditionalCandidates": [
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 327,
+            "Height": 90
+          },
+          "FullFrame": true
+        },
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 327,
+            "Height": 90
+          },
+          "FullFrame": true
+        },
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 327,
+            "Height": 90
+          },
+          "FullFrame": true
+        }
+      ],
+      "Payloads": [
+        "2079"
+      ],
+      "Formats": [
+        "Pharmacode"
+      ]
+    },
+    {
+      "Type": "Pharmacode",
+      "Alpha": 0,
+      "Vertical": true,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "91",
+        "123"
+      ],
+      "AdditionalPayloads": [
+        "2079"
+      ],
+      "AdditionalCandidates": [
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 90,
+            "Height": 327
+          },
+          "FullFrame": true
+        },
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 90,
+            "Height": 327
+          },
+          "FullFrame": true
+        },
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 90,
+            "Height": 327
+          },
+          "FullFrame": true
+        }
+      ],
+      "Payloads": [
+        "2079"
+      ],
+      "Formats": [
+        "Pharmacode"
+      ]
+    },
+    {
+      "Type": "Pharmacode",
+      "Alpha": 128,
+      "Vertical": false,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "91",
+        "123"
+      ],
+      "AdditionalPayloads": [
+        "2079"
+      ],
+      "AdditionalCandidates": [
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 327,
+            "Height": 90
+          },
+          "FullFrame": true
+        },
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 327,
+            "Height": 90
+          },
+          "FullFrame": true
+        },
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 327,
+            "Height": 90
+          },
+          "FullFrame": true
+        }
+      ],
+      "Payloads": [
+        "2079"
+      ],
+      "Formats": [
+        "Pharmacode"
+      ]
+    },
+    {
+      "Type": "Pharmacode",
+      "Alpha": 128,
+      "Vertical": true,
+      "Completion": "Completed",
+      "Correct": false,
+      "ExactPayloadSet": false,
+      "Expected": [
+        "91",
+        "123"
+      ],
+      "AdditionalPayloads": [
+        "2079"
+      ],
+      "AdditionalCandidates": [
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 90,
+            "Height": 327
+          },
+          "FullFrame": true
+        },
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 90,
+            "Height": 327
+          },
+          "FullFrame": true
+        },
+        {
+          "Text": "2079",
+          "Region": {
+            "X": 0,
+            "Y": 0,
+            "Width": 90,
+            "Height": 327
+          },
+          "FullFrame": true
+        }
+      ],
+      "Payloads": [
+        "2079"
+      ],
+      "Formats": [
+        "Pharmacode"
+      ]
+    }
+  ]
+}

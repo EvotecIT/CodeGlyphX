@@ -1,0 +1,616 @@
+{
+  "Scope": "Sampled allocation amounts and managed thread-time stacks on the decoding thread between probe markers. Inclusive stacks overlap; these are not CPU utilization or competitive timings.",
+  "Markers": [
+    {
+      "EventName": "Begin",
+      "Id": 1,
+      "ThreadID": 67880,
+      "TimeStampRelativeMSec": 231.5825
+    },
+    {
+      "EventName": "End",
+      "Id": 2,
+      "ThreadID": 67880,
+      "TimeStampRelativeMSec": 583.5582
+    },
+    {
+      "EventName": "Begin",
+      "Id": 1,
+      "ThreadID": 67880,
+      "TimeStampRelativeMSec": 585.5073
+    },
+    {
+      "EventName": "End",
+      "Id": 2,
+      "ThreadID": 67880,
+      "TimeStampRelativeMSec": 803.4126
+    },
+    {
+      "EventName": "Begin",
+      "Id": 1,
+      "ThreadID": 67880,
+      "TimeStampRelativeMSec": 803.4688
+    },
+    {
+      "EventName": "End",
+      "Id": 2,
+      "ThreadID": 67880,
+      "TimeStampRelativeMSec": 967.4731
+    }
+  ],
+  "AllocationTicks": 32,
+  "SampledAllocationBytes": 13363024,
+  "ThreadTimeSamples": 378,
+  "AllocationTypes": [
+    {
+      "Key": "System.Byte[]",
+      "Value": 10306200
+    },
+    {
+      "Key": "System.Int32[]",
+      "Value": 2097176
+    },
+    {
+      "Key": "System.String",
+      "Value": 425040
+    },
+    {
+      "Key": "\u003C\u003Ec__DisplayClass62_0",
+      "Value": 109120
+    },
+    {
+      "Key": "Entry[System.Char,System.Byte][]",
+      "Value": 109048
+    },
+    {
+      "Key": "CodeGlyphX.BitMatrix",
+      "Value": 107184
+    },
+    {
+      "Key": "System.UInt32[]",
+      "Value": 106600
+    },
+    {
+      "Key": "PooledList\u00601[CodeGlyphX.Qr.QrFinderPatternDetector\u002BFinderPattern]",
+      "Value": 102656
+    }
+  ],
+  "InclusiveAllocationStacks": [
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanQr(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 13363024
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanFrame(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline)",
+      "Value": 13363024
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.Scan(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions)",
+      "Value": 13363024
+    },
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusReaders.Decode(unsigned int8[],int32,int32,class System.String,class System.String,bool,bool,class System.String\u0026)",
+      "Value": 13363024
+    },
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusSession.Decode(class System.String,bool)",
+      "Value": 13363024
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,bool,bool,class CodeGlyphX.QrDecoded[]\u0026,value class System.Nullable\u00601\u003Cvalue class DecodeBudget\u003E)",
+      "Value": 13150112
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,bool,class CodeGlyphX.QrDecoded[]\u0026)",
+      "Value": 13150112
+    },
+    {
+      "Key": "CodeGlyphX.QrImageDecoder.TryDecodeAll(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,value class System.Threading.CancellationToken,bool,class CodeGlyphX.QrDecoded[]\u0026)",
+      "Value": 13150112
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllFromImage(int32,value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 12494704
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllFromImageCore(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 12385656
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectHybridThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 7340344
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromImage(value class CodeGlyphX.Qr.QrGrayImage,bool,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class DecodeBudget,bool,bool)",
+      "Value": 6094008
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget)",
+      "Value": 5349720
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.FindComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Func\u00601\u003Cbool\u003E,int32,int32)",
+      "Value": 5243120
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImagePool.Rent(int32)",
+      "Value": 4849880
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.RentBuffer(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 4194472
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAdaptiveThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 3357928
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithBinaryClose(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 2097248
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithBinaryOpen(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 2097224
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithAdaptiveThreshold(int32,int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 2097176
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectGlobalThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class System.Span\u00601\u003Cunsigned int8\u003E,int32)",
+      "Value": 1687384
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.TryCreate(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,int32,class System.Func\u00601\u003Cbool\u003E,class CodeGlyphX.Qr.QrGrayImagePool,value class CodeGlyphX.Qr.QrGrayImage\u0026)",
+      "Value": 655408
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.TryDecodeInternal(class CodeGlyphX.BitMatrix,class System.Func\u00601\u003Cbool\u003E,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 641560
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TrySampleAndDecodeDimension(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,value class FinderPattern,value class FinderPattern,value class FinderPattern,int32,int32,int32,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,bool)",
+      "Value": 641560
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TrySampleAndDecode(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,value class FinderPattern,value class FinderPattern,value class FinderPattern,int32,int32,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,bool)",
+      "Value": 641560
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TrySampleWithCornersInternal(value class CodeGlyphX.Qr.QrGrayImage,bool,float64,float64,int32,class CodeGlyphX.BitMatrix,float64,float64,float64,float64,float64,float64,float64,float64,float64,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,bool,bool,bool,bool,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 534960
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TrySampleWithCorners(value class CodeGlyphX.Qr.QrGrayImage,bool,float64,float64,int32,class CodeGlyphX.BitMatrix,float64,float64,float64,float64,float64,float64,float64,float64,float64,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 534960
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.TryDecodeWithCandidates(class CodeGlyphX.BitMatrix,int32,value class QrFormatCandidate[],int32,class System.Func\u00601\u003Cbool\u003E,value class QrCandidateSearch\u0026,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 534376
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectIndependentFinderGroups(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,value class DecodeBudget,bool)",
+      "Value": 532512
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromFinderCandidates(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,bool,bool,bool)",
+      "Value": 532512
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.TryCorrectAndExtractData(unsigned int8[],int32,int32,value class CodeGlyphX.QrErrorCorrectionLevel,class System.Func\u00601\u003Cbool\u003E,unsigned int8[]\u0026)",
+      "Value": 213200
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.TryExtractDataCodewords(class CodeGlyphX.BitMatrix,class CodeGlyphX.BitMatrix,int32,value class CodeGlyphX.QrErrorCorrectionLevel,int32,class System.Func\u00601\u003Cbool\u003E,unsigned int8[],int32\u0026,unsigned int8[]\u0026)",
+      "Value": 213200
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.CreateKey(class CodeGlyphX.DetectedSymbol)",
+      "Value": 212912
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.Add(class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,class CodeGlyphX.DetectedSymbol)",
+      "Value": 212912
+    },
+    {
+      "Key": "CodeGlyphX.Payloads.QrPayloadParser.TryParse(class System.String,class CodeGlyphX.Payloads.QrParsedPayload\u0026)",
+      "Value": 212128
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoded..ctor(int32,value class CodeGlyphX.QrErrorCorrectionLevel,int32,unsigned int8[],class System.String,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.QrStructuredAppend\u003E,value class CodeGlyphX.QrFnc1Mode,value class System.Nullable\u00601\u003Cint32\u003E)",
+      "Value": 212128
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAtScale(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class QrProfileSettings,value class DecodeBudget,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026)",
+      "Value": 131096
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeCore(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,value class System.Nullable\u00601\u003Cvalue class DecodeBudget\u003E)",
+      "Value": 131096
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass43_0.\u003CTryDecodeAll\u003Eg__ScanGrid|1(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class DecodeBudget,value class \u003C\u003Ec__DisplayClass43_1\u0026,value class \u003C\u003Ec__DisplayClass43_2\u0026)",
+      "Value": 131096
+    },
+    {
+      "Key": "CodeGlyphX.Internal.QrEncoding.BuildMap(wchar[])",
+      "Value": 109048
+    },
+    {
+      "Key": "CodeGlyphX.Internal.QrEncoding..cctor()",
+      "Value": 109048
+    },
+    {
+      "Key": "CodeGlyphX.Internal.QrEncoding.Decode(value class CodeGlyphX.QrTextEncoding,unsigned int8[],int32,int32)",
+      "Value": 109048
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.DecodeSegment(value class CodeGlyphX.Qr.QrPayloadSegment)",
+      "Value": 109048
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.DecodeSegments(value class CodeGlyphX.Qr.QrPayloadSegment[])",
+      "Value": 109048
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeFromFinderCandidates(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,bool,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,float64,float64,int32,int32)",
+      "Value": 109048
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeFromGray(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026)",
+      "Value": 109048
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrStructureAnalysis.BuildFunctionMask(int32,int32)",
+      "Value": 107184
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder\u002BQrCandidateSearch..ctor(int32,int32,bool)",
+      "Value": 107184
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeWithInversion(class CodeGlyphX.BitMatrix,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeByRotations(class CodeGlyphX.BitMatrix,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeByBoundingBox(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,int32,int32,int32,int32,int32,int32)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.BitMatrix..ctor(int32,int32)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.Payloads.QrPayloadParser.TryParseEip681(class System.String,class Eip681\u0026)",
+      "Value": 106600
+    },
+    {
+      "Key": "CodeGlyphX.Payloads.QrPayloadParser.TryParseLightning(class System.String,class Lightning\u0026)",
+      "Value": 105528
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrFinderPatternDetector.FindCandidates(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,bool,class System.Func\u00601\u003Cbool\u003E,int32,int32,bool,bool)",
+      "Value": 102656
+    }
+  ],
+  "InclusiveThreadTimeStacks": [
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusSession.Decode(class System.String,bool)",
+      "Value": 378
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.Scan(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions)",
+      "Value": 360
+    },
+    {
+      "Key": "CodeGlyphX.Benchmarks.CorpusReaders.Decode(unsigned int8[],int32,int32,class System.String,class System.String,bool,bool,class System.String\u0026)",
+      "Value": 360
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanFrame(class CodeGlyphX.ImageFrame,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline)",
+      "Value": 358
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,bool,class CodeGlyphX.QrDecoded[]\u0026)",
+      "Value": 352
+    },
+    {
+      "Key": "CodeGlyphX.QrImageDecoder.TryDecodeAll(unsigned int8[],int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,value class System.Threading.CancellationToken,bool,class CodeGlyphX.QrDecoded[]\u0026)",
+      "Value": 352
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ScanQr(unsigned int8[],int32,int32,value class CodeGlyphX.ImageRegion,class CodeGlyphX.ScanOptions,class CodeGlyphX.ScanDeadline,class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class System.Collections.Generic.List\u00601\u003Cclass CodeGlyphX.DetectedSymbol\u003E,class System.Collections.Generic.HashSet\u00601\u003Cclass System.String\u003E,int32\u0026)",
+      "Value": 352
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,bool,bool,class CodeGlyphX.QrDecoded[]\u0026,value class System.Nullable\u00601\u003Cvalue class DecodeBudget\u003E)",
+      "Value": 350
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllFromImage(int32,value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 342
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAllFromImageCore(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 314
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromImage(value class CodeGlyphX.Qr.QrGrayImage,bool,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class DecodeBudget,bool,bool)",
+      "Value": 284
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget)",
+      "Value": 209
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectGlobalThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class System.Span\u00601\u003Cunsigned int8\u003E,int32)",
+      "Value": 194
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeByBoundingBox(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,int32,int32,int32,int32,int32,int32)",
+      "Value": 123
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002BDecodeBudget.get_IsExpired()",
+      "Value": 91
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.FindComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Func\u00601\u003Cbool\u003E,int32,int32)",
+      "Value": 85
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectHybridThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 85
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrFinderPatternDetector.FindCandidates(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,bool,class System.Func\u00601\u003Cbool\u003E,int32,int32,bool,bool)",
+      "Value": 62
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrFinderPatternDetector.FindCandidatesWithStep(value class CodeGlyphX.Qr.QrGrayImage,bool,int32,class PooledList\u00601\u003Cvalue class FinderPattern\u003E,bool,class System.Func\u00601\u003Cbool\u003E,int32,bool)",
+      "Value": 60
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass65_0.\u003CCollectFromComponents\u003Eb__0()",
+      "Value": 52
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.TryDecodeInternal(class CodeGlyphX.BitMatrix,class System.Func\u00601\u003Cbool\u003E,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 42
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.TryDecodeWithCandidates(class CodeGlyphX.BitMatrix,int32,value class QrFormatCandidate[],int32,class System.Func\u00601\u003Cbool\u003E,value class QrCandidateSearch\u0026,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 40
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectAdaptiveThresholdPasses(value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,value class QrCollectionSink,value class DecodeBudget,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 34
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TrySampleWithCornersInternal(value class CodeGlyphX.Qr.QrGrayImage,bool,float64,float64,int32,class CodeGlyphX.BitMatrix,float64,float64,float64,float64,float64,float64,float64,float64,float64,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,bool,bool,bool,bool,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 32
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TrySampleWithCorners(value class CodeGlyphX.Qr.QrGrayImage,bool,float64,float64,int32,class CodeGlyphX.BitMatrix,float64,float64,float64,float64,float64,float64,float64,float64,float64,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 32
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TrySampleAndDecodeDimension(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,value class FinderPattern,value class FinderPattern,value class FinderPattern,int32,int32,int32,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,bool)",
+      "Value": 32
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TrySampleAndDecode(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,value class FinderPattern,value class FinderPattern,value class FinderPattern,int32,int32,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,bool)",
+      "Value": 32
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.TryExtractDataCodewords(class CodeGlyphX.BitMatrix,class CodeGlyphX.BitMatrix,int32,value class CodeGlyphX.QrErrorCorrectionLevel,int32,class System.Func\u00601\u003Cbool\u003E,unsigned int8[],int32\u0026,unsigned int8[]\u0026)",
+      "Value": 30
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass62_0.\u003CCollectFromImage\u003Eb__0()",
+      "Value": 26
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeFromGray(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026)",
+      "Value": 24
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.TryCorrectAndExtractData(unsigned int8[],int32,int32,value class CodeGlyphX.QrErrorCorrectionLevel,class System.Func\u00601\u003Cbool\u003E,unsigned int8[]\u0026)",
+      "Value": 23
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeWithInversion(class CodeGlyphX.BitMatrix,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 22
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeByRotations(class CodeGlyphX.BitMatrix,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.QrDecodeDiagnostics\u0026)",
+      "Value": 22
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.HasPlausibleBoundingFinders(value class CodeGlyphX.Qr.QrGrayImage,int32,int32,int32,float64,float64,float64,bool,bool,float64,value class DecodeBudget)",
+      "Value": 21
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass115_0.\u003CTryDecodeWithInversion\u003Eb__0()",
+      "Value": 20
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectFromFinderCandidates(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class DecodeBudget,bool,bool,bool)",
+      "Value": 19
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrReedSolomonDecoder.TryCorrectInPlace(unsigned int8[],int32,int32,class System.Func\u00601\u003Cbool\u003E)",
+      "Value": 19
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CollectIndependentFinderGroups(value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,class PooledList\u00601\u003Cclass CodeGlyphX.QrDecoded\u003E,class System.Collections.Generic.HashSet\u00601\u003Cunsigned int8[]\u003E,value class DecodeBudget,bool)",
+      "Value": 18
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeFromFinderCandidates(int32,unsigned int8,value class CodeGlyphX.Qr.QrGrayImage,bool,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,bool,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,bool,bool,value class DecodeBudget,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,float64,float64,int32,int32)",
+      "Value": 16
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithBinaryOpen(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 14
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.SampleModules(value class CodeGlyphX.Qr.QrGrayImage,bool,value class CodeGlyphX.Qr.QrPerspectiveTransform\u0026,int32,float64,float64,class CodeGlyphX.BitMatrix,value class DecodeBudget,int32,float64,int32\u0026)",
+      "Value": 11
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithBinaryClose(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 11
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass94_0.\u003CTrySampleWithCornersInternal\u003Eb__0()",
+      "Value": 7
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAtScale(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,int32,value class QrProfileSettings,value class DecodeBudget,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeCore(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,int32,int32,value class CodeGlyphX.PixelFormat,class CodeGlyphX.QrPixelDecodeOptions,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,value class System.Threading.CancellationToken,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026,value class System.Nullable\u00601\u003Cvalue class DecodeBudget\u003E)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002B\u003C\u003Ec__DisplayClass43_0.\u003CTryDecodeAll\u003Eg__ScanGrid|1(value class System.ReadOnlySpan\u00601\u003Cunsigned int8\u003E,int32,value class DecodeBudget,value class \u003C\u003Ec__DisplayClass43_1\u0026,value class \u003C\u003Ec__DisplayClass43_2\u0026)",
+      "Value": 5
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithLocalNormalize(int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 4
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithAdaptiveThreshold(int32,int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.TryDecodeWithImage(int32,value class CodeGlyphX.Qr.QrGrayImage,value class QrProfileSettings,class System.Collections.Generic.List\u00601\u003Cvalue class FinderPattern\u003E,value class DecodeBudget,class System.Func\u00602\u003Cclass CodeGlyphX.QrDecoded,bool\u003E,class CodeGlyphX.Qr.QrGrayImagePool,class CodeGlyphX.QrDecoded\u0026,value class CodeGlyphX.Qr.QrPixelDecodeDiagnostics\u0026)",
+      "Value": 3
+    },
+    {
+      "Key": "CodeGlyphX.Payloads.QrPayloadParser.TryParse(class System.String,class CodeGlyphX.Payloads.QrParsedPayload\u0026)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoded..ctor(int32,value class CodeGlyphX.QrErrorCorrectionLevel,int32,unsigned int8[],class System.String,value class System.Nullable\u00601\u003Cvalue class CodeGlyphX.QrStructuredAppend\u003E,value class CodeGlyphX.QrFnc1Mode,value class System.Nullable\u00601\u003Cint32\u003E)",
+      "Value": 2
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ValidateOptions(class CodeGlyphX.ScanOptions)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.SnapshotOptions(class CodeGlyphX.ScanOptions)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudget.Begin(int32)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.ScanDeadline..ctor(value class System.Threading.CancellationToken,int32,class CodeGlyphX.ScanDeadline)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.ScanDeadline..ctor(value class System.Threading.CancellationToken,int32)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolCapabilities..cctor()",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolCapabilities.TryGet(value class CodeGlyphX.SymbolFormat,class CodeGlyphX.SymbolCapability\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.ResolveRequestedFormats(value class CodeGlyphX.SymbolFormat[],class System.Collections.Generic.List\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.CountInitialAttempts(class System.Collections.Generic.ISet\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class CodeGlyphX.ScanOptions,int32,int32)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrFinderPatternDetector\u002BPooledList\u00601[CodeGlyphX.Qr.QrFinderPatternDetector\u002BFinderPattern].CopyTo(class System.Collections.Generic.List\u00601\u003C!0\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelSampling.SampleModule25NearestWithDelta(value class CodeGlyphX.Qr.QrGrayImage,float64,float64,bool,float64)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder\u002BNearest25Sampler.Sample(value class CodeGlyphX.Qr.QrGrayImage,float64,float64,bool,float64)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.TryDecodeFormat(class CodeGlyphX.BitMatrix,value class QrFormatCandidate[]\u0026,int32\u0026,int32\u0026,int32\u0026)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.DecodeSegment(value class CodeGlyphX.Qr.QrPayloadSegment)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.DecodeSegments(value class CodeGlyphX.Qr.QrPayloadSegment[])",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelSampling.SampleModule9PxCore(value class CodeGlyphX.Qr.QrGrayImage,float64,float64,bool,float64,int32)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelSampling.SampleModule9Px(value class CodeGlyphX.Qr.QrGrayImage,float64,float64,bool,float64)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrGrayImage.WithHybridThreshold(int32,int32,int32,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.CreateHybridThresholdImage(value class CodeGlyphX.Qr.QrGrayImage,bool,class CodeGlyphX.Qr.QrGrayImagePool)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.ArraySortHelper\u00601[CodeGlyphX.QrDecoder\u002BQrFormatCandidate].IntroSort(value class System.Span\u00601\u003C!0\u003E,int32,class System.Comparison\u00601\u003C!0\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.ArraySortHelper\u00601[CodeGlyphX.QrDecoder\u002BQrFormatCandidate].IntrospectiveSort(value class System.Span\u00601\u003C!0\u003E,class System.Comparison\u00601\u003C!0\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "System.Collections.Generic.ArraySortHelper\u00601[CodeGlyphX.QrDecoder\u002BQrFormatCandidate].Sort(value class System.Span\u00601\u003C!0\u003E,class System.Collections.Generic.IComparer\u00601\u003C!0\u003E)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.QrDecoder.BuildAllFormatCandidates(int32,int32)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.RotateInto90(class CodeGlyphX.BitMatrix,class CodeGlyphX.BitMatrix)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.RotateInto270(class CodeGlyphX.BitMatrix,class CodeGlyphX.BitMatrix)",
+      "Value": 1
+    },
+    {
+      "Key": "CodeGlyphX.SymbolScanner.IsUniformDefaultFrame(unsigned int8[],class System.Collections.Generic.IList\u00601\u003Cvalue class CodeGlyphX.SymbolFormat\u003E,class CodeGlyphX.ScanDeadline)",
+      "Value": 1
+    }
+  ],
+  "DeadlineCallers": [
+    {
+      "Key": "CodeGlyphX.ScanDeadline..ctor(value class System.Threading.CancellationToken,int32,class CodeGlyphX.ScanDeadline)",
+      "Value": 1
+    }
+  ]
+}

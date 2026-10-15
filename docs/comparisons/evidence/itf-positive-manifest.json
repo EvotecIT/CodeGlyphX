@@ -1,0 +1,114 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "First six images per upstream blackbox directory ordered by SHA256 of source path, with UTF-8 .txt oracle; six negatives per directory; independently specified multi-QR fixture. No decoded-result selection.",
+  "Samples": [
+    {
+      "Id": "itf-1/15.png",
+      "File": "itf-1/15.png",
+      "Sha256": "e1b618dfef3da35c1216f8b3e55e334c6e5182438ca6ca7cd388c855a32648bd",
+      "Format": "Itf",
+      "Expected": [
+        "0829220875"
+      ]
+    },
+    {
+      "Id": "itf-1/2.png",
+      "File": "itf-1/2.png",
+      "Sha256": "a07aa9f8c29c1155c4968a527db6790bdf6eb33e061e9add4cebc9421cbd05b7",
+      "Format": "Itf",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "itf-1/7.png",
+      "File": "itf-1/7.png",
+      "Sha256": "8cb1ec5c43ec21aad8f9e0649f272a906d09f2b31f1483a47602c203b9186d22",
+      "Format": "Itf",
+      "Expected": [
+        "0817605453"
+      ]
+    },
+    {
+      "Id": "itf-1/1.png",
+      "File": "itf-1/1.png",
+      "Sha256": "b5e77ebf242658012777405b7e3e4f73d796bef2c1b6758692ef1baf03ae4eff",
+      "Format": "Itf",
+      "Expected": [
+        "30712345000010"
+      ]
+    },
+    {
+      "Id": "itf-1/8.png",
+      "File": "itf-1/8.png",
+      "Sha256": "567b6de1b662e4486abce30b4de34f6f8254d59599bc984b67a97be783696ea4",
+      "Format": "Itf",
+      "Expected": [
+        "0829220874"
+      ]
+    },
+    {
+      "Id": "itf-1/14.png",
+      "File": "itf-1/14.png",
+      "Sha256": "e4bdabb393aaecdb843270719535549f47c020fc33b782d65bb21905b7463220",
+      "Format": "Itf",
+      "Expected": [
+        "0829220875"
+      ]
+    },
+    {
+      "Id": "itf-2/08.png",
+      "File": "itf-2/08.png",
+      "Sha256": "40b26a7271ff3b584e8b5ee156cf4c0a119a9ec8e0bf883c1d5701b0641dffd0",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    },
+    {
+      "Id": "itf-2/05.png",
+      "File": "itf-2/05.png",
+      "Sha256": "1c54d2a5890f20b96167c028fde32822d9566c75e107173e040e101c5d73aa08",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    },
+    {
+      "Id": "itf-2/14.png",
+      "File": "itf-2/14.png",
+      "Sha256": "5e5fde5d68e2f717fab70666755f24139591e08d777f837ede4873593211a617",
+      "Format": "Itf",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "itf-2/09.png",
+      "File": "itf-2/09.png",
+      "Sha256": "9728e78fdacd32f072250f0094f6ab89693673030c42a33555218e704bf16f7a",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    },
+    {
+      "Id": "itf-2/13.png",
+      "File": "itf-2/13.png",
+      "Sha256": "8f26eb556a248bcf463b2f7ab9723ea56247c4cd6acb8d50a2b5fdfdf0857ce2",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    },
+    {
+      "Id": "itf-2/03.png",
+      "File": "itf-2/03.png",
+      "Sha256": "fdb4c3925e3621601899bb84969bcc01a17059a4c62e15c86c17b08d7a80764d",
+      "Format": "Itf",
+      "Expected": [
+        "070429"
+      ]
+    }
+  ]
+}

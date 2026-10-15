@@ -4,23 +4,31 @@ using CodeGlyphX.Code128;
 namespace CodeGlyphX;
 
 public static partial class BarcodeDecoder {
-    private static bool TryDecodeCode128(bool[] modules, out string text, out bool isGs1) {
-        return TryDecodeCode128(modules, out text, out isGs1, out _);
+    private static bool TryDecodeCode128(ref ModuleRunWorkspace runWorkspace, out string text, out bool isGs1, out bool readerInitialization) {
+        return TryDecodeCode128(ref runWorkspace, out text, out isGs1, out readerInitialization, out _);
     }
 
     internal static bool TryDecodeGs1CompositeCarrier(bool[] modules, out string text, out int compositeLinkage) {
-        return TryDecodeCode128(modules, out text, out var isGs1, out compositeLinkage)
-            && isGs1
-            && compositeLinkage != 0;
+        var runWorkspace = new ModuleRunWorkspace(modules);
+        try {
+            return TryDecodeCode128(ref runWorkspace, out text, out var isGs1, out var readerInitialization, out compositeLinkage)
+                && isGs1
+                && !readerInitialization
+                && compositeLinkage != 0;
+        } finally {
+            runWorkspace.Dispose();
+        }
     }
 
-    private static bool TryDecodeCode128(bool[] modules, out string text, out bool isGs1, out int compositeLinkage) {
+    private static bool TryDecodeCode128(ref ModuleRunWorkspace runWorkspace, out string text, out bool isGs1, out bool readerInitialization, out int compositeLinkage) {
+        var modules = runWorkspace.Modules;
         text = string.Empty;
         isGs1 = false;
+        readerInitialization = false;
         compositeLinkage = 0;
         if (modules.Length < 24) return false;
 
-        var runs = GetRuns(modules);
+        var runs = runWorkspace.Runs;
         if (runs.Length < 6) return false;
         if (runs[0] == 0) return false;
 
@@ -88,6 +96,10 @@ public static partial class BarcodeDecoder {
                 if (upperMode != upperShift) value += 128;
                 sb.Append((char)value);
                 upperShift = false;
+            } else if (code == Code128Tables.Fnc3) {
+                // In sets A/B, FNC3 marks the entire symbol as reader configuration.
+                // Preserve the content for inspection without applying any device settings.
+                readerInitialization = true;
             } else if (code == 98) {
                 shifted = true;
             } else if (code == Code128Tables.CodeC) {
@@ -98,7 +110,7 @@ public static partial class BarcodeDecoder {
                 if (upperShift) { upperMode = !upperMode; upperShift = false; }
                 else upperShift = true;
             } else {
-                // FNC2/FNC3 require application-level semantics not represented by this result.
+                // FNC2 requires message-append state across symbols.
                 return false;
             }
         }

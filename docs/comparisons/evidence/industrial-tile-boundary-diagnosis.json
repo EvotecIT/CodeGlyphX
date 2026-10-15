@@ -1,0 +1,243 @@
+{
+  "CoreSha256": "88430AB519945F27D5940426CDF1D923DF811C0C9F031523F6ED0EF2F5A3F32E",
+  "InputSha256": "8ED198F523B6881AEE9AF81BFF855C74CE67D5939952887D39AD0C1B5331DF95",
+  "Scope": "Read-only reflection of existing located candidates and public scanner diagnostics; not a shipped fallback or public API.",
+  "Rows": [
+    {
+      "ExpectedType": "All",
+      "Turns": 0,
+      "Inverted": true,
+      "Type": "Industrial2of5",
+      "Text": "2",
+      "Region": {
+        "X": 228,
+        "Y": 228,
+        "Width": 252,
+        "Height": 252
+      },
+      "Vertical": false,
+      "Position": 126,
+      "ModuleCount": 44,
+      "DarkBackground": true,
+      "QuietBeforePixels": 27,
+      "QuietAfterPixels": 18,
+      "RequiredQuietPixels": 47,
+      "BoundaryClipped": true
+    },
+    {
+      "ExpectedType": "Industrial2of5",
+      "Turns": 0,
+      "Inverted": true,
+      "Type": "Industrial2of5",
+      "Text": "2",
+      "Region": {
+        "X": 228,
+        "Y": 228,
+        "Width": 252,
+        "Height": 252
+      },
+      "Vertical": false,
+      "Position": 126,
+      "ModuleCount": 44,
+      "DarkBackground": true,
+      "QuietBeforePixels": 27,
+      "QuietAfterPixels": 18,
+      "RequiredQuietPixels": 47,
+      "BoundaryClipped": true
+    },
+    {
+      "ExpectedType": "All",
+      "Turns": 1,
+      "Inverted": true,
+      "Type": "Industrial2of5",
+      "Text": "8",
+      "Region": {
+        "X": 0,
+        "Y": 228,
+        "Width": 252,
+        "Height": 252
+      },
+      "Vertical": true,
+      "Position": 168,
+      "ModuleCount": 252,
+      "DarkBackground": true,
+      "QuietBeforePixels": 2,
+      "QuietAfterPixels": 2,
+      "RequiredQuietPixels": 9,
+      "BoundaryClipped": true
+    },
+    {
+      "ExpectedType": "Industrial2of5",
+      "Turns": 1,
+      "Inverted": true,
+      "Type": "Industrial2of5",
+      "Text": "8",
+      "Region": {
+        "X": 0,
+        "Y": 228,
+        "Width": 252,
+        "Height": 252
+      },
+      "Vertical": true,
+      "Position": 168,
+      "ModuleCount": 252,
+      "DarkBackground": true,
+      "QuietBeforePixels": 2,
+      "QuietAfterPixels": 2,
+      "RequiredQuietPixels": 9,
+      "BoundaryClipped": true
+    },
+    {
+      "ExpectedType": "Industrial2of5",
+      "Turns": 2,
+      "Inverted": true,
+      "Type": "Industrial2of5",
+      "Text": "8",
+      "Region": {
+        "X": 0,
+        "Y": 0,
+        "Width": 252,
+        "Height": 252
+      },
+      "Vertical": false,
+      "Position": 168,
+      "ModuleCount": 252,
+      "DarkBackground": true,
+      "QuietBeforePixels": 2,
+      "QuietAfterPixels": 2,
+      "RequiredQuietPixels": 9,
+      "BoundaryClipped": true
+    },
+    {
+      "ExpectedType": "Industrial2of5",
+      "Turns": 3,
+      "Inverted": true,
+      "Type": "Industrial2of5",
+      "Text": "2",
+      "Region": {
+        "X": 228,
+        "Y": 0,
+        "Width": 252,
+        "Height": 252
+      },
+      "Vertical": true,
+      "Position": 126,
+      "ModuleCount": 44,
+      "DarkBackground": true,
+      "QuietBeforePixels": 18,
+      "QuietAfterPixels": 27,
+      "RequiredQuietPixels": 47,
+      "BoundaryClipped": true
+    }
+  ],
+  "ShortSymbols": [
+    {
+      "Inverted": false,
+      "Vertical": false,
+      "Typed": false,
+      "Completion": "Completed",
+      "Correct": true,
+      "Payloads": [
+        "2",
+        "8"
+      ],
+      "Formats": [
+        "Industrial2Of5",
+        "Industrial2Of5"
+      ]
+    },
+    {
+      "Inverted": false,
+      "Vertical": false,
+      "Typed": true,
+      "Completion": "Completed",
+      "Correct": true,
+      "Payloads": [
+        "2",
+        "8"
+      ],
+      "Formats": [
+        "Industrial2Of5",
+        "Industrial2Of5"
+      ]
+    },
+    {
+      "Inverted": false,
+      "Vertical": true,
+      "Typed": false,
+      "Completion": "Completed",
+      "Correct": true,
+      "Payloads": [
+        "2",
+        "8"
+      ],
+      "Formats": [
+        "Industrial2Of5",
+        "Industrial2Of5"
+      ]
+    },
+    {
+      "Inverted": false,
+      "Vertical": true,
+      "Typed": true,
+      "Completion": "Completed",
+      "Correct": true,
+      "Payloads": [
+        "2",
+        "8"
+      ],
+      "Formats": [
+        "Industrial2Of5",
+        "Industrial2Of5"
+      ]
+    },
+    {
+      "Inverted": true,
+      "Vertical": false,
+      "Typed": false,
+      "Completion": "Completed",
+      "Correct": false,
+      "Payloads": [],
+      "Formats": []
+    },
+    {
+      "Inverted": true,
+      "Vertical": false,
+      "Typed": true,
+      "Completion": "Completed",
+      "Correct": true,
+      "Payloads": [
+        "2",
+        "8"
+      ],
+      "Formats": [
+        "Industrial2Of5",
+        "Industrial2Of5"
+      ]
+    },
+    {
+      "Inverted": true,
+      "Vertical": true,
+      "Typed": false,
+      "Completion": "Completed",
+      "Correct": false,
+      "Payloads": [],
+      "Formats": []
+    },
+    {
+      "Inverted": true,
+      "Vertical": true,
+      "Typed": true,
+      "Completion": "Completed",
+      "Correct": true,
+      "Payloads": [
+        "2",
+        "8"
+      ],
+      "Formats": [
+        "Industrial2Of5",
+        "Industrial2Of5"
+      ]
+    }
+  ]
+}

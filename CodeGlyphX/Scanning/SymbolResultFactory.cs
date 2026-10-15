@@ -22,8 +22,9 @@ internal static class SymbolResultFactory {
             searchRegion: region, directPartMarkProfile: directPartMarkProfile);
     internal static DetectedSymbol From(Pdf417Decoded value, ImageRegion? region = null) =>
         new(SymbolFormat.Pdf417, value.Text, metadata: new Pdf417SymbolMetadata(value), searchRegion: region);
-    internal static DetectedSymbol From(MaxiCodeDecoded value) =>
-        new(SymbolFormat.MaxiCode, value.Text, value.Bytes, new MaxiCodeSymbolMetadata(value), symbologyIdentifier: value.SymbologyIdentifier);
+    internal static DetectedSymbol From(MaxiCodeDecoded value, ImageRegion? region = null, bool? inverted = null) =>
+        new(SymbolFormat.MaxiCode, value.Text, value.Bytes, new MaxiCodeSymbolMetadata(value), searchRegion: region,
+            isInverted: inverted, symbologyIdentifier: value.SymbologyIdentifier);
     internal static DetectedSymbol From(DotCodeDecoded value) =>
         new(SymbolFormat.DotCode, value.Text, value.Bytes, new DotCodeSymbolMetadata(value),
             value.HasFnc1 ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None, symbologyIdentifier: value.SymbologyIdentifier);
@@ -34,7 +35,10 @@ internal static class SymbolResultFactory {
     internal static DetectedSymbol From(BarcodeDecoded value, ImageRegion? region = null) {
         if (!SymbolCapabilities.TryFromLegacy(value.Type, out var format))
             throw new System.InvalidOperationException("The decoder returned an unknown physical format.");
-        return new DetectedSymbol(format, value.Text, payloadProfile: IsGs1(format) ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None,
+        var metadata = format == SymbolFormat.Code128 || format == SymbolFormat.Gs1Code128
+            ? new Code128SymbolMetadata(value) : null;
+        return new DetectedSymbol(format, value.Text, metadata: metadata,
+            payloadProfile: IsGs1(format) ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None,
             searchRegion: region);
     }
     private static bool IsGs1(SymbolFormat format) => format == SymbolFormat.Gs1Code128 ||

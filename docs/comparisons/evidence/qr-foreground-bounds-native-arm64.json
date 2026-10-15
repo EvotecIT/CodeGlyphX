@@ -1,0 +1,27 @@
+{
+  "Host": "evomini.ad.evotec.xyz",
+  "OperatingSystem": "27.0.1",
+  "Architecture": "arm64",
+  "Processor": "Apple M4",
+  "Runtime": "10.0.401",
+  "Source": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+  "Scope": "Exact Windows-qualified portable managed binaries executed by the native ARM64 .NET runtime. Independent foreground bounds decision checks only; no performance comparison or remote source build.",
+  "InputFiles": {
+    "CodeGlyphX.Tests.dll": "CAF94004830881494F87E51A05A9BC10055409DD9D9E734A9785DE20A51044C3",
+    "CodeGlyphX.Tests.deps.json": "E3CDFDE3CBCB4BD98E0449F3123135443DE8B72D819F7A46772A2065DD52D251",
+    "CodeGlyphX.Tests.runtimeconfig.json": "C230A317A54DD960BCBEB5F347F52E18DC665A26F7EFDA2159FCED9A5AC7E097",
+    "CodeGlyphX.dll": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623"
+  },
+  "RemoteRoot": "/Volumes/Samsung/CodeGlyphX-qr-bounds-8178c13b",
+  "DecisionProof": {
+    "CoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+    "Vector256HardwareAccelerated": false,
+    "Vector128HardwareAccelerated": true,
+    "Cases": 286720,
+    "PixelClassificationsCompared": 144252928,
+    "Mismatches": 0,
+    "CancelledAndExpiredBoundsStop": true,
+    "Scope": "Actual private foreground bounds versus independent selected-pixel extrema across every byte threshold, global/adaptive maps, both polarities, vector boundary widths, cropped and single-row/column regions, patterned/random masks and unused pooled-array tails. Separate runtime modes verify 256-bit, 128-bit and scalar paths. This is decision proof, not a performance benchmark."
+  },
+  "Stdout": "{\"CoreSha256\":\"EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623\",\"Vector256HardwareAccelerated\":false,\"Vector128HardwareAccelerated\":true,\"Cases\":286720,\"PixelClassificationsCompared\":144252928,\"Mismatches\":0,\"CancelledAndExpiredBoundsStop\":true,\"Scope\":\"Actual private foreground bounds versus independent selected-pixel extrema across every byte threshold, global/adaptive maps, both polarities, vector boundary widths, cropped and single-row/column regions, patterned/random masks and unused pooled-array tails. Separate runtime modes verify 256-bit, 128-bit and scalar paths. This is decision proof, not a performance benchmark.\"}"
+}

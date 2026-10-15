@@ -1,0 +1,23 @@
+{
+  "Base": "f47fc3abd30a6d8dbf82f702aff87ddd6c828be9",
+  "OriginalReviewHead": "5e00fb8f25afeca2fd88d10a32e6ef347b8dee81",
+  "Head": "a83e44aad8767c51df3f7fe40890c3e814473f17",
+  "BoundaryState": "current",
+  "ConfirmationBoundaryState": "candidate-reviewed",
+  "FullReadOnlyPasses": 1,
+  "TargetedConfirmations": 1,
+  "UnresolvedFindings": [],
+  "ResolvedFindings": [
+    {
+      "Priority": "P3",
+      "Classification": "Existing conversion classifier newly reachable with ambient-only deadline polling",
+      "Issue": "Valid buffers stopped during grayscale conversion were reported as invalid input.",
+      "Reproduction": "Six real enclosing-deadline public pixel calls reported InvalidInput at the reviewed prototype; six reported Payload after the fix, with InvalidInput retained for the malformed-buffer control.",
+      "Fix": "Record the actual stop callback result and distinguish Cancelled/Payload from other conversion failure.",
+      "Confirmation": "Independent strictly read-only targeted confirmation found the issue fixed and no new actionable defects."
+    }
+  ],
+  "Disposition": "Accept as shaped; existing QR engine, no new public API, production dependency or maintained toolchain.",
+  "Scope": "One fresh read-only pass covered the nine-file QR component/cancellation change and supported callers. One targeted confirmation covered the conversion classifier and completed partial-result ownership regression. The source review boundary is current; full framework/corpus validation and performance acceptance remain separate proof. No tests, builds, mutations, installations or external actions were performed by the reviewer.",
+  "PartialResultProofLimit": "The deterministic acceptance-callback regression exercises representative storage reuse; it does not force a particular pool buffer reuse."
+}

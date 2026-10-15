@@ -1,0 +1,65 @@
+{
+  "net10.0": {
+    "Source": "0d74cff21a0c39cc6f1fbf0aface3a2662077e2b",
+    "Total": 2754,
+    "DistinctPassed": 2754,
+    "InitialMissingFixtureFailures": 8,
+    "FixtureRerunPassed": 8,
+    "UnresolvedFailures": 0,
+    "Skipped": 0,
+    "ContractsPassed": 6,
+    "ContractCases": [
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [], cutoffs: [0, 127, 255])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [17, 17, 17], cutoffs: [17, 18, 16, 19])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_CancellationDoesNotExposePartialMasks",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [0, 255, 0, 255], cutoffs: [15, 31, 63, 127, 191, ···])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [0, 127, 128, 255], cutoffs: [128, 127, 129, 128, 0, ···])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [255, 254, 1, 0, 254], cutoffs: [255, 254, 2, 1, 0, ···])"
+    ],
+    "FullTrxSha256": "6D4714D8DB0172C2152B662405484DCA2619666A3CDD56F20F267363249F5E7C",
+    "FixtureRerunSha256": "4196AB2B63CC5024FA51F3FC75CF4B3EA60B1949BCBB10F9294BC6126B3F72B5",
+    "CoreSha256": "A9511D51D4A9ED2E27CD6EB6619B17C84075C33A7560B252B2A8AA9EC01BF9CE"
+  },
+  "net8.0": {
+    "Source": "0d74cff21a0c39cc6f1fbf0aface3a2662077e2b",
+    "Total": 2732,
+    "DistinctPassed": 2732,
+    "InitialMissingFixtureFailures": 10,
+    "FixtureRerunPassed": 10,
+    "UnresolvedFailures": 0,
+    "Skipped": 0,
+    "ContractsPassed": 6,
+    "ContractCases": [
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [17, 17, 17], cutoffs: [17, 18, 16, 19])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [255, 254, 1, 0, 254], cutoffs: [255, 254, 2, 1, 0, ···])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_CancellationDoesNotExposePartialMasks",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [0, 255, 0, 255], cutoffs: [15, 31, 63, 127, 191, ···])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [], cutoffs: [0, 127, 255])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [0, 127, 128, 255], cutoffs: [128, 127, 129, 128, 0, ···])"
+    ],
+    "FullTrxSha256": "6D6C17D4D8B9DDE4C1B90B4B2938A6525CC3271C739196E1CD842D6D9EDAA20D",
+    "FixtureRerunSha256": "DA630EF0A7A35576AB8970980BF91FF31D9B38E914D132CF02A2DF6BFD850074",
+    "CoreSha256": "CE93732034AFAD7715D10381945F5E6F07115FA94517801EAE9ADE3D8523DE17"
+  },
+  "net472": {
+    "Source": "0d74cff21a0c39cc6f1fbf0aface3a2662077e2b",
+    "Total": 1177,
+    "DistinctPassed": 1177,
+    "InitialMissingFixtureFailures": 0,
+    "FixtureRerunPassed": 0,
+    "UnresolvedFailures": 0,
+    "Skipped": 0,
+    "ContractsPassed": 6,
+    "ContractCases": [
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [17, 17, 17], cutoffs: [17, 18, 16, 19])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_CancellationDoesNotExposePartialMasks",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [0, 127, 128, 255], cutoffs: [128, 127, 129, 128, 0, ···])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [], cutoffs: [0, 127, 255])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [0, 255, 0, 255], cutoffs: [15, 31, 63, 127, 191, ···])",
+      "CodeGlyphX.Tests.ScanlineThresholdTests.DistinctThresholds_PreserveFirstMaskAndEveryChangedPixel(luminance: [255, 254, 1, 0, 254], cutoffs: [255, 254, 2, 1, 0, ···])"
+    ],
+    "FullTrxSha256": "FEC044A227C6E1B18EF746691ADA793757383D8A629155C6CA756BF76334B55A",
+    "FixtureRerunSha256": null,
+    "CoreSha256": "333688B5F6F673416C1E4BF340EEFC4E95A9A7DD914E41168BC2987A26913CEC"
+  }
+}

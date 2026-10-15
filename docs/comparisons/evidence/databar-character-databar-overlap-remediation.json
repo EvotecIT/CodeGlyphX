@@ -1,0 +1,17 @@
+{
+  "Contract": "Different payloads with aligned physical bounds reject when their three-row support windows overlap; disjoint bands remain separately decodable.",
+  "After": {
+    "Failed": 0,
+    "Passed": 150,
+    "Trx": "tests/focused/databar-overlap-fixed-net10.trx"
+  },
+  "OriginalSource": "85ea93b9767e3857d3bdab20599003abc1311d73",
+  "FinalSource": "217a30ffb28a25aadec49a55a9ca2a0c797131e5",
+  "Status": "Validated selector regression",
+  "Before": {
+    "Failed": 2,
+    "Passed": 1,
+    "Trx": "tests/before/databar-overlap-before.trx"
+  },
+  "Scope": "Direct actual production selector with canonical complete-symbol observations; no test-only production hook. Public photo/row/polarity/stride regressions included in focused suite."
+}

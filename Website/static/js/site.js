@@ -931,6 +931,9 @@ globalThis.CodeGlyphX.setupDropZone = function(dropZoneElement, inputFileElement
                 if (next) { event.preventDefault(); next.focus(); select(next); }
             });
         });
+        // Panels render visible so the page reads without script; show only the selected one from here on.
+        var initial = tabs.filter(function (tab) { return tab.getAttribute('aria-selected') === 'true'; })[0] || tabs[0];
+        if (initial) select(initial);
     });
 
     // Filter sets ([data-cgx-filter-set]): toggle buttons that show the items whose data-family matches.

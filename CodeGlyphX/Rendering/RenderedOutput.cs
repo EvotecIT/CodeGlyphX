@@ -49,6 +49,10 @@ public sealed class RenderedOutput {
         return new RenderedOutput(format, OutputKind.Binary, (byte[])data.Clone(), text: null);
     }
 
+    /// <summary>Adopts a renderer's newly allocated buffer; the caller must relinquish mutable access.</summary>
+    internal static RenderedOutput FromOwnedBinary(OutputFormat format, byte[] data) =>
+        new RenderedOutput(format, OutputKind.Binary, data, text: null);
+
     /// <summary>
     /// Creates a text output using UTF-8 unless an encoding is supplied.
     /// The original text remains available through <see cref="GetText"/>.

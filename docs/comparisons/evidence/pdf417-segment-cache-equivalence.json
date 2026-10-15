@@ -1,0 +1,237 @@
+{
+  "BaselineCoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+  "CandidateCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+  "Requests": 95100,
+  "ShapePatternCases": 30,
+  "SegmentBoundaryPositions": [
+    126,
+    127,
+    128,
+    129,
+    254,
+    255,
+    256
+  ],
+  "Mismatches": 0,
+  "PrecisePolarityAndRunWidths": true,
+  "LaterCancellationOnCachedRowsStopped": true,
+  "BaselinePressureBytes": 8382530,
+  "CandidatePressureBytes": 8380858,
+  "ByteAllowance": 8388608,
+  "EntryAllowance": 32768,
+  "BaselineEntryPressureCount": 32768,
+  "CandidateEntryPressureCount": 32768,
+  "Observations": [
+    {
+      "Width": 1,
+      "Height": 257,
+      "Pattern": 0,
+      "BaselineBytes": 9720,
+      "CandidateBytes": 53880
+    },
+    {
+      "Width": 1,
+      "Height": 257,
+      "Pattern": 1,
+      "BaselineBytes": 9736,
+      "CandidateBytes": 53896
+    },
+    {
+      "Width": 1,
+      "Height": 257,
+      "Pattern": 2,
+      "BaselineBytes": 10408,
+      "CandidateBytes": 54568
+    },
+    {
+      "Width": 1,
+      "Height": 257,
+      "Pattern": 3,
+      "BaselineBytes": 9800,
+      "CandidateBytes": 53960
+    },
+    {
+      "Width": 1,
+      "Height": 257,
+      "Pattern": 4,
+      "BaselineBytes": 10034,
+      "CandidateBytes": 54194
+    },
+    {
+      "Width": 257,
+      "Height": 1,
+      "Pattern": 0,
+      "BaselineBytes": 9720,
+      "CandidateBytes": 53880
+    },
+    {
+      "Width": 257,
+      "Height": 1,
+      "Pattern": 1,
+      "BaselineBytes": 9736,
+      "CandidateBytes": 53896
+    },
+    {
+      "Width": 257,
+      "Height": 1,
+      "Pattern": 2,
+      "BaselineBytes": 10408,
+      "CandidateBytes": 54568
+    },
+    {
+      "Width": 257,
+      "Height": 1,
+      "Pattern": 3,
+      "BaselineBytes": 9812,
+      "CandidateBytes": 53972
+    },
+    {
+      "Width": 257,
+      "Height": 1,
+      "Pattern": 4,
+      "BaselineBytes": 10034,
+      "CandidateBytes": 54194
+    },
+    {
+      "Width": 129,
+      "Height": 257,
+      "Pattern": 0,
+      "BaselineBytes": 14580,
+      "CandidateBytes": 69780
+    },
+    {
+      "Width": 129,
+      "Height": 257,
+      "Pattern": 1,
+      "BaselineBytes": 14656,
+      "CandidateBytes": 69856
+    },
+    {
+      "Width": 129,
+      "Height": 257,
+      "Pattern": 2,
+      "BaselineBytes": 38026,
+      "CandidateBytes": 93226
+    },
+    {
+      "Width": 129,
+      "Height": 257,
+      "Pattern": 3,
+      "BaselineBytes": 17778,
+      "CandidateBytes": 72978
+    },
+    {
+      "Width": 129,
+      "Height": 257,
+      "Pattern": 4,
+      "BaselineBytes": 27956,
+      "CandidateBytes": 83156
+    },
+    {
+      "Width": 257,
+      "Height": 129,
+      "Pattern": 0,
+      "BaselineBytes": 14580,
+      "CandidateBytes": 69780
+    },
+    {
+      "Width": 257,
+      "Height": 129,
+      "Pattern": 1,
+      "BaselineBytes": 14656,
+      "CandidateBytes": 69856
+    },
+    {
+      "Width": 257,
+      "Height": 129,
+      "Pattern": 2,
+      "BaselineBytes": 38026,
+      "CandidateBytes": 93226
+    },
+    {
+      "Width": 257,
+      "Height": 129,
+      "Pattern": 3,
+      "BaselineBytes": 17944,
+      "CandidateBytes": 73144
+    },
+    {
+      "Width": 257,
+      "Height": 129,
+      "Pattern": 4,
+      "BaselineBytes": 28016,
+      "CandidateBytes": 83216
+    },
+    {
+      "Width": 65535,
+      "Height": 3,
+      "Pattern": 0,
+      "BaselineBytes": 12960,
+      "CandidateBytes": 68160
+    },
+    {
+      "Width": 65535,
+      "Height": 3,
+      "Pattern": 1,
+      "BaselineBytes": 13008,
+      "CandidateBytes": 68208
+    },
+    {
+      "Width": 65535,
+      "Height": 3,
+      "Pattern": 2,
+      "BaselineBytes": 407936,
+      "CandidateBytes": 463136
+    },
+    {
+      "Width": 65535,
+      "Height": 3,
+      "Pattern": 3,
+      "BaselineBytes": 65606,
+      "CandidateBytes": 120806
+    },
+    {
+      "Width": 65535,
+      "Height": 3,
+      "Pattern": 4,
+      "BaselineBytes": 210534,
+      "CandidateBytes": 265734
+    },
+    {
+      "Width": 65536,
+      "Height": 3,
+      "Pattern": 0,
+      "BaselineBytes": 12990,
+      "CandidateBytes": 68190
+    },
+    {
+      "Width": 65536,
+      "Height": 3,
+      "Pattern": 1,
+      "BaselineBytes": 13086,
+      "CandidateBytes": 68286
+    },
+    {
+      "Width": 65536,
+      "Height": 3,
+      "Pattern": 2,
+      "BaselineBytes": 802710,
+      "CandidateBytes": 857910
+    },
+    {
+      "Width": 65536,
+      "Height": 3,
+      "Pattern": 3,
+      "BaselineBytes": 118294,
+      "CandidateBytes": 173494
+    },
+    {
+      "Width": 65536,
+      "Height": 3,
+      "Pattern": 4,
+      "BaselineBytes": 407962,
+      "CandidateBytes": 463162
+    }
+  ],
+  "Scope": "Diagnostic comparisons against the exact preceding core and direct bitmap run enumeration. Both axis directions, inversion, zero and tilted slopes, segment boundaries, ushort width boundary and byte/entry-pressure fallback are covered. No recognition deadline or performance ranking is inferred."
+}

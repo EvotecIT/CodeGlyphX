@@ -5,6 +5,22 @@ namespace CodeGlyphX.Tests;
 
 public sealed class Pdf417CharsetFramingTests {
     [Theory]
+    [InlineData(new[] { 921, 1 }, "AB")]
+    [InlineData(new[] { 921, 901, 72, 105 }, "Hi")]
+    [InlineData(new[] { 921, 927, 26, 901, 0xC3, 0xA9 }, "é")]
+    public void ReaderInitializationPrefix_PreservesTheFollowingPayload(int[] codewords, string expected) {
+        Assert.Equal(expected, Pdf417DecodedBitStreamParser.Decode(codewords));
+    }
+
+    [Theory]
+    [InlineData(new[] { 1, 921 })]
+    [InlineData(new[] { 921, 921, 1 })]
+    [InlineData(new[] { 927, 3, 921, 1 })]
+    public void ReaderInitializationPrefix_RequiresTheFirstDataPosition(int[] codewords) {
+        Assert.Null(Pdf417DecodedBitStreamParser.Decode(codewords));
+    }
+
+    [Theory]
     [InlineData(26, 0xC3, 0xA9, "é")]
     [InlineData(25, 0x6F, 0x22, "漢")]
     public void DeclaredCharset_ConsecutiveByteShiftsFormOneCharacter(int eci, int first, int second, string expected) {

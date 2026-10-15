@@ -316,13 +316,7 @@ internal static class QrDecodePackRunner {
 
     private static bool ExpectedMatched(string[] decodedTexts, string[]? expectedTexts) {
         if (expectedTexts is null || expectedTexts.Length == 0) return decodedTexts.Length > 0;
-        var texts = decodedTexts
-            .Where(t => !string.IsNullOrWhiteSpace(t))
-            .ToHashSet(StringComparer.Ordinal);
-        for (var i = 0; i < expectedTexts.Length; i++) {
-            if (!texts.Contains(expectedTexts[i])) return false;
-        }
-        return true;
+        return decodedTexts.ToHashSet(StringComparer.Ordinal).SetEquals(expectedTexts);
     }
 
     private static bool ShouldDumpFailures() {

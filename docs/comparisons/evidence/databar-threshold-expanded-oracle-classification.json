@@ -1,0 +1,10 @@
+{
+  "Id": "rssexpandedstacked-2/13.png",
+  "Expected": "(01)90012345678908(3922)795888888888888888888888888888888888888888888888888888",
+  "Actual": "01900123456789083922795888888888888888888888888888888888888888888888888888",
+  "SameRawCharacters": true,
+  "PriceDigits": 54,
+  "Gs1MaximumPriceDigits": 15,
+  "Source": "https://ref.gs1.org/standards/genspecs/",
+  "Disposition": "Keep the locked failed score. Classify as invalid GS1 HRI oracle versus recovered raw characters, not a missed physical symbol. No product validation relaxation."
+}

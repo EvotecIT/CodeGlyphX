@@ -1,0 +1,13 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "Selected unfinished negative for tracing diagnosis only; frozen hash, oracle, hints and allowances unchanged.",
+  "Samples": [
+    {
+      "Id": "falsepositives/15.png",
+      "File": "falsepositives/15.png",
+      "Sha256": "acc5cd8ddb6c29324cbdb8fcd0dbe35cbd8847cd877399186fee566b98993270",
+      "Format": "All",
+      "Expected": []
+    }
+  ]
+}

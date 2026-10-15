@@ -1,0 +1,59 @@
+{
+  "License": "Apache-2.0; full text in ZXING-LICENSE.txt",
+  "Copyright": "ZXing authors",
+  "Copies": "Unmodified",
+  "Sources": [
+    {
+      "File": "perspective-bookmark.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-1/6.png",
+      "Sha256": "8e6d85ff2f01fc79cdd53eae7099504fbf0c8e208c2868868ecdddf68ae2f7a9d",
+      "Expected": [
+        "MEBKM:URL:http\\://en.wikipedia.org/wiki/Main_Page;;"
+      ]
+    },
+    {
+      "File": "contact-photograph.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-3/11.png",
+      "Sha256": "3eab0098a500a9b50a1f02d0a91dd6d7feed2d27406f9adc73d7306a2bb1910d",
+      "Expected": [
+        "MECARD:N:Google 411,;TEL:18665881077;;"
+      ]
+    },
+    {
+      "File": "small-rotated-13.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-6/13.png",
+      "Sha256": "8f1b358cd934f95d326abd89a55ba7609478060d455b271c3f1b35ddd0e98039",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "File": "small-rotated-7.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-6/7.png",
+      "Sha256": "c32be7f134a927159edceb63eec1c7ed186823c2dfeea71db184ce414790a941",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "File": "small-rotated-12.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-6/12.png",
+      "Sha256": "e9d97c47629bc2560f860c376abf4e7aa838b826f9e880550fa4f47dcba1adba",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "File": "zxing-exact-grid-18.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-5/18.png",
+      "Sha256": "3b63f527f1c4999b14d93d741b88699e5ab42922eaf4259c3e77d062249ddc97",
+      "ExpectedFile": "zxing-exact-grid-18.txt"
+    },
+    {
+      "File": "zxing-exact-grid-19.png",
+      "Source": "https://github.com/zxing/zxing/blob/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/qrcode-5/19.png",
+      "Sha256": "ed8890b9e31698774de78572738c1b91930887c802b2a8c32d18e49340a8975b",
+      "ExpectedFile": "zxing-exact-grid-19.txt"
+    }
+  ]
+}

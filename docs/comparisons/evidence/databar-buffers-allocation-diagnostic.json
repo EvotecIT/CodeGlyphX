@@ -1,0 +1,13 @@
+{
+  "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+  "PreviousCoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+  "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+  "CallsPerBinary": 5,
+  "ImagesPerCall": 31,
+  "CorrectEveryCall": 31,
+  "UnexpectedEveryCall": 0,
+  "BeforeMeanAllocatedBytes": 155957739.2,
+  "CurrentMeanAllocatedBytes": 111201830.4,
+  "AllocationRatio": 0.7130254065647549,
+  "Scope": "Diagnostic direct public corpus adapter calls with tracing enabled; actual allocation counter and sampled inclusive stacks are separate evidence. Stack samples overlap and are not CPU utilization or competitive latency. All raw trace/probe outcomes retained in qualification archive."
+}

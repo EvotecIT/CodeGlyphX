@@ -84,38 +84,45 @@ public static partial class QrDecoder {
             return false;
         }
 
-        if (!TryDecodeFormat(modules, out var formatCandidates, out var formatBestDistance, out var formatBitsA, out var formatBitsB)) {
-            // If format info is too noisy, attempt a bounded brute-force over all masks.
-            if (formatBestDistance <= 7) {
-                var allCandidates = BuildAllFormatCandidates(formatBitsA, formatBitsB);
-                if (TryDecodeWithCandidates(modules, version, allCandidates, formatBestDistance, requireBothWithin: false, shouldStop, out result, out diagnostics)) {
-                    return true;
-                }
-            }
-
+        var hasFormatCandidates = TryDecodeFormat(modules, out var formatCandidates, out var formatBestDistance, out var formatBitsA, out var formatBitsB);
+        if (!hasFormatCandidates && formatBestDistance > 7) {
             diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.FormatInfo, version, formatBestDistance: formatBestDistance);
             return false;
         }
 
-        if (formatCandidates.Length > 0 && HasBothWithin(formatCandidates)) {
-            if (TryDecodeWithCandidates(modules, version, formatCandidates, formatBestDistance, requireBothWithin: true, shouldStop, out result, out diagnostics)) {
+        // Share extraction and completed candidate attempts across the closest-pattern
+        // pass and the broader fallback. Clean format information needs no byte cache.
+        var search = new QrCandidateSearch(version, size, cacheExtractions: formatBestDistance > 3);
+        try {
+            if (!hasFormatCandidates) {
+                // If format info is too noisy, attempt a bounded brute-force over all masks.
+                var allCandidates = BuildAllFormatCandidates(formatBitsA, formatBitsB);
+                if (TryDecodeWithCandidates(modules, version, allCandidates, formatBestDistance, shouldStop, ref search, out result, out diagnostics)) {
+                    return true;
+                }
+
+                diagnostics = new QrDecodeDiagnostics(QrDecodeFailure.FormatInfo, version, formatBestDistance: formatBestDistance);
+                return false;
+            }
+
+            // CompareCandidates already puts matches from both format copies first.
+            // Trying that subset separately repeats the same failed extraction and RS work.
+            if (TryDecodeWithCandidates(modules, version, formatCandidates, formatBestDistance, shouldStop, ref search, out result, out diagnostics)) {
                 return true;
             }
-        }
 
-        if (TryDecodeWithCandidates(modules, version, formatCandidates, formatBestDistance, requireBothWithin: false, shouldStop, out result, out diagnostics)) {
-            return true;
-        }
-
-        // If format bits are noisy, retry all masks (RS + payload validation will reject wrong masks).
-        if (formatBestDistance > 3) {
-            var allCandidates = BuildAllFormatCandidates(formatBitsA, formatBitsB);
-            if (TryDecodeWithCandidates(modules, version, allCandidates, formatBestDistance, requireBothWithin: false, shouldStop, out result, out diagnostics)) {
-                return true;
+            // If format bits are noisy, try the remaining masks and correction levels.
+            if (formatBestDistance > 3) {
+                var allCandidates = BuildAllFormatCandidates(formatBitsA, formatBitsB);
+                if (TryDecodeWithCandidates(modules, version, allCandidates, formatBestDistance, shouldStop, ref search, out result, out diagnostics)) {
+                    return true;
+                }
             }
-        }
 
-        return false;
+            return false;
+        } finally {
+            search.Dispose();
+        }
     }
 
 #if NET8_0_OR_GREATER

@@ -1,0 +1,18 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "First sample of each format from frozen independent corpus; exact same preloaded pixels for all readers.",
+  "Samples": [
+    {
+      "Id": "multi-qrcode-1/1.png",
+      "File": "multi-qrcode-1/1.png",
+      "Sha256": "22aa7015f341ee8ecb8219e7790df7cb21814daf05c56e86953f24f09c87ea56",
+      "Format": "QrCode",
+      "Expected": [
+        "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let's boogie!",
+        "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+        "You get to SIT AT MRS. SIGMON'S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+        "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+      ]
+    }
+  ]
+}

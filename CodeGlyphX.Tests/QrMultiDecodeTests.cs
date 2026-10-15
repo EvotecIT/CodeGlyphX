@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Jpeg;
 using CodeGlyphX.Rendering.Png;
@@ -8,7 +9,36 @@ using Xunit;
 
 namespace CodeGlyphX.Tests;
 
+[Collection("ImageScannerSerial")]
 public sealed class QrMultiDecodeTests {
+    [Fact]
+    public void DecodeAll_CancellationAfterAcceptancePreservesAnIndependentPartialResult() {
+        var payloads = new[] { "PARTIAL-LEFT", "PARTIAL-RIGHT" };
+        var canvas = BuildCompositeCanvas(payloads, new QrRenderOptions { ModuleSize = 8, QuietZone = 4 },
+            grid: 2, pad: 24, out var width, out var height, out var stride);
+        var options = new QrPixelDecodeOptions { BudgetMilliseconds = 0, MaxScale = 1, DisableTransforms = true };
+        using var cancellation = new CancellationTokenSource();
+        string? accepted = null;
+        bool Accept(QrDecoded decoded) {
+            accepted = decoded.Text;
+            cancellation.Cancel();
+            return true;
+        }
+
+        Assert.True(CodeGlyphX.Qr.QrPixelDecoder.TryDecodeAll(canvas, width, height, stride, PixelFormat.Rgba32,
+            options, Accept, cancellation.Token, out var partial));
+        var result = Assert.Single(partial);
+        Assert.Contains(result.Text, payloads);
+        Assert.Equal(accepted, result.Text);
+        var bytes = (byte[])result.Bytes.Clone();
+
+        // A later search can reuse pooled storage without mutating the returned partial payload.
+        Assert.True(QrDecoder.TryDecodeAll(canvas, width, height, stride, PixelFormat.Rgba32, out var complete, options));
+        Assert.Equal(2, complete.Length);
+        Assert.Equal(bytes, result.Bytes);
+        Assert.Equal(accepted, result.Text);
+    }
+
     [Fact]
     public void DecodeAll_FindsTwoQrCodes() {
         var left = QR.RenderPixels("LEFT-QR", out var w1, out var h1, out var s1);
@@ -49,7 +79,7 @@ public sealed class QrMultiDecodeTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 3200,
-            BudgetMilliseconds = 8000,
+            BudgetMilliseconds = TestBudget.Adjust(8000),
             AggressiveSampling = true,
             StylizedSampling = true,
             EnableTileScan = true,
@@ -80,7 +110,7 @@ public sealed class QrMultiDecodeTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 2800,
-            BudgetMilliseconds = 8000,
+            BudgetMilliseconds = TestBudget.Adjust(8000),
             AggressiveSampling = true,
             StylizedSampling = true,
             EnableTileScan = true,
@@ -117,7 +147,7 @@ public sealed class QrMultiDecodeTests {
         var options = new QrPixelDecodeOptions {
             Profile = QrDecodeProfile.Robust,
             MaxDimension = 3600,
-            BudgetMilliseconds = 18000,
+            BudgetMilliseconds = TestBudget.Adjust(18000),
             AutoCrop = true,
             AggressiveSampling = true,
             StylizedSampling = true,

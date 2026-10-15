@@ -1,0 +1,306 @@
+{
+  "Source": "023a9382680bc029515093c1de1bc6ed50accc27",
+  "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+  "PreviousSource": "bfd639a91c1603c302e6204e60bdc7f5383951ba",
+  "PreviousCoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+  "Changes": "Synchronous retail row searches reuse their active deadline, check caller cancellation at every candidate, poll the clock every 32 bounded candidates and check it before returning. Adaptive thresholds and scanline selection reuse their active deadline without reducing checks. PDF417 removes duplicate clock reads already performed at row-reader entry. Search order, hypotheses, fit tolerances and recognition allowances are unchanged.",
+  "Scope": "The exact preceding qualified binary and current tested core scan the same images. Paired retail batches use 87 positive requests and nine typed negative requests, three warmups and twelve rotated measurements on each fixed cache domain. All measured allocation, latency, correctness and inconclusive samples are retained. Successful warmups are not retained by PowerForge.",
+  "Limits": "Fewer clock reads do not establish universal speed, lower CPU use or reliable completion on unseen images. Clock polling remains bounded within synchronous candidate work; the configured allowances are unchanged. Deadline-sensitive requests can still be inconclusive and every completion loss remains visible. These finite workloads do not establish overall superiority.",
+  "RetainedScannerContracts": {
+    "net10": 58,
+    "net8": 58,
+    "net472": 58
+  },
+  "CallerOwnershipContracts": {
+    "net10": 4,
+    "net8": 4,
+    "net472": 4
+  },
+  "DeadlineContracts": {
+    "net10": 2,
+    "net8": 2,
+    "net472": 2
+  },
+  "RetailCosts": [
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd0",
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "BaselineMedianMs": 1183.24155,
+      "CurrentMedianMs": 1079.72785,
+      "LatencyRatio": 0.9125168483138545,
+      "BaselineAllocatedBytes": 95705326.66666667,
+      "CurrentAllocatedBytes": 95697905.33333333,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "positive",
+      "Requests": 87,
+      "Domain": "ccd1",
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "BaselineMedianMs": 1015.33185,
+      "CurrentMedianMs": 962.7451000000001,
+      "LatencyRatio": 0.9482073274860826,
+      "BaselineAllocatedBytes": 95709558.66666667,
+      "CurrentAllocatedBytes": 95695436.66666667,
+      "PreviousCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "PreviousCorrectImagesMean": 70.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        70.0,
+        70.0
+      ],
+      "CurrentCorrectImagesMean": 70.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd0",
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "BaselineMedianMs": 821.1111000000001,
+      "CurrentMedianMs": 712.0708,
+      "LatencyRatio": 0.8672039630203512,
+      "BaselineAllocatedBytes": 34132002.0,
+      "CurrentAllocatedBytes": 34133022.0,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    },
+    {
+      "Kind": "negative",
+      "Requests": 9,
+      "Domain": "ccd1",
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "BaselineMedianMs": 723.9213500000001,
+      "CurrentMedianMs": 627.92115,
+      "LatencyRatio": 0.8673886327568595,
+      "BaselineAllocatedBytes": 34130488.0,
+      "CurrentAllocatedBytes": 34127466.0,
+      "PreviousCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "PreviousCorrectImagesMean": 9.0,
+      "PreviousInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousInconclusiveImagesMean": 0.0,
+      "PreviousUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "PreviousUnexpectedImagesMean": 0.0,
+      "CurrentCorrectImagesRange": [
+        9.0,
+        9.0
+      ],
+      "CurrentCorrectImagesMean": 9.0,
+      "CurrentInconclusiveImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentInconclusiveImagesMean": 0.0,
+      "CurrentUnexpectedImagesRange": [
+        0.0,
+        0.0
+      ],
+      "CurrentUnexpectedImagesMean": 0.0
+    }
+  ],
+  "Profiles": {
+    "retail": {
+      "before": {
+        "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+        "AllocatedBytes": [
+          93284408,
+          93060920,
+          93025072
+        ],
+        "CorrectImages": [
+          70,
+          70,
+          70
+        ],
+        "InconclusiveImages": [
+          0,
+          0,
+          0
+        ],
+        "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+      },
+      "after": {
+        "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+        "AllocatedBytes": [
+          93299944,
+          93093888,
+          93038640
+        ],
+        "CorrectImages": [
+          70,
+          70,
+          70
+        ],
+        "InconclusiveImages": [
+          0,
+          0,
+          0
+        ],
+        "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+      }
+    },
+    "negative15": {
+      "before": {
+        "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+        "AllocatedBytes": [
+          89610872,
+          103971120,
+          95460488
+        ],
+        "CorrectImages": [
+          0,
+          0,
+          0
+        ],
+        "InconclusiveImages": [
+          1,
+          1,
+          1
+        ],
+        "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+      },
+      "after": {
+        "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+        "AllocatedBytes": [
+          99511344,
+          111149608,
+          102629016
+        ],
+        "CorrectImages": [
+          0,
+          1,
+          0
+        ],
+        "InconclusiveImages": [
+          1,
+          0,
+          1
+        ],
+        "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence."
+      }
+    }
+  },
+  "RecipeScan": {
+    "Scope": [
+      "CodeGlyphX/BarcodeDecoder.Scanlines.cs",
+      "CodeGlyphX/Internal/DecodeBudget.cs",
+      "CodeGlyphX/Internal/BarcodeScanline.Retail.cs",
+      "CodeGlyphX/Internal/BarcodeScanline.AdaptiveRetail.cs",
+      "CodeGlyphX/Pdf417/Pdf417Decoder.Scanlines.cs",
+      "CodeGlyphX/Pdf417/Pdf417Decoder.PixelRunCache.cs"
+    ],
+    "RecipeCounts": {
+      "IndexOf string": 0,
+      "Substring": 0,
+      "StartsWith EndsWith Contains": 4,
+      "Culture case conversions": 0,
+      "Replace": 0,
+      "Chained Replace 3+": 0,
+      "params": 0,
+      "LINQ query": 0,
+      "All Any": 0,
+      "All Any char": 0,
+      "List allocations": 9,
+      "Dictionary allocations": 5,
+      "Static Dictionary": 0,
+      "Static FrozenDictionary": 0,
+      "CurrentCulture comparer": 0,
+      "Unsealed classes": 0,
+      "Sealed classes": 3,
+      "IEquatable": 0,
+      "Array allocations": 5,
+      "Array.Copy": 0
+    },
+    "Status": "Recipe checklist before classifying performance findings; patterns require profiling and mutability review."
+  },
+  "ProfileScope": "Allocation and stack profiles use three diagnostic repetitions of the public corpus adapter. Tracing overhead and JIT warmup affect completion. Sampled inclusive stacks overlap and are not CPU utilization or ranked benchmark timings."
+}

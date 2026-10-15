@@ -1,0 +1,133 @@
+{
+  "Source": "417f25c101aada2148f1d9f7ebdc8a8f505f7a29",
+  "CoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18",
+  "PreviousSource": "7dc89ae6ba182b0868ef6d983f9737f07316cd5c",
+  "PreviousCoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+  "Changes": "Code 39 locates complete guarded symbols in either scanline direction and accepts quiet runs clipped only at the physical image boundary. Interior quiet-zone, character-width and payload checks remain. Fixed nine-run normalization avoids temporary LINQ arrays. RequireValid now checks short payloads and validates and strips the checksum for the encoder-supported empty payload; optional checksum behavior remains unchanged.",
+  "NormalizerEquivalence": {
+    "Cases": 205040,
+    "Accepted": 25219,
+    "Mismatches": 0,
+    "PreviousCoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+    "CoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18",
+    "Scope": "Actual previous/current private normalizers through isolated assembly contexts. Return value, pitch and successful pattern match in both directions. All 84 three-wide patterns at ten pitches and three ratios, plus 100000 seeded variable-length run lists. Failed output arrays are ignored by the production caller."
+  },
+  "FocusedCases": 18,
+  "Engines": {
+    "CodeGlyphX": {
+      "positive": {
+        "previous": {
+          "Correct": 9,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      },
+      "negative": {
+        "previous": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      }
+    },
+    "ZXing.Net": {
+      "positive": {
+        "previous": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      },
+      "negative": {
+        "previous": {
+          "Correct": 30,
+          "Unexpected": 1,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 30,
+          "Unexpected": 1,
+          "Inconclusive": 0
+        }
+      }
+    },
+    "ZXing-C++": {
+      "positive": {
+        "previous": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 12,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      },
+      "negative": {
+        "previous": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        },
+        "current": {
+          "Correct": 31,
+          "Unexpected": 0,
+          "Inconclusive": 0
+        }
+      }
+    }
+  },
+  "Cost": [
+    {
+      "Domain": "ccd0",
+      "PreviousMedianMs": 137.5385,
+      "CurrentMedianMs": 120.05369999999999,
+      "LatencyRatio": 0.8728734136260029,
+      "PreviousAllocatedBytes": 23315695.333333332,
+      "CurrentAllocatedBytes": 18037974.666666668,
+      "PreviousCorrect": 9.0,
+      "CurrentCorrect": 12.0,
+      "PreviousUnexpected": 0.0,
+      "CurrentUnexpected": 0.0,
+      "PreviousInconclusive": 0.0,
+      "CurrentInconclusive": 0.0
+    },
+    {
+      "Domain": "ccd1",
+      "PreviousMedianMs": 123.0091,
+      "CurrentMedianMs": 109.05245,
+      "LatencyRatio": 0.8865396950306927,
+      "PreviousAllocatedBytes": 23346060.0,
+      "CurrentAllocatedBytes": 18066933.333333332,
+      "PreviousCorrect": 9.0,
+      "CurrentCorrect": 12.0,
+      "PreviousUnexpected": 0.0,
+      "CurrentUnexpected": 0.0,
+      "PreviousInconclusive": 0.0,
+      "CurrentInconclusive": 0.0
+    }
+  ],
+  "Scope": "Twelve unchanged Code 39 positives from the main corpus and the same thirty-one negative image IDs with an explicit Code 39 hint. These are supplementary contract checks; they do not establish a general recognition or false-positive rate.",
+  "Limits": "Both binaries receive identical hints, pixels, validation and allowances. The earlier binary reads fewer positive images, so latency ratios include different completed recognition work. Managed allocation excludes native costs; shared-host measurements do not establish portable speed, throughput or capacity. Every measured sample, warmup failure, completion and unexpected payload is retained; successful warmup samples are not retained.",
+  "RawCostPackets": [
+    "code39-cost-ccd0-result.json",
+    "code39-cost-ccd1-result.json"
+  ],
+  "WarmupRetentionClarification": "PowerForge executes three warmups. Successful warmup samples are not retained; failed warmups and all measured samples are retained. This corrects descriptive retention wording only; outcomes, raw measurements, source identities and historical attribution are unchanged. Original historical wording remains in the preceding verification archives."
+}

@@ -1,0 +1,1299 @@
+[
+  {
+    "Id": "codabar-1/09.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "12345"
+    ],
+    "Actual": [
+      "12345"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "codabar-1/12.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "31117013206375"
+    ],
+    "Actual": [
+      "31117013206375"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "codabar-1/13.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "12345"
+    ],
+    "Actual": [
+      "12345"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "codabar-1/11.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "3419500"
+    ],
+    "Actual": [],
+    "Missing": [
+      "3419500"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/01.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "1234567890"
+    ],
+    "Actual": [
+      "1234567890"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "codabar-1/04.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "123455"
+    ],
+    "Actual": [],
+    "Missing": [
+      "123455"
+    ],
+    "Unexpected": [],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/01.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/02.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/03.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/04.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/05.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/06.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/07.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/08.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/09.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/10.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/11.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/12.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/13.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/14.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/15.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/16.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/17.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/18.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/19.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/20.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/21.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/22.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/23.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/24.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/25.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/01.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/03.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/04.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/15.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/16.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/19.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/09.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "12345"
+    ],
+    "Actual": [
+      "12345"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/12.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "31117013206375"
+    ],
+    "Actual": [
+      "31117013206375"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/13.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "12345"
+    ],
+    "Actual": [
+      "12345"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/11.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "3419500"
+    ],
+    "Actual": [
+      "3419500"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/01.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "1234567890"
+    ],
+    "Actual": [
+      "1234567890"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/04.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "123455"
+    ],
+    "Actual": [
+      "123455"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/01.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/02.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/03.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [
+      "8$"
+    ],
+    "Missing": [],
+    "Unexpected": [
+      "8$"
+    ],
+    "Status": "Failed",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/04.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/05.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/06.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/07.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/08.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/09.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/10.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/11.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/12.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/13.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/14.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/15.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/16.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/17.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/18.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/19.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/20.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/21.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/22.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/23.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/24.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/25.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/01.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/03.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/04.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/15.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/16.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/19.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/09.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "12345"
+    ],
+    "Actual": [
+      "A12345A"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/12.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "31117013206375"
+    ],
+    "Actual": [
+      "A31117013206375B"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/13.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "12345"
+    ],
+    "Actual": [
+      "A12345B"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/11.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "3419500"
+    ],
+    "Actual": [
+      "A3419500A"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/01.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "1234567890"
+    ],
+    "Actual": [
+      "A1234567890A"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/04.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "123455"
+    ],
+    "Actual": [
+      "A123455C"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/01.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/02.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/03.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/04.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/05.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/06.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/07.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/08.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/09.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/10.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/11.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/12.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/13.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/14.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/15.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/16.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/17.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/18.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/19.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/20.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/21.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/22.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/23.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/24.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives-2/25.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/01.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/03.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/04.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/15.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/16.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "falsepositives/19.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [],
+    "Actual": [],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  }
+]

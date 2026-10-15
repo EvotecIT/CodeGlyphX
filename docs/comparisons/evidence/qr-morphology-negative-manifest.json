@@ -1,0 +1,34 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "Every distinct negative image with an unfinished search in the latest main or supplemental qualification; diagnostic profiling only.",
+  "Samples": [
+    {
+      "Id": "falsepositives-2/21.png",
+      "File": "falsepositives-2/21.png",
+      "Sha256": "7f7e8205af8fdb7e00be97d309a681efc77ec0cce96290889442b3ab93b2eec1",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "File": "falsepositives/03.png",
+      "Sha256": "bb9cada0e2cee198bc652c6a0a53650f40c2fd9e6b2ec17cfa00f86ec5ceee22",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "File": "falsepositives/15.png",
+      "Sha256": "acc5cd8ddb6c29324cbdb8fcd0dbe35cbd8847cd877399186fee566b98993270",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "File": "falsepositives/19.png",
+      "Sha256": "342fdb2e223f3a41144aaa1029dc3ce7dc4d278a07e7e47dc885c874b1e57c77",
+      "Format": "All",
+      "Expected": []
+    }
+  ]
+}

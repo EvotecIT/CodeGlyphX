@@ -1,0 +1,7 @@
+{
+  "Scope": "Current public-entrypoint regression tests with the exact preceding qualified core substituted in an isolated host. Four photo cases, BGRA/padded input and three-row acceptance fail; two-row rejection and misaligned-row rejection pass.",
+  "TestAssemblySha256": "EF9ECABB572EBD7B723F1FCBA0C6C5EFAE394D8EADF45CAF2B6720D3A616E138",
+  "BaselineCoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+  "Failed": 6,
+  "Passed": 2
+}

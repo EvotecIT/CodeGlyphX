@@ -217,6 +217,11 @@ globalThis.setTheme = setTheme;
 
         loadBenchmarkSummary().then((data) => {
             const entry = pickBenchmarkSummary(data);
+            if (entry?.qualification === 'historical-unqualified') {
+                container.textContent = 'Historical benchmark results are not a current ranking. Read the qualified comparisons at /benchmarks/.';
+                container.dataset.loaded = 'true';
+                return;
+            }
             if (!entry || !entry.summary?.length) {
                 container.textContent = 'Benchmark summary unavailable.';
                 container.dataset.loaded = 'true';

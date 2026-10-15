@@ -1,0 +1,11 @@
+{{~ # Image recognition chart: correct images per reader, from data/visuals.json bench (drawn from data/comparisons.json). ~}}
+{{~ rec = data.visuals.bench ~}}
+<figure class="cgx-bench-figure">
+  <figcaption class="cgx-bench-figure__title">Correct images out of {{ rec.positives }} positives<span>Exact payload sets · same pixels and format hints for every reader · measured {{ rec.date }}</span></figcaption>
+  <ul class="cgx-bench-bars cgx-bench-bars--score">
+    {{~ for r in rec.recognition ~}}
+    <li{{ if r.cgx }} class="is-cgx"{{ end }}><span class="cgx-bench-bars__vendor">{{ r.engine }}</span><span class="cgx-bench-bars__track"><span class="cgx-bench-bars__lane"><span class="cgx-bench-bars__bar" style="width: {{ r.pct }}%"></span>{{ if r.before != r.correct }}<span class="cgx-bench-bars__was" style="left: {{ r.before_pct }}%" aria-hidden="true"></span>{{ end }}</span><span class="cgx-bench-bars__time">{{ r.correct }}/{{ r.positives }} <em>{{ r.percent }}%</em>{{ if r.before != r.correct }}<span class="cgx-visually-hidden">, {{ r.before }} on the original source</span>{{ end }}</span></span></li>
+    {{~ end ~}}
+  </ul>
+  <p class="cgx-bench-legend"><span><i class="is-cgx" aria-hidden="true"></i>CodeGlyphX</span><span><i aria-hidden="true"></i>Other readers</span>{{ for r in rec.recognition }}{{ if r.before != r.correct }}<span><i class="is-was" aria-hidden="true"></i>{{ r.engine }} on the original source: {{ r.before }}/{{ r.positives }}</span>{{ end }}{{ end }}</p>
+</figure>

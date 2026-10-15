@@ -10,7 +10,9 @@
   "ThemesRoot": "themes",
   "DataRoot": "data",
   "StaticAssets": [
-    { "Source": "static" }
+    { "Source": "static" },
+    { "Source": "../docs/comparisons", "Destination": "comparisons" },
+    { "Source": "../docs/fair-comparisons.md", "Destination": "fair-comparisons.md" }
   ],
   "Collections": [
     {
@@ -245,7 +247,7 @@
             "Items": [
               { "Id": "docs", "Title": "Docs", "Url": "/docs/", "Description": "Every symbology, payloads, decoding and output formats." },
               { "Id": "api", "Title": "API", "Url": "/api/", "Description": "Every public type and member in the package." },
-              { "Id": "benchmarks", "Title": "Benchmarks", "Url": "/benchmarks/", "Description": "Encode, render and decode timings beside other libraries." },
+              { "Id": "benchmarks", "Title": "Benchmarks", "Url": "/benchmarks/", "Description": "Generation timing and image recognition beside ZXing and QRCoder." },
               { "Id": "downloads", "Title": "Downloads", "Url": "/downloads/", "Description": "ZIP builds of every release, and the NuGet package." },
               { "Id": "changelog", "Title": "Changelog", "Url": "/changelog/", "Description": "What each release added, with the codes it drew." }
             ]

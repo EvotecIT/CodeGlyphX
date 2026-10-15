@@ -1,0 +1,114 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "First six images per upstream blackbox directory ordered by SHA256 of source path, with UTF-8 .txt oracle; six negatives per directory; independently specified multi-QR fixture. No decoded-result selection.",
+  "Samples": [
+    {
+      "Id": "rss14-1/4.png",
+      "File": "rss14-1/4.png",
+      "Sha256": "c1443144e3ea6c68f97c3eb003ad712a99e9a6f2b8bc07d06b88e5ea5e124bed",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "20012345678909"
+      ]
+    },
+    {
+      "Id": "rss14-1/6.png",
+      "File": "rss14-1/6.png",
+      "Sha256": "710dda5104e381f0971c1b9b81de297c93c70424bf40e6bd2fb64dcd047597d7",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "rss14-1/3.png",
+      "File": "rss14-1/3.png",
+      "Sha256": "7a077e771bd3c4c95e99bcf94219c68a14da6de9f13b9c70a1c57879450da31b",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00075678164125"
+      ]
+    },
+    {
+      "Id": "rss14-1/5.png",
+      "File": "rss14-1/5.png",
+      "Sha256": "7a8fa3382c7335fde0ee1fc03efb749b8bd2a0a09158b9128aee75319385454e",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00034567890125"
+      ]
+    },
+    {
+      "Id": "rss14-1/2.png",
+      "File": "rss14-1/2.png",
+      "Sha256": "b29f386c51ceeacd770c292c21e7c237da13490710a61b8e590f78d636425be3",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00821935106427"
+      ]
+    },
+    {
+      "Id": "rss14-1/1.png",
+      "File": "rss14-1/1.png",
+      "Sha256": "7f19fe1962e05f5d889d8f5a988bd19aeec1e2d689f58ce72ae86a52d42f1153",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "04412345678909"
+      ]
+    },
+    {
+      "Id": "rss14-2/11.png",
+      "File": "rss14-2/11.png",
+      "Sha256": "0436cd131a7cacfe5a51fa69b714c5015a5b6a8697bbc7152ec93977e4a5aab3",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/22.png",
+      "File": "rss14-2/22.png",
+      "Sha256": "ec31e2bb6f05ceb3bd7d1169d16746bd84093cb496cbd8e33419e9179a7d3a5c",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "rss14-2/18.png",
+      "File": "rss14-2/18.png",
+      "Sha256": "3277288ae96e011807d2d156118e29826940bb91e991babade6e041ee7337003",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/19.png",
+      "File": "rss14-2/19.png",
+      "Sha256": "7f05f84567c29984c81f1f5e75c165ae2223fa98a0a0012e56d078959f5d92bd",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/24.png",
+      "File": "rss14-2/24.png",
+      "Sha256": "68f49ccf7e84b5e334f7b3e6ea43f95d201cf134259d9facfa453bef8c951402",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "rss14-2/7.png",
+      "File": "rss14-2/7.png",
+      "Sha256": "2045a611e4c53abc354d3c7aef4f27c787cbd2468ed867d720884ef0c8f5a0a5",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    }
+  ]
+}

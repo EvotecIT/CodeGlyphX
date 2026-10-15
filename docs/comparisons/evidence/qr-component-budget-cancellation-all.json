@@ -1,0 +1,73 @@
+{
+  "CoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+  "CallKind": "all",
+  "Scope": "Diagnostic supported public QrDecoder.TryDecode/TryDecodeAll calls on synthetic block noise, with the documented zero local budget and a live cancellation token. Request time is recorded immediately before Cancel; calls that finish before the request are identified explicitly. Timer/tracing overhead and host load affect response time; no timing threshold or competitive performance claim.",
+  "Rows": [
+    {
+      "Side": 2048,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 5,
+      "CancelledAtMs": 19.9722,
+      "FinishedAtMs": 20.0507,
+      "PostCancellationMs": 0.07849999999999824,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "Multi-symbol negative returned no payloads."
+    },
+    {
+      "Side": 2048,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 40,
+      "CancelledAtMs": 44.6337,
+      "FinishedAtMs": 44.9174,
+      "PostCancellationMs": 0.28370000000000317,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "Multi-symbol negative returned no payloads."
+    },
+    {
+      "Side": 2048,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 120,
+      "CancelledAtMs": 125.2264,
+      "FinishedAtMs": 125.3142,
+      "PostCancellationMs": 0.08780000000000143,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "Multi-symbol negative returned no payloads."
+    },
+    {
+      "Side": 4096,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 5,
+      "CancelledAtMs": 18.3154,
+      "FinishedAtMs": 18.3245,
+      "PostCancellationMs": 0.009100000000000108,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "Multi-symbol negative returned no payloads."
+    },
+    {
+      "Side": 4096,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 40,
+      "CancelledAtMs": 45.3117,
+      "FinishedAtMs": 45.3304,
+      "PostCancellationMs": 0.018699999999995498,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "Multi-symbol negative returned no payloads."
+    },
+    {
+      "Side": 4096,
+      "LocalBudgetMilliseconds": 0,
+      "DelayMilliseconds": 120,
+      "CancelledAtMs": 137.1113,
+      "FinishedAtMs": 138.734,
+      "PostCancellationMs": 1.622700000000009,
+      "CancellationRequestedBeforeReturn": true,
+      "Found": false,
+      "Info": "Multi-symbol negative returned no payloads."
+    }
+  ]
+}

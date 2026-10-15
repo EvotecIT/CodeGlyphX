@@ -1,0 +1,140 @@
+{
+  "Source": "3dfe351da00e598368d21224a01502c90c31be71",
+  "CoreSha256": "EB5CC554EA9BBA3077A1E83BCE24F6E8D1961A5002BAFBF795D7B71902CB0FB8",
+  "PreviousSource": "34bfc0ab2216f02a6d84acbed997b3b9f9513f90",
+  "PreviousCoreSha256": "DC005150AC82C7473BBC1A8C49BD8AAFA5F8AC0B34D011E4F975431375D3567F",
+  "Changes": [
+    "Codabar candidates use exact thresholded pixel runs before module rounding. Bars and spaces have separately validated narrow and wide groups with a consistent print-gain model. Recovery requires valid A-D framing, consistent gaps and quiet zones; clipped image-edge quiet zones are bounded. Existing module decoding and public APIs remain unchanged."
+  ],
+  "PublicApiAdded": false,
+  "ProductionDependenciesAdded": false,
+  "OraclesAndScoringChanged": false,
+  "MainCorpus": {
+    "Images": 6,
+    "PreviousCorrect": 4,
+    "Correct": 6
+  },
+  "PreFixRegression": {
+    "Source": "f5165a28206f2f016ed078705e6533d990eba03c",
+    "CoreSha256": "4C0342A253130C2A56418DFACA84943FA4C9207B5EC1DB69D05B86EF2A77759F",
+    "NewLocalizerPresent": false,
+    "PreFixTests": {
+      "total": "6",
+      "executed": "6",
+      "passed": "0",
+      "failed": "6",
+      "error": "0",
+      "timeout": "0",
+      "aborted": "0",
+      "inconclusive": "0",
+      "passedButRunAborted": "0",
+      "notRunnable": "0",
+      "notExecuted": "0",
+      "disconnected": "0",
+      "warning": "0",
+      "completed": "0",
+      "inProgress": "0",
+      "pending": "0"
+    },
+    "FailureTrxSha256": "0563e460fead6f72d622b347975e526bdb1ab6937cd973ddc622f9691b1e2e3b",
+    "FrozenDiagnosticCoreSha256": "DC005150AC82C7473BBC1A8C49BD8AAFA5F8AC0B34D011E4F975431375D3567F"
+  },
+  "FocusedCases": 16,
+  "ExistingFocusedCases": 54,
+  "FullFrameworkContractMatches": {
+    "net10": 16,
+    "net8": 16,
+    "net472": 16
+  },
+  "Diagnostics": {
+    "diagnostic": {
+      "CodeGlyphX": {
+        "Previous": {
+          "CorrectPositive": 4,
+          "CorrectNegative": 31,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        },
+        "Current": {
+          "CorrectPositive": 6,
+          "CorrectNegative": 31,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        }
+      },
+      "ZXing.Net": {
+        "Previous": {
+          "CorrectPositive": 6,
+          "CorrectNegative": 30,
+          "UnexpectedImages": 1,
+          "InconclusiveImages": 0
+        },
+        "Current": {
+          "CorrectPositive": 6,
+          "CorrectNegative": 30,
+          "UnexpectedImages": 1,
+          "InconclusiveImages": 0
+        }
+      },
+      "ZXing-C++": {
+        "Previous": {
+          "CorrectPositive": 6,
+          "CorrectNegative": 31,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        },
+        "Current": {
+          "CorrectPositive": 6,
+          "CorrectNegative": 31,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        }
+      }
+    },
+    "supplemental": {
+      "CodeGlyphX": {
+        "Previous": {
+          "CorrectPositive": 5,
+          "CorrectNegative": 0,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        },
+        "Current": {
+          "CorrectPositive": 5,
+          "CorrectNegative": 0,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        }
+      },
+      "ZXing.Net": {
+        "Previous": {
+          "CorrectPositive": 5,
+          "CorrectNegative": 0,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        },
+        "Current": {
+          "CorrectPositive": 5,
+          "CorrectNegative": 0,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        }
+      },
+      "ZXing-C++": {
+        "Previous": {
+          "CorrectPositive": 5,
+          "CorrectNegative": 0,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        },
+        "Current": {
+          "CorrectPositive": 5,
+          "CorrectNegative": 0,
+          "UnexpectedImages": 0,
+          "InconclusiveImages": 0
+        }
+      }
+    }
+  },
+  "Limits": "Two main-corpus images informed implementation and permanent regression fixtures. Five additional upstream Codabar images were collected after the fix; all three engines already passed them on the previous binary. The 31 fixed negative inputs use an explicit Codabar hint and are contract diagnostics, not a representative false-positive survey. Main corpus, format hints, payload oracles, scoring and allowances remain unchanged. All-format costs and negative completion are separately rerun; these finite results do not establish overall superiority."
+}

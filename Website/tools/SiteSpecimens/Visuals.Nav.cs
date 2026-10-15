@@ -1,6 +1,6 @@
 // Navigation thumbnails: one small composition per destination in the site.json "main" menu, drawn on the night
-// panel colors. The codes inside are CodeGlyphX SVG output nested as-is; the benchmark sparkline is drawn from the
-// published benchmark data. nav.json mirrors the menu for pages whose header the API generator writes.
+// panel colors. The codes inside are CodeGlyphX SVG output nested as-is; the benchmark bars are drawn from the
+// qualified comparison data. nav.json mirrors the menu for pages whose header the API generator writes.
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -16,7 +16,7 @@ internal static partial class SiteVisuals {
     static string Mono(double x, double y, string text, string fill, double size = 7.5, string anchor = "start", string weight = "500") =>
         $"<text x=\"{F(x)}\" y=\"{F(y)}\" font-family=\"JetBrains Mono, Consolas, monospace\" font-size=\"{F(size)}\" font-weight=\"{weight}\" fill=\"{fill}\" text-anchor=\"{anchor}\">{Esc(text)}</text>";
 
-    static Dictionary<string, object> BuildNav(JsonNode site, string latestVersion, double[] speedups) {
+    static Dictionary<string, object> BuildNav(JsonNode site, string latestVersion, ReaderScore[] recognition) {
         var thumbs = new Dictionary<string, object>();
         var ink = Hex(NightInk);
         const string dim = "#6f6987";
@@ -94,18 +94,20 @@ internal static partial class SiteVisuals {
             art["api"] = sb.ToString();
         }
 
-        // Benchmarks: how many times faster than the runner-up, scenario by scenario (log scale).
+        // Benchmarks: correctly decoded corpus images per reader; the pink tick marks CodeGlyphX's original source.
         {
             var sb = new StringBuilder();
-            var n = Math.Max(1, speedups.Length);
-            var gap = 3.0;
-            var bw = (140 - gap * (n - 1)) / n;
-            var max = Math.Log10(Math.Max(2, speedups.DefaultIfEmpty(2).Max()));
-            sb.Append($"<rect x=\"10\" y=\"84\" width=\"140\" height=\"1\" fill=\"{dim}\"/>");
-            for (var i = 0; i < speedups.Length; i++) {
-                var h = Math.Max(3, 64 * Math.Log10(Math.Max(1.05, speedups[i])) / max);
-                sb.Append($"<rect x=\"{F(10 + i * (bw + gap))}\" y=\"{F(84 - h)}\" width=\"{F(bw)}\" height=\"{F(h)}\" rx=\"1.5\" fill=\"{(speedups[i] >= 10 ? Hex(Cyan) : Hex(Violet))}\"/>");
+            const double x0 = 62, width = 88;
+            for (var i = 0; i < recognition.Length; i++) {
+                var r = recognition[i];
+                var y = 18 + i * 24;
+                var cgx = r.Engine == "CodeGlyphX";
+                sb.Append(Mono(10, y + 7.5, r.Engine, cgx ? ink : dim, 7));
+                sb.Append($"<rect x=\"{F(x0)}\" y=\"{F(y)}\" width=\"{F(width)}\" height=\"10\" rx=\"2\" fill=\"{dim}\" opacity=\".35\"/>");
+                sb.Append($"<rect x=\"{F(x0)}\" y=\"{F(y)}\" width=\"{F(width * r.Correct / Math.Max(1, r.Positives))}\" height=\"10\" rx=\"2\" fill=\"{(cgx ? Hex(Cyan) : Hex(Violet))}\"/>");
+                if (r.Before != r.Correct) sb.Append($"<rect x=\"{F(x0 + width * r.Before / Math.Max(1, r.Positives) - 1)}\" y=\"{F(y - 3)}\" width=\"2\" height=\"16\" rx=\"1\" fill=\"{Hex(Pink)}\"/>");
             }
+            if (recognition.Length > 0) sb.Append(Mono(150, 90, "correct of " + recognition[0].Positives + " images", dim, 6.5, "end"));
             art["benchmarks"] = sb.ToString();
         }
 
