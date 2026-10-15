@@ -129,8 +129,9 @@ main.cgx-landing { padding: var(--header-height) 0 0; overflow-x: clip; }
 .cgx-decode p { margin-top: 14px; color: var(--text-muted); }
 
 /* Measured performance and recognition: the comparison summary beside the recognition chart. */
-.cgx-measured { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(24px, 4vw, 56px); align-items: center; border-top: 1px solid var(--border); }
-.cgx-measured .comparison-summary { margin-top: 20px; }
+.cgx-measured { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 28px clamp(24px, 4vw, 56px); align-items: start; border-top: 1px solid var(--border); }
+.cgx-measured > h2 { grid-column: 1 / -1; max-width: 18ch; }
+.cgx-measured > .cgx-bench-figure { position: sticky; top: calc(var(--header-height) + 24px); }
 
 /* PowerShell band */
 .cgx-ps { padding-block: clamp(64px, 8vw, 112px); background: radial-gradient(45% 50% at 85% 15%, rgba(83, 145, 254, .22), transparent 70%), radial-gradient(40% 50% at 10% 90%, rgba(139, 92, 246, .18), transparent 72%), var(--cgx-night); color: var(--cgx-night-ink); }
