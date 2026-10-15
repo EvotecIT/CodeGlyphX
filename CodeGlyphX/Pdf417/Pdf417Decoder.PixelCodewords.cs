@@ -57,7 +57,7 @@ public static partial class Pdf417Decoder {
                         }
                         // Buckets change iteration order. Exact score ties keep the
                         // lowest codeword, matching the preceding exhaustive search.
-                        if (!fits || error > bestError || error.Equals(bestError) && (!found || candidate >= word)) continue;
+                        if (!fits || error > bestError || error.CompareTo(bestError) == 0 && (!found || candidate >= word)) continue;
                         word = candidate; bestError = error; found = true;
                     }
                 }

@@ -35,7 +35,7 @@ public static partial class Pdf417Decoder {
         var indicatorX = leftPixel + width;
         foreach (var candidate in candidates) {
             if (candidate.Axis == axis && candidate.Reverse == reverse && candidate.Invert == invert &&
-                candidate.Slope.Equals(slope) && candidate.Columns == columns && candidate.Count == count && candidate.Ec == ec &&
+                candidate.Slope.CompareTo(slope) == 0 && candidate.Columns == columns && candidate.Count == count && candidate.Ec == ec &&
                 Math.Abs(candidate.IndicatorX - indicatorX) <= pitch && Math.Abs(candidate.Pitch - pitch) <= pitch * 0.05) return;
         }
         const int maximumCandidates = 16;
