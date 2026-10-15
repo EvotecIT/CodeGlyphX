@@ -11,7 +11,7 @@ public static partial class SymbolScanner {
         if (!requested.Contains(SymbolFormat.DataMatrix) && !requested.Contains(SymbolFormat.Aztec) &&
             !requested.Contains(SymbolFormat.Pdf417)) return;
         var grid = ResolveMatrixTileGrid(options, width, height);
-        var remainingAttempts = grid * grid * CountMatrixFamilies(requested);
+        var remainingAttempts = grid * grid * CountMatrixAttemptWeight(requested);
         var padding = Math.Max(8, Math.Min(width, height) / 40);
         for (var ty = 0; ty < grid; ty++) {
             for (var tx = 0; tx < grid; tx++) {
@@ -42,18 +42,28 @@ public static partial class SymbolScanner {
 
     private static int CountInitialAttempts(ISet<SymbolFormat> requested, ScanOptions options, int width, int height) {
         var matrixFamilies = CountMatrixFamilies(requested);
-        var count = matrixFamilies;
-        if (requested.Contains(SymbolFormat.QrCode)) count++;
+        var count = CountMatrixAttemptWeight(requested);
+        // QR searches multiple scales and grayscale variants; Data Matrix also
+        // tries direct-part-mark variants, and PDF417 searches row slopes and
+        // damaged framing. Give these stages more of the same
+        // total deadline while retaining time for the other requested families.
+        if (requested.Contains(SymbolFormat.QrCode)) count += 3;
         if (requested.Contains(SymbolFormat.MicroQrCode)) count++;
+        if (requested.Contains(SymbolFormat.MaxiCode)) count++;
+        if (requested.Contains(SymbolFormat.Gs1DataBarExpandedStacked)) count++;
+        if (requested.Contains(SymbolFormat.Gs1DataBarStacked) || requested.Contains(SymbolFormat.Gs1DataBarStackedOmnidirectional)) count++;
         foreach (var format in requested) {
             if (SymbolCapabilities.Get(format).Family != SymbolFamily.Linear) continue;
             count++;
             break;
         }
         if (options.EnableTileScan && matrixFamilies > 0) {
-            // Reserve time for each tile, without multiplying the initial penalty by its decoder count.
+            // Reserve one share for the tile stage, which divides its own remaining time.
             var grid = ResolveMatrixTileGrid(options, width, height);
-            count += grid * grid;
+            // Do not reserve recognition time for tiles too short to be scanned.
+            var padding = Math.Max(8, Math.Min(width, height) / 40);
+            if (width / grid + padding * 2 >= 48 && height / grid + padding * 2 >= 48)
+                count++;
         }
         return count;
     }
@@ -62,6 +72,10 @@ public static partial class SymbolScanner {
         (requested.Contains(SymbolFormat.DataMatrix) ? 1 : 0) +
         (requested.Contains(SymbolFormat.Pdf417) ? 1 : 0) +
         (requested.Contains(SymbolFormat.Aztec) ? 1 : 0);
+
+    private static int CountMatrixAttemptWeight(ISet<SymbolFormat> requested) =>
+        CountMatrixFamilies(requested) + (requested.Contains(SymbolFormat.DataMatrix) ? 1 : 0) +
+        (requested.Contains(SymbolFormat.Pdf417) ? 1 : 0);
 
     private static int ResolveMatrixTileGrid(ScanOptions options, int width, int height) =>
         options.TileGrid == 0 ? (Math.Max(width, height) >= 720 ? 3 : 2) : options.TileGrid;

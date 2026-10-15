@@ -1,0 +1,11 @@
+{
+  "Conclusion": "Setup runs for every warmup and every measured iteration. An assembly context created in setup cannot be warmed by preceding iterations.",
+  "MeasuredSessionIdentities": [
+    4.0,
+    5.0
+  ],
+  "SetupCalls": 5,
+  "Runner": "3.0.158.3",
+  "MeasuredIterations": 2,
+  "Warmups": 3
+}

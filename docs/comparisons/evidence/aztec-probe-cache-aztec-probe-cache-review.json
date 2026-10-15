@@ -1,0 +1,12 @@
+{
+  "BoundaryState": "current",
+  "Base": "de885bd3d37a27f7b15b959e911f28e1d3b67a54",
+  "Head": "9d4d7ff462586a9beecd5e94c9069d6a6bc2035a",
+  "Reviewer": "/root/aztec_probe_cache_review",
+  "Scope": "One independent strictly read-only review of compact Aztec bullseye probe decisions, the sampling integration and three image-scoped owners. Checked image/threshold/polarity isolation, bounded admission, coordinate arithmetic, uncached fallback, sampled views, cancellation and live deadline behavior. No actionable P0-P3 findings.",
+  "UnresolvedFindings": [],
+  "Disposition": "Accept as shaped; internal allocation optimization with no public API or production dependency change.",
+  "ConfirmationUsed": false,
+  "ExecutionGapClosure": "The review noted no direct cached-path clock-expiry execution proof in the initial diagnostic. The final private diagnostic uses real DecodeBudget.Begin scopes against both exact binaries, verifies expiry stops a cached accepted probe, and verifies scope disposal restores acceptance. No production change was needed.",
+  "ExternalReview": "No PR or hosted-review request made."
+}

@@ -1,0 +1,87 @@
+{
+  "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+  "Scope": "Diagnostic repetitions with tracing overhead; unchanged public corpus adapter and recognition allowances. Not ranked timing evidence.",
+  "Rows": [
+    {
+      "Iteration": 0,
+      "AllocatedBytes": 6715944,
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let\u0027s boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON\u0027S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON\u0027S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let\u0027s boogie!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Iteration": 1,
+      "AllocatedBytes": 10123736,
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let\u0027s boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON\u0027S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON\u0027S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let\u0027s boogie!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Iteration": 2,
+      "AllocatedBytes": 6615912,
+      "Outcomes": [
+        {
+          "Id": "multi-qrcode-1/1.png",
+          "Format": "QrCode",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let\u0027s boogie!",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON\u0027S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  "
+          ],
+          "Actual": [
+            "You get to CREATE OUR JOURNAL PROMPT FOR THE DAY!  Yay!  Way to go!  ",
+            "You earned the class 5 EXTRA MINUTES OF RECESS!!  Fabulous!!  Way to go!!",
+            "You get to SIT AT MRS. SIGMON\u0027S DESK FOR A DAY!!  Awesome!!  Way to go!! Guess I better clean up! :)",
+            "You earned the class a 5 MINUTE DANCE PARTY!!  Awesome!  Way to go!  Let\u0027s boogie!"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    }
+  ]
+}

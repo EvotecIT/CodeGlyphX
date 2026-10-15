@@ -1,0 +1,51 @@
+{
+  "CoreSha256": "42F8E4BDF9267743C7B37843B567BB823F5C5AB1306C494DDCC9C7AC9ECCE811",
+  "LocalBudgetMilliseconds": 0,
+  "AmbientDeadlineMilliseconds": 10,
+  "InvalidBufferFailure": "InvalidInput",
+  "Rows": [
+    {
+      "Attempt": 0,
+      "Found": false,
+      "Expired": true,
+      "Failure": "Payload",
+      "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+    },
+    {
+      "Attempt": 1,
+      "Found": false,
+      "Expired": true,
+      "Failure": "Payload",
+      "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+    },
+    {
+      "Attempt": 2,
+      "Found": false,
+      "Expired": true,
+      "Failure": "Payload",
+      "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+    },
+    {
+      "Attempt": 3,
+      "Found": false,
+      "Expired": true,
+      "Failure": "Payload",
+      "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+    },
+    {
+      "Attempt": 4,
+      "Found": false,
+      "Expired": true,
+      "Failure": "Payload",
+      "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+    },
+    {
+      "Attempt": 5,
+      "Found": false,
+      "Expired": true,
+      "Failure": "Payload",
+      "Info": "s1 t0 norm cand0 tri0 payload parse failed (v0, L, m0)"
+    }
+  ],
+  "Scope": "Supported public QR pixel decoding with the real enclosing recognition deadline, no cancellation token. Repeated valid buffers allow expiry during grayscale conversion. The task-only friend assembly establishes the existing internal image-wrapper deadline; no production hooks or timing thresholds are introduced."
+}

@@ -1,0 +1,92 @@
+{
+  "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+  "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+  "Mode": "inventory",
+  "Scope": "Private non-packable friend driver; actual production normalizer determines guarded-row sampling, or actual production recovery collector supplies complete located candidates. No test-only production hook or timing claim.",
+  "Rows": [
+    {
+      "Id": "rss14-1/4.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 401,
+      "IdenticalBinarizations": 125
+    },
+    {
+      "Id": "rss14-1/6.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 375,
+      "IdenticalBinarizations": 162
+    },
+    {
+      "Id": "rss14-1/3.png",
+      "SampledRows": 68,
+      "GuardedRows": 42,
+      "Cutoffs": 840,
+      "IdenticalBinarizations": 107
+    },
+    {
+      "Id": "rss14-1/5.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 114
+    },
+    {
+      "Id": "rss14-1/2.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 405,
+      "IdenticalBinarizations": 378
+    },
+    {
+      "Id": "rss14-1/1.png",
+      "SampledRows": 84,
+      "GuardedRows": 60,
+      "Cutoffs": 1185,
+      "IdenticalBinarizations": 544
+    },
+    {
+      "Id": "rss14-2/11.png",
+      "SampledRows": 52,
+      "GuardedRows": 25,
+      "Cutoffs": 780,
+      "IdenticalBinarizations": 18
+    },
+    {
+      "Id": "rss14-2/22.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 419,
+      "IdenticalBinarizations": 93
+    },
+    {
+      "Id": "rss14-2/18.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 17
+    },
+    {
+      "Id": "rss14-2/19.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 416,
+      "IdenticalBinarizations": 135
+    },
+    {
+      "Id": "rss14-2/24.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 77
+    },
+    {
+      "Id": "rss14-2/7.png",
+      "SampledRows": 44,
+      "GuardedRows": 18,
+      "Cutoffs": 660,
+      "IdenticalBinarizations": 26
+    }
+  ]
+}

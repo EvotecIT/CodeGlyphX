@@ -1,0 +1,31 @@
+{
+  "Status": "passed",
+  "UpstreamRevision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Checks": [
+    {
+      "Image": "11.png",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/11.txt",
+      "Text": "02001234567893",
+      "OracleSha256": "EA3059E21ED26E11A6FE902ACC434CEEA213D5FD3117EE02C46586B1540C18CF"
+    },
+    {
+      "Image": "18.png",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/18.txt",
+      "Text": "02001234567893",
+      "OracleSha256": "EA3059E21ED26E11A6FE902ACC434CEEA213D5FD3117EE02C46586B1540C18CF"
+    },
+    {
+      "Image": "19.png",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/19.txt",
+      "Text": "02001234567893",
+      "OracleSha256": "EA3059E21ED26E11A6FE902ACC434CEEA213D5FD3117EE02C46586B1540C18CF"
+    },
+    {
+      "Image": "7.png",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/7.txt",
+      "Text": "02001234567893",
+      "OracleSha256": "EA3059E21ED26E11A6FE902ACC434CEEA213D5FD3117EE02C46586B1540C18CF"
+    }
+  ],
+  "Scope": "Immutable primary-source text oracles checked independently; existing corpus mappings unchanged."
+}

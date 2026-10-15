@@ -1,0 +1,33 @@
+{
+  "Selection": "Two existing hash-locked negative controls, PDF417-only and all-format; separate hints, same unchanged1500ms robust allowance and original empty oracles",
+  "Samples": [
+    {
+      "Id": "falsepositives/15.png/Pdf417",
+      "File": "falsepositives/15.png",
+      "Sha256": "acc5cd8ddb6c29324cbdb8fcd0dbe35cbd8847cd877399186fee566b98993270",
+      "Format": "Pdf417",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/19.png/Pdf417",
+      "File": "falsepositives/19.png",
+      "Sha256": "342fdb2e223f3a41144aaa1029dc3ce7dc4d278a07e7e47dc885c874b1e57c77",
+      "Format": "Pdf417",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/15.png/All",
+      "File": "falsepositives/15.png",
+      "Sha256": "acc5cd8ddb6c29324cbdb8fcd0dbe35cbd8847cd877399186fee566b98993270",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/19.png/All",
+      "File": "falsepositives/19.png",
+      "Sha256": "342fdb2e223f3a41144aaa1029dc3ce7dc4d278a07e7e47dc885c874b1e57c77",
+      "Format": "All",
+      "Expected": []
+    }
+  ]
+}

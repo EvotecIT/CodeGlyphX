@@ -1,0 +1,27 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "All 31 distinct negative IDs from the two unchanged frozen manifests; diagnostic paired rerun",
+  "Samples": [
+    {
+      "Id": "falsepositives-2/01.png",
+      "File": "falsepositives-2/01.png",
+      "Sha256": "1e99e694791f4e083bff9cb0ffe83a1b198875095d32adab1c832ebff8571cb9",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "File": "falsepositives-2/09.png",
+      "Sha256": "cbaf0067efa7f6ee9eab8112bb666f61f7e891beaf229d95adcc4b23678c330f",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "File": "falsepositives/15.png",
+      "Sha256": "acc5cd8ddb6c29324cbdb8fcd0dbe35cbd8847cd877399186fee566b98993270",
+      "Format": "All",
+      "Expected": []
+    }
+  ]
+}

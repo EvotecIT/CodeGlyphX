@@ -1,0 +1,11 @@
+{
+  "Scope": "Differential diagnostic of actual private guard matchers; no production test hook or timing claim",
+  "BaselineCoreSha256": "96D0200DD9080B837266B98E9288DC688BC7B594814565F577E118FDCD7BA238",
+  "CandidateCoreSha256": "877165EE4B2CE32A831F212E989CCCAE74D8C5FAFB89D823936C7D729F12786B",
+  "Seed": 417103,
+  "Cases": 401400,
+  "Accepted": 93382,
+  "CheapRejections": 95963,
+  "Mismatches": 0,
+  "Invariant": "An accepted stop needs first width \u003E= 6*pitch and second \u003C= 2*pitch; an accepted start needs \u003E= 7*pitch. First \u003C= 2*second therefore cannot satisfy the unchanged fit. Positive scanline widths sum within the image dimension."
+}

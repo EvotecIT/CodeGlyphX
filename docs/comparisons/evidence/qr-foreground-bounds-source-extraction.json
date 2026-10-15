@@ -1,0 +1,31 @@
+{
+  "Base": "d4099472eeba67910c650805308af2ba6f095179",
+  "Candidate": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+  "Checks": [
+    {
+      "Responsibility": "MatrixAttempts",
+      "Lines": 124,
+      "Sha256": "88D36B399162EF620593CA50942258CC74D8F34C3B3637A09AB8E0A85B48E109",
+      "VerbatimMoved": true
+    },
+    {
+      "Responsibility": "NeighborhoodVoting",
+      "Lines": 197,
+      "Sha256": "581A2A4CC81E700AC348D6A84DBA3275FC20B35A6D787FFEFFE9EB0D74654E23",
+      "VerbatimMoved": true
+    },
+    {
+      "Responsibility": "BoundingBox",
+      "Lines": 110,
+      "Sha256": "223E2462A9E55972162ED0C65C8273B309F1F056E4762675B6B074014C1AE650",
+      "VerbatimMoved": true
+    },
+    {
+      "Responsibility": "Trimming, expansion, version/phase sampling, decoding and diagnostics",
+      "Lines": 99,
+      "Sha256": "AEAFD55555399FB3A29F2554C07B3B41B93CF5E423F6E17AFB2623E86D4698E1",
+      "VerbatimMoved": true
+    }
+  ],
+  "Scope": "Exact source-body comparison for moved helpers and the unchanged recovery after foreground extrema. New extrema are qualified separately against independent pixel selection."
+}

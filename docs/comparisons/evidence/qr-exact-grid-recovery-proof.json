@@ -1,0 +1,174 @@
+{
+  "Source": "7bed5e6b90d79081058661142ee062803bd5e581",
+  "CoreSha256": "27015632EC81A9338305B249DF465A05C184C7A018EA677D206AD8FFC10C6D9C",
+  "PreviousSource": "3dfe351da00e598368d21224a01502c90c31be71",
+  "PreviousCoreSha256": "EB5CC554EA9BBA3077A1E83BCE24F6E8D1961A5002BAFBF795D7B71902CB0FB8",
+  "Changes": [
+    "QR image decoding recognizes exact two-tone integer raster grids before neighborhood sampling. Finder borders determine bounded version 1-40 candidates; three finder patterns and uniform pixel blocks are required. Existing format, error correction, payload validation, acceptance filtering and inherited deadlines remain authoritative. Single-result and collection paths share the candidate."
+  ],
+  "Images": [
+    "qrcode-5/18.png",
+    "qrcode-5/19.png"
+  ],
+  "PreviousCorrect": 0,
+  "Correct": 2,
+  "PublicApiAdded": false,
+  "ProductionDependenciesAdded": false,
+  "OraclesAndScoringChanged": false,
+  "Diagnostic": {
+    "Source": "3dfe351da00e598368d21224a01502c90c31be71",
+    "CoreSha256": "EB5CC554EA9BBA3077A1E83BCE24F6E8D1961A5002BAFBF795D7B71902CB0FB8",
+    "Limit": "Next-work diagnostic only; not part of the frozen ranking or a performance comparison.",
+    "Images": [
+      {
+        "Id": "qrcode-5/18.png",
+        "Width": 177,
+        "Height": 177,
+        "RawPixelGridAssumption": "Each thresholded pixel is treated as one module without cropping or resampling; diagnostic only.",
+        "ModuleSucceeded": true,
+        "ModuleExact": true,
+        "ModuleFailure": "None",
+        "Version": 40,
+        "FormatBestDistance": 0,
+        "UnrankedModuleElapsedMs": 21.8668,
+        "ExpectedCharacters": 1663,
+        "ModuleCharacters": 1663,
+        "ModuleTextSha256": "FE2179C66054F3B55833DC140C78959BE19BD68959F4514141E14C7DB563C11F",
+        "BoundingBox": [
+          {
+            "BudgetMilliseconds": 1500,
+            "Succeeded": false,
+            "Exact": false
+          },
+          {
+            "BudgetMilliseconds": 0,
+            "Succeeded": false,
+            "Exact": false
+          }
+        ],
+        "BoundingFindersPlausible": false,
+        "MajoritySamplingChangedModules": 11329,
+        "ImageExact": false,
+        "ImageCompletion": "Completed"
+      },
+      {
+        "Id": "qrcode-5/19.png",
+        "Width": 177,
+        "Height": 177,
+        "RawPixelGridAssumption": "Each thresholded pixel is treated as one module without cropping or resampling; diagnostic only.",
+        "ModuleSucceeded": true,
+        "ModuleExact": true,
+        "ModuleFailure": "None",
+        "Version": 40,
+        "FormatBestDistance": 0,
+        "UnrankedModuleElapsedMs": 0.5199,
+        "ExpectedCharacters": 1273,
+        "ModuleCharacters": 1273,
+        "ModuleTextSha256": "FA7197CA029F00F4CE83433F032EB5A40544A4FE4125125604FF5310F7793C43",
+        "BoundingBox": [
+          {
+            "BudgetMilliseconds": 1500,
+            "Succeeded": false,
+            "Exact": false
+          },
+          {
+            "BudgetMilliseconds": 0,
+            "Succeeded": false,
+            "Exact": false
+          }
+        ],
+        "BoundingFindersPlausible": false,
+        "MajoritySamplingChangedModules": 11275,
+        "ImageExact": false,
+        "ImageCompletion": "Completed"
+      }
+    ]
+  },
+  "CandidateDiagnostic": {
+    "Source": "7bed5e6b90d79081058661142ee062803bd5e581",
+    "CoreSha256": "27015632EC81A9338305B249DF465A05C184C7A018EA677D206AD8FFC10C6D9C",
+    "Limit": "Next-work diagnostic only; not part of the frozen ranking or a performance comparison.",
+    "Images": [
+      {
+        "Id": "qrcode-5/18.png",
+        "Width": 177,
+        "Height": 177,
+        "RawPixelGridAssumption": "Each thresholded pixel is treated as one module without cropping or resampling; diagnostic only.",
+        "ModuleSucceeded": true,
+        "ModuleExact": true,
+        "ModuleFailure": "None",
+        "Version": 40,
+        "FormatBestDistance": 0,
+        "UnrankedModuleElapsedMs": 21.861,
+        "ExpectedCharacters": 1663,
+        "ModuleCharacters": 1663,
+        "ModuleTextSha256": "FE2179C66054F3B55833DC140C78959BE19BD68959F4514141E14C7DB563C11F",
+        "BoundingBox": [
+          {
+            "BudgetMilliseconds": 1500,
+            "Succeeded": false,
+            "Exact": false
+          },
+          {
+            "BudgetMilliseconds": 0,
+            "Succeeded": false,
+            "Exact": false
+          }
+        ],
+        "BoundingFindersPlausible": false,
+        "MajoritySamplingChangedModules": 11329,
+        "ImageExact": true,
+        "ImageCompletion": "Completed"
+      },
+      {
+        "Id": "qrcode-5/19.png",
+        "Width": 177,
+        "Height": 177,
+        "RawPixelGridAssumption": "Each thresholded pixel is treated as one module without cropping or resampling; diagnostic only.",
+        "ModuleSucceeded": true,
+        "ModuleExact": true,
+        "ModuleFailure": "None",
+        "Version": 40,
+        "FormatBestDistance": 0,
+        "UnrankedModuleElapsedMs": 0.5063,
+        "ExpectedCharacters": 1273,
+        "ModuleCharacters": 1273,
+        "ModuleTextSha256": "FA7197CA029F00F4CE83433F032EB5A40544A4FE4125125604FF5310F7793C43",
+        "BoundingBox": [
+          {
+            "BudgetMilliseconds": 1500,
+            "Succeeded": false,
+            "Exact": false
+          },
+          {
+            "BudgetMilliseconds": 0,
+            "Succeeded": false,
+            "Exact": false
+          }
+        ],
+        "BoundingFindersPlausible": false,
+        "MajoritySamplingChangedModules": 11275,
+        "ImageExact": true,
+        "ImageCompletion": "Completed"
+      }
+    ]
+  },
+  "FocusedCases": 14,
+  "ExistingFocusedCases": 23,
+  "FullFrameworkContractMatches": {
+    "net10": 14,
+    "net8": 14
+  },
+  "Limits": "Both images informed implementation and permanent regression fixtures; they are not unseen inputs. Each is a dense version-40 raster at one pixel per module. The candidate requires exactly two grayscale levels, integer spacing, three recognizable finders and uniform pixel blocks. Ordinary photographs retain the existing fallback and bounded version search. Current main corpus, negative rotation and whole-image costs are rerun with unchanged hints, payload oracles, scoring and deadlines. This does not establish general photograph recovery or overall superiority.",
+  "PreFixRegression": {
+    "Source": "3dfe351da00e598368d21224a01502c90c31be71",
+    "CoreSha256": "EB5CC554EA9BBA3077A1E83BCE24F6E8D1961A5002BAFBF795D7B71902CB0FB8",
+    "Cases": 4,
+    "Failed": 4,
+    "File": "pre-fix-frozen-core.trx",
+    "Sha256": "77797FB40BAB53A18BC201587025A42E9ACB1F556CF82C3AC811521F7C1ADE52",
+    "TestHost": "Frozen candidate regression methods executed unchanged against the independently archived previous core; only CodeGlyphX.dll and its PDB are replaced in task-local test output.",
+    "OriginalBeforeRun": "before.trx retained as the initial pre-edit regression run."
+  },
+  "LegacyScope": "The exact-raster candidate uses the existing modern pixel decoder (net8/net10); the net472 and netstandard module/fallback boundaries remain unchanged and are separately validated."
+}

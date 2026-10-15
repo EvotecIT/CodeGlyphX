@@ -53,7 +53,7 @@ public static partial class Pdf417Decoder {
             if (TryDecodeWithRotations(modules, cancellationToken, out decoded)) return true;
 
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, out decoded)) return true;
         }
 
         decoded = null!;
@@ -97,26 +97,16 @@ public static partial class Pdf417Decoder {
             if (TryDecodeWithRotations(modules, cancellationToken, diagnostics, out value)) return true;
 
             var trimmed = TrimModuleBorder(modules);
-            if (!ReferenceEquals(trimmed, modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
+            if (!trimmed.IsSameRegion(modules) && TryDecodeWithRotations(trimmed, cancellationToken, diagnostics, out value)) return true;
         }
 
         value = string.Empty;
         return false;
     }
 
-    private static BitMatrix SampleModulesPerspective(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int widthModules, int heightModules, int threshold, bool invert, Qr.QrPerspectiveTransform transform, double offsetX, double offsetY, CancellationToken cancellationToken) {
-        var modules = new BitMatrix(widthModules, heightModules);
-        for (var y = 0; y < heightModules; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
-            for (var x = 0; x < widthModules; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
-                transform.Transform(x + 0.5 + offsetX, y + 0.5 + offsetY, out var sx, out var sy);
-                if (double.IsNaN(sx) || double.IsNaN(sy)) continue;
-                var dark = IsDarkAverage(pixels, width, height, stride, format, sx, sy, threshold);
-                modules[x, y] = invert ? !dark : dark;
-            }
-        }
-        return modules;
+    private static ModuleGrid SampleModulesPerspective(PixelSpan pixels, int width, int height, int stride, PixelFormat format, int widthModules, int heightModules, int threshold, bool invert, Qr.QrPerspectiveTransform transform, double offsetX, double offsetY, CancellationToken cancellationToken) {
+        return ModuleGrid.Projected(pixels, width, height, stride, format, widthModules, heightModules,
+            threshold, invert, transform, offsetX, offsetY, cancellationToken);
     }
 
     private static bool IsDarkAverage(PixelSpan pixels, int width, int height, int stride, PixelFormat format, double x, double y, int threshold) {
@@ -145,6 +135,8 @@ public static partial class Pdf417Decoder {
                     b = pixels[p + 2];
                 }
                 var lum = (r * 77 + g * 150 + b * 29) >> 8;
+                var alpha = pixels[p + 3];
+                if (alpha != 255) lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
                 sum += lum;
                 count++;
             }
@@ -332,8 +324,7 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static BitMatrix SampleModulesSheared(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert, double shearModulesPerRow, int? leftEdgeMid, CancellationToken cancellationToken) {
-        var modules = new BitMatrix(widthModules, heightModules);
+    private static ModuleGrid SampleModulesSheared(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert, double shearModulesPerRow, int? leftEdgeMid, CancellationToken cancellationToken) {
         var totalWidth = widthModules * moduleSize;
         var totalHeight = heightModules * moduleSize;
         var half = moduleSize / 2.0;
@@ -342,27 +333,13 @@ public static partial class Pdf417Decoder {
             : box.Left + (box.Width - totalWidth) / 2.0;
         var offsetY = box.Top + (box.Height - totalHeight) / 2.0;
 
-        var midRow = (heightModules - 1) / 2.0;
-
-        for (var y = 0; y < heightModules; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
-            var rowShift = (y - midRow) * shearModulesPerRow * moduleSize;
-            var sy = (int)Math.Round(offsetY + (y * moduleSize) + half);
-            sy = Clamp(sy, 0, height - 1);
-            for (var x = 0; x < widthModules; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
-                var sx = (int)Math.Round(offsetX + rowShift + (x * moduleSize) + half);
-                sx = Clamp(sx, 0, width - 1);
-                var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
-                modules[x, y] = invert ? !dark : dark;
-            }
-        }
-
-        return modules;
+        return ModuleGrid.Regular(pixels, width, height, stride, format, offsetX, offsetY, widthModules,
+            heightModules, moduleSize, moduleSize, true, threshold, invert, cancellationToken,
+            sheared: true, shear: shearModulesPerRow);
     }
 
     private static bool TryGetDimensions(int width, out int cols, out bool compact) {
-        if (width >= 69 && (width - 69) % 17 == 0) {
+        if (width >= 86 && (width - 69) % 17 == 0) {
             cols = (width - 69) / 17;
             compact = false;
             return cols > 0;
@@ -377,46 +354,46 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+    private static bool TryDecodeWithRotations(ModuleGrid modules, CancellationToken cancellationToken, out string value) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecode(modules, cancellationToken, out value)) return true;
+        if (TryDecodeGrid(modules, cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecode(Rotate90(modules), cancellationToken, out value)) return true;
+        if (modules.Height >= MinimumSymbolWidth && TryDecodeGrid(Rotate90(modules), cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecode(Rotate180(modules), cancellationToken, out value)) return true;
+        if (TryDecodeGrid(Rotate180(modules), cancellationToken, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; return false; }
-        if (TryDecode(Rotate270(modules), cancellationToken, out value)) return true;
+        if (modules.Height >= MinimumSymbolWidth && TryDecodeGrid(Rotate270(modules), cancellationToken, out value)) return true;
         value = string.Empty;
         return false;
     }
 
-    private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
+    private static bool TryDecodeWithRotations(ModuleGrid modules, CancellationToken cancellationToken, out Pdf417Decoded decoded) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecode(modules, cancellationToken, out Pdf417Decoded pdf417)) { decoded = pdf417; return true; }
+        if (TryDecodeGrid(modules, cancellationToken, out Pdf417Decoded pdf417)) { decoded = pdf417; return true; }
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecode(Rotate90(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
+        if (modules.Height >= MinimumSymbolWidth && TryDecodeGrid(Rotate90(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecode(Rotate180(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
+        if (TryDecodeGrid(Rotate180(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
         if (DecodeBudget.ShouldAbort(cancellationToken)) { decoded = null!; return false; }
-        if (TryDecode(Rotate270(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
+        if (modules.Height >= MinimumSymbolWidth && TryDecodeGrid(Rotate270(modules), cancellationToken, out pdf417)) { decoded = pdf417; return true; }
         decoded = null!;
         return false;
     }
 
-    private static bool TryDecodeWithRotations(BitMatrix modules, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
+    private static bool TryDecodeWithRotations(ModuleGrid modules, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeInternal(modules, cancellationToken, diagnostics, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeInternal(Rotate90(modules), cancellationToken, diagnostics, out value)) return true;
+        if (modules.Height >= MinimumSymbolWidth && TryDecodeInternal(Rotate90(modules), cancellationToken, diagnostics, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
         if (TryDecodeInternal(Rotate180(modules), cancellationToken, diagnostics, out value)) return true;
         if (DecodeBudget.ShouldAbort(cancellationToken)) { value = string.Empty; diagnostics.Failure = "Cancelled."; return false; }
-        if (TryDecodeInternal(Rotate270(modules), cancellationToken, diagnostics, out value)) return true;
+        if (modules.Height >= MinimumSymbolWidth && TryDecodeInternal(Rotate270(modules), cancellationToken, diagnostics, out value)) return true;
         value = string.Empty;
         return false;
     }
 
-    private static bool TryDecodeWithStartPattern(BitMatrix modules, CancellationToken cancellationToken, out string value) {
+    private static bool TryDecodeWithStartPattern(ModuleGrid modules, CancellationToken cancellationToken, out string value) {
         var height = modules.Height;
         if (height == 0) {
             value = string.Empty;
@@ -459,7 +436,7 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool TryDecodeWithStartPattern(BitMatrix modules, CancellationToken cancellationToken, out string value, out Pdf417MacroMetadata? macro) {
+    private static bool TryDecodeWithStartPattern(ModuleGrid modules, CancellationToken cancellationToken, out string value, out Pdf417MacroMetadata? macro) {
         var height = modules.Height;
         macro = null;
         if (height == 0) {
@@ -504,7 +481,7 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool TryDecodeWithStartPattern(BitMatrix modules, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
+    private static bool TryDecodeWithStartPattern(ModuleGrid modules, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         var height = modules.Height;
         if (height == 0) {
             value = string.Empty;
@@ -551,9 +528,9 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool TryDecodeWithOffset(BitMatrix modules, int startOffset, CancellationToken cancellationToken, out string value) {
+    private static bool TryDecodeWithOffset(ModuleGrid modules, int startOffset, CancellationToken cancellationToken, out string value) {
         var maxWidth = modules.Width - startOffset;
-        if (maxWidth < StartPatternWidth + 17 + 17 + 1) {
+        if (maxWidth < StartPatternWidth + 17 + 17 + 1 || !HasInitialOffsetCodewords(modules, startOffset)) {
             value = string.Empty;
             return false;
         }
@@ -575,10 +552,10 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool TryDecodeWithOffset(BitMatrix modules, int startOffset, CancellationToken cancellationToken, out string value, out Pdf417MacroMetadata? macro) {
+    private static bool TryDecodeWithOffset(ModuleGrid modules, int startOffset, CancellationToken cancellationToken, out string value, out Pdf417MacroMetadata? macro) {
         var maxWidth = modules.Width - startOffset;
         macro = null;
-        if (maxWidth < StartPatternWidth + 17 + 17 + 1) {
+        if (maxWidth < StartPatternWidth + 17 + 17 + 1 || !HasInitialOffsetCodewords(modules, startOffset)) {
             value = string.Empty;
             return false;
         }
@@ -601,9 +578,9 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static bool TryDecodeWithOffset(BitMatrix modules, int startOffset, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
+    private static bool TryDecodeWithOffset(ModuleGrid modules, int startOffset, CancellationToken cancellationToken, Pdf417DecodeDiagnostics diagnostics, out string value) {
         var maxWidth = modules.Width - startOffset;
-        if (maxWidth < StartPatternWidth + 17 + 17 + 1) {
+        if (maxWidth < StartPatternWidth + 17 + 17 + 1 || !HasInitialOffsetCodewords(modules, startOffset)) {
             value = string.Empty;
             diagnostics.Failure ??= "Invalid start offset.";
             return false;
@@ -626,20 +603,8 @@ public static partial class Pdf417Decoder {
         return false;
     }
 
-    private static IEnumerable<OffsetMatch> FindPatternOffsets(BitMatrix modules, int row, int pattern, int length, int maxErrors) {
-        var width = modules.Width;
-        if (length <= 0 || width < length) yield break;
-
-        for (var x = 0; x <= width - length; x++) {
-            var bits = 0;
-            for (var i = 0; i < length; i++) {
-                bits = (bits << 1) | (modules[x + i, row] ? 1 : 0);
-            }
-            var diff = bits ^ pattern;
-            var errors = PopCount(diff);
-            if (errors <= maxErrors) yield return new OffsetMatch(x, errors);
-        }
-    }
+    private static OffsetMatches FindPatternOffsets(ModuleGrid modules, int row, int pattern, int length, int maxErrors) =>
+        new(modules, row, pattern, length, maxErrors);
 
     private readonly struct OffsetMatch {
         public int Offset { get; }
@@ -688,18 +653,10 @@ public static partial class Pdf417Decoder {
         return count;
     }
 
-    private static BitMatrix CropColumns(BitMatrix modules, int left, int width) {
-        var height = modules.Height;
-        var cropped = new BitMatrix(width, height);
-        for (var y = 0; y < height; y++) {
-            for (var x = 0; x < width; x++) {
-                cropped[x, y] = modules[left + x, y];
-            }
-        }
-        return cropped;
-    }
+    private static ModuleGrid CropColumns(ModuleGrid modules, int left, int width) =>
+        modules.Crop(left, 0, width, modules.Height);
 
-    private static BitMatrix TrimModuleBorder(BitMatrix modules) {
+    private static ModuleGrid TrimModuleBorder(ModuleGrid modules) {
         var width = modules.Width;
         var height = modules.Height;
         if (width <= 2 || height <= 2) return modules;
@@ -712,47 +669,42 @@ public static partial class Pdf417Decoder {
         var rowThreshold = Math.Max(1, width / 40);
         var colThreshold = Math.Max(1, height / 40);
 
-        while (top <= bottom && CountDarkRow(modules, top, left, right) <= rowThreshold) top++;
-        while (top <= bottom && CountDarkRow(modules, bottom, left, right) <= rowThreshold) bottom--;
-        while (left <= right && CountDarkCol(modules, left, top, bottom) <= colThreshold) left++;
-        while (left <= right && CountDarkCol(modules, right, top, bottom) <= colThreshold) right--;
+        while (!modules.IsAborted && top <= bottom && CountDarkRow(modules, top, left, right, rowThreshold) <= rowThreshold) top++;
+        while (!modules.IsAborted && top <= bottom && CountDarkRow(modules, bottom, left, right, rowThreshold) <= rowThreshold) bottom--;
+        while (!modules.IsAborted && left <= right && CountDarkCol(modules, left, top, bottom, colThreshold) <= colThreshold) left++;
+        while (!modules.IsAborted && left <= right && CountDarkCol(modules, right, top, bottom, colThreshold) <= colThreshold) right--;
 
         if (left <= 0 && right >= width - 1 && top <= 0 && bottom >= height - 1) return modules;
         if (right < left || bottom < top) return modules;
 
-        var trimmed = new BitMatrix(right - left + 1, bottom - top + 1);
-        for (var y = top; y <= bottom; y++) {
-            for (var x = left; x <= right; x++) {
-                trimmed[x - left, y - top] = modules[x, y];
-            }
-        }
-
-        return trimmed;
+        return modules.Crop(left, top, right - left + 1, bottom - top + 1);
     }
 
-    private static int CountDarkRow(BitMatrix modules, int y, int left, int right) {
+    private static int CountDarkRow(ModuleGrid modules, int y, int left, int right, int threshold) {
         var count = 0;
         for (var x = left; x <= right; x++) {
-            if (modules[x, y]) count++;
+            if (modules.IsAborted) break;
+            if (modules[x, y] && ++count > threshold) break;
         }
         return count;
     }
 
-    private static int CountDarkCol(BitMatrix modules, int x, int top, int bottom) {
+    private static int CountDarkCol(ModuleGrid modules, int x, int top, int bottom, int threshold) {
         var count = 0;
         for (var y = top; y <= bottom; y++) {
-            if (modules[x, y]) count++;
+            if (modules.IsAborted) break;
+            if (modules[x, y] && ++count > threshold) break;
         }
         return count;
     }
 
-    private static bool TryReadCodeword(BitMatrix modules, int row, int offset, int length, int cluster, out int codeword) {
+    private static bool TryReadCodeword(ModuleGrid modules, int row, int offset, int length, int cluster, out int codeword) {
         var pattern = 0;
         for (var i = 0; i < length; i++) {
             pattern <<= 1;
             if (modules[offset + i, row]) pattern |= 1;
         }
-        if (PatternToCodeword[cluster].TryGetValue(pattern, out var cw)) {
+        if (!modules.IsAborted && PatternToCodeword[cluster].TryGetValue(pattern, out var cw)) {
             codeword = cw;
             return true;
         }

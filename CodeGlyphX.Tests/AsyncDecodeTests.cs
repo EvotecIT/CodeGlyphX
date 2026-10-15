@@ -123,16 +123,19 @@ public sealed class AsyncDecodeTests {
             entered.Set();
             if (!release.Wait(TimeSpan.FromSeconds(5))) throw new TimeoutException("The test did not release the read.");
         });
-        var scan = Task.Run(() => SymbolScanner.Scan(stream, new ScanOptions { TimeoutMilliseconds = 50 }));
+        var scan = Task.Factory.StartNew(
+            () => SymbolScanner.Scan(stream, new ScanOptions { TimeoutMilliseconds = 50 }),
+            CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        ScanResult result;
         try {
             Assert.True(entered.Wait(TimeSpan.FromSeconds(5)), "The scanner did not begin reading.");
-            // The real deadline must expire while Read is blocked. No elapsed-time performance
-            // assertion is made: the contract is to stop before another read after it is released.
-            await Task.Delay(250);
+            // Expire the real deadline while Read is blocked. Synchronous orchestration
+            // keeps release independent of test-scheduler or thread-pool continuations.
+            Thread.Sleep(250);
         } finally {
             release.Set();
+            result = await scan;
         }
-        var result = await scan;
 
         Assert.Equal(1, stream.ReadCalls);
         Assert.True(stream.CanRead);

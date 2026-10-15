@@ -1,0 +1,19 @@
+{
+  "Status": "passed",
+  "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+  "BaselineCoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+  "CandidateCoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+  "Cases": 344,
+  "LocatedCandidates": 732,
+  "Mismatches": 0,
+  "InputImages": 43,
+  "RotationPolarityVariants": 4,
+  "PixelLayouts": [
+    "PackedRgba32",
+    "PaddedBgra32"
+  ],
+  "PaddedStrideBytes": 12,
+  "DirtyIntPoolBucketsSeededBeforeEveryCall": true,
+  "DirtyValues": "Int32.MinValue plus variant; buckets64 through next supported power of two for the image",
+  "Scope": "Actual production recovery candidates match in modules/order/physical positions/orientation/fit/flags/polarity on43 frozen images across rotation,inversion,packedRGBA and paddedBGRA. Shared integer-pool buckets are prefilled before each real call; returned candidates retain their own module arrays. Direct calls are unbounded; no timing,cancellation-response or forced exception-injection claim."
+}

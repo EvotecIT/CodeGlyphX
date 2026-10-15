@@ -1,0 +1,114 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "First six images per upstream blackbox directory ordered by SHA256 of source path, with UTF-8 .txt oracle; six negatives per directory; independently specified multi-QR fixture. No decoded-result selection.",
+  "Samples": [
+    {
+      "Id": "code39-1/4.png",
+      "File": "code39-1/4.png",
+      "Sha256": "b7f7dd951b5f13d70c2d4472a3e5e162c0908b7889537e0ed36a1e06466a50c5",
+      "Format": "Code39",
+      "Expected": [
+        "ABC123"
+      ]
+    },
+    {
+      "Id": "code39-1/3.png",
+      "File": "code39-1/3.png",
+      "Sha256": "dc06d76a28db293e8bcc574246c110f75934432d9fba80a1ff2a387f57b46009",
+      "Format": "Code39",
+      "Expected": [
+        "MOROVIA"
+      ]
+    },
+    {
+      "Id": "code39-1/2.png",
+      "File": "code39-1/2.png",
+      "Sha256": "da37008b78f688f9583942676f3727407e46a7030ea04cc651fda49510d2d9af",
+      "Format": "Code39",
+      "Expected": [
+        " WWW.CITRONSOFT.COM "
+      ]
+    },
+    {
+      "Id": "code39-1/1.png",
+      "File": "code39-1/1.png",
+      "Sha256": "1480b3894f1b930e8562c2676366149fb7dccba32d01c34fee6a77d57e16868e",
+      "Format": "Code39",
+      "Expected": [
+        "TEST-SHEET"
+      ]
+    },
+    {
+      "Id": "code39-2/1.png",
+      "File": "code39-2/1.png",
+      "Sha256": "515dc352e25c80d98fd37e3c5b284266262fec5d8a0466fe87e50a2fd9fece27",
+      "Format": "Code39",
+      "Expected": [
+        "Extended !?*#"
+      ]
+    },
+    {
+      "Id": "code39-2/2.png",
+      "File": "code39-2/2.png",
+      "Sha256": "1233387958b247e35d56a6d59d69f6588e111e660a99b7b092f44ceefcf93946",
+      "Format": "Code39",
+      "Expected": [
+        "12ab"
+      ]
+    },
+    {
+      "Id": "code39-3/01.png",
+      "File": "code39-3/01.png",
+      "Sha256": "0b12e2937e8e5142f567af2735196a1af5f4ff9aff96aea03f007140ed96c218",
+      "Format": "Code39",
+      "Expected": [
+        "165627"
+      ]
+    },
+    {
+      "Id": "code39-3/11.png",
+      "File": "code39-3/11.png",
+      "Sha256": "6018d721b57be4fd261de4e4da081bd9190b70c63ba5409c90628de77e573e17",
+      "Format": "Code39",
+      "Expected": [
+        "001EC94767E0"
+      ]
+    },
+    {
+      "Id": "code39-3/04.png",
+      "File": "code39-3/04.png",
+      "Sha256": "75981925456aca83906d62dc472a97f185b9e5fe3635012e7729c24732459492",
+      "Format": "Code39",
+      "Expected": [
+        "001EC947D49B"
+      ]
+    },
+    {
+      "Id": "code39-3/17.png",
+      "File": "code39-3/17.png",
+      "Sha256": "5e6e311dce7ada0f3f6d17875b4fcc7aa22fb4efefabfb9e87ed5380b82e6a0d",
+      "Format": "Code39",
+      "Expected": [
+        "404785"
+      ]
+    },
+    {
+      "Id": "code39-3/02.png",
+      "File": "code39-3/02.png",
+      "Sha256": "21cc285faef95c499f18505e675009b4c7dfbffdbacdb1ce9f3990b7824840db",
+      "Format": "Code39",
+      "Expected": [
+        "165627"
+      ]
+    },
+    {
+      "Id": "code39-3/06.png",
+      "File": "code39-3/06.png",
+      "Sha256": "e17cc693ed803a1deffc15d84369f322e4e4cf80b12e021e77c90a4f593b6a19",
+      "Format": "Code39",
+      "Expected": [
+        "165340"
+      ]
+    }
+  ]
+}

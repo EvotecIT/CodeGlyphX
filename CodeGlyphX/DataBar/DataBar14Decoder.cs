@@ -1,19 +1,19 @@
 using System;
-using System.Collections.Generic;
 
 namespace CodeGlyphX.DataBar;
 
 /// <summary>
 /// Decodes GS1 DataBar-14 symbols (Truncated / Omnidirectional / Stacked / Stacked Omnidirectional).
 /// </summary>
-public static class DataBar14Decoder {
+public static partial class DataBar14Decoder {
     /// <summary>
     /// Attempts to decode a GS1 DataBar-14 Truncated symbol from a <see cref="Barcode1D">Barcode1D</see>.
     /// </summary>
     public static bool TryDecodeTruncated(Barcode1D barcode, out string content) {
         content = string.Empty;
-        if (barcode is null) return false;
-        if (!TryExtractWidths(barcode, out var widths)) return false;
+        if (barcode is null || barcode.Segments.Count != 46 || barcode.Segments[0].IsBar) return false;
+        Span<int> widths = stackalloc int[46];
+        for (var i = 0; i < widths.Length; i++) widths[i] = barcode.Segments[i].Modules;
         return TryDecodeFromWidths(widths, out content);
     }
 
@@ -23,7 +23,15 @@ public static class DataBar14Decoder {
     public static bool TryDecodeTruncated(bool[] modules, out string content) {
         content = string.Empty;
         if (modules is null || modules.Length == 0) return false;
-        if (!TryExtractWidths(modules, out var widths)) return false;
+        if (modules.Length < 2) return false;
+        Span<int> widths = stackalloc int[46];
+        if (!DataBarModuleRuns.TryRead(modules, widths, out var count)) return false;
+        // Complete run sequences retain their existing polarity-independent interpretation.
+        // Only a 45-run dark-starting sequence has a missing leading light guard.
+        if (count == 45 && modules[0]) {
+            widths.Slice(0, 45).CopyTo(widths.Slice(1));
+            widths[0] = 1;
+        } else if (count != 46) return false;
         return TryDecodeFromWidths(widths, out content);
     }
 
@@ -47,7 +55,8 @@ public static class DataBar14Decoder {
     public static bool TryDecodeStackedOmnidirectional(BitMatrix modules, out string content) {
         content = string.Empty;
         if (modules is null || modules.Width <= 0 || modules.Height != 5) return false;
-        if (!TryExtractWidthsFromStacked(modules, topRow: 0, bottomRow: 4, out var widths)) return false;
+        Span<int> widths = stackalloc int[46];
+        if (!TryExtractWidthsFromStacked(modules, topRow: 0, bottomRow: 4, widths)) return false;
         return TryDecodeFromWidths(widths, out content);
     }
 
@@ -67,37 +76,36 @@ public static class DataBar14Decoder {
     public static bool TryDecodeStacked(BitMatrix modules, out string content) {
         content = string.Empty;
         if (modules is null || modules.Width <= 0 || modules.Height != 3) return false;
-        if (!TryExtractWidthsFromStacked(modules, topRow: 0, bottomRow: 2, out var widths)) return false;
+        Span<int> widths = stackalloc int[46];
+        if (!TryExtractWidthsFromStacked(modules, topRow: 0, bottomRow: 2, widths)) return false;
         return TryDecodeFromWidths(widths, out content);
     }
 
-    private static bool TryDecodeFromWidths(int[] totalWidths, out string content) {
+    private static bool TryDecodeFromWidths(ReadOnlySpan<int> totalWidths, out string content) {
         content = string.Empty;
         if (!HasValidGuards(totalWidths)) return false;
 
         if (!TryFindFinder(totalWidths, out var cLeft, out var cRight)) return false;
 
-        var dataWidths = BuildDataWidths(totalWidths);
+        Span<int> dataWidths = stackalloc int[32];
+        BuildDataWidths(totalWidths, dataWidths);
         if (!HasValidChecksum(dataWidths, cLeft, cRight)) return false;
 
-        if (!TryDecodeDataCharacters(dataWidths, out var dataCharacters)) return false;
+        Span<int> dataCharacters = stackalloc int[4];
+        if (!TryDecodeDataCharacters(dataWidths, dataCharacters)) return false;
 
         if (!TryBuildContent(dataCharacters, out content)) return false;
         return true;
     }
 
-    private static bool TryDecodeDataCharacter(int index, int[][] dataWidths, out int dataCharacter) {
+    private static bool TryDecodeDataCharacter(int index, ReadOnlySpan<int> dataWidths, out int dataCharacter) {
         dataCharacter = 0;
         Span<int> odd = stackalloc int[4];
         Span<int> even = stackalloc int[4];
-        odd[0] = dataWidths[0][index];
-        odd[1] = dataWidths[2][index];
-        odd[2] = dataWidths[4][index];
-        odd[3] = dataWidths[6][index];
-        even[0] = dataWidths[1][index];
-        even[1] = dataWidths[3][index];
-        even[2] = dataWidths[5][index];
-        even[3] = dataWidths[7][index];
+        for (var i = 0; i < 4; i++) {
+            odd[i] = dataWidths[i * 8 + index];
+            even[i] = dataWidths[i * 8 + 4 + index];
+        }
 
         if (index == 0 || index == 2) {
             return TryDecodeDataCharacterGroups(odd, even, 0, 4, swapEvenOdd: false, out dataCharacter);
@@ -132,13 +140,13 @@ public static class DataBar14Decoder {
         _ => -1
     };
 
-    private static bool TryFindFinder(int[] totalWidths, out int cLeft, out int cRight) {
+    private static bool TryFindFinder(ReadOnlySpan<int> totalWidths, out int cLeft, out int cRight) {
         cLeft = FindFinder(totalWidths, offset: 10, reverse: false);
         cRight = FindFinder(totalWidths, offset: 31, reverse: true);
         return cLeft >= 0 && cRight >= 0;
     }
 
-    private static bool HasValidGuards(int[] totalWidths) {
+    private static bool HasValidGuards(ReadOnlySpan<int> totalWidths) {
         return totalWidths.Length == 46
             && totalWidths[0] == 1
             && totalWidths[1] == 1
@@ -146,31 +154,28 @@ public static class DataBar14Decoder {
             && totalWidths[45] == 1;
     }
 
-    private static int[][] BuildDataWidths(int[] totalWidths) {
-        var dataWidths = new int[8][];
-        for (var i = 0; i < dataWidths.Length; i++) dataWidths[i] = new int[4];
-
+    private static void BuildDataWidths(ReadOnlySpan<int> totalWidths, Span<int> dataWidths) {
+        // Eight element widths, each containing the same four physical characters as the original table.
         for (var i = 0; i < 8; i++) {
-            dataWidths[i][0] = totalWidths[i + 2];
-            dataWidths[i][1] = totalWidths[15 + (7 - i)];
-            dataWidths[i][3] = totalWidths[i + 23];
-            dataWidths[i][2] = totalWidths[36 + (7 - i)];
+            dataWidths[i * 4] = totalWidths[i + 2];
+            dataWidths[i * 4 + 1] = totalWidths[15 + (7 - i)];
+            dataWidths[i * 4 + 3] = totalWidths[i + 23];
+            dataWidths[i * 4 + 2] = totalWidths[36 + (7 - i)];
         }
-        return dataWidths;
     }
 
-    private static bool HasValidChecksum(int[][] dataWidths, int cLeft, int cRight) {
+    private static bool HasValidChecksum(ReadOnlySpan<int> dataWidths, int cLeft, int cRight) {
         var checksum = ComputeChecksum(dataWidths);
         return checksum / 9 == cLeft && checksum % 9 == cRight;
     }
 
-    private static int ComputeChecksum(int[][] dataWidths) {
+    private static int ComputeChecksum(ReadOnlySpan<int> dataWidths) {
         var checksum = 0;
         for (var i = 0; i < 8; i++) {
-            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i] * dataWidths[i][0];
-            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 8] * dataWidths[i][1];
-            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 16] * dataWidths[i][2];
-            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 24] * dataWidths[i][3];
+            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i] * dataWidths[i * 4];
+            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 8] * dataWidths[i * 4 + 1];
+            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 16] * dataWidths[i * 4 + 2];
+            checksum += DataBar14Tables.CHECKSUM_WEIGHT[i + 24] * dataWidths[i * 4 + 3];
         }
         checksum %= 79;
         if (checksum >= 8) checksum++;
@@ -178,15 +183,14 @@ public static class DataBar14Decoder {
         return checksum;
     }
 
-    private static bool TryDecodeDataCharacters(int[][] dataWidths, out int[] dataCharacters) {
-        dataCharacters = new int[4];
+    private static bool TryDecodeDataCharacters(ReadOnlySpan<int> dataWidths, Span<int> dataCharacters) {
         for (var i = 0; i < 4; i++) {
             if (!TryDecodeDataCharacter(i, dataWidths, out dataCharacters[i])) return false;
         }
         return true;
     }
 
-    private static bool TryBuildContent(int[] dataCharacters, out string content) {
+    private static bool TryBuildContent(ReadOnlySpan<int> dataCharacters, out string content) {
         content = string.Empty;
         var leftReg = dataCharacters[0] * 1597 + dataCharacters[1];
         var rightReg = dataCharacters[2] * 1597 + dataCharacters[3];
@@ -212,14 +216,14 @@ public static class DataBar14Decoder {
         return false;
     }
 
-    private static int FindFinder(int[] totalWidths, int offset, bool reverse) {
+    private static int FindFinder(ReadOnlySpan<int> totalWidths, int offset, bool reverse) {
         for (var c = 0; c < 9; c++) {
             if (FinderMatches(totalWidths, offset, c, reverse)) return c;
         }
         return -1;
     }
 
-    private static bool FinderMatches(int[] totalWidths, int offset, int c, bool reverse) {
+    private static bool FinderMatches(ReadOnlySpan<int> totalWidths, int offset, int c, bool reverse) {
         var baseIndex = 5 * c;
         for (var i = 0; i < 5; i++) {
             var idx = reverse ? baseIndex + (4 - i) : baseIndex + i;
@@ -228,61 +232,16 @@ public static class DataBar14Decoder {
         return true;
     }
 
-    private static bool TryExtractWidths(Barcode1D barcode, out int[] widths) {
-        widths = Array.Empty<int>();
-        if (barcode.Segments.Count != 46) return false;
-        if (barcode.Segments[0].IsBar) return false;
-        widths = new int[46];
-        for (var i = 0; i < 46; i++) {
-            widths[i] = barcode.Segments[i].Modules;
-        }
-        return true;
-    }
-
-    private static bool TryExtractWidths(bool[] modules, out int[] widths) {
-        widths = Array.Empty<int>();
-        if (modules.Length < 2) return false;
-
-        var runs = new List<int>(48);
-        var current = modules[0];
-        var count = 1;
-        for (var i = 1; i < modules.Length; i++) {
-            if (modules[i] == current) {
-                count++;
-            } else {
-                runs.Add(count);
-                current = modules[i];
-                count = 1;
-            }
-        }
-        runs.Add(count);
-
-        if (runs.Count == 45 && modules[0]) {
-            runs.Insert(0, 1);
-        }
-
-        if (runs.Count != 46) return false;
-        widths = runs.ToArray();
-        return true;
-    }
-
-    private static bool TryExtractWidthsFromStacked(BitMatrix modules, int topRow, int bottomRow, out int[] widths) {
-        widths = Array.Empty<int>();
+    private static bool TryExtractWidthsFromStacked(BitMatrix modules, int topRow, int bottomRow, Span<int> widths) {
         var top = ExtractRow(modules, topRow);
         var bottom = ExtractRow(modules, bottomRow);
         if (top.Length == 0 || bottom.Length == 0) return false;
-
-        var topRuns = RunLengths(top);
-        var bottomRuns = RunLengths(bottom);
-        if (topRuns.Count != 25 || bottomRuns.Count != 25) return false;
-
-        widths = new int[46];
-        for (var i = 0; i < 23; i++) {
-            widths[i] = topRuns[i];
-        }
-        for (var i = 0; i < 23; i++) {
-            widths[i + 23] = bottomRuns[i + 2];
-        }
+        Span<int> topRuns = stackalloc int[25];
+        Span<int> bottomRuns = stackalloc int[25];
+        if (!DataBarModuleRuns.TryRead(top, topRuns, out var topCount) || topCount != 25
+            || !DataBarModuleRuns.TryRead(bottom, bottomRuns, out var bottomCount) || bottomCount != 25) return false;
+        topRuns.Slice(0, 23).CopyTo(widths);
+        bottomRuns.Slice(2, 23).CopyTo(widths.Slice(23));
         return true;
     }
 
@@ -295,20 +254,4 @@ public static class DataBar14Decoder {
         return data;
     }
 
-    private static List<int> RunLengths(bool[] row) {
-        var runs = new List<int>(row.Length / 2);
-        var current = row[0];
-        var count = 1;
-        for (var i = 1; i < row.Length; i++) {
-            if (row[i] == current) {
-                count++;
-            } else {
-                runs.Add(count);
-                current = row[i];
-                count = 1;
-            }
-        }
-        runs.Add(count);
-        return runs;
-    }
 }

@@ -1,0 +1,109 @@
+{
+  "Source": "f24d627591a7f30c8819b1f1a1eb9d3cf014a9b5",
+  "CoreSha256": "308BDAA962967F8F48BCD9D97B85A59E074A216AE974834B9F103A5A78032204",
+  "PreviousSource": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+  "PreviousCoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+  "HostSha256": "1EA2D66420C36F8A7E385EC7403FAF20AE23CF900AE97BF6EC50E11C71758D0A",
+  "PreviousHostSha256": "1EE34198985B66A58201F28CF15737A9764A3E986749CB615C5CF183A23FB25D",
+  "Changes": "PDF417 and GS1 DataBar loops capture the current recognition deadline once per synchronous method while preserving live expiry and cancellation checks. Rejected Aztec ring probes check cancellation at each offset and poll the clock after at most 32 bounded candidates; accepted sampled views retain existing checks. Search order, checksums, payload validation and recognition allowances are unchanged.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are a separate workload from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "retained-contexts-fabric-ccd0-result.json",
+      "OutcomesFile": "retained-contexts-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "439F2D50BD87EC3C0D24C67BAEFF771BA88F52FAE3A7BED815C5F2720403A0F6"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "retained-contexts-fabric-ccd1-result.json",
+      "OutcomesFile": "retained-contexts-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "84D48F6D8448A279B2D67F53B8B21B97090773E9C32CBCE3525B015233B088DC"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "retained-contexts-texture-ccd0-result.json",
+      "OutcomesFile": "retained-contexts-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "D1ED96632FBA0BD734C9212DB88E7FF9E983854713EEC6AFE762F35C8102EA9B"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "retained-contexts-texture-ccd1-result.json",
+      "OutcomesFile": "retained-contexts-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "05E701FEDB9A17660F35621594F5FEBE87986321D5C44FA2CB86F08BCE0B1094"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "retained-contexts-whole-ccd0-result.json",
+      "OutcomesFile": "retained-contexts-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "4AC9B51931A6798CB12AFEED9752DD510D7CBBF12AE19C5E5A2699B921E804A6"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "retained-contexts-whole-ccd1-result.json",
+      "OutcomesFile": "retained-contexts-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "AB0640908DB85AAE0A556120573544DECF367CF4D716D690A65005E7463CA6AB"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "retained-contexts-retail-positive-ccd0-result.json",
+      "OutcomesFile": "retained-contexts-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "A689011861424101C8D86856466B48E33E89C02CF74C048C16C07C4C9507C40A"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "retained-contexts-retail-positive-ccd1-result.json",
+      "OutcomesFile": "retained-contexts-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "0752B3717A69E3A1A2C09CD7D59C39702772CBB3B3B97C46822198E134DA2D4C"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "retained-contexts-retail-negative-ccd0-result.json",
+      "OutcomesFile": "retained-contexts-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "BBAB7352CE342C5AF9B68CC7ED75FD5A62E3B37B62661699AC1B06DC95C31771"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "retained-contexts-retail-negative-ccd1-result.json",
+      "OutcomesFile": "retained-contexts-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "39F10660C19053947C1868718DD31D393D0A6F64DC34BE83D1007D152460BD07"
+    }
+  ],
+  "Contracts": {
+    "net10": 481,
+    "net8": 481,
+    "net472": 338
+  }
+}

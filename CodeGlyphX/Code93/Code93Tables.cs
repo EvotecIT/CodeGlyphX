@@ -1,8 +1,30 @@
+using System;
 using System.Collections.Generic;
 
 namespace CodeGlyphX.Code93;
 
 internal static class Code93Tables {
+    /// <summary>Computes a checksum over encoded symbols, before full-ASCII expansion is decoded.</summary>
+    internal static char GetChecksum(ReadOnlySpan<char> content, int maxWeight) {
+        var weight = 1;
+        var sum = 0;
+        for (var i = content.Length - 1; i >= 0; i--) {
+            if (!EncodingTable.TryGetValue(content[i], out var entry)) return ' ';
+            sum += entry.value * weight;
+            if (++weight > maxWeight) weight = 1;
+        }
+        sum %= 47;
+        foreach (var entry in EncodingTable) {
+            if (entry.Value.value == sum) return entry.Key;
+        }
+        return ' ';
+    }
+
+    /// <summary>Validates both C and K checksum symbols without changing checksum-free decoding.</summary>
+    internal static bool HasChecksums(ReadOnlySpan<char> content) => content.Length >= 2 &&
+        content[content.Length - 2] == GetChecksum(content.Slice(0, content.Length - 2), 20) &&
+        content[content.Length - 1] == GetChecksum(content.Slice(0, content.Length - 1), 15);
+
     public const char Fnc1 = '\u00F1';
     public const char Fnc2 = '\u00F2';
     public const char Fnc3 = '\u00F3';

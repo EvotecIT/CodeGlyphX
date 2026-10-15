@@ -1,0 +1,29 @@
+<section class="benchmark-section" aria-labelledby="png-output-buffers">
+    <h2 id="png-output-buffers">{{ if comparison.png_output.historical }}Retained PNG study: {{ end }}PNG output allocation and stream correctness</h2>
+    {{ if comparison.png_output.historical }}<p>This PNG study retains its original binaries, measurements and test results.</p>{{ end }}
+    <p>{{ comparison.png_output.changes }}</p>
+    <p>{{ comparison.png_output.contracts }}</p>
+    <p>Seven public rendering probes produce identical PNG bytes and decoded pixels with fewer managed allocations. Each probe creates 100 outputs after five priming calls. These counters do not rank elapsed time.</p>
+    <div class="comparison-scroll" role="region" aria-label="PNG public output allocation" tabindex="0">
+        <table class="bench-table">
+            <caption>Managed KiB per 100 outputs · identical encoded bytes and pixels</caption>
+            <thead><tr><th scope="col">Public path</th><th scope="col">Previous KiB</th><th scope="col">Current KiB</th><th scope="col">Reduction</th></tr></thead>
+            <tbody>{{ for row in comparison.png_output.buffer_rows }}<tr><th scope="row">{{ row.case }}</th><td>{{ row.before_kib }}</td><td>{{ row.current_kib }}</td><td>{{ row.reduction }}</td></tr>{{ end }}</tbody>
+        </table>
+    </div>
+    <p>{{ comparison.png_output.stream_scope }}</p>
+    <p>The matched generation matrix reduces CodeGlyphX managed PNG allocation by {{ comparison.png_output.qr_png_allocation_reduction }} across all six payload/domain cases. {{ comparison.png_output.qr_png_timing_note }}</p>
+    <details>
+        <summary>Fresh generation results for both binaries and every engine</summary>
+        <p>{{ comparison.png_output.generation_scope }}</p>
+        <div class="comparison-scroll" role="region" aria-label="PNG change full generation comparison" tabindex="0">
+            <table class="bench-table">
+                <caption>100 validated outputs per call · 12 measurements · all samples retained</caption>
+                <thead><tr><th scope="col">Domain</th><th scope="col">Payload</th><th scope="col">Output</th><th scope="col">Engine</th><th scope="col">Previous ms</th><th scope="col">Current ms</th><th scope="col">Current / previous</th><th scope="col">Previous managed KiB</th><th scope="col">Current managed KiB</th></tr></thead>
+                <tbody>{{ for row in comparison.png_output.generation_rows }}<tr><th scope="row">{{ row.domain }}</th><td>{{ row.case }}</td><td>{{ row.operation }}</td><td>{{ row.engine }}</td><td>{{ row.before_ms }}</td><td>{{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_kib }}</td><td>{{ row.current_kib }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>
+    </details>
+    <p>{{ comparison.png_output.generation_limits }}</p>
+    <p><a href="/comparisons/evidence/png-output-proof.json">PNG proof and all raw packets</a> · <a href="/comparisons/evidence/png-output-stream-before.json">Previous stream reproduction</a> · <a href="/comparisons/evidence/png-output-stream-current.json">Current stream output</a></p>
+</section>

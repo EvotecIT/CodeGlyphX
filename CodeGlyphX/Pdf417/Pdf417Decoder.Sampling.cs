@@ -63,7 +63,7 @@ public static partial class Pdf417Decoder {
         seen.Add((moduleSize, widthModules, heightModules));
     }
 
-    private static BitMatrix SampleModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert, CancellationToken cancellationToken) {
+    private static ModuleGrid SampleModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, BoundingBox box, int widthModules, int heightModules, int moduleSize, int threshold, bool invert, CancellationToken cancellationToken) {
         var totalWidth = widthModules * moduleSize;
         var totalHeight = heightModules * moduleSize;
         var offsetX = box.Left + (box.Width - totalWidth) / 2.0;
@@ -73,26 +73,11 @@ public static partial class Pdf417Decoder {
             moduleSize, moduleSize, roundCenters: true, threshold, invert, cancellationToken);
     }
 
-    private static BitMatrix SampleGrid(PixelSpan pixels, int width, int height, int stride, PixelFormat format,
+    private static ModuleGrid SampleGrid(PixelSpan pixels, int width, int height, int stride, PixelFormat format,
         double left, double top, int widthModules, int heightModules, double stepX, double stepY, bool roundCenters,
         int threshold, bool invert, CancellationToken cancellationToken) {
-        var modules = new BitMatrix(widthModules, heightModules);
-        for (var y = 0; y < heightModules; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
-            var centerY = top + (y + 0.5) * stepY;
-            var sy = (int)(roundCenters ? Math.Round(centerY) : Math.Floor(centerY));
-            sy = Clamp(sy, 0, height - 1);
-            for (var x = 0; x < widthModules; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) return modules;
-                var centerX = left + (x + 0.5) * stepX;
-                var sx = (int)(roundCenters ? Math.Round(centerX) : Math.Floor(centerX));
-                sx = Clamp(sx, 0, width - 1);
-                var dark = IsDark(pixels, width, height, stride, format, sx, sy, threshold);
-                modules[x, y] = invert ? !dark : dark;
-            }
-        }
-
-        return modules;
+        return ModuleGrid.Regular(pixels, width, height, stride, format, left, top, widthModules, heightModules,
+            stepX, stepY, roundCenters, threshold, invert, cancellationToken);
     }
 
     // Physical layouts can rasterize each module to a fractional number of pixels. Fit both

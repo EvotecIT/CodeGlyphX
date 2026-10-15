@@ -1,0 +1,51 @@
+{
+  "CoreSha256": "628C3FFA7151CFBD788D6AB3ED79BC9C41F5EDC3F2A91CE1A3DB80F60A24C582",
+  "LocalBudgetMilliseconds": 0,
+  "AmbientDeadlineMilliseconds": 10,
+  "InvalidBufferFailure": "InvalidInput",
+  "Rows": [
+    {
+      "Attempt": 0,
+      "Found": false,
+      "Expired": true,
+      "Failure": "InvalidInput",
+      "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+    },
+    {
+      "Attempt": 1,
+      "Found": false,
+      "Expired": true,
+      "Failure": "InvalidInput",
+      "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+    },
+    {
+      "Attempt": 2,
+      "Found": false,
+      "Expired": true,
+      "Failure": "InvalidInput",
+      "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+    },
+    {
+      "Attempt": 3,
+      "Found": false,
+      "Expired": true,
+      "Failure": "InvalidInput",
+      "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+    },
+    {
+      "Attempt": 4,
+      "Found": false,
+      "Expired": true,
+      "Failure": "InvalidInput",
+      "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+    },
+    {
+      "Attempt": 5,
+      "Found": false,
+      "Expired": true,
+      "Failure": "InvalidInput",
+      "Info": "s1 t0 norm cand0 tri0 invalid input (expect a square QR matrix)"
+    }
+  ],
+  "Scope": "Supported public QR pixel decoding with the real enclosing recognition deadline, no cancellation token. Repeated valid buffers allow expiry during grayscale conversion. The task-only friend assembly establishes the existing internal image-wrapper deadline; no production hooks or timing thresholds are introduced."
+}

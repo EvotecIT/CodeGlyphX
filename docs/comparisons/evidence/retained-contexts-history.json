@@ -1,0 +1,1223 @@
+{
+  "Scope": "Only listed packets with a verified archived recipe owner are classified. Per-iteration setup recreates the collectible decoder context, so three setup warmups do not warm the contexts used by measured iterations. These are fresh-context first-use costs. Main corpus, generation and typed default-context decoding are separate execution paths. Unverified historical cost packets keep their original scope.",
+  "Packets": [
+    {
+      "File": "code39-cost-ccd0-result.json",
+      "Sha256": "0F1442D6BD47C2BA2149E70645C9745B7A3735538628A8A61054217D200FE6C1",
+      "Source": "417f25c101aada2148f1d9f7ebdc8a8f505f7a29",
+      "CoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18",
+      "Suite": "code39-image-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "code39-cost-ccd1-result.json",
+      "Sha256": "3A583BED3362F5AF998ABFF010B886C852F880B1E4CA546E2B49D9BE856F17CB",
+      "Source": "417f25c101aada2148f1d9f7ebdc8a8f505f7a29",
+      "CoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18",
+      "Suite": "code39-image-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "databar-tilted-initial-negative-ccd0-result.json",
+      "Sha256": "7534C902E49E2D64AF9608BF1118E01640FB5DCD8259F41943CD802D46CC708F",
+      "Source": "70aaab3f08ae81526ffbcdd2b8ffa9e05190e60f",
+      "CoreSha256": "CDBE9A3313389DB14C6A2773648D46A8B24737981CA4F430175F52EEBAD0752B",
+      "Suite": "paired-databar-tilted-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "databar-tilted-initial-negative-ccd1-result.json",
+      "Sha256": "6BB5F83EFFD653256412A2154FF3DC54887F5BDAC6AA3CD2D244340745D4EA20",
+      "Source": "70aaab3f08ae81526ffbcdd2b8ffa9e05190e60f",
+      "CoreSha256": "CDBE9A3313389DB14C6A2773648D46A8B24737981CA4F430175F52EEBAD0752B",
+      "Suite": "paired-databar-tilted-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "databar-tilted-initial-positive-ccd0-result.json",
+      "Sha256": "F4A15B42165C1FC7D1B91C6BCE582D5FD240605D17FC0BEF5B627A808526917A",
+      "Source": "70aaab3f08ae81526ffbcdd2b8ffa9e05190e60f",
+      "CoreSha256": "CDBE9A3313389DB14C6A2773648D46A8B24737981CA4F430175F52EEBAD0752B",
+      "Suite": "paired-databar-tilted-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "databar-tilted-initial-positive-ccd1-result.json",
+      "Sha256": "12ED0525EE2CFF8EBBF79F0EF2979C023C8F824487180D2CB87AA8CA1AA4CD70",
+      "Source": "70aaab3f08ae81526ffbcdd2b8ffa9e05190e60f",
+      "CoreSha256": "CDBE9A3313389DB14C6A2773648D46A8B24737981CA4F430175F52EEBAD0752B",
+      "Suite": "paired-databar-tilted-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "databar-tilted-negative-ccd0-result.json",
+      "Sha256": "A503930369A3CD6A057145875F8E4EFE92446125154C516E8DE2F3687679003E",
+      "Source": "01832f81c81289094b11c32bb3434df302f3efd9",
+      "CoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+      "Suite": "paired-databar-tilted-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "databar-tilted-negative-ccd1-result.json",
+      "Sha256": "7EDB3044EB3CE7D7A6944799938224EECC54A066C6AF75F0D2EBA79769E66AE5",
+      "Source": "01832f81c81289094b11c32bb3434df302f3efd9",
+      "CoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+      "Suite": "paired-databar-tilted-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "databar-tilted-positive-ccd0-result.json",
+      "Sha256": "AFC4D26467E5F72FADCD7D8E3D780B5DBBCFFFE5F9673EAC4FB053E3B553C7A7",
+      "Source": "01832f81c81289094b11c32bb3434df302f3efd9",
+      "CoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+      "Suite": "paired-databar-tilted-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "databar-tilted-positive-ccd1-result.json",
+      "Sha256": "41B486F301015744B58E70D887983675DEF926C9F7761A39A3E634D4ED859611",
+      "Source": "01832f81c81289094b11c32bb3434df302f3efd9",
+      "CoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+      "Suite": "paired-databar-tilted-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "databar14-cost-ccd0-result.json",
+      "Sha256": "8E94F3CACB2352E0872F6034D0228DF01DFF07C6630B9EA24863E627F2AD6B4A",
+      "Source": "5f41d326a8c332853096d888059504677cada46e",
+      "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+      "Suite": "itf-image-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "databar14-cost-ccd1-result.json",
+      "Sha256": "CD912D0DE73A9FE3E2007A236171F712D19B47C5B88E698F2E4CACBFA0A51599",
+      "Source": "5f41d326a8c332853096d888059504677cada46e",
+      "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+      "Suite": "itf-image-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "datamatrix-box-cost-ccd0-result.json",
+      "Sha256": "2FA3D349583E1678A95E0502E7E58D06B19A1FBE57AC72F4CD3B7F345E2020AA",
+      "Source": "b006759fea1017ffb9940b9251a2d201b29b0615",
+      "CoreSha256": "48827C50013802DDC6F5DA8C24C1BD846057EA995DEB452275D42C6C5489C48A",
+      "Suite": "datamatrix-box-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "datamatrix-box-cost-ccd1-result.json",
+      "Sha256": "0E3DE16B8B2DFC1B079A28B4DD1A5E09509346505EA56C95106F2D1073F7CD81",
+      "Source": "b006759fea1017ffb9940b9251a2d201b29b0615",
+      "CoreSha256": "48827C50013802DDC6F5DA8C24C1BD846057EA995DEB452275D42C6C5489C48A",
+      "Suite": "datamatrix-box-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "datamatrix-selected-negative-cost-ccd0-result.json",
+      "Sha256": "CB9F0DE23339BD74AB62465F53ACC466D8F5549AFC7BB5C4DBEB0230FC1BF1B0",
+      "Source": "7dc89ae6ba182b0868ef6d983f9737f07316cd5c",
+      "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+      "Suite": "pdf-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "datamatrix-selected-negative-cost-ccd1-result.json",
+      "Sha256": "E482167A567E596C06DBCD64AE9886E2D002387890076DE5ED34DCCFA9A775A3",
+      "Source": "7dc89ae6ba182b0868ef6d983f9737f07316cd5c",
+      "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+      "Suite": "pdf-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "datamatrix-texture-cost-ccd0-result.json",
+      "Sha256": "AA7851F9E4D6C13ED7611D57BDB6A5CBF402098689EE6E636EEF69EDF2922E53",
+      "Source": "7dc89ae6ba182b0868ef6d983f9737f07316cd5c",
+      "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+      "Suite": "texture-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "datamatrix-texture-cost-ccd1-result.json",
+      "Sha256": "E278F599C58DD28046EBF7B623D724208D60AC7CFB7212A71FDA5D06B86BC191",
+      "Source": "7dc89ae6ba182b0868ef6d983f9737f07316cd5c",
+      "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+      "Suite": "texture-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "decode-allocation-negative-ccd0-result.json",
+      "Sha256": "B27C21FA5AFFCAF67537ACBC050B2245E65BECF7D49F028B7210ABD4E1B1BA73",
+      "Source": "bfd639a91c1603c302e6204e60bdc7f5383951ba",
+      "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "decode-allocation-negative-ccd1-result.json",
+      "Sha256": "26A3445ECB9273E547DE9903A11AEEE0DA0B9235CECE5460D135FF22D22E44A7",
+      "Source": "bfd639a91c1603c302e6204e60bdc7f5383951ba",
+      "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "decode-allocation-positive-ccd0-result.json",
+      "Sha256": "4AF025D51D21BF43079519C502EDECCC95AEC484E47DD84976070C69B47B3469",
+      "Source": "bfd639a91c1603c302e6204e60bdc7f5383951ba",
+      "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "decode-allocation-positive-ccd1-result.json",
+      "Sha256": "0E7E1E21FE11505133606B0D5BCBEBC6932BBFCDBD91BD42F9A3746694AAB4F9",
+      "Source": "bfd639a91c1603c302e6204e60bdc7f5383951ba",
+      "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "decode-deadline-negative-ccd0-result.json",
+      "Sha256": "4F125487436B4FE918F6F14A9ACEAEB59823C174C9B2FBDA22FD301812E9D6A5",
+      "Source": "023a9382680bc029515093c1de1bc6ed50accc27",
+      "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "decode-deadline-negative-ccd1-result.json",
+      "Sha256": "78AB15C607F80E3D1411F9826F404962D4A0F9546AA0998A38B4CA521D9AB834",
+      "Source": "023a9382680bc029515093c1de1bc6ed50accc27",
+      "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "decode-deadline-positive-ccd0-result.json",
+      "Sha256": "1D1B93FCA93A118B4CD8B86BF16A656ED2E128D24A6B316A4201683A2967CE68",
+      "Source": "023a9382680bc029515093c1de1bc6ed50accc27",
+      "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "decode-deadline-positive-ccd1-result.json",
+      "Sha256": "9086D70D075EB747C0EF02B8DEAB12B8607DD391AE984A3E2E9DE542C359F6A1",
+      "Source": "023a9382680bc029515093c1de1bc6ed50accc27",
+      "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-gray8-retail-negative-ccd0-result.json",
+      "Sha256": "7DB812DD0E9370AF5EE1250E1BCE320CCD71138158C86CC858B71ACE73B36CA3",
+      "Source": "6fb1250566eae8ad74fb464354c47795175f28bd",
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-gray8-retail-negative-ccd1-result.json",
+      "Sha256": "53076F289781C3E837F1C5EAD19B45D07B367D0C410825A55E88BDA22DFD446B",
+      "Source": "6fb1250566eae8ad74fb464354c47795175f28bd",
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-gray8-retail-positive-ccd0-result.json",
+      "Sha256": "305857B73031DFF6E1DBA1243B5B9CD4FDFD44C43C2DBB6771E9E6B11D70E93E",
+      "Source": "6fb1250566eae8ad74fb464354c47795175f28bd",
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-gray8-retail-positive-ccd1-result.json",
+      "Sha256": "2BCF97CA3A14D6515FDE61B9198955F3AB5D64D50B31F14829037A5A00ED2782",
+      "Source": "6fb1250566eae8ad74fb464354c47795175f28bd",
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-gray8-texture-ccd0-result.json",
+      "Sha256": "FE62F1384D5C31A6892485F61CDF57A87CC15B492D2524FA3E8A8C5186E0C9CE",
+      "Source": "6fb1250566eae8ad74fb464354c47795175f28bd",
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-gray8-texture-ccd1-result.json",
+      "Sha256": "2ECF75DB96E979FD73B37F26CBC6060F15E97C99F6EFF63C643BD3729C68B565",
+      "Source": "6fb1250566eae8ad74fb464354c47795175f28bd",
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-window-means-fabric-ccd0-result.json",
+      "Sha256": "5D9494B50801780F75BD50C9DD2676CDBA930E830C92E01A40E5B37D4E62CAB7",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-window-means-fabric-ccd1-result.json",
+      "Sha256": "EBDDB53E3E0752ECA913C706B58214606ED16F9D29F2F009F60ECEE54D3D0A48",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-window-means-retail-negative-ccd0-result.json",
+      "Sha256": "A66AF84BF5FB34FD2635E099815B3690E3F1D2FE6A62889D8A7114680FD7990D",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-window-means-retail-negative-ccd1-result.json",
+      "Sha256": "C37502EC54C517B6037B06426E9A783663CFF4C803F1E0CC4D6354125BCBF721",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-window-means-retail-positive-ccd0-result.json",
+      "Sha256": "C0C2D632CBA7011F09221E47724B5C26AD8B20CB225B6A859E0632D12BF1DFE3",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-window-means-retail-positive-ccd1-result.json",
+      "Sha256": "963B8D13C6D0AFDD864EB3EF6BD1E6AA747B4C6D7133453794C554EA3E855271",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-window-means-texture-ccd0-result.json",
+      "Sha256": "A531868FF0BB4CC66975DF958D1FDD7220B03A266E76A81B83FFE0AAF3A2F70B",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "dpm-window-means-texture-ccd1-result.json",
+      "Sha256": "37BFFFBE820B07A03F7FFA15B88B6BDCC860C9ADEA32FACDE3551C783886D909",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-databar-tilt-paired-decode-cost-ccd0-result.json",
+      "Sha256": "3DC2621F2C6419EDF4722996925760F5BE1D4954621D866910055C09517D9395",
+      "Source": "418fc0728d2d5fa5e29247de4bc5bacfdafd5f70",
+      "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-databar-tilt-paired-decode-cost-ccd1-result.json",
+      "Sha256": "81680E0F2882976C3495DD5EBD870D9E8BE34312E6DCAABBE957717E3A5F29D4",
+      "Source": "418fc0728d2d5fa5e29247de4bc5bacfdafd5f70",
+      "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-databar14-retail-cost-ccd0-result.json",
+      "Sha256": "70CC22D37AB27C83178CBB26E3855ADEACC5366E8E5B77864A516D5B61088086",
+      "Source": "5145edfb766f1ced33dfc6427b65cfdbd2aa7eb3",
+      "CoreSha256": "DFDDE80285429E278828398F62EFE78659647C8BF164015592A1773EB18DC609",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-databar14-retail-cost-ccd1-result.json",
+      "Sha256": "17701E61128161142064361B21DB2445D60FD4FA988036B2FFD8B72DACC50506",
+      "Source": "5145edfb766f1ced33dfc6427b65cfdbd2aa7eb3",
+      "CoreSha256": "DFDDE80285429E278828398F62EFE78659647C8BF164015592A1773EB18DC609",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-databar14-retail-cost-previous-ccd0-result.json",
+      "Sha256": "8AD1BC1CA20CB810DB3904D11BA3E8CF0CF7EAC6A4DB0AC8EC2DD463D3B413D6",
+      "Source": "344a78dcc2f20946f0ba87890d8607767a5f3f83",
+      "CoreSha256": "F3AA6684D2FD59EBE876BDCCE724F9E7CDDE635E4B8ED0AA6F0B2DE2C4CCB277",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "historical-databar14-retail-cost-previous-ccd1-result.json",
+      "Sha256": "7595B6AC81E3B67CE90D3139921B9724688FBBB13F75958F4C8676CD3FDE1122",
+      "Source": "344a78dcc2f20946f0ba87890d8607767a5f3f83",
+      "CoreSha256": "F3AA6684D2FD59EBE876BDCCE724F9E7CDDE635E4B8ED0AA6F0B2DE2C4CCB277",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "historical-databar14-retail-positive-cost-ccd0-result.json",
+      "Sha256": "A2280B9FA04B0E689D3B5D85C1C2ADD6385EDD75BB36089F687BC8ADF40C4A97",
+      "Source": "5145edfb766f1ced33dfc6427b65cfdbd2aa7eb3",
+      "CoreSha256": "DFDDE80285429E278828398F62EFE78659647C8BF164015592A1773EB18DC609",
+      "Suite": "retail-positive-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-databar14-retail-positive-cost-ccd1-result.json",
+      "Sha256": "E5009341427ACB19117EB545D07809B32F0B22CFD2513F379FFB512DEFE87685",
+      "Source": "5145edfb766f1ced33dfc6427b65cfdbd2aa7eb3",
+      "CoreSha256": "DFDDE80285429E278828398F62EFE78659647C8BF164015592A1773EB18DC609",
+      "Suite": "retail-positive-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-deadline-polling-paired-decode-cost-ccd0-result.json",
+      "Sha256": "25FEEB0241B11F12F5B84503E5256CBEDC73C5DA821C213C46EE31E88ECF1267",
+      "Source": "bfd639a91c1603c302e6204e60bdc7f5383951ba",
+      "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-deadline-polling-paired-decode-cost-ccd1-result.json",
+      "Sha256": "16D7F895B29772BCF9ADDD52E98A739FFC9C5C7028B51025F1E4A8AE23CD08B2",
+      "Source": "bfd639a91c1603c302e6204e60bdc7f5383951ba",
+      "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-decode-allocation-paired-decode-cost-ccd0-result.json",
+      "Sha256": "A59C9741AB8BD899FEAD7E400E2A63B50D12130301605F6900371CE6ADAE4369",
+      "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+      "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-decode-allocation-paired-decode-cost-ccd1-result.json",
+      "Sha256": "94555A2F3A6A05067AC9A3E0EB5B3028A83489DEB0751238A6736ED133CAE4D2",
+      "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+      "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-dpm-gray8-paired-decode-cost-ccd0-result.json",
+      "Sha256": "94899F48F689FEFD59CCD83030F783C816B61401F966FBA9E49CB115FE737DFF",
+      "Source": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-dpm-gray8-paired-decode-cost-ccd1-result.json",
+      "Sha256": "0DF09345150CB2E5EE916931C1794051B8EEEFDFAE8E486C9141B42FB99D454C",
+      "Source": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-dpm-window-means-paired-decode-cost-ccd0-result.json",
+      "Sha256": "19BE6951D7C96617CA255DF8328F090ACB267A50BA529776709BBD96E3621D01",
+      "Source": "6fb1250566eae8ad74fb464354c47795175f28bd",
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-dpm-window-means-paired-decode-cost-ccd1-result.json",
+      "Sha256": "0EE2EC8975B3738C033FEB97663BC6F6B041C57E365E94FA94DEF0EF274678A7",
+      "Source": "6fb1250566eae8ad74fb464354c47795175f28bd",
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-pdf417-pdf-negative-cost-ccd0-result.json",
+      "Sha256": "E1BB58A49A6A3A2EE82CB894E06CDC405ECA8EC96EE40B45132FFD355B86493F",
+      "Source": "84e37687c8fc9e46bd34047c72e56a8262db13e4",
+      "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E",
+      "Suite": "pdf-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-pdf417-pdf-negative-cost-ccd1-result.json",
+      "Sha256": "71776128CAE9762E7092A09775C92B3C04085913B17445A408ECE54E027B93EC",
+      "Source": "84e37687c8fc9e46bd34047c72e56a8262db13e4",
+      "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E",
+      "Suite": "pdf-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-qr-finder-groups-paired-decode-cost-ccd0-result.json",
+      "Sha256": "E264B4D1FFAC0D557C7D682CA012DB20F1942586CAA23437EF7C1E33BCA38852",
+      "Source": "023a9382680bc029515093c1de1bc6ed50accc27",
+      "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-qr-finder-groups-paired-decode-cost-ccd1-result.json",
+      "Sha256": "4317E2C5272C733DD2E4BA5D3AE7472C5DA8AF9F99C377C7F6D229C83FB2FE2E",
+      "Source": "023a9382680bc029515093c1de1bc6ed50accc27",
+      "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-retail-cost-ccd0-result.json",
+      "Sha256": "D38E7E20512E2E7BF56B09C0A759BC37C24B5626C14BB291FF3C2AFC75D1F5F9",
+      "Source": "7c907b2c9f64b622fac80fde24d9a2f421035b39",
+      "CoreSha256": "3FCE2A04CDD023B164AE723CE8FE5DE6E596F847C6C090E572FCBF8E50FA804E",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-retail-cost-ccd1-result.json",
+      "Sha256": "1631D00FA8F6AF470C80467E32D0E2973D9E09EA2C1AD394B0DF134666586E4F",
+      "Source": "7c907b2c9f64b622fac80fde24d9a2f421035b39",
+      "CoreSha256": "3FCE2A04CDD023B164AE723CE8FE5DE6E596F847C6C090E572FCBF8E50FA804E",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-retail-cost-previous-ccd0-result.json",
+      "Sha256": "8AD1BC1CA20CB810DB3904D11BA3E8CF0CF7EAC6A4DB0AC8EC2DD463D3B413D6",
+      "Source": "344a78dcc2f20946f0ba87890d8607767a5f3f83",
+      "CoreSha256": "F3AA6684D2FD59EBE876BDCCE724F9E7CDDE635E4B8ED0AA6F0B2DE2C4CCB277",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "historical-retail-cost-previous-ccd1-result.json",
+      "Sha256": "7595B6AC81E3B67CE90D3139921B9724688FBBB13F75958F4C8676CD3FDE1122",
+      "Source": "344a78dcc2f20946f0ba87890d8607767a5f3f83",
+      "CoreSha256": "F3AA6684D2FD59EBE876BDCCE724F9E7CDDE635E4B8ED0AA6F0B2DE2C4CCB277",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "historical-retail-fine-paired-decode-cost-ccd0-result.json",
+      "Sha256": "A732DCB7277A7712F3CFFFBAC60E52A4B54603B9FE71D0FBF176C6CDA3E4DBE9",
+      "Source": "01832f81c81289094b11c32bb3434df302f3efd9",
+      "CoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-retail-fine-paired-decode-cost-ccd1-result.json",
+      "Sha256": "4857B732A94E5160B00D78FCE96E743E5BFE8BA95E2FCF28A89FBE7AABEDB10E",
+      "Source": "01832f81c81289094b11c32bb3434df302f3efd9",
+      "CoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-retail-positive-cost-ccd0-result.json",
+      "Sha256": "29AC4DAA0005C1018BFFFEA674D4E69AB524B7E197252366ACC6FB4B4FFA77C1",
+      "Source": "7c907b2c9f64b622fac80fde24d9a2f421035b39",
+      "CoreSha256": "3FCE2A04CDD023B164AE723CE8FE5DE6E596F847C6C090E572FCBF8E50FA804E",
+      "Suite": "retail-positive-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-retail-positive-cost-ccd1-result.json",
+      "Sha256": "CBE29FB01FD18C7A29F1ADB601EFA9A008CECC466868A6C265CA4DD9DE6E3DEB",
+      "Source": "7c907b2c9f64b622fac80fde24d9a2f421035b39",
+      "CoreSha256": "3FCE2A04CDD023B164AE723CE8FE5DE6E596F847C6C090E572FCBF8E50FA804E",
+      "Suite": "retail-positive-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-scanner-boundary-paired-decode-cost-ccd0-result.json",
+      "Sha256": "6673F3AB9F2B434E1389504A4FA4685086E04987ADC7A568A993639304D824F5",
+      "Source": "63677a2c11e9561677736cc001a8bf748ca28670",
+      "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-scanner-boundary-paired-decode-cost-ccd1-result.json",
+      "Sha256": "711FE1BC0A09A36C7192AFED2DAAEC1B4F7404FC66CFD8A8E8DD1C0CA81CF530",
+      "Source": "63677a2c11e9561677736cc001a8bf748ca28670",
+      "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "itf-cost-ccd0-result.json",
+      "Sha256": "071497EE9408018947111819E3DC3F28B6AAD39847D5F187F1F8E37EC4995F95",
+      "Source": "56f04ae35ce5e98ecc596ad85dcb391e9d0fc204",
+      "CoreSha256": "EAF7AFDB8F9480956F7193466D21D6E1ED96934131D9B986F928EA6904E2551F",
+      "Suite": "itf-image-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "itf-cost-ccd1-result.json",
+      "Sha256": "12AB245CFB11248BD416B377BDE9668F341459D3A35A8FCCB0BEE7C0A35D161A",
+      "Source": "56f04ae35ce5e98ecc596ad85dcb391e9d0fc204",
+      "CoreSha256": "EAF7AFDB8F9480956F7193466D21D6E1ED96934131D9B986F928EA6904E2551F",
+      "Suite": "itf-image-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "historical-retained-contexts-paired-decode-cost-ccd0-result.json",
+      "Sha256": "B3B355B843C3D23F10FDD43E7A07A96AF2A0F40CA0374A8A4B4AA3489C1B0376",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true,
+      "OriginalFile": "paired-decode-cost-ccd0-result.json"
+    },
+    {
+      "File": "historical-retained-contexts-paired-decode-cost-ccd1-result.json",
+      "Sha256": "C03A89143F8E4B2E5F430D085E4075BD1DFD2ABFE2DA9D9997D2621A81CB4C53",
+      "Source": "4f3d6312bd989d03d5b475b99b22327d56a53561",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true,
+      "OriginalFile": "paired-decode-cost-ccd1-result.json"
+    },
+    {
+      "File": "pdf-negative-cost-ccd0-result.json",
+      "Sha256": "E1BB58A49A6A3A2EE82CB894E06CDC405ECA8EC96EE40B45132FFD355B86493F",
+      "Source": "84e37687c8fc9e46bd34047c72e56a8262db13e4",
+      "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E",
+      "Suite": "pdf-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "pdf-negative-cost-ccd1-result.json",
+      "Sha256": "71776128CAE9762E7092A09775C92B3C04085913B17445A408ECE54E027B93EC",
+      "Source": "84e37687c8fc9e46bd34047c72e56a8262db13e4",
+      "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E",
+      "Suite": "pdf-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "pdf417-cache-cost-ccd0-12-result.json",
+      "Sha256": "C19D4A8A1DDB793E3324FB63534A7DCC691E4F3F2F34D4B877BBCFCD442E3F04",
+      "Source": "34bfc0ab2216f02a6d84acbed997b3b9f9513f90",
+      "CoreSha256": "DC005150AC82C7473BBC1A8C49BD8AAFA5F8AC0B34D011E4F975431375D3567F",
+      "Suite": "paired-pdf417-cache-controls",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "pdf417-cache-cost-ccd1-12-result.json",
+      "Sha256": "DD5BE5D942A47AB81ADAA13A77750823407D301553CAB7275BE11F8910FDE65E",
+      "Source": "34bfc0ab2216f02a6d84acbed997b3b9f9513f90",
+      "CoreSha256": "DC005150AC82C7473BBC1A8C49BD8AAFA5F8AC0B34D011E4F975431375D3567F",
+      "Suite": "paired-pdf417-cache-controls",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "pdf417-cost-ccd0-result.json",
+      "Sha256": "0C01B81F4D29568DEF068BBC8459506311F045A390D34987BC6A5402DEB1A931",
+      "Source": "d10503fa973942b31b1e79e293de71a34eba5858",
+      "CoreSha256": "877165EE4B2CE32A831F212E989CCCAE74D8C5FAFB89D823936C7D729F12786B",
+      "Suite": "paired-pdf417-negative-search",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "pdf417-cost-ccd1-result.json",
+      "Sha256": "BC44F37A6C8A80DAC1910B4AB7F13F52D83E2F1147200A99C2A613188C899259",
+      "Source": "d10503fa973942b31b1e79e293de71a34eba5858",
+      "CoreSha256": "877165EE4B2CE32A831F212E989CCCAE74D8C5FAFB89D823936C7D729F12786B",
+      "Suite": "paired-pdf417-negative-search",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-finder-groups-ccd0-result.json",
+      "Sha256": "845AB174AFC2270C8B55EC2FF755BDF880AC416430082477ECA80972197DD562",
+      "Source": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-finder-groups-ccd1-result.json",
+      "Sha256": "035CF69091A791AD1615484A1957C049F61BACEFFD54F9759C359B9F5988A779",
+      "Source": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-finder-groups-retail-negative-ccd0-result.json",
+      "Sha256": "29467D306B93EA5963BBD04B48FC343FF4F21620FEE35E895B92D7D2DB0CF6A1",
+      "Source": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-finder-groups-retail-negative-ccd1-result.json",
+      "Sha256": "F13D8704F9FDC33EDFEF81997847D77C2018C3A5EB08AAE408D143E9727B1E2E",
+      "Source": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-finder-groups-retail-positive-ccd0-result.json",
+      "Sha256": "710AF16C0EC3ABFDAD304442384E33AF5388E97C35AEFCCDE05AD301F6D13E00",
+      "Source": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-finder-groups-retail-positive-ccd1-result.json",
+      "Sha256": "A2B0747136D0381D094E22B4AD95A0475CD32FE6D65C27C9DC7C6CEDE2DB7116",
+      "Source": "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48",
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-morphology-cost-ccd0-result.json",
+      "Sha256": "B1518CC6EA5BA4DFBE53A4D669C5D78D386F2E38505322DB28DD7B61A5A2EE21",
+      "Source": "418fc0728d2d5fa5e29247de4bc5bacfdafd5f70",
+      "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+      "Suite": "qr-binary-morphology",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-morphology-cost-ccd1-result.json",
+      "Sha256": "6F050BA6D6EF0E02F700919BEC0428DD439CD47DB65FB8B6BB59CB5A45C2361F",
+      "Source": "418fc0728d2d5fa5e29247de4bc5bacfdafd5f70",
+      "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+      "Suite": "qr-binary-morphology",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-negative-cost-ccd0-result.json",
+      "Sha256": "E96824C2F88A611B5C4F0F244A0483542E7AA13194EF716CF07A07DE4F280ABE",
+      "Source": "418fc0728d2d5fa5e29247de4bc5bacfdafd5f70",
+      "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+      "Suite": "negative-complete-image-search",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "qr-negative-cost-ccd1-result.json",
+      "Sha256": "EB092813FB25C2F54CACDB04A6B70A62F935FEDFB6FA636E32C8B66CDDC5185D",
+      "Source": "418fc0728d2d5fa5e29247de4bc5bacfdafd5f70",
+      "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+      "Suite": "negative-complete-image-search",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "retail-cost-ccd0-result.json",
+      "Sha256": "E2C43B92498AF372790B5EAF3C54025F676F98BB54D94E6EBF47D5BCB9840650",
+      "Source": "5f41d326a8c332853096d888059504677cada46e",
+      "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "retail-cost-ccd1-result.json",
+      "Sha256": "E47B6DF1A398809E370A1F87C718F379F928A4BED7FDFDE7AE136A4234D94AC2",
+      "Source": "5f41d326a8c332853096d888059504677cada46e",
+      "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "retail-cost-previous-ccd0-result.json",
+      "Sha256": "8AD1BC1CA20CB810DB3904D11BA3E8CF0CF7EAC6A4DB0AC8EC2DD463D3B413D6",
+      "Source": "344a78dcc2f20946f0ba87890d8607767a5f3f83",
+      "CoreSha256": "F3AA6684D2FD59EBE876BDCCE724F9E7CDDE635E4B8ED0AA6F0B2DE2C4CCB277",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "retail-cost-previous-ccd1-result.json",
+      "Sha256": "7595B6AC81E3B67CE90D3139921B9724688FBBB13F75958F4C8676CD3FDE1122",
+      "Source": "344a78dcc2f20946f0ba87890d8607767a5f3f83",
+      "CoreSha256": "F3AA6684D2FD59EBE876BDCCE724F9E7CDDE635E4B8ED0AA6F0B2DE2C4CCB277",
+      "Suite": "retail-negative-cost",
+      "VerifiedRecipeOwner": false
+    },
+    {
+      "File": "retail-fine-negative-ccd0-result.json",
+      "Sha256": "EF1B22D726282A9953349A580803E4168453B96754151F5D2CCAE87E6903EAED",
+      "Source": "63677a2c11e9561677736cc001a8bf748ca28670",
+      "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "retail-fine-negative-ccd1-result.json",
+      "Sha256": "A10D786C94B10C18DE950F2B0F08601E0578DD1A94A03A8857761505E8C16957",
+      "Source": "63677a2c11e9561677736cc001a8bf748ca28670",
+      "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "retail-fine-positive-ccd0-result.json",
+      "Sha256": "AA633E7114063E7A2BB93B60F546B2BF7A991C7107DDE9A89DA07F924C54DEE5",
+      "Source": "63677a2c11e9561677736cc001a8bf748ca28670",
+      "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "retail-fine-positive-ccd1-result.json",
+      "Sha256": "2B679C2DF810B8523EA1BA9862F435C33CD980E02805C6B57D72A2737541DDAE",
+      "Source": "63677a2c11e9561677736cc001a8bf748ca28670",
+      "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "retail-positive-cost-ccd0-result.json",
+      "Sha256": "04853A66B8E7C0684150D4D3F725B6868D644CBC4CC2A4866CDEBB7E7A529336",
+      "Source": "5f41d326a8c332853096d888059504677cada46e",
+      "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+      "Suite": "retail-positive-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "retail-positive-cost-ccd1-result.json",
+      "Sha256": "7DDD7A7F9C6DAEB9B7839629055EE190472CCD7BF598E4C95657E12C201CE107",
+      "Source": "5f41d326a8c332853096d888059504677cada46e",
+      "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+      "Suite": "retail-positive-cost",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "scanner-boundary-negative-ccd0-result.json",
+      "Sha256": "CA4FE4E25FE02B7F64721E89EA741862031904D4BCD45CEF2088829F6D537A76",
+      "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+      "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "scanner-boundary-negative-ccd1-result.json",
+      "Sha256": "0D74D59B08A0476AF184A589CA2E5EA69C10A0837DBD465953F3E9002C2B9987",
+      "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+      "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "scanner-boundary-positive-ccd0-result.json",
+      "Sha256": "61AC1533EC6F881345EC5590E9A1174F35F05B2245C1EA4B69DAB1DEBEA2AF75",
+      "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+      "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    },
+    {
+      "File": "scanner-boundary-positive-ccd1-result.json",
+      "Sha256": "5D5F4FE764C41C498B771917E88D26B632B01506425D7AC2BCED3FA3B4B4C737",
+      "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+      "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+      "Suite": "paired-whole-image-decoding",
+      "VerifiedRecipeOwner": true
+    }
+  ],
+  "Owners": {
+    "417f25c101aada2148f1d9f7ebdc8a8f505f7a29": {
+      "Archive": "code39-run-recovery-417f25c1/final-validation.zip",
+      "QualificationSha256": "6E6B7F4756C75A469C6DD286EC85A0D76D61A71CC99BC67CC70CA7B327BD1D2C",
+      "CoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "5f41d326a8c332853096d888059504677cada46e": {
+      "Archive": "databar14-row-recovery-5f41d326/final-validation.zip",
+      "QualificationSha256": "338466411739DEA9626EC7B4F2F3FD16990BE6A6555C59F950D9078F9DF573A5",
+      "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "01832f81c81289094b11c32bb3434df302f3efd9": {
+      "Archive": "databar14-tilted-01832f81/final-validation.zip",
+      "QualificationSha256": "4E10A9B91A88EC4800E54330CC3FC9796478D0B4DE5D1DDFFDB8ED975465A606",
+      "CoreSha256": "12176C59B8B12792CF0E7C5EFE40D621C160CB2936C9AA3187DB228F5CD155F6",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "b006759fea1017ffb9940b9251a2d201b29b0615": {
+      "Archive": "datamatrix-deadline-cost-b006759f/final-validation.zip",
+      "QualificationSha256": "F438769D15DFBACF34221CD8C6989E66AB04DDAA1BF2C6DDDADAFBCDD9D5D26F",
+      "CoreSha256": "48827C50013802DDC6F5DA8C24C1BD846057EA995DEB452275D42C6C5489C48A",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "BC18D0B4A90FFDBCAB14D5BD6941A8BC69B100FC5A4B3EAE72BC3F5B701C776B",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\n$candidateRoot = Get-BenchmarkInput CandidateRoot\n$manifest = Get-BenchmarkInput ManifestPath\n$imageRoot = Get-BenchmarkInput ImageRoot\n$outputRoot = Get-BenchmarkInput OutputRoot\n$iterations = [int](Get-BenchmarkInput Iterations 12)\n$warmup = [int](Get-BenchmarkInput Warmup 3)\n$repoRoot = Get-BenchmarkInput RepoRoot\n$expectedSource = Get-BenchmarkInput ExpectedSource\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\n Add-BenchmarkMetadata CandidateSource $source\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\n Add-BenchmarkCases { Add-BenchmarkCase FixedRetailNegatives @{} }\n Set-BenchmarkSetup {\n  param($case,$run)\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\n }\n foreach($name in 'Baseline','Candidate') {\n  Add-BenchmarkEngine $name {\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\n  }\n }\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\n Set-BenchmarkArtifacts Json, Csv, Markdown\n}\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "4E294F413079A1BEAFBC5CA43878B5F03E51FAFFFF63429DC8DE245D22BE7A32",
+          "Source": "using System;\nusing System.IO;\nusing System.Reflection;\nusing System.Runtime.Loader;\npublic sealed class VersionedCorpusSession : IDisposable {\n private sealed class Context : AssemblyLoadContext {\n  private readonly string root;\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\n }\n private readonly Context context;\n private readonly object session;\n private readonly MethodInfo decode,evaluate;\n private object output;\n public int Count { get; }\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\n  context=new Context(root);\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\n }\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\n public void Dispose() { context.Unload(); }\n}\n"
+        }
+      ]
+    },
+    "7dc89ae6ba182b0868ef6d983f9737f07316cd5c": {
+      "Archive": "datamatrix-spatial-search-7dc89ae6/final-validation.zip",
+      "QualificationSha256": "FF991C0B6A570BF9DF0AE56FA253ADB9A873F572B6E15E4871BB53D475D3FF53",
+      "CoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "bfd639a91c1603c302e6204e60bdc7f5383951ba": {
+      "Archive": "decode-allocations-bfd639a9/final-validation.zip",
+      "QualificationSha256": "5E441B3CAB9DF8DE8461FEA155B856B95649A3D21368C1A39C42D196F47A4CF3",
+      "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "8527E3B32A77D5D597C1B09205BE659C1935EE77BC592007814358B2A9309528",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Unchanged frozen complete-image requests; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement; all outcomes, allocations and CPU time retained.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "023a9382680bc029515093c1de1bc6ed50accc27": {
+      "Archive": "decode-deadlines-023a9382/final-validation.zip",
+      "QualificationSha256": "8CEEAD2BB598EFA9BBAEE254C4F651426E218DA92758992353FACD7DA2BC4CB3",
+      "CoreSha256": "679B281B3F82BFFFA2D48763271011D5A15959888075B65EC5AEFADE68006FB2",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "8527E3B32A77D5D597C1B09205BE659C1935EE77BC592007814358B2A9309528",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Unchanged frozen complete-image requests; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement; all outcomes, allocations and CPU time retained.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "6fb1250566eae8ad74fb464354c47795175f28bd": {
+      "Archive": "dpm-gray8-6fb12505/final-validation.zip",
+      "QualificationSha256": "1630F946F1380170CF4029DFC554B30B5454FC44298B1A8377728E17EC1A9AB8",
+      "CoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "8527E3B32A77D5D597C1B09205BE659C1935EE77BC592007814358B2A9309528",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Unchanged frozen complete-image requests; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement; all outcomes, allocations and CPU time retained.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "4f3d6312bd989d03d5b475b99b22327d56a53561": {
+      "Archive": "dpm-window-means-4f3d6312/final-validation.zip",
+      "QualificationSha256": "E1F0669481642966E4F2078498629E7D064B2DC0AE2EFEA7FB67018FD2213647",
+      "CoreSha256": "A85D48CA9212241A228E38865CC39B7BE6023539A449EB5F90E1ED4A04F6EBFD",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "8527E3B32A77D5D597C1B09205BE659C1935EE77BC592007814358B2A9309528",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Unchanged frozen complete-image requests; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement; all outcomes, allocations and CPU time retained.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "7c907b2c9f64b622fac80fde24d9a2f421035b39": {
+      "Archive": "ean-row-recovery-7c907b2c/final-validation.zip",
+      "QualificationSha256": "CE40D63BB00434C4A3C3EA29EB2D494F7D7CC82B7615976A1289CC76B5CC1D96",
+      "CoreSha256": "3FCE2A04CDD023B164AE723CE8FE5DE6E596F847C6C090E572FCBF8E50FA804E",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "56f04ae35ce5e98ecc596ad85dcb391e9d0fc204": {
+      "Archive": "itf-run-recovery-56f04ae3/final-validation.zip",
+      "QualificationSha256": "5A64DBBB9BFED1E3DD555C30CA3EDBBD4AD8CE037F58285B399F63278A2C4930",
+      "CoreSha256": "EAF7AFDB8F9480956F7193466D21D6E1ED96934131D9B986F928EA6904E2551F",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "34bfc0ab2216f02a6d84acbed997b3b9f9513f90": {
+      "Archive": "pdf417-cache-cost-34bfc0ab/final-validation.zip",
+      "QualificationSha256": "4684D0EEC2397FF92480F516F872314DC3F6DB9E900B0E528CEA4D27564D0258",
+      "CoreSha256": "DC005150AC82C7473BBC1A8C49BD8AAFA5F8AC0B34D011E4F975431375D3567F",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "84e37687c8fc9e46bd34047c72e56a8262db13e4": {
+      "Archive": "pdf417-negative-completion-84e37687/final-validation.zip",
+      "QualificationSha256": "BBF077CD7604E71B16012BB40D9F160F87122A995516C6D5BCA4A5021CB5246F",
+      "CoreSha256": "589FAC794DE033B0A63E970448413F5743A4481C3E270AF75158BCE8596F482E",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "d10503fa973942b31b1e79e293de71a34eba5858": {
+      "Archive": "pdf417-recovery-cost-d10503fa/final-validation.zip",
+      "QualificationSha256": "AE1D2DF6FC43485568D2D570F10CC0A47591E95A8D5864ABFE69510081B4FC16",
+      "CoreSha256": "877165EE4B2CE32A831F212E989CCCAE74D8C5FAFB89D823936C7D729F12786B",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "2855F30A2E80828F99CB92DB158E150A2E9935333834207D2D405C2270F8CE2F",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedRetailNegatives @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "6d50ae7c4ea1ff380cabbd0bbb94938eab5fff48": {
+      "Archive": "qr-finder-groups-6d50ae7c/final-validation.zip",
+      "QualificationSha256": "5B19AC9CB2DFFAB45D6A53CCDAC61C7A2DEAA3AE81923B3C3CDBA1E5B2C4F8D4",
+      "CoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "8527E3B32A77D5D597C1B09205BE659C1935EE77BC592007814358B2A9309528",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Unchanged frozen complete-image requests; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement; all outcomes, allocations and CPU time retained.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "418fc0728d2d5fa5e29247de4bc5bacfdafd5f70": {
+      "Archive": "qr-morphology-418fc072/final-validation.zip",
+      "QualificationSha256": "E3B37F24E8CC75EF0094260D87760272722128BB1ABBE0F11F6979F7F4B289F1",
+      "CoreSha256": "DB433116B2149010E88DD07FA68037D476555B1AFA2638E8F1B5BAB345C216CA",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "5145edfb766f1ced33dfc6427b65cfdbd2aa7eb3": {
+      "Archive": "retail-extrema-5145edfb/final-validation.zip",
+      "QualificationSha256": "F13D77D2A49E3357BDD5DB37CE192EEEA7D50AB58B5844EABDD1154858D4A33E",
+      "CoreSha256": "DFDDE80285429E278828398F62EFE78659647C8BF164015592A1773EB18DC609",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "5359F40D7948237FE6092FB7FA6DD0CDECA942A7006139DF8F45B4DFE814D397",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Nineteen fixed complete-image requests, including a negative, formerly unsupported MaxiCode and four-QR image; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "63677a2c11e9561677736cc001a8bf748ca28670": {
+      "Archive": "retail-fine-63677a2c/final-validation.zip",
+      "QualificationSha256": "E0BF1719B18A551E282ECCAF79F60B10BEE040E358580E04525E749F6D93C93C",
+      "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "8527E3B32A77D5D597C1B09205BE659C1935EE77BC592007814358B2A9309528",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Unchanged frozen complete-image requests; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement; all outcomes, allocations and CPU time retained.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    },
+    "f42250892ab5234464dbf2a7c926a903f9946ab5": {
+      "Archive": "scanner-margins-f4225089/final-validation.zip",
+      "QualificationSha256": "19DC0E50E0461ABB3149AC232EA6A86353D3FCA9A5BB417D8EC55E1378F4F05D",
+      "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+      "Recipes": [
+        {
+          "ArchiveEntry": "scripts/paired-decode-cost.benchmark.ps1",
+          "Sha256": "8527E3B32A77D5D597C1B09205BE659C1935EE77BC592007814358B2A9309528",
+          "Setup": "VersionedCorpusSession constructed inside per-iteration Set-BenchmarkSetup.",
+          "Recipe": "$baselineRoot = Get-BenchmarkInput BaselineRoot\r\n$candidateRoot = Get-BenchmarkInput CandidateRoot\r\n$manifest = Get-BenchmarkInput ManifestPath\r\n$imageRoot = Get-BenchmarkInput ImageRoot\r\n$outputRoot = Get-BenchmarkInput OutputRoot\r\n$iterations = [int](Get-BenchmarkInput Iterations 12)\r\n$warmup = [int](Get-BenchmarkInput Warmup 3)\r\n$repoRoot = Get-BenchmarkInput RepoRoot\r\n$expectedSource = Get-BenchmarkInput ExpectedSource\r\n$source = (git -C $repoRoot rev-parse HEAD).Trim()\r\nif ($source -ne $expectedSource -or (git -C $repoRoot status --porcelain)) { throw 'Candidate source is not frozen and clean' }\r\nAdd-Type -Path (Join-Path $PSScriptRoot 'VersionedCorpusSession.cs')\r\nNew-BenchmarkSuite 'paired-whole-image-decoding' -OutputRoot $outputRoot {\r\n Set-BenchmarkPolicy -Warmup $warmup -Iterations $iterations -Order GroupedRotated -OutlierMode None\r\n Add-BenchmarkMetadata ManifestSha256 (Get-FileHash -LiteralPath $manifest).Hash\r\n Add-BenchmarkMetadata BaselineCoreSha256 (Get-FileHash -LiteralPath (Join-Path $baselineRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateCoreSha256 (Get-FileHash -LiteralPath (Join-Path $candidateRoot 'CodeGlyphX.dll')).Hash\r\n Add-BenchmarkMetadata CandidateSource $source\r\n Add-BenchmarkMetadata CandidateWorktreeClean 'true'\r\n Add-BenchmarkMetadata Scope 'Unchanged frozen complete-image requests; separate collectible assembly contexts, identical preloaded RGBA32 and options. Reflection invocation is identical in both operations. Input loading and outcome evaluation are outside measurement; all outcomes, allocations and CPU time retained.'\r\n Add-BenchmarkCases { Add-BenchmarkCase FixedImageCorpus @{} }\r\n Set-BenchmarkSetup {\r\n  param($case,$run)\r\n  $root=if($case.Engine -eq 'Baseline'){$baselineRoot}else{$candidateRoot}\r\n  $run.Session=[VersionedCorpusSession]::new($root,$manifest,$imageRoot)\r\n }\r\n foreach($name in 'Baseline','Candidate') {\r\n  Add-BenchmarkEngine $name {\r\n   Add-BenchmarkOperation Decode { param($case,$run) $run.Session.Decode() }\r\n  }\r\n }\r\n Add-BenchmarkValidation { param($case,$run) $run.Outcomes=$run.Session.Evaluate();if($run.Outcomes.Length -ne $run.Session.Count){throw 'Some requests were not processed'} }\r\n Add-BenchmarkMetric Requests { param($case,$run) $run.Session.Count }\r\n Add-BenchmarkMetric CorrectImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Correct).Count }\r\n Add-BenchmarkMetric UnexpectedImages { param($case,$run) @($run.Outcomes | Where-Object {$_.Unexpected.Length -gt 0}).Count }\r\n Add-BenchmarkMetric InconclusiveImages { param($case,$run) @($run.Outcomes | Where-Object Status -eq Inconclusive).Count }\r\n Set-BenchmarkArtifacts Json, Csv, Markdown\r\n}\r\n\r\n"
+        }
+      ],
+      "ContextConstructors": [
+        {
+          "ArchiveEntry": "scripts/VersionedCorpusSession.cs",
+          "Sha256": "B16F37ABD23CA20D68532A6E52526F6F6AE074AC39F8F533A7EFD7C34F02F7DF",
+          "Source": "using System;\r\nusing System.IO;\r\nusing System.Reflection;\r\nusing System.Runtime.Loader;\r\npublic sealed class VersionedCorpusSession : IDisposable {\r\n private sealed class Context : AssemblyLoadContext {\r\n  private readonly string root;\r\n  public Context(string root) : base(isCollectible:true) { this.root=root; }\r\n  protected override Assembly Load(AssemblyName name) { var path=Path.Combine(root,name.Name+\".dll\");return File.Exists(path)?LoadFromAssemblyPath(path):null; }\r\n }\r\n private readonly Context context;\r\n private readonly object session;\r\n private readonly MethodInfo decode,evaluate;\r\n private object output;\r\n public int Count { get; }\r\n public VersionedCorpusSession(string root,string manifest,string imageRoot) {\r\n  context=new Context(root);\r\n  var type=context.LoadFromAssemblyPath(Path.Combine(root,\"CodeGlyphX.Benchmarks.dll\")).GetType(\"CodeGlyphX.Benchmarks.CorpusSession\",true);\r\n  session=Activator.CreateInstance(type,new object[]{manifest,imageRoot});\r\n  decode=type.GetMethod(\"Decode\");evaluate=type.GetMethod(\"Evaluate\");Count=(int)type.GetProperty(\"Count\").GetValue(session);\r\n }\r\n public void Decode() { output=decode.Invoke(session,new object[]{\"CodeGlyphX\",true}); }\r\n public Array Evaluate() { return (Array)evaluate.Invoke(session,new object[]{\"CodeGlyphX\",output}); }\r\n public void Dispose() { context.Unload(); }\r\n}\r\n"
+        }
+      ]
+    }
+  },
+  "RunnerLifecycleProof": "runner-lifetime-probe.json",
+  "CurrentLifecycle": "RetainedEngineContextsV1; one independently owned session per binary across all priming and measured calls, all outcomes retained under the runner RunId."
+}

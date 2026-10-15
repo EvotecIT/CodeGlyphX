@@ -1,0 +1,18 @@
+{
+  "BaselineCoreSha256": "BD66830503DC9FA20B1FCA959357C1FECDB55E3A989328475032E2A83CF27B6E",
+  "CandidateCoreSha256": "F2D5F74C6BB07502B52EA024DC4524603B19FBA571C8A05E28DDCBF003398866",
+  "Cases": 100,
+  "Requests": 194168,
+  "AcceptedProbes": 5848,
+  "AcceptedViewsCompared": 457,
+  "Mismatches": 0,
+  "LaterCancellationOnCachedAcceptedProbesStopped": true,
+  "PressureWindows": 256,
+  "PressureStateCells": 16976,
+  "MaximumWindows": 256,
+  "MaximumCellsPerWindow": 81,
+  "UncachedAcceptedProbesAfterCapacity": 2,
+  "LaterClockExpiryOnCachedAcceptedProbesStopped": true,
+  "ClockScopeDisposalRestoresAcceptance": true,
+  "Scope": "Actual preceding and current ring probes versus independent 33-point voting, and accepted sampled pixels. Includes both polarities, small modules, clamped edges, noise, acceptance-boundary rings, reused dimensions, off-grid origins and bounded admission. Diagnostic requests are not an independent accuracy corpus or performance benchmark."
+}

@@ -1,0 +1,27 @@
+{
+  "CoreSha256": "C88EC2BFE60E04C052D05BAAF187295FBDD6D99FF69E8FBE266F1D749E64128E",
+  "TestAssemblySha256": "626513F809E4E3771F8382330C16D2B34DAA24A3F6D774ECB677297C15B1F801",
+  "TrxSha256": "FECE0EFB20C8F45BBA5CC4E381A46FE82819B2132757E1B8B3E5777C78B57B9D",
+  "Cases": [
+    {
+      "Name": "CodeGlyphX.Tests.Pdf417GridEvidenceTests.OffsetCandidates_RetainPayloadAndMacroInBothRowOrders(compact: False, columns: 4, bottomUp: True)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Pdf417GridEvidenceTests.OffsetCandidates_RetainPayloadAndMacroInBothRowOrders(compact: True, columns: 4, bottomUp: False)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Pdf417GridEvidenceTests.OffsetCandidates_RetainPayloadAndMacroInBothRowOrders(compact: False, columns: 1, bottomUp: False)",
+      "Outcome": "Passed"
+    },
+    {
+      "Name": "CodeGlyphX.Tests.Pdf417GridEvidenceTests.OffsetCandidates_RetainPayloadAndMacroInBothRowOrders(compact: True, columns: 1, bottomUp: True)",
+      "Outcome": "Passed"
+    }
+  ],
+  "Total": 4,
+  "Failed": 0,
+  "Passed": 4,
+  "Scope": "The four current PDF417 offset/Macro/bottom-up contracts pass against the exact preceding C88EC2 core in an isolated copied test host. This is behavior-preservation proof; the preceding implementation is expected to pass. No cases aborted or skipped."
+}

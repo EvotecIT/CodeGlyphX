@@ -1,0 +1,69 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "Nine unchanged frozen negative images with an inconclusive outcome in the preceding qualification. Per-image diagnostic profiles retain every repetition and unchanged public robust scan options; not ranked timing.",
+  "Samples": [
+    {
+      "Id": "falsepositives-2/01.png",
+      "File": "falsepositives-2/01.png",
+      "Sha256": "1e99e694791f4e083bff9cb0ffe83a1b198875095d32adab1c832ebff8571cb9",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "File": "falsepositives-2/03.png",
+      "Sha256": "11d625f28e75fe56650ab85ce174e76064a56c85fdb3f833d4cc9f6f7707b207",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "File": "falsepositives-2/06.png",
+      "Sha256": "877ca6a982fd2b74cea72b5b5db5bb9cd99b640f88b858a913233546849d75ee",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "File": "falsepositives-2/07.png",
+      "Sha256": "246c88e6566fe2879711f4df51aabc35aa3ce0c9f5de866d6c72d16e87fb2dc7",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "File": "falsepositives-2/14.png",
+      "Sha256": "99e0b792b5f60108ee6ea0171fec974cf6f55cc9f994ab953b0586de78d20857",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "File": "falsepositives-2/21.png",
+      "Sha256": "7f7e8205af8fdb7e00be97d309a681efc77ec0cce96290889442b3ab93b2eec1",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "File": "falsepositives/03.png",
+      "Sha256": "bb9cada0e2cee198bc652c6a0a53650f40c2fd9e6b2ec17cfa00f86ec5ceee22",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "File": "falsepositives/15.png",
+      "Sha256": "acc5cd8ddb6c29324cbdb8fcd0dbe35cbd8847cd877399186fee566b98993270",
+      "Format": "All",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "File": "falsepositives/19.png",
+      "Sha256": "342fdb2e223f3a41144aaa1029dc3ce7dc4d278a07e7e47dc885c874b1e57c77",
+      "Format": "All",
+      "Expected": []
+    }
+  ]
+}

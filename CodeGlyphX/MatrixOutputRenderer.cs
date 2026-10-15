@@ -31,7 +31,7 @@ internal static class MatrixOutputRenderer {
         var png = MatrixRenderOptionsBuilder.BuildPng(options);
         if (format == OutputFormat.Png && outputOptions is not null) png.PngCompressionLevel = outputOptions.ResolvePngCompression(png.PngCompressionLevel);
         return format switch {
-            OutputFormat.Png => Binary(format, MatrixPngRenderer.Render(modules, png)),
+            OutputFormat.Png => RenderedOutput.FromOwnedBinary(format, MatrixPngRenderer.Render(modules, png)),
             OutputFormat.Svg => Text(format, MatrixSvgRenderer.Render(modules, MatrixRenderOptionsBuilder.BuildSvg(options))),
             OutputFormat.Svgz => Binary(format, MatrixSvgzRenderer.Render(modules, MatrixRenderOptionsBuilder.BuildSvg(options))),
             OutputFormat.Html => Text(format, RenderHtml(modules, options, outputOptions)),

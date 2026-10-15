@@ -1,0 +1,13 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "One prespecified texture negative from the unchanged nineteen-image latency workload. Exact preloaded pixels and scanner options are unchanged.",
+  "Samples": [
+    {
+      "Id": "falsepositives/19.png",
+      "File": "falsepositives/19.png",
+      "Sha256": "342fdb2e223f3a41144aaa1029dc3ce7dc4d278a07e7e47dc885c874b1e57c77",
+      "Format": "All",
+      "Expected": []
+    }
+  ]
+}

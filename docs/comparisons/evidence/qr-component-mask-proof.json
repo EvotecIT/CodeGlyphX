@@ -1,0 +1,377 @@
+{
+  "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+  "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+  "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+  "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+  "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+  "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08",
+  "Changes": "QR component foreground classification on .NET 8 and later uses hardware vectors when available, with scalar tails and fallback. Every logical pixel receives the same zero or one value for its unsigned threshold comparison and polarity. Unused pooled storage is untouched. Row-level live budget checks, four-connected traversal, row-major seed order, component filtering and resource return paths retain their previous behavior.",
+  "Scope": "One separately owned decoder context per binary is reused across three priming calls and twelve grouped rotated measurements per cache domain. The unchanged 1500 ms robust allowance applies to the same preloaded RGBA32 requests. Loading, outcome evaluation, persistence and disposal are outside operation timing. All thirty calls per workload retain per-image outcomes, including every inconclusive negative.",
+  "Limits": "These retained-context costs are a separate workload from historical fresh-context first-use costs. Lower elapsed time or allocation does not establish reliable completion, lower CPU use, throughput or capacity. Managed allocation excludes native allocations. Shared-host contention affects timing and fixed-deadline completion. Every loss remains included; finite corpus results do not establish overall superiority.",
+  "HistoricalContextCorrection": "Archived recipe inspection verifies 94 historical paired packets from nineteen source snapshots as fresh-context first-use costs: setup constructs a new decoder context for each call, so setup warmups do not warm the instances used for measurements. The inventory identifies these packets and archived recipes explicitly. Ten other historical paired packets remain unclassified. The main corpus, generation and typed decoding lanes use separate paths. Original costs and completion losses remain retained.",
+  "Packets": [
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "qr-component-mask-fabric-ccd0-result.json",
+      "OutcomesFile": "qr-component-mask-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "D46C5715CDC569C6EBB29BCCEDE7D04F029D7B827901A7615B42F987F4070B9C"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "qr-component-mask-fabric-ccd1-result.json",
+      "OutcomesFile": "qr-component-mask-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "E6B1C877B798791BE1E1C12B9D31F5A279FE65D6A4165037F2DA17BB07CD8D3B"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "qr-component-mask-texture-ccd0-result.json",
+      "OutcomesFile": "qr-component-mask-texture-ccd0-outcomes.json",
+      "OutcomesSha256": "76D477FF1477FA850335FB322E18BFE413035D1ED939DF8A2CE2BD8D92F1E360"
+    },
+    {
+      "Kind": "texture",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+      "PacketFile": "qr-component-mask-texture-ccd1-result.json",
+      "OutcomesFile": "qr-component-mask-texture-ccd1-outcomes.json",
+      "OutcomesSha256": "83CAB385EC778840D2AF865E31C610DECE616AFCF2E9007318BD0E3363FC6FE9"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd0",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "qr-component-mask-whole-ccd0-result.json",
+      "OutcomesFile": "qr-component-mask-whole-ccd0-outcomes.json",
+      "OutcomesSha256": "15FBD04CD9FD930599FCF560FB9513B760B79ADFC5D74611EE2BE933616C8B68"
+    },
+    {
+      "Kind": "whole",
+      "Domain": "ccd1",
+      "Requests": 19,
+      "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+      "PacketFile": "qr-component-mask-whole-ccd1-result.json",
+      "OutcomesFile": "qr-component-mask-whole-ccd1-outcomes.json",
+      "OutcomesSha256": "12127D99DB566903B73DB161487E82C5AEAD39130CAE03C00BCFCDCB2013E847"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd0",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "qr-component-mask-retail-positive-ccd0-result.json",
+      "OutcomesFile": "qr-component-mask-retail-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "4F5A733E7AD9B0A78E59C531C74C48E55E04A5CBB83E50C0B7BBD9D9A4251488"
+    },
+    {
+      "Kind": "retail-positive",
+      "Domain": "ccd1",
+      "Requests": 87,
+      "ManifestSha256": "771AE903475BB556AF7CC7E63883EF32D39940A4E34AC4B622F9B3085FD7A06A",
+      "PacketFile": "qr-component-mask-retail-positive-ccd1-result.json",
+      "OutcomesFile": "qr-component-mask-retail-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "9A3F44D811FFA7CCBE94109A1CFCC9385503CB0A8539441FF31CE68FC6613A5E"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd0",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "qr-component-mask-retail-negative-ccd0-result.json",
+      "OutcomesFile": "qr-component-mask-retail-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "1701E6EB150D0D9E1EEC68969B534CBAEF3BF0F2A61DA503BCE8E2B82A7F2274"
+    },
+    {
+      "Kind": "retail-negative",
+      "Domain": "ccd1",
+      "Requests": 9,
+      "ManifestSha256": "05E712EEBD060234C84385EA6EC28181702686FBD5A0A1C5ADA1AB48A287B517",
+      "PacketFile": "qr-component-mask-retail-negative-ccd1-result.json",
+      "OutcomesFile": "qr-component-mask-retail-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "0BB11DC2527F0D94DE3FCAFC82A683E2AB35ACC602C4E054B7DC6454380802E1"
+    }
+  ],
+  "Contracts": {
+    "net10": 5,
+    "net8": 5,
+    "net472": 0
+  },
+  "Equivalence": {
+    "vector256": {
+      "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+      "Vector256HardwareAccelerated": true,
+      "Vector128HardwareAccelerated": true,
+      "Cases": 57344,
+      "PixelClassificationsCompared": 72810496,
+      "Mismatches": 0,
+      "UnusedPooledTailPreserved": true,
+      "CancelledAndExpiredMasksStopBeforeWrites": true,
+      "Scope": "Actual private component foreground fill versus independent byte selection across every global byte threshold, varied adaptive maps, both polarities, vector boundary widths, solid/patterned/random images and unused pooled-array tails. Decision proof only; component bounds, areas and order are checked separately."
+    },
+    "vector128": {
+      "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+      "Vector256HardwareAccelerated": false,
+      "Vector128HardwareAccelerated": true,
+      "Cases": 57344,
+      "PixelClassificationsCompared": 72810496,
+      "Mismatches": 0,
+      "UnusedPooledTailPreserved": true,
+      "CancelledAndExpiredMasksStopBeforeWrites": true,
+      "Scope": "Actual private component foreground fill versus independent byte selection across every global byte threshold, varied adaptive maps, both polarities, vector boundary widths, solid/patterned/random images and unused pooled-array tails. Decision proof only; component bounds, areas and order are checked separately."
+    },
+    "scalar": {
+      "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+      "Vector256HardwareAccelerated": false,
+      "Vector128HardwareAccelerated": false,
+      "Cases": 57344,
+      "PixelClassificationsCompared": 72810496,
+      "Mismatches": 0,
+      "UnusedPooledTailPreserved": true,
+      "CancelledAndExpiredMasksStopBeforeWrites": true,
+      "Scope": "Actual private component foreground fill versus independent byte selection across every global byte threshold, varied adaptive maps, both polarities, vector boundary widths, solid/patterned/random images and unused pooled-array tails. Decision proof only; component bounds, areas and order are checked separately."
+    }
+  },
+  "NativeArm64": {
+    "Host": "evomini.ad.evotec.xyz",
+    "OperatingSystem": "27.0.1",
+    "Architecture": "arm64",
+    "Processor": "Apple M4",
+    "SDKVersion": "10.0.401",
+    "SelectedFrameworkVersion": "10.0.12",
+    "FrameworkRollForward": "Disable",
+    "FrameworkSelection": "dotnet exec --fx-version 10.0.12 --roll-forward Disable CodeGlyphX.Tests.dll",
+    "InstalledFrameworkVersions": [
+      "Microsoft.AspNetCore.App 8.0.23",
+      "Microsoft.AspNetCore.App 10.0.3",
+      "Microsoft.AspNetCore.App 10.0.10",
+      "Microsoft.AspNetCore.App 10.0.11",
+      "Microsoft.AspNetCore.App 10.0.12",
+      "Microsoft.NETCore.App 8.0.23",
+      "Microsoft.NETCore.App 10.0.3",
+      "Microsoft.NETCore.App 10.0.10",
+      "Microsoft.NETCore.App 10.0.11",
+      "Microsoft.NETCore.App 10.0.12"
+    ],
+    "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+    "Scope": "Exact clean prototype portable managed binaries executed by the native ARM64 .NET runtime. Independent component mask decision checks only; full prototype qualification remains separate. No performance comparison or remote source build.",
+    "InputFiles": {
+      "CodeGlyphX.Tests.dll": "40066D80F529024163F1BFAC1A6E4634F828BFC67E74EACCB0F7A537FF251190",
+      "CodeGlyphX.Tests.deps.json": "E3CDFDE3CBCB4BD98E0449F3123135443DE8B72D819F7A46772A2065DD52D251",
+      "CodeGlyphX.Tests.runtimeconfig.json": "C230A317A54DD960BCBEB5F347F52E18DC665A26F7EFDA2159FCED9A5AC7E097",
+      "CodeGlyphX.dll": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167"
+    },
+    "RemoteRoot": "/Volumes/Samsung/CodeGlyphX-qr-mask-2178357d",
+    "DecisionProof": {
+      "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+      "Vector256HardwareAccelerated": false,
+      "Vector128HardwareAccelerated": true,
+      "Cases": 57344,
+      "PixelClassificationsCompared": 72810496,
+      "Mismatches": 0,
+      "UnusedPooledTailPreserved": true,
+      "CancelledAndExpiredMasksStopBeforeWrites": true,
+      "Scope": "Actual private component foreground fill versus independent byte selection across every global byte threshold, varied adaptive maps, both polarities, vector boundary widths, solid/patterned/random images and unused pooled-array tails. Decision proof only; component bounds, areas and order are checked separately."
+    },
+    "Stdout": "{\"CoreSha256\":\"F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167\",\"Vector256HardwareAccelerated\":false,\"Vector128HardwareAccelerated\":true,\"Cases\":57344,\"PixelClassificationsCompared\":72810496,\"Mismatches\":0,\"UnusedPooledTailPreserved\":true,\"CancelledAndExpiredMasksStopBeforeWrites\":true,\"Scope\":\"Actual private component foreground fill versus independent byte selection across every global byte threshold, varied adaptive maps, both polarities, vector boundary widths, solid/patterned/random images and unused pooled-array tails. Decision proof only; component bounds, areas and order are checked separately.\"}"
+  },
+  "NativeMetadataNote": {
+    "CurrentSDKVersion": "10.0.401",
+    "CurrentSelectedFrameworkVersion": "10.0.12",
+    "CurrentFrameworkRollForward": "Disable",
+    "OriginalMaskReceiptFile": "qr-component-mask-original-native-arm64.json",
+    "OriginalMaskReceiptSha256": "A761168C10748AC7FD63729268EE1FAF453AC06BFE225A3696AB712876ECBCC2",
+    "HistoricalForegroundReceiptFile": "qr-foreground-bounds-native-arm64.json",
+    "Correction": "The Runtime field in the earlier foreground-bounds receipt and initial mask receipt contains dotnet --version output, which is the SDK version. Their selected framework runtime was not recorded. The current mask check was rerun with an explicit framework version and roll-forward disabled; the decision proof is unchanged. Original receipts remain retained."
+  },
+  "ComponentEquivalence": {
+    "vector256": {
+      "BaselineCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+      "CandidateCoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+      "ImagePolarityThresholdCases": 288,
+      "PixelClassificationsCompared": 12279996,
+      "AcceptedComponentsCompared": 133,
+      "Mismatches": 0,
+      "CancelledAndExpiredTraversalStops": true,
+      "UnboundedTraversalPreserved": true,
+      "Scope": "Actual baseline and current private component searches versus independent row-major four-connected breadth-first traversal. Includes narrow images, both polarities, global/adaptive thresholds, solid/noisy masks, corner contact, narrow bridges, bounds, areas and order. Pre-cancelled/expired calls and ordinary unbounded calls are checked. This diagnostic is separate from public corpus accuracy and timing."
+    },
+    "vector128": {
+      "BaselineCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+      "CandidateCoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+      "ImagePolarityThresholdCases": 288,
+      "PixelClassificationsCompared": 12279996,
+      "AcceptedComponentsCompared": 133,
+      "Mismatches": 0,
+      "CancelledAndExpiredTraversalStops": true,
+      "UnboundedTraversalPreserved": true,
+      "Scope": "Actual baseline and current private component searches versus independent row-major four-connected breadth-first traversal. Includes narrow images, both polarities, global/adaptive thresholds, solid/noisy masks, corner contact, narrow bridges, bounds, areas and order. Pre-cancelled/expired calls and ordinary unbounded calls are checked. This diagnostic is separate from public corpus accuracy and timing."
+    },
+    "scalar": {
+      "BaselineCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+      "CandidateCoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+      "ImagePolarityThresholdCases": 288,
+      "PixelClassificationsCompared": 12279996,
+      "AcceptedComponentsCompared": 133,
+      "Mismatches": 0,
+      "CancelledAndExpiredTraversalStops": true,
+      "UnboundedTraversalPreserved": true,
+      "Scope": "Actual baseline and current private component searches versus independent row-major four-connected breadth-first traversal. Includes narrow images, both polarities, global/adaptive thresholds, solid/noisy masks, corner contact, narrow bridges, bounds, areas and order. Pre-cancelled/expired calls and ordinary unbounded calls are checked. This diagnostic is separate from public corpus accuracy and timing."
+    }
+  },
+  "ContractNote": "The actual component mask matches independent byte selection in 57,344 cases and 72,810,496 pixel classifications per execution mode. Windows covers 256-bit vectors, 128-bit vectors and scalar fallback; the same clean binary also passes native Apple M4 ARM64 with 128-bit vectors. Checks cover every global byte threshold, varied adaptive maps, both polarities, vector boundary widths, solid/patterned/random images and unused pooled-array tails. Separately, both exact binaries match an independent four-connected reference across 288 cases, 12,279,996 pixel classifications and 133 accepted components, including bounds, areas and order. Pre-cancelled and already-expired mask calls stop before writes; row-level mid-scan polling is supported by source inspection, without a response-time guarantee.",
+  "ReviewCoverage": {
+    "Base": "31539a122c0e7a02a4a4942a3208739c0c0baad1",
+    "Head": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+    "BoundaryState": "current",
+    "UnresolvedFindings": [],
+    "Scope": "One fresh strictly read-only independent review of component foreground mask classification, unsigned threshold equality and polarity, complete vector writes and scalar tails, logical image and pooled-buffer bounds, row-level budget checks, integration with unchanged traversal and resource lifetime, platform boundary and focused contract tests. No actionable findings.",
+    "Limits": "The 21 focused tests used a precommit artifact. Exact-core three-mode mask and component-reference diagnostics are separately retained. Broader framework, public corpus, competitive timing and native ARM64 execution are separate qualification gates. Already-expired and pre-cancelled behavior is exercised; row-level mid-scan cadence is inspected statically. The prior foreground-extrema optimization is outside this review.",
+    "Recommendation": "Accept the internal implementation shape; final qualification pending at review time. No public API or production dependency added. No overall performance or merge-readiness conclusion.",
+    "ReviewAgent": "qr_component_mask_review"
+  },
+  "Experiments": [
+    {
+      "Label": "component-mask",
+      "Disposition": "Eight exploratory pairs on the same final production binary before full framework and corpus qualification. All latency, allocation and completion outcomes remain included.",
+      "Packets": [
+        {
+          "Kind": "qr",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "9C143F4CD8DBFB5F8E0ED34784A2031E088A282D8181A4EB1D35765A31665A5D",
+          "PacketFile": "qr-component-mask-exploratory-qr-ccd0-result.json",
+          "OutcomesFile": "qr-component-mask-exploratory-qr-ccd0-outcomes.json",
+          "OutcomesSha256": "4FB15D72CFEB9C88748CD615EF885E2C38D574CF29830FE8C4126DB90C091F02",
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+          "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08"
+        },
+        {
+          "Kind": "qr",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "9C143F4CD8DBFB5F8E0ED34784A2031E088A282D8181A4EB1D35765A31665A5D",
+          "PacketFile": "qr-component-mask-exploratory-qr-ccd1-result.json",
+          "OutcomesFile": "qr-component-mask-exploratory-qr-ccd1-outcomes.json",
+          "OutcomesSha256": "E89FD0FC7A027DBE759F9755D3BC62C8DA6D49F7520DDA248677FD1B846F632C",
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+          "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "qr-component-mask-exploratory-texture-ccd0-result.json",
+          "OutcomesFile": "qr-component-mask-exploratory-texture-ccd0-outcomes.json",
+          "OutcomesSha256": "63FE6FB0F2C5BAB9B7ECD06E512BD7B0212DE18BE4CD72F25C0908F36D444E74",
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+          "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08"
+        },
+        {
+          "Kind": "texture",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "2AC8C1C6786412147C31AC6B8F8EF1D009499052D37ACC797CECF2747D7053F2",
+          "PacketFile": "qr-component-mask-exploratory-texture-ccd1-result.json",
+          "OutcomesFile": "qr-component-mask-exploratory-texture-ccd1-outcomes.json",
+          "OutcomesSha256": "38AB5BBA2243575BA7F1BC040D6FA5B134CF129D7F673647EE02872B35FD1CDD",
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+          "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd0",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "qr-component-mask-exploratory-whole-ccd0-result.json",
+          "OutcomesFile": "qr-component-mask-exploratory-whole-ccd0-outcomes.json",
+          "OutcomesSha256": "0CCFEA4EBF31D4816058D456AE924B52C4B614954D0B8485267BCCCC483DCEF1",
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+          "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08"
+        },
+        {
+          "Kind": "whole",
+          "Domain": "ccd1",
+          "Requests": 19,
+          "ManifestSha256": "2404E0397D8A7CA2B3EF0DA2EBE1C5516F25565B909F5817777DC9F955769594",
+          "PacketFile": "qr-component-mask-exploratory-whole-ccd1-result.json",
+          "OutcomesFile": "qr-component-mask-exploratory-whole-ccd1-outcomes.json",
+          "OutcomesSha256": "1C5B9760946B154B46958CBD78F8F4B4B7E0E7DB6C45047245BAFD3FB5272F70",
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+          "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08"
+        },
+        {
+          "Kind": "fabric",
+          "Domain": "ccd0",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "qr-component-mask-exploratory-negative15-ccd0-result.json",
+          "OutcomesFile": "qr-component-mask-exploratory-negative15-ccd0-outcomes.json",
+          "OutcomesSha256": "20E7EECD79EB1B00EBBA1B921CA2BBF7B4BDF0BE60E58FB5B50D2EA7E723DE2E",
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+          "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08"
+        },
+        {
+          "Kind": "fabric",
+          "Domain": "ccd1",
+          "Requests": 1,
+          "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+          "PacketFile": "qr-component-mask-exploratory-negative15-ccd1-result.json",
+          "OutcomesFile": "qr-component-mask-exploratory-negative15-ccd1-outcomes.json",
+          "OutcomesSha256": "1288EAB4370AD3B900E6167F81758A0DEF5BA2A95301B07026E4369F5E5BFC84",
+          "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+          "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+          "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+          "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+          "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+          "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08"
+        }
+      ],
+      "Scope": "Three priming calls and twelve grouped rotated measurements per binary and domain; same options, fixed deadlines and per-image oracles. These exploratory calls precede the final matrix.",
+      "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+      "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+      "PreviousSource": "8178c13b0a12445b83cc014c9abc7f92bd4d8900",
+      "PreviousCoreSha256": "EE8E597D41BDAE22638675219663C524AF86CE1A5FE15A39619E151084AFD623",
+      "HostSha256": "38F4E83BAF2A5B014EE473C31593BCB8F8CF4662E9B4D7B1D6FEBD1E17311F0A",
+      "PreviousHostSha256": "E5AA312AF4AD0A533217A6A2D01371415FA6B05DD94BCCF9D7DB61164EFD4C08"
+    }
+  ]
+}

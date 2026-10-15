@@ -49,7 +49,11 @@ internal static class AztecDecoder {
 
     public static bool TryDecode(BitMatrix modules, CancellationToken cancellationToken, out string value) {
         value = string.Empty;
-        if (modules is null) return false;
+        return modules is not null && TryDecode(new BitMatrixView(modules), cancellationToken, out value);
+    }
+
+    internal static bool TryDecode(BitMatrixView modules, CancellationToken cancellationToken, out string value) {
+        value = string.Empty;
         if (cancellationToken.IsCancellationRequested) return false;
         if (!AztecDetector.TryDetect(modules, out var detectorResult)) return false;
         return TryDecode(detectorResult, out value);

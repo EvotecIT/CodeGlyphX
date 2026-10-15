@@ -1,0 +1,225 @@
+{
+  "CoreSha256": "4C1AB149FDD8B56E4C6AF7CA2BAAB0704617A8B1FA862EDA0F2A4D860BEEFFA5",
+  "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+  "Mode": "inventory",
+  "Scope": "Private non-packable friend driver; actual production normalizer determines guarded-row sampling, or actual production recovery collector supplies complete located candidates. No test-only production hook or timing claim.",
+  "Rows": [
+    {
+      "Id": "falsepositives/19.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "SampledRows": 44,
+      "GuardedRows": 2,
+      "Cutoffs": 660,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "SampledRows": 52,
+      "GuardedRows": 6,
+      "Cutoffs": 780,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "SampledRows": 36,
+      "GuardedRows": 1,
+      "Cutoffs": 540,
+      "IdenticalBinarizations": 1
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 15
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "SampledRows": 36,
+      "GuardedRows": 1,
+      "Cutoffs": 540,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 3
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 1
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 1
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 7
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 7
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 9
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 8
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 2
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 1
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 1
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 1
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 6
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 0
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 9
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "SampledRows": 28,
+      "GuardedRows": 0,
+      "Cutoffs": 420,
+      "IdenticalBinarizations": 5
+    }
+  ]
+}

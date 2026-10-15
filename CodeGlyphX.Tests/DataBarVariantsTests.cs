@@ -137,7 +137,9 @@ public sealed class DataBarVariantsTests {
     public void DefaultUnifiedImageScan_UsesPhysicalDataBar14Identity(int heightModules, SymbolFormat expectedFormat) {
         const string value = "1234567890123";
 
-        var result = SymbolScanner.Scan(RenderDataBarFrame(DataBar14Encoder.EncodeTruncated(value), heightModules));
+        // This verifies default format selection and physical identity, not coverage speed.
+        var options = new ScanOptions { TimeoutMilliseconds = TestBudget.Adjust(5000) };
+        var result = SymbolScanner.Scan(RenderDataBarFrame(DataBar14Encoder.EncodeTruncated(value), heightModules), options);
 
         Assert.Equal(ScanStatus.Success, result.Status);
         var symbol = Assert.Single(result.Symbols);

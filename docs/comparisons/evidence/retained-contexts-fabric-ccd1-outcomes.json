@@ -1,0 +1,545 @@
+{
+  "RunId": "20261013-080537-a53763a1",
+  "Calls": [
+    {
+      "Engine": "Baseline",
+      "Iteration": 0,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 1,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 10,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/10/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 11,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/11/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 2,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/2/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 3,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/3/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 4,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/4/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 5,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/5/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 6,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/6/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 7,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/7/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 8,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/8/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 9,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Baseline/Decode/matrix/9/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 0,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 1,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 10,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/10/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 11,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/11/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 2,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/2/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 3,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/3/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 4,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/4/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 5,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/5/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 6,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/6/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 7,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/7/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 8,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/8/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 9,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/FixedImageCorpus/Candidate/Decode/matrix/9/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -1,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/warmup-outcomes/Baseline--1.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -2,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/warmup-outcomes/Baseline--2.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -3,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/warmup-outcomes/Baseline--3.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -1,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/warmup-outcomes/Candidate--1.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Inconclusive",
+          "Completion": "RecognitionBudgetExceeded"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -2,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/warmup-outcomes/Candidate--2.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -3,
+      "Path": "scanner-paired-negative15-ccd1-12/20261013-080537-a53763a1/warmup-outcomes/Candidate--3.json",
+      "Outcomes": [
+        {
+          "Id": "falsepositives/15.png",
+          "Format": "All",
+          "Engine": "CodeGlyphX",
+          "Expected": [],
+          "Actual": [],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "Completed"
+        }
+      ]
+    }
+  ]
+}

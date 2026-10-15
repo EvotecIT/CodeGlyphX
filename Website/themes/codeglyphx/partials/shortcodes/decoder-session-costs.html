@@ -1,0 +1,32 @@
+    <section class="benchmark-section" aria-labelledby="{{ session_costs.anchor }}">
+        <h2 id="{{ session_costs.anchor }}">{{ session_costs.title }}</h2>
+        {{ if session_costs.historical }}<p>These measurements retain their original source <code class="comparison-source">{{ session_costs.source }}</code>.</p>{{ end }}
+        {{ if session_costs.summary }}
+        <p>{{ session_costs.summary }}</p>
+        {{ if session_costs.completion_note }}<p>{{ session_costs.completion_note }}</p>{{ end }}
+        <details class="comparison-methods"><summary>Methods and validation</summary>
+        {{ end }}
+        {{ if session_costs.contracts }}<p>{{ session_costs.contracts }}</p>{{ end }}
+        {{ if session_costs.exploration_note }}<p>{{ session_costs.exploration_note }}</p>{{ end }}
+        {{ if session_costs.completion_note && !session_costs.summary }}<p>{{ session_costs.completion_note }}</p>{{ end }}
+        {{ if session_costs.completion_notes }}<ul>{{ for note in session_costs.completion_notes }}<li>{{ note }}</li>{{ end }}</ul>{{ end }}
+        <p>{{ session_costs.changes }}</p>
+        <p>{{ session_costs.scope }}</p>
+        <p>{{ session_costs.history_note }}</p>
+        {{ if session_costs.summary }}</details>{{ end }}
+        {{ if session_costs.kernel_costs }}{{ include "shortcodes/component-kernel-cost-table" }}<h3>Complete scans</h3>{{ end }}
+        {{ cost_rows = session_costs.costs }}
+        {{ cost_caption = "Previous → current · one retained session per binary · every measured outcome included" }}
+        {{ cost_region_label = session_costs.title + ": complete scans" }}
+        {{ include "shortcodes/decoder-scan-cost-table" }}
+        {{ if session_costs.exploratory_costs }}
+        <h3>Exploratory complete scans</h3>
+        <p>Every exploratory public-scan pass remains separate from the final table, with all priming and measured outcomes retained.</p>
+        {{ cost_rows = session_costs.exploratory_costs }}
+        {{ cost_caption = "Previous → current · exploratory public scans · every measured outcome included" }}
+        {{ cost_region_label = session_costs.title + ": exploratory scans" }}
+        {{ include "shortcodes/decoder-scan-cost-table" }}
+        {{ end }}
+        <p>{{ session_costs.limits }}</p>
+        <p><a href="/comparisons/evidence/{{ session_costs.evidence }}">{{ session_costs.evidence_label }}</a> · <a href="/comparisons/evidence/retained-contexts-history.json">Historical context inventory</a>. The proof links every packet and its complete priming and measured per-image outcomes.</p>
+    </section>

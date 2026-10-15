@@ -1,0 +1,474 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "Every eligible image with a UTF-8 text oracle in upstream code128-2 and rss14-2, excluding the unchanged main corpus IDs, sorted by SHA256 of source path. Selected before decoding; all misses retained. Separate diagnostic qualification set, not an independent post-development accuracy estimate.",
+  "Samples": [
+    {
+      "Id": "code128-2/39.png",
+      "File": "code128-2/39.png",
+      "Sha256": "5f316d59806dc96ca8b4e63bf8ff4a180bb015eecf225a4fe1aebe8dd0b71080",
+      "Format": "Code128",
+      "Expected": [
+        "FGGQ6D1"
+      ]
+    },
+    {
+      "Id": "code128-2/05.png",
+      "File": "code128-2/05.png",
+      "Sha256": "a5c7ad1095d18051da11c00c3998d69d2d157a40eb17e6d82b6f609ffd919be2",
+      "Format": "Code128",
+      "Expected": [
+        "15182881"
+      ]
+    },
+    {
+      "Id": "rss14-2/3.png",
+      "File": "rss14-2/3.png",
+      "Sha256": "cb621eb0491d4e91c6d11b5fc1e2e5c36809405d185f572044cb8d0286a11cad",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "04412345678909"
+      ]
+    },
+    {
+      "Id": "rss14-2/13.png",
+      "File": "rss14-2/13.png",
+      "Sha256": "ababfc13a57a619988c361aab8ae6ec8fe0b44c5dbc47728d3e2e0c7d5cf83a6",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "code128-2/15.png",
+      "File": "code128-2/15.png",
+      "Sha256": "43cb2e522f49f88fc98ee47c04ca42f6eafa325580ee5f61a6286a3e395cf0bd",
+      "Format": "Code128",
+      "Expected": [
+        "1PEF224A4"
+      ]
+    },
+    {
+      "Id": "rss14-2/12.png",
+      "File": "rss14-2/12.png",
+      "Sha256": "109c935ceb2907bcf02497aabe2ad39f2bfc981bb79c786a5c6beb893362d125",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "code128-2/10.png",
+      "File": "code128-2/10.png",
+      "Sha256": "3e08932070ccce9d443441c67b5bb95ad6d43a89c8897106ae9e4ccf5443d45d",
+      "Format": "Code128",
+      "Expected": [
+        "CNK8181G2C"
+      ]
+    },
+    {
+      "Id": "code128-2/03.png",
+      "File": "code128-2/03.png",
+      "Sha256": "b2f4b9fd09e3dc2593a136f5ecf13be729e64d3f7a8a9c74f409a609fa3b54e1",
+      "Format": "Code128",
+      "Expected": [
+        "005-3379497200006"
+      ]
+    },
+    {
+      "Id": "code128-2/08.png",
+      "File": "code128-2/08.png",
+      "Sha256": "48141b7b425515700a90cdc005f256f926a8fe32e3d8229712be67cd2b409456",
+      "Format": "Code128",
+      "Expected": [
+        "15182881"
+      ]
+    },
+    {
+      "Id": "rss14-2/2.png",
+      "File": "rss14-2/2.png",
+      "Sha256": "37e07f72d5ae0d1abc7a018d78060bbc0423337da24c806b96c471ea5b847038",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "04412345678909"
+      ]
+    },
+    {
+      "Id": "code128-2/23.png",
+      "File": "code128-2/23.png",
+      "Sha256": "67f56478a4567328ab83988cf55b0e958eb0700ece08a18ca57f1093397015e3",
+      "Format": "Code128",
+      "Expected": [
+        "005-3354174500018"
+      ]
+    },
+    {
+      "Id": "rss14-2/15.png",
+      "File": "rss14-2/15.png",
+      "Sha256": "8eae112f5e5d88279a29acff391a339d07f6818fd652ad2d986ec76a9513e1ee",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "code128-2/34.png",
+      "File": "code128-2/34.png",
+      "Sha256": "9059dac038b5526bbd05e61d99ff9bfda021dcf6c07f70130d7cff41aca72d51",
+      "Format": "Code128",
+      "Expected": [
+        "30885909173823"
+      ]
+    },
+    {
+      "Id": "code128-2/35.png",
+      "File": "code128-2/35.png",
+      "Sha256": "34e2c22ed89ff73f8e52553ba4e79394351d3e79cb139bb5b64df7ccb7b9164c",
+      "Format": "Code128",
+      "Expected": [
+        "30885909173823"
+      ]
+    },
+    {
+      "Id": "code128-2/37.png",
+      "File": "code128-2/37.png",
+      "Sha256": "413ca64fb9c8101951e4e2a23c319e8760ee80527fd6e1302d858951d4cf89ff",
+      "Format": "Code128",
+      "Expected": [
+        "FGGQ6D1"
+      ]
+    },
+    {
+      "Id": "code128-2/40.png",
+      "File": "code128-2/40.png",
+      "Sha256": "b236e9c48e6b63f772a9df8ba8e0d0a8d97f6d7f4e3cb99fd5a5370a19fddb30",
+      "Format": "Code128",
+      "Expected": [
+        "FGGQ6D1"
+      ]
+    },
+    {
+      "Id": "code128-2/11.png",
+      "File": "code128-2/11.png",
+      "Sha256": "a3cc34225562c9acb95a0f15447b8a883e536ed31f094642008fac616f3bb61e",
+      "Format": "Code128",
+      "Expected": [
+        "CNK8181G2C"
+      ]
+    },
+    {
+      "Id": "code128-2/26.png",
+      "File": "code128-2/26.png",
+      "Sha256": "6555669007c7b69133b6d4ce9715dfa31139e899c6cb8ee4327a7e9b8d8dfc90",
+      "Format": "Code128",
+      "Expected": [
+        "31001171800000017989625355702636"
+      ]
+    },
+    {
+      "Id": "rss14-2/9.png",
+      "File": "rss14-2/9.png",
+      "Sha256": "5bc17687128479f62a0ecaa07e59900f1e15253f3bae4adb6f27d26bd4708ab9",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/4.png",
+      "File": "rss14-2/4.png",
+      "Sha256": "b2996efe471865378941a0665c085a8e25e35f17c8f5a4ad951c9dc7c36a97bf",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "04412345678909"
+      ]
+    },
+    {
+      "Id": "code128-2/36.png",
+      "File": "code128-2/36.png",
+      "Sha256": "c5be7bc931db314f8b778ab55d0ba4b711a52f442fadcf95445ac4afbb56265e",
+      "Format": "Code128",
+      "Expected": [
+        "30885909173823"
+      ]
+    },
+    {
+      "Id": "rss14-2/23.png",
+      "File": "rss14-2/23.png",
+      "Sha256": "d4fe140678d7cdd6a02558da57279db658c1e9893267c99c184eaf57853610f6",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "code128-2/09.png",
+      "File": "code128-2/09.png",
+      "Sha256": "3359ccb6b222a71ce3f01294eee4a9da7604385598c40554c0461abc79a2dd1b",
+      "Format": "Code128",
+      "Expected": [
+        "CNK8181G2C"
+      ]
+    },
+    {
+      "Id": "code128-2/14.png",
+      "File": "code128-2/14.png",
+      "Sha256": "4acbf14a9131ee8f271647fbccc3fe2598fc9db696240e7e20e0557a4b6dfa5c",
+      "Format": "Code128",
+      "Expected": [
+        "1PEF224A4"
+      ]
+    },
+    {
+      "Id": "rss14-2/1.png",
+      "File": "rss14-2/1.png",
+      "Sha256": "3b72468ea6855430ad49b7d440b8ab253c44c4f82b0a400b5ee2f02ff4364082",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "04412345678909"
+      ]
+    },
+    {
+      "Id": "code128-2/31.png",
+      "File": "code128-2/31.png",
+      "Sha256": "bb32ff93b37cf0e8a106bbdb5b2d52f6261a1f69572eb360556752790b8af229",
+      "Format": "Code128",
+      "Expected": [
+        "42094043"
+      ]
+    },
+    {
+      "Id": "code128-2/21.png",
+      "File": "code128-2/21.png",
+      "Sha256": "b76c1fcfe15a9e0bfa24ddb79d15e219fa7d87acfdad49c3904b59ecb78e2b59",
+      "Format": "Code128",
+      "Expected": [
+        "005-3354174500018"
+      ]
+    },
+    {
+      "Id": "rss14-2/6.png",
+      "File": "rss14-2/6.png",
+      "Sha256": "5cd058586cec3f1deaf202a6d830002e96d41eacbaaee992781a827dd5fa3094",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/5.png",
+      "File": "rss14-2/5.png",
+      "Sha256": "4c363bafdd5d6986bf823a5a9d19dc2f1f27abd7a2a29e84f47de47c21bff47e",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/8.png",
+      "File": "rss14-2/8.png",
+      "Sha256": "8f5d55cea44abc7f105f7f33c1c9b8147c25b8dfd3041a3e6f76ea434890964c",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "code128-2/32.png",
+      "File": "code128-2/32.png",
+      "Sha256": "515cac4a8c1ee0dafb6a9030d4ca2bd1991eb91bf4c7f8c2f697ee781760ddd0",
+      "Format": "Code128",
+      "Expected": [
+        "42094043"
+      ]
+    },
+    {
+      "Id": "code128-2/07.png",
+      "File": "code128-2/07.png",
+      "Sha256": "bbb57a909f1b47d20630797aa539822bc8e3bf9b78c85580a6a4fa99d76431a6",
+      "Format": "Code128",
+      "Expected": [
+        "15182881"
+      ]
+    },
+    {
+      "Id": "code128-2/20.png",
+      "File": "code128-2/20.png",
+      "Sha256": "e841bc8844f9f70607a853796aad22df41ff6df9cb67a8b0cc932af941252964",
+      "Format": "Code128",
+      "Expected": [
+        "FW727"
+      ]
+    },
+    {
+      "Id": "code128-2/16.png",
+      "File": "code128-2/16.png",
+      "Sha256": "0da2cd80223842b45249e2332d86383d6f8de6e198cca224db3ce1fe3cb589ff",
+      "Format": "Code128",
+      "Expected": [
+        "1PEF224A4"
+      ]
+    },
+    {
+      "Id": "code128-2/01.png",
+      "File": "code128-2/01.png",
+      "Sha256": "d7045425d071773fd8018bd6733fa67b53a5ff9cef1d6c92a86af56a48683359",
+      "Format": "Code128",
+      "Expected": [
+        "005-3379497200006"
+      ]
+    },
+    {
+      "Id": "rss14-2/21.png",
+      "File": "rss14-2/21.png",
+      "Sha256": "7af229ea627929d00f3905e718c72e1772802978ff8bbfbfe7ae419bc482a04e",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "code128-2/29.png",
+      "File": "code128-2/29.png",
+      "Sha256": "cf8c5f569f60a41a21cb13080b60283c583e3d92b1f5b967e22ccc16b1c4ee28",
+      "Format": "Code128",
+      "Expected": [
+        "42094043"
+      ]
+    },
+    {
+      "Id": "code128-2/33.png",
+      "File": "code128-2/33.png",
+      "Sha256": "3c07086c91a4bab35c8d124cbcaadb3aaeee5801960b67c26040b3d47aa4c392",
+      "Format": "Code128",
+      "Expected": [
+        "30885909173823"
+      ]
+    },
+    {
+      "Id": "code128-2/06.png",
+      "File": "code128-2/06.png",
+      "Sha256": "305dcbf9f747cf1b5eea14daae266e36de3aaace2849aefdf3c16f0dff01f5a6",
+      "Format": "Code128",
+      "Expected": [
+        "15182881"
+      ]
+    },
+    {
+      "Id": "code128-2/13.png",
+      "File": "code128-2/13.png",
+      "Sha256": "acb78c6b6f5164e6dfc9b0d0934e3260d88d0f2a78760dbd0afd2f8b49ae89ed",
+      "Format": "Code128",
+      "Expected": [
+        "1PEF224A4"
+      ]
+    },
+    {
+      "Id": "rss14-2/17.png",
+      "File": "rss14-2/17.png",
+      "Sha256": "406fd645d0f652f162443960866e54a5c6c9b82d4016c6441e45e7dec06a03c4",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/14.png",
+      "File": "rss14-2/14.png",
+      "Sha256": "a3007a2cb5bf52c06938ca306dae982d3677607d2fdbc46a15179bc22b589cba",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "code128-2/22.png",
+      "File": "code128-2/22.png",
+      "Sha256": "82dfc46458a3febf45a443321e921a89aa60b4f261395e0badf12adba6775e2e",
+      "Format": "Code128",
+      "Expected": [
+        "005-3354174500018"
+      ]
+    },
+    {
+      "Id": "code128-2/25.png",
+      "File": "code128-2/25.png",
+      "Sha256": "557bc49746b2c09bcd9948659a991fa63626b23847b53abdf0c81102f38f9117",
+      "Format": "Code128",
+      "Expected": [
+        "31001171800000017989625355702636"
+      ]
+    },
+    {
+      "Id": "code128-2/24.png",
+      "File": "code128-2/24.png",
+      "Sha256": "6e153d303e6029633172cfbe491ce7068d73c1362b1a94e95f778f169a16c588",
+      "Format": "Code128",
+      "Expected": [
+        "005-3354174500018"
+      ]
+    },
+    {
+      "Id": "code128-2/38.png",
+      "File": "code128-2/38.png",
+      "Sha256": "8747ba508818edc6417e938624d0f15e62e32c0f328d6f94a46db4977d7ed237",
+      "Format": "Code128",
+      "Expected": [
+        "FGGQ6D1"
+      ]
+    },
+    {
+      "Id": "rss14-2/10.png",
+      "File": "rss14-2/10.png",
+      "Sha256": "746e082f457c59de6e3787f3d7d573e33136212ca2eb030b53f8c2f5b367661e",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "rss14-2/20.png",
+      "File": "rss14-2/20.png",
+      "Sha256": "0b11e6ead8bb3578c68aa5a4244e7ba403645d9a75a1f351f2aac1c9a0bf7d50",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "00012345678905"
+      ]
+    },
+    {
+      "Id": "rss14-2/16.png",
+      "File": "rss14-2/16.png",
+      "Sha256": "75ad2e8da1a7dbeab1f69ca3531022ddea06c955300b55becd46af16856f752b",
+      "Format": "Gs1DataBarOmnidirectional",
+      "Expected": [
+        "02001234567893"
+      ]
+    },
+    {
+      "Id": "code128-2/27.png",
+      "File": "code128-2/27.png",
+      "Sha256": "961a2a41ef53b28e7926c9c658a49bc2ac81ffa31772dd77477bef748d3859b6",
+      "Format": "Code128",
+      "Expected": [
+        "31001171800000017989625355702636"
+      ]
+    },
+    {
+      "Id": "code128-2/12.png",
+      "File": "code128-2/12.png",
+      "Sha256": "0cda56a5c752569a78a230c563e1f0cb8aa65a40ceefe062897ec66ceb60e200",
+      "Format": "Code128",
+      "Expected": [
+        "CNK8181G2C"
+      ]
+    },
+    {
+      "Id": "code128-2/17.png",
+      "File": "code128-2/17.png",
+      "Sha256": "ecb082137e54fb878895003cb542ac035b0c078f4fb6273eea03066815cf3156",
+      "Format": "Code128",
+      "Expected": [
+        "FW727"
+      ]
+    }
+  ]
+}

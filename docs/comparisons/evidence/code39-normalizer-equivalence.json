@@ -1,0 +1,8 @@
+{
+  "Cases": 205040,
+  "Accepted": 25219,
+  "Mismatches": 0,
+  "PreviousCoreSha256": "412EA19032005011D1510B05C8BF83FABA05CA644E03CEA9D5437FF3C397D6F4",
+  "CoreSha256": "D0FD649D7BA720C7A58941C12A32DBB04D61DDE99B6F265D6EE4AB7A1FE3EF18",
+  "Scope": "Actual previous/current private normalizers through isolated assembly contexts. Return value, pitch and successful pattern match in both directions. All 84 three-wide patterns at ten pitches and three ratios, plus 100000 seeded variable-length run lists. Failed output arrays are ignored by the production caller."
+}

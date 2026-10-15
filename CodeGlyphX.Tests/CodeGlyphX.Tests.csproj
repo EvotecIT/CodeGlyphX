@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeGlyphX\CodeGlyphX.csproj" />
+    <Compile Include="../CodeGlyphX.Benchmarks/Corpus/CorpusPresentation.cs" Link="Comparison/CorpusPresentation.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
@@ -29,7 +30,33 @@
     <Compile Include="GlobalStateCollection.cs" />
     <Compile Include="TestBudget.cs" />
     <Compile Include="FractionalBarcodeSamplingTests.cs" />
+    <Compile Include="Code93RunLocalizationTests.cs" />
+    <Compile Include="Code39RunLocalizationTests.cs" />
+    <Compile Include="ItfRunLocalizationTests.cs" />
+    <Compile Include="CodabarRunLocalizationTests.cs" />
     <Compile Include="BarcodeGrayBoundaryTests.cs" />
+    <Compile Include="BarcodeModuleOwnershipTests.cs" />
+    <Compile Include="ModuleRunWorkspaceTests.cs" />
+    <Compile Include="DecodeBudgetSnapshotTests.cs" />
+    <Compile Include="ImageComponentCoordinateTests.cs" />
+    <Compile Include="DirectPartMarkWindowTests.cs" />
+    <Compile Include="DirectPartMarkWorkspaceTests.cs" />
+    <Compile Include="BinaryMaskMorphologyTests.cs" />
+    <Compile Include="IndustrialTileBoundaryTests.cs" />
+    <Compile Include="RetailIlluminationTests.cs" />
+    <Compile Include="RetailParityRecoveryTests.cs" />
+    <Compile Include="RetailRowCoverageTests.cs" />
+    <Compile Include="RetailFineContrastTests.cs" />
+    <Compile Include="DataBar14RunLocalizationTests.cs" />
+    <Compile Include="DataBar14CharacterRecoveryTests.cs" />
+    <Compile Include="ScanlineThresholdTests.cs" />
+    <Compile Include="DataBarModuleRunTests.cs" />
+    <Compile Include="DataBar14WorkspaceTests.cs" />
+    <Compile Include="DataBarExpandedWorkspaceTests.cs" />
+    <Compile Include="Code128ReaderInitializationTests.cs" />
+    <Compile Include="Code128PhotographRecoveryTests.cs" />
+    <Compile Include="DataBarSeparatorGeometryTests.cs" />
+    <Compile Include="PngOutputBufferTests.cs" />
     <Compile Include="BarcodePixelSamplingTests.cs" />
     <Compile Include="QrImageDecodeParityData.cs" />
     <Compile Include="QrImageDecodeParitySharedTests.cs" />
@@ -40,17 +67,40 @@
     <Compile Include="IndependentPngPixelTests.cs" />
     <Compile Include="PngMalformedInputTests.cs" />
     <Compile Include="QrDecodeInfoTests.cs" />
+    <Compile Include="QrCodewordCancellationTests.cs" />
+    <Compile Include="QrFormatVariantsTests.cs" />
+    <Compile Include="QrFormatDistanceTests.cs" />
     <Compile Include="QrApiTests.cs" />
     <Compile Include="EncodedSymbolContractTests.cs" />
     <Compile Include="ScanSelectionRegressionTests.cs" />
     <Compile Include="EncodingContractRegressionTests.cs" />
     <Compile Include="Pdf417CharsetFramingTests.cs" />
     <Compile Include="Pdf417FractionalSamplingTests.cs" />
+    <Compile Include="Pdf417ScanlineImageTests.cs" />
+    <Compile Include="Pdf417GridEvidenceTests.cs" />
+    <Compile Include="Pdf417ModuleGridTests.cs" />
+    <Compile Include="Pdf417ErasureImageTests.cs" />
+    <Compile Include="Pdf417RightFramingTests.cs" />
+    <Compile Include="Pdf417ErrorCorrectionTests.cs" />
+    <Compile Include="PhysicalRowDecodingTests.cs" />
     <Compile Include="Pdf417MacroRangeTests.cs" />
     <Compile Include="RenderingContractRegressionTests.cs" />
     <Compile Include="ScannerCompletionContractTests.cs" />
+    <Compile Include="MaxiCodeImageTests.cs" />
+    <Compile Include="CorpusPresentationTests.cs" />
     <Compile Include="ScannerDuplicateContractTests.cs" />
     <Compile Include="DataMatrixValidationTests.cs" />
+    <Compile Include="DataMatrixOrientationTests.cs" />
+    <Compile Include="DataMatrixImageBoundsTests.cs" />
+    <Compile Include="DataMatrixGray8Tests.cs" />
+    <Compile Include="DirectPartMarkTests.cs" />
+    <Compile Include="DataMatrixPerspectiveTests.cs" />
+    <Compile Include="DataBarExpandedImageScannerTests.cs" />
+    <Compile Include="DataBarStackedImageScannerTests.cs" />
+    <Compile Include="AztecReaderInitializationTests.cs" />
+    <Compile Include="AztecPixelSamplingTests.cs" />
+    <Compile Include="MicroQrValidationTests.cs" />
+    <Compile Include="BitMatrixTransformTests.cs" />
     <Compile Include="GenericPngCompressionTests.cs" />
     <Compile Include="QrProceduralArtTests.cs" />
     <Compile Include="QrPatternWorkflowTests.cs" />
@@ -58,6 +108,7 @@
     <Compile Include="QrSceneExportTests.cs" />
     <Compile Include="SvgQrRendererTests.cs" />
     <Compile Include="ImageScannerSerialCollection.cs" />
+    <Compile Include="RetailDigitFitTests.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
@@ -79,9 +130,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
+    <EmbeddedResource Include="Fixtures/Aztec/*.png" />
+    <EmbeddedResource Include="Fixtures/MicroQr/*.png" />
+    <EmbeddedResource Include="Fixtures/MaxiCode/*.png" />
+    <EmbeddedResource Include="Fixtures/Pdf417/*.png" />
     <EmbeddedResource Include="Fixtures/Linear/excel-asset-register.png" />
     <EmbeddedResource Include="Fixtures/Linear/native-svg-asset.png" />
     <EmbeddedResource Include="Fixtures/Linear/word-asset-page.png" />
+    <EmbeddedResource Include="Fixtures/Linear/zxing-*.png" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.webp" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.rgba" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.webp" />

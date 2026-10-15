@@ -1,0 +1,372 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "OriginalFrozenManifestSha256": "3714951ed16a82c1bd9b7a94543590dd609312ef3a39efdd462f6c7f5be7dd28",
+  "ManifestSha256": "cb95ce443561b90e4dbd9463175737401d2539b839eedc570fea5cc3e2e85071",
+  "AllGitBlobHashesVerified": true,
+  "Samples": [
+    {
+      "Id": "code128-2/39.png",
+      "ImageGitBlob": "d5eb0a9d4e6695b4787c3d69523e1e13b1814cfe",
+      "OracleGitBlob": "2aa6bceccb8d01e4d9508a792f757e00eab47d87",
+      "OracleSha256": "e4de8355456dea2c33e10cb32f288f7c205a096fa860c07bf5436f9dcf816564",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/39.txt"
+    },
+    {
+      "Id": "code128-2/05.png",
+      "ImageGitBlob": "06cefb6deaa48951ad405c73112b6490233cc0be",
+      "OracleGitBlob": "f8406b6331001f26ec8b4b20bd12501940d067cd",
+      "OracleSha256": "0060ad7d200a2f1ffcf8c5f72e662f684072c4d51d0562a717beac6779138b69",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/05.txt"
+    },
+    {
+      "Id": "rss14-2/3.png",
+      "ImageGitBlob": "badf6d5ced170f2d02a3fdf373fb8eb5908676f9",
+      "OracleGitBlob": "da8b2e720b45c117b40e89e1f8a96e25d052d02b",
+      "OracleSha256": "60d6d962a6325ab04bd09398344569b4eb0efa43c525a2f7cf38ed8ac7e37daa",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/3.txt"
+    },
+    {
+      "Id": "rss14-2/13.png",
+      "ImageGitBlob": "c2306f391584b5114c2b040b8fb2e99d00a954bd",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/13.txt"
+    },
+    {
+      "Id": "code128-2/15.png",
+      "ImageGitBlob": "21777a1c4cfdcbab7def075238466b928b9679d9",
+      "OracleGitBlob": "3e4497ec04f3bbdbecd9043faedc294f3cda859b",
+      "OracleSha256": "c65abfe1520a2e2f7c31d8a31dfc7ae374ec4c2755be0953c8af817187422de2",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/15.txt"
+    },
+    {
+      "Id": "rss14-2/12.png",
+      "ImageGitBlob": "b0070398ff26031447b1aad5bf6040f2665354bf",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/12.txt"
+    },
+    {
+      "Id": "code128-2/10.png",
+      "ImageGitBlob": "df6b8dbeeacbbbb8f65c75d51f4562bb812c658b",
+      "OracleGitBlob": "545c9613430ff57d8cd86072180ce8adcaa53eb0",
+      "OracleSha256": "af86e0fed576a6e07df67a17ba75e7a012c91338a50ae70dd006ca4045faec96",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/10.txt"
+    },
+    {
+      "Id": "code128-2/03.png",
+      "ImageGitBlob": "c1c03728ba3dc20d0404931447506e42be2c0066",
+      "OracleGitBlob": "a34fa650c85ae1d7756407abeb8d43250757237b",
+      "OracleSha256": "732cb661844f7c7dc0e6b6627969ff04d12a5d0f6205bb5848b6ab0944f0533d",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/03.txt"
+    },
+    {
+      "Id": "code128-2/08.png",
+      "ImageGitBlob": "24a548550ece67005d206f42e19b25ce9f075f68",
+      "OracleGitBlob": "f8406b6331001f26ec8b4b20bd12501940d067cd",
+      "OracleSha256": "0060ad7d200a2f1ffcf8c5f72e662f684072c4d51d0562a717beac6779138b69",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/08.txt"
+    },
+    {
+      "Id": "rss14-2/2.png",
+      "ImageGitBlob": "7b348da11d6c65e1c0fec922a2ab3628c17a5738",
+      "OracleGitBlob": "da8b2e720b45c117b40e89e1f8a96e25d052d02b",
+      "OracleSha256": "60d6d962a6325ab04bd09398344569b4eb0efa43c525a2f7cf38ed8ac7e37daa",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/2.txt"
+    },
+    {
+      "Id": "code128-2/23.png",
+      "ImageGitBlob": "b2cabfd96cda073fa6225e0c8aeb951f826e398e",
+      "OracleGitBlob": "f093728f27a9c25d9673246548b518ec572dd0ba",
+      "OracleSha256": "8300072e775965b3caf2837e5da73705276281cdf31ef62dca60a850ae1743d5",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/23.txt"
+    },
+    {
+      "Id": "rss14-2/15.png",
+      "ImageGitBlob": "a0f8e64dcfbd4735eab282136c41cb6530e3b81b",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/15.txt"
+    },
+    {
+      "Id": "code128-2/34.png",
+      "ImageGitBlob": "a957a36971baf264bfd87eaf0c3b398ed2027e7a",
+      "OracleGitBlob": "1e4f8e381eebcc15d71c1ada0e22252d962fe96a",
+      "OracleSha256": "b48e47c29ee2edc73074a0ecf307a5348bbe6353d559326ed01f744a5cba662a",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/34.txt"
+    },
+    {
+      "Id": "code128-2/35.png",
+      "ImageGitBlob": "47f00f9539d35e6c959c5180091a88cd21b139ad",
+      "OracleGitBlob": "1e4f8e381eebcc15d71c1ada0e22252d962fe96a",
+      "OracleSha256": "b48e47c29ee2edc73074a0ecf307a5348bbe6353d559326ed01f744a5cba662a",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/35.txt"
+    },
+    {
+      "Id": "code128-2/37.png",
+      "ImageGitBlob": "005c68d5951564f4f28eb91916626eee225e5a86",
+      "OracleGitBlob": "2aa6bceccb8d01e4d9508a792f757e00eab47d87",
+      "OracleSha256": "e4de8355456dea2c33e10cb32f288f7c205a096fa860c07bf5436f9dcf816564",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/37.txt"
+    },
+    {
+      "Id": "code128-2/40.png",
+      "ImageGitBlob": "9f91cc8f8fcdc20e347a1e82a698f08bf2a86422",
+      "OracleGitBlob": "2aa6bceccb8d01e4d9508a792f757e00eab47d87",
+      "OracleSha256": "e4de8355456dea2c33e10cb32f288f7c205a096fa860c07bf5436f9dcf816564",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/40.txt"
+    },
+    {
+      "Id": "code128-2/11.png",
+      "ImageGitBlob": "b604e462987ee6b4c0ec8ce807c52e7c479b64f8",
+      "OracleGitBlob": "545c9613430ff57d8cd86072180ce8adcaa53eb0",
+      "OracleSha256": "af86e0fed576a6e07df67a17ba75e7a012c91338a50ae70dd006ca4045faec96",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/11.txt"
+    },
+    {
+      "Id": "code128-2/26.png",
+      "ImageGitBlob": "a1d074e490738c8838f1ce48d1a63fad110bf659",
+      "OracleGitBlob": "ab6367f28b011a4d6cf86bdc247eba4ccd32821c",
+      "OracleSha256": "ad6e4d00cf48b093848954a25d8c28b6294eb0e13a630dd79da4c53e6b5563b2",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/26.txt"
+    },
+    {
+      "Id": "rss14-2/9.png",
+      "ImageGitBlob": "7f169ca1b4e2f4b60c3369f63dbd423637068d38",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/9.txt"
+    },
+    {
+      "Id": "rss14-2/4.png",
+      "ImageGitBlob": "47028a6a2fc16323231919faef11007d39d6fe0e",
+      "OracleGitBlob": "da8b2e720b45c117b40e89e1f8a96e25d052d02b",
+      "OracleSha256": "60d6d962a6325ab04bd09398344569b4eb0efa43c525a2f7cf38ed8ac7e37daa",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/4.txt"
+    },
+    {
+      "Id": "code128-2/36.png",
+      "ImageGitBlob": "95841e8219da8eff107568b73e833e3d802eccc9",
+      "OracleGitBlob": "1e4f8e381eebcc15d71c1ada0e22252d962fe96a",
+      "OracleSha256": "b48e47c29ee2edc73074a0ecf307a5348bbe6353d559326ed01f744a5cba662a",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/36.txt"
+    },
+    {
+      "Id": "rss14-2/23.png",
+      "ImageGitBlob": "4dbfebaf2f04581dac37d97b26ca767bee27d9f7",
+      "OracleGitBlob": "eabb743b0e92ff013df9b5c6b13222b7f6656b87",
+      "OracleSha256": "884fe55f923e3696f77cf185d9a51ffb3035bf9ac61629ea924a4a42ed7d415a",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/23.txt"
+    },
+    {
+      "Id": "code128-2/09.png",
+      "ImageGitBlob": "e987d6871689bae9efd87ef8b3c949ab32fc13a0",
+      "OracleGitBlob": "545c9613430ff57d8cd86072180ce8adcaa53eb0",
+      "OracleSha256": "af86e0fed576a6e07df67a17ba75e7a012c91338a50ae70dd006ca4045faec96",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/09.txt"
+    },
+    {
+      "Id": "code128-2/14.png",
+      "ImageGitBlob": "93e597ecde914b39197bcb46ffbeec85cd264ede",
+      "OracleGitBlob": "3e4497ec04f3bbdbecd9043faedc294f3cda859b",
+      "OracleSha256": "c65abfe1520a2e2f7c31d8a31dfc7ae374ec4c2755be0953c8af817187422de2",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/14.txt"
+    },
+    {
+      "Id": "rss14-2/1.png",
+      "ImageGitBlob": "d2033e8a50d8dfcac0b29d865c4ff88e8681df4f",
+      "OracleGitBlob": "da8b2e720b45c117b40e89e1f8a96e25d052d02b",
+      "OracleSha256": "60d6d962a6325ab04bd09398344569b4eb0efa43c525a2f7cf38ed8ac7e37daa",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/1.txt"
+    },
+    {
+      "Id": "code128-2/31.png",
+      "ImageGitBlob": "ce6a050cd6653283baf3d4296d1b730543e4a123",
+      "OracleGitBlob": "e7d384fe896e6133eac38480ee5a636b480aeca1",
+      "OracleSha256": "5494d11fa102c985f24e9236f07a3fdd45a14d960a35cf4c51f4065a153269d1",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/31.txt"
+    },
+    {
+      "Id": "code128-2/21.png",
+      "ImageGitBlob": "626bc5f3af4ced5e8e0d912081e07d5356462d18",
+      "OracleGitBlob": "f093728f27a9c25d9673246548b518ec572dd0ba",
+      "OracleSha256": "8300072e775965b3caf2837e5da73705276281cdf31ef62dca60a850ae1743d5",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/21.txt"
+    },
+    {
+      "Id": "rss14-2/6.png",
+      "ImageGitBlob": "70051bd3dbbceb258922a760130f37539d127d76",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/6.txt"
+    },
+    {
+      "Id": "rss14-2/5.png",
+      "ImageGitBlob": "eb5287adf8b60d96e7b6be4ddc81e490a38cc71a",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/5.txt"
+    },
+    {
+      "Id": "rss14-2/8.png",
+      "ImageGitBlob": "0412c1c0ce83e5f96384d90d6ac14b2627358328",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/8.txt"
+    },
+    {
+      "Id": "code128-2/32.png",
+      "ImageGitBlob": "1966591debc8f754158dda639a8100f2f763b878",
+      "OracleGitBlob": "e7d384fe896e6133eac38480ee5a636b480aeca1",
+      "OracleSha256": "5494d11fa102c985f24e9236f07a3fdd45a14d960a35cf4c51f4065a153269d1",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/32.txt"
+    },
+    {
+      "Id": "code128-2/07.png",
+      "ImageGitBlob": "1a2652c9535c43a3bcb18b718ff70031eeffa9c1",
+      "OracleGitBlob": "f8406b6331001f26ec8b4b20bd12501940d067cd",
+      "OracleSha256": "0060ad7d200a2f1ffcf8c5f72e662f684072c4d51d0562a717beac6779138b69",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/07.txt"
+    },
+    {
+      "Id": "code128-2/20.png",
+      "ImageGitBlob": "e75f3bb6099ab453e82e265c01a6e72b855aea82",
+      "OracleGitBlob": "75824d9c6e17490f42e7f48defce955708d05c64",
+      "OracleSha256": "89145c9130d1cb4c3c668d780a3cc34c7c4cb45d0290237c248164d0dc0b70e6",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/20.txt"
+    },
+    {
+      "Id": "code128-2/16.png",
+      "ImageGitBlob": "93d079046e32fdab142fadcbadc06b1f9a6db23a",
+      "OracleGitBlob": "3e4497ec04f3bbdbecd9043faedc294f3cda859b",
+      "OracleSha256": "c65abfe1520a2e2f7c31d8a31dfc7ae374ec4c2755be0953c8af817187422de2",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/16.txt"
+    },
+    {
+      "Id": "code128-2/01.png",
+      "ImageGitBlob": "0a1795836c39b97239154ac09a5630bebc2f2c32",
+      "OracleGitBlob": "a34fa650c85ae1d7756407abeb8d43250757237b",
+      "OracleSha256": "732cb661844f7c7dc0e6b6627969ff04d12a5d0f6205bb5848b6ab0944f0533d",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/01.txt"
+    },
+    {
+      "Id": "rss14-2/21.png",
+      "ImageGitBlob": "afbb277d6ae3db30ca08acc6167415b1a2794481",
+      "OracleGitBlob": "eabb743b0e92ff013df9b5c6b13222b7f6656b87",
+      "OracleSha256": "884fe55f923e3696f77cf185d9a51ffb3035bf9ac61629ea924a4a42ed7d415a",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/21.txt"
+    },
+    {
+      "Id": "code128-2/29.png",
+      "ImageGitBlob": "32a539147b11286955f9de5055df1bcd573f0079",
+      "OracleGitBlob": "e7d384fe896e6133eac38480ee5a636b480aeca1",
+      "OracleSha256": "5494d11fa102c985f24e9236f07a3fdd45a14d960a35cf4c51f4065a153269d1",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/29.txt"
+    },
+    {
+      "Id": "code128-2/33.png",
+      "ImageGitBlob": "58693137447c2f5e249f4733bf28918c1f805caf",
+      "OracleGitBlob": "1e4f8e381eebcc15d71c1ada0e22252d962fe96a",
+      "OracleSha256": "b48e47c29ee2edc73074a0ecf307a5348bbe6353d559326ed01f744a5cba662a",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/33.txt"
+    },
+    {
+      "Id": "code128-2/06.png",
+      "ImageGitBlob": "54728e38c40cc4046b13554f3bcffb34475035e6",
+      "OracleGitBlob": "f8406b6331001f26ec8b4b20bd12501940d067cd",
+      "OracleSha256": "0060ad7d200a2f1ffcf8c5f72e662f684072c4d51d0562a717beac6779138b69",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/06.txt"
+    },
+    {
+      "Id": "code128-2/13.png",
+      "ImageGitBlob": "fb97e47c79df4a8a9741e2145a0fb3652b7a3873",
+      "OracleGitBlob": "3e4497ec04f3bbdbecd9043faedc294f3cda859b",
+      "OracleSha256": "c65abfe1520a2e2f7c31d8a31dfc7ae374ec4c2755be0953c8af817187422de2",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/13.txt"
+    },
+    {
+      "Id": "rss14-2/17.png",
+      "ImageGitBlob": "b2e7e8fbd6494c479c837c2b238c2b0530094880",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/17.txt"
+    },
+    {
+      "Id": "rss14-2/14.png",
+      "ImageGitBlob": "4a9dea67a503fa07bb5c48ff452627a26bead66b",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/14.txt"
+    },
+    {
+      "Id": "code128-2/22.png",
+      "ImageGitBlob": "81666eab16df1427d1089d8b4873f1a62b57a58b",
+      "OracleGitBlob": "f093728f27a9c25d9673246548b518ec572dd0ba",
+      "OracleSha256": "8300072e775965b3caf2837e5da73705276281cdf31ef62dca60a850ae1743d5",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/22.txt"
+    },
+    {
+      "Id": "code128-2/25.png",
+      "ImageGitBlob": "d49bc6f18ceb1d28c7eec75a0136f2277b73a528",
+      "OracleGitBlob": "ab6367f28b011a4d6cf86bdc247eba4ccd32821c",
+      "OracleSha256": "ad6e4d00cf48b093848954a25d8c28b6294eb0e13a630dd79da4c53e6b5563b2",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/25.txt"
+    },
+    {
+      "Id": "code128-2/24.png",
+      "ImageGitBlob": "2cf6513577532e1a81069d52789effeb5ba212c9",
+      "OracleGitBlob": "f093728f27a9c25d9673246548b518ec572dd0ba",
+      "OracleSha256": "8300072e775965b3caf2837e5da73705276281cdf31ef62dca60a850ae1743d5",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/24.txt"
+    },
+    {
+      "Id": "code128-2/38.png",
+      "ImageGitBlob": "13011ccad08e465d7ef9ee92976371fa1d47bf2a",
+      "OracleGitBlob": "2aa6bceccb8d01e4d9508a792f757e00eab47d87",
+      "OracleSha256": "e4de8355456dea2c33e10cb32f288f7c205a096fa860c07bf5436f9dcf816564",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/38.txt"
+    },
+    {
+      "Id": "rss14-2/10.png",
+      "ImageGitBlob": "a2a7b0312f3708264926a515862b28552a37b5fe",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/10.txt"
+    },
+    {
+      "Id": "rss14-2/20.png",
+      "ImageGitBlob": "6075a07d7fff3466eae669353df9b143f794c456",
+      "OracleGitBlob": "eabb743b0e92ff013df9b5c6b13222b7f6656b87",
+      "OracleSha256": "884fe55f923e3696f77cf185d9a51ffb3035bf9ac61629ea924a4a42ed7d415a",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/20.txt"
+    },
+    {
+      "Id": "rss14-2/16.png",
+      "ImageGitBlob": "e919782c68601622830aff50973d19067462021a",
+      "OracleGitBlob": "adb4ff344592ec3f795e9c5c486e721cae8b0542",
+      "OracleSha256": "ea3059e21ed26e11a6fe902acc434ceea213d5fd3117ee02c46586b1540c18cf",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/rss14-2/16.txt"
+    },
+    {
+      "Id": "code128-2/27.png",
+      "ImageGitBlob": "0885124d48e61061c22668c1efeafa2bd62797aa",
+      "OracleGitBlob": "ab6367f28b011a4d6cf86bdc247eba4ccd32821c",
+      "OracleSha256": "ad6e4d00cf48b093848954a25d8c28b6294eb0e13a630dd79da4c53e6b5563b2",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/27.txt"
+    },
+    {
+      "Id": "code128-2/12.png",
+      "ImageGitBlob": "5ea515d0e25c4fbc13d7a0a7d6b20697abda1136",
+      "OracleGitBlob": "545c9613430ff57d8cd86072180ce8adcaa53eb0",
+      "OracleSha256": "af86e0fed576a6e07df67a17ba75e7a012c91338a50ae70dd006ca4045faec96",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/12.txt"
+    },
+    {
+      "Id": "code128-2/17.png",
+      "ImageGitBlob": "5772376a0d91d342567806521dae9df2830560c7",
+      "OracleGitBlob": "75824d9c6e17490f42e7f48defce955708d05c64",
+      "OracleSha256": "89145c9130d1cb4c3c668d780a3cc34c7c4cb45d0290237c248164d0dc0b70e6",
+      "OracleUrl": "https://raw.githubusercontent.com/zxing/zxing/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox/code128-2/17.txt"
+    }
+  ]
+}

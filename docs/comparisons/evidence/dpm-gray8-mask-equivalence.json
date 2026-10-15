@@ -1,0 +1,11 @@
+{
+  "Cases": 225,
+  "Variants": 675,
+  "IdenticalNormalizedPixelHashesAndOrder": true,
+  "PreCancelledAndLaterCancelledStopped": true,
+  "BaselineCoreSha256": "C6E5CD35D12722A6D732F2AF523EF68685E4F7EA0B2C4C8FCA4389EBF2A3339C",
+  "CandidateCoreSha256": "4EFE850C2B2670C61A54E5910424B77683321E1ADE55677E99C94F4C27FE100F",
+  "BaselineVariantBytes": 6268860,
+  "CandidateVariantBytes": 1567215,
+  "Scope": "Exact retry output equivalence; retained array lengths do not measure total allocation or latency."
+}

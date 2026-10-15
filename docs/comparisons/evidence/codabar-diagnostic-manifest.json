@@ -1,0 +1,277 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "Selection": "Unchanged six main Codabar positives and 31 distinct frozen negatives; explicit Codabar hints only for supplementary format rejection diagnostic",
+  "Samples": [
+    {
+      "Id": "codabar-1/09.png",
+      "File": "codabar-1/09.png",
+      "Sha256": "5fd6c62f13c8278203a0ad1aea9d3f7acfa0d7be4f11d4b7861b1c89f9aef851",
+      "Format": "Codabar",
+      "Expected": [
+        "12345"
+      ]
+    },
+    {
+      "Id": "codabar-1/12.png",
+      "File": "codabar-1/12.png",
+      "Sha256": "a5bd5e5b7e72cf3d5cf0ea23b5d32601064ba6855922ae0ab4585736aba4728b",
+      "Format": "Codabar",
+      "Expected": [
+        "31117013206375"
+      ]
+    },
+    {
+      "Id": "codabar-1/13.png",
+      "File": "codabar-1/13.png",
+      "Sha256": "c4aa7a7188b0a6d70aeb0f6b8dfcd90fa75bafabeccbc285ec0d07ce30fd897c",
+      "Format": "Codabar",
+      "Expected": [
+        "12345"
+      ]
+    },
+    {
+      "Id": "codabar-1/11.png",
+      "File": "codabar-1/11.png",
+      "Sha256": "cb87f0737514801e3f7fcae3e63e6db4888fd9aa91e14da5587f9fafcb956b2b",
+      "Format": "Codabar",
+      "Expected": [
+        "3419500"
+      ]
+    },
+    {
+      "Id": "codabar-1/01.png",
+      "File": "codabar-1/01.png",
+      "Sha256": "abbb32aaa836fa05726931ac0ebf02d1d27ac7bf4c9bdbab8eafc0f49a1e2d17",
+      "Format": "Codabar",
+      "Expected": [
+        "1234567890"
+      ]
+    },
+    {
+      "Id": "codabar-1/04.png",
+      "File": "codabar-1/04.png",
+      "Sha256": "2fb7ad891423ab931c26e384a13f9f8e4d3530a1f638148ffb814544660b4c0a",
+      "Format": "Codabar",
+      "Expected": [
+        "123455"
+      ]
+    },
+    {
+      "Id": "falsepositives-2/01.png",
+      "File": "falsepositives-2/01.png",
+      "Sha256": "1e99e694791f4e083bff9cb0ffe83a1b198875095d32adab1c832ebff8571cb9",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/02.png",
+      "File": "falsepositives-2/02.png",
+      "Sha256": "cf39bd3a874f023c3506b4484c4fcbd0088548b526ca096854a587b1659da2c1",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/03.png",
+      "File": "falsepositives-2/03.png",
+      "Sha256": "11d625f28e75fe56650ab85ce174e76064a56c85fdb3f833d4cc9f6f7707b207",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/04.png",
+      "File": "falsepositives-2/04.png",
+      "Sha256": "ed67f5d68fc17685d8d85d5e68728b012f9a35753c5d89847531a72b72d88cd6",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/05.png",
+      "File": "falsepositives-2/05.png",
+      "Sha256": "4423d56bd794066943709033008b80d65c215fd153c085fafed45962802c1019",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/06.png",
+      "File": "falsepositives-2/06.png",
+      "Sha256": "877ca6a982fd2b74cea72b5b5db5bb9cd99b640f88b858a913233546849d75ee",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/07.png",
+      "File": "falsepositives-2/07.png",
+      "Sha256": "246c88e6566fe2879711f4df51aabc35aa3ce0c9f5de866d6c72d16e87fb2dc7",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/08.png",
+      "File": "falsepositives-2/08.png",
+      "Sha256": "2b6957b0fc9afd545ad72e7f2a4e1d98daf829c695349d1c826fe85b7969b59d",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/09.png",
+      "File": "falsepositives-2/09.png",
+      "Sha256": "cbaf0067efa7f6ee9eab8112bb666f61f7e891beaf229d95adcc4b23678c330f",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/10.png",
+      "File": "falsepositives-2/10.png",
+      "Sha256": "6c9a9ee9c55bdf2ce660518c2fcafb0429f3a04c49557f143b62739621d8d77e",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/11.png",
+      "File": "falsepositives-2/11.png",
+      "Sha256": "6c719e5c98e35599a0f085efe6989b9a639eaec981e074291b92be20737ab22f",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/12.png",
+      "File": "falsepositives-2/12.png",
+      "Sha256": "b4da02184cfecc051a00a6ac04323ea4f0f9d8fce8f72978341e22100c61e558",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/13.png",
+      "File": "falsepositives-2/13.png",
+      "Sha256": "8ed198f523b6881aee9af81bff855c74ce67d5939952887d39ad0c1b5331df95",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/14.png",
+      "File": "falsepositives-2/14.png",
+      "Sha256": "99e0b792b5f60108ee6ea0171fec974cf6f55cc9f994ab953b0586de78d20857",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/15.png",
+      "File": "falsepositives-2/15.png",
+      "Sha256": "88e5db884184cce74def2337b627e3e25cf4d49eceab89262755f4c3a9aac10c",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/16.png",
+      "File": "falsepositives-2/16.png",
+      "Sha256": "7e9887b8f6bbe008a019f742869475d6d4a138b88553cb8466a830e2e79ec991",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/17.png",
+      "File": "falsepositives-2/17.png",
+      "Sha256": "0b866f0309e78b1ced8f8f370e3f4b406836e816f3098fc6b54f1286b2740132",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/18.png",
+      "File": "falsepositives-2/18.png",
+      "Sha256": "f56fa7648b39a4cdb8c163c608640d6885c8c165cd710f6298b59561a57f70ef",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/19.png",
+      "File": "falsepositives-2/19.png",
+      "Sha256": "b2a97a2123581c6abaa570610cbbb6d41f03413b72a2edb60ae2cf4b2c78a7d4",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/20.png",
+      "File": "falsepositives-2/20.png",
+      "Sha256": "f72e804ca8559d6e86cd49b11ff29752111f44a5b15d618f57f779f1918892fc",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/21.png",
+      "File": "falsepositives-2/21.png",
+      "Sha256": "7f7e8205af8fdb7e00be97d309a681efc77ec0cce96290889442b3ab93b2eec1",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/22.png",
+      "File": "falsepositives-2/22.png",
+      "Sha256": "4f5d0ed641fa3cb3cb9ac9adbab9eb51ea31f654466c39038cd68b279002ac89",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/23.png",
+      "File": "falsepositives-2/23.png",
+      "Sha256": "2e44dc6f761d61c987fa107d28bc11aad3df1d34d40c93e317b0933106fe63fe",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/24.png",
+      "File": "falsepositives-2/24.png",
+      "Sha256": "61a54a9b385f5f4395857d2157e5a406a79ef40d89054b010149ce2c8125fb02",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives-2/25.png",
+      "File": "falsepositives-2/25.png",
+      "Sha256": "937b83587231333fce23e41847a5415643a895d1b7730e846360a77682a85e7e",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/01.png",
+      "File": "falsepositives/01.png",
+      "Sha256": "351fc204817fae136f77412dd38d22c6e8bd1aac0306d75323f73ecf8e6e8bff",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/03.png",
+      "File": "falsepositives/03.png",
+      "Sha256": "bb9cada0e2cee198bc652c6a0a53650f40c2fd9e6b2ec17cfa00f86ec5ceee22",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/04.png",
+      "File": "falsepositives/04.png",
+      "Sha256": "bfcd333d527da6beb0c0b3cf715388e13555976eb9388b888d859543d009fc64",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/15.png",
+      "File": "falsepositives/15.png",
+      "Sha256": "acc5cd8ddb6c29324cbdb8fcd0dbe35cbd8847cd877399186fee566b98993270",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/16.png",
+      "File": "falsepositives/16.png",
+      "Sha256": "044706ba8dc800a5ad0a71e33c10c238ee6e3a4a3e5a77f9538f76d117ea2c0b",
+      "Format": "Codabar",
+      "Expected": []
+    },
+    {
+      "Id": "falsepositives/19.png",
+      "File": "falsepositives/19.png",
+      "Sha256": "342fdb2e223f3a41144aaa1029dc3ce7dc4d278a07e7e47dc885c874b1e57c77",
+      "Format": "Codabar",
+      "Expected": []
+    }
+  ]
+}

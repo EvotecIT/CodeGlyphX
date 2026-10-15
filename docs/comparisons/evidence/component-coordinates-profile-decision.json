@@ -1,0 +1,79 @@
+{
+  "Source": "5a33118fd1ef6e6381dc4bd86007e65c1d161511",
+  "CoreSha256": "138342CB7A5C8C07A93925F9652D54B2B31F77726D41E5F944ABBB68FC93F578",
+  "TraceSha256": "d0be5dc2d9309d5d6d98c5cf4a789d41617569391c9252cac3e72629e6c7a790",
+  "DiagnosticSha256": "a91aef25e1df5d6d0ae5e775f671b1fdb3cbc40525dd2f78db8966761ff3e4e8",
+  "Images": 9,
+  "PrimingCalls": 9,
+  "MeasuredDiagnosticCalls": 27,
+  "MeasuredCorrect": 27,
+  "Scope": "Sampled allocation amounts and managed thread-time stacks on the decoding thread between probe markers. Inclusive stacks overlap; these are not CPU utilization or competitive timings.",
+  "TopProductThreadTimeStacks": [
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder.FindComponents(value class CodeGlyphX.Qr.QrGrayImage,bool,value class DecodeBudget,int32,int32)",
+      "Value": 791
+    },
+    {
+      "Key": "CodeGlyphX.DataMatrix.DataMatrixDecoder.FindImageComponents(unsigned int8[],int32,int32,bool,value class System.Threading.CancellationToken)",
+      "Value": 679
+    },
+    {
+      "Key": "CodeGlyphX.Aztec.AztecPixelDecoder.TryDecodePerspective(value class AztecGrayImage,value class System.Threading.CancellationToken,class System.String&,class CodeGlyphX.AztecDecodeDiagnostics)",
+      "Value": 525
+    },
+    {
+      "Key": "CodeGlyphX.DataBar.DataBarLimitedDecoder.TryExtractWidths(bool[],int32[]&)",
+      "Value": 512
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectRetailRunCandidates(value class System.ReadOnlySpan`1<unsigned int8>,int32,value class System.Threading.CancellationToken,class System.Collections.Generic.List`1<value class CodeGlyphX.Internal.BarcodeScanlineCandidate>,int32,bool,bool,bool,bool,bool)",
+      "Value": 500
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.CollectExpandedStackedRows(value class System.ReadOnlySpan`1<unsigned int8>,int32,int32,int32,class System.Collections.Generic.List`1<class ExpandedRowObservation>[],value class System.Threading.CancellationToken)",
+      "Value": 473
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadPixelRows(int32,int32,class PixelRunCache,value class System.Threading.CancellationToken,bool,bool,class CodeGlyphX.Pdf417.Pdf417Decoded&,bool&,class System.Collections.Generic.List`1<value class PixelFramingCandidate>)",
+      "Value": 425
+    },
+    {
+      "Key": "CodeGlyphX.Internal.MicroQrPixelDecoder.TryDecodeFromFinderPatterns(value class GrayImage,unsigned int8,bool,value class System.Threading.CancellationToken,bool&,class CodeGlyphX.MicroQrDecoded&,class CodeGlyphX.MicroQrPixelDecodeInfo&)",
+      "Value": 376
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudgetState.get_IsExpired()",
+      "Value": 328
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BarcodeScanline.TryCollectAdaptiveRetailCandidates(value class System.ReadOnlySpan`1<unsigned int8>,value class System.Threading.CancellationToken,class System.Collections.Generic.List`1<value class CodeGlyphX.Internal.BarcodeScanlineCandidate>,int32,bool,bool)",
+      "Value": 321
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrFinderPatternDetector.FindCandidatesWithStep(value class CodeGlyphX.Qr.QrGrayImage,bool,int32,class PooledList`1<value class FinderPattern>,bool,class System.Func`1<bool>,int32,bool)",
+      "Value": 310
+    },
+    {
+      "Key": "CodeGlyphX.Pdf417.Pdf417Decoder.TryReadRightFramedRows(int32,int32,class PixelRunCache,value class System.Threading.CancellationToken,bool,class CodeGlyphX.Pdf417.Pdf417Decoded&,bool&)",
+      "Value": 287
+    },
+    {
+      "Key": "CodeGlyphX.Internal.DecodeBudget.ShouldAbort(value class System.Threading.CancellationToken)",
+      "Value": 261
+    },
+    {
+      "Key": "CodeGlyphX.DirectPartMarkPreprocessor.Dilate(unsigned int8[],int32,int32,int32,value class System.Threading.CancellationToken)",
+      "Value": 202
+    },
+    {
+      "Key": "CodeGlyphX.Qr.QrPixelDecoder+<>c__DisplayClass107_0.<TrySampleWithCornersInternal>b__0()",
+      "Value": 171
+    },
+    {
+      "Key": "CodeGlyphX.Internal.BinaryImageComponents.Visit(unsigned int8[],int32,int32,bool,value class System.Threading.CancellationToken,class System.Func`4<int32[],int32,bool,bool>)",
+      "Value": 157
+    }
+  ],
+  "Decision": "Prototype exact reciprocal row-coordinate division in the existing shared component visitor and QR traversal. Keep the existing queues, seeds, area filters, ordering and polling cadence. Reject if balanced comparisons do not show useful gains.",
+  "Limits": "All 27 diagnostic repetitions completed on this run, although the same unchanged images had inconclusive outcomes in the preceding qualification. Samples locate work; they do not establish CPU utilization, ranked latency or a reliable deadline-completion guarantee."
+}

@@ -1,0 +1,7 @@
+        <div class="comparison-scroll" role="region" aria-label="{{ cost_region_label }}" tabindex="0">
+            <table class="bench-table">
+                <caption>{{ cost_caption }}</caption>
+                <thead><tr><th scope="col">Workload</th><th scope="col">Requests</th><th scope="col">Domain</th><th scope="col">Median ms</th><th scope="col">Current / previous</th><th scope="col">Mean managed MiB</th><th scope="col">Correct range</th><th scope="col">Inconclusive range</th><th scope="col">Unexpected range</th></tr></thead>
+                <tbody>{{ for row in cost_rows }}<tr><th scope="row">{{ row.kind }}</th><td>{{ row.requests }}</td><td>{{ row.domain }}</td><td>{{ row.before_ms }} → {{ row.current_ms }}</td><td>{{ row.ratio }}</td><td>{{ row.before_mib }} → {{ row.current_mib }}</td><td>{{ row.before_correct }} → {{ row.current_correct }}</td><td>{{ row.before_inconclusive }} → {{ row.current_inconclusive }}</td><td>{{ row.before_unexpected }} → {{ row.current_unexpected }}</td></tr>{{ end }}</tbody>
+            </table>
+        </div>

@@ -1,0 +1,29 @@
+{
+  "Scope": "Two legacy qualification records previously relied on the default previous-qualification.json filename. That filename later named a newer candidate, making a backward walk cyclic. Explicit links now target their already-retained preceding records after checking both source and core identities. Original byte-for-byte copies remain downloadable; measurements and proof contents are unchanged.",
+  "Changes": [
+    {
+      "File": "historical-qr-finder-groups-previous-qualification.json",
+      "Source": "bfd639a91c1603c302e6204e60bdc7f5383951ba",
+      "CoreSha256": "E57388E8BCB8F6F905D28D2DDEB84E77747359A3FC175ACA41676837A712EA72",
+      "PriorQualificationPacket": "historical-deadline-polling-previous-qualification.json",
+      "PreviousSource": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+      "PreviousCoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+      "OriginalFile": "qr-foreground-bounds-original-historical-qr-finder-groups-previous-qualification.json",
+      "OriginalSha256": "6CB5D1114B691AC72E0B512EBF3393E788853FAB0E6E65F543972B99D41C5B52",
+      "LinkedSha256": "74700BE3A840F66F394736483AFDC8BD9F2986F89D09E1A49395576289DB8ACD",
+      "OnlyAddedField": "PriorQualificationPacket"
+    },
+    {
+      "File": "historical-deadline-polling-previous-qualification.json",
+      "Source": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+      "CoreSha256": "986EC0742018F2F0272D1D7ECADB2F43E33CF5A1B72281A32DA680221F42E12C",
+      "PriorQualificationPacket": "historical-decode-allocation-previous-qualification.json",
+      "PreviousSource": "63677a2c11e9561677736cc001a8bf748ca28670",
+      "PreviousCoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+      "OriginalFile": "qr-foreground-bounds-original-historical-deadline-polling-previous-qualification.json",
+      "OriginalSha256": "CBD19C81DD235A95E90F7CBC12CC829C2EEFBE4E03B727515417FE32E8E15BD5",
+      "LinkedSha256": "2C26B0DFDF773E0C4603803D5EEA63B82F3083174F64C90C07DB499BDB0FC700",
+      "OnlyAddedField": "PriorQualificationPacket"
+    }
+  ]
+}

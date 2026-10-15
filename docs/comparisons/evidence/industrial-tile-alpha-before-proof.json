@@ -1,0 +1,10 @@
+{
+  "TrxSha256": "C6AF5A004D2B206ADF92650772037EF8A944D0F7A91DB2A24B3B0A20C21D6A10",
+  "Contracts": 12,
+  "TestSourceSha256": "76C3E002213C38465B7640DCE5F40E1B9E88121755E64440BDF6AF8F75604A6E",
+  "Failed": 12,
+  "CoreSha256": "8E577665B8BF5EDF48FCB176C7FEE8122545F0C945B59269451D84E8CCA335AF",
+  "Source": "66390262a224722b588740947dff963f5280f356",
+  "Passed": 0,
+  "Scope": "Both original typed tile payloads, alpha 0/128 and both axes, for Industrial 2 of 5, ITF and Pharmacode. Separate Pharmacode full-frame concatenation remains open."
+}

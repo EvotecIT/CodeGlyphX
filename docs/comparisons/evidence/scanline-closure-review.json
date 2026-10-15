@@ -1,0 +1,19 @@
+{
+  "CandidateHead": "f42250892ab5234464dbf2a7c926a903f9946ab5",
+  "ConfirmedFindings": [
+    "Pre-existing inverted one-sided cropped91 returned64",
+    "Pre-existing wide6 compact neighbors lost91; parent subsequently confirmed static reviewer candidate"
+  ],
+  "Scope": "One bounded closure of exposed physical scanline ends, Pharmacode polarity, and unchecked tile boundaries",
+  "Remediation": "One-sided foreground and quiet-margin evidence; all partitioned symbols must validate; direct focused157/157 proof retains DataBar neighbor control",
+  "Reviewer": "scanline_physical_ends_closure_review",
+  "Publication": "No external publication authorized or performed",
+  "ReviewedHead": "46af9d303cf8b2ff815083915e2e8b3ed09dac91",
+  "UnresolvedFindings": [],
+  "Limits": [
+    "Static review of predecessor; latest narrow remediation covered by direct controls",
+    "Precommit focused binary embeds preceding Git version; full committed-core qualification is separate"
+  ],
+  "Status": "candidate-reviewed",
+  "Confirmation": "No additional independent confirmation requested"
+}

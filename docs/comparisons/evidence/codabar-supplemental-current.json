@@ -1,0 +1,227 @@
+[
+  {
+    "Id": "codabar-1/02.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "1234567890"
+    ],
+    "Actual": [
+      "1234567890"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "codabar-1/03.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "294/586"
+    ],
+    "Actual": [
+      "294/586"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "codabar-1/10.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "123456"
+    ],
+    "Actual": [
+      "123456"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "codabar-1/14.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "31117013206375"
+    ],
+    "Actual": [
+      "31117013206375"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "codabar-1/15.png",
+    "Format": "Codabar",
+    "Engine": "CodeGlyphX",
+    "Expected": [
+      "123456789012"
+    ],
+    "Actual": [
+      "123456789012"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "SymbolLimitReached"
+  },
+  {
+    "Id": "codabar-1/02.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "1234567890"
+    ],
+    "Actual": [
+      "1234567890"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/03.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "294/586"
+    ],
+    "Actual": [
+      "294/586"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/10.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "123456"
+    ],
+    "Actual": [
+      "123456"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/14.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "31117013206375"
+    ],
+    "Actual": [
+      "31117013206375"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/15.png",
+    "Format": "Codabar",
+    "Engine": "ZXing.Net",
+    "Expected": [
+      "123456789012"
+    ],
+    "Actual": [
+      "123456789012"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/02.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "1234567890"
+    ],
+    "Actual": [
+      "A1234567890A"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/03.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "294/586"
+    ],
+    "Actual": [
+      "A294/586B"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/10.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "123456"
+    ],
+    "Actual": [
+      "A123456A"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/14.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "31117013206375"
+    ],
+    "Actual": [
+      "A31117013206375A"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  },
+  {
+    "Id": "codabar-1/15.png",
+    "Format": "Codabar",
+    "Engine": "ZXing-C\u002B\u002B",
+    "Expected": [
+      "123456789012"
+    ],
+    "Actual": [
+      "A123456789012A"
+    ],
+    "Missing": [],
+    "Unexpected": [],
+    "Status": "Correct",
+    "Completion": "Completed"
+  }
+]

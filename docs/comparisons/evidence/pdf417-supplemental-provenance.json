@@ -1,0 +1,235 @@
+{
+  "Revision": "33dfdefcb35576612841e614d44ba9edc9aee2b5",
+  "SampleCount": 38,
+  "ExcludedFrozenPdf417": 18,
+  "VerifiedPinnedGitBlobs": [
+    {
+      "Id": "pdf417-1/01.png",
+      "ImageGitBlob": "76de45813b2cfb7c635ef9aaefc1a1fbd2667c4c",
+      "OracleGitBlob": "8c84eae5ab226f96fada6b5b8a359737bcedd630",
+      "OracleSha256": "0d23f6541b65e5fa22480b208c7fd25c37deead6ad41b07ea58520822de48c1e"
+    },
+    {
+      "Id": "pdf417-1/03.png",
+      "ImageGitBlob": "7a13bb9005edb58d64961d555dff9030e401f9f6",
+      "OracleGitBlob": "8a97eecafd60e1f6aa975a462f204836d5a731e6",
+      "OracleSha256": "73427347b110a8352f3990b8b34e8ae53d4a5ba713f6b65bc0a5604775a68f6b"
+    },
+    {
+      "Id": "pdf417-1/07.png",
+      "ImageGitBlob": "3ab2624f08308642a7564b66274611d9275bf7de",
+      "OracleGitBlob": "13e3209524263cda2f0c000895c1a9c3becf92da",
+      "OracleSha256": "300095f88a4c3ccb56bab143f7049405793c1e9ef7c631ef3814121893aadc69"
+    },
+    {
+      "Id": "pdf417-1/10.png",
+      "ImageGitBlob": "4e0a5ae91f871ff471a35d1273572b7815fd695c",
+      "OracleGitBlob": "2215b03370c0226f004aa84e207a370a79fc347a",
+      "OracleSha256": "3b80afafca9bbb5fee000dd3d62f10eda297ec010b8f2dda52ca48c2665f3ad3"
+    },
+    {
+      "Id": "pdf417-1/11.png",
+      "ImageGitBlob": "a18dd8376d85d2c7ae7ced6a160b12eba4031ba9",
+      "OracleGitBlob": "25f399193a1275dc728ac0bb9ac91b18f06b4957",
+      "OracleSha256": "11dfc1e6953dac4bd02d8faa06878f51eea3421fa58d7148e808d425cff2a921"
+    },
+    {
+      "Id": "pdf417-1/12.png",
+      "ImageGitBlob": "6b57177bbebb8ba25127c520d3153e402d32df80",
+      "OracleGitBlob": "2869388fa0346a15a8761e652ef54be998be7ec8",
+      "OracleSha256": "81ae3be5f26fec47c5e466f59fd655392cb0a09ff0636465fb69d90a28ceb74c"
+    },
+    {
+      "Id": "pdf417-1/13.png",
+      "ImageGitBlob": "3251b95d38bb1b26f458fb9bb2abe0ec9555c3ab",
+      "OracleGitBlob": "0ee4e32280569d27e1bbac183131ddf8fe04d638",
+      "OracleSha256": "3260d68f149380a6d2db5e5500541c661d558498eacf490648833ecd8127fabb"
+    },
+    {
+      "Id": "pdf417-2/01.png",
+      "ImageGitBlob": "44a1775777cb36cb6f161685584467eba08d0b49",
+      "OracleGitBlob": "6a537b5b367880eac21e3c0f0a382de7a19bd30a",
+      "OracleSha256": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+    },
+    {
+      "Id": "pdf417-2/02.png",
+      "ImageGitBlob": "7236ea2c65494f33845d82429c44a708a07ec407",
+      "OracleGitBlob": "6a537b5b367880eac21e3c0f0a382de7a19bd30a",
+      "OracleSha256": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+    },
+    {
+      "Id": "pdf417-2/03.png",
+      "ImageGitBlob": "857e8ba3456ddb9339c60d60706a4752bf7430b5",
+      "OracleGitBlob": "6a537b5b367880eac21e3c0f0a382de7a19bd30a",
+      "OracleSha256": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+    },
+    {
+      "Id": "pdf417-2/04.png",
+      "ImageGitBlob": "568484847de26c7df1e946246f40c8b86a14e427",
+      "OracleGitBlob": "6a537b5b367880eac21e3c0f0a382de7a19bd30a",
+      "OracleSha256": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+    },
+    {
+      "Id": "pdf417-2/06.png",
+      "ImageGitBlob": "0e979b6062c0a0f9bbe6a466157b517de744462f",
+      "OracleGitBlob": "6a537b5b367880eac21e3c0f0a382de7a19bd30a",
+      "OracleSha256": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+    },
+    {
+      "Id": "pdf417-2/07.png",
+      "ImageGitBlob": "54bd9bc714edc2d2dbf21bf2db5a08b8488f6d0b",
+      "OracleGitBlob": "6a537b5b367880eac21e3c0f0a382de7a19bd30a",
+      "OracleSha256": "c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646"
+    },
+    {
+      "Id": "pdf417-2/08.png",
+      "ImageGitBlob": "51de70fb5bd2a2b06c594b584aef9ed80e2a87fe",
+      "OracleGitBlob": "cd7a77d8c353b73196b37272c1d47362b3295b97",
+      "OracleSha256": "35a6729004eb1cf2110e103272f567ccb916de9e25a1d3153763f5b7544c3c63"
+    },
+    {
+      "Id": "pdf417-2/09.png",
+      "ImageGitBlob": "aa072cbf191f64d5b8bcc64bb50a0ba406d12e7b",
+      "OracleGitBlob": "cd7a77d8c353b73196b37272c1d47362b3295b97",
+      "OracleSha256": "35a6729004eb1cf2110e103272f567ccb916de9e25a1d3153763f5b7544c3c63"
+    },
+    {
+      "Id": "pdf417-2/10.png",
+      "ImageGitBlob": "d19e85df1627e0c9dcb196f2fc0b09bbf743f308",
+      "OracleGitBlob": "cd7a77d8c353b73196b37272c1d47362b3295b97",
+      "OracleSha256": "35a6729004eb1cf2110e103272f567ccb916de9e25a1d3153763f5b7544c3c63"
+    },
+    {
+      "Id": "pdf417-2/11.png",
+      "ImageGitBlob": "5df3a060bdb32e54b59bda78acbbcb8da6cfeab3",
+      "OracleGitBlob": "cd7a77d8c353b73196b37272c1d47362b3295b97",
+      "OracleSha256": "35a6729004eb1cf2110e103272f567ccb916de9e25a1d3153763f5b7544c3c63"
+    },
+    {
+      "Id": "pdf417-2/12.png",
+      "ImageGitBlob": "678a8a1626b85788f888bfbc26ecf35eb5a853c9",
+      "OracleGitBlob": "cd7a77d8c353b73196b37272c1d47362b3295b97",
+      "OracleSha256": "35a6729004eb1cf2110e103272f567ccb916de9e25a1d3153763f5b7544c3c63"
+    },
+    {
+      "Id": "pdf417-2/13.png",
+      "ImageGitBlob": "2ce4a043d5d7f9255c7c2d47b0908a5fb6b89cab",
+      "OracleGitBlob": "cd7a77d8c353b73196b37272c1d47362b3295b97",
+      "OracleSha256": "35a6729004eb1cf2110e103272f567ccb916de9e25a1d3153763f5b7544c3c63"
+    },
+    {
+      "Id": "pdf417-2/16.png",
+      "ImageGitBlob": "b97f6077184142d23e964e4ae19066ecd03f2a3e",
+      "OracleGitBlob": "ccef7632d2b4e430b77f2f251a891b64aee127c4",
+      "OracleSha256": "8e37a35e11f344e61b1e296d69eeaf2da4dc6d6dcd4e261ffb14f0c0e0e740e2"
+    },
+    {
+      "Id": "pdf417-2/18.png",
+      "ImageGitBlob": "ed618b13ab7b1f7cf47b4751410ce697ecceb41d",
+      "OracleGitBlob": "ccef7632d2b4e430b77f2f251a891b64aee127c4",
+      "OracleSha256": "8e37a35e11f344e61b1e296d69eeaf2da4dc6d6dcd4e261ffb14f0c0e0e740e2"
+    },
+    {
+      "Id": "pdf417-2/20.png",
+      "ImageGitBlob": "1d5dfb8d7cbf7461f61b001542f6780457910f5f",
+      "OracleGitBlob": "ccef7632d2b4e430b77f2f251a891b64aee127c4",
+      "OracleSha256": "8e37a35e11f344e61b1e296d69eeaf2da4dc6d6dcd4e261ffb14f0c0e0e740e2"
+    },
+    {
+      "Id": "pdf417-2/21.png",
+      "ImageGitBlob": "9dffd89c403f6e895472fa92bc0eb1664001c069",
+      "OracleGitBlob": "ccef7632d2b4e430b77f2f251a891b64aee127c4",
+      "OracleSha256": "8e37a35e11f344e61b1e296d69eeaf2da4dc6d6dcd4e261ffb14f0c0e0e740e2"
+    },
+    {
+      "Id": "pdf417-2/23.png",
+      "ImageGitBlob": "ccdded27ee86ec6aba879a54d9ea61f23ed8a44e",
+      "OracleGitBlob": "ccef7632d2b4e430b77f2f251a891b64aee127c4",
+      "OracleSha256": "8e37a35e11f344e61b1e296d69eeaf2da4dc6d6dcd4e261ffb14f0c0e0e740e2"
+    },
+    {
+      "Id": "pdf417-2/25.png",
+      "ImageGitBlob": "739a9a989743c075c8466274f761c8b2d93ff346",
+      "OracleGitBlob": "8c84eae5ab226f96fada6b5b8a359737bcedd630",
+      "OracleSha256": "0d23f6541b65e5fa22480b208c7fd25c37deead6ad41b07ea58520822de48c1e"
+    },
+    {
+      "Id": "pdf417-3/01.png",
+      "ImageGitBlob": "b94256c8504979608edc859d6dfad095882542c8",
+      "OracleGitBlob": "26c04cee6ec71c6eed726f96b2deaf19198251ef",
+      "OracleSha256": "1f804ad5b89bc4dab8ba1e50a213ed7a7e2d3b219978ed2307cf6121a37cb563"
+    },
+    {
+      "Id": "pdf417-3/02.png",
+      "ImageGitBlob": "82552971cee46b7a8b7c7b216e060a9071d1cdf0",
+      "OracleGitBlob": "26c04cee6ec71c6eed726f96b2deaf19198251ef",
+      "OracleSha256": "1f804ad5b89bc4dab8ba1e50a213ed7a7e2d3b219978ed2307cf6121a37cb563"
+    },
+    {
+      "Id": "pdf417-3/05.png",
+      "ImageGitBlob": "56361ccde3181e1ffc8c1aa255ed4778f641eea0",
+      "OracleGitBlob": "26c04cee6ec71c6eed726f96b2deaf19198251ef",
+      "OracleSha256": "1f804ad5b89bc4dab8ba1e50a213ed7a7e2d3b219978ed2307cf6121a37cb563"
+    },
+    {
+      "Id": "pdf417-3/07.png",
+      "ImageGitBlob": "d05b7d2acf222fee9eb728555075709eaa226ed1",
+      "OracleGitBlob": "3d34dfff68d120bb7de99d0abd398bcf3d471352",
+      "OracleSha256": "974af0b8e2563db53f74545b6cf4db28897a30163933981287db0b63096d8622"
+    },
+    {
+      "Id": "pdf417-3/10.png",
+      "ImageGitBlob": "c32bf8ae9a155092a4ce1874e85e7e41e6a1c9f1",
+      "OracleGitBlob": "3d34dfff68d120bb7de99d0abd398bcf3d471352",
+      "OracleSha256": "974af0b8e2563db53f74545b6cf4db28897a30163933981287db0b63096d8622"
+    },
+    {
+      "Id": "pdf417-3/11.png",
+      "ImageGitBlob": "f7a1374eefbb03d25778635cdfad8c782785ec91",
+      "OracleGitBlob": "3d34dfff68d120bb7de99d0abd398bcf3d471352",
+      "OracleSha256": "974af0b8e2563db53f74545b6cf4db28897a30163933981287db0b63096d8622"
+    },
+    {
+      "Id": "pdf417-3/12.png",
+      "ImageGitBlob": "fd16e2dd06b80afb133307bec6a428737e726d34",
+      "OracleGitBlob": "6cb009496686acc0ed63b36bb12ca44d243418ae",
+      "OracleSha256": "59799a204deea873579b5be1b232ac7aa5120cf08e29a1ac4a19f8488474ba1f"
+    },
+    {
+      "Id": "pdf417-3/13.png",
+      "ImageGitBlob": "696d413736089d01864fbcdf4a4908fc982d3aeb",
+      "OracleGitBlob": "26c04cee6ec71c6eed726f96b2deaf19198251ef",
+      "OracleSha256": "1f804ad5b89bc4dab8ba1e50a213ed7a7e2d3b219978ed2307cf6121a37cb563"
+    },
+    {
+      "Id": "pdf417-3/14.png",
+      "ImageGitBlob": "fe56c48eeea561144a61e898195edf8b79711d39",
+      "OracleGitBlob": "26c04cee6ec71c6eed726f96b2deaf19198251ef",
+      "OracleSha256": "1f804ad5b89bc4dab8ba1e50a213ed7a7e2d3b219978ed2307cf6121a37cb563"
+    },
+    {
+      "Id": "pdf417-3/15.png",
+      "ImageGitBlob": "1aa831295512bc20df233850fc48864308d21f1c",
+      "OracleGitBlob": "26c04cee6ec71c6eed726f96b2deaf19198251ef",
+      "OracleSha256": "1f804ad5b89bc4dab8ba1e50a213ed7a7e2d3b219978ed2307cf6121a37cb563"
+    },
+    {
+      "Id": "pdf417-3/16.png",
+      "ImageGitBlob": "5438e4c8a9b476de26db8d119b9a06271ad82255",
+      "OracleGitBlob": "26c04cee6ec71c6eed726f96b2deaf19198251ef",
+      "OracleSha256": "1f804ad5b89bc4dab8ba1e50a213ed7a7e2d3b219978ed2307cf6121a37cb563"
+    },
+    {
+      "Id": "pdf417-3/17.png",
+      "ImageGitBlob": "8ef101c590748efc8a0aff004b1429589be3240c",
+      "OracleGitBlob": "26c04cee6ec71c6eed726f96b2deaf19198251ef",
+      "OracleSha256": "1f804ad5b89bc4dab8ba1e50a213ed7a7e2d3b219978ed2307cf6121a37cb563"
+    },
+    {
+      "Id": "pdf417-3/19.png",
+      "ImageGitBlob": "fcf4b65823ddc241031b27f7a9c8ebae34204643",
+      "OracleGitBlob": "49db7a0da9b230b0bdde051dac3863b8a04d113c",
+      "OracleSha256": "941d49420b8921cb119efa5f8e4eae8b39ca0a38cd6a4d892cdf91dffc912088"
+    }
+  ]
+}

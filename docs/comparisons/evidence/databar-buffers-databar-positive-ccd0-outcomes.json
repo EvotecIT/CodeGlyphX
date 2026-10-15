@@ -1,0 +1,5615 @@
+{
+  "RunId": "20261013-200420-9d1470eb",
+  "Calls": [
+    {
+      "Engine": "Baseline",
+      "Iteration": 0,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 1,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 10,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/10/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 11,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/11/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 2,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/2/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 3,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/3/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 4,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/4/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 5,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/5/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 6,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/6/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 7,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/7/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 8,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/8/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": 9,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Baseline/Decode/matrix/9/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 0,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/0/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 1,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/1/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 10,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/10/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 11,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/11/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 2,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/2/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 3,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/3/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 4,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/4/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 5,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/5/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 6,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/6/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 7,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/7/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 8,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/8/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": 9,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/FixedImageCorpus/Candidate/Decode/matrix/9/outcomes.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -1,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/warmup-outcomes/Baseline--1.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -2,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/warmup-outcomes/Baseline--2.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Baseline",
+      "Iteration": -3,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/warmup-outcomes/Baseline--3.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -1,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/warmup-outcomes/Candidate--1.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -2,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/warmup-outcomes/Candidate--2.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    },
+    {
+      "Engine": "Candidate",
+      "Iteration": -3,
+      "Path": "databar-paired-databar-positive-ccd0-12/20261013-200420-9d1470eb/warmup-outcomes/Candidate--3.json",
+      "Outcomes": [
+        {
+          "Id": "rss14-1/4.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "20012345678909"
+          ],
+          "Actual": [
+            "2001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/6.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/3.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00075678164125"
+          ],
+          "Actual": [
+            "0007567816412"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/5.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00034567890125"
+          ],
+          "Actual": [
+            "0003456789012"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/2.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00821935106427"
+          ],
+          "Actual": [
+            "0082193510642"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-1/1.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "04412345678909"
+          ],
+          "Actual": [
+            "0441234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/11.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/22.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/18.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/19.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [],
+          "Missing": [
+            "02001234567893"
+          ],
+          "Unexpected": [],
+          "Status": "Failed",
+          "Completion": "Completed"
+        },
+        {
+          "Id": "rss14-2/24.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "00012345678905"
+          ],
+          "Actual": [
+            "0001234567890"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        },
+        {
+          "Id": "rss14-2/7.png",
+          "Format": "Gs1DataBarOmnidirectional",
+          "Engine": "CodeGlyphX",
+          "Expected": [
+            "02001234567893"
+          ],
+          "Actual": [
+            "0200123456789"
+          ],
+          "Missing": [],
+          "Unexpected": [],
+          "Status": "Correct",
+          "Completion": "SymbolLimitReached"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "Source": "63677a2c11e9561677736cc001a8bf748ca28670",
+  "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+  "Changes": "The unified image scanner extends its existing unchecked-barcode tile-boundary filter to Industrial 2 of 5, for default and explicit-format scans. Both quiet margins must have the background polarity and sufficient width; inverted symbols use their dark background. Full-frame and module decoding retain their behavior, and no minimum payload length is introduced. Tile-margin luminance now uses the same alpha-to-white compositing as decoding, preserving visible quiet zones on transparent backgrounds for Industrial 2 of 5, ITF and Pharmacode.",
+  "Scope": "Four inverted orientations of the perforated texture are scanned with default formats and an Industrial 2 of 5 hint. Before correction, six of the eight checks fail on returned fragments. Six positive contracts preserve both single-digit payloads: typed scans cover both axes and polarities, and default scans cover normal polarity in both axes. Twelve typed transparent-margin cases cover both image axes and alpha 0/128 for these three formats. Both original payloads are restored in every case; Industrial and ITF return exactly those two.",
+  "Limits": "These images informed the repair. They establish these regressions and valid short-symbol behavior, not a general false-positive rate. Unfinished format searches remain inconclusive in the unchanged corpus. Default-format scans still miss the inverted single-digit pair, while explicit Industrial hints recover both payloads; this pre-existing recognition gap remains open. The separate full-frame Pharmacode ambiguity remains open: a neighboring 91/123 pair also produces 2079, before and after the repair.",
+  "RegressionBefore": {
+    "Source": "16883574248837975511de59cdd336026b35b66f",
+    "CoreSha256": "88430AB519945F27D5940426CDF1D923DF811C0C9F031523F6ED0EF2F5A3F32E",
+    "Contracts": 8,
+    "Failed": 6,
+    "Passed": 2,
+    "PositiveContractsPassed": 6,
+    "TrxFile": "industrial-tile-before-final-contract-net10.trx",
+    "TrxSha256": "2D74682B12A78AFCD2E3AC8DD8DA131FBE73682DDE8B34D495E752EA997CE558",
+    "TestSourceSha256": "65D960BB63A7E040CC5476C14411FE7E9955CCC6042BF31BF075B1F9F4CA467F",
+    "Scope": "Negative contracts cover four inverted orientations with default and explicit Industrial formats. Default scans fail in two orientations; explicit-format scans fail in all four. Six positive contracts pass, covering normal default/typed and inverted typed scans in both axes. Default inverted single-digit misses are separately retained as a pre-existing gap."
+  },
+  "DiagnosisSource": "16883574248837975511de59cdd336026b35b66f",
+  "DiagnosisCoreSha256": "88430AB519945F27D5940426CDF1D923DF811C0C9F031523F6ED0EF2F5A3F32E",
+  "NegativeCases": {
+    "net10": 8,
+    "net8": 8,
+    "net472": 8
+  },
+  "SingleDigitCases": {
+    "net10": 6,
+    "net8": 6,
+    "net472": 6
+  },
+  "AlphaTileCases": {
+    "net10": 12,
+    "net8": 12,
+    "net472": 12
+  },
+  "AlphaMargins": {
+    "Source": "63677a2c11e9561677736cc001a8bf748ca28670",
+    "CoreSha256": "C0CE8CFEF082410688E0319E42D860231BBB8165F4A7E7CE6A18C735E88FF203",
+    "RegressionBefore": {
+      "TrxSha256": "C6AF5A004D2B206ADF92650772037EF8A944D0F7A91DB2A24B3B0A20C21D6A10",
+      "Contracts": 12,
+      "TestSourceSha256": "76C3E002213C38465B7640DCE5F40E1B9E88121755E64440BDF6AF8F75604A6E",
+      "Failed": 12,
+      "CoreSha256": "8E577665B8BF5EDF48FCB176C7FEE8122545F0C945B59269451D84E8CCA335AF",
+      "Source": "66390262a224722b588740947dff963f5280f356",
+      "Passed": 0,
+      "Scope": "Both original typed tile payloads, alpha 0/128 and both axes, for Industrial 2 of 5, ITF and Pharmacode. Separate Pharmacode full-frame concatenation remains open."
+    },
+    "Scope": "Twelve typed public-scanner tile scans, two axes and transparent or half-transparent black backgrounds across Industrial 2 of 5, ITF and Pharmacode; no deadline. Correct requires both original tile payloads, and exactly those two for Industrial/ITF. Pharmacode's pre-existing extra full-frame concatenation remains an open gap and is retained separately as AdditionalPayloads.",
+    "BeforeOriginalPayloadContractsPassed": 0,
+    "CurrentOriginalPayloadContractsPassed": 12,
+    "PriorIndustrialContractsPassed": 4,
+    "PreExistingSiblingFailures": 8,
+    "CurrentExactPayloadSets": 8,
+    "Limits": "The generated transparent fixtures informed the repair. Pharmacode retains its pre-existing extra combined full-frame payload 2079 from the 91/123 pair. Restoring the two original tile results does not resolve this separate ambiguity."
+  }
+}

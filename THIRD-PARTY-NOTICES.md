@@ -47,6 +47,16 @@ The MaxiCode module mapping and decoder and the GS1 DataBar Limited reference ch
 - Source: <https://github.com/zxing-cpp/zxing-cpp>
 - License: Apache License 2.0
 
+## ZXing regression fixtures
+
+The linear and Data Matrix photograph tests include unmodified ZXing black-box images. The Aztec initialization test embeds module centers sampled from one ZXing image. These test fixtures have no runtime dependency on ZXing.
+
+- Copyright ZXing authors
+- Source revision: `33dfdefcb35576612841e614d44ba9edc9aee2b5`
+- Source: <https://github.com/zxing/zxing/tree/33dfdefcb35576612841e614d44ba9edc9aee2b5/core/src/test/resources/blackbox>
+- License: Apache License 2.0; full text in `CodeGlyphX.Tests/Fixtures/Linear/ZXING-LICENSE.txt`
+- Data Matrix image identities and hashes: `CodeGlyphX.Tests/Fixtures/DataMatrix/zxing-perspective-sources.json`
+
 ## WebM VP8 transform reference
 
 The managed VP8 encoder's forward transform follows the WebM Project's libvpx integer transform and its rounding rules. Decoder prediction and entropy behavior were checked against RFC 6386 and libwebp. CodeGlyphX has no runtime dependency on these reference implementations.

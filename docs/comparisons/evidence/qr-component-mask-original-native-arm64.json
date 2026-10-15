@@ -1,0 +1,28 @@
+{
+  "Host": "evomini.ad.evotec.xyz",
+  "OperatingSystem": "27.0.1",
+  "Architecture": "arm64",
+  "Processor": "Apple M4",
+  "Runtime": "10.0.401",
+  "Source": "2178357d3a5faefd626d06cb0c48a2caedd85e86",
+  "Scope": "Exact clean prototype portable managed binaries executed by the native ARM64 .NET runtime. Independent component mask decision checks only; full prototype qualification remains separate. No performance comparison or remote source build.",
+  "InputFiles": {
+    "CodeGlyphX.Tests.dll": "40066D80F529024163F1BFAC1A6E4634F828BFC67E74EACCB0F7A537FF251190",
+    "CodeGlyphX.Tests.deps.json": "E3CDFDE3CBCB4BD98E0449F3123135443DE8B72D819F7A46772A2065DD52D251",
+    "CodeGlyphX.Tests.runtimeconfig.json": "C230A317A54DD960BCBEB5F347F52E18DC665A26F7EFDA2159FCED9A5AC7E097",
+    "CodeGlyphX.dll": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167"
+  },
+  "RemoteRoot": "/Volumes/Samsung/CodeGlyphX-qr-mask-2178357d",
+  "DecisionProof": {
+    "CoreSha256": "F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167",
+    "Vector256HardwareAccelerated": false,
+    "Vector128HardwareAccelerated": true,
+    "Cases": 57344,
+    "PixelClassificationsCompared": 72810496,
+    "Mismatches": 0,
+    "UnusedPooledTailPreserved": true,
+    "CancelledAndExpiredMasksStopBeforeWrites": true,
+    "Scope": "Actual private component foreground fill versus independent byte selection across every global byte threshold, varied adaptive maps, both polarities, vector boundary widths, solid/patterned/random images and unused pooled-array tails. Decision proof only; component bounds, areas and order are checked separately."
+  },
+  "Stdout": "{\"CoreSha256\":\"F6B7AE46D4FDC627ADD214CB39F4954E88EDE90BEEF4BF97F1D06F7CAD84E167\",\"Vector256HardwareAccelerated\":false,\"Vector128HardwareAccelerated\":true,\"Cases\":57344,\"PixelClassificationsCompared\":72810496,\"Mismatches\":0,\"UnusedPooledTailPreserved\":true,\"CancelledAndExpiredMasksStopBeforeWrites\":true,\"Scope\":\"Actual private component foreground fill versus independent byte selection across every global byte threshold, varied adaptive maps, both polarities, vector boundary widths, solid/patterned/random images and unused pooled-array tails. Decision proof only; component bounds, areas and order are checked separately.\"}"
+}

@@ -1,0 +1,52 @@
+{
+  "Source": "5f41d326a8c332853096d888059504677cada46e",
+  "CoreSha256": "EC28D8B1245AE2664E81137D5A7004524147C9E49B2F6BD3F6227E9FB946DE69",
+  "PreviousSource": "5145edfb766f1ced33dfc6427b65cfdbd2aa7eb3",
+  "Changes": "GS1 DataBar-14 image recognition fits both finders and four characters independently, validates the complete symbol checksum, and preserves measured enclosed guard gaps before normalizing. The same guard invariant is enforced in stacked bottom rows. Existing APIs, payload oracles, family hints and recognition allowances are unchanged.",
+  "Scope": "Twelve fixed RSS-14 family images from the main corpus, with the same full-family hint for every engine. They inform the repair and are regression evidence, not an unseen holdout or an additional accuracy survey.",
+  "FocusedCases": 4,
+  "ExactBaselineFailures": 4,
+  "AdditionalGuardCases": 8,
+  "NegativeRequests": 31,
+  "Engines": {
+    "CodeGlyphX": {
+      "PreviousCorrect": 7,
+      "Correct": 8,
+      "Unexpected": 0
+    },
+    "ZXing.Net": {
+      "PreviousCorrect": 8,
+      "Correct": 8,
+      "Unexpected": 0
+    },
+    "ZXing-C++": {
+      "PreviousCorrect": 8,
+      "Correct": 8,
+      "Unexpected": 0
+    }
+  },
+  "Cost": [
+    {
+      "Domain": "ccd0",
+      "BaselineMedianMs": 164.15404999999998,
+      "CurrentMedianMs": 164.00689999999997,
+      "LatencyRatio": 0.999103585930411,
+      "BaselineAllocatedBytes": 16931210.666666668,
+      "CurrentAllocatedBytes": 16390645.333333334,
+      "PreviousCorrectRequests": 7.0,
+      "CurrentCorrectRequests": 8.0
+    },
+    {
+      "Domain": "ccd1",
+      "BaselineMedianMs": 145.3128,
+      "CurrentMedianMs": 147.15935000000002,
+      "LatencyRatio": 1.0127074146255526,
+      "BaselineAllocatedBytes": 16928787.333333332,
+      "CurrentAllocatedBytes": 16390425.333333334,
+      "PreviousCorrectRequests": 7.0,
+      "CurrentCorrectRequests": 8.0
+    }
+  ],
+  "CostScope": "Same twelve preloaded DataBar-14 images and 1500 ms allowance, separate binary contexts, three warmups and twelve rotated measurements per binary/domain. Normal priority, fixed affinity and no outlier removal. Loading and evaluation are excluded. Recognition is recorded with time: additional correct results change completed work. Shared-host contention prevents portable latency claims; managed allocation excludes native memory.",
+  "CurrentNegativeCorrect": 31
+}

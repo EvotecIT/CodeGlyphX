@@ -75,7 +75,7 @@ public static partial class DataMatrixDecoder {
             }
 
             if (index + 1 >= data.Length) {
-                index = data.Length;
+                // X12 uses the same implicit single-codeword ASCII tail as C40/Text.
                 return DataMatrixEncodation.Ascii;
             }
 
@@ -227,10 +227,19 @@ public static partial class DataMatrixDecoder {
         return value;
     }
 
+    // Both the axis-aligned and perspective paths sample through IsDarkAt.
+    // Validate complete rows here so malformed raw buffers never reach either sampler.
+    private static bool HasValidPixelLayout(int length, int width, int height, int stride, PixelFormat format) {
+        if (width <= 0 || height <= 0 || stride <= 0) return false;
+        var bytesPerPixel = format == PixelFormat.Gray8 ? 1 : format is PixelFormat.Rgba32 or PixelFormat.Bgra32 ? 4 : 0;
+        var rowBytes = (long)width * bytesPerPixel;
+        return bytesPerPixel != 0 && stride >= rowBytes && (long)(height - 1) * stride + rowBytes <= length;
+    }
+
     private static bool TryExtractModules(PixelSpan pixels, int width, int height, int stride, PixelFormat format, CancellationToken cancellationToken, out BitMatrix modules, out ImageSamplingGrid sampling) {
         modules = null!;
         sampling = default;
-        if (width <= 0 || height <= 0 || stride <= 0) return false;
+        if (!HasValidPixelLayout(pixels.Length, width, height, stride, format)) return false;
         if (DecodeBudget.ShouldAbort(cancellationToken)) return false;
 
         var invert = false;
@@ -248,6 +257,14 @@ public static partial class DataMatrixDecoder {
         var cols = (int)Math.Round((double)box.Width / moduleSize);
         var rows = (int)Math.Round((double)box.Height / moduleSize);
         if (cols <= 0 || rows <= 0) return false;
+
+        // Unsupported dimensions cannot decode in any orientation. Resolve the
+        // clock tracks before allocating a grid, retaining fractional-pitch recovery.
+        // A supported integer estimate still has priority over a clock alternative.
+        if (!DataMatrixSymbolInfo.TryGetForSize(rows, cols, out _) &&
+            !DataMatrixSymbolInfo.TryGetForSize(cols, rows, out _) &&
+            !TryResolveTimingGrid(pixels, width, height, stride, format, box, invert,
+                moduleSize, cancellationToken, ref cols, ref rows)) return false;
 
         sampling = new ImageSamplingGrid(box, invert, moduleSize, cols, rows);
         return TrySampleGrid(pixels, width, height, stride, format, box, invert, cols, rows, cancellationToken, out modules);
@@ -311,20 +328,37 @@ public static partial class DataMatrixDecoder {
         var right = -1;
         var top = height;
         var bottom = -1;
+        // This synchronous pixel loop never opens a nested budget. Keep checking
+        // the same clock and token without reading AsyncLocal for each examined pixel.
+        var budget = DecodeBudget.Capture();
 
         for (var y = 0; y < height; y++) {
-            if (DecodeBudget.ShouldAbort(cancellationToken)) { box = default; return false; }
+            if (cancellationToken.IsCancellationRequested || budget.IsExpired) { box = default; return false; }
             var row = y * stride;
+            var first = width;
             for (var x = 0; x < width; x++) {
-                if (DecodeBudget.ShouldAbort(cancellationToken)) { box = default; return false; }
+                if (cancellationToken.IsCancellationRequested || budget.IsExpired) { box = default; return false; }
                 var dark = IsDarkAt(pixels, row, x, format);
                 if (invert) dark = !dark;
                 if (!dark) continue;
+                first = x;
+                break;
+            }
+            if (first == width) continue;
+            if (first < left) left = first;
+            if (first > right) right = first;
+            if (y < top) top = y;
+            bottom = y;
 
-                if (x < left) left = x;
-                if (x > right) right = x;
-                if (y < top) top = y;
-                if (y > bottom) bottom = y;
+            // Interior pixels cannot enlarge the bounds. Only search beyond
+            // the rightmost dark pixel already observed, starting at the edge.
+            for (var x = width - 1; x > right; x--) {
+                if (cancellationToken.IsCancellationRequested || budget.IsExpired) { box = default; return false; }
+                var dark = IsDarkAt(pixels, row, x, format);
+                if (invert) dark = !dark;
+                if (!dark) continue;
+                right = x;
+                break;
             }
         }
 
@@ -344,6 +378,7 @@ public static partial class DataMatrixDecoder {
     }
 
     private static bool IsDarkAt(PixelSpan pixels, int row, int x, PixelFormat format) {
+        if (format == PixelFormat.Gray8) return pixels[row + x] < 128;
         var p = row + x * 4;
         byte r;
         byte g;
@@ -362,46 +397,6 @@ public static partial class DataMatrixDecoder {
         var alpha = pixels[p + 3];
         if (alpha < 255) lum = (lum * alpha + 255 * (255 - alpha) + 127) / 255;
         return lum < 128;
-    }
-
-    private static BitMatrix Rotate90(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Height, matrix.Width);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[matrix.Height - 1 - y, x] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
-    private static BitMatrix Rotate180(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Width, matrix.Height);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[matrix.Width - 1 - x, matrix.Height - 1 - y] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
-    private static BitMatrix Rotate270(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Height, matrix.Width);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[y, matrix.Width - 1 - x] = matrix[x, y];
-            }
-        }
-        return result;
-    }
-
-    private static BitMatrix MirrorX(BitMatrix matrix) {
-        var result = new BitMatrix(matrix.Width, matrix.Height);
-        for (var y = 0; y < matrix.Height; y++) {
-            for (var x = 0; x < matrix.Width; x++) {
-                result[matrix.Width - 1 - x, y] = matrix[x, y];
-            }
-        }
-        return result;
     }
 
     private readonly struct BoundingBox {

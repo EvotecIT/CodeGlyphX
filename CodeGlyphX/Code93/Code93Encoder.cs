@@ -23,8 +23,8 @@ public static class Code93Encoder {
 
         var body = content;
         if (includeChecksum) {
-            body += GetChecksum(body, 20);
-            body += GetChecksum(body, 15);
+            body += Code93Tables.GetChecksum(body.AsSpan(), 20);
+            body += Code93Tables.GetChecksum(body.AsSpan(), 15);
         }
 
         var encoded = "*" + body + "*";
@@ -51,22 +51,4 @@ public static class Code93Encoder {
         return sb.ToString();
     }
 
-    private static char GetChecksum(string content, int maxWeight) {
-        var weight = 1;
-        var sum = 0;
-        for (var i = content.Length - 1; i >= 0; i--) {
-            var ch = content[i];
-            if (!Code93Tables.EncodingTable.TryGetValue(ch, out var entry)) {
-                return ' ';
-            }
-            sum += entry.value * weight;
-            weight++;
-            if (weight > maxWeight) weight = 1;
-        }
-        sum %= 47;
-        foreach (var kvp in Code93Tables.EncodingTable) {
-            if (kvp.Value.value == sum) return kvp.Key;
-        }
-        return ' ';
-    }
 }

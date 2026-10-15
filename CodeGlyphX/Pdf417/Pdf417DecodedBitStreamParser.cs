@@ -21,6 +21,7 @@ internal static class Pdf417DecodedBitStreamParser {
     private const int NumericCompactionLatch = 902;
     private const int ByteCompactionLatch6 = 924;
     private const int ModeShiftToByte = 913;
+    private const int ReaderInitialization = 921;
     private const int MacroPdf417ControlBlock = 928;
     private const int MacroPdf417Terminator = 922;
     private const int MacroPdf417OptionalField = 923;
@@ -64,6 +65,12 @@ internal static class Pdf417DecodedBitStreamParser {
 
         while (index < codewords.Length) {
             var code = codewords[index++];
+            // ISO/IEC 15438 places this marker immediately after the length
+            // descriptor. Decode its payload without applying device settings.
+            if (code == ReaderInitialization) {
+                if (index != 1) return null;
+                continue;
+            }
             if (code == CharsetEci) {
                 if (!DecodeCharsetEci(codewords, ref index, result)) return null;
                 continue;

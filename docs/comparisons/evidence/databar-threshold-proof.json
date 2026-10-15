@@ -1,0 +1,167 @@
+{
+  "Source": "0d74cff21a0c39cc6f1fbf0aface3a2662077e2b",
+  "CoreSha256": "A9511D51D4A9ED2E27CD6EB6619B17C84075C33A7560B252B2A8AA9EC01BF9CE",
+  "PreviousSource": "429ec7881d9137ba33189e9632d04822d50882ab",
+  "PreviousCoreSha256": "B83B062F29D6D4E85E8D332686CC42A8FBE0451CE2B8302E8699F6C9865C7423",
+  "HostSha256": "E1690E5CEAC23904C8C7BA6DB1E4A43AEF6193599E445EE001D12305D82EBD1F",
+  "PreviousHostSha256": "E1690E5CEAC23904C8C7BA6DB1E4A43AEF6193599E445EE001D12305D82EBD1F",
+  "TestAssemblySha256": "99FF479F18B464E5C23BEC2DD618388DFB8EF2D713245CC3CDBBE9C4F4B0462C",
+  "BaselineQualification": {
+    "File": "databar-threshold-baseline-qualification.json",
+    "Sha256": "837FD03CC394C75A801FD88D5F7BF9BC45680F27944C2559FF230D3150FF45A2"
+  },
+  "ReviewCoverage": {
+    "Head": "0d74cff21a0c39cc6f1fbf0aface3a2662077e2b",
+    "BoundaryState": "current",
+    "UnresolvedFindings": [],
+    "Task": "databar_threshold_mask_review",
+    "Scope": "One fresh read-only pass over shared mask selection, DataBar geometry/corroboration/cancellation, compatibility, tests and ownership. No actionable P0-P3 findings."
+  },
+  "Changes": "DataBar recovery retains the first cutoff for each distinct binary row before fitting runs. The ordinary and Code128 paths use the same existing histogram rule through one internal owner. Cutoff order, every changed pixel hypothesis, finder rules, checksum validation and three-row corroboration remain intact. No public API or production dependency changes.",
+  "Scope": "Decoder-only follow-up on the exact later core. The earlier full generation and mixed-format comparison retains its original qualified core. Six paired workload/domain packets use separate retained decoder contexts, three priming calls and twelve grouped rotated measurements per binary. Identical verified RGBA32 pixels, format hints, payload sets and 1500 ms robust allowance are fixed. All 180 priming and measured calls retain per-image outcomes. Loading, evaluation and persistence are outside timing. The unchanged comparison adapter retains its preceding source and hash.",
+  "HistoryNote": "This follow-up does not replace or relabel the preceding full comparison, its first-use results or its incomplete negative scans. Both binaries use the same frozen corpus and adapters. The separate main and supplementary passes include all three decoding engines; QRCoder remains generation-only.",
+  "Limits": "Initial observed CPU load reached 94-100 percent on the shared Windows host. These observations do not prove load throughout each operation or establish the cause of a latency difference. All slower results and incomplete searches remain included. Managed allocation excludes native memory. A faster DataBar batch does not establish improved negative completion, lower CPU use, throughput, capacity or overall superiority. The Expanded Stacked13 raw payload matches its oracle after removing parentheses, but its 54-digit AI3922 price exceeds the GS1 maximum of fifteen; the locked failed score remains unchanged.",
+  "NativeArm64": {
+    "File": "databar-threshold-native-arm64.json",
+    "Sha256": "C0326372B868D447A2C8F89CD036EB256BE671B1A3054D4CE4858C243980F343"
+  },
+  "Tests": {
+    "File": "databar-threshold-tests.json",
+    "Sha256": "CDE60863B71602DAB31487AC6FAB068C9B9D3295700B4B94E86527F86F1C2379"
+  },
+  "Manifests": {
+    "databar-positive": {
+      "File": "databar-threshold-databar14-positive-manifest.json",
+      "Sha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "OriginalInputSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8"
+    },
+    "databar-negative": {
+      "File": "databar-threshold-databar14-negative-manifest.json",
+      "Sha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "OriginalInputSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F"
+    },
+    "fabric": {
+      "File": "databar-threshold-profile-falsepositives-15.json",
+      "Sha256": "D8D92985BBF038D89FA3E6D40E600C2C709CE84747E1DB6FD0F77EC507AB1047",
+      "OriginalInputSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42"
+    }
+  },
+  "HostLoads": [
+    {
+      "File": "databar-threshold-threshold-paired-databar-positive-ccd0-12-host-load.json",
+      "Sha256": "B998C5905CD19A44B896B851A27B14C6631AE8F74EC86EC09A8C0D179D848D30"
+    },
+    {
+      "File": "databar-threshold-threshold-paired-databar-positive-ccd1-12-host-load.json",
+      "Sha256": "E6F4AFBAFD36EFD2D9ECDE1A782C13A23C2F33D450A992ED786366AB9D6BE43B"
+    },
+    {
+      "File": "databar-threshold-threshold-paired-databar-negative-ccd0-12-host-load.json",
+      "Sha256": "7C01C6DDE51D47C693CFAAAC3C98C6541FF4F31E39C7C5F613913FA2572D0195"
+    },
+    {
+      "File": "databar-threshold-threshold-paired-databar-negative-ccd1-12-host-load.json",
+      "Sha256": "E0C97BA2C7494336F0EE8B2FBC1A379C106F5337AFAF9A62D136068E17EAD0C8"
+    },
+    {
+      "File": "databar-threshold-threshold-paired-fabric-ccd0-12-host-load.json",
+      "Sha256": "C2F47AC5269081418406E3C31BDF2ADB003A7DC4DA9E2F1E1D5B9BF7A44D76B3"
+    },
+    {
+      "File": "databar-threshold-threshold-paired-fabric-ccd1-12-host-load.json",
+      "Sha256": "D7772952BC52796C26F732A5165E2634369E3B8BB3B3ED8F9A3DD54E379E9B9A"
+    }
+  ],
+  "Packets": [
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd0",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-threshold-databar-positive-ccd0-result.json",
+      "PacketSha256": "0307A2C0D2B584D39496EDAC9F9076C14DA6B0999B5B21CE0967DEE506CE50DD",
+      "OutcomesFile": "databar-threshold-databar-positive-ccd0-outcomes.json",
+      "OutcomesSha256": "C85DADBDABD3A9FFCCE15EF5BA7EBBFAA8C8A3E2B1C2DA354014FF89858C82D5"
+    },
+    {
+      "Kind": "databar-positive",
+      "Domain": "ccd1",
+      "Requests": 12,
+      "ManifestSha256": "FCFC4A7A06233D92DDB574584266519124099BAA2FC7D303C6C5044319E9B0D8",
+      "PacketFile": "databar-threshold-databar-positive-ccd1-result.json",
+      "PacketSha256": "91DEE714D76CCB74101F5A2210C2E18FEBE855B4A0BBA03C1BFCABE81FF4CFCB",
+      "OutcomesFile": "databar-threshold-databar-positive-ccd1-outcomes.json",
+      "OutcomesSha256": "D6B36B6697B1B13E94A136E41D713D35CF8E40E8D1699B8B9EF90A3786FD12EC"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd0",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-threshold-databar-negative-ccd0-result.json",
+      "PacketSha256": "7035E40FDB40CC1B4B0E3E3B636982E053547E2B1C800E4A15BEA06D533F0E4A",
+      "OutcomesFile": "databar-threshold-databar-negative-ccd0-outcomes.json",
+      "OutcomesSha256": "B78E8BF957414D86D2F0C6FC0BD1C24BEE316B4CCFC839C3CACC896B37FB8039"
+    },
+    {
+      "Kind": "databar-negative",
+      "Domain": "ccd1",
+      "Requests": 31,
+      "ManifestSha256": "5BCFF4853C8A68D004103249A05CD206A2CE9DBD30C3182184F04315B1DB324F",
+      "PacketFile": "databar-threshold-databar-negative-ccd1-result.json",
+      "PacketSha256": "8765E62817D0B712FCEBC1CA79E51247C418A01F42FAACCA7387FD04596105E8",
+      "OutcomesFile": "databar-threshold-databar-negative-ccd1-outcomes.json",
+      "OutcomesSha256": "3DD0CED763AEE9728AFE05997DF73991C308D7C360BBFD42A036C9BDB24BA59D"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd0",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "databar-threshold-fabric-ccd0-result.json",
+      "PacketSha256": "6CCEF7C69AA9BE6ED3DE8B74AA5BAEABA4D965074493A5C926B35D9C56EF56F5",
+      "OutcomesFile": "databar-threshold-fabric-ccd0-outcomes.json",
+      "OutcomesSha256": "F6FC8B67E1C8C763E39E05751B1D1C71DD223DDEBB0E3220EBF74664F7CD7460"
+    },
+    {
+      "Kind": "fabric",
+      "Domain": "ccd1",
+      "Requests": 1,
+      "ManifestSha256": "D9B09BC9280054216F84181C54E4379FE26982157A60C972040E1FE97D9A2C42",
+      "PacketFile": "databar-threshold-fabric-ccd1-result.json",
+      "PacketSha256": "646CA349495BC1B22E366CA6263CCD4BB6984335DDEB86ECE5800E264B20D18A",
+      "OutcomesFile": "databar-threshold-fabric-ccd1-outcomes.json",
+      "OutcomesSha256": "CCC4A001F1F718B5334F5D622F4D61D947D842B06D824F6B939F881DC070E635"
+    }
+  ],
+  "FrozenManifests": {
+    "main": {
+      "File": "databar-threshold-corpus-manifest.json",
+      "Sha256": "D30B25BD492FC6D66BB2E1FED20265D07DDCEACDCA3A2949857A09C940F871BF",
+      "OriginalInputSha256": "3714951ED16A82C1BD9B7A94543590DD609312EF3A39EFDD462F6C7F5BE7DD28"
+    },
+    "negative": {
+      "File": "databar-threshold-negative-manifest.json",
+      "Sha256": "6B8DCAEE1BB7A39C6A989A7ED58F998C9EC2FB7E609011C751F162ECA89B8751",
+      "OriginalInputSha256": "58774CB9E4C9BDB79B49D11A1C83F8F15D0FDE5214487ED16ABE0D2B5063FF4D"
+    }
+  },
+  "Corpus": {
+    "main-before": {
+      "File": "databar-threshold-corpus-main-baseline.json",
+      "Sha256": "6C86756C3ED41480AA59E482246463D7D2D64420ACAF72664821B6CD80E75D22"
+    },
+    "main-current": {
+      "File": "databar-threshold-corpus-main-candidate.json",
+      "Sha256": "FFCE8A4C33096AA2D0F4B362F8E24020BB9B82362AA881EDC5468771C3125992"
+    },
+    "negative-before": {
+      "File": "databar-threshold-corpus-supplemental-negative-baseline.json",
+      "Sha256": "6BAE0927A46715587DA25D4B8DB53859E686D5AD3B8F56CC1593FBB7FAFFFC53"
+    },
+    "negative-current": {
+      "File": "databar-threshold-corpus-supplemental-negative-candidate.json",
+      "Sha256": "C48A325C3B7AC5B26FB24E2367CE9718B8C8F405AB8269A70C4CE5F5A00B3AE3"
+    }
+  }
+}

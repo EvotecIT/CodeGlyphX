@@ -19,10 +19,7 @@ internal static class DataBarExpandedStacking {
 
         for (var row = 0; row < rowCount; row++) {
             var blocksInRow = Math.Min(columns, blockCount - currentBlock);
-            var leftToRight = ((row + 1) & 1) == 1 || (columns & 1) == 1;
-            var hasPartialBlock = (totalCharacters & 1) != 0 && currentBlock + blocksInRow == blockCount;
-            var specialRow = !leftToRight && (blocksInRow == 1 || hasPartialBlock);
-            if (specialRow) leftToRight = true;
+            var leftToRight = GetRowDirection(totalCharacters, columns, row, out var specialRow);
 
             var rowWidths = BuildRow(elements, totalCharacters, currentBlock, blocksInRow, leftToRight, specialRow);
             rows[row] = rowWidths;
@@ -36,7 +33,18 @@ internal static class DataBarExpandedStacking {
         return matrix;
     }
 
-    private static int[] BuildRow(int[] elements, int totalCharacters, int firstBlock, int blockCount, bool leftToRight, bool specialRow) {
+    /// <summary>Resolves row direction and the exceptional two-module starting guard.</summary>
+    internal static bool GetRowDirection(int totalCharacters, int columns, int row, out bool specialRow) {
+        var blocks = (totalCharacters + 1) / 2;
+        var count = Math.Min(columns, blocks - row * columns);
+        var forward = (row & 1) == 0 || (columns & 1) != 0;
+        var partial = (totalCharacters & 1) != 0 && row * columns + count == blocks;
+        specialRow = !forward && (count == 1 || partial);
+        return forward || specialRow;
+    }
+
+    /// <summary>Projects canonical character-pair elements into one physical stacked row.</summary>
+    internal static int[] BuildRow(int[] elements, int totalCharacters, int firstBlock, int blockCount, bool leftToRight, bool specialRow) {
         var totalBlocks = (totalCharacters + 1) / 2;
         var partialBlock = (totalCharacters & 1) != 0 ? totalBlocks - 1 : -1;
         var contentElements = 0;
