@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using CodeGlyphX.Code128;
 
 namespace CodeGlyphX.Code16K;
 
@@ -57,48 +57,10 @@ public static class Code16KDecoder {
     }
 
     private static bool TryReadPayload(List<int> words, int end, int mode, out string text) {
-        text = string.Empty;
         var set = mode == 0 ? 'A' : mode == 2 || mode >= 4 && mode <= 6 ? 'C' : 'B';
         var temporary = mode == 5 || mode == 6 ? 'B' : '\0';
         var remaining = mode == 5 ? 1 : mode == 6 ? 2 : 0;
-        var upperMode = false;
-        var upperShift = false;
-        var result = new StringBuilder();
-        for (var i = 1; i < end; i++) {
-            var code = words[i];
-            var active = remaining > 0 ? temporary : set;
-            if ((active == 'C' && code < 100) || (active != 'C' && code < 96)) {
-                if (active == 'C') {
-                    if (upperShift) return false;
-                    result.Append((char)('0' + code / 10)).Append((char)('0' + code % 10));
-                } else {
-                    var value = active == 'A' && code >= 64 ? code - 64 : code + 32;
-                    if (upperMode != upperShift) value += 128;
-                    result.Append((char)value);
-                    upperShift = false;
-                }
-                if (remaining > 0) remaining--;
-                continue;
-            }
-            if (remaining > 0 || upperShift) return false;
-            if (code == 102) { result.Append(Gs1.GroupSeparator); continue; }
-            if (active != 'C' && (code == 96 || code == 97)) continue;
-            if (code == 99 && active != 'C') { set = 'C'; continue; }
-            if (code == 100 && active != 'B') { set = 'B'; continue; }
-            if (code == 101 && active != 'A') { set = 'A'; continue; }
-            if ((active == 'A' && code == 101) || (active == 'B' && code == 100)) {
-                if (i + 1 < end && words[i + 1] == code) { upperMode = !upperMode; i++; }
-                else upperShift = true;
-                continue;
-            }
-            if (active == 'C' && code >= 104 && code <= 106) { temporary = 'B'; remaining = code - 103; continue; }
-            if (active != 'C' && (code == 98 || code == 104)) { temporary = active == 'A' ? 'B' : 'A'; remaining = code == 98 ? 1 : 2; continue; }
-            if (active != 'C' && (code == 105 || code == 106)) { temporary = 'C'; remaining = code - 103; continue; }
-            return false;
-        }
-        if (remaining != 0 || upperShift) return false;
-        text = result.ToString();
-        return true;
+        return Code128CharacterReader.TryRead(words, 1, end, set, temporary, remaining, out text, out _);
     }
 
     private static bool SameRow(BitMatrix modules, int first, int second) {

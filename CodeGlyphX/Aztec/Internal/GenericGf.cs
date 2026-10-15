@@ -4,6 +4,7 @@ namespace CodeGlyphX.Internal.ReedSolomon;
 
 internal sealed class GenericGf {
     public static readonly GenericGf AztecParam = new(0x13, 16, 1);
+    public static readonly GenericGf Mailmark = new(0x25, 32, 1);
     public static readonly GenericGf AztecData6 = new(0x43, 64, 1);
     public static readonly GenericGf MaxiCode = AztecData6;
     public static readonly GenericGf AztecData8 = new(0x12d, 256, 1);

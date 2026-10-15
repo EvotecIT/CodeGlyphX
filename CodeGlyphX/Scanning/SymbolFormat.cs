@@ -119,5 +119,13 @@ public enum SymbolFormat {
     /// <summary>Code 16K stacked barcode.</summary>
     Code16K = 56,
     /// <summary>Code 49 stacked barcode.</summary>
-    Code49 = 57
+    Code49 = 57,
+    /// <summary>Codablock F stacked barcode.</summary>
+    CodablockF = 58,
+    /// <summary>Normal, limited and stacked PosiCode.</summary>
+    PosiCode = 59,
+    /// <summary>Royal Mail Mailmark C and L four-state symbols.</summary>
+    Mailmark4State = 60,
+    /// <summary>Provisional D3 AQR category frame around a QR Code.</summary>
+    D3Aqr = 61
 }

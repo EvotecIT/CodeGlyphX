@@ -111,6 +111,7 @@
     <Compile Include="SvgQrRendererTests.cs" />
     <Compile Include="ImageScannerSerialCollection.cs" />
     <Compile Include="RetailDigitFitTests.cs" />
+    <Compile Include="AdditionalBarcodeRuntimeTests.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">

@@ -196,4 +196,10 @@ public enum BarcodeType {
     Code16K = 52,
     /// <summary>Code 49 stacked barcode.</summary>
     Code49 = 53,
+    /// <summary>Codablock F stacked barcode.</summary>
+    CodablockF = 54,
+    /// <summary>Normal, limited and stacked PosiCode.</summary>
+    PosiCode = 55,
+    /// <summary>Royal Mail Mailmark C and L four-state symbols.</summary>
+    Mailmark4State = 56,
 }

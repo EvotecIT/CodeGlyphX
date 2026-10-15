@@ -8,7 +8,7 @@ namespace CodeGlyphX;
 /// <summary>Decodes sampled module grids without image detection or raster conversion.</summary>
 public static class SymbolDecoder {
     private static readonly SymbolFormat[] DetailedFormats = {
-        SymbolFormat.Gs1Composite, SymbolFormat.RmQrCode, SymbolFormat.MaxiCode, SymbolFormat.DotCode,
+        SymbolFormat.D3Aqr, SymbolFormat.Gs1Composite, SymbolFormat.RmQrCode, SymbolFormat.MaxiCode, SymbolFormat.DotCode,
         SymbolFormat.HanXin, SymbolFormat.MicroQrCode, SymbolFormat.QrCode, SymbolFormat.Aztec,
         SymbolFormat.DataMatrix, SymbolFormat.Pdf417, SymbolFormat.MicroPdf417,
         SymbolFormat.Gs1DataBarOmnidirectional, SymbolFormat.Gs1DataBarStackedOmnidirectional,
@@ -46,6 +46,21 @@ public static class SymbolDecoder {
     private static bool TryDecodeFormat(BitMatrix modules, SymbolFormat format, out DetectedSymbol symbol) {
         symbol = null!;
         switch (format) {
+            case SymbolFormat.D3Aqr:
+                if (!D3Aqr.D3AqrDecoder.TryDecode(modules, out var d3)) return false;
+                symbol = new DetectedSymbol(format, d3.Text, d3.Host.Bytes, new D3AqrSymbolMetadata(d3),
+                    d3.Host.Fnc1Mode == QrFnc1Mode.FirstPosition ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
+                return true;
+            case SymbolFormat.PosiCode:
+                if (!PosiCode.PosiCodeDecoder.TryDecode(modules, out var posi)) return false;
+                symbol = new DetectedSymbol(format, posi.Text,
+                    payloadProfile: posi.IsGs1 ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
+                return true;
+            case SymbolFormat.CodablockF:
+                if (!CodablockF.CodablockFDecoder.TryDecode(modules, out var block)) return false;
+                symbol = new DetectedSymbol(format, block.Text,
+                    payloadProfile: block.IsGs1 ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
+                return true;
             case SymbolFormat.Code16K:
                 if (!Code16K.Code16KDecoder.TryDecode(modules, out var code16K)) return false;
                 symbol = new DetectedSymbol(format, code16K.Text,

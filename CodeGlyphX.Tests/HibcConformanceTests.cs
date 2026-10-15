@@ -21,6 +21,7 @@ public sealed class HibcConformanceTests {
                 "hibcqrcode" => SymbolFormat.QrCode,
                 "hibcpdf417" => SymbolFormat.Pdf417,
                 "hibcmicropdf417" => SymbolFormat.MicroPdf417,
+                "hibccodablockf" => SymbolFormat.CodablockF,
                 _ => (SymbolFormat?)null
             };
             if (!carrier.HasValue) continue;
@@ -38,7 +39,7 @@ public sealed class HibcConformanceTests {
             }
             count++;
         }
-        Assert.Equal(7, count);
+        Assert.Equal(8, count);
     }
 
     [Theory]

@@ -3,6 +3,7 @@
 import { createRequire } from 'node:module';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const [moduleDirectory, output] = process.argv.slice(2);
 if (!moduleDirectory || !output) throw new Error('Specify the independent bwip-js directory and fixture output path.');
@@ -27,6 +28,8 @@ const cases = [
     ['hibcqrcode', 'A999BJC5D6E71'], ['hibcpdf417', 'A999BJC5D6E71'], ['hibcmicropdf417', 'A999BJC5D6E71'],
     ...['HELLO', '1234567890', 'A123456', 'AB123456', '\u0001ABC', 'ab\u0001cd'].map(text => ['code16k', text]),
     ...['HELLO', '12345', '123456', '1234567', '12345678', '123456789', 'A1234567B', '\u0001ABC', 'lowercase', '1'.repeat(81)].map(text => ['code49', text]),
+    ...['HELLO', '1234567890', 'AB1234567890xy', '\u0001ABC', 'ab\u0001cd', 'A'.repeat(45)].map(text => ['codablockf', text]),
+    ['hibccodablockf', 'A999BJC5D6E71'],
     ...['industrial2of5', 'iata2of5', 'matrix2of5', 'coop2of5', 'datalogic2of5'].flatMap(bcid => [
         [bcid, '1234'], [bcid, '0123456789'], [bcid, '1234', { includecheck: true }],
     ]),
@@ -49,7 +52,8 @@ const fixtures = cases.map(([bcid, text, options = {}]) => {
     };
 });
 writeFileSync(resolve(output), JSON.stringify({
-    generator: `bwip-js ${metadata.version} / BWIPP`,
+    generator: `bwip-js ${metadata.version} / BWIPP ${bwip.BWIPP_VERSION}`,
+    engineSha256: createHash('sha256').update(readFileSync(require.resolve(resolve(moduleDirectory)))).digest('hex'),
     source: 'https://github.com/metafloor/bwip-js',
     fixtures,
 }, null, 2) + '\n');

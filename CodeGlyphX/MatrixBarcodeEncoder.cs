@@ -18,6 +18,7 @@ public static class MatrixBarcodeEncoder {
     public static MatrixSymbol EncodeSymbol(SymbolFormat format, string value) {
         if (value is null) throw new ArgumentNullException(nameof(value));
         return format switch {
+            SymbolFormat.D3Aqr => throw new NotSupportedException("D3 AQR requires a category. Use D3AqrEncoder.EncodeText or Wrap."),
             SymbolFormat.MicroQrCode => MicroQrCodeEncoder.EncodeText(value),
             SymbolFormat.RmQrCode => RmQrCodeEncoder.EncodeText(value),
             SymbolFormat.Aztec => Aztec.AztecEncoder.EncodeSymbol(value),
@@ -41,6 +42,9 @@ public static class MatrixBarcodeEncoder {
             BarcodeType.Daft => Postal.DaftCode.Encode(value).Modules.Clone(),
             BarcodeType.Code16K => Code16K.Code16KEncoder.Encode(value).Modules.Clone(),
             BarcodeType.Code49 => Code49.Code49Encoder.Encode(value).Modules.Clone(),
+            BarcodeType.CodablockF => CodablockF.CodablockFEncoder.Encode(value).Modules.Clone(),
+            BarcodeType.PosiCode => ToSingleRowMatrix(PosiCode.PosiCodeEncoder.Encode(value)),
+            BarcodeType.Mailmark4State => Mailmark.MailmarkFourState.Encode(value).Modules.Clone(),
             BarcodeType.PharmacodeTwoTrack => PharmacodeTwoTrackEncoder.Encode(value),
             BarcodeType.Postnet => PostnetEncoder.Encode(value),
             BarcodeType.Planet => PlanetEncoder.Encode(value),

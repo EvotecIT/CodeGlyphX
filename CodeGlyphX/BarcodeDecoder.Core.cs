@@ -242,6 +242,12 @@ public static partial class BarcodeDecoder {
         var modules = runWorkspace.Modules;
         decoded = null!;
         switch (type) {
+            case BarcodeType.PosiCode:
+                if (PosiCode.PosiCodeDecoder.TryDecode(modules, out var posi)) {
+                    decoded = new BarcodeDecoded(type, posi.Text, readerInitialization: posi.ReaderInitialization);
+                    return true;
+                }
+                return false;
             case BarcodeType.ChannelCode:
                 if (ChannelCode.ChannelCodeDecoder.TryDecode(modules, out var channelNumber)) {
                     decoded = new BarcodeDecoded(type, channelNumber);

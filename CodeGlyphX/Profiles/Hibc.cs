@@ -49,7 +49,7 @@ public static class Hibc {
         };
     }
 
-    /// <summary>Encodes HIBC in QR Code, square Data Matrix, PDF417, or MicroPDF417.</summary>
+    /// <summary>Encodes HIBC in QR Code, square Data Matrix, PDF417, MicroPDF417, or Codablock F.</summary>
     public static MatrixSymbol EncodeMatrix(SymbolFormat carrier, string data) {
         var payload = Prepare(data);
         return carrier switch {
@@ -57,6 +57,7 @@ public static class Hibc {
             SymbolFormat.DataMatrix => DataMatrixEncoder.EncodeSymbol(payload),
             SymbolFormat.Pdf417 => Pdf417Encoder.EncodeSymbol(payload),
             SymbolFormat.MicroPdf417 => new MatrixSymbol(carrier, MicroPdf417Encoder.Encode(payload)),
+            SymbolFormat.CodablockF => CodablockF.CodablockFEncoder.Encode(payload),
             _ => throw new ArgumentException("This format is not a supported HIBC matrix carrier.", nameof(carrier))
         };
     }
@@ -81,7 +82,7 @@ public static class Hibc {
     public static bool TryDecodeMatrix(SymbolFormat carrier, BitMatrix modules, out string data) {
         data = string.Empty;
         if (carrier != SymbolFormat.QrCode && carrier != SymbolFormat.DataMatrix
-            && carrier != SymbolFormat.Pdf417 && carrier != SymbolFormat.MicroPdf417)
+            && carrier != SymbolFormat.Pdf417 && carrier != SymbolFormat.MicroPdf417 && carrier != SymbolFormat.CodablockF)
             throw new ArgumentException("This format is not a supported HIBC matrix carrier.", nameof(carrier));
         return SymbolDecoder.TryDecode(modules, out var decoded, carrier) && TryParse(decoded.Text, out data);
     }

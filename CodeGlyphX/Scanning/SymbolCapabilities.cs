@@ -17,6 +17,9 @@ public static class SymbolCapabilities {
             ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
+        Entry(SymbolFormat.D3Aqr, "D3 AQR (provisional)", SymbolFamily.Matrix,
+            Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
+            SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Entry(SymbolFormat.MicroQrCode, "Micro QR Code", SymbolFamily.Matrix,
             ImageMulti | SymbolCapabilityFlags.ReportsGeometry),
         Entry(SymbolFormat.RmQrCode, "Rectangular Micro QR Code", SymbolFamily.Matrix,
@@ -49,9 +52,14 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Daft, "DAFT", SymbolFamily.Postal, BarcodeType.Daft, Standard),
         Legacy(SymbolFormat.Flattermarken, "Flattermarken", SymbolFamily.Linear, BarcodeType.Flattermarken, Standard),
         Legacy(SymbolFormat.ChannelCode, "Channel Code", SymbolFamily.Linear, BarcodeType.ChannelCode, ImageMulti),
+        Legacy(SymbolFormat.PosiCode, "PosiCode", SymbolFamily.Linear, BarcodeType.PosiCode,
+            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+        Legacy(SymbolFormat.Mailmark4State, "Mailmark 4-State", SymbolFamily.Postal, BarcodeType.Mailmark4State, Standard),
         Legacy(SymbolFormat.Code16K, "Code 16K", SymbolFamily.Stacked, BarcodeType.Code16K,
             Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Code49, "Code 49", SymbolFamily.Stacked, BarcodeType.Code49,
+            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+        Legacy(SymbolFormat.CodablockF, "Codablock F", SymbolFamily.Stacked, BarcodeType.CodablockF,
             Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Plessey, "Plessey", SymbolFamily.Linear, BarcodeType.Plessey, ImageMulti),
         Legacy(SymbolFormat.Telepen, "Telepen", SymbolFamily.Linear, BarcodeType.Telepen, ImageMulti),
