@@ -1,7 +1,7 @@
 """Project DataBar-14 workspaces, exact public and ordered-row outcomes, and complete-scan costs."""
 import hashlib
 import json
-import math
+from comparison_decoder_contracts import validate_native_contracts, validate_profile_diagnostics
 from comparison_retained_contexts import project_context_costs, project_packet_costs
 from comparison_qualification_history import resolve_proof_owner
 
@@ -68,52 +68,8 @@ def project_databar14_workspace(root, qualification):
         count += row_count; calls += record['CollectorCalls']
     if count != rows['Rows'] or calls != rows['CollectorCallsPerBinary']:
         raise ValueError('Actual row collector totals differ')
-    native = read('native-arm64')
-    if (native != proof['NativeArm64'] or native['Source'] != proof['Source'] or native['CoreSha256'] != proof['CoreSha256']
-            or native['InputFiles']['CodeGlyphX.dll'] != proof['CoreSha256']
-            or native['InputFiles']['CodeGlyphX.Tests.dll'] != proof['TestAssemblySha256']
-            or native['Architecture'] != 'arm64' or native['FrameworkRollForward'] != 'Disable'
-            or not native['SDKVersion'] or not native['SelectedFrameworkVersion']
-            or native['DecisionProof']['Status'] != 'passed' or native['DecisionProof']['Checks'] != 78
-            or len(native['DecisionProof']['Cases']) != 78 or any(r['Status'] != 'passed' for r in native['DecisionProof']['Cases'])
-            or native['DecisionProof']['CoreSha256'] != proof['CoreSha256']
-            or native['DecisionProof']['TestAssemblySha256'] != proof['TestAssemblySha256']
-            or native['DecisionProof']['CoreInformationalVersion'].split('+')[-1] != proof['Source']):
-        raise ValueError('Workspace native proof differs from its exact core or tests')
-    profile_inputs = checked(proof['ProfileManifest'])
-    if (proof['FrozenCorpusManifest']['OriginalInputSha256'] != owner['CorpusManifestSha256']
-            or proof['FrozenNegativeManifest']['OriginalInputSha256'] != owner['NegativeManifestSha256']):
-        raise ValueError('Workspace frozen manifests differ from their qualification')
-    frozen_samples = {r['Id']:r for m in (frozen,negatives) for r in m['Samples']}
-    ids = {r['Id'] for r in profile_inputs['Samples']}
-    if len(ids) != 9 or any(frozen_samples.get(r['Id']) != r for r in profile_inputs['Samples']):
-        raise ValueError('Profile image hashes, oracles or hints differ from the frozen corpus')
-    diagnostic = read('allocation-diagnostic')
-    if (diagnostic != proof['AllocationDiagnostic'] or diagnostic['Source'] != proof['Source']
-            or diagnostic['CoreSha256'] != proof['CoreSha256'] or diagnostic['PreviousCoreSha256'] != proof['PreviousCoreSha256']
-            or diagnostic['Images'] != 9 or diagnostic['PrimingCalls'] != 9 or diagnostic['MeasuredCalls'] != 27):
-        raise ValueError('Module-run allocation diagnostic identity differs')
-    packets = proof['DiagnosticPackets']
-    if len(packets) != 2 or {r['Lane'] for r in packets} != {'before','after'}:
-        raise ValueError('Module-run allocation diagnostic lane missing')
-    means = {}
-    completions = {}
-    for row in packets:
-        data = checked(row); profile = checked(row,'ProfileFile','ProfileSha256')
-        source, core = (proof['PreviousSource'],proof['PreviousCoreSha256']) if row['Lane']=='before' else (proof['Source'],proof['CoreSha256'])
-        if (row['Source'] != source or row['CoreSha256'] != core or data['CoreSha256'] != core
-                or len(data['Rows']) != 36 or {(r['Id'],r['Iteration']) for r in data['Rows']} != {(id,i) for id in ids for i in (-1,0,1,2)}
-                or any(len(r['Outcomes']) != 1 or r['Outcomes'][0]['Id'] != r['Id'] or r['Outcomes'][0]['Engine'] != 'CodeGlyphX' for r in data['Rows'])
-                or profile['Source'] != source or profile['CoreSha256'] != core or profile['ProbeOutcomeSha256'] != row['Sha256']
-                or len(profile['DerivedFromTraceSha256']) != 64 or profile['AllocationTicks'] < 1 or profile['ThreadTimeSamples'] < 1):
-            raise ValueError('Incomplete module-run profile identities or actual outcomes')
-        measured = [r for r in data['Rows'] if r['Iteration'] >= 0]
-        means[row['Lane']] = sum(r['AllocatedBytes'] for r in measured)/27
-        completions[row['Lane']] = sum(r['Outcomes'][0]['Status']=='Correct' for r in measured)
-    if (not math.isclose(means['before'],diagnostic['BeforeMeanAllocatedBytes'],abs_tol=1e-8)
-            or not math.isclose(means['after'],diagnostic['CurrentMeanAllocatedBytes'],abs_tol=1e-8)
-            or not math.isclose(means['after']/means['before'],diagnostic['AllocationRatio'],abs_tol=1e-12)):
-        raise ValueError('Module-run diagnostic counters differ')
+    validate_native_contracts(proof, read('native-arm64'), 78)
+    frozen_samples, means, completions = validate_profile_diagnostics(proof, owner, frozen, negatives, checked, read)
     supplemental = proof['SupplementalPackets']
     if (len(supplemental) != 4 or {(r['Kind'],r['Domain']) for r in supplemental} !=
             {(kind,domain) for kind in ('databar-positive','databar-negative') for domain in ('ccd0','ccd1')}

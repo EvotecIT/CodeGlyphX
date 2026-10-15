@@ -108,7 +108,7 @@ internal static partial class AztecPixelDecoder {
                 if (score < 0.93) continue;
                 var position = 0;
                 while (position < grids.Count && (grids[position].Score > score ||
-                    grids[position].Score == score && grids[position].Side >= side)) position++;
+                    grids[position].Score.Equals(score) && grids[position].Side >= side)) position++;
                 if (position >= 8) continue;
                 grids.Insert(position, new BullseyeGrid(transform, side, score));
                 if (grids.Count > 8) grids.RemoveAt(8);

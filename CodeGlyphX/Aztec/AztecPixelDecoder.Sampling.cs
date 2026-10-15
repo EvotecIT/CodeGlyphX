@@ -19,8 +19,9 @@ internal static partial class AztecPixelDecoder {
             for (var ring = 0; ring < 5; ring++) {
                 var expected = (ring & 1) == 0;
                 for (var axis = 0; axis < (ring == 0 ? 1 : 8); axis++) {
-                    var x = center + (axis == 0 || axis == 4 || axis == 5 ? ring : axis == 1 || axis == 6 || axis == 7 ? -ring : 0);
-                    var y = center + (axis == 2 || axis == 4 || axis == 6 ? ring : axis == 3 || axis == 5 || axis == 7 ? -ring : 0);
+                    var offset = GetBullseyeProbeOffset(axis, ring);
+                    var x = center + offset.X;
+                    var y = center + offset.Y;
                     if (SampleModule(image, offsetX + x * moduleSize + moduleSize / 2,
                         offsetY + y * moduleSize + moduleSize / 2, moduleSize, invert) != expected && ++errors > 4) { probes?.Store(moduleSize, centerX, centerY, false); return false; }
                 }
@@ -30,6 +31,17 @@ internal static partial class AztecPixelDecoder {
         modules = CreateSampledView(image, invert, size, moduleSize, offsetX, offsetY, cancellationToken);
         return !DecodeBudget.ShouldAbort(cancellationToken);
     }
+
+    private static (int X, int Y) GetBullseyeProbeOffset(int axis, int ring) => axis switch {
+        0 => (ring, 0),
+        1 => (-ring, 0),
+        2 => (0, ring),
+        3 => (0, -ring),
+        4 => (ring, ring),
+        5 => (ring, -ring),
+        6 => (-ring, ring),
+        _ => (-ring, -ring)
+    };
 
     // Keep the capture outside the probe method so rejected offsets allocate nothing.
     private static BitMatrixView CreateSampledView(AztecGrayImage image, bool invert,
