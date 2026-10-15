@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using CodeGlyphX;
 using CodeGlyphX.Payloads;
+using CodeGlyphX.Website.Specimens;
 using CodeGlyphX.Rendering;
 
 var website = Path.GetFullPath(args.Length > 0 ? args[0] : "Website");

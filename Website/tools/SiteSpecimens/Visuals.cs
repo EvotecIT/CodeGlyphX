@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
+namespace CodeGlyphX.Website.Specimens;
+
 internal static partial class SiteVisuals {
     public static void Run(string website) {
         root = website;
@@ -17,7 +19,7 @@ internal static partial class SiteVisuals {
 
         var site = JsonNode.Parse(File.ReadAllText(Path.Combine(website, "site.json")))!;
         var csproj = File.ReadAllText(Path.Combine(website, "..", "CodeGlyphX", "CodeGlyphX.csproj"));
-        var version = Regex.Match(csproj, "<VersionPrefix>([^<]+)</VersionPrefix>").Groups[1].Value;
+        var version = Regex.Match(csproj, "<VersionPrefix>([^<]+)</VersionPrefix>", RegexOptions.None, RegexTimeout).Groups[1].Value;
 
         var docs = BuildDocs(out var cards);
         var bench = BuildBench(out var recognition);

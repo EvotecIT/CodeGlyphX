@@ -33,6 +33,10 @@ $sourceRoot = Join-Path $website 'powershell'
 $outputRoot = Join-Path $website 'static/powershell/examples'
 $dataPath = Join-Path $website 'data/powershell-examples.json'
 $manifest = Get-Content -LiteralPath (Join-Path $sourceRoot 'examples.json') -Raw | ConvertFrom-Json
+$unknownIds = @($Id | Where-Object { $_ -notin $manifest.examples.id })
+if ($unknownIds.Count -gt 0) {
+    throw "Unknown example IDs: $($unknownIds -join ', ')."
+}
 
 if (-not $ModulePath) {
     $installed = Get-Module ImagePlayground -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1
@@ -58,7 +62,11 @@ function Get-ImageSize([string] $path) {
 
 $previous = @{}
 if (Test-Path -LiteralPath $dataPath) {
-    foreach ($entry in (Get-Content -LiteralPath $dataPath -Raw | ConvertFrom-Json).examples) { $previous[$entry.id] = $entry }
+    $saved = Get-Content -LiteralPath $dataPath -Raw | ConvertFrom-Json
+    if ($Id -and $saved.module.version -ne "$moduleVersion") {
+        throw "Regenerate all examples when changing ImagePlayground from $($saved.module.version) to $moduleVersion."
+    }
+    foreach ($entry in $saved.examples) { $previous[$entry.id] = $entry }
 }
 
 $results = foreach ($example in $manifest.examples) {

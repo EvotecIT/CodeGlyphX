@@ -53,6 +53,7 @@ globalThis.setTheme = setTheme;
             const el = document.createElement('script');
             el.src = src;
             el.onload = () => done?.();
+            el.onerror = () => done?.();
             document.head.appendChild(el);
         };
 
@@ -932,7 +933,7 @@ globalThis.CodeGlyphX.setupDropZone = function(dropZoneElement, inputFileElement
             });
         });
         // Panels render visible so the page reads without script; show only the selected one from here on.
-        var initial = tabs.filter(function (tab) { return tab.getAttribute('aria-selected') === 'true'; })[0] || tabs[0];
+        const initial = tabs.find(function (tab) { return tab.getAttribute('aria-selected') === 'true'; }) || tabs[0];
         if (initial) select(initial);
     });
 

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -281,9 +282,10 @@ public partial class Playground {
                     sb.Append("QR.Save(QrPayloads.Wifi(\"").Append(EscapeString(WifiSsid)).Append("\", \"").Append(EscapeString(WifiPassword)).Append("\"), \"wifi.png\");");
                     break;
                 case "vCard":
-                    sb.Append("QR.Save(QrPayloads.VCard(").Append(nl);
-                    sb.Append("    firstName: \"").Append(EscapeString(VCardFirstName)).Append("\",").Append(nl);
-                    sb.Append("    lastName: \"").Append(EscapeString(VCardLastName)).Append("\",").Append(nl);
+                    sb.Append("QR.Save(QrPayloads.Contact(").Append(nl);
+                    sb.Append("    QrContactOutputType.VCard3,").Append(nl);
+                    sb.Append("    firstname: \"").Append(EscapeString(VCardFirstName)).Append("\",").Append(nl);
+                    sb.Append("    lastname: \"").Append(EscapeString(VCardLastName)).Append("\",").Append(nl);
                     sb.Append("    email: \"").Append(EscapeString(VCardEmail)).Append("\",").Append(nl);
                     sb.Append("    phone: \"").Append(EscapeString(VCardPhone)).Append("\"").Append(nl);
                     sb.Append("), \"contact.png\");");
@@ -299,8 +301,8 @@ public partial class Playground {
                     break;
                 case "OTP":
                     sb.Append("QR.Save(QrPayloads.OneTimePassword(").Append(nl);
-                    sb.Append("    OtpAuthType.").Append(OtpType).Append(",").Append(nl);
-                    sb.Append("    secret: \"").Append(EscapeString(OtpSecret)).Append("\",").Append(nl);
+                    sb.Append("    OtpAuthType.").Append(OtpType == "HOTP" ? "Hotp" : "Totp").Append(",").Append(nl);
+                    sb.Append("    secretBase32: \"").Append(EscapeString(OtpSecret)).Append("\",").Append(nl);
                     sb.Append("    label: \"").Append(EscapeString(OtpLabel)).Append("\",").Append(nl);
                     sb.Append("    issuer: \"").Append(EscapeString(OtpIssuer)).Append("\"").Append(nl);
                     sb.Append("), \"otp.png\");");
@@ -309,9 +311,9 @@ public partial class Playground {
                     sb.Append("QR.Save(QrPayloads.Girocode(").Append(nl);
                     sb.Append("    iban: \"").Append(EscapeString(GirocodeIban)).Append("\",").Append(nl);
                     sb.Append("    bic: \"").Append(EscapeString(GirocodeBic)).Append("\",").Append(nl);
-                    sb.Append("    recipientName: \"").Append(EscapeString(GirocodeRecipient)).Append("\",").Append(nl);
-                    sb.Append("    amount: ").Append(GirocodeAmount).Append("m,").Append(nl);
-                    sb.Append("    reference: \"").Append(EscapeString(GirocodeReference)).Append("\"").Append(nl);
+                    sb.Append("    name: \"").Append(EscapeString(GirocodeRecipient)).Append("\",").Append(nl);
+                    sb.Append("    amount: ").Append(GirocodeAmount.ToString(CultureInfo.InvariantCulture)).Append("m,").Append(nl);
+                    sb.Append("    remittanceInformation: \"").Append(EscapeString(GirocodeReference)).Append("\"").Append(nl);
                     sb.Append("), \"sepa.png\");");
                     break;
                 default:
@@ -408,10 +410,10 @@ public partial class Playground {
                 sb.Append("Dim options = New QrRenderOptions With {").Append(nl);
                 sb.Append(string.Join("," + nl, lines)).Append(nl);
                 sb.Append("}").Append(nl).Append(nl);
-                sb.Append("QR.Save(\"").Append(escapedContent).Append("\", \"qrcode.png\", options, New QrEncodingOptions With {.ErrorCorrectionLevel = QrErrorCorrectionLevel.").Append(ErrorCorrection).Append("})");
+                sb.Append("QrCodeEncoder.EncodeText(\"").Append(escapedContent).Append("\", New QrEncodingOptions With {.ErrorCorrectionLevel = QrErrorCorrectionLevel.").Append(ErrorCorrection).Append("}).Save(\"qrcode.png\", options)");
                 return sb.ToString();
             }
-            return "Imports CodeGlyphX" + nl + nl + "QR.Save(\"" + escapedContent + "\", \"qrcode.png\")";
+            return "Imports CodeGlyphX" + nl + nl + "QrCodeEncoder.EncodeText(\"" + escapedContent + "\").Save(\"qrcode.png\")";
         }
         else if (SelectedCategory == "SpecialQR")
         {
@@ -422,48 +424,62 @@ public partial class Playground {
             switch (SpecialPayloadType)
             {
                 case "WiFi":
-                    sb.Append("QR.Save(QrPayloads.Wifi(\"").Append(EscapeStringVb(WifiSsid)).Append("\", \"").Append(EscapeStringVb(WifiPassword)).Append("\"), \"wifi.png\")");
+                    sb.Append("Dim payload = QrPayloads.Wifi(\"").Append(EscapeStringVb(WifiSsid)).Append("\", \"").Append(EscapeStringVb(WifiPassword)).Append("\")");
                     break;
                 case "vCard":
-                    sb.Append("QR.Save(QrPayloads.VCard(").Append(nl);
-                    sb.Append("    firstName:=\"").Append(EscapeStringVb(VCardFirstName)).Append("\",").Append(nl);
-                    sb.Append("    lastName:=\"").Append(EscapeStringVb(VCardLastName)).Append("\",").Append(nl);
+                    sb.Append("Dim payload = QrPayloads.Contact(").Append(nl);
+                    sb.Append("    QrContactOutputType.VCard3,").Append(nl);
+                    sb.Append("    firstname:=\"").Append(EscapeStringVb(VCardFirstName)).Append("\",").Append(nl);
+                    sb.Append("    lastname:=\"").Append(EscapeStringVb(VCardLastName)).Append("\",").Append(nl);
                     sb.Append("    email:=\"").Append(EscapeStringVb(VCardEmail)).Append("\",").Append(nl);
                     sb.Append("    phone:=\"").Append(EscapeStringVb(VCardPhone)).Append("\"").Append(nl);
-                    sb.Append("), \"contact.png\")");
+                    sb.Append(")");
                     break;
                 case "Email":
-                    sb.Append("QR.Save(QrPayloads.Email(\"").Append(EscapeStringVb(EmailAddress)).Append("\"), \"email.png\")");
+                    sb.Append("Dim payload = QrPayloads.Email(\"").Append(EscapeStringVb(EmailAddress)).Append("\")");
                     break;
                 case "Phone":
-                    sb.Append("QR.Save(QrPayloads.Phone(\"").Append(EscapeStringVb(PhoneNumber)).Append("\"), \"phone.png\")");
+                    sb.Append("Dim payload = QrPayloads.Phone(\"").Append(EscapeStringVb(PhoneNumber)).Append("\")");
                     break;
                 case "SMS":
-                    sb.Append("QR.Save(QrPayloads.Sms(\"").Append(EscapeStringVb(SmsNumber)).Append("\", \"").Append(EscapeStringVb(SmsMessage)).Append("\"), \"sms.png\")");
+                    sb.Append("Dim payload = QrPayloads.Sms(\"").Append(EscapeStringVb(SmsNumber)).Append("\", \"").Append(EscapeStringVb(SmsMessage)).Append("\")");
                     break;
                 case "OTP":
-                    sb.Append("QR.Save(QrPayloads.OneTimePassword(").Append(nl);
-                    sb.Append("    OtpAuthType.").Append(OtpType).Append(",").Append(nl);
-                    sb.Append("    secret:=\"").Append(EscapeStringVb(OtpSecret)).Append("\",").Append(nl);
+                    sb.Append("Dim payload = QrPayloads.OneTimePassword(").Append(nl);
+                    sb.Append("    OtpAuthType.").Append(OtpType == "HOTP" ? "Hotp" : "Totp").Append(",").Append(nl);
+                    sb.Append("    secretBase32:=\"").Append(EscapeStringVb(OtpSecret)).Append("\",").Append(nl);
                     sb.Append("    label:=\"").Append(EscapeStringVb(OtpLabel)).Append("\",").Append(nl);
                     sb.Append("    issuer:=\"").Append(EscapeStringVb(OtpIssuer)).Append("\"").Append(nl);
-                    sb.Append("), \"otp.png\")");
+                    sb.Append(")");
                     break;
                 case "Girocode":
-                    sb.Append("QR.Save(QrPayloads.Girocode(").Append(nl);
+                    sb.Append("Dim payload = QrPayloads.Girocode(").Append(nl);
                     sb.Append("    iban:=\"").Append(EscapeStringVb(GirocodeIban)).Append("\",").Append(nl);
                     sb.Append("    bic:=\"").Append(EscapeStringVb(GirocodeBic)).Append("\",").Append(nl);
-                    sb.Append("    recipientName:=\"").Append(EscapeStringVb(GirocodeRecipient)).Append("\",").Append(nl);
-                    sb.Append("    amount:=").Append(GirocodeAmount).Append("D,").Append(nl);
-                    sb.Append("    reference:=\"").Append(EscapeStringVb(GirocodeReference)).Append("\"").Append(nl);
-                    sb.Append("), \"sepa.png\")");
+                    sb.Append("    name:=\"").Append(EscapeStringVb(GirocodeRecipient)).Append("\",").Append(nl);
+                    sb.Append("    amount:=").Append(GirocodeAmount.ToString(CultureInfo.InvariantCulture)).Append("D,").Append(nl);
+                    sb.Append("    remittanceInformation:=\"").Append(EscapeStringVb(GirocodeReference)).Append("\"").Append(nl);
+                    sb.Append(")");
                     break;
                 default:
                     sb.Clear();
                     sb.Append("Imports CodeGlyphX").Append(nl).Append(nl);
-                    sb.Append("QR.Save(\"").Append(EscapeStringVb(UrlContent)).Append("\", \"qrcode.png\")");
-                    break;
+                    sb.Append("QrCodeEncoder.EncodeText(\"").Append(EscapeStringVb(UrlContent)).Append("\").Save(\"qrcode.png\")");
+                    return sb.ToString();
             }
+            var file = SpecialPayloadType switch {
+                "WiFi" => "wifi.png", "vCard" => "contact.png", "Email" => "email.png",
+                "Phone" => "phone.png", "SMS" => "sms.png", "OTP" => "otp.png", _ => "sepa.png"
+            };
+            // VB is case insensitive: QR and the implementation namespace Qr collide.
+            // The public encoder and symbol Save API preserve typed payload recommendations.
+            sb.Append(nl).Append("Dim encoding = New QrEncodingOptions With {").Append(nl)
+                .Append("    .ErrorCorrectionLevel = If(payload.ErrorCorrectionLevel, QrErrorCorrectionLevel.M),").Append(nl)
+                .Append("    .TextEncoding = If(payload.TextEncoding, QrTextEncoding.Utf8),").Append(nl)
+                .Append("    .MinVersion = If(payload.MinVersion, 1),").Append(nl)
+                .Append("    .MaxVersion = If(payload.MaxVersion, 40)").Append(nl)
+                .Append("}").Append(nl)
+                .Append("QrCodeEncoder.EncodeText(payload.Text, encoding).Save(\"").Append(file).Append("\")");
             return sb.ToString();
         }
         else if (SelectedCategory == "Barcode")
@@ -486,10 +502,11 @@ public partial class Playground {
             };
             return "Imports CodeGlyphX" + nl + nl + method + ".Save(\"" + content + "\", \"" + SelectedMatrixType.ToLowerInvariant() + ".png\")";
         }
-        return "Imports CodeGlyphX" + nl + nl + "QR.Save(\"https://example.com\", \"qrcode.png\")";
+        return "Imports CodeGlyphX" + nl + nl + "QrCodeEncoder.EncodeText(\"https://example.com\").Save(\"qrcode.png\")";
     }
 
-    internal static string EscapeString(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    internal static string EscapeString(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"")
+        .Replace("\r", "\\r").Replace("\n", "\\n").Replace("\t", "\\t").Replace("\0", "\\0");
 
     internal static string EscapeStringVb(string s) => s.Replace("\"", "\"\"");
 

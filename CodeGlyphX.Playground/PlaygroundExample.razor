@@ -380,7 +380,7 @@ else
                 + "    Inherits ControllerBase" + nl + nl
                 + "    <HttpGet(\"qr/{text}\")>" + nl
                 + "    Public Function GetQrCode(text As String) As IActionResult" + nl
-                + "        Dim png = QR.Render(text, OutputFormat.Png).ToArray()" + nl
+                + "        Dim png = QrCodeEncoder.EncodeText(text).Render(OutputFormat.Png).ToArray()" + nl
                 + "        Return File(png, \"image/png\", \"qrcode.png\")" + nl
                 + "    End Function" + nl
                 + "End Class";
@@ -435,7 +435,7 @@ else
                 + "Imports CodeGlyphX.Rendering" + nl
                 + "Imports System.IO" + nl + nl
                 + "' In your ViewModel or code-behind:" + nl
-                + "Dim png = QR.Render(\"" + EscapeForVbString(Host?.Content ?? "https://example.com") + "\", OutputFormat.Png).ToArray()" + nl
+                + "Dim png = QrCodeEncoder.EncodeText(\"" + EscapeForVbString(Host?.Content ?? "https://example.com") + "\").Render(OutputFormat.Png).ToArray()" + nl
                 + "QrImage.Source = ImageSource.FromStream(Function() New MemoryStream(png))" + nl + nl
                 + "' XAML:" + nl
                 + "' <Image x:Name=\"QrImage\" WidthRequest=\"200\" HeightRequest=\"200\" />";
@@ -489,7 +489,7 @@ else
         return SelectedLanguage == Playground.CodeLanguage.Vb ? "language-vbnet" : "language-csharp";
     }
 
-    private static string EscapeForComment(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    private static string EscapeForComment(string s) => Playground.EscapeString(s);
 
     private static string EscapeForVbString(string s) => s.Replace("\"", "\"\"");
 }

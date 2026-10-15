@@ -5,6 +5,8 @@ using CodeGlyphX;
 using CodeGlyphX.Payloads;
 using CodeGlyphX.Rendering;
 
+namespace CodeGlyphX.Website.Specimens;
+
 internal static partial class SiteVisuals {
     static readonly Rgba32 Ink = new(22, 19, 31);
     static readonly Rgba32 DeepViolet = new(91, 33, 182);
@@ -18,7 +20,7 @@ internal static partial class SiteVisuals {
     static object CodeCard(string file, string payload, string label, QrRenderOptions? options = null, string? href = null) {
         var o = options ?? Plate();
         var a = SaveQr(file.Replace(".svg", ""), payload, o);
-        var png = QR.Render(payload, OutputFormat.Png, new QrRenderOptions { ModuleSize = 8 }).ToArray();
+        var png = QR.Render(payload, OutputFormat.Png, o).ToArray();
         var decoded = QrImageDecoder.TryDecodeImage(png, out var d) ? d.Text : null;
         return new { src = a.Src, w = a.W, h = a.H, label, decoded, href };
     }
@@ -145,10 +147,11 @@ internal static partial class SiteVisuals {
         foreach (var dir in new[] { ("pages", ""), ("docs", "/docs") }) {
             foreach (var md in Directory.GetFiles(Path.Combine(root, "content", dir.Item1), "*.md").OrderBy(p => p, StringComparer.Ordinal)) {
                 var text = File.ReadAllText(md);
-                var slug = Regex.Match(text, @"^slug:\s*(\S+)", RegexOptions.Multiline).Groups[1].Value;
+                var slug = Regex.Match(text, @"^slug:\s*(\S+)", RegexOptions.Multiline, RegexTimeout).Groups[1].Value;
+                if (slug == "" && dir.Item1 == "docs") slug = Path.GetFileNameWithoutExtension(md);
                 if (slug is "" or "404" or "index" && dir.Item1 == "pages") continue;
-                var title = Regex.Match(text, @"^title:\s*(.+)$", RegexOptions.Multiline).Groups[1].Value.Trim().Trim('"');
-                title = Regex.Replace(title, @"\s*[-|]\s*CodeGlyphX.*$", "");
+                var title = Regex.Match(text, @"^title:\s*(.+)$", RegexOptions.Multiline, RegexTimeout).Groups[1].Value.Trim().Trim('"');
+                title = Regex.Replace(title, @"\s*[-|]\s*CodeGlyphX.*$", "", RegexOptions.None, RegexTimeout);
                 var url = slug == "index" ? dir.Item2 + "/" : dir.Item2 + "/" + slug + "/";
                 Add(url, title, dir.Item1 == "docs" ? "Docs" : "Pages");
             }

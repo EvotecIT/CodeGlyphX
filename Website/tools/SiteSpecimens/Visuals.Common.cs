@@ -6,9 +6,12 @@ using System.Text.RegularExpressions;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 
+namespace CodeGlyphX.Website.Specimens;
+
 internal static partial class SiteVisuals {
     static readonly UTF8Encoding Utf8 = new(false);
     static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
+    static readonly TimeSpan RegexTimeout = TimeSpan.FromSeconds(2);
 
     // Night panel palette (navigation thumbnails are always shown on the night surface).
     static readonly Rgba32 Clear = new(0, 0, 0, 0);
@@ -38,8 +41,8 @@ internal static partial class SiteVisuals {
         return "/visuals/" + relative;
     }
 
-    static readonly Regex RootSize = new("<svg[^>]*?\\swidth=\"(?<w>[\\d.]+)\"[^>]*?\\sheight=\"(?<h>[\\d.]+)\"", RegexOptions.Compiled);
-    static readonly Regex RootViewBox = new("<svg[^>]*?\\sviewBox=\"(?<vb>[^\"]+)\"", RegexOptions.Compiled);
+    static readonly Regex RootSize = new("<svg[^>]*?\\swidth=\"(?<w>[\\d.]+)\"[^>]*?\\sheight=\"(?<h>[\\d.]+)\"", RegexOptions.Compiled, RegexTimeout);
+    static readonly Regex RootViewBox = new("<svg[^>]*?\\sviewBox=\"(?<vb>[^\"]+)\"", RegexOptions.Compiled, RegexTimeout);
 
     static (int W, int H) SvgSize(string svg) {
         var m = RootSize.Match(svg);

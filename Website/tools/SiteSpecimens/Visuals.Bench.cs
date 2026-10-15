@@ -2,6 +2,8 @@
 // charts without script and they follow the site theme. Values are copied as published; only bar lengths are computed.
 using System.Text.Json.Nodes;
 
+namespace CodeGlyphX.Website.Specimens;
+
 internal static partial class SiteVisuals {
     sealed record ReaderScore(string Engine, int Before, int Correct, int Positives);
 

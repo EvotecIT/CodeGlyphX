@@ -162,7 +162,7 @@
           "commands": [
             "New-ImageBarCode"
           ],
-          "note": "They encode through -Type. Reading Aztec back does not work yet, and MaxiCode needs its own renderer."
+          "note": "They encode through -Type, and Aztec images can be read back. Manual Aztec correction and layer settings are not exposed by the command; MaxiCode needs its own renderer."
         },
         {
           "capability": "Bar height, module width, quiet zone, colours and human-readable text",

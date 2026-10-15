@@ -8,6 +8,8 @@ using CodeGlyphX.Payloads;
 using CodeGlyphX.Pdf417;
 using CodeGlyphX.Rendering;
 
+namespace CodeGlyphX.Website.Specimens;
+
 internal static partial class SiteVisuals {
     sealed record FigItem(string Src, int W, int H, string Label, string? Note = null, string? Decoded = null, string? Text = null);
 

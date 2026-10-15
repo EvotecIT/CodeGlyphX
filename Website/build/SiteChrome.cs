@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 var utf8 = new UTF8Encoding(false);
+var regexTimeout = TimeSpan.FromSeconds(2);
 if (args.Length < 3) return Fail("usage: export <site> <out> | playground <published index.html> <site index.html>");
 
 switch (args[0]) {
@@ -30,15 +31,15 @@ switch (args[0]) {
     }
     case "playground": {
         var published = File.ReadAllText(args[1]);
-        var map = Regex.Match(published, "<script type=\"importmap\">([\\s\\S]*?)</script>");
-        var blazor = Regex.Match(published, "<script src=\"(_framework/blazor\\.webassembly[^\"]*\\.js)\"");
+        var map = Regex.Match(published, "<script type=\"importmap\">([\\s\\S]*?)</script>", RegexOptions.None, regexTimeout);
+        var blazor = Regex.Match(published, "<script src=\"(_framework/blazor\\.webassembly[^\"]*\\.js)\"", RegexOptions.None, regexTimeout);
         if (!map.Success || !blazor.Success) return Fail("The published index.html has no import map or Blazor script.");
         var page = File.ReadAllText(args[2]);
         var before = page;
         page = Regex.Replace(page, "<script[^>]*data-cgx-importmap[^>]*>[\\s\\S]*?</script>",
-            "<script type=\"importmap\" data-cgx-importmap>" + map.Groups[1].Value.Trim() + "</script>");
+            _ => "<script type=\"importmap\" data-cgx-importmap>" + map.Groups[1].Value.Trim() + "</script>", RegexOptions.None, regexTimeout);
         page = Regex.Replace(page, "<script[^>]*data-cgx-blazor[^>]*></script>",
-            "<script src=\"" + blazor.Groups[1].Value + "\" data-cgx-blazor autostart=\"false\"></script>");
+            _ => "<script src=\"" + blazor.Groups[1].Value + "\" data-cgx-blazor autostart=\"false\"></script>", RegexOptions.None, regexTimeout);
         if (page == before || !page.Contains(blazor.Groups[1].Value, StringComparison.Ordinal)) return Fail("The site playground page has no data-cgx-importmap or data-cgx-blazor placeholder.");
         File.WriteAllText(args[2], page, utf8);
         Console.WriteLine($"Playground shell: {blazor.Groups[1].Value} and its import map -> {args[2]}");

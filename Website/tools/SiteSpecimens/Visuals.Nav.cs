@@ -7,6 +7,8 @@ using System.Text.Json.Nodes;
 using CodeGlyphX;
 using CodeGlyphX.Rendering;
 
+namespace CodeGlyphX.Website.Specimens;
+
 internal static partial class SiteVisuals {
     const int ThumbW = 160, ThumbH = 100;
 
