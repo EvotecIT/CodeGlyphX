@@ -172,4 +172,28 @@ public enum BarcodeType {
     /// GS1 Composite with a standards-linked GS1-128 carrier.
     /// </summary>
     GS1Composite = 41,
+    /// <summary>Standalone EAN/UPC two-digit supplement.</summary>
+    EAN2 = 42,
+    /// <summary>Standalone EAN/UPC five-digit supplement.</summary>
+    EAN5 = 43,
+    /// <summary>Telepen Numeric, using two-character numeric compaction.</summary>
+    TelepenNumeric = 44,
+    /// <summary>COOP 2 of 5.</summary>
+    Coop2of5 = 45,
+    /// <summary>Datalogic 2 of 5.</summary>
+    Datalogic2of5 = 46,
+    /// <summary>SEMI BC412 wafer identification.</summary>
+    Bc412 = 47,
+    /// <summary>USPS Facing Identification Mark.</summary>
+    FacingIdentificationMark = 48,
+    /// <summary>Explicit descender, ascender, full-height, and tracker bar states.</summary>
+    Daft = 49,
+    /// <summary>Flattermarken decimal collation marks.</summary>
+    Flattermarken = 50,
+    /// <summary>Channel Code.</summary>
+    ChannelCode = 51,
+    /// <summary>Code 16K stacked barcode.</summary>
+    Code16K = 52,
+    /// <summary>Code 49 stacked barcode.</summary>
+    Code49 = 53,
 }

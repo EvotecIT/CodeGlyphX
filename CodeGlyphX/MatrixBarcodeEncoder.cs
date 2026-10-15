@@ -38,6 +38,9 @@ public static class MatrixBarcodeEncoder {
         if (value is null) throw new ArgumentNullException(nameof(value));
         return type switch {
             BarcodeType.KixCode => KixEncoder.Encode(value),
+            BarcodeType.Daft => Postal.DaftCode.Encode(value).Modules.Clone(),
+            BarcodeType.Code16K => Code16K.Code16KEncoder.Encode(value).Modules.Clone(),
+            BarcodeType.Code49 => Code49.Code49Encoder.Encode(value).Modules.Clone(),
             BarcodeType.PharmacodeTwoTrack => PharmacodeTwoTrackEncoder.Encode(value),
             BarcodeType.Postnet => PostnetEncoder.Encode(value),
             BarcodeType.Planet => PlanetEncoder.Encode(value),

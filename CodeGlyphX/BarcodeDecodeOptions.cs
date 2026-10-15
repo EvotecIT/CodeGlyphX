@@ -4,6 +4,8 @@ namespace CodeGlyphX;
 /// Options controlling how 1D barcode decoding behaves.
 /// </summary>
 public sealed partial class BarcodeDecodeOptions {
+    /// <summary>Interprets Code 39 shift pairs as Full ASCII (default). Set false for literal Code 39 application payloads such as HIBC.</summary>
+    public bool Code39FullAscii { get; set; } = true;
     /// <summary>
     /// Controls how Code39 checksum characters are handled during decode.
     /// </summary>

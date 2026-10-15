@@ -343,7 +343,7 @@ public static partial class SymbolScanner {
         HashSet<string>? seen,
         BarcodeType expectedType,
         BarcodeDecodeOptions? barcodeOptions) {
-        if (expectedType == BarcodeType.Pharmacode || expectedType == BarcodeType.ITF || expectedType == BarcodeType.Industrial2of5) {
+        if (BarcodeDecoder.RequiresUncheckedBarcodeBoundaryEvidence(expectedType)) {
             ScanLocatedLinear(rgba, width, height, searchRegion, options, deadline, requested, expectedTypes,
                 expectedType, barcodeOptions, results, seen);
             return;
@@ -471,6 +471,7 @@ public static partial class SymbolScanner {
         if (source is null) return null;
         return new BarcodeDecodeOptions {
             Code39Checksum = source.Code39Checksum,
+            Code39FullAscii = source.Code39FullAscii,
             MsiChecksum = source.MsiChecksum,
             Code11Checksum = source.Code11Checksum,
             PlesseyChecksum = source.PlesseyChecksum,

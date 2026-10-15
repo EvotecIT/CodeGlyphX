@@ -130,6 +130,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Fixtures/Conformance/*.json" />
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
     <EmbeddedResource Include="Fixtures/Aztec/*.png" />

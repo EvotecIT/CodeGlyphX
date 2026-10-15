@@ -23,6 +23,28 @@ namespace CodeGlyphX;
 
 public static partial class BarcodeDecoder {
     private static bool TryDecodeCode39(bool[] modules, BarcodeDecodeOptions? options, out string text) {
+        if (TryDecodeNormalizedCode39(modules, options, out text)) return true;
+        // Exact external module grids can use a different legal wide:narrow
+        // ratio than our encoder. Reuse the physical scanline width rules.
+        var workspace = new ModuleRunWorkspace(modules);
+        try {
+            var runs = workspace.Runs.ToArray().ToList();
+            if (runs.Count < 19 || (runs.Count + 1) % 10 != 0 || !modules[0]) return false;
+            var normalized = new List<bool>();
+            for (var start = 0; start < runs.Count; start += 10) {
+                if (!BarcodeScanline.NormalizeCode39(runs, start, false, out var pattern, out var pitch)) return false;
+                if (start > 0) {
+                    if (runs[start - 1] > pitch * 3 || runs[start - 1] < pitch * 0.4) return false;
+                    normalized.Add(false);
+                }
+                for (var i = 0; i < pattern.Length; i++)
+                    for (var x = 0; x < pattern[i]; x++) normalized.Add((i & 1) == 0);
+            }
+            return TryDecodeNormalizedCode39(normalized.ToArray(), options, out text);
+        } finally { workspace.Dispose(); }
+    }
+
+    private static bool TryDecodeNormalizedCode39(bool[] modules, BarcodeDecodeOptions? options, out string text) {
         text = string.Empty;
         var patternToChar = Code39PatternMap.Value;
         var maxSymbols = (modules.Length + 1) / 13;
@@ -42,7 +64,7 @@ public static partial class BarcodeDecoder {
                 if (index < modules.Length && !modules[index]) index++; // inter-character space
             }
 
-            if (count < 2) return false;
+            if (count < 2 || index != modules.Length) return false;
             if (rented[0] != '*' || rented[count - 1] != '*') return false;
 
             var rawLen = count - 2;
@@ -59,7 +81,7 @@ public static partial class BarcodeDecoder {
                     return false;
                 }
             }
-            text = DecodeCode39Extended(raw);
+            text = options?.Code39FullAscii == false ? raw : DecodeCode39Extended(raw);
             return true;
         } finally {
             ArrayPool<char>.Shared.Return(rented);
@@ -448,15 +470,15 @@ public static partial class BarcodeDecoder {
     }
 
     private static bool TryDecodeMatrix2of5(ref ModuleRunWorkspace runWorkspace, out string text) {
-        return TryDecodeDiscrete2of5(ref runWorkspace, Matrix2of5StartBars, Matrix2of5StopBars, out text);
+        return Code25.Discrete2Of5Encoder.TryDecode(runWorkspace.Runs, SymbolFormat.Matrix2Of5, out text);
     }
 
     private static bool TryDecodeIndustrial2of5(ref ModuleRunWorkspace runWorkspace, out string text) {
-        return TryDecodeDiscrete2of5(ref runWorkspace, Industrial2of5StartBars, Industrial2of5StopBars, out text);
+        return Code25.Discrete2Of5Encoder.TryDecode(runWorkspace.Runs, SymbolFormat.Industrial2Of5, out text);
     }
 
     private static bool TryDecodeIata2of5(ref ModuleRunWorkspace runWorkspace, out string text) {
-        return TryDecodeDiscrete2of5(ref runWorkspace, Iata2of5StartBars, Iata2of5StopBars, out text);
+        return Code25.Discrete2Of5Encoder.TryDecode(runWorkspace.Runs, SymbolFormat.Iata2Of5, out text);
     }
 
     private static bool TryDecodeDiscrete2of5(ref ModuleRunWorkspace runWorkspace, int[] startBars, int[] stopBars, out string text) {

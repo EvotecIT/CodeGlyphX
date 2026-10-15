@@ -41,7 +41,7 @@ internal static partial class BarcodeScanline {
         }
     }
 
-    private static bool NormalizeCode39(List<int> runs, int start, bool reverse, out int[] pattern, out double pitch) {
+    internal static bool NormalizeCode39(List<int> runs, int start, bool reverse, out int[] pattern, out double pitch) {
         pattern = Array.Empty<int>(); pitch = 0;
         if (start + 9 > runs.Count) return false;
         // Nine widths have a fixed small bound. Keep rejected hypotheses on the
