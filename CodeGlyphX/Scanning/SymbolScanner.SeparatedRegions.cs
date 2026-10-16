@@ -8,7 +8,17 @@ public static partial class SymbolScanner {
     // Isolate those regions before a whole-frame recognizer can spend the allowance
     // repeatedly observing the same symbol. Single-result calls retain their path.
     private static void ScanSeparatedRegions(byte[] rgba, int width, int height, ImageRegion sourceRegion,
-        ScanOptions options, ScanDeadline deadline, List<DetectedSymbol> results, HashSet<string>? seen) {
+        ScanOptions options, ScanDeadline deadline, ISet<SymbolFormat> requested,
+        List<DetectedSymbol> results, HashSet<string>? seen) {
+        // Linear discovery already collects multiple results and validates unchecked
+        // formats against surrounding scanlines. A crop must not erase that evidence.
+        var formats = new List<SymbolFormat>();
+        foreach (var format in requested) {
+            if (format == SymbolFormat.QrCode && options.Qr is not null && !options.Qr.EnableTileScan) continue;
+            if (SymbolCapabilities.Get(format).Family == SymbolFamily.Matrix || format == SymbolFormat.Pdf417)
+                formats.Add(format);
+        }
+        if (formats.Count == 0) return;
         var grid = ResolveMatrixTileGrid(options, width, height);
         var regions = new List<ImageRegion> { new(0, 0, width, height) };
         for (var i = 0; i < regions.Count; ) {
@@ -27,6 +37,7 @@ public static partial class SymbolScanner {
         // remain necessary on photographs, clutter and symbols without clear gutters.
         using var search = deadline.CreateAttempt(2, options.Image?.RecognitionBudgetMilliseconds ?? 0);
         var localOptions = SnapshotOptions(options);
+        localOptions.Formats = formats.ToArray();
         localOptions.MaxSymbols = 1;
         localOptions.Region = null;
         localOptions.EnableTileScan = false;

@@ -101,7 +101,7 @@ public static partial class SymbolScanner {
         var requestedSet = new HashSet<SymbolFormat>(requested);
         var remainingAttempts = CountInitialAttempts(requestedSet, options, width, height);
         if (options.MaxSymbols != 1 && options.EnableTileScan) {
-            ScanSeparatedRegions(rgba, width, height, searchRegion, options, deadline, results, seen);
+            ScanSeparatedRegions(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
         }
 
         if (!ShouldStop(options, deadline, results)) ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);

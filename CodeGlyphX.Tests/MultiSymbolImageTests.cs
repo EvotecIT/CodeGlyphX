@@ -102,6 +102,16 @@ public sealed class MultiSymbolImageTests {
         }
     }
 
+    [Fact]
+    public void Scan_ExplicitQrTileOptOut_RetainsWholeFrameQrSearchRegion() {
+        var pixels = MixedCanvas(out var width, out var height);
+        var options = Options();
+        options.Qr = new QrPixelDecodeOptions { EnableTileScan = false };
+        var scan = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options);
+        Assert.Equal(new ImageRegion(0, 0, width, height), Assert.Single(scan.Symbols, s => s.Format == SymbolFormat.QrCode).SearchRegion);
+        Assert.Equal(4, scan.Symbols.Count);
+    }
+
     internal static byte[] MixedCanvas(out int width, out int height) {
         width = 840; height = 420;
         var pixels = White(width, height);
