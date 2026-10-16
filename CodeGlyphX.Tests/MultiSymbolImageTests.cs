@@ -108,8 +108,15 @@ public sealed class MultiSymbolImageTests {
         var options = Options();
         options.Qr = new QrPixelDecodeOptions { EnableTileScan = false };
         var scan = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options);
+#if NET8_0_OR_GREATER
         Assert.Equal(new ImageRegion(0, 0, width, height), Assert.Single(scan.Symbols, s => s.Format == SymbolFormat.QrCode).SearchRegion);
         Assert.Equal(4, scan.Symbols.Count);
+#else
+        // The legacy decoder may need tiles to recognize the QR in a composed
+        // image. With tiles disabled, any QR result must come from the full frame.
+        Assert.DoesNotContain(scan.Symbols, s => s.Format == SymbolFormat.QrCode && s.SearchRegion != new ImageRegion(0, 0, width, height));
+        Assert.Equal(3, scan.Symbols.Count(s => s.Format != SymbolFormat.QrCode));
+#endif
     }
 
     internal static byte[] MixedCanvas(out int width, out int height) {
