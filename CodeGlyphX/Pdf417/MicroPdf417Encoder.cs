@@ -13,7 +13,7 @@ public static class MicroPdf417Encoder {
     /// </summary>
     public static BitMatrix Encode(string text, MicroPdf417EncodeOptions? options = null) {
         options ??= new MicroPdf417EncodeOptions();
-        var dataCodewords = Pdf417HighLevelEncoder.Encode(text, options.Compaction, options.TextEncoding);
+        var dataCodewords = Pdf417HighLevelEncoder.Encode(text, options.Compaction, options.TextEncoding, initialByteMode: true);
         return EncodeCodewords(dataCodewords, options);
     }
 

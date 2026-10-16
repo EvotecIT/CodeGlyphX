@@ -8,7 +8,7 @@ public static partial class SymbolScanner {
         ValidateOptions(source);
         return new ScanOptions {
             Formats = source.Formats is null ? null : (SymbolFormat[])source.Formats.Clone(),
-            Region = source.Region, TimeoutMilliseconds = source.TimeoutMilliseconds,
+            Region = source.Region, SamplingGrid = source.SamplingGrid, TimeoutMilliseconds = source.TimeoutMilliseconds,
             MaxSymbols = source.MaxSymbols, Deduplicate = source.Deduplicate,
             EnableTileScan = source.EnableTileScan, TileGrid = source.TileGrid, Profile = source.Profile,
             CancellationToken = source.CancellationToken, Barcode = CloneBarcodeOptions(source.Barcode),

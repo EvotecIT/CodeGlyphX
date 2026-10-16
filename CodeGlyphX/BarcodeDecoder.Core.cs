@@ -19,6 +19,9 @@ using CodeGlyphX.UpcE;
 namespace CodeGlyphX;
 
 public static partial class BarcodeDecoder {
+    private static readonly BarcodeType[] AdditionalGuardedLinearTypes = {
+        BarcodeType.Bc412, BarcodeType.ChannelCode, BarcodeType.PosiCode, BarcodeType.EAN2, BarcodeType.EAN5
+    };
     private static bool TryDecodeWithTransforms(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, out BarcodeDecoded decoded) {
         return TryDecodeWithTransforms(modules, expectedType, options, CancellationToken.None, null, out decoded);
     }
@@ -34,6 +37,13 @@ public static partial class BarcodeDecoder {
     private static bool TryDecodeWithTransforms(bool[] modules, BarcodeType? expectedType, BarcodeDecodeOptions? options, CancellationToken cancellationToken, BarcodeDecodeDiagnostics? diagnostics, out BarcodeDecoded decoded, out int priority, bool? backgroundIsDark = null) {
         priority = int.MaxValue;
         if (cancellationToken.IsCancellationRequested) { decoded = null!; return false; }
+        if (expectedType == BarcodeType.Flattermarken) {
+            decoded = null!;
+            if (!Flattermarken.FlattermarkenCode.TryDecode(modules, out var marks)) return false;
+            decoded = new BarcodeDecoded(BarcodeType.Flattermarken, marks);
+            priority = 0;
+            return true;
+        }
         // Without guards or a checksum, Pharmacode can reinterpret spaces as
         // bars. Agreeing endpoints only propose a background polarity; the
         // Pharmacode decoder must validate it before excluding an interpretation.
@@ -112,6 +122,11 @@ public static partial class BarcodeDecoder {
             decoded = new BarcodeDecoded(BarcodeType.UPCE, upce);
             return true;
         }
+        foreach (var type in AdditionalGuardedLinearTypes) {
+            if (cancellationToken.IsCancellationRequested) return false;
+            priority++;
+            if (TryDecodeType(type, ref runWorkspace, options, out decoded)) return true;
+        }
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
         if (TryDecodeItf14(ref runWorkspace, out var itf14)) {
@@ -142,6 +157,12 @@ public static partial class BarcodeDecoder {
             decoded = new BarcodeDecoded(BarcodeType.IATA2of5, iata25);
             return true;
         }
+        if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
+        if (TryDecodeType(BarcodeType.Coop2of5, ref runWorkspace, options, out decoded)) return true;
+        if (cancellationToken.IsCancellationRequested) return false;
+        priority++;
+        if (TryDecodeType(BarcodeType.Datalogic2of5, ref runWorkspace, options, out decoded)) return true;
 
         if (cancellationToken.IsCancellationRequested) return false;
         priority++;
@@ -235,6 +256,47 @@ public static partial class BarcodeDecoder {
         var modules = runWorkspace.Modules;
         decoded = null!;
         switch (type) {
+            case BarcodeType.PosiCode:
+                if (PosiCode.PosiCodeDecoder.TryDecode(modules, out var posi)) {
+                    decoded = new BarcodeDecoded(type, posi.Text, readerInitialization: posi.ReaderInitialization,
+                        metadata: new PosiCodeSymbolMetadata(posi));
+                    return true;
+                }
+                return false;
+            case BarcodeType.ChannelCode:
+                if (ChannelCode.ChannelCodeDecoder.TryDecode(modules, out var channelNumber)) {
+                    decoded = new BarcodeDecoded(type, channelNumber);
+                    return true;
+                }
+                return false;
+            case BarcodeType.FacingIdentificationMark:
+                if (Postal.FacingIdentificationMark.TryDecode(modules, out var mark)) {
+                    decoded = new BarcodeDecoded(type, mark);
+                    return true;
+                }
+                return false;
+            case BarcodeType.Bc412:
+                if (Bc412.Bc412Decoder.TryDecode(modules, out var waferIdentifier, options?.Bc412Variant ?? Bc412.Bc412Variant.Semi)) {
+                    decoded = new BarcodeDecoded(type, waferIdentifier);
+                    return true;
+                }
+                return false;
+            case BarcodeType.Coop2of5:
+            case BarcodeType.Datalogic2of5:
+                var discreteFormat = type == BarcodeType.Coop2of5 ? SymbolFormat.Coop2Of5 : SymbolFormat.Datalogic2Of5;
+                if (Code25.Discrete2Of5Encoder.TryDecode(runWorkspace.Runs, discreteFormat, out var discreteText)) {
+                    decoded = new BarcodeDecoded(type, discreteText);
+                    return true;
+                }
+                return false;
+            case BarcodeType.EAN2:
+            case BarcodeType.EAN5:
+                if (modules.Length == (type == BarcodeType.EAN2 ? 20 : 47)
+                    && TryDecodeEanSupplement(modules, out var supplement)) {
+                    decoded = new BarcodeDecoded(type, supplement);
+                    return true;
+                }
+                return false;
             case BarcodeType.EAN:
                 if (TryDecodeEan8(modules, out var ean8)) {
                     decoded = new BarcodeDecoded(BarcodeType.EAN, ean8);
@@ -242,6 +304,13 @@ public static partial class BarcodeDecoder {
                 }
                 if (TryDecodeEan13(modules, out var ean13)) {
                     decoded = new BarcodeDecoded(BarcodeType.EAN, ean13);
+                    return true;
+                }
+                return false;
+            case BarcodeType.TelepenNumeric:
+                if (TryDecodeTelepen(ref runWorkspace, out var compacted)
+                    && TryExpandTelepenNumeric(compacted, out var numeric)) {
+                    decoded = new BarcodeDecoded(type, numeric);
                     return true;
                 }
                 return false;

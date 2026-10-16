@@ -1,0 +1,160 @@
+{
+  "generator": "bwip-js 4.11.4 / BWIPP 2026-05-28",
+  "source": "https://github.com/metafloor/bwip-js",
+  "engineSha256": "5859342d747575fd4b573007f2d6eb18afc0cd6e41a3f40822ba1587adea2cd5",
+  "fixtures": [
+    {
+      "file": "bwipp-RmQrCode.png",
+      "format": "RmQrCode",
+      "text": "RMQR-42",
+      "options": {
+        "version": "R13x77"
+      },
+      "sha256": "d3eac820507976610f93ee670d7dc4853111b5567c95019de7b9c777aba903ab"
+    },
+    {
+      "file": "bwipp-HanXin.png",
+      "format": "HanXin",
+      "text": "1234567890",
+      "options": {
+        "version": 1,
+        "eclevel": "L1"
+      },
+      "sha256": "6ea61a658cd065c4cce60844d756152e1022fc8f29177ac26959b7e10f61670b"
+    },
+    {
+      "file": "bwipp-DotCode.png",
+      "format": "DotCode",
+      "text": "ABC123",
+      "options": {},
+      "sha256": "c8d31f52e4815548960ab3506878255a4601b774e807d48a3cfe0edd8d3a1ec1"
+    },
+    {
+      "file": "bwipp-Code16K.png",
+      "format": "Code16K",
+      "text": "HELLO",
+      "options": {},
+      "sha256": "6df3fd09f08c6f38881266a6de93b851cd1cd3276fb8bc560a3e79dbf1a03b6d"
+    },
+    {
+      "file": "bwipp-Code49.png",
+      "format": "Code49",
+      "text": "ABC123",
+      "options": {},
+      "sha256": "f70ddf3de0238d8998fa334514afc91f4301a162e436aa5f3de5cece1db1a7ad"
+    },
+    {
+      "file": "bwipp-CodablockF.png",
+      "format": "CodablockF",
+      "text": "AB1234567890xy",
+      "options": {},
+      "sha256": "cf2ecc06f8df739ca6be11b6a29547e1081abd81d289dafa5dbcf31aff566dd7"
+    },
+    {
+      "file": "bwipp-MicroPdf417.png",
+      "format": "MicroPdf417",
+      "text": "ABC123",
+      "options": {},
+      "sha256": "014164e26e53b9b8fc3b13d48640cd61ede49449cac2a36af8f9d1cd458d3cc8"
+    },
+    {
+      "file": "bwipp-Gs1Composite.png",
+      "format": "Gs1Composite",
+      "text": "(01)03212345678906|(21)A1B2C3D4E5F6G7H8",
+      "options": {
+        "ccversion": "a"
+      },
+      "sha256": "772601022aa21dfd45becfc243fd4620061ac895ccab052efb81c50452bb3633"
+    },
+    {
+      "file": "bwipp-UspsIntelligentMail.png",
+      "format": "UspsIntelligentMail",
+      "text": "0123456709498765432101234567891",
+      "options": {},
+      "sha256": "015d3b0d7ec3a43b98f14c39e917507df2603e21cc570ef91d2e61e65af7186b"
+    },
+    {
+      "file": "bwipp-RoyalMail4State.png",
+      "format": "RoyalMail4State",
+      "text": "LE28HS9Z",
+      "options": {},
+      "sha256": "d4b8cc11a10b2981eb503466e654e1f8ef78faf2b480208f610bc69f137350e0"
+    },
+    {
+      "file": "bwipp-AustraliaPost.png",
+      "format": "AustraliaPost",
+      "text": "5956439111ABA9X",
+      "options": {},
+      "sha256": "5e332d1a1f312833ac15be2ea8c6f5894f5ec2dfda5444ce696de5e6d09f0dcf"
+    },
+    {
+      "file": "bwipp-JapanPost.png",
+      "format": "JapanPost",
+      "text": "15400233-16-4",
+      "options": {},
+      "sha256": "99a3ec45b51bb06fff2b9d33aee822b60a64adee1344a838087bbdd6543a4b25"
+    },
+    {
+      "file": "bwipp-KixCode.png",
+      "format": "KixCode",
+      "text": "1231FZ13XHS",
+      "options": {},
+      "sha256": "1c8ee5b21f1ae66fc218394f1185f722281f884e88e64ec07a356d5234bf3778"
+    },
+    {
+      "file": "bwipp-Postnet.png",
+      "format": "Postnet",
+      "text": "012345678",
+      "options": {},
+      "sha256": "ef05e44db5b2cda90bc124c6f19213348074f7b899275c75d80d6d5d039e6531"
+    },
+    {
+      "file": "bwipp-Planet.png",
+      "format": "Planet",
+      "text": "01234567890",
+      "options": {},
+      "sha256": "8e86c360759311b0d686632e0934b8cf9f8df0b3c2398b4c187ab10e58bc27bf"
+    },
+    {
+      "file": "bwipp-PharmacodeTwoTrack.png",
+      "format": "PharmacodeTwoTrack",
+      "text": "117480",
+      "options": {},
+      "sha256": "2cf578e6ae4a96d90c1e76acb8c30d09eff526654de32d38c8a5d8d42bdc045e"
+    },
+    {
+      "file": "bwipp-FacingIdentificationMark.png",
+      "format": "FacingIdentificationMark",
+      "text": "fima",
+      "options": {},
+      "sha256": "7d5916e18d34c091eacd3993d32a432971f12fdfcbee3e1f541867e80071ffe6"
+    },
+    {
+      "file": "bwipp-Daft.png",
+      "format": "Daft",
+      "text": "FATDAFTD",
+      "options": {},
+      "sha256": "48bd724f5df7ee2439ac52d48ce46e42584596c3129e3055f4a6d964ffc11fd5"
+    },
+    {
+      "file": "bwipp-Flattermarken.png",
+      "format": "Flattermarken",
+      "text": "001109900",
+      "options": {
+        "paddingleft": 30,
+        "paddingright": 30
+      },
+      "samplingGrid": {
+        "columns": 81,
+        "rows": 1,
+        "region": {
+          "x": 36,
+          "y": 36,
+          "width": 243,
+          "height": 66
+        }
+      },
+      "sha256": "6fdbb083d1241ceb724dae7b59e38313f95fe003d83a0179985e078920835d15"
+    }
+  ]
+}

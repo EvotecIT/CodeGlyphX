@@ -40,6 +40,7 @@
       "key": "#f59e0b",
       "topics": [
         { "card": "gs1", "title": "GS1 data and Digital Link", "url": "/docs/gs1/", "summary": "Validate element strings and build Digital Link URIs.", "value": "(01)09520123456788(10)ABC1(17)261231" },
+        { "card": "ean-upc", "title": "Barcode profiles", "url": "/docs/barcode-profiles/", "summary": "Checked identifiers, postal and payment helpers, specialist format controls.", "value": "9781565812314" },
         { "card": "payloads", "title": "Payload helpers", "url": "/docs/payloads/", "summary": "Wi-Fi, contacts, authenticators and payments that phones understand.", "value": "WIFI:T:WPA;S:Evotec-Guest;P:correct-horse-battery;;" },
         { "card": "decoding", "title": "Image decoding", "url": "/docs/decoding/", "summary": "Find and read codes in screenshots, photos and artwork.", "value": "https://example.com/art" },
         { "card": "styling", "title": "Styling", "url": "/docs/qr/#styling-options", "summary": "Module shapes, finder frames, palettes and logos.", "value": "https://codeglyphx.com" },

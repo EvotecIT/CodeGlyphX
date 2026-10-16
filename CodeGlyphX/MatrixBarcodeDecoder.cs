@@ -23,6 +23,12 @@ public static class MatrixBarcodeDecoder {
         if (modules is null) return false;
         return type switch {
             BarcodeType.KixCode => KixDecoder.TryDecode(modules, out text),
+            BarcodeType.Daft => Postal.DaftCode.TryDecode(modules, out text),
+            BarcodeType.Code16K => TryDecodeCode16KText(modules, out text),
+            BarcodeType.Code49 => TryDecodeCode49Text(modules, out text),
+            BarcodeType.CodablockF => TryDecodeCodablockFText(modules, out text),
+            BarcodeType.PosiCode => TryDecodePosiCodeText(modules, out text),
+            BarcodeType.Mailmark4State => Mailmark.MailmarkFourState.TryDecode(modules, out text),
             BarcodeType.PharmacodeTwoTrack => PharmacodeTwoTrackDecoder.TryDecode(modules, out text),
             BarcodeType.Postnet => PostnetDecoder.TryDecode(modules, out text),
             BarcodeType.Planet => PlanetDecoder.TryDecode(modules, out text),
@@ -106,6 +112,34 @@ public static class MatrixBarcodeDecoder {
         text = string.Empty;
         if (!Gs1CompositeDecoder.TryDecode(modules, out var decoded)) return false;
         text = decoded.CompositeText;
+        return true;
+    }
+
+    private static bool TryDecodeCode16KText(BitMatrix modules, out string text) {
+        text = string.Empty;
+        if (!Code16K.Code16KDecoder.TryDecode(modules, out var decoded)) return false;
+        text = decoded.Text;
+        return true;
+    }
+
+    private static bool TryDecodeCode49Text(BitMatrix modules, out string text) {
+        text = string.Empty;
+        if (!Code49.Code49Decoder.TryDecode(modules, out var decoded)) return false;
+        text = decoded.Text;
+        return true;
+    }
+
+    private static bool TryDecodeCodablockFText(BitMatrix modules, out string text) {
+        text = string.Empty;
+        if (!CodablockF.CodablockFDecoder.TryDecode(modules, out var decoded)) return false;
+        text = decoded.Text;
+        return true;
+    }
+
+    private static bool TryDecodePosiCodeText(BitMatrix modules, out string text) {
+        text = string.Empty;
+        if (!PosiCode.PosiCodeDecoder.TryDecode(modules, out var decoded)) return false;
+        text = decoded.Text;
         return true;
     }
 }

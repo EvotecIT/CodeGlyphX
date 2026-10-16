@@ -34,6 +34,10 @@ public sealed class DataMatrixEncodingOptions {
     /// <summary>Gets or sets structured-append metadata for this symbol.</summary>
     public DataMatrixStructuredAppend? StructuredAppend { get; set; }
 
+    /// <summary>Gets or sets the number of leading characters that must use basic C40 encodation.</summary>
+    /// <remarks>Use with Auto mode and a string payload. The length must be a multiple of three; the header accepts uppercase letters, digits and spaces. Control headers and ECI cannot be combined with this option.</remarks>
+    public int C40BasicHeaderLength { get; set; }
+
     internal DataMatrixEncodingOptions Clone() {
         return new DataMatrixEncodingOptions {
             Mode = Mode,
@@ -44,7 +48,8 @@ public sealed class DataMatrixEncodingOptions {
             EciAssignmentNumber = EciAssignmentNumber,
             ReaderProgramming = ReaderProgramming,
             Macro = Macro,
-            StructuredAppend = StructuredAppend
+            StructuredAppend = StructuredAppend,
+            C40BasicHeaderLength = C40BasicHeaderLength
         };
     }
 }

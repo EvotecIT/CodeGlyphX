@@ -27,6 +27,8 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Compile Include="Net472\**\*.cs" />
+    <Compile Include="MultiSymbolImageTests.cs" />
+    <Compile Include="WebpLargeRoundTripTests.cs" />
     <Compile Include="GlobalStateCollection.cs" />
     <Compile Include="TestBudget.cs" />
     <Compile Include="FractionalBarcodeSamplingTests.cs" />
@@ -86,6 +88,9 @@
     <Compile Include="Pdf417MacroRangeTests.cs" />
     <Compile Include="RenderingContractRegressionTests.cs" />
     <Compile Include="ScannerCompletionContractTests.cs" />
+    <Compile Include="PostalImageValidationTests.cs" />
+    <Compile Include="SwissQrCapacityTests.cs" />
+    <Compile Include="SwissQrValidationBoundaryTests.cs" />
     <Compile Include="MaxiCodeImageTests.cs" />
     <Compile Include="CorpusPresentationTests.cs" />
     <Compile Include="ScannerDuplicateContractTests.cs" />
@@ -109,6 +114,7 @@
     <Compile Include="SvgQrRendererTests.cs" />
     <Compile Include="ImageScannerSerialCollection.cs" />
     <Compile Include="RetailDigitFitTests.cs" />
+    <Compile Include="AdditionalBarcodeRuntimeTests.cs" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
@@ -128,6 +134,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Fixtures/Conformance/*.json" />
     <EmbeddedResource Include="Fixtures/ImageSamples/*.png" />
     <EmbeddedResource Include="Fixtures/DataMatrix/*.png" />
     <EmbeddedResource Include="Fixtures/Aztec/*.png" />
@@ -142,5 +149,6 @@
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.rgba" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.webp" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.rgba" />
+    <EmbeddedResource Include="Fixtures/Webp/qualified-vp8l-*.webp" />
   </ItemGroup>
 </Project>

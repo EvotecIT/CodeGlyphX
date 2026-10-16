@@ -34,6 +34,9 @@ public sealed class DataMatrixDecoded {
     /// <summary>Gets whether the symbol belongs to the ISO/IEC 21471 DMRE family.</summary>
     public bool IsDmre { get; }
 
+    /// <summary>Gets the number of leading characters encoded in the basic C40 alphabet before any shift or mode change.</summary>
+    public int C40BasicHeaderLength { get; }
+
     internal DataMatrixDecoded(
         string text,
         bool isGs1,
@@ -43,7 +46,8 @@ public sealed class DataMatrixDecoded {
         int[] eciAssignments,
         int rows,
         int columns,
-        bool isDmre) {
+        bool isDmre,
+        int c40BasicHeaderLength = 0) {
         Text = text ?? throw new ArgumentNullException(nameof(text));
         IsGs1 = isGs1;
         StructuredAppend = structuredAppend;
@@ -53,5 +57,6 @@ public sealed class DataMatrixDecoded {
         Rows = rows;
         Columns = columns;
         IsDmre = isDmre;
+        C40BasicHeaderLength = c40BasicHeaderLength;
     }
 }

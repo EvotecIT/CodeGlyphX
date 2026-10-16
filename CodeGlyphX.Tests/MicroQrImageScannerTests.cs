@@ -203,13 +203,13 @@ public sealed class MicroQrImageScannerTests {
     }
 
     [Fact]
-    public void CapabilityCatalog_AdvertisesSingleResultImageScanningWithGeometry() {
+    public void CapabilityCatalog_AdvertisesMultipleResultImageScanningWithGeometry() {
         var capability = SymbolCapabilities.Get(SymbolFormat.MicroQrCode);
 
         Assert.True(capability.CanEncode);
         Assert.True(capability.CanDecodeModules);
         Assert.True(capability.CanScanImages);
-        Assert.False(capability.CanScanMultiple);
+        Assert.True(capability.CanScanMultiple);
         Assert.True(capability.ReportsGeometry);
         Assert.Contains(SymbolFormat.MicroQrCode, SymbolCapabilities.ImageScannableFormats);
     }

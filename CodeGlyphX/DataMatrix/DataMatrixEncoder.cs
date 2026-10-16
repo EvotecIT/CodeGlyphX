@@ -38,6 +38,10 @@ public static partial class DataMatrixEncoder {
         }
         var controlCodewords = BuildControlCodewords(options);
 
+        if (options.C40BasicHeaderLength > 0) {
+            return EncodeC40BasicHeader(text, options);
+        }
+
         if (options.EciAssignmentNumber is { } eciAssignmentNumber) {
             if (text.Length == 0) {
                 return EncodeCodewords(controlCodewords, options);
@@ -98,6 +102,7 @@ public static partial class DataMatrixEncoder {
     public static BitMatrix EncodeBytes(byte[] data, DataMatrixEncodingOptions options) {
         if (data is null) throw new ArgumentNullException(nameof(data));
         ValidateOptions(options);
+        if (options.C40BasicHeaderLength != 0) throw new ArgumentException("C40 basic headers require a string payload.", nameof(options));
         return EncodeBytesCore(data, options);
     }
 
@@ -114,6 +119,7 @@ public static partial class DataMatrixEncoder {
     /// </summary>
     public static BitMatrix EncodeBytes(ReadOnlySpan<byte> data, DataMatrixEncodingOptions options) {
         ValidateOptions(options);
+        if (options.C40BasicHeaderLength != 0) throw new ArgumentException("C40 basic headers require a string payload.", nameof(options));
         return EncodeBytesCore(data, options);
     }
 #endif
@@ -216,6 +222,13 @@ public static partial class DataMatrixEncoder {
 
     private static void ValidateOptions(DataMatrixEncodingOptions options) {
         if (options is null) throw new ArgumentNullException(nameof(options));
+        if (options.C40BasicHeaderLength < 0 || options.C40BasicHeaderLength % 3 != 0) {
+            throw new ArgumentOutOfRangeException(nameof(options), "A basic C40 header length must be a nonnegative multiple of three.");
+        }
+        if (options.C40BasicHeaderLength > 0 && (options.Mode != DataMatrixEncodingMode.Auto || options.IsGs1
+            || options.ReaderProgramming || options.Macro != DataMatrixMacro.None || options.StructuredAppend != null || options.EciAssignmentNumber.HasValue)) {
+            throw new ArgumentException("A basic C40 header requires Auto mode without control headers or ECI.", nameof(options));
+        }
         if (options.Mode < DataMatrixEncodingMode.Auto || options.Mode > DataMatrixEncodingMode.Base256) {
             throw new ArgumentOutOfRangeException(nameof(options), options.Mode, "Unsupported Data Matrix encoding mode.");
         }

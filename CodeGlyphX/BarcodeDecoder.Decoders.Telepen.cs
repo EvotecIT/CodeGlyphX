@@ -5,6 +5,26 @@ using CodeGlyphX.Telepen;
 namespace CodeGlyphX;
 
 public static partial class BarcodeDecoder {
+    private static bool TryExpandTelepenNumeric(string compacted, out string text) {
+        text = string.Empty;
+        if (compacted.Length == 0) return false;
+        var characters = new char[compacted.Length * 2];
+        for (var i = 0; i < compacted.Length; i++) {
+            var value = (int)compacted[i];
+            if (value < 17 || value > 126) return false;
+            if (value < 27) {
+                characters[i * 2] = (char)('0' + value - 17);
+                characters[i * 2 + 1] = 'X';
+            } else {
+                value -= 27;
+                characters[i * 2] = (char)('0' + value / 10);
+                characters[i * 2 + 1] = (char)('0' + value % 10);
+            }
+        }
+        text = new string(characters);
+        return true;
+    }
+
     private static bool TryDecodeTelepen(ref ModuleRunWorkspace runWorkspace, out string text) {
         var modules = runWorkspace.Modules;
         text = string.Empty;

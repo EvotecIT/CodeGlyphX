@@ -282,32 +282,42 @@ internal static class WebpVp8lEncoder {
             ? BuildTokensWithColorCache(pixels, width, colorCacheBits)
             : BuildSmallDistanceTokens(pixels);
 
-        if (colorCacheBits > 0) {
-            writer.WriteBits(1, 1);
-            writer.WriteBits(colorCacheBits, 4);
-        } else {
-            writer.WriteBits(0, 1);
-        }
-
+        // Stage the codebooks and tokens before committing the cache header. A failed
+        // strategy can have written bits, and a literal fallback has no color cache.
+        var imageWriter = new WebpBitWriter();
         if (allowMetaPrefix && TryPrepareMetaPrefix(tokens, pixels, width, height, colorCacheSize, out var meta, out reason)) {
-            writer.WriteBits(1, 1);
-            writer.WriteBits(meta.PrefixBits - 2, 3);
-            if (!TryWriteMetaImage(writer, meta, out reason)) {
-                return false;
+            imageWriter.WriteBits(1, 1);
+            imageWriter.WriteBits(meta.PrefixBits - 2, 3);
+            if (TryWriteMetaImage(imageWriter, meta, out reason) &&
+                TryWriteGroupPrefixCodes(imageWriter, colorCacheSize, meta, out var groups, out reason) &&
+                TryEncodeTokensWithGroups(imageWriter, tokens, width, groups, meta, out reason)) {
+                WriteColorCacheHeader(writer, colorCacheBits);
+                writer.Append(imageWriter);
+                reason = string.Empty;
+                return true;
             }
-            if (!TryWriteGroupPrefixCodes(writer, colorCacheSize, meta, out var groups, out reason)) {
-                return false;
-            }
-            return TryEncodeTokensWithGroups(writer, tokens, width, groups, meta, out reason);
         }
 
-        writer.WriteBits(0, 1);
-        if (!TryWriteTokensWithPrefixCodes(writer, tokens, width, colorCacheSize, out reason)) {
+        imageWriter = new WebpBitWriter();
+        // Transform and entropy subimages omit the meta-prefix flag entirely.
+        if (allowMetaPrefix) imageWriter.WriteBits(0, 1);
+        if (!TryWriteTokensWithPrefixCodes(imageWriter, tokens, width, colorCacheSize, out reason)) {
             tokens = BuildLiteralTokens(pixels);
-            return TryWriteTokensWithPrefixCodes(writer, tokens, width, colorCacheSize: 0, out reason);
+            colorCacheBits = 0;
+            imageWriter = new WebpBitWriter();
+            if (allowMetaPrefix) imageWriter.WriteBits(0, 1);
+            if (!TryWriteTokensWithPrefixCodes(imageWriter, tokens, width, colorCacheSize: 0, out reason)) return false;
         }
 
+        WriteColorCacheHeader(writer, colorCacheBits);
+        writer.Append(imageWriter);
+        reason = string.Empty;
         return true;
+    }
+
+    private static void WriteColorCacheHeader(WebpBitWriter writer, int colorCacheBits) {
+        writer.WriteBits(colorCacheBits > 0 ? 1 : 0, 1);
+        if (colorCacheBits > 0) writer.WriteBits(colorCacheBits, 4);
     }
 
     private static bool ComputeAlphaUsed(ReadOnlySpan<byte> rgba, int width, int height, int stride) {

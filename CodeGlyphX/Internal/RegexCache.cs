@@ -10,9 +10,6 @@ internal static partial class RegexCache {
     [GeneratedRegex("^[0-9]+$", RegexOptions.CultureInvariant)]
     internal static partial Regex DigitsRequired();
 
-    [GeneratedRegex("^[A-Za-z]{2}$", RegexOptions.CultureInvariant)]
-    internal static partial Regex CountryCode();
-
     [GeneratedRegex("^[a-zA-Z]{2}[0-9]{2}([a-zA-Z0-9]?){16,30}$", RegexOptions.CultureInvariant)]
     internal static partial Regex IbanBasic();
 
@@ -30,7 +27,6 @@ internal static partial class RegexCache {
 #else
     private static readonly Regex DigitsOptionalRegex = new("^[0-9]*$", RegexOptions.CultureInvariant);
     private static readonly Regex DigitsRequiredRegex = new("^[0-9]+$", RegexOptions.CultureInvariant);
-    private static readonly Regex CountryCodeRegex = new("^[A-Za-z]{2}$", RegexOptions.CultureInvariant);
     private static readonly Regex IbanBasicRegex = new("^[a-zA-Z]{2}[0-9]{2}([a-zA-Z0-9]?){16,30}$", RegexOptions.CultureInvariant);
     private static readonly Regex BicRegex = new("^([a-zA-Z]{4}[a-zA-Z]{2}[a-zA-Z0-9]{2}([a-zA-Z0-9]{3})?)$", RegexOptions.CultureInvariant);
     private static readonly Regex HexPlainRegex = new("\\A\\b[0-9a-fA-F]+\\b\\Z", RegexOptions.CultureInvariant);
@@ -39,7 +35,6 @@ internal static partial class RegexCache {
 
     internal static Regex DigitsOptional() => DigitsOptionalRegex;
     internal static Regex DigitsRequired() => DigitsRequiredRegex;
-    internal static Regex CountryCode() => CountryCodeRegex;
     internal static Regex IbanBasic() => IbanBasicRegex;
     internal static Regex Bic() => BicRegex;
     internal static Regex HexPlain() => HexPlainRegex;

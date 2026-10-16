@@ -93,9 +93,12 @@ public sealed class DataMatrixSymbolMetadata : SymbolMetadata {
     public int Columns { get; }
     /// <summary>Gets whether the symbol belongs to the DMRE family.</summary>
     public bool IsDmre { get; }
+    /// <summary>Gets the leading basic-C40 character count; Mailmark 2D requires its fixed header in this subset.</summary>
+    public int C40BasicHeaderLength { get; }
     internal DataMatrixSymbolMetadata(DataMatrixDecoded value) {
         IsGs1 = value.IsGs1; StructuredAppend = value.StructuredAppend; ReaderProgramming = value.ReaderProgramming;
         Macro = value.Macro; EciAssignments = Copy(value.EciAssignments); Rows = value.Rows; Columns = value.Columns; IsDmre = value.IsDmre;
+        C40BasicHeaderLength = value.C40BasicHeaderLength;
     }
 }
 

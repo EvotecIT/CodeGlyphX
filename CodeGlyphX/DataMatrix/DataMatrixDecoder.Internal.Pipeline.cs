@@ -22,6 +22,7 @@ public static partial class DataMatrixDecoder {
         public DataMatrixStructuredAppend? StructuredAppend { get; set; }
         public bool ReaderProgramming { get; set; }
         public DataMatrixMacro Macro { get; set; }
+        public int C40BasicHeaderLength { get; set; }
         public List<int> EciAssignments { get; } = new List<int>();
     }
 
@@ -150,7 +151,8 @@ public static partial class DataMatrixDecoder {
             state.EciAssignments.ToArray(),
             symbol.SymbolRows,
             symbol.SymbolCols,
-            symbol.IsDmre);
+            symbol.IsDmre,
+            state.C40BasicHeaderLength);
         return true;
     }
 
@@ -260,9 +262,29 @@ public static partial class DataMatrixDecoder {
         }
 
         var state = decodeState ?? new DataMatrixDecodeState();
+        state.C40BasicHeaderLength = CountBasicC40Header(data);
         value = DecodeData(data, cancellationToken, state);
         if (!state.IsValid || DecodeBudget.ShouldAbort(cancellationToken)) return Fail(out value);
         return true;
+    }
+
+    private static int CountBasicC40Header(byte[] data) {
+        if (data.Length == 0 || data[0] != 230) return 0;
+        var count = 0;
+        for (var index = 1; index + 1 < data.Length && data[index] != 254; index += 2) {
+            var packed = (data[index] << 8) + data[index + 1] - 1;
+            if (packed < 0 || packed >= 64000) break;
+            var first = packed / 1600;
+            var second = packed / 40 % 40;
+            var third = packed % 40;
+            if (first < 3) break;
+            count++;
+            if (second < 3) break;
+            count++;
+            if (third < 3) break;
+            count++;
+        }
+        return count;
     }
 
     private static bool Fail(out string value) {

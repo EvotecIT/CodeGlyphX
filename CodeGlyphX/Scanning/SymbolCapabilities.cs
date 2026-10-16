@@ -10,6 +10,7 @@ namespace CodeGlyphX;
 public static class SymbolCapabilities {
     private const SymbolCapabilityFlags Standard = SymbolCapabilityFlags.Encode | SymbolCapabilityFlags.DecodeModules;
     private const SymbolCapabilityFlags Image = Standard | SymbolCapabilityFlags.ScanImage;
+    private const SymbolCapabilityFlags ImageGeometry = Image | SymbolCapabilityFlags.ReportsGeometry;
     private const SymbolCapabilityFlags ImageMulti = Image | SymbolCapabilityFlags.ScanMultiple;
 
     private static readonly SymbolCapability[] Items = {
@@ -17,10 +18,13 @@ public static class SymbolCapabilities {
             ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
+        Entry(SymbolFormat.D3Aqr, "D3 AQR (provisional)", SymbolFamily.Matrix,
+            ImageGeometry | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
+            SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Entry(SymbolFormat.MicroQrCode, "Micro QR Code", SymbolFamily.Matrix,
-            Image | SymbolCapabilityFlags.ReportsGeometry),
+            ImageMulti | SymbolCapabilityFlags.ReportsGeometry),
         Entry(SymbolFormat.RmQrCode, "Rectangular Micro QR Code", SymbolFamily.Matrix,
-            Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
+            ImageGeometry | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Entry(SymbolFormat.Aztec, "Aztec Code", SymbolFamily.Matrix, ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
         Legacy(SymbolFormat.Code128, "Code 128", SymbolFamily.Linear, BarcodeType.Code128, ImageMulti),
@@ -29,6 +33,8 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Code39, "Code 39", SymbolFamily.Linear, BarcodeType.Code39, ImageMulti),
         Legacy(SymbolFormat.Code93, "Code 93", SymbolFamily.Linear, BarcodeType.Code93, ImageMulti),
         Legacy(SymbolFormat.Ean, "EAN", SymbolFamily.Linear, BarcodeType.EAN, ImageMulti),
+        Legacy(SymbolFormat.Ean2, "EAN-2", SymbolFamily.Linear, BarcodeType.EAN2, ImageMulti),
+        Legacy(SymbolFormat.Ean5, "EAN-5", SymbolFamily.Linear, BarcodeType.EAN5, ImageMulti),
         Legacy(SymbolFormat.UpcA, "UPC-A", SymbolFamily.Linear, BarcodeType.UPCA, ImageMulti),
         Legacy(SymbolFormat.UpcE, "UPC-E", SymbolFamily.Linear, BarcodeType.UPCE, ImageMulti),
         Legacy(SymbolFormat.Itf14, "ITF-14", SymbolFamily.Linear, BarcodeType.ITF14, ImageMulti),
@@ -36,20 +42,39 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Industrial2Of5, "Industrial 2 of 5", SymbolFamily.Linear, BarcodeType.Industrial2of5, ImageMulti),
         Legacy(SymbolFormat.Matrix2Of5, "Matrix 2 of 5", SymbolFamily.Linear, BarcodeType.Matrix2of5, ImageMulti),
         Legacy(SymbolFormat.Iata2Of5, "IATA 2 of 5", SymbolFamily.Linear, BarcodeType.IATA2of5, ImageMulti),
+        Legacy(SymbolFormat.Coop2Of5, "COOP 2 of 5", SymbolFamily.Linear, BarcodeType.Coop2of5, ImageMulti),
+        Legacy(SymbolFormat.Datalogic2Of5, "Datalogic 2 of 5", SymbolFamily.Linear, BarcodeType.Datalogic2of5, ImageMulti),
         Legacy(SymbolFormat.PatchCode, "Patch Code", SymbolFamily.Linear, BarcodeType.PatchCode, ImageMulti),
         Legacy(SymbolFormat.Codabar, "Codabar", SymbolFamily.Linear, BarcodeType.Codabar, ImageMulti),
         Legacy(SymbolFormat.Msi, "MSI", SymbolFamily.Linear, BarcodeType.MSI, ImageMulti),
         Legacy(SymbolFormat.Code11, "Code 11", SymbolFamily.Linear, BarcodeType.Code11, ImageMulti),
+        Legacy(SymbolFormat.Bc412, "BC412", SymbolFamily.Linear, BarcodeType.Bc412, ImageMulti),
+        Legacy(SymbolFormat.FacingIdentificationMark, "Facing Identification Mark", SymbolFamily.Linear, BarcodeType.FacingIdentificationMark, ImageGeometry),
+        Legacy(SymbolFormat.Daft, "DAFT", SymbolFamily.Postal, BarcodeType.Daft, ImageGeometry),
+        Legacy(SymbolFormat.Flattermarken, "Flattermarken", SymbolFamily.Linear, BarcodeType.Flattermarken, ImageGeometry),
+        Legacy(SymbolFormat.ChannelCode, "Channel Code", SymbolFamily.Linear, BarcodeType.ChannelCode, ImageMulti),
+        Legacy(SymbolFormat.PosiCode, "PosiCode", SymbolFamily.Linear, BarcodeType.PosiCode,
+            ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+        Legacy(SymbolFormat.Mailmark4State, "Mailmark 4-State", SymbolFamily.Postal, BarcodeType.Mailmark4State, ImageGeometry),
+        Legacy(SymbolFormat.Code16K, "Code 16K", SymbolFamily.Stacked, BarcodeType.Code16K,
+            ImageGeometry | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
+            SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
+        Legacy(SymbolFormat.Code49, "Code 49", SymbolFamily.Stacked, BarcodeType.Code49,
+            ImageGeometry | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
+            SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
+        Legacy(SymbolFormat.CodablockF, "Codablock F", SymbolFamily.Stacked, BarcodeType.CodablockF,
+            ImageGeometry | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Plessey, "Plessey", SymbolFamily.Linear, BarcodeType.Plessey, ImageMulti),
         Legacy(SymbolFormat.Telepen, "Telepen", SymbolFamily.Linear, BarcodeType.Telepen, ImageMulti),
+        Legacy(SymbolFormat.TelepenNumeric, "Telepen Numeric", SymbolFamily.Linear, BarcodeType.TelepenNumeric, ImageMulti),
         Legacy(SymbolFormat.Pharmacode, "Pharmacode", SymbolFamily.Linear, BarcodeType.Pharmacode, ImageMulti),
-        Legacy(SymbolFormat.PharmacodeTwoTrack, "Two-track Pharmacode", SymbolFamily.Stacked, BarcodeType.PharmacodeTwoTrack, Standard),
+        Legacy(SymbolFormat.PharmacodeTwoTrack, "Two-track Pharmacode", SymbolFamily.Stacked, BarcodeType.PharmacodeTwoTrack, ImageGeometry),
         Legacy(SymbolFormat.Code32, "Code 32", SymbolFamily.Linear, BarcodeType.Code32, ImageMulti),
-        Legacy(SymbolFormat.Postnet, "POSTNET", SymbolFamily.Postal, BarcodeType.Postnet, Standard),
-        Legacy(SymbolFormat.Planet, "PLANET", SymbolFamily.Postal, BarcodeType.Planet, Standard),
-        Legacy(SymbolFormat.RoyalMail4State, "Royal Mail 4-State", SymbolFamily.Postal, BarcodeType.RoyalMail4State, Standard),
-        Legacy(SymbolFormat.AustraliaPost, "Australia Post", SymbolFamily.Postal, BarcodeType.AustraliaPost, Standard),
-        Legacy(SymbolFormat.JapanPost, "Japan Post", SymbolFamily.Postal, BarcodeType.JapanPost, Standard),
+        Legacy(SymbolFormat.Postnet, "POSTNET", SymbolFamily.Postal, BarcodeType.Postnet, ImageGeometry),
+        Legacy(SymbolFormat.Planet, "PLANET", SymbolFamily.Postal, BarcodeType.Planet, ImageGeometry),
+        Legacy(SymbolFormat.RoyalMail4State, "Royal Mail 4-State", SymbolFamily.Postal, BarcodeType.RoyalMail4State, ImageGeometry),
+        Legacy(SymbolFormat.AustraliaPost, "Australia Post", SymbolFamily.Postal, BarcodeType.AustraliaPost, ImageGeometry),
+        Legacy(SymbolFormat.JapanPost, "Japan Post", SymbolFamily.Postal, BarcodeType.JapanPost, ImageGeometry),
         Legacy(SymbolFormat.Gs1DataBarTruncated, "GS1 DataBar Truncated", SymbolFamily.Linear, BarcodeType.GS1DataBarTruncated,
             ImageMulti | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.Gs1DataBarOmnidirectional, "GS1 DataBar Omnidirectional", SymbolFamily.Linear, BarcodeType.GS1DataBarOmni,
@@ -65,18 +90,18 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Gs1DataBarStackedOmnidirectional, "GS1 DataBar Stacked Omnidirectional", SymbolFamily.Stacked, BarcodeType.GS1DataBarStackedOmni,
             Image | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.MaxiCode, "MaxiCode", SymbolFamily.Matrix, BarcodeType.MaxiCode,
-            Image | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
+            ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
         Legacy(SymbolFormat.DotCode, "DotCode", SymbolFamily.Matrix, BarcodeType.DotCode,
-            Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
+            ImageGeometry | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
         Legacy(SymbolFormat.HanXin, "Han Xin Code", SymbolFamily.Matrix, BarcodeType.HanXin,
-            Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
+            ImageGeometry | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
         Legacy(SymbolFormat.Gs1Composite, "GS1 Composite", SymbolFamily.Stacked, BarcodeType.GS1Composite,
-            Standard | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
-        Legacy(SymbolFormat.UspsIntelligentMail, "USPS Intelligent Mail", SymbolFamily.Postal, BarcodeType.UspsImb, Standard),
-        Legacy(SymbolFormat.KixCode, "KIX Code", SymbolFamily.Postal, BarcodeType.KixCode, Standard),
+            ImageGeometry | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
+        Legacy(SymbolFormat.UspsIntelligentMail, "USPS Intelligent Mail", SymbolFamily.Postal, BarcodeType.UspsImb, ImageGeometry),
+        Legacy(SymbolFormat.KixCode, "KIX Code", SymbolFamily.Postal, BarcodeType.KixCode, ImageGeometry),
         Legacy(SymbolFormat.DataMatrix, "Data Matrix", SymbolFamily.Matrix, BarcodeType.DataMatrix,
             ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
@@ -84,7 +109,7 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Pdf417, "PDF417", SymbolFamily.Stacked, BarcodeType.PDF417,
             ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode),
         Legacy(SymbolFormat.MicroPdf417, "MicroPDF417", SymbolFamily.Stacked, BarcodeType.MicroPDF417,
-            Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode)
+            ImageGeometry | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode)
     };
 
     private static readonly ReadOnlyCollection<SymbolCapability> ReadOnlyItems = Array.AsReadOnly(Items);

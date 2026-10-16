@@ -8,12 +8,6 @@ public static partial class Gs1Validator {
         0x8888889a89002021UL, 0xe080222a00082102UL, 0x0000000000000000UL, 0x0000000000000000UL
     };
 
-    private static readonly ulong[] Iso3166Alpha2Bits = {
-        0x1e9afb77f7bdbb7bUL, 0xe4fc21a8012b0070UL, 0x003a900df9dfa800UL, 0xb160181ef00202c0UL,
-        0x00b8d42f8281f2bfUL, 0x3fffeba4d2100080UL, 0x023cf1ca80000002UL, 0x008a8fbfe75cddf9UL,
-        0x59820820eaa10200UL, 0x4002000000000800UL, 0x1020020080000000UL
-    };
-
     private static readonly ulong[] Iso4217NumericBits = {
         0x008800008808b808UL, 0x8880082080880808UL, 0x0880808800220008UL, 0x8010820202822000UL,
         0x0202000008000000UL, 0x8888088888888080UL, 0x088a88a262222002UL, 0x022200008800a080UL,
@@ -27,11 +21,6 @@ public static partial class Gs1Validator {
 
     private static bool IsIso3166Numeric(string value) {
         return value.Length == 3 && ContainsOnlyDigits(value) && IsSet(Iso3166NumericBits, ParseDigits(value, 0, 3));
-    }
-
-    private static bool IsIso3166Alpha2(string value) {
-        if (value.Length != 2 || value[0] < 'A' || value[0] > 'Z' || value[1] < 'A' || value[1] > 'Z') return false;
-        return IsSet(Iso3166Alpha2Bits, (value[0] - 'A') * 26 + value[1] - 'A');
     }
 
     private static bool IsIso4217Numeric(string value) {

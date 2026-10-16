@@ -8,7 +8,7 @@ namespace CodeGlyphX;
 /// <summary>Decodes sampled module grids without image detection or raster conversion.</summary>
 public static class SymbolDecoder {
     private static readonly SymbolFormat[] DetailedFormats = {
-        SymbolFormat.Gs1Composite, SymbolFormat.RmQrCode, SymbolFormat.MaxiCode, SymbolFormat.DotCode,
+        SymbolFormat.D3Aqr, SymbolFormat.Gs1Composite, SymbolFormat.RmQrCode, SymbolFormat.MaxiCode, SymbolFormat.DotCode,
         SymbolFormat.HanXin, SymbolFormat.MicroQrCode, SymbolFormat.QrCode, SymbolFormat.Aztec,
         SymbolFormat.DataMatrix, SymbolFormat.Pdf417, SymbolFormat.MicroPdf417,
         SymbolFormat.Gs1DataBarOmnidirectional, SymbolFormat.Gs1DataBarStackedOmnidirectional,
@@ -30,7 +30,8 @@ public static class SymbolDecoder {
         }
         for (var i = 0; i < SymbolCapabilities.All.Count; i++) {
             var capability = SymbolCapabilities.All[i];
-            if (Array.IndexOf(DetailedFormats, capability.Format) >= 0 || !capability.CanDecodeModules) continue;
+            if (Array.IndexOf(DetailedFormats, capability.Format) >= 0 || !capability.CanDecodeModules
+                || capability.Format == SymbolFormat.Daft || capability.Format == SymbolFormat.Flattermarken) continue;
             if (TryDecodeFormat(modules, capability.Format, out symbol)) return true;
         }
         return false;
@@ -45,6 +46,30 @@ public static class SymbolDecoder {
     private static bool TryDecodeFormat(BitMatrix modules, SymbolFormat format, out DetectedSymbol symbol) {
         symbol = null!;
         switch (format) {
+            case SymbolFormat.D3Aqr:
+                if (!D3Aqr.D3AqrDecoder.TryDecode(modules, out var d3)) return false;
+                symbol = SymbolResultFactory.From(d3);
+                return true;
+            case SymbolFormat.PosiCode:
+                if (!PosiCode.PosiCodeDecoder.TryDecode(modules, out var posi)) return false;
+                symbol = new DetectedSymbol(format, posi.Text, metadata: new PosiCodeSymbolMetadata(posi),
+                    payloadProfile: posi.IsGs1 ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
+                return true;
+            case SymbolFormat.CodablockF:
+                if (!CodablockF.CodablockFDecoder.TryDecode(modules, out var block)) return false;
+                symbol = new DetectedSymbol(format, block.Text, metadata: new CodablockFSymbolMetadata(block),
+                    payloadProfile: block.IsGs1 ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
+                return true;
+            case SymbolFormat.Code16K:
+                if (!Code16K.Code16KDecoder.TryDecode(modules, out var code16K)) return false;
+                symbol = new DetectedSymbol(format, code16K.Text, metadata: new Code16KSymbolMetadata(code16K),
+                    payloadProfile: code16K.IsGs1 ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
+                return true;
+            case SymbolFormat.Code49:
+                if (!Code49.Code49Decoder.TryDecode(modules, out var code49)) return false;
+                symbol = new DetectedSymbol(format, code49.Text, metadata: new Code49SymbolMetadata(code49),
+                    payloadProfile: code49.IsGs1 ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
+                return true;
             case SymbolFormat.QrCode:
                 if (!QrDecoder.TryDecode(modules, out var qr)) return false;
                 symbol = SymbolResultFactory.From(qr); return true;
