@@ -81,7 +81,7 @@ bool valid = SwissQrCode.TryDecode(swiss.Modules, out var parsedPayment);
 
 Current structured addresses are the default, and contact countries must be assigned ISO 3166-1 two-letter codes. Legacy combined addresses require explicit opt-in in both the encoder and parser. Optional billing and alternative-procedure fields retain their defined positions. The common QR result recognizes validated Swiss UTF-8 payloads without requiring an ECI.
 
-For printing, scale the QR area to 46 by 46 mm, with its proportional 7 mm cross and an adequate quiet zone. The helper supplies the symbol; a complete Swiss payment part and receipt need their own layout and qualification under the [SIX QR-bill guidelines](https://www.six-group.com/dam/download/banking-services/standardization/qr-bill/ig-qr-bill-v2.3-en.pdf).
+For printing, scale the data-module area, excluding the quiet zone, to 46 by 46 mm; the cross is proportional to 7 mm within that area. Output includes four quiet-zone modules on each side. For a core width of `n` modules, scale the complete output to `46 * (n + 8) / n` mm, rather than 46 mm. The helper supplies the symbol; a complete Swiss payment part and receipt need their own layout and qualification under the [SIX QR-bill guidelines](https://www.six-group.com/dam/download/banking-services/standardization/qr-bill/ig-qr-bill-v2.3-en.pdf), sections 6.4–6.4.2.
 
 ## Specialist format controls
 

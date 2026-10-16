@@ -55,7 +55,8 @@ public static partial class SymbolScanner {
         if (requested.Contains(SymbolFormat.Gs1DataBarExpandedStacked)) count++;
         if (requested.Contains(SymbolFormat.Gs1DataBarStacked) || requested.Contains(SymbolFormat.Gs1DataBarStackedOmnidirectional)) count++;
         foreach (var format in requested) {
-            if (SymbolCapabilities.Get(format).Family != SymbolFamily.Linear) continue;
+            if (SymbolCapabilities.Get(format).Family != SymbolFamily.Linear
+                || SpecialistImageDecoder.RequiresSpecialistScanner(format)) continue;
             count++;
             break;
         }

@@ -44,9 +44,10 @@ internal static partial class SpecialistImageDecoder {
             // A Composite has independently sized linked components. Narrow bar pitch establishes
             // the common horizontal lattice; neither component may be decoded in isolation as Composite.
             var center = (int)Math.Round(region.Width / pitch);
+            var minimum = format == SymbolFormat.PosiCode ? 40 : 50;
             for (var delta = 0; delta <= 3; delta++) {
-                if (center + delta >= 50) yield return center + delta;
-                if (delta != 0 && center - delta >= 50) yield return center - delta;
+                if (center + delta >= minimum) yield return center + delta;
+                if (delta != 0 && center - delta >= minimum) yield return center - delta;
             }
         }
     }

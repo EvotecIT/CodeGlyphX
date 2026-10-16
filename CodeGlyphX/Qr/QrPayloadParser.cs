@@ -90,11 +90,16 @@ internal static class QrPayloadParser {
     }
 
     public static bool TryParse(byte[] dataCodewords, int version, Func<bool>? shouldStop, out byte[] payload, out QrPayloadSegment[] segments, out QrStructuredAppend? structuredAppend, out QrFnc1Mode fnc1Mode, out int? fnc1ApplicationIndicator) {
+        return TryParse(dataCodewords, version, shouldStop, out payload, out segments, out structuredAppend, out fnc1Mode, out fnc1ApplicationIndicator, out _);
+    }
+
+    public static bool TryParse(byte[] dataCodewords, int version, Func<bool>? shouldStop, out byte[] payload, out QrPayloadSegment[] segments, out QrStructuredAppend? structuredAppend, out QrFnc1Mode fnc1Mode, out int? fnc1ApplicationIndicator, out bool hasEci) {
         payload = null!;
         segments = null!;
         structuredAppend = null;
         fnc1Mode = QrFnc1Mode.None;
         fnc1ApplicationIndicator = null;
+        hasEci = false;
 
         if (dataCodewords is null) return false;
         if (version is < 1 or > 40) return false;
@@ -360,6 +365,7 @@ internal static class QrPayloadParser {
 
                 if (mode == 0b0111) {
                     if (!TryReadEciAssignmentNumber(ReadBits, out var assignmentNumber)) return false;
+                    hasEci = true;
 
                     var newEncoding = QrEncoding.TryGetTextEncoding(assignmentNumber, out var mappedEncoding)
                         ? mappedEncoding
