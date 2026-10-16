@@ -100,8 +100,11 @@ public static partial class SymbolScanner {
         var seen = options.Deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
         var requestedSet = new HashSet<SymbolFormat>(requested);
         var remainingAttempts = CountInitialAttempts(requestedSet, options, width, height);
+        if (options.MaxSymbols != 1 && options.EnableTileScan) {
+            ScanSeparatedRegions(rgba, width, height, searchRegion, options, deadline, results, seen);
+        }
 
-        ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        if (!ShouldStop(options, deadline, results)) ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanMicroQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
