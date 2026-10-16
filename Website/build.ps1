@@ -127,17 +127,22 @@ $PowerForge = $null
 $PowerForgeArgs = @()
 $PowerForgeRoot = Resolve-PowerForgeRoot -RequestedRoot $PowerForgeRoot
 if (-not [string]::IsNullOrWhiteSpace($PowerForgeRoot)) {
-    $PowerForgeCliProject = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli\PowerForge.Web.Cli.csproj'
+    $PowerForgeCliRoot = Join-Path $PowerForgeRoot 'PowerForge.Web.Cli'
+    $PowerForgeCliProject = Join-Path $PowerForgeCliRoot 'PowerForge.Web.Cli.csproj'
+    $PowerForgeBinRoot = Join-Path $PowerForgeCliRoot 'bin'
 
     $tfms = @('net10.0', 'net8.0')
     foreach ($tfm in $tfms) {
-        if (-not $PowerForgeReleaseExe) { $PowerForgeReleaseExe = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Release\\$tfm\\PowerForge.Web.Cli.exe" }
-        if (-not $PowerForgeReleaseAppHost) { $PowerForgeReleaseAppHost = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Release\\$tfm\\PowerForge.Web.Cli" }
-        if (-not $PowerForgeReleaseDll) { $PowerForgeReleaseDll = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Release\\$tfm\\PowerForge.Web.Cli.dll" }
+        $releaseTfmRoot = Join-Path (Join-Path $PowerForgeBinRoot 'Release') $tfm
+        $debugTfmRoot = Join-Path (Join-Path $PowerForgeBinRoot 'Debug') $tfm
 
-        if (-not $PowerForgeDebugExe) { $PowerForgeDebugExe = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Debug\\$tfm\\PowerForge.Web.Cli.exe" }
-        if (-not $PowerForgeDebugAppHost) { $PowerForgeDebugAppHost = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Debug\\$tfm\\PowerForge.Web.Cli" }
-        if (-not $PowerForgeDebugDll) { $PowerForgeDebugDll = Join-Path $PowerForgeRoot "PowerForge.Web.Cli\\bin\\Debug\\$tfm\\PowerForge.Web.Cli.dll" }
+        if (-not $PowerForgeReleaseExe) { $PowerForgeReleaseExe = Join-Path $releaseTfmRoot 'PowerForge.Web.Cli.exe' }
+        if (-not $PowerForgeReleaseAppHost) { $PowerForgeReleaseAppHost = Join-Path $releaseTfmRoot 'PowerForge.Web.Cli' }
+        if (-not $PowerForgeReleaseDll) { $PowerForgeReleaseDll = Join-Path $releaseTfmRoot 'PowerForge.Web.Cli.dll' }
+
+        if (-not $PowerForgeDebugExe) { $PowerForgeDebugExe = Join-Path $debugTfmRoot 'PowerForge.Web.Cli.exe' }
+        if (-not $PowerForgeDebugAppHost) { $PowerForgeDebugAppHost = Join-Path $debugTfmRoot 'PowerForge.Web.Cli' }
+        if (-not $PowerForgeDebugDll) { $PowerForgeDebugDll = Join-Path $debugTfmRoot 'PowerForge.Web.Cli.dll' }
     }
 }
 

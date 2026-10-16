@@ -55,13 +55,10 @@ var samples = new (SymbolFormat Format, string Name, string Family, string Value
 };
 
 var rendered = new List<object>();
-var skipped = new List<string>();
 foreach (var sample in samples) {
     var svg = TryRender(sample.Format, sample.Value, out var error);
-    if (svg is null) {
-        skipped.Add($"{sample.Name}: {error}");
-        continue;
-    }
+    if (string.IsNullOrWhiteSpace(svg))
+        throw new InvalidOperationException($"Failed to render required {sample.Name} specimen: {error ?? "renderer returned no SVG artifact"}");
 
     var file = sample.Format.ToString().ToLowerInvariant() + ".svg";
     File.WriteAllText(Path.Combine(output, file), svg, utf8);
@@ -104,9 +101,6 @@ var json = new JsonSerializerOptions { WriteIndented = true };
 File.WriteAllText(Path.Combine(website, "data", "specimens.json"),
     JsonSerializer.Serialize(new { generatedBy = "Website/tools/SiteSpecimens", count = rendered.Count, specimens = rendered, payloads = payloadResults, decoded }, json) + "\n", utf8);
 Console.WriteLine($"Rendered {rendered.Count} specimens and {payloadResults.Count} payloads.");
-foreach (var line in skipped) {
-    Console.WriteLine("Skipped " + line);
-}
 
 // Inner pages: navigation thumbnails, docs figures, benchmark charts and product-page codes (Visuals*.cs).
 SiteVisuals.Run(website);
