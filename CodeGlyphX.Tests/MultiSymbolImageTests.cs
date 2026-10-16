@@ -11,11 +11,14 @@ namespace CodeGlyphX.Tests;
 [Collection("ImageScannerSerial")]
 public sealed class MultiSymbolImageTests {
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void Scan_ComposedMixedFamilies_ReturnsEveryPayload(bool encoded) {
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public void Scan_ComposedMixedFamilies_ReturnsEveryPayload(bool encoded, bool defaultFormats) {
         var pixels = MixedCanvas(out var width, out var height);
         var options = Options();
+        if (defaultFormats) options.Formats = null;
         var scan = encoded
             ? SymbolScanner.Scan(EncodePng(pixels, width, height), options)
             : SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options);

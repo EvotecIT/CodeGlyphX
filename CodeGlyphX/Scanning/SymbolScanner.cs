@@ -100,11 +100,20 @@ public static partial class SymbolScanner {
         var seen = options.Deduplicate ? new HashSet<string>(StringComparer.Ordinal) : null;
         var requestedSet = new HashSet<SymbolFormat>(requested);
         var remainingAttempts = CountInitialAttempts(requestedSet, options, width, height);
-        if (options.MaxSymbols != 1 && options.EnableTileScan) {
+        var separatedSearchEnabled = options.MaxSymbols != 1 && options.EnableTileScan;
+        var searchedSeparatedRegions = false;
+        if (separatedSearchEnabled && options.Formats is { Length: > 0 }) {
             ScanSeparatedRegions(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
+            searchedSeparatedRegions = true;
         }
 
         if (!ShouldStop(options, deadline, results)) ScanQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        // Default all-format negatives retain their established recognition allowance.
+        // A QR hit can trigger region recovery early enough to find the other families.
+        if (separatedSearchEnabled && !searchedSeparatedRegions && results.Count > 0 && !ShouldStop(options, deadline, results)) {
+            ScanSeparatedRegions(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
+            searchedSeparatedRegions = true;
+        }
         if (!ShouldStop(options, deadline, results)) ScanMicroQr(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanDataMatrix(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanAztec(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
@@ -113,6 +122,9 @@ public static partial class SymbolScanner {
         if (!ShouldStop(options, deadline, results)) ScanLinear(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanExpandedStacked(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanDataBarStacked(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
+        if (separatedSearchEnabled && !searchedSeparatedRegions && results.Count > 0 && !ShouldStop(options, deadline, results)) {
+            ScanSeparatedRegions(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
+        }
         if (!ShouldStop(options, deadline, results) && options.EnableTileScan) {
             ScanMatrixTiles(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
         }
