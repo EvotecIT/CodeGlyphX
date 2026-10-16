@@ -18,7 +18,7 @@ public static class SymbolCapabilities {
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
         Entry(SymbolFormat.MicroQrCode, "Micro QR Code", SymbolFamily.Matrix,
-            Image | SymbolCapabilityFlags.ReportsGeometry),
+            ImageMulti | SymbolCapabilityFlags.ReportsGeometry),
         Entry(SymbolFormat.RmQrCode, "Rectangular Micro QR Code", SymbolFamily.Matrix,
             Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
@@ -65,7 +65,7 @@ public static class SymbolCapabilities {
         Legacy(SymbolFormat.Gs1DataBarStackedOmnidirectional, "GS1 DataBar Stacked Omnidirectional", SymbolFamily.Stacked, BarcodeType.GS1DataBarStackedOmni,
             Image | SymbolCapabilityFlags.Gs1Encode | SymbolCapabilityFlags.Gs1Decode),
         Legacy(SymbolFormat.MaxiCode, "MaxiCode", SymbolFamily.Matrix, BarcodeType.MaxiCode,
-            Image | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
+            ImageMulti | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |
             SymbolCapabilityFlags.StructuredAppendEncode | SymbolCapabilityFlags.StructuredAppendDecode),
         Legacy(SymbolFormat.DotCode, "DotCode", SymbolFamily.Matrix, BarcodeType.DotCode,
             Standard | SymbolCapabilityFlags.EciEncode | SymbolCapabilityFlags.EciDecode |

@@ -144,5 +144,6 @@
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-odd-color.rgba" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.webp" />
     <EmbeddedResource Include="Fixtures/Webp/independent-vp8-pattern.rgba" />
+    <EmbeddedResource Include="Fixtures/Webp/qualified-vp8l-*.webp" />
   </ItemGroup>
 </Project>

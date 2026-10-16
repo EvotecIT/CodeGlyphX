@@ -110,7 +110,33 @@ public sealed class MaxiCodeImageTests {
         Assert.Empty(scan.Symbols);
         Assert.Empty(scan.UnsupportedFormats);
         Assert.True(SymbolCapabilities.Get(SymbolFormat.MaxiCode).IsDefaultScanFormat);
-        Assert.False(SymbolCapabilities.Get(SymbolFormat.MaxiCode).CanScanMultiple);
+    }
+
+    [Fact]
+    public void MultipleIndependentSymbols_AgreeWithAdvertisedImageCapability() {
+        Assert.True(SymbolCapabilities.Get(SymbolFormat.MaxiCode).CanScanMultiple);
+        var left = ImageReader.DecodeRgba32(ReadFixture("MODE3.png"), out var lw, out var lh);
+        var right = ImageReader.DecodeRgba32(ReadFixture("MODE5.png"), out var rw, out var rh);
+        const int border = 24;
+        var width = lw + rw + border * 3;
+        var height = Math.Max(lh, rh) + border * 2;
+        var pixels = new byte[width * height * 4];
+        for (var i = 0; i < pixels.Length; i++) pixels[i] = 255;
+        for (var row = 0; row < lh; row++)
+            Buffer.BlockCopy(left, row * lw * 4, pixels, ((row + border) * width + border) * 4, lw * 4);
+        for (var row = 0; row < rh; row++)
+            Buffer.BlockCopy(right, row * rw * 4, pixels, ((row + border) * width + lw + border * 2) * 4, rw * 4);
+        var options = Options();
+        options.EnableTileScan = true;
+        options.TileGrid = 2;
+        options.MaxSymbols = 2;
+
+        var scan = SymbolScanner.Scan(ImageFrame.Packed(pixels, width, height, PixelFormat.Rgba32), options);
+
+        Assert.Equal(2, scan.Symbols.Count);
+        Assert.Contains(scan.Symbols, symbol => symbol.Format == SymbolFormat.MaxiCode && symbol.Text == "[)>\u001e01\u001d96MODE3");
+        Assert.Contains(scan.Symbols, symbol => symbol.Format == SymbolFormat.MaxiCode && symbol.Text == "[)>\u001e01\u001d96MODE5");
+        Assert.All(scan.Symbols, symbol => Assert.IsType<MaxiCodeSymbolMetadata>(symbol.Metadata));
     }
 
     [Fact]

@@ -78,6 +78,7 @@ public sealed class MultiSymbolImageTests {
 
     [Fact]
     public void Scan_SeparatedMicroQr_PreservesPayloadMetadataAndSourceGeometryAfterDownscale() {
+        Assert.True(SymbolCapabilities.Get(SymbolFormat.MicroQrCode).CanScanMultiple);
         const int width = 840, height = 420;
         var pixels = White(width, height);
         foreach (var position in new[] { (Text: "ONE", X: 100, Y: 40), (Text: "TWO", X: 500, Y: 230) }) {

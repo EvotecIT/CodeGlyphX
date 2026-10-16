@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Security.Cryptography;
 using CodeGlyphX.Rendering;
 using CodeGlyphX.Rendering.Webp;
 using Xunit;
@@ -7,6 +9,30 @@ namespace CodeGlyphX.Tests;
 
 [Collection("WebpTests")]
 public sealed class WebpLargeRoundTripTests {
+    // These encoded vectors and decoded RGBA hashes were qualified by libwebp.
+    // Pinning the representative bitstreams prevents a mutually permissive
+    // in-project writer/reader pair from accepting the same invalid output.
+    // Encoding-strategy changes must requalify these vectors independently.
+    [Theory]
+    [InlineData("checker", 840, 420, "checker", false, "c005b589fb377b927938d7fc74e042bf2852dde1f34aa94e51321cac87effd4e")]
+    [InlineData("fallback", 257, 129, "noise", false, "f407b1d2adcfa26e7bc04777fe258902c5794d8ec92c3d409d53f0b7f850300f")]
+    [InlineData("alpha", 257, 129, "gradient", true, "f9025a130a74ba6a1137bff0e677efa42c37f17f5a9bbf298725bc249e1726fc")]
+    public void WriteRgba32_MatchesIndependentlyDecodedVp8lVectors(
+        string fixture, int width, int height, string pattern, bool alpha, string decodedSha256) {
+        var expected = CreatePixels(width, height, pattern, alpha);
+        var encoded = WebpWriter.WriteRgba32(width, height, expected, width * 4);
+        using var stream = typeof(WebpLargeRoundTripTests).Assembly.GetManifestResourceStream(
+            "CodeGlyphX.Tests.Fixtures.Webp.qualified-vp8l-" + fixture + ".webp");
+        Assert.NotNull(stream);
+        using var buffer = new MemoryStream();
+        stream!.CopyTo(buffer);
+
+        Assert.Equal(buffer.ToArray(), encoded);
+        using var sha256 = SHA256.Create();
+        Assert.Equal(decodedSha256, BitConverter.ToString(sha256.ComputeHash(expected)).Replace("-", "").ToLowerInvariant());
+        AssertDecodedPixels(encoded, width, height, expected);
+    }
+
     [Theory]
     [InlineData(4, 4, "checker")]
     [InlineData(31, 33, "gradient")]
