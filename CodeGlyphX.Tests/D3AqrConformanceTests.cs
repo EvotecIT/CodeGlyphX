@@ -1,12 +1,24 @@
 using System;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using CodeGlyphX.D3Aqr;
 using Xunit;
 
 namespace CodeGlyphX.Tests;
 
 public sealed class D3AqrConformanceTests {
+    [Fact]
+    public void TokenAwareModulePath_RejectsCanceledRequestsAndLeavesGridReusable() {
+        var symbol = D3AqrEncoder.EncodeText("D3-CANCELLATION", 42, 2.5);
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        Assert.False(D3AqrDecoder.TryDecode(symbol.Modules, cancellation.Token, out _));
+        Assert.True(D3AqrDecoder.TryDecode(symbol.Modules, CancellationToken.None, out var decoded));
+        Assert.Equal("D3-CANCELLATION", decoded.Text);
+        Assert.Equal(42, decoded.Category);
+    }
+
     [Theory]
     [InlineData(2.0000000000000004)]
     [InlineData(2.4999999999999996)]

@@ -110,6 +110,14 @@ public sealed partial class SpecialistImageScannerTests {
                     Assert.Equal(new SymbolBounds(30, 30, width * 3, height * 3), hit.Geometry!.Bounds);
                     Assert.Equal((transform % 4 * 90 + (transform >= 4 ? 180 : 0)) % 360, hit.Geometry.RotationDegrees);
                     Assert.Equal(transform >= 4, hit.IsMirrored);
+                    var calibration = Options(format);
+                    calibration.Region = new ImageRegion(30, 30, width * 3, height * 3);
+                    calibration.SamplingGrid = new ImageSamplingGrid(width, height, transform % 4 * 90);
+                    var calibrated = Assert.Single(SymbolScanner.Scan(png, calibration).Symbols);
+                    Assert.Equal(expected.Text, calibrated.Text);
+                    Assert.Equal(expected.PayloadProfile, calibrated.PayloadProfile);
+                    Assert.Equal(metadata.Category, Assert.IsType<D3AqrSymbolMetadata>(calibrated.Metadata).Category);
+                    Assert.Equal(hit.Geometry.Bounds, calibrated.Geometry!.Bounds);
                 }
             }
             count++;

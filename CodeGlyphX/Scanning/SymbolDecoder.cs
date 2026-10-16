@@ -48,8 +48,7 @@ public static class SymbolDecoder {
         switch (format) {
             case SymbolFormat.D3Aqr:
                 if (!D3Aqr.D3AqrDecoder.TryDecode(modules, out var d3)) return false;
-                symbol = new DetectedSymbol(format, d3.Text, d3.Host.Bytes, new D3AqrSymbolMetadata(d3),
-                    d3.Host.Fnc1Mode == QrFnc1Mode.FirstPosition ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
+                symbol = SymbolResultFactory.From(d3);
                 return true;
             case SymbolFormat.PosiCode:
                 if (!PosiCode.PosiCodeDecoder.TryDecode(modules, out var posi)) return false;

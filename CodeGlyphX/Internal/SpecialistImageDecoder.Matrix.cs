@@ -71,22 +71,7 @@ internal static partial class SpecialistImageDecoder {
             if (DecodeBudget.ShouldAbort(token)) return false;
             for (var x = 0; x < region.Width; x++) local[y * region.Width + x] = (byte)(view.Get(region.X + x, region.Y + y) ? 1 : 0);
         }
-        var points = new System.Collections.Generic.List<SymbolPoint>();
-        var diameters = new System.Collections.Generic.List<int>();
-        BinaryImageComponents.Visit(local, region.Width, region.Height, false, token, (queue, length, edge) => {
-            if (length < 2) return false;
-            var left = region.Width; var right = 0; var top = region.Height; var bottom = 0;
-            long sumX = 0; long sumY = 0;
-            for (var i = 0; i < length; i++) {
-                var x = queue[i] % region.Width; var y = queue[i] / region.Width;
-                left = Math.Min(left, x); right = Math.Max(right, x); top = Math.Min(top, y); bottom = Math.Max(bottom, y);
-                sumX += x; sumY += y;
-            }
-            if (right - left > (bottom - top + 1) * 2 || bottom - top > (right - left + 1) * 2) return false;
-            points.Add(new SymbolPoint(region.X + sumX / (double)length, region.Y + sumY / (double)length));
-            diameters.Add(Math.Min(right - left + 1, bottom - top + 1));
-            return points.Count > 20000;
-        });
+        var points = CollectDotComponents(local, region, token, out var diameters);
         if (points.Count < 4 || points.Count > 20000) return false;
         diameters.Sort();
         var tolerance = Math.Max(.5, diameters[diameters.Count / 2] * .45);
@@ -110,6 +95,28 @@ internal static partial class SpecialistImageDecoder {
             }
         }
         return TryOrientations(grid, SymbolFormat.DotCode, token, out symbol, out rotation, out mirrored);
+    }
+
+    private static System.Collections.Generic.List<SymbolPoint> CollectDotComponents(byte[] mask, ImageRegion region,
+        CancellationToken token, out System.Collections.Generic.List<int> diameters) {
+        var points = new System.Collections.Generic.List<SymbolPoint>();
+        var sizes = new System.Collections.Generic.List<int>();
+        BinaryImageComponents.Visit(mask, region.Width, region.Height, false, token, (queue, length, edge) => {
+            if (length < 2) return false;
+            var left = region.Width; var right = 0; var top = region.Height; var bottom = 0;
+            long sumX = 0; long sumY = 0;
+            for (var i = 0; i < length; i++) {
+                var x = queue[i] % region.Width; var y = queue[i] / region.Width;
+                left = Math.Min(left, x); right = Math.Max(right, x); top = Math.Min(top, y); bottom = Math.Max(bottom, y);
+                sumX += x; sumY += y;
+            }
+            if (right - left > (bottom - top + 1) * 2 || bottom - top > (right - left + 1) * 2) return false;
+            points.Add(new SymbolPoint(region.X + sumX / (double)length, region.Y + sumY / (double)length));
+            sizes.Add(Math.Min(right - left + 1, bottom - top + 1));
+            return points.Count > 20000;
+        });
+        diameters = sizes;
+        return points;
     }
 
     private static System.Collections.Generic.List<double> DotCenters(System.Collections.Generic.List<SymbolPoint> points,

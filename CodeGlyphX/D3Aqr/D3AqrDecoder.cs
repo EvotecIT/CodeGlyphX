@@ -11,12 +11,15 @@ public static class D3AqrDecoder {
         TryDecodeView(new BitMatrixView(modules), token, out decoded);
     /// <summary>Decodes an exact module grid, accepting rotations and mirrored orientations.</summary>
     /// <remarks>Frame, timing, category parity and cell-pitch consistency are validated before returning a QR payload.</remarks>
-    public static bool TryDecode(BitMatrix modules, out D3AqrDecoded decoded) {
+    public static bool TryDecode(BitMatrix modules, out D3AqrDecoded decoded) =>
+        TryDecode(modules, CancellationToken.None, out decoded);
+
+    internal static bool TryDecode(BitMatrix modules, CancellationToken token, out D3AqrDecoded decoded) {
         decoded = null!;
         if (modules is null || modules.Width != modules.Height || modules.Width < 35 || modules.Width > 748) return false;
         for (var mirror = 0; mirror < 2; mirror++)
             for (var rotation = 0; rotation < 4; rotation++)
-                if (TryDecodeView(new BitMatrixView(modules, rotation, mirror != 0), CancellationToken.None, out decoded)) return true;
+                if (TryDecodeView(new BitMatrixView(modules, rotation, mirror != 0), token, out decoded)) return true;
         return false;
     }
 
@@ -59,7 +62,7 @@ public static class D3AqrDecoder {
                                 if (modules.Get(offset + x * hostPitch + dx, offset + y * hostPitch + dy) != value) { valid = false; break; }
                     }
                 }
-                if (valid && QrDecoder.TryDecode(host, out var qr) && qr.Version == version) {
+                if (valid && QrDecoder.TryDecode(host, out var qr, token) && qr.Version == version) {
                     decoded = new D3AqrDecoded(category, ratio, qr);
                     return true;
                 }

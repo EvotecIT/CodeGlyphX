@@ -65,7 +65,7 @@ internal static partial class SpecialistImageDecoder {
                 view = new MaskView(mask, width, height, (4 - calibration.RotationDegrees / 90) & 3, polarity != 0);
                 var full = new ImageRegion(0, 0, view.Width, view.Height);
                 if (TrySample(view, full, calibration.Columns, calibration.Rows, token, out var grid)
-                    && SymbolDecoder.TryDecode(grid, out symbol, format)) {
+                    && TryDecodeCalibratedGrid(grid, format, token, out symbol)) {
                     geometry = Geometry(view, full, 0, false); inverted = polarity != 0; return true;
                 }
                 continue;
@@ -126,8 +126,17 @@ internal static partial class SpecialistImageDecoder {
     private static bool TryDecodeD3Canonical(BitMatrix modules, CancellationToken token, out DetectedSymbol symbol) {
         symbol = null!;
         if (!D3Aqr.D3AqrDecoder.TryDecodeCanonical(modules, token, out var value)) return false;
-        symbol = new DetectedSymbol(SymbolFormat.D3Aqr, value.Text, value.Host.Bytes, new D3AqrSymbolMetadata(value),
-            value.Host.Fnc1Mode == QrFnc1Mode.FirstPosition ? SymbolPayloadProfile.Gs1 : SymbolPayloadProfile.None);
+        symbol = SymbolResultFactory.From(value);
+        return true;
+    }
+
+    private static bool TryDecodeCalibratedGrid(BitMatrix modules, SymbolFormat format, CancellationToken token,
+        out DetectedSymbol symbol) {
+        if (format != SymbolFormat.D3Aqr) return SymbolDecoder.TryDecode(modules, out symbol, format);
+        symbol = null!;
+        // Preserve the calibrated path's module-decoder orientation support while forwarding its attempt token.
+        if (!D3Aqr.D3AqrDecoder.TryDecode(modules, token, out var value)) return false;
+        symbol = SymbolResultFactory.From(value);
         return true;
     }
 
