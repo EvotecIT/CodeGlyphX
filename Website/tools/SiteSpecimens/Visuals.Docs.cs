@@ -222,6 +222,8 @@ internal static partial class SiteVisuals {
         Card("code128", Specimen("code128"));
         Card("code39", Specimen("code39"));
         Card("ean-upc", Specimen("ean"));
+        Card("barcode-profiles", SaveSvg("docs/card-barcode-profiles.svg",
+            BarcodeProfiles.Render(LinearBarcodeProfile.Isbn, "9781565812314", OutputFormat.Svg).GetText()));
         Card("other-1d", Specimen("royalmail4state"));
         Card("gs1", File.Exists(Path.Combine(staticRoot, "visuals", "docs", "gs1-datamatrix.svg")) ? Specimen2("/visuals/docs/gs1-datamatrix.svg") : Specimen("gs1code128"));
         Card("payloads", Specimen("payload-wifi"));

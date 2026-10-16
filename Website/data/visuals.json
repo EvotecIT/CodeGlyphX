@@ -107,6 +107,11 @@
         "w": 230,
         "h": 80
       },
+      "barcode-profiles": {
+        "src": "/visuals/docs/card-barcode-profiles.svg",
+        "w": 230,
+        "h": 96
+      },
       "other-1d": {
         "src": "/specimens/royalmail4state.svg",
         "w": 546,
