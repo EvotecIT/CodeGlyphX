@@ -15,7 +15,8 @@ public static partial class SymbolScanner {
         var formats = new List<SymbolFormat>();
         foreach (var format in requested) {
             if (format == SymbolFormat.QrCode && options.Qr is not null && !options.Qr.EnableTileScan) continue;
-            if (SymbolCapabilities.Get(format).Family == SymbolFamily.Matrix || format == SymbolFormat.Pdf417)
+            var capability = SymbolCapabilities.Get(format);
+            if (capability.CanScanMultiple && (capability.Family == SymbolFamily.Matrix || format == SymbolFormat.Pdf417))
                 formats.Add(format);
         }
         if (formats.Count == 0) return;

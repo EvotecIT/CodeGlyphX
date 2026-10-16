@@ -126,6 +126,39 @@ public sealed partial class SpecialistImageScannerTests {
     }
 
     [Fact]
+    public void SeparatedD3References_RetainTheSingleResultSpecialistContract() {
+        using var document = JsonDocument.Parse(Resource("Conformance.bwipp-current.json"));
+        var fixtures = document.RootElement.GetProperty("fixtures").EnumerateArray()
+            .Where(item => item.GetProperty("bcid").GetString() == "d3aqr"
+                && item.GetProperty("width").GetInt32() == 35 && item.GetProperty("height").GetInt32() == 35)
+            .GroupBy(item => item.GetProperty("text").GetString())
+            .Select(group => group.First()).Take(2).ToArray();
+        Assert.Equal(2, fixtures.Length);
+        const int symbolSize = 165, width = symbolSize * 2 + 80, height = symbolSize + 40;
+        var canvas = new byte[width * height * 4];
+        Array.Fill(canvas, (byte)255);
+        for (var i = 0; i < fixtures.Length; i++) {
+            var modules = new BitMatrix(35, 35);
+            var bits = fixtures[i].GetProperty("modules").GetString()!;
+            for (var y = 0; y < 35; y++) for (var x = 0; x < 35; x++) modules[x, y] = bits[y * 35 + x] == '1';
+            var png = MatrixPngRenderer.Render(modules, new MatrixPngRenderOptions { ModuleSize = 3, QuietZone = 10 });
+            Assert.True(ImageReader.TryDecodeRgba32(png, out var pixels, out var imageWidth, out var imageHeight));
+            Assert.Equal(symbolSize, imageWidth);
+            Assert.Equal(symbolSize, imageHeight);
+            for (var y = 0; y < imageHeight; y++)
+                Buffer.BlockCopy(pixels, y * imageWidth * 4, canvas, ((y + 20) * width + 20 + i * (symbolSize + 40)) * 4, imageWidth * 4);
+        }
+        Assert.False(SymbolCapabilities.Get(SymbolFormat.D3Aqr).CanScanMultiple);
+        var options = Options(SymbolFormat.D3Aqr);
+        options.MaxSymbols = 2;
+        options.EnableTileScan = true;
+        options.TileGrid = 2;
+        var result = SymbolScanner.Scan(ImageFrame.Packed(canvas, width, height, PixelFormat.Rgba32), options);
+        var symbol = Assert.Single(result.Symbols);
+        Assert.Contains(symbol.Text, fixtures.Select(item => item.GetProperty("text").GetString()));
+    }
+
+    [Fact]
     public void RawCollationMarks_PreserveWhiteDataCellsWithExplicitCalibration() {
         const string expected = "001109900";
         var barcode = BarcodeEncoder.Encode(BarcodeType.Flattermarken, expected);
