@@ -12,6 +12,8 @@ layout: docs
 
 CodeGlyphX 3.0 separates encoding from appearance, uses one general scanner, and gives completed results stable ownership. These changes require recompiling consumers. Start with the public entry points below; the expert format encoders and decoders remain available for specialized workflows.
 
+The Industrial, IATA and Matrix 2-of-5 encoders report empty or non-decimal input with `ArgumentException` instead of `InvalidOperationException`. Update exception handlers that depend on the previous type.
+
 | 2.x API | 3.0 API |
 | --- | --- |
 | `QrCode.Encode`, `QrEasy.Encode` | `QR.Encode` |

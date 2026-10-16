@@ -75,7 +75,7 @@ internal static class PostalDecoder {
         if (!bars[0].tall || !bars[bars.Count - 1].tall) return false;
 
         var digitCount = (bars.Count - 2) / 5;
-        if (digitCount < 2 || digitCount > 12) return false;
+        if (digitCount < 2 || (digitCount > 12 && (!invert || digitCount != 14))) return false;
         var digits = new char[digitCount];
         var idx = 1;
         for (var d = 0; d < digitCount; d++) {

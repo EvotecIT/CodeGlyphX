@@ -37,7 +37,10 @@ public static class SwissQrCode {
     private static bool TryRead(QrDecoded qr, out SwissQrCodePayload payload, bool legacy) {
         payload = null!;
         if (qr.ErrorCorrectionLevel != QrErrorCorrectionLevel.M || qr.Version > 25 || qr.StructuredAppend != null || qr.Fnc1Mode != QrFnc1Mode.None) return false;
-        return SwissQrCodePayload.TryParseBytes(qr.Bytes, out payload, out _, legacy);
+        if (!SwissQrCodePayload.TryParseBytes(qr.Bytes, out var parsed, out var text, legacy)
+            || (qr.HasEci && !string.Equals(qr.Text, text, StringComparison.Ordinal))) return false;
+        payload = parsed;
+        return true;
     }
 }
 
@@ -52,7 +55,7 @@ public sealed class SwissQrSymbol {
     internal SwissQrSymbol(QrCode qr, SwissQrCodePayload payload) { Qr = qr; Payload = payload; }
 
     /// <summary>Renders a black-and-white Swiss QR with a centered cross proportional to 7 mm within the 46 mm QR area.</summary>
-    /// <remarks>For print, scale the QR area to 46 by 46 mm. Four quiet-zone modules are included. Vector output is recommended for physical scaling.</remarks>
+    /// <remarks>For print, scale the data-module area, excluding the quiet zone, to 46 by 46 mm. Output includes four quiet-zone modules on each side, so its complete width is 46 * (Modules.Width + 8) / Modules.Width mm. Vector output is recommended for physical scaling.</remarks>
     public RenderedOutput Render(OutputFormat format, int moduleSize = 8, OutputOptions? outputOptions = null) => Qr.Render(format, BuildOptions(moduleSize), outputOptions);
 
     /// <summary>Renders raw RGBA pixels with the Swiss cross.</summary>
