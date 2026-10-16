@@ -14,7 +14,7 @@ CodeGlyphX currently describes 46 physical symbol formats through `SymbolCapabil
 | Format | Family | Encode | Module decode | Image scan | Default scan | Multiple | GS1 | ECI | Structured append | Geometry |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | --- | --- | ---: |
 | QR Code | Matrix | Yes | Yes | Yes | Yes | Yes | Encode + decode | Encode + decode | Encode + decode | No |
-| Micro QR Code | Matrix | Yes | Yes | Yes | Yes | No | No | No | No | Yes |
+| Micro QR Code | Matrix | Yes | Yes | Yes | Yes | Yes | No | No | No | Yes |
 | Rectangular Micro QR Code | Matrix | Yes | Yes | No | No | No | Encode + decode | Encode + decode | No | No |
 | Aztec Code | Matrix | Yes | Yes | Yes | Yes | Yes | No | Encode + decode | No | No |
 | Code 128 | Linear | Yes | Yes | Yes | Yes | Yes | No | No | No | No |
@@ -50,7 +50,7 @@ CodeGlyphX currently describes 46 physical symbol formats through `SymbolCapabil
 | GS1 DataBar Expanded Stacked | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | No |
 | GS1 DataBar Limited | Linear | Yes | Yes | Yes | Yes | Yes | Encode + decode | No | No | No |
 | GS1 DataBar Stacked Omnidirectional | Stacked | Yes | Yes | Yes | Yes | No | Encode + decode | No | No | No |
-| MaxiCode | Matrix | Yes | Yes | Yes | Yes | No | No | Encode + decode | Encode + decode | No |
+| MaxiCode | Matrix | Yes | Yes | Yes | Yes | Yes | No | Encode + decode | Encode + decode | No |
 | DotCode | Matrix | Yes | Yes | No | No | No | Encode + decode | Encode + decode | Encode + decode | No |
 | Han Xin Code | Matrix | Yes | Yes | No | No | No | No | Encode + decode | No | No |
 | GS1 Composite | Stacked | Yes | Yes | No | No | No | Encode + decode | No | No | No |

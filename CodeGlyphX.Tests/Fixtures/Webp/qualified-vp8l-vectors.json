@@ -1,0 +1,36 @@
+{
+  "producer": "CodeGlyphX writer at 87f5cb7924016b9f9976e10b8f261bd900c894f3",
+  "independentDecoder": {
+    "pillow": "12.3.0",
+    "libwebp": "1.6.0"
+  },
+  "vectors": [
+    {
+      "file": "qualified-vp8l-checker.webp",
+      "width": 840,
+      "height": 420,
+      "pattern": "checker",
+      "alpha": false,
+      "encodedSha256": "e67c58688e277ed63d916737fbb2d6758b66fc847f41ac92a2b003bf8609ef28",
+      "decodedRgbaSha256": "c005b589fb377b927938d7fc74e042bf2852dde1f34aa94e51321cac87effd4e"
+    },
+    {
+      "file": "qualified-vp8l-fallback.webp",
+      "width": 257,
+      "height": 129,
+      "pattern": "noise",
+      "alpha": false,
+      "encodedSha256": "7d4b4ceafcb487e580a05d97b7cd078d0c220d4728861e1640a001df0c55c451",
+      "decodedRgbaSha256": "f407b1d2adcfa26e7bc04777fe258902c5794d8ec92c3d409d53f0b7f850300f"
+    },
+    {
+      "file": "qualified-vp8l-alpha.webp",
+      "width": 257,
+      "height": 129,
+      "pattern": "gradient",
+      "alpha": true,
+      "encodedSha256": "5dee6444acb050f8e4ab2a81e611ebcf4633df65b20cd2ea7732b98507ebc858",
+      "decodedRgbaSha256": "f9025a130a74ba6a1137bff0e677efa42c37f17f5a9bbf298725bc249e1726fc"
+    }
+  ]
+}
