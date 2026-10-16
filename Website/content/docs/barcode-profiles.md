@@ -106,4 +106,4 @@ var linked = PosiCodeEncoder.EncodeStacked("ABC123DEF456", rows: 3, variant: Pos
 bool decoded = SymbolDecoder.TryDecode(linked.Modules, out var result, SymbolFormat.PosiCode);
 ```
 
-`MatrixOptions.LabelText` adds a portable caption outside the symbol's quiet zone. Caption rendering keeps the encoded modules intact. The [capability table](/docs/symbol-capabilities/) distinguishes module decoding from image recognition for every physical format. Code 16K, Code 49, Codablock F, Mailmark 4-state and D3 AQR currently decode sampled grids; they do not advertise photograph recognition.
+`MatrixOptions.LabelText` adds a portable caption outside the symbol's quiet zone. Caption rendering keeps the encoded modules intact. Code 16K, Code 49, Codablock F, Mailmark 4-state, D3 AQR and linked PosiCode rows also decode from images through `SymbolScanner`. The [capability table](/docs/symbol-capabilities/) records default recognition, calibration, geometry and multiple-result support for every physical format.

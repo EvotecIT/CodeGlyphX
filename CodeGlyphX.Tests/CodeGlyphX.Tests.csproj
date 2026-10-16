@@ -88,6 +88,7 @@
     <Compile Include="Pdf417MacroRangeTests.cs" />
     <Compile Include="RenderingContractRegressionTests.cs" />
     <Compile Include="ScannerCompletionContractTests.cs" />
+    <Compile Include="PostalImageValidationTests.cs" />
     <Compile Include="MaxiCodeImageTests.cs" />
     <Compile Include="CorpusPresentationTests.cs" />
     <Compile Include="ScannerDuplicateContractTests.cs" />

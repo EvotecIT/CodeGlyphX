@@ -27,11 +27,14 @@ public sealed class SymbolCapability {
     /// <remarks>
     /// Pharmacode and Patch Code patterns provide insufficient evidence for reliable unrestricted
     /// recognition. Request them explicitly when the application knows they may be present.
-    /// Module-only formats never participate in default image scanning.
+    /// DAFT, Flattermarken, FIM and KIX also require explicit selection because raw or unchecked patterns
+    /// do not provide sufficient evidence for unrestricted recognition. Raw marks can require a calibrated grid.
     /// Telepen Numeric requires explicit selection because its bars also have a valid Telepen ASCII interpretation.
     /// </remarks>
     public bool IsDefaultScanFormat => CanScanImages && Format != SymbolFormat.Pharmacode &&
-        Format != SymbolFormat.PharmacodeTwoTrack && Format != SymbolFormat.PatchCode && Format != SymbolFormat.TelepenNumeric;
+        Format != SymbolFormat.PharmacodeTwoTrack && Format != SymbolFormat.PatchCode && Format != SymbolFormat.TelepenNumeric &&
+        Format != SymbolFormat.Daft && Format != SymbolFormat.Flattermarken && Format != SymbolFormat.FacingIdentificationMark &&
+        Format != SymbolFormat.KixCode;
     /// <summary>Gets whether one image scan can return multiple instances.</summary>
     public bool CanScanMultiple => Has(SymbolCapabilityFlags.ScanMultiple);
     /// <summary>Gets whether image recognition reports symbol geometry.</summary>

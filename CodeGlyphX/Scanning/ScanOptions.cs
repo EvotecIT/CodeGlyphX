@@ -9,12 +9,17 @@ public sealed class ScanOptions {
     /// <summary>
     /// Gets or sets the formats to scan. A null or empty array selects formats whose
     /// <see cref="SymbolCapability.IsDefaultScanFormat"/> is true.
-    /// Module-only requested formats are reported through <see cref="ScanResult.UnsupportedFormats"/>.
+    /// Unknown requested formats are reported through <see cref="ScanResult.UnsupportedFormats"/>.
     /// </summary>
     public SymbolFormat[]? Formats { get; set; }
 
     /// <summary>Gets or sets an optional region of interest in source-image coordinates.</summary>
     public ImageRegion? Region { get; set; }
+
+    /// <summary>Gets or sets an optional known module grid occupying the complete scan region, without quiet zones or captions.</summary>
+    /// <remarks>Requires exactly one explicit format. Required for Flattermarken because its white edge cells carry data.
+    /// Also useful for externally calibrated raw DAFT marks and orientation-ambiguous unchecked symbols.</remarks>
+    public ImageSamplingGrid? SamplingGrid { get; set; }
 
     /// <summary>
     /// Gets or sets the total wall-clock deadline in milliseconds for image decoding, conversion, and recognition.

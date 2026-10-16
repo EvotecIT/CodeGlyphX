@@ -10,7 +10,7 @@ layout: docs
 
 # Image Decoding
 
-Use `QrImageDecoder` when only QR is expected, or `MicroQrDecoder` for direct Micro QR recognition. Use `SymbolScanner` for a unified result model across QR, Micro QR, linear barcodes, Data Matrix, PDF417, and Aztec. The [capability matrix](/docs/symbol-capabilities/) distinguishes pixel recognition from module-only decoding for every format.
+Use `QrImageDecoder` when only QR is expected, or `MicroQrDecoder` for direct Micro QR recognition. `SymbolScanner` provides one result model for all 62 physical formats, including matrix, linear, stacked and postal symbols. The [capability matrix](/docs/symbol-capabilities/) records default recognition, explicit format selection, geometry and multiple-result support.
 
 ## QR-only decoding
 
@@ -50,7 +50,7 @@ foreach (var symbol in scan.Symbols) {
 }
 ```
 
-`TimeoutMilliseconds` covers compressed-image decoding, pixel conversion, and the complete recognition sequence. Cancellation and decoder budgets remain cooperative rather than hard real-time limits. Requested module-only formats are returned in `ScanResult.UnsupportedFormats` instead of being advertised as image-scannable.
+`TimeoutMilliseconds` covers compressed-image decoding, pixel conversion, and the complete recognition sequence. Cancellation and decoder budgets remain cooperative rather than hard real-time limits. Unknown requested formats are returned in `ScanResult.UnsupportedFormats`.
 
 The default total deadline is 500 ms, whether options are omitted or created with `new ScanOptions()`. Set `TimeoutMilliseconds = 0` explicitly to disable the total deadline. Choose a longer deadline when scanning large images or requesting more recognition attempts.
 
@@ -63,7 +63,19 @@ var pharmacodeScan = SymbolScanner.Scan(image, new ScanOptions {
 });
 ```
 
-Pharmacode Two-Track supports module decoding only; explicitly requesting it from the image scanner reports it in `UnsupportedFormats`.
+Two-track Pharmacode, FIM, DAFT, Flattermarken and KIX also require explicit format selection. These raw or unchecked patterns cannot reliably identify themselves among arbitrary image content. Unchecked marks can have more than one valid reading orientation.
+
+Flattermarken additionally requires its known cell-aligned data area. Each digit has nine columns, and completely white cells represent zero. Supply that area without quiet zones or captions:
+
+```csharp
+var marks = SymbolScanner.Scan(image, new ScanOptions {
+    Formats = new[] { SymbolFormat.Flattermarken },
+    Region = new ImageRegion(x, y, dataWidth, dataHeight),
+    SamplingGrid = new ImageSamplingGrid(columns: digitCount * 9, rows: 1)
+});
+```
+
+`SamplingGrid` requires exactly one selected format. Its `rotationDegrees` argument supplies a known clockwise rotation of 0, 90, 180 or 270 degrees. Use calibration for orientation-ambiguous DAFT, KIX or Pharmacode marks, and for DAFT sequences whose bars do not establish the full state height. It cannot restore blank data cells already removed by cropping.
 
 Raw camera and interop buffers use the same scanner without a compressed-image codec:
 

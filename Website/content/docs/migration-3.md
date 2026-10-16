@@ -128,7 +128,7 @@ Console.WriteLine(scan.CompletionReason);
 
 The default total deadline is 500 ms, including when options are omitted or created with `new ScanOptions()`. Set `TimeoutMilliseconds = 0` explicitly for an unlimited total budget, or select a longer deadline for expensive scans. Deadlines remain cooperative.
 
-Null or empty `Formats` selects the catalogue's default image formats. Pharmacode and PatchCode require explicit selection because their simple patterns can match unrelated content. Use `SymbolCapability.IsDefaultScanFormat` when building a picker that follows this policy; `CanScanImages` also includes formats that require this opt-in. Pharmacode Two-Track remains module-only.
+Null or empty `Formats` selects the catalogue's default image formats. Pharmacode, Two-track Pharmacode, PatchCode, FIM, DAFT, Flattermarken and KIX require explicit selection because their raw or unchecked patterns can match unrelated content. Use `SymbolCapability.IsDefaultScanFormat` when building a picker that follows this policy; `CanScanImages` also includes formats that require this opt-in. Flattermarken needs a cell-aligned `Region` and `SamplingGrid` to retain blank data cells. A calibrated grid also supplies a known orientation for unchecked marks.
 
 Replace `CodeGlyphBudget` scopes with `ScanOptions.TimeoutMilliseconds` for one cooperative deadline across reading, image decoding and recognition. For specialist calls, use `ImageDecodeOptions.RecognitionBudgetMilliseconds` or `QrPixelDecodeOptions.BudgetMilliseconds`; these recognition budgets do not time the image codec.
 

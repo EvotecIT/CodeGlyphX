@@ -1,4 +1,5 @@
 using System;
+using CodeGlyphX.Internal;
 using CodeGlyphX.DotCode;
 using CodeGlyphX.Internal.ReedSolomon;
 
@@ -13,6 +14,7 @@ public static class DotCodeDecoder {
             ((modules.Width + modules.Height) & 1) == 0) return false;
         var lit = 0;
         for (var y = 0; y < modules.Height; y++) {
+            if (DecodeBudget.ShouldAbort(default)) return false;
             for (var x = 0; x < modules.Width; x++) {
                 if (!modules[x, y]) continue;
                 if (((x + y) & 1) != 0) return false;
@@ -36,6 +38,7 @@ public static class DotCodeDecoder {
             if (overwrittenDataBits == 0) return false;
             var candidateStream = (bool[])stream.Clone();
             for (var candidate = 0; candidate < 1 << overwrittenDataBits; candidate++) {
+                if (DecodeBudget.ShouldAbort(default)) return false;
                 for (var bit = 0; bit < overwrittenDataBits; bit++) {
                     candidateStream[firstOverwritten + bit] = (candidate & 1 << bit) != 0;
                 }
