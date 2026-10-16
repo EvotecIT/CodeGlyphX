@@ -139,6 +139,7 @@ public partial class PlaygroundExample {
         if (host.UseForegroundGradient || host.UseBackgroundGradient) yield return "gradients";
         if (host.EnablePalette || host.EnableZonePalettes) yield return "palettes";
         if (host.EnableScaleMap) yield return "module scale maps";
+        if (host.EnableDebugOverlay) yield return "debug overlays";
         if (host.EnableQrBackgroundPattern) yield return "background patterns";
         if (host.CustomEyes) yield return "custom eyes";
         if (host.EnableCanvas) yield return "canvas";
