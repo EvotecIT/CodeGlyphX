@@ -122,11 +122,11 @@ public static partial class SymbolScanner {
         if (!ShouldStop(options, deadline, results)) ScanLinear(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanExpandedStacked(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
         if (!ShouldStop(options, deadline, results)) ScanDataBarStacked(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen, ref remainingAttempts);
-        if (separatedSearchEnabled && !searchedSeparatedRegions && results.Count > 0 && !ShouldStop(options, deadline, results)) {
-            ScanSeparatedRegions(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
-        }
         if (!ShouldStop(options, deadline, results) && options.EnableTileScan) {
-            ScanMatrixTiles(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
+            if (separatedSearchEnabled && !searchedSeparatedRegions && results.Count > 0) {
+                ScanSeparatedRegions(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
+            }
+            if (!ShouldStop(options, deadline, results)) ScanMatrixTiles(rgba, width, height, searchRegion, options, deadline, requestedSet, results, seen);
         }
         TrimToMaximum(options, results);
         if (results.Count > 0) {
