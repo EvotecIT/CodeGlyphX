@@ -5,6 +5,8 @@ using System.Text;
 namespace CodeGlyphX.Payloads;
 
 public sealed partial class SwissQrCodePayload {
+    private const int MaximumEncodedBytes = 997;
+
     internal static bool TryParseBytes(byte[] bytes, out SwissQrCodePayload payload, out string text, bool legacy = false) {
         payload = null!;
         text = string.Empty;
@@ -34,12 +36,13 @@ public sealed partial class SwissQrCodePayload {
     public string? AlternativeProcedure2 => _alternativeProcedure2;
 
     /// <summary>Parses and validates an SPC/0200/1 payload with LF or CRLF separators.</summary>
+    /// <remarks>The complete content, including separators, must fit 997 UTF-8 bytes in the Swiss QR carrier.</remarks>
     /// <param name="value">Complete Swiss QR payload, without a byte-order mark or trailing newline.</param>
     /// <param name="payload">The typed payment fields when valid.</param>
     /// <param name="allowLegacyCombinedAddresses">Allows the combined address format used before the 2025 structured-address requirement.</param>
     public static bool TryParse(string value, out SwissQrCodePayload payload, bool allowLegacyCombinedAddresses = false) {
         payload = null!;
-        if (value is null || value.Length > 997 || value.EndsWith("\n", StringComparison.Ordinal)) return false;
+        if (value is null || !FitsEncodedCapacity(value) || value.EndsWith("\n", StringComparison.Ordinal)) return false;
         var crlf = value.IndexOf('\r') >= 0;
         var normalized = crlf ? value.Replace("\r\n", "\n") : value;
         if (normalized.IndexOf('\r') >= 0 || (crlf && value.Replace("\r\n", "").IndexOf('\n') >= 0)) return false;
@@ -87,6 +90,9 @@ public sealed partial class SwissQrCodePayload {
         }
         return false;
     }
+
+    private static bool FitsEncodedCapacity(string value) =>
+        value.Length <= MaximumEncodedBytes && Encoding.UTF8.GetByteCount(value) <= MaximumEncodedBytes;
 
     private static string? CleanField(string? value, int maximumLength, string name) {
         if (value is null) return null;

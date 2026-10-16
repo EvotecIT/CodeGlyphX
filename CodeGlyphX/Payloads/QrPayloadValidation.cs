@@ -6,7 +6,7 @@ namespace CodeGlyphX.Payloads;
 
 internal static class QrPayloadValidation {
     internal static bool IsValidCreditorReference(string? reference) {
-        if (reference is null || reference.Length < 5 || reference.Length > 25) return false;
+        if (reference is null || reference.Length < 5 || reference.Length > 25 || !ContainsOnlyAscii(reference)) return false;
         var text = reference.ToUpperInvariant();
         if (!text.StartsWith("RF", StringComparison.Ordinal) || text[2] < '0' || text[2] > '9' || text[3] < '0' || text[3] > '9') return false;
         var remainder = 0;
@@ -19,7 +19,7 @@ internal static class QrPayloadValidation {
         return remainder == 1;
     }
     public static bool IsValidIban(string iban) {
-        if (string.IsNullOrEmpty(iban)) return false;
+        if (string.IsNullOrEmpty(iban) || !ContainsOnlyAscii(iban)) return false;
         var text = iban.ToUpperInvariant().Replace(" ", "").Replace("-", "");
         var basic = RegexCache.IbanBasic().IsMatch(text);
         if (!basic) return false;
@@ -41,6 +41,11 @@ internal static class QrPayloadValidation {
         }
 
         return result == 1;
+    }
+
+    private static bool ContainsOnlyAscii(string value) {
+        foreach (var c in value) if (c > '\u007f') return false;
+        return true;
     }
 
     public static bool IsValidQrIban(string iban) {

@@ -66,7 +66,8 @@ public sealed class QrDecoded {
         StructuredAppend = structuredAppend;
         Fnc1Mode = fnc1Mode;
         Fnc1ApplicationIndicator = fnc1ApplicationIndicator;
-        if (!Payloads.QrPayloadParser.TryParse(Text, out var parsed)) {
+        if (!Payloads.QrPayloadParser.TryParse(Text, out var parsed)
+            || (parsed.Type == Payloads.QrPayloadType.SwissQr && !isSwiss)) {
             parsed = new Payloads.QrParsedPayload(Payloads.QrPayloadType.Text, Text, Text);
         }
         Parsed = parsed;

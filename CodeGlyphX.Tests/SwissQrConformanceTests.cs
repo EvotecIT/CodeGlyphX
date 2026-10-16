@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Text.Json;
 using CodeGlyphX.Payloads;
 using Xunit;
@@ -6,6 +7,34 @@ using Xunit;
 namespace CodeGlyphX.Tests;
 
 public sealed class SwissQrConformanceTests {
+    [Fact]
+    public void IndependentBwippCapacityVectors_MatchTheUtf8CarrierBoundary() {
+        using var stream = typeof(SwissQrConformanceTests).Assembly.GetManifestResourceStream(
+            "CodeGlyphX.Tests.Fixtures.Conformance.bwipp-swiss-capacity.json");
+        using var document = JsonDocument.Parse(stream!);
+        var count = 0;
+        foreach (var fixture in document.RootElement.GetProperty("fixtures").EnumerateArray()) {
+            var text = fixture.GetProperty("text").GetString()!;
+            var bytes = Encoding.UTF8.GetBytes(text);
+            Assert.Equal(fixture.GetProperty("utf8Bytes").GetInt32(), bytes.Length);
+            var accepted = fixture.GetProperty("accepted").GetBoolean();
+            Assert.Equal(accepted, SwissQrCodePayload.TryParse(text, out _));
+            if (accepted) {
+                var width = fixture.GetProperty("width").GetInt32();
+                var height = fixture.GetProperty("height").GetInt32();
+                var bits = fixture.GetProperty("modules").GetString()!;
+                var modules = new BitMatrix(width, height);
+                for (var y = 0; y < height; y++) for (var x = 0; x < width; x++) modules[x, y] = bits[y * width + x] == '1';
+                Assert.True(SwissQrCode.TryDecode(modules, out var decoded));
+                Assert.Equal(text.Replace("\r\n", "\n"), decoded.ToString());
+            } else {
+                Assert.Throws<ArgumentException>(() => QrCodeEncoder.EncodeBytes(bytes, QrErrorCorrectionLevel.M, maxVersion: 25));
+            }
+            count++;
+        }
+        Assert.Equal(8, count);
+    }
+
     [Fact]
     public void IndependentBwippSymbols_DecodeUtf8PaymentsWithAllReferenceTypes() {
         using var stream = typeof(SwissQrConformanceTests).Assembly.GetManifestResourceStream(

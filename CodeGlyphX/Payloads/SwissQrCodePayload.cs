@@ -23,6 +23,7 @@ public sealed partial class SwissQrCodePayload {
     /// <summary>
     /// Creates a Swiss QR bill payload.
     /// </summary>
+    /// <exception cref="ArgumentException">A field is invalid or the complete serialized payment exceeds 997 UTF-8 bytes.</exception>
     public SwissQrCodePayload(
         Iban iban,
         SwissQrCurrency currency,
@@ -60,13 +61,15 @@ public sealed partial class SwissQrCodePayload {
         }
         _alternativeProcedure1 = CleanField(alternativeProcedure1, 100, nameof(alternativeProcedure1));
         _alternativeProcedure2 = CleanField(alternativeProcedure2, 100, nameof(alternativeProcedure2));
+        if (!FitsEncodedCapacity(ToString()))
+            throw new ArgumentException("The complete Swiss QR payload must fit 997 UTF-8 bytes, including separators.");
     }
 
     /// <summary>
     /// Converts this payload to a QR payload with recommended settings.
     /// </summary>
     public QrPayloadData ToPayloadData() {
-        return new QrPayloadData(ToString(), QrErrorCorrectionLevel.M, textEncoding: QrTextEncoding.Utf8);
+        return new QrPayloadData(ToString(), QrErrorCorrectionLevel.M, maxVersion: 25, textEncoding: QrTextEncoding.Utf8);
     }
 
     /// <summary>
@@ -207,14 +210,14 @@ public sealed partial class SwissQrCodePayload {
         public Iban(string iban, SwissQrIbanType ibanType) {
             if (iban is null) throw new ArgumentNullException(nameof(iban));
             if (ibanType != SwissQrIbanType.Iban && ibanType != SwissQrIbanType.QrIban) throw new ArgumentOutOfRangeException(nameof(ibanType));
-            iban = iban.ToUpperInvariant().Replace("-", "").Replace(" ", "");
-            if (iban.Length != 21) throw new ArgumentException("A Swiss QR account requires a 21-character CH or LI IBAN.", nameof(iban));
             if (ibanType == SwissQrIbanType.Iban && !QrPayloadValidation.IsValidIban(iban)) {
                 throw new ArgumentException("The IBAN entered isn't valid.", nameof(iban));
             }
             if (ibanType == SwissQrIbanType.QrIban && !QrPayloadValidation.IsValidQrIban(iban)) {
                 throw new ArgumentException("The QR-IBAN entered isn't valid.", nameof(iban));
             }
+            iban = iban.ToUpperInvariant().Replace("-", "").Replace(" ", "");
+            if (iban.Length != 21) throw new ArgumentException("A Swiss QR account requires a 21-character CH or LI IBAN.", nameof(iban));
             if (!iban.StartsWith("CH", StringComparison.Ordinal) && !iban.StartsWith("LI", StringComparison.Ordinal)) {
                 throw new ArgumentException("The IBAN must start with \"CH\" or \"LI\".", nameof(iban));
             }
@@ -278,7 +281,7 @@ public sealed partial class SwissQrCodePayload {
                 _city = CleanField(city, 35, nameof(city))!;
                 if (_zipCode.Length == 0 || _city.Length == 0) throw new ArgumentException("Structured addresses require a postal code and town.");
             } else {
-                if (string.IsNullOrEmpty(houseNumberOrAddressLine2)) throw new ArgumentException("Address line 2 must be provided for combined addresses.", nameof(houseNumberOrAddressLine2));
+                if (string.IsNullOrEmpty(_houseNumberOrAddressLine2)) throw new ArgumentException("Address line 2 must be provided for combined addresses.", nameof(houseNumberOrAddressLine2));
                 _zipCode = string.Empty;
                 _city = string.Empty;
             }
