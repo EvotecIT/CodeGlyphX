@@ -146,6 +146,21 @@
         "src": "/specimens/hanxin.svg",
         "w": 186,
         "h": 186
+      },
+      "document-codes": {
+        "src": "/visuals/docs/document-service.png",
+        "w": 246,
+        "h": 246
+      },
+      "office-documents": {
+        "src": "/visuals/docs/document-lot.png",
+        "w": 120,
+        "h": 120
+      },
+      "powershell-documents": {
+        "src": "/visuals/docs/document-inventory.png",
+        "w": 242,
+        "h": 120
       }
     },
     "figures": {
@@ -845,6 +860,39 @@
             }
           ]
         }
+      },
+      "document-assets": {
+        "layout": "row",
+        "items": [
+          {
+            "src": "/visuals/docs/document-service.png",
+            "w": 246,
+            "h": 246,
+            "label": "Service record",
+            "note": "QrCode",
+            "decoded": "https://example.org/assets/AT-1042",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/document-inventory.png",
+            "w": 242,
+            "h": 120,
+            "label": "Asset identifier",
+            "note": "Code128",
+            "decoded": "AT-1042",
+            "text": null
+          },
+          {
+            "src": "/visuals/docs/document-lot.png",
+            "w": 120,
+            "h": 120,
+            "label": "Manufacturing lot",
+            "note": "DataMatrix",
+            "decoded": "LOT-2026-1042",
+            "text": null
+          }
+        ],
+        "extra": null
       },
       "quickstart": {
         "layout": "row",
@@ -1685,7 +1733,7 @@
       }
     ],
     "notFound": {
-      "count": 31,
+      "count": 34,
       "index": "/visuals/notfound/index.json"
     }
   }

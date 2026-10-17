@@ -194,6 +194,7 @@ internal static partial class SiteVisuals {
 
         figs["decoding"] = BuildScanFigure();
         figs["renderers"] = BuildFormatsFigure();
+        figs["document-assets"] = BuildDocumentAssetsFigure();
 
         // Quick start: what the four steps write.
         {
@@ -231,6 +232,9 @@ internal static partial class SiteVisuals {
         Card("renderers", Specimen2("/visuals/docs/formats-svg.svg"));
         Card("styling", Specimen2(figs["qr-eyes"].Items.First(i => i.Label == "Target").Src));
         Card("symbol-capabilities", Specimen("hanxin"));
+        Card("document-codes", Specimen2(figs["document-assets"].Items[0].Src));
+        Card("office-documents", Specimen2(figs["document-assets"].Items[2].Src));
+        Card("powershell-documents", Specimen2(figs["document-assets"].Items[1].Src));
         return figs;
     }
 

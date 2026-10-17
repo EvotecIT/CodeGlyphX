@@ -35,6 +35,16 @@
       ]
     },
     {
+      "id": "documents",
+      "title": "Documents and labels",
+      "key": "var(--cgx-violet)",
+      "topics": [
+        { "card": "document-codes", "title": "Document label assets", "url": "/docs/document-codes/", "summary": "Generate reusable QR, Code 128 and Data Matrix images and verify their payloads.", "value": "https://example.org/assets/AT-1042" },
+        { "card": "office-documents", "title": "OfficeIMO documents", "url": "/docs/office-documents/", "summary": "Place generated images in Word, Excel, PowerPoint and PDF.", "value": "LOT-2026-1042" },
+        { "card": "powershell-documents", "title": "PowerShell documents", "url": "/docs/powershell-documents/", "summary": "Generate SVG codes with ImagePlayground and place them with PSWriteOffice.", "value": "AT-1042" }
+      ]
+    },
+    {
       "id": "features",
       "title": "Payloads, reading and output",
       "key": "#f59e0b",

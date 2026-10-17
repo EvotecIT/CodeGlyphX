@@ -443,7 +443,7 @@
       "noVerify": true,
       "baseline": "./.powerforge/audit-baseline.json",
       "failOnNewIssues": false,
-      "maxTotalFiles": 6000,
+      "maxTotalFiles": 6500,
       "exclude": "**/*.scripts.html,**/*.head.html",
       "ignoreNav": "sitemap/**,search/**,playground/index.html,playground/404.html",
       "noDefaultIgnoreNav": true,
