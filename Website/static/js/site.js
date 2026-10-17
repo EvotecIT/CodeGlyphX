@@ -1018,11 +1018,19 @@ globalThis.CodeGlyphX.setupDropZone = function(dropZoneElement, inputFileElement
         var url = lost.querySelector('[data-cgx-lost-url]');
         var img = lost.querySelector('[data-cgx-lost-img]');
         var caption = lost.querySelector('[data-cgx-lost-caption]');
-        var link = '<a href="' + best.url + '">' + best.title.replace(/[&<>"]/g, '') + '</a>';
-        if (match) match.innerHTML = (best.section && best.section !== 'Pages' && best.section !== 'CodeGlyphX' ? best.section + ': ' : '') + link;
+        var link = document.createElement('a');
+        link.href = best.url;
+        link.textContent = best.title;
+        if (match) {
+            match.textContent = best.section && best.section !== 'Pages' && best.section !== 'CodeGlyphX' ? best.section + ': ' : '';
+            match.appendChild(link);
+        }
         if (url) url.textContent = full;
         if (img) { img.src = best.src; img.alt = 'QR code that opens ' + full; }
-        if (caption) caption.innerHTML = 'Scan, or open ' + link;
+        if (caption) {
+            caption.textContent = 'Scan, or open ';
+            caption.appendChild(link.cloneNode(true));
+        }
     }, function () { /* the default suggestion stays */ });
 })();
 
