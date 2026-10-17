@@ -45,7 +45,7 @@
     },
     {
       "name": "API reference",
-      "body": "Every public type and member, generated from the current release.",
+      "body": "Public types and members, generated from the library API.",
       "action": "Browse the API",
       "url": "/api/"
     }
