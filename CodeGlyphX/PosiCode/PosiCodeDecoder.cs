@@ -6,6 +6,9 @@ namespace CodeGlyphX.PosiCode;
 
 /// <summary>Validates and decodes PosiCode module rows and linked stacked symbols.</summary>
 public static class PosiCodeDecoder {
+    private const int MaxRowCodewords = 2002;
+    // At most eight start runs, twelve check runs and eleven stop runs.
+    private const int MaxRowRuns = MaxRowCodewords * 6 + 31;
     /// <summary>Decodes an exact module row, including optional white margins.</summary>
     public static bool TryDecode(bool[] modules, out PosiCodeDecoded decoded) {
         decoded = null!;
@@ -58,15 +61,19 @@ public static class PosiCodeDecoder {
         var length = 0;
         for (var x = first; x <= last; x++) {
             if (modules[x] == dark) length++;
-            else { runs.Add(length); length = 1; dark = !dark; }
+            else {
+                if (runs.Count == MaxRowRuns) return false;
+                runs.Add(length); length = 1; dark = !dark;
+            }
         }
+        if (runs.Count == MaxRowRuns) return false;
         runs.Add(length);
         for (var version = 0; version < 4; version++) {
             var start = PosiCodeTables.Starts[version];
             var stop = PosiCodeTables.Stops[version];
             if (!Matches(runs, 0, start) || !Matches(runs, runs.Count - stop.Length, stop)) continue;
             var count = runs.Count - start.Length - stop.Length - 12;
-            if (count < 6 || count % 6 != 0 || count / 6 > 2002) continue;
+            if (count < 6 || count % 6 != 0 || count / 6 > MaxRowCodewords) continue;
             words.Clear();
             var valid = true;
             for (var i = start.Length; i < start.Length + count; i += 6) {

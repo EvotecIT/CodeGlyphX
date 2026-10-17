@@ -8,16 +8,30 @@ internal static partial class SpecialistImageDecoder {
     private static ImageContext? Rectify(ImageContext source, CancellationToken token) {
         var mask = source.Mask; var width = source.Width; var height = source.Height;
         var border = 0;
-        for (var x = 0; x < width; x++) border += mask[x] + mask[(height - 1) * width + x];
-        for (var y = 0; y < height; y++) border += mask[y * width] + mask[y * width + width - 1];
+        for (var x = 0; x < width; x++) {
+            if ((x & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return null;
+            border += mask[x] + mask[(height - 1) * width + x];
+        }
+        for (var y = 0; y < height; y++) {
+            if ((y & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return null;
+            border += mask[y * width] + mask[y * width + width - 1];
+        }
         var background = border > width + height ? (byte)1 : (byte)0;
         var points = new List<SymbolPoint>();
         var increment = Math.Max(1, height / 1024);
         for (var y = 0; y < height; y += increment) {
             if (DecodeBudget.ShouldAbort(token)) return null;
-            var left = 0; while (left < width && mask[y * width + left] == background) left++;
+            var left = 0;
+            while (left < width && mask[y * width + left] == background) {
+                if ((left & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return null;
+                left++;
+            }
             if (left == width) continue;
-            var right = width - 1; while (right > left && mask[y * width + right] == background) right--;
+            var right = width - 1;
+            while (right > left && mask[y * width + right] == background) {
+                if ((right & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return null;
+                right--;
+            }
             points.Add(new SymbolPoint(left, y)); points.Add(new SymbolPoint(right, y));
         }
         var hull = ConvexHull(points);
@@ -54,6 +68,7 @@ internal static partial class SpecialistImageDecoder {
         for (var y = 0; y < targetHeight; y++) {
             if (DecodeBudget.ShouldAbort(token)) return null;
             for (var x = 0; x < targetWidth; x++) {
+                if ((x & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return null;
                 var point = MapRectified(result, new SymbolPoint(x + .5, y + .5));
                 var sx = (int)Math.Floor(point.X); var sy = (int)Math.Floor(point.Y);
                 target[y * targetWidth + x] = (uint)sx < (uint)width && (uint)sy < (uint)height

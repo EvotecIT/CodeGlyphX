@@ -22,7 +22,8 @@ internal static partial class SpecialistImageDecoder {
         if (format == SymbolFormat.D3Aqr) return TryD3(view, region, token, out sampledRegion, out symbol, out rotation, out mirrored);
         if (format == SymbolFormat.DotCode) return TryDots(view, region, token, out symbol, out rotation, out mirrored);
         if (region.Width / (double)region.Height < .65 || region.Width / (double)region.Height > 1.55) return false;
-        var pitch = EstimatePitch(view, region);
+        var pitch = EstimatePitch(view, region, token);
+        if (pitch == 0) return false;
         for (var size = 23; size <= 189; size += 2) {
             if (DecodeBudget.ShouldAbort(token)) return false;
             if (pitch > 0 && Math.Abs(region.Width / (double)size / pitch - 1) > .22) continue;
@@ -36,7 +37,7 @@ internal static partial class SpecialistImageDecoder {
         out ImageRegion sampledRegion, out DetectedSymbol symbol, out int rotation, out bool mirrored) {
         sampledRegion = region; symbol = null!; rotation = 0; mirrored = false;
         if (region.Width / (double)region.Height < .8 || region.Width / (double)region.Height > 1.25) return false;
-        var measured = EstimatePitch(view, region);
+        var measured = EstimatePitch(view, region, token);
         for (var choice = 0; choice < 3; choice++) {
             D3AqrLayout.GetPitch(choice == 0 ? 2 : choice == 1 ? 2.5 : 3, out var half, out var host);
             for (var version = 1; version <= 40; version++) {
@@ -69,9 +70,13 @@ internal static partial class SpecialistImageDecoder {
         var local = new byte[checked(region.Width * region.Height)];
         for (var y = 0; y < region.Height; y++) {
             if (DecodeBudget.ShouldAbort(token)) return false;
-            for (var x = 0; x < region.Width; x++) local[y * region.Width + x] = (byte)(view.Get(region.X + x, region.Y + y) ? 1 : 0);
+            for (var x = 0; x < region.Width; x++) {
+                if ((x & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return false;
+                local[y * region.Width + x] = (byte)(view.Get(region.X + x, region.Y + y) ? 1 : 0);
+            }
         }
         var points = CollectDotComponents(local, region, token, out var diameters);
+        if (DecodeBudget.ShouldAbort(token)) return false;
         if (points.Count < 4 || points.Count > 20000) return false;
         diameters.Sort();
         var tolerance = Math.Max(.5, diameters[diameters.Count / 2] * .45);
@@ -106,6 +111,7 @@ internal static partial class SpecialistImageDecoder {
             var left = region.Width; var right = 0; var top = region.Height; var bottom = 0;
             long sumX = 0; long sumY = 0;
             for (var i = 0; i < length; i++) {
+                if ((i & 4095) == 0 && DecodeBudget.ShouldAbort(token)) return true;
                 var x = queue[i] % region.Width; var y = queue[i] / region.Width;
                 left = Math.Min(left, x); right = Math.Max(right, x); top = Math.Min(top, y); bottom = Math.Max(bottom, y);
                 sumX += x; sumY += y;
